@@ -18,6 +18,8 @@ class InfoDelegaciones extends DatosInfoRepo
 
         $this->setClase('src\\ubis\\domain\\entity\\Delegacion');
         $this->setMetodoGestor('getDelegaciones');
+
+        $this->setRepositoryInterface(DelegacionRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -31,7 +33,7 @@ class InfoDelegaciones extends DatosInfoRepo
             $aWhere = ['dl' => $this->k_buscar];
             $aOperador = ['dl' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getDelegaciones($aWhere, $aOperador);
 
         return $Coleccion;

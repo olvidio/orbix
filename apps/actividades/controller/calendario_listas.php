@@ -1,12 +1,12 @@
 <?php
 
-use actividades\model\entity\GestorActividad;
-use actividadescentro\model\entity\GestorCentroEncargado;
-use actividadtarifas\model\entity\TipoTarifa;
-use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use dossiers\model\PermisoDossier;
 use permisos\model\PermisosActividadesTrue;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -173,6 +173,9 @@ switch ($tipo) {
 }
 
 $a_ubi_activ = [];
+$TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+$CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
 foreach (array_keys($aGrupos) as $key) {
     $aWhere = [];
     $aOperador = [];
@@ -185,24 +188,22 @@ foreach (array_keys($aGrupos) as $key) {
             $aWhere['id_ubi'] = $key;
             $aWhere['_ordre'] = 'id_ubi,f_ini';
 
-            $oGesActiv = new GestorActividad();
-            $cActividades = $oGesActiv->getActividades($aWhere, $aOperador);
+            $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
             break;
         case "oficina":
             $aWhere['_ordre'] = 'f_ini';
             // $key es el id asistentes
             if ($mi_of === "des") {
-                $oGesActiv = new GestorActividad();
                 // los de la sssc
                 $aWhere['id_tipo_activ'] = '^16';
                 $aOperador['id_tipo_activ'] = '~';
-                $cActividadesSSSC = $oGesActiv->getActividades($aWhere, $aOperador);
+                $cActividadesSSSC = $ActividadRepository->getActividades($aWhere, $aOperador);
                 /* otras
                  * ca ordenandos, cve sacd de n, agd:
                  */
                 $aWhere['id_tipo_activ'] = '^1(124)|^1(.41)';
                 $aOperador['id_tipo_activ'] = '~';
-                $cActividadesOtros = $oGesActiv->getActividades($aWhere, $aOperador);
+                $cActividadesOtros = $ActividadRepository->getActividades($aWhere, $aOperador);
 
                 $cActividades = array_merge($cActividadesOtros, $cActividadesSSSC);
 
@@ -210,8 +211,7 @@ foreach (array_keys($aGrupos) as $key) {
                 $oTiposActividades->setAsistentesId($key);
                 $aWhere['id_tipo_activ'] = $oTiposActividades->getNom_tipoRegexp();
                 $aOperador['id_tipo_activ'] = '~';
-                $oGesActiv = new GestorActividad();
-                $cActividades = $oGesActiv->getActividades($aWhere, $aOperador);
+                $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
             }
             break;
         default:
@@ -261,8 +261,8 @@ foreach (array_keys($aGrupos) as $key) {
             if (ConfigGlobal::$dmz) {
                 $num_asistentes = '?';
             } else {
-                $gesAsistentes = new GestorAsistente();
-                $cAsistentes = $gesAsistentes->getAsistentesDeActividad($id_activ);
+                $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
+                $cAsistentes = $AsistenteRepository->getAsistentesDeActividad($id_activ);
                 $num_asistentes = count($cAsistentes);
             }
 
@@ -301,15 +301,14 @@ foreach (array_keys($aGrupos) as $key) {
                 $a_ubi_activ[$key][$a]['h_ini'] = $h_ini;
                 $a_ubi_activ[$key][$a]['h_fin'] = $h_fin;
                 $a_ubi_activ[$key][$a]['num_asistentes'] = $num_asistentes;
-                $oTipoTarifa = new TipoTarifa($tarifa);
+                $oTipoTarifa = $TipoTarifaRepository->findById($tarifa);
                 $a_ubi_activ[$key][$a]['id_tarifa'] = $oTipoTarifa->getLetra();
             }
 
             $a_ubi_activ[$key][$a]['ctr_encargados'] = ''; //inicializar
 
             if ($ver_ctr === 'si' && $oPermCtr->have_perm_action('ver')) {
-                $oGesEncargados = new GestorCentroEncargado();
-                $cCtrsEncargados = $oGesEncargados->getCentrosEncargados(array('id_activ' => $id_activ, '_ordre' => 'num_orden'));
+                $cCtrsEncargados = $CentroEncargadoRepository->getCentrosEncargados(array('id_activ' => $id_activ, '_ordre' => 'num_orden'));
 
                 $i = 0;
                 $txt_ctr = '';

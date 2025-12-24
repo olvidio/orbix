@@ -19,6 +19,8 @@ class InfoAsignaturas extends DatosInfoRepo
 
         $this->setClase('src\\asignaturas\\domain\\entity\\Asignatura');
         $this->setMetodoGestor('getAsignaturas');
+
+        $this->setRepositoryInterface(AsignaturaRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoAsignaturas extends DatosInfoRepo
         $aWhere['id_asignatura'] = 3000;
         $aOperador['id_asignatura'] = '<';
         $aWhere['_ordre'] = 'id_nivel';
-        $oLista = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getAsignaturas($aWhere, $aOperador);
 
         return $Coleccion;

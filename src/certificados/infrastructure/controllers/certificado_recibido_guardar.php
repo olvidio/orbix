@@ -2,9 +2,9 @@
 
 use core\ConfigGlobal;
 use core\ServerConf;
-use personas\model\entity\Persona;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
+use src\personas\domain\entity\Persona;
 use web\ContestarJson;
 use web\DateTimeLocal;
 use function core\is_true;
@@ -41,9 +41,9 @@ if (is_true($Qnuevo)) {
 }
 $oCertificadoRecibido->setId_nom($Qid_nom);
 if (empty($Qnom)) {
-    $oPersona = Persona::NewPersona($Qid_nom);
+    $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
     if (!is_object($oPersona)) {
-        $error_txt .= "<br>$oPersona con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
+        $error_txt .= "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
         ContestarJson::enviar($error_txt, 'ok');
         exit();
     }

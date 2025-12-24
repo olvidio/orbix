@@ -2,6 +2,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\personas\domain\entity\Persona;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
 
@@ -30,9 +31,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 
-$oPersona = personas\model\entity\Persona::NewPersona($Qid_nom);
+$oPersona = Persona::findPersonaEnGlobal($Qid_nom);
 if (!is_object($oPersona)) {
-    $msg_err .= "<br>$oPersona con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
+    $msg_err .= "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
 }
 
 $nom = $oPersona->getNombreApellidos();

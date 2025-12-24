@@ -18,6 +18,8 @@ use src\actividades\domain\value_objects\NivelStgrId;
 interface NivelStgrRepositoryInterface
 {
 
+    public function getArrayIdNiveleStgrActivo(): array;
+    public function getArrayNivelesStgrBreve(): array;
     public function getArrayNivelesStgr(): array;
 
 /* -------------------- GESTOR BASE ---------------------------------------- */

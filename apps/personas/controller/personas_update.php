@@ -1,6 +1,14 @@
 <?php
 
 use core\ConfigGlobal;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use web\ContestarJson;
+use web\DateTimeLocal;
 use function core\is_true;
 
 /**
@@ -17,65 +25,117 @@ require_once("apps/core/global_object.inc");
 $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qque = (string)filter_input(INPUT_POST, 'que');
-$Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
 $oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
-switch ($Qque) {
-    case 'eliminar':
-        $obj = 'personas\\model\\entity\\' . $Qobj_pau;
-        $oPersona = new $obj($Qid_nom);
-        $dl = $oPersona->getDl();
-        // solo lo dejo borrar si es de mi dl.
-        if (ConfigGlobal::mi_delef() === $dl) {
-            if ($oPersona->DBEliminar() === false) {
-                echo _("hay un error, no se ha eliminado");
-                echo "\n" . $oPersona->getErrorTxt();
-            }
-        }
-//		echo $oPosicion->go_atras(1);
+switch ($Qobj_pau) {
+    case 'PersonaN':
+        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        break;
+    case 'PersonaNax':
+        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+        break;
+    case 'PersonaAgd':
+        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+        break;
+    case 'PersonaS':
+        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+        break;
+    case 'PersonaSSSC':
+        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+        break;
+    case 'PersonaEx':
+        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+        break;
+    default:
+        echo "No existe la clase de la persona";
         die();
-        break;
-    case 'guardar':
-        $obj = 'personas\\model\\entity\\' . $Qobj_pau;
-        $oPersona = new $obj($Qid_nom);
-        break;
 }
 
-$campos_chk = empty($Qcampos_chk) ? [] : explode('!', $Qcampos_chk);
-$oPersona->DBCarregar();
-$oDbl = $oPersona->getoDbl();
-$cDatosCampo = $oPersona->getDatosCampos();
-foreach ($cDatosCampo as $oDatosCampo) {
-    $camp = $oDatosCampo->getNom_camp();
-    $valor = empty($_POST[$camp]) ? '' : $_POST[$camp];
-    if ($oDatosCampo->datos_campo($oDbl, 'tipo') === "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
-        if ($valor === "on") {
-            $valor = 't';
-            $a_values_o[$camp] = $valor;
-        } else {
-            // compruebo que esté en la lista de campos enviados
-            if (in_array($camp, $campos_chk)) {
-                $valor = 'f';
-                $a_values_o[$camp] = $valor;
-            }
+
+$oPersona = $repoPersona->findById($Qid_nom);
+if ($Qque === 'eliminar') {
+    $error_txt = '';
+    $dl = $oPersona->getDl();
+    // solo lo dejo borrar si es de mi dl.
+    if (ConfigGlobal::mi_delef() === $dl) {
+        if ($repoPersona->Eliminar($oPersona) === false) {
+            $error_txt .= _("hay un error, no se ha eliminado");
+            $error_txt .= "\n" . $repoPersona->getErrorTxt();
         }
     } else {
-        if (!isset($_POST[$camp]) && !empty($Qid_nom)) continue; // sólo si no es nuevo
-        //pongo el valor nulo, sobretodo para las fechas.
-        if (isset($_POST[$camp]) && (empty($_POST[$camp]) || trim($_POST[$camp]) == "") && !is_array($_POST[$camp])) {
-            //si es un campo not null (y es null), pongo el valor por defecto
-            if (is_true($oDatosCampo->datos_campo($oDbl, 'nulo'))) {
-                $valor_predeterminado = $oDatosCampo->datos_campo($oDbl, 'valor');
-                $a_values_o[$camp] = $valor_predeterminado;
-            } else {
-                $a_values_o[$camp] = NULL;
-            }
-        } else {
-            $a_values_o[$camp] = $valor;
-        }
+        $error_txt .= _("No se ha eliminado, porque no es de mi dl");
     }
+
+    ContestarJson::enviar($error_txt, 'ok');
+    die();
 }
-$oPersona->setAllAttributes($a_values_o, TRUE);
-$oPersona->DBGuardar();
+
+
+$dl = (string)filter_input(INPUT_POST, 'dl');
+$id_ctr = (int)filter_input(INPUT_POST, 'id_ctr');
+$situacion = (string)filter_input(INPUT_POST, 'situacion');
+$idioma_preferido = (string)filter_input(INPUT_POST, 'idioma_preferido');
+$nivel_stgr = (int)filter_input(INPUT_POST, 'nivel_stgr');
+
+$trato = (string)filter_input(INPUT_POST, 'trato');
+$nom = (string)filter_input(INPUT_POST, 'nom');
+$apel_fam = (string)filter_input(INPUT_POST, 'apel_fam');
+$nx1 = (string)filter_input(INPUT_POST, 'nx1');
+$apellido1 = (string)filter_input(INPUT_POST, 'apellido1');
+$nx2 = (string)filter_input(INPUT_POST, 'nx2');
+$apellido2 = (string)filter_input(INPUT_POST, 'apellido2');
+$lugar_nacimiento = (string)filter_input(INPUT_POST, 'lugar_nacimiento');
+$f_nacimiento = (string)filter_input(INPUT_POST, 'f_nacimiento');
+$f_situacion = (string)filter_input(INPUT_POST, 'f_situacion');
+$profesion = (string)filter_input(INPUT_POST, 'profesion');
+$sacd = (string)filter_input(INPUT_POST, 'sacd');
+$eap = (string)filter_input(INPUT_POST, 'eap');
+$inc = (string)filter_input(INPUT_POST, 'inc');
+$f_inc = (string)filter_input(INPUT_POST, 'f_inc');
+$ce = (int)filter_input(INPUT_POST, 'ce');
+$ce_lugar = (string)filter_input(INPUT_POST, 'ce_lugar');
+$ce_ini = (int)filter_input(INPUT_POST, 'ce_ini');
+$ce_fin = (int)filter_input(INPUT_POST, 'ce_fin');
+$observ = (string)filter_input(INPUT_POST, 'observ');
+
+$oPersona->setDl($dl);
+$oPersona->setId_ctr($id_ctr);
+$oPersona->setSituacion($situacion);
+$oPersona->setIdioma_preferido($idioma_preferido);
+$oPersona->setNivel_stgr($nivel_stgr);
+$oPersona->setTrato($trato);
+$oPersona->setNom($nom);
+$oPersona->setApel_fam($apel_fam);
+$oPersona->setNx1($nx1);
+$oPersona->setApellido1($apellido1);
+$oPersona->setNx2($nx2);
+$oPersona->setApellido2($apellido2);
+$oPersona->setLugar_nacimiento($lugar_nacimiento);
+// asegurar tipo correcto para f_nacimiento
+$oF_nacimiento = empty($f_nacimiento) ? null : DateTimeLocal::createFromLocal($f_nacimiento);
+$oPersona->setF_nacimiento($oF_nacimiento);
+// asegurar tipo correcto para f_situacion
+$oF_situacion = empty($f_situacion) ? null : DateTimeLocal::createFromLocal($f_situacion);
+$oPersona->setF_situacion($oF_situacion);
+$oPersona->setProfesion($profesion);
+$oPersona->setSacd(is_true($sacd));
+$oPersona->setEap($eap);
+$oPersona->setInc($inc);
+// asegurar tipo correcto para f_inc
+$oF_inc = empty($f_inc) ? null : DateTimeLocal::createFromLocal($f_inc);
+$oPersona->setF_inc($oF_inc);
+$oPersona->setCe($ce);
+$oPersona->setCe_lugar($ce_lugar);
+$oPersona->setCe_ini($ce_ini);
+$oPersona->setCe_fin($ce_fin);
+$oPersona->setObserv($observ);
+
+$error_txt = '';
+if ($repoPersona->Guardar($oPersona) === false) {
+    $error_txt .= _("hay un error, no se ha guardado");
+    $error_txt .= "\n" . $repoPersona->getErrorTxt();
+}
+
+ContestarJson::enviar($error_txt, 'ok');

@@ -1,11 +1,10 @@
 <?php
 
-use actividades\model\entity\GestorTipoDeActividad;
-use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
+use procesos\model\entity\GestorProcesoTipo;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use web\Lista;
 use web\TiposActividades;
-use procesos\model\entity\GestorProcesoTipo;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -22,14 +21,14 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 switch ($Qque) {
     case 'lista':
         $aWhere = ['_ordre' => 'id_tipo_activ'];
-        $oGesTiposDeActividades = new GestorTipoDeActividad();
-        $cTiposDeActividades = $oGesTiposDeActividades->getTiposDeActividades($aWhere);
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $cTiposDeActividades = $TipoDeActividadRepository->getTiposDeActividades($aWhere);
 
         $oGesProcesosTipo = new GestorProcesoTipo();
         $cProcesosTipo = $oGesProcesosTipo->getProcesoTipos();
         $a_procesos_tipo = [];
         foreach ($cProcesosTipo as $oProcesoTipo) {
-            $id_tipo = $oProcesoTipo->getId_tipo_proceso();
+            $id_tipo = $oProcesoTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
             $nom_proceso = $oProcesoTipo->getNom_proceso();
             $a_procesos_tipo[$id_tipo] = $nom_proceso;
         }
@@ -45,7 +44,7 @@ switch ($Qque) {
         foreach ($cTiposDeActividades as $oTipo) {
             $i++;
             $id_tipo_activ = $oTipo->getId_tipo_activ();
-            $id_tipo_proceso = $oTipo->getId_tipo_proceso();
+            $id_tipo_proceso = $oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
             $id_tipo_proceso_ex = $oTipo->getId_tipo_proceso_ex();
             $oTiposActividades = new TiposActividades($id_tipo_activ);
             $a_valores[$i][1] = $id_tipo_activ;
@@ -86,7 +85,7 @@ switch ($Qque) {
         $cProcesosTipo = $GesProcesoTipo->getProcesoTipos($aWhere);
         $txt_lista = '';
         foreach ($cProcesosTipo as $oProcesoTipo) {
-            $id_tipo_proceso = $oProcesoTipo->getId_tipo_proceso();
+            $id_tipo_proceso = $oProcesoTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
             $nom_proceso = $oProcesoTipo->getNom_proceso();
 
             $txt_lista .= "<tr><td class=link id=$id_tipo_proceso onclick=fnjs_asignar_proceso(event,'$Qid_tipo_activ','$Qpropio','$id_tipo_proceso')> $nom_proceso</td></tr>";
@@ -99,14 +98,14 @@ switch ($Qque) {
         $Qpropio = (string)filter_input(INPUT_POST, 'propio');
         $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
 
-        $oTipoActividad = new TipoDeActividad($Qid_tipo_activ);
-        $oTipoActividad->DBCarregar();
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $oTipoDeActividad = $TipoDeActividadRepository->findById($Qid_tipo_activ);
         if (is_true($Qpropio)) {
-            $oTipoActividad->setId_tipo_proceso($Qid_tipo_proceso);
+            $oTipoDeActividad->setId_tipo_proceso($Qid_tipo_proceso, ConfigGlobal::mi_sfsv());
         } else {
-            $oTipoActividad->setId_tipo_proceso_ex($Qid_tipo_proceso);
+            $oTipoDeActividad->setId_tipo_proceso_ex($Qid_tipo_proceso, ConfigGlobal::mi_sfsv());
         }
-        if ($oTipoActividad->DBGuardar() === false) {
+        if ($TipoDeActividadRepository->Guardar($oTipoDeActividad) === false) {
             echo _("hay un error, no se ha guardado el proceso");
         }
         break;

@@ -22,16 +22,15 @@
  *
  */
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -78,15 +77,12 @@ $oDesplNotas = new Desplegable();
 $oDesplNotas->setOpciones($aOpciones);
 $oDesplNotas->setNombre('id_situacion');
 
-$cNotas = $NotaRepository->getArrayNoSuperadas();
+$cNotas = $NotaRepository->getArrayNotasNoSuperadas();
 $lista_situacion_no_acta = '"11"'; // Para el caso de 'exento', es superada pero sin acta.
-foreach ($cNotas as $oNota) {
-    $id_situacion = $oNota->getId_situacion();
+foreach ($cNotas as $id_situacion) {
     $lista_situacion_no_acta .= ',"' . $id_situacion . '"';
 }
 
-
-$GesActividades = new GestorActividad();
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 
 if (!empty($Qid_asignatura_real)) { //caso de modificar
@@ -138,9 +134,9 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $msg_err = '';
     foreach ($cProfesores as $oProfesor) {
         $id_nom = $oProfesor->getId_nom();
-        $oPersona = Persona::NewPersona($id_nom);
-        if (!is_object($oPersona)) {
-            $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+        $oPersona = Persona::findPersonaEnGlobal($id_nom);
+        if ($oPersona === null) {
+            $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             continue;
         }
         $ap_nom = $oPersona->getPrefApellidosNombre();
@@ -229,7 +225,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 }
 
 // Valores por defecto
-$nota_max_default = $_SESSION['oConfig']->getNota_max();
+$nota_max_default = $_SESSION['oConfig']->getNotaMax();
 $nota_max = empty($nota_max) ? $nota_max_default : $nota_max;
 $id_situacion = empty($id_situacion) ? Nota::NUMERICA : $id_situacion;
 
@@ -279,7 +275,8 @@ if (!empty($epoca)) {
 }
 
 if (!empty($id_activ)) {
-    $oActividad = new ActividadAll($id_activ);
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $oActividad = $ActividadAllRepository->findById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
 } else {
     $nom_activ = '';

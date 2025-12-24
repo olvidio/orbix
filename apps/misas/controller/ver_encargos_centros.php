@@ -3,14 +3,14 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ViewTwig;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoTipo;
+use misas\domain\repositories\EncargoCtrRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
-use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -42,7 +42,8 @@ if (isset($Qid_zona)) {
     $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
     $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
     $cCentros = array_merge($cCentrosDl, $cCentrosSf);
-    
+
+    $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
     foreach ($cCentros as $oCentro) {
         $id_ubi = $oCentro->getId_ubi();
         $nombre_ubi = $oCentro->getNombre_ubi();
@@ -55,7 +56,7 @@ if (isset($Qid_zona)) {
             $data_cols = [];
             $data_cols["id_item"] = $id_item;
             $data_cols["id_encargo"] = $id_enc;
-            $oEncargo = new Encargo($id_enc);
+            $oEncargo = $EncargoRepository->findById($id_enc);
             $desc_enc = $oEncargo->getDesc_enc();
             $data_cols["encargo"] = $desc_enc;
             $data_cols["id_centro"] = $id_ubi;
@@ -95,8 +96,8 @@ $aWhere = [];
 $aOperador = [];
 $aWhere['id_tipo_enc'] = '^' . $grupo;
 $aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+$cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
 $a_tipo_enc = [];
 $posibles_encargo_tipo = [];
@@ -115,8 +116,7 @@ $aWhere['id_tipo_enc'] = $cond_tipo_enc;
 $aOperador['id_tipo_enc'] = 'ANY';
 $aWhere['id_zona'] = $Qid_zona;
 
-$GesEncargos = new GestorEncargo();
-$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+$cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
 foreach ($cEncargos as $oEncargo) {
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();
@@ -127,8 +127,8 @@ $oDesplEncargos = new Desplegable();
 $oDesplEncargos->setNombre('id_enc');
 $oDesplEncargos->setOpciones($aEncargos);
 
-$oGestorZonaCtr = new GestorZona();
-$aOpciones = $oGestorZonaCtr->getArrayZonas();
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$aOpciones = $ZonaRepository->getArrayZonas();
 $oDesplZonasCtr = new Desplegable();
 $oDesplZonasCtr->setOpciones($aOpciones);
 $oDesplZonasCtr->setBlanco(FALSE);

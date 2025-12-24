@@ -12,13 +12,15 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-use asistentes\model\entity\GestorAsistente;
+
 use core\ViewTwig;
 use notas\model\AsignaturasPendientes;
 use notas\model\entity\GestorPersonaNotaDB;
-use personas\model\entity\Persona;
-use personas\model\entity\PersonaGlobal;
+use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\personas\domain\entity\Persona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -41,7 +43,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 //posibles valores de stgr
-$aTipos_stgr = PersonaGlobal::$stgr_posibles;
+$NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
+$aTipos_stgr = $NivelStgrRepository->getArrayNivelesStgrCa();
 /*  "n"=> _("no cursa est."),
     "b"=> _("bienio"),
     "c1"=>  _("cuadrienio año I"),
@@ -55,15 +58,15 @@ unset ($aTipos_stgr["r"]);
 // ----------------------- Selección de Alumnos -----------------
 $a_alumnos_fin_c = [];
 $a_alumnos = [];
-$gesAsistentes = new GestorAsistente();
-foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_activ)) as $oAsistente) {
+$AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
+foreach ($AsistenteRepository->getAsistentes(array('id_activ' => $id_activ)) as $oAsistente) {
     $id_nom = $oAsistente->getId_nom();
-    $oPersona = Persona::NewPersona($id_nom);
+    $oPersona = Persona::findPersonaEnGlobal($id_nom);
     if (is_string($oPersona)) {
         // no se encuentra esta persona...
         continue;
     }
-    $stgr = $oPersona->getStgr();
+    $stgr = $oPersona->getNivel_stgr();
     // sólo los que hacen estudios:
     if (!array_key_exists($stgr, $aTipos_stgr)) {
         continue;

@@ -59,7 +59,7 @@ switch ($Qmod) {
         break;
     case 'teleco':
         $Qid_tipo_teleco = (integer)filter_input(INPUT_POST, 'id_tipo_teleco');
-        $Qdesc_teleco = (integer)filter_input(INPUT_POST, 'desc_teleco');
+        $Qdesc_teleco = (integer)filter_input(INPUT_POST, 'id_desc_teleco');
         $Qnum_teleco = (string)filter_input(INPUT_POST, 'num_teleco');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
@@ -74,7 +74,7 @@ switch ($Qmod) {
             $TelecoUbi = $Repository->findById($a_pkey);
         }
         $TelecoUbi->setId_tipo_teleco($Qid_tipo_teleco);
-        $TelecoUbi->setDesc_teleco($Qdesc_teleco);
+        $TelecoUbi->setId_desc_teleco($Qdesc_teleco);
         $TelecoUbi->setNum_teleco($Qnum_teleco);
         $TelecoUbi->setObserv($Qobserv);
         $Repository->Guardar($TelecoUbi);

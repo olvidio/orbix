@@ -1,15 +1,17 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividadDl;
-use actividades\model\entity\GestorActividadPub;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\PosiblesCa;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\GestorPersonaN;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
+use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
+use src\actividades\domain\value_objects\StatusId;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Hash;
@@ -194,16 +196,18 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
 
     $Qtexto = "image";
-    $GesPersonaDl = new GestorPersonaDl();
+    $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 } else {
     switch ($id_tabla_persona) {
         case 'n':
-            $aWhere['stgr'] = 'n';
-            $aOperador['stgr'] = '<>';
-            $GesPersonaDl = new GestorPersonaN();
+            $NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
+            $niveles_stgr_con_esturdios = implode(',', $NivelStgrRepository->getArrayIdNiveleStgrActivo());
+            $aWhere['nivel_stgr'] = $niveles_stgr_con_esturdios;
+            $aOperador['nivel_stgr'] = 'IN';
+            $PersonaRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
             break;
         case 'a':
-            $GesPersonaDl = new GestorPersonaAgd();
+            $PersonaRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
             break;
     }
     $aWhere['situacion'] = 'A';
@@ -213,7 +217,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     if (!empty($id_ctr)) $aWhere['id_ctr'] = $id_ctr;
 }
 
-$cPersonas = $GesPersonaDl->getPersonas($aWhere, $aOperador);
+$cPersonas = $PersonaRepository->getPersonas($aWhere, $aOperador);
 
 //------------- Selección de Actividades ---------------------------------
 $aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
@@ -233,16 +237,16 @@ if ($Qgrupo_estudios !== 'todos') {
     $aWhereActividad['dl_org'] = $mi_grupo;
 }
 
-$aWhereActividad['status'] = ActividadAll::STATUS_ACTUAL;
+$aWhereActividad['status'] = StatusId::ACTUAL;
 $aWhereActividad['_ordre'] = 'nivel_stgr,f_ini';
 
 $cActividades = [];
-$GesActividades = new GestorActividadPub();
-$cActividades1 = $GesActividades->getActividades($aWhereActividad, $aOperadorActividad);
+$ActividadPubRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
+$cActividades1 = $ActividadPubRepository->getActividades($aWhereActividad, $aOperadorActividad);
 // añadir las actividades de la dl aunque no estén publicadas
-$GesActividadesDl = new GestorActividadDl();
+$ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
 $aWhereActividad['publicado'] = 'f';
-$cActividades2 = $GesActividadesDl->getActividades($aWhereActividad, $aOperadorActividad);
+$cActividades2 = $ActividadDlRepository->getActividades($aWhereActividad, $aOperadorActividad);
 $cActividades = $cActividades1 + $cActividades2;
 
 
@@ -269,6 +273,7 @@ if (!empty($Qidca)) {
         $aAsignaturasCa = [];
         $i++;
         $id_activ = $oActividad->getId_activ();
+        $id_tipo_activ = $oActividad->getId_tipo_activ();
         $nom_activ = $oActividad->getNom_activ();
         $nivel_stgr = $oActividad->getNivel_stgr();
         // si es sólo un alumno pongo el nombre entero, porque saldrá en formato lista.
@@ -283,7 +288,7 @@ if (!empty($Qidca)) {
         }
         if (empty($nivel_stgr)) {
             $msg_txt .= sprintf(_("el ca: %s no tiene puesto el nivel de stgr.") . "<br>", $nom_activ);
-            $nivel_stgr = $oActividad->generarNivelStgr();
+            $nivel_stgr = NivelStgrId::generarNivelStgr($id_tipo_activ);
         }
         // repaso, mayores 30, menores 30, pa-ad
         if ($nivel_stgr == 4 || $nivel_stgr == 9 || $nivel_stgr == 8 || $nivel_stgr == 7) {
@@ -370,7 +375,7 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
         $id_nom = $oPersonaDl->getId_nom();
         $id_tabla_persona = $oPersonaDl->getId_tabla();
         $nom_persona = $oPersonaDl->getPrefApellidosNombre();
-        $stgr = $oPersonaDl->getStgr(); //posibles: n,s,t,b,c1,c2,r
+        $stgr = $oPersonaDl->getNivel_stgr(); //posibles: n,s,t,b,c1,c2,r
 
         if (method_exists($oPersonaDl, 'getCe')) {
             $ce = $oPersonaDl->getCe(); //está en el ce? 1,2,3

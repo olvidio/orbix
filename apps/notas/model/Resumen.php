@@ -2,10 +2,10 @@
 
 namespace notas\model;
 
-use actividades\model\entity\ActividadAll;
 use core\ClasePropiedades;
 use core\ConfigGlobal;
 use personas\model\entity\PersonaDl;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
@@ -1328,6 +1328,7 @@ class Resumen extends ClasePropiedades
         $docencia_dep = [];
         $docencia_no_dep = [];
         $nombres = [];
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($a_profe_dept as $row) {
             $id_nom = $row['id_nom'];
             $id_departamento = $row['id_departamento'];
@@ -1357,9 +1358,9 @@ class Resumen extends ClasePropiedades
                     if (!empty($id_activ)) {
                         // En el caso cr-stgr, se consulta la tabla global.
                         if (ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) {
-                            $oActividad = new ActividadAll($id_activ);
+                            $oActividad = $ActividadAllRepository->findById($id_activ);
                         } else {
-                            $oActividad = new ActividadAll($id_activ);
+                            $oActividad = $ActividadAllRepository->findById($id_activ);
                         }
                         $nom_activ = $oActividad->getNom_activ();
                     }

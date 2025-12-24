@@ -2,6 +2,18 @@
 
 namespace src\profesores\domain\entity;
 
+use core\DatosCampo;
+use core\Set;
+use src\profesores\domain\value_objects\ColeccionName;
+use src\profesores\domain\value_objects\EditorialName;
+use src\profesores\domain\value_objects\FechaPublicacion;
+use src\profesores\domain\value_objects\LugarPublicacionName;
+use src\profesores\domain\value_objects\ObservacionText;
+use src\profesores\domain\value_objects\PublicacionTitulo;
+use src\profesores\domain\value_objects\ReferenciaText;
+use src\profesores\domain\value_objects\TipoPublicacionName;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 use function core\is_true;
 
 /**
@@ -168,8 +180,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar getTipoPublicacionVo()->value()
      * @return string|null $stipo_publicacion
+     * @deprecated Usar getTipoPublicacionVo()->value()
      */
     public function getTipo_publicacion(): ?string
     {
@@ -177,8 +189,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar setTipoPublicacionVo(TipoPublicacionName $vo)
      * @param string|null $stipo_publicacion
+     * @deprecated Usar setTipoPublicacionVo(TipoPublicacionName $vo)
      */
     public function setTipo_publicacion(?string $stipo_publicacion = null): void
     {
@@ -196,8 +208,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar getTituloVo()->value()
      * @return string $stitulo
+     * @deprecated Usar getTituloVo()->value()
      */
     public function getTitulo(): string
     {
@@ -205,8 +217,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar setTituloVo(PublicacionTitulo $vo)
      * @param string $stitulo
+     * @deprecated Usar setTituloVo(PublicacionTitulo $vo)
      */
     public function setTitulo(string $stitulo): void
     {
@@ -226,8 +238,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar getEditorialVo()->value()
      * @return string|null $seditorial
+     * @deprecated Usar getEditorialVo()->value()
      */
     public function getEditorial(): ?string
     {
@@ -235,8 +247,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar setEditorialVo(EditorialName $vo)
      * @param string|null $seditorial
+     * @deprecated Usar setEditorialVo(EditorialName $vo)
      */
     public function setEditorial(?string $seditorial = null): void
     {
@@ -254,8 +266,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar getColeccionVo()->value()
      * @return string|null $scoleccion
+     * @deprecated Usar getColeccionVo()->value()
      */
     public function getColeccion(): ?string
     {
@@ -263,8 +275,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar setColeccionVo(ColeccionName $vo)
      * @param string|null $scoleccion
+     * @deprecated Usar setColeccionVo(ColeccionName $vo)
      */
     public function setColeccion(?string $scoleccion = null): void
     {
@@ -282,8 +294,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar getFechaPublicacionVo()->value()
      * @return DateTimeLocal|NullDateTimeLocal|null $df_publicacion
+     * @deprecated Usar getFechaPublicacionVo()->value()
      */
     public function getF_publicacion(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -291,8 +303,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar setFechaPublicacionVo(FechaPublicacion $vo)
      * @param DateTimeLocal|null $df_publicacion
+     * @deprecated Usar setFechaPublicacionVo(FechaPublicacion $vo)
      */
     public function setF_publicacion(DateTimeLocal|null $df_publicacion = null): void
     {
@@ -328,8 +340,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar getReferenciaVo()->value()
      * @return string|null $sreferencia
+     * @deprecated Usar getReferenciaVo()->value()
      */
     public function getReferencia(): ?string
     {
@@ -337,8 +349,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar setReferenciaVo(ReferenciaText $vo)
      * @param string|null $sreferencia
+     * @deprecated Usar setReferenciaVo(ReferenciaText $vo)
      */
     public function setReferencia(?string $sreferencia = null): void
     {
@@ -356,8 +368,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar getLugarVo()->value()
      * @return string|null $slugar
+     * @deprecated Usar getLugarVo()->value()
      */
     public function getLugar(): ?string
     {
@@ -365,8 +377,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar setLugarVo(LugarPublicacionName $vo)
      * @param string|null $slugar
+     * @deprecated Usar setLugarVo(LugarPublicacionName $vo)
      */
     public function setLugar(?string $slugar = null): void
     {
@@ -384,8 +396,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar getObservVo()->value()
      * @return string|null $sobserv
+     * @deprecated Usar getObservVo()->value()
      */
     public function getObserv(): ?string
     {
@@ -393,8 +405,8 @@ class ProfesorPublicacion
     }
 
     /**
-     * @deprecated Usar setObservVo(ObservacionText $vo)
      * @param string|null $sobserv
+     * @deprecated Usar setObservVo(ObservacionText $vo)
      */
     public function setObserv(?string $sobserv = null): void
     {
@@ -421,6 +433,7 @@ class ProfesorPublicacion
     {
         $oProfesorPublicacionSet = new Set();
 
+        $oProfesorPublicacionSet->add($this->getDatosId_nom());
         $oProfesorPublicacionSet->add($this->getDatosTipo_publicacion());
         $oProfesorPublicacionSet->add($this->getDatosTitulo());
         $oProfesorPublicacionSet->add($this->getDatosEditorial());
@@ -431,6 +444,18 @@ class ProfesorPublicacion
         $oProfesorPublicacionSet->add($this->getDatosLugar());
         $oProfesorPublicacionSet->add($this->getDatosObserv());
         return $oProfesorPublicacionSet->getTot();
+    }
+
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     function getDatosTipo_publicacion(): DatosCampo
@@ -496,7 +521,7 @@ class ProfesorPublicacion
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('pendiente');
-        $oDatosCampo->setMetodoGet('getPendiente');
+        $oDatosCampo->setMetodoGet('isPendiente');
         $oDatosCampo->setMetodoSet('setPendiente');
         $oDatosCampo->setEtiqueta(_("pendiente"));
         $oDatosCampo->setTipo('check');

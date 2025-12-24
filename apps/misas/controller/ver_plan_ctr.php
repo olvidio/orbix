@@ -1,19 +1,15 @@
 <?php
 
 
-// INICIO Cabecera global de URL de controlador *********************************
-use core\ViewTwig;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\EncargoTipo;
 use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\EncargoCtrRepository;
-use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\repositories\EncargoCtrRepositoryInterface;
+use misas\domain\repositories\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\DateTimeLocal;
 
-//use personas\model\entity\GestorPersona;
-//use web\Desplegable;
-
+// INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -28,22 +24,22 @@ $Qorden = (string)filter_input(INPUT_POST, 'orden');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-echo 'id_ubi: '.$Qid_ubi.'<br>';
+echo 'id_ubi: ' . $Qid_ubi . '<br>';
 switch ($Qperiodo) {
     case "esta_semana":
-        $dia_week = date('N');
+        $dia_week = (int)date('N');
         $dia_week--;
-        if ($dia_week==-1){
-            $dia_week=6;
+        if ($dia_week === -1) {
+            $dia_week = 6;
         }
         $empiezamin = new DateTimeLocal(date('Y-m-d'));
-        $intervalo='P'.($dia_week).'D';
+        $intervalo = 'P' . ($dia_week) . 'D';
         $di = new DateInterval($intervalo);
         $di->invert = 1; // intervalo negativo
 
         $empiezamin->add($di);
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
-        $intervalo='P7D';
+        $intervalo = 'P7D';
         $empiezamax = $empiezamin;
         $empiezamax->add(new DateInterval($intervalo));
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
@@ -51,53 +47,53 @@ switch ($Qperiodo) {
     case "proxima_semana":
         $dia_week = date('N');
         $empiezamin = new DateTimeLocal(date('Y-m-d'));
-        $intervalo='P'.(8-$dia_week).'D';
+        $intervalo = 'P' . (8 - $dia_week) . 'D';
         $empiezamin->add(new DateInterval($intervalo));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
-        $intervalo='P7D';
+        $intervalo = 'P7D';
         $empiezamax = $empiezamin;
         $empiezamax->add(new DateInterval($intervalo));
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
     case "este_mes":
-        $este_mes = date('m');
-        $anyo = date('Y');
-        $empiezamin = new DateTimeLocal(date($anyo.'-'.$este_mes.'-01'));
+        $este_mes = (int)date('m');
+        $anyo = (int)date('Y');
+        $empiezamin = new DateTimeLocal(date($anyo . '-' . $este_mes . '-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         $siguiente_mes = $este_mes + 1;
         if ($siguiente_mes == 13) {
             $siguiente_mes = 1;
             $anyo++;
         }
-        $empiezamax = new DateTimeLocal(date($anyo.'-'.$siguiente_mes.'-01'));
+        $empiezamax = new DateTimeLocal(date($anyo . '-' . $siguiente_mes . '-01'));
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
 
-        
+
     case "proximo_mes":
-        $proximo_mes = date('m') + 1;
-        $anyo = date('Y');
+        $proximo_mes = (int)date('m') + 1;
+        $anyo = (int)date('Y');
         if ($proximo_mes == 13) {
             $proximo_mes = 1;
             $anyo++;
         }
-        $empiezamin = new DateTimeLocal(date($anyo.'-'.$proximo_mes.'-01'));
+        $empiezamin = new DateTimeLocal(date($anyo . '-' . $proximo_mes . '-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         $siguiente_mes = $proximo_mes + 1;
         if ($siguiente_mes == 13) {
             $siguiente_mes = 1;
             $anyo++;
         }
-        $empiezamax = new DateTimeLocal(date($anyo.'-'.$siguiente_mes.'-01'));
+        $empiezamax = new DateTimeLocal(date($anyo . '-' . $siguiente_mes . '-01'));
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
     default:
-        $Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
-        $Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
+        $Qempiezamin_rep = str_replace('/', '-', $Qempiezamin);
+        $Qempiezamax_rep = str_replace('/', '-', $Qempiezamax);
 }
 
-$a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
-$a_nombre_mes_breve=[1=>'Ene', 2=>'feb', 3=>'mar', 4=>'abr', 5=>'may', 6=>'jun', 7=>'jul', 8=>'ago', 9=>'sep', 10=>'oct', 11=>'nov', 12=>'dic'];
+$a_dias_semana_breve = [1 => 'L', 2 => 'M', 3 => 'X', 4 => 'J', 5 => 'V', 6 => 'S', 7 => 'D'];
+$a_nombre_mes_breve = [1 => 'Ene', 2 => 'feb', 3 => 'mar', 4 => 'abr', 5 => 'may', 6 => 'jun', 7 => 'jul', 8 => 'ago', 9 => 'sep', 10 => 'oct', 11 => 'nov', 12 => 'dic'];
 
 
 $columns_cuadricula = [
@@ -115,8 +111,8 @@ $oFin = new DateTimeLocal($Qempiezamax_rep);
 $interval = new DateInterval('P1D');
 $date_range = new DatePeriod($oInicio, $interval, $oFin);
 
-$inicio_dia = $Qempiezamin_rep.' 00:00:00';
-$fin_dia = $Qempiezamax_rep.' 23:59:59';
+$inicio_dia = $Qempiezamin_rep . ' 00:00:00';
+$fin_dia = $Qempiezamax_rep . ' 23:59:59';
 
 foreach ($date_range as $date) {
     $id_dia = $date->format('Y-m-d');
@@ -124,26 +120,28 @@ foreach ($date_range as $date) {
     $num_mes = $date->format('n');
     $dia_week = $date->format('N');
     $dia_week_sacd[$id_dia] = $date->format('N');
-    $nom_dia=$a_dias_semana_breve[$dia_week].' '.$num_dia.'.'.$num_mes;
-    $nom_dia2=$a_dias_semana_breve[$dia_week].'<br>'.$num_dia.'.'.$num_mes;
+    $nom_dia = $a_dias_semana_breve[$dia_week] . ' ' . $num_dia . '.' . $num_mes;
+    $nom_dia2 = $a_dias_semana_breve[$dia_week] . '<br>' . $num_dia . '.' . $num_mes;
     //    $nom_dia = $a_dias_semana_breve[$dia_week].$num_dia.$a_nombre_mes_breve[$num_mes];
 
     $columns_cuadricula[] = [
-        "id" => "$id_dia", 
-        "name" => "$nom_dia", 
-        "field" => "$id_dia", 
-        "width" => 80, 
+        "id" => "$id_dia",
+        "name" => "$nom_dia",
+        "field" => "$id_dia",
+        "width" => 80,
         "cssClass" => "cell-title"
     ];
-    echo '<TH class=cell-title style:"width:60px">'.$nom_dia2.'</TH>';
+    echo '<TH class=cell-title style:"width:60px">' . $nom_dia2 . '</TH>';
 }
 $data_cuadricula = [];
 
 $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
 $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 foreach ($cEncargosCtr as $oEncargoCtr) {
     $id_enc = $oEncargoCtr->getId_enc();
-    $oEncargo = new Encargo($id_enc);
+    $oEncargo = $EncargoRepository->findBYId($id_enc);
     $desc_enc = $oEncargo->getDesc_enc();
     $id_ubi = $oEncargo->getId_ubi();
     $id_tipo_enc = $oEncargo->getId_tipo_enc();
@@ -155,7 +153,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 
     $data_cols["encargo"] = $desc_enc;
     echo '</TR>';
-    echo '<TR><TD>'.$desc_enc.'</TD>';
+    echo '<TR><TD>' . $desc_enc . '</TD>';
 
     if (!empty($id_ubi)) {
         $oUbi = Ubi::newUbi($id_ubi);
@@ -165,19 +163,19 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
     }
 
     if (!empty($id_tipo_enc)) {
-        $oEncargoTipo = new EncargoTipo($id_tipo_enc);
+        $oEncargoTipo = $EncargoTipoRepository->findById($id_tipo_enc);
         $tipo_enc = $oEncargoTipo->getTipo_enc();
     } else {
         $tipo_enc = '';
     }
 
     foreach ($date_range as $date) {
-        $iniciales=' -- ';
+        $iniciales = ' -- ';
 
         $id_dia = $date->format('Y-m-d');
-    
-        $inicio_dia = $id_dia.' 00:00:00';
-        $fin_dia = $id_dia.' 23:59:59';
+
+        $inicio_dia = $id_dia . ' 00:00:00';
+        $fin_dia = $id_dia . ' 23:59:59';
 
         $aWhere = [
             'id_enc' => $id_enc,
@@ -188,28 +186,28 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             'tstart' => 'BETWEEN',
         ];
         $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
-        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
-        foreach($cEncargosDia as $oEncargoDia) {
+        foreach ($cEncargosDia as $oEncargoDia) {
             $id_enc = $oEncargoDia->getId_enc();
             $id_nom = $oEncargoDia->getId_nom();
             $dia = $oEncargoDia->getTstart()->format('d-m-Y');
             $hora_ini = $oEncargoDia->getTstart()->format('H:i');
             $hora_fin = $oEncargoDia->getTend()->format('H:i');
-            if ($hora_ini=='00:00')
-                $hora_ini='';
-            if ($hora_fin=='00:00')
-                $hora_fin='';
+            if ($hora_ini === '00:00')
+                $hora_ini = '';
+            if ($hora_fin === '00:00')
+                $hora_fin = '';
             $observ = $oEncargoDia->getObserv();
-            $dia_y_hora=$dia;
-            if ($hora_ini!='') {
-                $dia_y_hora .= ' '.$hora_ini;
+            $dia_y_hora = $dia;
+            if ($hora_ini != '') {
+                $dia_y_hora .= ' ' . $hora_ini;
             }
-            if ($hora_fin!='') {
-                $dia_y_hora .= '-'.$hora_fin;
+            if ($hora_fin != '') {
+                $dia_y_hora .= '-' . $hora_fin;
             }
             $InicialesSacd = new InicialesSacd();
-            $iniciales=$InicialesSacd->iniciales($id_nom);
+            $iniciales = $InicialesSacd->iniciales($id_nom);
             $color = '';
 
             $meta_dia["$id_dia"] = [
@@ -223,11 +221,11 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
                 "dia" => $num_dia,
             ];
             // añadir '*' si tiene observaciones
-            $iniciales .= " ".$hora_ini;
-            $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
+            $iniciales .= " " . $hora_ini;
+            $iniciales .= empty($oEncargoDia->getObserv()) ? '' : '*';
             $data_cols["$id_dia"] = $iniciales;
         }
-        echo '<TD>'.$iniciales.'</TD>';
+        echo '<TD>' . $iniciales . '</TD>';
 
 //        $data_cols["dia"] = $dia_y_hora;
 //        $data_cols["observaciones"] = $observ;
@@ -244,8 +242,6 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 
 echo '</TR>';
 echo '</TABLE>';
-
-
 
 
 $json_columns_cuadricula = json_encode($columns_cuadricula);

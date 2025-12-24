@@ -7,9 +7,9 @@ use notas\model\entity\GestorActaTribunal;
 use notas\model\entity\GestorActaTribunalDl;
 use notas\model\getDatosActa;
 use personas\model\entity\GestorNombreLatin;
-use personas\model\entity\Persona;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 
 /**
@@ -110,8 +110,8 @@ $oGesNomLatin = new GestorNombreLatin();
 foreach ($cPersonaNotas as $oPersonaNota) {
     $id_situacion = $oPersonaNota->getId_situacion();
     $id_nom = $oPersonaNota->getId_nom();
-    $oPersona = Persona::NewPersona($id_nom);
-    if (!is_object($oPersona)) {
+    $oPersona = Persona::findPersonaEnGlobal($id_nom);
+    if ($oPersona === null) {
         $errores .= "<br>" . sprintf(_("existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de otra dl o 'de paso' borrado."), $id_nom);
         $errores .= " " . _("no aparece en la lista");
         continue;

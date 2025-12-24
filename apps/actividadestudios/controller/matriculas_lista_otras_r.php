@@ -5,8 +5,9 @@ use core\ViewPhtml;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use personas\model\entity\GestorPersonaStgr;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -103,12 +104,13 @@ if (!empty($Qapellido1)) {
     $str_asignaturas = '';
     $id_nom_anterior = '';
     $alert = '';
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
     foreach ($a_notas_otras_regiones_stgr_sin_cert as $oPersonaNotaOtraRegionDB) {
         $i++;
         $id_nom = $oPersonaNotaOtraRegionDB->getId_nom();
 
         if (!empty($id_nom_anterior) && $id_nom != $id_nom_anterior) {
-            $oPersona = Persona::newPersona($id_nom_anterior);
+            $oPersona = Persona::findPersonaEnGlobal($id_nom_anterior);
             if (!is_object($oPersona)) {
                 $msg_err .= "<br>$oPersona en  " . __FILE__ . ": line " . __LINE__;
                 $id_nom_anterior = $id_nom;
@@ -141,7 +143,7 @@ if (!empty($Qapellido1)) {
         }
 
         $nom_asignatura = $a_asignaturas[$id_asignatura];
-        $oActividad = new ActividadAll($id_activ);
+        $oActividad = $ActividadAllRepository->findById($id_activ);
         $nom_activ = $oActividad->getNom_activ();
         $dl_org = $oActividad->getDl_org();
 
@@ -153,9 +155,9 @@ if (!empty($Qapellido1)) {
     }
     // para escribir el último. Ojo, si no hay ninguno, $id_nom = ''
     if (!empty($id_nom)) {
-        $oPersona = Persona::newPersona($id_nom);
-        if (!is_object($oPersona)) {
-            $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+        $oPersona = Persona::findPersonaEnGlobal($id_nom);
+        if ($oPersona === null) {
+            $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         } else {
             $apellidos_nombre = $oPersona->getPrefApellidosNombre();
             $ctr = $oPersona->getCentro_o_dl();

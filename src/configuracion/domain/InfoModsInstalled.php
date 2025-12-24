@@ -19,6 +19,8 @@ class InfoModsInstalled extends DatosInfoRepo
 
         $this->setClase('src\\configuracion\\domain\\entity\\ModuloInstalado');
         $this->setMetodoGestor('getModulosInstalados');
+
+        $this->setRepositoryInterface(ModuloInstaladoRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,8 @@ class InfoModsInstalled extends DatosInfoRepo
             $aWhere = array('id_mod' => $this->k_buscar);
             $aOperador = [];
         }
-        $oLista = $GLOBALS['container']->get(ModuloInstaladoRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
+
         $Coleccion = $oLista->getModuloInstalados($aWhere, $aOperador);
 
         return $Coleccion;

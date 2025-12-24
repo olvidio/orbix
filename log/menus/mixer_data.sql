@@ -1,7 +1,7 @@
 ---
 --- Archivo para mezclar los datos de la tabla de personas:
 --- Se conserva:
---- 	id_schema, id_nom, id_cr, id_tabla, dl, sacd, stgr, id_ctr, situacion, f_situacion, trato, lengua, 
+--- 	id_schema, id_nom, id_tabla, dl, sacd, nivel_stgr, id_ctr, situacion, f_situacion, trato, idioma_preferido,
 --- Se mezcla:  
 --- 	nom, nx1, apellido1, nx2, apellido2, f_nacimiento, apel_fam, inc, f_inc, profesion, eap, observ, lugar_nacimiento 
 --- Se borra:

@@ -13,10 +13,10 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use actividades\model\entity\GestorActividadDl;
-use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
@@ -57,7 +57,7 @@ $oPeriodo->setPeriodo($Qperiodo);
 
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
-if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
+if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
     $aWhere['f_fin'] = "'$inicioIso','$finIso'";
     $aOperador['f_fin'] = 'BETWEEN';
 } else {
@@ -90,7 +90,7 @@ switch ($mi_of) {
         $aWhere['id_tipo_activ'] = '^' . $mi_sfsv . '7';
         break;
     default:
-        if ($_SESSION['oConfig']->getGestionCalendario() == 'central') { // central => centralizada, oficinas => por oficinas.
+        if ($_SESSION['oConfig']->getGestionCalendario() === 'central') { // central => centralizada, oficinas => por oficinas.
             $aWhere['id_tipo_activ'] = '^' . $mi_sfsv;
         } else {
             exit (_("No tiene actividades asignadas a su oficina"));
@@ -98,18 +98,19 @@ switch ($mi_of) {
 }
 
 $aWhere['_ordre'] = 'f_ini';
-$GesActividadesDl = new GestorActividadDl();
-$cActividades = $GesActividadesDl->getActividades($aWhere, $aOperador);
+$ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+$cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
 $i = 0;
 $a_valores = [];
 $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
+$IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_activ = $oActividad->getId_activ();
     $nom_activ = $oActividad->getNom_activ();
     $id_ubi = $oActividad->getId_ubi();
 
-    $Ingreso = new Ingreso($id_activ);
+    $Ingreso = $IngresoRepository->findById($id_activ);
     $num_asistentes_previstos = $Ingreso->getNum_asistentes_previstos();
 
     $Ubi = $CasaDlRepository->findById($id_ubi);
@@ -152,7 +153,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $boton = "<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >";
 $oFormP->setBoton($boton);
 
-if ($_SESSION['oConfig']->getGestionCalendario() == 'central') { // central => centralizada, oficinas => por oficinas.
+if ($_SESSION['oConfig']->getGestionCalendario() === 'central') { // central => centralizada, oficinas => por oficinas.
     $aOpciones = array(
         'sm' => 'sm',
         'nax' => 'nax',

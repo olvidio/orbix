@@ -37,7 +37,7 @@ switch ($Qque) {
         $i = 0;
         foreach ($oLista as $oActividadProcesoTarea) {
             $id_item = $oActividadProcesoTarea->getId_item();
-            $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
+            $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
             $id_fase = $oActividadProcesoTarea->getId_fase();
             $id_tarea = $oActividadProcesoTarea->getId_tarea();
             $completado = $oActividadProcesoTarea->getCompletado();

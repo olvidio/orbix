@@ -2,7 +2,8 @@
 
 namespace web;
 
-use actividades\model\entity\GestorTipoDeActividad;
+
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 
 /**
  * Clase que implementa la entidad tipos de actividades
@@ -182,6 +183,7 @@ class TiposActividades
     /* CONSTRUCTOR -------------------------------------------------------------- */
     private array $afNom_tipo;
     private array $aNom_tipo;
+    private $TipoDeActividadRepository;
 
     /**
      * Constructor de la classe.
@@ -195,6 +197,7 @@ class TiposActividades
             if (is_numeric($id)) $this->iid_tipo_activ = $id;
             $this->separarId($id);
         }
+        $this->TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
     }
 
     /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
@@ -443,8 +446,7 @@ class TiposActividades
     public function getSfsvPosibles()
     {
         $aText = $this->getFlipSfsv();
-        $GesTipoDeActividades = new GestorTipoDeActividad();
-        return $GesTipoDeActividades->getSfsvPosibles($aText);
+        return $this->TipoDeActividadRepository->getSfsvPosibles($aText);
     }
 
     /**
@@ -537,8 +539,7 @@ class TiposActividades
         } else {
             $regexp = $this->getSfsvRegexp();
         }
-        $GesTipoDeActividades = new GestorTipoDeActividad();
-        return $GesTipoDeActividades->getAsistentesPosibles($aText, $regexp);
+        return $this->TipoDeActividadRepository->getAsistentesPosibles($aText, $regexp);
     }
 
     /**
@@ -645,15 +646,13 @@ class TiposActividades
     public function getActividadesPosibles1Digito()
     {
         $aText = $this->getFlipActividad1Digito();
-        $GesTipoDeActividades = new GestorTipoDeActividad();
-        return $GesTipoDeActividades->getActividadesPosibles(1, $aText, $this->getAsistentesRegexp());
+        return $this->TipoDeActividadRepository->getActividadesPosibles(1, $aText, $this->getAsistentesRegexp());
     }
 
     public function getActividadesPosibles2Digitos()
     {
         $aText = $this->getFlipActividad2Digitos();
-        $GesTipoDeActividades = new GestorTipoDeActividad();
-        return $GesTipoDeActividades->getActividadesPosibles(2, $aText, $this->getAsistentesRegexp());
+        return $this->TipoDeActividadRepository->getActividadesPosibles(2, $aText, $this->getAsistentesRegexp());
     }
 
     /**
@@ -718,8 +717,7 @@ class TiposActividades
      */
     public function getNom_tipoPosibles3Digitos()
     {
-        $GesTipoDeActividades = new GestorTipoDeActividad();
-        $rta = $GesTipoDeActividades->getNom_tipoPosibles(3, $this->getActividadRegexp());
+        $rta = $this->TipoDeActividadRepository->getNom_tipoPosibles(3, $this->getActividadRegexp());
         $this->afNom_tipo = $rta['tipo_nom'];
         $this->aNom_tipo = $rta['nom_tipo'];
         return $rta['tipo_nom'];
@@ -727,8 +725,7 @@ class TiposActividades
 
     public function getNom_tipoPosibles2Digitos()
     {
-        $GesTipoDeActividades = new GestorTipoDeActividad();
-        $rta = $GesTipoDeActividades->getNom_tipoPosibles(2, $this->getActividadRegexp());
+        $rta = $this->TipoDeActividadRepository->getNom_tipoPosibles(2, $this->getActividadRegexp());
         $this->afNom_tipo = $rta['tipo_nom'];
         $this->aNom_tipo = $rta['nom_tipo'];
         return $rta['tipo_nom'];
@@ -742,8 +739,7 @@ class TiposActividades
      */
     public function getId_tipoPosibles($regexp = '.*')
     {
-        $GesTipoDeActividades = new GestorTipoDeActividad();
-        return $GesTipoDeActividades->getId_tipoPosibles($regexp, $this->getActividadRegexp());
+        return $this->TipoDeActividadRepository->getId_tipoPosibles($regexp, $this->getActividadRegexp());
     }
 
     /**

@@ -3,11 +3,11 @@
 namespace core;
 
 use actividades\model\entity\ActividadDl;
-use actividades\model\entity\ActividadEx;
 use actividades\model\entity\GestorActividadDl;
-use actividades\model\entity\GestorActividadEx;
 use devel\model\DBAbstract;
 use PDO;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\contracts\ActividadExRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -247,32 +247,22 @@ class DBTrasvase extends DBAbstract
                 } else {
                     $dl_org = $dl;
                 }
-                $GesActividadesEx = new GestorActividadEx();
-                $cActividades = $GesActividadesEx->getActividades(['dl_org' => $dl_org]);
+                $ActividadExRepository = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
+                $cActividades = $ActividadExRepository->getActividades(['dl_org' => $dl_org]);
                 $error = '';
                 if (!empty($cActividades)) {
                     $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
                     $MapIdRepository->setoDbl($oDbl);
+                    $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
                     foreach ($cActividades as $oActividad) {
-                        $oActividad->DBCarregar();
-                        $aDades = $oActividad->getTot();
-                        //print_r($oActividad);
-                        $oActividadDl = new ActividadDl();
-                        $oActividadDl->setoDbl($oDbl);
-                        $oActividadDl->setAllAttributes($aDades, TRUE);
-                        $oActividadDl->setNoGenerarProceso(TRUE);
+                        //TODO: $oActividadDl->setNoGenerarProceso(TRUE);
 
-                        if ($oActividadDl->DBGuardar(1) === false) { // Pongo el param quiet=1 para que no anote cambios.
+                        if ($ActividadDlRepository->Guardar($oActividad) === false) { // Pongo el param quiet=1 para que no anote cambios.
                             $error .= '<br>' . _("no se ha guardado la actividad");
-                        } else {
-                            // Al hacer INSERT se genera un id_activ nuevo. Para conservar el original:
-                            $id_old = $aDades['id_activ'];
-                            $oMapId = $MapIdRepository->findById('Actividad', $id_old);
-                            $oMapId->setIdDlVo(MapIdDl::fromString($oActividadDl->getId_activ()));
-                            $MapIdRepository->Guardar($oMapId);
-                            //borrar la origen:
-                            $oActividad->DBEliminar();
+                            exit($error);
                         }
+                        //borrar la origen:
+                        $ActividadExRepository->Eliminar($oActividad);
                     }
                 }
                 if (empty($error)) {
@@ -283,29 +273,21 @@ class DBTrasvase extends DBAbstract
                 }
                 break;
             case 'dl2resto':
-                $GesActividadesDl = new GestorActividadDl();
-                $GesActividadesDl->setoDbl($oDbl);
-                $cActividades = $GesActividadesDl->getActividades(['dl_org' => $dl]);
+                $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+                $ActividadDlRepository->setoDbl($oDbl);
+                $cActividades = $ActividadDlRepository->getActividades(['dl_org' => $dl]);
                 $error = '';
                 if (!empty($cActividades)) {
+                    $ActividadExRepository = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
                     foreach ($cActividades as $oActividad) {
-                        $oActividad->DBCarregar();
-                        $aDades = $oActividad->getTot();
-                        //print_r($oActividad);
-                        $oActividadEx = new ActividadEx();
-                        $oActividadEx->setoDbl($oDbl);
-                        $oActividadEx->setAllAttributes($aDades, TRUE);
-                        $oActividadEx->setNoGenerarProceso(TRUE);
+                        // TODO: $oActividadEx->setNoGenerarProceso(TRUE);
 
-                        if ($oActividadEx->DBGuardar(1) === false) { // Pongo el param quiet=1 para que no anote cambios.
+                        if ($ActividadExRepository->Guadar($oActividad) === false) { // Pongo el param quiet=1 para que no anote cambios.
                             $error .= '<br>' . _("no se ha guardado la actividad");
-                        } else {
-                            // Al hacer INSERT se genera un id_activ nuevo. Para conservar el original:
-                            $id_new = $aDades['id_activ'];
-                            $oActividadEx->DBCambioId($id_new);
-                            //borrar la origen:
-                            $oActividad->DBEliminar();
+                            exit($error);;
                         }
+                        //borrar la origen:
+                        $ActividadDlRepository->Eliminar($oActividad);
                     }
                 }
                 if (empty($error)) {
@@ -318,10 +300,11 @@ class DBTrasvase extends DBAbstract
         }
     }
 
-    //---------------- CDC --------------------
-    //---------------- Direcciones CDC --------------------
-    //---------------- Teleco CDC --------------------
-    public function cdc($que)
+//---------------- CDC --------------------
+//---------------- Direcciones CDC --------------------
+//---------------- Teleco CDC --------------------
+    public
+    function cdc($que)
     {
         // Conexión DB comun
         $oDbl = $this->getoDbl();
@@ -442,11 +425,12 @@ class DBTrasvase extends DBAbstract
         }
     }
 
-    // SV o SF
-    //---------------- Ctr --------------------
-    //---------------- Direcciones Ctr --------------------
-    //---------------- Teleco Ctr --------------------
-    public function ctr($que)
+// SV o SF
+//---------------- Ctr --------------------
+//---------------- Direcciones Ctr --------------------
+//---------------- Teleco Ctr --------------------
+    public
+    function ctr($que)
     {
         // Conexión DB SV/SF
         $oDbl = $this->getoDbl();
@@ -514,7 +498,7 @@ class DBTrasvase extends DBAbstract
                         }
                         // Buscar la dirección
                         $gesCtrExxDireccion = new GestorCtrExxDireccion();
-                        $cUbixDirecciones = $gesCtrExxDireccion->getCtrxDirecciones(['id_ubi' => $id_ubi_old]);
+                        $cUbixDirecciones = $gesCtrExxDireccion->getDireccionesPorUbi($id_ubi_old);
                         foreach ($cUbixDirecciones as $oUbixDireccion) {
                             $id_direccion_old = $oUbixDireccion->getId_direccion();
                             $oDireccion = new DireccionCentroEx($id_direccion_old);

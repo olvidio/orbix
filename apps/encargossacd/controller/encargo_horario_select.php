@@ -1,9 +1,9 @@
 <?php
 
 use core\ViewTwig;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoHorario;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use web\Hash;
 use web\Lista;
 
@@ -31,21 +31,22 @@ if (!empty($Qid_sel)) { //vengo de un checkbox
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $Qorigen = (string)filter_input(INPUT_POST, 'origen');
 
-$oEncargo = new Encargo($Qid_enc);
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$oEncargo = $EncargoRepository->findByID($Qid_enc);
 $desc_enc = $oEncargo->getDesc_enc();
 
 $titulo = $desc_enc;
 
-$GesEncargoTipo = new GestorEncargoTipo();
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 
-$GesEncargoHorario = new GestorEncargoHorario();
-$cEncargoHorarios = $GesEncargoHorario->getEncargoHorarios(array('id_enc' => $Qid_enc));
+$EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
+$cEncargoHorarios = $EncargoHorarioRepository->getEncargoHorarios(array('id_enc' => $Qid_enc));
 
 
-$a_botones = array(array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")"),
-    array('txt' => _("eliminar"), 'click' => "fnjs_borrar(\"#seleccionados\")")
-);
-$a_botones = [];
+$a_botones = [
+    ['txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")"],
+    ['txt' => _("eliminar"), 'click' => "fnjs_borrar(\"#seleccionados\")"],
+];
 
 $a_cabeceras = array(array('name' => ucfirst(_("id")), 'formatter' => 'clickFormatter'),
     _("ord."),
@@ -82,8 +83,8 @@ foreach ($cEncargoHorarios as $oEncargoHorario) {
     $h_fin = $oEncargoHorario->getH_fin();
     $n_sacd = $oEncargoHorario->getN_sacd();
     $mes = $oEncargoHorario->getMes();
-    $f_ini = empty($oEncargoHorario->getF_ini())? null : $oEncargoHorario->getF_ini()->getFromLocal();
-    $f_fin = empty($oEncargoHorario->getF_fin())? null : $oEncargoHorario->getF_fin()->getFromLocal();
+    $f_ini = empty($oEncargoHorario->getF_ini()) ? null : $oEncargoHorario->getF_ini()->getFromLocal();
+    $f_fin = empty($oEncargoHorario->getF_fin()) ? null : $oEncargoHorario->getF_fin()->getFromLocal();
 
     $aQuery = ['mod' => 'editar',
         'id_enc' => $id_enc,
@@ -118,7 +119,7 @@ foreach ($cEncargoHorarios as $oEncargoHorario) {
     $a_valores[$i][12] = $f_fin;
     $a_valores[$i][13] = $excep;
     // Pruebo de poner el horario en texto, por si aclara.
-    $texto_horario = $GesEncargoTipo->texto_horario($mas_menos, $dia_ref, $dia_inc, $dia_num, $h_ini, $h_fin, $n_sacd);
+    $texto_horario = $EncargoTipoRepository->texto_horario($mas_menos, $dia_ref, $dia_inc, $dia_num, $h_ini, $h_fin, $n_sacd);
     $a_valores[$i][14] = $texto_horario;
 
 }

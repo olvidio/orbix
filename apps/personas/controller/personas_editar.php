@@ -3,7 +3,13 @@
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
-use personas\model\entity\PersonaGlobal;
+use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
@@ -27,9 +33,51 @@ require_once("apps/core/global_object.inc");
 $Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo'); // 0 -> existe, 1->nuevo
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-$obj = 'personas\\model\\entity\\' . $Qobj_pau;
+switch ($Qobj_pau) {
+    case 'PersonaN':
+        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        break;
+    case 'PersonaNax':
+        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+        break;
+    case 'PersonaAgd':
+        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+        break;
+    case 'PersonaS':
+        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+        break;
+    case 'PersonaSSSC':
+        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+        break;
+    case 'PersonaEx':
+        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+        break;
+}
+$obj = 'src\\personas\\model\\entity\\' . $Qobj_pau;
 
 $oPosicion->recordar();
+
+$trato = '';
+$nom = '';
+$apel_fam = '';
+$nx1 = '';
+$apellido1 = '';
+$nx2 = '';
+$apellido2 = '';
+$lugar_nacimiento = '';
+$f_nacimiento = '';
+$f_situacion = '';
+$profesion = '';
+$sacd = '';
+$eap = '';
+$inc = '';
+$f_inc = '';
+$ce = '';
+$ce_lugar = '';
+$ce_ini = '';
+$ce_fin = '';
+$observ = '';
+
 
 if (!empty($Qnuevo)) {
     $oF_hoy = new web\DateTimeLocal();
@@ -47,7 +95,7 @@ if (!empty($Qnuevo)) {
     $oPersona->setApellido1($Qapellido1);
     $oPersona->setF_situacion($oF_hoy);
     $id_tabla = (string)filter_input(INPUT_POST, 'tabla');
-    $stgr = '';
+    $nivel_stgr = '';
     $dl = ConfigGlobal::mi_delef();
     $nom_ctr = '';
     $id_ctr = '';
@@ -86,17 +134,43 @@ if (!empty($Qnuevo)) {
         }
     }
 
-    $oPersona = new $obj($Qid_nom);
+    $oPersona = $repoPersona->findById($Qid_nom);
 
     $id_tabla = $oPersona->getId_tabla();
     $dl = $oPersona->getDl();
-    $stgr = $oPersona->getStgr();
+    $nivel_stgr = $oPersona->getNivel_stgr();
     // los de paso no tienen ctr
     if (method_exists($oPersona, "getId_ctr")) {
         $id_ctr = $oPersona->getId_ctr();
     } else {
         $id_ctr = '';
     }
+
+    $situacion = $oPersona->getSituacion();
+    $idioma_preferido = $oPersona->getIdioma_preferido();
+
+    $trato = $oPersona->getTrato();
+    $nom = $oPersona->getNom();
+    $apel_fam = $oPersona->getApel_fam();
+    $nx1 = $oPersona->getNx1();
+    $apellido1 = $oPersona->getApellido1();
+    $nx2 = $oPersona->getNx2();
+    $apellido2 = $oPersona->getApellido2();
+    $lugar_nacimiento = $oPersona->getLugar_nacimiento();
+    $f_nacimiento = $oPersona->getF_nacimiento()->getFromLocal();
+    $f_situacion = $oPersona->getF_situacion()->getFromLocal();
+    $profesion = $oPersona->getProfesion();
+    $sacd = $oPersona->isSacd();
+    $eap = $oPersona->getEap();
+    $inc = $oPersona->getInc();
+    $f_inc = $oPersona->getF_inc()->getFromLocal();
+    $ce = $oPersona->getCe();
+    $ce_lugar = $oPersona->getCe_lugar();
+    $ce_ini = $oPersona->getCe_ini();
+    $ce_fin = $oPersona->getCe_fin();
+    $observ = $oPersona->getObserv();
+
+
 //	// para los de paso
 //	if (method_exists($oPersona, "getEdad")) {
 //		$edad = $oPersona->getEdad();
@@ -125,7 +199,7 @@ if (!empty($Qnuevo)) {
 
 // para la dl
 $repoDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-$cDeleg = $repoDl->getDelegaciones(['status' => true, '_ordre' => 'dl']);
+$cDeleg = $repoDl->getDelegaciones(['active' => true, '_ordre' => 'dl']);
 $a_dl_todas = [];
 if (is_array($cDeleg)) {
     foreach ($cDeleg as $oDeleg) {
@@ -154,7 +228,9 @@ $oDesplDl->setBlanco(TRUE);
 // para el ctr, si es nuevo o está vacío
 if (empty($nom_ctr)) {
     $GesCentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-    $oDesplCentroDl = $GesCentroDl->getListaCentros();
+    $aOpciones = $GesCentroDl->getArrayCentros();
+    $oDesplCentroDl= new Desplegable();
+    $oDesplCentroDl->setOpciones($aOpciones);
     $oDesplCentroDl->setAction("fnjs_act_ctr('ctr')");
     $oDesplCentroDl->setNombre("id_ctr");
 }
@@ -266,33 +342,36 @@ $aOpciones = $SituacionRepository->getArraySituaciones();
 $oDesplSituacion = new Desplegable();
 $oDesplSituacion->setOpciones($aOpciones);
 $oDesplSituacion->setNombre("situacion");
-$oDesplSituacion->setOpcion_sel($oPersona->getSituacion());
+$oDesplSituacion->setOpcion_sel($situacion);
 
 $Localrepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
 $a_locales = $Localrepository->getArrayLocales();
-$oDesplLengua = new Desplegable("lengua", $a_locales, '', true);
-$oDesplLengua->setOpcion_sel($oPersona->getLengua());
+$oDesplLengua = new Desplegable();
+$oDesplLengua->setOpciones($a_locales);
+$oDesplLengua->setNombre('idioma_preferido');
+$oDesplLengua->setOpcion_sel($idioma_preferido);
 
 //posibles valores de stgr
-$aTipos_stgr = PersonaGlobal::$stgr_posibles;
+$NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
+$aTipos_stgr = $NivelStgrRepository->getArrayNivelesStgr();
 $oDesplStgr = new Desplegable();
-$oDesplStgr->setNombre('stgr');
+$oDesplStgr->setNombre('nivel_stgr');
 $oDesplStgr->setOpciones($aTipos_stgr);
-$oDesplStgr->setOpcion_sel($stgr);
+$oDesplStgr->setOpcion_sel($nivel_stgr);
 $oDesplStgr->setBlanco(true);
 
 $oHash = new Hash();
 $campos_chk = 'sacd';
-$camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin';
+$camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!idioma_preferido!nom!nx1!nx2!observ!profesion!situacion!nivel_stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin';
 
 //Para la presentacion "de_sss" los campos un poco distintos:
 if ($Qobj_pau === 'PersonaSSSC') {
-    $camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato!lugar_nacimiento';
+    $camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!idioma_preferido!nom!nx1!nx2!observ!profesion!situacion!nivel_stgr!trato!lugar_nacimiento';
 }
 //Para la presentacion "de_paso" los campos un poco distintos:
 if ($Qobj_pau === 'PersonaEx') {
     $campos_chk = 'sacd!profesor_stgr';
-    $camposForm = 'que!id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!lugar_nacimiento!edad!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato';
+    $camposForm = 'que!id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!lugar_nacimiento!edad!f_situacion!inc!idioma_preferido!nom!nx1!nx2!observ!profesion!situacion!nivel_stgr!trato';
 }
 
 $oHash->setCamposForm($camposForm);
@@ -313,7 +392,6 @@ $titulo = $oPersona->getNombreApellidos();
 
 
 $a_campos = ['obj_txt' => $obj,
-    'obj' => $oPersona,
     'oPosicion' => $oPosicion,
     'pau' => 'p',
     'id_pau' => $Qid_nom,
@@ -334,6 +412,26 @@ $a_campos = ['obj_txt' => $obj,
     'oDesplSituacion' => $oDesplSituacion,
     'oDesplLengua' => $oDesplLengua,
     'oDesplStgr' => $oDesplStgr,
+    'trato' => $trato,
+    'nom' => $nom,
+    'apel_fam' => $apel_fam,
+    'nx1' => $nx1,
+    'apellido1' => $apellido1,
+    'nx2' => $nx2,
+    'apellido2' => $apellido2,
+    'lugar_nacimiento' => $lugar_nacimiento,
+    'f_nacimiento' => $f_nacimiento,
+    'f_situacion' => $f_situacion,
+    'profesion' => $profesion,
+    'sacd' => $sacd,
+    'eap' => $eap,
+    'inc' => $inc,
+    'f_inc' => $f_inc,
+    'ce' => $ce,
+    'ce_lugar' => $ce_lugar,
+    'ce_ini' => $ce_ini,
+    'ce_fin' => $ce_fin,
+    'observ' => $observ,
     'botones' => $botones,
 ];
 

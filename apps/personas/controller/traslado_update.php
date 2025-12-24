@@ -5,6 +5,8 @@ use dossiers\model\entity\Dossier;
 use personas\model\entity\PersonaDl;
 use personas\model\entity\Traslado;
 use personas\model\entity\TrasladoDl;
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\value_objects\DossierPk;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 
 /**
@@ -83,9 +85,10 @@ if (!empty($Qnew_dl) && !empty($Qf_dl)) {
 
 
 // hay que abrir el dossier para esta persona/actividad/ubi, si no tiene.
-$oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_pau, 'id_tipo_dossier' => 1004));
-$oDossier->abrir(); // ya pone la fecha de hoy.
-$oDossier->DBGuardar();
+$DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+$oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_pau, 'id_tipo_dossier' => 1004]));
+$oDossier->abrir();
+$DosierRepository->Guardar($oDossier);
 
 if (!empty($error)) {
     echo $error;

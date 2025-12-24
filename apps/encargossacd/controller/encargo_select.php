@@ -1,8 +1,8 @@
 <?php
 
 use core\ViewTwig;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\Hash;
@@ -50,8 +50,8 @@ if (!empty($Qid_tipo_enc)) {
     $aWhere['id_tipo_enc'] = $Qid_tipo_enc;
 }
 
-$GesEncargos = new GestorEncargo();
-$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
 
 $a_botones = array(array('txt' => _("horario"), 'click' => "fnjs_horario(\"#seleccionados\")"),
     array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")"),
@@ -68,6 +68,7 @@ if (isset($Qid_sel) && !empty($Qid_sel)) {
 if (isset($Qscroll_id) && !empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 foreach ($cEncargos as $oEncargo) {
     $i++;
     $id_enc = $oEncargo->getId_enc();
@@ -89,8 +90,7 @@ foreach ($cEncargos as $oEncargo) {
 
     $seccion = '';
     if (!empty($sf_sv)) {
-        $oGesEncargoTipo = new GestorEncargoTipo();
-        $a_seccion = $oGesEncargoTipo->getArraySeccion();
+        $a_seccion = $EncargoTipoRepository->getArraySeccion();
         $seccion = $a_seccion[$sf_sv]?? '?¿?';
     }
 

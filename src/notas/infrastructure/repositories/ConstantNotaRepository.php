@@ -56,11 +56,6 @@ class zzConstantNotaRepository implements NotaRepositoryInterface
         return $aSuperadas;
     }
 
-    public function getArrayNotas(): array
-    {
-        return Nota::$array_status_txt;
-    }
-
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
     /* -------------------- ENTIDAD --------------------------------------------- */

@@ -1,19 +1,19 @@
 <?php
 
-use actividadcargos\model\GestorCargoOAsistente;
-use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\GestorPersonaEx;
-use personas\model\entity\GestorPersonaN;
-use personas\model\entity\GestorPersonaNax;
-use personas\model\entity\GestorPersonaS;
-use personas\model\entity\GestorPersonaSSSC;
 use planning\domain\Planning;
 use planning\domain\PlanningStyle;
+use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Periodo;
@@ -99,30 +99,30 @@ $aWhere['id_nom'] = implode(',', $aid_nom);
 $aOperador['id_nom'] = 'OR';
 switch ($Qobj_pau) {
     case 'PersonaN':
-        $GesPersonas = new GestorPersonaN();
+        $PersonaRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
         break;
     case 'PersonaAgd':
-        $GesPersonas = new GestorPersonaAgd();
+        $PersonaRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
         break;
     case 'PersonaNax':
-        $GesPersonas = new GestorPersonaNax();
+        $PersonaRepository = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
         break;
     case 'PersonaS':
-        $GesPersonas = new GestorPersonaS();
+        $PersonaRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
         break;
     case 'PersonaSSSC':
-        $GesPersonas = new GestorPersonaSSSC();
+        $PersonaRepository = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
         break;
     case 'PersonaDl':
-        $GesPersonas = new GestorPersonaDl();
+        $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         break;
     case 'PersonaEx':
-        $GesPersonas = new GestorPersonaEx();
+        $PersonaRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
         break;
     default:
-        $GesPersonas = new GestorPersonaDl();
+        $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 }
-$cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+$cPersonas = $PersonaRepository->getPersonas($aWhere, $aOperador);
 
 $aGoBackComun = array(
     'modelo' => $Qmodelo,
@@ -132,7 +132,7 @@ $aGoBackComun = array(
     'empiezamin' => $Qempiezamin,
 );
 
-$GesActividades = new GestorActividad();
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
 $sCdc = '';
 $sin_activ = 0;
 $Qid_ubi = '';
@@ -178,18 +178,17 @@ foreach ($cPersonas as $oPersona) {
     $aOperador['status'] = 'BETWEEN';
 
     if (ConfigGlobal::is_app_installed('actividadcargos')) {
-        $GesCargoOAsistente = new GestorCargoOAsistente();
-        $cCargoOAsistente = $GesCargoOAsistente->getCargoOAsistente($id_nom, $aWhere, $aOperador);
+        $CargoOAsistente = $GLOBALS['container']->get(CargoOAsistenteInterface::class);
+        $cCargoOAsistente = $CargoOAsistente->getCargoOAsistente($id_nom, $aWhere, $aOperador);
     } else {
-        //$oGesAsistentes = new asistentes\GestorActividadCargo();
         echo "ja veurem...";
     }
     foreach ($cCargoOAsistente as $oCargoOAsistente) {
         $id_activ = $oCargoOAsistente->getId_activ();
-        $propio = $oCargoOAsistente->getPropio();
+        $propio = $oCargoOAsistente->isPropio();
 
         $aWhere['id_activ'] = $id_activ;
-        $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
         if (is_array($cActividades) && count($cActividades) == 0) continue;
 
         $oActividad = $cActividades[0]; // sólo debería haber una.

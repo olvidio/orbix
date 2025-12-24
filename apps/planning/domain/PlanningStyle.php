@@ -2,18 +2,18 @@
 
 namespace planning\domain;
 
- use asistentes\model\entity\Asistente;
+use src\actividadplazas\domain\value_objects\PlazaId;
 
- class PlanningStyle
+class PlanningStyle
 {
- /**
+    /**
      *Es para no volver a escribir todo en la función select.
      *Sirve para seleccionar el color en función del tipo de actividad: sv, sf, resto
      */
     public static function clase($id_tipo_activ, $propio, $plaza, $status)
     {
         $svsf = (integer)substr($id_tipo_activ, 0, 1);
-        switch ($svsf){
+        switch ($svsf) {
             case 1:
                 $clase = "actsv";
                 break;
@@ -30,7 +30,7 @@ namespace planning\domain;
         if ($propio === "p") {
             $clase = 'actpersonal';
         }
-        if (!empty($plaza) && $plaza < Asistente::PLAZA_ASIGNADA) {
+        if (!empty($plaza) && $plaza < PlazaId::ASIGNADA) {
             $clase = 'provisional ' . $clase;
         }
         if (!empty($status) && $status === 1) {

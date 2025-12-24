@@ -5,17 +5,16 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use misas\domain\entity\InicialesSacd;
-use personas\model\entity\GestorPersonaSacd;
+use personas\legacy\GestorPersonaSacd;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use web\PeriodoQue;
-use zonassacd\model\entity\GestorZona;
-use zonassacd\model\entity\GestorZonaSacd;
 
-//use personas\model\entity\GestorPersona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -91,15 +90,15 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 }
 //echo 'jefe: '.$id_nom_jefe.'<br>';
 
-$GesZonas = new GestorZona();
-$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$cZonas = $ZonaRepository->getZonas(array('id_nom' => $id_sacd));
 //echo 'count zonas: '.count($cZonas).'<br>';
 if (is_array($cZonas) && count($cZonas) > 0) {
-    $GesZonaSacd = new GestorZonaSacd();
+    $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
     foreach ($cZonas as $oZona) {
         $id_zona = $oZona->getId_zona();
-        $cSacds = $GesZonaSacd->getSacdsZona($id_zona);
-        foreach ($cSacds as $id_nom) {
+        $a_id_nom = $ZonaSacdRepository->getIdSacdsDeZona($id_zona);
+        foreach ($a_id_nom as $id_nom) {
 //            echo $id_nom.'<br>';
             $InicialesSacd = new InicialesSacd();
             $sacd = $InicialesSacd->nombre_sacd($id_nom);

@@ -1,6 +1,6 @@
 <?php
 
-use personas\model\entity\GestorPersonaS;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -29,8 +29,8 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qcurso = (string)filter_input(INPUT_POST, 'curso'); // actual, anterior
 
 // centros con s
-$GesPersonasS = new GestorPersonaS();
-$aIdCentros = $GesPersonasS->getListaCtr();
+$PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+$aIdCentros = $PersonaSRepository->getArrayIdCentros();
 
 $aOpciones = [];
 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);

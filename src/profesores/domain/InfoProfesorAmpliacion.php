@@ -19,6 +19,8 @@ class InfoProfesorAmpliacion extends DatosInfoRepo
         $this->setClase('src\\profesores\\domain\\entity\\ProfesorAmpliacion');
         $this->setMetodoGestor('getProfesorAmpliaciones');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(ProfesorAmpliacionRepositoryInterface::class);
     }
 
     public function getId_dossier()
@@ -40,7 +42,7 @@ class InfoProfesorAmpliacion extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get(ProfesorAmpliacionRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getProfesorAmpliaciones($aWhere, $aOperador);
 
         return $Coleccion;

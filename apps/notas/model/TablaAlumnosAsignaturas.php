@@ -88,7 +88,7 @@ class TablaAlumnosAsignaturas
             $id_nom = $oPersona->getId_nom();
             $id_tabla = $oPersona->getId_tabla();
             $ap_nom = $oPersona->getPrefApellidosNombre();
-            $stgr = $oPersona->getStgr();
+            $stgr = $oPersona->getNivel_stgr();
             $centro = $oPersona->getCentro_o_dl();
             $dl = $oPersona->getDl();
 
@@ -216,7 +216,7 @@ class TablaAlumnosAsignaturas
             $id_nom = $oPersona->getId_nom();
             $id_tabla = $oPersona->getId_tabla();
             $ap_nom = $oPersona->getPrefApellidosNombre();
-            $stgr = $oPersona->getStgr();
+            $stgr = $oPersona->getNivel_stgr();
             $centro = $oPersona->getCentro_o_dl();
 
             $a_valores[$p][1] = $id_tabla;

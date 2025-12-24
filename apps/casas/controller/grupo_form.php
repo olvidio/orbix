@@ -1,7 +1,7 @@
 <?php
 
-use casas\model\entity\GrupoCasa;
 use core\ViewTwig;
+use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -21,7 +21,8 @@ $oPosicion->recordar();
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 
 if (!empty($Qid_item)) {
-    $oGrupoCasa = new GrupoCasa($Qid_item);
+    $GrupoCasaRepository = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
+    $oGrupoCasa = $GrupoCasaRepository->findById($Qid_item);
     $id_ubi_padre = $oGrupoCasa->getId_ubi_padre();
     $id_ubi_hijo = $oGrupoCasa->getId_ubi_hijo();
 } else {

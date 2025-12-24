@@ -6,11 +6,11 @@ use core\ConfigGlobal;
 use core\ViewTwig;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use web\PeriodoQue;
-use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -62,8 +62,8 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     }
 }
 
-$oGestorZona = new GestorZona();
-$aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$aOpciones = $ZonaRepository->getArrayZonas($id_nom_jefe);
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
 $oDesplZonas->setBlanco(FALSE);

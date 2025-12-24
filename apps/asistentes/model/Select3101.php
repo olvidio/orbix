@@ -2,16 +2,18 @@
 
 namespace asistentes\model;
 
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
-use actividadplazas\model\GestorResumenPlazas;
-use asistentes\model\entity\Asistente;
-use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
-use personas\model\entity\Persona;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\value_objects\PlazaId;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\personas\domain\entity\Persona;
+use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Lista;
@@ -176,12 +178,13 @@ class Select3101
 
     private function getDatosActividad()
     {
-        $oActividad = new ActividadAll($this->id_pau);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($this->id_pau);
         $this->id_tipo_activ = $oActividad->getId_tipo_activ();
         $this->dl_org = $oActividad->getDl_org();
         $this->plazas_totales = $oActividad->getPlazas();
         $this->id_ubi = $oActividad->getId_ubi();
-        $this->publicado = $oActividad->getPublicado();
+        $this->publicado = $oActividad->isPublicado();
 
     }
 
@@ -242,13 +245,13 @@ class Select3101
 
         // primero el cl:
         // primero los cargos
-        $gesAsistentes = new GestorAsistente();
+        $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
         $c = 0;
         $num = 0;
         $a_valores = [];
         $this->aListaCargos = [];
-        $GesCargosEnActividad = new GestorActividadCargo();
-        $cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ' => $this->id_pau));
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $cCargosEnActividad = $ActividadCargoRepository->getActividadCargos(array('id_activ' => $this->id_pau));
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         foreach ($cCargosEnActividad as $oActividadCargo) {
@@ -266,8 +269,8 @@ class Select3101
                 continue;
             }
 
-            $oPersona = Persona::NewPersona($id_nom);
-            if (!is_object($oPersona)) {
+            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            if ($oPersona === null) {
                 $this->msg_err .= "<br>";
                 $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, __FILE__, __LINE__);
                 continue;
@@ -276,20 +279,21 @@ class Select3101
             $nom = $oPersona->getPrefApellidosNombre();
             $nombre = $oPersona->getNom();
             $apellidos = $oPersona->getApellidos();
-            $sacd = ($oPersona->getSacd()) ? _("sí") : '';
+            $sacd = ($oPersona->isSacd()) ? _("sí") : '';
             // Añado los telf:
+            $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
             $telfs = '';
-            $telfs_fijo = $oPersona->telecos_persona($id_nom, "telf", " / ", "*", FALSE);
-            $telfs_movil = $oPersona->telecos_persona($id_nom, "móvil", " / ", "*", FALSE);
+            $telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, "telf", " / ", "*", FALSE);
+            $telfs_movil = $telecoService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", FALSE);
             if (!empty($telfs_fijo) && !empty($telfs_movil)) {
                 $telfs = $telfs_fijo . " / " . $telfs_movil;
             } else {
                 $telfs .= $telfs_fijo ?? '';
                 $telfs .= $telfs_movil ?? '';
             }
-            $mails = $oPersona->telecos_persona($id_nom, "e-mail", " / ", "*", FALSE);
+            $mails = $telecoService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", FALSE);
 
-            $puede_agd = $oActividadCargo->getPuede_agd();
+            $puede_agd = $oActividadCargo->isPuede_agd();
             $observ_cargo = $oActividadCargo->getObserv();
             $dl_asistente = $oPersona->getDl();
             $ctr_dl = $oPersona->getCentro_o_dl();
@@ -306,11 +310,11 @@ class Select3101
             }
 
             // ahora miro si también asiste:
-            $plaza = Asistente::PLAZA_PEDIDA;
+            $plaza = PlazaId::PEDIDA;
             $aWhere = array('id_activ' => $this->id_pau, 'id_nom' => $id_nom);
             $aOperador = array('id_activ' => '=', 'id_nom' => '=');
             // me aseguro de que no sea un cargo vacio (sin id_nom)
-            if (!empty($id_nom) && $cAsistente = $gesAsistentes->getAsistentes($aWhere, $aOperador)) {
+            if (!empty($id_nom) && $cAsistente = $AsistenteRepository->getAsistentes($aWhere, $aOperador)) {
                 if (is_array($cAsistente) && count($cAsistente) > 1) {
                     $tabla = '';
                     foreach ($cAsistente as $Asistente) {
@@ -322,11 +326,11 @@ class Select3101
                     exit ("$msg_err");
                 }
                 $oAsistente = $cAsistente[0];
-                $propio = $oAsistente->getPropio();
-                $falta = $oAsistente->getFalta();
-                $est_ok = $oAsistente->getEst_ok();
+                $propio = $oAsistente->isPropio();
+                $falta = $oAsistente->isFalta();
+                $est_ok = $oAsistente->isEst_ok();
                 $observ = $oAsistente->getObserv();
-                $plaza = empty($oAsistente->getPlaza()) ? Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
+                $plaza = empty($oAsistente->getPlaza()) ? PlazaId::PEDIDA : $oAsistente->getPlaza();
 
                 // contar plazas
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
@@ -339,7 +343,7 @@ class Select3101
                     //si es de otra dl no distingo cedidas.
                     // no muestro ni cuento las que esten en estado distinto al asignado o confirmado (>3)
                     if ($padre != $this->mi_dele) {
-                        if ($plaza > Asistente::PLAZA_DENEGADA) {
+                        if ($plaza > PlazaId::DENEGADA) {
                             $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
                             if (!empty($child) && $child != $padre) {
                                 $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -354,7 +358,7 @@ class Select3101
                     } else {  // En mi dl distingo las cedidas
                         // si no es de (la dl o de paso ) y no tiene la plaza asignada o confirmada no lo muestro
                         if ($child != $this->mi_dele) {
-                            if ($plaza < Asistente::PLAZA_ASIGNADA) {
+                            if ($plaza < PlazaId::ASIGNADA) {
                                 continue;
                             } else {
                                 $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -429,9 +433,9 @@ class Select3101
      */
     public function getAsistentes()
     {
-        $gesAsistentes = new GestorAsistente();
+        $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
         $this->a_asistentes = [];
-        $cAsistentes = $gesAsistentes->getAsistentes(array('id_activ' => $this->id_pau));
+        $cAsistentes = $AsistenteRepository->getAsistentes(array('id_activ' => $this->id_pau));
         foreach ($cAsistentes as $oAsistente) {
             $this->num++;
             $id_nom = $oAsistente->getId_nom();
@@ -441,8 +445,8 @@ class Select3101
                 continue;
             }
 
-            $oPersona = Persona::NewPersona($id_nom);
-            if (!is_object($oPersona)) {
+            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            if ($oPersona === null) {
                 $this->msg_err .= "<br>";
                 $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, __FILE__, __LINE__);
                 continue;
@@ -451,31 +455,33 @@ class Select3101
             $nom = $oPersona->getPrefApellidosNombre();
             $nombre = $oPersona->getNom();
             $apellidos = $oPersona->getApellidos();
-            $sacd = ($oPersona->getSacd()) ? _("sí") : '';
+            $sacd = ($oPersona->isSacd()) ? _("sí") : '';
             $dl_asistente = $oPersona->getDl();
             $ctr_dl = $oPersona->getCentro_o_dl();
             // Añado los telf:
+            $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
             $telfs = '';
-            $telfs_fijo = $oPersona->telecos_persona($id_nom, "telf", " / ", "*", FALSE);
-            $telfs_movil = $oPersona->telecos_persona($id_nom, "móvil", " / ", "*", FALSE);
+            $telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, "telf", " / ", "*", FALSE);
+            $telfs_movil = $telecoService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", FALSE);
             if (!empty($telfs_fijo) && !empty($telfs_movil)) {
                 $telfs = $telfs_fijo . " / " . $telfs_movil;
             } else {
                 $telfs .= $telfs_fijo ?? '';
                 $telfs .= $telfs_movil ?? '';
             }
-            $mails = $oPersona->telecos_persona($id_nom, "e-mail", " / ", "*", FALSE);
+            $mails = $telecoService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", FALSE);
 
-            $propio = $oAsistente->getPropio();
-            $falta = $oAsistente->getFalta();
-            $est_ok = $oAsistente->getEst_ok();
+            $propio = $oAsistente->isPropio();
+            $falta = $oAsistente->isFalta();
+            $est_ok = $oAsistente->isEst_ok();
             $observ = $oAsistente->getObserv();
-            $plaza = Asistente::PLAZA_PEDIDA;
+            //$plaza = PlazaId::PEDIDA;
+            $plaza = 2;
 
             // contar plazas
             //if (ConfigGlobal::is_app_installed('actividadplazas') && !empty($dl)) {
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
-                $plaza = empty($oAsistente->getPlaza()) ? Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
+                $plaza = empty($oAsistente->getPlaza()) ? PlazaId::PEDIDA : $oAsistente->getPlaza();
                 // las cuento todas y a la hora de enseñar miro si soy la dl org o no.
                 // propiedad de la plaza:
                 $propietario = $oAsistente->getPropietario();
@@ -496,7 +502,7 @@ class Select3101
                 //si es de otra dl no distingo cedidas.
                 // no muestro ni cuento las que estén en estado distinto al asignado o confirmado (>3)
                 if ($padre != $this->mi_dele) {
-                    if ($plaza > Asistente::PLAZA_DENEGADA) {
+                    if ($plaza > PlazaId::DENEGADA) {
                         $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
                         if (!empty($child) && $child != $padre) {
                             $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -511,7 +517,7 @@ class Select3101
                 } else {  // En mi dl distingo las cedidas
                     // si no es de (la dl o de paso ) y no tiene la plaza asignada o confirmada no lo muestro
                     if ($child != $this->mi_dele) {
-                        if ($plaza < Asistente::PLAZA_ASIGNADA) {
+                        if ($plaza < PlazaId::ASIGNADA) {
                             continue;
                         } else {
                             $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -600,8 +606,7 @@ class Select3101
 				}
 				</style>
 				";
-            $oGesAsistente = new GestorAsistente();
-            $aOpciones = $oGesAsistente->getOpcionesPosiblesPlaza();
+            $aOpciones = PlazaId::getArrayPosiblesPlazas();
             foreach ($aOpciones as $plaza => $plaza_txt) {
                 $expl = "explicacion$plaza";
                 $explicacion = $$expl;
@@ -739,13 +744,13 @@ class Select3101
                             $espera = 0;
                             $ocupadas_dl = 0;
                             foreach ($pl as $plaza => $num) {
-                                if ($plaza == Asistente::PLAZA_PEDIDA) {
+                                if ($plaza == PlazaId::PEDIDA) {
                                     $decidir += $num;
                                 }
-                                if ($plaza == Asistente::PLAZA_EN_ESPERA) {
+                                if ($plaza == PlazaId::EN_ESPERA) {
                                     $espera += $num;
                                 }
-                                if ($plaza > Asistente::PLAZA_DENEGADA) {
+                                if ($plaza > PlazaId::DENEGADA) {
                                     $ocupadas_dl += $num;
                                 }
                             }

@@ -1,11 +1,11 @@
 <?php
 
 use core\ConfigGlobal;
-use dossiers\model\entity\TipoDossier;
 use dossiers\model\PermDossier;
-use personas\model\entity\Persona;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
@@ -129,8 +129,9 @@ $a_tipos_dossier = [
     1025 => 'docencia',
 ];
 
+$TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
 foreach ($a_tipos_dossier as $id_tipo_dossier => $nom_dossier) {
-    $oTipoDossier = new TipoDossier($id_tipo_dossier);
+    $oTipoDossier = $TipoDossierRepository->findById($id_tipo_dossier);
     $permiso_lectura = $oTipoDossier->getPermiso_lectura();
     $permiso_escritura = $oTipoDossier->getPermiso_escritura();
     $depende_modificar = $oTipoDossier->getDepende_modificar();
@@ -167,9 +168,9 @@ switch ($Qid_tabla) {
         break;
 }
 
-$oPersona = Persona::NewPersona($id_nom);
-if (!is_object($oPersona)) {
-    $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
+if ($oPersona === null) {
+    $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
 }
 $nom_ap = $oPersona->getNombreApellidosCrSin();

@@ -1,7 +1,7 @@
 <?php
 
-use actividadessacd\model\entity\GestorAtnActivSacdTexto;
-use actividadessacd\model\entity\AtnActivSacdTexto;
+use actividadessacd\legacy\AtnActivSacdTexto;
+use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -25,8 +25,8 @@ switch ($Qque) {
         $aWhere = [];
         $aWhere['clave'] = $Qclave;
         $aWhere['idioma'] = $Qidioma;
-        $oGesAtnActivSacdTexto = new GestorAtnActivSacdTexto();
-        $cAtnActivTextos = $oGesAtnActivSacdTexto->getAtnActivSacdTextos($aWhere);
+        $ActividadSacdTextoRepository = $GLOBALS['container']->get(ActividadSacdTextoRepositoryInterface::class);
+        $cAtnActivTextos = $ActividadSacdTextoRepository->getActividadSacdTextos($aWhere);
         $txt = '';
         if (count($cAtnActivTextos) > 0) {
             $txt = $cAtnActivTextos[0]->getTexto();
@@ -39,8 +39,8 @@ switch ($Qque) {
         $aWhere = [];
         $aWhere['clave'] = $Qclave;
         $aWhere['idioma'] = $Qidioma;
-        $oGesAtnActivSacdTexto = new GestorAtnActivSacdTexto();
-        $cAtnActivTextos = $oGesAtnActivSacdTexto->getAtnActivSacdTextos($aWhere);
+        $ActividadSacdTextoRepository = $GLOBALS['container']->get(ActividadSacdTextoRepositoryInterface::class);
+        $cAtnActivTextos = $ActividadSacdTextoRepository->getActividadSacdTextos($aWhere);
         $txt = '';
         if (count($cAtnActivTextos) > 0) {
             $oAtnActivSacdTexto = $cAtnActivTextos[0];

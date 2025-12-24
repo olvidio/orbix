@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\ContestarJson;
 
@@ -15,11 +15,12 @@ $nombre_ubi = empty($oUbi->getNombre_ubi()) ? 'sin determinar' : $oUbi->getNombr
 
 $a = 0;
 $ids_activ = '';
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 foreach ($a_sel as $id_activ) {
     $ids_activ .= empty($ids_activ) ? '' : ',';
     $ids_activ .= $id_activ;
     $a++;
-    $oActividad = new ActividadAll($id_activ);
+    $oActividad = $ActividadAllRepository->findById($id_activ);
     $iso_ini = $oActividad->getF_ini()->getIso();
     $aF_ini[$iso_ini] = $oActividad->getF_ini()->getFromLocal();
     $iso_fin = $oActividad->getF_fin()->getIso();

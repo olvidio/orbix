@@ -5,13 +5,14 @@
  */
 
 use actividades\model\ActividadTipo;
-use actividades\model\entity\ActividadAll;
-use actividadtarifas\model\entity\GestorTipoActivTarifa;
-use actividadtarifas\model\entity\GestorTipoTarifa;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
 use web\Desplegable;
@@ -73,8 +74,9 @@ if (!empty($Qid_activ)) { // caso de modificar
         $Qmod = 'editar';
     }
 
-    $oActividad = new ActividadAll($Qid_activ);
-    $a_status = $oActividad->getArrayStatus();
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $oActividad = $ActividadAllRepository->findById($Qid_activ);
+    $a_status = StatusId::getArrayStatus();
 
     $id_tipo_activ = $oActividad->getId_tipo_activ();
     $dl_org = $oActividad->getDl_org();
@@ -82,9 +84,9 @@ if (!empty($Qid_activ)) { // caso de modificar
     $id_ubi = $oActividad->getId_ubi();
     //$desc_activ = $oActividad->['desc_activ'];
     $f_ini = $oActividad->getF_ini()->getFromLocal();
-    $h_ini = $oActividad->getH_ini();
+    $h_ini = $oActividad->getH_ini()?->format('H:i');
     $f_fin = $oActividad->getF_fin()->getFromLocal();
-    $h_fin = $oActividad->getH_fin();
+    $h_fin = $oActividad->getH_fin()?->format('H:i');
     //$tipo_horario = $oActividad->['tipo_horario'];
     $precio = $oActividad->getPrecio();
     //$num_asistentes = $oActividad->['num_asistentes'];
@@ -95,7 +97,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $lugar_esp = $oActividad->getLugar_esp();
     $tarifa = $oActividad->getTarifa();
     $id_repeticion = $oActividad->getId_repeticion();
-    $publicado = $oActividad->getPublicado();
+    $publicado = $oActividad->isPublicado();
     $plazas = $oActividad->getPlazas();
 
     // mirar permisos.
@@ -127,8 +129,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $Qmod = 'nuevo';
     $isfsv = ConfigGlobal::mi_sfsv();
 
-    $oActividad = new ActividadAll();
-    $a_status = $oActividad->getArrayStatus();
+    $a_status = StatusId::getArrayStatus();
     // Valores por defecto
     $dl_org = ConfigGlobal::mi_delef();
     // si es nueva, obligatorio estado: proyecto (14.X.2011)
@@ -149,8 +150,8 @@ if (!empty($Qid_activ)) { // caso de modificar
         $aWhereT = [];
         $aWhereT['id_tipo_activ'] = $id_tipo_activ;
         $aWhereT['_ordre'] = 'id_serie';
-        $GesActiTipoTarifa = new GestorTipoActivTarifa();
-        $cActiTipoTarifa = $GesActiTipoTarifa->getTipoActivTarifas($aWhereT);
+        $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+        $cActiTipoTarifa = $RelacionTarifaTipoActividadRepository->getTipoActivTarifas($aWhereT);
         if (!empty($cActiTipoTarifa) && $cActiTipoTarifa > 0) {
             $tarifa = $cActiTipoTarifa[0]->getId_tarifa();
         }
@@ -245,8 +246,8 @@ if (!empty($id_ubi) && $id_ubi != 1) {
     } else {
         $delegacion = $oCasa->getDl();
         $region = $oCasa->getRegion();
-        $sv = $oCasa->getSv();
-        $sf = $oCasa->getSf();
+        $sv = $oCasa->isSv();
+        $sf = $oCasa->isSf();
     }
 } else {
     if ($id_ubi == 1 && $lugar_esp) {
@@ -260,8 +261,10 @@ if (!empty($id_ubi) && $id_ubi != 1) {
 $oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones($isfsv, $Bdl, 'dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
 
-$oGesTipoTarifa = new GestorTipoTarifa();
-$oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
+$TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+$aOpciones = $TipoTarifaRepository->getArrayTipoTarifas($isfsv);
+$oDesplPosiblesTipoTarifas = new Desplegable();
+$oDesplPosiblesTipoTarifas->setOpciones($aOpciones);
 $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
 
@@ -275,7 +278,7 @@ $oDesplNivelStgr->setOpcion_sel($nivel_stgr);
 $RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
 $aOpciones = $RepeticionRepository->getArrayRepeticion();
 $oDesplRepeticion = new Desplegable();
-$oDesplDelegacionesOrg->setOpciones($aOpciones);
+$oDesplRepeticion->setOpciones($aOpciones);
 $oDesplRepeticion->setNombre('id_repeticion');
 $oDesplRepeticion->setOpcion_sel($id_repeticion);
 

@@ -8,6 +8,7 @@
 
 namespace web;
 
+use src\actividades\domain\value_objects\StatusId;
 use function core\curso_est;
 
 /**
@@ -77,7 +78,7 @@ class BotonesCurso
                 $this->chk_1 = "checked";
                 $this->chk_2 = "";
                 $this->chk_3 = "";
-                $this->aWhere['status'] = \actividades\model\entity\ActividadAll::STATUS_ACTUAL;
+                $this->aWhere['status'] = StatusId::ACTUAL;
                 $this->aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
                 $this->aOperator['f_ini'] = 'BETWEEN';
                 break;

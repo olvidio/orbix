@@ -1,14 +1,14 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\GestorMatricula;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorActa;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -81,7 +81,8 @@ $oDesplNotas = new Desplegable();
 $oDesplNotas->setOpciones($aOpciones);
 $oDesplNotas->setNombre('id_situacion[]');
 
-$oActividad = new ActividadAll($id_activ);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$oActividad = $ActividadAllRepository->findById($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 $GesMatriculas = new GestorMatricula();
@@ -93,9 +94,9 @@ if ($matriculados > 0) {
     $msg_err = '';
     foreach ($cMatriculados as $oMatricula) {
         $id_nom = $oMatricula->getId_nom();
-        $oPersona = Persona::NewPersona($id_nom);
-        if (!is_object($oPersona)) {
-            $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+        $oPersona = Persona::findPersonaEnGlobal($id_nom);
+        if ($oPersona === null) {
+            $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             continue;
         }
         $nom = $oPersona->getPrefApellidosNombre();
@@ -116,7 +117,7 @@ $GesActas = new GestorActa();
 $cActas = $GesActas->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura, '_ordre' => 'f_acta'));
 $acta_principal = '';
 if (is_array($cActas) && !empty($cActas)) {
-    $a_actas = [0 => '', Nota::CURSADA => Nota::$array_status_txt[Nota::CURSADA]];
+    $a_actas = [0 => '', Nota::CURSADA => Nota::getStatusTxt(Nota::CURSADA)];
     foreach ($cActas as $oActa) {
         $nom_acta = $oActa->getActa();
         $a_actas[$nom_acta] = $oActa->getActa();
@@ -136,7 +137,7 @@ if (is_array($cActas) && !empty($cActas)) {
 }
 
 
-$nota_max_default = $_SESSION['oConfig']->getNota_max();
+$nota_max_default = $_SESSION['oConfig']->getNotaMax();
 
 $oHashNotas = new Hash();
 $oHashNotas->setCamposForm('id_nom!nota_num!nota_max!form_preceptor!acta_nota');

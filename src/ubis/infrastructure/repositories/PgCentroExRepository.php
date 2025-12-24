@@ -30,7 +30,9 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBR'];
+        $oDbl_Select = $GLOBALS['oDBR'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_centros_ex');
     }
 
@@ -112,8 +114,7 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($filas as $aDatos) {
+        foreach ($stmt as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
             $CentroEx = new CentroEx();

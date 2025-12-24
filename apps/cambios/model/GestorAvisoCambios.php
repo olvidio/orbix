@@ -2,12 +2,17 @@
 
 namespace cambios\model;
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\ActividadEx;
-use cambios\model\entity\Cambio;
-use cambios\model\entity\CambioDl;
+use actividadcargos\legacy\ActividadCargoNoSacd;
+use actividadcargos\legacy\ActividadCargoSacd;
 use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
+use src\actividadescentro\domain\entity\CentroEncargado;
+use src\asistentes\domain\entity\Asistente;
+use src\cambios\domain\contracts\CambioDlRepositoryInterface;
+use src\cambios\domain\contracts\CambioRepositoryInterface;
+use src\cambios\domain\entity\Cambio;
 use web\DateTimeLocal;
 use function core\is_true;
 
@@ -29,7 +34,7 @@ class GestorAvisoCambios
      *
      * @return array  $aNomTablas_obj['ActividadProcesoTarea'] = _("fases actividad");
      */
-    public static function getArrayObjetosPosibles()
+    public static function getArrayObjetosPosibles(): array
     {
         $aNomTablas_obj = array('Actividad' => _("actividad"),
             'ActividadCargoSacd' => _("sacd"),
@@ -49,31 +54,31 @@ class GestorAvisoCambios
      * @param string $obj_txt nombre corto del objeto.
      * @return string
      */
-    public static function getFullPathObj(string $obj_txt)
+    public static function getFullPathObj(string $obj_txt): string
     {
         $spath = '';
         switch ($obj_txt) {
             case 'Actividad':
             case 'ActividadDl':
             case 'ActividadEx':
-                $spath = 'actividades\\model\\entity\\ActividadAll';
+            case 'ActividadAll':
+                $spath = ActividadAll::class;
                 break;
             case 'ActividadCargoSacd':
-                $spath = 'actividadcargos\\model\\entity\\ActividadCargoSacd';
+                $spath = ActividadCargoSacd::class;
                 break;
             case 'CentroEncargado':
-                $spath = 'actividadescentro\\model\\entity\\CentroEncargado';
+                $spath = CentroEncargado::class;
                 break;
             case 'ActividadCargoNoSacd':
-                $spath = 'actividadcargos\\model\\entity\\ActividadCargoNoSacd';
+                $spath = ActividadCargoNoSacd::class;
                 break;
             case 'Asistente':
             case 'AsistenteDl':
             case 'AsistenteOut':
             case 'AsistenteEx':
-            case 'AsistenteIn':
             case 'AsistentePub':
-                $spath = 'asistentes\\model\\entity\\Asistente';
+                $spath = Asistente::class;
                 break;
             case 'ActividadProcesoTarea':
                 $spath = 'procesos\\model\\entity\\ActividadProcesoTarea';
@@ -101,11 +106,10 @@ class GestorAvisoCambios
 
     public function addCanvi($sObjeto, $sTipoCambio, $iid_activ, $aDadesNew, $aDadesActuals)
     {
-        // poso el nom de l'objecte que gestiona la taula en comptes del nom de la taula.
+        // pongo el nombre del objeto (no el de la tabla).
         $id_user = ConfigGlobal::mi_id_usuario();
         $sfsv = ConfigGlobal::mi_sfsv();
         $oAhora = new DateTimeLocal();
-        $ahora_iso = $oAhora->format('Y-m-d H:i:s');
 
         // per saber el tipus d'activitat.
         switch ($sObjeto) {
@@ -121,18 +125,28 @@ class GestorAvisoCambios
                 // porque todavía no se ha importado (y no está en su grupo de actividades).
                 // Para evitar errores accedo directamente a los datos sin esperar a importarla,
                 // En principio la dl que la crea es porque va a importarla...
+                /*
                 if ($iid_activ < 0) {
                     $oActividad = new ActividadEx($iid_activ);
                 } else {
-                    $oActividad = new ActividadAll($iid_activ);
+                    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+                    $oActividad = $ActividadAllRepository->findById($iid_activ);
                 }
+                */
+
+                $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+                $oActividad = $ActividadAllRepository->findById($iid_activ);
+
                 $iId_tipo_activ = $oActividad->getId_tipo_activ();
                 $dl_org = $oActividad->getDl_org();
                 $id_status = $oActividad->getStatus();
         }
 
         if (ConfigGlobal::is_app_installed('cambios')) {
-            $oActividadCambio = new CambioDl();
+            $CambioRepository = $GLOBALS['container']->get(CambioDlRepositoryInterface::class);
+            $newIdItem = $CambioRepository->getNewIdItem();
+            $oActividadCambio = new Cambio();
+            $oActividadCambio->setId_item_cambio($newIdItem);
             // si no tengo instalado procesos, la fase es el status.
             if (ConfigGlobal::is_app_installed('procesos')) {
                 $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
@@ -149,7 +163,10 @@ class GestorAvisoCambios
         } else {
             // Si no tengo instalado el módulo de 'cambios', no tengo la tabla en mi esquema.
             // Lo anoto en public. Como fase anoto el estado de la actividad.
+            $CambioRepository = $GLOBALS['container']->get(CambioRepositoryInterface::class);
+            $newIdItem = $CambioRepository->getNewIdItem();
             $oActividadCambio = new Cambio();
+            $oActividadCambio->setId_item_cambio($newIdItem);
             $aFases_sv = [$id_status];
             $aFases_sf = [$id_status];
         }
@@ -166,7 +183,7 @@ class GestorAvisoCambios
                 $oActividadCambio->setObjeto($sObjeto);
                 $oActividadCambio->setQuien_cambia($id_user);
                 $oActividadCambio->setSfsv_quien_cambia($sfsv);
-                $oActividadCambio->setTimestamp_cambio($ahora_iso);
+                $oActividadCambio->setTimestamp_cambio($oAhora);
                 $oActividadCambio->setValor_old();
                 switch ($sObjeto) {
                     case 'Actividad':
@@ -178,7 +195,6 @@ class GestorAvisoCambios
                     case 'Asistente':
                     case 'AsistenteDl':
                     case 'AsistenteEx':
-                    case 'AsistenteIn':
                     case 'AsistenteOut':
                     case 'ActividadCargoNoSacd':
                     case 'ActividadCargoSacd':
@@ -190,7 +206,7 @@ class GestorAvisoCambios
                         $oActividadCambio->setValor_new($aDadesNew['id_ubi']);
                         break;
                 }
-                $oActividadCambio->DBGuardar();
+                $CambioRepository->Guardar($oActividadCambio);
                 break;
             case 'UPDATE':
                 $result = array_diff_assoc($aDadesNew, $aDadesActuals);
@@ -216,8 +232,8 @@ class GestorAvisoCambios
                     $oActividadCambio->setValor_new($value);
                     $oActividadCambio->setQuien_cambia($id_user);
                     $oActividadCambio->setSfsv_quien_cambia($sfsv);
-                    $oActividadCambio->setTimestamp_cambio($ahora_iso);
-                    $oActividadCambio->DBGuardar();
+                    $oActividadCambio->setTimestamp_cambio($oAhora);
+                    $CambioRepository->Guardar($oActividadCambio);
                 }
                 break;
             case 'DELETE':
@@ -232,7 +248,7 @@ class GestorAvisoCambios
                 $oActividadCambio->setValor_new();
                 $oActividadCambio->setQuien_cambia($id_user);
                 $oActividadCambio->setSfsv_quien_cambia($sfsv);
-                $oActividadCambio->setTimestamp_cambio($ahora_iso);
+                $oActividadCambio->setTimestamp_cambio($oAhora);
                 switch ($sObjeto) {
                     case 'Actividad':
                     case 'ActividadDl':
@@ -246,7 +262,6 @@ class GestorAvisoCambios
                     case 'Asistente':
                     case 'AsistenteDl':
                     case 'AsistenteEx':
-                    case 'AsistenteIn':
                     case 'AsistenteOut':
                     case 'ActividadCargoNoSacd':
                     case 'ActividadCargoSacd':
@@ -260,7 +275,7 @@ class GestorAvisoCambios
                         $oActividadCambio->setValor_old($aDadesActuals['id_ubi']);
                         break;
                 }
-                $oActividadCambio->DBGuardar();
+                $CambioRepository->Guardar($oActividadCambio);
                 break;
             case 'FASE':
                 // només mi fixo en el 'completado'
@@ -292,8 +307,8 @@ class GestorAvisoCambios
                     $oActividadCambio->setValor_new($boolCompletadoNew);
                     $oActividadCambio->setQuien_cambia($id_user);
                     $oActividadCambio->setSfsv_quien_cambia($sfsv);
-                    $oActividadCambio->setTimestamp_cambio($ahora_iso);
-                    $oActividadCambio->DBGuardar();
+                    $oActividadCambio->setTimestamp_cambio($oAhora);
+                    $CambioRepository->Guardar($oActividadCambio);
                 }
                 break;
         }

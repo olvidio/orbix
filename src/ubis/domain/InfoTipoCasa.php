@@ -19,6 +19,8 @@ class InfoTipoCasa extends DatosInfoRepo
 
         $this->setClase('src\\ubis\\domain\\entity\\TipoCasa');
         $this->setMetodoGestor('getTiposCasa');
+
+        $this->setRepositoryInterface(TipoCasaRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoTipoCasa extends DatosInfoRepo
             $aWhere = array('nombre_tipo_casa' => $this->k_buscar);
             $aOperador = array('nombre_tipo_casa' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(TipoCasaRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getTiposCasa($aWhere, $aOperador);
 
         return $Coleccion;

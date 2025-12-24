@@ -19,6 +19,8 @@ class InfoTipoTeleco extends DatosInfoRepo
 
         $this->setClase('src\\ubis\\domain\\entity\\TipoTeleco');
         $this->setMetodoGestor('getTiposTeleco');
+
+        $this->setRepositoryInterface(TipoTelecoRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoTipoTeleco extends DatosInfoRepo
             $aWhere = array('nombre_teleco' => $this->k_buscar);
             $aOperador = array('nombre_teleco' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(TipoTelecoRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getTiposTeleco($aWhere, $aOperador);
 
         return $Coleccion;

@@ -2,6 +2,8 @@
 
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 
@@ -28,6 +30,8 @@ require_once("apps/core/global_object.inc");
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
+$EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+$ENcargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 switch ($Qque) {
     case "ctr":
         //Eliminar encargos de centros con status=false
@@ -36,10 +40,9 @@ switch ($Qque) {
 
         $ctrsv = 0;
         $ctrsf = 0;
-        $oGesEncargos = new GestorEncargo();
         $aWhere = ['id_ubi' => 'x'];
         $aOperador = ['id_ubi' => 'IS NOT NULL'];
-        $cEncargosCtr = $oGesEncargos->getEncargos($aWhere, $aOperador);
+        $cEncargosCtr = $ENcargoRepository->getEncargos($aWhere, $aOperador);
         foreach ($cEncargosCtr as $oEncargo) {
             $id_ubi = $oEncargo->getId_ubi();
             if (empty($id_ubi)) { // OJO también puede ser 0 a demás de NULL.
@@ -70,8 +73,7 @@ switch ($Qque) {
         $msg .= sprintf(_("se han eliminado %s encargos de centros sf \n"), $ctrsf);
 
         //También elimino los sacd encargados de encargos inexistentes
-        $oGesEncargoSacd = new GestorEncargoSacd();
-        $msg .= $oGesEncargoSacd->deleteEncargos();
+        $msg .= $EncargoSacdRepository->deleteEncargos();
 
         echo $msg;
         break;

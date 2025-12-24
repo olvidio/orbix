@@ -14,11 +14,11 @@
 
 use actividades\model\ActividadLugar;
 use actividades\model\ActividadTipo;
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use procesos\model\entity\GestorActividadFase;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use src\usuarios\domain\entity\Role;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Hash;
@@ -107,7 +107,7 @@ $oActividadTipo->setNom_tipo($Qsnom_tipo);
 
 
 if (empty($Qstatus)) {
-    $Qstatus = ActividadAll::STATUS_ACTUAL;
+    $Qstatus = StatusId::ACTUAL;
 }
 
 $Qisfsv = substr($Qid_tipo_activ, 0, 1);
@@ -249,15 +249,15 @@ if (!$oRole->isRolePau('ctr')) {
     $perm_ctr = TRUE;
 }
 
-$val_status_1 = ActividadAll::STATUS_PROYECTO;
+$val_status_1 = StatusId::PROYECTO;
 $chk_status_1 = ($Qstatus === $val_status_1) ? "checked='true'" : '';
-$val_status_2 = ActividadAll::STATUS_ACTUAL;
+$val_status_2 = StatusId::ACTUAL;
 $chk_status_2 = ($Qstatus === $val_status_2) ? "checked='true'" : '';
-$val_status_3 = ActividadAll::STATUS_TERMINADA;
+$val_status_3 = StatusId::TERMINADA;
 $chk_status_3 = ($Qstatus === $val_status_3) ? "checked='true'" : '';
-$val_status_4 = ActividadAll::STATUS_BORRABLE;
+$val_status_4 = StatusId::BORRABLE;
 $chk_status_4 = ($Qstatus === $val_status_4) ? "checked='true'" : '';
-$val_status_9 = ActividadAll::STATUS_ALL;
+$val_status_9 = StatusId::ALL;
 $chk_status_9 = ($Qstatus === $val_status_9) ? "checked='true'" : '';
 
 //////////// PROCESOS /////////////////
@@ -275,12 +275,12 @@ if (ConfigGlobal::is_app_installed('procesos')) {
     $h_actualizar_fases = $oHash1->linkSinVal();
 
     $dl_propia = ($Qdl_org === $mi_dele);
-    $GesTiposActiv = new GestorTipoDeActividad();
+    $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
     // Para limitar las opciones:
     if (empty($Qid_tipo_activ)) {
         $Qid_tipo_activ = ConfigGlobal::mi_sfsv();
     }
-    $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ, $dl_propia);
+    $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $dl_propia);
     $oGesFases = new GestorActividadFase();
     $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
     foreach ($aFases as $descripcion => $id_fase) {

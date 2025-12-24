@@ -27,19 +27,21 @@
  *
  */
 
-use actividades\model\entity\ActividadAll;
-use actividadplazas\model\GestorResumenPlazas;
 use asistentes\model\entity\Asistente;
-use asistentes\model\entity\GestorAsistente;
+
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaEx;
-use personas\model\entity\GestorPersonaN;
-use personas\model\entity\GestorPersonaNax;
-use personas\model\entity\GestorPersonaS;
-use personas\model\entity\GestorPersonaSSSC;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\value_objects\PlazaId;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\entity\Persona;
+use src\ubis\domain\value_objects\DescTelecoOrder;
+use web\Desplegable;
 use web\Hash;
 use function core\is_true;
 
@@ -78,18 +80,19 @@ if (empty($Qid_activ)) {
 }
 
 
-$gesAsistentes = new GestorAsistente();
+$AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
 
 $obj = 'asistentes\\model\\entity\\Asistente';
 
 /* Mirar si la actividad es mia o no */
-$oActividad = new ActividadAll($Qid_activ);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$oActividad = $ActividadAllRepository->findById($Qid_activ);
 
 if (!empty($Qid_nom)) { //caso de modificar
     $mod = "editar";
-    $oPersona = Persona::NewPersona($Qid_nom);
+    $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
     if (!is_object($oPersona)) {
-        $msg_err = "<br>$oPersona con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
+        $msg_err = "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
         exit($msg_err);
     }
     // Hay que especificar el tipo de personas para poder crear un nuevo asistente desde la ficha
@@ -120,12 +123,12 @@ if (!empty($Qid_nom)) { //caso de modificar
     $id_nom_real = $Qid_nom;
 
     $aWhere = array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom);
-    $cAsistentes = $gesAsistentes->getAsistentes($aWhere);
+    $cAsistentes = $AsistenteRepository->getAsistentes($aWhere);
     $oAsistente = $cAsistentes[0];
 
-    $propio = $oAsistente->getPropio();
-    $falta = $oAsistente->getFalta();
-    $est_ok = $oAsistente->getEst_ok();
+    $propio = $oAsistente->isPropio();
+    $falta = $oAsistente->isFalta();
+    $est_ok = $oAsistente->isEst_ok();
     $observ = $oAsistente->getObserv();
     $observ_est = $oAsistente->getObserv_est();
     $plaza = $oAsistente->getPlaza();
@@ -148,41 +151,43 @@ if (!empty($Qid_nom)) { //caso de modificar
     $propio = "t"; //valor por defecto
     $observ = ""; //valor por defecto
     $observ_est = ""; //valor por defecto
-    $plaza = Asistente::PLAZA_PEDIDA; //valor por defecto
+    $plaza = PlazaId::PEDIDA; //valor por defecto
     $propietario = ''; //valor por defecto
     $Qobj_pau = !empty($Qobj_pau) ? urldecode($Qobj_pau) : '';
     $obj_pau = $Qobj_pau;
     $Qna = (string)filter_input(INPUT_POST, 'na');
     $na_val = 'p' . $Qna;
+    $oDesplegablePersonas = new Desplegable();
     switch ($obj_pau) {
         case 'PersonaN':
-            $oPersonas = new GestorPersonaN();
-            $oDesplegablePersonas = $oPersonas->getListaPersonas();
+            $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+            $oOpciones = $PersonaNRepository->getArrayPersonas();
+            $oDesplegablePersonas->setOpciones($oOpciones);
             $oDesplegablePersonas->setNombre('id_nom');
             break;
         case 'PersonaNax':
-            $oPersonas = new GestorPersonaNax();
-            $oDesplegablePersonas = $oPersonas->getListaPersonas();
+            $PersonaNaxRepository = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+            $oOpciones = $PersonaNaxRepository->getArrayPersonas();
+            $oDesplegablePersonas->setOpciones($oOpciones);
             $oDesplegablePersonas->setNombre('id_nom');
             break;
         case 'PersonaAgd':
-            $oPersonas = new GestorPersonaAgd();
-            $oDesplegablePersonas = $oPersonas->getListaPersonas();
+            $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+            $oOpciones = $PersonaAgdRepository->getArrayPersonas();
+            $oDesplegablePersonas->setOpciones($oOpciones);
             $oDesplegablePersonas->setNombre('id_nom');
             break;
         case 'PersonaS':
-            $oPersonas = new GestorPersonaS();
-            $oDesplegablePersonas = $oPersonas->getListaPersonas();
+            $PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+            $oOpciones = $PersonaSRepository->getArrayPersonas();
+            $oDesplegablePersonas->setOpciones($oOpciones);
             $oDesplegablePersonas->setNombre('id_nom');
             break;
         case 'PersonaSSSC':
-            $oPersonas = new GestorPersonaSSSC();
-            $oDesplegablePersonas = $oPersonas->getListaPersonas();
-            $oDesplegablePersonas->setNombre('id_nom');
-            break;
         case 'PersonaEx':
-            $oPersonas = new GestorPersonaEx();
-            $oDesplegablePersonas = $oPersonas->getListaPersonas($na_val);
+            $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+            $oOpciones = $PersonaExRepository->getArrayPersonas($na_val);
+            $oDesplegablePersonas->setOpciones($oOpciones);
             $oDesplegablePersonas->setNombre('id_nom');
             $obj_pau = 'PersonaEx';
             break;
@@ -196,8 +201,10 @@ $falta_chk = (!empty($falta) && is_true($falta)) ? 'checked' : '';
 $est_chk = (!empty($est_ok) && is_true($est_ok)) ? 'checked' : '';
 
 if (ConfigGlobal::is_app_installed('actividadplazas')) {
-    $oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
+    $aOpciones = PlazaId::getArrayPosiblesPlazas();
+    $oDesplegablePlaza = new Desplegable();
     $oDesplegablePlaza->setNombre('plaza');
+    $oDesplegablePlaza->setOpciones($aOpciones);
     $oDesplegablePlaza->setOpcion_sel($plaza);
 
     $dl_de_paso = FALSE;

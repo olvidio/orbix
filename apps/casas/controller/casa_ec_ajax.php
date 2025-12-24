@@ -19,8 +19,9 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use casas\model\entity\GestorUbiGasto;
-use casas\model\entity\UbiGasto;
+use src\casas\domain\contracts\UbiGastoRepositoryInterface;
+use src\casas\domain\entity\UbiGasto;
+use src\casas\domain\value_objects\UbiGastoTipo;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
@@ -36,7 +37,7 @@ $oPosicion->recordar();
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-
+$UbiGastoRepository = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
 switch ($Qque) {
     case "guardarGasto":
         $Qyear = (integer)filter_input(INPUT_POST, 'year');
@@ -54,30 +55,36 @@ switch ($Qque) {
             // lo pongo el 5 de cada mes.
             $oFecha = new DateTimeLocal("$Qyear/$m/5");
             //gasto
+            $newId = $UbiGastoRepository->getNewId();
             $oUbiGasto = new UbiGasto();
+            $oUbiGasto->setId_item($newId);
             $oUbiGasto->setF_gasto($oFecha);
             $oUbiGasto->setId_ubi($Qid_ubi);
-            $oUbiGasto->setTipo(UbiGasto::TIPO_GASTO);
-            $oUbiGasto->setCantidad($g);
-            if ($oUbiGasto->DBGuardar() === false) {
+            $oUbiGasto->setTipoVo(UbiGastoTipo::GASTO);
+            $oUbiGasto->setCantidadVo($g);
+            if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
                 echo _("Hay un error, no se ha guardado.");
             }
             //aportacion sv
+            $newId = $UbiGastoRepository->getNewId();
             $oUbiGasto = new UbiGasto();
+            $oUbiGasto->setId_item($newId);
             $oUbiGasto->setF_gasto($oFecha);
             $oUbiGasto->setId_ubi($Qid_ubi);
-            $oUbiGasto->setTipo(UbiGasto::TIPO_APORTACION_SV);
-            $oUbiGasto->setCantidad($ap_sv);
-            if ($oUbiGasto->DBGuardar() === false) {
+            $oUbiGasto->setTipoVo(UbiGastoTipo::APORTACION_SV);
+            $oUbiGasto->setCantidadVo($ap_sv);
+            if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
                 echo _("Hay un error, no se ha guardado.");
             }
             //aportacion sf
+            $newId = $UbiGastoRepository->getNewId();
             $oUbiGasto = new UbiGasto();
+            $oUbiGasto->setId_item($newId);
             $oUbiGasto->setF_gasto($oFecha);
             $oUbiGasto->setId_ubi($Qid_ubi);
-            $oUbiGasto->setTipo(UbiGasto::TIPO_APORTACION_SF);
-            $oUbiGasto->setCantidad($ap_sf);
-            if ($oUbiGasto->DBGuardar() === false) {
+            $oUbiGasto->setTipoVo(UbiGastoTipo::APORTACION_SF);
+            $oUbiGasto->setCantidadVo($ap_sf);
+            if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
                 echo _("Hay un error, no se ha guardado.");
             }
 

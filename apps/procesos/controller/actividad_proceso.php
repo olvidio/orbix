@@ -1,8 +1,8 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -38,7 +38,8 @@ $godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_bui
 $alt = _("ver dossiers");
 $dos = _("dossiers");
 
-$oActividad = new ActividadAll($Qid_activ);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$oActividad = $ActividadAllRepository($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 $permiso_calendario = FALSE;

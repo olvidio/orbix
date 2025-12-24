@@ -67,7 +67,7 @@ class TrasladoUbi
         $campos = 'id_ubi, f_ini, f_fin, sfsv';
         $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
         $tabla = 'd_teleco_cdc_dl';
-        $campos = 'id_ubi, tipo_teleco, desc_teleco, num_teleco, observ';
+        $campos = 'id_ubi, tipo_teleco, id_desc_teleco, num_teleco, observ';
         $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 
         foreach ($aInserts as $cambio) {
@@ -95,7 +95,7 @@ class TrasladoUbi
         $aInserts = [];
 
         $tabla = 'd_teleco_ctr_dl';
-        $campos = 'id_ubi, tipo_teleco, desc_teleco, num_teleco, observ';
+        $campos = 'id_ubi, tipo_teleco, id_desc_teleco, num_teleco, observ';
         $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
         $tabla = 'du_presentacion_dl';
         $campos = 'id_direccion, id_ubi, pres_nom, pres_telf, pres_mail, zona, observ';

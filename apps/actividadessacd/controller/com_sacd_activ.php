@@ -4,10 +4,8 @@ use actividadessacd\model\ActividadesSacdFunciones;
 use actividadessacd\model\ComunicarActividadesSacd;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaEx;
-use personas\model\entity\GestorPersonaSacd;
-use personas\model\entity\GestorPersonaSSSC;
-use personas\model\entity\PersonaSacd;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\DateTimeLocal;
@@ -115,8 +113,8 @@ if ($Qque === "un_sacd") {
     $Qyear = date('Y');
     */
     $Qyear = date('Y');
-    $inicioIso = (string)((int)$Qyear -1) .'-07-01';
-    $finIso = (string)((int)$Qyear +1) .'-06-30';
+    $inicioIso = (string)((int)$Qyear - 1) . '-07-01';
+    $finIso = (string)((int)$Qyear + 1) . '-06-30';
 }
 
 
@@ -131,27 +129,30 @@ if (empty($Qque)) {
     $Qque = "nagd";
 }
 $aWhereP = [];
+$aOperadorP = [];
+$PersonassacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
 switch ($Qque) {
     case "nagd":
-        $aWhereP['id_tabla'] = '^n|^a';
+        $aWhereP['id_tabla'] = "'n','a'";
+        $aOperadorP['id_tabla'] = 'IN';
         $aWhereP['situacion'] = 'A';
         $aWhereP['sacd'] = 't';
         $aWhereP['dl'] = $mi_dele;
         $aWhereP['_ordre'] = 'apellido1,apellido2,nom';
         $aOperadorP['id_tabla'] = '~';
-        $GesPersonas = new GestorPersonaSacd();
-        $cPersonas = $GesPersonas->getPersonas($aWhereP, $aOperadorP);
+        $cPersonas = $PersonassacdRepository->getPersonas($aWhereP, $aOperadorP);
         break;
     case "sssc":
+        $aWhereP['id_tabla'] = "sssc";
+        $aOperadorP['id_tabla'] = 'IN';
         $aWhereP['situacion'] = 'A';
         $aWhereP['sacd'] = 't';
         $aWhereP['dl'] = $mi_dele;
         $aWhereP['_ordre'] = 'apellido1,apellido2,nom';
-        $GesPersonas = new GestorPersonaSSSC();
-        $cPersonas = $GesPersonas->getPersonas($aWhereP);
+        $cPersonas = $PersonassacdRepository->getPersonas($aWhereP);
         break;
     case "un_sacd":
-        $oPersona = new PersonaSacd($Qid_nom);
+        $oPersona = $PersonassacdRepository->findById($Qid_nom);
         $cPersonas = array($oPersona);
         break;
 }
@@ -214,8 +215,8 @@ if ($Qque !== "un_sacd" && $Qmail === 'no') {
     $aWhereP['sacd'] = 't';
     $aWhereP['dl'] = $mi_dele;
     $aWhereP['_ordre'] = 'apellido1,apellido2,nom';
-    $GesPersonas = new GestorPersonaEx();
-    $cPersonas = $GesPersonas->getPersonas($aWhereP);
+    $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+    $cPersonas = $PersonaExRepository->getPersonas($aWhereP);
 
     $oComunicarActividadesSacd = new ComunicarActividadesSacd();
     $oComunicarActividadesSacd->setInicioIso($inicioIso);

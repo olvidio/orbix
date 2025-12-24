@@ -1,10 +1,10 @@
 <?php
 
-use actividades\model\entity\GestorActividadDl;
-use actividadescentro\model\entity\CentroEncargado;
-use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadescentro\domain\entity\CentroEncargado;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -26,8 +26,8 @@ require_once("apps/core/global_object.inc");
 function ordena($id_activ, $id_ubi, $orden): string
 {
     $err_txt = '';
-    $GesCentroEncargado = new GestorCentroEncargado();
-    $cCentrosEncargados = $GesCentroEncargado->getCentrosEncargados(array('id_activ' => $id_activ, '_ordre' => 'num_orden'));
+    $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
+    $cCentrosEncargados = $CentroEncargadoRepository->getCentrosEncargados(array('id_activ' => $id_activ, '_ordre' => 'num_orden'));
     $i_max = count($cCentrosEncargados);
     for ($i = 0; $i < $i_max; $i++) {
         if ($cCentrosEncargados[$i]->getId_ubi() === $id_ubi) {
@@ -74,6 +74,7 @@ $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
 $aWhere = [];
 $aOperador = [];
+$CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
 switch ($Qque) {
     case "orden":
         $Qnum_orden = (string)filter_input(INPUT_POST, 'num_orden');
@@ -81,8 +82,8 @@ switch ($Qque) {
         $error_txt = '';
         if ($Qnum_orden === "borrar") { //entonces es borrar:
             if ($Qid_activ && $Qid_ubi) {
-                $oCentroEncargado = new CentroEncargado(array('id_activ' => $Qid_activ, 'id_ubi' => $Qid_ubi));
-                if ($oCentroEncargado->DBEliminar() === false) {
+                $oCentroEncargado = $CentroEncargadoRepository->findbyId($Qid_activ, $Qid_ubi);
+                if ($CentroEncargadoRepository->Eliminar($oCentroEncargado) === false) {
                     $error_txt = _("hay un error, no se ha eliminado el centro");
                 }
             } else {
@@ -104,8 +105,7 @@ switch ($Qque) {
         $txt = '';
         if ($oPermCtr->have_perm_activ('ver') === true) { // sólo si tiene permiso
             // listado de centros encargados
-            $GesCtrEncargados = new GestorCentroEncargado();
-            $cCtrsEncargados = $GesCtrEncargados->getCentrosEncargadosActividad($Qid_activ);
+            $cCtrsEncargados = $CentroEncargadoRepository->getCentrosEncargadosActividad($Qid_activ);
             $txt_ctr = '';
 
             foreach ($cCtrsEncargados as $oCentro) {
@@ -144,12 +144,11 @@ switch ($Qque) {
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi = $oCentro->getNombre_ubi();
             // número de actividades en periodo
-            $oGesCtrEncargado = new GestorCentroEncargado();
-            $cCtrsEncargados = $oGesCtrEncargado->getActividadesDeCentros($id_ubi, $periodo);
+            $cCtrsEncargados = $CentroEncargadoRepository->getActividadesDeCentros($id_ubi, $periodo);
             $num_activ = count($cCtrsEncargados);
 
             //próxima actividad
-            $txt_dif = $oGesCtrEncargado->getProximasActividadesDeCentro($id_ubi, $f_ini_act_iso);
+            $txt_dif = $CentroEncargadoRepository->getProximasActividadesDeCentro($id_ubi, $f_ini_act_iso);
             $txt_ctr .= "<tr><td class=link id=$id_ubi onclick=fnjs_asignar_ctr('$Qid_activ','$id_ubi')> $nombre_ubi</td>";
             $txt_ctr .= "<td>$num_activ</td><td>$txt_dif</td></tr>";
         }
@@ -258,17 +257,18 @@ switch ($Qque) {
         // miro si hay centros encargados, para poner num orden después.
         $aWhere['id_activ'] = $Qid_activ;
         $aWhere['_ordre'] = 'num_orden DESC';
-        $GesCentrosEncargados = new GestorCentroEncargado();
-        $cCentros = $GesCentrosEncargados->getCentrosEncargados($aWhere);
+        $cCentros = $CentroEncargadoRepository->getCentrosEncargados($aWhere);
         if (is_array($cCentros) && count($cCentros) >= 1) {
             $num_orden = $cCentros[0]->getNum_orden() + 1;
         } else {
             $num_orden = 0;
         }
-        $oCentroEncargado = new CentroEncargado(array('id_activ' => $Qid_activ, 'id_ubi' => $Qid_ubi));
+        $oCentroEncargado = new CentroEncargado();
+        $oCentroEncargado->setId_activ($Qid_activ);
+        $oCentroEncargado->setId_ubi($Qid_ubi);
         $oCentroEncargado->setNum_orden($num_orden);
         $oCentroEncargado->setEncargo('organizador');
-        if ($oCentroEncargado->DBGuardar() === false) {
+        if ($CentroEncargadoRepository->Guardar($oCentroEncargado) === false) {
             echo _("hay un error, no se ha guardado el cargo");
         }
         break;
@@ -333,8 +333,8 @@ switch ($Qque) {
         }
         $aWhere['_ordre'] = 'f_ini,nom_activ';
 
-        $GesActividades = new GestorActividadDl();
-        $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
 
         $titulo = sprintf(_("listado de actividades %s"), $Qtipo);
 
@@ -374,15 +374,13 @@ switch ($Qque) {
                 $sin++;
                 continue;
             } // no tiene permisos ni para ver.
-            if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
-            } else {
+            if ($oPermActiv->have_perm_activ('ver') !== false) { // sólo puede ver que està ocupado
                 $a_valores[$i][0] = $id_activ;
                 $a_valores[$i][10] = $oPermCtr; // para no tener que recalcularlo después.
 
                 $a_valores[$i][1] = $nom_activ;
 
-                $GesCtrEncargados = new GestorCentroEncargado();
-                $cCtrsEncargados = $GesCtrEncargados->getCentrosEncargadosActividad($id_activ);
+                $cCtrsEncargados = $CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ);
                 $a_centros = [];
                 if ($oPermCtr->have_perm_activ('ver') === true) { // sólo si tiene permiso
                     foreach ($cCtrsEncargados as $oCentro) {
@@ -395,7 +393,7 @@ switch ($Qque) {
                 $a_valores[$i][3] = $f_ini;
                 $a_valores[$i][4] = $f_fin;
 
-                if (empty($id_ubi_actividad) || $id_ubi_actividad == 1) {
+                if (empty($id_ubi_actividad) || $id_ubi_actividad === 1) {
                     $nombre_ubi_actividad = 'z';
                 } else {
                     $nombre_ubi_actividad = $a_casas[$id_ubi_actividad];

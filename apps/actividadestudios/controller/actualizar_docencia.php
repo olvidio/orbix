@@ -1,12 +1,13 @@
 <?php
 
 use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\ActividadAsignatura;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorActa;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use web\Hash;
@@ -90,7 +91,7 @@ if (empty($continuar)) {
     $aOperador = [];
     $aWhere['f_ini'] = "'$inicioIso','$finIso'";
     $aOperador['f_ini'] = 'BETWEEN';
-    $aWhere['status'] = ActividadAll::STATUS_TERMINADA;
+    $aWhere['status'] = StatusId::TERMINADA;
 
     $mi_sfsv = ConfigGlobal::mi_sfsv();
     //$id_tipo='^'.$mi_sfsv.'[123][23]';   // OJO AÑADO sem inv.
@@ -98,10 +99,9 @@ if (empty($continuar)) {
     $id_tipo_inv = '^' . $mi_sfsv . '325';
     $aWhere['id_tipo_activ'] = $id_tipo;
     $aOperador['id_tipo_activ'] = '~';
-    //$GesActividades = new GestorActividadDl();
     // Lo cambio para actividades de todas las dl.
-    $GesActividades = new GestorActividad();
-    $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $cActividades = $ActividadAllRepository->getActividades($aWhere, $aOperador);
     $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
     $ini_m = $_SESSION['oConfig']->getMesIniStgr();
     // busco los profesores que han dado alguna asignatura en actividad.

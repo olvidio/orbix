@@ -12,12 +12,14 @@
 // Si vengo para descargar, es via GET, por tanto empleo REQUEST
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividades\model\entity\GestorActividad;
-use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
+use src\usuarios\domain\value_objects\TipoPreferencia;
+use src\usuarios\domain\value_objects\ValorPreferencia;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
@@ -55,9 +57,9 @@ $json_status = json_encode($Qa_status);
 $json_activ = json_encode($Qa_activ);
 $json_cdc = json_encode($Qa_id_cdc);
 $aPref = ['status' => $json_status,
-    'periodo' => $Qperiodo,
-    'tipo_activ' => $json_activ,
-    'ubis_compartidos' => $json_cdc,
+        'periodo' => $Qperiodo,
+        'tipo_activ' => $json_activ,
+        'ubis_compartidos' => $json_cdc,
 ];
 
 // Guardar Preferencia
@@ -70,9 +72,9 @@ $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia === null) {
     $oPreferencia = new Preferencia();
     $oPreferencia->setId_usuario($id_usuario);
-    $oPreferencia->setTipo($tipo);
+    $oPreferencia->setTipo(new TipoPreferencia($tipo));
 }
-$oPreferencia->setPreferencia($json_busqueda);
+$oPreferencia->setPreferencia(new ValorPreferencia($json_busqueda));
 if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
     echo _("hay un error, no se ha guardado la preferencia");
     echo "\n" . $PreferenciaRepository->getErrorTxt();
@@ -147,8 +149,8 @@ if (!empty($Qdl_org)) {
 }
 
 $aWhere['_ordre'] = 'f_ini';
-$GesActividades = new GestorActividad();
-$cActividades_1 = $GesActividades->getActividades($aWhere, $aOperador);
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+$cActividades_1 = $ActividadRepository->getActividades($aWhere, $aOperador);
 // genero un nuevo array con clave el id_activ (como text: precedo 's') para
 // poder utilizar array_merge y que me quite los duplicados.
 $cActividadesxTipo = [];
@@ -167,7 +169,7 @@ if (is_array($Qa_id_cdc) && count($Qa_id_cdc) > 0) {
     $aWhere['id_ubi'] = $cond_ubis;
     $aOperador['id_ubi'] = 'ANY';
 }
-$cActividades_2 = $GesActividades->getActividades($aWhere, $aOperador);
+$cActividades_2 = $ActividadRepository->getActividades($aWhere, $aOperador);
 // genero un nuevo array con clave el id_activ (como text: precedo 's') para
 // poder utilizar array_merge y que me quite los duplicados.
 $cActividadesxUbi = [];
@@ -195,6 +197,7 @@ $a_cabeceras[] = ucfirst(_("centro"));
 
 $a_valores = [];
 $i = 0;
+$CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_activ = $oActividad->getId_activ();
@@ -226,8 +229,8 @@ foreach ($cActividades as $oActividad) {
     $snom_tipo = $oTipoActiv->getNom_tipoText();
 
     if ((($_SESSION['oPerm']->have_perm_oficina('sg'))
-            || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
-            || ($_SESSION['oPerm']->have_perm_oficina('des'))) and !($_SESSION['oPerm']->have_perm_oficina('admin'))
+                    || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
+                    || ($_SESSION['oPerm']->have_perm_oficina('des'))) and !($_SESSION['oPerm']->have_perm_oficina('admin'))
     ) {
         if ($snom_tipo === "(sin especificar)") {
             $snom_tipo = "";
@@ -243,18 +246,17 @@ foreach ($cActividades as $oActividad) {
     $a_valores[$i][10] = $snom_tipo;
     $a_valores[$i][11] = $nombre_ubi;
 
-    $oEnc = new GestorCentroEncargado();
     $ctrs = '';
-    foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
+    foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
         $ctrs .= $oEncargado->getNombre_ubi() . ', ';
     }
     $ctrs = substr($ctrs, 0, -2);
     $a_valores[$i][12] = $ctrs;
     /*
     if ($ver_sacd == 1) {
-        $oCargosActividad=new GestorActividadCargo();
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
         $sacds='';
-        foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
+        foreach($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {;
             $sacds.=$oPersona->getPrefApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
         }
         $sacds=substr($sacds,0,-2);

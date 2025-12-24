@@ -5,8 +5,9 @@ namespace actividadestudios\model;
 use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -136,9 +137,9 @@ class Select3005
 
             $id_profesor = $oActividadAsignatura->getId_profesor();
             if (!empty($id_profesor)) {
-                $oPersona = Persona::NewPersona($id_profesor);
+                $oPersona = Persona::findPersonaEnGlobal($id_profesor);
                 if (!is_object($oPersona)) {
-                    $this->msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
+                    $this->msg_err .= "<br>No encuentro a nadie con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
                     $nom = '';
                 } else {
                     $nom = $oPersona->getPrefApellidosNombre();
@@ -185,7 +186,8 @@ class Select3005
 
     public function getHtml()
     {
-        $oActividad = new ActividadAll($this->id_pau);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($this->id_pau);
         $this->dl_org = $oActividad->getDl_org();
         // Finalmente hay que dar permiso a todos, porque pueden crear asignaturas para su dl
         $this->permiso = 3;

@@ -2,6 +2,8 @@
 
 use actividadestudios\model\entity\ActividadAsignaturaDl;
 use dossiers\model\entity\Dossier;
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\value_objects\DossierPk;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
@@ -81,9 +83,10 @@ switch ($Qmod) {
             $msg_err = _("hay un error, no se ha creado");
         }
         // si es la primera asignatura, hay que abrir el dossier para esta actividad
-        $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3005));
+        $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+        $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3005]));
         $oDossier->abrir();
-        $oDossier->DBGuardar();
+        $DosierRepository->Guardar($oDossier);
         break;
     case 'editar': //------------ EDITAR --------
         $Qid_profesor = (integer)filter_input(INPUT_POST, 'id_profesor');

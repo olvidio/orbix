@@ -2,19 +2,21 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
-use actividadescentro\model\entity\GestorCentroEncargado;
-use actividadtarifas\model\entity\GestorTipoTarifa;
-use actividadtarifas\model\entity\TipoTarifa;
-use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\casas\domain\contracts\IngresoRepositoryInterface;
+use src\casas\domain\entity\Ingreso;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use ubis\model\entity\GestorTarifaUbi;
+use web\Desplegable;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
@@ -54,7 +56,12 @@ switch ($Qque) {
         break;
     case 'form_ingreso':
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
-        $oActividad = new ActividadAll($Qid_activ);
+
+        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
+
+        $oActividad = $ActividadAllRepository->findById($Qid_activ);
         $nom_activ = $oActividad->getNom_activ();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
@@ -66,20 +73,22 @@ switch ($Qque) {
         $oPermTar = $_SESSION['oPermActividades']->getPermisoActual('id_tarifa'); //tarifas
 
         $oTipoActiv = new TiposActividades($id_tipo_activ);
-        $oGesTipoTarifa = new GestorTipoTarifa();
         $isfsv = $oTipoActiv->getSfsvId();
 
         if ($oPermTar->have_perm_action('modificar')) {
-            $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
+            $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+            $aOpciones = $TipoTarifaRepository->getArrayTipoTarifas($isfsv);
+            $oDesplPosiblesTipoTarifas = new Desplegable();
+            $oDesplPosiblesTipoTarifas->setOpciones($aOpciones);
             $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
             $oDesplPosiblesTipoTarifas->setOpcion_sel($id_tarifa);
             $tarifa_html = $oDesplPosiblesTipoTarifas->desplegable();
         } else {
-            $oTipoTarifa = new TipoTarifa($id_tarifa);
+            $oTipoTarifa = $TipoTarifaRepository->findById($id_tarifa);
             $tarifa_html = $oTipoTarifa->getLetra();
         }
 
-        $oIngreso = new Ingreso(array('id_activ' => $Qid_activ));
+        $oIngreso = $IngresoRepository->findById($Qid_activ);
         $ingresos = $oIngreso->getIngresos();
         $num_asistentes = $oIngreso->getNum_asistentes();
         $observ = $oIngreso->getObserv();
@@ -177,13 +186,15 @@ switch ($Qque) {
             exit (_("Debe seleccionar una casa."));
         }
         $a_valores = [];
+        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
         foreach ($aGrupos as $id_ubi => $Titulo) {
             $aWhere['id_ubi'] = $id_ubi;
             $aWhere['status'] = 4;
             $aOperador['status'] = '<';
             $aWhere['_ordre'] = 'f_ini';
-            $GesActividades = new GestorActividad();
-            $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+            $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
 
             $a = 0;
             $i_previstos_acumulados = 0;
@@ -227,7 +238,7 @@ switch ($Qque) {
                     $permiso = '';
                 }
 
-                $oTipoTarifa = new TipoTarifa(array('id_tarifa' => $id_tarifa));
+                $oTipoTarifa = $TipoTarifaRepository->findById($id_tarifa);
                 $modo = $oTipoTarifa->getModo();
 
                 $gesTarifaUbi = new GestorTarifaUbi();
@@ -240,7 +251,7 @@ switch ($Qque) {
                 }
                 if (empty($precio)) {
                     $flag = ($factor_dias != 1) ? '*' : '';
-                    if ($modo == 1) { // precio fijo
+                    if ($modo === 1) { // precio fijo
                         $precio = round($factor_dias * $cantidad, 2) . $flag;
                         $precio_pr = round($factor_dias * $cantidad, 2);
                     } else {
@@ -264,7 +275,7 @@ switch ($Qque) {
                 }
 
                 $err = 0;
-                $oIngreso = new Ingreso(array('id_activ' => $id_activ));
+                $oIngreso = $IngresoRepository->findById($id_activ);
                 $num_asistentes_previstos = $oIngreso->getNum_asistentes_previstos();
                 if (empty($num_asistentes_previstos)) {
                     $txt_err .= empty($txt_err) ? '' : "<br>";
@@ -400,9 +411,9 @@ switch ($Qque) {
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
         // también los datos en la actividad.
         if (!empty($Qid_activ)) {
-            $oActividad = new ActividadAll($Qid_activ);
-            $oActividad->DBCarregar();
-            isset($Q_id_tarifa) ? $oActividad->setTarifa($Q_id_tarifa) : '';
+            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $oActividad = $ActividadAllRepository->findById($Qid_activ);
+            $oActividad->setTarifa($Q_id_tarifa);
             if (isset($Qprecio)) {
                 $Qprecio = str_replace(',', '.', $Qprecio);
                 $oActividad->setPrecio($Qprecio);
@@ -411,25 +422,27 @@ switch ($Qque) {
                 echo _("Hay un error, no se ha guardado la actividad.");
             }
         }
+        $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
         if (!empty($Qid_activ)) {
-            $oIngreso = new Ingreso(array('id_activ' => $Qid_activ));
-            $oIngreso->DBCarregar(); //perque agafi els valor que ja té.
+            $oIngreso = $IngresoRepository->findById($Qid_activ);
         } else {
             $oIngreso = new Ingreso();
+            $oIngreso->setId_activ($Qid_activ);
         }
         $Qingresos = str_replace(',', '.', $Qingresos);
         $oIngreso->setIngresos($Qingresos);
         $oIngreso->setNum_asistentes($Qnum_asistentes);
         $oIngreso->setObserv($Qobserv);
-        if ($oIngreso->DBGuardar() === false) {
+        if ($IngresoRepository->Guardar($oIngreso) === false) {
             echo _("Hay un error, no se ha guardado.");
         }
         break;
     case "eliminar":
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+        $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
         if (!empty($Qid_activ)) {
-            $oIngreso = new Ingreso(array('id_activ' => $Qid_activ));
-            if ($oIngreso->DBEliminar() === false) {
+            $oIngreso = $IngresoRepository->findById($Qid_activ);
+            if ($IngresoRepository->Eliminar($oIngreso) === false) {
                 echo _('Hay un error, no se ha eliminado');
             }
         } else {
@@ -464,6 +477,9 @@ switch ($Qque) {
             }
         }
         $a_valores = [];
+        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
         foreach ($aGrupos as $id_ubi => $Titulo) {
             $aWhere['id_ubi'] = $id_ubi;
             $aWhere['f_ini'] = "'$inicioIso','$finIso'";
@@ -471,8 +487,7 @@ switch ($Qque) {
             $aWhere['status'] = 4;
             $aOperador['status'] = '<';
             $aWhere['_ordre'] = 'f_ini';
-            $GesActividades = new GestorActividad();
-            $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+            $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
             if ($cActividades === false) continue;
 
             $a = 0;
@@ -536,8 +551,7 @@ switch ($Qque) {
 
                 $txt_ctr = '';
                 if ($oPermCtr->have_perm_action('ver')) {
-                    $oEnc = new GestorCentroEncargado();
-                    foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {
+                    foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {
                         $id_ctr = $oCentroEncargado->getId_ubi();
                         $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                         $oCentroDl = $CentroDlRepository->findById($id_ctr);
@@ -556,8 +570,8 @@ switch ($Qque) {
                     }
                     if (!ConfigGlobal::is_app_installed('procesos')
                         || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
-                        $gesCargosActividad = new actividadcargos\model\entity\GestorActividadCargo();
-                        foreach ($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {
+                        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+                        foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
                             $nom_sacd = $oPersona->getPrefApellidosNombre();
                             //separar con #. la coma la utilizo como separador de apellidos, nombre.
                             $txt_sacds .= empty($txt_sacds) ? $nom_sacd : "# $nom_sacd";
@@ -565,7 +579,7 @@ switch ($Qque) {
                     }
                 }
 
-                $oTipoTarifa = new TipoTarifa(array('id_tarifa' => $id_tarifa));
+                $oTipoTarifa = $TipoTarifaRepository->findById($id_tarifa);
                 $letra_tarifa = $oTipoTarifa->getLetra();
 
                 $a_valores[$id_ubi][$a][1] = $f_ini;

@@ -4,22 +4,24 @@ namespace src\actividades\domain\value_objects;
 
 final class RepeticionId
 {
-    private int $value;
+    private ?int $value;
 
-    public function __construct(int $value)
+    public function __construct(?int $value)
     {
-        $this->validate($value);
+        if ($value !== null) {
+            $this->validate($value);
+        }
         $this->value = $value;
     }
 
     private function validate(int $value): void
     {
-        if ($value <= 0) {
+        if ($value < 0) {
             throw new \InvalidArgumentException('RepeticionId must be a positive integer');
         }
     }
 
-    public function value(): int
+    public function value(): ?int
     {
         return $this->value;
     }
@@ -27,5 +29,10 @@ final class RepeticionId
     public function equals(RepeticionId $other): bool
     {
         return $this->value === $other->value();
+    }
+
+    public function isNull(): bool
+    {
+        return $this->value === null;
     }
 }

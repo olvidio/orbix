@@ -1,6 +1,6 @@
 <?php
 
-use actividadplazas\model\entity\ActividadPlazasDl;
+use actividadplazas\legacy\ActividadPlazasDl;
 use core\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 

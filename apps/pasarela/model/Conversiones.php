@@ -3,7 +3,7 @@
 namespace pasarela\model;
 
 
-use actividades\model\entity\GestorTipoDeActividad;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use web\TiposActividades;
 
 /**
@@ -23,14 +23,14 @@ class Conversiones
      *
      * @var array
      */
-    private $c_tipos_activ = [];
+    private array $c_tipos_activ = [];
 
     /**
      * array con los nombres (cuadrienio, bienio...) para cada id_tipo actividad
      *
      * @var array
      */
-    private $a_tipos_nom = [];
+    private array $a_tipos_nom = [];
 
     /**
      * array con los nombres tipo actividad (crt, ca, cv...) para cada id_tipo actividad
@@ -38,12 +38,12 @@ class Conversiones
      *
      * @var array
      */
-    private $a_tipos_activ1 = [];
+    private array $a_tipos_activ1 = [];
 
-    private $a_tipos_asistentes = [];
-    private $a_tipos_activacion = [];
-    private $a_tipos_contribucion_no_duerme = [];
-    private $a_tipos_contribucion_reserva = [];
+    private array $a_tipos_asistentes = [];
+    private array $a_tipos_activacion = [];
+    private array $a_tipos_contribucion_no_duerme = [];
+    private array $a_tipos_contribucion_reserva = [];
 
     public function getArrayContribucionReserva(): array
     {
@@ -214,8 +214,8 @@ class Conversiones
     {
         if (empty($this->c_tipos_activ)) {
             $aWhere = ['_ordre' => 'id_tipo_activ'];
-            $oGesTiposDeActividades = new GestorTipoDeActividad();
-            $cTiposDeActividades = $oGesTiposDeActividades->getTiposDeActividades($aWhere);
+            $TipoDeActividadRepository =  $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+            $cTiposDeActividades = $TipoDeActividadRepository->getTiposDeActividades($aWhere);
             $this->c_tipos_activ = $cTiposDeActividades;
         }
         return $this->c_tipos_activ;

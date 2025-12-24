@@ -11,7 +11,7 @@ use web\Desplegable;
  * replicando el comportamiento legacy de GestorDelegacion.
  *
  * Criterios generales:
- * - Muestra solo delegaciones activas (status = true)
+ * - Muestra solo delegaciones activas (active = true)
  * - Orden por nombre_dl, salvo métodos con etiqueta compuesta donde se ordena por la propia etiqueta.
  * - value/label según cada método (ver docblocks).
  */
@@ -28,7 +28,7 @@ final class DelegacionDropdown
         $sf = ($sfsv == 2) ? 'f' : '';
 
         $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $delegaciones = $repo->getDelegaciones(['status' => true]);
+        $delegaciones = $repo->getDelegaciones(['active' => true]);
 
         $opciones = [];
         foreach ($delegaciones as $dl) {
@@ -54,7 +54,7 @@ final class DelegacionDropdown
     public static function activasOrdenNombre(string $nombre = 'dl', bool $conBlanco = true): Desplegable
     {
         $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $delegaciones = $repo->getDelegaciones(['status' => true, '_ordre' => 'nombre_dl']);
+        $delegaciones = $repo->getDelegaciones(['active' => true, '_ordre' => 'nombre_dl']);
 
         $opciones = [];
         foreach ($delegaciones as $dl) {
@@ -77,7 +77,7 @@ final class DelegacionDropdown
     public static function byRegiones(array $regiones, string $nombre = 'dl', bool $conBlanco = true): Desplegable
     {
         $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $aWhere = ['status' => true, '_ordre' => 'nombre_dl'];
+        $aWhere = ['active' => true, '_ordre' => 'nombre_dl'];
         $aOper = [];
         if (!empty($regiones)) {
             // operador IN de la infraestructura: usar 'region' => 'IN' con valor array si está soportado;
@@ -112,7 +112,7 @@ final class DelegacionDropdown
         $propia = ConfigGlobal::mi_dele();
 
         $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $delegaciones = $repo->getDelegaciones(['status' => true]);
+        $delegaciones = $repo->getDelegaciones(['active' => true]);
 
         $opciones = [];
         foreach ($delegaciones as $dl) {
@@ -143,7 +143,7 @@ final class DelegacionDropdown
         $propia = ConfigGlobal::mi_dele();
 
         $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $delegaciones = $repo->getDelegaciones(['status' => true]);
+        $delegaciones = $repo->getDelegaciones(['active' => true]);
 
         $opciones = [];
         foreach ($delegaciones as $dl) {

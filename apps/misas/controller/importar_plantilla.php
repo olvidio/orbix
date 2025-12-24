@@ -2,26 +2,15 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
-use core\ViewTwig;
-use encargossacd\model\EncargoConstants;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
-use encargossacd\model\entity\GestorEncargoTipo;
 use misas\domain\EncargoDiaId;
 use misas\domain\EncargoDiaTend;
 use misas\domain\EncargoDiaTstart;
 use misas\domain\entity\EncargoDia;
-use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use misas\model\EncargosZona;
-use web\DateTimeLocal;
-use web\Hash;
-use web\TiposActividades;
 use Ramsey\Uuid\Uuid as RamseyUuid;
-use zonassacd\model\entity\GestorZonaSacd;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use web\DateTimeLocal;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -107,15 +96,14 @@ if($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES) {
     $oFinDestino = new DateTimeLocal(EncargoDia::FIN_MENSUAL_TRES);
 }
 
-$oGesEncargoTipo = new GestorEncargoTipo();
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 
 $grupo = '8...';
 $aWhere = [];
 $aOperador = [];
 $aWhere['id_tipo_enc'] = '^' . $grupo;
 $aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+$cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
 $a_tipo_enc = [];
 $posibles_encargo_tipo = [];

@@ -2,13 +2,13 @@
 
 namespace permisos\model;
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\PermAccion;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use function core\is_true;
 
@@ -59,8 +59,8 @@ class PermisosActividades
      *
      * @var array
      */
-    private $aPermDl = [];
-    private $aPermOtras = [];
+    private array $aPermDl = [];
+    private array $aPermOtras = [];
     /**
      * Per saber a quina activitat fa referència.
      *
@@ -73,38 +73,38 @@ class PermisosActividades
      *
      * @var integer
      */
-    private $iid_activ;
+    private int $iid_activ;
     /**
      * Id_tipo_proceso de PermisoActividad
      *
      * @var integer
      */
-    private $iid_tipo_proceso;
+    private int $iid_tipo_proceso;
     /**
      * propia de PermisoActividad
      *
      * @var boolean
      */
-    private $bpropia;
+    private bool $bpropia;
     /**
      * número de orden de la fase actual
      *
      * @var integer
      */
-    private $iid_fase;
+    private int $iid_fase;
     /**
      * si ha llegado al final.
      *
      * @var boolean
      */
-    private $btop;
+    private bool $btop;
 
     /**
      * fases de la actividad completadas.
      *
      * @var array
      */
-    private $aFasesCompletadas = [];
+    private array $aFasesCompletadas = [];
 
     /* METODES ----------------------------------------------------------------- */
     public function __construct($iid_usuario)
@@ -194,7 +194,8 @@ class PermisosActividades
         $this->btop = false;
         $this->iid_activ = $id_activ;
 
-        $oActividad = new ActividadAll($id_activ);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($id_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
@@ -250,10 +251,10 @@ class PermisosActividades
         $this->bpropia = $dl_propia;
         $id_tipo_activ = $this->sid_tipo_activ;
         // si vengo de una búsqueda, el id_tipo_actividad puede ser con '...'
-        // pongo el tipo básico (sin specificar)
+        // pongo el tipo básico (sin especificar)
         //$id_tipo_activ = str_replace('.', '0', $id_tipo_activ);
-        $GesTiposActiv = new GestorTipoDeActividad();
-        $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ, $dl_propia);
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
 
         if (empty($aTiposDeProcesos)) {
             echo _("debería crear un proceso para este tipo de actividad");

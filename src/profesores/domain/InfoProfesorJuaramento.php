@@ -21,6 +21,8 @@ class InfoProfesorJuaramento extends DatosInfoRepo
         $this->setClase('src\\profesores\\domain\\entity\\ProfesorJuramento');
         $this->setMetodoGestor('getProfesorJuramentos');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(ProfesorJuramentoRepositoryInterface::class);
     }
 
     public function getId_dossier()
@@ -42,7 +44,7 @@ class InfoProfesorJuaramento extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get(ProfesorJuramentoRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getProfesorJuramentos($aWhere, $aOperador);
 
         return $Coleccion;

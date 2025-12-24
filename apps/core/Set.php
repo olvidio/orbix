@@ -2,7 +2,7 @@
 
 namespace core;
 
-use actividades\model\entity\GestorActividad;
+use actividades\legacy\GestorActividad;
 
 /**
  * Set

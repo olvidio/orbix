@@ -1,6 +1,7 @@
 <?php
 
-use zonassacd\model\entity\GestorZona;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use web\Desplegable;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -12,8 +13,8 @@ require_once("apps/core/global_object.inc");
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
-$oGestorZona = new GestorZona();
-$aOpciones = $oGestorZona->getArrayZonas();
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$aOpciones = $ZonaRepository->getArrayZonas();
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
 $oDesplZonas->setBlanco(FALSE);$oDesplZonas->setNombre('id_zona_sel');

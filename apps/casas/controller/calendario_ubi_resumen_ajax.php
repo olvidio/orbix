@@ -1,15 +1,14 @@
 <?php
 
-use actividades\model\entity\GestorActividad;
-use actividadtarifas\model\entity\GestorTipoTarifa;
-use casas\model\entity\GestorUbiGasto;
-use casas\model\entity\Ingreso;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\casas\domain\contracts\IngresoRepositoryInterface;
+use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use ubis\model\entity\GestorCasaPeriodo;
+use ubis\model\entity\GestorTarifaUbi;
 use web\DateTimeLocal;
 use web\Hash;
 use web\TiposActividades;
-use ubis\model\entity\GestorCasaPeriodo;
-use ubis\model\entity\GestorTarifaUbi;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -90,11 +89,11 @@ $p_df = $GesCasaPeriodo->getCasaPeriodosDias(2, $Qid_ubi, $oInicio, $oFin);
 // Gastos ------
 $oInicio_anterior = new DateTimeLocal("$any_anterior/1/1");
 $oFin_anterior = new DateTimeLocal("$any_anterior/12/31");
-$GesGastos = new GestorUbiGasto();
+$UbiGastoRepository = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
 // tipo: 1=sv, 2=sf, 3=gastos
-$a_resumen[1]['aportacion'] = $GesGastos->getSumaGastos($Qid_ubi, 1, $oInicio_anterior, $oFin_anterior);
-$a_resumen[2]['aportacion'] = $GesGastos->getSumaGastos($Qid_ubi, 2, $oInicio_anterior, $oFin_anterior);
-$a_resumen[0]['gasto'] = $GesGastos->getSumaGastos($Qid_ubi, 3, $oInicio_anterior, $oFin_anterior);
+$a_resumen[1]['aportacion'] = $UbiGastoRepository->getSumaGastos($Qid_ubi, 1, $oInicio_anterior, $oFin_anterior);
+$a_resumen[2]['aportacion'] = $UbiGastoRepository->getSumaGastos($Qid_ubi, 2, $oInicio_anterior, $oFin_anterior);
+$a_resumen[0]['gasto'] = $UbiGastoRepository->getSumaGastos($Qid_ubi, 3, $oInicio_anterior, $oFin_anterior);
 
 if (empty($a_resumen[0]['gasto'])) {
 
@@ -158,8 +157,8 @@ $aOperador['f_fin'] = '>=';
 $aWhere['id_tipo_activ'] = "^$isfsv";
 $aOperador['id_tipo_activ'] = '~';
 $aWhere['_ordre'] = 'f_ini';
-$GesActividades = new GestorActividad();
-$cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+$cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
 
 $i = 0;
 $p_tda = 0;
@@ -168,6 +167,7 @@ $p_ta = 0;
 $p_tia = 0;
 $r_tia = 0;
 $a_actividades = [];
+$IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_activ = $oActividad->getId_activ();
@@ -187,7 +187,7 @@ foreach ($cActividades as $oActividad) {
     $oTipoActiv = new TiposActividades($id_tipo_activ);
     $nom = $oTipoActiv->getNom() . " ($f_ini_local - $f_fin_local)";
     if (!empty($id_tarifa)) {
-        $oIngreso = new Ingreso($id_activ);
+        $oIngreso = $IngresoRepository->findById($id_activ);
         $num_asistentes = $oIngreso->getNum_asistentes();
         if (empty($num_asistentes)) $num_asistentes = $plazas_min;
         $asistencias = $num_dias * $num_asistentes;

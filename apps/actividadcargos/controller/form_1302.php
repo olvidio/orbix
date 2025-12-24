@@ -29,14 +29,13 @@
 
 //Comentario para comprobar subidas desde Eclipse (2)
 
-use actividadcargos\model\entity\ActividadCargo;
-use actividades\model\entity\Actividad;
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use frontend\shared\web\Desplegable;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use web\Hash;
 use function core\is_true;
 
@@ -78,14 +77,16 @@ $id_activ_real = '';
 $nom_activ = '';
 $cActividades = [];
 if (!empty($Qid_item)) { //caso de modificar
-    $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item));
+    $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+    $oActividadCargo = $ActividadCargoRepository->findById($Qid_item);
     $id_activ = $oActividadCargo->getId_activ();
     $id_nom = $oActividadCargo->getId_nom();
     $id_cargo = $oActividadCargo->getId_cargo();
-    $puede_agd = $oActividadCargo->getPuede_agd();
+    $puede_agd = $oActividadCargo->isPuede_agd();
     $observ = $oActividadCargo->getObserv();
 
-    $oActividad = new Actividad(array('id_activ' => $id_activ));
+    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+    $oActividad = $ActividadRepository->findById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
     // si es de la sf quito la 'f'
     $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
@@ -107,11 +108,11 @@ if (!empty($Qid_item)) { //caso de modificar
 
     $aWhere['id_tipo_activ'] = $id_tipo;
     $aOperadores['id_tipo_activ'] = '~';
-    $aWhere['status'] = ActividadAll::STATUS_ACTUAL;
+    $aWhere['status'] = StatusId::ACTUAL;
     $aWhere['_ordre'] = 'f_ini';
 
-    $oGesActividades = new GestorActividad();
-    $cActividades = $oGesActividades->getActividades($aWhere, $aOperadores);
+    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+    $cActividades = $ActividadRepository->getActividades($aWhere, $aOperadores);
 
     $puede_agd = "f"; //valor por defecto
     $observ = ""; //valor por defecto

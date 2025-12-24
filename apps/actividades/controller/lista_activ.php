@@ -26,12 +26,12 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
-use actividadescentro\model\entity\GestorCentroEncargado;
-use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -61,7 +61,7 @@ if (isset($_POST['stack'])) {
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
 // sino en $Posicion. Le paso la referecia del stack donde está la información.
-if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
+if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== '')) {
     $oPosicion->goStack($QGstack);
 
     $Qque = $oPosicion->getParametro('que');
@@ -90,7 +90,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
     $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
     //Si vengo por medio de Posicion, borro la última
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -123,23 +123,23 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
     $Qseccion = (array)filter_input(INPUT_POST, 'seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (empty($Qstatus)) {
         $Qa_status = (array)filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $Qstatus = empty($Qa_status) ? ActividadAll::STATUS_ACTUAL : $Qa_status;
+        $Qstatus = empty($Qa_status) ? StatusId::ACTUAL : $Qa_status;
     }
 
     $aGoBack = [
-        'que' => $Qque,
-        'status' => $Qstatus,
-        'id_tipo_activ' => $Qid_tipo_activ,
-        'filtro_lugar' => $Qfiltro_lugar,
-        'id_ubi' => $Qid_ubi,
-        'periodo' => $Qperiodo,
-        'year' => $Qyear,
-        'dl_org' => $Qdl_org,
-        'empiezamin' => $Qempiezamin,
-        'empiezamax' => $Qempiezamax,
-        'c_activ' => $Qc_activ,
-        'asist' => $Qasist,
-        'seccion' => $Qseccion,
+            'que' => $Qque,
+            'status' => $Qstatus,
+            'id_tipo_activ' => $Qid_tipo_activ,
+            'filtro_lugar' => $Qfiltro_lugar,
+            'id_ubi' => $Qid_ubi,
+            'periodo' => $Qperiodo,
+            'year' => $Qyear,
+            'dl_org' => $Qdl_org,
+            'empiezamin' => $Qempiezamin,
+            'empiezamax' => $Qempiezamax,
+            'c_activ' => $Qc_activ,
+            'asist' => $Qasist,
+            'seccion' => $Qseccion,
     ];
     $oPosicion->setParametros($aGoBack, 1);
 }
@@ -181,8 +181,8 @@ if (empty($Qid_tipo_activ)) {
         $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
 
         if (empty($Qssfsv)) {
-            if ($mi_sfsv == 1) $Qssfsv = 'sv';
-            if ($mi_sfsv == 2) $Qssfsv = 'sf';
+            if ($mi_sfsv === 1) $Qssfsv = 'sv';
+            if ($mi_sfsv === 2) $Qssfsv = 'sf';
         }
         $sasistentes = empty($Qsasistentes) ? '.' : $Qsasistentes;
         $sactividad = empty($Qsactividad) ? '.' : $Qsactividad;
@@ -236,8 +236,8 @@ if (!empty($Qdl_org)) {
 }
 
 $aWhere['_ordre'] = 'f_ini';
-$GesActividades = new GestorActividad();
-$cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+$cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
 
 // Titulo	
 if (($Qque === 'list_active_inv_sg') || ($Qque === 'list_activ_sr')) {
@@ -252,10 +252,10 @@ if (($Qque === 'list_active_inv_sg') || ($Qque === 'list_activ_sr')) {
 
 // Ver hora si...
 if (($Qque === "list_activ_compl")
-    || ($Qque === "list_activ_inv_sg")
-    || ($Qque === "list_activ_sr")
-    || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
-    || ($_SESSION['oPerm']->have_perm_oficina('des'))
+        || ($Qque === "list_activ_inv_sg")
+        || ($Qque === "list_activ_sr")
+        || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
+        || ($_SESSION['oPerm']->have_perm_oficina('des'))
 ) {
     $ver_hora = 1;
 } else {
@@ -263,8 +263,8 @@ if (($Qque === "list_activ_compl")
 }
 // ver id_tarifa y sacd si...
 if (!(($_SESSION['oPerm']->have_perm_oficina('sg'))
-    && ($Qque === "list_activ_inv_sg")
-    &&  !($_SESSION['oPerm']->have_perm_oficina('admin')))) {
+        && ($Qque === "list_activ_inv_sg")
+        && !($_SESSION['oPerm']->have_perm_oficina('admin')))) {
     $ver_tarifa = 1;
     $ver_sacd = 1;
 } else {
@@ -308,6 +308,8 @@ $a_botones = [];
 $a_valores = [];
 $i = 0;
 $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
+$TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+$CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_activ = $oActividad->getId_activ();
@@ -343,8 +345,8 @@ foreach ($cActividades as $oActividad) {
     $snom_tipo = $oTipoActiv->getNom_tipoText();
 
     if ((($_SESSION['oPerm']->have_perm_oficina('sg'))
-            || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
-            || ($_SESSION['oPerm']->have_perm_oficina('des'))) && !($_SESSION['oPerm']->have_perm_oficina('admin'))) {
+                    || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
+                    || ($_SESSION['oPerm']->have_perm_oficina('des'))) && !($_SESSION['oPerm']->have_perm_oficina('admin'))) {
         if ($snom_tipo === "(sin especificar)") {
             $snom_tipo = "&nbsp;";
         }
@@ -373,21 +375,20 @@ foreach ($cActividades as $oActividad) {
     $a_valores[$i][9] = $snom_tipo;
     $a_valores[$i][10] = $nombre_ubi;
     if ($ver_tarifa == 1) {
-        $oTarifa = new TipoTarifa($tarifa);
+        $oTarifa = $TipoTarifaRepository->findById($tarifa);
         $tarifa = $oTarifa->getLetra();
         $a_valores[$i][11] = $tarifa;
     }
-    $oEnc = new GestorCentroEncargado();
     $ctrs = '';
-    foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
+    foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
         $ctrs .= $oEncargado->getNombre_ubi() . ', ';
     }
     $ctrs = substr($ctrs, 0, -2);
     $a_valores[$i][12] = $ctrs;
     if ($ver_sacd == 1) {
-        $oCargosActividad = new GestorActividadCargo();
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
         $sacds = '';
-        foreach ($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {
+        foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
             $sacds .= $oPersona->getPrefApellidosNombre() . "# "; // la coma la utilizo como separador de apellidos, nombre.
         }
         $sacds = substr($sacds, 0, -2);

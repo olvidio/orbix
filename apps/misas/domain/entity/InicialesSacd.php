@@ -2,9 +2,9 @@
 
 namespace misas\domain\entity;
 
-use misas\domain\repositories\InicialesSacdRepository;
-//use personas\model\entity\PersonaEx;
-use personas\model\entity\PersonaSacd;
+
+use misas\domain\repositories\InicialesSacdRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 
 class InicialesSacd extends InicialesSacdDB
 {
@@ -15,7 +15,8 @@ class InicialesSacd extends InicialesSacdDB
         $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
         if ($InicialesSacd === null) {
 //            if ($id_nom > 0) {
-                $PersonaSacd = new PersonaSacd($id_nom);
+                $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+                $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
                 // iniciales
                 $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
                 $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
@@ -46,7 +47,8 @@ class InicialesSacd extends InicialesSacdDB
     {
         $nombre_sacd='';
         if ($id_nom>0) {
-            $PersonaSacd = new PersonaSacd($id_nom);
+            $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+            $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
             $nombre_sacd = $PersonaSacd->getNombreApellidos().' ('.$this->iniciales($id_nom).')';
         }
 //        if ($id_nom<0) {

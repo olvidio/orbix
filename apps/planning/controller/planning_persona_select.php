@@ -1,14 +1,12 @@
 <?php
 
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\GestorPersonaEx;
-use personas\model\entity\GestorPersonaN;
-use personas\model\entity\GestorPersonaNax;
-use personas\model\entity\GestorPersonaS;
-use personas\model\entity\GestorPersonaSacd;
-use personas\model\entity\GestorPersonaSSSC;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -140,33 +138,30 @@ if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
 } else {
     switch ($Qobj_pau) {
         case 'PersonaN':
-            $GesPersonas = new GestorPersonaN();
+            $PersonaRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
             break;
         case 'PersonaAgd':
-            $GesPersonas = new GestorPersonaAgd();
+            $PersonaRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
             break;
         case 'PersonaNax':
-            $GesPersonas = new GestorPersonaNax();
+            $PersonaRepository = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
             break;
         case 'PersonaS':
-            $GesPersonas = new GestorPersonaS();
+            $PersonaRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
             break;
         case 'PersonaSSSC':
-            $GesPersonas = new GestorPersonaSSSC();
+            $PersonaRepository = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
             break;
         case 'PersonaDl':
-            $GesPersonas = new GestorPersonaDl();
+            $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
             break;
         case 'PersonaEx':
-            $GesPersonas = new GestorPersonaEx();
-            break;
-        case 'PersonaSacd':
-            $GesPersonas = new GestorPersonaSacd();
+            $PersonaRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
             break;
         default:
-            $GesPersonas = new GestorPersonaDl();
+            $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
     }
-    $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+    $cPersonas = $PersonaRepository->getPersonas($aWhere, $aOperador);
 }
 
 /*

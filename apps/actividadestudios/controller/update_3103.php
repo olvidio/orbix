@@ -5,9 +5,11 @@ use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\MatriculaDl;
-use asistentes\model\entity\AsistentePub;
 use dossiers\model\entity\Dossier;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\value_objects\DossierPk;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -49,22 +51,18 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_preceptor = (integer)filter_input(INPUT_POST, 'id_preceptor');
 }
 
+$service = $GLOBALS['container']->get(AsistenteActividadService::class);
+$AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ);
+$AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+$oAsistente = $AsistenteRepository->findById($Qid_activ, $Qid_nom);
 switch ($Qmod) {
     case 'observ_est':  //------------ observaciones estudios --------
-        $oAsistentePub = new AsistentePub();
-        $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $Qid_activ);
-        $oAsistente->setPrimary_key(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom));
-        $oAsistente->DBCarregar();
         $oAsistente->setObserv_est($Qobserv_est);
-        $oAsistente->DBGuardar();
+        $AsistenteRepository->Guardar($oAsistente);
         break;
     case 'observ':  //------------ observaciones --------
-        $oAsistentePub = new AsistentePub();
-        $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $Qid_activ);
-        $oAsistente->setPrimary_key(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom));
-        $oAsistente->DBCarregar();
         $oAsistente->setObserv($Qobserv);
-        $oAsistente->DBGuardar();
+        $AsistenteRepository->Guardar($oAsistente);
         break;
     case 'plan':  //------------ confirmar estudios --------
         if (is_true($Qest_ok)) {
@@ -72,12 +70,8 @@ switch ($Qmod) {
         } else {
             $est_ok = 'f';
         }
-        $oAsistentePub = new AsistentePub();
-        $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $Qid_activ);
-        $oAsistente->setPrimary_key(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom));
-        $oAsistente->DBCarregar();
         $oAsistente->setEst_ok($est_ok);
-        $oAsistente->DBGuardar();
+        $AsistenteRepository->Guardar($oAsistente);
         break;
     case 'eliminar': //------------ BORRAR --------
         if ($Qpau === "p") {
@@ -99,9 +93,10 @@ switch ($Qmod) {
                     $msg_err = _("hay un error, no se ha borrado");
                 }
                 // hay que cerrar el dossier para esta persona, si no tiene más actividades:
-                $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303));
-                $oDossier->abrir();
-                $oDossier->DBGuardar();
+                $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+                $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303]));
+                $oDossier->cerrar();
+                $DosierRepository->Guardar($oDossier);
                 // Si la puse yo, hay que eliminar esta asignatura a las asignaturas que se dan en el ca
                 // si no hay nadie más matriculado:
                 $oGesActividadAsignatura = new GestorActividadAsignaturaDl();
@@ -122,9 +117,10 @@ switch ($Qmod) {
                 $msg_err = _("hay un error, no se ha borrado");
             }
             // hay que cerrar el dossier para esta actividad, si no tiene más personas:
-            $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $id_activ, 'id_tipo_dossier' => 3103));
-            $oDossier->abrir();
-            $oDossier->DBGuardar();
+            $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+            $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $id_activ, 'id_tipo_dossier' => 3103]));
+            $oDossier->cerrar();
+            $DosierRepository->Guardar($oDossier);
         }
         break;
     case 'nuevo': //------------ NUEVO --------
@@ -145,13 +141,14 @@ switch ($Qmod) {
             $msg_err = _("hay un error, no se ha guardado");
         } else {
             // si no está abierto, hay que abrir el dossier para esta persona
-            $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1303));
+            $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+            $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1303]));
             $oDossier->abrir();
-            $oDossier->DBGuardar();
+            $DosierRepository->Guardar($oDossier);
             // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-            $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3103));
-            $oDossier->abrir();
-            $oDossier->DBGuardar();
+            $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3103]));
+            $oDossier->cerrar();
+            $DosierRepository->Guardar($oDossier);
 
             // hay que añadir esta asignatura a las asignaturas que se dan en el ca
             // compruebo que no existe:

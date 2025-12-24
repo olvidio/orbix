@@ -2,12 +2,12 @@
 
 namespace asistentes\model;
 
-use actividades\model\entity\ActividadAll;
-use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\personas\domain\entity\Persona;
 use web\BotonesCurso;
 use web\Hash;
 use web\Lista;
@@ -120,10 +120,9 @@ class Select1301
         $aWhere = $this->oBotonesCurso->getWhere();
         $aOperator = $this->oBotonesCurso->getOperator();
 
-        $gesAsistente = new GestorAsistente();
-        $oPersona = Persona::newPersona($this->id_pau);
+        $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
         if (!is_object($oPersona)) {
-            $this->msg_err = "<br>$oPersona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
+            $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
             exit($this->msg_err);
         }
         // permisos Según el tipo de persona: n, agd, s
@@ -135,21 +134,23 @@ class Select1301
         $a_valores = [];
         $aWhereNom = ['id_nom' => $this->id_pau];
         $aOperadorNom = [];
-        $cActividadesAsistente = $gesAsistente->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperator, TRUE);
+        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+        $cActividadesAsistente = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperator, TRUE);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($cActividadesAsistente as $oAsistente) {
             $i++;
             $id_activ = $oAsistente->getId_activ();
             $id_tabla_asist = $oAsistente->getId_tabla();
-            $oActividad = new ActividadAll($id_activ);
+            $oActividad = $ActividadAllRepository->findById($id_activ);
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $dl_org = $oActividad->getDl_org();
             $f_ini = $oActividad->getF_ini()->getFromLocal();
             $f_fin = $oActividad->getF_fin()->getFromLocal();
 
-            $propio = $oAsistente->getPropio();
-            $falta = $oAsistente->getFalta();
-            $est_ok = $oAsistente->getEst_ok();
+            $propio = $oAsistente->isPropio();
+            $falta = $oAsistente->isFalta();
+            $est_ok = $oAsistente->isEst_ok();
             $observ = $oAsistente->getObserv();
 
             $oTipoActividad = new TiposActividades($id_tipo_activ);

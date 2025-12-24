@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use web\Desplegable;
 use web\Hash;
 
 /**
@@ -109,9 +110,11 @@ switch ($Qn_agd) {
 }
 
 $oGesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-$oDesplCentros = $oGesCentros->getListaCentros("WHERE status = 't' AND tipo_ctr ~ '^a|^n' ");
+$aOpciones = $oGesCentros->getArrayCentros("WHERE status = 't' AND tipo_ctr ~ '^a|^n' ");
+$oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setBlanco(true);
+$oDesplCentros->setOpciones($aOpciones);
 $oDesplCentros->setOpcion_sel($Qid_ubi);
 $oDesplCentros->setAction('fnjs_otro(1)');
 

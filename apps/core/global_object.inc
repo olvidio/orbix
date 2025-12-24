@@ -13,9 +13,9 @@ use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\Hash;
 use web\Posicion;
-use zonassacd\model\entity\GestorZona;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     // Para detectar el error: "Headers already sent"
@@ -245,7 +245,7 @@ if (!isset($GLOBALS['container'])) {
 
     // Cache de compilación en producción
     if (class_exists(ConfigGlobal::class) && !ConfigGlobal::is_debug_mode()) {
-        $cacheDir = __DIR__ . '/../var/cache/php-di';
+        $cacheDir = __DIR__ . '/../../var/cache/php-di';
         if (!is_dir($cacheDir)) {
             if (!mkdir($cacheDir, 0775, true) && !is_dir($cacheDir)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $cacheDir));
@@ -381,8 +381,8 @@ if (ConfigGlobal::is_app_installed('menus')) {
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p_sacd')) {
             $id_nom = $oMiUsuario->getId_pauAsString();
             if (!empty($id_nom)) {
-                $oGesZonas = new GestorZona();
-                $isJefeZona = $oGesZonas->isJefeZona($id_nom);
+                $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+                $isJefeZona = $ZonaRepository->isJefeZona($id_nom);
             }
         }
         if ($isJefeZona) {

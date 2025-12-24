@@ -1,7 +1,7 @@
 <?php
 
-use personas\model\entity\Persona;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\ContestarJson;
 
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');
@@ -21,7 +21,7 @@ $data['f_enviado'] = $oCertificadoEmitido->getF_enviado()->getFromLocal();
 $data['firmado'] = $oCertificadoEmitido->isFirmado();
 $data['content'] = base64_encode($oCertificadoEmitido->getDocumento());
 
-$oPersona = Persona::NewPersona($id_nom);
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
 $apellidos_nombre = $oPersona->getApellidosNombre();
 $data['nom'] = empty($nom) ? $apellidos_nombre : $nom;
 $data['apellidos_nombre'] = $apellidos_nombre;

@@ -9,10 +9,10 @@ use dbextern\model\entity\GestorPersonaBDU;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\entity\PersonaBDU;
 use PDO;
+use personas\legacy\GestorTelecoPersonaDl;
+use personas\legacy\TelecoPersonaDl;
 use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\GestorTelecoPersonaDl;
 use personas\model\entity\PersonaDl;
-use personas\model\entity\TelecoPersonaDl;
 use personas\model\entity\TrasladoDl;
 use web\DateTimeLocal;
 
@@ -520,7 +520,7 @@ class SincroDB
         $GesTeleco = new GestorTelecoPersonaDl();
         // Telf movil  --particular(5)
         if (!empty($Tfno_Movil)) {
-            $cTelecos = $GesTeleco->getTelecos(array('id_nom' => $id_orbix, 'tipo_teleco' => 'móvil', 'desc_teleco' => 5));
+            $cTelecos = $GesTeleco->getTelecos(array('id_nom' => $id_orbix, 'tipo_teleco' => 'móvil', 'id_desc_teleco' => 5));
             if (!empty($cTelecos) && count($cTelecos) > 0) {
                 $oTeleco = $cTelecos[0];
                 $oTeleco->DBCarregar();
@@ -530,7 +530,7 @@ class SincroDB
                 $oTeleco = new TelecoPersonaDl();
                 $oTeleco->setId_nom($id_orbix);
                 $oTeleco->setTipo_teleco('móvil');
-                $oTeleco->setDesc_teleco(5);
+                $oTeleco->setId_desc_teleco(5);
                 $oTeleco->setNum_teleco($Tfno_Movil);
                 $oTeleco->setObserv('de listas');
             }
@@ -540,7 +540,7 @@ class SincroDB
         }
         // e-mail   --principal(13)
         if (!empty($Email)) {
-            $cTelecos = $GesTeleco->getTelecos(array('id_nom' => $id_orbix, 'tipo_teleco' => 'e-mail', 'desc_teleco' => 13));
+            $cTelecos = $GesTeleco->getTelecos(array('id_nom' => $id_orbix, 'tipo_teleco' => 'e-mail', 'id_desc_teleco' => 13));
             if (!empty($cTelecos) && count($cTelecos) > 0) {
                 $oTeleco = $cTelecos[0];
                 $oTeleco->DBCarregar();
@@ -550,7 +550,7 @@ class SincroDB
                 $oTeleco = new TelecoPersonaDl();
                 $oTeleco->setId_nom($id_orbix);
                 $oTeleco->setTipo_teleco('e-mail');
-                $oTeleco->setDesc_teleco(13);
+                $oTeleco->setId_desc_teleco(13);
                 $oTeleco->setNum_teleco($Email);
                 $oTeleco->setObserv('de listas');
             }

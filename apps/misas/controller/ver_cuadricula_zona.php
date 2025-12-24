@@ -1,25 +1,26 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
-use encargossacd\model\EncargoConstants;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
-use encargossacd\model\entity\GestorEncargoTipo;
 use misas\domain\entity\EncargoDia;
 use misas\domain\entity\InicialesSacd;
+use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use misas\model\EncargosZona;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\EncargoConstants;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
 use web\TiposActividades;
-use zonassacd\model\entity\GestorZonaSacd;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -101,8 +102,8 @@ if ($QTipoPlantilla !== 'p') {
 $aWhere = [];
 $aWhere['id_zona'] = $Qid_zona;
 $aOperador = [];
-$GesZonasSacd = new GestorZonaSacd();
-$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
+$ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
+$cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
 $sacd_zona = [];
 foreach ($cZonaSacd as $oZonaSacd) {
     $id_nom = $oZonaSacd->getId_nom();
@@ -144,8 +145,8 @@ switch ($Qperiodo) {
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
     case "este_mes":
-        $este_mes = date('m');
-        $anyo = date('Y');
+        $este_mes = (int)date('m');
+        $anyo = (int)date('Y');
         $empiezamin = new DateTimeLocal(date($anyo . '-' . $este_mes . '-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         $siguiente_mes = $este_mes + 1;
@@ -158,11 +159,9 @@ switch ($Qperiodo) {
         $empiezamax->sub($un_dia);
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
-
-
     case "proximo_mes":
-        $proximo_mes = date('m') + 1;
-        $anyo = date('Y');
+        $proximo_mes = (int)date('m') + 1;
+        $anyo = (int)date('Y');
         if ($proximo_mes == 13) {
             $proximo_mes = 1;
             $anyo++;
@@ -326,7 +325,7 @@ $columns_cuadricula .= "]";
 
 $data_cuadricula = [];
 
-$oGesEncargoTipo = new GestorEncargoTipo();
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 
 $grupo = '8...';
 //if (!empty($grupo)) {
@@ -334,8 +333,7 @@ $aWhere = [];
 $aOperador = [];
 $aWhere['id_tipo_enc'] = '^' . $grupo;
 $aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+$cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
 $posibles_encargo_tipo = [];
 foreach ($cEncargoTipos as $oEncargoTipo) {
@@ -540,7 +538,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
                 $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                if ($hora_ini == '00:00')
+                if ($hora_ini === '00:00')
                     $hora_ini = '';
                 $InicialesSacd = new InicialesSacd();
                 $iniciales = $InicialesSacd->iniciales($id_nom);
@@ -652,6 +650,7 @@ $contador_1a_sacd = [];
 $contador_total_sacd = [];
 $esta_sacd = [];
 $donde_esta_sacd = [];
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
 foreach ($sacd_zona as $id_nom => $nombre_sacd) {
 //    echo $id_nom.'->'.$nombre_sacd.'<br>';
     $contador_sacd[$id_nom] = [];
@@ -671,22 +670,21 @@ foreach ($sacd_zona as $id_nom => $nombre_sacd) {
     $aOperadorAct['f_ini'] = '<=';
     $aWhereAct['f_fin'] = $sInicio_iso;
     $aOperadorAct['f_fin'] = '>=';
-    $aWhereAct['status'] = ActividadAll::STATUS_ACTUAL;
+    $aWhereAct['status'] = StatusId::ACTUAL;
     $aWhere = ['id_nom' => $id_nom];
     $aOperador = [];
 
-    $oGesActividadCargo = new GestorActividadCargo();
-    $cAsistentes = $oGesActividadCargo->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+    $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+    $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
 
     foreach ($cAsistentes as $aAsistente) {
         $id_activ = $aAsistente['id_activ'];
         $propio = $aAsistente['propio'];
         $id_cargo = empty($aAsistente['id_cargo']) ? '' : $aAsistente['id_cargo'];
 
-// Seleccionar sólo las del periodo
+        // Seleccionar sólo las del periodo
         $aWhereAct['id_activ'] = $id_activ;
-        $GesActividades = new GestorActividad();
-        $cActividades = $GesActividades->getActividades($aWhereAct, $aOperadorAct);
+        $cActividades = $ActividadRepository->getActividades($aWhereAct, $aOperadorAct);
         if (is_array($cActividades) && count($cActividades) == 0) continue;
 
         $oActividad = $cActividades[0]; // sólo debería haber una.
@@ -726,14 +724,15 @@ foreach ($sacd_zona as $id_nom => $nombre_sacd) {
     $aOperadorE['f_ini'] = '<=';
     $aWhereE['f_fin'] = "'$sInicio_iso'";
     $aOperadorE['f_fin'] = '>=';
-    $GesAusencias = new GestorEncargoSacdHorario();
-    $cAusencias = $GesAusencias->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+    $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+    $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
+    $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
     foreach ($cAusencias as $oTareaHorarioSacd) {
         $id_enc = $oTareaHorarioSacd->getId_enc();
         $oF_ini = $oTareaHorarioSacd->getF_ini();
         $oF_fin = $oTareaHorarioSacd->getF_fin();
 
-        $oEncargo = new Encargo($id_enc);
+        $oEncargo = $EncargoRepository->findById($id_enc);
         $id_tipo_enc = $oEncargo->getId_tipo_enc();
         $id = (string)$id_tipo_enc;
         if ($id[0] != 7 && $id[0] != 4) {
@@ -809,8 +808,8 @@ $data_cuadricula[] = $data_cols;
 $aWhere = [];
 $aWhere['id_zona'] = $Qid_zona;
 $aOperador = [];
-$GesZonasSacd = new GestorZonaSacd();
-$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
+$ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
+$cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
 foreach ($cZonaSacd as $oZonaSacd) {
     $data_cols = [];
     $id_nom = $oZonaSacd->getId_nom();
@@ -823,6 +822,7 @@ foreach ($cZonaSacd as $oZonaSacd) {
 }
 
 ksort($lista_sacd);
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 foreach ($lista_sacd as $key => $nombre_sacd) {
     $exp_key = explode('#', $key);
     $id_nom = $exp_key[1];
@@ -856,7 +856,7 @@ foreach ($lista_sacd as $key => $nombre_sacd) {
         foreach ($cEncargosDia as $oEncargoDia) {
             $id_enc = $oEncargoDia->getId_enc();
 //            echo 'id_enc: '.$id_enc.'<br>';
-            $oEncargo = new Encargo(array('id_enc' => $id_enc));
+            $oEncargo = $EncargoRepository->findById($id_enc);
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
             $id_zona_enc = $oEncargo->getId_zona();
 //            echo 'tipo: '.$id_tipo_enc.' zona: '.$id_zona_enc.'<br>';

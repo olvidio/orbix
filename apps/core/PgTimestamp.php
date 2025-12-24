@@ -4,6 +4,7 @@ namespace core;
 
 use Exception;
 use web\DateTimeLocal;
+use web\TimeLocal;
 
 /**
  * @author dani
@@ -34,15 +35,24 @@ class PgTimestamp
      *
      * @return mixed   PHP representation of the data.
      */
-    public function fromPg()
+    public function fromPg(string $type)
     {
-        $data = trim($this->data?? '');
-        if ($data !== '') {
-            $oFecha = new DateTimeLocal($data);
-            //$fecha = $oFecha->createFromLocal($data);
+        if ($this->data !== null) {
+            switch ($type) {
+                case 'timestamp':
+                case 'date':
+                    $oFecha = new DateTimeLocal($this->data);
+                    break;
+                case 'time':
+                    $oFecha = TimeLocal::fromString($this->data);
+                    break;
+                default:
+                    throw new \Exception('Unexpected value');
+            }
         } else {
             $oFecha = null;
         }
+
         return $oFecha;
     }
 
@@ -71,7 +81,8 @@ class PgTimestamp
                     break;
             }
         } else {
-            $rta = sprintf("NULL::%s", $type);
+            //$rta = sprintf("NULL::%s", $type);
+            $rta = null;
         }
         return $rta;
     }
@@ -103,8 +114,14 @@ class PgTimestamp
      */
     protected function checkData(mixed $data)
     {
-        if (!$data instanceof \DateTimeInterface) {
+        // Modificamos la comprobación para aceptar también web\TimeLocal
+        if (!$data instanceof \DateTimeInterface && !$data instanceof \web\TimeLocal) {
             try {
+                // Si llega un string "HH:MM", añadimos los segundos antes de convertir
+                if (is_string($data) && preg_match('/^\d{1,2}:\d{2}$/', $data)) {
+                    $data .= ':00';
+                }
+
                 $data = DateTimeLocal::createFromLocal($data);
             } catch (\Exception $e) {
                 throw new Exception(

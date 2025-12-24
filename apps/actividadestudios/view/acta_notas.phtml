@@ -121,7 +121,7 @@ use function core\is_true;
                     $oDesplActas->setOpcion_sel(0);
                 }
             } else if ($acta == Nota::CURSADA) {
-                $acta_txt = Nota::$array_status_txt[Nota::CURSADA];
+                $acta_txt = Nota::getStatusTxt(Nota::CURSADA);
                 $oDesplActas->setOpcion_sel((int)$acta);
             } else {
                 $acta_txt = $acta;

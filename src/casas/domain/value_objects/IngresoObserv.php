@@ -1,0 +1,35 @@
+<?php
+
+namespace src\casas\domain\value_objects;
+
+final class IngresoObserv
+{
+    private string $value;
+
+    public function __construct(string $value)
+    {
+        $value = trim($value);
+        $this->value = $value;
+    }
+
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
+
+    public function equals(IngresoObserv $other): bool
+    {
+        return $this->value === $other->value();
+    }
+
+    public static function fromNullableString(?string $value): ?self
+    {
+        if ($value === null) { return null; }
+        return new self($value);
+    }
+}

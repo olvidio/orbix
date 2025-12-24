@@ -214,7 +214,7 @@ abstract class DatosInfo
         $oFicha =  $this->getFicha();
         // para el desplegable depende
         $v1=$oFicha->tipo_teleco;
-        $v2=$oFicha->desc_teleco;
+        $v2=$oFicha->id_desc_teleco;
         if (!empty($v2)) {
             $oDepende = new GestorDescTeleco();
             $aOpciones=$oDepende->getListaDescTelecoUbis($v1);
@@ -232,7 +232,7 @@ abstract class DatosInfo
         //caso de actualizar el campo depende
         /* Debe sobreescribirse el método, esto es un ejemlpo
         if (isset($this->accion)) {
-            if ($this->accion == 'desc_teleco') {
+            if ($this->accion == 'id_desc_teleco') {
                 $oDepende = new GestorDescTeleco();
                 $aOpciones = $oDepende->getListaDescTelecoUbis($valor_depende);
                 $oDesplegable = new Desplegable('',$aOpciones,'',true);

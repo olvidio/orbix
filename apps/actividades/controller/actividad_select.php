@@ -23,16 +23,17 @@
  *
  */
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
-use actividades\model\entity\GestorActividadPub;
-use actividades\model\entity\GestorImportada;
-use actividadescentro\model\entity\GestorCentroEncargado;
-use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\contracts\ImportadaRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
@@ -130,7 +131,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
         $Qperiodo = 'actual';
     }
 
-    $Qstatus = empty($Qstatus) ? ActividadAll::STATUS_ACTUAL : $Qstatus;
+    $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
 
     $aGoBack = array(
         'modo' => $Qmodo,
@@ -334,22 +335,21 @@ $a_cabeceras[] = ucfirst(_("observaciones"));
 if (!empty($Qmodo) && $Qmodo === 'importar') {
     // actividades publicadas
     $mod = 'importar';
-    $GesActividades = new GestorActividadPub();
+    $ActividadRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
     if (empty($Qdl_org)) {
         $aWhere['dl_org'] = $mi_dele;
         $aOperador['dl_org'] = '!=';
     }
-    $GesImportada = new GestorImportada();
     $obj_pau = 'ActividadPub';
 } else {
     //actividades de la dl más las importadas
     $mod = '';
-    $GesActividades = new GestorActividad();
+    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
     $obj_pau = 'Actividad';
 }
 
 $aWhere['_ordre'] = 'f_ini';
-$cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+$cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
 $num_activ = count($cActividades);
 if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
     $go_avant = Hash::link(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select.php?' . http_build_query(array('continuar' => 'si', 'Gstack' => $oPosicion->getStack())));
@@ -383,6 +383,9 @@ $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia !== null) {
     $sPrefs = $oPreferencia->getPreferencia();
 }
+$TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+$ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
+$CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $id_activ = $oActividad->getId_activ();
     $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -392,16 +395,16 @@ foreach ($cActividades as $oActividad) {
     $oF_ini = $oActividad->getF_ini();
     $f_ini = $oActividad->getF_ini()->getFromLocal();
     $f_fin = $oActividad->getF_fin()->getFromLocal();
-    $h_ini = $oActividad->getH_ini();
-    $h_fin = $oActividad->getH_fin();
+    $h_ini = $oActividad->getH_ini()?->format('H:i')?? '';
+    $h_fin = $oActividad->getH_fin()?->format('H:i')?? '';
     $tarifa = $oActividad->getTarifa();
     $observ = $oActividad->getObserv();
     // Si es para importar, quito las que ya están importadas
     // y no miro permisos de procesos
     //echo "nom: $nom_activ<br>";
     if (!empty($Qmodo) && $Qmodo === 'importar') {
-        $cImportadas = $GesImportada->getImportadas(array('id_activ' => $id_activ));
-        if ($cImportadas !== FALSE && !empty($cImportadas)) {
+        $oImportada = $ImportadaRepository->findById($id_activ);
+        if ($oImportada !== null) {
             continue;
         }
         $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
@@ -480,15 +483,11 @@ foreach ($cActividades as $oActividad) {
         }
 
     } else {
-        if (strlen($h_ini ?? '')) {
-            $h_ini = substr($h_ini, 0, (strlen($h_ini) - 3));
+        $tarifa_letra = '';
+        if ($tarifa !== null) {
+            $oTarifa = $TipoTarifaRepository->findById($tarifa);
+            $tarifa_letra = $oTarifa?->getLetra() ?? '';
         }
-        if (strlen($h_fin ?? '')) {
-            $h_fin = substr($h_fin, 0, (strlen($h_fin) - 3));
-        }
-
-        $oTarifa = new TipoTarifa($tarifa);
-        $tarifa_letra = $oTarifa->getLetra();
 
         $sacds = "";
         if (ConfigGlobal::is_app_installed('actividadessacd')) {
@@ -500,8 +499,8 @@ foreach ($cActividades as $oActividad) {
             }
             if (!ConfigGlobal::is_app_installed('procesos')
                 || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
-                $gesCargosActividad = new actividadcargos\model\entity\GestorActividadCargo();
-                foreach ($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {
+                $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+                foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
                     $sacds .= $oPersona->getPrefApellidosNombre() . "# "; // la coma la utilizo como separador de apellidos, nombre.
                 }
                 $sacds = substr($sacds, 0, -2);
@@ -510,9 +509,8 @@ foreach ($cActividades as $oActividad) {
 
         $ctrs = "";
         if (ConfigGlobal::is_app_installed('actividadescentro')) {
-            $oEnc = new GestorCentroEncargado();
             $n = 0;
-            foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
+            foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
                 $n++;
                 $ctrs .= $oEncargado->getNombre_ubi() . ", ";
             }
@@ -530,14 +528,14 @@ foreach ($cActividades as $oActividad) {
                  $w = date ('w',mktime(0,0,0,$mini_0,$dini_0,$aini_0));
                  */
                 $w = $oF_ini->format('w');
-                if ($w < 4) { // de domingo a miercoles.
+                if ($w < 4) { // de domingo a miércoles.
                     $flag = 0;
                 } else {
                     $flag = 1;
                 }
             }
             if (empty($flag)) {
-                $coincide = $GesActividades->getCoincidencia($oActividad, 'bool');
+                $coincide = $ActividadRepository->getCoincidencia($oActividad);
                 $con = ($coincide) ? '*' : '';
             }
         }

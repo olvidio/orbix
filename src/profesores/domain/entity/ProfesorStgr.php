@@ -4,12 +4,12 @@ namespace src\profesores\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
-use src\profesores\domain\value_objects\EscritoNombramiento;
-use src\profesores\domain\value_objects\FechaNombramiento;
-use src\profesores\domain\value_objects\EscritoCese;
-use src\profesores\domain\value_objects\FechaCese;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
+use src\profesores\domain\value_objects\EscritoCese;
+use src\profesores\domain\value_objects\EscritoNombramiento;
+use src\profesores\domain\value_objects\FechaCese;
+use src\profesores\domain\value_objects\FechaNombramiento;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -301,6 +301,7 @@ class ProfesorStgr
     function getDatosCampos(): array
     {
         $oProfesorSet = new Set();
+        $oProfesorSet->add($this->getDatosId_nom());
         $oProfesorSet->add($this->getDatosId_departamento());
         $oProfesorSet->add($this->getDatosEscrito_nombramiento());
         $oProfesorSet->add($this->getDatosF_nombramiento());
@@ -308,6 +309,18 @@ class ProfesorStgr
         $oProfesorSet->add($this->getDatosEscrito_cese());
         $oProfesorSet->add($this->getDatosF_cese());
         return $oProfesorSet->getTot();
+    }
+
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     function getDatosId_departamento()

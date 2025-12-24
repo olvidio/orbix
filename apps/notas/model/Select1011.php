@@ -2,15 +2,14 @@
 
 namespace notas\model;
 
-use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatricula;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorPersonaNotaDlDB;
-use personas\model\entity\Persona;
-use personas\model\entity\PersonaDl;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
@@ -87,6 +86,7 @@ class Select1011
 
     private function getTabla()
     {
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 
         // Aviso si le faltan notas por poner
         $gesMatriculas = new GestorMatricula();
@@ -97,8 +97,8 @@ class Select1011
             foreach ($cMatriculasPendientes as $oMatricula) {
                 $id_activ = $oMatricula->getId_activ();
                 $id_asignatura = $oMatricula->getId_asignatura();
-                $oActividad = new ActividadAll($id_activ);
-                $nom_activ = $oActividad->getNom_activ();
+                $oActividad = $ActividadAllRepository->findById($id_activ);
+                $nom_activ = $oActividad?->getNom_activ()?? '';
                 $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
                 if ($oAsignatura === null) {
                     throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
@@ -117,14 +117,6 @@ class Select1011
         // Que si muestre el "fin bienio, fin cuadrienio".
         //$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
         $cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom' => $this->id_pau, '_ordre' => 'id_nivel'), array('id_asignatura' => '<'));
-
-        //Según el tipo de persona: n, agd, s
-        $oPersona = Persona::NewPersona($this->id_pau);
-        if (!is_object($oPersona)) {
-            $msg_err = "<br>$oPersona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
-            exit($msg_err);
-        }
-        $id_tabla = $oPersona->getId_Tabla();
 
         $i = 0;
         $a_valores = [];
@@ -146,8 +138,8 @@ class Select1011
 
             $nom_activ = '';
             if (!empty($id_activ)) {
-                $oActividad = new ActividadAll($id_activ);
-                $nom_activ = $oActividad->getNom_activ();
+                $oActividad = $ActividadAllRepository->findById($id_activ);
+                $nom_activ = $oActividad?->getNom_activ()?? '';
             }
             $nota = $oPersonaNota->getNota_txt();
             if ($acta == Nota::CURSADA) {
@@ -174,14 +166,11 @@ class Select1011
             }
 
 
-            $preceptor = is_true($preceptor)? _("sí") : _("no");
+            $preceptor = is_true($preceptor) ? _("sí") : _("no");
             // preceptor
             if ($id_preceptor && is_true($preceptor)) {
-                $oPersonaDl = new PersonaDl($id_preceptor);
-                $nom_precptor = $oPersonaDl->getPrefApellidosNombre();
-                if (empty($nom_precptor)) {
-                    $nom_precptor = _("no lo encuentro");
-                }
+                $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
+                $nom_precptor = $oPersona?->getPrefApellidosNombre()?? _("no lo encuentro");
                 $preceptor .= " (" . $nom_precptor . ")";
             }
 

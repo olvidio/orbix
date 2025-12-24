@@ -115,8 +115,21 @@ class ProfesorTipo
     {
         $oTipoCentroSet = new Set();
 
+        $oTipoCentroSet->add($this->getDatosId_nom());
         $oTipoCentroSet->add($this->getDatosTipo_profesor());
         return $oTipoCentroSet->getTot();
+    }
+
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     function getDatosTipo_profesor()

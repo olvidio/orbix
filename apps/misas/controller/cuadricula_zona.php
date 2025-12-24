@@ -1,17 +1,16 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use core\ViewTwig;
-use encargossacd\model\EncargoConstants;
-use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use misas\model\EncargosZona;
-use personas\model\entity\PersonaSacd;
+use src\encargossacd\domain\EncargoConstants;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
-use zonassacd\model\entity\GestorZonaSacd;
 
+// INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -22,12 +21,14 @@ require_once("apps/core/global_object.inc");
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
-$gesZonaSacd = new GestorZonaSacd();
-$a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
+$ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
+$a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($Qid_zona);
 $a_iniciales = [];
 
+$PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+$a_sacd = [];
 foreach ($a_Id_nom as $id_nom) {
-    $PersonaSacd = new PersonaSacd($id_nom);
+    $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
     $sacd = $PersonaSacd->getNombreApellidos();
     // iniciales
     $nom = mb_substr($PersonaSacd->getNom(), 0, 1);

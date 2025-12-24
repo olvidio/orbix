@@ -14,6 +14,9 @@ use core\ConfigGlobal;
 use core\ViewTwig;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
 use web\Desplegable;
@@ -27,8 +30,8 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
     $permiso_des = TRUE;
 }
 
-$oActividad = new actividades\model\entity\ActividadAll($Qid_activ);
-$a_status = $oActividad->getArrayStatus();
+$oActividad = new ActividadAll($Qid_activ);
+$a_status = StatusId::getArrayStatus();
 
 $id_tipo_activ = $oActividad->getId_tipo_activ();
 $dl_org = $oActividad->getDl_org();
@@ -49,7 +52,7 @@ $nivel_stgr = $oActividad->getNivel_stgr();
 $lugar_esp = $oActividad->getLugar_esp();
 $tarifa = $oActividad->getTarifa();
 $id_repeticion = $oActividad->getId_repeticion();
-$publicado = $oActividad->getPublicado();
+$publicado = $oActividad->isPublicado();
 $plazas = $oActividad->getPlazas();
 
 // mirar permisos.
@@ -81,8 +84,8 @@ if (!empty($id_ubi) && $id_ubi != 1) {
     $nombre_ubi = $oCasa->getNombre_ubi();
     $delegacion = $oCasa->getDl();
     $region = $oCasa->getRegion();
-    $sv = $oCasa->getSv();
-    $sf = $oCasa->getSf();
+    $sv = $oCasa->isSv();
+    $sf = $oCasa->isSf();
 } else {
     if ($id_ubi == 1 && $lugar_esp) $nombre_ubi = $lugar_esp;
     if (!$id_ubi && !$lugar_esp) $nombre_ubi = _("sin determinar");
@@ -91,8 +94,10 @@ if (!empty($id_ubi) && $id_ubi != 1) {
 $oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones(0, true, 'dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
 
-$oGesTipoTarifa = new GestorTipoTarifa();
-$oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
+$TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+$aOpciones = $TipoTarifaRepository->getArrayTipoTarifas($isfsv);
+$oDesplPosiblesTipoTarifas = new Desplegable();
+$oDesplPosiblesTipoTarifas->setOpciones($aOpciones);
 $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
 

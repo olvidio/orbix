@@ -24,6 +24,7 @@ abstract class DatosInfoRepo
     protected bool $exacto = false;
 
     protected $pau;
+    protected $repoInterface;
 
     /**
      * Ruta relativa al namespace
@@ -134,6 +135,16 @@ abstract class DatosInfoRepo
         } else {
             return $this->txt_buscar;
         }
+    }
+
+    public function setRepositoryInterface($repoInterface)
+    {
+        $this->repoInterface = $repoInterface;
+    }
+
+    public function getRepositoryInterface()
+    {
+        return $this->repoInterface;
     }
 
     public function setClase($obj)

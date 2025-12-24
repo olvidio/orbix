@@ -19,6 +19,8 @@ class InfoSectores extends DatosInfoRepo
 
         $this->setClase('src\\asignaturas\\domain\\entity\\Sector');
         $this->setMetodoGestor('getSectores');
+
+        $this->setRepositoryInterface(SectorRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoSectores extends DatosInfoRepo
             $aWhere = array('sector' => $this->k_buscar);
             $aOperador = array('sector' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(SectorRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getSectores($aWhere, $aOperador);
 
         return $Coleccion;

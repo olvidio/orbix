@@ -2,11 +2,12 @@
 
 namespace src\profesores\domain\entity;
 
+use actividadestudios\model\entity\ActividadAsignatura;
 use core\DatosCampo;
 use core\Set;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\profesores\domain\value_objects\Acta;
 use src\profesores\domain\value_objects\CursoInicio;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 /**
  * Clase que implementa la entidad d_docencia_stgr
@@ -200,8 +201,8 @@ class ProfesorDocenciaStgr
     }
 
     /**
-     * @deprecated Usar getCursoInicioVo()->value()
      * @return int $icurso_inicio
+     * @deprecated Usar getCursoInicioVo()->value()
      */
     public function getCurso_inicio(): int
     {
@@ -209,8 +210,8 @@ class ProfesorDocenciaStgr
     }
 
     /**
-     * @deprecated Usar setCursoInicioVo(CursoInicio $vo)
      * @param int $icurso_inicio
+     * @deprecated Usar setCursoInicioVo(CursoInicio $vo)
      */
     public function setCurso_inicio(int $icurso_inicio): void
     {
@@ -228,8 +229,8 @@ class ProfesorDocenciaStgr
     }
 
     /**
-     * @deprecated Usar getActaVo()->value()
      * @return string|null $sacta
+     * @deprecated Usar getActaVo()->value()
      */
     public function getActa(): ?string
     {
@@ -237,8 +238,8 @@ class ProfesorDocenciaStgr
     }
 
     /**
-     * @deprecated Usar setActaVo(Acta $vo)
      * @param string|null $sacta
+     * @deprecated Usar setActaVo(Acta $vo)
      */
     public function setActa(?string $sacta = null): void
     {
@@ -265,12 +266,25 @@ class ProfesorDocenciaStgr
     {
         $oProfesorDocenciaStgrSet = new Set();
 
+        $oProfesorDocenciaStgrSet->add($this->getDatosId_nom());
         $oProfesorDocenciaStgrSet->add($this->getDatosId_asignatura());
         $oProfesorDocenciaStgrSet->add($this->getDatosId_activ());
         $oProfesorDocenciaStgrSet->add($this->getDatosTipo());
         $oProfesorDocenciaStgrSet->add($this->getDatosCurso_inicio());
         $oProfesorDocenciaStgrSet->add($this->getDatosActa());
         return $oProfesorDocenciaStgrSet->getTot();
+    }
+
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     function getDatosId_asignatura(): DatosCampo
@@ -297,7 +311,7 @@ class ProfesorDocenciaStgr
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('actividades\model\entity\ActividadAll'); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNom_activ'); // método para obtener el valor a mostrar del objeto relacionado.
-        $oDatosCampo->setArgument3('getListaActividadesEstudios'); // método con que crear la lista de opciones del Gestor objeto relacionado.
+        $oDatosCampo->setArgument3('getArrayActividadesEstudios'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         return $oDatosCampo;
     }
 

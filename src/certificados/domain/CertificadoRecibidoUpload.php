@@ -3,12 +3,11 @@
 namespace src\certificados\domain;
 
 use core\ConfigGlobal;
-use personas\model\entity\Persona;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
+use src\personas\domain\entity\Persona;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
-use function core\is_true;
 
 class CertificadoRecibidoUpload
 {
@@ -35,7 +34,7 @@ class CertificadoRecibidoUpload
                                      DateTimeLocal|NullDateTimeLocal $oF_recibido,
                                      ?string                         $destino): string|CertificadoRecibido
     {
-        $oPersona = Persona::NewPersona($Qid_nom);
+        $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
         $apellidos_nombre = $oPersona->getApellidosNombre();
         $nom = $apellidos_nombre;
 

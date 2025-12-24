@@ -1,6 +1,6 @@
 <?php
 
-use dossiers\model\entity\TipoDossier;
+use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use function core\is_true;
 
 /**
@@ -18,71 +18,59 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qid_tipo_dossier = (integer)filter_input(INPUT_POST, 'id_tipo_dossier');
 $Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
+$TipoDossierRepository = $GLOBALS['container']->get(TipoTelecoRepositoryInterface::class);
 switch ($Qque) {
     case 'eliminar':
-        $oTipoDossier = new TipoDossier($Qid_tipo_dossier);
-        if ($oTipoDossier->DBEliminar() === false) {
-            echo _("hay un error, no se ha eliminado");
-            echo "\n" . $oTipoDossier->getErrorTxt();
-        }
+        $oTipoDossier = $TipoDossierRepository->findById($Qid_tipo_dossier);
+        $TipoDossierRepository->Eliminar($oTipoDossier);
         echo $oPosicion->go_atras(1);
         die();
         break;
     case 'guardar':
-        $oTipoDossier = new TipoDossier($Qid_tipo_dossier);
-        break;
-}
+        $oTipoDossier = $TipoDossierRepository->findById($Qid_tipo_dossier);
 
-$campos_chk = empty($Qcampos_chk) ? [] : explode('!', $Qcampos_chk);
-$oTipoDossier->DBCarregar();
-$oDbl = $oTipoDossier->getoDbl();
-$cDatosCampo = $oTipoDossier->getDatosCampos();
-foreach ($cDatosCampo as $oDatosCampo) {
-    $camp = $oDatosCampo->getNom_camp();
-    $valor = empty($_POST[$camp]) ? '' : $_POST[$camp];
-    if ($oDatosCampo->datos_campo($oDbl, 'tipo') === "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
-        if ($valor === "on") {
-            $valor = 't';
-            $a_values_o[$camp] = $valor;
-        } else {
-            // compruebo que esté en la lista de campos enviados
-            if (in_array($camp, $campos_chk)) {
-                $valor = 'f';
-                $a_values_o[$camp] = $valor;
-            }
-        }
-    } else {
-        if (!isset($_POST[$camp]) && !empty($Qid_tipo_dossier)) continue; // sólo si no es nuevo
+        $Qdescripcion = (string)filter_input(INPUT_POST, 'descripcion');
+        $Qtabla_from = (string)filter_input(INPUT_POST, 'tabla_from');
+        $Qtabla_to = (string)filter_input(INPUT_POST, 'tabla_to');
+        $Qcampo_to = (string)filter_input(INPUT_POST, 'campo_to');
+        $Qid_tipo_dossier_rel = (integer)filter_input(INPUT_POST, 'id_tipo_dossier_rel');
+        $Qdepende_modificar = (string)filter_input(INPUT_POST, 'depende_modificar');
+        $Qapp = (string)filter_input(INPUT_POST, 'app');
+        $Qclass = (string)filter_input(INPUT_POST, 'class');
+        $Qdb = (integer)filter_input(INPUT_POST, 'db');
+        $aPermiso_lectura = (array)filter_input(INPUT_POST, 'Permiso_lectura', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $aPermiso_escritura = (array)filter_input(INPUT_POST, 'Permiso_escritura', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
+        $oTipoDossier->setDescripcion($Qdescripcion);
+        $oTipoDossier->setTabla_from($Qtabla_from);
+        $oTipoDossier->setTabla_to($Qtabla_to);
+        $oTipoDossier->setCampo_to($Qcampo_to);
+        $oTipoDossier->setId_tipo_dossier_rel($Qid_tipo_dossier_rel);
+        $oTipoDossier->setDepende_modificar(is_true($Qdepende_modificar));
+        $oTipoDossier->setApp($Qapp);
+        $oTipoDossier->setClass($Qclass);
+        $oTipoDossier->setId_schema($Qdb);
         //cuando el campo es permiso_lectura, se pasa un array que hay que convertirlo en número.
-        if ($camp === "permiso_lectura") {
+        if (!empty($aPermiso_lectura) && (count($aPermiso_lectura) > 0)) {
             $byte = 0;
-            foreach ($_POST[$camp] as $bit) {
+            foreach ($aPermiso_lectura as $bit) {
                 $byte = $byte + $bit;
             }
             $valor = $byte;
+            $oTipoDossier->setPermiso_lectura($valor);
         }
         //cuando el campo es permiso_escritura, se pasa un array que hay que convertirlo en número.
-        if ($camp === "permiso_escritura") {
+        if (!empty($aPermiso_escritura) && (count($aPermiso_escritura) > 0)) {
             $byte = 0;
-            foreach ($_POST[$camp] as $bit) {
+            foreach ($aPermiso_escritura as $bit) {
                 $byte = $byte + $bit;
             }
             $valor = $byte;
+            $oTipoDossier->setPermiso_escritura($valor);
         }
-        //pongo el valor nulo, sobretodo para las fechas.
-        if (!is_array($_POST[$camp]) && (empty($_POST[$camp]) || trim($_POST[$camp]) == "")) {
-            //si es un campo not null (y es null), pongo el valor por defecto
-            if (is_true($oDatosCampo->datos_campo($oDbl, 'nulo'))) {
-                $valor_predeterminado = $oDatosCampo->datos_campo($oDbl, 'valor');
-                $a_values_o[$camp] = $valor_predeterminado;
-            } else {
-                $a_values_o[$camp] = NULL;
-            }
-        } else {
-            $a_values_o[$camp] = $valor;
+
+        if ($TipoDossierRepository->Guardar($oTipoDossier) === false) {
+            echo _("Hay un error, no se ha guardado.");
         }
-    }
+        break;
 }
-$oTipoDossier->setAllAttributes($a_values_o, TRUE);
-$oTipoDossier->DBGuardar();

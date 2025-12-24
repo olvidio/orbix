@@ -19,6 +19,8 @@ class InfoDescTeleco extends DatosInfoRepo
 
         $this->setClase('src\\ubis\\domain\\entity\\DescTeleco');
         $this->setMetodoGestor('getDescTeleco');
+
+        $this->setRepositoryInterface(DescTelecoRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -29,10 +31,10 @@ class InfoDescTeleco extends DatosInfoRepo
             $aWhere = array('_ordre' => 'ubi,persona,orden');
             $aOperador = [];
         } else {
-            $aWhere = array('desc_teleco' => $this->k_buscar);
-            $aOperador = array('desc_teleco' => 'sin_acentos');
+            $aWhere = array('id_desc_teleco' => $this->k_buscar);
+            $aOperador = array('id_desc_teleco' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getDescsTeleco($aWhere, $aOperador);
 
         return $Coleccion;

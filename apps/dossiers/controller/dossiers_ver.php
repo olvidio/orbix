@@ -1,9 +1,11 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
-use dossiers\model\entity\TipoDossier;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\personas\domain\entity\Persona;
+use src\shared\domain\DatosTablaRepo;
+use src\shared\infrastructure\ProvidesRepositories;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -67,6 +69,9 @@ if (empty($Qid_dossier) && !empty($Qclase_info)) {
     // Tiene que ser en dos pasos.
     $obj = urldecode($Qclase_info);
     $oInfoClase = new $obj();
+    if (method_exists($oInfoClase, 'setObj_pau')) {
+        $oInfoClase->setObj_pau($Qobj_pau);
+    }
     $Qid_dossier = $oInfoClase->getId_dossier();
     $pau = $oInfoClase->getPau();
 }
@@ -116,69 +121,72 @@ switch ($QqueSel) {
     default: // enseña la lista de dossiers.
 }
 
+// Clase auxiliar para usar el trait en contexto procedural
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+    
+    public function get(string $entityType): object {
+        return $this->getRepository($entityType);
+    }
+};
 
-$sQuery = http_build_query(array('pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau));
-$godossiers = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
-// según sean personas, ubis o actividades:
-switch ($pau) {
-    case 'p':
-        //Hay que aclararse si la persona es de la dl o no
-        if (empty($Qobj_pau) || $Qobj_pau === 'Persona') {
-            $oPersona = Persona::NewPersona($id_pau);
-            if (!is_object($oPersona)) {
-                $msg_err = "<br>$oPersona con id_nom: $id_pau en  " . __FILE__ . ": line " . __LINE__;
-                exit($msg_err);
-            }
-            $clase = get_class($oPersona);
-            $Qobj_pau = implode('', array_slice(explode('\\', $clase), -1));
-        } else {
-            $clase = "personas\\model\\entity\\$Qobj_pau";
-            $oPersona = new $clase($id_pau);
-        }
-        $nom_cabecera = $oPersona->getNombreApellidos();
-
-        $sQuery = http_build_query(array('id_nom' => $id_pau, 'obj_pau' => $Qobj_pau));
-        $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/personas/controller/home_persona.php?$sQuery");
-
-        break;
-    case 'u':
-        $clase = "ubis\\model\\entity\\$Qobj_pau";
-        $oUbi = new $clase($id_pau);
-        $nom_cabecera = $oUbi->getNombre_ubi();
-
-        $sQuery = http_build_query(array('id_ubi' => $id_pau, 'obj_pau' => $Qobj_pau));
-        $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/ubis/controller/home_ubis.php?$sQuery");
-        break;
-    case 'a':
-        $oActividad = new ActividadAll($id_pau);
-        $nom_cabecera = $oActividad->getNom_activ();
-
-        $sQuery = http_build_query(array('id_activ' => $id_pau, 'obj_pau' => $Qobj_pau));
-        $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/actividades/controller/actividad_ver.php?$sQuery");
-
-        /*
-        // según de donde venga, debo volver al mismo sitio...
-        if (!empty($_SESSION['session_go_to']['sel']['pag'])) {
-            $pag = $_SESSION['session_go_to']['sel']['pag']; //=>"lista_actividades_sg.php",
-            $dir = $_SESSION['session_go_to']['sel']['dir_pag']; //=>ConfigGlobal::$directorio."/sg",
-            $dir = str_replace(ConfigGlobal::$directorio,'',$dir);
-            $form_action=Hash::link(ConfigGlobal::getWeb()."$dir/$pag");
-        } else {
-            $form_action=Hash::link(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_select.php');
-        }
-        */
-        break;
+function getRepository($obj_pau)
+{
+    global $repositoryProvider;
+    return $repositoryProvider->get($obj_pau);
 }
 
+    $sQuery = http_build_query(array('pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau));
+    $godossiers = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
+// según sean personas, ubis o actividades:
+    switch ($pau) {
+        case 'p':
+            //Hay que aclararse si la persona es de la dl o no
+            if (empty($Qobj_pau) || $Qobj_pau === 'Persona') {
+                $oPersona = Persona::findPersonaEnGlobal($id_pau);
+                if (!is_object($oPersona)) {
+                    $msg_err = "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ": line " . __LINE__;
+                    exit($msg_err);
+                }
+                $clase = get_class($oPersona);
+                $Qobj_pau = implode('', array_slice(explode('\\', $clase), -1));
+            } else {
+                $repo = getRepository($Qobj_pau);
+                $oPersona = $repo->findById($id_pau);
+            }
+            $nom_cabecera = $oPersona->getNombreApellidos();
 
-$alt = _("ver dossiers");
-$dos = _("dossiers");
-$titulo = "<span class=link onclick=fnjs_update_div('#main','$goHome')>$nom_cabecera</span>";
+            $sQuery = http_build_query(array('id_nom' => $id_pau, 'obj_pau' => $Qobj_pau));
+            $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/personas/controller/home_persona.php?$sQuery");
+
+            break;
+        case 'u':
+            $repo = getRepository($Qobj_pau);
+            $oUbi = $repo->findById($id_pau);
+            $nom_cabecera = $oUbi->getNombre_ubi();
+
+            $sQuery = http_build_query(array('id_ubi' => $id_pau, 'obj_pau' => $Qobj_pau));
+            $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/ubis/controller/home_ubis.php?$sQuery");
+            break;
+        case 'a':
+            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $oActividad = $ActividadAllRepository->findById($id_pau);
+            $nom_cabecera = $oActividad->getNom_activ();
+
+            $sQuery = http_build_query(array('id_activ' => $id_pau, 'obj_pau' => $Qobj_pau));
+            $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/actividades/controller/actividad_ver.php?$sQuery");
+            break;
+    }
+
+
+    $alt = _("ver dossiers");
+    $dos = _("dossiers");
+    $titulo = "<span class=link onclick=fnjs_update_div('#main','$goHome')>$nom_cabecera</span>";
 
 // -----------------------------  cabecera ---------------------------------
 
-echo $oPosicion->mostrar_left_slide(1);
-?>
+    echo $oPosicion->mostrar_left_slide(1);
+    ?>
     <div id="top">
         <table>
             <tr>
@@ -188,156 +196,159 @@ echo $oPosicion->mostrar_left_slide(1);
                 <td class="titulo"><?= $titulo ?></td>
         </table>
     </div>
-<?php
+    <?php
 
 // ------------------------- cuerpo -----------------------------
-if (empty($Qid_dossier)) { // enseña la lista de dossiers.
-    echo "<div id=\"ficha\">";
-    include("lista_dossiers.php");
-    echo "</div>";
-} else {
-    // Voy a intentar mostrar dossiers seguidos. Se supone que id_dossier es una lista de nº separados por 'y'
-    $id_dossier = strtok($Qid_dossier, "y");
-    while ($id_dossier) {
-        // nombre del id div actual
-        $nom_bloque = 'ficha' . $id_dossier;
-        $bloque = '#ficha' . $id_dossier;
-        echo "<div id=\"$nom_bloque\">";
-        $oTipoDossier = new TipoDossier($id_dossier);
-        $app = $oTipoDossier->getApp();
-        $db = $oTipoDossier->getDb();
-        $nameClaseSelect = '';
-        if ($db === 5) { // nuevas clases en /src
-            $nameFile = "../../../src/$app/domain/Select" . $id_dossier . ".php";
-            if (realpath($nameFile)) { //como file_exists
-                $nameClaseSelect = "src\\$app\\domain\\Select" . $id_dossier;
-            }
-        } else {
-            // Para presentaciones particulares
-            $nameFile = "../../$app/model/Select" . $id_dossier . ".php";
-            $nameFile2 = "../../$app/domain/Select" . $id_dossier . ".php";
-            if (realpath($nameFile)) { //como file_exists
-                $nameClaseSelect = "$app\\model\\Select" . $id_dossier;
-            }
-            if (realpath($nameFile2)) { //como file_exists
-                $nameClaseSelect = "$app\\domain\\Select" . $id_dossier;
-            }
-        }
-
-        if (!empty($nameClaseSelect)) {
-            $claseSelect = new $nameClaseSelect();
-            $claseSelect->setId_dossier($id_dossier);
-            $claseSelect->setPau($pau);
-            $claseSelect->setObj_pau($Qobj_pau);
-            $claseSelect->setId_pau($id_pau);
-            $claseSelect->setPermiso($Qpermiso);
-            $claseSelect->setBloque($bloque);
-            $claseSelect->setQueSel($QqueSel);
-
-            // sólo si vengo de vuelta, sino el scroll corresponde a la grid
-            // de la selección que me trae aqui.
-            if (isset($_POST['stack']) && $stack != '') {
-                $claseSelect->setQId_sel($Qid_sel);
-                $claseSelect->setQScroll_id($Qscroll_id);
-            }
-
-            switch ((int)$id_dossier) {
-                case 1301:
-                case 1302:
-                    // propio del 1302
-                    $Qmodo_curso = (integer)filter_input(INPUT_POST, 'modo_curso');
-                    $claseSelect->setModo_curso($Qmodo_curso);
-                    break;
-                case 1303:
-                    // propio del 1303
-                    if (!empty($Qid_activ)) {
-                        $claseSelect->setQId_activ($Qid_activ);
-                    }
-                    break;
-            }
-            echo $claseSelect->getHtml();
-        } else {
-            // para presentación genérica, con la info tipo InfoProfesorPublicacion.php
-            // datos del dossier:
-            $oTipoDossier = new TipoDossier($id_dossier);
-            $clase = $oTipoDossier->getClass();
-
+    if (empty($Qid_dossier)) { // enseña la lista de dossiers.
+        echo "<div id=\"ficha\">";
+        include("lista_dossiers.php");
+        echo "</div>";
+    } else {
+        // Voy a intentar mostrar dossiers seguidos. Se supone que id_dossier es una lista de nº separados por 'y'
+        $id_dossier = strtok($Qid_dossier, "y");
+        $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
+        while ($id_dossier) {
+            // nombre del id div actual
+            $nom_bloque = 'ficha' . $id_dossier;
+            $bloque = '#ficha' . $id_dossier;
+            echo "<div id=\"$nom_bloque\">";
+            $oTipoDossier = $TipoDossierRepository->findById($id_dossier);
             $app = $oTipoDossier->getApp();
-            // No sé porque no acepa aquí el '_' en el nombre de la clase.
-            $clase_info = "$app\\model\\Info$id_dossier";
-            // Tiene que ser en dos pasos.
-            $obj = $clase_info;
-            $oInfoClase = new $obj();
-            $oInfoClase->setId_pau($id_pau);
-            $oInfoClase->setObj_pau($Qobj_pau);
-
-            $oDatosTabla = new core\DatosTabla();
-            $oDatosTabla->setBloque($bloque);
-            $oDatosTabla->setExplicacion_txt($oInfoClase->getTxtExplicacion());
-            $oDatosTabla->setEliminar_txt($oInfoClase->getTxtEliminar());
-            $oDatosTabla->setColeccion($oInfoClase->getColeccion());
-            $oDatosTabla->setId_sel($Qid_sel);
-            $oDatosTabla->setScroll_id($Qscroll_id);
-
-            $aQuery = array(
-                'clase_info' => $Qclase_info,
-                'id_pau' => $id_pau,
-                'bloque' => $bloque,
-                'permiso' => $Qpermiso,
-            );
-            $aQuery['obj_pau'] = $Qobj_pau;
-            $sQuery = http_build_query($aQuery);
-            $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
-            $oDatosTabla->setAction_tabla($Qgo_to);
-
-            $oHashSelect = new Hash();
-            $oHashSelect->setCamposForm('mod');
-            $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
-            $a_camposHidden = array(
-                'clase_info' => $clase_info,
-                'pau' => $pau,
-                'id_pau' => $id_pau, // Hace falta para el boton nuevo
-                'obj_pau' => $Qobj_pau,
-                'permiso' => $Qpermiso,
-                'bloque' => $bloque,
-            );
-            $oHashSelect->setArraycamposHidden($a_camposHidden);
-
-            $html = '';
-            $html .= '<script>';
-            $html .= $oDatosTabla->getScript();
-            $html .= '</script>';
-            $html .= "<h3 class=subtitulo>" . $oInfoClase->getTxtTitulo() . "</h3>
-				<form id='seleccionados' name='seleccionados' action='' method='post'>";
-            $html .= $oHashSelect->getCamposHtml();
-            $html .= "<input type='hidden' id='mod' name='mod' value=''>";
-
-            $oTabla = new Lista();
-            $oTabla->setId_tabla('datos_sql' . $id_dossier);
-            $oTabla->setCabeceras($oDatosTabla->getCabeceras());
-            $oTabla->setBotones($oDatosTabla->getBotones());
-            $oTabla->setDatos($oDatosTabla->getValores());
-
-            if (!empty($oDatosTabla->getValores())) {
-                $html .= $oTabla->mostrar_tabla();
-            }
-
-            // Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
-            if ((int)$Qpermiso === 3) {
-                $html .= "<br><table class=botones><tr class=botones>
-					<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
-                $html .= _("nuevo");
-                // caso especial para traslados:
-                if ((int)$id_dossier === 1004) {
-                    $insert = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/traslado_form.php?' . http_build_query(array('cabecera' => 'no', 'id_pau' => $id_pau, 'id_dossier' => $id_dossier, 'obj_pau' => $Qobj_pau)));
-                    $html .= "\" onclick=\"fnjs_update_div('#main','$insert');\"></td></tr></table>";
-                } else {
-                    $html .= "\" onclick=\"fnjs_nuevo('#seleccionados');\"></td></tr></table>";
+            $db = $oTipoDossier->getDb();
+            $nameClaseSelect = '';
+            if ($db === 5) { // nuevas clases en /src
+                $nameFile = "../../../src/$app/domain/Select" . $id_dossier . ".php";
+                if (realpath($nameFile)) { //como file_exists
+                    $nameClaseSelect = "src\\$app\\domain\\Select" . $id_dossier;
+                }
+            } else {
+                // Para presentaciones particulares
+                $nameFile = "../../$app/model/Select" . $id_dossier . ".php";
+                $nameFile2 = "../../$app/domain/Select" . $id_dossier . ".php";
+                if (realpath($nameFile)) { //como file_exists
+                    $nameClaseSelect = "$app\\model\\Select" . $id_dossier;
+                }
+                if (realpath($nameFile2)) { //como file_exists
+                    $nameClaseSelect = "$app\\domain\\Select" . $id_dossier;
                 }
             }
-            echo $html;
+
+            if (!empty($nameClaseSelect)) {
+                $claseSelect = new $nameClaseSelect();
+                $claseSelect->setId_dossier($id_dossier);
+                $claseSelect->setPau($pau);
+                $claseSelect->setObj_pau($Qobj_pau);
+                $claseSelect->setId_pau($id_pau);
+                $claseSelect->setPermiso($Qpermiso);
+                $claseSelect->setBloque($bloque);
+                $claseSelect->setQueSel($QqueSel);
+
+                // sólo si vengo de vuelta, sino el scroll corresponde a la grid
+                // de la selección que me trae aqui.
+                if (isset($_POST['stack']) && $stack != '') {
+                    $claseSelect->setQId_sel($Qid_sel);
+                    $claseSelect->setQScroll_id($Qscroll_id);
+                }
+
+                switch ((int)$id_dossier) {
+                    case 1301:
+                    case 1302:
+                        // propio del 1302
+                        $Qmodo_curso = (integer)filter_input(INPUT_POST, 'modo_curso');
+                        $claseSelect->setModo_curso($Qmodo_curso);
+                        break;
+                    case 1303:
+                        // propio del 1303
+                        if (!empty($Qid_activ)) {
+                            $claseSelect->setQId_activ($Qid_activ);
+                        }
+                        break;
+                }
+                echo $claseSelect->getHtml();
+            } else {
+                // para presentación genérica, con la info tipo InfoProfesorPublicacion.php
+                // datos del dossier:
+                $clase = $oTipoDossier->getClass();
+
+                $app = $oTipoDossier->getApp();
+                // No sé porque no acepa aquí el '_' en el nombre de la clase.
+                //$clase_info = "$app\\model\\Info$id_dossier";
+                $clase_info = "src\\$app\\domain\\Info$clase";
+                // Tiene que ser en dos pasos.
+                $obj = $clase_info;
+                $oInfoClase = new $obj();
+                $oInfoClase->setId_pau($id_pau);
+                if (method_exists($oInfoClase, 'setObj_pau')) {
+                    $oInfoClase->setObj_pau($Qobj_pau);
+                }
+
+                $oDatosTabla = new DatosTablaRepo();
+                $oDatosTabla->setBloque($bloque);
+                $oDatosTabla->setExplicacion_txt($oInfoClase->getTxtExplicacion());
+                $oDatosTabla->setEliminar_txt($oInfoClase->getTxtEliminar());
+                $oDatosTabla->setColeccion($oInfoClase->getColeccion());
+                $oDatosTabla->setId_sel($Qid_sel);
+                $oDatosTabla->setScroll_id($Qscroll_id);
+
+                $aQuery = array(
+                        'clase_info' => $Qclase_info,
+                        'id_pau' => $id_pau,
+                        'bloque' => $bloque,
+                        'permiso' => $Qpermiso,
+                );
+                $aQuery['obj_pau'] = $Qobj_pau;
+                $sQuery = http_build_query($aQuery);
+                $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
+                $oDatosTabla->setAction_tabla($Qgo_to);
+
+                $oHashSelect = new Hash();
+                $oHashSelect->setCamposForm('mod');
+                $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
+                $a_camposHidden = array(
+                        'clase_info' => $clase_info,
+                        'pau' => $pau,
+                        'id_pau' => $id_pau, // Hace falta para el botón nuevo
+                        'obj_pau' => $Qobj_pau,
+                        'permiso' => $Qpermiso,
+                        'bloque' => $bloque,
+                );
+                $oHashSelect->setArraycamposHidden($a_camposHidden);
+
+                $html = '';
+                $html .= '<script>';
+                $html .= $oDatosTabla->getScript();
+                $html .= '</script>';
+                $html .= "<h3 class=subtitulo>" . $oInfoClase->getTxtTitulo() . "</h3>
+				<form id='seleccionados' name='seleccionados' action='' method='post'>";
+                $html .= $oHashSelect->getCamposHtml();
+                $html .= "<input type='hidden' id='mod' name='mod' value=''>";
+
+                $oTabla = new Lista();
+                $oTabla->setId_tabla('datos_sql' . $id_dossier);
+                $oTabla->setCabeceras($oDatosTabla->getCabeceras());
+                $oTabla->setBotones($oDatosTabla->getBotones());
+                $oTabla->setDatos($oDatosTabla->getValores());
+
+                if (!empty($oDatosTabla->getValores())) {
+                    $html .= $oTabla->mostrar_tabla();
+                }
+
+                // Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
+                if ((int)$Qpermiso === 3) {
+                    $html .= "<br><table class=botones><tr class=botones>
+					<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
+                    $html .= _("nuevo");
+                    // caso especial para traslados:
+                    if ((int)$id_dossier === 1004) {
+                        $insert = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/traslado_form.php?' . http_build_query(array('cabecera' => 'no', 'id_pau' => $id_pau, 'id_dossier' => $id_dossier, 'obj_pau' => $Qobj_pau)));
+                        $html .= "\" onclick=\"fnjs_update_div('#main','$insert');\"></td></tr></table>";
+                    } else {
+                        $html .= "\" onclick=\"fnjs_nuevo('#seleccionados');\"></td></tr></table>";
+                    }
+                }
+                echo $html;
+            }
+            echo "</div>";
+            $id_dossier = strtok("y");
         }
-        echo "</div>";
-        $id_dossier = strtok("y");
     }
-}

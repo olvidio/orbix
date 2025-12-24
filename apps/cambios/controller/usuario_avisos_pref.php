@@ -1,12 +1,12 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorTipoDeActividad;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use procesos\model\entity\GestorActividadFase;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -76,6 +76,7 @@ $oDesplObjetos->setBlanco('true');
 $oDesplObjetos->setOpciones($aObjetos);
 $oDesplObjetos->setAction('fnjs_actualizar_fases(); fnjs_actualizar_propiedades()');
 
+$TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
 if ($Qsalida === 'modificar' && !empty($Qid_item_usuario_objeto)) {
     $oCambioUsuarioObjetoPref = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
     $id_tipo_activ = $oCambioUsuarioObjetoPref->getId_tipo_activ_txt();
@@ -91,8 +92,7 @@ if ($Qsalida === 'modificar' && !empty($Qid_item_usuario_objeto)) {
     $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
     $dl_propia = (ConfigGlobal::mi_dele() === $dl_org_no_f);
 
-    $GesTiposActiv = new GestorTipoDeActividad();
-    $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ, $dl_propia);
+    $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
 
     $oDesplObjetos->setOpcion_sel($objeto);
     $oDesplTiposAviso->setOpcion_sel($aviso_tipo);
@@ -102,8 +102,7 @@ if ($Qsalida === 'modificar' && !empty($Qid_item_usuario_objeto)) {
     $id_pau = '';
 
     $id_tipo_activ = $mi_sfsv . '.....';
-    $GesTiposActiv = new GestorTipoDeActividad();
-    $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ, $dl_propia);
+    $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
     $id_fase_ref = '';
     $aviso_off = FALSE;
     $aviso_on = TRUE;
@@ -115,10 +114,9 @@ if (ConfigGlobal::is_app_installed('procesos')) {
     $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
     $oDesplFases->setOpcion_sel($id_fase_ref);
 } else {
-    $oActividad = new ActividadAll();
-    $a_status = $oActividad->getArrayStatus();
+    $a_status = StatusId::getArrayStatus();
     // Quitar el status 'cualquiera'
-    unset($a_status[ActividadAll::STATUS_ALL]);
+    unset($a_status[StatusId::ALL]);
     $aStatusFlip = array_flip($a_status);
 
     $oDesplFases = new Desplegable();

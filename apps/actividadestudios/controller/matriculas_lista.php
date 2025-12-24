@@ -1,11 +1,12 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use core\ViewPhtml;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\domain\entity\Persona;
+use src\personas\domain\services\TelecoPersonaService;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Lista;
@@ -67,8 +68,8 @@ $finIso = $oPeriodo->getF_fin_iso();
 $aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
 $aOperadorActividad['f_ini'] = 'BETWEEN';
 
-$gesActividades = new GestorActividad();
-$a_IdActividades = $gesActividades->getArrayIdsWithKeyFini($aWhereActividad, $aOperadorActividad);
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+$a_IdActividades = $ActividadRepository->getArrayIdsWithKeyFini($aWhereActividad, $aOperadorActividad);
 
 $str_actividades = "{" . implode(', ', $a_IdActividades) . "}";
 $aWhere = ['id_activ' => $str_actividades];
@@ -103,6 +104,7 @@ $a_valores = [];
 $msg_err = '';
 $id_nom_anterior = '';
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 foreach ($cMatriculas as $oMatricula) {
     $i++;
     $id_nom = $oMatricula->getId_nom();
@@ -115,12 +117,13 @@ foreach ($cMatriculas as $oMatricula) {
         $id_preceptor = $oMatricula->getId_preceptor();
         $mails_preceptor = '';
         if (!empty($id_preceptor)) {
-            $oPersona = Persona::newPersona($id_preceptor);
+            $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
             if (!is_object($oPersona)) {
                 $msg_err .= "<br>preceptor: $oPersona con id_nom: $id_preceptor en  " . __FILE__ . ": line " . __LINE__;
             } else {
+                $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
                 $preceptor = $oPersona->getPrefApellidosNombre();
-                $mails_preceptor = $oPersona->telecos_persona($id_preceptor, 'e-mail', ' / ');
+                $mails_preceptor = $telecoService->getTelecosPorTipo($id_preceptor, 'e-mail', ' / ');
                 if (!empty($mails_preceptor)) {
                     $preceptor .= ' [' . $mails_preceptor . ']';
                 }
@@ -133,20 +136,21 @@ foreach ($cMatriculas as $oMatricula) {
     //echo "id_activ: $id_activ<br>";
     //echo "id_asignatura: $id_asignatura<br>";
 
-    $oActividad = new ActividadAll($id_activ);
+    $oActividad = $ActividadAllRepository->findById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
 
     if ($id_nom != $id_nom_anterior) {
         $mails_alumno = '';
-        $oPersona = Persona::newPersona($id_nom);
-        if (!is_object($oPersona)) {
-            $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+        $oPersona = Persona::findPersonaEnGlobal($id_nom);
+        if ($oPersona === null) {
+            $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             continue;
         }
+        $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
         $apellidos_nombre = $oPersona->getPrefApellidosNombre();
         $ctr = $oPersona->getCentro_o_dl();
         $dl = $oPersona->getDl();
-        $mails_alumno = $oPersona->telecos_persona($id_nom, 'e-mail', ' / ');
+        $mails_alumno = $telecoService->getTelecosPorTipo($id_nom, 'e-mail', ' / ');
         if (!empty($mails_alumno)) {
             $apellidos_nombre .= ' [' . $mails_alumno . ']';
         }

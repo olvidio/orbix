@@ -2,13 +2,12 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use encargossacd\model\EncargoFunciones;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoSacd;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
-use encargossacd\model\entity\GestorEncargoSacdObserv;
-use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\PersonaDl;
+use src\encargossacd\application\traits\EncargoFunciones;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdObservRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
@@ -59,7 +58,7 @@ $poblacion = $oEncargoFunciones->getLugar_dl();
 $lugar_fecha = "$poblacion, $hoy_local";
 
 // los sacd
-$GesPersonas = new GestorPersonaDl();
+$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 $aWhere = [];
 $aOperador = [];
 switch ($Qsel) {
@@ -70,7 +69,7 @@ switch ($Qsel) {
         $aWhere['dl'] = ConfigGlobal::mi_delef();
         $aWhere['_ordre'] = 'apellido1,apellido2,nom';
         $aOperador['id_tabla'] = '~';
-        $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+        $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
         break;
     case "sssc":
         $aWhere['id_tabla'] = '^sss';
@@ -79,16 +78,20 @@ switch ($Qsel) {
         $aWhere['dl'] = ConfigGlobal::mi_delef();
         $aWhere['_ordre'] = 'apellido1,apellido2,nom';
         $aOperador['id_tabla'] = '~';
-        $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+        $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
         break;
 }
 $array_modo = [];
 $s = 0;
+$EncargoSacdObservRepository = $GLOBALS['container']->get(EncargoSacdObservRepositoryInterface::class);
+$EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+$EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 foreach ($cPersonas as $oPersona) {
     $s++;
     $id_nom = $oPersona->getId_nom();
     $array_modo[$s]['nom_ap'] = $oPersona->getNombreApellidos();
-    $idioma = $oPersona->getLengua();
+    $idioma = $oPersona->getIdioma_preferido();
 
     $array_modo[$s]['txt']['com_sacd'] = $oEncargoFunciones->getTraduccion('com_sacd', $idioma);
     $array_modo[$s]['txt']['t_secc'] = $oEncargoFunciones->getTraduccion('t_secc', $idioma);
@@ -101,39 +104,37 @@ foreach ($cPersonas as $oPersona) {
     $array_modo[$s]['txt']['t_otros'] = $oEncargoFunciones->getTraduccion('t_otros', $idioma);
 
     // busco las observaciones (si las hay)
-    $GesEncargoSacdObserv = new GestorEncargoSacdObserv();
-    $cEncargoSacdObserv = $GesEncargoSacdObserv->getEncargoSacdObservs(array('id_nom' => $id_nom));
+    $cEncargoSacdObserv = $EncargoSacdObservRepository->getEncargoSacdObservs(array('id_nom' => $id_nom));
     if (is_array($cEncargoSacdObserv) && count($cEncargoSacdObserv) > 0) {
         $observ = $cEncargoSacdObserv[0]->getObserv();
     } else {
         $observ = '';
     }
     /* busco los datos del encargo que se tengan */
-    $GesEncargoSad = new GestorEncargoSacd();
     $aWhere = ['id_nom' => $id_nom, 'f_fin' => 'x', '_ordre' => 'modo'];
     $aOperador = ['f_fin' => 'IS NULL'];
-    $cEncargosSacd1 = $GesEncargoSad->getEncargosSacd($aWhere, $aOperador);
+    $cEncargosSacd1 = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
 
     $aWhere = ['id_nom' => $id_nom, 'f_fin' => $hoy_iso, '_ordre' => 'modo'];
     $aOperador = ['f_fin' => '>'];
-    $cEncargosSacd2 = $GesEncargoSad->getEncargosSacd($aWhere, $aOperador);
+    $cEncargosSacd2 = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
 
     $cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2;
     foreach ($cEncargosSacd as $oEncargoSacd) {
         $id_enc = $oEncargoSacd->getId_enc();
         $modo = $oEncargoSacd->getModo();
-        $oEncargo = new Encargo($id_enc);
+        $oEncargo = $EncargoRepository->findById($id_enc);
         $id_tipo_enc = $oEncargo->getId_tipo_enc();
-        // paso a texto para poder coger el segundo caracter.
+        // paso a texto para poder coger el segundo carácter.
         $id_tipo_enc_txt = (string)$id_tipo_enc;
-        if ($id_tipo_enc_txt[0] == 4 || $id_tipo_enc_txt[0] == 7 || $id_tipo_enc_txt[0] == 8) continue;
+        if ((int)$id_tipo_enc_txt[0] === 4 || (int)$id_tipo_enc_txt[0] === 7 || (int)$id_tipo_enc_txt[0] === 8) continue;
         $sup_tit = "";
         $desc_enc = $oEncargo->getDesc_enc();
         $id_ubi = $oEncargo->getId_ubi();
         $desc_lugar = $oEncargo->getDesc_lugar();
         $grupo = $array_orden[$modo];
         if (!empty($id_ubi)) { // en algunos encargos no hay ubi
-            if (substr($id_ubi, 0, 1) == 2) {
+            if ((int)substr($id_ubi, 0, 1) === 2) {
                 $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $oUbi = $CentroEllasRepository->findById($id_ubi);
             } else {
@@ -161,29 +162,29 @@ foreach ($cPersonas as $oPersona) {
             }
         }
 
-        if ($modo == 2 || $modo == 3) {
+        if ($modo === 2 || $modo === 3) {
             // busco el suplente
-            $cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => 4), array('f_fin' => 'IS NULL'));
-            if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 0) {
-                $cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => 4), array('f_fin' => '>'));
+            $cEncargosSacd1 = $EncargoSacdRepository->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => 4), array('f_fin' => 'IS NULL'));
+            if (is_array($cEncargosSacd1) && count($cEncargosSacd1) === 0) {
+                $cEncargosSacd1 = $EncargoSacdRepository->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => 4), array('f_fin' => '>'));
             }
-            if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 1) {
+            if (is_array($cEncargosSacd1) && count($cEncargosSacd1) === 1) {
                 $id_nom_sup = $cEncargosSacd1[0]->getId_nom();
-                $oSacd = new PersonaDl($id_nom_sup);
+                $oSacd = $PersonaDlRepository->findById($id_nom_sup);
                 $sup_tit = $oSacd->getNombreApellidos();
             } else {
                 $sup_tit = '';
             }
-        } elseif ($modo == 4) {
+        } elseif ($modo === 4) {
             // busco el titular
             // busco el suplente
-            $cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => '[23]'), array('modo' => '~', 'f_fin' => 'IS NULL'));
-            if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 0) {
-                $cEncargosSacd1 = $GesEncargoSad->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => '[23]'), array('modo' => '~', 'f_fin' => '>'));
+            $cEncargosSacd1 = $EncargoSacdRepository->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => 'x', 'modo' => '[23]'), array('modo' => '~', 'f_fin' => 'IS NULL'));
+            if (is_array($cEncargosSacd1) && count($cEncargosSacd1) === 0) {
+                $cEncargosSacd1 = $EncargoSacdRepository->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => $hoy_iso, 'modo' => '[23]'), array('modo' => '~', 'f_fin' => '>'));
             }
-            if (is_array($cEncargosSacd1) && count($cEncargosSacd1) == 1) {
+            if (is_array($cEncargosSacd1) && count($cEncargosSacd1) === 1) {
                 $id_nom_tit = $cEncargosSacd1[0]->getId_nom();
-                $oSacd = new PersonaDl($id_nom_tit);
+                $oSacd = $PersonaDlRepository($id_nom_tit);
                 $sup_tit = $oSacd->getNombreApellidos();
             } else {
                 $sup_tit = '';
@@ -193,15 +194,14 @@ foreach ($cPersonas as $oPersona) {
         // horario
         $aWhere = [];
         $aOperador = [];
-        $GesHorario = new GestorEncargoSacdHorario();
         $aWhere['id_enc'] = $id_enc;
         $aWhere['id_nom'] = $id_nom;
         $aWhere['f_fin'] = "'$hoy_iso'";
         $aOperador['f_fin'] = '>';
 
-        $cHorarios1 = $GesHorario->getEncargoSacdHorarios($aWhere, $aOperador);
+        $cHorarios1 = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhere, $aOperador);
         $aOperador['f_fin'] = 'IS NULL';
-        $cHorarios2 = $GesHorario->getEncargoSacdHorarios($aWhere, $aOperador);
+        $cHorarios2 = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhere, $aOperador);
         $cHorarios = $cHorarios1 + $cHorarios2;
 
         $dedic_m = "";
@@ -223,14 +223,14 @@ foreach ($cPersonas as $oPersona) {
         }
 
         // estudio, descanso y otros como grupo 6
-        if ($id_tipo_enc == 5020 || $id_tipo_enc == 5030 || $id_tipo_enc == 6000) {
+        if ($id_tipo_enc === 5020 || $id_tipo_enc === 5030 || $id_tipo_enc === 6000) {
             $grupo = 6;
             $nombre_ubi = $oEncargoFunciones->getTraduccion('e_' . $desc_enc, $idioma);
             $dedic_m = $oEncargoFunciones->dedicacion($id_nom, $id_enc, $idioma);
         }
 
         // las colatios y rtm los pongo al final
-        if ($id_tipo_enc == 4002 || $id_tipo_enc == 1110 || $id_tipo_enc == 1210) {
+        if ($id_tipo_enc === 4002 || $id_tipo_enc === 1110 || $id_tipo_enc === 1210) {
             $otros_enc .= $desc_enc;
             continue;
         }

@@ -2,8 +2,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
-use personas\model\entity\Persona;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************
@@ -30,7 +30,7 @@ $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
 $id_nom = $oCertificadoEmitido->getId_nom();
 $nom = $oCertificadoEmitido->getNom();
 
-$oPersona = Persona::NewPersona($id_nom);
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
 $apellidos_nombre = $oPersona->getApellidosNombre();
 $nom = empty($nom) ? $apellidos_nombre : $nom;
 

@@ -1,6 +1,5 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\ActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\Matricula;
@@ -10,9 +9,10 @@ use notas\model\entity\GestorActa;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
 use notas\model\PersonaNota;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\personas\domain\entity\Persona;
 use web\TiposActividades;
 use function core\is_true;
 
@@ -29,7 +29,7 @@ $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
 $nota_corte = $_SESSION['oConfig']->getNota_corte();
-$nota_max_default = $_SESSION['oConfig']->getNota_max();
+$nota_max_default = $_SESSION['oConfig']->getNotaMax();
 
 if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
     $aNivelOpcionales = array(1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434);
@@ -38,7 +38,8 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
     $GesActas = new GestorActa();
     $cActas = $GesActas->getActas(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));
     // miro la epoca
-    $oActividad = new ActividadAll($Qid_activ);
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $oActividad = $ActividadAllRepository->findById($Qid_activ);
     $id_tipo_activ = $oActividad->getId_tipo_activ();
     $iepoca = PersonaNotaDB::EPOCA_CA;
     $oTipoActividad = new TiposActividades($id_tipo_activ);
@@ -75,9 +76,9 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             if (!empty($nota_num) && $nota_num / $nota_max < $nota_corte) {
                 $nn = $nota_num / $nota_max * 10;
                 // Ahora si la guardo como examinado
-                $oPersona = Persona::NewPersona($id_nom);
-                if (!is_object($oPersona)) {
-                    $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+                $oPersona = Persona::findPersonaEnGlobal($id_nom);
+                if ($oPersona === null) {
+                    $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                     continue;
                 }
                 $error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"), $oPersona->getNombreApellidos(), $nn) . "\n";
@@ -202,7 +203,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
 
         if (!empty($id_activ_old) && ($Qid_activ !== $id_activ_old)) {
             //aviso
-            $oAlumno = Persona::NewPersona($id_nom);
+            $oAlumno = Persona::findPersonaEnGlobal($id_nom);
             if (!is_object($oAlumno)) {
                 $msg_err .= "<br>$oAlumno con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             } else {

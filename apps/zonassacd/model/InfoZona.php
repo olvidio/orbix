@@ -3,6 +3,7 @@
 namespace zonassacd\model;
 
 use core\DatosInfo;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 /* No vale el underscore en el nombre */
 
@@ -31,7 +32,7 @@ class InfoZona extends DatosInfo
             $aWhere = array('nom' => $this->k_buscar);
             $aOperador = array('nom' => 'sin_acentos');
         }
-        $oLista = new entity\GestorZona();
+        $oLista = ZonaRepositoryInterface::class;
         $Coleccion = $oLista->getZonas($aWhere, $aOperador);
 
         return $Coleccion;

@@ -1,0 +1,278 @@
+<?php
+
+namespace src\zonassacd\infrastructure\repositories;
+
+use core\ClaseRepository;
+use core\Condicion;
+use core\Set;
+use PDO;
+use src\shared\traits\HandlesPdoErrors;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\entity\ZonaSacd;
+use function core\is_true;
+
+
+/**
+ * Clase que adapta la tabla zonas_sacd a la interfaz del repositorio
+ *
+ * @package orbix
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 2.0
+ * @created 24/12/2025
+ */
+class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepositoryInterface
+{
+    use HandlesPdoErrors;
+
+    public function __construct()
+    {
+        $oDbl = $GLOBALS['oDBE'];
+        $this->setoDbl($oDbl);
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $this->setoDbl_select($oDbl_Select);
+        $this->setNomTabla('zonas_sacd');
+    }
+
+    /**
+     * retorna l'array de id_nom dels sacd de la zona
+     *
+     * @param integer iid_zona.
+     * @return array|false
+     */
+    public function getIdSacdsDeZona(int $iid_zona):array
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $sQuery = "SELECT id_nom
+				FROM $nom_tabla
+				WHERE id_zona=$iid_zona
+				ORDER BY id_nom";
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        $aLista = [];
+        foreach ($stmt as $aDades) {
+            $aLista[] = $aDades['id_nom'];
+        }
+        return $aLista;
+    }
+    /* -------------------- GESTOR BASE ---------------------------------------- */
+
+    /**
+     * devuelve una colección (array) de objetos de tipo ZonaSacd
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo ZonaSacd
+     */
+    public function getZonasSacds(array $aWhere = [], array $aOperators = []): array|false
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $ZonaSacdSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') {
+                continue;
+            }
+            if ($camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = " WHERE " . $sCondicion;
+        }
+        $sOrdre = '';
+        $sLimit = '';
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($filas as $aDatos) {
+            $ZonaSacd = new ZonaSacd();
+            $ZonaSacd->setAllAttributes($aDatos);
+            $ZonaSacdSet->add($ZonaSacd);
+        }
+        return $ZonaSacdSet->getTot();
+    }
+
+    /* -------------------- ENTIDAD --------------------------------------------- */
+
+    public function Eliminar(ZonaSacd $ZonaSacd): bool
+    {
+        $id_item = $ZonaSacd->getId_item();
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+    }
+
+
+    /**
+     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     */
+    public function Guardar(ZonaSacd $ZonaSacd): bool
+    {
+        $id_item = $ZonaSacd->getId_item();
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $bInsert = $this->isNew($id_item);
+
+        $aDatos = [];
+        $aDatos['id_nom'] = $ZonaSacd->getId_nom();
+        $aDatos['id_zona'] = $ZonaSacd->getId_zona();
+        $aDatos['propia'] = $ZonaSacd->isPropia();
+        $aDatos['dw1'] = $ZonaSacd->isDw1();
+        $aDatos['dw2'] = $ZonaSacd->isDw2();
+        $aDatos['dw3'] = $ZonaSacd->isDw3();
+        $aDatos['dw4'] = $ZonaSacd->isDw4();
+        $aDatos['dw5'] = $ZonaSacd->isDw5();
+        $aDatos['dw6'] = $ZonaSacd->isDw6();
+        $aDatos['dw7'] = $ZonaSacd->isDw7();
+        array_walk($aDatos, 'core\poner_null');
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if (is_true($aDatos['propia'])) {
+            $aDatos['propia'] = 'true';
+        } else {
+            $aDatos['propia'] = 'false';
+        }
+        if (is_true($aDatos['dw1'])) {
+            $aDatos['dw1'] = 'true';
+        } else {
+            $aDatos['dw1'] = 'false';
+        }
+        if (is_true($aDatos['dw2'])) {
+            $aDatos['dw2'] = 'true';
+        } else {
+            $aDatos['dw2'] = 'false';
+        }
+        if (is_true($aDatos['dw3'])) {
+            $aDatos['dw3'] = 'true';
+        } else {
+            $aDatos['dw3'] = 'false';
+        }
+        if (is_true($aDatos['dw4'])) {
+            $aDatos['dw4'] = 'true';
+        } else {
+            $aDatos['dw4'] = 'false';
+        }
+        if (is_true($aDatos['dw5'])) {
+            $aDatos['dw5'] = 'true';
+        } else {
+            $aDatos['dw5'] = 'false';
+        }
+        if (is_true($aDatos['dw6'])) {
+            $aDatos['dw6'] = 'true';
+        } else {
+            $aDatos['dw6'] = 'false';
+        }
+        if (is_true($aDatos['dw7'])) {
+            $aDatos['dw7'] = 'true';
+        } else {
+            $aDatos['dw7'] = 'false';
+        }
+
+        if ($bInsert === false) {
+            //UPDATE
+            $update = "
+					id_nom                   = :id_nom,
+					id_zona                  = :id_zona,
+					propia                   = :propia,
+					dw1                      = :dw1,
+					dw2                      = :dw2,
+					dw3                      = :dw3,
+					dw4                      = :dw4,
+					dw5                      = :dw5,
+					dw6                      = :dw6,
+					dw7                      = :dw7";
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        } else {
+            // INSERT
+            $aDatos['id_item'] = $ZonaSacd->getId_item();
+            $campos = "(id_item,id_nom,id_zona,propia,dw1,dw2,dw3,dw4,dw5,dw6,dw7)";
+            $valores = "(:id_item,:id_nom,:id_zona,:propia,:dw1,:dw2,:dw3,:dw4,:dw5,:dw6,:dw7)";
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+    }
+
+    private function isNew(int $id_item): bool
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
+            return TRUE;
+        }
+        return false;
+    }
+
+    /**
+     * Devuelve los campos de la base de datos en un array asociativo.
+     * Devuelve false si no existe la fila en la base de datos
+     *
+     * @param int $id_item
+     * @return array|bool
+     */
+    public function datosById(int $id_item): array|bool
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $aDatos;
+    }
+
+
+    /**
+     * Busca la clase con id_item en la base de datos .
+     */
+    public function findById(int $id_item): ?ZonaSacd
+    {
+        $aDatos = $this->datosById($id_item);
+        if (empty($aDatos)) {
+            return null;
+        }
+        return (new ZonaSacd())->setAllAttributes($aDatos);
+    }
+
+    public function getNewId()
+    {
+        $oDbl = $this->getoDbl();
+        $sQuery = "select nextval('zonas_sacd_id_item_seq'::regclass)";
+        return $oDbl->query($sQuery)->fetchColumn();
+    }
+}

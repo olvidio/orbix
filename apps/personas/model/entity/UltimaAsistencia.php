@@ -550,7 +550,7 @@ class UltimaAsistencia extends ClasePropiedades
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('actividades\model\entity\TipoDeActividad'); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNombreCompleto'); // método para obtener el valor a mostrar del objeto relacionado.
-        $oDatosCampo->setArgument3('getListaTiposActividad'); // método con que crear la lista de opciones del Gestor objeto relacionado.
+        $oDatosCampo->setArgument3('getArrayTiposActividad'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 
         return $oDatosCampo;
     }

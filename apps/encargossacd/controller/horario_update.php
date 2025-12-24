@@ -1,6 +1,9 @@
 <?php
 
-use encargossacd\model\entity\EncargoHorario;
+use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
+use src\encargossacd\domain\entity\EncargoHorario;
+use web\DateTimeLocal;
+use web\TimeLocal;
 
 /**
  * Esta página actualiza la base de datos de los encargos.
@@ -42,8 +45,16 @@ $Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
 $Qn_sacd = (integer)filter_input(INPUT_POST, 'n_sacd');
 $Qmes = (string)filter_input(INPUT_POST, 'mes');
 
+// asegurar tipo correcto para f_ini, f_fin
+$oF_ini = empty($Qf_ini) ? null : new DateTimeLocal($Qf_ini);
+$oF_fin = empty($Qf_fin) ? null : new DateTimeLocal($Qf_fin);
+// asegurar tipo correcto para h_ini
+$oH_ini = empty($Qh_ini) ? null : TimeLocal::fromString($Qh_ini);
+$oH_fin = empty($Qh_fin) ? null : TimeLocal::fromString($Qh_fin);
+
 if (empty($Qmas_menos)) $Qdia_ref = $Qdia;
 
+$EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
 switch ($Qmod) {
     case 'nuevo':
         //Compruebo que estén todos los campos necesarios
@@ -52,21 +63,23 @@ switch ($Qmod) {
             exit;
         }
 
+        $NewId = $EncargoHorarioRepository->getNewId();
         $oEncargoHorario = new EncargoHorario();
+        $oEncargoHorario->setId_item_h($NewId);
         $oEncargoHorario->setId_enc($Qid_enc);
-        $oEncargoHorario->setF_ini($Qf_ini);
-        $oEncargoHorario->setF_fin($Qf_fin);
+        $oEncargoHorario->setF_ini($oF_ini);
+        $oEncargoHorario->setF_fin($oF_fin);
         $oEncargoHorario->setDia_ref($Qdia_ref);
         $oEncargoHorario->setDia_num($Qdia_num);
         $oEncargoHorario->setMas_menos($Qmas_menos);
         $oEncargoHorario->setDia_inc($Qdia_inc);
-        $oEncargoHorario->setH_ini($Qh_ini);
-        $oEncargoHorario->setH_fin($Qh_fin);
+        $oEncargoHorario->setH_ini($oH_ini);
+        $oEncargoHorario->setH_fin($oH_fin);
         $oEncargoHorario->setN_sacd($Qn_sacd);
         $oEncargoHorario->setMes($Qmes);
-        if ($oEncargoHorario->DBGuardar() === false) {
+        if ($EncargoHorarioRepository->Guardar($oEncargoHorario) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oEncargoHorario->getErrorTxt();
+            echo "\n" . $EncargoHorarioRepository->getErrorTxt();
         }
         break;
     case "editar":
@@ -76,29 +89,28 @@ switch ($Qmod) {
             exit;
         }
 
-        $oEncargoHorario = new EncargoHorario($Qid_item_h);
-        $oEncargoHorario->DBCarregar();
+        $oEncargoHorario = $EncargoHorarioRepository->findById($Qid_item_h);
 
-        $oEncargoHorario->setF_ini($Qf_ini);
-        $oEncargoHorario->setF_fin($Qf_fin);
+        $oEncargoHorario->setF_ini($oF_ini);
+        $oEncargoHorario->setF_fin($oF_fin);
         $oEncargoHorario->setDia_ref($Qdia_ref);
         $oEncargoHorario->setDia_num($Qdia_num);
         $oEncargoHorario->setMas_menos($Qmas_menos);
         $oEncargoHorario->setDia_inc($Qdia_inc);
-        $oEncargoHorario->setH_ini($Qh_ini);
-        $oEncargoHorario->setH_fin($Qh_fin);
+        $oEncargoHorario->setH_ini($oH_ini);
+        $oEncargoHorario->setH_fin($oH_fin);
         $oEncargoHorario->setN_sacd($Qn_sacd);
         $oEncargoHorario->setMes($Qmes);
-        if ($oEncargoHorario->DBGuardar() === false) {
+        if ($EncargoHorarioRepository->Guardar($oEncargoHorario) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oEncargoHorario->getErrorTxt();
+            echo "\n" . $EncargoHorarioRepository->getErrorTxt();
         }
         break;
     case "eliminar":
         if (!empty($_POST['sel_nom'])) {
             $id_item_h = strtok($_POST['sel_nom'][0], "#");
-            $oEncargoHorario = new EncargoHorario($id_item_h);
-            $oEncargoHorario->DBEliminar();
+            $oEncargoHorario = $EncargoHorarioRepository->findById($Qid_item_h);
+            $EncargoHorarioRepository->Elminar($oEncargoHorario);
         }
         break;
 }

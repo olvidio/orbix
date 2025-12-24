@@ -1,12 +1,11 @@
 <?php
 
-use cambios\model\entity\Cambio;
-use cambios\model\entity\CambioDl;
-use cambios\model\entity\CambioUsuario;
-use cambios\model\entity\CambioUsuarioObjetoPref;
-use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\cambios\domain\contracts\CambioDlRepositoryInterface;
+use src\cambios\domain\contracts\CambioRepositoryInterface;
+use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
+use src\cambios\domain\value_objects\AvisoTipoId;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Desplegable;
@@ -27,7 +26,7 @@ $oPosicion->recordar($Qrefresh);
 $QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
 
 // Tipos de avisos
-$aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();
+$aTipos_aviso = AvisoTipoId::getArrayAvisoTipo();
 $dele = ConfigGlobal::mi_dele();
 $delef = $dele . 'f';
 $aSecciones = array(1 => $dele, 2 => $delef);
@@ -57,7 +56,7 @@ if ($_SESSION['oPerm']->only_perm('admin_sf') || $_SESSION['oPerm']->only_perm('
     }
 } else {
     $Qid_usuario = ConfigGlobal::mi_id_usuario();
-    $Qaviso_tipo = CambioUsuario::TIPO_LISTA; // de moment nomes "anotar en lista".
+    $Qaviso_tipo = AvisoTipoId::LISTA; // de moment nomes "anotar en lista".
 }
 
 $aGoBack = [
@@ -96,17 +95,19 @@ if (!empty($Qid_usuario)) {
     $aWhere['sfsv'] = $mi_sfsv;
     $aWhere['aviso_tipo'] = $Qaviso_tipo;
     $aWhere['avisado'] = 'false';
-    $GesCambiosUsuario = new GestorCambioUsuario();
-    $cCambiosUsuario = $GesCambiosUsuario->getCambiosUsuario($aWhere);
+    $CambiosUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
+    $cCambiosUsuario = $CambiosUsuarioRepository->getCambiosUsuario($aWhere);
     $a_valores = [];
     $i = 0;
+    $CambioRepository = $GLOBALS['container']->get(CambioRepositoryInterface::class);
+    $CambioDlRepository = $GLOBALS['container']->get(CambioDlRepositoryInterface::class);
     foreach ($cCambiosUsuario as $oCambioUsuario) {
         $id_item_cmb = $oCambioUsuario->getId_item_cambio();
         $id_schema_cmb = $oCambioUsuario->getId_schema_cambio();
         if ($id_schema_cmb === 3000) {
-            $oCambio = new Cambio($id_item_cmb);
+            $oCambio = $CambioRepository->findById($id_item_cmb);
         } else {
-            $oCambio = new CambioDl($id_item_cmb);
+            $oCambio = $CambioDlRepository->findById($id_item_cmb);
         }
         $quien_cambia = $oCambio->getQuien_cambia();
         $sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();

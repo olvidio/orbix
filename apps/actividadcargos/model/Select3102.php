@@ -7,8 +7,10 @@ use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
-use personas\model\entity\Persona;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
@@ -106,10 +108,11 @@ class Select3102
 
     private function getTabla()
     {
-        $oCargosEnActividad = new GestorActividadCargo();
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
 
         // Permisos según el tipo de actividad
-        $oActividad = new ActividadAll($this->id_pau);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($this->id_pau);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $oPermDossier = new PermDossier();
         $a_ref_perm = $oPermDossier->perm_pers_activ($id_tipo_activ);
@@ -117,7 +120,7 @@ class Select3102
 
         $c = 0;
         $a_valores = [];
-        $cCargosEnActividad = $oCargosEnActividad->getActividadCargos(array('id_activ' => $this->id_pau));
+        $cCargosEnActividad = $ActividadCargoRepository->getActividadCargos(array('id_activ' => $this->id_pau));
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         foreach ($cCargosEnActividad as $oActividadCargo) {
@@ -133,15 +136,15 @@ class Select3102
             if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
                 continue;
             }
-            $oPersona = Persona::NewPersona($id_nom);
-            if (!is_object($oPersona)) {
-                $this->msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            if ($oPersona === null) {
+                $this->msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 continue;
             }
 
             $nom = $oPersona->getPrefApellidosNombre();
 
-            $puede_agd = $oActividadCargo->getPuede_agd();
+            $puede_agd = $oActividadCargo->isPuede_agd();
             $observ = $oActividadCargo->getObserv();
             $ctr_dl = $oPersona->getCentro_o_dl();
             // permisos (añado caso de cargo sin nombre = todos permiso)

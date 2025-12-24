@@ -1,12 +1,12 @@
 <?php
 
-use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use permisos\model\PermisosActividades;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorPermUsuarioActividad;
 use procesos\model\PermAccion;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -84,8 +84,8 @@ if ($_SESSION['oConfig']->is_jefeCalendario()
 }
 $oActividadTipo->setPerm_jefe($perm_jefe);
 
-$GesTiposActiv = new GestorTipoDeActividad();
-$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ, $Qdl_propia);
+$TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+$aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $Qdl_propia);
 
 $oGesFases = new GestorActividadFase();
 $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);

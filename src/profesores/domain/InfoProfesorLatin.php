@@ -19,6 +19,8 @@ class InfoProfesorLatin extends DatosInfoRepo
         $this->setClase('src\\profesores\\domain\\entity\\ProfesorLatin');
         $this->setMetodoGestor('getProfesoresLatin');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(ProfesorLatinRepositoryInterface::class);
     }
 
     public function getId_dossier()
@@ -40,7 +42,7 @@ class InfoProfesorLatin extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get(ProfesorLatinRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getProfesoresLatin($aWhere, $aOperador);
 
         return $Coleccion;

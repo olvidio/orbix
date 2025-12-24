@@ -1,6 +1,7 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
+use src\personas\domain\entity\Persona;
 use src\ubis\domain\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
@@ -12,9 +13,9 @@ require_once("apps/core/global_object.inc");
 
 $msg_err = '';
 
-$oPersona = personas\model\entity\Persona::NewPersona($id_nom);
-if (!is_object($oPersona)) {
-    $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
+if ($oPersona === null) {
+    $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
 }
 
 $nom = $oPersona->getNombreApellidos();

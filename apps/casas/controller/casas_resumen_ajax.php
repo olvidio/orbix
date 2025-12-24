@@ -22,15 +22,15 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use actividades\model\entity\GestorActividad;
-use casas\model\entity\GestorGrupoCasa;
-use casas\model\entity\GestorUbiGasto;
-use casas\model\entity\Ingreso;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
+use src\casas\domain\contracts\IngresoRepositoryInterface;
+use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use ubis\model\entity\GestorCasaPeriodo;
 use web\DateTimeLocal;
 use web\Periodo;
-use ubis\model\entity\GestorCasaPeriodo;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -96,7 +96,7 @@ function reparto($aPeriodos)
         $interval = $oInicio->diff($oFin);
         $num_dias = $interval->format('%a');
         $sfsv = $row['sfsv'];
-        $aOcupacion[$sfsv] += $num_dias;
+        $aOcupacion[$sfsv] .= $num_dias;
     }
     return $aOcupacion;
 }
@@ -281,7 +281,7 @@ $cCasasDl = $GesCasaDl->getCasas($aWhere, $aOperador);
 
 if ($_POST['cdc_sel'] == 6) { //añado los ctr de sf
     foreach ($cCentrosSf as $oCentroSf) {
-        array_push($cCasasDl, $oCentroSf);
+        $cCasasDl[] = $oCentroSf;
     }
 }
 
@@ -325,16 +325,19 @@ if (empty($Qque)) {
     $tot[2]['superavit'] = 0;
 
     $a_resumen = [];
+    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+    $GrupoCasaRepository = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
     foreach ($cCasasDl as $oCasaDl) {
         $out = [];
         $in = [];
         $id_ubi = $oCasaDl->getId_ubi();
         $nombre_ubi = $oCasaDl->getNombre_ubi();
         // Caso especial para Grupos: Los gastos son comunes a todas las casas.
-        $gesGrupoCasas = new GestorGrupoCasa();
-        $nom_tabla = $gesGrupoCasas->getNomTabla();
-        $sQuery = "SELECT * FROM $nom_tabla WHERE id_ubi_padre = $id_ubi OR id_ubi_hijo= $id_ubi";
-        $cGrupoCasas = $gesGrupoCasas->getGrupoCasasQuery($sQuery);
+        $aWhere = ['id_ubi_padre' => $id_ubi];
+        $cGrupoCasas1 = $GrupoCasaRepository->getGrupoCasas($aWhere);
+        $aWhere = ['id_ubi_hijo' => $id_ubi];
+        $cGrupoCasas2 = $GrupoCasaRepository->getGrupoCasas($aWhere);
+        $cGrupoCasas = array_merge($cGrupoCasas1, $cGrupoCasas2);
         $id_ubi_hijo = 0;
         $id_ubi_padre = 0;
         foreach ($cGrupoCasas as $oGrupoCasa) {
@@ -372,8 +375,9 @@ if (empty($Qque)) {
         $aWhere['status'] = 4;
         $aOperador['status'] = '<';
         $aWhere['_ordre'] = 'f_ini';
-        $oGesActividades = new GestorActividad();
-        $cActividades = $oGesActividades->getActividades($aWhere, $aOperador);
+        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+        $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
+        $UbiGastoRepository = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
         foreach ($cActividades as $oActividad) {
             $in = [];
             $id_activ = $oActividad->getId_activ();
@@ -396,7 +400,7 @@ if (empty($Qque)) {
             $a_resumen[$id_ubi][1]['dias'] += $a_ocupacion[1]; // sv
             $a_resumen[$id_ubi][2]['dias'] += $a_ocupacion[2]; // sf
 
-            $oIngreso = new Ingreso(array('id_activ' => $id_activ));
+            $oIngreso = $IngresoRepository->findBYId($id_activ);
             $num_asistentes_previstos = $oIngreso->getNum_asistentes_previstos();
             $num_asistentes = $oIngreso->getNum_asistentes();
             $ingresos_previstos = $factor_dias * $oIngreso->getIngresos_previstos();
@@ -464,11 +468,10 @@ if (empty($Qque)) {
         }
 
         // Gastos ------
-        $GesGastos = new GestorUbiGasto();
         // tipo: 1=sv, 2=sf, 3=gastos
-        $a_resumen[$id_ubi][1]['aportacion'] = $GesGastos->getSumaGastos($id_ubi, 1, $oInicio, $oFin);
-        $a_resumen[$id_ubi][2]['aportacion'] = $GesGastos->getSumaGastos($id_ubi, 2, $oInicio, $oFin);
-        $a_resumen[$id_ubi][0]['gasto'] = $GesGastos->getSumaGastos($id_ubi, 3, $oInicio, $oFin);
+        $a_resumen[$id_ubi][1]['aportacion'] = $UbiGastoRepository->getSumaGastos($id_ubi, 1, $oInicio, $oFin);
+        $a_resumen[$id_ubi][2]['aportacion'] = $UbiGastoRepository->getSumaGastos($id_ubi, 2, $oInicio, $oFin);
+        $a_resumen[$id_ubi][0]['gasto'] = $UbiGastoRepository->getSumaGastos($id_ubi, 3, $oInicio, $oFin);
 
         $a_repartoGastos = reparto($aPeriodos);
         if (($var = $a_repartoGastos[1] + $a_repartoGastos[2]) > 0) {
@@ -723,20 +726,25 @@ if (empty($Qque)) {
 } else {
     // sólo veo 5 años.
     $a_anys = [];
-    $any_prox = date('Y') + 1;
+    $any_prox = (int)date('Y') + 1;
     //$any_prox = date('Y');
     for ($i = 0; $i < 6; $i++) {
         $a_anys[] = $any_prox - $i;
     }
 
+    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+    $GrupoCasaRepository = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
+    $UbiGastoRepository = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
+    $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
     foreach ($cCasasDl as $oCasaDl) {
         $id_ubi = $oCasaDl->getId_ubi();
         $nombre_ubi = $oCasaDl->getNombre_ubi();
         // Caso especial para Grupos: Los gastos son comunes a todas las casas.
-        $gesGrupoCasas = new GestorGrupoCasa();
-        $nom_tabla = $gesGrupoCasas->getNomTabla();
-        $sQuery = "SELECT * FROM $nom_tabla WHERE id_ubi_padre = $id_ubi OR id_ubi_hijo= $id_ubi";
-        $cGrupoCasas = $gesGrupoCasas->getGrupoCasasQuery($sQuery);
+        $aWhere = ['id_ubi_padre' => $id_ubi];
+        $cGrupoCasas1 = $GrupoCasaRepository->getGrupoCasas($aWhere);
+        $aWhere = ['id_ubi_hijo' => $id_ubi];
+        $cGrupoCasas2 = $GrupoCasaRepository->getGrupoCasas($aWhere);
+        $cGrupoCasas = array_merge($cGrupoCasas1, $cGrupoCasas2);
         $id_ubi_padre = 0;
         $id_ubi_hijo = 0;
         foreach ($cGrupoCasas as $oGrupoCasa) {
@@ -799,8 +807,7 @@ if (empty($Qque)) {
             $aWhere['status'] = 4;
             $aOperador['status'] = '<';
             $aWhere['_ordre'] = 'f_ini';
-            $oGesActividades = new GestorActividad();
-            $cActividades = $oGesActividades->getActividades($aWhere, $aOperador);
+            $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
             foreach ($cActividades as $oActividad) {
                 $id_activ = $oActividad->getId_activ();
                 $oInicio = $oActividad->getF_ini();
@@ -822,8 +829,8 @@ if (empty($Qque)) {
                 $a_resumen[$id_ubi][$any][1]['dias'] += $a_ocupacion[1]; // sv
                 $a_resumen[$id_ubi][$any][2]['dias'] += $a_ocupacion[2]; // sf
 
-                $oIngreso = new Ingreso(array('id_activ' => $id_activ));
-                $num_asistentes_previstos = empty($oIngreso->getNum_asistentes_previstos()) ? 0 : $oIngreso->getNum_asistentes_previstos();
+                $oIngreso = $IngresoRepository->findBbyId($id_activ);
+                $num_asistentes_previstos = $oIngreso->getNum_asistentes_previstos()?? 0;
                 $num_asistentes = empty($oIngreso->getNum_asistentes()) ? 0 : $oIngreso->getNum_asistentes();
                 if (empty($oIngreso->getIngresos_previstos())) {
                     echo "<br>" . sprintf(_("No hay ingresos previstos para la actividad %s"), $nom_activ);
@@ -899,11 +906,10 @@ if (empty($Qque)) {
             }
 
             // Gastos ------
-            $GesGastos = new GestorUbiGasto();
             // tipo: 1=sv, 2=sf, 3=gastos
-            $a_resumen[$id_ubi][$any][1]['aportacion'] = $GesGastos->getSumaGastos($id_ubi, 1, $oInicio, $oFin);
-            $a_resumen[$id_ubi][$any][2]['aportacion'] = $GesGastos->getSumaGastos($id_ubi, 2, $oInicio, $oFin);
-            $a_resumen[$id_ubi][$any][0]['gasto'] = $GesGastos->getSumaGastos($id_ubi, 3, $oInicio, $oFin);
+            $a_resumen[$id_ubi][$any][1]['aportacion'] = $UbiGastoRepository->getSumaGastos($id_ubi, 1, $oInicio, $oFin);
+            $a_resumen[$id_ubi][$any][2]['aportacion'] = $UbiGastoRepository->getSumaGastos($id_ubi, 2, $oInicio, $oFin);
+            $a_resumen[$id_ubi][$any][0]['gasto'] = $UbiGastoRepository->getSumaGastos($id_ubi, 3, $oInicio, $oFin);
 
             $a_repartoGastos = reparto($aPeriodos);
             if (($var = $a_repartoGastos[1] + $a_repartoGastos[2]) > 0) {

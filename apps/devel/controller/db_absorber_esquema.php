@@ -101,7 +101,7 @@ $tabla = 'du_periodos';
 $campos = 'id_ubi, f_ini, f_fin, sfsv';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'd_teleco_cdc_dl';
-$campos = 'id_ubi, tipo_teleco, desc_teleco, num_teleco, observ';
+$campos = 'id_ubi, id_tipo_teleco, id_desc_teleco, num_teleco, observ';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'da_ctr_encargados';
 $campos = 'id_activ, id_ubi, num_orden, encargo';
@@ -167,10 +167,10 @@ $tabla = 'd_publicaciones';
 $campos = 'id_nom, tipo_publicacion, titulo, editorial, coleccion, f_publicacion, pendiente, referencia, lugar, observ';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'd_teleco_ctr_dl';
-$campos = 'id_ubi, tipo_teleco, desc_teleco, num_teleco, observ';
+$campos = 'id_ubi, id_tipo_teleco, id_desc_teleco, num_teleco, observ';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'd_teleco_personas_dl';
-$campos = 'id_nom, tipo_teleco, num_teleco, observ, desc_teleco';
+$campos = 'id_nom, id_tipo_teleco, num_teleco, observ, id_desc_teleco';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'd_titulo_est';
 $campos = 'id_nom, titulo, centro_dnt, eclesiastico, year';
@@ -202,20 +202,20 @@ $campos = 'id_nom, id_nivel, id_asignatura, id_situacion, acta, f_acta, detalle,
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'p_agregados';
 // quito el campo dl para que se llene con el default de la dl destino.
-$campos = 'id_nom, id_cr, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, lengua, situacion, f_situacion, apel_fam, inc, f_inc, stgr, profesion, eap, observ, id_ctr, lugar_nacimiento, ce, ce_ini, ce_fin, ce_lugar';
+$campos = 'id_nom, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, idioma_preferido, situacion, f_situacion, apel_fam, inc, f_inc, nivel_stgr, profesion, eap, observ, id_ctr, lugar_nacimiento, ce, ce_ini, ce_fin, ce_lugar';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'p_de_paso_out';
 // quito el campo dl para que se llene con el default de la dl destino.
-$campos = 'id_nom, id_cr, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, lengua, situacion, f_situacion, apel_fam, inc, f_inc, stgr, edad, profesion, eap, observ, profesor_stgr, lugar_nacimiento';
+$campos = 'id_nom, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, idioma_preferido, situacion, f_situacion, apel_fam, inc, f_inc, nivel_stgr, edad, profesion, eap, observ, profesor_stgr, lugar_nacimiento';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'p_numerarios';
-$campos = 'id_nom, id_cr, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, lengua, situacion, f_situacion, apel_fam, inc, f_inc, stgr, profesion, eap, observ, id_ctr, lugar_nacimiento, ce, ce_ini, ce_fin, ce_lugar';
+$campos = 'id_nom, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, idioma_preferido, situacion, f_situacion, apel_fam, inc, f_inc, nivel_stgr, profesion, eap, observ, id_ctr, lugar_nacimiento, ce, ce_ini, ce_fin, ce_lugar';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'p_supernumerarios';
-$campos = 'id_nom, id_cr, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, lengua, situacion, f_situacion, apel_fam, inc, f_inc, stgr, profesion, eap, observ, id_ctr, lugar_nacimiento, ce, ce_ini, ce_fin, ce_lugar';
+$campos = 'id_nom, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, idioma_preferido, situacion, f_situacion, apel_fam, inc, f_inc, nivel_stgr, profesion, eap, observ, id_ctr, lugar_nacimiento, ce, ce_ini, ce_fin, ce_lugar';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'p_sssc';
-$campos = 'id_nom, id_cr, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, lengua, situacion, f_situacion, apel_fam, inc, f_inc, stgr, profesion, eap, observ, id_ctr, lugar_nacimiento';
+$campos = 'id_nom, id_tabla, sacd, trato, nom, nx1, apellido1, nx2, apellido2, f_nacimiento, idioma_preferido, situacion, f_situacion, apel_fam, inc, f_inc, nivel_stgr, profesion, eap, observ, id_ctr, lugar_nacimiento';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'u_centros_dl';
 // quito el campo dl, region para que se llene con el default de la dl destino.

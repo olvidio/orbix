@@ -3,9 +3,9 @@
 namespace src\certificados\domain;
 
 use core\ConfigGlobal;
-use personas\model\entity\Persona;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
+use src\personas\domain\entity\Persona;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -52,7 +52,7 @@ class CertificadoEmitidoUpload
                               DateTimeLocal|NullDateTimeLocal $oF_enviado,
                               ?string                         $destino): string|CertificadoEmitido
     {
-        $oPersona = Persona::NewPersona($id_nom);
+        $oPersona = Persona::findPersonaEnGlobal($id_nom);
         $apellidos_nombre = $oPersona->getApellidosNombre();
         $nom = $apellidos_nombre;
 

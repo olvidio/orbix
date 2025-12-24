@@ -3,6 +3,7 @@
 use actividades\model\entity\ActividadAll;
 use asistentes\model\ListaPlazas;
 use core\ConfigGlobal;
+use src\actividades\domain\value_objects\StatusId;
 use web\Periodo;
 
 /**
@@ -30,7 +31,7 @@ require_once("apps/core/global_object.inc");
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
 $Qstatus = (integer)filter_input(INPUT_POST, 'status');
-$Qstatus = empty($Qstatus) ? ActividadAll::STATUS_ACTUAL : $Qstatus;
+$Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
@@ -51,7 +52,7 @@ $aWhere = [];
 $aOperador = [];
 
 // Status
-if ($Qstatus != ActividadAll::STATUS_ALL) {
+if ($Qstatus != StatusId::ALL) {
     $aWhere['status'] = $Qstatus;
 }
 // Id tipo actividad

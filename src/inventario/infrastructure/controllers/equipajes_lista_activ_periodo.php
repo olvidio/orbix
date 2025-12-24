@@ -1,7 +1,7 @@
 <?php
 
-use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\ContestarJson;
 use web\Periodo;
@@ -49,8 +49,8 @@ if (empty($Qid_cdc)) {
     $aWhere['status'] = 4;
     $aOperador['status'] = '<';
     $aWhere['_ordre'] = 'f_ini';
-    $GesActividades = new GestorActividad();
-    $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+    $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
 
     $a = 0;
     foreach ($cActividades as $oActividad) {

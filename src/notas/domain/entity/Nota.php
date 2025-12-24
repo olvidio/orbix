@@ -52,15 +52,14 @@ class Nota
     const EXENTO = 11;
     const EXAMINADO = 12;
     const FALTA_CERTIFICADO = 13;
-    //
-    // Para que la variable stgr_posibles coja las traducciones, hay
-    // que ejecutar la funcion 'traduccion_init()'. Cosa que se hace justo
-    // al final de la definicion de la clase: Nota::traduccion_init();
-    static $array_status_txt;
-
-    static function traduccion_init()
+    /**
+     * Devuelve el array de textos de estados traducidos
+     *
+     * @return array
+     */
+    public static function getArrayStatusTxt(): array
     {
-        self::$array_status_txt = [
+        return [
             self::DESCONOCIDO => _("desconocido"),
             self::SUPERADA => _("superada"),
             self::CURSADA => _("cursada"),
@@ -76,6 +75,18 @@ class Nota
             self::EXAMINADO => _("examinado"),
             self::FALTA_CERTIFICADO => _("falta certificado"),
         ];
+    }
+
+    /**
+     * Devuelve el texto traducido de un estado específico
+     *
+     * @param int $id_situacion
+     * @return string
+     */
+    public static function getStatusTxt(int $id_situacion): string
+    {
+        $array = self::getArrayStatusTxt();
+        return $array[$id_situacion] ?? _("desconocido");
     }
 
     /* ATRIBUTOS ----------------------------------------------------------------- */

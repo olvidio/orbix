@@ -1,11 +1,16 @@
 <?php
 
 use actividades\model\entity\ActividadAll;
-use asistentes\model\entity\GestorAsistente;
+
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaSSSC;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Periodo;
 
@@ -154,17 +159,18 @@ $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
 // Bucle para poder sacar los centros de la consulta anterior
 $ctr = 0;
 $aCentros = [];
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$PersonaSSSCRepository = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 foreach ($cCentros as $oCentro) {
     $ctr++;
     $id_ubi = $oCentro->getId_ubi();
     $nombre_ubi = $oCentro->getNombre_ubi();
     //consulta para buscar personas de cada ctr
     if ($tabla === "p_sssc") {
-        $GesPersonas = new GestorPersonaSSSC();
-        $cPersonas = $GesPersonas->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1'));
+        $cPersonas = $PersonaSSSCRepository->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1'));
     } else {
-        $GesPersonas = new GestorPersonaDl();
-        $cPersonas = $GesPersonas->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom'));
+        $cPersonas = $PersonaDlRepository->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom'));
     }
 
     $aCentros[$id_ubi]['nombre_ubi'] = $nombre_ubi;
@@ -172,6 +178,7 @@ foreach ($cCentros as $oCentro) {
     $i = 0;
     $aPersonasCtr = [];
     $aWhereNom = [];
+    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
     foreach ($cPersonas as $oPersona) {
         $i++;
         $id_nom = $oPersona->getId_nom();
@@ -182,8 +189,7 @@ foreach ($cCentros as $oCentro) {
         $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
         $aOperadorAct['f_ini'] = "BETWEEN";
 
-        $GesAsistencias = new GestorAsistente();
-        $cAsistencias = $GesAsistencias->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
+        $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
         $aActividades = [];
         if (is_array($cAsistencias) && count($cAsistencias) == 0) {
             $nom_activ = _("pendiente de solicitar");
@@ -191,7 +197,7 @@ foreach ($cCentros as $oCentro) {
             $a = 0;
             foreach ($cAsistencias as $oAsistente) {
                 $id_activ = $oAsistente->getId_activ();
-                $oActividad = new ActividadAll($id_activ);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $a++;
                 $aActividades[] = $nom_activ;

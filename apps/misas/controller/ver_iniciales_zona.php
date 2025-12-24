@@ -1,16 +1,12 @@
 <?php
 
+use core\ViewTwig;
+use misas\domain\repositories\InicialesSacdRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use web\Hash;
+use zonassacd\legacy\GestorZonaSacd;
 
 // INICIO Cabecera global de URL de controlador *********************************
-use core\ViewTwig;
-use misas\domain\repositories\InicialesSacdRepository;
-//use personas\model\entity\PersonaEx;
-use personas\model\entity\PersonaSacd;
-use web\DateTimeLocal;
-use web\Desplegable;
-use web\Hash;
-use zonassacd\model\entity\GestorZonaSacd;
-
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -29,13 +25,14 @@ $columns_cuadricula = [
 
 $data_cuadricula = [];
 
-$gesZonaSacd = new GestorZonaSacd();
-$a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
+$ZonaSacdRepository = $GLOBALS['container']->get(GestorZonaSacd::class);
+$a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($Qid_zona);
 
 $a_datos_sacd = [];
+$PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
 foreach ($a_Id_nom as $id_nom) {
 //    if ($id_nom>0) {
-        $PersonaSacd = new PersonaSacd($id_nom);
+        $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
         $sacd = $PersonaSacd->getNombreApellidos();
 //    } else {
 //        $PersonaEx = new PersonaEx($id_nom);

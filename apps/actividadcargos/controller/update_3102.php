@@ -1,11 +1,14 @@
 <?php
 
-use actividadcargos\model\entity\ActividadCargo;
-use actividades\model\entity\Actividad;
-use asistentes\model\entity\AsistentePub;
 use core\ConfigGlobal;
-use dossiers\model\entity\Dossier;
-use personas\model\entity\Persona;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividadcargos\domain\entity\ActividadCargo;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\entity\Asistente;
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\value_objects\DossierPk;
+use src\personas\domain\entity\Persona;
 use function core\is_true;
 
 /**
@@ -74,22 +77,27 @@ if (!empty($a_sel)) { //vengo de un checkbox
 switch ($Qmod) {
     //------------ BORRAR --------
     case "eliminar":
-        $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item));
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $oActividadCargo = $ActividadCargoRepository->findById($Qid_item);
         $Qid_activ = $oActividadCargo->getId_activ();
         $Qid_nom = $oActividadCargo->getId_nom();
 
-        if (($oActividadCargo->DBEliminar()) === false) {
+        if (($ActividadCargoRepository->Eliminar($oActividadCargo)) === false) {
             $msg_err = _("hay un error, no se ha eliminado");
             exit ($msg_err);
         }
 
         // hay que cerrar el dossier para esta persona, si no tiene más actividades:
-        $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1302));
-        $oDossier->cerrar();
-        $oDossier->DBGuardar();
+        $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+        $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1302]));
+        if ($oDossier !== null) {
+            $oDossier->cerrar();
+            $DosierRepository->Guardar($oDossier);
+        }
 
         // Borrar también la asistencia, también en el caso de actividades de s y sg
-        $oActividad = new Actividad($Qid_activ);
+        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $oActividad = $ActividadRepository->findById($Qid_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
 
         $oTipoActiv = new web\TiposActividades($id_tipo_activ);
@@ -99,31 +107,36 @@ switch ($Qmod) {
         $snom_tipo = $oTipoActiv->getNom_tipoText();
 
         if ($Qelim_asis == 2 && ($sasistentes === 's' || $sasistentes === 'sg')) {
-            $oAsistentePub = new AsistentePub();
-            $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $Qid_activ);
-            $oAsistente->setPrimary_key(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom));
+            $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+            $AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ);
+            $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+            $oAsistente = $AsistenteRepository->findById($Qid_activ, $Qid_nom);
             // Si es depende de otra dl ya no lo intento:
             if (is_true($oAsistente->perm_modificar())) {
-                if ($oAsistente->DBEliminar() === false) {
+                if ($AsistenteRepository->Eliminar($oAsistente) === false) {
                     $msg_err = _("hay un error, no se ha eliminado");
                 }
             }
-            $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+            $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+            $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
             $oDossier->cerrar();
-            $oDossier->DBGuardar();
+            $DosierRepository->Guardar($oDossier);
         }
         break;
     case "nuevo":
         //------------ NUEVO --------
-        // Ahora machaca un cargo existente. Quiza podria avisar que ya existe
+        //TODO: Ahora machaca un cargo existente. Quizá podría avisar que ya existe
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $newIdItem = $ActividadCargoRepository->getNewId();
         $oActividadCargo = new ActividadCargo();
+        $oActividadCargo->setId_item($newIdItem);
         $oActividadCargo->setId_activ($Qid_activ);
         $oActividadCargo->setId_cargo($Qid_cargo);
         $oActividadCargo->setId_nom($Qid_nom);
         isset($Qobserv) ? $oActividadCargo->setObserv($Qobserv) : $oActividadCargo->setObserv();
-        empty($Qpuede_agd) ? $oActividadCargo->setPuede_agd('f') : $oActividadCargo->setPuede_agd('t');
+        $oActividadCargo->setPuede_agd(is_true($Qpuede_agd));
 
-        if (($oActividadCargo->DBGuardar()) === false) {
+        if (($ActividadCargoRepository->Guardar($oActividadCargo)) === false) {
             // intentar recuperar el error
             $error = end($_SESSION['errores']);
             if (strpos($error, 'duplicate key') !== false) {
@@ -135,52 +148,74 @@ switch ($Qmod) {
         }
 
         // si no está abierto, hay que abrir el dossier para esta persona
-        $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1302));
+        $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+        $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1302]));
+        if ($oDossier === null) {
+            $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1302]));
+        }
         $oDossier->abrir();
-        $oDossier->DBGuardar();
+        $DosierRepository->Guardar($oDossier);
         // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-        $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3102));
+        $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3102]));
+        if ($oDossier === null) {
+            $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3102]));
+        }
         $oDossier->abrir();
-        $oDossier->DBGuardar();
+        $DosierRepository->Guardar($oDossier);
 
         // También asiste:
         if (!empty($Qasis)) {
-            $oPersona = Persona::NewPersona($Qid_nom);
+            $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
             if (!is_object($oPersona)) {
-                $msg_err = "<br>$oPersona con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
+                $msg_err = "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
                 exit ($msg_err);
             }
-            $oAsistentePub = new AsistentePub();
-            $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $Qid_activ);
-            $oAsistente->setPrimary_key(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom));
-            $oAsistente->DBCarregar();
+            $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+            $AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ);
+            $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+            $oAsistente = $AsistenteRepository->findById($Qid_activ, $Qid_nom);
+            if ($oAsistente === null) {
+                $oAsistente = new Asistente();
+                $oAsistente->setId_activ($Qid_activ);
+                $oAsistente->setId_nom($Qid_nom);
+                $oAsistente->setEst_ok(false);
+                $oAsistente->setCfi(false);
+            }
             $oAsistente->setPropio('t'); // por defecto lo pongo como propio
             $oAsistente->setFalta('f');
             $oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
-            if ($oAsistente->DBGuardar() === false) {
+            if ($AsistenteRepository->Guardar($oAsistente) === false) {
                 $msg_err = _("hay un error, no se ha guardado");
             }
             // si no está abierto, hay que abrir el dossier para esta persona
-            $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+            $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+            $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
+            if ($oDossier === null) {
+                $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
+            }
             $oDossier->abrir();
-            $oDossier->DBGuardar();
+            $DosierRepository->Guardar($oDossier);
             // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-            $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101));
+            $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101]));
+            if ($oDossier === null) {
+                $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101]));
+            }
             $oDossier->abrir();
-            $oDossier->DBGuardar();
+            $DosierRepository->Guardar($oDossier);
         }
         break;
     case "editar":
         //------------ EDITAR --------
-        $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item));
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $oActividadCargo = $ActividadCargoRepository->findById($Qid_item);
 
-        isset($Qid_activ) ? $oActividadCargo->setId_activ($Qid_activ) : '';
-        isset($Qid_cargo) ? $oActividadCargo->setId_cargo($Qid_cargo) : '';
-        isset($Qid_nom) ? $oActividadCargo->setId_nom($Qid_nom) : '';
+        $oActividadCargo->setId_activ($Qid_activ);
+        $oActividadCargo->setId_cargo($Qid_cargo);
+        $oActividadCargo->setId_nom($Qid_nom);
 
         isset($Qobserv) ? $oActividadCargo->setObserv($Qobserv) : $oActividadCargo->setObserv();
-        empty($Qpuede_agd) ? $oActividadCargo->setPuede_agd('f') : $oActividadCargo->setPuede_agd('t');
-        if ($oActividadCargo->DBGuardar() === false) {
+        $oActividadCargo->setPuede_agd(is_true($Qpuede_agd));
+        if ($ActividadCargoRepository->Guardar($oActividadCargo) === false) {
             // intentar recuperar el error
             $error = end($_SESSION['errores']);
             if (strpos($error, 'duplicate key') !== false) {
@@ -190,39 +225,44 @@ switch ($Qmod) {
             }
         }
         // Modifico la asistencia:
-        $oAsistentePub = new AsistentePub();
-        $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $Qid_activ);
-        $oAsistente->setPrimary_key(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom));
-        if ($oAsistente->DBCarregar('guardar') === false) { //no existe
+        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+        $AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ);
+        $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+        $oAsistente = $AsistenteRepository->findById($Qid_activ, $Qid_nom);
+        if ($oAsistente === null) { //no existe
             if (!empty($Qasis)) { // lo añado
+                $oAsistente = new AsistenteDl();
+                $oAsistente->setId_activ($Qid_activ);
+                $oAsistente->setId_nom($Qid_nom);
                 $oAsistente->setPropio('t'); // por defecto lo pongo como propio
                 $oAsistente->setFalta('f');
                 $oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
-                if ($oAsistente->DBGuardar() === false) {
+                if ($AsistenteRepository->Guardar($oAsistente) === false) {
                     $msg_err = _("hay un error, no se ha guardado");
                 }
                 // si no está abierto, hay que abrir el dossier para esta persona
-                $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+                $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+                $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
                 $oDossier->abrir();
-                $oDossier->DBGuardar();
+                $DosierRepository->Guardar($oDossier);
                 // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-                $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101));
+                $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101]));
                 $oDossier->abrir();
-                $oDossier->DBGuardar();
+                $DosierRepository->Guardar($oDossier);
             }
         } else {
             if (isset($_POST['asis']) && empty($Qasis)) { // lo borro. OJO hay que mirar el $_POST para isset
-                if ($oAsistente->DBEliminar() === false) {
+                if ($AsistenteRepository->Eliminar($oAsistente) === false) {
                     $msg_err = _("hay un error, no se ha eliminado");
                 }
                 // si no está abierto, hay que abrir el dossier para esta persona
-                $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+                $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+                $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
                 $oDossier->abrir();
-                $oDossier->DBGuardar();
+                $DosierRepository->Guardar($oDossier);
                 // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-                $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101));
+                $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101]));
                 $oDossier->abrir();
-                $oDossier->DBGuardar();
             }
         }
         break;

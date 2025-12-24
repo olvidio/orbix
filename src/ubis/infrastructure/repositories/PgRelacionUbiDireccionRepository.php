@@ -35,11 +35,10 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 FROM $nom_tabla 
                 WHERE id_ubi = :id_ubi
                 ORDER BY principal DESC, propietario DESC";
-        $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         if ($stmt === false) { return []; }
-        $stmt->bindValue(':id_ubi', $id_ubi, \PDO::PARAM_INT);
-        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
+        if (!$this->pdoExecute($stmt, [$id_ubi], __METHOD__, __FILE__, __LINE__)) { return []; }
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -55,14 +54,10 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 DO UPDATE SET principal = :principal";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) { return false; }
-        $stmt->bindValue(':id_ubi', $id_ubi, PDO::PARAM_INT);
-        $stmt->bindValue(':id_direccion', $id_direccion, PDO::PARAM_INT);
-        if ($principal === null) {
-            $stmt->bindValue(':principal', null, PDO::PARAM_NULL);
-        } else {
-            $stmt->bindValue(':principal', $principal, PDO::PARAM_BOOL);
-        }
-        return $this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__);
+        $aWhere['id_ubi'] = $id_ubi;
+        $aWhere['id_direccion'] = $id_direccion;
+        $aWhere['principal'] = $principal;
+        return $this->pdoExecute($stmt, $aWhere, __METHOD__, __FILE__, __LINE__);
     }
 
     /** Desasocia una dirección de una casa */
@@ -74,9 +69,10 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 WHERE id_ubi = :id_ubi AND id_direccion = :id_direccion";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) { return false; }
-        $stmt->bindValue(':id_ubi', $id_ubi, PDO::PARAM_INT);
-        $stmt->bindValue(':id_direccion', $id_direccion, PDO::PARAM_INT);
-        return $this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__);
+
+        $aWhere['id_ubi'] = $id_ubi;
+        $aWhere['id_direccion'] = $id_direccion;
+        return $this->pdoExecute($stmt, $aWhere, __METHOD__, __FILE__, __LINE__);
     }
 
     /** Obtiene todos los IDs de direcciones asociadas a una casa */
@@ -90,8 +86,7 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 ORDER BY principal DESC NULLS LAST";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) { return []; }
-        $stmt->bindValue(':id_ubi', $id_ubi, PDO::PARAM_INT);
-        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
+        if (!$this->pdoExecute($stmt, [$id_ubi], __METHOD__, __FILE__, __LINE__)) { return []; }
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -106,8 +101,7 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 WHERE id_direccion = :id_direccion";
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) { return []; }
-        $stmt->bindValue(':id_direccion', $id_direccion, PDO::PARAM_INT);
-        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
+        if (!$this->pdoExecute($stmt, [$id_direccion], __METHOD__, __FILE__, __LINE__)) { return []; }
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

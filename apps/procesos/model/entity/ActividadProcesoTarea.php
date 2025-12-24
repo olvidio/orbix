@@ -2,13 +2,14 @@
 
 namespace procesos\model\entity;
 
-use actividades\model\entity\ActividadAll;
 use cambios\model\GestorAvisoCambios;
 use core\ClasePropiedades;
 use core\ConfigGlobal;
 use core\DatosCampo;
 use core\Set;
 use ReflectionClass;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use src\menus\domain\PermisoMenu;
 use function core\is_true;
 
@@ -260,7 +261,8 @@ class ActividadProcesoTarea extends ClasePropiedades
             // comprobar si hay que cambiar el estado (status) de la actividad.
             // en caso de completar la fase. Si se quita el 'completado' habría que buscar la fase anterior para saber que status corresponde.
             $permitido = TRUE;
-            $oActividad = new ActividadAll($this->iid_activ);
+            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $oActividad = $ActividadAllRepository->findById($this->iid_activ);
             $statusActividad = $oActividad->getStatus();
             $GesTareaProcesos = new GestorTareaProceso();
             $cTareasProceso = $GesTareaProcesos->getTareasProceso(['id_tipo_proceso' => $this->iid_tipo_proceso, 'id_fase' => $this->iid_fase, 'id_tarea' => $this->iid_tarea]);
@@ -292,8 +294,8 @@ class ActividadProcesoTarea extends ClasePropiedades
                 $id_tabla = $oActividad->getId_tabla();
                 // Sólo dre puede aprobar (pasar de proyecto a actual) las actividades
                 // ojo marcha atrás tampoco debería poderse.
-                if (($statusProceso == ActividadAll::STATUS_ACTUAL && $statusActividad < ActividadAll::STATUS_ACTUAL)
-                    || ($statusActividad == ActividadAll::STATUS_ACTUAL && $statusProceso < ActividadAll::STATUS_ACTUAL)) {
+                if (($statusProceso == StatusId::ACTUAL && $statusActividad < StatusId::ACTUAL)
+                    || ($statusActividad == StatusId::ACTUAL && $statusProceso < StatusId::ACTUAL)) {
                     // para dl y dlf:
                     $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
                     if ($dl_org == ConfigGlobal::mi_delef() || $dl_org_no_f == ConfigGlobal::mi_dele()) {

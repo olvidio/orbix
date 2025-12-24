@@ -56,14 +56,10 @@ if (!isset($container)) {
     // Si estás en producción, PHP-DI escribirá un archivo PHP optimizado y no leerá las configs de nuevo.
     if (!ConfigGlobal::is_debug_mode()) {
         // Asegúrate de que esta carpeta exista y tenga permisos de escritura (www-data)
-        $cacheDir = __DIR__ . '/../../var/cache/php-di';
+        $cacheDir = __DIR__ . '/var/cache/php-di';
         $builder->enableCompilation($cacheDir);
         $builder->writeProxiesToFile(true, $cacheDir . '/proxies');
     }
-
-    // Cargar configuración de módulos
-    $builder->addDefinitions(__DIR__ . '/../../src/ubis/config/dependencies.php');
-    $builder->addDefinitions(__DIR__ . '/../../src/usuarios/config/dependencies.php');
 
     $container = $builder->build();
 }

@@ -2,7 +2,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
-use personas\model\entity\Persona;
+use src\personas\domain\entity\Persona;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
@@ -16,7 +16,7 @@ require_once("frontend/shared/global_header_front.inc");
 $oPosicion->recordar();
 
 $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-$oPersona = Persona::NewPersona($id_nom);
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
 $nom = $oPersona->getApellidosNombre();
 $idioma = '';
 $destino = '';

@@ -1,10 +1,10 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividadplazas\model\GestorResumenPlazas;
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadplazas\domain\GestorResumenPlazas;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -45,8 +45,9 @@ $oDesplDelegaciones->setOpciones($aOpcionesDl);
 
 // comprobar que la actividad está publicada, sino: avisar!
 $publicado = '';
-$oActividad = new ActividadAll($id_activ);
-$publicado = $oActividad->getPublicado();
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$oActividad = $ActividadAllRepository->findById($id_activ);
+$publicado = $oActividad->istPublicado();
 // Si no es una actividad de la dl, publicado da NULL (igual que todos los campos)
 if (!is_true($publicado) || $publicado === null) {
     $publicado = FALSE;

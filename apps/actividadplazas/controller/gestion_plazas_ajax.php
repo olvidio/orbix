@@ -5,9 +5,11 @@
  */
 
 use actividades\model\entity\ActividadDl;
-use actividadplazas\model\entity\ActividadPlazasDl;
-use actividadplazas\model\GestorResumenPlazas;
+use actividadplazas\legacy\ActividadPlazasDl;
 use core\ConfigGlobal;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividadplazas\domain\GestorResumenPlazas;
+use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -35,7 +37,8 @@ switch ($que) {
         $mi_dele = ConfigGlobal::mi_delef();
         //Para las plazas totales
         if ($dl === 'tot' && $mi_dele == $dl_org) {
-            $oActividadDl = new ActividadDl(array('id_activ' => $id_activ));
+            $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+            $oActividadDl = $ActividadDlRepository->findById($id_activ);
             $oActividadDl->DBCarregar();
             $oActividadDl->setPlazas($plazas);
             if ($oActividadDl->DBGuardar() === false) {
@@ -74,9 +77,9 @@ switch ($que) {
         $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
         $id_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
-        $oPersona = \personas\model\entity\Persona::NewPersona($Qid_nom);
+        $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
         if (!is_object($oPersona)) {
-            $msg_err = "<br>$oPersona con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
+            $msg_err = "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
             exit($msg_err);
         }
         $obj_pau = str_replace("personas\\model\\entity\\", '', get_class($oPersona));

@@ -2,10 +2,10 @@
 
 use core\ConfigGlobal;
 use Illuminate\Http\JsonResponse;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\GestorPersonaN;
 use procesos\model\entity\GestorPermUsuarioActividad;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -126,18 +126,18 @@ if ($miRole < 4) { // es administrador
             $nom_role = $oRole->getRoleAsString();
             switch ($nom_role) {
                 case "p-agd":
-                    $GesPersonas = new GestorPersonaAgd();
-                    $aDataDespl = $GesPersonas->getArrayPersonas();
+                    $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+                    $aOpciones = $PersonaAgdRepository->getArrayPersonas();
                     break;
                 case "p-n":
-                    $GesPersonas = new GestorPersonaN();
-                    $aDataDespl = $GesPersonas->getArrayPersonas();
+                    $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+                    $aOpciones = $PersonaNRepository->getArrayPersonas();
                     break;
                 case "p-sacd":
                 case "p-sacdInt": // para hacer pruebas desde dentro (dmz=false)
-                    $GesPersonas = new GestorPersonaDl();
+                    $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
                     // de momento sólo n y agd
-                    $aOpciones = $GesPersonas->getArraySacd("AND id_tabla ~ '[na]'");
+                    $aOpciones = $PersonaDlRepository->getArraySacd("AND id_tabla ~ '[na]'");
                     break;
             }
 

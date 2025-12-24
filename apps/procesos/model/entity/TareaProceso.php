@@ -2,10 +2,11 @@
 
 namespace procesos\model\entity;
 
-use actividades\model\entity\ActividadAll;
 use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
+use src\actividades\domain\entity\ActividadAll;
+use src\actividades\domain\value_objects\StatusId;
 use src\menus\domain\PermisoMenu;
 use stdClass;
 
@@ -641,8 +642,7 @@ class TareaProceso extends ClasePropiedades
      */
     function getDatosStatus()
     {
-        $oActividad = new ActividadAll();
-        $a_status = $oActividad->getArrayStatus();
+        $a_status = StatusId::getArrayStatus();
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
         $oDatosCampo->setEtiqueta(_("status"));

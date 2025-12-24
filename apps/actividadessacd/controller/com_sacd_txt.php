@@ -1,7 +1,7 @@
 <?php
 
-use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 use core\ViewTwig;
+use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -53,8 +53,8 @@ $oDesplIdiomas->setAction('fnjs_get_texto()');
 $aWhere = [];
 $aWhere['clave'] = 'com_sacd';
 $aWhere['idioma'] = 'es';
-$oGesAtnActivSacdTexto = new GestorAtnActivSacdTexto();
-$cAtnActivSacdTextos = $oGesAtnActivSacdTexto->getAtnActivSacdTextos($aWhere);
+$ActividadSacdTextoRepository = $GLOBALS['container']->get(ActividadSacdTextoRepositoryInterface::class);
+$cAtnActivSacdTextos = $ActividadSacdTextoRepository->getActividadSacdTextos($aWhere);
 $txt = '';
 if (count($cAtnActivSacdTextos) > 0) {
     $txt = $cAtnActivSacdTextos[0]->getTexto();

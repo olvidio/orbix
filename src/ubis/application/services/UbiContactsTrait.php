@@ -115,7 +115,7 @@ trait UbiContactsTrait
         $aWhere['id_tipo_teleco'] = $id_tipo_teleco;
 
         if ($desc_teleco !== 13) {
-            $aWhere['desc_teleco'] = $desc_teleco;
+            $aWhere['id_desc_teleco'] = $desc_teleco;
         }
 
         $e_mail = '';
@@ -173,7 +173,7 @@ trait UbiContactsTrait
         }
         $aWhere['id_tipo_teleco'] = $id_tipo_teleco;
         if ($desc_teleco !== '*' && !empty($desc_teleco)) {
-            $aWhere['desc_teleco'] = $desc_teleco;
+            $aWhere['id_desc_teleco'] = $desc_teleco;
         }
         $cTelecos = $TelecoUbiRepository->getTelecos($aWhere);
         $tels = '';
@@ -181,7 +181,7 @@ trait UbiContactsTrait
         if ($cTelecos !== false) {
             $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
             foreach ($cTelecos as $oTelecoUbi) {
-                $iDescTel = $oTelecoUbi->getDesc_teleco();
+                $iDescTel = $oTelecoUbi->getId_desc_teleco();
                 $num_teleco = trim($oTelecoUbi->getNum_teleco());
                 if ($desc_teleco === "*" && !empty($iDescTel)) {
                     $oDescTel = $DescTelecoRepository->findById((int)$iDescTel);

@@ -1,15 +1,14 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
-use actividades\model\entity\GestorActividadDl;
-use actividades\model\entity\GestorTipoDeActividad;
-use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
 use procesos\model\entity\ActividadProcesoTarea;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
@@ -69,7 +68,7 @@ switch ($Qque) {
         $aWhere = [];
         $aOperador = [];
         // id_tipo_activ
-        if ($Qid_tipo_activ != '......') {
+        if ($Qid_tipo_activ !== '......') {
             $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
             $aOperador['id_tipo_activ'] = '~';
             $isfsv = (integer)substr($Qid_tipo_activ, 0, 1);
@@ -77,11 +76,11 @@ switch ($Qque) {
         // dl_org
         if (is_true($Qdl_propia)) {
             $aWhere['dl_org'] = ConfigGlobal::mi_delef($isfsv);
-            $gesActividades = new GestorActividadDl();
+            $ActividadRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
         } else {
             $aWhere['dl_org'] = ConfigGlobal::mi_delef($isfsv);
             $aOperador['dl_org'] = '!=';
-            $gesActividades = new GestorActividad();
+            $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         }
         // las borrables no
         $aWhere['status'] = 4;
@@ -97,7 +96,7 @@ switch ($Qque) {
 
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
-        if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
+        if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
             $aWhere['f_fin'] = "'$inicioIso','$finIso'";
             $aOperador['f_fin'] = 'BETWEEN';
         } else {
@@ -110,7 +109,7 @@ switch ($Qque) {
         $a_cabeceras[] = _("nom");
         $a_cabeceras[] = _("cumple requisito");
 
-        if ($Qaccion == 'desmarcar') {
+        if ($Qaccion === 'desmarcar') {
             $txt_cambiar = _("descambiar los marcados");
         } else {
             $txt_cambiar = _("cambiar los marcados");
@@ -126,12 +125,13 @@ switch ($Qque) {
 
         $a_valores = [];
         $aWhere['_ordre'] = 'f_ini';
-        $cActividades = $gesActividades->getActividades($aWhere, $aOperador);
+        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
         if (!is_array($cActividades)) {
             exit (_("faltan condiciones para la selección"));
         }
         $num_activ = count($cActividades);
         $num_ok = 0;
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
         foreach ($cActividades as $oActividad) {
             //print_r($oActividad);
             $id_activ = $oActividad->getId_activ();
@@ -139,8 +139,8 @@ switch ($Qque) {
             $nom_activ = $oActividad->getNom_activ();
             $i++;
             // Por el tipo de actividad sé el tipo de proceso
-            $oTipoActiv = new TipoDeActividad(array('id_tipo_activ' => $id_tipo_activ));
-            $id_tipo_proceso = $oTipoActiv->getId_tipo_proceso();
+            $oTipoDeActiv = $TipoDeActividadRepository->findById($id_tipo_activ);
+            $id_tipo_proceso = $oTipoDeActiv->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
             $aWhereTP = [
                 'id_tipo_proceso' => $id_tipo_proceso,
                 'id_fase' => $Qid_fase_nueva,
@@ -155,7 +155,7 @@ switch ($Qque) {
             $aFases_completadas = $GesActivProceso->getFasesCompletadas($id_activ);
 
             $mensaje = '';
-            if ($Qaccion == 'desmarcar') {
+            if ($Qaccion === 'desmarcar') {
                 // para desmarcar solo miro si está marcada:
                 $ok_fases_previas = FALSE;
                 $mensaje = _("No tiene marcada la fase");
@@ -247,6 +247,7 @@ switch ($Qque) {
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         $Qaccion = (string)filter_input(INPUT_POST, 'accion');
 
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($a_sel as $id_activ) {
             $id_activ = strtok($id_activ, "#");
             $gesActividadProcesoTareas = new GestorActividadProcesoTarea();
@@ -254,7 +255,7 @@ switch ($Qque) {
             $cListaSel = $gesActividadProcesoTareas->getActividadProcesoTareas(array('id_activ' => $id_activ, 'id_fase' => $Qid_fase_nueva));
             if (empty($cListaSel)) {
                 // No se encuentra esta fase para esta actividad
-                $oActividad = new ActividadAll($id_activ);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $txt = sprintf(_("No se encuentra esta fase %s para esta actividad %s(%s)"), $Qid_fase_nueva, $nom_activ, $id_activ);
                 $txt .= '<br>';
@@ -263,7 +264,7 @@ switch ($Qque) {
                 continue;
             }
             $oActividadProcesoTarea = $cListaSel[0];
-            $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso();
+            $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
             $id_fase = $oActividadProcesoTarea->getId_fase();
             $id_tarea = $oActividadProcesoTarea->getId_tarea();
             //buscar of responsable
@@ -281,7 +282,7 @@ switch ($Qque) {
             }
             $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
             if (empty($of_responsable_txt) || $_SESSION['oPerm']->have_perm_oficina($of_responsable_txt)) {
-                if ($Qaccion == 'desmarcar') {
+                if ($Qaccion === 'desmarcar') {
                     $oActividadProcesoTarea->setCompletado('f');
                 } else {
                     $oActividadProcesoTarea->setCompletado('t');
@@ -298,8 +299,8 @@ switch ($Qque) {
     case 'get':
         $Qid_fase_sel = (string)filter_input(INPUT_POST, 'id_fase_sel');
         // buscar los procesos posibles para estos tipos de actividad
-        $GesTiposActiv = new GestorTipoDeActividad();
-        $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);
 
         $oGesFases = new GestorActividadFase();
         $oDesplFasesIni = $oGesFases->getListaActividadFases($aTiposDeProcesos, true);

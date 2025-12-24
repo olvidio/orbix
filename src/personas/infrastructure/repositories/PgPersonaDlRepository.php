@@ -1,0 +1,252 @@
+<?php
+
+namespace src\personas\infrastructure\repositories;
+
+use core\ClaseRepository;
+use core\Condicion;
+use core\ConverterDate;
+use core\Set;
+use PDO;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\entity\PersonaDl;
+use src\shared\traits\HandlesPdoErrors;
+use src\personas\infrastructure\repositories\traits\PersonaGlobalListsTrait;
+use function core\is_true;
+
+
+/**
+ * Clase que adapta la tabla personas_dl a la interfaz del repositorio
+ *
+ * @package orbix
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 2.0
+ * @created 9/12/2025
+ */
+class PgPersonaDlRepository extends ClaseRepository implements PersonaDlRepositoryInterface
+{
+    use HandlesPdoErrors;
+    use PersonaGlobalListsTrait;
+
+    public function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('personas_dl');
+    }
+
+    /* -------------------- GESTOR BASE ---------------------------------------- */
+
+    /**
+     * devuelve una colección (array) de objetos de tipo PersonaDl
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo PersonaDl
+     */
+    public function getPersonasDl(array $aWhere = [], array $aOperators = []): array|false
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $PersonaDlSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') {
+                continue;
+            }
+            if ($camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = " WHERE " . $sCondicion;
+        }
+        $sOrdre = '';
+        $sLimit = '';
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($filas as $aDatos) {
+            // para las fechas del postgres (texto iso)
+            $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
+            $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
+            $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+            $PersonaDl = new PersonaDl();
+            $PersonaDl->setAllAttributes($aDatos);
+            $PersonaDlSet->add($PersonaDl);
+        }
+        return $PersonaDlSet->getTot();
+    }
+
+    /* -------------------- ENTIDAD --------------------------------------------- */
+
+    public function Eliminar(PersonaDl $PersonaDl): bool
+    {
+        $id_nom = $PersonaDl->getId_nom();
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "DELETE FROM $nom_tabla WHERE id_nom = $id_nom";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+    }
+
+
+    /**
+     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     */
+    public function Guardar(PersonaDl $PersonaDl): bool
+    {
+        $id_nom = $PersonaDl->getId_nom();
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $bInsert = $this->isNew($id_nom);
+
+        $aDatos = [];
+        $aDatos['id_tabla'] = $PersonaDl->getId_tabla();
+        $aDatos['dl'] = $PersonaDl->getDl();
+        $aDatos['sacd'] = $PersonaDl->isSacd();
+        $aDatos['trato'] = $PersonaDl->getTrato();
+        $aDatos['nom'] = $PersonaDl->getNom();
+        $aDatos['nx1'] = $PersonaDl->getNx1();
+        $aDatos['apellido1'] = $PersonaDl->getApellido1();
+        $aDatos['nx2'] = $PersonaDl->getNx2();
+        $aDatos['apellido2'] = $PersonaDl->getApellido2();
+        $aDatos['idioma_preferido'] = $PersonaDl->getIdioma_preferido();
+        $aDatos['situacion'] = $PersonaDl->getSituacion();
+        $aDatos['apel_fam'] = $PersonaDl->getApel_fam();
+        $aDatos['inc'] = $PersonaDl->getInc();
+        $aDatos['nivel_stgr'] = $PersonaDl->getNivel_stgr();
+        $aDatos['profesion'] = $PersonaDl->getProfesion();
+        $aDatos['eap'] = $PersonaDl->getEap();
+        $aDatos['observ'] = $PersonaDl->getObserv();
+        $aDatos['id_ctr'] = $PersonaDl->getId_ctr();
+        $aDatos['lugar_nacimiento'] = $PersonaDl->getLugar_nacimiento();
+        $aDatos['es_publico'] = $PersonaDl->isEs_publico();
+        // para las fechas
+        $aDatos['f_nacimiento'] = (new ConverterDate('date', $PersonaDl->getF_nacimiento()))->toPg();
+        $aDatos['f_situacion'] = (new ConverterDate('date', $PersonaDl->getF_situacion()))->toPg();
+        $aDatos['f_inc'] = (new ConverterDate('date', $PersonaDl->getF_inc()))->toPg();
+        array_walk($aDatos, 'core\poner_null');
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if (is_true($aDatos['sacd'])) {
+            $aDatos['sacd'] = 'true';
+        } else {
+            $aDatos['sacd'] = 'false';
+        }
+
+        if ($bInsert === false) {
+            //UPDATE
+            $update = "
+					id_tabla                 = :id_tabla,
+					dl                       = :dl,
+					sacd                     = :sacd,
+					trato                    = :trato,
+					nom                      = :nom,
+					nx1                      = :nx1,
+					apellido1                = :apellido1,
+					nx2                      = :nx2,
+					apellido2                = :apellido2,
+					f_nacimiento             = :f_nacimiento,
+					idioma_preferido         = :idioma_preferido,
+					situacion                = :situacion,
+					f_situacion              = :f_situacion,
+					apel_fam                 = :apel_fam,
+					inc                      = :inc,
+					f_inc                    = :f_inc,
+					nivel_stgr               = :nivel_stgr,
+					profesion                = :profesion,
+					eap                      = :eap,
+					observ                   = :observ,
+					id_ctr                   = :id_ctr,
+					lugar_nacimiento         = :lugar_nacimiento,
+                    es_publico               = :es_publico";
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_nom = $id_nom";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        } else {
+            // INSERT
+            $aDatos['id_nom'] = $PersonaDl->getId_nom();
+            $campos = "(id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento,es_publico)";
+            $valores = "(:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento:es_publico)";
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+    }
+
+    private function isNew(int $id_nom): bool
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
+            return TRUE;
+        }
+        return false;
+    }
+
+    /**
+     * Devuelve los campos de la base de datos en un array asociativo.
+     * Devuelve false si no existe la fila en la base de datos
+     *
+     * @param int $id_nom
+     * @return array|bool
+     */
+    public function datosById(int $id_nom): array|bool
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        // para las fechas del postgres (texto iso)
+        if ($aDatos !== false) {
+            $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
+            $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
+            $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+        }
+        return $aDatos;
+    }
+
+
+    /**
+     * Busca la clase con id_nom en la base de datos .
+     */
+    public function findById(int $id_nom): ?PersonaDl
+    {
+        $aDatos = $this->datosById($id_nom);
+        if (empty($aDatos)) {
+            return null;
+        }
+        return (new PersonaDl())->setAllAttributes($aDatos);
+    }
+}

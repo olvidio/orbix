@@ -1202,7 +1202,7 @@ $txt_pgRepositorio .= "\n\n\t\t" . 'if ($bInsert === false) {
 $txt_pgRepositorio .= $update . '";';
 $txt_pgRepositorio .= '
 			$sql = "UPDATE $nom_tabla SET $update WHERE ' . $where . '";
-            stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 		} else {
 			// INSERT';
 foreach ($a_add_campos as $add_campo) {
@@ -1214,8 +1214,7 @@ $txt_pgRepositorio .= "\t\t\t" . '$valores="(';
 $txt_pgRepositorio .= $valores . ')";';
 $txt_pgRepositorio .= '
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-            }';
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);';
 $txt_pgRepositorio .= "\n\t\t" . '}
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 	}';

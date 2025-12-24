@@ -2,14 +2,14 @@
 
 namespace actividadestudios\model;
 
-use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
 
@@ -103,7 +103,8 @@ class Select3103
     private function getTabla()
     {
         $mi_dele = ConfigGlobal::mi_delef();
-        $oActividad = new ActividadAll($this->id_pau);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($this->id_pau);
         $this->nom_activ = $oActividad->getNom_activ();
         $dl_org = $oActividad->getDl_org();
 
@@ -131,9 +132,9 @@ class Select3103
             $id_profesor = $oActividadAsignatura->getId_profesor();
 
             if (!empty($id_profesor)) {
-                $oPersona = Persona::NewPersona($id_profesor);
+                $oPersona = Persona::findPersonaEnGlobal($id_profesor);
                 if (!is_object($oPersona)) {
-                    $msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
+                    $msg_err .= "<br>No encuentro a nadie con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
                     $nom_profesor = '';
                 } else {
                     $nom_profesor = $oPersona->getPrefApellidosNombre();
@@ -156,9 +157,9 @@ class Select3103
             $a_valores = [];
             foreach ($cMatriculas as $oMatricula) {
                 $id_nom = $oMatricula->getId_nom();
-                $oPersona = Persona::NewPersona($id_nom);
-                if (!is_object($oPersona)) {
-                    $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+                $oPersona = Persona::findPersonaEnGlobal($id_nom);
+                if ($oPersona === null) {
+                    $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                     continue;
                 }
                 $nom_persona = $oPersona->getPrefApellidosNombre();

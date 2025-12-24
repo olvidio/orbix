@@ -2,13 +2,14 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividades\model\entity\ActividadAll;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use procesos\model\entity\ActividadFase;
+use src\actividades\domain\entity\ActividadAll;
+use src\actividades\domain\value_objects\StatusId;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;
 use web\TiposActividades;
@@ -33,8 +34,7 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
     $nombre_usuario = $oUsuario->getUsuarioAsString();
 
-    $oActividad = new ActividadAll();
-    $a_status = $oActividad->getArrayStatus();
+    $a_status = StatusId::getArrayStatus();
 
     // avisos
     $oGesCambiosUsuariosObjeto = new GestorCambioUsuarioObjetoPref();

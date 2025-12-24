@@ -2,17 +2,18 @@
 
 namespace actividadessacd\model;
 
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
-use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use core\ValueObject\Uuid;
-use personas\model\entity\PersonaDl;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepositoryInterface;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -82,11 +83,13 @@ class ComunicarActividadesSacd
         $aWhereAct['f_fin'] = "'$this->inicioIso'";
         $aOperadorAct['f_fin'] = '>=';
         $aWhereAct['status'] = '2';
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
         foreach ($this->cPersonas as $oPersona) {
             $s++;
             $id_nom = $oPersona->getId_nom();
             $nom_ap = $oPersona->getPrefApellidosNombre();
-            $idioma = $oPersona->getLengua();
+            $idioma = $oPersona->getIdiomaPreferido();
 
             $array_actividades[$id_nom]['txt']['com_sacd'] = $oActividadesSacdFunciones->getTraduccion('com_sacd', $idioma);
             $array_actividades[$id_nom]['txt']['t_propio'] = $oActividadesSacdFunciones->getTraduccion('t_propio', $idioma);
@@ -105,12 +108,12 @@ class ComunicarActividadesSacd
             $aWhere = ['id_nom' => $id_nom];
             $aOperador = [];
 
-            $oGesActividadCargo = new GestorActividadCargo();
+            $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
 
             if ($this->soloCargos === TRUE) {
-                $cAsistentes = $oGesActividadCargo->getCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+                $cAsistentes = $ActividadCargoRepository->getCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
             } else {
-                $cAsistentes = $oGesActividadCargo->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+                $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
             }
 
             $ord_activ = [];
@@ -134,7 +137,7 @@ class ComunicarActividadesSacd
                     continue;
                 }
 
-                $oActividad = new ActividadAll($id_activ);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $id_ubi = $oActividad->getId_ubi();
                 $lugar_esp = $oActividad->getLugar_esp();
@@ -170,9 +173,8 @@ class ComunicarActividadesSacd
                 }
 
                 // ctr que organiza:
-                $GesCentroEncargado = new GestorCentroEncargado();
                 $ctrs = '';
-                foreach ($GesCentroEncargado->getCentrosEncargadosActividad($id_activ) as $oCentro) {
+                foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oCentro) {
                     if (!empty($ctrs)) {
                         $ctrs .= ", ";
                     }
@@ -259,8 +261,10 @@ class ComunicarActividadesSacd
         }
 
         $i = 0;
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         foreach ($array_actividades as $id_nom => $vector) {
             $i++;
+            $oPersona = $PersonaDlRepository->findById($id_nom);
             $nom_ap = $vector['nom_ap'];
 
             $propio = $vector['txt']['t_propio'];
@@ -281,9 +285,9 @@ class ComunicarActividadesSacd
                 continue; // me salto los que no tienen actividades.
             }
             // buscar el mail
-            $oPersona = new PersonaDl($id_nom);
-            $e_mail_sacd = $oPersona->emailPrincipalOPrimero($id_nom);
-            $idioma = $oPersona->getLengua();
+            $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
+            $e_mail_sacd = $telecoService->getEmailPrincipalOPrimero($id_nom);
+            $idioma = $oPersona->getIdioma_preferido();
 
             // buscar el mail del ctr
             $id_ctr = $oPersona->getId_ctr();

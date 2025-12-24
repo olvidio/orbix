@@ -1,8 +1,9 @@
 <?php
 
-use casas\model\entity\Ingreso;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use src\casas\domain\contracts\IngresoRepositoryInterface;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -13,6 +14,7 @@ require_once("apps/core/global_object.inc");
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
+$IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
 switch ($Qque) {
     case "update":
         $data = (string)filter_input(INPUT_POST, 'data');
@@ -24,7 +26,7 @@ switch ($Qque) {
         $id_activ = $obj->id;
         $plazas_previstas = $obj->$dl;
 
-        $oIngreso = new Ingreso($id_activ);
+        $oIngreso = $IngresoRepository->finndById($id_activ);
         $oIngreso->DBCarregar();
         $oIngreso->setNum_asistentes_previstos($plazas_previstas);
         if ($oIngreso->DBGuardar() === false) {

@@ -1,8 +1,9 @@
 <?php
 
 use core\ViewTwig;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use web\Desplegable;
 use web\Hash;
-use zonassacd\model\entity\GestorZona;
 
 /**
  * Esta página sirve para asignar centros a una zona de Misas.
@@ -25,8 +26,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$GesZonas = new GestorZona();
-$aOpciones = $oGestorZona->getArrayZonas();
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$aOpciones = $ZonaRepository->getArrayZonas();
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
 $oDesplZonas->setBlanco(FALSE);

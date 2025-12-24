@@ -2,14 +2,13 @@
 
 //////////// Esto lo ven todos ////////////
 // si no hay usuario, no puedo poner permisos.
-use actividades\model\entity\ActividadAll;
-use cambios\model\entity\CambioUsuarioObjetoPref;
-use cambios\model\entity\GestorCambioUsuarioObjetoPref;
-use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use procesos\model\entity\ActividadFase;
+use src\actividades\domain\value_objects\StatusId;
+use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
+use src\cambios\domain\value_objects\AvisoTipoId;
 use web\Hash;
 use web\Lista;
 use web\TiposActividades;
@@ -17,17 +16,16 @@ use web\TiposActividades;
 if ($Qquien === 'usuario') $obj = 'usuarios\\model\\entity\\Usuario';
 
 if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Qquien === 'usuario')) {
-    $oActividad = new ActividadAll();
-    $a_status = $oActividad->getArrayStatus();
+    $a_status = StatusId::getArrayStatus();
 
     // avisos
-    $oGesCambiosUsuariosObjeto = new GestorCambioUsuarioObjetoPref();
+    $CambioUsuariosObjetoPrefRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
     $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'objeto, dl_org, id_tipo_activ_txt'];
     $aOperador = [];
-    $cListaTablas = $oGesCambiosUsuariosObjeto->getCambioUsuarioObjetosPrefs($aWhere, $aOperador);
+    $cListaTablas = $CambioUsuariosObjetoPrefRepository->getCambioUsuarioObjetosPrefs($aWhere, $aOperador);
 
     // Tipos de avisos
-    $aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();
+    $aTipos_aviso = AvisoTipoId::getArrayAvisoTipo();
     // Nombre de los possibles objetos (que manejan la tablas) susceptibles de avisar.
     $aObjetos = GestorAvisoCambios::getArrayObjetosPosibles();
 
@@ -50,6 +48,7 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     ];
     $a_valores_avisos = [];
     $oFase = new ActividadFase();
+    $CambioUsuarioPropiedadesPref = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
     foreach ($cListaTablas as $oCambioUsuarioObjetoPref) {
         $i++;
 
@@ -92,8 +91,7 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
         $a_valores_avisos[$i][7] = $aviso_outdate;
 
         $a_valores_avisos[$i][8] = $aTipos_aviso[$aviso_tipo];
-        $GesCambiosUsuarioPropiedadesPref = new GestorCambioUsuarioPropiedadPref();
-        $cListaPropiedades = $GesCambiosUsuarioPropiedadesPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $id_item_usuario_objeto));
+        $cListaPropiedades = $CambioUsuarioPropiedadesPref->getCambioUsuarioPropiedadesPrefs(['id_item_usuario_objeto' => $id_item_usuario_objeto]);
         $txt_cambio = '';
         $txt_propiedades = '';
         $c = 0;

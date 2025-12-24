@@ -28,11 +28,12 @@ $oInfoClase = new $obj();
 $oInfoClase->setMod($Qmod);
 $oInfoClase->setA_pkey($a_pkey); //Para eliminar y editar
 $oInfoClase->setId_pau($Qid_pau); //Para nuevo
+if (method_exists($oInfoClase, 'setObj_pau')) {
+    $oInfoClase->setObj_pau($Qobj_pau);
+}
 $oFicha = $oInfoClase->getFicha();
 
-$clase_ficha = $oInfoClase->getClase();
-$repo = str_replace('domain\entity', 'domain\contracts', $clase_ficha);
-$repositoryInterface = $repo . 'RepositoryInterface';
+$repositoryInterface = $oInfoClase->getRepositoryInterface();
 
 $oDatosUpdate = new DatosUpdateRepo();
 $oDatosUpdate->setRepositoryInterface($repositoryInterface);

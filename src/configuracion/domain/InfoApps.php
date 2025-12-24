@@ -19,6 +19,8 @@ class InfoApps extends DatosInfoRepo
 
         $this->setClase('src\\configuracion\\domain\\entity\\App');
         $this->setMetodoGestor('getApps');
+
+        $this->setRepositoryInterface(AppRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoApps extends DatosInfoRepo
             $aWhere = array('nom' => $this->k_buscar);
             $aOperador = array('nom' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(AppRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getApps($aWhere, $aOperador);
 
         return $Coleccion;

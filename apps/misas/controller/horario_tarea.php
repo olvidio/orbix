@@ -1,10 +1,10 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
 use core\ViewTwig;
-use encargossacd\model\entity\EncargoHorario;
+use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use web\Hash;
 
+// INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -14,7 +14,8 @@ require_once("apps/core/global_object.inc");
 
 $Qid_item_h = (integer)filter_input(INPUT_POST, 'id_item_h');
 
-$oEncargoHorario = new EncargoHorario($Qid_item_h);
+$EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
+$oEncargoHorario = $EncargoHorarioRepository->findBYId($Qid_item_h);
 
 $t_start = $oEncargoHorario->getH_ini();
 $t_end = $oEncargoHorario->getH_fin();

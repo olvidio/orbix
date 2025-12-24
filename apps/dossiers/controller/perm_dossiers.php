@@ -1,6 +1,6 @@
 <?php
 
-use dossiers\model\entity\GestorTipoDossier;
+use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use web\Hash;
 
 /**
@@ -31,8 +31,8 @@ en caso de no pasarla, por defecto lista los de personas:
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $tipo = empty($Qtipo) ? 'p' : $Qtipo;
 
-$GesTipoDossiers = new GestorTipoDossier();
-$cTipoDossiers = $GesTipoDossiers->getTiposDossiers(array('tabla_from' => $tipo, '_ordre' => 'id_tipo_dossier'));
+$TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
+$cTipoDossiers = $TipoDossierRepository->getTiposDossiers(array('tabla_from' => $tipo, '_ordre' => 'id_tipo_dossier'));
 
 echo "<table>";
 echo "<th colspan=2>" . ucfirst(_("dossiers seleccionados")) . "</th>";

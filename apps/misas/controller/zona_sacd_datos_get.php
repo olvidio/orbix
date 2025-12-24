@@ -1,12 +1,10 @@
 <?php
 
+use Illuminate\Http\JsonResponse;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 // INICIO Cabecera global de URL de controlador *********************************
-use Illuminate\Http\JsonResponse;
-use personas\model\entity\PersonaSacd;
-//use personas\model\entity\PersonaEx;
-use zonassacd\model\entity\GestorZonaSacd;
-
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -25,12 +23,13 @@ $error_txt = '';
 $aWhere = [];
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['id_nom'] = $Qid_sacd;
-$GesZonasSacd = new GestorZonaSacd();
-$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+$ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
+$cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
 if (empty ($cZonaSacd)) {
     $error_txt .= _("No existe");
 } else {
-    $oPersona = new PersonaSacd($Qid_sacd);
+    $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+    $oPersona = $PersonaSacdRepository->findById($Qid_sacd);
     $jsondata['nombre_sacd'] = empty($oPersona->getNombreApellidos())? '?' : $oPersona->getNombreApellidos();
 
     $oZonaSacd = $cZonaSacd[0];
@@ -52,4 +51,3 @@ if (empty($error_txt)) {
 }
 
 (new JsonResponse($jsondata))->send();
-exit();

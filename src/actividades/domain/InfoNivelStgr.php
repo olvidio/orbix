@@ -19,6 +19,8 @@ class InfoNivelStgr extends DatosInfoRepo
 
         $this->setClase('src\\actividades\\domain\\entity\\NivelStgr');
         $this->setMetodoGestor('getNivelesStgr');
+
+        $this->setRepositoryInterface(NivelStgrRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoNivelStgr extends DatosInfoRepo
             $aOperador['desc_nivel'] = 'sin_acentos';
         }
         $aWhere['_ordre'] = 'orden';
-        $oLista = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getNivelesStgr($aWhere, $aOperador);
 
         return $Coleccion;

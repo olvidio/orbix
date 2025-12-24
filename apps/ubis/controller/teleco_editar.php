@@ -75,7 +75,7 @@ if ($Qmod === 'nuevo') {
     $repo = new $repoName();
     $TelecoUbi = $repo->findById($a_pkey);
 
-    $desc_teleco = $TelecoUbi->getDesc_teleco();
+    $desc_teleco = $TelecoUbi->getId_desc_teleco();
     $id_tipo_teleco = $TelecoUbi->getId_tipo_teleco();
     $num_teleco = $TelecoUbi->getNum_teleco();
     $observ = $TelecoUbi->getObserv();
@@ -131,7 +131,7 @@ if (!empty($id_tipo_teleco)) {
 }
 $oDesplegableDescTeleco = new Desplegable();
 $oDesplegableDescTeleco->setOpciones($aOpciones);
-$oDesplegableDescTeleco->setNombre('desc_teleco');
+$oDesplegableDescTeleco->setNombre('id_desc_teleco');
 $oDesplegableDescTeleco->setOpcion_sel($desc_teleco);
 $oDesplegableDescTeleco->setBlanco(true);
 
@@ -142,7 +142,7 @@ $oHash1->setCamposForm('id_tipo_teleco');
 $h_actualizar = $oHash1->linkSinVal();
 
 $oHash = new Hash();
-$oHash->setCamposForm('mod!id_tipo_teleco!desc_teleco!num_teleco!observ');
+$oHash->setCamposForm('mod!id_tipo_teleco!id_desc_teleco!num_teleco!observ');
 $oHash->setcamposNo('mod!' . $campos_chk);
 $a_camposHidden = array(
     'campos_chk' => $campos_chk,

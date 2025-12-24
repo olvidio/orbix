@@ -1,6 +1,5 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\ActividadTarea;
@@ -8,6 +7,8 @@ use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorActividadTarea;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\entity\TareaProceso;
+use src\actividades\domain\entity\ActividadAll;
+use src\actividades\domain\value_objects\StatusId;
 use src\menus\domain\PermisoMenu;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -104,7 +105,6 @@ switch ($Qque) {
         // clonar
         $GesTareaPorceso = new GestorTareaProceso();
         $cTareasProceso = $GesTareaPorceso->getTareasProceso(array('id_tipo_proceso' => $Qid_tipo_proceso_ref));
-        $i = 0;
         foreach ($cTareasProceso as $oTareaProceso) {
             $id_fase = $oTareaProceso->getId_fase();
             $id_tarea = $oTareaProceso->getId_tarea();
@@ -113,7 +113,7 @@ switch ($Qque) {
             $json_fases_previas = $oTareaProceso->getJson_fases_previas();
 
             $oTareaProcesoNew = new TareaProceso();
-            $oTareaProcesoNew->setId_tipo_proceso($Qid_tipo_proceso);
+            $oTareaProcesoNew->setId_tipo_proceso($Qid_tipo_proceso,);
             $oTareaProcesoNew->setId_fase($id_fase);
             $oTareaProcesoNew->setId_tarea($id_tarea);
             $oTareaProcesoNew->setStatus($status);
@@ -123,9 +123,12 @@ switch ($Qque) {
         }
     // Omito el break, para que a haga el get.
     case 'get':
-        $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
-        $oActividad = new ActividadAll();
-        $a_status = $oActividad->getArrayStatus();
+        if (!isset($Qid_tipo_proceso)) {
+            $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
+            $GesTareaPorceso = new GestorTareaProceso();
+            $cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso, '_ordre' => 'status,id_of_responsable']);
+        }
+        $a_status = StatusId::getArrayStatus();
 
         $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
@@ -153,13 +156,11 @@ switch ($Qque) {
             }
         }
 
-        $GesTareaPorceso = new GestorTareaProceso();
-        $cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso, '_ordre' => 'status,id_of_responsable']);
-        $i = 0;
+        $j = 0;
         $aPadres = [];
         foreach ($cTareasProceso as $oTareaProceso) {
-            $i++;
-            $clase = ($i % 2 == 0) ? 'tono2' : 'tono4';
+            $j++;
+            $clase = ($j % 2 == 0) ? 'tono2' : 'tono4';
             $id_item = $oTareaProceso->getId_item();
             $id_fase = $oTareaProceso->getId_fase();
             $status = $oTareaProceso->getStatus();
@@ -173,7 +174,7 @@ switch ($Qque) {
             $sv = ($oFase->getSv()) ? 1 : 0;
             //ojo, que puede ser las dos a la vez
             if (!(($soy & $sf) || ($soy & $sv))) {
-                $i--;
+                $j--;
                 continue;
             }
             $oTarea = new ActividadTarea($oTareaProceso->getId_tarea());
@@ -196,7 +197,7 @@ switch ($Qque) {
 
             $id_fase_previa = empty($id_fase_previa) ? 0 : $id_fase_previa;
 
-            $aPadres[$id_fase_previa][$i] = ['id' => $id_fase, 'nom' => $fase];
+            $aPadres[$id_fase_previa][$j] = ['id' => $id_fase, 'nom' => $fase];
 
         }
 
@@ -204,8 +205,7 @@ switch ($Qque) {
         break;
     case 'get_listado':
         $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
-        $oActividad = new ActividadAll();
-        $a_status = $oActividad->getArrayStatus();
+        $a_status =  StatusId::getArrayStatus();
 
         $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());

@@ -1,8 +1,8 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
-use casas\model\entity\GestorGrupoCasa;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -22,7 +22,7 @@ $oPosicion->recordar($Qrefresh);
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
@@ -35,8 +35,8 @@ if (isset($_POST['stack'])) {
 $aWhere = [];
 $aOperador = [];
 
-$GesGrupoCasa = new GestorGrupoCasa();
-$cGrupoCasas = $GesGrupoCasa->getGrupoCasas($aWhere, $aOperador);
+$GrupoCasaRepository = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
+$cGrupoCasas = $GrupoCasaRepository->getGrupoCasas($aWhere, $aOperador);
 
 $a_cabeceras = [
     _("casa padre"),

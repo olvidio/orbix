@@ -2,9 +2,12 @@
 
 use actividades\model\ActividadTipo;
 use actividadtarifas\model\entity\GestorTipoTarifa;
-use actividadtarifas\model\entity\TipoActivTarifa;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\value_objects\SerieId;
+use web\Desplegable;
 use web\Hash;
 use web\TiposActividades;
 
@@ -27,24 +30,16 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oTipoActivTarifa = new TipoActivTarifa();
-$aTipoSerie = $oTipoActivTarifa->getArraySerie();
-
-/*
-$oDesplPosiblesSeries = new Desplegable();
-$oDesplPosiblesSeries->setNombre('id_serie');
-$oDesplPosiblesSeries->setOpciones($aTipoSerie);
-$oDesplPosiblesSeries->setOpcion_sel(1);
-*/
-
 $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 
+$aTipoSerie = SerieId::getArraySerie();
 $miSfsv = 0;
 // -------------- MODIFICAR TARIFA --------------------
 if ($Qid_item !== 'nuevo') {
     $txt_eliminar = _("¿Está seguro que desea quitar esta tarifa?");
 
-    $oTipoActivTarifa = new TipoActivTarifa(array('id_item' => $Qid_item));
+    $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+    $oTipoActivTarifa = $RelacionTarifaTipoActividadRepository->findById($Qid_item);
     $id_tarifa = $oTipoActivTarifa->getId_tarifa();
     $id_serie = $oTipoActivTarifa->getId_serie();
     $aTipoSerie = $oTipoActivTarifa->getArraySerie();
@@ -53,8 +48,10 @@ if ($Qid_item !== 'nuevo') {
     $oTipoActiv = new TiposActividades($id_tipo_activ);
     $isfsv = $oTipoActiv->getSfsvId();
 
-    $oGesTipoTarifa = new GestorTipoTarifa();
-    $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
+    $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+    $aOpciones = $TipoTarifaRepository->getArrayTipoTarifas($isfsv);
+    $oDesplPosiblesTipoTarifas = new Desplegable();
+    $oDesplPosiblesTipoTarifas->setOpciones($aOpciones);
     $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
     $oDesplPosiblesTipoTarifas->setOpcion_sel($id_tarifa);
 
@@ -110,8 +107,10 @@ if ($Qid_item !== 'nuevo') {
     $oActividadTipo->setNom_tipo($Qsnom_tipo);
     $oActividadTipo->setPara('tipoactiv-tarifas');
 
-    $oGesTipoTarifa = new GestorTipoTarifa();
-    $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($miSfsv);
+    $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+    $aOpciones = $TipoTarifaRepository->getArrayTipoTarifas($miSfsv);
+    $oDesplPosiblesTipoTarifas = new Desplegable();
+    $oDesplPosiblesTipoTarifas->setOpciones($aOpciones);
     $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 
     $oHash = new Hash();

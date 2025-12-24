@@ -113,7 +113,7 @@ foreach ($cPersonas as $oPersona) {
     $id_nom = $oPersona->getId_nom();
     $id_tabla = $oPersona->getId_tabla();
     //$ap_nom = $oPersona->getPrefApellidosNombre();
-    $stgr = $oPersona->getStgr();
+    $stgr = $oPersona->getNivel_stgr();
 
     $tipo = $id_tabla . $stgr;
 

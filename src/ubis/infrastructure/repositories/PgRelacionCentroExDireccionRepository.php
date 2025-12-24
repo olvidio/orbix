@@ -15,7 +15,7 @@ class PgRelacionCentroExDireccionRepository extends PgRelacionUbiDireccionReposi
         parent::__construct();
         $oDbl = $GLOBALS['oDBR'];
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBR_Select'];
+        $oDbl_Select = $GLOBALS['oDBR'];
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('u_cross_ctr_ex_dir');
     }

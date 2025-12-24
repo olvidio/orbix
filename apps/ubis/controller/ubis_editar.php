@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\application\services\RegionDropdown;
 use src\ubis\application\services\TipoCasaDropdown;
@@ -36,6 +37,23 @@ require_once("apps/core/global_object.inc");
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
+
+
+// Clase auxiliar para usar el trait en contexto procedural
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function get(string $entityType): object {
+        return $this->getRepository($entityType);
+    }
+};
+
+function getRepository($obj_pau)
+{
+    global $repositoryProvider;
+    return $repositoryProvider->get($obj_pau);
+}
+
 
 $es_de_dl = FALSE;
 if (!empty($Qnuevo)) {
@@ -78,10 +96,10 @@ if (!empty($Qnuevo)) {
     $oUbi->setStatus(true);
 
     if (strstr($tipo_ubi, 'cdc')) {
-        if (ConfigGlobal::mi_sfsv() == 1) {
+        if (ConfigGlobal::mi_sfsv() === 1) {
             $oUbi->setSv(TRUE);
         }
-        if (ConfigGlobal::mi_sfsv() == 2) {
+        if (ConfigGlobal::mi_sfsv() === 2) {
             $oUbi->setSf(TRUE);
         }
     }
@@ -90,8 +108,8 @@ if (!empty($Qnuevo)) {
     $id_direccion = '';
     $status = true;
 } else {
-    $obj = 'src\\ubis\\application\\repositories\\' . $Qobj_pau . 'Repository';
-    $oUbi = (new $obj())->findById($Qid_ubi);
+    $repo = getRepository($Qobj_pau);
+    $oUbi = (new $repo())->findById($Qid_ubi);
 
     $tipo_ubi = $oUbi->getTipo_ubi();
     $dl = $oUbi->getDl();
@@ -246,7 +264,7 @@ switch ($tipo_ubi) {
         $oDesplRegiones->setOpcion_sel($region);
         $a_campos = ['botones' => $botones,
             'oPosicion' => $oPosicion,
-            'obj' => $obj,
+            //'obj' => $obj,
             'oHash' => $oHash,
             'tipo_ubi' => $tipo_ubi,
             'chk' => $chk,
@@ -300,7 +318,7 @@ switch ($tipo_ubi) {
         $oDesplRegiones->setOpcion_sel($region);
         $a_campos = ['botones' => $botones,
             'oPosicion' => $oPosicion,
-            'obj' => $obj,
+            //'obj' => $obj,
             'oHash' => $oHash,
             'tipo_ubi' => $tipo_ubi,
             'chk' => $chk,
@@ -342,7 +360,7 @@ switch ($tipo_ubi) {
 
         $a_campos = ['botones' => $botones,
             'oPosicion' => $oPosicion,
-            'obj' => $obj,
+            //'obj' => $obj,
             'oHash' => $oHash,
             'tipo_ubi' => $tipo_ubi,
             'chk' => $chk,

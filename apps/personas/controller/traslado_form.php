@@ -1,7 +1,7 @@
 <?php
 
 use core\ViewPhtml;
-use personas\model\entity\Persona;
+use src\personas\domain\entity\Persona;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Desplegable;
@@ -34,19 +34,19 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 if (empty($Qobj_pau)) {
-    $oPersona = Persona::newPersona($id_pau);
+    $oPersona = Persona::findPersonaEnGlobal($id_pau);
 } else {
     $obj = 'personas\\model\\entity\\' . $Qobj_pau;
     $oPersona = new $obj($id_pau);
 }
 
 if (!is_object($oPersona)) {
-    $msg_err = "<br>$oPersona con id_nom: $id_pau en " . __FILE__ . ": line " . __LINE__;
+    $msg_err = "<br>No encuentro a nadie con id_nom: $id_pau en " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
 }
 
-if (get_class($oPersona) === 'personas\model\entity\PersonaEx'
-    || get_class($oPersona) === 'personas\model\entity\PersonaIn') {
+if (get_class($oPersona) === 'personas\legacy\PersonaEx'
+    || get_class($oPersona) === 'personas\legacy\PersonaIn') {
     exit(_("con las personas de paso no tiene sentido."));
 }
 

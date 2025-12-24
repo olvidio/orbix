@@ -1,9 +1,12 @@
 <?php
 
-use actividadtarifas\model\entity\GestorTipoActivTarifa;
-use actividadtarifas\model\entity\TipoActivTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
+use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\entity\RelacionTarifaTipoActividad;
+use src\actividadtarifas\domain\value_objects\SerieId;
+use src\actividadtarifas\domain\value_objects\TarifaModoId;
 use web\Lista;
 use web\TiposActividades;
 
@@ -31,29 +34,27 @@ switch ($Qque) {
     case "get":
         $miSfsv = ConfigGlobal::mi_sfsv();
         // listado de tarifas asociadas a tipos de actividad.
-        $oGesTipoActivTarifas = new GestorTipoActivTarifa();
-        $cTipoActivTarifas = $oGesTipoActivTarifas->getTipoActivTarifas(array('_ordre' => 'substring(id_tipo_activ::text,1)'));
+        $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+        $cTipoActivTarifas = $RelacionTarifaTipoActividadRepository->getTipoActivTarifas(['_ordre' => 'substring(id_tipo_activ::text,1)']);
         $i = 0;
         $a_cabeceras = [];
         $a_valores = [];
-        foreach ($cTipoActivTarifas as $oTipoActivTarifa) {
+        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+        $a_modos_tarifa = TarifaModoId::getArrayModo();
+        foreach ($cTipoActivTarifas as $oRelacionTarifaTipoActividad) {
             $i++;
-            $id_item = $oTipoActivTarifa->getId_item();
-            $id_tarifa = $oTipoActivTarifa->getId_tarifa();
-            $id_tipo_activ = $oTipoActivTarifa->getId_tipo_activ();
-            $id_serie = $oTipoActivTarifa->getId_serie();
+            $id_item = $oRelacionTarifaTipoActividad->getId_item();
+            $id_tarifa = $oRelacionTarifaTipoActividad->getId_tarifa();
+            $id_tipo_activ = $oRelacionTarifaTipoActividad->getId_tipo_activ();
+            $id_serie = $oRelacionTarifaTipoActividad->getId_serie();
 
             $oTipoActividad = new TiposActividades($id_tipo_activ);
             $isfsv = $oTipoActividad->getSfsvId();
-            $oTipoTarifa = new TipoTarifa(array('id_tarifa' => $id_tarifa));
+            $oTipoTarifa = $TipoTarifaRepository->findById($id_tarifa);
 
             $nom_tipo = $oTipoActividad->getNom();
             $modo = $oTipoTarifa->getModo();
-            if (!empty($modo)) {
-                $modo_txt = _("total");
-            } else {
-                $modo_txt = _("por dia");
-            }
+            $modo_txt = $a_modos_tarifa[$modo];
 
             $nombre_tarifa = $oTipoTarifa->getLetra();
             /*
@@ -91,24 +92,26 @@ switch ($Qque) {
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 
         if ($Qid_item === 'nuevo') {
-            $oTipoActivTarifa = new TipoActivTarifa();
+            $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+            $newId = $RelacionTarifaTipoActividadRepository->nextId();
+            $oRelacionTarifaTipoActividad = new RelacionTarifaTipoActividad();
+            $oRelacionTarifaTipoActividad->setId_item($newId);
         } else {
-            $oTipoActivTarifa = new TipoActivTarifa($Qid_item);
-            $oTipoActivTarifa->DBCarregar();
+            $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+            $oRelacionTarifaTipoActividad = $RelacionTarifaTipoActividadRepository->findById($Qid_item);
         }
-        $oTipoActivTarifa->setId_tarifa($Qid_tarifa);
-        $oTipoActivTarifa->setId_serie(TipoActivTarifa::S_GENERAL);
-        $oTipoActivTarifa->setId_tipo_activ($Qid_tipo_activ);
-        if ($oTipoActivTarifa->DBGuardar() === false) {
+        $oRelacionTarifaTipoActividad->setId_tarifa($Qid_tarifa);
+        $oRelacionTarifaTipoActividad->setId_serie(SerieId::GENERAL);
+        $oRelacionTarifaTipoActividad->setId_tipo_activ($Qid_tipo_activ);
+        if ($RelacionTarifaTipoActividadRepository->Guardar($oRelacionTarifaTipoActividad) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oTipoActivTarifa->getErrorTxt();
         }
         break;
     case "eliminar":
         $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
-        $oTipoActivTarifa = new TipoActivTarifa();
-        $oTipoActivTarifa->setId_item($Qid_item);
-        if ($oTipoActivTarifa->DBEliminar() === false) {
+        $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+        $oRelacionTarifaTipoActividad = $RelacionTarifaTipoActividadRepository->findById($Qid_item);
+        if ($RelacionTarifaTipoActividadRepository->Eliminar($oRelacionTarifaTipoActividad) === false) {
             echo _("hay un error, no se ha borrado");
         }
         break;

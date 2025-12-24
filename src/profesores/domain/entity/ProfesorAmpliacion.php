@@ -257,7 +257,7 @@ class ProfesorAmpliacion
     /**
      * @deprecated Usar setFechaCeseVo(FechaCese $vo)
      */
-    public function setF_cese(DateTimeLocal|null $df_cese = null): void
+    public function setF_cese(DateTimeLocal|NullDateTimeLocal|null $df_cese = null): void
     {
         $this->df_cese = $df_cese;
     }
@@ -273,12 +273,25 @@ class ProfesorAmpliacion
     {
         $oProfesorAmpliacionSet = new Set();
 
+        $oProfesorAmpliacionSet->add($this->getDatosId_nom());
         $oProfesorAmpliacionSet->add($this->getDatosId_asignatura());
         $oProfesorAmpliacionSet->add($this->getDatosEscrito_nombramiento());
         $oProfesorAmpliacionSet->add($this->getDatosF_nombramiento());
         $oProfesorAmpliacionSet->add($this->getDatosEscrito_cese());
         $oProfesorAmpliacionSet->add($this->getDatosF_cese());
         return $oProfesorAmpliacionSet->getTot();
+    }
+
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     function getDatosId_asignatura(): DatosCampo

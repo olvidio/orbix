@@ -37,7 +37,7 @@ class DescTeleco
      */
     private TipoTelecoCode $idTipoTeleco;
     /**
-     * Desc_teleco de DescTeleco (texto)
+     * desc_teleco de DescTeleco (texto)
      */
     private ?DescTelecoText $descTeleco = null;
     /**
@@ -228,7 +228,7 @@ class DescTeleco
         $oDescTelecoSet = new Set();
 
         $oDescTelecoSet->add($this->getDatosOrden());
-        $oDescTelecoSet->add($this->getDatosTipo_teleco());
+        $oDescTelecoSet->add($this->getDatosId_tipo_teleco());
         $oDescTelecoSet->add($this->getDatosDesc_teleco());
         $oDescTelecoSet->add($this->getDatosUbi());
         $oDescTelecoSet->add($this->getDatosPersona());
@@ -259,7 +259,7 @@ class DescTeleco
      *
      * @return DatosCampo
      */
-    function getDatosTipo_teleco()
+    function getDatosId_tipo_teleco()
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_tipo_teleco');
@@ -282,7 +282,7 @@ class DescTeleco
     function getDatosDesc_teleco()
     {
         $oDatosCampo = new DatosCampo();
-        $oDatosCampo->setNom_camp('desc_teleco');
+        $oDatosCampo->setNom_camp('id_desc_teleco');
         $oDatosCampo->setMetodoGet('getDesc_teleco');
         $oDatosCampo->setMetodoSet('setDesc_teleco');
         $oDatosCampo->setEtiqueta(_("descripción"));

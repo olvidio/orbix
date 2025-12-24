@@ -8,11 +8,11 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use web\PeriodoQue;
-use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -24,8 +24,8 @@ require_once("apps/core/global_object.inc");
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
 $id_nom_jefe = '';
-$id_sacd='';
-$id_ubi='';
+$id_sacd = '';
+$id_ubi = '';
 
 
 $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
@@ -37,14 +37,14 @@ $aRoles = $RoleRepository->getArrayRoles();
 echo $aRoles[$id_role];
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-    $id_sacd=$oMiUsuario->getId_pauAsString();
+    $id_sacd = $oMiUsuario->getId_pauAsString();
 }
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
-    $id_ubi=$oMiUsuario->getId_pauAsString();
+    $id_ubi = $oMiUsuario->getId_pauAsString();
 }
 echo ConfigGlobal::mi_id_usuario();
-echo '-'.$id_sacd.'='.$id_ubi;
+echo '-' . $id_sacd . '=' . $id_ubi;
 
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
@@ -58,10 +58,10 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     }
 }
 
-$oGestorZona = new GestorZona();
-$aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
-if ($Qid_zona==0) {
-    $Qid_zona=array_key_first($aOpciones);
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$aOpciones = $ZonaRepository->getArrayZonas($id_nom_jefe);
+if ($Qid_zona == 0) {
+    $Qid_zona = array_key_first($aOpciones);
 }
 
 $oDesplZonas = new Desplegable();
@@ -142,7 +142,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ver_plan_ctr' => $url_ver_plan_ctr,
     'h_plan_ctr' => $h_plan_ctr,
 ];
- 
+
 $oView = new ViewTwig('misas/controller');
 if ($aRoles[$id_role] === 'p-sacd')
     echo $oView->render('buscar_plan_ctr.html.twig', $a_campos);

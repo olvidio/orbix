@@ -1,10 +1,11 @@
 <?php
+
 namespace src\profesores\domain;
 
 
-use asistentes\model\entity\GestorAsistenteIn;
 use core\ClaseGestor;
-use personas\model\entity\Persona;
+use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Desplegable;
 use function core\is_true;
@@ -45,24 +46,28 @@ class GestorProfesorActividad extends ClaseGestor
         $aProfesoresDl = $ProfesorRepository->getListaProfesoresDl();
         // asistentes de otras dl que son profesores
         // asistentes de paso que son profesores
-        $gesAsistentesIn = new GestorAsistenteIn();
+        $AsistentesPubRepository = $GLOBALS['container']->get(AsistentePubRepositoryInterface::class);
         $aProfesoresEx = [];
         $aAp1 = [];
         $aAp2 = [];
         $aNom = [];
         $msg_err = '';
-        foreach ($gesAsistentesIn->getListaAsistentesDistintos($aId_activ) as $id_nom) {
-            $oPersona = Persona::NewPersona($id_nom);
-            if (!is_object($oPersona)) {
-                $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+        foreach ($AsistentesPubRepository->getListaAsistentesDistintos($aId_activ) as $id_nom) {
+            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            if ($oPersona === null) {
+                $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 continue;
             }
             $obj_persona = get_class($oPersona);
             $obj_persona = str_replace("personas\\model\\entity\\", '', $obj_persona);
-            if ($obj_persona === 'PersonaDl') { continue; }
+            if ($obj_persona === 'PersonaDl') {
+                continue;
+            }
             // solo puede ser PersonaEx o PersonaIN;
             $profesor_stgr = $oPersona->getProfesor_stgr();
-            if (!is_true($profesor_stgr)) { continue; }
+            if (!is_true($profesor_stgr)) {
+                continue;
+            }
 
             $ap_nom = $oPersona->getPrefApellidosNombre();
             //$ctr_dl=$oPersona->getCentro_o_dl();

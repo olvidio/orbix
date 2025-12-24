@@ -67,6 +67,9 @@ use core\ConfigGlobal;
             $valor_camp = $field['valor'];
 
             switch ($tipo):
+                case "hidden": ?>
+                        <input type='hidden' name='<?= $nom_camp ?>' value="<?= htmlspecialchars($valor_camp ?? '') ?>">
+                    <?php break;
                 case "ver":
                     if ($mod !== 'nuevo'): ?>
                         <tr>

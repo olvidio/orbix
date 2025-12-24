@@ -8,6 +8,7 @@ use core\Set;
 use PDO;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\Cargo;
+use src\actividadcargos\domain\value_objects\TipoCargoCode;
 use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
@@ -33,6 +34,27 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         $this->setNomTabla('xd_orden_cargo');
     }
 
+    public function getArrayIdCargosSacd(): array
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+
+        $tipo_cargo = TipoCargoCode::SACD;
+        $where = empty($tipo_cargo) ? '' : " WHERE tipo_cargo = '$tipo_cargo' ";
+        $sQuery = "SELECT id_cargo,cargo 
+                FROM $nom_tabla
+                $where
+                ORDER BY orden_cargo";
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        $aIdCargo = [];
+        foreach ($oDbl->query($sQuery) as $aDades) {
+            $id_cargo = $aDades['id_cargo'];
+            $aIdCargo[] = $id_cargo;
+        }
+        return $aIdCargo;
+
+    }
     public function getArrayCargos(string $tipo_cargo = ''): array
     {
         $oDbl = $this->getoDbl_Select();

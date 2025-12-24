@@ -19,6 +19,8 @@ class InfoMetaMenus extends DatosInfoRepo
 
         $this->setClase('src\\menus\\domain\\entity\\MetaMenu');
         $this->setMetodoGestor('getMetamenus');
+
+        $this->setRepositoryInterface(MetaMenuRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoMetaMenus extends DatosInfoRepo
             $aWhere = ['descripcion' => $this->k_buscar];
             $aOperador = ['descripcion' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getMetamenus($aWhere, $aOperador);
 
         return $Coleccion;

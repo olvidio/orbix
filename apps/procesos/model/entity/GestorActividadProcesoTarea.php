@@ -2,13 +2,13 @@
 
 namespace procesos\model\entity;
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\ActividadEx;
-use actividades\model\entity\TipoDeActividad;
 use core\ClaseGestor;
 use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use web\DateTimeLocal;
 use function core\is_true;
@@ -194,14 +194,25 @@ class GestorActividadProcesoTarea extends ClaseGestor
         // porque todavía no se ha importado (y no está en su grupo de actividades).
         // Para evitar errores accedo directamente a los datos sin esperar a importarla,
         // En principio la dl que la crea es porque va a importarla...
+        /*
         if ($iid_activ < 0) {
             $oActividad = new ActividadEx(array('id_activ' => $iid_activ));
         } else {
-            $oActividad = new ActividadAll(array('id_activ' => $iid_activ));
+            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $oActividad = $ActividadAllRepository->findById($iid_activ);
         }
+        */
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($iid_activ);
         $iid_tipo_activ = $oActividad->getId_tipo_activ();
-        $oTipo = new TipoDeActividad(array('id_tipo_activ' => $iid_tipo_activ));
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $oTipoDeActividad = $TipoDeActividadRepository->findById($iid_tipo_activ);
 
+        if (empty($oTipoDeActividad)) {
+            echo sprintf(_("No existe este tipo de actividad: %s"), $iid_tipo_activ) . "\n";
+            return TRUE;
+
+        }
         // Creo que cuando pasa es que no existe la actividad (pero se tiene el id_activ)
         if (empty($oActividad) || empty($iid_tipo_activ)) {
             echo sprintf(_("La actividad: %s ya no existe"), $iid_activ) . "\n";
@@ -218,13 +229,13 @@ class GestorActividadProcesoTarea extends ClaseGestor
         }
         $iid_fase = [];
         foreach ($a_sfsv as $sfsv) {
-            if ($sfsv == 1) {
+            if ($sfsv === 1) {
                 $this->setNomTabla('a_actividad_proceso_sv');
             } else {
                 $this->setNomTabla('a_actividad_proceso_sf');
             }
-            if ($dl_org_no_f == ConfigGlobal::mi_dele()) {
-                $id_tipo_proceso = $oTipo->getId_tipo_proceso($sfsv);
+            if ($dl_org_no_f === ConfigGlobal::mi_dele()) {
+                $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso($sfsv);
             } else {
                 // NO se genera si:
                 // - es una actividad de otra dl,
@@ -237,7 +248,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
                         continue;
                     }
                 }
-                $id_tipo_proceso = $oTipo->getId_tipo_proceso_ex($sfsv);
+                $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex($sfsv);
             }
             if (empty($id_tipo_proceso)) {
                 echo sprintf(_("No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"), $iid_tipo_activ, $sfsv);
@@ -374,13 +385,13 @@ class GestorActividadProcesoTarea extends ClaseGestor
         // Para las posteriores, sólo la primera fase del status.
         // Vamos a establecer la fecha de hoy como criterio para distinguir entre 
         // actividades anteriores y posteriores.
-        $oActividad = new ActividadAll($iid_activ);
-        $oActividad->DBCarregar();
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($iid_activ);
         $nom_activ = $oActividad->getNom_activ();
         $statusActividad = $oActividad->getStatus();
 
         // Si es borrable, hay que ver que hacemos: de momento nada.
-        if ($statusActividad == ActividadAll::STATUS_BORRABLE) {
+        if ($statusActividad === StatusId::BORRABLE) {
             $nom_activ = empty($nom_activ) ? $iid_activ : $nom_activ;
             $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Está para borrar."), $nom_activ);
             $msg .= "\n";
@@ -479,17 +490,17 @@ class GestorActividadProcesoTarea extends ClaseGestor
                     $id_fase = $oActividadProcesoTarea->getId_fase();
                     $completado = 'f';
                     // marco el status correspondiente en la actividad.
-                    if ($statusActividad == ActividadAll::STATUS_PROYECTO) {
+                    if ($statusActividad === StatusId::PROYECTO) {
                         if ($id_fase <= ActividadFase::FASE_PROYECTO) {
                             $completado = 't';
                         }
                     }
-                    if ($statusActividad == ActividadAll::STATUS_ACTUAL) {
+                    if ($statusActividad === StatusId::ACTUAL) {
                         if ($id_fase <= ActividadFase::FASE_APROBADA) {
                             $completado = 't';
                         }
                     }
-                    if ($statusActividad == ActividadAll::STATUS_TERMINADA) {
+                    if ($statusActividad === StatusId::TERMINADA) {
                         if ($id_fase <= ActividadFase::FASE_TERMINADA) {
                             $completado = 't';
                         }

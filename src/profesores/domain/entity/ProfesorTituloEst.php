@@ -4,8 +4,8 @@ namespace src\profesores\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
-use src\profesores\domain\value_objects\TituloName;
 use src\profesores\domain\value_objects\CentroDntName;
+use src\profesores\domain\value_objects\TituloName;
 use src\profesores\domain\value_objects\YearNumber;
 use function core\is_true;
 
@@ -128,8 +128,8 @@ class ProfesorTituloEst
     }
 
     /**
-     * @deprecated Usar getTituloVo()->value()
      * @return string $stitulo
+     * @deprecated Usar getTituloVo()->value()
      */
     public function getTitulo(): string
     {
@@ -137,8 +137,8 @@ class ProfesorTituloEst
     }
 
     /**
-     * @deprecated Usar setTituloVo(TituloName $vo)
      * @param string $stitulo
+     * @deprecated Usar setTituloVo(TituloName $vo)
      */
     public function setTitulo(string $stitulo): void
     {
@@ -158,8 +158,8 @@ class ProfesorTituloEst
     }
 
     /**
-     * @deprecated Usar getCentroDntVo()->value()
      * @return string|null $scentro_dnt
+     * @deprecated Usar getCentroDntVo()->value()
      */
     public function getCentro_dnt(): ?string
     {
@@ -167,8 +167,8 @@ class ProfesorTituloEst
     }
 
     /**
-     * @deprecated Usar setCentroDntVo(CentroDntName $vo)
      * @param string|null $scentro_dnt
+     * @deprecated Usar setCentroDntVo(CentroDntName $vo)
      */
     public function setCentro_dnt(?string $scentro_dnt = null): void
     {
@@ -204,8 +204,8 @@ class ProfesorTituloEst
     }
 
     /**
-     * @deprecated Usar getYearVo()->value()
      * @return int|null $iyear
+     * @deprecated Usar getYearVo()->value()
      */
     public function getYear(): ?int
     {
@@ -213,8 +213,8 @@ class ProfesorTituloEst
     }
 
     /**
-     * @deprecated Usar setYearVo(YearNumber $vo)
      * @param int|null $iyear
+     * @deprecated Usar setYearVo(YearNumber $vo)
      */
     public function setYear(?int $iyear = null): void
     {
@@ -236,15 +236,29 @@ class ProfesorTituloEst
     {
         return 'id_item';
     }
-    function getDatosCampos():array
+
+    function getDatosCampos(): array
     {
         $oProfesorTituloEstSet = new Set();
 
+        $oProfesorTituloEstSet->add($this->getDatosId_nom());
         $oProfesorTituloEstSet->add($this->getDatosTitulo());
         $oProfesorTituloEstSet->add($this->getDatosCentro_dnt());
         $oProfesorTituloEstSet->add($this->getDatosEclesiastico());
         $oProfesorTituloEstSet->add($this->getDatosYear());
         return $oProfesorTituloEstSet->getTot();
+    }
+
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     function getDatosTitulo(): DatosCampo

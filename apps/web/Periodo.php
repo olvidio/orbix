@@ -68,11 +68,11 @@ class Periodo
             case 'prev':
             case 'previo':
             case 'previous':
-                $any = date('Y') - 1;
+                $any = (int)date('Y') - 1;
                 break;
             case 'siguiente':
             case 'next':
-                $any = date('Y') + 1;
+                $any = (int)date('Y') + 1;
                 break;
             case 'actual':
             default:

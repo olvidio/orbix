@@ -23,8 +23,8 @@ class PgDireccionCasaExRepository extends PgDireccionRepository implements Direc
     public function __construct()
     {
         parent::__construct();
-        $oDbl = $GLOBALS['oDBR'];
-        $oDbl_Select = $GLOBALS['oDBR_Select'];
+        $oDbl = $GLOBALS['oDBRC'];
+        $oDbl_Select = $GLOBALS['oDBRC_Select'];
         $this->setoDbl($oDbl);
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('u_dir_cdc_ex');

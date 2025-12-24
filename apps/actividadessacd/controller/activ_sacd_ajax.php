@@ -1,22 +1,22 @@
 <?php
 
-use actividadcargos\model\entity\ActividadCargo;
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividadcargos\model\GestorCargoOAsistente;
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\ActividadDl;
-use actividades\model\entity\GestorActividadDl;
-use actividadescentro\model\entity\GestorCentroEncargado;
-use asistentes\model\entity\AsistenteDl;
+use asistentes\legacy\AsistenteDl;
 use core\ConfigGlobal;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoSacd;
 use permisos\model\PermisosActividadesTrue;
-use personas\model\entity\GestorPersona;
-use personas\model\entity\Persona;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\entity\ActividadCargo;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Periodo;
 use function core\is_true;
 
@@ -71,22 +71,22 @@ function ordena($id_activ, $id_nom, $num_orden)
 
     // Si no pongo nada me lo ordena por orden cargo.
     //$aWhere['_ordre']='id_cargo';
-    $GesActividadCargos = new GestorActividadCargo();
-    $cActividadCargos = $GesActividadCargos->getActividadCargos($aWhere, $aOperador);
+    $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+    $cActividadCargos = $ActividadCargoRepository->getActividadCargos($aWhere, $aOperador);
     $i_max = count($cActividadCargos);
     for ($i = 0; $i < $i_max; $i++) {
-        if ($cActividadCargos[$i]->getId_nom() == $id_nom) {
+        if ($cActividadCargos[$i]->getId_nom() === $id_nom) {
             switch ($num_orden) {
                 case "mas":
                     if ($i >= 1) {
                         $anterior_id_nom = $cActividadCargos[($i - 1)]->getId_nom();
                         if (!empty($anterior_id_nom)) {
                             $cActividadCargos[($i - 1)]->setId_nom($id_nom);
-                            if ($cActividadCargos[($i - 1)]->DBGuardar() === false) {
+                            if ($ActividadCargoRepository->Guardar($cActividadCargos[($i - 1)]) === false) {
                                 echo _("hay un error, no se ha guardado");
                             }
                             $cActividadCargos[($i)]->setId_nom($anterior_id_nom);
-                            if ($cActividadCargos[($i)]->DBGuardar() === false) {
+                            if ($ActividadCargoRepository->Guardar($cActividadCargos[($i)]) === false) {
                                 echo _("hay un error, no se ha guardado");
                             }
                         }
@@ -97,11 +97,11 @@ function ordena($id_activ, $id_nom, $num_orden)
                         $post_id_nom = $cActividadCargos[($i + 1)]->getId_nom();
                         if (!empty($post_id_nom)) {
                             $cActividadCargos[($i + 1)]->setId_nom($id_nom);
-                            if ($cActividadCargos[($i + 1)]->DBGuardar() === false) {
+                            if ($ActividadCargoRepository->Guardar($cActividadCargos[($i + 1)]) === false) {
                                 echo _("hay un error, no se ha guardado");
                             }
                             $cActividadCargos[($i)]->setId_nom($post_id_nom);
-                            if ($cActividadCargos[($i)]->DBGuardar() === false) {
+                            if ($ActividadCargoRepository->Guardar($cActividadCargos[($i)]) === false) {
                                 echo _("hay un error, no se ha guardado");
                             }
                         }
@@ -124,6 +124,7 @@ if ($Qque === 'lista_activ') {
 
 $aWhere = [];
 $aOperador = [];
+$CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
 switch ($Qque) {
     case "orden":
         $Qnum_orden = (string)filter_input(INPUT_POST, 'num_orden');
@@ -132,10 +133,10 @@ switch ($Qque) {
         $error_txt = '';
         if ($Qnum_orden === "borrar") { //entonces es borrar:
             if ($Qid_activ && $Qid_cargo) {
-                $oCargoActiv = new ActividadCargo(array('id_activ' => $Qid_activ, 'id_cargo' => $Qid_cargo));
+                $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+                $oActividadCargo = $ActividadCargoRepository->getActividadCargos(['id_activ' => $Qid_activ, 'id_cargo' => $Qid_cargo]);
                 // Para obligar a cargar el id_item y poder eliminar. (hemos creado el objeto: con id_activ,id_cargo)
-                $oCargoActiv->DBCarregar();
-                if ($oCargoActiv->DBEliminar() === false) {
+                if ($ActividadCargoRepository->Eliminar($oActividadCargo) === false) {
                     $error_txt = _("hay un error, no se ha eliminado el cargo");
                 }
                 // también la asistencia
@@ -171,15 +172,15 @@ switch ($Qque) {
             $aWhere['id_activ'] = $Qid_activ;
             // Si no pongo nada me lo ordena por orden cargo.
             //$aWhere['_ordre']='id_cargo';
-            $GesActividadCargos = new GestorActividadCargo();
-            $cActividadCargos = $GesActividadCargos->getActividadCargos($aWhere, $aOperador);
+            $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+            $cActividadCargos = $ActividadCargoRepository->getActividadCargos($aWhere, $aOperador);
             $txt_sacd = '';
 
             foreach ($cActividadCargos as $oActividadCargo) {
                 $id_nom = $oActividadCargo->getId_nom();
                 $id_cargo = $oActividadCargo->getId_cargo();
                 // OJO puede ser de la dl o de_paso
-                $oPersona = Persona::NewPersona($id_nom);
+                $oPersona = Persona::findPersonaEnGlobal($id_nom);
                 $ap_nom = $oPersona->getPrefApellidosNombre();
                 $id_txt_nom = $Qid_activ . "_" . $id_nom;
 
@@ -199,32 +200,31 @@ switch ($Qque) {
         // una lista con los sacd posibles.
         // Primero el sacd del centro encargado [añado (*)] y después el resto.
         // ctr encargado:
-        $oEnc = new GestorCentroEncargado();
         $sacd_posibles = '';
-        foreach ($oEnc->getCentrosEncargados(array('id_activ' => $Qid_activ, '_ordre' => 'num_orden')) as $oEncargado) {
+        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+        foreach ($CentroEncargadoRepository->getCentrosEncargados(array('id_activ' => $Qid_activ, '_ordre' => 'num_orden')) as $oEncargado) {
             $id_ctr = $oEncargado->getId_ubi();
             $num_orden = $oEncargado->getNum_orden();
             if (ConfigGlobal::is_app_installed('encargossacd')) {
-                $GesEncargos = new GestorEncargo();
                 // Tipos de encargo que son atención centro. No los rt.
                 // 1000,1100,1200,1300
                 // Todos los 100 (es genérico) "sacd del cl"...: 1001
                 $aWhere = ['id_ubi' => $id_ctr, 'id_tipo_enc' => '^1(00|100|200|300)'];
                 $aOperador = ['id_tipo_enc' => '~'];
-                $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+                $cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
                 if (is_array($cEncargos) && count($cEncargos) > 0) { // puede ser que no haya sacd encargado (dlb, dlbf).
                     // solamente debería haber uno.
                     $id_enc = $cEncargos[0]->getId_enc();
-                    $GesEncargoSacd = new GestorEncargoSacd();
                     $aWhere = array('id_enc' => $id_enc, 'modo' => '2|3', 'f_fin' => '');
                     $aOperador = array('modo' => '~', 'f_fin' => 'IS NULL');
-                    $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere, $aOperador);
+                    $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
                     if (!is_array($cEncargosSacd) || count($cEncargosSacd) < 1) {
                         continue;
                     }
                     $id_nom = $cEncargosSacd[0]->getId_nom();
                     // OJO puede ser de la dl o de_paso
-                    $oPersona = Persona::NewPersona($id_nom);
+                    $oPersona = Persona::findPersonaEnGlobal($id_nom);
                     if (is_object($oPersona)) {
                         $ap_nom = $oPersona->getApellidosNombre();
                     } else {
@@ -235,29 +235,9 @@ switch ($Qque) {
             }
         }
         // listado de todos los sacd.
-        // selecciono según la variable selecion ('2'=> n y agd, '4'=> de paso, '8'=> sssc, '16'=>cp)
-        $a_Clases = [];
-        if ($Qseleccion & 2) {
-            $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
-            $a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
-        }
-        if ($Qseleccion & 4) {
-            $a_Clases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
-        }
-        if ($Qseleccion & 8) {
-            $a_Clases[] = array('clase' => 'PersonaSSSC', 'get' => 'getPersonas');
-        }
-        if ($Qseleccion & 16) {
-        }
-
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['sacd'] = 't';
-        $aWhere['situacion'] = 'A';
-        $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-        $GesPersonas = new GestorPersona();
-        $GesPersonas->setClases($a_Clases);
-        $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+        // selecciono según la variable selección ('2'=> n y agd, '4'=> de paso, '8'=> sssc, '16'=>cp)
+        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+        $cPersonas = $PersonaSacdRepository->getSacdsBySelect($Qseleccion);
         foreach ($cPersonas as $oPersona) {
             $id_nom = $oPersona->getId_nom();
             $ap_nom = $oPersona->getPrefApellidosNombre();
@@ -273,14 +253,14 @@ switch ($Qque) {
         $aWhere['id_cargo'] = $txt_where_cargos;
         $aOperador['id_cargo'] = 'IN';
         $aWhere['_ordre'] = 'a.id_cargo DESC';
-        $GesCargoActiv = new GestorActividadCargo();
-        $cCargosActiv = $GesCargoActiv->getActividadCargos($aWhere, $aOperador);
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $cCargosActiv = $ActividadCargoRepository->getActividadCargos($aWhere, $aOperador);
         if (is_array($cCargosActiv) && count($cCargosActiv) >= 1) {
             $id_cargo = $cCargosActiv[0]->getId_cargo() + 1;
             // lo meto en el primero vacio, 
             $a_cargos_ocupados = [];
-            foreach ($cCargosActiv as $oCargoActiv) {
-                $a_cargos_ocupados[] = $oCargoActiv->getId_cargo();
+            foreach ($cCargosActiv as $oActividadCargo) {
+                $a_cargos_ocupados[] = $oActividadCargo->getId_cargo();
             }
             $flag_stop = TRUE;
             foreach ($aIdCargos_sacd as $id_cargo_x => $cargo) {
@@ -297,15 +277,19 @@ switch ($Qque) {
             // Solo a partir de php 7.3: $id_cargo = array_key_first($aIdCargos_sacd);
             $id_cargo = key($aIdCargos_sacd);
         }
-        $oCargoActiv = new ActividadCargo();
-        $oCargoActiv->setId_activ($Qid_activ);
-        $oCargoActiv->setId_nom($Qid_nom);
-        $oCargoActiv->setId_cargo($id_cargo);
-        if ($oCargoActiv->DBGuardar() === false) {
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+        $newIdItem = $ActividadCargoRepository->getNewId();
+        $oActividadCargo = new ActividadCargo();
+        $oActividadCargo->setId_item($newIdItem);
+        $oActividadCargo->setId_activ($Qid_activ);
+        $oActividadCargo->setId_nom($Qid_nom);
+        $oActividadCargo->setId_cargo($id_cargo);
+        if ($ActividadCargoRepository->Guardar($oActividadCargo) === false) {
             echo _("hay un error, no se ha guardado el cargo");
         }
         // pongo que asiste si no es de sf
-        $oActividad = new ActividadDl($Qid_activ);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $oActividad = $ActividadDlRepository->findById($Qid_activ);
         $id_tipo_activ = (string)$oActividad->getId_tipo_activ();
         if ($id_tipo_activ[0] == 1) {
             $oAsisActiv = new AsistenteDl(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom, 'propio' => 'f', 'falta' => 'f'));
@@ -336,7 +320,7 @@ switch ($Qque) {
         $aWhere['f_ini'] = "'$inicioIso','$finIso'";
         $aOperador['f_ini'] = 'BETWEEN';
 
-        $aWhere['status'] = ActividadAll::STATUS_TERMINADA;
+        $aWhere['status'] = StatusId::TERMINADA;
         $aOperador['status'] = "<";
 
         $txt_fase_ok_sacd = '';
@@ -388,8 +372,8 @@ switch ($Qque) {
         }
         $aWhere['_ordre'] = 'f_ini';
 
-        $GesActividades = new GestorActividadDl();
-        $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
 
         $titulo = ucfirst(_("listado de actividades"));
 
@@ -442,16 +426,15 @@ switch ($Qque) {
                 } else {
                     $clase = '';
                 }
-                if ($status == ActividadAll::STATUS_PROYECTO) {
+                if ($status == StatusId::PROYECTO) {
                     $clase = 'wrong-soft';
                 }
 
 
                 // permisos centro encargado.
                 if ($oPermCtr->have_perm_activ('ver') === true) {
-                    $oEnc = new GestorCentroEncargado();
                     $ctrs = "";
-                    foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oUbi) {
+                    foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oUbi) {
                         $ctrs .= $oUbi->getNombre_ubi() . ", ";
                     }
                     $ctrs = substr($ctrs, 0, -2);
@@ -468,31 +451,31 @@ switch ($Qque) {
                     $aWhere['id_cargo'] = $txt_where_cargos;
                     $aOperador['id_cargo'] = 'IN';
                     $aWhere['_ordre'] = 'a.id_cargo DESC';
-                    $GesCargoActiv = new GestorActividadCargo();
-                    $cCargosActividad = $GesCargoActiv->getActividadCargos($aWhere, $aOperador);
+                    $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+                    $cCargosActividad = $ActividadCargoRepository->getActividadCargos($aWhere, $aOperador);
                     foreach ($cCargosActividad as $oActividadCargo) {
                         $id_nom = $oActividadCargo->getId_nom();
                         // OJO puede ser de la dl o de_paso
-                        $oPersona = Persona::NewPersona($id_nom);
+                        $oPersona = Persona::findPersonaEnGlobal($id_nom);
                         if (is_object($oPersona)) {
                             $sacds[] = array('id_nom' => $id_nom,
-                                'id_cargo' => $oActividadCargo->getId_cargo(),
-                                'ap_nom' => $oPersona->getPrefApellidosNombre()
+                                    'id_cargo' => $oActividadCargo->getId_cargo(),
+                                    'ap_nom' => $oPersona->getPrefApellidosNombre()
                             );
                         } else {
                             // la función Persona::NewPersona puede devolver: "no encuentro a nadie"
                             $sacds[] = array('id_nom' => $id_nom,
-                                'id_cargo' => $oActividadCargo->getId_cargo(),
-                                'ap_nom' => $oPersona,
+                                    'id_cargo' => $oActividadCargo->getId_cargo(),
+                                    'ap_nom' => $oPersona,
                             );
                         }
                     }
                     // Para el listado de falta_sacd, sólo hay que mantener las que no tienen sacd,
                     // o si lo tienen, que no tengan la fase ok_sacd.
                     if ($Qtipo === 'falta_sacd'
-                        && !(!(is_true($sacd_aprobado) && !empty($sacds))
-                            || empty($sacds)
-                        )
+                            && !(!(is_true($sacd_aprobado) && !empty($sacds))
+                                    || empty($sacds)
+                            )
                     ) {
                         unset ($a_valores[$i]);
                         continue;
@@ -600,31 +583,27 @@ switch ($Qque) {
         $aWhere['f_ini'] = "'$inicioIso','$finIso'";
         $aOperador['f_ini'] = 'BETWEEN';
 
-        $aWhere['status'] = ActividadAll::STATUS_TERMINADA;
+        $aWhere['status'] = StatusId::TERMINADA;
         $aOperador['status'] = "<";
 
         $aWhere['_ordre'] = 'f_ini';
 
-        $GesActividades = new GestorActividadDl();
-        $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
 
-        $GesSacd = new GestorPersona();
+        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
         // Para los de la dl y de_paso:
-        $aClases = [];
-        $aClases[] = array('clase' => 'PersonaDl', 'get' => 'getPersonasDl');
-        $aClases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
-        $GesSacd->setClases($aClases);
-
         $mi_dl = ConfigGlobal::mi_delef();
         $aWhere = [];
+        $aWhere['id_tabla'] = "'n','a'";
+        $aOperador['id_tabla'] = 'IN';
         $aWhere['sacd'] = 't';
         $aWhere['dl'] = $mi_dl;
         $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-        $cSacds = $GesSacd->getPersonas($aWhere);
+        $cSacds = $PersonaSacdRepository->getPersonas($aWhere);
 
-
-        $gesCargoOAsistente = new GestorCargoOAsistente();
-        $a_solapes = $gesCargoOAsistente->getSolapes($cSacds, $cActividades);
+        $CargoOAsistenteRepository = $GLOBALS['container']->get(CargoOAsistenteInterface::class);
+        $a_solapes = $CargoOAsistenteRepository->getSolapes($cSacds, $cActividades);
 
         $titulo = ucfirst(_("listado de sacd con actividades incompatibles"));
 
@@ -638,7 +617,7 @@ switch ($Qque) {
         foreach ($a_solapes as $id_nom => $aId_activ) {
             $i++;
 
-            $oPersona = Persona::NewPersona($id_nom);
+            $oPersona = Persona::findPersonaEnGlobal($id_nom);
             if (is_object($oPersona)) {
                 $ap_nom = $oPersona->getApellidosNombre();
             } else {
@@ -650,8 +629,9 @@ switch ($Qque) {
 
             $a_nom_activ = [];
             $id_ubi_anterior = '';
+            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
             foreach ($aId_activ as $id_activ) {
-                $oActividad = new ActividadAll($id_activ);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $id_ubi = $oActividad->getId_ubi();
                 $status = $oActividad->getStatus();
@@ -663,7 +643,7 @@ switch ($Qque) {
                 } else {
                     $clase = '';
                 }
-                if ($status == ActividadAll::STATUS_PROYECTO) {
+                if ($status == StatusId::PROYECTO) {
                     $clase = 'wrong-soft';
                 }
                 // si es el mismo dia y el mismo ubi, no lo pongo, y borro el anterior:

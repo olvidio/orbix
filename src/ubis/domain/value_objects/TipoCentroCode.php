@@ -22,8 +22,8 @@ final class TipoCentroCode
         if (mb_strlen($value) > 5) {
             throw new \InvalidArgumentException('TipoCentroCode must be at most 8 characters');
         }
-        // Allow letters, numbers, underscore and hyphen
-        if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {
+        // Allow letters, numbers, underscore and hyphen, and comma
+        if (!preg_match('/^[A-Za-z0-9_-|,]+$/u', $value)) {
             throw new \InvalidArgumentException('TipoCentroCode has invalid characters');
         }
     }

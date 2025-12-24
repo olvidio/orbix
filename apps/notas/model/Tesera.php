@@ -9,9 +9,9 @@
 namespace notas\model;
 
 use core\ViewPhtml;
-use personas\model\entity\Persona;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\DateTimeLocal;
 use web\Posicion;
 use function core\is_true;
@@ -174,7 +174,7 @@ class Tesera
     public function verTesera($id_nom)
     {
 
-        $oPersona = Persona::NewPersona($id_nom);
+        $oPersona = Persona::findPersonaEnGlobal($id_nom);
         $ap_nom = $oPersona->getPrefApellidosNombre();
         $centro = $oPersona->getCentro_o_dl();
 

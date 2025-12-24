@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use notas\model\AsignaturasPendientes;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -142,7 +143,7 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
     $i++;
     $oPersona = new $obj($id_nom);
     $id_tabla = $oPersona->getId_tabla();
-    $stgr = $oPersona->getStgr();
+    $stgr = $oPersona->getNivel_stgr();
     $nom = $oPersona->getPrefApellidosNombre();
     // El ctr
     // En el caso cr-stgr, interesa la dl
@@ -156,9 +157,10 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
     }
 
     // Añado los telf:
+    $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
     $telfs = '';
-    $telfs_fijo = $oPersona->telecos_persona($id_nom, "telf", " / ", "*", FALSE);
-    $telfs_movil = $oPersona->telecos_persona($id_nom, "móvil", " / ", "*", FALSE);
+    $telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, "telf", " / ", "*", FALSE);
+    $telfs_movil = $telecoService->getTelecosPorTipo($id_nom, "móvil", " / ", "*", FALSE);
     if (!empty($telfs_fijo) && !empty($telfs_movil)) {
         $telfs = $telfs_fijo . " / " . $telfs_movil;
     } else {
@@ -166,7 +168,7 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
         $telfs .= $telfs_movil ?? '';
     }
     $mails = '';
-    $mails = $oPersona->telecos_persona($id_nom, "e-mail", " / ", "*", FALSE);
+    $mails = $telecoService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", FALSE);
 
     $condicion_2 = "Where id_nom='" . $id_nom . "'";
     $condicion_2 = urlencode($condicion_2);

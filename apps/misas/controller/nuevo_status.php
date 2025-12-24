@@ -1,17 +1,15 @@
 <?php
 
 
-// INICIO Cabecera global de URL de controlador *********************************
 use core\ViewTwig;
-use encargossacd\model\EncargoConstants;
-use encargossacd\model\entity\GestorEncargoTipo;
-use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use misas\model\EncargosZona;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\EncargoConstants;
 use web\DateTimeLocal;
-use web\Desplegable;
 use web\Hash;
-use web\TiposActividades;
 
+// INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -102,15 +100,14 @@ foreach ($date_range as $date) {
         ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
 }
 
-$oGesEncargoTipo = new GestorEncargoTipo();
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 
 $grupo = '8...';
 $aWhere = [];
 $aOperador = [];
 $aWhere['id_tipo_enc'] = '^' . $grupo;
 $aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+$cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
 $a_tipo_enc = [];
 $posibles_encargo_tipo = [];

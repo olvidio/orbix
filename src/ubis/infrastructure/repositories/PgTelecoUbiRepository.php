@@ -115,7 +115,7 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
         $aDatos = [];
         $aDatos['id_ubi'] = $TelecoCdc->getId_ubi();
         $aDatos['id_tipo_teleco'] = $TelecoCdc->getId_tipo_teleco();
-        $aDatos['desc_teleco'] = $TelecoCdc->getDesc_teleco();
+        $aDatos['id_desc_teleco'] = $TelecoCdc->getId_desc_teleco();
         $aDatos['num_teleco'] = $TelecoCdc->getNum_teleco();
         $aDatos['observ'] = $TelecoCdc->getObserv();
         array_walk($aDatos, 'core\poner_null');
@@ -125,7 +125,7 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
             $update = "
 					id_ubi                   = :id_ubi,
 					id_tipo_teleco           = :id_tipo_teleco,
-					desc_teleco              = :desc_teleco,
+					id_desc_teleco              = :id_desc_teleco,
 					num_teleco               = :num_teleco,
 					observ                   = :observ";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
@@ -134,8 +134,8 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
         } else {
             //INSERT
             $aDatos['id_item'] = $TelecoCdc->getId_item();
-            $campos = "(id_ubi,id_tipo_teleco,desc_teleco,num_teleco,observ,id_item)";
-            $valores = "(:id_ubi,:id_tipo_teleco,:desc_teleco,:num_teleco,:observ,:id_item)";
+            $campos = "(id_ubi,id_tipo_teleco,id_desc_teleco,num_teleco,observ,id_item)";
+            $valores = "(:id_ubi,:id_tipo_teleco,:id_desc_teleco,:num_teleco,:observ,:id_item)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

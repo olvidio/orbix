@@ -1,9 +1,10 @@
 <?php
 
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\EncargoTipo;
-use encargossacd\model\entity\GestorEncargoSacd;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\application\traits\EncargoFunciones;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\entity\Encargo;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
@@ -63,8 +64,10 @@ $oF_ini = new DateTimeLocal();
 $oF_fin = new DateTimeLocal();
 
 // Para las funciones
-$GesEncargoTipo = new GestorEncargoTipo();
+$oEncargoFunciones = new EncargoFunciones();
 
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 switch ($Qmod) {
     case "nuevo": //nuevo
         if ($Qtipo_centro !== "of") { // para el caso de los oficiales no pongo titular ni suplente.
@@ -74,7 +77,7 @@ switch ($Qmod) {
                 exit;
             }
         }
-        /* crear encargo: atencion ctr. El tipo de encargo es distinto según el ctr.
+        /* crear encargo: atención ctr. El tipo de encargo es distinto según el ctr.
            si el id ubi empieza por 1 es sv, si empieza por 2 es sf. */
         $Qid_ubi_txt = (string)$Qid_ubi;
         if ($Qid_ubi_txt[0] == 2) { // sf
@@ -113,11 +116,13 @@ switch ($Qmod) {
             }
 
         }
-        $oEncargoTipo = new EncargoTipo($id_tipo_enc);
+        $oEncargoTipo = $EncargoTipoRepository->findById($id_tipo_enc);
         $tipo_enc = $oEncargoTipo->getTipo_enc();
         $desc_enc = $tipo_enc . " ($nombre_ubi)";
 
+        $newId = $EncargoRepository->getNewId();
         $oEncargo = new Encargo();
+        $oEncargo->setId_enc($newId);
         $oEncargo->setId_tipo_enc($id_tipo_enc);
         $oEncargo->setSf_sv($sf_sv);
         $oEncargo->setId_ubi($Qid_ubi);
@@ -126,24 +131,24 @@ switch ($Qmod) {
         //$oEncargo->setIdioma_enc($idioma_enc);
         //$oEncargo->setDesc_lugar($desc_lugar);
         $oEncargo->setObserv($Qobserv);
-        if ($oEncargo->DBGuardar() === false) {
+        if ($EncargoRepository->Guardar($oEncargo) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oEncargo->getErrorTxt();
+            echo "\n" . $EncargoRepository->getErrorTxt();
         }
 
         /* crear horario encargo */
         $id_enc = $oEncargo->getId_enc();
         // horario de mañana (m-matí)
         if (!empty($Qdedic_ctr_m)) {
-            $GesEncargoTipo->insert_horario_ctr($id_enc, 'm', $Qdedic_ctr_m, $Qn_sacd);
+            $oEncargoFunciones->insert_horario_ctr($id_enc, 'm', $Qdedic_ctr_m, $Qn_sacd);
         }
         // horario de tarde 1ª hora (t-tarda)
         if (!empty($Qdedic_ctr_t)) {
-            $GesEncargoTipo->insert_horario_ctr($id_enc, 't', $Qdedic_ctr_t, $Qn_sacd);
+            $oEncargoFunciones->insert_horario_ctr($id_enc, 't', $Qdedic_ctr_t, $Qn_sacd);
         }
         // horario de tarde 2ª hora (v-vespre)
         if (!empty($Qdedic_ctr_v)) {
-            $GesEncargoTipo->insert_horario_ctr($id_enc, 'v', $Qdedic_ctr_v, $Qn_sacd);
+            $oEncargoFunciones->insert_horario_ctr($id_enc, 'v', $Qdedic_ctr_v, $Qn_sacd);
         }
 
         /* horarios sacd */
@@ -158,26 +163,26 @@ switch ($Qmod) {
                 } // titular de cl - no cl.
                 $QAid_sacd[0] = $Qid_sacd_titular;
             }
-            $oEncargoSacd = $GesEncargoTipo->insert_sacd($id_enc, $QAid_sacd[$i], $modo);
+            $oEncargoSacd = $oEncargoFunciones->insert_sacd($id_enc, $QAid_sacd[$i], $modo);
             $id_item_t_sacd = $oEncargoSacd->getId_item();
 
             if ($QAdedic_m[$i]) {
-                $GesEncargoTipo->insert_horario_sacd($id_item_t_sacd, $id_enc, $QAid_sacd[$i], 'm', $QAdedic_m[$i]);
+                $oEncargoFunciones->insert_horario_sacd($id_item_t_sacd, $id_enc, $QAid_sacd[$i], 'm', $QAdedic_m[$i]);
             }
             if ($QAdedic_t[$i]) {
-                $GesEncargoTipo->insert_horario_sacd($id_item_t_sacd, $id_enc, $QAid_sacd[$i], 't', $QAdedic_t[$i]);
+                $oEncargoFunciones->insert_horario_sacd($id_item_t_sacd, $id_enc, $QAid_sacd[$i], 't', $QAdedic_t[$i]);
             }
             if ($QAdedic_v[$i]) {
-                $GesEncargoTipo->insert_horario_sacd($id_item_t_sacd, $id_enc, $QAid_sacd[$i], 'v', $QAdedic_v[$i]);
+                $oEncargoFunciones->insert_horario_sacd($id_item_t_sacd, $id_enc, $QAid_sacd[$i], 'v', $QAdedic_v[$i]);
             }
         }
 
         if (!empty($Qid_sacd_suplente)) {
-            $GesEncargoTipo->insert_sacd($id_enc, $Qid_sacd_suplente, 4);
+            $oEncargoFunciones->insert_sacd($id_enc, $Qid_sacd_suplente, 4);
         }
         // para grabar los datos del número de alumnos (si es un cgi).
         if (strstr($Qtipo_centro, "cgi")) {
-            $GesEncargoTipo->grabar_alumnos($Qid_ubi, $Qnum_alum);
+            $oEncargoFunciones->grabar_alumnos($Qid_ubi, $Qnum_alum);
         }
         break;
     case "editar": //modificar
@@ -185,8 +190,8 @@ switch ($Qmod) {
             //Compruebo que estén todos los campos necesarios
             if (empty($Qid_sacd_titular)) {
                 if (!empty($Qid_enc)) { // Si existe el encargo, lo elimino.
-                    $oEncargo = new Encargo(array('id_enc' => $Qid_enc));
-                    $oEncargo->DBEliminar();
+                    $oEncargo = $EncargoRepository->findById($Qid_enc);
+                    $EncargoRepository->Eliminar($oEncargo);
                     exit;
                 } else {
                     echo _("Debe nombrar un sacerdote titular") . "\n";
@@ -194,56 +199,53 @@ switch ($Qmod) {
                 }
             }
             //Compruebo que el titular y suplente sean distintos (excepto para los oficiales de dl)
-            if ($Qid_sacd_titular == $Qid_sacd_suplente) {
+            if ($Qid_sacd_titular === $Qid_sacd_suplente) {
                 exit(_("El sacd titular y suplente deben ser distintos"));
             }
 
             /* encargo: atención ctr */
             // Quedaría poder cambiar la zona, el idioma...
-            $oEncargo = new Encargo(array('id_enc' => $Qid_enc));
-            $oEncargo->DBCarregar();
+            $oEncargo = $EncargoRepository->findById($Qid_enc);
             $oEncargo->setObserv($Qobserv);
-            if ($oEncargo->DBGuardar() === false) {
+            if ($EncargoRepository->Guardar($oEncargo) === false) {
                 echo _("hay un error, no se ha guardado");
-                echo "\n" . $oEncargo->getErrorTxt();
+                echo "\n" . $EncargoRepository->getErrorTxt();
             }
             /* modificar horario encargo */
             // horario de mañana (m-matí)
-            $GesEncargoTipo->modificar_horario_ctr($Qid_enc, 'm', $Qdedic_ctr_m, $Qn_sacd);
+            $oEncargoFunciones->modificar_horario_ctr($Qid_enc, 'm', $Qdedic_ctr_m, $Qn_sacd);
             // horario de tarde 1ª hora (t-tarda)
-            $GesEncargoTipo->modificar_horario_ctr($Qid_enc, 't', $Qdedic_ctr_t, $Qn_sacd);
+            $oEncargoFunciones->modificar_horario_ctr($Qid_enc, 't', $Qdedic_ctr_t, $Qn_sacd);
             // horario de tarde 2ª hora (v-vespre)
-            $GesEncargoTipo->modificar_horario_ctr($Qid_enc, 'v', $Qdedic_ctr_v, $Qn_sacd);
+            $oEncargoFunciones->modificar_horario_ctr($Qid_enc, 'v', $Qdedic_ctr_v, $Qn_sacd);
         }
 
         /* sacd */
-        $GesEncargoSacd = new GestorEncargoSacd();
+        $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
         $aWhere = [];
         $aOperador = [];
         $aWhere['id_enc'] = $Qid_enc;
         $aWhere['modo'] = '5';
         $aWhere['f_fin'] = 'x';
         $aOperador['f_fin'] = 'IS NULL';
-        $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere, $aOperador);
+        $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
         foreach ($cEncargosSacd as $oEncargoSacd) { // pongo f_fin a todos los sacd del encargo.
-            $oEncargoSacd->DBCarregar();
             $oEncargoSacd->setF_fin($oF_fin);
-            if ($oEncargoSacd->DBGuardar() === false) {
+            if ($EncargoSacdRepository->Guardar($oEncargoSacd) === false) {
                 echo _("hay un error, no se ha guardado");
-                echo "\n" . $oEncargoSacd->getErrorTxt();
+                echo "\n" . $EncargoSacdRepository->getErrorTxt();
             }
             // también a todos los horarios
             $id_nom = $oEncargoSacd->getId_nom();
-            $GesEncargoTipo->finalizar_horario_sacd($Qid_enc, $id_nom, $oF_fin);
+            $oEncargoFunciones->finalizar_horario_sacd($Qid_enc, $id_nom, $oF_fin);
         }
 
         for ($i = 0; $i < $Qsacd_num; $i++) {
             if ($i > 0 || $Qtipo_centro === "of") { // para el caso de los oficiales son sacd colaboradores
                 if (!empty($QAid_sacd[$i])) {
-                    $GesEncargoTipo->insert_sacd($Qid_enc, $QAid_sacd[$i], 5);
+                    $oEncargoFunciones->insert_sacd($Qid_enc, $QAid_sacd[$i], 5);
                 }
             } else { // sacd titular
-                $GesEncargoSacd = new GestorEncargoSacd();
                 $aWhere = [];
                 $aOperador = [];
                 $aWhere['id_enc'] = $Qid_enc;
@@ -251,7 +253,7 @@ switch ($Qmod) {
                 $aWhere['f_fin'] = 'x';
                 $aOperador['f_fin'] = 'IS NULL';
                 $aOperador['modo'] = '~';
-                $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere, $aOperador);
+                $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
                 $actual_id_sacd_titular = 0;
                 $actual_modo = 0;
                 foreach ($cEncargosSacd as $oEncargoSacd) { // se supone que sólo hay uno.
@@ -264,25 +266,24 @@ switch ($Qmod) {
                     $modo = 3;
                 }
                 if ($actual_id_sacd_titular != $Qid_sacd_titular) {
-                    $GesEncargoTipo->insert_sacd($Qid_enc, $Qid_sacd_titular, $modo);
-                    $GesEncargoTipo->finalizar_horario_sacd($Qid_enc, $actual_id_sacd_titular, $oF_fin);
+                    $oEncargoFunciones->insert_sacd($Qid_enc, $Qid_sacd_titular, $modo);
+                    $oEncargoFunciones->finalizar_horario_sacd($Qid_enc, $actual_id_sacd_titular, $oF_fin);
                     if (!empty($actual_id_sacd_titular)) {
-                        $GesEncargoTipo->finalizar_sacd($Qid_enc, $actual_id_sacd_titular, $actual_modo, $oF_fin);
+                        $oEncargoFunciones->finalizar_sacd($Qid_enc, $actual_id_sacd_titular, $actual_modo, $oF_fin);
                     }
                 } elseif ($actual_modo != $modo) {
                     // puede ser que ya exista...
-                    $GesEncargoSacd2 = new GestorEncargoSacd();
                     $aWhere = [
                         'id_enc' => $Qid_enc,
                         'id_nom' => $actual_id_sacd_titular,
                         'modo' => $modo,
                         'f_ini' => $oF_ini->getIso(),
                     ];
-                    $cEncargosSacd2 = $GesEncargoSacd2->getEncargosSacd($aWhere);
+                    $cEncargosSacd2 = $EncargoSacdRepository->getEncargosSacd($aWhere);
                     foreach ($cEncargosSacd2 as $oEncargoSacd2) { // aunque sólo debería haber una.
-                        if ($oEncargoSacd2->DBEliminar() === false) {
+                        if ($EncargoSacdRepository->Eliminar($oEncargoSacd2) === false) {
                             echo _("hay un error, no se ha eliminado");
-                            echo "\n" . $oEncargoSacd2->getErrorTxt();
+                            echo "\n" . $EncargoSacdRepository->getErrorTxt();
                         }
                     }
                     $oEncargoSacd->setModo($modo);
@@ -295,7 +296,6 @@ switch ($Qmod) {
             }
             if (!empty($QAid_sacd[$i])) { // si está vacío salto.
                 // busco el id_item de la tarea_sacd.
-                $GesEncargoSacd = new GestorEncargoSacd();
                 $aWhere = [];
                 $aOperador = [];
                 $aWhere['id_nom'] = $QAid_sacd[$i];
@@ -304,58 +304,56 @@ switch ($Qmod) {
                 $aWhere['f_fin'] = 'x';
                 $aOperador['f_fin'] = 'IS NULL';
                 $aOperador['modo'] = '~';
-                $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere, $aOperador);
+                $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
                 $id_item_t_sacd = 0;
                 if (count($cEncargosSacd) > 1) echo _("Error con las tareas");
                 foreach ($cEncargosSacd as $oEncargoSacd) { // se supone que sólo hay uno.
                     $id_item_t_sacd = $oEncargoSacd->getId_item();
                 }
 
-                $GesEncargoTipo->modificar_horario_sacd($id_item_t_sacd, $Qid_enc, $QAid_sacd[$i], 'm', $QAdedic_m[$i]);
-                $GesEncargoTipo->modificar_horario_sacd($id_item_t_sacd, $Qid_enc, $QAid_sacd[$i], 't', $QAdedic_t[$i]);
-                $GesEncargoTipo->modificar_horario_sacd($id_item_t_sacd, $Qid_enc, $QAid_sacd[$i], 'v', $QAdedic_v[$i]);
+                $oEncargoFunciones->modificar_horario_sacd($id_item_t_sacd, $Qid_enc, $QAid_sacd[$i], 'm', $QAdedic_m[$i]);
+                $oEncargoFunciones->modificar_horario_sacd($id_item_t_sacd, $Qid_enc, $QAid_sacd[$i], 't', $QAdedic_t[$i]);
+                $oEncargoFunciones->modificar_horario_sacd($id_item_t_sacd, $Qid_enc, $QAid_sacd[$i], 'v', $QAdedic_v[$i]);
             }
         }
 
         if (!empty($Qid_sacd_suplente)) {
-            $GesEncargoSacd = new GestorEncargoSacd();
             $aWhere = [];
             $aOperador = [];
             $aWhere['id_enc'] = $Qid_enc;
             $aWhere['modo'] = '4';
             $aWhere['f_fin'] = 'x';
             $aOperador['f_fin'] = 'IS NULL';
-            $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere, $aOperador);
+            $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
             if (is_array($cEncargosSacd) && count($cEncargosSacd) === 0) {
-                $GesEncargoTipo->insert_sacd($Qid_enc, $Qid_sacd_suplente, 4);
+                $oEncargoFunciones->insert_sacd($Qid_enc, $Qid_sacd_suplente, 4);
             } else {
                 foreach ($cEncargosSacd as $oEncargoSacd) { // se supone que sólo hay uno.
                     $actual_id_sacd_suplente = $oEncargoSacd->getId_nom();
-                    if ($actual_id_sacd_suplente != $Qid_sacd_suplente) {
+                    if ($actual_id_sacd_suplente !== $Qid_sacd_suplente) {
                         $oEncargoSacd->setF_fin($oF_fin);
                         if ($oEncargoSacd->DBGuardar() === false) {
                             echo _("hay un error, no se ha guardado");
                             echo "\n" . $oEncargoSacd->getErrorTxt();
                         }
-                        $GesEncargoTipo->insert_sacd($Qid_enc, $Qid_sacd_suplente, 4);
+                        $oEncargoFunciones->insert_sacd($Qid_enc, $Qid_sacd_suplente, 4);
                     }
                 }
             }
         } else { // eliminar suplente
-            $GesEncargoSacd = new GestorEncargoSacd();
-            $cEncargosSacd = $GesEncargoSacd->getEncargosSacd(array('id_enc' => $Qid_enc, 'modo' => 4));
+            $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd(['id_enc' => $Qid_enc, 'modo' => 4]);
             foreach ($cEncargosSacd as $oEncargoSacd) { // aunque sólo debería haber una.
                 $oEncargoSacd->DBCarregar();
                 $oEncargoSacd->setF_fin($oF_fin);
-                if ($oEncargoSacd->DBGuardar() === false) {
+                if ($EncargoSacdRepository->Guardar($oEncargoSacd) === false) {
                     echo _("hay un error, no se ha guardado");
-                    echo "\n" . $oEncargoSacd->getErrorTxt();
+                    echo "\n" . $EncargoSacdRepository->getErrorTxt();
                 }
             }
         }
         // para grabar los datos del número de alumnos (si es un cgi).
         if (str_contains($Qtipo_centro, "cgi")) {
-            //$GesEncargoTipo->grabar_alumnos($Qid_ubi,$Qnum_alum);
+            //$oEncargoFunciones->grabar_alumnos($Qid_ubi,$Qnum_alum);
         }
         break;
 }

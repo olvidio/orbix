@@ -10,7 +10,7 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividadescentro\model\entity\GestorCentroEncargado;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Periodo;
 
@@ -79,13 +79,13 @@ if (empty($Qid_ctr_num)) {
 $c = 0;
 $a_centros = [];
 $a_actividades = [];
-$GesEncargados = new GestorCentroEncargado();
+$CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
 foreach ($cCentros as $oCentro) {
     $c++;
     $id_ubi = $oCentro->getId_ubi();
     $a_centros[$c] = $oCentro->getNombre_ubi();
     // actividades encargadas al centro en el periodo
-    $cActividades = $GesEncargados->getActividadesDeCentros($id_ubi, $condicion_periodo);
+    $cActividades = $CentroEncargadoRepository->getActividadesDeCentros($id_ubi, $condicion_periodo);
     // para cada actividad, los otros centros encargados
     $a = 0;
     foreach ($cActividades as $oActividad) {
@@ -94,7 +94,7 @@ foreach ($cCentros as $oCentro) {
         //$a_actividades[$c][$a]['f_ini']=$oActividad->getF_ini();
         //$a_actividades[$c][$a]['f_fin']=$oActividad->getF_fin();
         $a_actividades[$c][$a]['nom_activ'] = $oActividad->getNom_activ();
-        $cEncargados = $GesEncargados->getCentrosEncargadosActividad($id_activ);
+        $cEncargados = $CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ);
         $i = 0;
         $txt_ctr = "";
         foreach ($cEncargados as $oUbi) {

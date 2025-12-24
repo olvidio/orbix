@@ -100,14 +100,14 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'ce_lugar';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
             $nom_param = _("lugar ce");
             $this->msg .= "<br><br>";
             $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
-            $this->msg .= "<br>". _("se puede poner una lista separada por comas");
+            $this->msg .= "<br>" . _("se puede poner una lista separada por comas");
             exit ($this->msg);
         } else {
             return $valor;
@@ -127,7 +127,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'region_latin';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
@@ -144,7 +144,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'vstgr';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
@@ -161,7 +161,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'lugar_firma';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
@@ -178,7 +178,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'dir_stgr';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
@@ -195,7 +195,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'ambito';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
@@ -212,7 +212,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'nota_corte';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
@@ -229,7 +229,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'nota_max';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
@@ -246,7 +246,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'caduca_cursada';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
         if (empty($valor)) {
@@ -263,7 +263,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'curso_stgr';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
 
@@ -277,7 +277,7 @@ class Config
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'curso_crt';
-        
+
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
 
@@ -303,7 +303,46 @@ class Config
         return $this->aCursoCrt;
     }
 
-        public function getMesFinStgr()
+    public function getDiaIniStgr():int
+    {
+        $aCursoStgr = $this->getCursoStgr();
+        if (empty($aCursoStgr['ini_dia'])) {
+            $nom_param = _("dia de ini stgr");
+            $this->msg .= "<br><br>";
+            $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
+            exit ($this->msg);
+        } else {
+            return (int)$aCursoStgr['ini_dia'];
+        }
+    }
+
+    public function getMesIniStgr():int
+    {
+        $aCursoStgr = $this->getCursoStgr();
+        if (empty($aCursoStgr['ini_mes'])) {
+            $nom_param = _("mes de ini stgr");
+            $this->msg .= "<br><br>";
+            $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
+            exit ($this->msg);
+        } else {
+            return (int)$aCursoStgr['ini_mes'];
+        }
+    }
+
+    public function getDiaFinStgr():int
+    {
+        $aCursoStgr = $this->getCursoStgr();
+        if (empty($aCursoStgr['fin_dia'])) {
+            $nom_param = _("dia de fin stgr");
+            $this->msg .= "<br><br>";
+            $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
+            exit ($this->msg);
+        } else {
+            return (int)$aCursoStgr['fin_dia'];
+        }
+    }
+
+    public function getMesFinStgr():int
     {
         $aCursoStgr = $this->getCursoStgr();
         if (empty($aCursoStgr['fin_mes'])) {
@@ -312,8 +351,64 @@ class Config
             $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
             exit ($this->msg);
         } else {
-            return $aCursoStgr['fin_mes'];
+            return (int)$aCursoStgr['fin_mes'];
         }
     }
+
+    public function getDiaIniCrt():int
+    {
+        $aCursoCrt = $this->getCursoCrt();
+        if (empty($aCursoCrt['ini_dia'])) {
+            $nom_param = _("dia de ini crt");
+            $this->msg .= "<br><br>";
+            $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
+            exit ($this->msg);
+        }
+
+        return (int)$aCursoCrt['ini_dia'];
+    }
+
+    public function getMesIniCrt():int
+    {
+        $aCursoCrt = $this->getCursoCrt();
+        if (empty($aCursoCrt['ini_mes'])) {
+            $nom_param = _("mes de ini crt");
+            $this->msg .= "<br><br>";
+            $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
+            exit ($this->msg);
+        }
+
+        return (int)$aCursoCrt['ini_mes'];
+
+    }
+
+    public function getDiaFinCrt():int
+    {
+        $aCursoCrt = $this->getCursoCrt();
+        if (empty($aCursoCrt['fin_dia'])) {
+            $nom_param = _("dia de fin crt");
+            $this->msg .= "<br><br>";
+            $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
+            exit ($this->msg);
+        }
+
+        return (int)$aCursoCrt['fin_dia'];
+
+    }
+
+    public function getMesFinCrt():int
+    {
+        $aCursoCrt = $this->getCursoCrt();
+        if (empty($aCursoCrt['fin_mes'])) {
+            $nom_param = _("mes de fin crt");
+            $this->msg .= "<br><br>";
+            $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
+            exit ($this->msg);
+        }
+
+        return (int)$aCursoCrt['fin_mes'];
+
+    }
+
 
 }

@@ -14,9 +14,11 @@ final class CentroId
 
     private function validate(int $value): void
     {
+        /* OJO: puede ser negativo para los de resto (ex)
         if ($value <= 0) {
             throw new \InvalidArgumentException('CentroId must be a positive integer');
         }
+        */
     }
 
     public function value(): int

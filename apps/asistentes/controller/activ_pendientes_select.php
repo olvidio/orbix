@@ -12,13 +12,14 @@
  *
  */
 
-use actividades\model\entity\GestorActividad;
-use asistentes\model\entity\GestorAsistente;
+
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\GestorPersonaN;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -48,14 +49,14 @@ switch ($any) {
         $chk_any_1 = "selected";
         $chk_any_2 = "";
         break;
-    case (date("Y") + 1):
+    case ((int)date("Y") + 1):
         $chk_any_1 = "";
         $chk_any_2 = "selected";
         break;
 }
 $any_real = date("Y");
 $txt_curso_1 = ($any_real - 1) . "/" . $any_real;
-$txt_curso_2 = ($any_real) . "/" . ($any_real + 1);
+$txt_curso_2 = ($any_real) . "/" . ((int)$any_real + 1);
 $txt_curso = ($any - 1) . "/" . $any;
 
 // tipo de personas
@@ -107,14 +108,14 @@ $aWhereA['id_tipo_activ'] = $id_tipo_activ;
 $aOperadorA['id_tipo_activ'] = '~';
 $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
 $aOperadorA['f_ini'] = 'BETWEEN';
-$GesActividades = new GestorActividad();
-$cActividades = $GesActividades->getActividades($aWhereA, $aOperadorA);
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+$cActividades = $ActividadRepository->getActividades($aWhereA, $aOperadorA);
 $aAsistentes = [];
+$AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $id_activ = $oActividad->getId_activ();
     // Asistentes:
-    $GesAsistentes = new GestorAsistente();
-    $cAsistentes = $GesAsistentes->getAsistentes(array('id_activ' => $id_activ, 'propio' => 't'));
+    $cAsistentes = $AsistenteRepository->getAsistentes(array('id_activ' => $id_activ, 'propio' => 't'));
     foreach ($cAsistentes as $oAsistente) {
         $aAsistentes[] = $oAsistente->getId_nom();
     }
@@ -122,18 +123,18 @@ foreach ($cActividades as $oActividad) {
 // Personas que deberían haber hecho la actividad:
 switch ($Qtipo_personas) {
     case "n":
-        $GesPersonas = new GestorPersonaN();
-        $cPersonas = $GesPersonas->getPersonas(array('situacion' => 'A', 'dl' => $mi_dele));
+        $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        $cPersonas = $PersonaNRepository->getPersonas(array('situacion' => 'A', 'dl' => $mi_dele));
         $obj_pau = 'PersonaN';
         break;
     case "agd":
-        $GesPersonas = new GestorPersonaAgd();
-        $cPersonas = $GesPersonas->getPersonas(array('situacion' => 'A', 'dl' => $mi_dele));
+        $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+        $cPersonas = $PersonaAgdRepository->getPersonas(array('situacion' => 'A', 'dl' => $mi_dele));
         $obj_pau = 'PersonaAgd';
         break;
     case "sacd":
-        $GesPersonas = new GestorPersonaDl();
-        $cPersonas = $GesPersonas->getPersonas(array('sacd' => 't', 'situacion' => 'A', 'dl' => $mi_dele));
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $cPersonas = $PersonaDlRepository->getPersonas(array('sacd' => 't', 'situacion' => 'A', 'dl' => $mi_dele));
         $obj_pau = 'PersonaDl';
         break;
 }
@@ -144,7 +145,7 @@ foreach ($cPersonas as $oPersona) {
     if (in_array($id_nomP, $aAsistentes)) continue;
     $ap_nom = $oPersona->getPrefApellidosNombre();
     $id_ubi = $oPersona->getId_ctr();
-    $nivel_stgr = $oPersona->getStgr();
+    $nivel_stgr = $oPersona->getNivel_stgr();
     if (!empty($ap_nom)) {
         $aFaltan[$ap_nom] = ['id_nom' => $id_nomP, 'id_ubi' => $id_ubi, 'nivel_stgr' => $nivel_stgr];
     }
@@ -189,17 +190,17 @@ $aWhere['dl'] = $mi_dele;
 $aOperador['dl'] = '!=';
 switch ($Qtipo_personas) {
     case "n":
-        $GesPersonas = new GestorPersonaN();
-        $cPersonasOtras = $GesPersonas->getPersonas($aWhere, $aOperador);
+        $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        $cPersonasOtras = $PersonaNRepository->getPersonas($aWhere, $aOperador);
         break;
     case "agd":
-        $GesPersonas = new GestorPersonaAgd();
-        $cPersonasOtras = $GesPersonas->getPersonas($aWhere, $aOperador);
+        $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+        $cPersonasOtras = $PersonaAgdRepository->getPersonas($aWhere, $aOperador);
         break;
     case "sacd":
         $aWhere['sacd'] = 't';
-        $GesPersonas = new GestorPersonaDl();
-        $cPersonasOtras = $GesPersonas->getPersonas($aWhere, $aOperador);
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $cPersonasOtras = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
         break;
 }
 
@@ -209,7 +210,7 @@ foreach ($cPersonasOtras as $oPersona) {
     if (in_array($id_nomP, $aAsistentes)) continue;
     $ap_nom = $oPersona->getPrefApellidosNombre();
     $id_ubi = $oPersona->getId_ctr();
-    $nivel_stgr = $oPersona->getStgr();
+    $nivel_stgr = $oPersona->getNivel_stgr();
     $aFaltanOtras[$ap_nom] = ['id_nom' => $id_nomP, 'id_ubi' => $id_ubi, 'nivel_stgr' => $nivel_stgr];
 }
 uksort($aFaltanOtras, "core\strsinacentocmp");

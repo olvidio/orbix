@@ -43,7 +43,7 @@ class ConverterDate
 
     public function fromPg()
     {
-        return $this->Converter->fromPg();
+        return $this->Converter->fromPg($this->type);
     }
 
     public function toCal()

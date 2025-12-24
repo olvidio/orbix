@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\GestorTipoDeActividad;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use function core\is_true;
 use procesos\model\entity\GestorActividadFase;
 
@@ -26,8 +26,8 @@ if (is_true($Qdl_propia)) {
 
 
 // buscar los procesos posibles para estos tipos de actividad
-$GesTiposActiv = new GestorTipoDeActividad();
-$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ, $dl_propia);
+$TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+$aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $dl_propia);
 $oGesFases = new GestorActividadFase();
 $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
 

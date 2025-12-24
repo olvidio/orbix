@@ -1,8 +1,8 @@
 <?php
 
-use actividades\model\entity\GestorTipoDeActividad;
-use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\entity\TipoDeActividad;
 use web\Hash;
 use web\Lista;
 use web\TiposActividades;
@@ -21,8 +21,8 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 switch ($Qque) {
     case 'lista':
         $aWhere = ['_ordre' => 'id_tipo_activ'];
-        $oGesTiposDeActividades = new GestorTipoDeActividad();
-        $cTiposDeActividades = $oGesTiposDeActividades->getTiposDeActividades($aWhere);
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $cTiposDeActividades = $TipoDeActividadRepository->getTiposDeActividades($aWhere);
 
         $a_cabeceras = [];
         $a_cabeceras[] = _("id_tipo_activ");
@@ -121,9 +121,11 @@ switch ($Qque) {
         if (strlen($id_tipo_activ) != 6) {
             echo _("Id incorrecto");
         }
-        $oTipoActividad = new TipoDeActividad($id_tipo_activ);
-        $oTipoActividad->setNombre($Qnom_tipo_activ);
-        if ($oTipoActividad->DBGuardar() === false) {
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $oTipoDeActividad = new TipoDeActividad();
+        $oTipoDeActividad->setId_tipo_activ($id_tipo_activ);
+        $oTipoDeActividad->setNombre($Qnom_tipo_activ);
+        if ($TipoDeActividadRepository->Guardar($oTipoDeActividad) === false) {
             echo _("hay un error, no se ha guardado");
         }
         if (ConfigGlobal::is_app_installed('procesos')) {
@@ -135,18 +137,19 @@ switch ($Qque) {
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qnom_tipo_activ = (string)filter_input(INPUT_POST, 'nom_tipo_activ');
 
-        $oTipoActividad = new TipoDeActividad($Qid_tipo_activ);
-        $oTipoActividad->DBCarregar();
-        $oTipoActividad->setNombre($Qnom_tipo_activ);
-        if ($oTipoActividad->DBGuardar() === false) {
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $oTipoDeActividad = $TipoDeActividadRepository->findById($Qid_tipo_activ);
+        $oTipoDeActividad->setNombre($Qnom_tipo_activ);
+        if ($TipoDeActividadRepository->Guardar($oTipoDeActividad) === false) {
             echo _("hay un error, no se ha guardado");
         }
         break;
     case "eliminar":
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
 
-        $oTipoActividad = new TipoDeActividad($Qid_tipo_activ);
-        if ($oTipoActividad->DBEliminar() === false) {
+        $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $oTipoDeActividad = $TipoDeActividadRepository->findById($Qid_tipo_activ);
+        if ($TipoDeActividadRepository->Eliminar($oTipoDeActividad) === false) {
             echo _("hay un error, no se ha eliminado");
         }
         break;

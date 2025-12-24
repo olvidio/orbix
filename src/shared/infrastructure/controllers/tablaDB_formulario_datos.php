@@ -11,7 +11,9 @@ $Qmod = filter_input(INPUT_POST, 'mod');
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info);
 $oInfoClase = new $obj();
-
+if (method_exists($oInfoClase, 'setObj_pau')) {
+    $oInfoClase->setObj_pau($Qobj_pau);
+}
 $oInfoClase->setMod($Qmod);
 $oInfoClase->setA_pkey($a_pkey);
 $oFicha = $oInfoClase->getFicha();

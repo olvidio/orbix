@@ -123,7 +123,7 @@ abstract class ClaseRepository
      * @param array $aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array $aOperators aOperators associate amb els valors dels operadors que cal aplicar a cada variable
      */
-    protected function getConjunt(array $a_Clases, string $namespace, array $aWhere, array $aOperators)
+    public function getConjunt(array $a_Clases, string $namespace, array $aWhere, array $aOperators)
     {
         $cClassesTot = [];
 
@@ -133,14 +133,14 @@ abstract class ClaseRepository
             unset($aWhere['_ordre']);
         }
         foreach ($a_Clases as $aClasse) {
-            $Classe = $aClasse['clase'];
+            $repoInterface = $aClasse['repo'];
+            $repoName = $repoInterface;
             $get = $aClasse['get'];
 
-            $a_ord[$Classe] = [];
-            $a_ord_cond[$Classe] = [];
-            $Gestor = $namespace . '\Gestor' . $Classe;
-            $oGesClasse = new $Gestor;
-            $cClasses = $oGesClasse->$get($aWhere, $aOperators);
+            $a_ord[$repoName] = [];
+            $a_ord_cond[$repoName] = [];
+            $Repository = $GLOBALS['container']->get($repoInterface);
+            $cClasses = $Repository->$get($aWhere, $aOperators);
             if (is_array($cClasses)) {
                 $cClassesTot = array_merge($cClassesTot, $cClasses);
             }

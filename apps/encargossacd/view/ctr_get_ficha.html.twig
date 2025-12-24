@@ -136,19 +136,6 @@
             </tr>
             {% endif %}
 
-            {#
-            if (strstr($tipo_centro,"cgi")) { //para el caso de los cgi
-                include_once("func_tareas.php"); // para saber $any1
-                $num_alum = '';
-                $oDatosCgi = new DatosCgi(array('id_ubi'=>$Qid_ubi,'curso_ini_any'=>$GLOBALS['any1']));
-                $num_alum = $oDatosCgi->getNum_alum($num_alum);
-                ?>
-                <tr><td>{{ "nº de alumnos"|trans|raw }}:</td>
-                <td colspan=2><input type=text name=num_alum value={{ num_alum }}></td></tr>
-                <?php
-            }
-            #}
-
             {% if perm_des %}
                 <tr>
                     <td colspan=5><input type="button" name="ok" onclick="fnjs_guardar({{ e }});"

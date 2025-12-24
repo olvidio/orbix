@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use function core\is_true;
 
 ?>
 <script>
@@ -30,9 +31,9 @@ use core\ConfigGlobal;
                     url: $(this).attr('action'),
                     data: $(this).serialize()
                 })
-                    .done(function (rta_txt) {
-                        if (rta_txt !== '' && rta_txt !== '\\n') {
-                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    .done(function (json) {
+                        if (json.success !== true) {
+                            alert('<?= _("respuesta") ?>: ' + json.mensaje);
                         } else {
                             <?= $oPosicion->js_atras(1); ?>
                         }
@@ -53,9 +54,9 @@ use core\ConfigGlobal;
                     type: 'post',
                     data: $(this).serialize()
                 })
-                    .done(function (rta_txt) {
-                        if (rta_txt !== '' && rta_txt !== '\\n') {
-                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    .done(function (json) {
+                        if (json.success !== true) {
+                            alert('<?= _("respuesta") ?>: ' + json.mensaje);
                         } else {
                             <?= $oPosicion->js_atras(1); ?>
                         }
@@ -98,7 +99,7 @@ if (!$nuevo) {
             </td>
         </tr>
         <tr>
-            <td><span class="etiqueta">Delegación</span></td>
+            <td><span class="etiqueta"><?= _("Delegación") ?></span></td>
             <td colspan=2>
                 <?= $oDesplDl->desplegable() ?>
             </td>
@@ -106,7 +107,7 @@ if (!$nuevo) {
             if (empty($id_nom) || empty($nom_ctr)){
             ?>
             <td>
-                Centro-sede:
+                <?= _("Centro-sede") ?>:
                 <?= $oDesplCentro->desplegable() ?>
                 <?php
                 } else {
@@ -125,58 +126,151 @@ if (!$nuevo) {
             </td>
         </tr>
         <tr>
-            <?php
-            echo web\dibujar_campo($obj, "trato", 7, 1, 0);
-            echo web\dibujar_campo($obj, "nom", 20, 1, 2);
-            echo "</tr><tr><td></td>";
-            echo web\dibujar_campo($obj, "apel_fam", 20, 1, 2);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "nx1", 7, 1, 0);
-            echo web\dibujar_campo($obj, "apellido1", 25, 1, 2);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "nx2", 7, 1, 0);
-            echo web\dibujar_campo($obj, "apellido2", 25, 1, 2);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "lugar_nacimiento", 15, 1, 1);
-            echo web\dibujar_campo($obj, "f_nacimiento", 11, 1, 0);
+            <td>
+                <span class="etiqueta"> <?= _("Trato") ?></span>
+                <input class="contenido" size=7 id="trato" name="trato" value="<?= $trato ?>">
+            </td>
 
-            echo "</tr><tr>";
-            ?>
-            <td><span class=etiqueta><?= ucfirst('situacion'); ?></span>
+            <td>
+                <span class="etiqueta"> <?= _("Nombre") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=20 id="nom" name="nom" value="<?= $nom ?>">
+            </td>
+
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <span class="etiqueta"> <?= _("Apelativo") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=20 id="apel_fam" name="apel_fam" value="<?= $apel_fam ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("nx1") ?></span>
+                <input class="contenido" size=7 id="nx1" name="nx1" value="<?= $nx1 ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Apellido") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=25 id="apellido1" name="apellido1" value="<?= $apellido1 ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("nx2") ?></span>
+                <input class="contenido" size=7 id="nx2" name="nx2" value="<?= $nx2 ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Segundo Apellido") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=25 id="apellido2" name="apellido2" value="<?= $apellido2 ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("Lugar de nacimiento") ?></span>
+            </td>
+            <td>
+                <input class="contenido" size=15 id="lugar_nacimiento" name="lugar_nacimiento"
+                       value="<?= $lugar_nacimiento ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Fecha Nacimiento") ?></span>
+                <input class="fecha contenido" size=11 id="f_nacimiento" name="f_nacimiento" value="<?= $f_nacimiento ?>">
+            </td>
+        </tr>
+        <tr>
+            <td><span class=etiqueta><?= ucfirst('situacion') ?></span>
             </td>
             <td colspan=2><?= $oDesplSituacion->desplegable() ?></td>
-            <?php
-            echo web\dibujar_campo($obj, "f_situacion", 11, 1, 0);
-            echo "</tr><tr>";
-            ?>
-            <td><span class=etiqueta><?= ucfirst('lengua'); ?></span>
+            <td>
+                <span class="etiqueta"> <?= _("Fecha situación") ?></span>
+                <input class="fecha contenido" size=11 id="f_situacion" name="f_situacion" value="<?= $f_situacion ?>">
+            </td>
+        </tr>
+        <tr>
+            <td><span class=etiqueta><?= ucfirst('Idioma preferido') ?></span>
             </td>
             <td colspan=2><?= $oDesplLengua->desplegable() ?></td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("Profesión") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=30 id="profesion" name="profesion" value="<?= $profesion ?>">
+            </td>
+        </tr>
+        <tr>
             <?php
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "profesion", 30, 1, 2);
-            echo "</tr><tr>";
-
             if (ConfigGlobal::mi_sfsv() == 1) {
-                echo web\dibujar_campo($obj, "sacd", 9, 1, 1);
+                ?>
+                <td>
+                    <span class="etiqueta"> <?= _("sacd") ?></span>
+                </td>
+                <td>
+                    <input class="contenido" id="sacd" name="sacd"
+                           type=checkbox <?= is_true($sacd) ? 'checked' : '' ?> >
+                </td>
+                <?php
             }
             ?>
-            <td><span class="etiqueta">Stgr&nbsp;</span>
+            <td><span class="etiqueta"><?= _("Stgr") ?></span>
                 <?= $oDesplStgr->desplegable() ?>
             </td>
+            <td colspan=2>
+                <span class="etiqueta"> <?= _("eap") ?></span>
+                <input class="contenido" size=20 id="eap" name="eap" value="<?= $eap ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("inc") ?></span>
+                <input class="contenido" size=5 id="inc" name="inc" value="<?= $inc ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Fecha inc") ?></span>
+            </td>
+            <td>
+                <input class="fecha contenido" size=11 id="f_inc" name="f_inc" value="<?= $f_inc ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("ce") ?></span>
+                <input class="contenido" size=2 id="ce" name="ce" value="<?= $ce ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Lugar ce") ?></span>
+            </td>
+            <td>
+                <input class="contenido" size=11 id="ce_lugar" name="ce_lugar" value="<?= $ce_lugar ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Año inicio ce") ?></span>
+                <input class="contenido" size=5 id="ce_ini" name="ce_ini" value="<?= $ce_ini ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Año fin ce") ?></span>
+                <input class="contenido" size=5 id="ce_fin" name="ce_fin" value="<?= $ce_fin ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("Observaciones") ?></span>
+            </td>
+            <td colspan='4'>
+                <input class="contenido" size=60 id="observ" name="observ" value="<?= $observ ?>">
+            </td>
+        </tr>
+        <tr>
             <?php
-            echo web\dibujar_campo($obj, "eap", 20, 2, 0);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "inc", 5, 1, 0);
-            echo web\dibujar_campo($obj, "f_inc", 11, 1, 1);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "ce", 2, 1, 0);
-            echo web\dibujar_campo($obj, "ce_lugar", 11, 1, 1);
-            echo web\dibujar_campo($obj, "ce_ini", 5, 1, 0);
-            echo web\dibujar_campo($obj, "ce_fin", 5, 1, 0);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "observ", 60, 1, 4);
-            echo "</tr><tr>";
             // -----------------------------------  Botones  ----------------------
             if (!empty($botones)) {
                 echo "<table><tr class=botones>";

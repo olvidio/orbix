@@ -1,10 +1,8 @@
 <?php
 
 use core\ViewTwig;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaN;
-use personas\model\entity\PersonaAgd;
-use personas\model\entity\PersonaN;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -61,33 +59,26 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 // no utilizo las búsquedas predefinidas, porque normalmente será una situación
 // de 'Baja', y por defecto se busca en 'Altas'
-$tipo_persona = 'n';
-$oPersonaOrg = new PersonaN($id_nom);
-$apellido1 = $oPersonaOrg->getApellido1();
-if (empty($apellido1)) {
+$PersonaRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+$oPersonaOrg = $PersonaRepository->findById($id_nom);
+if ($oPersonaOrg === null) {
     // será agd
-    $oPersonaOrg = new PersonaAgd($id_nom);
-    $tipo_persona = 'agd';
-    $apellido1 = $oPersonaOrg->getApellido1();
-    if (empty($apellido1)) {
-        $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+    $PersonaRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+    $oPersonaOrg = $PersonaRepository->findById($id_nom);
+    if ($oPersonaOrg === null) {
+        $msg_err = "<br>No existe una persona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         exit($msg_err);
     }
 }
+$apellido1 = $oPersonaOrg->getApellido1();
 
 $nom = $oPersonaOrg->getNombreApellidos();
 $apellido1 = $oPersonaOrg->getApellido1();
 
-if ($tipo_persona === 'n') {
-    $gesPersonas = new GestorPersonaAgd();
-}
-if ($tipo_persona === 'agd') {
-    $gesPersonas = new GestorPersonaN();
-}
 // no filtro por situación
 // si excluyo el origen
 $aWhere = ['apellido1' => $apellido1];
-$cPersonas = $gesPersonas->getPersonas($aWhere);
+$cPersonas = $PersonaRepository->getPersonas($aWhere);
 $a_posibles_personas = [];
 foreach ($cPersonas as $oPersona) {
     $id_nom_dst = $oPersona->getId_nom();

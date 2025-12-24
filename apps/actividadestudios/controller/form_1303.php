@@ -1,11 +1,11 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use actividadestudios\model\entity\Matricula;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorPersonaNotaDB;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
@@ -41,7 +41,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$oActividad = new ActividadAll($Qid_activ);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$oActividad = $ActividadAllRepository->findById($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);

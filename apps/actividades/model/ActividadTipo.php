@@ -4,6 +4,7 @@ namespace actividades\model;
 
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\actividades\domain\value_objects\StatusId;
 use web\Desplegable;
 use web\Hash;
 use web\TiposActividades;
@@ -38,7 +39,7 @@ class ActividadTipo
             $this->ssfsv = $aSfsv[$isfsv];
         }
         if (empty($this->status)) {
-            $this->status = entity\ActividadAll::STATUS_ACTUAL;
+            $this->status = StatusId::ACTUAL;
         }
 
         if (!empty($this->id_tipo_activ)) {
@@ -102,7 +103,7 @@ class ActividadTipo
             $array2 = array_merge($array2, $array_sg);
         }
         if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-            if ($this->status == entity\ActividadAll::STATUS_ACTUAL) {
+            if ($this->status === StatusId::ACTUAL) {
                 $array_des = $oTipoActiv->getAsistentesPosibles(); //todos
             } else {
                 $array_des = array(6 => 'sss+');

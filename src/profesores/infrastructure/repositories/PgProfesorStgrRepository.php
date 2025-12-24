@@ -12,6 +12,7 @@ use personas\model\entity\PersonaDl;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorStgr;
@@ -186,13 +187,14 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
 
     public function getArrayProfesoresDl(): array
     {
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $gesProfesores = $this->getProfesoresStgr(array('f_cese' => ''), array('f_cese' => 'IS NULL'));
         $aProfesores = [];
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = new PersonaDl($id_nom);
+            $oPersonaDl = $PersonaDlRepository->findById($id_nom);
             // comprobar situación
-            $situacion = $oPersonaDl->getSituacion();
+            $situacion = $oPersonaDl?->getSituacion();
             if ($situacion !== 'A') {
                 continue;
             }

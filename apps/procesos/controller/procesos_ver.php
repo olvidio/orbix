@@ -1,10 +1,11 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use core\ViewTwig;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadTarea;
 use procesos\model\entity\TareaProceso;
+use src\actividades\domain\entity\ActividadAll;
+use src\actividades\domain\value_objects\StatusId;
 use src\menus\domain\PermisoMenu;
 use web\Desplegable;
 use web\Hash;
@@ -28,15 +29,13 @@ $oPermMenus = new PermisoMenu;
 $aOpcionesOficinas = $oPermMenus->lista_array();
 $oDesplOficinas = new  Desplegable('id_of_responsable', $aOpcionesOficinas, '', true);
 
-
-$oActividad = new ActividadAll();
-$a_status = $oActividad->getArrayStatus();
+$a_status = StatusId::getArrayStatus();
 $dep_num = 0;
 $aDesplFasesPrevias = [];
 $aDesplTareasPrevias = [];
 $aMensajes_requisitos = [];
 // para el form
-if ($Qmod == 'editar') {
+if ($Qmod === 'editar') {
 
     $oTareaProceso = new TareaProceso(array('id_item' => $Qid_item));
     $status = $oTareaProceso->getStatus();
@@ -96,7 +95,7 @@ if ($Qmod == 'editar') {
         $aMensajes_requisitos[] = '';
     }
 }
-if ($Qmod == 'nuevo') {
+if ($Qmod === 'nuevo') {
     $status = '';
     $oDesplStatus = new Desplegable('status', $a_status, $status, true);
 

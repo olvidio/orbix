@@ -2,10 +2,10 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use encargossacd\model\EncargoFunciones;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoSacd;
-use personas\model\entity\PersonaDl;
+use src\encargossacd\application\traits\EncargoFunciones;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
@@ -47,15 +47,15 @@ $hoy_local = $oDateLocal->getFromLocal('.');
 $lugar_fecha = "$poblacion, $hoy_local";
 
 // primero selecciono los centros por tipos de ctr
-if ($Qctr_igl == 'ctr') {
-    if ($Qsf == 1) {
+if ($Qctr_igl === 'ctr') {
+    if ($Qsf === 1) {
         $tipos_de_ctr = array('n', 'a[jm$]', 's[jm]');
     } else {
         $tipos_de_ctr = array('n', 'a[jm$]', 's[jm]', 'ss');
     }
 }
 
-if ($Qctr_igl == 'igl') {
+if ($Qctr_igl === 'igl') {
     $tipos_de_ctr = array('ctr', 'igl', 'cgioc', '^cgi$');
 }
 
@@ -100,7 +100,7 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
     $aWhere['tipo_ctr'] = "^$tipo_ctr_que";
     $aOperador['tipo_ctr'] = '~';
     $aWhere['_ordre'] = 'nombre_ubi';
-    if ($Qctr_igl == 'ctr') {
+    if ($Qctr_igl === 'ctr') {
         if ($Qsf == 1) {
             $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
             $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
@@ -109,7 +109,7 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
             $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         }
     }
-    if ($Qctr_igl == 'igl') {
+    if ($Qctr_igl === 'igl') {
         $GesCentrosF = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $cCentrosF = $GesCentrosF->getCentros($aWhere, $aOperador);
         $GesCentrosV = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
@@ -120,6 +120,9 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
     $contador_ctr = 0;
     $actual_orden = '';
     //print_r($cCentros);
+    $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+    $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+    $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
     foreach ($cCentros as $oCentro) {
         $contador_ctr++;
         $id_ubi = $oCentro->getId_ubi();
@@ -143,11 +146,10 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
             $cargos[$id_nom]=$orden_cargo."#".$cargo;
         }
         */
-        $GesEncargo = new GestorEncargo();
         $aWhere = [];
         $aOperador = [];
         $aWhere['id_ubi'] = $id_ubi;
-        $cEncargos = $GesEncargo->getEncargos($aWhere, $aOperador);
+        $cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
         $sacds = [];
         $dedicacion_ctr = '';
         foreach ($cEncargos as $oEncargo) {
@@ -158,19 +160,18 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
             $sacd_titular = "";
             $sacd_suplente = "";
             $sacds_colaboradores = [];
-            $GesTareasSacd = new GestorEncargoSacd();
             $aWhereT['id_enc'] = $id_enc;
             $aWhereT['f_fin'] = 'null';
             $aOperadorT['f_fin'] = 'IS NULL';
             $aWhereT['_ordre'] = 'modo';
-            $cTareasSacd = $GesTareasSacd->getEncargosSacd($aWhereT, $aOperadorT);
+            $cTareasSacd = $EncargoSacdRepository->getEncargosSacd($aWhereT, $aOperadorT);
             $s = 0;
             $dedic_horas_ctr = 0;
             foreach ($cTareasSacd as $oTareaSacd) {
                 $s++;
                 $modo = $oTareaSacd->getModo();
                 $id_nom = $oTareaSacd->getId_nom();
-                $oPersona = new PersonaDl($id_nom);
+                $oPersona = $PersonaDlRepository->findById($id_nom);
                 $nom_ap = $oPersona->getNombreApellidosCrSin();
                 // para saber la dedicación
                 $dedicacion_txt = $oEncargoFunciones->dedicacion($id_nom, $id_enc);
@@ -179,7 +180,7 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
                 if (!empty($cargos[$id_nom])) {
                     $orden_cargo = strtok($cargos[$id_nom], "#");
                     $cargo = strtok("#");
-                    if ($cargo == "sacd") $cargo .= " cl";
+                    if ($cargo === "sacd") $cargo .= " cl";
                     if (!empty($dedicacion_txt)) {
                         $dedicacion_txt = $cargo . " " . $dedicacion_txt;
                     } else {
@@ -208,7 +209,7 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
                             default:
                                 $parentesis = _("capellán");
                         }
-                        if ($Qsf == 1) {
+                        if ($Qsf === 1) {
                             $sacd_titular = $nom_ap;
                         } else {
                             $sacd_titular = sprintf("%s (%s)", $nom_ap, $parentesis);

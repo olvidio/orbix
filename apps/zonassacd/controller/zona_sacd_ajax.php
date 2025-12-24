@@ -1,12 +1,12 @@
 <?php
 
 use core\ConfigGlobal;
-use personas\model\entity\GestorPersona;
-use personas\model\entity\Persona;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\entity\Persona;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
+use src\zonassacd\domain\entity\ZonaSacd;
 use web\Lista;
-use zonassacd\model\entity\GestorZonaSacd;
-use zonassacd\model\entity\Zona;
-use zonassacd\model\entity\ZonaSacd;
 use function core\is_true;
 
 /**
@@ -39,30 +39,27 @@ $Qacumular = (integer)filter_input(INPUT_POST, 'acumular');
 $QAsel = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $QAsel = empty($QAsel) ? [] : $QAsel;
 
+$PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+$ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
 switch ($Qque) {
     case 'get_lista':
         if ($Qid_zona === "no") { // los que no tienen ninguna zona asignada.
-            $GesSacd = new GestorPersona();
             // Para los de la dl y de_paso:
-            $aClases = [];
-            $aClases[] = array('clase' => 'PersonaDl', 'get' => 'getPersonasDl');
-            $aClases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
-            $GesSacd->setClases($aClases);
-
             $mi_dl = ConfigGlobal::mi_delef();
             $aWhere = [];
+            $aWhere['id_tabla'] = "'n','a','sssc','pa','pn'"; // -> creo que son todos los sacds TODO: quitar
+            $aOperador['id_tabla'] = 'IN';
             $aWhere['sacd'] = 't';
             $aWhere['situacion'] = 'A';
             $aWhere['dl'] = $mi_dl;
             $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-            $cSacds = $GesSacd->getPersonas($aWhere);
+            $cSacds = $PersonaSacdRepository->getPersonas($aWhere);
             $i = 0;
             $a_valores = [];
             foreach ($cSacds as $oPersona) {
                 $id_nom = $oPersona->getId_nom();
                 $ap_nom = $oPersona->getPrefApellidosNombre();
-                $GesZonasSacd = new GestorZonaSacd();
-                $cZonaSacd = $GesZonasSacd->getZonasSacds(array('id_nom' => $id_nom));
+                $cZonaSacd = $ZonaSacdRepository->getZonasSacds(array('id_nom' => $id_nom));
                 $a_zonas = [];
                 if (is_array($cZonaSacd) && count($cZonaSacd) < 1) {
                     $a_valores[$i]['sel'] = $id_nom;
@@ -75,16 +72,16 @@ switch ($Qque) {
             $aWhere = [];
             $aWhere['id_zona'] = $Qid_zona;
             $aOperador = [];
-            $oZona = new Zona($Qid_zona);
+            $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+            $oZona = $ZonaRepository->findById($Qid_zona);
             $nombre_zona = $oZona->getNombre_zona();
-            $GesZonasSacd = new GestorZonaSacd();
-            $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
+            $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
             $a_sacds = [];
             $a_valores = [];
             $i = 0;
             foreach ($cZonaSacd as $oZonaSacd) {
                 $id_nom = $oZonaSacd->getId_nom();
-                $oPersona = Persona::NewPersona($id_nom);
+                $oPersona = Persona::findPersonaEnGlobal($id_nom);
                 // Ahora todos, para poder borrar a los que se han ido.
                 // if ($oPersona->getSituacion() != 'A') { continue; }
                 // if ($oPersona->getDl() != ConfigGlobal::mi_delef()) { continue; }
@@ -131,30 +128,25 @@ switch ($Qque) {
         echo $oTabla->mostrar_tabla();
         break;
     case 'get_lista_tot':
-        $GesSacd = new GestorPersona();
         // Para los de la dl y de_paso:
-        $aClases = [];
-        $aClases[] = array('clase' => 'PersonaDl', 'get' => 'getPersonasDl');
-        $aClases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
-        $GesSacd->setClases($aClases);
-
         $mi_dl = ConfigGlobal::mi_delef();
+        // -> creo que son todos los sacds No filtro
         $aWhere = [];
         $aWhere['sacd'] = 't';
         $aWhere['dl'] = $mi_dl;
         $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-        $cSacds = $GesSacd->getPersonas($aWhere);
+        $cSacds = $PersonaSacdRepository->getPersonas($aWhere);
         $i = 0;
+        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
         foreach ($cSacds as $oPersona) {
             $id_nom = $oPersona->getId_nom();
             $ap_nom = $oPersona->getPrefApellidosNombre();
-            $GesZonasSacd = new GestorZonaSacd();
-            $cZonaSacd = $GesZonasSacd->getZonasSacds(array('id_nom' => $id_nom));
+            $cZonaSacd = $ZonaSacdRepository->getZonasSacds(array('id_nom' => $id_nom));
             $a_zonas = [];
             foreach ($cZonaSacd as $oZonaSacd) {
                 $id_zona = $oZonaSacd->getId_zona();
                 $propia = $oZonaSacd->getPropia();
-                $oZona = new Zona($id_zona);
+                $oZona = $ZonaRepository->findById($id_zona);
                 $nombre_zona = $oZona->getNombre_zona();
                 if ($propia === true) {
                     $orden = 0;
@@ -197,8 +189,7 @@ switch ($Qque) {
                 if ($Qacumular === 2) {
                     if (empty($id_zona_new)) {
                         $aWhere = ['id_nom' => $id_nom, 'id_zona' => $Qid_zona];
-                        $GesZonasSacd = new GestorZonaSacd();
-                        $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+                        $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
                         if (!empty($cZonaSacd)) {
                             $oZonaSacd = $cZonaSacd[0];
                             if ($oZonaSacd->DBEliminar() === false) {
@@ -208,42 +199,43 @@ switch ($Qque) {
                         }
                     } else {
                         $aWhere = ['id_nom' => $id_nom, 'id_zona' => $id_zona_new];
-                        $GesZonasSacd = new GestorZonaSacd();
-                        $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+                        $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
                         if (!empty($cZonaSacd)) {
                             $oZonaSacd = $cZonaSacd[0];
-                            $oZonaSacd->DBCarregar();
                             $oZonaSacd->setPropia('f');
-                            if ($oZonaSacd->DBGuardar() === false) {
+                            if ($ZonaSacdRepository->Guardar($oZonaSacd) === false) {
                                 echo _("hay un error, no se ha guardado");
-                                echo "\n" . $oZonaSacd->getErrorTxt();
+                                echo "\n" . $ZonaSacdRepository->getErrorTxt();
                             }
                         } else {
+                            $newId_item = $ZonaSacdRepository->getNewId();
                             $oZonaSacd = new ZonaSacd();
+                            $oZonaSacd->setId_item($newId_item);
                             $oZonaSacd->setId_nom($id_nom);
                             $oZonaSacd->setId_zona($id_zona_new);
                             $oZonaSacd->setPropia('f');
-                            if ($oZonaSacd->DBGuardar() === false) {
+                            if ($ZonaSacdRepository->Guardar($oZonaSacd) === false) {
                                 echo _("hay un error, no se ha guardado");
-                                echo "\n" . $oZonaSacd->getErrorTxt();
+                                echo "\n" . $ZonaSacdRepository->getErrorTxt();
                             }
                         }
                     }
                 } else {
                     // Si el id_zona es 0, son nuevos: hay que hacer insert.
                     if ($Qid_zona === 'no' || $Qid_zona == 0) {
+                        $newId_item = $ZonaSacdRepository->getNewId();
                         $oZonaSacd = new ZonaSacd();
+                        $oZonaSacd->setId_item($newId_item);
                         $oZonaSacd->setId_nom($id_nom);
                         $oZonaSacd->setId_zona($id_zona_new);
                         $oZonaSacd->setPropia('t');
-                        if ($oZonaSacd->DBGuardar() === false) {
+                        if ($ZonaSacdRepository->Guardar($oZonaSacd) === false) {
                             echo _("hay un error, no se ha guardado");
-                            echo "\n" . $oZonaSacd->getErrorTxt();
+                            echo "\n" . $ZonaSacdRepository->getErrorTxt();
                         }
                     } elseif (empty($id_zona_new)) {
                         $aWhere = ['id_nom' => $id_nom, 'id_zona' => $Qid_zona];
-                        $GesZonasSacd = new GestorZonaSacd();
-                        $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+                        $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
                         if (!empty($cZonaSacd)) {
                             $oZonaSacd = $cZonaSacd[0];
                             if ($oZonaSacd->DBEliminar() === false) {
@@ -253,16 +245,14 @@ switch ($Qque) {
                         }
                     } else {
                         $aWhere = ['id_nom' => $id_nom, 'id_zona' => $Qid_zona];
-                        $GesZonasSacd = new GestorZonaSacd();
-                        $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+                        $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
                         if (!empty($cZonaSacd)) {
                             $oZonaSacd = $cZonaSacd[0];
-                            $oZonaSacd->DBCarregar();
                             $oZonaSacd->setId_zona($id_zona_new);
                             $oZonaSacd->setPropia('t');
-                            if ($oZonaSacd->DBGuardar() === false) {
+                            if ($ZonaSacdRepository->Guardar($oZonaSacd) === false) {
                                 echo _("hay un error, no se ha guardado");
-                                echo "\n" . $oZonaSacd->getErrorTxt();
+                                echo "\n" . $ZonaSacdRepository->getErrorTxt();
                             }
                         }
                     }

@@ -1,10 +1,9 @@
 <?php
 
 use core\ViewTwig;
-use encargossacd\model\EncargoConstants;
-use encargossacd\model\entity\EncargoHorario;
-use encargossacd\model\entity\GestorEncargoHorarioExcepcion;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\application\traits\EncargoFunciones;
+use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
+use src\encargossacd\domain\EncargoConstants;
 use web\Desplegable;
 use web\Hash;
 
@@ -37,12 +36,13 @@ $Qorigen = (string)filter_input(INPUT_POST, 'origen');
 $Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
 $Qdesc_enc = urldecode($Qdesc_enc);
 
+$EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
 if ($Qmod !== 'nuevo') { //significa que no es nuevo
     $id_item_h = (integer)filter_input(INPUT_POST, 'id_item_h');
     if (!empty($_POST['sel'])) { //vengo de un checkbox
         $id_item_h = strtok($_POST['sel'][0], "#");
     }
-    $EncargoHorario = new EncargoHorario($id_item_h);
+    $EncargoHorario = $EncargoHorarioRepository->findBYId($id_item_h);
     $f_ini = $EncargoHorario->getF_ini() === null ? '' : $EncargoHorario->getF_ini()->getFromLocal();
     $f_fin = $EncargoHorario->getF_fin() === null ? '' : $EncargoHorario->getF_fin()->getFromLocal();
     $dia_ref = $EncargoHorario->getDia_ref();
@@ -69,8 +69,8 @@ if ($Qmod !== 'nuevo') { //significa que no es nuevo
 
 $titulo = _("horario de") . ": " . $Qdesc_enc;
 
-$oGesEncagoTipo = new GestorEncargoTipo();
-$dia = $oGesEncagoTipo->calcular_dia($mas_menos, $dia_ref, $dia_inc);
+$oEncargoFunciones = new EncargoFunciones();
+$dia = $oEncargoFunciones->calcular_dia($mas_menos, $dia_ref, $dia_inc);
 $opciones_dia_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
 $oDesplDia = new Desplegable();
 $oDesplDia->setNombre('dia');
@@ -101,19 +101,6 @@ $oDesplRef->setNombre('dia_ref');
 $oDesplRef->setBlanco('t');
 $oDesplRef->setOpciones($op_dia_ref);
 $oDesplRef->setOpcion_sel($dia_ref);
-
-// miro si tienen excepciones:
-if (!empty($id_item_h)) {
-    $GesEncargoHorarioExcepcion = new GestorEncargoHorarioExcepcion();
-    $cEncargoHorarioExcepcion = $GesEncargoHorarioExcepcion->getEncargoHorarioExcepciones(['id_item_h' => $id_item_h]);
-    if (empty($cEncargoHorarioExcepcion)) {
-        //echo "<input TYPE=\"button\" VALUE=\"".ucfirst(_("generar excepciones"))."\" onclick=\"javascript:fnjs_guardar(3)\"> ";
-        //echo "</form>";
-    } else {
-        //echo "</form>";
-        //include("horario_excepcion_select.php");
-    }
-}
 
 $url_actualizar = 'apps/encargossacd/controller/encargo_ver.php';
 $oHash = new Hash();

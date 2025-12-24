@@ -2,6 +2,7 @@
 
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\Lista;
 use zonassacd\model\entity\Zona;
 
@@ -81,6 +82,7 @@ switch ($Qque) {
 
         $i = 0;
         $a_valores = [];
+        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
         foreach ($cCentros as $oCentro) {
             $i++;
             $id_ubi = "{$oCentro->getId_ubi()}"; // Para que lo coja como un string.
@@ -92,7 +94,7 @@ switch ($Qque) {
                 }
             }
             $id_zona = $oCentro->getId_zona();
-            $oZona = new Zona($id_zona);
+            $oZona = $ZonaRepository->findById($id_zona);
             $a_valores[$i]['sel'] = $id_ubi;
             $a_valores[$i][1] = $oCentro->getNombre_ubi();
             $a_valores[$i][2] = $oZona->getNombre_zona();

@@ -1,6 +1,13 @@
 <?php
 
 use core\ViewPhtml;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 
@@ -42,33 +49,28 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
-$obj = 'personas\\model\\entity\\' . $Qobj_pau;
-$oPersona = new $obj($id_nom);
-$id_tabla = $oPersona->getId_tabla();
 
-if (!empty($id_tabla)) {
-    switch ($id_tabla) {
-        case "n":
-            $Qobj_pau = "PersonaN";
-            break;
-        case "x":
-            $Qobj_pau = "PersonaNax";
-            break;
-        case "a":
-            $Qobj_pau = "PersonaAgd";
-            break;
-        case "s":
-            $Qobj_pau = "PersonaS";
-            break;
-        case "sssc":
-            $Qobj_pau = "PersonaSSSC";
-            break;
-        case "pn":
-        case "pa":
-        case "psssc":
-            $Qobj_pau = "PersonaEx";
-            break;
-    }
+switch ($Qobj_pau) {
+    case 'PersonaN':
+        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        break;
+    case 'PersonaNax':
+        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+        break;
+    case 'PersonaAgd':
+        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+        break;
+    case 'PersonaS':
+        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+        break;
+    case 'PersonaSSSC':
+        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+        break;
+    case 'PersonaEx':
+        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+        break;
+    default:
+        echo "No existe la clase de la persona";
 }
 
 // Si vengo de planning_select u otros, puede que la tabla sea más genérica (p_de_casa) y no sepa como resolver algunas cosas.
@@ -88,21 +90,17 @@ $select_sssc = "";
 $select_de_paso = "";
 $from = "";
 
-// según sean numerarios...
-$obj = 'personas\\model\\entity\\' . $Qobj_pau;
-$oPersona = new $obj($id_nom);
-
-
+$oPersona = $repoPersona->findById($id_nom);
 $nom = $oPersona->getNombreApellidos();
 $dl = $oPersona->getDl();
-$lengua = $oPersona->getLengua();
+$lengua = $oPersona->getIdioma_preferido();
 $f_nacimiento = $oPersona->getF_nacimiento()->getFromLocal();
 $santo = '';
 $celebra = '';
 $situacion = $oPersona->getSituacion();
 $f_situacion = $oPersona->getF_situacion()->getFromLocal();
 $profesion = $oPersona->getProfesion();
-$stgr = $oPersona->getStgr();
+$stgr = $oPersona->getNivel_stgr();
 if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {
     $id_ctr = $oPersona->getId_ctr();
     $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
@@ -120,16 +118,17 @@ $godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_bui
 
 $titulo = $nom;
 
+$telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
 $telfs = '';
-$telfs_fijo = $oPersona->telecos_persona($id_nom, "telf", " / ", "*");
-$telfs_movil = $oPersona->telecos_persona($id_nom, "móvil", " / ", "*");
+$telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, 'telf', " / ", "*");
+$telfs_movil = $telecoService->getTelecosPorTipo($id_nom, 'móvil', " / ", "*");
 if (!empty($telfs_fijo) && !empty($telfs_movil)) {
     $telfs = $telfs_fijo . " / " . $telfs_movil;
 } else {
     $telfs .= $telfs_fijo ?? '';
     $telfs .= $telfs_movil ?? '';
 }
-$mails = $oPersona->telecos_persona($id_nom, "e-mail", " / ", "*");
+$mails = $telecoService->getTelecosPorTipo($id_nom, 'e-mail', " / ", "*");
 
 
 $a_campos = [

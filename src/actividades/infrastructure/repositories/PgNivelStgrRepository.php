@@ -33,6 +33,61 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         $this->setNomTabla('xa_nivel_stgr');
     }
 
+    public function getArrayNiveleStgrCa(): array
+    {
+        /* de facto lo que hay: (habría que añadir un campo para indicar si cursa o no
+            1	Bienio	b
+            2	Cuadrienio Año I	c1
+            3	Cuadrienio Año II-IV	c2
+            4	Repaso	r
+            5	centro estudios	ce
+            6	Baja temporal	t
+            7	ap, pa, o ad
+            9	sin estudios	n
+            10	est. Ecles.
+            11	bienio-cuadrienio	bc
+        */
+        $aOpciones = $this->getArrayNivelesStgrBreve();
+        $claves_a_mantener = [1, 2, 3];
+
+        // array_intersect_key devuelve un array que contiene todas las entradas de $aOpciones
+        // cuyas claves están presentes en $claves_a_mantener.
+        return array_intersect_key($aOpciones, $claves_a_mantener);
+    }
+
+    public function getArrayIdNiveleStgrActivo(): array
+    {
+        /* de facto lo que hay: (habría que añadir un campo para indicar si cursa o no
+            1	Bienio	b
+            2	Cuadrienio Año I	c1
+            3	Cuadrienio Año II-IV	c2
+            4	Repaso	r
+            5	centro estudios	ce
+            6	Baja temporal	t
+            7	ap, pa, o ad
+            9	sin estudios	n
+            10	est. Ecles.
+            11	bienio-cuadrienio	bc
+        */
+        return [1, 2, 3, 4, 5, 11];
+    }
+
+    public function getArrayNivelesStgrBreve(): array
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+
+        $sQuery = "SELECT nivel_stgr,desc_breve FROM $nom_tabla ORDER BY orden";
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $aOpciones = [];
+        foreach ($stmt as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
+        }
+        return $aOpciones;
+    }
+
     public function getArrayNivelesStgr(): array
     {
         $oDbl = $this->getoDbl_Select();

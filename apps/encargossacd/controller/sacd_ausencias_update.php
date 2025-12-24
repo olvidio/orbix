@@ -1,9 +1,9 @@
 <?php
 
-use core\ConfigGlobal;
-use encargossacd\model\entity\EncargoSacd;
-use encargossacd\model\entity\EncargoSacdHorario;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
+use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\encargossacd\domain\entity\EncargoSacd;
+use src\encargossacd\domain\entity\EncargoSacdHorario;
 
 /**
  * Esta página actualiza la base de datos de los encargos del sacd (ausencias).
@@ -27,32 +27,33 @@ require_once("apps/core/global_object.inc");
 
 function modifica_sacd_ausencias($id_item, $id_enc, $id_nom, $f_ini, $f_fin)
 {
-    $oEncargoSacd = new EncargoSacd($id_item);
+    $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+    $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
+
+    $oEncargoSacd = $EncargoSacdRepository->findById($id_item);
+
     if (empty($f_ini) && empty($f_fin)) {
-        if ($oEncargoSacd->DBEliminar() === false) {
+        if ($EncargoSacdRepository->Eliminar($oEncargoSacd) === false) {
             echo _("hay un error, no se ha eliminado");
-            echo "\n" . $oEncargoSacd->getErrorTxt();
+            echo "\n" . $EncargoSacdRepository->getErrorTxt();
         }
     } else {
-        $oEncargoSacd->DBCarregar();
         $oEncargoSacd->setF_ini($f_ini);
         $oEncargoSacd->setF_fin($f_fin);
-        if ($oEncargoSacd->DBGuardar() === false) {
+        if ($EncargoSacdRepository->Guardar($oEncargoSacd) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oEncargoSacd->getErrorTxt();
+            echo "\n" . $EncargoSacdRepository->getErrorTxt();
         }
         $aWhere = [
             'id_enc' => $id_enc,
             'id_nom' => $id_nom,
             'id_item_tarea_sacd' => $id_item,
         ];
-        $gesHorario = new GestorEncargoSacdHorario();
-        $cHorario = $gesHorario->getEncargoSacdHorarios($aWhere);
+        $cHorario = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhere);
         foreach ($cHorario as $oHorario) {
-            $oHorario->DBCarregar();
             $oHorario->setF_ini($f_ini);
             $oHorario->setF_fin($f_fin);
-            if ($oHorario->DBGuardar() === false) {
+            if ($EncargoSacdHorarioRepository->Guardar($oHorario) === false) {
                 echo _("hay un error, no se ha guardado");
                 echo "\n" . $oHorario->getErrorTxt();
             }
@@ -62,26 +63,36 @@ function modifica_sacd_ausencias($id_item, $id_enc, $id_nom, $f_ini, $f_fin)
 
 function insert_sacd_ausencias($id_enc, $id_nom, $modo, $f_ini, $f_fin)
 {
+    $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+    $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
+
+    $newId = $EncargoSacdRepository->getNewId();
     $oEncargoSacd = new EncargoSacd();
+    $oEncargoSacd->setId_item($newId);
     $oEncargoSacd->setId_enc($id_enc);
     $oEncargoSacd->setId_nom($id_nom);
     $oEncargoSacd->setModo($modo);
     $oEncargoSacd->setF_ini($f_ini);
     $oEncargoSacd->setF_fin($f_fin);
-    if ($oEncargoSacd->DBGuardar() === false) {
+    if ($EncargoSacdRepository->Guardar($oEncargoSacd) === false) {
         echo _("hay un error, no se ha guardado");
-        echo "\n" . $oEncargoSacd->getErrorTxt();
+        echo "\n" . $EncargoSacdRepository->getErrorTxt();
     }
     $id_item_tarea_sacd = $oEncargoSacd->getId_item();
-    $oHorario = new EncargoSacdHorario();
+    $oHorario = $EncargoSacdHorarioRepository->findById($id_item_tarea_sacd);
+    if ($oHorario === null) {
+        $newId = $EncargoSacdHorarioRepository->getNewId();
+        $oHorario = new EncargoSacdHorario();
+        $oHorario->setId_item($newId);
+    }
     $oHorario->setId_item_tarea_sacd($id_item_tarea_sacd);
     $oHorario->setId_enc($id_enc);
     $oHorario->setId_nom($id_nom);
     $oHorario->setF_ini($f_ini);
     $oHorario->setF_fin($f_fin);
-    if ($oHorario->DBGuardar() === false) {
+    if ($EncargoSacdHorarioRepository->Guardar($oHorario) === false) {
         echo _("hay un error, no se ha guardado");
-        echo "\n" . $oHorario->getErrorTxt();
+        echo "\n" . $EncargoSacdHorarioRepository->getErrorTxt();
     }
 }
 

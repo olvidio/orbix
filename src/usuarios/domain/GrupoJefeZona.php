@@ -3,11 +3,13 @@
 namespace src\usuarios\domain;
 
 use src\menus\domain\PermisoMenu;
+use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\entity\UsuarioGrupo;
-use zonassacd\model\entity\GestorZona;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 class GrupoJefeZona
 {
@@ -91,8 +93,8 @@ class GrupoJefeZona
 
     private function arrayJefesZona()
     {
-        $gesZonas = new GestorZona();
-        $cZonas = $gesZonas->getZonas();
+        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+        $cZonas = $ZonaRepository->getZonas();
         $a_jefes_zona = [];
         foreach ($cZonas as $oZona) {
             if (!empty($oZona->getId_nom())) {

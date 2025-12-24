@@ -10,7 +10,7 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-use personas\model\entity\GestorPersonaS;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Lista;
 
@@ -22,10 +22,10 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //Para los centros de la dlb
-$CentroReposiory = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-$cCentros = $CentroReposiory->getCentros(array('tipo_ctr' => '^s[^s]', 'status' => 't', '_ordre' => 'nombre_ubi'), array('tipo_ctr' => '~'));
+$CentroRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+$cCentros = $CentroRepository->getCentros(array('tipo_ctr' => '^s[^s]', 'status' => 't', '_ordre' => 'nombre_ubi'), array('tipo_ctr' => '~'));
 
-$GesPersonas = new GestorPersonaS();
+$PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
 $num_total_s = 0;
 $a_valores = [];
 $i = 0;
@@ -33,7 +33,7 @@ foreach ($cCentros as $oCentro) {
     $i++;
     $id_ubi = $oCentro->getId_ubi();
     $nombre_ubi = $oCentro->getNombre_ubi();
-    $cPersonasCtr = $GesPersonas->getPersonasDl(array('id_ctr' => $id_ubi, 'situacion' => 'A'));
+    $cPersonasCtr = $PersonaSRepository->getPersonasDl(array('id_ctr' => $id_ubi, 'situacion' => 'A'));
     if ($cPersonasCtr === false) exit(_('error'));
     $num_s = count($cPersonasCtr);
     $num_total_s += $num_s;

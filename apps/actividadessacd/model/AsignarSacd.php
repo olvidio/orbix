@@ -2,13 +2,13 @@
 
 namespace actividadessacd\model;
 
-use actividadcargos\model\entity\ActividadCargo;
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\GestorActividadDl;
-use actividadescentro\model\entity\GestorCentroEncargado;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoSacd;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividadcargos\domain\entity\ActividadCargo;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 
 class AsignarSacd
 {
@@ -49,8 +49,8 @@ class AsignarSacd
         $aOperador['f_ini'] = '>';
         $aWhere['status'] = 2;
 
-        $oGesActividades = new GestorActividadDl();
-        $this->a_actividades = $oGesActividades->getArrayIdsWithKeyFini($aWhere, $aOperador);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $this->a_actividades = $ActividadDlRepository->getArrayIdsWithKeyFini($aWhere, $aOperador);
 
         return $this->a_actividades;
     }
@@ -59,11 +59,11 @@ class AsignarSacd
     {
         $a_actividades = $this->a_actividades;
         $a_ctr = [];
-        $oGesCentroEncargado = new GestorCentroEncargado();
+        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
         foreach ($a_actividades as $id_activ) {
-            $cCetrosEncargados = $oGesCentroEncargado->getCentrosEncargados(['id_activ' => $id_activ, 'num_orden' => 0]);
+            $cCetrosEncargados = $CentroEncargadoRepository->getCentrosEncargados(['id_activ' => $id_activ, 'num_orden' => 0]);
             // sólo debería haber uno
-            if (count($cCetrosEncargados) == 1) {
+            if (count($cCetrosEncargados) === 1) {
                 $oCentroEncargado = $cCetrosEncargados[0];
                 $a_ctr[$id_activ] = $oCentroEncargado->getId_ubi();
             }
@@ -78,18 +78,18 @@ class AsignarSacd
         if (empty($this->a_ctr_sacd)) {
             // tipo encargo: 1100 atn ctr sv, 1200 atn ctr sf
             $a_ctr_sacd = [];
+            $EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+            $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 
             $aWhere = [];
             $aOperador = [];
-            $oGesEncargos = new GestorEncargo();
             $aWhere['id_tipo_enc'] = '^1[12]00';
             $aOperador['id_tipo_enc'] = '~';
-            $cEncargos = $oGesEncargos->getEncargos($aWhere, $aOperador);
+            $cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
             foreach ($cEncargos as $oEncargo) {
                 $id_enc = $oEncargo->getId_enc();
                 $id_ubi = $oEncargo->getId_ubi();
 
-                $oGesEncargosSacd = new GestorEncargoSacd();
                 $aWhereS = [];
                 $aOperadorS = [];
                 $aWhereS['id_enc'] = $id_enc;
@@ -97,7 +97,7 @@ class AsignarSacd
                 $aOperadorS['f_fin'] = 'IS NULL';
                 $aWhereS['modo'] = '2|3';
                 $aOperadorS['modo'] = '~';
-                $cEncargosSacd = $oGesEncargosSacd->getEncargosSacd($aWhereS, $aOperadorS);
+                $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhereS, $aOperadorS);
                 foreach ($cEncargosSacd as $oEncargoSacd) {
                     $id_nom = $oEncargoSacd->getId_nom();
                     $a_ctr_sacd[$id_ubi] = $id_nom;
@@ -130,11 +130,11 @@ class AsignarSacd
         $aOperador['id_cargo'] = 'IN';
 
         $a_sin_sacd = [];
-        $oGesActividadCargo = new GestorActividadCargo();
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
         $a_actividades = $this->a_actividades;
         foreach ($a_actividades as $id_activ) {
             $aWhere['id_activ'] = $id_activ;
-            $cActividadCargo = $oGesActividadCargo->getActividadCargos($aWhere, $aOperador);
+            $cActividadCargo = $ActividadCargoRepository->getActividadCargos($aWhere, $aOperador);
             // me interesa los que no tienen asignado a nadie:
             if (count($cActividadCargo) == 0) {
                 $a_sin_sacd[] = $id_activ;
@@ -179,12 +179,15 @@ class AsignarSacd
         $a_ctr_sacd = $this->selCtrSacd();
         if (!empty($a_ctr_sacd[$id_ubi])) {
             $id_nom = $a_ctr_sacd[$id_ubi];
+            $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+            $newIdItem = $ActividadCargoRepository->getNewId();
             $oActividadcargo = new ActividadCargo();
+            $oActividadcargo->setId_item($newIdItem);
             $oActividadcargo->setId_activ($id_activ);
             $oActividadcargo->setId_cargo($id_cargo);
             $oActividadcargo->setId_nom($id_nom);
             $oActividadcargo->setObserv('auto');
-            $oActividadcargo->DBGuardar();
+            $ActividadCargoRepository->Guardar($oActividadcargo);
             $n = 1;
         } else {
             $n = 0;

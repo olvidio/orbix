@@ -273,6 +273,7 @@ class ProfesorDirector
     {
         $oProfesorDirectorSet = new Set();
 
+        $oProfesorDirectorSet->add($this->getDatosId_nom());
         $oProfesorDirectorSet->add($this->getDatosId_departamento());
         $oProfesorDirectorSet->add($this->getDatosEscrito_nombramiento());
         $oProfesorDirectorSet->add($this->getDatosF_nombramiento());
@@ -280,7 +281,17 @@ class ProfesorDirector
         $oProfesorDirectorSet->add($this->getDatosF_cese());
         return $oProfesorDirectorSet->getTot();
     }
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
 
+        return $oDatosCampo;
+    }
     function getDatosId_departamento(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();

@@ -2,7 +2,7 @@
 namespace dossiers\model;
 
 use core\ConfigGlobal;
-use personas\model\entity\Persona;
+use src\personas\domain\entity\Persona;
 use web\TiposActividades;
 use function core\is_true;
 
@@ -51,9 +51,9 @@ class PermDossier
 
         if (is_true($depende) && $rta == 3 && $pau === "p") {
             // busco el id_tabla para saber de quién se trata y ver si es de mi oficina.
-            $oPersona = Persona::NewPersona($id_pau);
+            $oPersona = Persona::findPersonaEnGlobal($id_pau);
             if (!is_object($oPersona)) {
-                $msg_err = "<br>$oPersona con id_nom: $id_pau en  " . __FILE__ . ": line " . __LINE__;
+                $msg_err = "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ": line " . __LINE__;
                 exit($msg_err);
             }
             $id_tabla = $oPersona->getId_tabla();

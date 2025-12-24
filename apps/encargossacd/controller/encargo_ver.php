@@ -2,14 +2,14 @@
 
 use core\ViewTwig;
 use encargossacd\model\DesplCentros;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
-use zonassacd\model\entity\GestorZona;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -104,12 +104,16 @@ if ($Qgrupo == 8) {
 }
 
 $idioma_enc = '';
+
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+
 if (empty($Qque) || $Qque === 'editar') { //significa que no es nuevo
     if (!empty($_POST['sel'])) { //vengo de un checkbox
         $Qid_enc = strtok($_POST['sel'][0], "#");
     }
 
-    $oEncargo = new Encargo($Qid_enc);
+    $oEncargo = $EncargoRepository->findById($Qid_enc);
     $Qid_ubi = $oEncargo->getId_ubi();
     $Qid_zona = $oEncargo->getId_zona();
     $Qid_tipo_enc = $oEncargo->getId_tipo_enc();
@@ -123,23 +127,22 @@ if (empty($Qque) || $Qque === 'editar') { //significa que no es nuevo
     }
 }
 
-$oGesEncargoTipo = new GestorEncargoTipo();
 if (!empty($Qid_tipo_enc)) {
-    $tipo = $oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
+    $tipo = $EncargoTipoRepository->encargo_de_tipo($Qid_tipo_enc);
     $Qgrupo = $tipo['grupo'];
     //$nom_tipo=$tipo['nom_tipo'];
 } else {
-    $Qid_tipo_enc = (new GestorEncargoTipo)->id_tipo_encargo($Qgrupo, '...');
+    $Qid_tipo_enc = $EncargoTipoRepository->id_tipo_encargo($Qgrupo, '...');
 }
 
-$ee = $oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
+$ee = $EncargoTipoRepository->encargo_de_tipo($Qid_tipo_enc);
 // desplegable de grupos
 if (substr($Qid_tipo_enc, 0, 1) === '.') {
     $grupo_posibles = $ee['grupo'];
 } else {
     $Qgrupo = substr($Qid_tipo_enc, 0, 1);
     $aux = '....'; //Que siempre salgan todas las opciones
-    $ee_grupo = $oGesEncargoTipo->encargo_de_tipo($aux);
+    $ee_grupo = $EncargoTipoRepository->encargo_de_tipo($aux);
     $grupo_posibles = $ee_grupo['grupo'];
 }
 $oDesplGrupos = new Desplegable();
@@ -154,8 +157,7 @@ if (!empty($Qgrupo)) {
     $aOperador = [];
     $aWhere['id_tipo_enc'] = '^' . $Qgrupo;
     $aOperador['id_tipo_enc'] = '~';
-    $oGesEncargoTipo = new GestorEncargoTipo();
-    $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+    $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
     // desplegable de nom_tipo
     $posibles_encargo_tipo = [];
@@ -173,7 +175,7 @@ if (!empty($Qgrupo)) {
     $oDesplNoms->setOpciones([]);
 }
 
-$opciones = $oGesEncargoTipo->getArraySeccion();
+$opciones = $EncargoTipoRepository->getArraySeccion();
 $oDesplGrupoCtrs = new Desplegable();
 $oDesplGrupoCtrs->setNombre('filtro_ctr');
 $oDesplGrupoCtrs->setOpciones($opciones);
@@ -181,8 +183,8 @@ $oDesplGrupoCtrs->setOpcion_sel($Qfiltro_ctr);
 $oDesplGrupoCtrs->setBlanco(1);
 $oDesplGrupoCtrs->setAction("fnjs_lista_ctrs();");
 
-$oGestorZona = new GestorZona();
-$aOpciones = $oGestorZona->getArrayZonas();
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$aOpciones = $ZonaRepository->getArrayZonas();
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
 $oDesplZonas->setBlanco(FALSE);$oDesplZonas->setNombre('id_zona_sel');

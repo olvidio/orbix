@@ -5,10 +5,10 @@ namespace src\profesores\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\profesores\domain\value_objects\CongresoName;
+use src\profesores\domain\value_objects\FechaFin;
+use src\profesores\domain\value_objects\FechaInicio;
 use src\profesores\domain\value_objects\LugarName;
 use src\profesores\domain\value_objects\OrganizaName;
-use src\profesores\domain\value_objects\FechaInicio;
-use src\profesores\domain\value_objects\FechaFin;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -160,8 +160,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar getCongresoVo()->value()
      * @return string $scongreso
+     * @deprecated Usar getCongresoVo()->value()
      */
     public function getCongreso(): string
     {
@@ -169,8 +169,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar setCongresoVo(CongresoName $vo)
      * @param string $scongreso
+     * @deprecated Usar setCongresoVo(CongresoName $vo)
      */
     public function setCongreso(string $scongreso): void
     {
@@ -190,8 +190,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar getLugarVo()->value()
      * @return string|null $slugar
+     * @deprecated Usar getLugarVo()->value()
      */
     public function getLugar(): ?string
     {
@@ -199,8 +199,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar setLugarVo(LugarName $vo)
      * @param string|null $slugar
+     * @deprecated Usar setLugarVo(LugarName $vo)
      */
     public function setLugar(?string $slugar = null): void
     {
@@ -218,8 +218,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar getFIniVo()->value()
      * @return DateTimeLocal|NullDateTimeLocal|null $df_ini
+     * @deprecated Usar getFIniVo()->value()
      */
     public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -227,8 +227,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar setFIniVo(FechaInicio $vo)
      * @param DateTimeLocal|null $df_ini
+     * @deprecated Usar setFIniVo(FechaInicio $vo)
      */
     public function setF_ini(DateTimeLocal|null $df_ini = null): void
     {
@@ -246,8 +246,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar getFFinVo()->value()
      * @return DateTimeLocal|NullDateTimeLocal|null $df_fin
+     * @deprecated Usar getFFinVo()->value()
      */
     public function getF_fin(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -255,8 +255,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar setFFinVo(FechaFin $vo)
      * @param DateTimeLocal|null $df_fin
+     * @deprecated Usar setFFinVo(FechaFin $vo)
      */
     public function setF_fin(DateTimeLocal|null $df_fin = null): void
     {
@@ -274,8 +274,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar getOrganizaVo()->value()
      * @return string|null $sorganiza
+     * @deprecated Usar getOrganizaVo()->value()
      */
     public function getOrganiza(): ?string
     {
@@ -283,8 +283,8 @@ class ProfesorCongreso
     }
 
     /**
-     * @deprecated Usar setOrganizaVo(OrganizaName $vo)
      * @param string|null $sorganiza
+     * @deprecated Usar setOrganizaVo(OrganizaName $vo)
      */
     public function setOrganiza(?string $sorganiza = null): void
     {
@@ -325,10 +325,11 @@ class ProfesorCongreso
         return 'id_item';
     }
 
-    function getDatosCampos():array
+    function getDatosCampos(): array
     {
         $oProfesorCongresoSet = new Set();
 
+        $oProfesorCongresoSet->add($this->getDatosId_nom());
         $oProfesorCongresoSet->add($this->getDatosCongreso());
         $oProfesorCongresoSet->add($this->getDatosLugar());
         $oProfesorCongresoSet->add($this->getDatosF_ini());
@@ -336,6 +337,18 @@ class ProfesorCongreso
         $oProfesorCongresoSet->add($this->getDatosOrganiza());
         $oProfesorCongresoSet->add($this->getDatosTipo());
         return $oProfesorCongresoSet->getTot();
+    }
+
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     function getDatosCongreso(): DatosCampo

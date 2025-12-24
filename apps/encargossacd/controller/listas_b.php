@@ -2,10 +2,10 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use encargossacd\model\EncargoFunciones;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoSacd;
-use personas\model\entity\PersonaDl;
+use src\encargossacd\application\traits\EncargoFunciones;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
@@ -50,6 +50,9 @@ $tipos_de_ctr = array('igl', 'cgioc', '^cgi$');
 
 $Html = '';
 $txt_tipo_ctr = "";
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 foreach ($tipos_de_ctr as $tipo_ctr_que) {
     switch ($tipo_ctr_que) {
         case 'igl':
@@ -119,11 +122,10 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
             $cargos[$id_nom]=$orden_cargo."#".$cargo;
         }
         */
-        $GesEncargo = new GestorEncargo();
         $aWhere = [];
         $aOperador = [];
         $aWhere['id_ubi'] = $id_ubi;
-        $cEncargos = $GesEncargo->getEncargos($aWhere, $aOperador);
+        $cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
         $sacds = [];
         foreach ($cEncargos as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();
@@ -136,15 +138,14 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
             $aWhereT['f_fin'] = 'null';
             $aOperadorT['f_fin'] = 'IS NULL';
             $aWhereT['_ordre'] = 'modo';
-            $GesEncargoSacd = new GestorEncargoSacd();
-            $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhereT, $aOperadorT);
+            $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhereT, $aOperadorT);
             $s = 0;
             $dedic_horas_ctr = 0;
             foreach ($cEncargosSacd as $oEncargoSacd) {
                 $s++;
                 $modo = $oEncargoSacd->getModo();
                 $id_nom = $oEncargoSacd->getId_nom();
-                $oPersona = new PersonaDl($id_nom);
+                $oPersona = $PersonaDlRepository->findById($id_nom);
                 $nom_ap = $oPersona->getNombreApellidosCrSin();
                 // para saber la dedicación
                 $dedicacion_txt = $oEncargoFunciones->dedicacion($id_nom, $id_enc);

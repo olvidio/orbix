@@ -2,8 +2,8 @@
 
 namespace actividadessacd\model;
 
-use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 use core\ConfigGlobal;
+use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 class ActividadesSacdFunciones
@@ -11,12 +11,12 @@ class ActividadesSacdFunciones
 
     private array $a_txt = [];
 
-    function getArrayTraducciones($idioma)
+    public function getArrayTraducciones($idioma): array|false
     {
         $idioma = empty($idioma) ? 'es' : $idioma;
         if (empty($this->a_txt[$idioma])) {
-            $oGesAtnActivSacdTextos = new GestorAtnActivSacdTexto();
-            $cAtnActivSacdTextos = $oGesAtnActivSacdTextos->getAtnActivSacdTextos();
+            $ActividadSacdTextoRepository = $GLOBALS['container']->get(ActividadSacdTextoRepositoryInterface::class);
+            $cAtnActivSacdTextos = $ActividadSacdTextoRepository->getActividadSacdTextos([]);
             foreach ($cAtnActivSacdTextos as $oAtnActivSacdTexto) {
                 $clave = $oAtnActivSacdTexto->getClave();
                 $idioma = $oAtnActivSacdTexto->getIdioma();
@@ -32,10 +32,9 @@ class ActividadesSacdFunciones
         return $this->a_txt[$idioma];
     }
 
-    function getTraduccion($clave, $idioma)
+    public function getTraduccion($clave, $idioma): string
     {
         $a_traduccion = $this->getArrayTraducciones($idioma);
-        $txt_traduccion = '';
         if (!empty($a_traduccion[$clave])) {
             $txt_traduccion = $a_traduccion[$clave];
         } else {
@@ -44,15 +43,14 @@ class ActividadesSacdFunciones
             if (!empty($a_traduccion[$clave])) {
                 $txt_traduccion = $a_traduccion[$clave];
             } else {
-                echo sprintf(_("falta definir el texto %s en este idioma: %s"), $clave, $idioma);
-                echo "<br>";
+                $txt_traduccion = sprintf(_("falta definir el texto %s en este idioma: %s"), $clave, $idioma);
             }
         }
         return $txt_traduccion;
     }
 
 
-    function getLugar_dl()
+    public function getLugar_dl(): ?string
     {
         if (ConfigGlobal::is_dmz()) {
             return "xxxx";

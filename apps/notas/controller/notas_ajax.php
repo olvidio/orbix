@@ -1,11 +1,11 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
@@ -43,7 +43,8 @@ switch ($Qque) {
             $id_asignatura = $oActa->getId_asignatura();
             $id_activ = $oActa->getId_activ();
             if (!empty($id_activ)) {
-                $oActividad = new ActividadAll($id_activ);
+                $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $id_tipo_actividad = $oActividad->getId_tipo_activ();
                 $epoca = PersonaNotaDB::EPOCA_CA;
@@ -111,8 +112,8 @@ switch ($Qque) {
         $aOperador['id_tipo_activ'] = '~';
         $aWhere['_ordre'] = 'f_ini';
         $aWhere['dl_org'] = $Qdl_org;
-        $GesActividades = new GestorActividad();
-        $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
         $aActividades = [];
         foreach ($cActividades as $oActividad) {
             $id_actividad = $oActividad->getId_activ();
@@ -213,7 +214,7 @@ switch ($Qque) {
             $id_nom=$oProfesor->getId_nom();
             $oPersona = personas\Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
-                $msg_err .= "<br>$oPersona con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
+                $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
                 continue;
             }
             $ap_nom=$oPersona->getPrefApellidosNombre();

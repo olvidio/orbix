@@ -85,97 +85,186 @@ if (!$nuevo) {
             </td>
         </tr>
         <tr>
-            <td colspan=2><span class=etiqueta ondblclick="fnjs_help('<?php //echo $id_tabla_help_ref; ?>')">n, agd o sss+:</span>
+            <td colspan=2><span class=etiqueta>n, agd o sss+:</span>
                 <select class=datos name="id_tabla">
-                    <option value="pn" <?php if ($id_tabla == "pn") {
+                    <option value="pn" <?php if ($id_tabla === "pn") {
                         echo "selected";
                     } ?> ><?= _("numerario") ?></option>
-                    <option value="pa" <?php if ($id_tabla == "pa") {
+                    <option value="pa" <?php if ($id_tabla === "pa") {
                         echo "selected";
                     } ?> ><?= _("agregado") ?></option>
                     <?php
-                    if (ConfigGlobal::mi_sfsv() == 2) {
-                        $selected = ($id_tabla == "px") ? 'selected' : '';
+                    if (ConfigGlobal::mi_sfsv() === 2) {
+                        $selected = ($id_tabla === "px") ? 'selected' : '';
                         echo "<option value=\"px\" $selected >" . _("numeraria auxiliar") . "</option>";
                     } else {
-                        $selected = ($id_tabla == "psssc") ? 'selected' : '';
+                        $selected = ($id_tabla === "psssc") ? 'selected' : '';
                         echo "<option value=\"psssc\" $selected >" . _("sss+") . "</option>";
                     }
                     ?>
                 </select></td>
-            <td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $dl_help_ref; ?>')">Delegación</span></td>
+            <td><span class="etiqueta"><?= _("Delegación") ?></span></td>
             <td colspan=2>
                 <?= $oDesplDl->desplegable() ?>
             </td>
         </tr>
         <tr>
-            <?php
-            echo web\dibujar_campo($obj, "trato", 7, 1, 0);
-            echo web\dibujar_campo($obj, "nom", 20, 1, 2);
-            echo "</tr><tr><td></td>";
-            echo web\dibujar_campo($obj, "apel_fam", 20, 1, 2);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "nx1", 7, 1, 0);
-            echo web\dibujar_campo($obj, "apellido1", 25, 1, 2);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "nx2", 7, 1, 0);
-            echo web\dibujar_campo($obj, "apellido2", 25, 1, 2);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "lugar_nacimiento", 15, 1, 1);
-            echo web\dibujar_campo($obj, "f_nacimiento", 11, 1, 0);
-            echo web\dibujar_campo($obj, "edad", 4, 1, 1);
-            echo "</tr><tr>";
-            ?>
-            <td><span class=etiqueta><?= ucfirst('situacion'); ?></span>
+            <td>
+                <span class="etiqueta"> <?= _("Trato") ?></span>
+                <input class="contenido" size=7 id="trato" name="trato" value="<?= $trato ?>">
+            </td>
+
+            <td>
+                <span class="etiqueta"> <?= _("Nombre") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=20 id="nom" name="nom" value="<?= $nom ?>">
+            </td>
+
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <span class="etiqueta"> <?= _("Apelativo") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=20 id="apel_fam" name="apel_fam" value="<?= $apel_fam ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("nx1") ?></span>
+                <input class="contenido" size=7 id="nx1" name="nx1" value="<?= $nx1 ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Apellido") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=25 id="apellido1" name="apellido1" value="<?= $apellido1 ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("nx2") ?></span>
+                <input class="contenido" size=7 id="nx2" name="nx2" value="<?= $nx2 ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Segundo Apellido") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=25 id="apellido2" name="apellido2" value="<?= $apellido2 ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("Lugar de nacimiento") ?></span>
+            </td>
+            <td>
+                <input class="contenido" size=15 id="lugar_nacimiento" name="lugar_nacimiento"
+                       value="<?= $lugar_nacimiento ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Fecha Nacimiento") ?></span>
+                <input class="fecha contenido" size=11 id="f_nacimiento" name="f_nacimiento"
+                       value="<?= $f_nacimiento ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Edad") ?></span>
+            </td>
+            <td>
+                <input class="contenido" size=4 id="edad" name="edad"
+                       value="<?= $edad ?>">
+            </td>
+        </tr>
+        <tr>
+            <td><span class=etiqueta><?= ucfirst('situacion') ?></span>
             </td>
             <td colspan=2><?= $oDesplSituacion->desplegable() ?></td>
-            <?php
-            echo web\dibujar_campo($obj, "f_situacion", 11, 1, 1);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "lengua", 3, 1, 1);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "profesion", 30, 1, 2);
-            echo "</tr><tr>";
-            if (ConfigGlobal::mi_sfsv() == 1) {
-                echo web\dibujar_campo($obj, "sacd", 9, 1, 1);
-            }
-            echo web\dibujar_campo($obj, "profesor_stgr", 9, 1, 1);
-            ?>
-            <td><span class=etiqueta ondblclick="fnjs_help('<?php //echo $stgr_help_ref; ?>')">Stgr&nbsp;</span>
-                <?= $oDesplStgr->desplegable(); ?>
+            <td>
+                <span class="etiqueta"> <?= _("Fecha situación") ?></span>
+                <input class="fecha contenido" size=11 id="f_situacion" name="f_situacion" value="<?= $f_situacion ?>">
             </td>
+        </tr>
+        <tr>
+            <td><span class=etiqueta><?= ucfirst('Idioma preferido') ?></span>
+            </td>
+            <td colspan=2><?= $oDesplLengua->desplegable() ?></td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("Profesión") ?></span>
+            </td>
+            <td colspan='2'>
+                <input class="contenido" size=30 id="profesion" name="profesion" value="<?= $profesion ?>">
+            </td>
+        </tr>
+        <tr>
             <?php
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "eap", 20, 2, 0);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "inc", 5, 1, 0);
-            echo web\dibujar_campo($obj, "f_inc", 11, 1, 1);
-            echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "observ", 60, 1, 4);
-            echo "</tr><tr>";
-            // -----------------------------------  Botones  ----------------------
+            if (ConfigGlobal::mi_sfsv() == 1) {
+                ?>
+                <td>
+                    <span class="etiqueta"> <?= _("sacd") ?></span>
+                </td>
+                <td>
+                    <input class="contenido" id="sacd" name="sacd"
+                           type=checkbox <?= is_true($sacd) ? 'checked' : '' ?> >
+                </td>
+                <?php
+            }
+            ?>
+            <td><span class="etiqueta"><?= _("Stgr") ?></span>
+                <?= $oDesplStgr->desplegable() ?>
+            </td>
+            <td colspan=2>
+                <span class="etiqueta"> <?= _("eap") ?></span>
+                <input class="contenido" size=20 id="eap" name="eap" value="<?= $eap ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("inc") ?></span>
+                <input class="contenido" size=5 id="inc" name="inc" value="<?= $inc ?>">
+            </td>
+            <td>
+                <span class="etiqueta"> <?= _("Fecha inc") ?></span>
+            </td>
+            <td>
+                <input class="fecha contenido" size=11 id="f_inc" name="f_inc" value="<?= $f_inc ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"> <?= _("Observaciones") ?></span>
+            </td>
+            <td colspan='4'>
+                <input class="contenido" size=60 id="observ" name="observ" value="<?= $observ ?>">
+            </td>
+        </tr>
+        <tr>
+            <?php
+            // ----------------------------------- Botones ----------------------
             if (!empty($botones)) {
-                echo "<table><tr class=botones>";
-                $b = strtok($botones, ",");
+                echo " <table> <tr class=botones>";
+                $b = (int)strtok($botones, ",");
                 while ($b) {
-                    if ($b == 1) {
+                    if ($b === 1) {
                         $txt_g = ucwords(_("guardar cambios"));
-                        echo "<th class='link_inv' onclick='fnjs_guardar(\"#frm2\")'>$txt_g</th>";
+                        echo " <th class='link_inv' onclick='fnjs_guardar(\"#frm2\")'>$txt_g</th> ";
                     }
-                    if ($b == 2) {
+                    if ($b === 2) {
                         $txt_e = ucwords(_("eliminar"));
-                        echo "<th class='link_inv' onclick='fnjs_eliminar(\"#frm2\")'>$txt_e</th>";
+                        echo " <th class='link_inv' onclick='fnjs_eliminar(\"#frm2\")'>$txt_e</th> ";
                     }
-                    if ($b == 3) {
+                    if ($b === 3) {
                         $txt_e = ucwords(_("formato texto"));
                         $pag = "programas/ficha_texto.php?id_nom=$id_nom&obj_pau=$Qobj_pau";
-                        echo "<th class='link_inv' onclick='fnjs_update_div('#main','$pag')'>$txt_e</th>";
+                        echo " <th class='link_inv' onclick=\"fnjs_update_div('#main','$pag')\">$txt_e</th>";
                     }
-                    $b = strtok(",");
+                    $b = (int)strtok(",");
                 }
-                echo "</tr></table><br>";
+                echo " </tr> </table> <br>";
             }
-            // fin ----------------------------  Botones  ----------------------
+            // fin ---------------------------- Botones ----------------------
             ?>
         </tr>
     </table>

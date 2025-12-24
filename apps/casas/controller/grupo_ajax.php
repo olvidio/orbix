@@ -1,8 +1,9 @@
 <?php
 
-use casas\model\entity\GrupoCasa;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -14,16 +15,17 @@ $oPosicion->recordar();
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
+$GrupoCasaRepository = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
 switch ($Qque) {
     case "update":
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         $Qid_ubi_padre = (integer)filter_input(INPUT_POST, 'id_ubi_padre');
         $Qid_ubi_hijo = (integer)filter_input(INPUT_POST, 'id_ubi_hijo');
 
-        $oGrupoCasa = new GrupoCasa($Qid_item);
+        $oGrupoCasa = $GrupoCasaRepository->findById($Qid_item);
         $oGrupoCasa->setId_ubi_padre($Qid_ubi_padre);
         $oGrupoCasa->setId_ubi_hijo($Qid_ubi_hijo);
-        if ($oGrupoCasa->DBGuardar() === false) {
+        if ($GrupoCasaRepository->Guardar($oGrupoCasa) === false) {
             echo _("Hay un error, no se ha guardado.");
         }
         break;
@@ -31,8 +33,8 @@ switch ($Qque) {
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         $Qid_item = urldecode(strtok($a_sel[0], "#"));
 
-        $oGrupoCasa = new GrupoCasa($Qid_item);
-        if ($oGrupoCasa->DBEliminar() === false) {
+        $oGrupoCasa = $GrupoCasaRepository->findById($Qid_item);
+        if ($GrupoCasaRepository->Eliminar($oGrupoCasa) === false) {
             echo _("Hay un error, no se ha eliminado.");
         }
 

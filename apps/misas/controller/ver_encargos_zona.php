@@ -3,9 +3,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ViewTwig;
-use encargossacd\model\entity\EncargoTipo;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
@@ -38,15 +37,15 @@ $columns_cuadricula = [
 
 $data_cuadricula = [];
 
-$oGesEncargoTipo = new GestorEncargoTipo();
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 
 $grupo = '8...';
 $aWhere = [];
 $aOperador = [];
 $aWhere['id_tipo_enc'] = '^' . $grupo;
 $aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+$cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
 $a_tipo_enc = [];
 $posibles_encargo_tipo = [];
@@ -66,8 +65,7 @@ $aOperador['id_tipo_enc'] = 'ANY';
 $aWhere['id_zona'] = $Qid_zona;
 
 $aWhere['_ordre'] = $Qorden;
-$GesEncargos = new GestorEncargo();
-$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+$cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
 
 $id_tipo_enc = '';
 $idioma_enc = '';
@@ -90,7 +88,7 @@ foreach ($cEncargos as $oEncargo) {
     }
 
     if (!empty($id_tipo_enc)) {
-        $oEncargoTipo = new EncargoTipo($id_tipo_enc);
+        $oEncargoTipo = $EncargoTipoRepository->findById($id_tipo_enc);
         $tipo_enc = $oEncargoTipo->getTipo_enc();
         //$nom_tipo=$tipo['nom_tipo'];
     } else {
@@ -156,8 +154,7 @@ $aOperador['id_tipo_enc'] = 'ANY';
 $aWhere['id_zona'] = $Qid_zona;
 
 $aWhere['_ordre'] = $Qorden;
-$GesEncargos = new GestorEncargo();
-$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+$cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
 
 $id_tipo_enc = '';
 $idioma_enc = '';

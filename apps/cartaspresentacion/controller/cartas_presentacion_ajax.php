@@ -1,18 +1,20 @@
 <?php
 
-use cartaspresentacion\model\entity\CartaPresentacion;
-use cartaspresentacion\model\entity\CartaPresentacionDl;
-use cartaspresentacion\model\entity\CartaPresentacionEx;
-use cartaspresentacion\model\entity\GestorCartaPresentacion;
-use cartaspresentacion\model\entity\GestorCartaPresentacionDl;
 use core\ConfigGlobal;
+use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
+use src\cartaspresentacion\domain\contracts\CartaPresentacionExRepositoryInterface;
+use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
+use src\cartaspresentacion\domain\entity\CartaPresentacion;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionUbiDireccionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\Desplegable;
 use web\Hash;
@@ -59,11 +61,11 @@ switch ($Qque_mod) {
                 $DireccionCentroDlRepository = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
                 foreach ($cCentrosDl as $oCentroDl) {
                     $id_ubi = $oCentroDl->getId_ubi();
-                    $oGesCtrxDir = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
-                    $cCtrxDir = $oGesCtrxDir->getCtrxDirecciones(['id_ubi' => $id_ubi]);
-                    foreach ($cCtrxDir as $oCtrxDir) {
-                        $id_direccion = $oCtrxDir->getId_direccion();
-                        $oDireccion = $DireccionCentroDlRepository->getById($id_direccion);
+                    $oGesCtrxDir = $GLOBALS['container']->get(RelacionCentroDlDireccionRepositoryInterface::class);
+                    $aDirecciones = $oGesCtrxDir->getDireccionesPorUbi($id_ubi);
+                    foreach ($aDirecciones as $aDireccion) {
+                        $id_direccion = $aDireccion['id_direccion'];
+                        $oDireccion = $DireccionCentroDlRepository->findById($id_direccion);
                         $poblacion = $oDireccion->getPoblacion();
                         if (!in_array($poblacion, $aPoblaciones)) {
                             $aPoblaciones[$poblacion] = $poblacion;
@@ -104,11 +106,11 @@ switch ($Qque_mod) {
 
         $dl = $oCentro->getDl();
         if ($dl === ConfigGlobal::mi_delef()) {
-            $oCartaPresentacion = new CartaPresentacionDl();
+            //$oCartaPresentacion = new CartaPresentacionDl();
         } else {
             $tipo_ctr = $oCentro->getTipo_ctr();
             if ($tipo_ctr === 'cr') {
-                $oCartaPresentacion = new CartaPresentacionEx();
+                //$oCartaPresentacion = new CartaPresentacionEx();
             } else {
                 $msg_exit = _("No puede modificar datos de otra dl");
             }
@@ -121,13 +123,9 @@ switch ($Qque_mod) {
             $zona = '';
             $observ = '';
 
-            $oGesCartasPresentacion = new GestorCartaPresentacion();
-            $cCartasPresentacion = $oGesCartasPresentacion->getCartasPresentacion(['id_direccion' => $Qid_direccion, 'id_ubi' => $Qid_ubi]);
-            if (count($cCartasPresentacion) > 0) {
-                // solo deberia haber uno, clave unica id_direccion,id_ubi
-                // sobreescribo el anterior objeto.
-                $oCartaPresentacion = $cCartasPresentacion[0];
-                $oCartaPresentacion->DBCarregar();
+            $CartasPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
+            $oCartaPresentacion = $CartasPresentacionRepository->findById($Qid_ubi, $Qid_direccion);
+            if ($oCartaPresentacion !== null) {
                 $pres_nom = $oCartaPresentacion->getPres_nom();
                 $pres_telf = $oCartaPresentacion->getPres_telf();
                 $pres_mail = $oCartaPresentacion->getPres_mail();
@@ -174,11 +172,9 @@ switch ($Qque_mod) {
         $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
         if (!empty($Qid_direccion) && !empty($Qid_ubi)) {
-            $a_pkey = array('id_direccion' => $Qid_direccion,
-                'id_ubi' => $Qid_ubi);
-            $oCartaPresentacion = new CartaPresentacion($a_pkey);
-            $oCartaPresentacion->DBCarregar();
-            if ($oCartaPresentacion->DBEliminar() === false) {
+            $CartasPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
+            $oCartaPresentacion = $CartasPresentacionRepository->findById($Qid_ubi, $Qid_direccion);
+            if ($CartasPresentacionRepository->Eliminar($oCartaPresentacion) === false) {
                 echo _("Hay un error, no se ha borrado.");
             }
         }
@@ -188,27 +184,24 @@ switch ($Qque_mod) {
         $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
         if (!empty($Qid_direccion) && !empty($Qid_ubi)) {
-            $oGesCartasPresentacion = new GestorCartaPresentacion();
-            $cCartasPresentacion = $oGesCartasPresentacion->getCartasPresentacion(['id_direccion' => $Qid_direccion, 'id_ubi' => $Qid_ubi]);
-            if (count($cCartasPresentacion) > 0) {
-                // solo deberia haber uno, clave unica id_direccion,id_ubi
-                $oCartaPresentacion = $cCartasPresentacion[0];
-                $oCartaPresentacion->DBCarregar();
-            } else {
+            $CartasPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
+            $oCartaPresentacion = $CartasPresentacionRepository->findById($Qid_ubi, $Qid_direccion);
+            if ($oCartaPresentacion === null) {
                 // Busco el ctr para saber si es de la dl o ex.
                 $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
                 $oCentro = $CentroRepository->findById($Qid_ubi);
                 $dl = $oCentro->getDl();
                 if ($dl === ConfigGlobal::mi_delef()) {
-                    $oCartaPresentacion = new CartaPresentacionDl();
+                    $CartasPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
                 } else {
                     $tipo_ctr = $oCentro->getTipo_ctr();
                     if ($tipo_ctr === 'cr') {
-                        $oCartaPresentacion = new CartaPresentacionEx();
+                        $CartasPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionExRepositoryInterface::class);
                     } else {
                         exit (_("No puede modificar datos de otra dl"));
                     }
                 }
+                $oCartaPresentacion = new CartaPresentacion();
                 $oCartaPresentacion->setId_direccion($Qid_direccion);
                 $oCartaPresentacion->setId_ubi($Qid_ubi);
             }
@@ -224,7 +217,7 @@ switch ($Qque_mod) {
             $oCartaPresentacion->setPres_mail($Qpres_mail);
             $oCartaPresentacion->setZona($Qzona);
             $oCartaPresentacion->setObserv($Qobserv);
-            if ($oCartaPresentacion->DBGuardar() === false) {
+            if ($CartasPresentacionRepository->Guardar($oCartaPresentacion) === false) {
                 echo _("Hay un error, no se ha guardado.");
             }
         }
@@ -233,8 +226,8 @@ switch ($Qque_mod) {
     case "actualizar":
         // se trata de poner el nombre del director (tf i mail) en el dossier.
         // sólo los de la dl.
-        $GesCartasPresentacion = new GestorCartaPresentacionDl();
-        $cCartasPresentacion = $GesCartasPresentacion->getCartasPresentacion();
+        $CartasPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
+        $cCartasPresentacion = $CartasPresentacionRepository->getCartasPresentacion();
         foreach ($cCartasPresentacion as $oCartaPresentacion) {
             $pres_nom = '';
             $pres_telf = '';
@@ -262,16 +255,17 @@ switch ($Qque_mod) {
             $txt_direccion = '';
             $d = 0;
             $cId_ubis = [];
+            $RelacionCentroDireccionRepository = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
             foreach ($cDirecciones as $oDireccion) {
                 $d++;
                 $id_direccion = $oDireccion->getId_direccion();
                 $txt_direccion = $oDireccion->getDireccionPostal(" - ");
                 $nom_sede = $oDireccion->getNom_sede();
-                $cId_ubis = $oDireccion->getUbis();
+                $cId_ubis = $RelacionCentroDireccionRepository->getUbisPorDireccion($id_direccion);
                 $cCentros = [];
                 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                foreach ($cId_ubis as $oUbi) {
-                    $cCentros[] =$CentroDlRepository->findById($oUbi->getId_ubi());
+                foreach ($cId_ubis as $aId_ubi) {
+                    $cCentros[] =$CentroDlRepository->findById($aId_ubi['id_ubi']);
                 }
                 $cDirCentros[$d] = ['dir' => $txt_direccion,
                     'colCentros' => $cCentros,
@@ -286,6 +280,7 @@ switch ($Qque_mod) {
         $c = 0;
         $a_valores = [];
         $orden_nom = [];
+        $CartasPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
         foreach ($cDirCentros as $key => $Cen) {
             $txt_direccion = $Cen['dir'];
             $cCentros = $Cen['colCentros'];
@@ -295,7 +290,7 @@ switch ($Qque_mod) {
                 $c++;
                 $id_ubi = $oCentro->getId_ubi();
                 $nombre_ubi = $oCentro->getNombre_ubi();
-                if (!is_true($oCentro->getStatus())) {
+                if (!$oCentro->isStatus()) {
                     $nombre_ubi = _("ANULADO") . ' ' . $nombre_ubi;
                 }
                 $nombre_ubi .= empty($nom_sede) ? '' : " ($nom_sede)";
@@ -303,10 +298,9 @@ switch ($Qque_mod) {
                 $tipo_labor = $oCentro->getTipo_labor();
                 $tipo_ubi = $oCentro->getTipo_ubi();
 
-                $GesPresentacion = new GestorCartaPresentacionDl();
-                $colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_direccion' => $id_direccion, 'id_ubi' => $id_ubi));
+                $oCartaPresentacion = $CartasPresentacionRepository->findById($id_ubi, $id_direccion);
                 //sólo debería haber una.
-                if (empty($colPresentacion[0])) {
+                if ($oCartaPresentacion === null) {
                     $activo = FALSE;
                     $pres = _("no");
                 } else {
@@ -385,17 +379,17 @@ switch ($Qque_mod) {
             $cDirCentros = [];
             $txt_direccion = '';
             $DireccionRepository = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
-            foreach ($cCtrxDir as $oCtrxDir) {
-                $id_direccion = $oCtrxDir->getId_direccion();
+            $CartasPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
+            foreach ($cCtrxDir as $aCtrxDir) {
+                $id_direccion = $aCtrxDir['id_direccion'];
                 $oDireccion = $DireccionRepository->findById($id_direccion);
                 $txt_direccion = $oDireccion->getDireccionPostal(" - ");
                 $nom_sede = $oDireccion->getNom_sede();
                 $nombre_ubi .= empty($nom_sede) ? '' : " ($nom_sede)";
 
-                $GesPresentacion = new GestorCartaPresentacion();
-                $colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_direccion' => $id_direccion, 'id_ubi' => $id_ubi));
+                $oCartaPresentacion = $CartasPresentacionRepository->findById($id_ubi, $id_direccion);
                 //sólo debería haber una.
-                if (empty($colPresentacion[0])) {
+                if (empty($oCartaPresentacion)) {
                     $activo = FALSE;
                     $pres = _("no");
                 } else {
@@ -459,20 +453,23 @@ switch ($Qque_mod) {
  */
 function sanear()
 {
-    $GesCartasPresentacion = new GestorCartaPresentacionDl();
-    $cCartasPresentacion = $GesCartasPresentacion->getCartasPresentacion();
+    $CartasPresentacionDlRepository = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
+    $cCartasPresentacion = $CartasPresentacionDlRepository->getCartasPresentacion();
     foreach ($cCartasPresentacion as $oCartaPresentacion) {
         $id_ubi = $oCartaPresentacion->getId_ubi();
         $id_direccion = $oCartaPresentacion->getId_direccion();
 
         $oUbi = Ubi::NewUbi($id_ubi);
-        $a_direcciones_ctr = [];
-        $cDirecciones = $oUbi->getDirecciones();
-        foreach ($cDirecciones as $oDireccion) {
-            $a_direcciones_ctr[] = $oDireccion->getId_direccion();
-        }
-        if (!in_array($id_direccion, $a_direcciones_ctr)) {
-            $oCartaPresentacion->DBEliminar();
+        if ($oUbi !== null) {
+            $a_direcciones_ctr = [];
+            $cDirecciones = $oUbi->getDirecciones();
+            foreach ($cDirecciones as $oDireccion) {
+                $a_direcciones_ctr[] = $oDireccion->getId_direccion();
+            }
+            if (!in_array($id_direccion, $a_direcciones_ctr)) {
+                $oCartaPresentacion->DBEliminar();
+            }
         }
     }
+
 }

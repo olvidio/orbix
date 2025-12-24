@@ -2,13 +2,15 @@
 
 namespace actividadestudios\model;
 
-use actividades\model\entity\ActividadAll;
-use asistentes\model\entity\GestorAsistente;
+
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\Persona;
 use personas\model\entity\PersonaDl;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
 use function core\curso_est;
@@ -95,18 +97,19 @@ class Select1303
     public function getHtmlCa($oAsistente, $ca_num = 1)
     {
         $this->id_activ = $oAsistente->getId_activ();
-        $propio = $oAsistente->getPropio();
+        $propio = $oAsistente->isPropio();
         if (!is_true($propio)) {
             echo _("no está como propio, no debería tener plan de estudios");
         }
 
-        $est_ok = $oAsistente->getEst_ok();
+        $est_ok = $oAsistente->isEst_ok();
         $observ_est = $oAsistente->getObserv_est();
-        $oActividad = new ActividadAll(array('id_activ' => $this->id_activ));
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($this->id_activ);
         $nom_activ = $oActividad->getNom_activ();
 
         // el plan de estudios solo puede modificarlo la dl del alumno (a no ser que sea de paso)
-        $oAlumno = Persona::NewPersona($this->id_pau);
+        $oAlumno = Persona::findPersonaEnGlobal($this->id_pau);
         $dl_alumno = $oAlumno->getDl();
         $classname = str_replace("personas\\model\\entity\\", '', get_class($oAlumno));
         $this->permiso = 3;
@@ -140,9 +143,9 @@ class Select1303
             $id_preceptor = $oMatricula->getId_preceptor();
             if (is_true($preceptor)) {
                 if (!empty($id_preceptor)) {
-                    $oPersona = Persona::NewPersona($id_preceptor);
+                    $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
                     if (!is_object($oPersona)) {
-                        $msg_err .= "<br>$oPersona con id_nom: $id_preceptor (profesor) en  " . __FILE__ . ": line " . __LINE__;
+                        $msg_err .= "<br>No encuentro a nadie con id_nom: $id_preceptor (profesor) en  " . __FILE__ . ": line " . __LINE__;
                         $preceptor = 'x';
                     } else {
                         $preceptor = $oPersona->getPrefApellidosNombre();
@@ -242,18 +245,19 @@ class Select1303
 
         $aviso = '';
         // Compruebo si está de repaso...
-        $oPersona = new PersonaDl(array('id_nom' => $this->id_pau));
-        $stgr = $oPersona->getStgr();
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $oPersona = $PersonaDlRepository->finById($this->id_pau);
+        $stgr = $oPersona->getNivel_stgr();
         if ($stgr === 'r') $aviso .= _("está de repaso") . "<br>";
 
         $aWhere = [];
         $aOperadores = [];
-        $GesAsistentes = new GestorAsistente();
+        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
         if (!empty($this->Qid_activ)) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
             $aWhere['id_activ'] = $this->Qid_activ;
             $aWhereNom = ['id_nom' => $this->id_pau, 'id_activ' => $this->Qid_activ];
             $aOperadorNom = [];
-            $cAsistencias = $GesAsistentes->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperadores, true);
+            $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperadores, true);
         } else {
             if (empty($this->todos)) {
                 $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
@@ -265,7 +269,7 @@ class Select1303
 
             $aWhereNom = ['id_nom' => $this->id_pau, 'propio' => 't'];
             $aOperadorNom = [];
-            $cAsistencias = $GesAsistentes->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperadores, true);
+            $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperadores, true);
         }
         if (is_array($cAsistencias)) {
             $n = count($cAsistencias);
@@ -298,9 +302,10 @@ class Select1303
             if ($n > 1 && empty($this->todos)) {
                 $nn = 0;
                 $id_sem_inv = (int)ConfigGlobal::mi_sfsv() . '32500';
+                $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
                 foreach ($cAsistencias as $oAsistente) {
                     $id_activ = $oAsistente->getId_activ();
-                    $oActividad = new ActividadAll($id_activ);
+                    $oActividad = $ActividadAllRepository->findById($id_activ);
                     $id_tipo_activ = $oActividad->getId_tipo_activ();
                     if ($id_tipo_activ != $id_sem_inv) $nn++;
                 }

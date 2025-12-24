@@ -21,6 +21,8 @@ class InfoProfesorDirector extends DatosInfoRepo
         $this->setClase('src\\profesores\\domain\\entity\\ProfesorDirector');
         $this->setMetodoGestor('getProfesoresDirectores');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(ProfesorDirectorRepositoryInterface::class);
     }
 
     public function getId_dossier()
@@ -42,7 +44,7 @@ class InfoProfesorDirector extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getProfesorDirectores($aWhere, $aOperador);
 
         return $Coleccion;

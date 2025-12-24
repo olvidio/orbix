@@ -19,6 +19,8 @@ class InfoCargo extends DatosInfoRepo
 
         $this->setClase('src\\actividadcargos\\domain\\entity\\Cargo');
         $this->setMetodoGestor('getCargos');
+
+        $this->setRepositoryInterface(CargoRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoCargo extends DatosInfoRepo
             $aWhere = array('cargo' => $this->k_buscar);
             $aOperador = array('cargo' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(CargoRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getCargos($aWhere, $aOperador);
 
         return $Coleccion;

@@ -905,8 +905,7 @@ class PersonaNotaDB extends ClasePropiedades
                 }
                 break;
             default:
-                $oNota = new Nota($id_situacion);
-                $nota_txt = $oNota->getDescripcion();
+                $nota_txt = Nota::getStatusTxt($id_situacion);
                 break;
         }
         return $nota_txt;

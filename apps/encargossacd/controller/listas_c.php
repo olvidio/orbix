@@ -2,15 +2,15 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use encargossacd\model\EncargoFunciones;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoSacd;
-use personas\model\entity\GestorPersonaDl;
+use src\encargossacd\application\traits\EncargoFunciones;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\DateTimeLocal;
-use zonassacd\model\entity\GestorZona;
-use zonassacd\model\entity\GestorZonaGrupo;
 use function core\strtoupper_dlb;
 
 /* Listado de ateción sacd. según cr 9/05, Anexo2,9.4 c) 
@@ -67,8 +67,8 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
 
 
 // creo un array con los nombres de los grupos (zonas geográficas)
-$GesZonaGrupo = new GestorZonaGrupo();
-$cZonasGrupos = $GesZonaGrupo->getZonasGrupo(array('_ordre' => 'orden'));
+$ZonaGrupoRepository = $GLOBALS['container']->get(ZonaGrupoRepositoryInterface::class);
+$cZonasGrupos = $ZonaGrupoRepository->getZonasGrupo(array('_ordre' => 'orden'));
 foreach ($cZonasGrupos as $oZonaGrupo) {
     $id_grupo = $oZonaGrupo->getId_grupo();
     $nombre_grupo = $oZonaGrupo->getNombre_grupo();
@@ -77,10 +77,13 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
 
 $Html_all = "<div class=salta_pag><table>";
 // por cada zona
+$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+$EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
 foreach ($cZonasGrupos as $oZonaGrupo) {
     $id_grupo = $oZonaGrupo->getId_grupo();
-    $GesZonas = new GestorZona();
-    $cZonas = $GesZonas->getZonas(array('id_grupo' => $id_grupo));
+    $cZonas = $ZonaRepository->getZonas(array('id_grupo' => $id_grupo));
     //print_r($cZonas);
     $Html = '';
     $a_sacd = [];
@@ -90,8 +93,7 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
         $cCentrosDl = $GesCentrosDl->getCentros(array('id_zona' => $id_zona));
         foreach ($cCentrosDl as $oCentroDl) {
             $id_ubi = $oCentroDl->getId_ubi();
-            $GesPersonas = new GestorPersonaDl();
-            $cPersonas = $GesPersonas->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', 'sacd' => 't', '_ordre' => 'apellido1,apellido2,nom'));
+            $cPersonas = $PersonaDlRepository->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', 'sacd' => 't', '_ordre' => 'apellido1,apellido2,nom'));
             // Bucle por cada sacd
             foreach ($cPersonas as $oPersonaNAgd) {
                 $id_nom = $oPersonaNAgd->getId_nom();
@@ -109,16 +111,15 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                     $poblacion = _("otros");
                 }
                 /* busco los datos del encargo que se tengan */
-                $GesTareasSacd = new GestorEncargoSacd();
                 $aWhereT['id_nom'] = $id_nom;
                 $aWhereT['f_fin'] = 'null';
                 $aOperadorT['f_fin'] = 'IS NULL';
                 $aWhereT['_ordre'] = 'modo';
-                $cTareasSacd = $GesTareasSacd->getEncargosSacd($aWhereT, $aOperadorT);
+                $cTareasSacd = $EncargoSacdRepository->getEncargosSacd($aWhereT, $aOperadorT);
                 foreach ($cTareasSacd as $oTareaSacd) {
                     $modo = $oTareaSacd->getModo();
                     $id_enc = $oTareaSacd->getId_enc();
-                    $oEncargo = new Encargo($id_enc);
+                    $oEncargo = $EncargoRepository->findById($id_enc);
                     $id_tipo_enc = $oEncargo->getId_tipo_enc();
                     $id_ubi_enc = $oEncargo->getId_ubi();
                     if (empty($id_ubi_enc)) {
@@ -181,7 +182,7 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                             $sv_txt .= trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
                             break;
                         case 2200:
-                            if ($permiso_sf == "si") {
+                            if ($permiso_sf === "si") {
                                 $sf_txt .= trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
                             } else {
                                 switch ($modo) {
@@ -213,27 +214,27 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                 if ($of=oficial_dl($id_nom)) $sv_txt.="<br>".ConfigGlobal::$dele.": $of";
                 */
                 // sf
-                if ($permiso_sf == "si") {
+                if ($permiso_sf === "si") {
                     $sf_txt = substr($sf_txt, 2);
                 } else {
-                    if ($sf_ctr[3] == 1) {
+                    if ((int)$sf_ctr[3] === 1) {
                         $sf_txt .= ", " . sprintf(_("%s centro sf"), $sf_ctr[3]);
-                    } elseif ($sf_ctr[3] > 1) {
+                    } elseif ((int)$sf_ctr[3] > 1) {
                         $sf_txt .= ", " . sprintf(_("%s centros sf"), $sf_ctr[3]);
                     }
-                    if ($sf_ctr[4] == 1) {
+                    if ((int)$sf_ctr[4] === 1) {
                         $sf_txt .= ", " . sprintf(_("suplente de %s centro sf"), $sf_ctr[4]);
-                    } elseif ($sf_ctr[4] > 1) {
+                    } elseif ((int)$sf_ctr[4] > 1) {
                         $sf_txt .= ", " . sprintf(_("suplente de %s centros sf"), $sf_ctr[4]);
                     }
-                    if ($sf_cgi[3] == 1) {
+                    if ((int)$sf_cgi[3] === 1) {
                         $sf_txt .= ", " . sprintf(_("atiende %s colegio sf"), $sf_cgi[3]);
-                    } elseif ($sf_cgi[3] > 1) {
+                    } elseif ((int)$sf_cgi[3] > 1) {
                         $sf_txt .= ", " . sprintf(_("atiende %s colegios sf"), $sf_cgi[3]);
                     }
-                    if ($sf_cgi[4] == 1) {
+                    if ((int)$sf_cgi[4] === 1) {
                         $sf_txt .= ", " . sprintf(_("colabora con %s colegio sf"), $sf_cgi[4]);
-                    } elseif ($sf_cgi[4] > 1) {
+                    } elseif ((int)$sf_cgi[4] > 1) {
                         $sf_txt .= ", " . sprintf(_("colabora con %s colegios sf"), $sf_cgi[4]);
                     }
                     $sf_txt = substr($sf_txt, 2);

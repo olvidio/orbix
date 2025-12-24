@@ -17,6 +17,7 @@ use function core\is_true;
  */
 interface CargoRepositoryInterface
 {
+    public function getArrayIdCargosSacd(): array;
 
     public function getArrayCargos(string $tipo_cargo = ''): array;
 

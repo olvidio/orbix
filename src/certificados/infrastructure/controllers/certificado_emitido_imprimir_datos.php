@@ -1,21 +1,21 @@
 <?php
 
-use personas\model\entity\Persona;
+use src\personas\domain\entity\Persona;
 use web\ContestarJson;
 
 $id_nom = (string)filter_input(INPUT_POST, 'id_nom');
 
 $error_txt = '';
 
-$oPersona = Persona::NewPersona($id_nom);
-if (!is_object($oPersona)) {
-    $error_txt .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
+if ($oPersona === null) {
+    $error_txt .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
     $data = 'ok';
 } else {
     $data['nombreApellidos'] = $oPersona->getNombreApellidos();
     $data['lugar_nacimiento'] = $oPersona->getLugar_nacimiento();
     $data['f_nacimiento'] = $oPersona->getF_nacimiento()->getFechaLatin();
-    $data['nivel_stgr'] = $oPersona->getStgr();
+    $data['nivel_stgr'] = $oPersona->getNivel_stgr();
 
     $data['region_latin'] = $_SESSION['oConfig']->getNomRegionLatin();
     $data['vstgr'] = $_SESSION['oConfig']->getNomVstgr();

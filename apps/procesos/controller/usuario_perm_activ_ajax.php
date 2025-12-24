@@ -1,7 +1,6 @@
 <?php
 
-use actividades\model\entity\GestorTipoDeActividad;
-use web\Desplegable;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use procesos\model\entity\GestorActividadFase;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -18,8 +17,8 @@ require_once("apps/core/global_object.inc");
 $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 
-$GesTiposActiv = new GestorTipoDeActividad();
-$aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);
+$TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+$aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);
 $oGesFases = new GestorActividadFase();
 $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
 

@@ -1,7 +1,7 @@
 <?php
 
 use core\ViewTwig;
-use encargossacd\model\entity\GestorEncargoTexto;
+use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -56,8 +56,8 @@ $oDesplIdiomas->setAction('fnjs_get_texto()');
 $aWhere = [];
 $aWhere['clave'] = 'com_sacd';
 $aWhere['idioma'] = 'es';
-$oGesEncargoTextos = new GestorEncargoTexto();
-$cEncargoTextos = $oGesEncargoTextos->getEncargoTextos($aWhere);
+$EncargoTextoRepository = $GLOBALS['container']->get(EncargoTextoRepositoryInterface::class);
+$cEncargoTextos = $EncargoTextoRepository->getEncargoTextos($aWhere);
 $txt = '';
 if (count($cEncargoTextos) > 0) {
     $txt = $cEncargoTextos[0]->getTexto();

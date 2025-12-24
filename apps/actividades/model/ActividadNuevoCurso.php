@@ -2,13 +2,14 @@
 
 namespace actividades\model;
 
-use actividades\model\entity\ActividadDl;
-use actividades\model\entity\GestorActividadDl;
-use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use DateInterval;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
+use src\actividades\domain\value_objects\IdTablaCode;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use web\DateTimeLocal;
 
 /**
@@ -71,12 +72,12 @@ class ActividadNuevoCurso
     public function comprobar_solapes($inicio, $fin)
     {
         $txt = '';
-        $GesActividades = new GestorActividadDl();
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
         $sQry = "SELECT id_activ, to_char(f_ini,'YYYYMMDD')||COALESCE(to_char(h_ini,'HH24MISS'),'200000') as inicio 
                     FROM a_actividades_dl
                     WHERE dl_org = '" . ConfigGlobal::mi_delef() . "' AND f_ini >= '$inicio' AND f_ini <= '$fin' AND status < 4 
                     ORDER BY inicio";
-        $cActividades = $GesActividades->getActividadesQuery($sQry);
+        $cActividades = $ActividadDlRepository->getActividadesQuery($sQry);
         $num_act = count($cActividades);
         for ($i = 0; $i < ($num_act - 1); $i++) {
             $id_ubi1 = $cActividades[$i]->getId_ubi();
@@ -122,12 +123,9 @@ class ActividadNuevoCurso
     function borrar_actividades_periodo($f_ini, $f_fin)
     {
         $txt = '';
-        // No utilizo la colección de actividades. Así se ejecuta todo de golpe y que va más rápido.
-        $sql = "DELETE FROM a_actividades_dl WHERE f_ini >= '$f_ini' AND f_ini <= '$f_fin' AND status = 1";
-        $GesActividades = new GestorActividadDl();
-        if ($GesActividades->getActividadesQuery($sql) === false) {
-            $txt .= _("error al intentar borrar las actividades") . "<br>";
-        }
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $ActividadDlRepository->deleteActividadesPeriodo($f_ini, $f_fin);
+
         if (ConfigGlobal::is_app_installed('procesos')) {
             // Borrar los procesos, No se puede crear una clave foránea a una tabla padre (a_actividades_all). Sólo
             // se podría con la de la dl, pero quedarían todos los procesos de las otras actividades.
@@ -136,8 +134,7 @@ class ActividadNuevoCurso
                     FROM a_actividad_proceso_sv d LEFT JOIN public.a_actividades_all a USING (id_activ)
                     WHERE a.id_activ IS NULL
                  )";
-            $GesActividades = new GestorActividadDl();
-            if ($GesActividades->getActividadesQuery($sql) === false) {
+            if ($ActividadDlRepository->getActividadesQuery($sql) === false) {
                 $txt .= _("error al borrar los procesos de la sv") . "<br>";
             }
             $sql = "DELETE FROM a_actividad_proceso_sf WHERE id_activ IN (
@@ -145,16 +142,13 @@ class ActividadNuevoCurso
                     FROM a_actividad_proceso_sf d LEFT JOIN public.a_actividades_all a USING (id_activ)
                     WHERE a.id_activ IS NULL
                  )";
-            $GesActividades = new GestorActividadDl();
-            if ($GesActividades->getActividadesQuery($sql) === false) {
+            if ($ActividadDlRepository->getActividadesQuery($sql) === false) {
                 $txt .= _("error al borrar los procesos de la sf") . "<br>";
             }
         }
 
         // comprobar que no quedan actividades en otro estado
-        $sql = "SELECT id_activ,nom_activ FROM a_actividades_dl WHERE f_ini >= '$f_ini' AND f_ini <= '$f_fin' AND status != 1";
-        $GesActividades = new GestorActividadDl();
-        $cActividades = $GesActividades->getActividadesQuery($sql);
+        $cActividades = $ActividadDlRepository->getArrayActividadesEnPeriodoNoEnProyecto($f_ini,$f_fin);
         $rta_txt = '';
         foreach ($cActividades as $oActividad) {
             $rta_txt .= $oActividad->getNom_activ() . "<br>";
@@ -223,7 +217,14 @@ class ActividadNuevoCurso
         }
         //cambio el status a proyecto:
         $status = 1;
-        $oActividad = new ActividadDl();
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $newId = $ActividadDlRepository->newId();
+        $newIdActividad = $ActividadDlRepository->newIdActividad($newId);
+        $oActividad = new ActividadAll();
+        $oActividad->setId_auto($newId);
+        $oActividad->setId_activ($newIdActividad);
+        $oActividad->setIdTablaVo(new IdTablaCode('dl'));
+
         $oActividad->setId_tipo_activ($oActividadOrigen->getId_tipo_activ());
         $oActividad->setDl_org($oActividadOrigen->getDl_org());
         $oActividad->setNom_activ($nom_activ_new);
@@ -231,7 +232,7 @@ class ActividadNuevoCurso
         $oActividad->setDesc_activ($oActividadOrigen->getDesc_activ());
         $oActividad->setF_ini($oFini);
         $oActividad->setF_fin($oFfin);
-        $oActividad->setTipo_horario($oActividadOrigen->getTipo_horario());
+        //$oActividad->setTipo_horario($oActividadOrigen->getTipo_horario());
         $oActividad->setPrecio($oActividadOrigen->getPrecio());
         $oActividad->setNum_asistentes($oActividadOrigen->getNum_asistentes());
         $oActividad->setStatus($status);
@@ -243,10 +244,10 @@ class ActividadNuevoCurso
         $oActividad->setTarifa($oActividadOrigen->getTarifa());
         $oActividad->setH_ini($oActividadOrigen->getH_ini());
         $oActividad->setH_fin($oActividadOrigen->getH_fin());
-        // se le pasa el valor Quiet, para que no apunte los cambios.
-        if ($oActividad->DBGuardar($this->getQuiet()) === false) {
+        // TODO: se le pasa el valor Quiet, para que no apunte los cambios.
+        //if ($ActividadDlRepository->Guardar($oActividad, $this->getQuiet()) === false) {
+        if ($ActividadDlRepository->Guardar($oActividad) === false) {
             echo "ERROR: no se ha guardado la actividad<br>";
-            echo "\n" . $oActividad->getErrorTxt();
             exit;
         }
 
@@ -255,8 +256,8 @@ class ActividadNuevoCurso
 
         if (ConfigGlobal::is_app_installed('actividadescentro')) {
             // También copio los centros encargados.
-            $GesEncargados = new GestorCentroEncargado();
-            $cEncargados = $GesEncargados->getCentrosEncargados(array('id_activ' => $oActividadOrigen->getId_activ()));
+            $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
+            $cEncargados = $CentroEncargadoRepository->getCentrosEncargados(array('id_activ' => $oActividadOrigen->getId_activ()));
             foreach ($cEncargados as $oCentroEncargado) {
                 $newEncargado = clone $oCentroEncargado;
                 $newEncargado->setId_activ($id_actividad_new);

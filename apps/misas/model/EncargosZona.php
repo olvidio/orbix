@@ -3,8 +3,8 @@
 namespace misas\model;
 
 use DateInterval;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoHorario;
+use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use web\DateTimeLocal;
 
 class EncargosZona
@@ -16,7 +16,7 @@ class EncargosZona
     private DateTimeLocal $inicio;
     private DateTimeLocal $fin;
 
-    public function __construct($id_zona, $inicio, $fin, $orden)
+    public function __construct($id_zona, $inicio, $fin, $orden = '')
     {
         $this->id_zona = $id_zona;
         $this->inicio = $inicio ?? DateTimeLocal::createFromLocal('1/1/2000');
@@ -24,7 +24,7 @@ class EncargosZona
         $this->orden = $orden;
     }
 
-    public function cuadriculaSemana()
+    public function cuadriculaSemana(): array
     {
         $a_centros = [];
         $a_ctr_enc = [];
@@ -32,6 +32,7 @@ class EncargosZona
         $cEncargos = $this->getEncargos();
         $id_ubi_anterior = '';
 
+        $EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
         foreach ($cEncargos as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
@@ -65,8 +66,7 @@ class EncargosZona
                 $aWhere['f_fin'] = "'$fin_iso'";
                 $aOperador['f_fin'] = '>=';
 
-                $gesEncargoHorario = new GestorEncargoHorario();
-                $cEncargoHorario = $gesEncargoHorario->getEncargoHorarios($aWhere, $aOperador);
+                $cEncargoHorario = $EncargoHorarioRepository->getEncargoHorarios($aWhere, $aOperador);
                 foreach ($cEncargoHorario as $oEncargoHorario) {
                     $dia_ref = strtolower($oEncargoHorario->getDia_ref() ?? '');
                     if ($dia_ref === $a_dia_semana) {
@@ -96,10 +96,12 @@ class EncargosZona
         $aOperador['id_tipo_enc'] = 'ANY';
         $aWhere['id_zona'] = $this->id_zona;
 //        $aWhere['_ordre'] = 'desc_enc';
-        $aWhere['_ordre'] = $this->orden;
+        if (!empty($this->orden)) {
+            $aWhere['_ordre'] = $this->orden;
+        }
 
-        $GestorEncargo = new GestorEncargo();
-        $cEncargos = $GestorEncargo->getEncargos($aWhere, $aOperador);
+        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+        $cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
 
         return $cEncargos;
     }

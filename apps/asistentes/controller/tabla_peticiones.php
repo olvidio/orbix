@@ -1,13 +1,15 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use actividadplazas\model\entity\GestorActividadPlazas;
 use actividadplazas\model\entity\GestorPlazaPeticion;
+use src\actividadplazas\domain\value_objects\PlazaId;
+use src\asistentes\application\services\AsistenteActividadService;
 use asistentes\model\entity\Asistente;
-use asistentes\model\entity\GestorAsistente;
+
 use core\ConfigGlobal;
 use core\ViewTwig;
 use personas\model\entity\PersonaDl;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -38,7 +40,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     $id_activ_old = (integer)filter_input(INPUT_POST, 'id_activ_old');
-    $oActividad = new ActividadAll($id_activ_old);
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $oActividad = $ActividadAllRepository->findById($id_activ_old);
     $nom_activ = $oActividad->getNom_activ();
 }
 
@@ -72,10 +75,10 @@ $a_cabeceras = [_("nombre"),
 
 $a_botones = [];
 
-$gesAsistentes = new GestorAsistente();
-$cAsistentes = $gesAsistentes->getAsistentesDeActividad($id_activ_old);
+$service = $GLOBALS['container']->get(AsistenteActividadService::class);
+$cAsistentes = $service->getAsistentesDeActividad($id_activ_old);
 
-$oActividad = new ActividadAll($id_activ_old);
+$oActividad = $ActividadAllRepository->findById($id_activ_old);
 $id_tipo_activ = $oActividad->getId_tipo_activ();
 
 $oTipoActividad = new TiposActividades($id_tipo_activ);
@@ -89,6 +92,7 @@ $id_dl = $oDelegacion?->getIdDlVo()->value() ?? 0;
 
 $a_valores = [];
 $i = 0;
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 foreach ($cAsistentes as $oAsistente) {
     $i++;
     $id_nom = $oAsistente->getId_nom();
@@ -103,7 +107,7 @@ foreach ($cAsistentes as $oAsistente) {
         $id_activ = $oPlazaPeticion->getId_activ();
         $nom_activ_i = '';
         if (!empty($id_activ)) {
-            $oActividadPosible = new ActividadAll($id_activ);
+            $oActividadPosible = $ActividadAllRepository->findById($id_activ);
             $nom_activ_i = $oActividadPosible->getNom_activ();
             $dl_org = $oActividad->getDl_org();
             // añadir plazas libres sobre totales
@@ -118,7 +122,7 @@ foreach ($cAsistentes as $oAsistente) {
                         $concedidas = $oActividadPlazas->getPlazas();
                     }
                 }
-                $ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ, $mi_dele);
+                $ocupadas = $service->getPlazasOcupadasPorDl($id_activ, $mi_dele);
                 if ($ocupadas < 0) { // No se sabe
                     $libres = '-';
                 } else {
@@ -136,7 +140,7 @@ foreach ($cAsistentes as $oAsistente) {
                     'id_nom' => $id_nom,
                     'id_activ_old' => $id_activ_old,
                     'id_activ' => $id_activ,
-                    'plaza' => Asistente::PLAZA_ASIGNADA,
+                    'plaza' => PlazaId::ASIGNADA,
                 ];
 
                 $oHash = new Hash();

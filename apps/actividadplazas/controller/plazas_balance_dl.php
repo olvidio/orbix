@@ -1,7 +1,9 @@
 <?php
 
+use src\asistentes\application\services\AsistenteActividadService;
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\actividades\domain\value_objects\StatusId;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\TablaEditable;
 
@@ -53,7 +55,7 @@ switch ($sactividad) {
         break;
 }
 
-$status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
+$status = StatusId::ACTUAL; //actual
 
 // Seleccionar los id_dl del mismo grupo de estudios
 $esquema = ConfigGlobal::mi_region_dl();
@@ -71,9 +73,6 @@ $cDelegaciones = $gesDelegacion->getDelegaciones(['grupo_estudios' => $grupo_est
 $gesActividadPlazas = new actividadplazas\model\entity\GestorActividadPlazas();
 // Seleccionar actividades exportadas de los id_dl
 
-$a_grupo = [];
-$cActividades = [];
-$gesActividades = new actividades\model\entity\GestorActividad();
 
 function PlazasAB_por_actividad($dlA, $dlB, $clase)
 {
@@ -82,7 +81,7 @@ function PlazasAB_por_actividad($dlA, $dlB, $clase)
     global $gesActividades;
     global $gesActividadPlazas;
 
-    $gesAsistentes = new asistentes\model\entity\GestorAsistente();
+    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
 
     $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $dlA));
     $oDelegacionA = $cDelegaciones[0];
@@ -127,7 +126,7 @@ function PlazasAB_por_actividad($dlA, $dlB, $clase)
             }
         }
         // ocupadas A
-        $ocupadasA = $gesAsistentes->getPlazasOcupadasPorDl($id_activ, $dlA);
+        $ocupadasA = $service->getPlazasOcupadasPorDl($id_activ, $dlA);
         if ($ocupadasA < 0) { // No se sabe
             $libresA = '-';
         } else {
@@ -147,7 +146,7 @@ function PlazasAB_por_actividad($dlA, $dlB, $clase)
             }
         }
         // ocupadas B
-        $ocupadasB = $gesAsistentes->getPlazasOcupadasPorDl($id_activ, $dlB);
+        $ocupadasB = $service->getPlazasOcupadasPorDl($id_activ, $dlB);
         if ($ocupadasB < 0) { // No se sabe
             $libresB = '-';
         } else {

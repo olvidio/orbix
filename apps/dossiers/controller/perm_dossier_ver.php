@@ -4,6 +4,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\entity\TipoDossier;
 use dossiers\model\PermisoDossier;
+use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use web\Hash;
 use function core\is_true;
 
@@ -37,7 +38,8 @@ $go_to = Hash::link(ConfigGlobal::getWeb() . '/apps/dossiers/controller/perm_dos
 
 $url_update = "apps/dossiers/controller/perm_dossier_update.php";
 
-$oTipoDossier = new TipoDossier(array('id_tipo_dossier' => $Qid_tipo_dossier));
+$TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
+$oTipoDossier = $TipoDossierRepository->findById($Qid_tipo_dossier);
 $depende_modificar = $oTipoDossier->getDepende_modificar();
 
 $botones = 0;

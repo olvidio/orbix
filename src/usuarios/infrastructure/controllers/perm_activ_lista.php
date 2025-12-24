@@ -1,11 +1,11 @@
 <?php
 
-use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorPermUsuarioActividad;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use web\ContestarJson;
 use web\TiposActividades;
 use function core\is_true;
@@ -59,6 +59,7 @@ $aOpcionesAction = $oAcciones->lista_array();
 $a_valores = [];
 $id_tipo_activ_anterior = '';
 $dl_propia_anterior = '';
+$TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
 foreach ($cUsuarioPermArray as $aUsuarioPerm) {
     $i++;
     $id_item = $aUsuarioPerm['id_item'];
@@ -86,14 +87,13 @@ foreach ($cUsuarioPermArray as $aUsuarioPerm) {
     $oTipoActividad = new TiposActividades($id_tipo_activ_txt);
     $id_tipo_activ = $oTipoActividad->getId_tipo_activ();
 
-    $GesTiposActiv = new GestorTipoDeActividad();
-    $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ, $dl_propia);
+    $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
 
     $oGesFases = new GestorActividadFase();
     $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
     $fase_ref_txt = array_search($fase_ref, $aFases);
 
-    if ($dl_propia == $dl_propia_anterior && $id_tipo_activ == $id_tipo_activ_anterior) {
+    if ($dl_propia === $dl_propia_anterior && $id_tipo_activ === $id_tipo_activ_anterior) {
         $a_valores[$i]['sel'] = "";
         $a_valores[$i][1] = '';
         $a_valores[$i][2] = '';

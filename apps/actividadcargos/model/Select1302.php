@@ -7,8 +7,10 @@ use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
-use personas\model\entity\Persona;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\BotonesCurso;
 use web\Hash;
 use web\Lista;
@@ -118,9 +120,9 @@ class Select1302
         $aWhere = $this->oBotonesCurso->getWhere();
         $aOperator = $this->oBotonesCurso->getOperator();
 
-        $oPersona = Persona::NewPersona($this->id_pau);
+        $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
         if (!is_object($oPersona)) {
-            $this->msg_err = "<br>$oPersona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
+            $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
             exit ($this->msg_err);
         }
 
@@ -140,12 +142,13 @@ class Select1302
             $eliminar = 1;
         }
 
-        $oCargosEnActividad = new GestorActividadCargo();
+        $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
 
         $c = 0;
         $a_valores = [];
-        $cCargosEnActividad = $oCargosEnActividad->getActividadCargosDeAsistente(array('id_nom' => $this->id_pau), $aWhere, $aOperator);
+        $cCargosEnActividad = $ActividadCargoRepository->getActividadCargosDeAsistente(array('id_nom' => $this->id_pau), $aWhere, $aOperator);
         $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($cCargosEnActividad as $oActividadCargo) {
             $c++;
             $id_item = $oActividadCargo->getId_item();
@@ -159,11 +162,11 @@ class Select1302
                 continue;
             }
 
-            $oActividad = new ActividadAll($id_activ);
+            $oActividad = $ActividadAllRepository->findById($id_activ);
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
 
-            $puede_agd = $oActividadCargo->getPuede_agd();
+            $puede_agd = $oActividadCargo->isPuede_agd();
             $observ = $oActividadCargo->getObserv();
 
             is_true($puede_agd) ? $chk_puede_agd = "si" : $chk_puede_agd = "no";

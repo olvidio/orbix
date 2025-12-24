@@ -27,13 +27,13 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
-use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use permisos\model\PermisosActividadesTrue;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use web\Hash;
@@ -119,7 +119,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
         }
     }
 
-    $Qstatus = empty($Qstatus) ? ActividadAll::STATUS_ACTUAL : $Qstatus;
+    $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
 
     $aGoBack = array(
         'que' => $Qque,
@@ -185,7 +185,7 @@ if (!empty($Qdl_org)) {
     $aWhere['dl_org'] = $Qdl_org;
 }
 
-$GesActividades = new GestorActividad();
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
 
 $a_botones = array(
     array('txt' => _('cargos'), 'click' => "jsForm.mandar(\"#seleccionados\",\"carg\")"),
@@ -206,7 +206,7 @@ $a_cabeceras[] = ucfirst(_("sacd"));
 $a_cabeceras[] = ucfirst(_("precio"));
 
 $aWhere['_ordre'] = 'f_ini';
-$cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+$cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
 $num_activ = count($cActividades);
 if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
     $go_avant = Hash::link(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select.php?' . http_build_query(array('continuar' => 'si', 'stack' => $oPosicion->getStack())));
@@ -228,6 +228,7 @@ $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia !== null) {
     $sPrefs = $oPreferencia->getPreferencia();
 }
+$CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $id_activ = $oActividad->getId_activ();
     $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -257,13 +258,12 @@ foreach ($cActividades as $oActividad) {
     $oTipoActividad = new TiposActividades($id_tipo_activ);
     $isfsv = $oTipoActividad->getSfsvId();
     // para ver el nombre en caso de la otra sección
+    $ssfsv = $oTipoActividad->getSfsvText();
     if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des'))) {
-        $ssfsv = $oTipoActividad->getSfsvText();
         $sactividad = $oTipoActividad->getActividadText();
         $nom_activ = "$ssfsv $sactividad";
     }
 
-    $ssfsv = $oTipoActividad->getSfsvText();
     $sasistentes = $oTipoActividad->getAsistentesText();
     $sactividad = $oTipoActividad->getActividadText();
     $nom_tipo = $oTipoActividad->getNom_tipoText();
@@ -298,8 +298,8 @@ foreach ($cActividades as $oActividad) {
         $sacds = "";
         if (ConfigGlobal::is_app_installed('actividadessacd')) {
             if ($oPermSacd->have_perm_action('ver') === true) { // sólo si tiene permiso
-                $gesCargosActividad = new GestorActividadCargo();
-                foreach ($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {
+                $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+                foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
                     $sacds .= $oPersona->getPrefApellidosNombre() . "# "; // la coma la utilizo como separador de apellidos, nombre.
                 }
                 $sacds = substr($sacds, 0, -2);
@@ -308,9 +308,8 @@ foreach ($cActividades as $oActividad) {
         //ctrs encargados.
         $ctrs = "";
         if (ConfigGlobal::is_app_installed('actividadescentro')) {
-            $oEnc = new GestorCentroEncargado();
             $n = 0;
-            foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
+            foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
                 $n++;
                 $ctrs .= $oEncargado->getNombre_ubi() . ", ";
             }
@@ -318,7 +317,7 @@ foreach ($cActividades as $oActividad) {
         }
 
         //coincidente con sf.
-        $coincide = $GesActividades->getCoincidencia($oActividad, 'bool');
+        $coincide = $ActividadRepository->getCoincidencia($oActividad);
         $con = ($coincide) ? '*' : '';
 
         $a_valores[$i]['sel'] = "$id_activ#$nom_activ";

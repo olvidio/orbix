@@ -25,9 +25,11 @@
  */
 
 use actividadestudios\model\entity\GestorMatricula;
-use asistentes\model\entity\AsistentePub;
 use core\ConfigGlobal;
-use dossiers\model\entity\Dossier;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\value_objects\DossierPk;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -63,22 +65,23 @@ if (!empty($a_sel)) { //vengo de un checkbox
 function eliminar($id_activ, $id_nom)
 {
     $msg_err = '';
-    $oAsistentePub = new AsistentePub();
-    $oAsistente = $oAsistentePub->getClaseAsistente($id_nom, $id_activ);
-    $oAsistente->setPrimary_key(array('id_activ' => $id_activ, 'id_nom' => $id_nom));
-    $oAsistente->DBCarregar();
+    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+    $AsistenteRepositoryInterface = $service->getRepoAsistente($id_nom, $id_activ);
+    $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+    $oAsistente = $AsistenteRepository->findById($id_activ, $id_nom);
     // comprobar si puedo:
     if ($oAsistente->perm_modificar() === FALSE) {
         $msg_err = _("los datos de asistencia los modifica la dl del asistente");
     } else {
-        if ($oAsistente->DBEliminar() === false) {
+        if ($AsistenteRepository->Eliminar($oAsistente) === false) {
             $msg_err = _("hay un error, no se ha eliminado");
         }
 
         // hay que cerrar el dossier para esta persona/actividad/ubi, si no tiene más:
-        $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1301));
+        $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+        $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1301]));
         $oDossier->cerrar();
-        $oDossier->DBGuardar();
+        $DosierRepository->Guardar($oDossier);
 
         // también borro las matriculas que pueda tener
         $oGestorMatricula = new GestorMatricula();
@@ -97,16 +100,16 @@ function plaza($id_nom)
     $id_activ = (string)filter_input(INPUT_POST, 'id_activ');
     $plaza = (string)filter_input(INPUT_POST, 'plaza');
 
-    $oAsistentePub = new AsistentePub();
-    $oAsistente = $oAsistentePub->getClaseAsistente($id_nom, $id_activ);
-    $oAsistente->setPrimary_key(array('id_activ' => $id_activ, 'id_nom' => $id_nom));
-    $oAsistente->DBCarregar();
+    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+    $AsistenteRepositoryInterface = $service->getRepoAsistente($id_nom, $id_activ);
+    $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+    $oAsistente = $AsistenteRepository->findById($id_activ, $id_nom);
     // comprobar si puedo:
     if ($oAsistente->perm_modificar() === FALSE) {
         $msg_err = _("los datos de asistencia los modifica la dl del asistente");
     } else {
-        isset($plaza) ? $oAsistente->setPlaza($plaza) : $oAsistente->setPlaza();
-        if ($oAsistente->DBGuardar() === false) {
+        isset($plaza) ? $oAsistente->setPlazaComprobando($plaza) : $oAsistente->setPlaza(null);
+        if ($AsistenteRepository->Guardar($oAsistente) === false) {
             $msg_err = _("hay un error, no se ha guardado");
         }
     }
@@ -116,10 +119,10 @@ function plaza($id_nom)
 function editar($id_activ, $id_nom, $mod)
 {
     $msg_err = '';
-    $oAsistentePub = new AsistentePub();
-    $oAsistente = $oAsistentePub->getClaseAsistente($id_nom, $id_activ);
-    $oAsistente->setPrimary_key(array('id_activ' => $id_activ, 'id_nom' => $id_nom));
-    $oAsistente->DBCarregar();
+    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+    $AsistenteRepositoryInterface = $service->getRepoAsistente($id_nom, $id_activ);
+    $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+    $oAsistente = $AsistenteRepository->findById($id_activ, $id_nom);
 
     // comprobar si puedo (si es nuevo o mover, SI):
     if ($mod === 'editar' && $oAsistente->perm_modificar() === FALSE) {
@@ -133,21 +136,21 @@ function editar($id_activ, $id_nom, $mod)
         $Qest_ok = (string)filter_input(INPUT_POST, 'est_ok');
         $Qcfi = (string)filter_input(INPUT_POST, 'cfi');
         $Qfalta = (string)filter_input(INPUT_POST, 'falta');
-        $Qcfi_con = (string)filter_input(INPUT_POST, 'cfi_con');
+        $Qcfi_con = (int)filter_input(INPUT_POST, 'cfi_con');
         $Qpropietario = (string)filter_input(INPUT_POST, 'propietario');
         if ($Qpropietario === 'xxx') {
             $Qpropietario = '';
         }
 
-        isset($Qencargo) ? $oAsistente->setEncargo($Qencargo) : $oAsistente->setEncargo();
-        isset($Qobserv) ? $oAsistente->setObserv($Qobserv) : $oAsistente->setObserv();
-        isset($Qobserv_est) ? $oAsistente->setObserv_est($Qobserv_est) : $oAsistente->setObserv_est();
-        isset($Qplaza) ? $oAsistente->setPlaza($Qplaza) : $oAsistente->setPlaza();
-        empty($Qpropio) ? $oAsistente->setPropio('f') : $oAsistente->setPropio('t');
-        empty($Qest_ok) ? $oAsistente->setEst_ok('f') : $oAsistente->setEst_ok('t');
-        empty($Qcfi) ? $oAsistente->setCfi('f') : $oAsistente->setCfi('t');
-        empty($Qfalta) ? $oAsistente->setFalta('f') : $oAsistente->setFalta('t');
-        isset($Qcfi_con) ? $oAsistente->setCfi_con($Qcfi_con) : $oAsistente->setCfi_con();
+        $oAsistente->setEncargo($Qencargo);
+        $oAsistente->setObserv($Qobserv);
+        $oAsistente->setObserv_est($Qobserv_est);
+        $oAsistente->setPlazaComprobando($Qplaza);
+        $oAsistente->setPropio(is_true($Qpropio));
+        $oAsistente->setEst_ok(is_true($Qest_ok));
+        $oAsistente->setCfi(is_true($Qcfi));
+        $oAsistente->setFalta(is_true($Qfalta));
+        $oAsistente->setCfi_con($Qcfi_con);
         // si es mover, poner propio
         if ($mod === 'mover'){
             $oAsistente->setPropio('t');
@@ -158,7 +161,7 @@ function editar($id_activ, $id_nom, $mod)
         if (!empty($Qpropietario)) {
             $oAsistente->setPropietario($Qpropietario);
         }
-        if ($oAsistente->DBGuardar() === false) {
+        if ($AsistenteRepository->Guardar($oAsistente) === false) {
             $msg_err = _("hay un error, no se ha guardado");
         }
     }
@@ -191,9 +194,10 @@ switch ($Qmod) {
     //------------ EDITAR --------
     case "nuevo":
         // hay que abrir el dossier para esta persona/actividad/ubi:
-        $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+        $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+        $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
         $oDossier->abrir();
-        $oDossier->DBGuardar();
+        $DosierRepository->Guardar($oDossier);
     case "editar":
         $msg_err = editar($Qid_activ, $Qid_nom, $Qmod);
         break;

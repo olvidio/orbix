@@ -1,16 +1,16 @@
 <?php
 
-use actividadtarifas\model\entity\GestorTipoActivTarifa;
-use actividadtarifas\model\entity\GestorTipoTarifa;
-use actividadtarifas\model\entity\TipoActivTarifa;
-use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
+use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\actividadtarifas\domain\entity\TipoTarifa;
+use src\actividadtarifas\domain\value_objects\SerieId;
+use ubis\model\entity\GestorTarifaUbi;
+use ubis\model\entity\TarifaUbi;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
 use web\TiposActividades;
-use ubis\model\entity\GestorTarifaUbi;
-use ubis\model\entity\TarifaUbi;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -32,8 +32,7 @@ switch ($Qque) {
         $Qletra = (string)filter_input(INPUT_POST, 'letra');
         $letra = empty($Qletra) ? _("nueva") : $Qletra;
 
-        $oTipoActivTarifa = new TipoActivTarifa();
-        $aTipoSerie = $oTipoActivTarifa->getArraySerie();
+        $aTipoSerie = SerieId::getArraySerie();
 
         $oDesplPosiblesSeries = new Desplegable();
         $oDesplPosiblesSeries->setNombre('id_serie');
@@ -66,11 +65,13 @@ switch ($Qque) {
         $txt .= '<h3>' . sprintf(_("tarifa %s"), $letra) . '</h3>';
         if (empty($Qid_item)) {
             $miSfsv = ConfigGlobal::mi_sfsv();
-            $oGesTipoTarifa = new GestorTipoTarifa();
-            $oTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($miSfsv);
-            $oTipoTarifas->setNombre('id_tarifa');
+            $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+            $aOpciones = $TipoTarifaRepository->getArrayTipoTarifas($miSfsv);
+            $oDesplPosiblesTipoTarifas = new Desplegable();
+            $oDesplPosiblesTipoTarifas->setOpciones($aOpciones);
+            $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
             $txt .= _("tarifa") . ": ";
-            $txt .= $oTipoTarifas->desplegable();
+            $txt .= $oDesplPosiblesTipoTarifas->desplegable();
             $txt .= '<br><br>';
             $txt .= _("serie") . ": ";
             $txt .= $oDesplPosiblesSeries->desplegable();
@@ -122,6 +123,8 @@ switch ($Qque) {
         $txt = '';
         $error_txt = '';
         $a_valores = [];
+        $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
         foreach ($cTarifas as $oTarifaUbi) {
             $i++;
             $id_item = $oTarifaUbi->getId_item();
@@ -131,8 +134,7 @@ switch ($Qque) {
 
             $cantidad = "$cantidad " . _("€");
 
-            $oGesTipoActivTarifas = new GestorTipoActivTarifa();
-            $cTipoActivTarifas = $oGesTipoActivTarifas->getTipoActivTarifas(array('id_tarifa' => $id_tarifa));
+            $cTipoActivTarifas = $RelacionTarifaTipoActividadRepository->getTipoActivTarifas(['id_tarifa' => $id_tarifa]);
             $txt = '';
             $t = 0;
             foreach ($cTipoActivTarifas as $oTipoActivTarifa) {
@@ -145,7 +147,7 @@ switch ($Qque) {
                 $txt .= $oTipoActividad->getNomGral();
             }
 
-            $oTipoTarifa = new TipoTarifa($id_tarifa);
+            $oTipoTarifa = $TipoTarifaRepository->findById($id_tarifa);
             $seccion = $oTipoTarifa->getSfsv();
             $letra = $oTipoTarifa->getLetra();
             $script = "fnjs_modificar($id_item,'$letra')";
@@ -281,7 +283,7 @@ switch ($Qque) {
             $sfsv = $oTipoTarifa->getSfsv();
             $observ = $oTipoTarifa->getObserv();
 
-            if ($modo == 1) {
+            if ($modo === 1) {
                 $modo_1 = "selected";
                 $modo_0 = "";
             } else {
@@ -310,12 +312,13 @@ switch ($Qque) {
         }
         break;
     case 'tar_form':
+        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
         if ($Qid_tarifa === 'nuevo') {
             $letra = '';
             $modo = 0;
             $observ = '';
         } else {
-            $oTipoTarifa = new TipoTarifa($Qid_tarifa);
+            $oTipoTarifa = $TipoTarifaRepository->findById($Qid_tarifa);
             $oTipoTarifa->DBCarregar();
             $letra = $oTipoTarifa->getLetra();
             $modo = $oTipoTarifa->getModo();
@@ -353,26 +356,29 @@ switch ($Qque) {
         $Qletra = (string)filter_input(INPUT_POST, 'letra');
         $Qmodo = (string)filter_input(INPUT_POST, 'modo');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
+
+        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
         if ($Qid_tarifa === 'nuevo') {
+            $newId = $TipoTarifaRepository->nextId();
             $oTipoTarifa = new TipoTarifa();
+            $oTipoTarifa->setId_tarifa($newId);
             // miro si soy sf/sv.
             $oTipoTarifa->setSfsv(ConfigGlobal::mi_sfsv());
         } else {
-            $oTipoTarifa = new TipoTarifa($Qid_tarifa);
-            $oTipoTarifa->DBCarregar();
+            $oTipoTarifa = $TipoTarifaRepository->findById($Qid_tarifa);
         }
         if (isset($Qletra)) $oTipoTarifa->setLetra($Qletra);
         if (isset($Qmodo)) $oTipoTarifa->setModo($Qmodo);
         if (isset($Qobserv)) $oTipoTarifa->setObserv($Qobserv);
-        if ($oTipoTarifa->DBGuardar() === false) {
+        if ($TipoTarifaRepository->Guardar($oTipoTarifa) === false) {
             echo _("hay un error, no se ha guardado");
             echo "\n" . $oTipoTarifa->getErrorTxt();
         }
         break;
     case "tar_eliminar":
-        $oTipoTarifa = new TipoTarifa($_POST['id_tarifa']);
-        $oTipoTarifa->DBCarregar();
-        if ($oTipoTarifa->DBEliminar() === false) {
+        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+        $oTipoTarifa = $TipoTarifaRepository->findById($Qid_tarifa);
+        if ($TipoTarifaRepository->Eliminar($oTipoTarifa) === false) {
             echo _("hay un error, no se ha borrado");
         }
         break;

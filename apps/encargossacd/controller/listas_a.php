@@ -2,10 +2,10 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use encargossacd\model\EncargoFunciones;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoSacd;
-use personas\model\entity\Persona;
+use src\encargossacd\application\traits\EncargoFunciones;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
@@ -55,6 +55,8 @@ if ($Qsf == 1) {
 
 $Html = '';
 $txt_tipo_ctr = "";
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
 foreach ($tipos_de_ctr as $tipo_ctr_que) {
     switch ($tipo_ctr_que) {
         case 'n':
@@ -97,13 +99,12 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
         $id_ubi = $oCentro->getId_ubi();
         $nombre_ubi = $oCentro->getNombre_ubi();
         $tipo_ctr = $oCentro->getTipo_ctr();
-        $GesEncargo = new GestorEncargo();
         $aWhere = [];
         $aOperador = [];
         $aWhere['id_ubi'] = $id_ubi;
         $aWhere['id_tipo_enc'] = '1[0123]0.';
         $aOperador['id_tipo_enc'] = '~';
-        $cEncargos = $GesEncargo->getEncargos($aWhere, $aOperador);
+        $cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
         foreach ($cEncargos as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
@@ -118,14 +119,13 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
             $aWhereT['f_fin'] = 'null';
             $aOperadorT['f_fin'] = 'IS NULL';
             $aWhereT['_ordre'] = 'modo';
-            $GesEncargoSacd = new GestorEncargoSacd();
-            $cEncargoSacd = $GesEncargoSacd->getEncargosSacd($aWhereT, $aOperadorT);
+            $cEncargoSacd = $EncargoSacdRepository->getEncargosSacd($aWhereT, $aOperadorT);
             $s = 0;
             foreach ($cEncargoSacd as $oEncargoSacd) {
                 $s++;
                 $modo = $oEncargoSacd->getModo();
                 $id_nom = $oEncargoSacd->getId_nom();
-                $oPersona = Persona::NewPersona($id_nom);
+                $oPersona = Persona::findPersonaEnGlobal($id_nom);
                 if (is_string($oPersona)) {
                     $nom_ap = $oPersona;
                 } else {
@@ -192,7 +192,7 @@ if (empty($Qsf)) {
 	foreach($cCargosCl as $oCargoCl) {
 		$id_nom = $oCargoCl->getId_nom();
 		$cargo = $oCargoCl->getCargo();
-		$oPersona = Persona::newPersona($id_nom);
+		$oPersona = Persona::findPersonaEnGlobal($id_nom);
 		$sacd = $oPersona->getSacd();
 		if ($sacd === false) continue; // sólo listo a los sacd.
 		$nom_ap = $oPersona->getNombreApellidosCrSin();

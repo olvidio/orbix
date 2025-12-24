@@ -4,6 +4,30 @@ namespace src\actividadcargos\domain\value_objects;
 
 final class TipoCargoCode
 {
+    public const EMPTY = '';
+    public const D = 'd';
+    public const SD = 'sd';
+    public const SCL = 'scl';
+    public const SACD = 'sacd';
+    public const COORDINA = 'coordina';
+
+    private const VALID_VALUES = [
+        self::EMPTY,
+        self::D,
+        self::SD,
+        self::SCL,
+        self::SACD,
+        self::COORDINA,
+    ];
+
+    private const TRANSLATIONS = [
+        self::D => 'Director',
+        self::SD => 'Subdirector',
+        self::SCL => 'Secretario',
+        self::SACD => 'Sacerdote',
+        self::COORDINA => 'Coordinador',
+    ];
+
     private string $value;
 
     public function __construct(string $value)
@@ -15,16 +39,10 @@ final class TipoCargoCode
 
     private function validate(string $value): void
     {
-        if ($value === '') {
-            throw new \InvalidArgumentException('TipoCargoCode cannot be empty');
-        }
-        // Por UI, longitud máxima 8 (DatosCampo->setArgument(8))
-        if (mb_strlen($value) > 8) {
-            throw new \InvalidArgumentException('TipoCargoCode must be at most 8 characters');
-        }
-        // Allow common name characters including accents, spaces, apostrophes, hyphens, underscore, plus, parentheses
-        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
-            throw new \InvalidArgumentException('TipoCargoCode has invalid characters');
+        if (!in_array($value, self::VALID_VALUES, true)) {
+            throw new \InvalidArgumentException(
+                sprintf('TipoCargoCode must be one of: %s', implode(', ', self::VALID_VALUES))
+            );
         }
     }
 

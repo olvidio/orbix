@@ -100,8 +100,8 @@ class ProfesorJuramento
     }
 
     /**
-     * @deprecated Usar getFechaJuramentoVo()->value()
      * @return DateTimeLocal|NullDateTimeLocal|null $df_juramento
+     * @deprecated Usar getFechaJuramentoVo()->value()
      */
     public function getF_juramento(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -109,8 +109,8 @@ class ProfesorJuramento
     }
 
     /**
-     * @deprecated Usar setFechaJuramentoVo(FechaJuramento $vo)
      * @param DateTimeLocal|null $df_juramento
+     * @deprecated Usar setFechaJuramentoVo(FechaJuramento $vo)
      */
     public function setF_juramento(DateTimeLocal|null $df_juramento = null): void
     {
@@ -137,8 +137,21 @@ class ProfesorJuramento
     {
         $oProfesorJuramentoSet = new Set();
 
+        $oProfesorJuramentoSet->add($this->getDatosId_nom());
         $oProfesorJuramentoSet->add($this->getDatosF_juramento());
         return $oProfesorJuramentoSet->getTot();
+    }
+
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     function getDatosF_juramento(): DatosCampo

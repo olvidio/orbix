@@ -2,6 +2,8 @@
 
 namespace personas\model\entity;
 
+use personas\legacy\GestorPersonaGlobal;
+
 /**
  * GestorPersonaEx
  *

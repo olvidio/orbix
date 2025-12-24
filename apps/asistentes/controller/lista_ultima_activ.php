@@ -1,10 +1,11 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
-use actividades\model\entity\GestorActividadDl;
-use asistentes\model\entity\GestorAsistente;
-use personas\model\entity\GestorPersonaS;
+
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\Lista;
@@ -169,8 +170,8 @@ switch ($Qque) {
                 '_ordre' => 'f_ini DESC',
         ];
         $aOperadorUltima = ['f_ini' => '<'];
-        $gesActividades = new GestorActividadDl();
-        $cActividades = $gesActividades->getActividades($aWhereUltima, $aOperadorUltima);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $cActividades = $ActividadDlRepository->getActividades($aWhereUltima, $aOperadorUltima);
         if (is_array($cActividades) && !empty($cActividades)) {
             $oActividadU = $cActividades[0];
             $oFini = $oActividadU->getF_fin();
@@ -207,19 +208,20 @@ switch ($Qque) {
 }
 // Id de actividades posibles
 $aWhereA['_ordre'] = 'f_ini DESC';
-$GesActividades = new GestorActividad();
-$a_id_activ_f_ini = $GesActividades->getArrayIdsWithKeyFini($aWhereA, $aOperadorA);
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+$a_id_activ_f_ini = $ActividadRepository->getArrayIdsWithKeyFini($aWhereA, $aOperadorA);
 
 $titulo = $titulo_actividad . ' ' . $titulo_fecha;
 
 $aWhereP['situacion'] = 'A';
-$GesPersonasS = new GestorPersonaS();
-$cPersonas = $GesPersonasS->getPersonasDl($aWhereP, $aOperadorP);
+$PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+$cPersonas = $PersonaSRepository->getPersonasDl($aWhereP, $aOperadorP);
 $i = 0;
 $falta = 0;
 $a_valores = [];
 $gesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-$GesAsistente = new GestorAsistente();
+$AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 foreach ($cPersonas as $oPersona) {
     $i++;
     $id_nom = $oPersona->getId_nom();
@@ -235,12 +237,12 @@ foreach ($cPersonas as $oPersona) {
         }
     }
 
-    $cAsistentes = $GesAsistente->getAsistenciasPersonaDeActividades($id_nom, $a_id_activ_f_ini, true);
+    $cAsistentes = $AsistenteRepository->getAsistenciasPersonaDeActividades($id_nom, $a_id_activ_f_ini, true);
     if (!empty($cAsistentes)) {
         reset($cAsistentes);
         $oAsistente = current($cAsistentes);
         $id_activ = $oAsistente->getId_activ();
-        $oActividad = new ActividadAll($id_activ);
+        $oActividad = $ActividadAllRepository->findById($id_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $oFini = $oActividad->getF_ini();
         $f_ini_iso = $oFini->getIso();

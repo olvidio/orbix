@@ -1,0 +1,39 @@
+<?php
+
+namespace src\personas\domain\value_objects;
+
+final class IncCode
+{
+    private string $value;
+
+    public function __construct(string $value)
+    {
+        $value = trim($value);
+        $this->validate($value);
+        $this->value = strtoupper($value);
+    }
+
+    private function validate(string $value): void
+    {
+        if ($value === '') {
+            throw new \InvalidArgumentException('IncCode cannot be empty');
+        }
+        if (mb_strlen($value) > 2) {
+            throw new \InvalidArgumentException('IncCode must be at most 2 characters');
+        }
+        if (!preg_match('/^[A-Za-z0-9]{1,2}$/', $value)) {
+            throw new \InvalidArgumentException('IncCode has invalid characters');
+        }
+    }
+
+    public function value(): string { return $this->value; }
+    public function __toString(): string { return $this->value; }
+
+    public static function fromNullableString(?string $value): ?self
+    {
+        if ($value === null) { return null; }
+        $value = trim($value);
+        if ($value === '') { return null; }
+        return new self($value);
+    }
+}

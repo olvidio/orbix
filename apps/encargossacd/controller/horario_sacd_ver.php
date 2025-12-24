@@ -1,8 +1,8 @@
 <?php
 
-use encargossacd\model\EncargoConstants;
-use encargossacd\model\EncargoFunciones;
-use personas\model\entity\PersonaDl;
+use src\encargossacd\application\traits\EncargoFunciones;
+use src\encargossacd\domain\EncargoConstants;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 
 /**
  * Esta página muestra un formulario para crear una nuevo horario de encargo.
@@ -34,7 +34,8 @@ $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 $Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
 
 
-$oPersona = new PersonaDl($Qid_nom);
+$PersonasDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+$oPersona = $PersonasDlRepository->findById($Qid_nom);
 $ap_nom = $oPersona->getPrefApellidosNombre();
 /*
 $GesEncargosSacdHorario = new GestorEncargoSacdHorario();
@@ -45,7 +46,7 @@ $cEncargos = $GesEncargos->getEncargos(array('id_enc'));
 */
 
 $sql_h = "SELECT t.desc_enc,hs.id_item
-		FROM encargos t LEFT JOIN encargo_sacd_horario hs USING(id_enc)
+		FROM encargos t LEFT JOIN encargo_sacd_horario hs USING($Qid_enc)
 		WHERE t.id_enc=$Qid_enc AND hs.id_nom=$Qid_nom";
 $oDBSt_q_h = $oDbl->query($sql_h);
 $h = 0;
@@ -192,18 +193,18 @@ $titulo = _("horario de") . ": " . $desc_enc;
             <td class=etiqueta><?php echo ucfirst(_("dia")); ?>:</td>
             <td><select class=contenido id="dia" name="dia">
                     <option></option>
-                        <?php
-                        $dia = $oEncargoFunciones->calcular_dia($mas_menos, $dia_ref, $dia_inc);
-                        $opciones_dia_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
-                        foreach ($opciones_dia_semana as $key => $d_semana) {
-                            if ($dia == $key) {
-                                $selected = "selected";
-                            } else {
-                                $selected = "";
-                            }
-                            echo "<option value=\"$key\" $selected>" . ucfirst($d_semana) . "</option>";
+                    <?php
+                    $dia = $oEncargoFunciones->calcular_dia($mas_menos, $dia_ref, $dia_inc);
+                    $opciones_dia_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
+                    foreach ($opciones_dia_semana as $key => $d_semana) {
+                        if ($dia == $key) {
+                            $selected = "selected";
+                        } else {
+                            $selected = "";
                         }
-                        ?>
+                        echo "<option value=\"$key\" $selected>" . ucfirst($d_semana) . "</option>";
+                    }
+                    ?>
                 </select>
             </td>
             <td>
@@ -281,7 +282,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
     if (!empty($id_item)) {
         $sql_ex = "SELECT * FROM encargo_sacd_horario_excepcion WHERE id_item_h=$id_item";
         //echo "query: $sql_ex<br>";
-        $oDBSt_q = $oDBE->query($sql_ex);
+        $oDBSt_q = $oDbl->query($sql_ex);
         if ($oDBSt_q->rowCount() > 0) {
             echo "</form>";
             include("horario_sacd_ex_select.php");

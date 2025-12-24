@@ -1,7 +1,7 @@
 <?php
 
-use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\ContestarJson;
 use web\Periodo;
@@ -41,8 +41,8 @@ $aWhere['f_fin'] = $inicio;
 $aOperador['f_fin'] = '>=';
 $aWhere['status'] = 4;
 $aOperador['status'] = '<';
-$GesActividades = new GestorActividad();
-$aIdUbis = $GesActividades->getUbis($aWhere, $aOperador);
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+$aIdUbis = $ActividadRepository->getUbis($aWhere, $aOperador);
 
 $aUbis = [];
 foreach ($aIdUbis as $id_ubi) {

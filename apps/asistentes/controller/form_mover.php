@@ -1,16 +1,15 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use actividadestudios\model\entity\PosiblesCa;
-use actividadplazas\model\entity\GestorActividadPlazas;
 use actividadplazas\model\entity\GestorPlazaPeticion;
-use asistentes\model\entity\Asistente;
-use asistentes\model\entity\AsistentePub;
-use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadplazas\domain\value_objects\PlazaId;
+use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -38,9 +37,10 @@ $Qid_activ_old = (integer)filter_input(INPUT_POST, 'id_activ');
 $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
 
 // Asistencia para saber si puedo modificar:
-$oAsistentePub = new AsistentePub();
-$oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $Qid_activ_old);
-$oAsistente->setPrimary_key(array('id_activ' => $Qid_activ_old, 'id_nom' => $Qid_nom));
+$service = $GLOBALS['container']->get(AsistenteActividadService::class);
+$AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ_old);
+$AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+$oAsistente = $AsistenteRepository->findById($Qid_activ_old, $Qid_nom);
 if ($oAsistente->perm_modificar() === FALSE) {
     $aviso_txt = _("los datos de asistencia los modifica la dl del asistente");
 
@@ -49,12 +49,13 @@ if ($oAsistente->perm_modificar() === FALSE) {
         'aviso_txt' => $aviso_txt,
     ];
 } else {
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 
     $oPosiblesCa = new PosiblesCa();
 
     $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $gesActividadPlazas = new GestorActividadPlazas();
-    $gesAsistentes = new GestorAsistente();
+    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
     $mi_dele = ConfigGlobal::mi_delef();
     $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
     $oDelegacion = $cDelegaciones[0] ?? null;
@@ -66,7 +67,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
         $mod = "mover";
 
         //del mismo tipo que la anterior
-        $oActividad = new ActividadAll(array('id_activ' => $Qid_activ_old));
+        $oActividad = $ActividadAllRepository->findById($Qid_activ_old);
         $id_tipo = $oActividad->getId_tipo_activ();
 
         // IMPORTANT: Propietario del a plaza
@@ -104,12 +105,12 @@ if ($oAsistente->perm_modificar() === FALSE) {
 
         $aWhere['id_tipo_activ'] = '^' . $id_tipo;
         $aOperador['id_tipo_activ'] = '~';
-        $aWhere['status'] = ActividadAll::STATUS_ACTUAL;
+        $aWhere['status'] = StatusId::ACTUAL;
         $aWhere['_ordre'] = 'f_ini';
 
         // todas las posibles.
-        $oGesActividades = new GestorActividad();
-        $cActividades = $oGesActividades->getActividades($aWhere, $aOperador);
+        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
 
         if (ConfigGlobal::is_app_installed('actividadplazas')) {
             //primero las que se han pedido
@@ -120,9 +121,9 @@ if ($oAsistente->perm_modificar() === FALSE) {
             $sid_activ = '';
             foreach ($cPlazasPeticion as $oPlazaPeticion) {
                 $id_activ = $oPlazaPeticion->getId_activ();
-                $oActividad = new ActividadAll($id_activ);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 // Asegurar que es una actividad actual (No terminada)
-                if ($oActividad->getStatus() != ActividadAll::STATUS_ACTUAL) {
+                if ($oActividad->getStatus() != StatusId::ACTUAL) {
                     continue;
                 }
                 // Asegurar que es una actividad del periodo
@@ -171,7 +172,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
                         $concedidas = $oActividadPlazas->getPlazas();
                     }
                 }
-                $ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ, $mi_dele);
+                $ocupadas = $service->getPlazasOcupadasPorDl($id_activ, $mi_dele);
                 if ($ocupadas < 0) { // No se sabe
                     $libres = '-';
                 } else {
@@ -207,7 +208,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
         'id_activ_old' => $Qid_activ_old,
         'mod' => $mod,
         'propio' => $propio,
-        'plaza' => Asistente::PLAZA_ASIGNADA,
+        'plaza' => PlazaId::ASIGNADA,
         'propietario' => $propietario,
     );
     $oHash->setCamposForm($camposForm);

@@ -76,7 +76,7 @@ class Info2001 extends DatosInfo
         $despl_depende = "<option></option>";
         // para el desplegable depende
         $v1 = $oFicha->tipo_teleco;
-        $v2 = $oFicha->desc_teleco;
+        $v2 = $oFicha->id_desc_teleco;
         if (!empty($v2)) {
             $oDepende = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
             $aOpciones = $oDepende->getArrayDescTelecoUbis($v1);
@@ -92,7 +92,7 @@ class Info2001 extends DatosInfo
     {
         //caso de actualizar el campo depende
         if (isset($this->accion)) {
-            if ($this->accion === 'desc_teleco') {
+            if ($this->accion === 'id_desc_teleco') {
                 $oDepende = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
                 $aOpciones = $oDepende->getArrayDescTelecoUbis($valor_depende);
                 $oDesplegable = new Desplegable('', $aOpciones, '', true);

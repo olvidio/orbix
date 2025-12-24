@@ -2,9 +2,8 @@
 
 use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
-use personas\model\entity\Persona;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use function core\is_true;
+use src\personas\domain\entity\Persona;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -33,9 +32,9 @@ require_once("apps/core/global_object.inc");
 $id_nom = empty($_GET['id_nom']) ? '' : $_GET['id_nom'];
 $id_tabla = empty($_GET['id_tabla']) ? '' : $_GET['id_tabla'];
 
-$oPersona = Persona::NewPersona($id_nom);
-if (!is_object($oPersona)) {
-    $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
+if ($oPersona === null) {
+    $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
 }
 $nom = $oPersona->getNombreApellidos();

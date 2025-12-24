@@ -21,6 +21,8 @@ class InfoProfesorTituloEst extends DatosInfoRepo
         $this->setClase('src\\profesores\\domain\\entity\\ProfesorTituloEst');
         $this->setMetodoGestor('getProfesorTitulosEst');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(ProfesorTituloEstRepositoryInterface::class);
     }
 
     public function getId_dossier()
@@ -42,7 +44,7 @@ class InfoProfesorTituloEst extends DatosInfoRepo
             $aWhere['titulo'] = $this->k_buscar;
             $aOperador['titulo'] = 'sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get(ProfesorTituloEstRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getProfesorTitulosEst($aWhere, $aOperador);
 
         return $Coleccion;

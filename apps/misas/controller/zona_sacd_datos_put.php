@@ -3,8 +3,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use Illuminate\Http\JsonResponse;
-use personas\model\entity\PersonaSacd;
-use zonassacd\model\entity\GestorZonaSacd;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -31,8 +30,8 @@ $error_txt = '';
 $aWhere = [];
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['id_nom'] = $Qid_sacd;
-$GesZonasSacd = new GestorZonaSacd();
-$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+$ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
+$cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
 if (empty ($cZonaSacd)) {
     $error_txt .= _("No existe");
 } else {

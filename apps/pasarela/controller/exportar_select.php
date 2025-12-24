@@ -1,11 +1,11 @@
 <?php
 
-use actividades\model\entity\GestorActividadDl;
-use actividadescentro\model\entity\GestorCentroEncargado;
-use actividadtarifas\model\entity\GestorTipoActivTarifa;
-use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use pasarela\model\Conversiones;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
@@ -40,10 +40,10 @@ if (empty($Qid_tipo_activ)) {
     $Qsactividad = (string)filter_input(INPUT_POST, 'iactividad_val');
 
     if (empty($Qssfsv)) {
-        if ($mi_sfsv == 1) {
+        if ($mi_sfsv === 1) {
             $Qssfsv = 'sv';
         }
-        if ($mi_sfsv == 2) {
+        if ($mi_sfsv === 2) {
             $Qssfsv = 'sf';
         }
     }
@@ -105,8 +105,8 @@ foreach ($aCentrosPosibles as $id_ubi => $nombre_ubi) {
     $aCentrosPosiblesSinSgAgd[$id_ubi] = $nombre_ubi_sin;
 }
 
-$gesActividades = new GestorActividadDl();
-$cActividades = $gesActividades->getActividades($aWhere, $aOperador);
+$ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+$cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
 
 $a_cabeceras = [_("activada"),
     _("casa"),
@@ -143,6 +143,8 @@ $a_botones = [];
 $a_valores = [];
 $i = 0;
 $oHoy = new DateTimeLocal();
+$TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+$CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -202,8 +204,7 @@ foreach ($cActividades as $oActividad) {
     $aWhereCentros = [];
     $aWhereCentros['id_activ'] = $id_activ;
     $aWhereCentros['_ordre'] = 'num_orden DESC';
-    $GesCentrosEncargados = new GestorCentroEncargado();
-    $cCentrosEncargados = $GesCentrosEncargados->getCentrosEncargados($aWhereCentros);
+    $cCentrosEncargados = $CentroEncargadoRepository->getCentrosEncargados($aWhereCentros);
     $aCentrosEncargados = [0 => '', 1 => '', 2 => ''];
     if (!empty($cCentrosEncargados)) {
         for ($n = 0; $n < 4; $n++) {
@@ -218,8 +219,8 @@ foreach ($cActividades as $oActividad) {
     $numero_de_dias = $oActividad->getDuracion();
     $id_tarifa = $oActividad->getTarifa();
     if (empty($id_tarifa)) {
-        $oGesTipoActivTarifas = new GestorTipoActivTarifa();
-        $cTipoActivTarifas = $oGesTipoActivTarifas->getTipoActivTarifas(array('id_tipo_activ' => $id_tipo_activ));
+        $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+        $cTipoActivTarifas = $RelacionTarifaTipoActividadRepository->getTipoActivTarifas(array('id_tipo_activ' => $id_tipo_activ));
         if (empty($cTipoActivTarifas)) {
             $oTipoActivdad = new TiposActividades($id_tipo_activ);
             $nom_tipo_actividad = $oTipoActivdad->getNom();
@@ -238,7 +239,7 @@ foreach ($cActividades as $oActividad) {
     $cantidad_estudiante = 0;
     if (empty($cTarifas)) {
         // buscar el nombre de la id_tarifa
-        $oTipoTarifa = new TipoTarifa($id_tarifa);
+        $oTipoTarifa = $TipoTarifaRepository->findById($id_tarifa);
         $nombre_tarifa = $oTipoTarifa->getLetra();
         $err .= sprintf(_("No está definida la id_tarifa %s para la casa %s"), $nombre_tarifa, $nombre_ubi);
         $err .= '<br>';

@@ -1,12 +1,12 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividadDl;
-use actividades\model\entity\GestorActividadPub;
 use actividadplazas\model\entity\GestorPlazaPeticion;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\PersonaDl;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\DesplegableArray;
 use web\Hash;
@@ -89,7 +89,7 @@ switch ($Qsactividad) {
 
 $aWhere['f_ini'] = "'$inicurs','$fincurs'";
 $aOperador['f_ini'] = 'BETWEEN';
-$aWhere['status'] = ActividadAll::STATUS_ACTUAL;
+$aWhere['status'] = StatusId::ACTUAL;
 $aWhere['_ordre'] = 'f_ini,nivel_stgr';
 
 $cActividades = [];
@@ -117,13 +117,13 @@ switch ($Qna) {
         $aOperador['id_tipo_activ'] = '~';
         //inicialmente estaba sólo con las activiades publicadas.
         //Ahora añado las no publicadas de midl.
-        $GesActividadesDl = new GestorActividadDl();
-        $cActividadesDl = $GesActividadesDl->getActividades($aWhere, $aOperador);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $cActividadesDl = $ActividadDlRepository->getActividades($aWhere, $aOperador);
         // Añado la condición para que no duplique las de midele:
         $aWhere['dl_org'] = $mi_dele;
         $aOperador['dl_org'] = '!=';
-        $GesActividadesPub = new GestorActividadPub();
-        $cActividadesPub = $GesActividadesPub->getActividades($aWhere, $aOperador);
+        $ActividadPubRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
+        $cActividadesPub = $ActividadPubRepository->getActividades($aWhere, $aOperador);
 
         $cActividades = array_merge($cActividadesDl, array('-------'), $cActividadesPub);
         break;
@@ -146,13 +146,13 @@ switch ($Qna) {
         $aOperador['id_tipo_activ'] = '~';
         //inicialmente estaba sólo con las activiades publicadas.
         //Ahora añado las no publicadas de midl.
-        $GesActividadesDl = new GestorActividadDl();
-        $cActividadesDl = $GesActividadesDl->getActividades($aWhere, $aOperador);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $cActividadesDl = $ActividadDlRepository->getActividades($aWhere, $aOperador);
         // Añado la condición para que no duplique las de midele:
         $aWhere['dl_org'] = $mi_dele;
         $aOperador['dl_org'] = '!=';
-        $GesActividadesPub = new GestorActividadPub();
-        $cActividadesPub = $GesActividadesPub->getActividades($aWhere, $aOperador);
+        $ActividadPubRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
+        $cActividadesPub = $ActividadPubRepository->getActividades($aWhere, $aOperador);
 
         $cActividades = array_merge($cActividadesDl, array('-------'), $cActividadesPub);
         break;

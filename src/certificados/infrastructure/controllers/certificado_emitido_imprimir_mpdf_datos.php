@@ -3,9 +3,9 @@
 use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\PersonaNota;
-use personas\model\entity\Persona;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\ContestarJson;
 use web\DateTimeLocal;
@@ -32,16 +32,16 @@ if (is_true($firmado)) {
     $chk_firmado = '';
 }
 
-$oPersona = Persona::NewPersona($id_nom);
-if (!is_object($oPersona)) {
-    $msg_err = "<br>$oPersona con id_nom: $id_nom en " . __FILE__ . ": line " . __LINE__;
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
+if ($oPersona === null) {
+    $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
 }
 $apellidos_nombre = $oPersona->getApellidosNombre();
 $nom = empty($nom) ? $apellidos_nombre : $nom;
 $lugar_nacimiento = $oPersona->getLugar_nacimiento();
 $f_nacimiento = $oPersona->getF_nacimiento()->getFechaLatin();
-$nivel_stgr = $oPersona->getStgr();
+$nivel_stgr = $oPersona->getNivel_stgr();
 
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $vstgr = $_SESSION['oConfig']->getNomVstgr();

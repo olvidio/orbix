@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use web\ContestarJson;
 
@@ -15,9 +15,10 @@ $ids_actividades = $oEquipaje->getIds_activ();
 $aId_activ = explode(',', $ids_actividades);
 $a = 0;
 $a_actividades = [];
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 foreach ($aId_activ as $id_activ) {
     $a++;
-    $oActividad = new ActividadAll($id_activ);
+    $oActividad = $ActividadAllRepository->indById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
     if (empty($nom_activ)) {
         $nom_activ = sprintf(_("OJO! No se encuentra la actividad con id: %s"), $id_activ);

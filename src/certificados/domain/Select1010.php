@@ -4,8 +4,8 @@ namespace src\certificados\domain;
 
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
-use personas\model\entity\Persona;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -94,9 +94,9 @@ class Select1010
 
     private function getTabla(): void
     {
-        $oPersona = Persona::newPersona($this->id_pau);
+        $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
         if (!is_object($oPersona)) {
-            $this->msg_err = "<br>$oPersona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
+            $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
             exit($this->msg_err);
         }
         $aWhere = [

@@ -1,9 +1,9 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 
-use cartaspresentacion\model\entity\GestorCartaPresentacion;
-use cartaspresentacion\model\entity\GestorCartaPresentacionDl;
 use core\ConfigGlobal;
+use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
+use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
@@ -29,23 +29,24 @@ switch ($Qque) {
     case "lista_dl":
         $solo_dl = 1;
         $mi_dele = ConfigGlobal::mi_delef();
-        $GesPresentacion = new GestorCartaPresentacionDl();
+        $CartaPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionDlRepositoryInterface::class);
     case "lista_todo":
         $ordenar_dl = 1;
         if (empty($solo_dl)) {
-            $GesPresentacion = new GestorCartaPresentacion();
+            $CartaPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
         }
-        $colPresentacion = $GesPresentacion->getCartasPresentacion();
+        $cCartasPresentacion = $CartaPresentacionRepository->getCartasPresentacion();
         $a_mega_tmp = [];
-        foreach ($colPresentacion as $oPresentacion) {
-            $id_ubi = $oPresentacion->getId_ubi();
+        foreach ($cCartasPresentacion as $oCartaPresentacion) {
+            $id_ubi = $oCartaPresentacion->getId_ubi();
             $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
             $oCentro = $CentroRepository->findById($id_ubi);
+            if ($oCentro === null) { continue; }
             $dl = $oCentro->getDl();
             if ($solo_dl === 1 && $dl !== $mi_dele) {
                 continue;
             }
-            $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
+            $a_mega_tmp[] = mega_array($oCartaPresentacion, $oCentro, $ordenar_dl);
         }
         $a_mega = array_merge_recursive(...$a_mega_tmp);
         lista_cartas($a_mega, $ordenar_dl);
@@ -59,6 +60,7 @@ switch ($Qque) {
         // buscar los ctr y de allí mirar los que tienen cartas de presentacion.
         $aWhere = [];
         $aOperador = [];
+        $CartaPresentacionRepository = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
         if (!empty($Qpais) || !empty($Qpoblacion)) {
             if (!empty($Qpoblacion)) {
                 $aWhere['poblacion'] = $Qpoblacion;
@@ -69,41 +71,39 @@ switch ($Qque) {
                 $aOperador['pais'] = 'sin_acentos';
             }
 
-            $GesDirecciones = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-            $cDirecciones = $GesDirecciones->getDirecciones($aWhere, $aOperador);
+            $DireccionCentroRepository = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
+            $cDirecciones = $DireccionCentroRepository->getDirecciones($aWhere, $aOperador);
             $a_mega_tmp = [];
+            $RelacionCentroDireccionRepository = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
             foreach ($cDirecciones as $oDireccion) {
                 $id_direccion = $oDireccion->getId_direccion();
-                $cId_ubis = $oDireccion->getUbis();
+                $cId_ubis = $RelacionCentroDireccionRepository->getUbisPorDireccion($id_direccion);
                 $cCentros = [];
                 $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                foreach ($cId_ubis as $oUbi) {
-                    $oCentro = $CentroRepository->findById($oUbi->getId_ubi());
+                foreach ($cId_ubis as $aUbi) {
+                    $oCentro = $CentroRepository->findById($aUbi['id_ubi']);
                     if ($oCentro->isStatus()) {
                         $cCentros[] = $oCentro;
                     }
                 }
                 foreach ($cCentros as $oCentro) {
                     $id_ubi = $oCentro->getId_ubi();
-                    $GesPresentacion = new GestorCartaPresentacion();
-                    $colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi' => $id_ubi, 'id_direccion' => $id_direccion));
-                    if (!empty($colPresentacion) && !empty($colPresentacion[0])) {
-                        $oPresentacion = $colPresentacion[0];
-                        $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
+                    $oCartaPresentacion = $CartaPresentacionRepository->findById($id_ubi, $id_direccion);
+                    if ($oCartaPresentacion !== null) {
+                        $a_mega_tmp[] = mega_array($oCartaPresentacion, $oCentro, $ordenar_dl);
                     }
                 }
                 $a_mega = array_merge_recursive(...$a_mega_tmp);
             }
             // Extiendo la búsqueda al campo zona
             if (!empty($Qpoblacion)) {
-                $GesPresentacion = new GestorCartaPresentacion();
-                $colPresentacion = $GesPresentacion->getCartasPresentacion(array('zona' => $Qpoblacion), array('zona' => 'sin_acentos'));
+                $cCartasPresentacion = $CartaPresentacionRepository->getCartasPresentacion(['zona' => $Qpoblacion], ['zona' => 'sin_acentos']);
                 $a_mega_tmp = [];
                 $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                foreach ($colPresentacion as $oPresentacion) {
-                    $id_ubi = $oPresentacion->getId_ubi();
+                foreach ($cCartasPresentacion as $oCartaPresentacion) {
+                    $id_ubi = $oCartaPresentacion->getId_ubi();
                     $oCentro = $CentroRepository->findById($id_ubi);
-                    $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
+                    $a_mega_tmp[] = mega_array($oCartaPresentacion, $oCentro, $ordenar_dl);
                 }
                 $a_mega = array_merge_recursive(...$a_mega_tmp);
             }
@@ -120,10 +120,9 @@ switch ($Qque) {
             $a_mega_tmp = [];
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
-                $GesPresentacion = new GestorCartaPresentacion();
-                $cPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi' => $id_ubi));
-                foreach ($cPresentacion as $oPresentacion) {
-                    $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
+                $cPresentacion = $CartaPresentacionRepository->getCartasPresentacion(['id_ubi' => $id_ubi]);
+                foreach ($cPresentacion as $oCartaPresentacion) {
+                    $a_mega_tmp[] = mega_array($oCartaPresentacion, $oCentro, $ordenar_dl);
                 }
             }
             $a_mega = array_merge_recursive(...$a_mega_tmp);
@@ -138,10 +137,9 @@ switch ($Qque) {
             $a_mega_tmp = [];
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
-                $GesPresentacion = new GestorCartaPresentacion();
-                $cPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi' => $id_ubi));
-                foreach ($cPresentacion as $oPresentacion) {
-                    $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
+                $cPresentacion = $CartaPresentacionRepository->getCartasPresentacion(['id_ubi' => $id_ubi]);
+                foreach ($cPresentacion as $oCartaPresentacion) {
+                    $a_mega_tmp[] = mega_array($oCartaPresentacion, $oCentro, $ordenar_dl);
                 }
             }
             $a_mega = array_merge_recursive(...$a_mega_tmp);
@@ -212,25 +210,29 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
     if (!empty($id_ctr_padre)) {
         $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
         $oCentro1 = $CentroRepository->findById($id_ctr_padre);
-        $cDirecciones1 = $oCentro1->getDirecciones();
-        if (!empty($cDirecciones1)) {
-            $oDireccion1 = $cDirecciones1[0];
-            $telf1 = $oCentro1->getTeleco("telf", "*", " / ");
-            //$telf1 .= 'fax:'.teleco($id_ctr_padre,"fax","*"," / ") ;
-            $a_direccion[] = array('direccion' => $oDireccion1->getDireccion(),
-                'a_p' => $oDireccion1->getA_p(),
-                'c_p' => $oDireccion1->getC_p(),
-                'poblacion' => $oDireccion1->getPoblacion(),
-                'telf' => $telf1);
+        if ($oCentro1 !== null) {
+            $cDirecciones1 = $oCentro1->getDirecciones();
+            if (!empty($cDirecciones1)) {
+                $oDireccion1 = $cDirecciones1[0];
+                $telf1 = $oCentro1->getTeleco("telf", "*", " / ");
+                //$telf1 .= 'fax:'.teleco($id_ctr_padre,"fax","*"," / ") ;
+                $a_direccion[] = array('direccion' => $oDireccion1->getDireccion(),
+                    'a_p' => $oDireccion1->getA_p(),
+                    'c_p' => $oDireccion1->getC_p(),
+                    'poblacion' => $oDireccion1->getPoblacion(),
+                    'telf' => $telf1);
+            }
         }
     }
     // Similar a ctr_padre: Si hay una segunda dirección del centro que sea la principal.
     $GesCtrxDireccion = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
-    $cCtrxDirecciones = $GesCtrxDireccion->getDirecciones(['id_ubi' => $id_ubi, 'principal' => 't']);
+    //$cCtrxDirecciones = $GesCtrxDireccion->getDirecciones(['id_ubi' => $id_ubi, 'principal' => 't']);
+    $cCtrxDirecciones = $GesCtrxDireccion->getDireccionesPorUbi($id_ubi);
     if (count($cCtrxDirecciones) > 0) {
-        $DirecccionRepository = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-        foreach ($cCtrxDirecciones as $oCtrxDireccion) {
-            $id_dir = $oCtrxDireccion->getId_direccion();
+        $DireccionRepository = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
+        foreach ($cCtrxDirecciones as $aCtrxDireccion) {
+            if ( $aCtrxDireccion['principal'] === false) { continue; }
+            $id_dir = $aCtrxDireccion['id_direccion'];
             if ($id_dir != $id_direccion) {
                 $oDireccion2 = $DireccionRepository->findById($id_dir);
                 //$telf1 .= 'fax:'.teleco($id_ctr_padre,"fax","*"," / ") ;
@@ -290,7 +292,7 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
     }
 
     $poblacion .= empty($pais) ? '' : '<br>(' . $pais . ')';
-    if ($ordenar_dl == 1) {
+    if ($ordenar_dl === 1) {
         foreach ($aTipo as $tipo) {
             $a_mega[$tipo][$dl][$poblacion][$edad] = datos_a_celdas($a_texto);
         }

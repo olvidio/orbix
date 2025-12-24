@@ -36,7 +36,7 @@ class TelecoUbi
      */
     private int $id_tipo_teleco;
     /**
-     * Desc_teleco de TelecoCdc
+     * id_desc_teleco de TelecoCdc
      *
      * @var string|null
      */
@@ -86,12 +86,12 @@ class TelecoUbi
                 $this->setId_tipo_teleco((int)$valor);
             }
         }
-        if (array_key_exists('desc_teleco', $aDatos)) {
-            $valor = $aDatos['desc_teleco'];
+        if (array_key_exists('id_desc_teleco', $aDatos)) {
+            $valor = $aDatos['id_desc_teleco'];
             if ($valor instanceof DescTelecoText || $valor === null) {
-                $this->setDescTelecoVo($valor);
+                $this->setIdDescTelecoVo($valor);
             } else {
-                $this->setDesc_teleco($valor !== null ? (string)$valor : null);
+                $this->setId_desc_teleco($valor !== null ? (string)$valor : null);
             }
         }
         if (array_key_exists('num_teleco', $aDatos)) {
@@ -198,7 +198,7 @@ class TelecoUbi
      *
      * @deprecated Usar `getDescTelecoVo(): ?DescTelecoText` en su lugar.
      */
-    public function getDesc_teleco(): ?string
+    public function getId_desc_teleco(): ?string
     {
         return $this->sdesc_teleco;
     }
@@ -209,17 +209,17 @@ class TelecoUbi
      *
      * @deprecated Usar `setDescTelecoVo(?DescTelecoText $texto = null): void` en su lugar.
      */
-    public function setDesc_teleco(?string $sdesc_teleco = null): void
+    public function setId_desc_teleco(?string $sdesc_teleco = null): void
     {
         $this->sdesc_teleco = $sdesc_teleco;
     }
 
-    public function getDescTelecoVo(): ?DescTelecoText
+    public function getIdDescTelecoVo(): ?DescTelecoText
     {
         return DescTelecoText::fromNullableString($this->sdesc_teleco);
     }
 
-    public function setDescTelecoVo(?DescTelecoText $texto = null): void
+    public function setIdDescTelecoVo(?DescTelecoText $texto = null): void
     {
         $this->sdesc_teleco = $texto?->value();
     }
@@ -347,16 +347,16 @@ class TelecoUbi
         $oDatosCampo->setArgument(TipoTelecoRepositoryInterface::class); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNombreTelecoVo'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayTiposTelecoUbi'); // método con que crear la lista de opciones del Gestor objeto relacionado.
-        $oDatosCampo->setAccion('desc_teleco'); // campo que hay que actualizar al cambiar este.
+        $oDatosCampo->setAccion('id_desc_teleco'); // campo que hay que actualizar al cambiar este.
         return $oDatosCampo;
     }
 
     function getDatosDesc_teleco()
     {
         $oDatosCampo = new DatosCampo();
-        $oDatosCampo->setNom_camp('desc_teleco');
-        $oDatosCampo->setMetodoGet('getDesc_teleco');
-        $oDatosCampo->setMetodoSet('setDec_teleco');
+        $oDatosCampo->setNom_camp('id_desc_teleco');
+        $oDatosCampo->setMetodoGet('getId_desc_teleco');
+        $oDatosCampo->setMetodoSet('setId_desc_teleco');
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('depende');
         $oDatosCampo->setArgument(DescTelecoRepositoryInterface::class);

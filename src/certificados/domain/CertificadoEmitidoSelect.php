@@ -3,8 +3,8 @@
 namespace src\certificados\domain;
 
 use core\ConfigGlobal;
-use personas\model\entity\Persona;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use function core\is_true;
@@ -100,8 +100,8 @@ class CertificadoEmitidoSelect
                 $idioma = $oLocal->getNom_idiomaAsString();
             }
 
-            $oPersona = Persona::NewPersona($id_nom);
-            if (!is_object($oPersona)) {
+            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            if ($oPersona === null) {
                 $nom_db = '';
             } else {
                 $nom_db = $oPersona->getNombreApellidos();

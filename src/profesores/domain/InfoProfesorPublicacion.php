@@ -20,6 +20,8 @@ class InfoProfesorPublicacion extends DatosInfoRepo
         $this->setClase('src\\profesores\\domain\\entity\\ProfesorPublicacion');
         $this->setMetodoGestor('getProfesorPublicaciones');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(ProfesorPublicacionRepositoryInterface::class);
     }
 
     public function getId_dossier()
@@ -41,7 +43,7 @@ class InfoProfesorPublicacion extends DatosInfoRepo
             $aWhere['titulo'] = $this->k_buscar;
             $aOperador['titulo'] = 'sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get(ProfesorPublicacionRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getProfesorPublicaciones($aWhere, $aOperador);
 
         return $Coleccion;

@@ -2,19 +2,20 @@
 
 namespace cambios\model;
 
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
-use cambios\model\entity\CambioAnotado;
-use cambios\model\entity\CambioUsuario;
-use cambios\model\entity\GestorCambioAnotado;
-use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividades;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
+use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
+use src\cambios\domain\entity\CambioAnotado;
+use src\cambios\domain\entity\CambioUsuario;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\DateTimeLocal;
-use zonassacd\model\entity\GestorZona;
-use zonassacd\model\entity\GestorZonaSacd;
+use zonassacd\legacy\GestorZonaSacd;
 use function core\is_true;
 
 
@@ -114,8 +115,8 @@ class Avisos
         $aWhere['id_usuario'] = $this->id_usuario;
         $aWhere['aviso_tipo'] = $aviso_tipo;
 
-        $oGesCambiosUsuario = new GestorCambioUsuario();
-        $cCambioUsuario = $oGesCambiosUsuario->getCambiosUsuario($aWhere);
+        $CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
+        $cCambioUsuario = $CambioUsuarioRepository->getCambiosUsuario($aWhere);
 
         // Log del resultado de búsqueda
         $msg = "fn_apuntar: Encontrados " . count($cCambioUsuario) . " registros existentes";
@@ -135,14 +136,16 @@ class Avisos
         } else {
             $msg = "fn_apuntar: Insertando nuevo registro";
             (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+            $newIdItem = $CambioUsuarioRepository->getNewIdItem();
             $oCambioUsuario = new CambioUsuario();
+            $oCambioUsuario->setId_item_cambio($newIdItem);
             $oCambioUsuario->setId_schema_cambio($this->id_schema_cmb);
             $oCambioUsuario->setId_item_cambio($this->id_item_cmb);
             $oCambioUsuario->setSfsv($sfsv);
             $oCambioUsuario->setId_usuario($this->id_usuario);
             $oCambioUsuario->setAviso_tipo($aviso_tipo);
 
-            $resultado = $oCambioUsuario->DBGuardar();
+            $resultado = $CambioUsuarioRepository->Guardar($oCambioUsuario);
             $msg = "fn_apuntar: Resultado DBGuardar: " . ($resultado ? 'SUCCESS' : 'FAILED');
             (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
 
@@ -168,23 +171,23 @@ class Avisos
             'id_item_cambio' => $this->id_item_cmb,
             'server' => $server,
         ];
-        $gesCambiosAnotados = new GestorCambioAnotado();
-        $gesCambiosAnotados->setTabla($ubicacion);
-        $cCambiosAnotados = $gesCambiosAnotados->getCambiosAnotados($aWhere);
+        $CambioAnotadoRepository = $GLOBALS['container']->get(CambioAnotadoRepositoryInterface::class);
+        $CambioAnotadoRepository->setTabla($ubicacion);
+        $cCambiosAnotados = $CambioAnotadoRepository->getCambiosAnotados($aWhere);
         // debería ser único
         if (count($cCambiosAnotados) > 0) {
             $oCambioAnotado = $cCambiosAnotados[0];
-            $oCambioAnotado->DBCarregar();
         } else {
+            $newIdItem = $CambioAnotadoRepository->getNewIdItem();
             $oCambioAnotado = new CambioAnotado();
-            $oCambioAnotado->setTabla($ubicacion);
+            $oCambioAnotado->setId_item_cambio($newIdItem);
             $oCambioAnotado->setId_item_cambio($this->id_item_cmb);
             $oCambioAnotado->setId_schema_cambio($this->id_schema_cmb);
             $oCambioAnotado->setServer($server);
         }
 
         $oCambioAnotado->setAnotado('t');
-        if ($oCambioAnotado->DBGuardar(true) === false) { //'true' para que no genere la tabla de avisos.
+        if ($CambioAnotadoRepository->Guardar($oCambioAnotado) === false) { //'true' para que no genere la tabla de avisos.
             echo _("Hay un error, no se ha guardado");
             echo _("anotado");
             echo "<br>";
@@ -241,7 +244,8 @@ class Avisos
             if (!empty($mis_id_ubis)) { //casa o un listado de ubis en la preferencia del aviso.
                 $a_mis_id_ubis = explode(',', $mis_id_ubis);
 
-                $oActividad = new ActividadAll($id_activ);
+                $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
 
                 // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
@@ -271,15 +275,15 @@ class Avisos
             // soy jefe zona?
             // si soy jefe de zona me afectan todos los sacd de la zona.
             $rta = FALSE;
-            $GesZonas = new GestorZona();
-            $cZonas = $GesZonas->getZonas(array('id_nom' => $id_nom_usuario));
+            $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+            $cZonas = $ZonaRepository->getZonas(array('id_nom' => $id_nom_usuario));
             if (is_array($cZonas) && count($cZonas) > 0) {
                 // sacd de mi zona
-                $GesZonaSacd = new GestorZonaSacd();
+                $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
                 foreach ($cZonas as $oZona) {
                     $id_zona = $oZona->getId_zona();
-                    $cSacds = $GesZonaSacd->getSacdsZona($id_zona);
-                    foreach ($cSacds as $id_nom_sacd) {
+                    $a_id_nom = $ZonaSacdRepository->getIdSacdsDeZona($id_zona);
+                    foreach ($a_id_nom as $id_nom_sacd) {
                         $rta = $this->tengoPermiso($propiedad, $id_activ, $id_nom_sacd, $valor_old_cmb, $valor_new_cmb);
                         if ($rta === TRUE) {
                             return TRUE;
@@ -297,7 +301,8 @@ class Avisos
         if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
             $a_id_pau = explode(',', $id_pau);
 
-            $oActividad = new ActividadAll($id_activ);
+            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $oActividad = $ActividadAllRepository->findById($id_activ);
             $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
             // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
             if ($propiedad === 'id_ubi') {
@@ -346,8 +351,8 @@ class Avisos
                 $aOperador = [];
 
                 $permiso_ver = FALSE;
-                $oGesActividadCargo = new GestorActividadCargo();
-                $cAsistentes = $oGesActividadCargo->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+                $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+                $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
                 if (is_array($cAsistentes) && !empty($cAsistentes)) {
                     $aAsistente = $cAsistentes[$id_activ];
                     $propio = $aAsistente['propio'];

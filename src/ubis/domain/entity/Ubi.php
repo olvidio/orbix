@@ -34,43 +34,52 @@ class Ubi
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public static function NewUbi($id_ubi)
+    public static function NewUbi($id_ubi): Casa|Centro|CentroDl|CentroEx|CentroEllas|CentroEllos|null
     {
-        // para la sf (comienza por 2).
-        if ((int)substr($id_ubi, 0, 1) === 2) {
-            // Si soy sv solo tengo acceso a los de la dl,
-            // En caso contrario puedo ver los de todas las regiones.
-            if (ConfigGlobal::mi_sfsv() === 1) {
+        if (ConfigGlobal::is_dmz()) {
+            $CentroRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
+            // para la sf (comienza por 2).
+            if ((int)substr($id_ubi, 0, 1) === 2) {
                 $CentroRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-            } else {
-                $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
             }
+            $oCentro = $CentroRepository->findById($id_ubi);
         } else {
-            // Si soy sf solo tengo acceso a los de la dl,
-            // En caso contrario puedo ver los de todas las regiones.
-            if (ConfigGlobal::mi_sfsv() === 2) {
-                $CentroRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
+            // para la sf (comienza por 2).
+            if ((int)substr($id_ubi, 0, 1) === 2) {
+                // Si soy sv solo tengo acceso a los de la dl,
+                // En caso contrario puedo ver los de todas las regiones.
+                if (ConfigGlobal::mi_sfsv() === 1) {
+                    $CentroRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+                } else {
+                    $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                }
             } else {
-                $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                // Si soy sf solo tengo acceso a los de la dl,
+                // En caso contrario puedo ver los de todas las regiones.
+                if (ConfigGlobal::mi_sfsv() === 2) {
+                    $CentroRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
+                } else {
+                    $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                }
             }
-        }
-        $oCentro = $CentroRepository->findById($id_ubi);
-        if (!empty($oCentro)) {
-            $tipo_ubi = $oCentro->getTipo_ubi();
-            switch ($tipo_ubi) {
-                case 'ctrdl':
-                    $oCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ubi);
-                    break;
-                case 'ctrex':
-                    $oCentro = $GLOBALS['container']->get(CentroExRepositoryInterface::class)->findById($id_ubi);
-                    break;
-                default:
-                    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
-                    exit ($err_switch);
+            $oCentro = $CentroRepository->findById($id_ubi);
+            if ($oCentro !== null) {
+                $tipo_ubi = $oCentro->getTipo_ubi();
+                switch ($tipo_ubi) {
+                    case 'ctrdl':
+                        $oCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ubi);
+                        break;
+                    case 'ctrex':
+                        $oCentro = $GLOBALS['container']->get(CentroExRepositoryInterface::class)->findById($id_ubi);
+                        break;
+                    default:
+                        $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                        exit ($err_switch);
+                }
+                $oUbi = $oCentro;
+            } else {
+                $oUbi = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi);
             }
-            $oUbi = $oCentro;
-        } else {
-            $oUbi = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi);
         }
         return $oUbi;
     }

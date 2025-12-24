@@ -19,6 +19,8 @@ class InfoProfesorTipo extends DatosInfoRepo
 
         $this->setClase('src\\profesores\\domain\\entity\\ProfesorTipo');
         $this->setMetodoGestor('getProfesorTipos');
+
+        $this->setRepositoryInterface(ProfesorTipoRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoProfesorTipo extends DatosInfoRepo
             $aWhere = array('tipo_profesor' => $this->k_buscar);
             $aOperador = array('tipo_profesor' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(ProfesorTipoRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getProfesorTipos($aWhere, $aOperador);
 
         return $Coleccion;

@@ -1,12 +1,13 @@
 <?php
 
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
-use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\Persona;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use function core\is_true;
 
 /**
@@ -15,15 +16,8 @@ use function core\is_true;
  * Admite dos tipos de lista: una simple
  * y otra con datos útiles al cl de la actividad
  *
- * @package    delegacion
- * @subpackage    actividades
- * @author    Josep Companys
- * @since        15/5/02.
- *
  */
-/**
- * Funciones más comunes de la aplicación
- */
+
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -44,12 +38,13 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     $id_pau = (integer)filter_input(INPUT_POST, 'id_pau');
-    $oActividad = new ActividadAll($id_pau);
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $oActividad = $ActividadAllRepository->findById($id_pau);
     $nom_activ = $oActividad->getNom_activ();
 }
 
 $queSel = (string)filter_input(INPUT_POST, 'queSel');
-$gesAsistentes = new GestorAsistente();
+$AsistenteRepository = $GLOBALS['container'] ->get(AsistenteRepositoryInterface::class);
 
 function datos($oPersona)
 {
@@ -119,8 +114,8 @@ $aListaCargos = [];
 $msg_err = '';
 // primero los cargos
 if (ConfigGlobal::is_app_installed('actividadcargos')) {
-    $GesCargosEnActividad = new GestorActividadCargo();
-    $cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ' => $id_pau));
+    $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+    $cCargosEnActividad = $ActividadCargoRepository->getActividadCargos(array('id_activ' => $id_pau));
     $mi_sfsv = ConfigGlobal::mi_sfsv();
     $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
     foreach ($cCargosEnActividad as $oActividadCargo) {
@@ -137,14 +132,14 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
             continue;
         }
 
-        $oPersona = Persona::NewPersona($id_nom);
-        if (!is_object($oPersona)) {
-            $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+        $oPersona = Persona::findPersonaEnGlobal($id_nom);
+        if ($oPersona === null) {
+            $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             continue;
         }
         $nom = $oPersona->getPrefApellidosNombre();
 
-        $puede_agd = $oActividadCargo->getPuede_agd();
+        $puede_agd = $oActividadCargo->isPuede_agd();
         $observ_c = $oActividadCargo->getObserv();
         $ctr_dl = $oPersona->getCentro_o_dl();
 
@@ -153,8 +148,8 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
         // ahora miro si también asiste:
         $aWhere = array('id_activ' => $id_pau, 'id_nom' => $id_nom);
         $aOperador = [];
-        // me aseguro de que no sea un cargo vacio (sin id_nom)
-        if (!empty($id_nom) && $cAsistente = $gesAsistentes->getAsistentes($aWhere, $aOperador)) {
+        // me aseguro de que no sea un cargo vacío (sin id_nom)
+        if (!empty($id_nom) && $cAsistente = $AsistenteRepository->getAsistentes($aWhere, $aOperador)) {
             if (is_array($cAsistente) && count($cAsistente) > 1) {
                 $tabla = '';
                 foreach ($cAsistente as $Asistente) {
@@ -164,9 +159,9 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
                 $msg_err .= "<br>$nom(" . $oPersona->getId_tabla() . ")<br><br>En las tablas:<ul>$tabla</ul>";
                 exit ("$msg_err");
             }
-            $propio = $cAsistente[0]->getPropio();
-            $falta = $cAsistente[0]->getFalta();
-            $est_ok = $cAsistente[0]->getEst_ok();
+            $propio = $cAsistente[0]->isPropio();
+            $falta = $cAsistente[0]->isFalta();
+            $est_ok = $cAsistente[0]->isEst_ok();
             $observ = $cAsistente[0]->getObserv();
 
             if (is_true($propio)) {
@@ -196,7 +191,7 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
 // ahora los asistentes sin los cargos
 $asistentes = [];
 $msg_err = '';
-foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsistente) {
+foreach ($AsistenteRepository->getAsistentes(array('id_activ' => $id_pau)) as $oAsistente) {
     $c++;
     $num++;
     $id_nom = $oAsistente->getId_nom();
@@ -206,17 +201,17 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsiste
         continue;
     }
 
-    $oPersona = Persona::NewPersona($id_nom);
-    if (!is_object($oPersona)) {
-        $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+    $oPersona = Persona::findPersonaEnGlobal($id_nom);
+    if ($oPersona === null) {
+        $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         continue;
     }
     $nom = $oPersona->getPrefApellidosNombre();
     $ctr_dl = $oPersona->getCentro_o_dl();
 
-    $propio = $oAsistente->getPropio();
-    $falta = $oAsistente->getFalta();
-    $est_ok = $oAsistente->getEst_ok();
+    $propio = $oAsistente->isPropio();
+    $falta = $oAsistente->isFalta();
+    $est_ok = $oAsistente->isEst_ok();
     $observ = $oAsistente->getObserv();
 
     if (ConfigGlobal::is_app_installed('actividadplazas')) {

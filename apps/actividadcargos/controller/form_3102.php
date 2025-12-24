@@ -24,16 +24,15 @@
  *
  */
 
-use actividadcargos\model\entity\ActividadCargo;
 use core\ViewPhtml;
 use frontend\shared\web\Desplegable;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaEx;
-use personas\model\entity\GestorPersonaN;
-use personas\model\entity\GestorPersonaNax;
-use personas\model\entity\GestorPersonaS;
-use personas\model\entity\Persona;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 use function core\is_true;
 
@@ -79,22 +78,25 @@ $pau = (string)filter_input(INPUT_POST, 'pau');
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-$obj = 'actividadcargos\\model\\entity\\ActividadCargo';
+$obj = 'ActividadCargo';
 
 $id_nom_real = '';
 $ape_nom = '';
 $oDesplegablePersonas = [];
 if (!empty($Qid_item)) { //caso de modificar
-    $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item, 'id_schema' => $Qid_schema));
+    $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+    // necesario mirar el esquema en el caso de consultar las vistas de union para regiones stgr
+    $cActividadCargo = $ActividadCargoRepository->getActividadCargos(['id_item' => $Qid_item, 'id_schema' => $Qid_schema]);
+    $oActividadCargo = $cActividadCargo[0];
     $Qid_activ = $oActividadCargo->getId_activ();
     $Qid_cargo = $oActividadCargo->getId_cargo();
     $Qid_nom = $oActividadCargo->getId_nom();
-    $puede_agd = $oActividadCargo->getPuede_agd();
+    $puede_agd = $oActividadCargo->isPuede_agd();
     $observ = $oActividadCargo->getObserv();
 
-    $oPersona = Persona::NewPersona($Qid_nom);
+    $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
     if (!is_object($oPersona)) {
-        $msg_err = "<br>$oPersona con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
+        $msg_err = "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
         exit ($msg_err);
     }
     $ape_nom = $oPersona->getPrefApellidosNombre();
@@ -104,9 +106,9 @@ if (!empty($Qid_item)) { //caso de modificar
     $observ = "";
     // Si vengo de la lista de asistentes, ya sé el id_nom y el id_activ (es como modificar)
     if ($Qid_dossier == 3101) {  // vengo del listado de asistencias
-        $oPersona = Persona::NewPersona($Qid_nom);
+        $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
         if (!is_object($oPersona)) {
-            $msg_err = "<br>$oPersona con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
+            $msg_err = "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
             exit ($msg_err);
         }
         $ape_nom = $oPersona->getPrefApellidosNombre();
@@ -117,32 +119,35 @@ if (!empty($Qid_item)) { //caso de modificar
         $na = strtok('&');
         $na_txt = strtok($na, '=');
         $na_val = 'p' . strtok('=');
+        $oDesplegablePersonas = new Desplegable();
+        $oDesplegablePersonas->setNombre('id_nom');
+        $oDesplegablePersonas->setBlanco(true);
         switch ($obj_pau) {
             case 'PersonaN':
-                $oPersonas = new GestorPersonaN();
-                $oDesplegablePersonas = $oPersonas->getListaPersonas();
-                $oDesplegablePersonas->setNombre('id_nom');
+                $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+                $oOpciones = $PersonaNRepository->getArrayPersonas();
+                $oDesplegablePersonas->setOpciones($oOpciones);
                 break;
             case 'PersonaNax':
-                $oPersonas = new GestorPersonaNax();
-                $oDesplegablePersonas = $oPersonas->getListaPersonas();
-                $oDesplegablePersonas->setNombre('id_nom');
+                $PersonaNaxRepository = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+                $oOpciones = $PersonaNaxRepository->getArrayPersonas();
+                $oDesplegablePersonas->setOpciones($oOpciones);
                 break;
             case 'PersonaAgd':
-                $oPersonas = new GestorPersonaAgd();
-                $oDesplegablePersonas = $oPersonas->getListaPersonas();
-                $oDesplegablePersonas->setNombre('id_nom');
+                $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+                $oOpciones = $PersonaAgdRepository->getArrayPersonas();
+                $oDesplegablePersonas->setOpciones($oOpciones);
                 break;
             case 'PersonaS':
-                $oPersonas = new GestorPersonaS();
-                $oDesplegablePersonas = $oPersonas->getListaPersonas();
-                $oDesplegablePersonas->setNombre('id_nom');
+                $PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+                $oOpciones = $PersonaSRepository->getArrayPersonas();
+                $oDesplegablePersonas->setOpciones($oOpciones);
                 break;
             case 'PersonaSSSC':
             case 'PersonaEx':
-                $oPersonas = new GestorPersonaEx();
-                $oDesplegablePersonas = $oPersonas->getListaPersonas($na_val);
-                $oDesplegablePersonas->setNombre('id_nom');
+                $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+                $oOpciones = $PersonaExRepository->getArrayPersonas($na_val);
+                $oDesplegablePersonas->setOpciones($oOpciones);
                 $obj_pau = 'PersonaEx';
                 break;
         }

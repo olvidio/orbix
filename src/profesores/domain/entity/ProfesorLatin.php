@@ -98,8 +98,21 @@ class ProfesorLatin
     {
         $oProfesorLatinSet = new Set();
 
+        $oProfesorLatinSet->add($this->getDatosId_nom());
         $oProfesorLatinSet->add($this->getDatosLatin());
         return $oProfesorLatinSet->getTot();
+    }
+
+    function getDatosId_nom(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_nom');
+        $oDatosCampo->setMetodoGet('getId_nom');
+        $oDatosCampo->setMetodoSet('setId_nom');
+        $oDatosCampo->setEtiqueta(_("id_nom"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     function getDatosLatin(): DatosCampo

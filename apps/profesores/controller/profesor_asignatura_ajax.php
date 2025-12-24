@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use personas\model\entity\GestorTelecoPersonaDl;
+use personas\legacy\GestorTelecoPersonaDl;
 use personas\model\entity\PersonaDl;
 use profesores\model\entity\GestorProfesorDocenciaStgr;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;

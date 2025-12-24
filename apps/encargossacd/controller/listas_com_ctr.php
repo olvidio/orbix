@@ -2,11 +2,11 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use encargossacd\model\EncargoFunciones;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoSacd;
-use encargossacd\model\entity\GestorEncargoTexto;
-use personas\model\entity\PersonaDl;
+use src\encargossacd\application\traits\EncargoFunciones;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTextoRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
@@ -36,8 +36,8 @@ $Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
  *       "com_ctr";
  *       "t_colaborador"
  */
-$oGesEncargoTextos = new GestorEncargoTexto();
-$cEncargoTextos = $oGesEncargoTextos->getEncargoTextos();
+$EncargoTextoRepository = $GLOBALS['container']->get(EncargoTextoRepositoryInterface::class);
+$cEncargoTextos = $EncargoTextoRepository->getEncargoTextos();
 $a_txt_comunicacion = [];
 foreach ($cEncargoTextos as $oEncargoTexto) {
     $clave = $oEncargoTexto->getClave();
@@ -69,28 +69,29 @@ switch ($Qsfsv) {
 }
 $c = 0;
 $array_atn_sacd = [];
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+$PersonaDlaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 foreach ($cCentros as $oCentro) {
     $c++;
     $id_ubi = $oCentro->getId_ubi();
     $nombre_ubi = $oCentro->getNombre_ubi();
 
     /* busco los datos del encargo que se tengan, para los tipos de encargo de atención de centros: 100,1100,1200,1300,2100,2200,3000. */
-    $GesEncargos = new GestorEncargo();
-    $cEncargos = $GesEncargos->getEncargos(array('id_ubi' => $id_ubi, 'id_tipo_enc' => '(1|2|3).00'), array('id_tipo_enc' => '~'));
-    if (is_array($cEncargos) && count($cEncargos) == 0) continue;
-    if (is_array($cEncargos) && count($cEncargos) != 1) {
+    $cEncargos = $EncargoRepository->getEncargos(array('id_ubi' => $id_ubi, 'id_tipo_enc' => '(1|2|3).00'), array('id_tipo_enc' => '~'));
+    if (is_array($cEncargos) && count($cEncargos) === 0) continue;
+    if (is_array($cEncargos) && count($cEncargos) !== 1) {
         echo _("sólo debería haber uno");
         continue;
     }
     $id_enc = $cEncargos[0]->getId_enc();
     if (empty($id_enc)) continue;
     // sacd
-    $GesEncargoSacd = new GestorEncargoSacd();
-    $cEncargosSacd = $GesEncargoSacd->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => 'x', '_ordre' => 'modo'), array('f_fin' => 'IS NULL'));
+    $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => 'x', '_ordre' => 'modo'), array('f_fin' => 'IS NULL'));
     $sacd_colaborador = [];  // reset
     foreach ($cEncargosSacd as $oEncargoSacd) {
         $id_nom = $oEncargoSacd->getId_nom();
-        $oPersona = new PersonaDl($id_nom);
+        $oPersona = $PersonaDlaRepository->findById($id_nom);
         $modo = $oEncargoSacd->getModo();
         switch ($modo) {
             case 2: // titular del cl

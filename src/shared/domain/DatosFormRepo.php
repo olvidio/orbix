@@ -37,10 +37,10 @@ class DatosFormRepo
             //$tabla=$oDatosCampo->getNom_tabla();	// Para usarlo a la hora de comprobar los campos.
             $metodo = $oDatosCampo->getMetodoGet();
             $nom_camp = $oDatosCampo->getNom_camp();
-            $camposForm .= empty($camposForm) ? $nom_camp : '!' . $nom_camp;
+
             if ($this->mod === 'nuevo') {
                 $valor_camp = '';
-            } else if (substr($metodo,-2) === 'Vo') {
+            } else if (substr($metodo, -2) === 'Vo') {
                 $valor_camp = $oFicha->$metodo()->value();
             } else {
                 $valor_camp = $oFicha->$metodo();
@@ -48,6 +48,8 @@ class DatosFormRepo
             $var_1 = $oDatosCampo->getArgument();
             $eti = $oDatosCampo->getEtiqueta();
             $tipo = $oDatosCampo->getTipo();
+
+            $camposForm .= empty($camposForm) ? $nom_camp : '!' . $nom_camp;
 
             $field = [
                 'tipo' => $tipo,
@@ -185,6 +187,9 @@ class DatosFormRepo
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $chk = $field['checked'] ? "checked" : "";
                     $formulario .= "<td class=contenido><input type='checkbox' name='$nom_camp' $chk>";
+                    break;
+                case "hidden":
+                    $formulario .= "<input type='hidden' name='$nom_camp' value ='$valor_camp'>";
                     break;
             }
         }

@@ -3,17 +3,17 @@
 <tr>
 	<td class=etiqueta>{{ "estado"|trans|capitalize }}:</td>
 	{% if not procesos_installed %}
-	<td><input type="Radio" id="status_1" name="status" value="{{ constant('actividades\\model\\entity\\ActividadAll::STATUS_PROYECTO') }}"
-		{% if status == constant('actividades\\model\\entity\\ActividadAll::STATUS_PROYECTO') %} checked {% endif %}>
+	<td><input type="Radio" id="status_1" name="status" value="{{ constant('actividades\\model\\value_objects\\StatusId::PROYECTO') }}"
+		{% if status == constant('actividades\\model\\value_objects\\StatusId::PROYECTO') %} checked {% endif %}>
 		{{ "proyecto"|trans|raw }}</td>
-	<td><input type="Radio" id="status_2" name="status" value="{{ constant('actividades\\model\\entity\\ActividadAll::STATUS_ACTUAL') }}"
-		{% if status == constant('actividades\\model\\entity\\ActividadAll::STATUS_ACTUAL') %} checked {% endif %}>
+	<td><input type="Radio" id="status_2" name="status" value="{{ constant('actividades\\model\\value_objects\\StatusId::ACTUAL') }}"
+		{% if status == constant('actividades\\model\\value_objects\\StatusId::ACTUAL') %} checked {% endif %}>
 		{{ "actual"|trans|raw }}</td>
-	<td><input type="Radio" id="status_3" name="status" value="{{ constant('actividades\\model\\entity\\ActividadAll::STATUS_TERMINADA') }}"
-		{% if status == constant('actividades\\model\\entity\\ActividadAll::STATUS_TERMINADA') %} checked {% endif %}>
+	<td><input type="Radio" id="status_3" name="status" value="{{ constant('actividades\\model\\value_objects\\StatusId::TERMINADA') }}"
+		{% if status == constant('actividades\\model\\value_objects\\StatusId::TERMINADA') %} checked {% endif %}>
 		{{ "terminada"|trans|raw }}</td>
-	<td><input type="Radio" id="status_4" name="status" value="{{ constant('actividades\\model\\entity\\ActividadAll::STATUS_BORRABLE') }}"
-		{% if status == constant('actividades\\model\\entity\\ActividadAll::STATUS_BORRABLE') %} checked {% endif %}>
+	<td><input type="Radio" id="status_4" name="status" value="{{ constant('actividades\\model\\value_objects\\StatusId::BORRABLE') }}"
+		{% if status == constant('actividades\\model\\value_objects\\StatusId::BORRABLE') %} checked {% endif %}>
 		{{ "borrable"|trans|raw }}</td>
 	{% else %}
 		<!-- Ara faig que no es pugui canviar. S'ha d'anar per les fases.  -->

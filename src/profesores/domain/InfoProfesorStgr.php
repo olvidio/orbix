@@ -21,6 +21,8 @@ class InfoProfesorStgr extends DatosInfoRepo
         $this->setClase('src\\profesores\\domain\\entity\\ProfesorStgr');
         $this->setMetodoGestor('getProfesores');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(ProfesorStgrRepositoryInterface::class);
     }
 
     public function getId_dossier()
@@ -42,7 +44,7 @@ class InfoProfesorStgr extends DatosInfoRepo
             //$aWhere['congreso'] = $this->k_buscar;
             //$aOperador['congreso'] ='sin_acentos';
         }
-        $oLista = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getProfesoresStgr($aWhere, $aOperador);
 
         return $Coleccion;

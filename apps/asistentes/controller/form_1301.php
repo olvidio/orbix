@@ -27,15 +27,17 @@
  *
  */
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
-use actividadplazas\model\GestorResumenPlazas;
 use asistentes\model\entity\Asistente;
-use asistentes\model\entity\AsistentePub;
-use asistentes\model\entity\GestorAsistente;
+
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\PersonaEx;
+use personas\legacy\PersonaEx;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\value_objects\PlazaId;
+use src\asistentes\application\services\AsistenteActividadService;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -70,18 +72,20 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $oDesplActividades = [];
 if (!empty($id_activ)) { //caso de modificar
     $mod = "editar";
-    $oActividad = new ActividadAll($id_activ);
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $oActividad = $ActividadAllRepository->findById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
 
-    $oAsistentePub = new AsistentePub();
-    $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $id_activ);
-    $oAsistente->setPrimary_key(array('id_activ' => $id_activ, 'id_nom' => $Qid_nom));
+    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+    $AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $id_activ);
+    $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
+    $oAsistente = $AsistenteRepository->findById($id_activ, $Qid_nom);
     $obj = get_class($oAsistente);
 
     $id_activ_real = $id_activ;
-    $propio = $oAsistente->getPropio();
-    $falta = $oAsistente->getFalta();
-    $est_ok = $oAsistente->getEst_ok();
+    $propio = $oAsistente->isPropio();
+    $falta = $oAsistente->isFalta();
+    $est_ok = $oAsistente->isEst_ok();
     $observ = $oAsistente->getObserv();
     $plaza = $oAsistente->getPlaza();
     $propietario = $oAsistente->getPropietario();
@@ -90,7 +94,7 @@ if (!empty($id_activ)) { //caso de modificar
         if (!empty($propietario)) {
             $padre = strtok($propietario, '>');
             $child = strtok('>');
-            if ($obj_pau != 'PersonaEx' && $child != ConfigGlobal::mi_delef()) {
+            if ($obj_pau !== 'PersonaEx' && $child !== ConfigGlobal::mi_delef()) {
                 exit (sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"), $child));
             }
         }
@@ -106,15 +110,17 @@ if (!empty($id_activ)) { //caso de modificar
         $id_tipo = '^' . $id_tipo;
     }
 
-    $condicion = "AND status = " . ActividadAll::STATUS_ACTUAL;
+    $condicion = "AND status = " . StatusId::ACTUAL;
     if (!empty($que_dl)) {
         $condicion .= " AND dl_org = '$que_dl'";
     } else {
         $condicion .= " AND dl_org != '" . ConfigGlobal::mi_delef() . "'";
     }
 
-    $oGesActividades = new GestorActividad();
-    $oDesplActividades = $oGesActividades->getListaActividadesDeTipo($id_tipo, $condicion);
+    $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+    $oOpciones = $ActividadRepository->getArrayActividadesDeTipo($id_tipo, $condicion);
+    $oDesplActividades = new Desplegable();
+    $oDesplActividades->setOpciones($oOpciones);
     $oDesplActividades->setNombre('id_activ');
 
     if (ConfigGlobal::is_app_installed('actividadplazas')) {
@@ -125,21 +131,22 @@ if (!empty($id_activ)) { //caso de modificar
     $falta = "f"; //valor por defecto
     $est_ok = "f"; //valor por defecto
     $observ = ""; //valor por defecto
-    $plaza = Asistente::PLAZA_PEDIDA; //valor por defecto
+    $plaza = PlazaId::PEDIDA; //valor por defecto
     $propietario = ''; //valor por defecto
 
     // supongo que es de mi dl
     // TODO: si es otro??
-    $obj = 'asistentes\\model\\entity\\AsistenteDl';
+    $obj = 'asistentes\\legacy\\AsistenteDl';
 }
 $propio_chk = (!empty($propio) && is_true($propio)) ? 'checked' : '';
 $falta_chk = (!empty($falta) && is_true($falta)) ? 'checked' : '';
 $est_chk = (!empty($est_ok) && is_true($est_ok)) ? 'checked' : '';
 
 if (ConfigGlobal::is_app_installed('actividadplazas')) {
-    $gesAsistentes = new GestorAsistente();
-    $oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
+    $aOpciones = PlazaId::getArrayPosiblesPlazas();
+    $oDesplegablePlaza = new Desplegable();
     $oDesplegablePlaza->setNombre('plaza');
+    $oDesplegablePlaza->setOpciones($aOpciones);
     $oDesplegablePlaza->setOpcion_sel($plaza);
 
     $dl_de_paso = FALSE;

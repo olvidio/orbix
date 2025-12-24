@@ -2,7 +2,7 @@
 
 use core\ViewTwig;
 use encargossacd\model\DesplCentros;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\Desplegable;
@@ -72,10 +72,9 @@ if (!empty($Qid_ubi)) {
     }
 }
 
-$oGesEncargoTipo = new GestorEncargoTipo();
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 
-
-$opciones = $oGesEncargoTipo->getArraySeccion();
+$opciones = $EncargoTipoRepository->getArraySeccion();
 $oDesplGrupoCtrs = new Desplegable();
 $oDesplGrupoCtrs->setNombre('filtro_ctr');
 $oDesplGrupoCtrs->setOpciones($opciones);

@@ -161,10 +161,9 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
 
         $aOpciones = [];
         foreach ($stmt as $aClave) {
-            $id_sector = $aClave[0];
-            $id_departamento = $aClave[1];
-            $a_1 = isset($aOpciones[$id_departamento]) ? $aOpciones[$id_departamento] : [];
-            $aOpciones[$id_departamento] = array_merge($a_1, array($id_sector));
+            $id_asignatura = $aClave[0];
+            $nombre_corto = $aClave[1];
+            $aOpciones[$id_asignatura] = $nombre_corto;
         }
 
         return $aOpciones;

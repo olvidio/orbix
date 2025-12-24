@@ -2,9 +2,9 @@
 
 namespace planning\domain;
 
-use actividadcargos\model\GestorCargoOAsistente;
-use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
+use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\TiposActividades;
@@ -12,23 +12,9 @@ use web\TiposActividades;
 class ActividadesDePersona
 {
 
-    /**
-     * @param array|false $cPersonas
-     * @param int $multiples_ctr
-     * @param string $nombre_ubi
-     * @param array $aListaCtr
-     * @param string $fin_iso
-     * @param array $aWhere
-     * @param array $aOperador
-     * @param string $inicio_iso
-     * @param GestorActividad $GesActividades
-     * @param DateTimeLocal $oIniPlanning
-     * @param string $inicio_local
-     * @return array
-     */
     public static function actividadesPorPersona(array|false $cPersonas, string $fin_iso, string $inicio_iso, DateTimeLocal $oIniPlanning, string $inicio_local): array
     {
-        $GesActividades = new GestorActividad();
+        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         $aListaCtr = [];
         $p = 0;
         $persona = [];
@@ -63,18 +49,17 @@ class ActividadesDePersona
             $aOperador['status'] = 'BETWEEN';
 
             if (ConfigGlobal::is_app_installed('actividadcargos')) {
-                $GesCargoOAsistente = new GestorCargoOAsistente();
-                $cCargoOAsistente = $GesCargoOAsistente->getCargoOAsistente($id_nom, $aWhere, $aOperador);
+                $CargoOAsistente = $GLOBALS['container']->get(CargoOAsistenteInterface::class);
+                $cCargoOAsistente = $CargoOAsistente->getCargoOAsistente($id_nom, $aWhere, $aOperador);
             } else {
-                //$oGesAsistentes = new asistentes\GestorActividadCargo();
                 echo "ja veurem...";
             }
             foreach ($cCargoOAsistente as $oCargoOAsistente) {
                 $id_activ = $oCargoOAsistente->getId_activ();
-                $propio = $oCargoOAsistente->getPropio();
+                $propio = $oCargoOAsistente->idPropio();
 
                 $aWhere['id_activ'] = $id_activ;
-                $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+                $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
                 if (is_array($cActividades) && count($cActividades) == 0) continue;
 
                 $oActividad = $cActividades[0]; // sólo debería haber una.

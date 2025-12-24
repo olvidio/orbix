@@ -1,9 +1,9 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -65,6 +65,7 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
 }
 $msg_err = '';
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 foreach ($cMatriculasPendientes as $oMatricula) {
     $i++;
     $id_nom = $oMatricula->getId_nom();
@@ -76,11 +77,11 @@ foreach ($cMatriculasPendientes as $oMatricula) {
     //echo "id_activ: $id_activ<br>";
     //echo "id_asignatura: $id_asignatura<br>";
 
-    $oActividad = new ActividadAll($id_activ);
+    $oActividad = $ActividadAllRepository->findById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
-    $oPersona = Persona::newPersona($id_nom);
-    if (!is_object($oPersona)) {
-        $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+    $oPersona = Persona::findPersonaEnGlobal($id_nom);
+    if ($oPersona === null) {
+        $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         continue;
     }
     $apellidos_nombre = $oPersona->getPrefApellidosNombre();

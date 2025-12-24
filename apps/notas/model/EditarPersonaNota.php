@@ -5,7 +5,6 @@ namespace notas\model;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
-use dossiers\model\entity\Dossier;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
@@ -13,9 +12,11 @@ use notas\model\entity\PersonaNotaCertificadoDB;
 use notas\model\entity\PersonaNotaDB;
 use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
-use personas\model\entity\Persona;
 use RuntimeException;
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\value_objects\DossierPk;
 use src\notas\domain\entity\Nota;
+use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
@@ -154,12 +155,10 @@ class EditarPersonaNota
             // si no está abierto, hay que abrir el dossier para esta persona
             // si es una persona de paso, No hace falta
             if ($id_nom > 0) {
-                $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303));
+                $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+                $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303]));
                 $oDossier->abrir();
-                if ($oDossier->DBGuardar() === false) {
-                    $err = end($_SESSION['errores']);
-                    throw new RunTimeException(sprintf(_("No al guardar el dossier: %s"), $err));
-                }
+                $DosierRepository->Guardar($oDossier);
             }
         }
 
@@ -311,8 +310,8 @@ class EditarPersonaNota
                 if (!empty($cPersonaNota)) {
                     $oPersonaNota2 = $cPersonaNota[0];
                     if (!is_null($oPersonaNota2)) {
-                        $oPersona = Persona::NewPersona($id_nom);
-                        $nom = $oPersona->getPrefApellidosNombre();
+                        $oPersona = Persona::findPersonaEnGlobal($id_nom);
+                        $nom = $oPersona?->getPrefApellidosNombre()?? _("No encuentro");
 
                         $err = sprintf(_("%s ya tiene puesta nota para esta asignatura en su r/dl."), $nom);
                         $err .= "\n" . _("Si ha guardado este acta anteriormente puede ignorar este aviso.");
@@ -442,9 +441,9 @@ class EditarPersonaNota
     function getId_schema_persona(): int
     {
         // para saber a que schema pertenece la persona
-        $oPersona = Persona::NewPersona($this->id_nom);
+        $oPersona = Persona::findPersonaEnGlobal($this->id_nom);
         if (!is_object($oPersona)) {
-            $msg_err = "$oPersona con id_nom: $this->id_nom en  " . __FILE__ . ": line " . __LINE__;
+            $msg_err = "No encuentro a nadie con id_nom: $this->id_nom en  " . __FILE__ . ": line " . __LINE__;
             // exit($msg_err);
             throw new RunTimeException($msg_err);
         }

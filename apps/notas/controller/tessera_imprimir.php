@@ -18,10 +18,9 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
-use personas\model\entity\Persona;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use web\Hash;
-use function core\is_true;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -66,9 +65,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qcara = (string)filter_input(INPUT_POST, 'cara');
 $Qcara = empty($Qcara) ? "A" : $Qcara;
 
-$oPersona = Persona::NewPersona($id_nom);
-if (!is_object($oPersona)) {
-    $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
+if ($oPersona === null) {
+    $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
 }
 $nom = $oPersona->getNombreApellidos();

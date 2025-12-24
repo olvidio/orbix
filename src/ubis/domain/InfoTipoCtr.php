@@ -19,6 +19,8 @@ class InfoTipoCtr extends DatosInfoRepo
 
         $this->setClase('src\\ubis\\domain\\entity\\TipoCentro');
         $this->setMetodoGestor('getTiposCentro');
+
+        $this->setRepositoryInterface(TipoCentroRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoTipoCtr extends DatosInfoRepo
             $aWhere = array('nombre_tipo_ctr' => $this->k_buscar);
             $aOperador = array('nombre_tipo_ctr' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(TipoCentroRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getTiposCentro($aWhere, $aOperador);
 
         return $Coleccion;

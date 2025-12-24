@@ -19,6 +19,8 @@ class InfoDepartamentos extends DatosInfoRepo
 
         $this->setClase('src\\asignaturas\\domain\\entity\\Departamento');
         $this->setMetodoGestor('getDepartamentos');
+
+        $this->setRepositoryInterface(DepartamentoRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoDepartamentos extends DatosInfoRepo
             $aWhere = array('departamento' => $this->k_buscar);
             $aOperador = array('departamento' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getDepartamentos($aWhere, $aOperador);
 
         return $Coleccion;

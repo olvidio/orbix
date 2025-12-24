@@ -18,6 +18,8 @@ class InfoRegiones extends DatosInfoRepo
 
         $this->setClase('src\\ubis\\domain\\entity\\Region');
         $this->setMetodoGestor('getRegiones');
+
+        $this->setRepositoryInterface(RegionRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -31,7 +33,8 @@ class InfoRegiones extends DatosInfoRepo
             $aWhere = ['region' => $this->k_buscar];
             $aOperador = ['region' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get(RegionRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
+
         $Coleccion = $oLista->getRegiones($aWhere, $aOperador);
 
         return $Coleccion;

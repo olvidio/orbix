@@ -17,8 +17,8 @@
  */
 
 use actividades\model\ActividadNuevoCurso;
-use actividades\model\entity\GestorActividadDl;
 use core\ConfigGlobal;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use web\Hash;
 use function core\is_true;
 
@@ -54,7 +54,7 @@ if ($Qok == 1) {
 
     $inicio_org = $Qyear_ref . '-1-1';
     $fin_org = $Qyear_ref . '-12-31';
-    $GesActividades = new GestorActividadDl();
+    $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
     $aWhere = [];
     $aOperador = [];
     // las dos secciones dlb y dlbf
@@ -66,7 +66,7 @@ if ($Qok == 1) {
     $aWhere['f_ini'] = "'$inicio_org','$fin_org'";
     $aOperador['f_ini'] = 'BETWEEN';
     $aWhere['_ordre'] = 'f_ini';
-    $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+    $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
 
     $txt_crear = '';
     $i = 0;

@@ -62,7 +62,7 @@ $obj = 'personas\\model\\entity\\' . $obj_pau;
 $oPersona = new $obj($id_nom);
 
 $nom = $oPersona->getNombreApellidos();
-$stgr = $oPersona->getStgr();
+$stgr = $oPersona->getNivel_stgr();
 
 //posibles valores de stgr
 $tipos = array("n" => _("no cursa est."),

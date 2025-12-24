@@ -19,6 +19,8 @@ class InfoTipoRepeticion extends DatosInfoRepo
 
         $this->setClase('src\\actividades\\domain\\entity\\Repeticion');
         $this->setMetodoGestor('getRepeticiones');
+
+        $this->setRepositoryInterface(RepeticionRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoTipoRepeticion extends DatosInfoRepo
             $aOperador['repeticion'] = 'sin_acentos';
         }
         $aWhere['_ordre'] = 'temporada, repeticion';
-        $oLista = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getRepeticiones($aWhere, $aOperador);
 
         return $Coleccion;

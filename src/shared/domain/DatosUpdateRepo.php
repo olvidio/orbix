@@ -43,7 +43,8 @@ class DatosUpdateRepo
             }
             if ($tipo === 'fecha') {
                 if (empty($aCampos[$nom_camp])) {
-                    $aCampos[$nom_camp] = new NullDateTimeLocal();
+                    //$aCampos[$nom_camp] = new NullDateTimeLocal();
+                    $aCampos[$nom_camp] = null;
                 } else {
                     $aCampos[$nom_camp] = DateTimeLocal::createFromLocal($aCampos[$nom_camp]);
                 }
@@ -55,6 +56,10 @@ class DatosUpdateRepo
                 $aCampos[$nom_camp] = null;
             }
 
+            if ($nom_camp === 'id_nom' || $nom_camp === 'id_ubi' || $nom_camp === 'id_activ') {
+                $aCampos[$nom_camp] = $this->Campos['id_pau'];
+            }
+
             $metodo = $oDatosCampo->getMetodoSet();
             // uso el método legacy
             if (substr($metodo, -2) === 'Vo') {
@@ -63,7 +68,6 @@ class DatosUpdateRepo
             try {
                 $oFicha->$metodo($aCampos[$nom_camp]);
             } catch (\Throwable $e) {
-                // aquí decides qué hacer con el error: log, re-lanzar, devolver texto, etc.
                 return 'Error al ejecutar ' . $metodo . ' para el campo ' . $nom_camp . ': ' . $e->getMessage();
             }
         }
@@ -83,9 +87,10 @@ class DatosUpdateRepo
         $pks1 = 'set' . ucfirst($oFicha->getPrimary_key());
         $oFicha->$pks1($new_id);
 
-        if ($oRepository->Guardar($oFicha) === false) {
-            $error_txt = $oRepository->getErrorTxt();
-            return $error_txt;
+        try {
+            $oRepository->Guardar($oFicha);
+        } catch (\Throwable $e) {
+            return 'Error al guardar: ' . $e->getMessage();
         }
         return true;
     }
@@ -107,7 +112,8 @@ class DatosUpdateRepo
             }
             if ($tipo === 'fecha') {
                 if (empty($aCampos[$nom_camp])) {
-                    $aCampos[$nom_camp] = new NullDateTimeLocal();
+                    //$aCampos[$nom_camp] = new NullDateTimeLocal();
+                    $aCampos[$nom_camp] = null;
                 } else {
                     $aCampos[$nom_camp] = DateTimeLocal::createFromLocal($aCampos[$nom_camp]);
                 }

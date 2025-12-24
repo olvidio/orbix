@@ -10,9 +10,11 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
@@ -38,14 +40,9 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 // Id tipo actividad
 $extendida = FALSE;
 if (empty($Qid_tipo_activ)) {
-    // mejor que novenga por menú. Así solo veo las de mi sección.
-    //$Qssfsv = (string)  filter_input(INPUT_POST, 'ssfsv');
-    $Qssfsv = '';
-    if (empty($Qssfsv)) {
-        $mi_sfsv = ConfigGlobal::mi_sfsv();
-        if ($mi_sfsv == 1) $Qssfsv = 'sv';
-        if ($mi_sfsv == 2) $Qssfsv = 'sf';
-    }
+    $Qssfsv = 'sv';
+    $mi_sfsv = ConfigGlobal::mi_sfsv();
+    if ($mi_sfsv === 2) $Qssfsv = 'sf';
     $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
     $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
     $Qsactividad2 = (string)filter_input(INPUT_POST, 'sactividad2');
@@ -93,7 +90,7 @@ $oPeriodo->setPeriodo($Qperiodo);
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
 
-$status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
+$status = StatusId::ACTUAL; //actual
 
 // Seleccionar los id_dl del mismo grupo de estudios
 $mi_reg = ConfigGlobal::mi_region();
@@ -102,7 +99,7 @@ $aWhere = array('region' => $mi_reg, 'dl' => $mi_dl);
 $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cDelegaciones = $repoDelegacion->getDelegaciones($aWhere);
 if (empty($cDelegaciones)) {
-    $msg = sprintf(_("No se ha definido ninguna dl='%s' en la región '%s'."),$mi_dl, $mi_reg);
+    $msg = sprintf(_("No se ha definido ninguna dl='%s' en la región '%s'."), $mi_dl, $mi_reg);
     exit ($msg);
 }
 $oMiDelegacion = $cDelegaciones[0];
@@ -115,12 +112,11 @@ if (empty($grupo_estudios)) {
     $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $grupo_estudios, '_ordre' => 'region,dl']);
 }
-$gesActividadPlazas = new GestorActividadPlazas();
-// Seleccionar actividades exportadas de los id_dl
 
+// Seleccionar actividades exportadas de los id_dl
 $a_grupo = [];
 $cActividades = [];
-$gesActividades = new actividades\model\entity\GestorActividad();
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
 $k = 0;
 foreach ($cDelegaciones as $oDelegacion) {
     $k++;
@@ -133,14 +129,14 @@ foreach ($cDelegaciones as $oDelegacion) {
         'f_ini' => "'$inicioIso','$finIso'",
         '_ordre' => 'publicado,f_ini');
     $aOperador = array('id_tipo_activ' => '~', 'f_ini' => 'BETWEEN');
-    $cActividades1 = $gesActividades->getActividades($aWhere, $aOperador);
-    $cActividades = array_merge($cActividades, $cActividades1);
-
+    $cActividades1 = $ActividadRepository->getActividades($aWhere, $aOperador);
+    array_push($cActividades, ...$cActividades1);
 }
 
 // Dibujar tabla de plazas por actividad
 $i = 0;
 $a_valores = [];
+$ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -149,20 +145,20 @@ foreach ($cActividades as $oActividad) {
     $dl_org = $oActividad->getDl_org();
     $plazas_totales = $oActividad->getPlazas();
     if (empty($plazas_totales)) {
+        $plazas_totales = '?';
         $id_ubi = $oActividad->getId_ubi();
-        $oCasa = Ubi::NewUbi($id_ubi);
-        // Si la casa es un ctr de otra dl, no sé las plazas
-        if (method_exists($oCasa, 'getPlazas')) {
-            $plazas_totales = $oCasa->getPlazas();
-        } else {
-            $plazas_totales = '';
-        }
-        if (empty($plazas_totales)) {
-            $plazas_totales = '?';
+        if ($id_ubi !== null) {
+            $oCasa = Ubi::NewUbi($id_ubi);
+            if ($oCasa !== null) {
+                // Si la casa es un ctr de otra dl, no sé las plazas
+                if (method_exists($oCasa, 'getPlazas')) {
+                    $plazas_totales = $oCasa->getPlazas();
+                }
+            }
         }
     }
     // para estilos
-    if ($mi_dl == $dl_org) {
+    if ($mi_dl === $dl_org) {
         $a_valores[$i]['clase'] = 'tono2';
     }
     //echo "$nom     $id_tipo_activ       $dl_org".'<br>';
@@ -170,7 +166,7 @@ foreach ($cActividades as $oActividad) {
     $a_valores[$i]['actividad'] = $nom;
     $a_valores[$i]['dlorg'] = $dl_org;
     $a_valores[$i]['tot'] = $plazas_totales;
-    if ($mi_dl == $dl_org) {
+    if ($mi_dl === $dl_org) {
         $a_valores[$i]['tot'] = array('editable' => 'true', 'valor' => $plazas_totales);
     } else {
         $a_valores[$i]['tot'] = array('editable' => 'false', 'valor' => $plazas_totales);
@@ -178,10 +174,10 @@ foreach ($cActividades as $oActividad) {
     foreach ($a_grupo as $dl => $id_dl) {
         $pedidas = '-';
         $concedidas = '-';
-        $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
+        $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
         foreach ($cActividadPlazas as $oActividadPlazas) {
             $dl_tabla = $oActividadPlazas->getDl_tabla();
-            if ($dl_org == $dl_tabla) {
+            if ($dl_org === $dl_tabla) {
                 $concedidas = $oActividadPlazas->getPlazas();
             } else {
                 $pedidas = $oActividadPlazas->getPlazas();
@@ -189,8 +185,8 @@ foreach ($cActividades as $oActividad) {
         }
         $dl_c = $dl . '-c';
         $dl_p = $dl . '-p';
-        if ($mi_dl == $dl) {
-            if ($mi_dl == $dl_org) {
+        if ($mi_dl === $dl) {
+            if ($mi_dl === $dl_org) {
                 $a_valores[$i][$dl_c] = array('editable' => 'true', 'valor' => $concedidas);
                 $a_valores[$i][$dl_p] = array('editable' => 'false', 'valor' => $pedidas);
             } else {
@@ -198,7 +194,7 @@ foreach ($cActividades as $oActividad) {
                 $a_valores[$i][$dl_p] = array('editable' => 'true', 'valor' => $pedidas);
             }
         } else {
-            if ($mi_dl == $dl_org) {
+            if ($mi_dl === $dl_org) {
                 $a_valores[$i][$dl_c] = array('editable' => 'true', 'valor' => $concedidas);
             } else {
                 $a_valores[$i][$dl_c] = array('editable' => 'false', 'valor' => $concedidas);

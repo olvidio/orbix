@@ -1,11 +1,14 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatricula;
-use asistentes\model\entity\GestorAsistente;
+
 use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\Persona;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Lista;
 use web\Periodo;
@@ -134,14 +137,15 @@ foreach ($cCentros as $oCentroDl) {
         $aOperador['stgr'] = '!=';
     }
 
-    $GesPersonas = new GestorPersonaDl();
-    $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+    $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+    $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
     $i = 0;
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
     foreach ($cPersonas as $oPersonaDl) {
         $i++;
         $id_nom = $oPersonaDl->getId_nom();
         $nom = $oPersonaDl->getPrefApellidosNombre();
-        $stgr = $oPersonaDl->getStgr();
+        $stgr = $oPersonaDl->getNivel_stgr();
         $a_valores[$id_ubi][$i][1] = $i;
         $a_valores[$id_ubi][$i][2] = $nom;
 
@@ -149,13 +153,14 @@ foreach ($cCentros as $oCentroDl) {
         //$condicion = "propio='t' AND $periodo AND id_tipo_activ::text ~ '^1(12|33)'";
         $aWhereNom['id_nom'] = $id_nom;
         $aOperadorNom = [];
-        $GesAsistente = new GestorAsistente();
-        $cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
+        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+        $cAsistentes = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
         $a = 0;
+        $AsistenteReposiroty = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
         foreach ($cAsistentes as $oAsistente) {
             $a++;
             $id_activ = $oAsistente->getId_activ();
-            $oActividad = new ActividadAll($id_activ);
+            $oActividad = $ActividadAllRepository->findBYId($id_activ);
             $nom_activ = $oActividad->getNom_activ();
 
             $oF_ini = $oActividad->getF_ini();
@@ -188,10 +193,10 @@ foreach ($cCentros as $oCentroDl) {
                             $creditos = $oAsignatura->getCreditos();
                             if (is_true($preceptor)) {
                                 if (!empty($id_preceptor)) {
-                                    $oPersona = Persona::NewPersona($id_preceptor);
+                                    $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
                                     // Comprobar si el preceptor asiste al ca.
                                     $aWherePreceptor = ['id_activ' => $id_activ, 'id_nom' => $id_nom];
-                                    $cAsistentesP = $GesAsistente->getAsistentes($aWherePreceptor);
+                                    $cAsistentesP = $AsistenteReposiroty->getAsistentes($aWherePreceptor);
                                     if (count($cAsistentesP) > 0) {
                                         $p = '*';
                                     } else {

@@ -13,13 +13,15 @@
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use actividadestudios\model\entity\MatriculaDl;
-use asistentes\model\entity\AsistenteDl;
-use asistentes\model\entity\GestorAsistenteDl;
+use asistentes\legacy\AsistenteDl;
 use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
-use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\GestorPersonaEx;
-use personas\model\entity\Persona;
+use src\actividades\domain\value_objects\StatusId;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\entity\Persona;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -62,18 +64,18 @@ if (!empty($Qid_nom)) {
     $aOperador['stgr'] = '!=';
     // miro si es de paso
 
-    $oPersona = Persona::NewPersona($Qid_nom);
+    $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
     if (is_string($oPersona)) {
         exit($oPersona);
     }
     $classname = str_replace("personas\\model\\entity\\", '', get_class($oPersona));
 
     if ($classname === 'PersonaEx') {
-        $GesPersonasDePaso = new GestorPersonaEx();
-        $cAlumnos = $GesPersonasDePaso->getPersonasEx($aWhere, $aOperador);
+        $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+        $cAlumnos = $PersonaExRepository->getPersonas($aWhere, $aOperador);
     } else {
-        $GesPersonasDl = new GestorPersonaDl();
-        $cAlumnos = $GesPersonasDl->getPersonasDl($aWhere, $aOperador);
+        $PeronaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $cAlumnos = $PeronaDlRepository->getPersonasDl($aWhere, $aOperador);
     }
     if (empty($cAlumnos)) {
         $msg = _("está de repaso");
@@ -84,8 +86,8 @@ if (!empty($Qid_nom)) {
     $aWhere['situacion'] = 'A';
     $aWhere['stgr'] = 'r';
     $aOperador['stgr'] = '!=';
-    $GesPersonasDl = new GestorPersonaDl();
-    $cAlumnos = $GesPersonasDl->getPersonasDl($aWhere, $aOperador);
+    $PeronaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+    $cAlumnos = $PeronaDlRepository->getPersonasDl($aWhere, $aOperador);
     $modo_aviso = '';
 }
 
@@ -94,7 +96,7 @@ $m = 0;
 $aWhere = [];
 $aOperadores = [];
 // de estudios ca-n, cv-agd
-$aWhere['status'] = \actividades\model\entity\ActividadAll::STATUS_ACTUAL;
+$aWhere['status'] = StatusId::ACTUAL;
 $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
 $aOperadores['f_ini'] = 'BETWEEN';
 $aWhere['id_tipo_activ'] = '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)';
@@ -104,13 +106,13 @@ foreach ($cAlumnos as $oPersonaDl) {
     $cAsistencias = [];
     // después me interesa el id_activ, asi que lo busco primero:
     if (empty($Qid_activ)) {
-        $GesAsistentes = new GestorAsistenteDl();
+        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
         $aWhereNom = array('id_nom' => $id_nom, 'propio' => 't');
         $aOperadorNom = [];
-        $cAsistencias = $GesAsistentes->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperadores);
+        $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperadores);
     } else { // puede ser que ya le pase la actividad
-        $oAsistenteDl = new AsistenteDl(array('id_activ' => $Qid_activ, 'id_nom' => $id_nom));
-        $oAsistenteDl->DBCarregar();
+        $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
+        $oAsistenteDl = $AsistenteDlRepository->findById($Qid_activ, $id_nom);
         $cAsistencias[0] = $oAsistenteDl;
     }
     // si no cursa ningún ca, me salto todo
@@ -123,7 +125,7 @@ foreach ($cAlumnos as $oPersonaDl) {
         case 1:
             $oAsistenteDl = current($cAsistencias); // En el caso de varias, el indice es la f_ini (para poder ordenar en otros casos).
             $id_activ_1 = $oAsistenteDl->getId_activ();
-            $est_ok = $oAsistenteDl->getEst_ok();
+            $est_ok = $oAsistenteDl->isEst_ok();
             if ($est_ok != 1) {
                 //borro el plan de estudios de esta persona.
                 $GesMatriculas = new GestorMatriculaDl();

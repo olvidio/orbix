@@ -19,6 +19,8 @@ class InfoLocales extends DatosInfoRepo
 
         $this->setClase('src\\usuarios\\model\\entity\\Local');
         $this->setMetodoGestor('getLocales');
+
+        $this->setRepositoryInterface(LocalRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -33,7 +35,7 @@ class InfoLocales extends DatosInfoRepo
             $aOperador = array('nom_idioma' => 'sin_acentos');
         }
         $aWhere['_ordre'] = 'activo DESC,nom_idioma ASC';
-        $oLista = $GLOBALS['container']->get(LocalRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getLocales($aWhere, $aOperador);
 
         return $Coleccion;

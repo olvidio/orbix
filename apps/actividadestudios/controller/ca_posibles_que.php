@@ -2,8 +2,8 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaN;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
@@ -69,8 +69,8 @@ if (is_array($cMiDl) && !empty($cMiDl)) {
 }
 
 // centros donde hay numerarios, aunque sean de agd
-$GesPersonas = new GestorPersonaN();
-$aListaCtr = $GesPersonas->getListaCtr();
+$PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+$aListaCtr = $PersonaNRepository->getArrayIdCentros();
 $aCentrosN = [];
 $aCentrosOrden = [];
 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
@@ -98,8 +98,8 @@ $oDesplCtrN->setBlanco(1);
 $oDesplCtrN->setAction("fnjs_n_a('n')");
 
 // centros donde hay agregados, aunque sean de n
-$GesPersonas = new GestorPersonaAgd();
-$aListaCtr = $GesPersonas->getListaCtr();
+$PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+$aListaCtr = $PersonaAgdRepository->getArrayIdCentros();
 $aCentrosAgd = [];
 $aCentrosOrden = [];
 foreach ($aListaCtr as $id_ubi) {

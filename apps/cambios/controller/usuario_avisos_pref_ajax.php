@@ -1,13 +1,13 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorTipoDeActividad;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\CambioUsuarioPropiedadPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadFase;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use web\DesplegableArray;
@@ -338,9 +338,9 @@ switch ($Qsalida) {
                  * el permiso a la hora de generar el aviso.
                 */
 
+                $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
                 // buscar los procesos posibles para estos tipos de actividad
-                $GesTiposActiv = new GestorTipoDeActividad();
-                $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ, $dl_propia);
+                $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $dl_propia);
                 $oGesFases = new GestorActividadFase();
                 $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
                 $oDesplFases->setNombre('id_fase_ref');
@@ -348,10 +348,9 @@ switch ($Qsalida) {
 
             } else {
                 // Sólo los estado de la actividad
-                $oActividad = new ActividadAll();
-                $a_status = $oActividad->getArrayStatus();
+                $a_status = StatusId::getArrayStatus();
                 // Quitar el status 'qualquiera'
-                unset($a_status[ActividadAll::STATUS_ALL]);
+                unset($a_status[StatusId::ALL]);
                 $aFasesConPerm = array_flip($a_status);
             }
 

@@ -19,6 +19,8 @@ class InfoSituacion extends DatosInfoRepo
 
         $this->setClase('src\\personas\\domain\\entity\\Situacion');
         $this->setMetodoGestor('getSituaciones');
+
+        $this->setRepositoryInterface(SituacionRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoSituacion extends DatosInfoRepo
             $aWhere = array('situacion' => $this->k_buscar);
             $aOperador = array('situacion' => 'sin_acentos');
         }
-        $oLista = $GLOBALS['container']->get(SituacionRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getSituaciones($aWhere, $aOperador);
 
         return $Coleccion;

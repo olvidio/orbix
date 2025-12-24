@@ -2,13 +2,14 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaEx;
-use personas\model\entity\GestorPersonaN;
-use personas\model\entity\GestorPersonaNax;
-use personas\model\entity\GestorPersonaS;
-use personas\model\entity\GestorPersonaSSSC;
-use personas\model\entity\PersonaDl;
+use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaPubRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
@@ -103,7 +104,8 @@ if ($miRolePau == Role::PAU_NOM) { //persona
     $aWhereCtr = [];
     $aOperadorCtr = [];
     // Sólo válido para las personas de la dl.
-    $oPersona = new PersonaDl($id_nom);
+    $PersonaDlrepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+    $oPersona = $PersonaDlrepository->findById($id_nom);
     $id_tabla = $oPersona->getId_tabla();
     switch ($id_tabla) {
         case 'n':
@@ -212,32 +214,32 @@ $obj_pau = '';
 switch ($tabla) {
     case "p_sssc":
         $obj_pau = 'PersonaSSSC';
-        $GesPersona = new GestorPersonaSSSC();
-        $cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador);
+        $PersonaSSSCRepository = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+        $cPersonas = $PersonaSSSCRepository->getPersonasDl($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('des')) {
             $permiso = 3;
         }
         break;
     case "p_supernumerarios":
         $obj_pau = 'PersonaS';
-        $GesPersona = new GestorPersonaS();
-        $cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador);
+        $PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+        $cPersonas = $PersonaSRepository->getPersonasDl($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
             $permiso = 3;
         }
         break;
     case "p_numerarios":
         $obj_pau = 'PersonaN';
-        $GesPersona = new GestorPersonaN();
-        $cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador);
+        $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        $cPersonas = $PersonaNRepository->getPersonasDl($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
             $permiso = 3;
         }
         break;
     case "p_nax":
         $obj_pau = 'PersonaNax';
-        $GesPersona = new GestorPersonaNax();
-        if (($cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador)) === false) {
+        $PersonaNaxRepository = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+        if (($cPersonas = $PersonaNaxRepository->getPersonasDl($aWhere, $aOperador)) === false) {
             $cPersonas = [];
         }
         if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
@@ -246,8 +248,8 @@ switch ($tabla) {
         break;
     case "p_agregados":
         $obj_pau = 'PersonaAgd';
-        $GesPersona = new GestorPersonaAgd();
-        $cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador);
+        $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+        $cPersonas = $PersonaAgdRepository->getPersonasDl($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
             $permiso = 3;
         }
@@ -259,8 +261,8 @@ switch ($tabla) {
             $id_tabla = 'p' . $Qna;
         }
         $obj_pau = 'PersonaEx';
-        $GesPersona = new GestorPersonaEx();
-        $cPersonas = $GesPersona->getPersonas($aWhere, $aOperador);
+        $PersonaPubRepository = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class);
+        $cPersonas = $PersonaPubRepository->getPersonas($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('sm')
             || $_SESSION['oPerm']->have_perm_oficina('agd')
             || $_SESSION['oPerm']->have_perm_oficina('des')
@@ -424,6 +426,8 @@ $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia !== null) {
     $sPrefs = $oPreferencia->getPreferencia();
 }
+$NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
+$aNivelStgr = $NivelStgrRepository->getArrayNivelesStgrBreve();
 foreach ($cPersonas as $oPersona) {
     $i++;
     $a_val = [];
@@ -431,16 +435,19 @@ foreach ($cPersonas as $oPersona) {
     $id_nom = $oPersona->getId_nom();
     $nom = $oPersona->getPrefApellidosNombre();
 
+    $nombre_ubi = '';
     if ($obj_pau !== 'PersonaEx') {
         $id_ctr = $oPersona->getId_ctr();
 
-        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $CentroDlRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-        } else {
-            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        if ($id_ctr !== null) {
+            if (ConfigGlobal::mi_ambito() === 'rstgr') {
+                $CentroDlRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+            } else {
+                $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+            }
+            $oCentroDl = $CentroDlRepository->findById($id_ctr);
+            $nombre_ubi = $oCentroDl->getNombre_ubi();
         }
-        $oCentroDl = $CentroDlRepository->findById($id_ctr);
-        $nombre_ubi = $oCentroDl->getNombre_ubi();
     } else {
         $nombre_ubi = $oPersona->getDl();
     }
@@ -465,7 +472,7 @@ foreach ($cPersonas as $oPersona) {
     para los n y agd siempre que no estemos ante una selección para ver
     un planning*/
     if ((($tabla === 'p_numerarios') || ($tabla === 'p_agregados')) and ($tipo !== 'planning')) {
-        $a_val[5] = $oPersona->getStgr();
+        $a_val[5] = $aNivelStgr[$oPersona->getNivel_stgr()]?? '';
     }
     if (!empty($Qcmb)) {
         $a_val[6] = $oPersona->getSituacion();

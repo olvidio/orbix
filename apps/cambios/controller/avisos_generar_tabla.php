@@ -1,22 +1,22 @@
 <?php
 
-/* En el caso de usarse desde la lienea de comandos (cli), se le pasan parametros ($argv).
+/* En el caso de usarse desde la linea de comandos (cli), se le pasan parámetros ($argv).
 *  No se le puede pasar id de la session, porque sólo puede haber un proceso con un session_id.
 *  Debe crearse una nueva session. Hay que pasarle un usuario y un password.
 *  Desde la clase Cambio y CambioDl, se llama a esta página para que funcione en background:
 *	exec('nohup /usr/bin/php /var/www/dl/sistema/avisos_generar_tabla.php $username $password $dirweb $doc_root $ubicacion $esquema_web > /tmp/avisos.out 2> /tmp/avisos.err < /dev/null &');
 *
-* Inicialmente se ejecutaba manualmente desde menú y no habia problema.
+* Inicialmente se ejecutaba manualmente desde menú y no había problema.
 * Al dispararlo cada vez que se ejecuta un cambio, pasa que pueden ejecutarse varios procesos en paralelo.
 * Como lo primero que hace es coger los cambios que no se han anotado, puede que cuando le toque escribirlo ya lo haya hecho
 * otro proceso antes.
 * Para evitarlo escribo en un archivo ($pid) que estoy trabajando, y hasta que no acabe no empieza el siguiente proceso. 
-* Esto tampoco funciona, porque en el tiempo de espera para saber si ya ha acabado el primer proceso, se puede colar algun
+* Esto tampoco funciona, porque en el tiempo de espera para saber si ya ha acabado el primer proceso, se puede colar algún
 * otro proceso, saltándose el orden.
 * Realmente no debería importar, excepto en el caso de asistencias en las que no quiero que se avise de la primera y 
 * si cambia el orden, la primera puede ser la segunda...
 *
-* Finalmente lo que se hace es lanzar el proceso, al teminar vuelve iniciarse hasta que no haya ningun cambio que analizar.
+* Finalmente lo que se hace es lanzar el proceso, al terminar vuelve iniciarse hasta que no haya ningún cambio que analizar.
 * Al principio se anota el pid, y no se borra hasta el final. Si se dispara un proceso en paralelo, al ver que existe el pid,
 * se para y no hace nada. En caso contrario se inicia.
 *
@@ -53,17 +53,17 @@ $dir_web = $_SERVER['DIRWEB'];
 $path = "$document_root/$dir_web";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorImportada;
-use actividades\model\entity\GestorTipoDeActividad;
 use cambios\model\Avisos;
-use cambios\model\entity\GestorCambio;
 use cambios\model\entity\GestorCambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividades;
-use personas\model\entity\PersonaSacd;
 use procesos\model\entity\GestorTareaProceso;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ImportadaRepositoryInterface;
+use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\cambios\domain\contracts\CambioRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -92,9 +92,9 @@ $oAvisos = new Avisos();
 // Mirar si hay otro proceso en marcha:
 $oAvisos->crear_pid($username, $esquema);
 
-$GesCambios = new GestorCambio();
+$CambioRepository = $GLOBALS['container']->get(CambioRepositoryInterface::class);
 // Borrar los cambios y sus anotaciones de hace más de un año:
-$GesCambios->borrarCambios('P1Y');
+$CambioRepository->borrarCambios('P1Y');
 
 // para mirar los permisos
 $aObjPerm = [
@@ -107,10 +107,14 @@ $aObjPerm = [
 ];
 
 // seleccionar cambios no anotados:
-$cNuevosCambios = $GesCambios->getCambiosNuevos();
+$cNuevosCambios = $CambioRepository->getCambiosNuevos();
 $num_cambios = count($cNuevosCambios);
 $err_fila = '';
 // Repito el proceso por si se han apuntado cambios mientras estaba realizando el proceso.
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
+$TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+$PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
 while ($num_cambios) {
     $num_cambios_inicial = $num_cambios;
     foreach ($cNuevosCambios as $oCambio) {
@@ -135,14 +139,14 @@ while ($num_cambios) {
         if ($sObjeto === 'Actividad' || $sObjeto === 'ActividadDl' || $sObjeto === 'ActividadEx') {
             $sObjeto = 'Actividad';
         }
-        // Para los asistentes, en el cambio se anota: 'Asistente' 'AsistenteDl' 'AsistenteEx' 'AsistenteIn' 'AsistenteOut'
+        // Para los asistentes, en el cambio se anota: 'Asistente' 'AsistenteDl' 'AsistenteEx' 'AsistenteOut'
         // pero en las preferencias, solo 'Asistente'.
         if (strpos($sObjeto, 'Asistente') !== false) {
             $sObjeto = 'Asistente';
             // Para el caso de los sacd, el permiso es 'asistentessacd'
             if ($propiedad_cmb === 'id_nom') {
                 $id_nom = empty($valor_new_cmb) ? $valor_old_cmb : $valor_new_cmb;
-                $oPersonaSacd = new PersonaSacd($id_nom);
+                $oPersonaSacd = $PersonaSacdRepository->findById($id_nom);
                 if (is_true($oPersonaSacd->getSacd())) {
                     $afecta = 'asistentesSacd';
                 }
@@ -151,7 +155,7 @@ while ($num_cambios) {
 
         $afecta = empty($afecta) ? $aObjPerm[$sObjeto] : $afecta;
 
-        if (ConfigGlobal::mi_sfsv() == 1) {
+        if (ConfigGlobal::mi_sfsv() === 1) {
             $aFases_cmb = $aFases_cmb_sv;
         } else {
             $aFases_cmb = $aFases_cmb_sf;
@@ -167,8 +171,7 @@ while ($num_cambios) {
         $dl_propia = (ConfigGlobal::mi_dele() === $dl_org_no_f);
         // Si es de otra dl, compruebo que sea una actividad importada, sino no tiene sentido avisar.
         if (!is_true($dl_propia)) {
-            $GesImportada = new GestorImportada();
-            $cImportadas = $GesImportada->getImportadas(array('id_activ' => $id_activ));
+            $cImportadas = $ImportadaRepository->findById($id_activ);
             if (empty($cImportadas)) {
                 // marco el cambio como anotado.
                 $oAvisos->anotado();
@@ -198,7 +201,7 @@ while ($num_cambios) {
             $aviso_tipo = $oCambioUsuarioObjetoPref->getAviso_tipo();
             $oAvisos->setId_usuario($id_usuario);
             // con que cumpla una condición para un mismo usuario basta, salto al siguiente cambio.
-            if ($apuntar && ($aviso_tipo == $aviso_tipo_anterior) && ($id_usuario == $id_usuario_anterior)) {
+            if ($apuntar && ($aviso_tipo === $aviso_tipo_anterior) && ($id_usuario === $id_usuario_anterior)) {
                 $apuntar = false;
                 continue;
             } else {
@@ -214,7 +217,7 @@ while ($num_cambios) {
             $fase_correcta = 0;
             /////////////////// COMPARAR DATE //////////////////////////////////////////
             if (!is_true($aviso_outdate)) {
-                $oActividad = new ActividadAll($id_activ);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 $oF_fin = $oActividad->getF_fin();
                 if ($oF_cmb > $oF_fin) {
                     continue;
@@ -229,23 +232,22 @@ while ($num_cambios) {
                 // Si yo SI tengo procesos:
                 if (ConfigGlobal::is_app_installed('procesos')) {
                     $status_de_fase = 0;
-                    $gesTiposActividad = new GestorTipoDeActividad();
-                    $cTiposActividad = $gesTiposActividad->getTiposDeActividades(['id_tipo_activ' => $id_tipo_activ]);
+                    $cTiposActividad = $TipoDeActividadRepository->getTiposDeActividades(['id_tipo_activ' => $id_tipo_activ]);
                     if (!empty($cTiposActividad)) {
-                        $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso();
+                        $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
                         $gesTareaProceso = new GestorTareaProceso();
                         $cTareasProceso = $gesTareaProceso->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase_ref]);
                         if (!empty($cTareasProceso)) {
                             $status_de_fase = $cTareasProceso[0]->getStatus();
                         }
                     }
-                    if ($id_status_cmb == $status_de_fase && is_true($aviso_on)) {
+                    if ($id_status_cmb === $status_de_fase && is_true($aviso_on)) {
                         $fase_correcta = 1;
                     }
                 } else {
                     // Si yo no tengo procesos:
                     foreach ($aFases_cmb as $id_fase) {
-                        if ($id_status_cmb == $id_fase) {
+                        if ($id_status_cmb === $id_fase) {
                             $fase_correcta = 1;
                         }
                     }
@@ -271,10 +273,10 @@ while ($num_cambios) {
                         } else {
                             //Yo no tengo instalado el modulo procesos, pero la dl que ha hecho el cambio si.
                             // miro que esté en el status.
-                            $oActividad = new ActividadAll($id_activ);
+                            $oActividad = $ActividadAllRepository->findById($id_activ);
                             $status = $oActividad->getStatus();
                             foreach ($aFases_cmb as $id_fase) {
-                                if ($status == $id_fase) {
+                                if ($status === $id_fase) {
                                     $fase_correcta = 1;
                                 }
                             }
@@ -309,7 +311,7 @@ while ($num_cambios) {
                     $valor_old = $oCambioUsuarioPropiedadPref->getValor_old();
                     $valor_new = $oCambioUsuarioPropiedadPref->getValor_new();
 
-                    if ($propiedad_cmb == $propiedad) {
+                    if ($propiedad_cmb === $propiedad) {
                         // En el caso de casas o sacd, comprobar que me afecta.
                         if (!$oAvisos->me_afecta($propiedad, $id_activ, $valor_old_cmb, $valor_new_cmb, $id_pau, $sObjeto)) {
                             $apuntar = false;
@@ -338,7 +340,7 @@ while ($num_cambios) {
     }
     // Si algo falla, el $num_cambios_inicial es igual al actual y se genera un bucle infinito.
     // Si se han producido nuevos cambios durante el proceso, $numcambios no será 0 y se repite el proceso.
-    $cNuevosCambios = $GesCambios->getCambiosNuevos();
+    $cNuevosCambios = $CambioRepository->getCambiosNuevos();
     $num_cambios = count($cNuevosCambios);
     if ($num_cambios === $num_cambios_inicial) {
         // igualmente borro el pid

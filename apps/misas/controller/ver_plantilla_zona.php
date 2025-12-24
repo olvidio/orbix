@@ -4,11 +4,11 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoHorario;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
 use misas\model\EncargosZona;
-use personas\model\entity\PersonaSacd;
+use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
@@ -54,12 +54,15 @@ $a_ctr_enc_t = $EncargosZona->cuadriculaSemana();
 $i = 0;
 $a_valores = [];
 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+$EncargoReposotory = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
+$EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
 foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
     $nombre_ubi = $CentroDlRepository->findById($id_ubi)->getNombre_ubi();
     foreach ($a_ctr_enc as $id_tipo_enc => $a_id_enc) {
         $i++;
         $id_enc = key($a_id_enc);
-        $oEncargo = new Encargo($id_enc);
+        $oEncargo = $EncargoReposotory->findById($id_enc);
         $desc_enc = $oEncargo->getDesc_enc();
 
         $a_cosas = ['id_zona' => $Qid_zona,
@@ -77,8 +80,7 @@ foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
 
         // horarios del encargo_ctr
         $a_datos_encargo_horario = [];
-        $gesEncargoHorarioCentro = new GestorEncargoHorario();
-        $cEncargoHorarios = $gesEncargoHorarioCentro->getEncargoHorarios(['id_enc' => $id_enc]);
+        $cEncargoHorarios = $EncargoHorarioRepository->getEncargoHorarios(['id_enc' => $id_enc]);
         foreach ($cEncargoHorarios as $oEncargoHorario) {
             $id_item_h = $oEncargoHorario->getId_item_h();
             $f_ini_iso = empty($oEncargoHorario->getF_ini()) ? '' : $oEncargoHorario->getF_ini()->getIso();
@@ -119,6 +121,7 @@ foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
         }
 
         $c = 1;
+        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
         foreach ($a_cabeceras as $column) {
             $c++;
             if ($column === 'sel' || $column === _("Centro") || $column === _("encargo")) {
@@ -136,18 +139,17 @@ foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
             $id_sacd = 0;
             $id_item_horario_sacd = 0;
             // buscar sacd encargado
-            $gesEncargoSacdHorario = new GestorEncargoSacdHorario();
             $aWhere = [
                 'id_enc' => $id_enc,
                 'dia_ref' => $dia,
             ];
             $aOperador = [];
 
-            $cEncargoSacdHorario = $gesEncargoSacdHorario->getEncargoSacdHorarios($aWhere, $aOperador);
+            $cEncargoSacdHorario = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhere, $aOperador);
             if (!empty($cEncargoSacdHorario)) {
                 $oEncargoHorarioSacd = $cEncargoSacdHorario[0];
                 $id_sacd = $oEncargoHorarioSacd->getId_nom();
-                $oPersonaSacd = new PersonaSacd($id_sacd);
+                $oPersonaSacd = $PersonaSacdRepository->findById($id_sacd);
                 $sacd = $oPersonaSacd->getApellidosNombre();
                 $id_item_horario_sacd = $oEncargoHorarioSacd->getId_item();
             }

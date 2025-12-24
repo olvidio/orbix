@@ -7,7 +7,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
-use encargossacd\model\EncargoFunciones;
+use src\encargossacd\application\traits\EncargoFunciones;
 use web\DateTimeLocal;
 
 require_once("global_header.inc");

@@ -1,12 +1,12 @@
 <?php
 
 use actividades\model\ActividadLugar;
-use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use core\ConfigGlobal;
+use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
+use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;
 use web\Lista;
 use web\TiposActividades;
-use src\ubis\application\services\DelegacionDropdown;
 use function core\is_true;
 
 /**
@@ -126,8 +126,8 @@ switch ($Qsalida) {
         $aWhere = [];
         $aWhere['id_tipo_activ'] = $id_tipo_activ;
         $aWhere['_ordre'] = 'id_serie';
-        $GesActiTipoTarifa = new GestorTipoActivTarifa();
-        $cActiTipoTarifa = $GesActiTipoTarifa->getTipoActivTarifas($aWhere);
+        $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
+        $cActiTipoTarifa = $RelacionTarifaTipoActividadRepository->getTipoActivTarifas($aWhere);
         if (!empty($cActiTipoTarifa) && $cActiTipoTarifa > 0) {
             return $cActiTipoTarifa[0]->getId_tarifa();
         }

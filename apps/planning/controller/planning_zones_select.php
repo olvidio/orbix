@@ -1,21 +1,20 @@
 <?php
 
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
-use personas\model\entity\PersonaSacd;
 use planning\domain\Planning;
 use planning\domain\PlanningStyle;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use web\TiposActividades;
-use zonassacd\model\entity\GestorZona;
-use zonassacd\model\entity\GestorZonaSacd;
-use zonassacd\model\entity\Zona;
 use function core\is_true;
 
 /**
@@ -160,12 +159,13 @@ $oIniPlanning = web\DateTimeLocal::createFromFormat('Y/m/d', $inicio_iso);
 $oFinPlanning = web\DateTimeLocal::createFromFormat('Y/m/d', $fin_iso);
 $inicio_local = $oIniPlanning->getFromLocal();
 
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
 switch ($Qid_zona) {
     case "todo_propias":
         $aWhere = [];
         $aWhere['propia'] = 't';
-        $GesZonasSacd = new GestorZonaSacd();
-        $cZonasSacd = $GesZonasSacd->getZonasSacds($aWhere);
+        $cZonasSacd = $ZonaSacdRepository->getZonasSacds($aWhere);
         $a_zonas = [];
         $a_zonas_o = [];
         foreach ($cZonasSacd as $oZonaSacd) {
@@ -173,7 +173,7 @@ switch ($Qid_zona) {
             if (array_key_exists($id_zona, $a_zonas)) {
                 continue;
             }
-            $oZona = new Zona($id_zona);
+            $oZona = $ZonaRepository->findById($id_zona);
             $nombre_zona = $oZona->getNombre_zona();
             $orden = $oZona->getOrden();
             $a_zonas[$id_zona] = $nombre_zona;
@@ -186,30 +186,32 @@ switch ($Qid_zona) {
         }
         break;
     case "todo":
-        $GesZonas = new GestorZona();
-        $aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
+        $aOpciones = $ZonaRepository->getArrayZonas($id_nom_jefe);
         $oDesplZonas = new Desplegable();
         $oDesplZonas->setOpciones($aOpciones);
         $oDesplZonas->setBlanco(FALSE);
         $aa_zonas = $oDesplZonas->getOpciones()->fetchAll(PDO::FETCH_ASSOC);
         break;
     default:
-        $oZona = new Zona($Qid_zona);
+        $oZona = $ZonaRepository->findById($Qid_zona);
         $nombre_zona = $oZona->getNombre_zona();
         $aa_zonas[0] = array('id_zona' => $Qid_zona, 'nombre_zona' => $nombre_zona);
 }
 
 $z = 0;
-$GesZonasSacd = new GestorZonaSacd();
 $aWhereZ = [];
 $actividades_por_zona = [];
 $cabeceras_por_zona = [];
+$ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+$PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
 foreach ($aa_zonas as $a_zonas) {
     $z++;
     $id_zona = $a_zonas['id_zona'];
     $nombre_zona = $a_zonas['nombre_zona'];
     $aWhereZ['id_zona'] = $id_zona;
-    $cZonasSacd = $GesZonasSacd->getZonasSacds($aWhereZ);
+    $cZonasSacd = $ZonaSacdRepository->getZonasSacds($aWhereZ);
     $p = 0;
     $actividades = [];
     $persona = [];
@@ -217,7 +219,7 @@ foreach ($aa_zonas as $a_zonas) {
         $aActivPersona = []; //inicializo el vector para la siguiente persona
         $id_nom = $oZonaSacd->getId_nom();
 
-        $oSacd = new PersonaSacd($id_nom);
+        $oSacd =$PersonaSacdRepository->findById($id_nom);
         if ($oSacd->getSituacion() !== 'A') {
             continue;
         }
@@ -234,20 +236,20 @@ foreach ($aa_zonas as $a_zonas) {
             $aWhereAct['f_fin'] = "'$inicio_iso'";
             $aOperadorAct['f_fin'] = '>=';
             if (!is_true($Qpropuesta)) {
-                $aWhereAct['status'] = ActividadAll::STATUS_ACTUAL;
+                $aWhereAct['status'] = StatusId::ACTUAL;
             } else {
-                $aWhereAct['status'] = ActividadAll::STATUS_BORRABLE;
+                $aWhereAct['status'] = StatusId::BORRABLE;
                 $aOperadorAct['status'] = '!=';
             }
             /*			
-			$aWhere = ['id_nom' => $id_nom, 'plaza' => Asistente::PLAZA_PEDIDA];
+			$aWhere = ['id_nom' => $id_nom, 'plaza' => PLazaId::PEDIDA];
 			$aOperador = ['plaza' => '>='];
 			*/
             $aWhere = ['id_nom' => $id_nom];
             $aOperador = [];
 
-            $oGesActividadCargo = new GestorActividadCargo();
-            $cAsistentes = $oGesActividadCargo->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+            $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+            $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
 
             foreach ($cAsistentes as $aAsistente) {
                 $id_activ = $aAsistente['id_activ'];
@@ -257,8 +259,7 @@ foreach ($aa_zonas as $a_zonas) {
 
                 // Seleccionar sólo las del periodo
                 $aWhereAct['id_activ'] = $id_activ;
-                $GesActividades = new GestorActividad();
-                $cActividades = $GesActividades->getActividades($aWhereAct, $aOperadorAct);
+                $cActividades = $ActividadRepository->getActividades($aWhereAct, $aOperadorAct);
                 if (is_array($cActividades) && count($cActividades) === 0) {
                     continue;
                 }
@@ -345,8 +346,7 @@ foreach ($aa_zonas as $a_zonas) {
             $aOperadorE['f_ini'] = '<=';
             $aWhereE['f_fin'] = "'$inicio_iso'";
             $aOperadorE['f_fin'] = '>=';
-            $GesAusencias = new GestorEncargoSacdHorario();
-            $cAusencias = $GesAusencias->getEncargoSacdHorarios($aWhereE, $aOperadorE);
+            $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
             foreach ($cAusencias as $oTareaHorarioSacd) {
                 $id_enc = $oTareaHorarioSacd->getId_enc();
                 $oF_ini = $oTareaHorarioSacd->getF_ini();
@@ -354,7 +354,7 @@ foreach ($aa_zonas as $a_zonas) {
                 $h_ini = '';
                 $h_fi = '';
 
-                $oEncargo = new Encargo($id_enc);
+                $oEncargo = $EncargoRepository->findById($id_enc);
                 $id_tipo_enc = $oEncargo->getId_tipo_enc();
                 $id = (string)$id_tipo_enc;
                 if ($id[0] !== '7' && $id[0] !== '4') {

@@ -201,6 +201,12 @@ class DatosTablaRepo
                             $a_valores[$c][$v] = _("no");
                         }
                         break;
+                    case "hidden":
+                        if ($c == 0) {
+                            array_pop($a_cabeceras);
+                        }
+                        continue 2;
+                        break;
                     default:
                         $a_valores[$c][$v] = $valor_camp;
                 }

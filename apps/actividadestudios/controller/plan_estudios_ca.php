@@ -1,14 +1,16 @@
 <?php
 
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
-use asistentes\model\entity\GestorAsistente;
+
 use core\ViewPhtml;
-use personas\model\entity\Persona;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -34,15 +36,16 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $msg_err = '';
 
 // nombre de la actividad
-$oActividad = new ActividadAll($id_activ);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$oActividad = $ActividadAllRepository->findById($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 //director de estudios
 $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
 $cCargos = $CargoRepository->getCargos(array('cargo' => 'd.est.'));
 $id_cargo = $cCargos[0]->getId_cargo(); // solo hay un cargo de director de estudios.
-$GesActividadCargos = new GestorActividadCargo();
-$cActividadCargos = $GesActividadCargos->getActividadCargos(array('id_activ' => $id_activ, 'id_cargo' => $id_cargo));
+$ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+$cActividadCargos = $ActividadCargoRepository->getActividadCargos(array('id_activ' => $id_activ, 'id_cargo' => $id_cargo));
 if (is_array($cActividadCargos) && count($cActividadCargos) > 0) {
     $id_nom_dtor_est = $cActividadCargos[0]->getId_nom(); // Imagino que sólo hay uno.
 } else {
@@ -52,9 +55,9 @@ if (is_array($cActividadCargos) && count($cActividadCargos) > 0) {
 if (empty($id_nom_dtor_est)) {
     $nom_director_est = _("para nombrarlo, ir al dossier de cargos de la actividad");
 } else {
-    $oPersona = Persona::NewPersona($id_nom_dtor_est);
+    $oPersona = Persona::findPersonaEnGlobal($id_nom_dtor_est);
     if (!is_object($oPersona)) {
-        $msg_err .= "<br>$oPersona con id_nom: $id_nom_dtor_est en  " . __FILE__ . ": line " . __LINE__;
+        $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom_dtor_est en  " . __FILE__ . ": line " . __LINE__;
         $nom_director_est = '';
     } else {
         $nom_director_est = $oPersona->getPrefApellidosNombre();
@@ -84,9 +87,9 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $creditos = $oAsignatura->getCreditos();
 
     if (!empty($id_profesor)) {
-        $oPersona = Persona::NewPersona($id_profesor);
+        $oPersona = Persona::findPersonaEnGlobal($id_profesor);
         if (!is_object($oPersona)) {
-            $msg_err .= "<br>$oPersona con id_nom: $id_profesor en  " . __FILE__ . ": line " . __LINE__;
+            $msg_err .= "<br>No encuentro a nadie con id_nom: $id_profesor en  " . __FILE__ . ": line " . __LINE__;
             continue;
         }
         $nom_profesor = $oPersona->getPrefApellidosNombre();
@@ -106,26 +109,26 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 }
 
 //buco los asistentes:
-$GesAsistentes = new GestorAsistente();
-$cAsistentes = $GesAsistentes->getAsistentesDeActividad($id_activ);
+$AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
+$cAsistentes = $AsistenteRepository->getAsistentesDeActividad($id_activ);
 $a = 0;
 $a_old = 0;
 $aAlumnos = [];
 foreach ($cAsistentes as $oAsistente) {
-    if ($oAsistente->getPropio() === FALSE) {
+    if (!$oAsistente->isPropio()) {
         continue;
     }
     $a++;
     $id_nom = $oAsistente->getId_nom();
     $observ_est = $oAsistente->getObserv_est();
-    $oPersona = Persona::NewPersona($id_nom);
-    if (!is_object($oPersona)) {
-        $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+    $oPersona = Persona::findPersonaEnGlobal($id_nom);
+    if ($oPersona === null) {
+        $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         continue;
     }
     $nom_persona = $oPersona->getPrefApellidosNombre();
     $ctr = $oPersona->getCentro_o_dl();
-    $stgr = $oPersona->getStgr();
+    $stgr = $oPersona->getNivel_stgr();
     // busco las asignaturas de esta persona
     $GesMatriculas = new GestorMatricula();
     $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ));

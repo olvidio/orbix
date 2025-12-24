@@ -1,7 +1,8 @@
 <?php
 
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\entity\Encargo;
 use web\Desplegable;
 
 /**
@@ -32,7 +33,8 @@ require_once("apps/core/global_object.inc");
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qfiltro_ctr = (integer)filter_input(INPUT_POST, 'filtro_ctr');
 
-
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 switch ($Qque) {
     case "lst_tipo_enc":
         $Qid_tipo_enc = (integer)filter_input(INPUT_POST, 'id_tipo_enc');
@@ -42,8 +44,7 @@ switch ($Qque) {
         $aOperador = [];
         $aWhere['id_tipo_enc'] = '^' . $Qgrupo;
         $aOperador['id_tipo_enc'] = '~';
-        $oGesEncargoTipo = new GestorEncargoTipo();
-        $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+        $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
         // desplegable de nom_tipo
         $posibles_encargo_tipo = [];
@@ -75,7 +76,7 @@ switch ($Qque) {
         if (!empty($Qid_tipo_enc) and !strstr($Qid_tipo_enc, '.')) {
             $id_tipo_enc = $Qid_tipo_enc;
         } else {
-            $condta = (new GestorEncargoTipo)->id_tipo_encargo($Qgrupo, $Qnom_tipo);
+            $condta = $EncargoTipoRepository->id_tipo_encargo($Qgrupo, $Qnom_tipo);
             if (!strstr($condta, '.')) {
                 $id_tipo_enc = $condta;
             } else {
@@ -92,7 +93,9 @@ switch ($Qque) {
             exit;
         }
 
+        $newId = $EncargoRepository->getNewId();
         $oEncargo = new Encargo();
+        $oEncargo->setId_enc($newId);
         $oEncargo->setId_tipo_enc($id_tipo_enc);
         $oEncargo->setSf_sv($Qsf_sv);
         $oEncargo->setId_ubi($Qid_ubi);
@@ -101,12 +104,10 @@ switch ($Qque) {
         $oEncargo->setIdioma_enc($Qidioma_enc);
         $oEncargo->setDesc_lugar($Qdesc_lugar);
         $oEncargo->setObserv($Qobserv);
-        if ($oEncargo->DBGuardar() === false) {
+        if ($EncargoRepository->Guardar($oEncargo) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oEncargo->getErrorTxt();
+            echo "\n" . $EncargoRepository->getErrorTxt();
         }
-        $oEncargo->DBCarregar();
-
         break;
     case "editar": // modificar 
         $Qsf_sv = empty($Qfiltro_ctr) ? 1 : $Qfiltro_ctr;
@@ -128,8 +129,7 @@ switch ($Qque) {
             exit;
         }
 
-        $oEncargo = new Encargo($Qid_enc);
-        $oEncargo->DBCarregar();
+        $oEncargo = $EncargoRepository->findById($Qid_enc);
 
         $oEncargo->setId_tipo_enc($Qid_tipo_enc);
         $oEncargo->setSf_sv($Qsf_sv);
@@ -139,19 +139,19 @@ switch ($Qque) {
         $oEncargo->setIdioma_enc($Qidioma_enc);
         $oEncargo->setDesc_lugar($Qdesc_lugar);
         $oEncargo->setObserv($Qobserv);
-        if ($oEncargo->DBGuardar() === false) {
+        if ($EncargoRepository->Guardar($oEncargo) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oEncargo->getErrorTxt();
+            echo "\n" . $EncargoRepository->getErrorTxt();
         }
 
         break;
     case "eliminar":
         if (!empty($_POST['sel'])) {
             $id_enc = strtok($_POST['sel'][0], "#");
-            $oEncargo = new Encargo(array('id_enc' => $id_enc));
-            if ($oEncargo->DBEliminar() === false) {
+            $oEncargo = $EncargoRepository->findById($id_enc);
+            if ($EncargoRepository->Eliminar($oEncargo) === false) {
                 echo _("hay un error, no se ha eliminado");
-                echo "\n" . $oEncargo->getErrorTxt();
+                echo "\n" . $EncargoRepository->getErrorTxt();
             }
             // También elimino todos los horarios con sus excepciones (por el postgres: foreginKey)
             /*

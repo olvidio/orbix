@@ -19,6 +19,8 @@ class InfoGrupMenus extends DatosInfoRepo
 
         $this->setClase('src\\menus\\domain\\entity\\GrupMenu');
         $this->setMetodoGestor('getGrupmenus');
+
+        $this->setRepositoryInterface(GrupMenuRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoGrupMenus extends DatosInfoRepo
             $aWhere = ['descripcion' => $this->k_buscar];
             $aOperador = ['descripcion' => 'sin_acentos'];
         }
-        $oLista = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
+        $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getGrupMenus($aWhere, $aOperador);
 
         return $Coleccion;

@@ -20,7 +20,7 @@ $oDescTeleco = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
 $aOpciones = $oDescTeleco->getArrayDescTelecoUbis($Qid_tipo_teleco);
 $oDesplegableDescTeleco = new Desplegable();
 $oDesplegableDescTeleco->setOpciones($aOpciones);
-$oDesplegableDescTeleco->setNombre('desc_teleco');
+$oDesplegableDescTeleco->setNombre('id_desc_teleco');
 $oDesplegableDescTeleco->setBlanco(true);
 
 echo $oDesplegableDescTeleco->desplegable();

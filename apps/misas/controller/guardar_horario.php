@@ -2,9 +2,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use encargossacd\model\entity\EncargoHorario;
 use Illuminate\Http\JsonResponse;
-use web\DateTimeLocal;
+use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -18,25 +17,25 @@ $Qid_item_h = (integer)filter_input(INPUT_POST, 'id_item_h');
 $Qt_start = (string)filter_input(INPUT_POST, 't_start');
 $Qt_end = (string)filter_input(INPUT_POST, 't_end');
 
+$error_txt = '';
 if (empty($Qid_item_h)) {
-    exit("Error: falta el id_item");
+    $error_txt .= _("Error: falta el id_item");
 } else {
-    $oEncargoHorario = new EncargoHorario($Qid_item_h);
-    $oEncargoHorario->DBCarregar();
-}
 
-if (!empty($Qt_start)) {
-    $oEncargoHorario->setH_ini($Qt_start);
-}
-if (!empty($Qt_end)) {
-    $oEncargoHorario->setH_fin($Qt_end);
-}
+    $EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
+    $oEncargoHorario = $EncargoHorarioRepository->findById($Qid_item_h);
 
+    if (!empty($Qt_start)) {
+        $oEncargoHorario->setH_ini($Qt_start);
+    }
+    if (!empty($Qt_end)) {
+        $oEncargoHorario->setH_fin($Qt_end);
+    }
 
-if ($oEncargoHorario->DBGuardar() === FALSE) {
-    $error_txt .= $oEncargoHorario->getErrorTxt();
+    if ($EncargoHorarioRepository->Guardar($oEncargoHorario) === FALSE) {
+        $error_txt .= $EncargoHorarioRepository->getErrorTxt();
+    }
 }
-
 
 if (empty($error_txt)) {
     $jsondata['success'] = true;

@@ -5,9 +5,9 @@ namespace src\certificados\domain;
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use Exception;
-use personas\model\entity\Persona;
 use personas\model\entity\TrasladoDl;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\personas\domain\entity\Persona;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 use src\tablonanuncios\domain\entity\Anuncio;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
@@ -37,36 +37,24 @@ class CertificadoEmitidoEnviar
             $certificado = $oCertificadoEmitido->getCertificado();
 
             // destino?
-            $gesPersona = new Persona();
-            /*     $a_lista = [
-                                'esquema' => $esquema,
-                                'id_nom' => $id_nom,
-                                'ape_nom' => $ape_nom,
-                                'nombre' => $nombre,
-                                'dl_persona' => $dl_persona,
-                                'apellido1' => $apellido1,
-                                'apellido2' => $apellido2,
-                                'situacion' => $situacion,
-                             ]
-            */
-            $a_lista = $gesPersona->buscarEnTodasRegiones($id_nom);
-            if (empty($a_lista)) {
+            $cPersonas = Persona::buscarEnTodasRegiones($id_nom);
+            if (empty($cPersonas)) {
                 $error_txt .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 $b_saltar = TRUE;
             }
-            if (count($a_lista) > 1) {
+            if (count($cPersonas) > 1) {
                 $error_txt .= "Existe más de una persona con este id, dado de alta:";
-                foreach ($a_lista as $dl) {
+                foreach ($cPersonas as $oPersona) {
                     $error_txt .= "\n";
-                    $error_txt .= $dl['esquema'];
+                    $error_txt .= $$oPersona->getEsquema();
                 }
                 $b_saltar = TRUE;
             }
         }
 
         if (!$b_saltar) {
-            $nombre_apellidos = $a_lista[0]['ape_nom'];
-            $dl_destino = $a_lista[0]['dl_persona'];
+            $nombre_apellidos = $cPersonas[0]->getApellidosNombre();
+            $dl_destino = $cPersonas[0]->getDl();
 
             $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
             try {

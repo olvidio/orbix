@@ -21,7 +21,7 @@ class PgDireccionCentroExRepository extends PgDireccionRepository implements Dir
     {
         parent::__construct();
         $oDbl = $GLOBALS['oDBR'];
-        $oDbl_Select = $GLOBALS['oDBR_Select'];
+        $oDbl_Select = $GLOBALS['oDBR'];
         $this->setoDbl($oDbl);
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('u_dir_ctr_ex');

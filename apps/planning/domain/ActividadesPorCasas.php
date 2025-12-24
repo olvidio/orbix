@@ -2,7 +2,7 @@
 
 namespace planning\domain;
 
-use actividades\model\entity\GestorActividad;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
@@ -21,7 +21,7 @@ class ActividadesPorCasas
      */
     public static function actividadesPorCasas(int $Qcdc_sel, \web\DateTimeLocal $oIniPlanning, \web\DateTimeLocal $oFinPlanning, mixed $sin_activ, string $fin_iso, string $inicio_iso): array
     {
-        $GesActividades = new GestorActividad();
+        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         $sCdc = '';
         if ($Qcdc_sel < 10) { //Para buscar por casas.
             $aWhere = [];
@@ -86,7 +86,7 @@ class ActividadesPorCasas
 
                 $cdc[$p] = "u#$id_ubi#$nombre_ubi";
 
-                $a_cdc = $GesActividades->actividadesDeUnaCasa($id_ubi, $oIniPlanning, $oFinPlanning, $Qcdc_sel);
+                $a_cdc = $ActividadRepository->actividadesDeUnaCasa($id_ubi, $oIniPlanning, $oFinPlanning, $Qcdc_sel);
                 if ($a_cdc !== false) {
                     $a_actividades[$nombre_ubi] = array($cdc[$p] => $a_cdc);
                     $p++;
@@ -105,7 +105,6 @@ class ActividadesPorCasas
             $a_actividades[] = array($cdc[$p + 1] => array());
         } else { // cdc_sel > 10 Para buscar por actividades (todas).
             // busco todas las actividades del periodo y las agrupo por ubis.
-            $oGesActividades = new GestorActividad();
             $aWhere = [];
             $aOperador = [];
             switch ($Qcdc_sel) {
@@ -126,7 +125,7 @@ class ActividadesPorCasas
             $aOperador['status'] = '<';
             $aWhere['_ordre'] = 'id_ubi';
 
-            $aUbis = $oGesActividades->getUbis($aWhere, $aOperador);
+            $aUbis = $ActividadRepository->getUbis($aWhere, $aOperador);
             $p = 0;
             $a_actividades = [];
             foreach ($aUbis as $id_ubi) {
@@ -143,7 +142,7 @@ class ActividadesPorCasas
                     $nombre_ubi = $oCasa->getNombre_ubi();
                     $cdc[$p] = "u#$id_ubi#$nombre_ubi";
                 }
-                $a_cdc = $GesActividades->actividadesDeUnaCasa($id_ubi, $oIniPlanning, $oFinPlanning, $Qcdc_sel);
+                $a_cdc = $ActividadRepository->actividadesDeUnaCasa($id_ubi, $oIniPlanning, $oFinPlanning, $Qcdc_sel);
                 if ($a_cdc !== false) {
                     $a_actividades[$nombre_ubi] = array($cdc[$p] => $a_cdc);
                     $p++;

@@ -3,7 +3,7 @@
 namespace encargossacd\model;
 
 use core\DatosInfo;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 
 /* No vale el underscore en el nombre */
 
@@ -25,6 +25,7 @@ class InfoEncargoTipo extends DatosInfo
     {
         $aWhere = [];
         $aOperador = [];
+        $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->k_buscar)) {
@@ -32,8 +33,7 @@ class InfoEncargoTipo extends DatosInfo
             $aOperador['tipo_enc'] = 'sin_acentos';
         }
         $aWhere['_ordre'] = 'id_tipo_enc';
-        $oLista = new GestorEncargoTipo();
-        $Coleccion = $oLista->getEncargoTipos($aWhere, $aOperador);
+        $Coleccion = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
         return $Coleccion;
     }

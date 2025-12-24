@@ -2,26 +2,25 @@
 
 namespace personas\model\entity;
 
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
-use asistentes\model\entity\AsistenteDl;
-use asistentes\model\entity\AsistenteOut;
-use asistentes\model\entity\GestorAsistenteDl;
-use asistentes\model\entity\GestorAsistenteOut;
+use asistentes\legacy\AsistenteDl;
+use asistentes\legacy\AsistenteOut;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\ConverterDate;
 use core\DBConnection;
 use core\DBPropiedades;
-use dossiers\model\entity\GestorDossier;
-use dossiers\model\entity\TipoDossier;
 use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
+use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\DateTimeLocal;
@@ -473,10 +472,11 @@ class TrasladoDl
         $cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($this->iid_nom);
         $msg = '';
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($cMatriculasPendientes as $oMatricula) {
             $id_activ = $oMatricula->getId_activ();
             $id_asignatura = $oMatricula->getId_asignatura();
-            $oActividad = new ActividadAll($id_activ);
+            $oActividad = $ActividadAllRepository->findById($id_activ);
             $nom_activ = $oActividad->getNom_activ();
             $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
@@ -640,7 +640,7 @@ class TrasladoDl
                     $obj = 'personas\model\entity\PersonaSSSC';
                     break;
                 case 'x':
-                    $obj = 'personas\model\entity\PersonaNax';
+                    $obj = 'personas\legacy\PersonaNax';
                     break;
             }
             $oPersona = new $obj();
@@ -736,21 +736,21 @@ class TrasladoDl
         $oDBorgE = $this->conexionOrg(TRUE);
         $oDBdstE = $this->conexionDst(TRUE);
         // Los Out pasan a Dl si la dl destino es la que organiza.
-        $ges = new GestorAsistenteOut();
-        $colection = $ges->getAsistentesOut(array('id_nom' => $this->iid_nom));
+        $AsistenteOutRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
+        $colection = $AsistenteOutRepository->getAsistentesOut(array('id_nom' => $this->iid_nom));
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($colection as $oAsistenteOut) {
             $err = 0;
             $oAsistenteOut->setoDbl($oDBorgE);
             $oAsistenteOut->DBCarregar();
             $id_activ = $oAsistenteOut->getId_activ();
-            $oActividad = new ActividadAll($id_activ);
+            $oActividad = $ActividadAllRepository->findById($id_activ);
             // si es de la sf quito la 'f'
             $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
-            if ($dl_org == $this->sdl_dst) {
-                $oAsistenteDl = new AsistenteDl();
-                $oAsistenteDl->setoDbl($oDBdstE);
-                $oAsistenteDl = $this->copiarAsistencia($oAsistenteOut, $oAsistenteDl);
-                if ($oAsistenteDl->DBGuardar(1) === false) { // param quiet=1 para que no anote cambios
+            if ($dl_org === $this->sdl_dst) {
+                $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
+                $AsistenteDlRepository->setoDbl($oDBdstE);
+                if ($AsistenteDlRepository->Guardar($oAsistenteOut) === false) { // param quiet=1 para que no anote cambios
                     $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(dl) a id_activ: %s"), $id_activ);
                     $err = 1;
                 }
@@ -770,8 +770,9 @@ class TrasladoDl
             }
         }
         // Los Dl pasan a Out
-        $ges = new GestorAsistenteDl();
-        $colection = $ges->getAsistentesDl(array('id_nom' => $this->iid_nom));
+        $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
+        $colection = $AsistenteDlRepository->getAsistentes(['id_nom' => $this->iid_nom]);
+        $AsistenteOutRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
         foreach ($colection as $oAsistenteDl) {
             $err = 0;
             $oAsistenteDl->setoDbl($oDBorgE);
@@ -810,15 +811,15 @@ class TrasladoDl
         $error = '';
         $oDBorg = $this->conexionOrg();
         $oDBdst = $this->conexionDst();
-        $GesDossiers = new GestorDossier();
-        $GesDossiers->setoDbl($oDBorg);
+        $DossierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
+        $DossierRepository->setoDbl($oDBorg);
         // Comprobar que estan apuntados.
-        $cDossiers = $GesDossiers->DossiersNotEmpty('p', $this->iid_nom);
+        $cDossiers = $DossierRepository->DossiersNotEmpty('p', $this->iid_nom);
 
-        //$cDossiers = $GesDossiers->getDossiers(array('tabla'=>'p','id_nom'=>$this->iid_nom));
+        $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
         foreach ($cDossiers as $oDossier) {
             $id_tipo_dossier = $oDossier->getId_tipo_dossier();
-            $oTipoDossier = new TipoDossier($id_tipo_dossier);
+            $oTipoDossier = $TipoDossierRepository->findById($id_tipo_dossier);
             $app = $oTipoDossier->getApp();
             $class = $oTipoDossier->getClass();
             if (empty($class)) {
@@ -1064,11 +1065,11 @@ class TrasladoDl
         if ($this->testActividad($oOrigen->getId_activ())) {
             $oDestino->setId_activ($oOrigen->getId_activ());
             $oDestino->setId_nom($oOrigen->getId_nom());
-            $oDestino->setPropio($oOrigen->getPropio());
-            $oDestino->setEst_ok($oOrigen->getEst_ok());
-            $oDestino->setCfi($oOrigen->getCfi());
+            $oDestino->setPropio($oOrigen->isPropio());
+            $oDestino->setEst_ok($oOrigen->isEst_ok());
+            $oDestino->setCfi($oOrigen->isCfi());
             $oDestino->setCfi_con($oOrigen->getCfi_con());
-            $oDestino->setFalta($oOrigen->getFalta());
+            $oDestino->setFalta($oOrigen->isFalta());
             $oDestino->setEncargo($oOrigen->getEncargo());
             // cambio para que la dl responsable sea la actual:
             $oDestino->setDl_responsable(ConfigGlobal::mi_delef());
@@ -1081,8 +1082,8 @@ class TrasladoDl
     private
     function testActividad($id_activ)
     {
-        $gesActividades = new GestorActividadAll();
-        $cActividades = $gesActividades->getActividades(['id_activ' => $id_activ]);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $cActividades = $ActividadAllRepository->getActividades(['id_activ' => $id_activ]);
         if (!empty($cActividades) && count($cActividades) == 1) {
             return TRUE;
         } else {

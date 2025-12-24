@@ -1,10 +1,9 @@
 <?php
 
 use core\ViewTwig;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoSacd;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use web\Hash;
 
 /**
@@ -32,13 +31,13 @@ $Qfiltro_sacd = (integer)filter_input(INPUT_POST, 'filtro_sacd');
 
 $hoy = date('Y-m-d');
 // tipos de actividades personales y stgr:
-$GesEncargos = new GestorEncargo();
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 $aWhere = [];
 $aOperador = [];
 $aWhere['id_tipo_enc'] = '(7|4)...';
 $aOperador['id_tipo_enc'] = '~';
 $aWhere['_ordre'] = 'id_tipo_enc';
-$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+$cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
 
 $array_tipo_ausencias = [];
 foreach ($cEncargos as $oEncargo) {
@@ -46,10 +45,10 @@ foreach ($cEncargos as $oEncargo) {
 }
 
 /* busco los datos del encargo que se tengan */
-$GesEncargosSacd = new GestorEncargoSacd();
+$EncargoSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
 $aWhereP = [];
 $aOperadorP = [];
-if ($Qhistorial == 1) {
+if ($Qhistorial === 1) {
     $aWhereP['id_nom'] = $Qid_nom;
     $aWhereP['_ordre'] = 'f_ini';
 } else {
@@ -58,7 +57,7 @@ if ($Qhistorial == 1) {
     $aOperadorP['f_ini'] = '>=';
     $aWhereP['_ordre'] = 'f_ini';
 }
-$cEncargosSacd = $GesEncargosSacd->getEncargosSacd($aWhereP, $aOperadorP);
+$cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhereP, $aOperadorP);
 $i = 0;
 $id_enc = [];
 $id_tipo_enc = [];
@@ -69,13 +68,14 @@ $fin = [];
 $dedic_m = [];
 $dedic_t = [];
 $dedic_v = [];
+$EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
 foreach ($cEncargosSacd as $oEncargoSacd) {
     $id_enc[$i] = $oEncargoSacd->getId_enc();
     // Encargo
-    $oEncargo = new Encargo($id_enc[$i]);
+    $oEncargo = $EncargoRepository->findById($id_enc[$i]);
     $id_tipo_enc[$i] = $oEncargo->getId_tipo_enc();
     // mirar que sea ausencia: id_tipo_enc = 4|7
-    if (!preg_match('/7|4/', $id_tipo_enc[$i])) {
+    if (!preg_match('/[74]/', $id_tipo_enc[$i])) {
         continue;
     }
     $desc_enc[$i] = $oEncargo->getDesc_enc();
@@ -85,24 +85,23 @@ foreach ($cEncargosSacd as $oEncargoSacd) {
     $fin[$i] = $oEncargoSacd->getF_fin()->getFromLocal();
 
     // horario
-    $GesHorario = new GestorEncargoSacdHorario();
     $aWhereH = [];
     $aOperadorH = [];
-    if ($Qhistorial == 1) {
+    if ($Qhistorial === 1) {
         $aWhereH['id_enc'] = $id_enc[$i];
         $aWhereH['id_nom'] = $Qid_nom;
-        $cHorarios = $GesHorario->getEncargoSacdHorarios($aWhereH);
+        $cHorarios = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH);
     } else {
         $aWhereH['id_enc'] = $id_enc[$i];
         $aWhereH['id_nom'] = $Qid_nom;
         // con fecha fin > hoy
         $aWhereH['f_fin'] = "'$hoy'";
         $aOperadorH['f_fin'] = '>';
-        $cHorarios_1 = $GesHorario->getEncargoSacdHorarios($aWhereH, $aOperadorH);
+        $cHorarios_1 = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH);
         // con fecha fin null
         $aWhereH['f_fin'] = "";
         $aOperadorH['f_fin'] = 'IS NULL';
-        $cHorarios_2 = $GesHorario->getEncargoSacdHorarios($aWhereH, $aOperadorH);
+        $cHorarios_2 = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereH, $aOperadorH);
         $cHorarios = $cHorarios_1 + $cHorarios_2;
     }
     foreach ($cHorarios as $oHorario) {

@@ -14,16 +14,22 @@
  */
 
 use actividades\domain\ActividadNueva;
-use actividades\model\entity\Actividad;
-use actividades\model\entity\ActividadAll;
-use actividades\model\entity\ActividadDl;
-use actividades\model\entity\Importada;
-use actividadplazas\model\entity\ActividadPlazasDl;
-use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
 use Illuminate\Http\JsonResponse;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\contracts\ActividadExRepositoryInterface;
+use src\actividades\domain\contracts\ImportadaRepositoryInterface;
+use src\actividades\domain\entity\Importada;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
+use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\shared\domain\value_objects\Dinero;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use web\DateTimeLocal;
+use web\TimeLocal;
+use function core\is_true;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -38,24 +44,27 @@ require_once("apps/core/global_object.inc");
 
 function borrar_actividad($id_activ)
 {
-    $oActividad = new Actividad($id_activ);
-    $oActividad->DBCarregar();
+    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $oActividad = $ActividadAllRepository->findById($id_activ);
+
     $dl_org = $oActividad->getDl_org();
     $id_tabla = $oActividad->getId_tabla();
+
     // para des => dl y dlf:
     $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-    $dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f) ? TRUE : FALSE;
+    $dl_propia = ConfigGlobal::mi_dele() === $dl_org_no_f;
 
     if ($dl_propia) { // de la propia dl
+        $repoActividad = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
         $status = $oActividad->getStatus();
-        if (!empty($status) && $status == 1) { // si no esta en proyecto (status=1) no dejo borrar,
-            if ($oActividad->DBEliminar() === false) {
+        if (!empty($status) && $status === StatusId::PROYECTO) { // si no esta en proyecto (status=1) no dejo borrar,
+            if ($repoActividad->Eliminar($oActividad) === false) {
                 echo _("hay un error, no se ha eliminado");
                 echo "\n" . $oActividad->getErrorTxt();
             }
         } else {
             $oActividad->setStatus(4); // la pongo en estado borrable
-            if ($oActividad->DBGuardar() === false) {
+            if ($repoActividad->Guardar($oActividad) === false) {
                 echo _("hay un error, no se ha guardado");
                 echo "\n" . $oActividad->getErrorTxt();
             }
@@ -63,11 +72,13 @@ function borrar_actividad($id_activ)
     } else {
         if ($id_tabla === 'dl') {
             // No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
-            $oImportada = new Importada($id_activ);
-            $oImportada->DBEliminar();
+            $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
+            $oImportada = $ImportadaRepository->findById($id_activ);
+            $ImportadaRepository->Eliminar($oImportada);
         } else { // de otras dl en resto
+            $repoActividad = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
             $oActividad->setStatus(4); // la pongo en estado borrable
-            if ($oActividad->DBGuardar() === false) {
+            if ($repoActividad->Guardar($oActividad) === false) {
                 echo _("hay un error, no se ha guardado");
                 echo "\n" . $oActividad->getErrorTxt();
             }
@@ -82,12 +93,12 @@ switch ($Qmod) {
     case 'publicar':
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
+            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
-                $oActividad = new ActividadAll($id_activ);
-                $oActividad->DBCarregar();
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 $oActividad->setPublicado('t');
-                if ($oActividad->DBGuardar() === false) {
+                if ($ActividadAllRepository->Guardar($oActividad) === false) {
                     echo _("hay un error, no se ha guardado");
                     echo "\n" . $oActividad->getErrorTxt();
                     $err = 1;
@@ -98,10 +109,12 @@ switch ($Qmod) {
     case 'importar':
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
+            $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
-                $oImportada = new Importada($id_activ);
-                if ($oImportada->DBGuardar() === false) {
+                $oImportada = new Importada();
+                $oImportada->setId_activ($id_activ);
+                if ($ImportadaRepository->Guardar($oImportada) === false) {
                     echo _("hay un error, no se ha importado");
                     echo "\n" . $oImportada->getErrorTxt();
                 }
@@ -146,49 +159,46 @@ switch ($Qmod) {
             'publicado' => (string)filter_input(INPUT_POST, 'publicado'),
         ];
 
-        $error_txt = ActividadNueva::actividadNueva($datosActividad);
-
-        if (!empty($error_txt)) {
-            $jsondata['success'] = FALSE;
-            $jsondata['mensaje'] = $error_txt;
-        } else {
+        try {
+            ActividadNueva::actividadNueva($datosActividad);
             $jsondata['success'] = TRUE;
+        } catch (Exception $e) {
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $e->getMessage();
         }
+
         (new JsonResponse($jsondata))->send();
         break;
     case "duplicar": // duplicar la actividad.
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) {
+            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
             $id_activ = (integer)strtok($a_sel[0], '#');
-            $oActividadAll = new ActividadAll($id_activ);
+            $oActividadAll = $ActividadAllRepository->findById($id_activ);
             $dl = $oActividadAll->getDl_org();
             // des si puede duplicar sf.
-            if ($dl == ConfigGlobal::mi_delef() ||
-                ($_SESSION['oPerm']->have_perm_oficina('des') && $dl == ConfigGlobal::mi_dele() . 'f')
+            if ($dl === ConfigGlobal::mi_delef() ||
+                ($_SESSION['oPerm']->have_perm_oficina('des') && $dl === ConfigGlobal::mi_dele() . 'f')
             ) {
-                $oActividad = new ActividadDl($id_activ);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
             } else {
                 exit(_("no se puede duplicar actividades que no sean de la propia dl"));
             }
-            $oActividad->DBCarregar();
             $oActividad->setId_activ('0'); //para que al guardar genere un nuevo id.
             $nom = _("dup") . ' ' . $oActividad->getNom_activ();
             $oActividad->setNom_activ($nom);
             $oActividad->setStatus(1); // la pongo en estado proyecto
-            if ($oActividad->DBGuardar() === false) {
-                echo _("hay un error, no se ha guardado");
-                echo "\n" . $oActividad->getErrorTxt();
-            }
-            $oActividad->DBCarregar();
+            $ActividadAllRepository->Guardar($oActividad);
         }
         break;
     case "eliminar": // Eliminar la actividad.
         $error_txt = '';
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
-                $oActividad = new ActividadAll($id_activ);
+                $oActividad = $ActividadAllRepository->findById($id_activ);
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $dl_org = $oActividad->getDl_org();
 
@@ -207,7 +217,7 @@ switch ($Qmod) {
         }
         // si vengo desde la presentación del planning, ya tengo el id_activ.
         if (!empty($Qid_activ)) {
-            $oActividad = new ActividadAll($Qid_activ);
+            $oActividad = $ActividadAllRepository->findById($Qid_activ);
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $dl_org = $oActividad->getDl_org();
 
@@ -258,7 +268,7 @@ switch ($Qmod) {
         $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
         $Qtipo_horario = (string)filter_input(INPUT_POST, 'tipo_horario');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
-        $Qnivel_stgr = (string)filter_input(INPUT_POST, 'nivel_stgr');
+        $Qnivel_stgr = (integer)filter_input(INPUT_POST, 'nivel_stgr');
         $Qobserv_material = (string)filter_input(INPUT_POST, 'observ_material');
         $Qh_ini = (string)filter_input(INPUT_POST, 'h_ini');
         $Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
@@ -276,8 +286,8 @@ switch ($Qmod) {
                 die();
             }
         }
-        $oActividad = new ActividadAll($Qid_activ);
-        $oActividad->DBCarregar();
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($Qid_activ);
         $oActividad->setId_tipo_activ($valor_id_tipo_activ);
         if (isset($Qdl_org)) {
             $dl_org = strtok($Qdl_org, '#');
@@ -288,9 +298,15 @@ switch ($Qmod) {
         $oActividad->setNom_activ($Qnom_activ);
         $oActividad->setId_ubi($Qid_ubi);
         $oActividad->setDesc_activ($Qdesc_activ);
-        $oActividad->setF_ini($Qf_ini);
-        $oActividad->setF_fin($Qf_fin);
-        $oActividad->setTipo_horario($Qtipo_horario);
+        // asegurar tipo correcto para f_ini
+        $oF_ini = empty($Qf_ini) ? null : DateTimeLocal::createFromLocal($Qf_ini);
+        $oActividad->setF_ini($oF_ini);
+        // asegurar tipo correcto para f_fin
+        $oF_fin = empty($Qf_fin) ? null : DateTimeLocal::createFromLocal($Qf_fin);
+        $oActividad->setF_fin($oF_fin);
+        //$oActividad->setTipo_horario($Qtipo_horario);
+        // asegurar tipo correcto para precio
+        $Qprecio = empty($Qprecio)? null :new Dinero($Qprecio);
         $oActividad->setPrecio($Qprecio);
         $oActividad->setNum_asistentes($Qnum_asistentes);
         $oActividad->setStatus($Qstatus);
@@ -300,13 +316,14 @@ switch ($Qmod) {
         $oActividad->setObserv_material($Qobserv_material);
         $oActividad->setLugar_esp($Qlugar_esp);
         $oActividad->setTarifa($Qtarifa);
-        $oActividad->setH_ini($Qh_ini);
-        $oActividad->setH_fin($Qh_fin);
+        // asegurar tipo correcto para h_ini
+        $oH_ini = empty($Qh_ini) ? null : TimeLocal::fromString($Qh_ini);
+        $oActividad->setH_ini($oH_ini);
+        // asegurar tipo correcto para h_fin
+        $oH_fin = empty($Qh_fin) ? null : TimeLocal::fromString($Qh_fin);
+        $oActividad->setH_fin($oH_fin);
         $oActividad->setPlazas($Qplazas);
-        if ($oActividad->DBGuardar() === false) {
-            echo _("hay un error, no se ha guardado");
-            echo "\n" . $oActividad->getErrorTxt();
-        }
+        $ActividadAllRepository->Guardar($oActividad);
         // Si tiene procesos, hay que hacerlo de nuevo
         if (ConfigGlobal::is_app_installed('procesos')) {
             // Copiado de actividad_proceso_ajax case 'generar':
@@ -334,7 +351,7 @@ switch ($Qmod) {
         $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
         $Qtipo_horario = (string)filter_input(INPUT_POST, 'tipo_horario');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
-        $Qnivel_stgr = (string)filter_input(INPUT_POST, 'nivel_stgr');
+        $Qnivel_stgr = (integer)filter_input(INPUT_POST, 'nivel_stgr');
         $Qobserv_material = (string)filter_input(INPUT_POST, 'observ_material');
         $Qh_ini = (string)filter_input(INPUT_POST, 'h_ini');
         $Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
@@ -361,9 +378,8 @@ switch ($Qmod) {
             $valor_id_tipo_activ = $Qid_tipo_activ;
         }
 
-
-        $oActividad = new ActividadAll($Qid_activ);
-        $oActividad->DBCarregar();
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadAllRepository->findById($Qid_activ);
         $plazas_old = $oActividad->getPlazas();
 
         // compruebo que tiene 6 dígitos
@@ -388,10 +404,16 @@ switch ($Qmod) {
             $oActividad->setLugar_esp($Qlugar_esp);
         }
         $oActividad->setDesc_activ($Qdesc_activ);
-        $oActividad->setF_ini($Qf_ini);
-        $oActividad->setF_fin($Qf_fin);
-        $oActividad->setTipo_horario($Qtipo_horario);
-        $oActividad->setPrecio($Qprecio);
+        // asegurar tipo correcto para f_ini
+        $oF_ini = empty($Qf_ini) ? null : DateTimeLocal::createFromLocal($Qf_ini);
+        $oActividad->setF_ini($oF_ini);
+        // asegurar tipo correcto para f_fin
+        $oF_fin = empty($Qf_fin) ? null : DateTimeLocal::createFromLocal($Qf_fin);
+        $oActividad->setF_fin($oF_fin);
+        //$oActividad->setTipo_horario($Qtipo_horario);
+        // asegurar tipo correcto para precio
+        $Qprecio = empty($Qprecio)? null :new Dinero($Qprecio);
+        $oActividad->setPrecioVo($Qprecio);
         $oActividad->setNum_asistentes($Qnum_asistentes);
         $oActividad->setStatus($Qstatus);
         $oActividad->setObserv($Qobserv);
@@ -399,11 +421,15 @@ switch ($Qmod) {
         $oActividad->setId_repeticion($Qid_repeticion);
         $oActividad->setObserv_material($Qobserv_material);
         $oActividad->setTarifa($Qtarifa);
-        $oActividad->setH_ini($Qh_ini);
-        $oActividad->setH_fin($Qh_fin);
-        $oActividad->setPublicado($Qpublicado);
+        // asegurar tipo correcto para h_ini
+        $oH_ini = empty($Qh_ini) ? null : TimeLocal::fromString($Qh_ini);
+        $oActividad->setH_ini($oH_ini);
+        // asegurar tipo correcto para h_fin
+        $oH_fin = empty($Qh_fin) ? null : TimeLocal::fromString($Qh_fin);
+        $oActividad->setH_fin($oH_fin);
+        $oActividad->setPublicado(is_true($Qpublicado));
         $oActividad->setPlazas($Qplazas);
-        if ($oActividad->DBGuardar() === false) {
+        if ($ActividadAllRepository->Guardar($oActividad) === false) {
             $error_txt .= _("hay un error, no se ha guardado");
             $error_txt .= "\n" . $oActividad->getErrorTxt();
         } else {
@@ -425,27 +451,27 @@ switch ($Qmod) {
                         $id_dl = $cDelegaciones[0]->getIdDlVo()?->value() ?? 0;
                     }
                     // si ya tengo algo, mejor no toco. (a no ser que tenga todas)
-                    $oGesActividadPlazas = new GestorActividadPlazas();
+                    $ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
                     $aWhere = [];
                     $aWhere['id_activ'] = $Qid_activ;
                     $aWhere['id_dl'] = $id_dl;
                     $aWhere['dl_tabla'] = $mi_dele;
-                    $cActividadPlazas = $oGesActividadPlazas->getactividadesPlazas($aWhere);
+                    $cActividadPlazas = $ActividadPlazasRepository->getactividadesPlazas($aWhere);
                     $salta = 0;
-                    if (count($cActividadPlazas) == 1) {
+                    if (count($cActividadPlazas) === 1) {
                         $oActividadPlazasDl = $cActividadPlazas[0];
                         $plazas_dl = $oActividadPlazasDl->getPlazas();
-                        if ($plazas_dl != $plazas_old) {
+                        if ($plazas_dl !== $plazas_old) {
                             $salta = 1;
                         }
                     }
-                    if ($salta != 1) {
+                    if ($salta !== 1) {
                         //Si es la dl_org, son plazas concedidas, sino pedidas.
-                        $oActividadPlazasDl = new ActividadPlazasDl($aWhere);
-                        $oActividadPlazasDl->DBCarregar();
+                        $ActividadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
+                        $oActividadPlazasDl = $ActividadPlazasRepository->findById($Qid_activ);
                         $oActividadPlazasDl->setPlazas($Qplazas);
 
-                        if ($oActividadPlazasDl->DBGuardar() === false) {
+                        if ($ActividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
                             $error_txt .= _("hay un error, no se ha guardado");
                             $error_txt .= "\n" . $oActividadPlazasDl->getErrorTxt();
                         }
