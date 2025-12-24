@@ -1,13 +1,13 @@
 <?php
 
-namespace encargossacd\model;
+namespace src\encargossacd\domain;
 
-use core\DatosInfo;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 
-class InfoEncargoTipo extends DatosInfo
+class InfoEncargoTipo extends DatosInfoRepo
 {
 
     public function __construct()
@@ -17,15 +17,16 @@ class InfoEncargoTipo extends DatosInfo
         $this->setTxtBuscar(_("buscar un tipo de encargo"));
         $this->setTxtExplicacion(_("solo los tipos 4000 y 7000 aparecen en el planning"));
 
-        $this->setClase('encargossacd\\model\\entity\\EncargoTipo');
+        $this->setClase('src\\encargossacd\\domain\\entity\\EncargoTipo');
         $this->setMetodoGestor('getEncargoTipos');
+
+        $this->setRepositoryInterface(EncargoTipoRepositoryInterface::class);
     }
 
     public function getColeccion()
     {
         $aWhere = [];
         $aOperador = [];
-        $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->k_buscar)) {
@@ -33,7 +34,9 @@ class InfoEncargoTipo extends DatosInfo
             $aOperador['tipo_enc'] = 'sin_acentos';
         }
         $aWhere['_ordre'] = 'id_tipo_enc';
-        $Coleccion = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
+
+        $oLista = $GLOBALS['container']->get($this->getRepositoryInterface());
+        $Coleccion = $oLista->getEncargoTipos($aWhere, $aOperador);
 
         return $Coleccion;
     }

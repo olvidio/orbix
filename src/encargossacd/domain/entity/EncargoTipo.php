@@ -1,6 +1,8 @@
 <?php
 
 namespace src\encargossacd\domain\entity;
+use core\DatosCampo;
+use core\Set;
 use src\encargossacd\domain\value_objects\EncargoTipoId;
 use src\encargossacd\domain\value_objects\EncargoTipoText;
 use src\encargossacd\domain\value_objects\EncargoModHorarioId;
@@ -189,5 +191,76 @@ class EncargoTipo
     public function setMod_horarioVo(EncargoModHorarioId $vo): void
     {
         $this->imod_horario = $vo;
+    }
+
+
+    /* ------------------- PARA el mod_tabla  -------------------------------*/
+    public function getPrimary_key(): string
+    {
+        return 'id_tipo_enc';
+    }
+
+    function getDatosCampos(): array
+    {
+        $oEncargoTipoSet = new Set();
+        $oEncargoTipoSet->add($this->getDatosId_tipo_enc());
+        $oEncargoTipoSet->add($this->getDatosTipo_enc());
+        $oEncargoTipoSet->add($this->getDatosMod_horario());
+        return $oEncargoTipoSet->getTot();
+    }
+
+    /**
+     * Recupera les propietats de l'atribut stipo_enc de EncargoTipo
+     * en una clase del tipus DatosCampo
+     *
+     * @return DatosCampo
+     */
+    function getDatosId_tipo_enc()
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_tipo_enc');
+        $oDatosCampo->setMetodoGet('getId_tipo_enc');
+        $oDatosCampo->setMetodoSet('setId_tipo_enc');
+        $oDatosCampo->setEtiqueta(_("id tipo de encargo"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(10);
+        return $oDatosCampo;
+    }
+
+    /**
+     * Recupera les propietats de l'atribut stipo_enc de EncargoTipo
+     * en una clase del tipus DatosCampo
+     *
+     * @return DatosCampo
+     */
+    function getDatosTipo_enc()
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('tipo_enc');
+        $oDatosCampo->setMetodoGet('getTipo_enc');
+        $oDatosCampo->setMetodoSet('setTipo_enc');
+        $oDatosCampo->setEtiqueta(_("tipo de encargo"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(30);
+        return $oDatosCampo;
+    }
+
+    /**
+     * Recupera les propietats de l'atribut imod_horario de EncargoTipo
+     * en una clase del tipus DatosCampo
+     *
+     * @return DatosCampo
+     */
+    function getDatosMod_horario()
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('mod_horario');
+        $oDatosCampo->setMetodoGet('getMod_horario');
+        $oDatosCampo->setMetodoSet('setMod_horario');
+        $oDatosCampo->setEtiqueta(_("tipo de horario"));
+        $oDatosCampo->setTipo('array');
+        $oDatosCampo->setLista(EncargoModHorarioId::ARRAY_HORARIO_TXT);
+
+        return $oDatosCampo;
     }
 }

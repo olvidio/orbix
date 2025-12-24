@@ -85,8 +85,8 @@ switch ($Qque) {
                 // Ahora todos, para poder borrar a los que se han ido.
                 // if ($oPersona->getSituacion() != 'A') { continue; }
                 // if ($oPersona->getDl() != ConfigGlobal::mi_delef()) { continue; }
-                if (is_string($oPersona)) {
-                    $ap_nom = $oPersona;
+                if ($oPersona === null) {
+                    $ap_nom = sprintf(_("No encuentro e nadie con id_nom %s"), $id_nom);
                 } else {
                     $ap_nom = $oPersona->getPrefApellidosNombre();
                 }
@@ -95,14 +95,14 @@ switch ($Qque) {
                 $a_valores[$i]['sel'] = $id_nom;
                 $a_valores[$i][1] = $ap_nom;
                 $a_valores[$i][2] = $nombre_zona;
-                $a_valores[$i][3] = $oZonaSacd->getPropia();
-                $a_valores[$i][4] = is_true($oZonaSacd->getDw1()) ? 'x' : '-';
-                $a_valores[$i][5] = is_true($oZonaSacd->getDw2()) ? 'x' : '-';
-                $a_valores[$i][6] = is_true($oZonaSacd->getDw3()) ? 'x' : '-';
-                $a_valores[$i][7] = is_true($oZonaSacd->getDw4()) ? 'x' : '-';
-                $a_valores[$i][8] = is_true($oZonaSacd->getDw5()) ? 'x' : '-';
-                $a_valores[$i][9] = is_true($oZonaSacd->getDw6()) ? 'x' : '-';
-                $a_valores[$i][10] = is_true($oZonaSacd->getDw7()) ? 'x' : '-';
+                $a_valores[$i][3] = $oZonaSacd->isPropia();
+                $a_valores[$i][4] = is_true($oZonaSacd->isDw1()) ? 'x' : '-';
+                $a_valores[$i][5] = is_true($oZonaSacd->isDw2()) ? 'x' : '-';
+                $a_valores[$i][6] = is_true($oZonaSacd->isDw3()) ? 'x' : '-';
+                $a_valores[$i][7] = is_true($oZonaSacd->isDw4()) ? 'x' : '-';
+                $a_valores[$i][8] = is_true($oZonaSacd->isDw5()) ? 'x' : '-';
+                $a_valores[$i][9] = is_true($oZonaSacd->isDw6()) ? 'x' : '-';
+                $a_valores[$i][10] = is_true($oZonaSacd->isDw7()) ? 'x' : '-';
                 $i++;
             }
 
@@ -145,7 +145,7 @@ switch ($Qque) {
             $a_zonas = [];
             foreach ($cZonaSacd as $oZonaSacd) {
                 $id_zona = $oZonaSacd->getId_zona();
-                $propia = $oZonaSacd->getPropia();
+                $propia = $oZonaSacd->isPropia();
                 $oZona = $ZonaRepository->findById($id_zona);
                 $nombre_zona = $oZona->getNombre_zona();
                 if ($propia === true) {

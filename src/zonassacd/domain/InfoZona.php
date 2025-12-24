@@ -1,13 +1,13 @@
 <?php
 
-namespace zonassacd\model;
+namespace src\zonassacd\domain;
 
-use core\DatosInfo;
+use src\shared\domain\DatosInfoRepo;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 /* No vale el underscore en el nombre */
 
-class InfoZona extends DatosInfo
+class InfoZona extends DatosInfoRepo
 {
 
     public function __construct()
@@ -17,8 +17,10 @@ class InfoZona extends DatosInfo
         $this->setTxtBuscar(_("zona a buscar"));
         $this->setTxtExplicacion();
 
-        $this->setClase('zonassacd\\model\\entity\\Zona');
+        $this->setClase('src\\zonassacd\\domain\\entity\\Zona');
         $this->setMetodoGestor('getZonas');
+
+        $this->setRepositoryInterface(ZonaRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -32,7 +34,7 @@ class InfoZona extends DatosInfo
             $aWhere = array('nom' => $this->k_buscar);
             $aOperador = array('nom' => 'sin_acentos');
         }
-        $oLista = ZonaRepositoryInterface::class;
+        $oLista = $GLOBALS['container']->get($this->getRepositoryInterface());
         $Coleccion = $oLista->getZonas($aWhere, $aOperador);
 
         return $Coleccion;
