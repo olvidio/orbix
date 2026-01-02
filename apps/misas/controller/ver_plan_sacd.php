@@ -133,59 +133,71 @@ $data_cuadricula = [];
 $inicio_dia = $Qempiezamin_rep.' 00:00:00';
 $fin_dia = $Qempiezamax_rep.' 23:59:59';
 
-$aWhere = [
-    'id_nom' => $Qid_sacd,
-    'tstart' => "'$inicio_dia', '$fin_dia'",
-];
-$aWhere['_ordre'] = 'tstart';
-$aOperador = [
-    'tstart' => 'BETWEEN',
-];
-$EncargoDiaRepository = new EncargoDiaRepository();
-$cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
-
-foreach($cEncargosDia as $oEncargoDia) {
-    $id_enc = $oEncargoDia->getId_enc();
-    $date = $oEncargoDia->getTstart();
-    $status = $oEncargoDia->getStatus();
-//    $dia = $date->format('d-m-Y');
+foreach ($date_range as $date) {
     $num_dia = $date->format('j');
     $num_mes = $date->format('n');
     $dia_week = $date->format('N');
     $dia=$a_dias_semana_breve[$dia_week].' '.$num_dia.'.'.$num_mes;
-    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-    $hora_fin = $oEncargoDia->getTend()->format('H:i');
-    if ($hora_ini=='00:00')
-        $hora_ini='';
-    if ($hora_fin=='00:00')
-        $hora_fin='';
-    $observ = $oEncargoDia->getObserv();
-    $dia_y_hora=$dia;
-    if ($hora_ini!='') {
-        $dia_y_hora .= ' '.$hora_ini;
-        if ($hora_fin!='') {
-            $dia_y_hora .= '-'.$hora_fin;
-        }
-    }
 
-    $oEncargo = new Encargo($id_enc);
-    $desc_enc = $oEncargo->getDesc_enc();
+    $id_dia = $date->format('Y-m-d');
+
+    $inicio_dia = $id_dia.' 00:00:00';
+    $fin_dia = $id_dia.' 23:59:59';
+
+    $aWhere = [
+        'id_nom' => $Qid_sacd,
+        'tstart' => "'$inicio_dia', '$fin_dia'",
+        ];
+    $aWhere['_ordre'] = 'tstart';
+    $aOperador = [
+        'tstart' => 'BETWEEN',
+    ];
+    $EncargoDiaRepository = new EncargoDiaRepository();
+    $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+    foreach($cEncargosDia as $oEncargoDia) {
+        $id_enc = $oEncargoDia->getId_enc();
+        $date = $oEncargoDia->getTstart();
+        $status = $oEncargoDia->getStatus();
+//    $dia = $date->format('d-m-Y');
+        $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+        $hora_fin = $oEncargoDia->getTend()->format('H:i');
+        if ($hora_ini=='00:00')
+            $hora_ini='';
+        if ($hora_fin=='00:00')
+            $hora_fin='';
+        $observ = $oEncargoDia->getObserv();
+        $dia_y_hora=$dia;
+        if ($hora_ini!='') {
+            $dia_y_hora .= ' '.$hora_ini;
+            if ($hora_fin!='') {
+                $dia_y_hora .= '-'.$hora_fin;
+            }
+        }
+
+        $oEncargo = new Encargo($id_enc);
+        $desc_enc = $oEncargo->getDesc_enc();
 
 
 //echo 'jefe: '.$jefe_zona.' s: '.$status.'<br>';
-    if ($jefe_zona || ($status==EncargoDia::STATUS_COMUNICADO_SACD) || ($status==EncargoDia::STATUS_COMUNICADO_CTR))
-    {
-        $data_cols["dia"] = $dia_y_hora;
-        $data_cols["observaciones"] = $observ;
-        $data_cols["encargo"] = $desc_enc;
-        $data_cuadricula[] = $data_cols;
-        echo '</TR>';
-        echo '<TR><TD>'.$dia_y_hora.'</TD>';
-        echo '<TD>'.$desc_enc.'</TD>';
-        echo '<TD>'.$observ.'</TD>';
+        if ($jefe_zona || ($status==EncargoDia::STATUS_COMUNICADO_SACD) || ($status==EncargoDia::STATUS_COMUNICADO_CTR))
+        {
+            $data_cols["dia"] = $dia_y_hora;
+            $data_cols["observaciones"] = $observ;
+            $data_cols["encargo"] = $desc_enc;
+            $data_cuadricula[] = $data_cols;
+            echo '</TR>';
+            echo '<TR><TD>'.$dia_y_hora.'</TD>';
+            echo '<TD>'.$desc_enc.'</TD>';
+            echo '<TD>'.$observ.'</TD>';
+        }
     }
-}
+    if (count($cEncargosDia)==0) {
+        echo '</TR>';
+        echo '<TR><TD>'.$dia.'</TD>';
+        echo '<TD></TD><TD></TD>';
+    }
 
+}
 echo '</TR>';
 echo '</TABLE>';
 
