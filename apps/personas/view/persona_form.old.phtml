@@ -1,0 +1,206 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_act_ctr = function (camp) {
+        var centre, camp, idCamp;
+        var dDate = new Date();
+        var mes = dDate.getMonth() + 1;
+        var fecha = dDate.getDate() + '/' + mes + '/' + dDate.getFullYear();
+        var f;
+        idCamp = '#id_' + camp;
+        centre = $(idCamp).val();
+        $(camp).val(centre);
+        // también la fecha
+        //f='f_'+camp;
+        //$(f).val(fecha);
+    }
+
+    fnjs_guardar = function (formulario) {
+        var rr = fnjs_comprobar_campos('#frm2', '<?= addslashes($obj_txt) ?>');
+        //alert ("EEE "+rr);
+        if (rr === 'ok') {
+            $('#que').val('guardar');
+            $(formulario).attr('action', "apps/personas/controller/personas_update.php");
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    type: 'post',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt !== '' && rta_txt !== '\\n') {
+                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        } else {
+                            <?= $oPosicion->js_atras(1); ?>
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+    fnjs_eliminar = function (formulario) {
+        if (confirm("<?= _("¿Está seguro que desea borrar esta persona?");?>")) {
+            $('#que').val('eliminar');
+            $(formulario).attr('action', "apps/personas/controller/personas_update.php");
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt !== '' && rta_txt !== '\\n') {
+                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        } else {
+                            <?= $oPosicion->js_atras(1); ?>
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<?php
+if (!$nuevo) {
+    ?>
+    <!-- ============================== cabecera ============================= -->
+    <table>
+        <tr>
+            <td class=esquerra nowrap>
+            </td>
+            <td>
+                <span class=link onclick="fnjs_update_div('#main','<?= $godossiers ?>')"><img
+                            src=<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif border=0 width=40 height=40
+                            alt='<?= _("ver dossiers") ?>'>(<?= _("dossiers") ?>)</span>
+
+            <td class=titulo><span class=link onclick="fnjs_update_div('#main','<?= $gohome ?>')"><?= $titulo ?></span>
+            </td>
+    </table>
+    <?php
+}
+?>
+<!-- ============================== Ficha ============================= -->
+<form id='frm2'>
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="Hidden" id="que" name="que" value="">
+    <table id="datospersonales">
+        <tr>
+            <td class=titulo colspan="5">
+                <?php print(strtoupper(_("datos personales"))); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><span class="etiqueta">Delegación</span></td>
+            <td colspan=2>
+                <?= $oDesplDl->desplegable() ?>
+            </td>
+            <?php //en el caso de nueva ficha o sin ctr actual, pongo el nombre del centro sin llenar el dossier de traslados.
+            if (empty($id_nom) || empty($nom_ctr)){
+            ?>
+            <td>
+                Centro-sede:
+                <?= $oDesplCentro->desplegable() ?>
+                <?php
+                } else {
+                    if (!empty($botones)) {
+                        echo "<td><span class=link onclick=\"fnjs_update_div('#main','$ir_a_traslado');\">&nbsp;Centro-sede:&nbsp;</span>";
+                        echo "<b class=contenido>$nom_ctr</b>";
+                        echo "<input class=contenido type='hidden' name='id_ctr' id='id_ctr' value='$id_ctr'>";
+                        echo "</td>";
+                    } else {
+                        echo "<td>&nbsp;Centro-sede:&nbsp;";
+                        echo "<b class=contenido>$nom_ctr</b>";
+                        echo "</td>";
+                    }
+                }
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <?php
+            echo web\dibujar_campo($obj, "trato", 7, 1, 0);
+            echo web\dibujar_campo($obj, "nom", 20, 1, 2);
+            echo "</tr><tr><td></td>";
+            echo web\dibujar_campo($obj, "apel_fam", 20, 1, 2);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "nx1", 7, 1, 0);
+            echo web\dibujar_campo($obj, "apellido1", 25, 1, 2);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "nx2", 7, 1, 0);
+            echo web\dibujar_campo($obj, "apellido2", 25, 1, 2);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "lugar_nacimiento", 15, 1, 1);
+            echo web\dibujar_campo($obj, "f_nacimiento", 11, 1, 0);
+
+            echo "</tr><tr>";
+            ?>
+            <td><span class=etiqueta><?= ucfirst('situacion'); ?></span>
+            </td>
+            <td colspan=2><?= $oDesplSituacion->desplegable() ?></td>
+            <?php
+            echo web\dibujar_campo($obj, "f_situacion", 11, 1, 0);
+            echo "</tr><tr>";
+            ?>
+            <td><span class=etiqueta><?= ucfirst('lengua'); ?></span>
+            </td>
+            <td colspan=2><?= $oDesplLengua->desplegable() ?></td>
+            <?php
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "profesion", 30, 1, 2);
+            echo "</tr><tr>";
+
+            if (ConfigGlobal::mi_sfsv() == 1) {
+                echo web\dibujar_campo($obj, "sacd", 9, 1, 1);
+            }
+            ?>
+            <td><span class="etiqueta">Stgr&nbsp;</span>
+                <?= $oDesplStgr->desplegable() ?>
+            </td>
+            <?php
+            echo web\dibujar_campo($obj, "eap", 20, 2, 0);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "inc", 5, 1, 0);
+            echo web\dibujar_campo($obj, "f_inc", 11, 1, 1);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "ce", 2, 1, 0);
+            echo web\dibujar_campo($obj, "ce_lugar", 11, 1, 1);
+            echo web\dibujar_campo($obj, "ce_ini", 5, 1, 0);
+            echo web\dibujar_campo($obj, "ce_fin", 5, 1, 0);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "observ", 60, 1, 4);
+            echo "</tr><tr>";
+            // -----------------------------------  Botones  ----------------------
+            if (!empty($botones)) {
+                echo "<table><tr class=botones>";
+                $b = strtok($botones, ",");
+                while ($b) {
+                    if ($b == 1) {
+                        $txt_g = ucwords(_("guardar cambios"));
+                        echo "<th class='link_inv' onclick='fnjs_guardar(\"#frm2\")'>$txt_g</th>";
+                    }
+                    if ($b == 2) {
+                        $txt_e = ucwords(_("eliminar"));
+                        echo "<th class='link_inv' onclick='fnjs_eliminar(\"#frm2\")'>$txt_e</th>";
+                    }
+                    if ($b == 3) {
+                        $txt_e = ucwords(_("formato texto"));
+                        $pag = "programas/ficha_texto.php?id_nom=$id_nom&obj_pau=$Qobj_pau";
+                        echo "<th class='link_inv' onclick='fnjs_update_div('#main','$pag')'>$txt_e</th>";
+                    }
+                    $b = strtok(",");
+                }
+                echo "</tr></table><br>";
+            }
+            // fin ----------------------------  Botones  ----------------------
+            ?>
+        </tr>
+    </table>
+</form>
