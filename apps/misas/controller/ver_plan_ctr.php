@@ -31,9 +31,6 @@ $UsuarioRepository = new UsuarioRepository();
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_sacd = $oMiUsuario->getId_pauAsString();
 $id_role = $oMiUsuario->getId_role();
-$GesZonas = new GestorZona();
-$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
-$jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 
 
 $RoleRepository = new RoleRepository();
@@ -43,6 +40,9 @@ $role='';
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     $role='sacd';
+    $GesZonas = new GestorZona();
+    $cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+    $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 }
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {

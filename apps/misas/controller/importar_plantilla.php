@@ -128,6 +128,7 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
 $sInicio_iso=$oDiaDestino->getIso();
 $sFin_iso=$oFinDestino->getIso();
 $orden='prioridad';
+echo $sInicio_iso.'-'.$sFin_iso.'<br>';
 
 $EncargosZona = new EncargosZona($Qid_zona, $oDiaDestino, $oFinDestino, $orden);
 $EncargosZona->setATipoEnc($a_tipo_enc);
@@ -160,19 +161,25 @@ echo 'ndias: '.$ndias.'<br>';
 for ($i=0;$i<$ndias;$i++) {
     echo 'I: '.$i.'<br>';
     $num_dia=$oDiaDestino->format('d-m-Y');
+    $num_dia2=$oDiaDestino2->format('d-m-Y');
+    $num_dia3=$oDiaDestino3->format('d-m-Y');
     echo 'destino: '.$oDiaDestino->format('d-m-Y').'<---';
+    echo 'destino2: '.$oDiaDestino2->format('d-m-Y').'<---';
+    echo 'destino3: '.$oDiaDestino3->format('d-m-Y').'<---';
     if(($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantillaOrigen== EncargoDia::PLANTILLA_SEMANAL_TRES)) {
         $oDiaOrigen = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
-        $iOrigen=$i;
+        $oDiaOrigen2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
+        $oDiaOrigen3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
+            $iOrigen=$i;
         //como se empieza el lunes, lunes+6 es domingo
-        if ((($i>6) && ($i<11)) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)))
-        {
+        if ((($i>6) && ($i<11)) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES))) {
             $iOrigen=6;
         } 
-        if (($i>6) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES)))
-        {
+        if (($i>6) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES))) {
             $iOrigen=$i%7;
         } 
+        $iOrigen2=$iOrigen;
+        $iOrigen3=$iOrigen;
     }
     if($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_SEMANAL_TRES) {
         $oDiaOrigen2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_DOS);
@@ -183,8 +190,7 @@ for ($i=0;$i<$ndias;$i++) {
         $oDiaOrigen = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_UNO);
         $iOrigen=$i;
         //como se empieza el lunes, lunes+6 es domingo
-        if (($i>6) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES)))
-        {
+        if (($i>6) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES))) {
             $iOrigen=$i%7;
             if ($iOrigen==6) {
                 $iOrigen+=intdiv($i,7);
@@ -199,8 +205,7 @@ for ($i=0;$i<$ndias;$i++) {
     if(($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
         $oDiaOrigen = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
         $iOrigen=$i;
-        if ((($i>6) && ($i<11)) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)))
-        {
+        if ((($i>6) && ($i<11)) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES))) {
             $iOrigen=6+($i-6)*7;
         } 
     }
@@ -209,10 +214,13 @@ for ($i=0;$i<$ndias;$i++) {
         $oDiaOrigen2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
         $oDiaOrigen3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
     }
-    echo 'i: '.$i.' iOrigen: '.$iOrigen.'<br>';
+    echo 'origen: '.$oDiaOrigen->format('d-m-Y').'--->';
+    echo 'origen2: '.$oDiaOrigen2->format('d-m-Y').'--->';
+    echo 'origen3: '.$oDiaOrigen3->format('d-m-Y').'--->';
     $oDiaOrigen->add(new DateInterval("P{$iOrigen}D"));
     echo 'origen: '.$oDiaOrigen->format('d-m-Y').'<br>';
-    if (($QTipoPlantillaOrigen== EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)  || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES)){
+    if (($QTipoPlantillaOrigen== EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantillaOrigen== EncargoDia::PLANTILLA_DOMINGOS_TRES)  || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES)){
+        echo 'origen TRES';
         $oDiaOrigen2->add(new DateInterval("P{$iOrigen}D"));
         echo 'origen2: '.$oDiaOrigen2->format('d-m-Y').'<br>';
         $oDiaOrigen3->add(new DateInterval("P{$iOrigen}D"));
@@ -221,11 +229,14 @@ for ($i=0;$i<$ndias;$i++) {
 
     $inicio_dia_plantilla = $oDiaOrigen->format('Y-m-d').' 00:00:00';
     $fin_dia_plantilla = $oDiaOrigen->format('Y-m-d').' 23:59:59';
-    
+    echo 'inicio dia platilla: '.$inicio_dia_plantilla.'<br>';
+
     foreach ($cEncargosZona as $oEncargo) {
         $id_enc = $oEncargo->getId_enc();
         $desc_enc = $oEncargo->getDesc_enc();
-    
+
+        echo 'foreach id_enc: '.$id_enc.'<br>';
+
         $aWhere = [
             'id_enc' => $id_enc,
             'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
@@ -236,6 +247,7 @@ for ($i=0;$i<$ndias;$i++) {
         $EncargoDiaRepository = new EncargoDiaRepository();
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
         if (count($cEncargosDia) > 1) {
+            echo 'III'.$inicio_dia_plantilla.'<br>';
             exit(_("sólo debería haber uno"));
         }
         if (count($cEncargosDia) === 1) {
@@ -265,7 +277,62 @@ for ($i=0;$i<$ndias;$i++) {
             if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
                 $error_txt .= $EncargoDiaRepository->getErrorTxt();
             }  
-    
+        }
+        if (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)  || ($QTipoPlantillaDestino == EncargoDia::PLANTILLA_MENSUAL_TRES)){
+            $inicio_dia_plantilla = $oDiaOrigen2->format('Y-m-d').' 00:00:00';
+            $fin_dia_plantilla = $oDiaOrigen2->format('Y-m-d').' 23:59:59';
+            
+            echo 'Origen2: inicio dia platilla: '.$inicio_dia_plantilla.'<br>';
+
+
+            foreach ($cEncargosZona as $oEncargo) {
+                $id_enc = $oEncargo->getId_enc();
+                $desc_enc = $oEncargo->getDesc_enc();
+            
+                echo 'foreach id_enc: '.$id_enc.'<br>';
+
+                $aWhere = [
+                    'id_enc' => $id_enc,
+                    'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
+                ];
+                $aOperador = [
+                    'tstart' => 'BETWEEN',
+                ];
+                $EncargoDiaRepository = new EncargoDiaRepository();
+                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+                if (count($cEncargosDia) > 1) {
+                    echo 'III1'.$inicio_dia_plantilla.'<br>';
+                    exit(_("sólo debería haber uno"));
+                }
+                if (count($cEncargosDia) === 1) {
+                    $oEncargoDia = $cEncargosDia[0];
+                    $id_nom = $oEncargoDia->getId_nom();
+                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                    $hora_fin = $oEncargoDia->getTend()->format('H:i');
+                    $observ = $oEncargoDia->getObserv();
+                    echo 'id_enc: '.$id_enc;
+                    echo ' desc_enc: '.$desc_enc;
+                    echo ' count:'.count($cEncargosDia);
+                    echo ' id_nom: '.$id_nom.'<br>';
+                    $oEncargoDia = new EncargoDia();
+                    $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
+                    $oEncargoDia->setUuid_item($Uuid);
+                    $oEncargoDia->setId_nom($id_nom);
+                    $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
+                    $oEncargoDia->setTstart($tstart);
+            
+                    $tend = new EncargoDiaTend($num_dia, $hora_fin);
+                    $oEncargoDia->setTend($tend);
+            
+                    if (isset($observ)) {
+                        $oEncargoDia->setObserv($observ);
+                    }
+                    $oEncargoDia->setId_enc($id_enc);
+                    if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
+                        $error_txt .= $EncargoDiaRepository->getErrorTxt();
+                    }  
+                }
+            }
         }
 
     }
@@ -280,7 +347,7 @@ for ($i=0;$i<$ndias;$i++) {
 
 }
 
-
+/*
 for ($i=1;$i<=7;$i++) {
     $num_dia=$oDiaDestino->format('d-m-Y');
     echo 'destino: '.$oDiaDestino->format('d-m-Y').'<---';
@@ -361,3 +428,4 @@ for ($i=1;$i<=7;$i++) {
     $oDiaDestino->add($intervalo_dia);
 }
 
+*/
