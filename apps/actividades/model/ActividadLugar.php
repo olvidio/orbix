@@ -84,9 +84,9 @@ class ActividadLugar
             $donde = "";
         }
         if (!empty($donde)) {
-            $donde .= " AND status='t'";
+            $donde .= " AND active='t'";
         } else {
-            $donde = "WHERE status='t'";
+            $donde = "WHERE active='t'";
         }
         $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
         $oOpcionesCasas = $CasaRepository->getArrayCasas($donde);

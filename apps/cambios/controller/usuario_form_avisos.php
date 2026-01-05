@@ -2,14 +2,13 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use cambios\model\entity\CambioUsuarioObjetoPref;
-use cambios\model\entity\GestorCambioUsuarioObjetoPref;
-use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
-use procesos\model\entity\ActividadFase;
-use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\StatusId;
+use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
+use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
+use src\cambios\domain\value_objects\AvisoTipoId;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;
 use web\TiposActividades;
@@ -37,19 +36,20 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     $a_status = StatusId::getArrayStatus();
 
     // avisos
-    $oGesCambiosUsuariosObjeto = new GestorCambioUsuarioObjetoPref();
+    $CambiosUsuarioPropiedadesPrefRepository = $GLOBALS['container']->get(CambioUsuarioPropiedadPrefRepositoryInterface::class);
+    $CambiosUsuariosObjetoRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
     $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'objeto, dl_org, id_tipo_activ_txt'];
     $aOperador = [];
-    $cListaTablas = $oGesCambiosUsuariosObjeto->getCambioUsuarioObjetosPrefs($aWhere, $aOperador);
+    $cListaTablas = $CambiosUsuariosObjetoRepository->getCambioUsuarioObjetosPrefs($aWhere, $aOperador);
 
     // Tipos de avisos
-    $aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();
+    $aTipos_aviso = AvisoTipoId::getArrayAvisoTipo();
     // Nombre de los possibles objetos (que manejan la tablas) susceptibles de avisar.
     $aObjetos = GestorAvisoCambios::getArrayObjetosPosibles();
 
     $i = 0;
     $a_valores_avisos = [];
-    $oFase = new ActividadFase();
+    $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
     foreach ($cListaTablas as $oCambioUsuarioObjetoPref) {
         $i++;
 
@@ -78,10 +78,9 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
         $a_valores_avisos[$i][3] = $oTipoActividad->getNom();
         $txt_fases = '';
         if (ConfigGlobal::is_app_installed('procesos')) {
-            $oFase->setId_fase($id_fase_ref);
-            $oFase->DBCarregar();
+            $oActividadFase = $ActividadFaseRepository->findById($id_fase_ref);
             $txt_fases .= empty($txt_fases) ? '' : ', ';
-            $txt_fases .= $oFase->getDesc_fase();
+            $txt_fases .= $oActividadFase->getDesc_fase();
         } else {
             $txt_fases .= empty($txt_fases) ? '' : ', ';
             $txt_fases .= $a_status[$id_fase_ref];
@@ -92,8 +91,7 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
         $a_valores_avisos[$i][7] = $aviso_outdate;
 
         $a_valores_avisos[$i][8] = $aTipos_aviso[$aviso_tipo];
-        $GesCambiosUsuarioPropiedadesPref = new GestorCambioUsuarioPropiedadPref();
-        $cListaPropiedades = $GesCambiosUsuarioPropiedadesPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $id_item_usuario_objeto));
+        $cListaPropiedades = $CambiosUsuarioPropiedadesPrefRepository->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $id_item_usuario_objeto));
         $txt_cambio = '';
         $txt_propiedades = '';
         $c = 0;

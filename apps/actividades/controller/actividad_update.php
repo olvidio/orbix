@@ -16,7 +16,6 @@
 use actividades\domain\ActividadNueva;
 use core\ConfigGlobal;
 use Illuminate\Http\JsonResponse;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadExRepositoryInterface;
@@ -25,8 +24,10 @@ use src\actividades\domain\entity\Importada;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\shared\domain\value_objects\Dinero;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\usuarios\domain\value_objects\IdLocale;
 use web\DateTimeLocal;
 use web\TimeLocal;
 use function core\is_true;
@@ -63,7 +64,7 @@ function borrar_actividad($id_activ)
                 echo "\n" . $oActividad->getErrorTxt();
             }
         } else {
-            $oActividad->setStatus(4); // la pongo en estado borrable
+            $oActividad->setStatus(StatusId::BORRABLE); // la pongo en estado borrable
             if ($repoActividad->Guardar($oActividad) === false) {
                 echo _("hay un error, no se ha guardado");
                 echo "\n" . $oActividad->getErrorTxt();
@@ -77,7 +78,7 @@ function borrar_actividad($id_activ)
             $ImportadaRepository->Eliminar($oImportada);
         } else { // de otras dl en resto
             $repoActividad = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
-            $oActividad->setStatus(4); // la pongo en estado borrable
+            $oActividad->setStatus(StatusId::BORRABLE); // la pongo en estado borrable
             if ($repoActividad->Guardar($oActividad) === false) {
                 echo _("hay un error, no se ha guardado");
                 echo "\n" . $oActividad->getErrorTxt();
@@ -116,12 +117,12 @@ switch ($Qmod) {
                 $oImportada->setId_activ($id_activ);
                 if ($ImportadaRepository->Guardar($oImportada) === false) {
                     echo _("hay un error, no se ha importado");
-                    echo "\n" . $oImportada->getErrorTxt();
+                    echo "\n" . $ImportadaRepository->getErrorTxt();
                 }
                 // generar proceso.
                 if (ConfigGlobal::is_app_installed('procesos')) {
-                    $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
-                    $oGestorActividadProcesoTarea->generarProceso($id_activ, ConfigGlobal::mi_sfsv(), TRUE);
+                    $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+                    $ActividadProcesoTareaRepository->generarProceso($id_activ, ConfigGlobal::mi_sfsv(), TRUE);
                 }
             }
         }
@@ -153,6 +154,7 @@ switch ($Qmod) {
             'tipo_horario' => (string)filter_input(INPUT_POST, 'tipo_horario'),
             'observ' => (string)filter_input(INPUT_POST, 'observ'),
             'nivel_stgr' => (string)filter_input(INPUT_POST, 'nivel_stgr'),
+            'idioma' => (string)filter_input(INPUT_POST, 'idioma'),
             'observ_material' => (string)filter_input(INPUT_POST, 'observ_material'),
             'h_ini' => (string)filter_input(INPUT_POST, 'h_ini'),
             'h_fin' => (string)filter_input(INPUT_POST, 'h_fin'),
@@ -187,7 +189,7 @@ switch ($Qmod) {
             $oActividad->setId_activ('0'); //para que al guardar genere un nuevo id.
             $nom = _("dup") . ' ' . $oActividad->getNom_activ();
             $oActividad->setNom_activ($nom);
-            $oActividad->setStatus(1); // la pongo en estado proyecto
+            $oActividad->setStatus(StatusId::PROYECTO); // la pongo en estado proyecto
             $ActividadAllRepository->Guardar($oActividad);
         }
         break;
@@ -273,6 +275,7 @@ switch ($Qmod) {
         $Qh_ini = (string)filter_input(INPUT_POST, 'h_ini');
         $Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
         $Qpublicado = (string)filter_input(INPUT_POST, 'publicado');
+        $Qidioma = (string)filter_input(INPUT_POST, 'idioma');
 
         //echo "id_tipo de actividad: $id_tipo_activ<br>";
         if (!empty($Qid_tipo_activ) and strpos($Qid_tipo_activ, '.') === false) {
@@ -323,12 +326,15 @@ switch ($Qmod) {
         $oH_fin = empty($Qh_fin) ? null : TimeLocal::fromString($Qh_fin);
         $oActividad->setH_fin($oH_fin);
         $oActividad->setPlazas($Qplazas);
+        // asegurar tipo correcto para idioma
+        $Qidioma = empty($Qidioma)? null :new IdLocale($Qidioma);
+        $oActividad->setIdiomaVo($Qidioma);
         $ActividadAllRepository->Guardar($oActividad);
         // Si tiene procesos, hay que hacerlo de nuevo
         if (ConfigGlobal::is_app_installed('procesos')) {
             // Copiado de actividad_proceso_ajax case 'generar':
-            $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
-            $oGestorActividadProcesoTarea->generarProceso($Qid_activ, ConfigGlobal::mi_sfsv(), TRUE);
+            $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+            $ActividadProcesoTareaRepository->generarProceso($Qid_activ, ConfigGlobal::mi_sfsv(), TRUE);
         }
         break;
     case "editar": // editar la actividad.
@@ -356,6 +362,7 @@ switch ($Qmod) {
         $Qh_ini = (string)filter_input(INPUT_POST, 'h_ini');
         $Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
         $Qpublicado = (string)filter_input(INPUT_POST, 'publicado');
+        $Qidioma = (string)filter_input(INPUT_POST, 'idioma');
 
         // Mirar si puedo cambiar el tipo de actividad:
         // permiso
@@ -429,6 +436,9 @@ switch ($Qmod) {
         $oActividad->setH_fin($oH_fin);
         $oActividad->setPublicado(is_true($Qpublicado));
         $oActividad->setPlazas($Qplazas);
+        // asegurar tipo correcto para idioma
+        $Qidioma = empty($Qidioma)? null : new IdLocale($Qidioma);
+        $oActividad->setIdiomaVo($Qidioma);
         if ($ActividadAllRepository->Guardar($oActividad) === false) {
             $error_txt .= _("hay un error, no se ha guardado");
             $error_txt .= "\n" . $oActividad->getErrorTxt();
@@ -436,8 +446,8 @@ switch ($Qmod) {
             // Si cambio de dl_propia a otra (o al revés), hay que cambiar el proceso. Se hace al final para que la actividad ya tenga puesta la nueva dl
             if (ConfigGlobal::is_app_installed('procesos')) {
                 if (($dl_orig != $dl_org) && ($dl_org == ConfigGlobal::mi_delef() || $dl_orig == ConfigGlobal::mi_delef())) {
-                    $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
-                    $oGestorActividadProcesoTarea->generarProceso($oActividad->getId_activ());
+                    $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+                    $ActividadProcesoTareaRepository->generarProceso($oActividad->getId_activ());
                 }
             }
             // Por defecto pongo todas las plazas en mi dl

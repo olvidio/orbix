@@ -4,8 +4,8 @@
 use Illuminate\Http\JsonResponse;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\repositories\EncargoDiaRepositoryInterface;
-use personas\legacy\GestorPersonaSacd;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 
@@ -35,7 +35,7 @@ $iniciales = $InicialesSacd->iniciales($Qid_sacd);
 //$key = $Qid_sacd . '#' . $iniciales;
 $key = $iniciales . '#' . $Qid_sacd;
 $desplegable_sacd .= '<OPTION VALUE="' . $key . '">' . $sacd . '</OPTION>';
-if ($Qid_sacd != 0) {
+if ($Qid_sacd !== 0) {
     $desplegable_sacd .= '<OPTION VALUE=""></OPTION>';
 }
 
@@ -73,7 +73,7 @@ if ($Qseleccion & 1) {
                 $desc_enc = $oEncargo->getDesc_enc();
                 $id_tipo_enc = $oEncargo->getId_tipo_enc();
 
-                if (substr($id_tipo_enc, 1, 1) == '1') {
+                if ((int)substr($id_tipo_enc, 1, 1) === 1) {
                     $libre = false;
                 }
             }
@@ -149,9 +149,9 @@ if ($Qseleccion & 4) {
     $aWhere['id_tabla'] = "'n','a'";
     $aOperador['id_tabla'] = 'IN';
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-    $GesPersonas = new GestorPersonaSacd();
+    $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
 
-    $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+    $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
         $InicialesSacd = new InicialesSacd();
@@ -172,9 +172,9 @@ if ($Qseleccion & 8) {
     $aWhere['sacd'] = 't';
     $aWhere['situacion'] = 'A';
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-    $GesPersonas = new GestorPersonaSacd();
 
-    $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+    $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+    $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
         $InicialesSacd = new InicialesSacd();

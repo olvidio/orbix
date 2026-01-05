@@ -114,8 +114,7 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Situacion = new Situacion();
-            $Situacion->setAllAttributes($aDatos);
+            $Situacion = Situacion::fromArray($aDatos);
             $SituacionSet->add($Situacion);
         }
         return $SituacionSet->getTot();
@@ -201,6 +200,6 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         if (empty($aDatos)) {
             return null;
         }
-        return (new Situacion())->setAllAttributes($aDatos);
+        return Situacion::fromArray($aDatos);
     }
 }

@@ -26,7 +26,7 @@ switch ($Qsalida) {
 
         $repoDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         // Filtrar delegaciones por región si se facilita
-        $aWhere = ['status' => true];
+        $aWhere = ['active' => true];
         if (!empty($region)) { $aWhere['region'] = $region; }
         $cDelegaciones = $repoDl->getDelegaciones($aWhere, ['_ordre' => 'dl']);
         // poner el valor del desplegable igual al texto, no id.

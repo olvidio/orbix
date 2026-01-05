@@ -5,21 +5,21 @@ namespace core;
 class DBPropiedades
 {
 
-    var $bBlanco = FALSE;
+    var $Blanco = FALSE;
 
     public function setBlanco($blanco = FALSE)
     {
         if ($blanco) {
-            $this->bBlanco = TRUE;
+            $this->Blanco = TRUE;
         } else {
-            $this->bBlanco = FALSE;
+            $this->Blanco = FALSE;
         }
     }
 
     public function posibles_esquemas($default = '', $comun = FALSE)
     {
         $txt = "<select id=\"esquema\" name=\"esquema\" >";
-        if ($this->bBlanco) {
+        if ($this->Blanco) {
             $txt .= "<option></option>";
         }
         $txt .= $this->opciones_posibles_esquemas($default, $comun);
@@ -187,7 +187,7 @@ class DBPropiedades
     public function posibles_tablas($default = '')
     {
         $txt = "<select id=\"tabla\" name=\"tabla\" >";
-        if ($this->bBlanco) {
+        if ($this->Blanco) {
             $txt .= "<option></option>";
         }
         $a_tablas = $this->array_posibles_tablas();

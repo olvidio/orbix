@@ -5,90 +5,63 @@ use src\configuracion\domain\value_objects\AppId;
 use src\configuracion\domain\value_objects\AppName;
 use core\DatosCampo;
 use core\Set;
+use src\shared\domain\traits\Hydratable;
 
-/**
- * Clase que implementa la entidad m0_apps
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 10/11/2025
- */
 class App
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
-  /**
-     * Id_dl de Delegacion
-     */
-    private AppId $idApp;
-    /**
-     * Nombre de la Delegacion
-     */
-    private AppName $nombreApp;
+
+    private AppId $id_app;
+
+    private AppName $nombre_app;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return App
-     */
-    public function setAllAttributes(array $aDatos): App
-    {
-        if (array_key_exists('id_app', $aDatos)) {
-            $this->setIdAppVo(isset($aDatos['id_app']) ? new AppId((int)$aDatos['id_app']) : null);
-        }
-         if (array_key_exists('nom', $aDatos)) {
-            $this->setNombreAppVo(AppName::fromString($aDatos['nom'] ?? null));
-        }
-        return $this;
-    }
 
        // VO API
     public function getIdAppVo(): AppId
     {
-        return $this->idApp;
+        return $this->id_app;
     }
 
-    public function setIdAppVo(AppId $iid_app): void
+    public function setIdAppVo(AppId $id_app): void
     {
-        $this->idApp = $iid_app;
+        $this->id_app = $id_app;
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
     public function getId_app(): int
     {
-        return $this->idApp->value();
+        return $this->id_app->value();
     }
 
-    public function setId_app(int $iid_app): void
+    public function setId_app(int $id_app): void
     {
-        $this->idApp = new AppId($iid_app);
+        $this->id_app = new AppId($id_app);
     }
 
     // VO API
     public function getNombreAppVo(): AppName
     {
-        return $this->nombreApp;
+        return $this->nombre_app;
     }
 
-    public function setNombreAppVo(AppName $snombre_app): void
+    public function setNombreAppVo(AppName $nombre_app): void
     {
-        $this->nombreApp = $snombre_app;
+        $this->nombre_app = $nombre_app;
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
     public function getNombreApp(): string
     {
-        return $this->nombreApp?->value();
+        return $this->nombre_app?->value();
     }
 
-    public function setNombreApp(string $snombre_app): void
+    public function setNombreApp(string $nombre_app): void
     {
-        $this->nombreApp = AppName::fromString($snombre_app);
+        $this->nombre_app = AppName::fromString($nombre_app);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -101,7 +74,7 @@ class App
      * Retorna una col·lecció d'objectes del tipus DatosCampo
      *
      */
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oAppSet = new Set();
 
@@ -110,12 +83,12 @@ class App
     }
 
     /**
-     * Recupera les propietats de l'atribut snom de App
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo nom de App
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosNombreApp()
+    private function getDatosNombreApp(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nom');

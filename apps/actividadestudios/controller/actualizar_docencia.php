@@ -1,13 +1,12 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
-use actividadestudios\model\entity\ActividadAsignatura;
-use actividadestudios\model\entity\GestorActividadAsignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorActa;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
+use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use web\Hash;
@@ -106,6 +105,7 @@ if (empty($continuar)) {
     $ini_m = $_SESSION['oConfig']->getMesIniStgr();
     // busco los profesores que han dado alguna asignatura en actividad.
     $ProfesorDocenciaStgrRepository = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
+    $ActaRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
     foreach ($cActividades as $oActividad) {
         $id_activ = $oActividad->getId_activ();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -117,9 +117,8 @@ if (empty($continuar)) {
         } else {
             $ini_a = $any;
         }
-        //$GesAsignaturasCa = new GestorActividadAsignaturaDl();
-        $GesAsignaturasCa = new GestorActividadAsignatura();
-        $cActivAsignaturas = $GesAsignaturasCa->getActividadAsignaturas(array('id_activ' => $id_activ), array('id_profesor' => 'IS NOT NULL'));
+        $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
+        $cActivAsignaturas = $ActividadAsignaturaRepository->getActividadAsignaturas(array('id_activ' => $id_activ), array('id_profesor' => 'IS NOT NULL'));
 
         foreach ($cActivAsignaturas as $oActividadAsignatura) {
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
@@ -130,14 +129,13 @@ if (empty($continuar)) {
             $tipo = $oActividadAsignatura->getTipo();
             // si no es con preceptor, pongo ca o inv
             if (empty($tipo)) {
-                $tipo = ActividadAsignatura::TIPO_CA;
+                $tipo = TipoActividadAsignatura::TIPO_CA;
                 if (preg_match("/$id_tipo_inv/", $id_tipo_activ)) { // semestre de invierno (ca agd)
-                    $tipo = ActividadAsignatura::TIPO_INV;
+                    $tipo = TipoActividadAsignatura::TIPO_INV;
                 }
             }
 
-            $GesActas = new GestorActa();
-            $cActas = $GesActas->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
+            $cActas = $ActaRepository->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
             if (is_array($cActas) && count($cActas) > 0) {
                 $acta = '';
                 foreach ($cActas as $oActa) {
@@ -167,7 +165,7 @@ if (empty($continuar)) {
                 $oProfesorDocencia->setTipo($tipo);
                 $oProfesorDocencia->setActa($acta);
             }
-            $ProfesorDocenciaStgrRepository->DBGuardar($oProfesorDocencia);
+            $ProfesorDocenciaStgrRepository->Guardar($oProfesorDocencia);
         }
     }
 

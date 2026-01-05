@@ -3,10 +3,7 @@
 namespace shared\domain\repositories;
 
 use PDO;
-use web\DateTimeLocal;
-use web\Desplegable;
-use web\NullDateTimeLocal;
-use shared\domain\entity\ColaMail;
+use src\shared\domain\entity\ColaMail;
 
 
 /**

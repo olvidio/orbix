@@ -96,8 +96,7 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoDossier = new TipoDossier();
-            $TipoDossier->setAllAttributes($aDatos);
+            $TipoDossier =  TipoDossier::fromArray($aDatos);
             $TipoDossierSet->add($TipoDossier);
         }
         return $TipoDossierSet->getTot();
@@ -105,12 +104,12 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function findByIdVO(TipoDossierId $id): ?TipoDossier
+    public function findByIdVo(TipoDossierId $id): ?TipoDossier
     {
         return $this->findById($id->value());
     }
 
-    public function datosByIdVO(TipoDossierId $id): array|bool
+    public function datosByIdVo(TipoDossierId $id): array|bool
     {
         return $this->datosById($id->value());
     }
@@ -225,6 +224,6 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
         if (empty($aDatos)) {
             return null;
         }
-        return (new TipoDossier())->setAllAttributes($aDatos);
+        return TipoDossier::fromArray($aDatos);
     }
 }

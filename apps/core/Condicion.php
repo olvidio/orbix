@@ -2,8 +2,6 @@
 
 namespace core;
 
-use actividades\legacy\GestorActividad;
-
 /**
  * Condicion
  *
@@ -17,26 +15,10 @@ use actividades\legacy\GestorActividad;
  */
 class Condicion
 {
-    /* ATRIBUTOS ----------------------------------------------------------------- */
-
-
-    /* CONSTRUCTOR -------------------------------------------------------------- */
-
-    /**
-     * Constructor de la classe.
-     *
-     * @return GestorActividad
-     *
-     */
-    function __construct()
-    {
-        // constructor buit
-    }
-
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
-    public function getCondicion($campo, $operador, $valor)
+    public function getCondicion($campo, $operador, $valor): string
     {
-        if (isset($operador) && $operador != '') {
+        if (isset($operador) && $operador !== '') {
             switch ($operador) {
                 case '!=':
                     $sCondi = "$campo != :$campo";
@@ -105,5 +87,4 @@ class Condicion
         }
         return $sCondi;
     }
-
 }

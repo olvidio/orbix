@@ -84,8 +84,7 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TelecoCdc = new TelecoUbi();
-            $TelecoCdc->setAllAttributes($aDatos);
+            $TelecoCdc = TelecoUbi::fromArray($aDatos);
             $TelecoCdcSet->add($TelecoCdc);
         }
         return $TelecoCdcSet->getTot();
@@ -180,6 +179,6 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
         if (empty($aDatos)) {
             return null;
         }
-        return (new TelecoUbi())->setAllAttributes($aDatos);
+        return TelecoUbi::fromArray($aDatos);
     }
 }

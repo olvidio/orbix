@@ -83,7 +83,7 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
 
         $aWhere = [];
     $aOperador = [];
-    $aWhere['status'] = 't';
+    $aWhere['active'] = 't';
     $aWhere['tipo_ctr'] = "^$tipo_ctr_que";
     $aOperador['tipo_ctr'] = '~';
     $aWhere['_ordre'] = 'nombre_ubi';

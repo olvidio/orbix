@@ -164,8 +164,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $NivelStgr = new NivelStgr();
-            $NivelStgr->setAllAttributes($aDatos);
+            $NivelStgr = NivelStgr::fromArray($aDatos);
             $NivelStgrSet->add($NivelStgr);
         }
         return $NivelStgrSet->getTot();
@@ -248,7 +247,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
 
     }
 
-    public function datosByIdVO(NivelStgrId $id): array|bool
+    public function datosByIdVo(NivelStgrId $id): array|bool
     {
         return $this->datosById($id->value());
     }
@@ -262,10 +261,10 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         if (empty($aDatos)) {
             return null;
         }
-        return (new NivelStgr())->setAllAttributes($aDatos);
+        return NivelStgr::fromArray($aDatos);
     }
 
-    public function findByIdVO(NivelStgrId $id): ?NivelStgr
+    public function findByIdVo(NivelStgrId $id): ?NivelStgr
     {
         return $this->findById($id->value());
     }
@@ -277,7 +276,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         return $oDbl->query($sQuery)->fetchColumn();
     }
 
-    public function getNewIdVO(): NivelStgrId
+    public function getNewIdVo(): NivelStgrId
     {
         return new NivelStgrId((int)$this->getNewId());
     }

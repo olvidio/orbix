@@ -70,6 +70,10 @@ use src\ubis\infrastructure\repositories\PgTelecoUbiRepository;
 use src\ubis\infrastructure\repositories\PgTipoCasaRepository;
 use src\ubis\infrastructure\repositories\PgTipoCentroRepository;
 use src\ubis\infrastructure\repositories\PgTipoTelecoRepository;
+use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
+use src\ubis\infrastructure\repositories\PgCasaPeriodoRepository;
+use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
+use src\ubis\infrastructure\repositories\PgTarifaUbiRepository;
 use function DI\autowire;
 
 return [
@@ -110,4 +114,6 @@ return [
     TipoCasaRepositoryInterface::class => autowire(PgTipoCasaRepository::class),
     TipoCentroRepositoryInterface::class => autowire(PgTipoCentroRepository::class),
     TipoTelecoRepositoryInterface::class => autowire(PgTipoTelecoRepository::class),
+    CasaPeriodoRepositoryInterface::class => autowire(PgCasaPeriodoRepository::class),
+    TarifaUbiRepositoryInterface::class => autowire(PgTarifaUbiRepository::class),
 ];

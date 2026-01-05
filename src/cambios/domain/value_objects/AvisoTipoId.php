@@ -4,15 +4,14 @@ namespace src\cambios\domain\value_objects;
 
 final class AvisoTipoId
 {
-    public const LISTA = 1;
-    public const MAIL = 2;
-
+    public const TIPO_LISTA = 1; // Anotar en lista.
+    public const TIPO_MAIL = 2; // por mail.
 
     public static function getArrayAvisoTipo(): array
     {
         return [
-            self::LISTA => _("lista"),
-            self::MAIL => _("email"),
+            self::TIPO_LISTA => _("lista"),
+            self::TIPO_MAIL => _("email"),
         ];
     }
 
@@ -27,7 +26,7 @@ final class AvisoTipoId
 
     private function validate(int $value): void
     {
-        if (!in_array($value, [self::LISTA, self::MAIL], true)) {
+        if (!in_array($value, [self::TIPO_LISTA, self::TIPO_MAIL], true)) {
             throw new \InvalidArgumentException('AvisoTipoId solo puede ser 1 o 2');
         }
     }

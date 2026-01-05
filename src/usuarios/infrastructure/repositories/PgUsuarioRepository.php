@@ -117,8 +117,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
                 $password = $contents;
                 $aDatos['password'] = $password;
             }
-            $usuario = new Usuario();
-            $usuario->setAllAttributes($aDatos);
+            $usuario = Usuario::fromArray($aDatos);
             $usuarioSet->add($usuario);
         }
         return $usuarioSet->getTot();
@@ -149,8 +148,8 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $aDatos['usuario'] = $usuario->getUsuarioAsString();
         $aDatos['id_role'] = $usuario->getId_role();
         $aDatos['email'] = $usuario->getEmailAsString();
-        $aDatos['id_pau'] = $usuario->getId_pauAsString();
-        $aDatos['nom_usuario'] = $usuario->getNom_usuarioAsString();
+        $aDatos['id_pau'] = $usuario->getCsvIdPauAsString();
+        $aDatos['nom_usuario'] = $usuario->getNomUsuarioAsString();
         $aDatos['has_2fa'] = $usuario->has2fa();
         $aDatos['secret_2fa'] = $usuario->getSecret2faAsString();
         $aDatos['cambio_password'] = $usuario->isCambio_password();
@@ -246,7 +245,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         if (empty($aDatos)) {
             return null;
         }
-        return (new Usuario())->setAllAttributes($aDatos);
+        return Usuario::fromArray($aDatos);
     }
 
     public function getNewId()

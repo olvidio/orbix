@@ -19,27 +19,6 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
 interface ProfesorStgrRepositoryInterface
 {
 
-    /**
-     * @deprecated Usar getArrayProfesoresAsignaturaVo(AsignaturaId $id_asignatura)
-     */
-    public function getArrayProfesoresAsignatura($id_asignatura): array;
-
-    public function getArrayProfesoresAsignaturaVo(AsignaturaId $id_asignatura): array;
-
-    /**
-     * @deprecated Usar getArrayTodosProfesoresAsignaturaVo(AsignaturaId $id_asignatura)
-     */
-    public function getArrayTodosProfesoresAsignatura($id_asignatura): array;
-
-    public function getArrayTodosProfesoresAsignaturaVo(AsignaturaId $id_asignatura): array;
-
-    public function getListaProfesoresPub(): array;
-
-    public function getArrayProfesoresConDl(): array;
-
-    public function getArrayProfesoresDl(): array;
-
-
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
     /**

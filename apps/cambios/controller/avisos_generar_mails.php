@@ -25,10 +25,11 @@ $dir_web = $_SERVER['DIRWEB'];
 $path = "$document_root/$dir_web";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
-use cambios\model\entity\Cambio;
-use cambios\model\entity\CambioDl;
-use cambios\model\entity\CambioUsuario;
-use cambios\model\entity\GestorCambioUsuario;
+use src\cambios\domain\contracts\CambioDlRepositoryInterface;
+use src\cambios\domain\contracts\CambioRepositoryInterface;
+use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
+use src\cambios\domain\entity\Cambio;
+use src\cambios\domain\value_objects\AvisoTipoId;
 use core\ConfigGlobal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -60,7 +61,7 @@ $dele = ConfigGlobal::mi_dele();
 $delef = $dele . 'f';
 $aSecciones = array(1 => $dele, 2 => $delef);
 
-$aviso_tipo = CambioUsuario::TIPO_MAIL; //e-mail
+$aviso_tipo = AvisoTipoId::TIPO_MAIL; //e-mail
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
 $aWhere = [];
@@ -68,8 +69,8 @@ $aWhere['_ordre'] = 'id_usuario,id_item_cambio';
 $aWhere['aviso_tipo'] = $aviso_tipo;
 $aWhere['avisado'] = 'false';
 $aWhere['sfsv'] = $mi_sfsv;
-$GesCambiosUsuario = new GestorCambioUsuario();
-$cCambiosUsuario = $GesCambiosUsuario->getCambiosUsuario($aWhere);
+$CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
+$cCambiosUsuario = $CambioUsuarioRepository->getCambiosUsuario($aWhere);
 $i = 0;
 $id_usuario_anterior = '';
 $email = '';
@@ -115,10 +116,11 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     $id_item_cmb = $oCambioUsuario->getId_item_cambio();
     $id_schema_cmb = $oCambioUsuario->getId_schema_cambio();
     if ($id_schema_cmb === 3000) {
-        $oCambio = new Cambio($id_item_cmb);
+        $repoCambioUsuario = $GLOBALS['container']->get(CambioRepositoryInterface::class);
     } else {
-        $oCambio = new CambioDl($id_item_cmb);
+        $repoCambioUsuario = $GLOBALS['container']->get(CambioDlRepositoryInterface::class);
     }
+    $oCambio = $repoCambioUsuario->findById($id_item_cmb);
     $quien_cambia = $oCambio->getQuien_cambia();
     $sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
     $oTimestamp_cambio_GMT = $oCambio->getTimestamp_cambio();
@@ -202,14 +204,14 @@ function eliminar_enviado($a_id)
         $id_usuario = $ids[1];
         $sfsv = $ids[2];
         $aviso_tipo = $ids[3];
-        $GesCambioUsuario = new GestorCambioUsuario();
+        $CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
         $aWhere = ['id_item_cambio' => $id_item_cmb,
             'id_usuario' => $id_usuario,
             'sfsv' => $sfsv,
             'aviso_tipo' => $aviso_tipo,
         ];
 
-        $cCambiosUsuario = $GesCambioUsuario->getCambiosUsuario($aWhere);
+        $cCambiosUsuario = $CambioUsuarioRepository->getCambiosUsuario($aWhere);
         foreach ($cCambiosUsuario as $oCambioUsuario) {
             if ($oCambioUsuario->DBEliminar() === false) {
                 echo _("Hay un error, no se ha eliminado");

@@ -94,8 +94,7 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $GrupoCasa = new GrupoCasa();
-            $GrupoCasa->setAllAttributes($aDatos);
+            $GrupoCasa = GrupoCasa::fromArray($aDatos);
             $GrupoCasaSet->add($GrupoCasa);
         }
         return $GrupoCasaSet->getTot();
@@ -183,7 +182,7 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
         if (empty($aDatos)) {
             return null;
         }
-        return (new GrupoCasa())->setAllAttributes($aDatos);
+        return GrupoCasa::fromArray($aDatos);
     }
 
     public function getNewId(): int

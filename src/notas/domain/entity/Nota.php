@@ -2,6 +2,9 @@
 
 namespace src\notas\domain\entity;
 
+use src\notas\domain\value_objects\Descripcion;
+use src\notas\domain\value_objects\Breve;
+use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 
 /**
@@ -15,6 +18,8 @@ use function core\is_true;
  */
 class Nota
 {
+    use Hydratable;
+
     // Al final de hecho deberían ser todo constantes, porque en demasiados sitios se tiene en
     // Cuenta que es.
     /*
@@ -91,125 +96,93 @@ class Nota
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_situacion de Nota
-     *
-     * @var int
-     */
-    private int $iid_situacion;
-    /**
-     * Descripcion de Nota
-     *
-     * @var string
-     */
-    private string $sdescripcion;
-    /**
-     * Superada de Nota
-     *
-     * @var bool
-     */
-    private bool $bsuperada;
-    /**
-     * Breve de Nota
-     *
-     * @var string|null
-     */
-    private string|null $sbreve = null;
+
+    private int $id_situacion;
+
+    private string $descripcion;
+
+    private bool $superada;
+
+    private string|null $breve = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Nota
-     */
-    public function setAllAttributes(array $aDatos): Nota
-    {
-        if (array_key_exists('id_situacion', $aDatos)) {
-            $this->setId_situacion($aDatos['id_situacion']);
-        }
-        if (array_key_exists('descripcion', $aDatos)) {
-            $this->setDescripcion($aDatos['descripcion']);
-        }
-        if (array_key_exists('superada', $aDatos)) {
-            $this->setSuperada(is_true($aDatos['superada']));
-        }
-        if (array_key_exists('breve', $aDatos)) {
-            $this->setBreve($aDatos['breve']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_situacion
-     */
     public function getId_situacion(): int
     {
-        return $this->iid_situacion;
+        return $this->id_situacion;
     }
 
-    /**
-     *
-     * @param int $iid_situacion
-     */
-    public function setId_situacion(int $iid_situacion): void
+
+    public function setId_situacion(int $id_situacion): void
     {
-        $this->iid_situacion = $iid_situacion;
+        $this->id_situacion = $id_situacion;
+    }
+
+
+    public function getDescripcionVo(): ?Descripcion
+    {
+        return Descripcion::fromNullable($this->descripcion);
+    }
+
+
+    public function setDescripcionVo(?Descripcion $oDescripcion): void
+    {
+        $this->descripcion = $oDescripcion?->value();
     }
 
     /**
-     *
-     * @return string $sdescripcion
+     * @deprecated use getDescripcionVo()
      */
     public function getDescripcion(): string
     {
-        return $this->sdescripcion;
+        return $this->descripcion;
     }
 
     /**
-     *
-     * @param string $sdescripcion
+     * @deprecated use setDescripcionVo()
      */
-    public function setDescripcion(string $sdescripcion): void
+    public function setDescripcion(string $descripcion): void
     {
-        $this->sdescripcion = $sdescripcion;
+        $this->descripcion = $descripcion;
     }
 
-    /**
-     *
-     * @return bool $bsuperada
-     */
+
     public function isSuperada(): bool
     {
-        return $this->bsuperada;
+        return $this->superada;
     }
 
-    /**
-     *
-     * @param bool $bsuperada
-     */
-    public function setSuperada(bool $bsuperada): void
+
+    public function setSuperada(bool $superada): void
     {
-        $this->bsuperada = $bsuperada;
+        $this->superada = $superada;
+    }
+
+
+    public function getBreveVo(): ?Breve
+    {
+        return Breve::fromNullable($this->breve);
+    }
+
+
+    public function setBreveVo(?Breve $oBreve): void
+    {
+        $this->breve = $oBreve?->value();
     }
 
     /**
-     *
-     * @return string|null $sbreve
+     * @deprecated use getBreveVo()
      */
     public function getBreve(): ?string
     {
-        return $this->sbreve;
+        return $this->breve;
     }
 
     /**
-     *
-     * @param string|null $sbreve
+     * @deprecated use setBreveVo()
      */
-    public function setBreve(?string $sbreve = null): void
+    public function setBreve(?string $breve = null): void
     {
-        $this->sbreve = $sbreve;
+        $this->breve = $breve;
     }
 }

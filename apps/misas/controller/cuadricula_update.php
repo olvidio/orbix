@@ -17,7 +17,7 @@ use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\DateTimeLocal;
-use zonassacd\legacy\GestorZonaSacd;
+use web\TiposActividades;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -37,7 +37,7 @@ $QTipoPlantilla = (string)filter_input(INPUT_POST, 'tipo_plantilla');
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
 $sdia = $Qdia;
-$dia = new DateTimeLocal($Qdia);
+$dia = DateTimeLocal::createFromLocal($Qdia);
 $dia_iso = $dia->getIso();
 //echo 'Qkey'.$Qkey.'<br>';
 $comprobacion = '';

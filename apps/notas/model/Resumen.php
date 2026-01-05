@@ -4,12 +4,13 @@ namespace notas\model;
 
 use core\ClasePropiedades;
 use core\ConfigGlobal;
-use personas\model\entity\PersonaDl;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use function core\is_true;
 
@@ -265,7 +266,7 @@ class Resumen extends ClasePropiedades
 										nom varchar(40),
 										apellido1  varchar(25),
 										apellido2  varchar(25),
-										stgr char(2),
+										nivel_stgr int,
 										situacion char(1),
 										f_situacion date,
 										f_o date,
@@ -285,7 +286,7 @@ class Resumen extends ClasePropiedades
 										nom varchar(40),
 										apellido1  varchar(25),
 										apellido2  varchar(25),
-										stgr char(2),
+										nivel_stgr int,
 										situacion char(1),
 										f_situacion date,
 										f_o date,
@@ -300,7 +301,7 @@ class Resumen extends ClasePropiedades
 
         $oDbl->query($sqlCreate);
         $oDbl->query("CREATE INDEX IF NOT EXISTS $tabla" . "_apellidos" . " ON $tabla (apellido1,apellido2,nom)");
-        $oDbl->query("CREATE INDEX IF NOT EXISTS $tabla" . "_stgr" . " ON $tabla (stgr)");
+        $oDbl->query("CREATE INDEX IF NOT EXISTS $tabla" . "_stgr" . " ON $tabla (nivel_stgr)");
         $oDbl->query($sqlDelete);
 
         /*
@@ -311,14 +312,14 @@ class Resumen extends ClasePropiedades
          situacion char(1),
          
          $sqlLlenar="INSERT INTO $tabla
-         SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
+         SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.nivel_stgr,
          p.situacion,p.f_situacion,p.f_o,p.f_fl,p.f_orden,p.ce_lugar,p.ce_ini,p.ce_fin,p.situacion,p.sacd
          FROM $personas p
          WHERE ((p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL)) OR (p.situacion='D' AND (p.f_situacion $curs)) OR (p.situacion='L' AND (p.f_orden $curs)))
          ";
          */
         $sqlLlenar = "INSERT INTO $tabla
-				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
+				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.nivel_stgr,
 				p.situacion,p.f_situacion,
 				NULL,NULL,NULL,
 				p.ce_lugar,p.ce_ini,p.ce_fin,
@@ -337,7 +338,7 @@ class Resumen extends ClasePropiedades
                 $where_dl = "u.dl IN ('$dl_csv') AND";
             }
             $sqlLlenar = "INSERT INTO $tabla
-				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.stgr,
+				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.nivel_stgr,
 				p.situacion,p.f_situacion,
 				NULL,NULL,NULL,
 				p.ce_lugar,p.ce_ini,p.ce_fin,
@@ -356,10 +357,10 @@ class Resumen extends ClasePropiedades
 
 
         // Miro los que se han incorporado "recientemente": desde el 1-junio
-        $ssql = "SELECT  p.nom, p.apellido1, p.apellido2, p.ctr, p.stgr
+        $ssql = "SELECT  p.nom, p.apellido1, p.apellido2, p.ctr, p.nivel_stgr
 			FROM $tabla p
 			WHERE p.situacion='A' AND p.f_situacion > '$any-6-1'
-				AND (p.stgr='b' OR p.stgr ILIKE 'c%') ";
+				AND (p.nivel_stgr IN (" . NivelStgrId::B . ", " . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")) ";
         //echo "qry: $ssql<br>";
         $statement = $oDbl->query($ssql);
         $nf = $statement->rowCount();
@@ -367,13 +368,13 @@ class Resumen extends ClasePropiedades
             echo "<p>Existen $nf Alumnos que se han incorporado \"recientemente\" (desde el 1-junio) a la dl<br>
 					Sí se cuentan en la estadística.</p>";
             // Para sacar una lista
-            echo $this->Lista($ssql, "nom,apellido1,apellido2,ctr,stgr", 1);
+            echo $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
         }
 
         // Miro si existe alguna excepción: Alguien incorporado a la dl después del 1 de OCT
-        $ssql = "SELECT  p.nom, p.apellido1, p.apellido2, p.ctr, p.stgr
+        $ssql = "SELECT  p.nom, p.apellido1, p.apellido2, p.ctr, p.nivel_stgr
 			FROM $tabla p
-			WHERE (p.stgr='b' OR p.stgr ILIKE 'c%')
+			WHERE p.nivel_stgr IN (" . NivelStgrId::B . ", " . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")
 				AND (p.situacion='A' AND p.f_situacion > '$fincurs')";
         $statement = $oDbl->query($ssql);
         $nf = $statement->rowCount();
@@ -382,19 +383,19 @@ class Resumen extends ClasePropiedades
             echo "<p>Existen $nf alumnos que se han incorporado después del 1-OCT a la dl<br>
 					No se van a contar</p>";
             // Para sacar una lista
-            echo $this->Lista($ssql, "nom,apellido1,apellido2,ctr,stgr", 1);
+            echo $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
         }
 
-        //Pongo 'b' en stgr a los que han terminado el bienio este curso
-        $ssql = "UPDATE $tabla SET stgr='b'
+        //Pongo 'b' en nivel_stgr a los que han terminado el bienio este curso
+        $ssql = "UPDATE $tabla SET nivel_stgr=".NivelStgrId::B."
 				FROM $this->tablaNotas n
 				WHERE $tabla.id_nom=n.id_nom AND n.id_asignatura=9999 AND n.f_acta $curs
 				 ";
         $statement = $oDbl->query($ssql);
         $nf = $statement->rowCount();
 
-        //Pongo 'c2' en stgr a los que han terminado el cuadrienio este curso
-        $ssql = "UPDATE $tabla SET stgr='c2'
+        //Pongo 'c2' en nivel_stgr a los que han terminado el cuadrienio este curso
+        $ssql = "UPDATE $tabla SET nivel_stgr=" . NivelStgrId::C2 . "
 				FROM $this->tablaNotas n
 				WHERE $tabla.id_nom=n.id_nom AND n.id_asignatura=9998 AND n.f_acta $curs
 				 ";
@@ -439,7 +440,7 @@ class Resumen extends ClasePropiedades
         $oDbl->query($sqlLlenar);
 
         //Ahora las asignaturas
-        //Como ahora las asignaturas estan en otra base de datos(comun) hago una copia para poder hacer unions...
+        //Como ahora las asignaturas están en otra base de datos(comun) hago una copia para poder hacer unions...
         $sqlDelete = "DROP TABLE IF EXISTS $asignaturas CASCADE";
         $sqlCreate = "CREATE TABLE $asignaturas(
 						id_asignatura integer,
@@ -449,7 +450,7 @@ class Resumen extends ClasePropiedades
 						creditos numeric(4,2),
 						year character varying(3),
 						id_sector smallint,
-						status boolean DEFAULT true NOT NULL,
+						active boolean DEFAULT true NOT NULL,
 						id_tipo integer
 					 )";
 
@@ -459,9 +460,9 @@ class Resumen extends ClasePropiedades
         $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_id_asignatura" . " ON $asignaturas (id_asignatura)");
 
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('status' => 'true'));
+        $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('active' => 'true'));
 
-        $prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
+        $prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :active, :id_tipo)");
         foreach ($cAsignaturas as $oAsignatura) {
             $aDades = [];
             $aDades['id_asignatura'] = $oAsignatura->getId_asignatura();
@@ -471,7 +472,7 @@ class Resumen extends ClasePropiedades
             $aDades['creditos'] = $oAsignatura->getCreditos();
             $aDades['year'] = $oAsignatura->getYear();
             $aDades['id_sector'] = $oAsignatura->getId_sector();
-            $aDades['status'] = $oAsignatura->getStatus();
+            $aDades['active'] = $oAsignatura->isActive();
             $aDades['id_tipo'] = $oAsignatura->getId_tipo();
 
             $prep->execute($aDades);
@@ -568,7 +569,7 @@ class Resumen extends ClasePropiedades
 
         $ssql = "SELECT p.id_nom,p.nom,p.apellido1,p.apellido2,ctr
 		FROM $tabla p
-		WHERE p.stgr='b'
+		WHERE p.nivel_stgr=" . NivelStgrId::B . "
 		ORDER BY p.apellido1,p.apellido2,p.nom
 		";
         $statement = $oDbl->query($ssql);
@@ -588,13 +589,13 @@ class Resumen extends ClasePropiedades
         $where = '';
         switch ($c) {
             case 1:
-                $where = "WHERE p.stgr='c1'";
+                $where = "WHERE p.nivel_stgr=" . NivelStgrId::C1;
                 break;
             case 2:
-                $where = "WHERE p.stgr='c2'";
+                $where = "WHERE p.nivel_stgr=" . NivelStgrId::C2;
                 break;
             case 'all':
-                $where = "WHERE p.stgr ~ '^c'";
+                $where = "WHERE p.nivel_stgr IN (" . NivelStgrId::C1 . "," . NivelStgrId::C2 . ")";
                 break;
         }
         $ssql = "SELECT p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr
@@ -619,7 +620,7 @@ class Resumen extends ClasePropiedades
 
         $ssql = "SELECT p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr
 		FROM $tabla p
-		WHERE p.stgr='r'
+		WHERE p.nivel_stgr=" . NivelStgrId::R . "
 		ORDER BY p.apellido1,p.apellido2,p.nom
 		";
         $statement = $oDbl->query($ssql);
@@ -637,15 +638,15 @@ class Resumen extends ClasePropiedades
         $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
-        $ssql = "SELECT p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr,p.stgr
+        $ssql = "SELECT p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr,p.nivel_stgr
 		FROM $tabla p
-		WHERE p.stgr='b' OR p.stgr ILIKE 'c%'
+		WHERE p.nivel_stgr IN (" . NivelStgrId::B . ", " . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")
 		ORDER BY p.apellido1,p.apellido2,p.nom
 		";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
-            $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,stgr", 1);
+            $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
         } else {
             $rta['lista'] = '';
         }
@@ -662,7 +663,7 @@ class Resumen extends ClasePropiedades
          $ssql="SELECT p.nom, p.apellido1, p.apellido2
          FROM $tabla p
          WHERE p.f_fl IS NULL
-         AND (p.stgr='b' OR p.stgr ILIKE 'c%') AND (p.f_o > '$iniverano' OR p.f_o IS NULL)
+         AND (p.nivel_stgr='b' OR p.nivel_stgr ILIKE 'c%') AND (p.f_o > '$iniverano' OR p.f_o IS NULL)
          ORDER BY p.apellido1,p.apellido2,p.nom
          ";
          
@@ -743,7 +744,7 @@ class Resumen extends ClasePropiedades
 
         $ssql = "SELECT p.nom, p.apellido1, p.apellido2, p.ctr
             FROM $tabla p
-            WHERE (p.stgr='b')
+            WHERE (p.nivel_stgr=" . NivelStgrId::B . ")
                 AND (p.ce_lugar IS NULL OR p.ce_lugar = '')
             ORDER BY p.apellido1,p.apellido2,p.nom
             ";
@@ -827,7 +828,7 @@ class Resumen extends ClasePropiedades
 			WHERE p.id_nom=n.id_nom
 				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
 				AND (p.ce_lugar ISNULL OR p.ce_lugar = '')
-			 	AND (p.stgr='b')
+			 	AND (p.nivel_stgr=" . NivelStgrId::B . ")
 			";
 
         $statement = $oDbl->query($ssql);
@@ -841,7 +842,7 @@ class Resumen extends ClasePropiedades
     }
 
     /**
-     * personas con stgr != 'b' y con FinBienio = NULL
+     * personas con nivel_stgr != 'b' y con FinBienio = NULL
      *
      * @return array
      */
@@ -853,7 +854,7 @@ class Resumen extends ClasePropiedades
         $rta = [];
         $ssql = " SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
                 FROM $tabla p
-                WHERE p.stgr ~ '^c'
+                WHERE p.nivel_stgr IN (".NivelStgrId::C1.", " . NivelStgrId::C2 . ")
                 EXCEPT
                 SELECT t.id_nom, t.nom, t.apellido1, t.apellido2, t.ctr
                 FROM $tabla t JOIN $this->tablaNotas n USING (id_nom)
@@ -884,9 +885,9 @@ class Resumen extends ClasePropiedades
         $tabla = $this->getNomTabla();
 
         $rta = [];
-        $ssql = "SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.stgr
+        $ssql = "SELECT p.id_nom, p.apellido1, p.apellido2, p.nom, p.ctr, p.nivel_stgr
             FROM $tabla p
-            WHERE  p.ce_fin < '$any' AND p.ce_lugar IS NOT NULL AND p.stgr = 'b'
+            WHERE  p.ce_fin < '$any' AND p.ce_lugar IS NOT NULL AND p.nivel_stgr = " . NivelStgrId::B . "
             ORDER BY p.apellido1,p.apellido2,p.nom  ";
         $statement = $oDbl->query($ssql);
         $nf = $statement->rowCount();
@@ -894,7 +895,7 @@ class Resumen extends ClasePropiedades
             $rta['error'] = true;
             $rta['num'] = $nf;
             if (is_true($this->blista) && $rta['num'] > 0) {
-                $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,stgr", 1);
+                $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
             } else {
                 $rta['lista'] = '';
             }
@@ -915,7 +916,7 @@ class Resumen extends ClasePropiedades
 				FROM $tabla p,$notas n, $asignaturas a
 				WHERE p.id_nom=n.id_nom AND n.id_asignatura=a.id_asignatura
 					AND (n.id_nivel BETWEEN 1100 AND 1232)
-					AND p.stgr ~ '^b'
+					AND p.nivel_stgr IN (" . NivelStgrId::B . ", " . NivelStgrId::BC . ")
 				ORDER BY p.apellido1, p.apellido2, p.nom
 				";
         $statement = $oDbl->query($ssql);
@@ -943,7 +944,7 @@ class Resumen extends ClasePropiedades
          FROM $tabla p,$notas n
          WHERE p.id_nom=n.id_nom
          AND (n.id_nivel BETWEEN 2100 AND 2500)
-         AND p.stgr='r'
+         AND p.nivel_stgr='r'
          GROUP BY p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
          ORDER BY p.apellido1, p.apellido2, p.nom
          ";
@@ -970,7 +971,7 @@ class Resumen extends ClasePropiedades
 				FROM $tabla p,$notas n, $asignaturas a
 				WHERE p.id_nom=n.id_nom AND n.id_asignatura=a.id_asignatura
 					AND (n.id_nivel BETWEEN 2100 AND 2500)
-					AND p.stgr ~ '^c'
+					AND p.nivel_stgr IN (" . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")
 				ORDER BY p.apellido1, p.apellido2, p.nom
 				";
         $statement = $oDbl->query($ssql);
@@ -994,7 +995,7 @@ class Resumen extends ClasePropiedades
 
         $ssql = "SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		FROM $tabla p,$notas n,$asignaturas a
-		WHERE p.id_nom=n.id_nom AND p.stgr ~ '^c' AND n.id_asignatura=a.id_asignatura
+		WHERE p.id_nom=n.id_nom AND p.nivel_stgr IN (" . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ") AND n.id_asignatura=a.id_asignatura
 			AND (n.id_nivel BETWEEN 2100 AND 2500)
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		HAVING count(*) > $numAsig
@@ -1020,7 +1021,7 @@ class Resumen extends ClasePropiedades
 
         $ssql = "SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		FROM $tabla p,$notas n,$asignaturas a
-		WHERE p.id_nom=n.id_nom AND p.stgr ~ '^c' AND n.id_asignatura=a.id_asignatura
+		WHERE p.id_nom=n.id_nom AND p.nivel_stgr IN (" . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ") AND n.id_asignatura=a.id_asignatura
 			AND (n.id_nivel BETWEEN 2100 AND 2500)
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		HAVING SUM( CASE WHEN n.id_nivel < 2430 THEN a.creditos else 1 END) > $creditos
@@ -1047,7 +1048,7 @@ class Resumen extends ClasePropiedades
         $ssql = "SELECT n.id_nom,p.nom, p.apellido1,p.apellido2,p.ctr
 		FROM $tabla p, $notas n, $asignaturas a
 		WHERE p.id_nom=n.id_nom AND  n.id_nivel=a.id_nivel
-			AND (p.stgr ILIKE 'c%' OR p.stgr='r')
+			AND p.nivel_stgr IN (" . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ", " . NivelStgrId::R . ") 
 			AND (n.id_nivel BETWEEN 2100 AND 2500)
 		GROUP BY n.id_nom,p.nom, p.apellido1,p.apellido2, p.ctr
 		HAVING count(*) <= $numASig
@@ -1073,7 +1074,7 @@ class Resumen extends ClasePropiedades
         $ssql = "SELECT n.id_nom,p.nom, p.apellido1,p.apellido2,p.ctr
 		FROM $tabla p, $notas n, $asignaturas a
 		WHERE p.id_nom=n.id_nom AND  n.id_nivel=a.id_nivel
-			AND (p.stgr ILIKE 'c%' OR p.stgr='r')
+			AND p.nivel_stgr IN (" . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ", " . NivelStgrId::R . ") 
 			AND (n.id_nivel BETWEEN 2100 AND 2500)
 		GROUP BY n.id_nom,p.nom, p.apellido1,p.apellido2, p.ctr
 		HAVING SUM( CASE WHEN n.id_nivel < 2430 THEN a.creditos else 1 END) <= $creditos
@@ -1097,7 +1098,7 @@ class Resumen extends ClasePropiedades
 
         $ssql = "SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		FROM $tabla p LEFT JOIN $notas n USING (id_nom)
-		WHERE p.stgr ~ '^c'
+		WHERE p.nivel_stgr IN (" . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ") 
 			AND n.id_nom IS NULL
 		ORDER BY p.apellido1,p.apellido2,p.nom
 		";
@@ -1121,7 +1122,7 @@ class Resumen extends ClasePropiedades
         $ssql = "SELECT n.id_nom, p.nom, p.apellido1, p.apellido2,p.ctr
 		FROM $notas n, $tabla p
 		WHERE n.id_nom=p.id_nom AND n.preceptor='t'
-			AND p.stgr = 'b'
+			AND p.nivel_stgr = " . NivelStgrId::B . "
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		ORDER BY p.apellido1,p.apellido2,p.nom ";
 
@@ -1144,7 +1145,7 @@ class Resumen extends ClasePropiedades
         $ssql = "SELECT n.id_nom, p.nom, p.apellido1, p.apellido2,p.ctr
 		FROM $notas n, $tabla p
 		WHERE n.id_nom=p.id_nom AND n.preceptor='t'
-			AND p.stgr ~ '^c'
+			AND p.nivel_stgr IN (" . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		ORDER BY p.apellido1,p.apellido2,p.nom ";
 
@@ -1197,7 +1198,7 @@ class Resumen extends ClasePropiedades
 
         $ssql = "SELECT pp.id_nom,pp.nom, pp.apellido1, pp.apellido2, pp.ctr
 			FROM $tabla pp
-			WHERE pp.stgr='r' AND pp.sacd='f'
+			WHERE pp.nivel_stgr=" . NivelStgrId::R . " AND pp.sacd='f'
 			ORDER BY pp.apellido1, pp.apellido2, pp.nom";
 
         /*
@@ -1329,6 +1330,7 @@ class Resumen extends ClasePropiedades
         $docencia_no_dep = [];
         $nombres = [];
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         foreach ($a_profe_dept as $row) {
             $id_nom = $row['id_nom'];
             $id_departamento = $row['id_departamento'];
@@ -1349,7 +1351,7 @@ class Resumen extends ClasePropiedades
                 }
 
                 if (is_true($this->blista)) {
-                    $oPersonaDl = new PersonaDl($id_nom);
+                    $oPersonaDl = $PersonaDlRepository->findById($id_nom);
                     $nom = $oPersonaDl->getNom();
                     $apellido1 = $oPersonaDl->getApellido1();
                     $apellido2 = $oPersonaDl->getApellido2();
@@ -1482,6 +1484,7 @@ class Resumen extends ClasePropiedades
         $ProfesorDirectorRepository = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
         $cDirectores = $ProfesorDirectorRepository->getProfesoresDirectores(array('f_cese' => 1), array('f_cese' => 'IS NULL'));
         $DepartamentoRepository = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 
         $rta['num'] = count($cDirectores);
         if (is_true($this->blista) && $rta['num'] > 0) {
@@ -1490,7 +1493,10 @@ class Resumen extends ClasePropiedades
                 $id_departamento = $oDirector->getId_departamento();
                 $id_nom = $oDirector->getId_nom();
                 $nom_dep = $DepartamentoRepository->findById($id_departamento)?->getNombreDepartamentoVo()->value();
-                $oPersonaDl = new PersonaDl($id_nom);
+                $oPersonaDl = $PersonaDlRepository->findById($id_nom);
+                if ($oPersonaDl === null) {
+                    continue;
+                }
                 $nom_persona = $oPersonaDl->getPrefApellidosNombre();
                 $html .= "<tr><td>$nom_dep</td><td>$nom_persona</td></tr>";
             }

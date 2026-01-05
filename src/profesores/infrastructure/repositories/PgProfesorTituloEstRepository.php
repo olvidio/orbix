@@ -93,8 +93,7 @@ class PgProfesorTituloEstRepository extends ClaseRepository implements ProfesorT
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ProfesorTituloEst = new ProfesorTituloEst();
-            $ProfesorTituloEst->setAllAttributes($aDatos);
+            $ProfesorTituloEst = ProfesorTituloEst::fromArray($aDatos);
             $ProfesorTituloEstSet->add($ProfesorTituloEst);
         }
         return $ProfesorTituloEstSet->getTot();
@@ -196,7 +195,7 @@ class PgProfesorTituloEstRepository extends ClaseRepository implements ProfesorT
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorTituloEst())->setAllAttributes($aDatos);
+        return ProfesorTituloEst::fromArray($aDatos);
     }
 
     public function getNewId()

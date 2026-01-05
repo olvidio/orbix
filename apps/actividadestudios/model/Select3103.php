@@ -2,12 +2,12 @@
 
 namespace actividadestudios\model;
 
-use actividadestudios\model\entity\GestorActividadAsignatura;
-use actividadestudios\model\entity\GestorActividadAsignaturaDl;
-use actividadestudios\model\entity\GestorMatriculaDl;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
@@ -27,39 +27,37 @@ use web\Lista;
 class Select3103
 {
     /* @var $msg_err string */
-    private $msg_err;
+    private string $msg_err;
     /* @var $nom_activ string */
-    private $nom_activ;
+    private string $nom_activ;
     /* @var $a_valores array */
-    private $a_valores;
+    private array $a_valores;
     /* @var $a_grupos array */
-    private $a_grupos;
+    private array $a_grupos;
     /**
      * Para pasar a la vista, aparece como alerta antes de ejecutarse
      * @var string $txt_eliminar
      */
-    private $txt_eliminar;
+    private string $txt_eliminar;
     /* @var $bloque string  necesario para el script */
-    private $bloque;
+    private string $bloque;
 
     // ---------- Variables requeridas
     /* @var $queSel integer */
-    private $queSel;
+    private int $queSel;
     /* @var $id_dossier integer */
-    private $id_dossier;
+    private int $id_dossier;
     /* @var $pau string */
-    private $pau;
+    private string $pau;
     /* @var $obj_pau string */
-    private $obj_pau;
+    private string $obj_pau;
     /* @var $id_pau integer */
-    private $id_pau;
+    private int $id_pau;
     /**
      * 3: para todo, 2, 1:solo lectura
      * @var integer $permiso
      */
-    private $permiso;
-
-    private $status;
+    private int $permiso;
 
     // ------ Variables para mantener la selección de la grid al volver atras
     private $Qid_sel;
@@ -110,12 +108,12 @@ class Select3103
 
         if ($mi_dele == $dl_org) {
             $this->permiso = 3;
-            $GesActivAsignaturas = new GestorActividadAsignaturaDl();
+            $repoAsignaturas = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
         } else {
             $this->permiso = 1;
-            $GesActivAsignaturas = new GestorActividadAsignatura();
+            $repoAsignaturas = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
         }
-        $cActividadAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $this->id_pau, '_ordre' => 'id_asignatura'));
+        $cActividadAsignaturas = $repoAsignaturas->getActividadAsignaturas(array('id_activ' => $this->id_pau, '_ordre' => 'id_asignatura'));
 
         if (is_array($cActividadAsignaturas) && count($cActividadAsignaturas) == 0) {
             echo _("esta actividad no tiene ninguna asignatura");
@@ -133,7 +131,7 @@ class Select3103
 
             if (!empty($id_profesor)) {
                 $oPersona = Persona::findPersonaEnGlobal($id_profesor);
-                if (!is_object($oPersona)) {
+                if ($oPersona === null) {
                     $msg_err .= "<br>No encuentro a nadie con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
                     $nom_profesor = '';
                 } else {
@@ -151,8 +149,8 @@ class Select3103
             $aGrupos[$id_asignatura] = $nombre_corto;
 
             //busco los matriculados:
-            $GesMatriculas = new GestorMatriculaDl();
-            $cMatriculas = $GesMatriculas->getMatriculas(array('id_activ' => $this->id_pau, 'id_asignatura' => $id_asignatura));
+            $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
+            $cMatriculas = $MatriculaDlRepository->getMatriculas(array('id_activ' => $this->id_pau, 'id_asignatura' => $id_asignatura));
             $m = 0;
             $a_valores = [];
             foreach ($cMatriculas as $oMatricula) {

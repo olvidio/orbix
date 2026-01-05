@@ -55,7 +55,7 @@ switch ($Qque_mod) {
                 break;
             case 'get_dl':
                 $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                //$cCentrosDl = $oGesCentrosDl->getCentros(['status'=>'t']);
+                //$cCentrosDl = $oGesCentrosDl->getCentros(['active'=>'t']);
                 $cCentrosDl = $oGesCentrosDl->getCentros();
                 $aPoblaciones = [];
                 $DireccionCentroDlRepository = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
@@ -274,7 +274,7 @@ switch ($Qque_mod) {
             }
         } else {
             $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-            $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
+            $aWhere = array('active' => 't', '_ordre' => 'nombre_ubi');
             $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         }
         $c = 0;
@@ -290,7 +290,7 @@ switch ($Qque_mod) {
                 $c++;
                 $id_ubi = $oCentro->getId_ubi();
                 $nombre_ubi = $oCentro->getNombre_ubi();
-                if (!$oCentro->isStatus()) {
+                if (!$oCentro->isActive()) {
                     $nombre_ubi = _("ANULADO") . ' ' . $nombre_ubi;
                 }
                 $nombre_ubi .= empty($nom_sede) ? '' : " ($nom_sede)";
@@ -360,7 +360,7 @@ switch ($Qque_mod) {
         // listado de centros.
         $oGesCentros = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
         $permiso = 'modificar';
-        $aWhere = array('tipo_ctr' => 'cr|dl', 'status' => 't', '_ordre' => 'nombre_ubi');
+        $aWhere = array('tipo_ctr' => 'cr|dl', 'active' => 't', '_ordre' => 'nombre_ubi');
         $aOperador = array('tipo_ctr' => '~');
         $cCentros = $oGesCentros->getCentros($aWhere, $aOperador);
         $c = 0;

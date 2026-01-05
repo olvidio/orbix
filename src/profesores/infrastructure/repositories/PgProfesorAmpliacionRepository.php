@@ -7,8 +7,8 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use personas\model\entity\PersonaDl;
 use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\entity\ProfesorAmpliacion;
 use src\shared\traits\HandlesPdoErrors;
@@ -44,9 +44,10 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
         $aAp1 = [];
         $aAp2 = [];
         $aNom = [];
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = new PersonaDl($id_nom);
+            $oPersonaDl = $PersonaDlRepository->findById($id_nom);
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
             $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
             $aAp1[] = $oPersonaDl->getApellido1();
@@ -144,8 +145,7 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
             // para las fechas del postgres (texto iso)
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
             $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
-            $ProfesorAmpliacion = new ProfesorAmpliacion();
-            $ProfesorAmpliacion->setAllAttributes($aDatos);
+            $ProfesorAmpliacion = ProfesorAmpliacion::fromArray($aDatos);
             $ProfesorAmpliacionSet->add($ProfesorAmpliacion);
         }
         return $ProfesorAmpliacionSet->getTot();
@@ -250,7 +250,7 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorAmpliacion())->setAllAttributes($aDatos);
+        return ProfesorAmpliacion::fromArray($aDatos);
     }
 
     public function getNewId(): int

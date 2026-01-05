@@ -39,7 +39,7 @@ class PgPersonaSSSCRepository extends PgPersonaDlRepository implements PersonaSS
         if (empty($aDatos)) {
             return null;
         }
-        return (new PersonaSSSC())->setAllAttributes($aDatos);
+        return PersonaSSSC::fromArray($aDatos);
     }
 
     public function getNewId()

@@ -1,11 +1,12 @@
 <?php
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
-use ubis\model\entity\GestorCasaPeriodo;
-use ubis\model\entity\GestorTarifaUbi;
+use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
+use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
 use web\TiposActividades;
@@ -43,19 +44,19 @@ $oCasa = $GLOBALS['container']->get(CasaDlRepositoryInterface::class)->findById(
 $nombre_ubi = $oCasa->getNombre_ubi();
 $plazas_min = $oCasa->getPlazas_min();
 
-$GesTipoTarifa = new GestorTipoTarifa();
-$cTipoTarifas = $GesTipoTarifa->getTipoTarifas(array('sfsv' => $isfsv));
-$gesTarifaUbi = new GestorTarifaUbi();
+$TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+$cTipoTarifas = $TipoTarifaRepository->getTipoTarifas(array('sfsv' => $isfsv));
+$TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
 foreach ($cTipoTarifas as $oTipoTarifa) {
     $id_tarifa = $oTipoTarifa->getId_tarifa();
     $a_tarifas_actual[$id_tarifa]['modo'] = $oTipoTarifa->getModo();
     $a_tarifas_actual[$id_tarifa]['letra'] = $oTipoTarifa->getLetra();
 
-    $cTarifasUbi = $gesTarifaUbi->getTarifas(['id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $any_actual]);
+    $cTarifasUbi = $TarifaUbiRepository->getTarifas(['id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $any_actual]);
     $oTarifa = $cTarifasUbi[0];
     $a_tarifas_actual[$id_tarifa]['cantidad'] = $oTarifa->getCantidad();
 
-    $cTarifasUbi = $gesTarifaUbi->getTarifas(['id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $any_prev]);
+    $cTarifasUbi = $TarifaUbiRepository->getTarifas(['id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $any_prev]);
     $oTarifaPrevision = $cTarifasUbi[0];
 
     if (is_object($oTarifaPrevision)) {
@@ -78,11 +79,11 @@ foreach ($cTipoTarifas as $oTipoTarifa) {
 
 $oInicio = new DateTimeLocal("$any_prev/1/1");
 $oFin = new DateTimeLocal("$any_prev/12/31");
-$GesCasaPeriodo = new GestorCasaPeriodo();
-// dies ocupació sv (1).
-$p_dv = $GesCasaPeriodo->getCasaPeriodosDias(1, $Qid_ubi, $oInicio, $oFin);
-// dies ocupació sf (2).
-$p_df = $GesCasaPeriodo->getCasaPeriodosDias(2, $Qid_ubi, $oInicio, $oFin);
+$CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+// dias ocupación sv (1).
+$p_dv = $CasaPeriodoRepository->getCasaPeriodosDias(1, $Qid_ubi, $oInicio, $oFin);
+// dias ocupación sf (2).
+$p_df = $CasaPeriodoRepository->getCasaPeriodosDias(2, $Qid_ubi, $oInicio, $oFin);
 
 // Ingresos
 

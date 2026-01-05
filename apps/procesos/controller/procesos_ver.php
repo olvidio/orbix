@@ -1,12 +1,11 @@
 <?php
 
 use core\ViewTwig;
-use procesos\model\entity\GestorActividadFase;
-use procesos\model\entity\GestorActividadTarea;
-use procesos\model\entity\TareaProceso;
-use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\StatusId;
 use src\menus\domain\PermisoMenu;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
+use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -35,9 +34,10 @@ $aDesplFasesPrevias = [];
 $aDesplTareasPrevias = [];
 $aMensajes_requisitos = [];
 // para el form
+$ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+$TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
 if ($Qmod === 'editar') {
-
-    $oTareaProceso = new TareaProceso(array('id_item' => $Qid_item));
+    $oTareaProceso = $TareaProcesoRepository->findById($Qid_item);
     $status = $oTareaProceso->getStatus();
     $oDesplStatus = new Desplegable('status', $a_status, $status, true);
     $id_of_responsable = $oTareaProceso->getId_of_responsable();
@@ -45,21 +45,25 @@ if ($Qmod === 'editar') {
     $aFases_previas = $oTareaProceso->getJson_fases_previas(TRUE);
 
     $id_fase = $oTareaProceso->getId_fase();
-    $oGesFase = new GestorActividadFase();
-    $oDesplFase = $oGesFase->getListaActividadFases();
+    $aOpciones = $ActividadFaseRepository->getArrayActividadFases();
+    $oDesplFase = new Desplegable();
+    $oDesplFase->setBlanco(true);
+    $oDesplFase->setOpciones($aOpciones);
     $oDesplFase->setNombre('id_fase');
     $oDesplFase->setAction('fnjs_get_depende(\'#id_fase\',\'#id_tarea\')');
     $oDesplFase->setOpcion_sel($id_fase);
     $oDesplFase->setBlanco(true);
     /* id_tarea */
     $id_tarea = $oTareaProceso->getId_tarea();
-    $oGesTarea = new GestorActividadTarea();
-    $oDesplTarea = $oGesTarea->getListaActividadTareas($id_fase);
+    $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
+    $aOpciones = $ActividadTareaRepository->getArrayActividadTareas($id_fase);
+    $oDesplTarea = new Desplegable();
+    $oDesplTarea->setOpciones($aOpciones);
+    $oDesplTarea->setBlanco(true);
     $oDesplTarea->setNombre('id_tarea');
     if (!empty($id_tarea)) {
         $oDesplTarea->setOpcion_sel($id_tarea);
     }
-    $oDesplTarea->setBlanco(true);
     /* id_fase_previa */
     $dep_num = count($aFases_previas);
     foreach ($aFases_previas as $oFaseP) {
@@ -69,22 +73,27 @@ if ($Qmod === 'editar') {
         $mensaje_requisito = $oFaseP['mensaje'];
         $aMensajes_requisitos[] = $mensaje_requisito;
 
-        $oDesplFasePrevia = $oGesFase->getListaActividadFases();
+        $aOpciones = $ActividadFaseRepository->getArrayActividadFases();
+        $oDesplFasePrevia = new Desplegable();
+        $oDesplFasePrevia->setOpciones($aOpciones);
         $oDesplFasePrevia->setNombre('id_fase_previa[]');
         $oDesplFasePrevia->setAction('fnjs_get_depende(\'#id_fase_previa\',\'#id_tarea_previa\')');
         $oDesplFasePrevia->setOpcion_sel($id_fase_previa);
         $oDesplFasePrevia->setBlanco(true);
         $aDesplFasesPrevias[] = $oDesplFasePrevia;
         /* id_tarea_previa */
-        $oGesTarea = new GestorActividadTarea();
-        $oDesplTareaPrevia = $oGesTarea->getListaActividadTareas($id_fase_previa);
+        $aOpciones = $ActividadTareaRepository->getArrayActividadTareas($id_fase_previa);
+        $oDesplTareaPrevia = new Desplegable();
+        $oDesplTareaPrevia->setOpciones($aOpciones);
         $oDesplTareaPrevia->setNombre('id_tarea_previa[]');
         $oDesplTareaPrevia->setOpcion_sel($id_tarea_previa);
         $oDesplTareaPrevia->setBlanco(true);
         $aDesplTareasPrevias[] = $oDesplTareaPrevia;
     }
     if (empty($aFases_previas)) {
-        $oDesplFasePrevia = $oGesFase->getListaActividadFases();
+        $aOpciones = $ActividadFaseRepository->getArrayActividadFases();
+        $oDesplFasePrevia = new Desplegable();
+        $oDesplFasePrevia->setOpciones($aOpciones);
         $oDesplFasePrevia->setNombre('id_fase_previa[]');
         $oDesplFasePrevia->setAction('fnjs_get_depende(\'#id_fase_previa\',\'#id_tarea_previa\')');
         $oDesplFasePrevia->setBlanco(true);
@@ -99,13 +108,16 @@ if ($Qmod === 'nuevo') {
     $status = '';
     $oDesplStatus = new Desplegable('status', $a_status, $status, true);
 
-    $oGesFase = new GestorActividadFase();
-    $oDesplFase = $oGesFase->getListaActividadFases();
+    $aOpciones = $ActividadFaseRepository->getArrayActividadFases();
+    $oDesplFase = new Desplegable();
+    $oDesplFase->setOpciones($aOpciones);
     $oDesplFase->setNombre('id_fase');
     $oDesplFase->setAction('fnjs_get_depende(\'#id_fase\',\'#id_tarea\')');
     $oDesplFase->setBlanco(true);
     $oDesplTarea = new Desplegable('id_tarea', [], '', true);
-    $oDesplFasePrevia = $oGesFase->getListaActividadFases();
+    $aOpciones = $ActividadFaseRepository->getArrayActividadFases();
+    $oDesplFasePrevia = new Desplegable();
+    $oDesplFasePrevia->setOpciones($aOpciones);
     $oDesplFasePrevia->setNombre('id_fase_previa[]');
     $oDesplFasePrevia->setAction('fnjs_get_depende(\'#id_fase_previa\',\'#id_tarea_previa\')');
     $oDesplFasePrevia->setBlanco(true);

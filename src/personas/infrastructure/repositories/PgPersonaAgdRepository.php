@@ -39,7 +39,7 @@ class PgPersonaAgdRepository extends PgPersonaDlRepository implements PersonaAgd
         if (empty($aDatos)) {
             return null;
         }
-        return (new PersonaAgd())->setAllAttributes($aDatos);
+        return PersonaAgd::fromArray($aDatos);
     }
 
     public function getNewId()

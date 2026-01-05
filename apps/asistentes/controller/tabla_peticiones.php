@@ -1,15 +1,13 @@
 <?php
 
-use actividadplazas\model\entity\GestorActividadPlazas;
-use actividadplazas\model\entity\GestorPlazaPeticion;
+use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
-use asistentes\model\entity\Asistente;
-
 use core\ConfigGlobal;
 use core\ViewTwig;
-use personas\model\entity\PersonaDl;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -48,7 +46,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
@@ -78,6 +76,7 @@ $a_botones = [];
 $service = $GLOBALS['container']->get(AsistenteActividadService::class);
 $cAsistentes = $service->getAsistentesDeActividad($id_activ_old);
 
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 $oActividad = $ActividadAllRepository->findById($id_activ_old);
 $id_tipo_activ = $oActividad->getId_tipo_activ();
 
@@ -87,22 +86,22 @@ $sactividad = $oTipoActividad->getActividadText();
 $mi_dele = ConfigGlobal::mi_delef();
 $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
-$oDelegacion = $cDelegaciones[0] ?? null;
-$id_dl = $oDelegacion?->getIdDlVo()->value() ?? 0;
+$oDelegacion = $cDelegaciones[0];
+$id_dl = $oDelegacion->getIdDlVo()->value();
 
 $a_valores = [];
 $i = 0;
-$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$PlazaPeticionRepository = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
+$ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
+$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 foreach ($cAsistentes as $oAsistente) {
     $i++;
     $id_nom = $oAsistente->getId_nom();
     // buscar otras opciones de ca
-    $gesPlazasPeticion = new GestorPlazaPeticion();
     $aWhere = ['id_nom' => $id_nom, 'tipo' => $sactividad, '_ordre' => 'orden'];
     $aOperador ['tipo'] = '~';
-    $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion($aWhere, $aOperador);
+    $cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion($aWhere, $aOperador);
     $posibles_activ = '';
-    $gesActividadPlazas = new GestorActividadPlazas();
     foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
         $id_activ = $oPlazaPeticion->getId_activ();
         $nom_activ_i = '';
@@ -115,10 +114,10 @@ foreach ($cAsistentes as $oAsistente) {
             $txt_plazas = '';
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $concedidas = 0;
-                $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
+                $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
                 foreach ($cActividadPlazas as $oActividadPlazas) {
                     $dl_tabla = $oActividadPlazas->getDl_tabla();
-                    if ($dl_org == $dl_tabla) {
+                    if ($dl_org === $dl_tabla) {
                         $concedidas = $oActividadPlazas->getPlazas();
                     }
                 }
@@ -155,7 +154,7 @@ foreach ($cAsistentes as $oAsistente) {
             $posibles_activ .= $nom_activ_i;
         }
     }
-    $oPersona = new PersonaDl($id_nom);
+    $oPersona = $PersonaDlRepository->findById($id_nom);
     $nom_ap = $oPersona->getApellidosNombre();
 
     $a_valores[$i][1] = $nom_ap;

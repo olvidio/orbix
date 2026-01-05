@@ -4,11 +4,10 @@
  *
  */
 
-use actividades\model\entity\ActividadDl;
-use actividadplazas\legacy\ActividadPlazasDl;
 use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
-use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
+use src\actividadplazas\domain\ResumenPlazas;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -36,20 +35,19 @@ switch ($que) {
 
         $mi_dele = ConfigGlobal::mi_delef();
         //Para las plazas totales
-        if ($dl === 'tot' && $mi_dele == $dl_org) {
+        if ($dl === 'tot' && $mi_dele === $dl_org) {
             $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
             $oActividadDl = $ActividadDlRepository->findById($id_activ);
-            $oActividadDl->DBCarregar();
             $oActividadDl->setPlazas($plazas);
-            if ($oActividadDl->DBGuardar() === false) {
+            if ($ActividadDlRepository->Guardar($oActividadDl) === false) {
                 echo _("hay un error, no se ha guardado");
-                echo "\n" . $oActividadDl->getErrorTxt();
+                echo "\n" . $ActividadDlRepository->getErrorTxt();
             }
         } else { //para el resto
             // $dl puede ser dlx-c para las concedidas, o dlx-p para las pedidas.
             $dl_sigla = substr($dl, 0, -2);
-            // OJO, para sf todavia hay que quitar la f:
-            if (ConfigGlobal::mi_sfsv() == 2) {
+            // OJO, para sf todavía hay que quitar la f:
+            if (ConfigGlobal::mi_sfsv() === 2) {
                 $dl_sigla = substr($dl_sigla, 0, -1);
             }
             // buscar el id de la dl
@@ -60,14 +58,15 @@ switch ($que) {
                 $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
             }
             //Si es la dl_org, son plazas concedidas, sino pedidas.
-            $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));
-            $oActividadPlazasDl->DBCarregar();
+            $ActividadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
+            $cActividadPlazasDl = $ActividadPlazasDlRepository->getActividadesPlazas(['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele]);
+            $oActividadPlazasDl = $cActividadPlazasDl[0];
             $oActividadPlazasDl->setPlazas($plazas);
 
             //print_r($oActividadPlazasDl);
-            if ($oActividadPlazasDl->DBGuardar() === false) {
+            if ($ActividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
                 echo _("hay un error, no se ha guardado");
-                echo "\n" . $oActividadPlazasDl->getErrorTxt();
+                echo "\n" . $ActividadPlazasDlRepository->getErrorTxt();
             }
             //$oPosicion = new web\Posicion();
             //echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);
@@ -93,7 +92,7 @@ switch ($que) {
         }
         // valor por defecto
         $propietario = ConfigGlobal::mi_delef() . ">" . $dl_de_paso;
-        $gesActividadPlazas = new GestorResumenPlazas();
+        $gesActividadPlazas = new ResumenPlazas();
         $gesActividadPlazas->setId_activ($id_activ);
         $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
         $oDesplPosiblesPropietarios->setNombre('propietario');

@@ -26,7 +26,7 @@ $Qtipo_ubi = (string)filter_input(INPUT_POST, 'tipo_ubi');
 
 $Qdl = (string)filter_input(INPUT_POST, 'dl');
 $Qregion = (string)filter_input(INPUT_POST, 'region');
-$Qstatus = (string)filter_input(INPUT_POST, 'status'); // checkbox, puede ser tipo 'on' o 'off'
+$Qactive = (string)filter_input(INPUT_POST, 'active'); // checkbox, puede ser tipo 'on' o 'off'
 $Qnombre_ubi = (string)filter_input(INPUT_POST, 'nombre_ubi');
 $Qsv = (string)filter_input(INPUT_POST, 'sv'); // checkbox, puede ser tipo 'on' o 'off'
 $Qsf = (string)filter_input(INPUT_POST, 'sf'); // checkbox, puede ser tipo 'on' o 'off'
@@ -50,7 +50,7 @@ if ($Qobj_pau === 'CasaDl' || $Qobj_pau === 'CasaEx') {
         $oUbi = new Casa();
         $id = $Repository->getNewId();
         $id_ubi = $Repository->getNewIdUbi($id);
-        $oUbi->setIdAuto($id);
+        $oUbi->setId_auto($id);
         $oUbi->setId_ubi($id_ubi);
     }
     $oUbi->setTipo_ubi($Qtipo_ubi);
@@ -58,8 +58,8 @@ if ($Qobj_pau === 'CasaDl' || $Qobj_pau === 'CasaEx') {
     $oUbi->setDl($Qdl);
     // pais
     $oUbi->setRegion($Qregion);
-    $oUbi->setStatus($Qstatus);
-    //$oUbi->setF_status($Qf_status);
+    $oUbi->setActive($Qactive);
+    //$oUbi->setF_active($Qf_active);
     $oUbi->setSv($Qsv);
     $oUbi->setSf($Qsf);
     $oUbi->setTipo_casa($Qtipo_casa);
@@ -99,8 +99,8 @@ if ($Qobj_pau === 'CentroDl' || $Qobj_pau === 'CentroEx') {
     $oUbi->setDl($Qdl);
     // pais
     $oUbi->setRegion($Qregion);
-    $oUbi->setStatus($Qstatus);
-    //$oUbi->setF_status($Qf_status);
+    $oUbi->setActive($Qactive);
+    //$oUbi->setF_active($Qf_active);
     $oUbi->setSv($Qsv);
     $oUbi->setSf($Qsf);
     $oUbi->setTipo_ctr($Qtipo_ctr);

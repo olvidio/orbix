@@ -1,6 +1,5 @@
 <?php
 
-use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
@@ -69,7 +68,7 @@ switch ($Qque) {
             $a_valores[$i][1] = $nom_tipo;
             $a_valores[$i][2] = $nombre_tarifa;
             // permiso
-            if ($miSfsv == $isfsv && $_SESSION['oPerm']->have_perm_oficina('adl')) {
+            if ($miSfsv === $isfsv && $_SESSION['oPerm']->have_perm_oficina('adl')) {
                 $script = "fnjs_modificar($id_item)";
                 $a_valores[$i][3] = array('script' => $script, 'valor' => _("modificar"));
             }

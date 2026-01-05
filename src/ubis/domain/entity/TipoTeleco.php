@@ -4,201 +4,121 @@ namespace src\ubis\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 use src\ubis\domain\value_objects\{TipoTelecoCode, TipoTelecoName};
 
-/**
- * Clase que implementa la entidad xd_tipo_teleco
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 17/11/2025
- */
 class TipoTeleco
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Código de TipoTeleco
-     */
-    private ?TipoTelecoCode $tipoTeleco = null;
-    /**
-     * Nombre de TipoTeleco
-     */
-    private ?TipoTelecoName $nombreTeleco = null;
-    /**
-     * Ubi de TipoTeleco
-     *
-     * @var bool|null
-     */
-    private bool|null $bubi = null;
-    /**
-     * Persona de TipoTeleco
-     *
-     * @var bool|null
-     */
-    private bool|null $bpersona = null;
-    /**
-     * Id de TipoTeleco
-     *
-     * @var int
-     */
-    private int $iid;
+
+    private ?TipoTelecoCode $tipo_teleco = null;
+
+    private ?TipoTelecoName $nombre_teleco = null;
+
+    private bool|null $ubi = null;
+
+    private bool|null $persona = null;
+
+    private int $id;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return TipoTeleco
-     */
-    public function setAllAttributes(array $aDatos): TipoTeleco
-    {
-        if (array_key_exists('tipo_teleco', $aDatos)) {
-            $valor = $aDatos['tipo_teleco'] ?? '';
-            $this->setTipoTelecoVo(isset($valor) && $valor !== '' ? new TipoTelecoCode((string)$valor) : null);
-        }
-        if (array_key_exists('nombre_teleco', $aDatos)) {
-            $this->setNombreTelecoVo(TipoTelecoName::fromNullableString($aDatos['nombre_teleco'] ?? null));
-        }
-        if (array_key_exists('ubi', $aDatos)) {
-            $this->setUbi(is_true($aDatos['ubi']));
-        }
-        if (array_key_exists('persona', $aDatos)) {
-            $this->setPersona(is_true($aDatos['persona']));
-        }
-        if (array_key_exists('id', $aDatos)) {
-            $this->setId((int)$aDatos['id']);
-        }
-        return $this;
-    }
 
     // -------- VO API --------
     public function getTipoTelecoVo(): ?TipoTelecoCode
     {
-        return $this->tipoTeleco;
+        return $this->tipo_teleco;
     }
 
     public function setTipoTelecoVo(?TipoTelecoCode $codigo = null): void
     {
-        $this->tipoTeleco = $codigo;
+        $this->tipo_teleco = $codigo;
     }
 
     public function getNombreTelecoVo(): ?TipoTelecoName
     {
-        return $this->nombreTeleco;
+        return $this->nombre_teleco;
     }
 
     public function setNombreTelecoVo(?TipoTelecoName $nombre = null): void
     {
-        $this->nombreTeleco = $nombre;
+        $this->nombre_teleco = $nombre;
     }
 
-    /**
-     *
-     * @return string $stipo_teleco
-     */
+
     /**
      * @deprecated Usar `getTipoTelecoVo(): ?TipoTelecoCode` en su lugar.
      */
     public function getTipo_teleco(): string
     {
-        return $this->tipoTeleco?->value();
+        return $this->tipo_teleco?->value();
     }
 
-    /**
-     *
-     * @param string $stipo_teleco
-     */
+
     /**
      * @deprecated Usar `setTipoTelecoVo(?TipoTelecoCode $codigo): void` en su lugar.
      */
-    public function setTipo_teleco(string $stipo_teleco): void
+    public function setTipo_teleco(string $tipo_teleco): void
     {
-        $stipo_teleco = trim($stipo_teleco);
-        $this->tipoTeleco = $stipo_teleco !== '' ? new TipoTelecoCode($stipo_teleco) : null;
+        $tipo_teleco = trim($tipo_teleco);
+        $this->tipo_teleco = $tipo_teleco !== '' ? new TipoTelecoCode($tipo_teleco) : null;
     }
 
-    /**
-     *
-     * @return string|null $snombre_teleco
-     */
+
     /**
      * @deprecated Usar `getNombreTelecoVo(): ?TipoTelecoName` en su lugar.
      */
     public function getNombre_teleco(): ?string
     {
-        return $this->nombreTeleco?->value();
+        return $this->nombre_teleco?->value();
     }
 
-    /**
-     *
-     * @param string|null $snombre_teleco
-     */
+
     /**
      * @deprecated Usar `setNombreTelecoVo(?TipoTelecoName $nombre): void` en su lugar.
      */
-    public function setNombre_teleco(?string $snombre_teleco = null): void
+    public function setNombre_teleco(?string $nombre_teleco = null): void
     {
-        $this->nombreTeleco = TipoTelecoName::fromNullableString($snombre_teleco);
+        $this->nombre_teleco = TipoTelecoName::fromNullableString($nombre_teleco);
     }
 
-    /**
-     *
-     * @return bool|null $bubi
-     */
+
     public function isUbi(): ?bool
     {
-        return $this->bubi;
+        return $this->ubi;
     }
 
-    /**
-     *
-     * @param bool|null $bubi
-     */
-    public function setUbi(?bool $bubi = null): void
+
+    public function setUbi(?bool $ubi = null): void
     {
-        $this->bubi = $bubi;
+        $this->ubi = $ubi;
     }
 
-    /**
-     *
-     * @return bool|null $bpersona
-     */
+
     public function isPersona(): ?bool
     {
-        return $this->bpersona;
+        return $this->persona;
     }
 
-    /**
-     *
-     * @param bool|null $bpersona
-     */
-    public function setPersona(?bool $bpersona = null): void
+
+    public function setPersona(?bool $persona = null): void
     {
-        $this->bpersona = $bpersona;
+        $this->persona = $persona;
     }
 
-    /**
-     *
-     * @return int $iid
-     */
+
     public function getId(): int
     {
-        return $this->iid;
+        return $this->id;
     }
 
-    /**
-     *
-     * @param int $iid
-     */
-    public function setId(int $iid): void
+
+    public function setId(int $id): void
     {
-        $this->iid = $iid;
+        $this->id = $id;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -207,7 +127,7 @@ class TipoTeleco
         return 'id';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oAsignaturaSet = new Set();
 
@@ -218,7 +138,7 @@ class TipoTeleco
         return $oAsignaturaSet->getTot();
     }
 
-    function getDatosTipo_teleco()
+    private function getDatosTipo_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo_teleco');
@@ -230,7 +150,7 @@ class TipoTeleco
         return $oDatosCampo;
     }
 
-    function getDatosNombre_teleco()
+    private function getDatosNombre_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nombre_teleco');
@@ -242,7 +162,7 @@ class TipoTeleco
         return $oDatosCampo;
     }
 
-    function getDatosUbi()
+    private function getDatosUbi(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('ubi');
@@ -253,7 +173,7 @@ class TipoTeleco
         return $oDatosCampo;
     }
 
-    function getDatosPersona()
+    private function getDatosPersona(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('persona');

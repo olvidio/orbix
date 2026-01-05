@@ -93,7 +93,7 @@ if (!empty($Qnuevo)) {
     $oUbi->setDl($dl);
     $oUbi->setRegion($region);
     $oUbi->setTipo_ubi($tipo_ubi);
-    $oUbi->setStatus(true);
+    $oUbi->setActive(true);
 
     if (strstr($tipo_ubi, 'cdc')) {
         if (ConfigGlobal::mi_sfsv() === 1) {
@@ -116,7 +116,7 @@ if (!empty($Qnuevo)) {
     $id_ubi = $oUbi->getId_ubi();
     $region = $oUbi->getRegion();
     $nombre_ubi = $oUbi->getNombre_ubi();
-    $status = $oUbi->isStatus();
+    $status = $oUbi->isActive();
     $id_direccion = '';
 
     // para saber si es de la dl o no, diferente para ctr o cdc.

@@ -2,8 +2,9 @@
 
 namespace notas\model;
 
-use notas\model\entity\GestorPersonaNotaDB;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\entity\PersonaNotaDB;
 
 class getDatosActa
 {
@@ -19,10 +20,10 @@ class getDatosActa
         $aWhere['id_situacion'] = implode(',', $aIdSuperadas);
         $aOperador['id_situacion'] = 'IN';
         $aWhere['acta'] = $acta;
-        $aWhere['tipo_acta'] = PersonaNota::FORMATO_ACTA;
+        $aWhere['tipo_acta'] = PersonaNotaDB::FORMATO_ACTA;
 
-        $GesPersonaNotas = new GestorPersonaNotaDB();
-        return $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        return $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
     }
 
 }

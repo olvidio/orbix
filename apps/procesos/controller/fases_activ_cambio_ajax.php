@@ -1,14 +1,15 @@
 <?php
 
 use core\ConfigGlobal;
-use procesos\model\entity\ActividadProcesoTarea;
-use procesos\model\entity\GestorActividadFase;
-use procesos\model\entity\GestorActividadProcesoTarea;
-use procesos\model\entity\GestorTareaProceso;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\procesos\application\ProcesoActividadService;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use web\Desplegable;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
@@ -71,7 +72,7 @@ switch ($Qque) {
         if ($Qid_tipo_activ !== '......') {
             $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
             $aOperador['id_tipo_activ'] = '~';
-            $isfsv = (integer)substr($Qid_tipo_activ, 0, 1);
+            $isfsv = (integer)$Qid_tipo_activ[0];
         }
         // dl_org
         if (is_true($Qdl_propia)) {
@@ -132,6 +133,9 @@ switch ($Qque) {
         $num_activ = count($cActividades);
         $num_ok = 0;
         $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $ProcesoActividadService = $GLOBALS['container']->get(ProcesoActividadService::class);
         foreach ($cActividades as $oActividad) {
             //print_r($oActividad);
             $id_activ = $oActividad->getId_activ();
@@ -145,14 +149,12 @@ switch ($Qque) {
                 'id_tipo_proceso' => $id_tipo_proceso,
                 'id_fase' => $Qid_fase_nueva,
             ];
-            $GesTareaProcesos = new GestorTareaProceso();
-            $cTareasProceso = $GesTareaProcesos->getTareasProceso($aWhereTP);
+            $cTareasProceso = $TareaProcesoRepository->getTareasProceso($aWhereTP);
             $aFases_previas = $cTareasProceso[0]->getJson_fases_previas(TRUE);
 
             // Busco el proceso de esta actividad. Las fases completadas.
-            $GesActivProceso = new GestorActividadProcesoTarea();
-            $aFases_estado = $GesActivProceso->getListaFaseEstado($id_activ);
-            $aFases_completadas = $GesActivProceso->getFasesCompletadas($id_activ);
+            $aFases_estado = $ActividadProcesoTareaRepository->getListaFaseEstado($id_activ);
+            $aFases_completadas = $ActividadProcesoTareaRepository->getFasesCompletadas($id_activ);
 
             $mensaje = '';
             if ($Qaccion === 'desmarcar') {
@@ -187,9 +189,8 @@ switch ($Qque) {
                                 } else {
                                     // 4.- Falta por lo menos una fase requerida
                                     $ok_fases_previas = FALSE;
-                                    $oActividadProcesoTarea = new ActividadProcesoTarea();
                                     $fase_tarea_previa = $id_fase_previa . '#0';
-                                    $mensaje .= empty($mensaje_requisito) ? $oActividadProcesoTarea->getMensaje($fase_tarea_previa, 'marcar') : $mensaje_requisito;
+                                    $mensaje .= empty($mensaje_requisito) ? $ProcesoActividadService->getMensaje($fase_tarea_previa, 'marcar') : $mensaje_requisito;
                                 }
                             }
                         } else {
@@ -248,11 +249,12 @@ switch ($Qque) {
         $Qaccion = (string)filter_input(INPUT_POST, 'accion');
 
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
         foreach ($a_sel as $id_activ) {
             $id_activ = strtok($id_activ, "#");
-            $gesActividadProcesoTareas = new GestorActividadProcesoTarea();
             // selecciono todas las tareas de esta fase.
-            $cListaSel = $gesActividadProcesoTareas->getActividadProcesoTareas(array('id_activ' => $id_activ, 'id_fase' => $Qid_fase_nueva));
+            $cListaSel = $ActividadProcesoTareaRepository->getActividadProcesoTareas(array('id_activ' => $id_activ, 'id_fase' => $Qid_fase_nueva));
             if (empty($cListaSel)) {
                 // No se encuentra esta fase para esta actividad
                 $oActividad = $ActividadAllRepository->findById($id_activ);
@@ -268,8 +270,7 @@ switch ($Qque) {
             $id_fase = $oActividadProcesoTarea->getId_fase();
             $id_tarea = $oActividadProcesoTarea->getId_tarea();
             //buscar of responsable
-            $GesTareaProcesos = new GestorTareaProceso();
-            $cTareasProceso = $GesTareaProcesos->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso,
+            $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso,
                 'id_fase' => $id_fase,
                 'id_tarea' => $id_tarea
             ]);
@@ -287,9 +288,10 @@ switch ($Qque) {
                 } else {
                     $oActividadProcesoTarea->setCompletado('t');
                 }
-                if ($oActividadProcesoTarea->DBGuardar() === false) {
+                $ProcesoActividadService = $GLOBALS['container']->get(ProcesoActividadService::class);
+                if ($ProcesoActividadService->guardar($oActividadProcesoTarea) === false) {
                     echo _("hay un error, no se ha guardado");
-                    echo "\n" . $oActividadProcesoTarea->getErrorTxt();
+                    echo "\n" . $ActividadProcesoTareaRepository->getErrorTxt();
                 }
             } else {
                 echo _("No tiene permiso para completar la fase, no se ha guardado");
@@ -302,8 +304,11 @@ switch ($Qque) {
         $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
         $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);
 
-        $oGesFases = new GestorActividadFase();
-        $oDesplFasesIni = $oGesFases->getListaActividadFases($aTiposDeProcesos, true);
+        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+        $aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos, true);
+        $oDesplFasesIni = new Desplegable();
+        $oDesplFasesIni->setBlanco(true);
+        $oDesplFasesIni->setOpciones($aOpciones);
         $oDesplFasesIni->setNombre('id_fase_nueva');
         $oDesplFasesIni->setOpcion_sel($Qid_fase_sel);
         $oDesplFasesIni->setAction('fnjs_lista()');

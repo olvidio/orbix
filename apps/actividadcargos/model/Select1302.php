@@ -2,8 +2,6 @@
 
 namespace actividadcargos\model;
 
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;

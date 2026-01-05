@@ -35,30 +35,30 @@ function ordena($id_activ, $id_ubi, $orden): string
             switch ($orden) {
                 case "mas":
                     if ($i >= 1) {
-                        $anterior_num_orden = $cCentrosEncargados[($i - 1)]->getNum_orden();
-                        $cCentrosEncargados[($i - 1)]->DBCarregar();
-                        $cCentrosEncargados[($i - 1)]->setNum_orden($num_orden);
-                        if ($cCentrosEncargados[($i - 1)]->DBGuardar() === false) {
+                        $oCentroEncargadoAnterior = $cCentrosEncargados[($i - 1)];
+                        $anterior_num_orden = $oCentroEncargadoAnterior->getNum_orden();
+                        $oCentroEncargadoAnterior->setNum_orden($num_orden);
+                        if ($CentroEncargadoRepository->Guardar($oCentroEncargadoAnterior) === false) {
                             $err_txt .= _("Error al ordenar (1)");
                         }
-                        $cCentrosEncargados[($i)]->DBCarregar();
-                        $cCentrosEncargados[($i)]->setNum_orden($anterior_num_orden);
-                        if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
+                        $oCentroEncargadoActual = $cCentrosEncargados[($i)];
+                        $oCentroEncargadoActual->setNum_orden($anterior_num_orden);
+                        if ($CentroEncargadoRepository->Guardar($oCentroEncargadoActual) === false) {
                             $err_txt .= _("Error al ordenar (2)");
                         }
                     }
                     break;
                 case "menos":
                     if ($i < ($i_max - 1)) {
-                        $post_num_orden = $cCentrosEncargados[($i + 1)]->getNum_orden();
-                        $cCentrosEncargados[($i + 1)]->DBCarregar();
-                        $cCentrosEncargados[($i + 1)]->setNum_orden($num_orden);
-                        if ($cCentrosEncargados[($i + 1)]->DBGuardar() === false) {
+                        $oCentroEncargadoPosterior = $cCentrosEncargados[($i + 1)];
+                        $post_num_orden = $oCentroEncargadoPosterior->getNum_orden();
+                        $oCentroEncargadoPosterior->setNum_orden($num_orden);
+                        if ($CentroEncargadoRepository->Guardar($oCentroEncargadoPosterior) === false) {
                             $err_txt .= _("Error al ordenar (3)");
                         }
-                        $cCentrosEncargados[($i)]->DBCarregar();
-                        $cCentrosEncargados[($i)]->setNum_orden($post_num_orden);
-                        if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
+                        $oCentroEncargadoActual = $cCentrosEncargados[($i)];
+                        $oCentroEncargadoActual->setNum_orden($post_num_orden);
+                        if ($CentroEncargadoRepository->Guardar($oCentroEncargadoActual) === false) {
                             $err_txt .= _("Error al ordenar (4)");
                         }
                     }
@@ -132,7 +132,7 @@ switch ($Qque) {
         $oDateIniAct = DateTimeLocal::createFromLocal($Qf_ini_act);
         $f_ini_act_iso = $oDateIniAct->getIso();
 
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['tipo_ctr'] = '^s[^s]*';
         $aWhere['_ordre'] = 'nombre_ubi';
         $aOperador['tipo_ctr'] = '~';
@@ -157,7 +157,7 @@ switch ($Qque) {
         break;
     case "nuevo_sr":
         $aWhere['_ordre'] = 'nombre_ubi';
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['tipo_labor'] = '512'; //sg -> 512
         $aOperador['tipo_labor'] = '&';
         $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
@@ -173,7 +173,7 @@ switch ($Qque) {
         break;
     case "nuevo_nagd":
         $aWhere['_ordre'] = 'nombre_ubi';
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['tipo_ctr'] = '^[na]';
         $aOperador['tipo_ctr'] = '~';
         $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
@@ -189,7 +189,7 @@ switch ($Qque) {
         break;
     case "nuevo_sssc":
         $aWhere['_ordre'] = 'nombre_ubi';
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['tipo_ctr'] = '^sss';
         $aOperador['tipo_ctr'] = '~';
         $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
@@ -205,7 +205,7 @@ switch ($Qque) {
         break;
     case "nuevo_sfsg":
         $aWhere['_ordre'] = 'nombre_ubi';
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['tipo_labor'] = '64'; //sg -> 64
         $aOperador['tipo_labor'] = '&';
         $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
@@ -221,7 +221,7 @@ switch ($Qque) {
         break;
     case "nuevo_sfsr":
         $aWhere['_ordre'] = 'nombre_ubi';
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['tipo_labor'] = '512'; //sg -> 512
         $aOperador['tipo_labor'] = '&';
         $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
@@ -237,7 +237,7 @@ switch ($Qque) {
         break;
     case "nuevo_sfnagd":
         $aWhere['_ordre'] = 'nombre_ubi';
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['tipo_ctr'] = '^[na]';
         $aOperador['tipo_ctr'] = '~';
         $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);

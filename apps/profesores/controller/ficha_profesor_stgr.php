@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use dossiers\model\PermDossier;
+use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
@@ -17,12 +18,11 @@ use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
 use src\profesores\domain\entity\ProfesorCongreso;
-use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use src\profesores\domain\InfoProfesorAmpliacion;
 use src\profesores\domain\InfoProfesorCongreso;
 use src\profesores\domain\InfoProfesorDirector;
 use src\profesores\domain\InfoProfesorDocenciaStgr;
-use src\profesores\domain\InfoProfesorJuaramento;
+use src\profesores\domain\InfoProfesorJuramento;
 use src\profesores\domain\InfoProfesorLatin;
 use src\profesores\domain\InfoProfesorPublicacion;
 use src\profesores\domain\InfoProfesorStgr;
@@ -174,7 +174,7 @@ if ($oPersona === null) {
     exit($msg_err);
 }
 $nom_ap = $oPersona->getNombreApellidosCrSin();
-$sacd = $oPersona->getSacd();
+$sacd = $oPersona->isSacd();
 $id_ctr = $oPersona->getid_ctr();
 
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
@@ -235,7 +235,7 @@ foreach ($cProfesores as $oProfesor) {
 if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
     // director departamento //////////////////////////////////
     $ProfesorDirectorRepository = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
-    $cDirectores = $ProfesorDirectorRepository->getProfesorDirectores($aWhere, $aOperador);
+    $cDirectores = $ProfesorDirectorRepository->getProfesoresDirectores($aWhere, $aOperador);
     $a_director = [];
     foreach ($cDirectores as $oProfesorDirector) {
         $id_departamento = $oProfesorDirector->getId_departamento();
@@ -261,7 +261,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
         $f_juramento = '';
     }
 
-    $a_cosas['clase_info'] = InfoProfesorJuaramento::class;
+    $a_cosas['clase_info'] = InfoProfesorJuramento::class;
     $go_cosas['juramento'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 
     //publicaciones  ///////////////////////////////////
@@ -360,7 +360,7 @@ $go_cosas['congresos'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/c
 
 // Actividad docente  ////////////////////////////////////
 $ProfesorDocenciaStgr = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
-$a_tipos_docencia = ProfesorDocenciaStgr::getTiposActividad();
+$a_tipos_docencia = TipoActividadAsignatura::getTiposActividad();
 $cDocencias = $ProfesorDocenciaStgr->getProfesorDocenciasStgr(array('id_nom' => $id_nom, '_ordre' => 'curso_inicio,id_asignatura'));
 $a_cosas['clase_info'] = InfoProfesorDocenciaStgr::class;
 $go_cosas['docencia'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));

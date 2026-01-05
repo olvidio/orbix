@@ -3,7 +3,7 @@
 namespace shared\domain\repositories;
 
 use PDO;
-use shared\domain\entity\ColaMail;
+use src\shared\domain\entity\ColaMail;
 
 
 /**

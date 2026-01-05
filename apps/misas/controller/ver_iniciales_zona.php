@@ -3,8 +3,8 @@
 use core\ViewTwig;
 use misas\domain\repositories\InicialesSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\Hash;
-use zonassacd\legacy\GestorZonaSacd;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -25,7 +25,7 @@ $columns_cuadricula = [
 
 $data_cuadricula = [];
 
-$ZonaSacdRepository = $GLOBALS['container']->get(GestorZonaSacd::class);
+$ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
 $a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($Qid_zona);
 
 $a_datos_sacd = [];

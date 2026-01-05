@@ -110,8 +110,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoCentro = new TipoCentro();
-            $TipoCentro->setAllAttributes($aDatos);
+            $TipoCentro = TipoCentro::fromArray($aDatos);
             $TipoCentroSet->add($TipoCentro);
         }
         return $TipoCentroSet->getTot();
@@ -196,7 +195,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         if (empty($aDatos)) {
             return null;
         }
-        return (new TipoCentro())->setAllAttributes($aDatos);
+        return TipoCentro::fromArray($aDatos);
     }
 
 }

@@ -1,9 +1,9 @@
 <?php
 
-use core\ConfigGlobal;
 use core\ViewTwig;
+use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
+use web\Desplegable;
 use web\Hash;
-use procesos\model\entity\GestorProcesoTipo;
 
 /**
  * Esta página muestra el cuadro para seleccionar el proceso
@@ -31,7 +31,7 @@ $oPosicion->recordar($Qrefresh);
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
@@ -41,8 +41,11 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$oLista = new GestorProcesoTipo();
-$oDespl = $oLista->getListaProcesoTipos();
+$ProcesoTipoRepository = $GLOBALS['container']->get(ProcesoTipoRepositoryInterface::class);
+$aOpciones = $ProcesoTipoRepository->getArrayProcesoTipos();
+$oDespl = new Desplegable();
+$oDespl->setOpciones($aOpciones);
+$oDespl->setBlanco(true);
 
 $url_ajax = "apps/procesos/controller/procesos_ajax.php";
 $url_ver = "apps/procesos/controller/procesos_ver.php";

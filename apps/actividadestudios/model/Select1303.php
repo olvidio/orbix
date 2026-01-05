@@ -5,8 +5,8 @@ namespace actividadestudios\model;
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\PersonaDl;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -31,33 +31,33 @@ use function core\is_true;
 class Select1303
 {
     /* @var $mwg_err string */
-    private $msg_err;
+    private string $msg_err;
     /* @var $a_valores array */
-    private $a_valores;
+    private array $a_valores;
     /**
      * Para pasar a la vista, aparece como alerta antes de ejecutarse
      * @var string $txt_eliminar
      */
-    private $txt_eliminar;
+    private string $txt_eliminar;
     /* @var $bloque string  necesario para el script */
-    private $bloque;
+    private string $bloque;
 
     // ---------- Variables requeridas
     /* @var $queSel integer */
-    private $queSel;
+    private int $queSel;
     /* @var $id_dossier integer */
-    private $id_dossier;
+    private int $id_dossier;
     /* @var $pau string */
-    private $pau;
+    private string $pau;
     /* @var $obj_pau string */
-    private $obj_pau;
+    private string $obj_pau;
     /* @var $id_pau integer */
-    private $id_pau;
+    private int $id_pau;
     /**
      * 3: para todo, 2, 1:solo lectura
      * @var integer $permiso
      */
-    private $permiso;
+    private int $permiso;
 
     // ------ Variables para mantener la selección de la grid al volver atras
     private $Qid_sel;
@@ -110,6 +110,9 @@ class Select1303
 
         // el plan de estudios solo puede modificarlo la dl del alumno (a no ser que sea de paso)
         $oAlumno = Persona::findPersonaEnGlobal($this->id_pau);
+        if ($oAlumno === null) {
+            throw new \Exception(sprintf(_("No se ha encontrado alumno con id_nom: %s"), $this->id_pau));
+        }
         $dl_alumno = $oAlumno->getDl();
         $classname = str_replace("personas\\model\\entity\\", '', get_class($oAlumno));
         $this->permiso = 3;
@@ -120,8 +123,8 @@ class Select1303
         }
 
 
-        $GesMatriculas = new entity\GestorMatricula();
-        $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $this->id_pau, 'id_activ' => $this->id_activ, '_ordre' => 'id_nivel'));
+        $MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
+        $cMatriculas = $MatriculaRepository->getMatriculas(array('id_nom' => $this->id_pau, 'id_activ' => $this->id_activ, '_ordre' => 'id_nivel'));
 
         $form = "seleccionados" . $ca_num;
         if (is_true($est_ok)) {
@@ -139,7 +142,7 @@ class Select1303
         foreach ($cMatriculas as $oMatricula) {
             $i++;
             $id_asignatura = $oMatricula->getId_asignatura();
-            $preceptor = $oMatricula->getPreceptor();
+            $preceptor = $oMatricula->isPreceptor();
             $id_preceptor = $oMatricula->getId_preceptor();
             if (is_true($preceptor)) {
                 if (!empty($id_preceptor)) {

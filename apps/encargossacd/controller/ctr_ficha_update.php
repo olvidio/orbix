@@ -287,7 +287,7 @@ switch ($Qmod) {
                         }
                     }
                     $oEncargoSacd->setModo($modo);
-                    if ($oEncargoSacd->DBGuardar() === false) {
+                    if ($EncargoSacdRepository->Guardar($oEncargoSacd) === false) {
                         echo _("hay un error, no se ha guardado");
                         echo "\n" . $oEncargoSacd->getErrorTxt();
                     }
@@ -343,7 +343,6 @@ switch ($Qmod) {
         } else { // eliminar suplente
             $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd(['id_enc' => $Qid_enc, 'modo' => 4]);
             foreach ($cEncargosSacd as $oEncargoSacd) { // aunque sólo debería haber una.
-                $oEncargoSacd->DBCarregar();
                 $oEncargoSacd->setF_fin($oF_fin);
                 if ($EncargoSacdRepository->Guardar($oEncargoSacd) === false) {
                     echo _("hay un error, no se ha guardado");

@@ -1,13 +1,11 @@
 <?php
 
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividadestudios\model\entity\GestorActividadAsignaturaDl;
-use actividadestudios\model\entity\GestorMatricula;
-
 use core\ViewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -70,8 +68,8 @@ $aPreceptores = [];
 $aProfesores = [];
 $a = 0;
 $tipo_old = 0;
-$GesActividadAsignaturas = new GestorActividadAsignaturaDl();
-$cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ, '_ordre' => 'tipo'));
+$ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
+$cActividadAsignaturas = $ActividadAsignaturaDlRepository->getActividadAsignaturas(array('id_activ' => $id_activ, '_ordre' => 'tipo'));
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $a++;
@@ -97,7 +95,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
         $nom_profesor = '?';
     }
 
-    if ($tipo == "p") {
+    if ($tipo === "p") {
         $aPreceptores[$a]['nombre_corto'] = $nombre_corto;
         $aPreceptores[$a]['creditos'] = $creditos;
         $aPreceptores[$a]['nom_profesor'] = $nom_profesor;
@@ -130,8 +128,8 @@ foreach ($cAsistentes as $oAsistente) {
     $ctr = $oPersona->getCentro_o_dl();
     $stgr = $oPersona->getNivel_stgr();
     // busco las asignaturas de esta persona
-    $GesMatriculas = new GestorMatricula();
-    $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ));
+    $MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
+    $cMatriculas = $MatriculaRepository->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ));
     // si no tiene asignaturas, miro si está de repaso
     if (is_array($cMatriculas) && count($cMatriculas) == 0) {
         switch ($stgr) {
@@ -155,7 +153,7 @@ foreach ($cAsistentes as $oAsistente) {
         foreach ($cMatriculas as $oMatricula) {
             $i++;
             $id_asignatura = $oMatricula->getId_asignatura();
-            $preceptor = $oMatricula->getPreceptor();
+            $preceptor = $oMatricula->isPreceptor();
 
             $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {

@@ -1,9 +1,9 @@
 <?php
 
-use notas\model\entity\GestorPersonaNotaDlDB;
-use personas\model\entity\GestorPersonaDl;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use function core\is_true;
 
 /**
@@ -46,7 +46,7 @@ require_once("apps/core/global_object.inc");
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $aWhere = [];
 $aOperador = [];
-$aWhere['status'] = 't';
+$aWhere['active'] = 't';
 $aWhere['id_nivel'] = '1100,2500';
 $aOperador['id_nivel'] = 'BETWEEN';
 $aWhere['_ordre'] = 'id_nivel';
@@ -89,7 +89,7 @@ foreach ($cAsignaturas as $oAsignatura) {
 $cAsignaturasTodas = $AsignaturaRepository->getAsignaturas(array('_ordre' => 'id_asignatura'));
 foreach ($cAsignaturasTodas as $oAsignatura) {
     $id_asignatura = $oAsignatura->getId_asignatura();
-    $a_Asig_status[$id_asignatura] = $oAsignatura->getStatus();
+    $a_Asig_status[$id_asignatura] = $oAsignatura->isActive();
     $a_Asig_nivel[$id_asignatura] = $oAsignatura->getId_nivel();
 }
 //print_r($a_Asig_nivel);
@@ -104,10 +104,10 @@ $aWhere['id_tabla'] = '^[na]';
 $aOperador['id_tabla'] = '~';
 
 
-$GesPersonas = new GestorPersonaDl();
-$cPersonas = $GesPersonas->getPersonasDl($aWhere, $aOperador);
+$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+$cPersonas = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
 $p = 0;
-$GesNotas = new GestorPersonaNotaDlDB();
+$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
 foreach ($cPersonas as $oPersona) {
     $p++;
     $id_nom = $oPersona->getId_nom();
@@ -125,7 +125,7 @@ foreach ($cPersonas as $oPersona) {
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel']='BETWEEN';
     */
-    $cNotas = $GesNotas->getPersonaNotasSuperadas($id_nom, 't');
+    $cNotas = $PersonaNotaDBRepository->getPersonaNotasSuperadas($id_nom, 't');
     $aAprobadas = [];
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();

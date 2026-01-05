@@ -5,39 +5,21 @@ namespace src\menus\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\menus\domain\value_objects\GrupMenuName;
+use src\shared\domain\traits\Hydratable;
 
-/**
- * Clase que implementa la entidad aux_grupmenu
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 15/4/2025
- */
+
 class GrupMenu
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_grupmenu de GrupMenu
-     *
-     * @var int
-     */
-    private int $iid_grupmenu;
-    /**
-     * Grup_menu de GrupMenu
-     *
-     * @var string
-     */
-    private string $sgrup_menu;
-    /**
-     * Orden de GrupMenu
-     *
-     * @var int|null
-     */
-    private int|null $iorden = null;
+
+    private int $id_grupmenu;
+
+    private string $grup_menu;
+
+    private int|null $orden = null;
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
 
@@ -55,84 +37,45 @@ class GrupMenu
     ];
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return GrupMenu
-     */
-    public function setAllAttributes(array $aDatos): GrupMenu
-    {
-        if (array_key_exists('id_grupmenu', $aDatos)) {
-            $this->setId_grupmenu($aDatos['id_grupmenu']);
-        }
-        if (array_key_exists('grup_menu', $aDatos)) {
-            $this->setGrup_menu($aDatos['grup_menu']);
-        }
-        if (array_key_exists('orden', $aDatos)) {
-            $this->setOrden($aDatos['orden']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_grupmenu
-     */
     public function getId_grupmenu(): int
     {
-        return $this->iid_grupmenu;
+        return $this->id_grupmenu;
     }
 
-    /**
-     *
-     * @param int $iid_grupmenu
-     */
-    public function setId_grupmenu(int $iid_grupmenu): void
+
+    public function setId_grupmenu(int $id_grupmenu): void
     {
-        $this->iid_grupmenu = $iid_grupmenu;
+        $this->id_grupmenu = $id_grupmenu;
     }
 
-    /**
-     *
-     * @return string $sgrup_menu
-     */
+
     public function getGrup_menu($dl_r = 'dl'): string
     {
-        $sgrupmenu = $this->sgrup_menu;
+        $sgrupmenu = $this->grup_menu;
         if ($dl_r === 'r' || $dl_r === 'rstgr') {
-            if (!empty($this->aEquivalencias[$this->sgrup_menu])) {
-                $sgrupmenu = $this->aEquivalencias[$this->sgrup_menu];
+            if (!empty($this->aEquivalencias[$this->grup_menu])) {
+                $sgrupmenu = $this->aEquivalencias[$this->grup_menu];
             }
         }
         return $sgrupmenu;
     }
 
-    /**
-     *
-     * @param string $sgrup_menu
-     */
-    public function setGrup_menu(string|GrupMenuName $sgrup_menu): void
+
+    public function setGrup_menu(string|GrupMenuName $grup_menu): void
     {
-        $this->sgrup_menu = $sgrup_menu instanceof GrupMenuName ? $sgrup_menu->value() : $sgrup_menu;
+        $this->grup_menu = $grup_menu instanceof GrupMenuName ? $grup_menu->value() : $grup_menu;
     }
 
-    /**
-     *
-     * @return int|null $iorden
-     */
+
     public function getOrden(): ?int
     {
-        return $this->iorden;
+        return $this->orden;
     }
 
-    /**
-     *
-     * @param int|null $iorden
-     */
-    public function setOrden(?int $iorden = null): void
+
+    public function setOrden(?int $orden = null): void
     {
-        $this->iorden = $iorden;
+        $this->orden = $orden;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -141,7 +84,7 @@ class GrupMenu
         return 'id_grupmenu';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oMetamenuSet = new Set();
 
@@ -150,7 +93,7 @@ class GrupMenu
         return $oMetamenuSet->getTot();
     }
 
-    function getDatosGrupMenu()
+    private function getDatosGrupMenu(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('grup_menu');
@@ -162,7 +105,7 @@ class GrupMenu
         return $oDatosCampo;
     }
 
-    function getDatosOrden()
+    private function getDatosOrden(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('orden');

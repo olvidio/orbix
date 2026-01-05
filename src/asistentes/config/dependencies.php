@@ -1,5 +1,6 @@
 <?php
 
+use src\asistentes\application\AsistenteApplicationService;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
@@ -22,5 +23,6 @@ return [
     AsistenteOutRepositoryInterface::class => autowire(PgAsistenteOutRepository::class),
 
 // Servicios de Aplicación
+    AsistenteApplicationService::class => autowire(AsistenteApplicationService::class),
     AsistenteActividadService::class => autowire(AsistenteActividadService::class),
 ];

@@ -1,7 +1,5 @@
 <?php
 
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoSacd;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -49,11 +47,11 @@ switch ($Qque) {
                 continue;
             }
             $sfsv = substr($id_ubi, 0, 1);
-            if ($sfsv == 1) {
+            if ($sfsv === 1) {
                 // Ctr sv
                 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $oCentroDl = $CentroDlRepository->findById($id_ubi);
-                $status = $oCentroDl->isStatus();
+                $status = $oCentroDl->isActive();
                 if ($status === FALSE || empty($status)) {
                     $ctrsv++;
                     $oEncargo->DBEliminar();
@@ -62,7 +60,7 @@ switch ($Qque) {
                 // Ctr sf
                 $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $oCentroDl = $CentroEllasRepository->findById($id_ubi);
-                $status = $oCentroDl->isStatus();
+                $status = $oCentroDl->isActive();
                 if ($status === FALSE || empty($status)) {
                     $ctrsf++;
                     $oEncargo->DBEliminar();

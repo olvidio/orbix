@@ -5,165 +5,63 @@ namespace src\ubis\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\ubis\domain\value_objects\{DescTelecoText};
+use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\ubis\domain\value_objects\{TipoTelecoId, TelecoUbiId, TelecoUbiItemId, NumTelecoText, ObservTelecoText};
 
-/**
- * Clase que implementa la entidad d_teleco_cdc
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 19/11/2025
- */
+
 class TelecoUbi
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_ubi de TelecoCdc
-     *
-     * @var int
-     */
-    private int $iid_ubi;
-    /**
-     * Id_tipo_teleco de TelecoCdc
-     *
-     * @var int
-     */
+
+    private int $id_ubi;
+
     private int $id_tipo_teleco;
-    /**
-     * id_desc_teleco de TelecoCdc
-     *
-     * @var string|null
-     */
-    private string|null $sdesc_teleco = null;
-    /**
-     * Num_teleco de TelecoCdc
-     *
-     * @var string
-     */
-    private string $snum_teleco;
-    /**
-     * Observ de TelecoCdc
-     *
-     * @var string|null
-     */
-    private string|null $sobserv = null;
-    /**
-     * Id_item de TelecoCdc
-     *
-     * @var int
-     */
-    private int $iid_item;
+
+    private string|null $desc_teleco = null;
+
+    private string $num_teleco;
+
+    private string|null $observ = null;
+
+    private int $id_item;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return TelecoUbi
-     */
-    public function setAllAttributes(array $aDatos): TelecoUbi
-    {
-        if (array_key_exists('id_ubi', $aDatos)) {
-            $valor = $aDatos['id_ubi'];
-            if ($valor instanceof TelecoUbiId) {
-                $this->setIdUbiVo($valor);
-            } else {
-                $this->setId_ubi((int)$valor);
-            }
-        }
-        if (array_key_exists('id_tipo_teleco', $aDatos)) {
-            $valor = $aDatos['id_tipo_teleco'];
-            if ($valor instanceof TipoTelecoId) {
-                $this->setIdTipoTelecoVo($valor);
-            } else {
-                $this->setId_tipo_teleco((int)$valor);
-            }
-        }
-        if (array_key_exists('id_desc_teleco', $aDatos)) {
-            $valor = $aDatos['id_desc_teleco'];
-            if ($valor instanceof DescTelecoText || $valor === null) {
-                $this->setIdDescTelecoVo($valor);
-            } else {
-                $this->setId_desc_teleco($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('num_teleco', $aDatos)) {
-            $valor = $aDatos['num_teleco'];
-            if ($valor instanceof NumTelecoText) {
-                $this->setNumTelecoVo($valor);
-            } else {
-                $this->setNum_teleco((string)$valor);
-            }
-        }
-        if (array_key_exists('observ', $aDatos)) {
-            $valor = $aDatos['observ'];
-            if ($valor instanceof ObservTelecoText || $valor === null) {
-                $this->setObservVo($valor);
-            } else {
-                $this->setObserv($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('id_item', $aDatos)) {
-            $valor = $aDatos['id_item'];
-            if ($valor instanceof TelecoUbiItemId) {
-                $this->setIdItemVo($valor);
-            } else {
-                $this->setId_item((int)$valor);
-            }
-        }
-        return $this;
-    }
-
     // -------- API VO (nueva) ---------
-    /**
-     * Getter VO para id_ubi
-     */
+
     public function getIdUbiVo(): TelecoUbiId
     {
-        return new TelecoUbiId($this->iid_ubi);
+        return new TelecoUbiId($this->id_ubi);
     }
 
-    /**
-     * Setter VO para id_ubi
-     */
+
     public function setIdUbiVo(TelecoUbiId $id): void
     {
-        $this->iid_ubi = $id->value();
+        $this->id_ubi = $id->value();
     }
 
     /**
-     *
-     * @return int $iid_ubi
-     *
      * @deprecated Usar `getIdUbiVo(): TelecoUbiId` en su lugar.
      */
     public function getId_ubi(): int
     {
-        return $this->iid_ubi;
+        return $this->id_ubi;
     }
 
     /**
-     *
-     * @param int $iid_ubi
-     *
      * @deprecated Usar `setIdUbiVo(TelecoUbiId $id): void` en su lugar.
      */
-    public function setId_ubi(int $iid_ubi): void
+    public function setId_ubi(int $id_ubi): void
     {
-        $this->iid_ubi = $iid_ubi;
+        $this->id_ubi = $id_ubi;
     }
 
     /**
-     *
-     * @return int $id_tipo_teleco
-     *
      * @deprecated Usar `getIdTipoTelecoVo(): TipoTelecoId` en su lugar.
      */
     public function getId_tipo_teleco(): int
@@ -172,9 +70,6 @@ class TelecoUbi
     }
 
     /**
-     *
-     * @param int $id_tipo_teleco
-     *
      * @deprecated Usar `setIdTipoTelecoVo(TipoTelecoId $id): void` en su lugar.
      */
     public function setId_tipo_teleco(int $id_tipo_teleco): void
@@ -193,131 +88,107 @@ class TelecoUbi
     }
 
     /**
-     *
-     * @return string|null $sdesc_teleco
-     *
      * @deprecated Usar `getDescTelecoVo(): ?DescTelecoText` en su lugar.
      */
     public function getId_desc_teleco(): ?string
     {
-        return $this->sdesc_teleco;
+        return $this->desc_teleco;
     }
 
     /**
-     *
-     * @param string|null $sdesc_teleco
-     *
      * @deprecated Usar `setDescTelecoVo(?DescTelecoText $texto = null): void` en su lugar.
      */
-    public function setId_desc_teleco(?string $sdesc_teleco = null): void
+    public function setId_desc_teleco(?string $desc_teleco = null): void
     {
-        $this->sdesc_teleco = $sdesc_teleco;
+        $this->desc_teleco = $desc_teleco;
     }
 
     public function getIdDescTelecoVo(): ?DescTelecoText
     {
-        return DescTelecoText::fromNullableString($this->sdesc_teleco);
+        return DescTelecoText::fromNullableString($this->desc_teleco);
     }
 
     public function setIdDescTelecoVo(?DescTelecoText $texto = null): void
     {
-        $this->sdesc_teleco = $texto?->value();
+        $this->desc_teleco = $texto?->value();
     }
 
     /**
-     *
-     * @return string $snum_teleco
-     *
      * @deprecated Usar `getNumTelecoVo(): NumTelecoText` en su lugar.
      */
     public function getNum_teleco(): string
     {
-        return $this->snum_teleco;
+        return $this->num_teleco;
     }
 
     /**
-     *
-     * @param string $snum_teleco
-     *
      * @deprecated Usar `setNumTelecoVo(NumTelecoText $texto): void` en su lugar.
      */
-    public function setNum_teleco(string $snum_teleco): void
+    public function setNum_teleco(string $num_teleco): void
     {
-        $this->snum_teleco = $snum_teleco;
+        $this->num_teleco = $num_teleco;
     }
 
     public function getNumTelecoVo(): NumTelecoText
     {
-        return new NumTelecoText($this->snum_teleco);
+        return new NumTelecoText($this->num_teleco);
     }
 
     public function setNumTelecoVo(NumTelecoText $texto): void
     {
-        $this->snum_teleco = $texto->value();
+        $this->num_teleco = $texto->value();
     }
 
     /**
-     *
-     * @return string|null $sobserv
-     *
      * @deprecated Usar `getObservVo(): ?ObservTelecoText` en su lugar.
      */
     public function getObserv(): ?string
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
     /**
-     *
-     * @param string|null $sobserv
-     *
      * @deprecated Usar `setObservVo(?ObservTelecoText $texto = null): void` en su lugar.
      */
-    public function setObserv(?string $sobserv = null): void
+    public function setObserv(?string $observ = null): void
     {
-        $this->sobserv = $sobserv;
+        $this->observ = $observ;
     }
 
     public function getObservVo(): ?ObservTelecoText
     {
-        return ObservTelecoText::fromNullableString($this->sobserv);
+        return ObservTelecoText::fromNullableString($this->observ);
     }
 
     public function setObservVo(?ObservTelecoText $texto = null): void
     {
-        $this->sobserv = $texto?->value();
+        $this->observ = $texto?->value();
     }
 
     /**
-     *
-     * @return int $iid_item
-     *
      * @deprecated Usar `getIdItemVo(): TelecoUbiItemId` en su lugar.
      */
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
     /**
-     *
-     * @param int $iid_item
-     *
      * @deprecated Usar `setIdItemVo(TelecoUbiItemId $id): void` en su lugar.
      */
-    public function setId_item(int $iid_item): void
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 
     public function getIdItemVo(): TelecoUbiItemId
     {
-        return new TelecoUbiItemId($this->iid_item);
+        return new TelecoUbiItemId($this->id_item);
     }
 
     public function setIdItemVo(TelecoUbiItemId $id): void
     {
-        $this->iid_item = $id->value();
+        $this->id_item = $id->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -325,7 +196,7 @@ class TelecoUbi
     {
         return 'id_item';
     }
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oTelecoUbiSet = new Set();
 
@@ -336,7 +207,7 @@ class TelecoUbi
         return $oTelecoUbiSet->getTot();
     }
 
-    function getDatosTipo_teleco()
+    private function getDatosTipo_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_tipo_teleco');
@@ -351,7 +222,7 @@ class TelecoUbi
         return $oDatosCampo;
     }
 
-    function getDatosDesc_teleco()
+    private function getDatosDesc_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_desc_teleco');
@@ -366,7 +237,7 @@ class TelecoUbi
         return $oDatosCampo;
     }
 
-    function getDatosNum_teleco()
+    private function getDatosNum_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('num_teleco');
@@ -378,7 +249,7 @@ class TelecoUbi
         return $oDatosCampo;
     }
 
-    function getDatosObserv()
+    private function getDatosObserv(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('observ');

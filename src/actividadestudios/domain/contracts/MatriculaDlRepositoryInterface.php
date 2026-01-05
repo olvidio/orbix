@@ -1,0 +1,17 @@
+<?php
+
+namespace src\actividadestudios\domain\contracts;
+
+
+/**
+ * Interfaz de la clase Matricula y su Repositorio
+ *
+ * @package orbix
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 2.0
+ * @created 29/12/2025
+ */
+interface MatriculaDlRepositoryInterface extends MatriculaRepositoryInterface
+{
+}

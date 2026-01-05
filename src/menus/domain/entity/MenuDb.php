@@ -1,241 +1,129 @@
 <?php
 
 namespace src\menus\domain\entity;
-	use function core\is_true;
-	use src\menus\domain\value_objects\MenuName;
-	use src\menus\domain\value_objects\MenuParametros;
-/**
- * Clase que implementa la entidad aux_menus
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 15/4/2025
- */
-class MenuDb {
 
-	/* ATRIBUTOS ----------------------------------------------------------------- */
+use src\menus\domain\value_objects\MenuName;
+use src\menus\domain\value_objects\MenuParametros;
+use src\shared\domain\traits\Hydratable;
+use function core\is_true;
 
-	/**
-	 * Id_menu de MenuDb
-	 *
-	 * @var int
-	 */
-	 private int $iid_menu;
-	/**
-	 * Orden de MenuDb
-	 *
-	 * @var array|null
-	 */
-	 private array|null $a_orden = null;
-	/**
-	 * Menu de MenuDb
-	 *
-	 * @var string|null
-	 */
-	 private string|null $smenu = null;
-	/**
-	 * Parametros de MenuDb
-	 *
-	 * @var string|null
-	 */
-	 private string|null $sparametros = null;
-	/**
-	 * Id_metamenu de MenuDb
-	 *
-	 * @var int|null
-	 */
-	 private int|null $iid_metamenu = null;
-	/**
-	 * Menu_perm de MenuDb
-	 *
-	 * @var int|null
-	 */
-	 private int|null $imenu_perm = null;
-	/**
-	 * Id_grupmenu de MenuDb
-	 *
-	 * @var int|null
-	 */
-	 private int|null $iid_grupmenu = null;
-	/**
-	 * Ok de MenuDb
-	 *
-	 * @var bool|null
-	 */
-	 private bool|null $bok = null;
+class MenuDb
+{
+    use Hydratable;
 
-	/* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-	/**
-	 * Establece el valor de todos los atributos
-	 *
-	 * @param array $aDatos
-	 * @return MenuDb
-	 */
-	public function setAllAttributes(array $aDatos): MenuDb
-	{
-		if (array_key_exists('id_menu',$aDatos))
-		{
-			$this->setId_menu($aDatos['id_menu']);
-		}
-		if (array_key_exists('orden',$aDatos))
-		{
-			$this->setOrden($aDatos['orden']);
-		}
-		if (array_key_exists('menu',$aDatos))
-		{
-			$this->setMenu($aDatos['menu']);
-		}
-		if (array_key_exists('parametros',$aDatos))
-		{
-			$this->setParametros($aDatos['parametros']);
-		}
-		if (array_key_exists('id_metamenu',$aDatos))
-		{
-			$this->setId_metamenu($aDatos['id_metamenu']);
-		}
-		if (array_key_exists('menu_perm',$aDatos))
-		{
-			$this->setMenu_perm($aDatos['menu_perm']);
-		}
-		if (array_key_exists('id_grupmenu',$aDatos))
-		{
-			$this->setId_grupmenu($aDatos['id_grupmenu']);
-		}
-		if (array_key_exists('ok',$aDatos))
-		{
-			$this->setOk(is_true($aDatos['ok']));
-		}
-		return $this;
-	}
-	/**
-	 *
-	 * @return int $iid_menu
-	 */
-	public function getId_menu(): int
-	{
-		return $this->iid_menu;
-	}
-	/**
-	 *
-	 * @param int $iid_menu
-	 */
-	public function setId_menu(int $iid_menu): void
-	{
-		$this->iid_menu = $iid_menu;
-	}
-	/**
-	 *
-	 * @return array|null $a_orden
-	 */
-	public function getOrden(): array|null
-	{
-        return $this->a_orden;
-	}
-	/**
-	 * 
-	 * @param array|null $a_orden
-	 */
-	public function setOrden(array $a_orden= null): void
-	{
-        $this->a_orden = $a_orden;
-	}
-	/**
-	 *
-	 * @return string|null $smenu
-	 */
-	public function getMenu(): ?string
-	{
-		return $this->smenu;
-	}
-	/**
-	 *
-	 * @param string|null $smenu
-	 */
-	public function setMenu(string|MenuName|null $smenu = null): void
-	{
-		$this->smenu = $smenu instanceof MenuName ? $smenu->value() : $smenu;
-	}
-	/**
-	 *
-	 * @return string|null $sparametros
-	 */
-	public function getParametros(): ?string
-	{
-		return $this->sparametros;
-	}
-	/**
-	 *
-	 * @param string|null $sparametros
-	 */
-	public function setParametros(string|MenuParametros|null $sparametros = null): void
-	{
-		$this->sparametros = $sparametros instanceof MenuParametros ? $sparametros->value() : $sparametros;
-	}
-	/**
-	 *
-	 * @return int|null $iid_metamenu
-	 */
-	public function getId_metamenu(): ?int
-	{
-		return $this->iid_metamenu;
-	}
-	/**
-	 *
-	 * @param int|null $iid_metamenu
-	 */
-	public function setId_metamenu(?int $iid_metamenu = null): void
-	{
-		$this->iid_metamenu = $iid_metamenu;
-	}
-	/**
-	 *
-	 * @return int|null $imenu_perm
-	 */
-	public function getMenu_perm(): ?int
-	{
-		return $this->imenu_perm;
-	}
-	/**
-	 *
-	 * @param int|null $imenu_perm
-	 */
-	public function setMenu_perm(?int $imenu_perm = null): void
-	{
-		$this->imenu_perm = $imenu_perm;
-	}
-	/**
-	 *
-	 * @return int|null $iid_grupmenu
-	 */
-	public function getId_grupmenu(): ?int
-	{
-		return $this->iid_grupmenu;
-	}
-	/**
-	 *
-	 * @param int|null $iid_grupmenu
-	 */
-	public function setId_grupmenu(?int $iid_grupmenu = null): void
-	{
-		$this->iid_grupmenu = $iid_grupmenu;
-	}
-	/**
-	 *
-	 * @return bool|null $bok
-	 */
-	public function isOk(): ?bool
-	{
-		return $this->bok;
-	}
-	/**
-	 *
-	 * @param bool|null $bok
-	 */
-	public function setOk(?bool $bok = null): void
-	{
-		$this->bok = $bok;
-	}
+
+    private int $id_menu;
+
+    private array|null $orden = null;
+
+    private string|null $menu = null;
+
+    private string|null $parametros = null;
+
+    private int|null $id_metamenu = null;
+
+    private int|null $menu_perm = null;
+
+    private int|null $id_grupmenu = null;
+
+    private bool|null $ok = null;
+
+    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getId_menu(): int
+    {
+        return $this->id_menu;
+    }
+
+
+    public function setId_menu(int $id_menu): void
+    {
+        $this->id_menu = $id_menu;
+    }
+
+
+    public function getOrden(): array|null
+    {
+        return $this->orden;
+    }
+
+
+    public function setOrden(array $orden = null): void
+    {
+        $this->orden = $orden;
+    }
+
+
+    public function getMenu(): ?string
+    {
+        return $this->menu;
+    }
+
+
+    public function setMenu(string|MenuName|null $menu = null): void
+    {
+        $this->menu = $menu instanceof MenuName ? $menu->value() : $menu;
+    }
+
+
+    public function getParametros(): ?string
+    {
+        return $this->parametros;
+    }
+
+
+    public function setParametros(string|MenuParametros|null $parametros = null): void
+    {
+        $this->parametros = $parametros instanceof MenuParametros ? $parametros->value() : $parametros;
+    }
+
+
+    public function getId_metamenu(): ?int
+    {
+        return $this->id_metamenu;
+    }
+
+
+    public function setId_metamenu(?int $id_metamenu = null): void
+    {
+        $this->id_metamenu = $id_metamenu;
+    }
+
+
+    public function getMenu_perm(): ?int
+    {
+        return $this->menu_perm;
+    }
+
+
+    public function setMenu_perm(?int $menu_perm = null): void
+    {
+        $this->menu_perm = $menu_perm;
+    }
+
+
+    public function getId_grupmenu(): ?int
+    {
+        return $this->id_grupmenu;
+    }
+
+
+    public function setId_grupmenu(?int $id_grupmenu = null): void
+    {
+        $this->id_grupmenu = $id_grupmenu;
+    }
+
+
+    public function isOk(): ?bool
+    {
+        return $this->ok;
+    }
+
+
+    public function setOk(?bool $ok = null): void
+    {
+        $this->ok = $ok;
+    }
 }

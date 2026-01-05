@@ -23,9 +23,9 @@ class PgActividadPubRepository extends PgActividadAllRepository implements Activ
 {
     use HandlesPdoErrors;
 
-    public function __construct()
+    public function __construct(TipoTelecoRepositoryInterface $tipoTelecoRepositor)
     {
-        parent::__construct();
+        parent::__construct($tipoTelecoRepositor);
         $oDbl = $GLOBALS['oDBPC'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBPC_Select'];

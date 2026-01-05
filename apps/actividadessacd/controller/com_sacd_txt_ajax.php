@@ -1,7 +1,7 @@
 <?php
 
-use actividadessacd\legacy\AtnActivSacdTexto;
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
+use src\actividadessacd\domain\entity\ActividadSacdTexto;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -44,19 +44,20 @@ switch ($Qque) {
         $txt = '';
         if (count($cAtnActivTextos) > 0) {
             $oAtnActivSacdTexto = $cAtnActivTextos[0];
-            $oAtnActivSacdTexto->DBCarregar();
             if (empty($Qcomunicacion)) {
-                $oAtnActivSacdTexto->DBEliminar();
+                $ActividadSacdTextoRepository->Eliminar($oAtnActivSacdTexto);
             } else {
                 $oAtnActivSacdTexto->setTexto($Qcomunicacion);
-                $oAtnActivSacdTexto->DBGuardar();
+                $ActividadSacdTextoRepository->Guardar($oAtnActivSacdTexto);
             }
         } else {
-            $oAtnActivSacdTexto = new AtnActivSacdTexto();
+            $newIdItem = $ActividadSacdTextoRepository->getNewId();
+            $oAtnActivSacdTexto = new ActividadSacdTexto();
+            $oAtnActivSacdTexto->setId_item($newIdItem);
             $oAtnActivSacdTexto->setClave($Qclave);
             $oAtnActivSacdTexto->setIdioma($Qidioma);
             $oAtnActivSacdTexto->setTexto($Qcomunicacion);
-            $oAtnActivSacdTexto->DBGuardar();
+            $ActividadSacdTextoRepository->Guardar($oAtnActivSacdTexto);
         }
         break;
 }

@@ -27,8 +27,8 @@ use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use ubis\model\entity\GestorCasaPeriodo;
 use web\DateTimeLocal;
 use web\Periodo;
 
@@ -327,6 +327,7 @@ if (empty($Qque)) {
     $a_resumen = [];
     $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
     $GrupoCasaRepository = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
+    $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
     foreach ($cCasasDl as $oCasaDl) {
         $out = [];
         $in = [];
@@ -346,8 +347,7 @@ if (empty($Qque)) {
 
         }
 
-        $GesPeriodos = new GestorCasaPeriodo();
-        $aPeriodos = $GesPeriodos->getArrayCasaPeriodos($id_ubi, $oInicio, $oFin);
+        $aPeriodos = $CasaPeriodoRepository->getArrayCasaPeriodos($id_ubi, $oInicio, $oFin);
 
         $a_resumen[$id_ubi][0]['nom'] = $nombre_ubi;
 
@@ -736,6 +736,7 @@ if (empty($Qque)) {
     $GrupoCasaRepository = $GLOBALS['container']->get(GrupoCasaRepositoryInterface::class);
     $UbiGastoRepository = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
     $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
+    $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
     foreach ($cCasasDl as $oCasaDl) {
         $id_ubi = $oCasaDl->getId_ubi();
         $nombre_ubi = $oCasaDl->getNombre_ubi();
@@ -777,9 +778,7 @@ if (empty($Qque)) {
             $oInicio = new DateTimeLocal($inicio);
             $oFin = new DateTimeLocal($fin);
 
-
-            $GesPeriodos = new GestorCasaPeriodo();
-            $aPeriodos = $GesPeriodos->getArrayCasaPeriodos($id_ubi, $oInicio, $oFin);
+            $aPeriodos = $CasaPeriodoRepository->getArrayCasaPeriodos($id_ubi, $oInicio, $oFin);
 
             $a_resumen[$id_ubi][$any][0]['nom'] = $nombre_ubi;
 
@@ -829,7 +828,7 @@ if (empty($Qque)) {
                 $a_resumen[$id_ubi][$any][1]['dias'] += $a_ocupacion[1]; // sv
                 $a_resumen[$id_ubi][$any][2]['dias'] += $a_ocupacion[2]; // sf
 
-                $oIngreso = $IngresoRepository->findBbyId($id_activ);
+                $oIngreso = $IngresoRepository->findById($id_activ);
                 $num_asistentes_previstos = $oIngreso->getNum_asistentes_previstos()?? 0;
                 $num_asistentes = empty($oIngreso->getNum_asistentes()) ? 0 : $oIngreso->getNum_asistentes();
                 if (empty($oIngreso->getIngresos_previstos())) {

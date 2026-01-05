@@ -1,220 +1,216 @@
 <?php
 
 namespace src\cartaspresentacion\domain\entity;
-/**
- * Clase que implementa la entidad du_presentacion_dl
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 20/12/2025
- */
+use src\cartaspresentacion\domain\value_objects\PresEmailText;
+use src\cartaspresentacion\domain\value_objects\PresNombreText;
+use src\cartaspresentacion\domain\value_objects\PresObservText;
+use src\cartaspresentacion\domain\value_objects\PresTelefonoText;
+use src\cartaspresentacion\domain\value_objects\PresZonaText;
+use src\shared\domain\traits\Hydratable;
+
 class CartaPresentacion
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_direccion de CartaPresentacion
-     *
-     * @var int
-     */
-    private int $iid_direccion;
-    /**
-     * Id_ubi de CartaPresentacion
-     *
-     * @var int
-     */
-    private int $iid_ubi;
-    /**
-     * Pres_nom de CartaPresentacion
-     *
-     * @var string|null
-     */
-    private string|null $spres_nom = null;
-    /**
-     * Pres_telf de CartaPresentacion
-     *
-     * @var string|null
-     */
-    private string|null $spres_telf = null;
-    /**
-     * Pres_mail de CartaPresentacion
-     *
-     * @var string|null
-     */
-    private string|null $spres_mail = null;
-    /**
-     * Zona de CartaPresentacion
-     *
-     * @var string|null
-     */
-    private string|null $szona = null;
-    /**
-     * Observ de CartaPresentacion
-     *
-     * @var string|null
-     */
-    private string|null $sobserv = null;
+    private int $id_direccion;
+
+    private int $id_ubi;
+
+    private string|null $pres_nom = null;
+
+    private string|null $pres_telf = null;
+
+    private string|null $pres_mail = null;
+
+    private string|null $zona = null;
+
+    private string|null $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return CartaPresentacion
-     */
-    public function setAllAttributes(array $aDatos): CartaPresentacion
-    {
-        if (array_key_exists('id_direccion', $aDatos)) {
-            $this->setId_direccion($aDatos['id_direccion']);
-        }
-        if (array_key_exists('id_ubi', $aDatos)) {
-            $this->setId_ubi($aDatos['id_ubi']);
-        }
-        if (array_key_exists('pres_nom', $aDatos)) {
-            $this->setPres_nom($aDatos['pres_nom']);
-        }
-        if (array_key_exists('pres_telf', $aDatos)) {
-            $this->setPres_telf($aDatos['pres_telf']);
-        }
-        if (array_key_exists('pres_mail', $aDatos)) {
-            $this->setPres_mail($aDatos['pres_mail']);
-        }
-        if (array_key_exists('zona', $aDatos)) {
-            $this->setZona($aDatos['zona']);
-        }
-        if (array_key_exists('observ', $aDatos)) {
-            $this->setObserv($aDatos['observ']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_direccion
-     */
     public function getId_direccion(): int
     {
-        return $this->iid_direccion;
+        return $this->id_direccion;
     }
 
-    /**
-     *
-     * @param int $iid_direccion
-     */
-    public function setId_direccion(int $iid_direccion): void
+
+    public function setId_direccion(int $id_direccion): void
     {
-        $this->iid_direccion = $iid_direccion;
+        $this->id_direccion = $id_direccion;
     }
 
-    /**
-     *
-     * @return int $iid_ubi
-     */
+
     public function getId_ubi(): int
     {
-        return $this->iid_ubi;
+        return $this->id_ubi;
     }
 
-    /**
-     *
-     * @param int $iid_ubi
-     */
-    public function setId_ubi(int $iid_ubi): void
+
+    public function setId_ubi(int $id_ubi): void
     {
-        $this->iid_ubi = $iid_ubi;
+        $this->id_ubi = $id_ubi;
     }
 
     /**
-     *
-     * @return string|null $spres_nom
+     * @return PresNombreText|null
+     */
+    public function getPresNomVo(): ?PresNombreText
+    {
+        return PresNombreText::fromNullableString($this->pres_nom);
+    }
+
+    /**
+     * @param PresNombreText|null $oPresNombreText
+     */
+    public function setPresNomVo(?PresNombreText $oPresNombreText = null): void
+    {
+        $this->pres_nom = $oPresNombreText?->value();
+    }
+
+    /**
+     * @deprecated use getPresNomVo()
      */
     public function getPres_nom(): ?string
     {
-        return $this->spres_nom;
+        return $this->pres_nom;
     }
 
     /**
-     *
-     * @param string|null $spres_nom
+     * @deprecated use setPresNomVo()
      */
-    public function setPres_nom(?string $spres_nom = null): void
+    public function setPres_nom(?string $pres_nom = null): void
     {
-        $this->spres_nom = $spres_nom;
+        $this->pres_nom = $pres_nom;
     }
 
     /**
-     *
-     * @return string|null $spres_telf
+     * @return PresTelefonoText|null
+     */
+    public function getPresTelfVo(): ?PresTelefonoText
+    {
+        return PresTelefonoText::fromNullableString($this->pres_telf);
+    }
+
+    /**
+     * @param PresTelefonoText|null $oPresTelefonoText
+     */
+    public function setPresTelfVo(?PresTelefonoText $oPresTelefonoText = null): void
+    {
+        $this->pres_telf = $oPresTelefonoText?->value();
+    }
+
+    /**
+     * @deprecated use getPresTelfVo()
      */
     public function getPres_telf(): ?string
     {
-        return $this->spres_telf;
+        return $this->pres_telf;
     }
 
     /**
-     *
-     * @param string|null $spres_telf
+     * @deprecated use setPresTelfVo()
      */
-    public function setPres_telf(?string $spres_telf = null): void
+    public function setPres_telf(?string $pres_telf = null): void
     {
-        $this->spres_telf = $spres_telf;
+        $this->pres_telf = $pres_telf;
+    }
+
+    /**
+     * @return PresEmailText|null
+     */
+    public function getPresMailVo(): ?PresEmailText
+    {
+        return PresEmailText::fromNullableString($this->pres_mail);
+    }
+
+    /**
+     * @param PresEmailText|null $oPresEmailText
+     */
+    public function setPresMailVo(?PresEmailText $oPresEmailText = null): void
+    {
+        $this->pres_mail = $oPresEmailText?->value();
     }
 
     /**
      *
-     * @return string|null $spres_mail
+     * @deprecated use getPresMailVo()
      */
     public function getPres_mail(): ?string
     {
-        return $this->spres_mail;
+        return $this->pres_mail;
     }
 
     /**
-     *
-     * @param string|null $spres_mail
+     * @deprecated use setPresMailVo()
      */
-    public function setPres_mail(?string $spres_mail = null): void
+    public function setPres_mail(?string $pres_mail = null): void
     {
-        $this->spres_mail = $spres_mail;
+        $this->pres_mail = $pres_mail;
     }
 
     /**
-     *
-     * @return string|null $szona
+     * @return PresZonaText|null
+     */
+    public function getZonaVo(): ?PresZonaText
+    {
+        return PresZonaText::fromNullableString($this->zona);
+    }
+
+    /**
+     * @param PresZonaText|null $oPresZonaText
+     */
+    public function setZonaVo(?PresZonaText $oPresZonaText = null): void
+    {
+        $this->zona = $oPresZonaText?->value();
+    }
+
+    /**
+     * @deprecated use getZonaVo()
      */
     public function getZona(): ?string
     {
-        return $this->szona;
+        return $this->zona;
     }
 
     /**
-     *
-     * @param string|null $szona
+     * @deprecated use setZonaVo()
      */
-    public function setZona(?string $szona = null): void
+    public function setZona(?string $zona = null): void
     {
-        $this->szona = $szona;
+        $this->zona = $zona;
     }
 
     /**
-     *
-     * @return string|null $sobserv
+     * @return PresObservText|null
+     */
+    public function getObservVo(): ?PresObservText
+    {
+        return PresObservText::fromNullableString($this->observ);
+    }
+
+    /**
+     * @param PresObservText|null $oPresObservText
+     */
+    public function setObservVo(?PresObservText $oPresObservText = null): void
+    {
+        $this->observ = $oPresObservText?->value();
+    }
+
+    /**
+     * @deprecated use getObservVo()
      */
     public function getObserv(): ?string
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
     /**
-     *
-     * @param string|null $sobserv
+     * @deprecated use setObservVo()
      */
-    public function setObserv(?string $sobserv = null): void
+    public function setObserv(?string $observ = null): void
     {
-        $this->sobserv = $sobserv;
+        $this->observ = $observ;
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use planning\domain\Planning;
 use planning\domain\PlanningStyle;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
@@ -136,10 +136,10 @@ $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::
 $sCdc = '';
 $sin_activ = 0;
 $Qid_ubi = '';
-$GesActividadAsignaturas = new GestorActividadAsignaturaDl();
+$ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
 $aWhere = array('f_ini' => "'$inicio_iso','$fin_iso'");
 $aOperador = array('f_ini' => 'BETWEEN');
-$GesActividadAsignaturas->getActividadAsignaturas($aWhere, $aOperador);
+$ActividadAsignaturaDlRepository->getActividadAsignaturas($aWhere, $aOperador);
 //por cada persona busco las actividades.
 $p = 0;
 $persona = [];

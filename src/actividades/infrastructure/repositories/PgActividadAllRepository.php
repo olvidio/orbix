@@ -381,8 +381,8 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
             $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
-            $ActividadAll = new ActividadAll();
-            $ActividadAll->setAllAttributes($aDatos);
+            // Usa el método fromArray() del trait Hydratable
+            $ActividadAll = ActividadAll::fromArray($aDatos);
             $ActividadAllSet->add($ActividadAll);
         }
         return $ActividadAllSet->getTot();
@@ -429,6 +429,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $aDatos['publicado'] = $ActividadAll->isPublicado();
         $aDatos['id_tabla'] = $ActividadAll->getId_tabla();
         $aDatos['plazas'] = $ActividadAll->getPlazas();
+        $aDatos['idioma'] = $ActividadAll->getIdiomaVo()?->value();
         // para las horas
         $aDatos['h_ini'] = (new ConverterDate('time', $ActividadAll->getH_ini()))->toPg();
         $aDatos['h_fin'] = (new ConverterDate('time', $ActividadAll->getH_fin()))->toPg();
@@ -467,15 +468,16 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
 					id_repeticion            = :id_repeticion,
 					publicado                = :publicado,
 					id_tabla                 = :id_tabla,
-					plazas                   = :plazas";
+					plazas                   = :plazas,
+                    idioma                   = :idioma";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_activ = $id_activ";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
             $aDatos['id_auto'] = $ActividadAll->getId_auto();
             $aDatos['id_activ'] = $ActividadAll->getId_activ();
-            $campos = "(id_auto,id_activ,id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas)";
-            $valores = "(:id_auto,:id_activ,:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:tarifa,:id_repeticion,:publicado,:id_tabla,:plazas)";
+            $campos = "(id_auto,id_activ,id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas,idioma)";
+            $valores = "(:id_auto,:id_activ,:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:tarifa,:id_repeticion,:publicado,:id_tabla,:plazas,:idioma)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -529,6 +531,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         if (empty($aDatos)) {
             return null;
         }
-        return (new ActividadAll())->setAllAttributes($aDatos);
+        // Usa el método fromArray() del trait Hydratable (más limpio)
+        return ActividadAll::fromArray($aDatos);
     }
 }

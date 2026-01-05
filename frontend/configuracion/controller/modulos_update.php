@@ -44,7 +44,7 @@ switch ($Qmod) {
             $newId = $ModuloRepository->getNewId();
             $oModulo = new Modulo();
             $oModulo->setIdModVo(new ModuloId($newId));
-            $oModulo->setNombreModVo(ModuloName::fromString($Qnom));
+            $oModulo->setNomVo(ModuloName::fromString($Qnom));
             $oModulo->setDescripcionVo(ModuloDescription::fromNullableString($Qdescripcion));
             $oModulo->setModsReqVo(ModsReq::fromNullableArray($Qsel_mods));
             $oModulo->setAppsReqVo(AppsReq::fromNullableArray($Qsel_apps));

@@ -1,13 +1,14 @@
 <?php
 
 use core\ConfigGlobal;
-use dossiers\model\entity\Dossier;
-use personas\model\entity\PersonaDl;
-use personas\model\entity\Traslado;
-use personas\model\entity\TrasladoDl;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\TrasladoRepositoryInterface;
+use src\personas\domain\entity\Traslado;
+use src\personas\domain\TrasladoDl;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
+use web\DateTimeLocal;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
@@ -23,8 +24,9 @@ require_once("apps/core/global_object.inc");
 $error = '';
 
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
-$oPersonaDl = new PersonaDl($Qid_pau);
-$oPersonaDl->DBCarregar();
+
+$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+$oPersonaDl = $PersonaDlRepository->findById($Qid_pau);
 
 //centro
 $Qnew_ctr = (string)filter_input(INPUT_POST, 'new_ctr');
@@ -41,20 +43,24 @@ if (!empty($Qnew_ctr) && !empty($Qf_ctr)) {
 
     $oPersonaDl->setId_ctr($id_new_ctr);
     // ?? $oPersonaDl->setF_ctr($Qf_ctr);
-    if ($oPersonaDl->DBGuardar() === false) {
+    if ($PersonaDlRepository->Guardar($oPersonaDl) === false) {
         $error .= '<br>' . _("hay un error, no se ha guardado");
     }
 
     //para el dossier de traslados
+    $TrasladoRepository = $GLOBALS['container']->get(TrasladoRepositoryInterface::class);
+    $newIdItem = $PersonaDlRepository->newId();
     $oTraslado = new Traslado();
+    $oTraslado->setId_item($newIdItem);
     $oTraslado->setId_nom($Qid_pau);
-    $oTraslado->setF_traslado($Qf_ctr);
+    $oF_ctr = new DateTimeLocal($Qf_ctr);
+    $oTraslado->setF_traslado($oF_ctr);
     $oTraslado->setTipo_cmb('sede');
     $oTraslado->setId_ctr_origen($Qid_ctr_o);
     $oTraslado->setCtr_origen($Qctr_o);
     $oTraslado->setId_ctr_destino($id_new_ctr);
     $oTraslado->setCtr_destino($nom_new_ctr);
-    if ($oTraslado->DBGuardar() === false) {
+    if ($TrasladoRepository->Guardar($oTraslado) === false) {
         $error .= '<br>' . _("hay un error, no se ha guardado");
     }
 }

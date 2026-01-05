@@ -3,7 +3,7 @@
 namespace src\personas\domain\contracts;
 
 use PDO;
-use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaPub;
 
 
 /**
@@ -52,9 +52,9 @@ interface PersonaPubRepositoryInterface
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(PersonaEx $PersonaEx): bool;
+    public function Eliminar(PersonaPub $PersonaPub): bool;
 
-    public function Guardar(PersonaEx $PersonaEx): bool;
+    public function Guardar(PersonaPub $PersonaPub): bool;
 
     public function getErrorTxt(): string;
 
@@ -76,5 +76,5 @@ interface PersonaPubRepositoryInterface
     /**
      * Busca la clase con id_nom en el repositorio.
      */
-    public function findById(int $id_nom): ?PersonaEx;
+    public function findById(int $id_nom): ?PersonaPub;
 }

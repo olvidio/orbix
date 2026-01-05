@@ -12,415 +12,285 @@ use src\profesores\domain\value_objects\ObservacionText;
 use src\profesores\domain\value_objects\PublicacionTitulo;
 use src\profesores\domain\value_objects\ReferenciaText;
 use src\profesores\domain\value_objects\TipoPublicacionName;
+use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
 
-/**
- * Clase que implementa la entidad d_publicaciones
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 29/11/2025
- */
+
 class ProfesorPublicacion
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_item de ProfesorPublicacion
-     *
-     * @var int
-     */
-    private int $iid_item;
-    /**
-     * Id_nom de ProfesorPublicacion
-     *
-     * @var int
-     */
-    private int $iid_nom;
-    /**
-     * Tipo_publicacion de ProfesorPublicacion
-     *
-     * @var string|null
-     */
-    private string|null $stipo_publicacion = null;
-    /**
-     * Titulo de ProfesorPublicacion
-     *
-     * @var string
-     */
-    private string $stitulo;
-    /**
-     * Editorial de ProfesorPublicacion
-     *
-     * @var string|null
-     */
-    private string|null $seditorial = null;
-    /**
-     * Coleccion de ProfesorPublicacion
-     *
-     * @var string|null
-     */
-    private string|null $scoleccion = null;
-    /**
-     * F_publicacion de ProfesorPublicacion
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $df_publicacion = null;
-    /**
-     * Pendiente de ProfesorPublicacion
-     *
-     * @var bool|null
-     */
-    private bool|null $bpendiente = null;
-    /**
-     * Referencia de ProfesorPublicacion
-     *
-     * @var string|null
-     */
-    private string|null $sreferencia = null;
-    /**
-     * Lugar de ProfesorPublicacion
-     *
-     * @var string|null
-     */
-    private string|null $slugar = null;
-    /**
-     * Observ de ProfesorPublicacion
-     *
-     * @var string|null
-     */
-    private string|null $sobserv = null;
+    private int $id_item;
+
+    private int $id_nom;
+
+    private string|null $tipo_publicacion = null;
+
+    private string $titulo;
+
+    private string|null $editorial = null;
+
+    private string|null $coleccion = null;
+
+    private DateTimeLocal|null $f_publicacion = null;
+
+    private bool|null $pendiente = null;
+
+    private string|null $referencia = null;
+
+    private string|null $lugar = null;
+
+    private string|null $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return ProfesorPublicacion
-     */
-    public function setAllAttributes(array $aDatos): ProfesorPublicacion
-    {
-        if (array_key_exists('id_item', $aDatos)) {
-            $this->setId_item($aDatos['id_item']);
-        }
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom($aDatos['id_nom']);
-        }
-        if (array_key_exists('tipo_publicacion', $aDatos)) {
-            $this->setTipoPublicacionVo(TipoPublicacionName::fromNullable($aDatos['tipo_publicacion']));
-        }
-        if (array_key_exists('titulo', $aDatos)) {
-            $this->setTituloVo(PublicacionTitulo::fromNullable($aDatos['titulo']));
-        }
-        if (array_key_exists('editorial', $aDatos)) {
-            $this->setEditorialVo(EditorialName::fromNullable($aDatos['editorial']));
-        }
-        if (array_key_exists('coleccion', $aDatos)) {
-            $this->setColeccionVo(ColeccionName::fromNullable($aDatos['coleccion']));
-        }
-        if (array_key_exists('f_publicacion', $aDatos)) {
-            $this->setFechaPublicacionVo(FechaPublicacion::fromNullable($aDatos['f_publicacion']));
-        }
-        if (array_key_exists('pendiente', $aDatos)) {
-            $this->setPendiente(is_true($aDatos['pendiente']));
-        }
-        if (array_key_exists('referencia', $aDatos)) {
-            $this->setReferenciaVo(ReferenciaText::fromNullable($aDatos['referencia']));
-        }
-        if (array_key_exists('lugar', $aDatos)) {
-            $this->setLugarVo(LugarPublicacionName::fromNullable($aDatos['lugar']));
-        }
-        if (array_key_exists('observ', $aDatos)) {
-            $this->setObservVo(ObservacionText::fromNullable($aDatos['observ']));
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_item
-     */
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
-    /**
-     *
-     * @param int $iid_item
-     */
-    public function setId_item(int $iid_item): void
+
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 
-    /**
-     *
-     * @return int $iid_nom
-     */
+
     public function getId_nom(): int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
-    /**
-     *
-     * @param int $iid_nom
-     */
-    public function setId_nom(int $iid_nom): void
+
+    public function setId_nom(int $id_nom): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
     /**
-     * @return string|null $stipo_publicacion
      * @deprecated Usar getTipoPublicacionVo()->value()
      */
     public function getTipo_publicacion(): ?string
     {
-        return $this->stipo_publicacion;
+        return $this->tipo_publicacion;
     }
 
     /**
-     * @param string|null $stipo_publicacion
      * @deprecated Usar setTipoPublicacionVo(TipoPublicacionName $vo)
      */
-    public function setTipo_publicacion(?string $stipo_publicacion = null): void
+    public function setTipo_publicacion(?string $tipo_publicacion = null): void
     {
-        $this->stipo_publicacion = $stipo_publicacion;
+        $this->tipo_publicacion = $tipo_publicacion;
     }
 
     public function getTipoPublicacionVo(): ?TipoPublicacionName
     {
-        return TipoPublicacionName::fromNullable($this->stipo_publicacion);
+        return TipoPublicacionName::fromNullable($this->tipo_publicacion);
     }
 
     public function setTipoPublicacionVo(?TipoPublicacionName $tipo): void
     {
-        $this->stipo_publicacion = $tipo?->value();
+        $this->tipo_publicacion = $tipo?->value();
     }
 
     /**
-     * @return string $stitulo
      * @deprecated Usar getTituloVo()->value()
      */
     public function getTitulo(): string
     {
-        return $this->stitulo;
+        return $this->titulo;
     }
 
     /**
-     * @param string $stitulo
      * @deprecated Usar setTituloVo(PublicacionTitulo $vo)
      */
-    public function setTitulo(string $stitulo): void
+    public function setTitulo(string $titulo): void
     {
-        $this->stitulo = $stitulo;
+        $this->titulo = $titulo;
     }
 
     public function getTituloVo(): PublicacionTitulo
     {
-        return new PublicacionTitulo($this->stitulo);
+        return new PublicacionTitulo($this->titulo);
     }
 
     public function setTituloVo(?PublicacionTitulo $titulo): void
     {
         if ($titulo !== null) {
-            $this->stitulo = $titulo->value();
+            $this->titulo = $titulo->value();
         }
     }
 
     /**
-     * @return string|null $seditorial
      * @deprecated Usar getEditorialVo()->value()
      */
     public function getEditorial(): ?string
     {
-        return $this->seditorial;
+        return $this->editorial;
     }
 
     /**
-     * @param string|null $seditorial
      * @deprecated Usar setEditorialVo(EditorialName $vo)
      */
-    public function setEditorial(?string $seditorial = null): void
+    public function setEditorial(?string $editorial = null): void
     {
-        $this->seditorial = $seditorial;
+        $this->editorial = $editorial;
     }
 
     public function getEditorialVo(): ?EditorialName
     {
-        return EditorialName::fromNullable($this->seditorial);
+        return EditorialName::fromNullable($this->editorial);
     }
 
     public function setEditorialVo(?EditorialName $editorial): void
     {
-        $this->seditorial = $editorial?->value();
+        $this->editorial = $editorial?->value();
     }
 
     /**
-     * @return string|null $scoleccion
      * @deprecated Usar getColeccionVo()->value()
      */
     public function getColeccion(): ?string
     {
-        return $this->scoleccion;
+        return $this->coleccion;
     }
 
     /**
-     * @param string|null $scoleccion
      * @deprecated Usar setColeccionVo(ColeccionName $vo)
      */
-    public function setColeccion(?string $scoleccion = null): void
+    public function setColeccion(?string $coleccion = null): void
     {
-        $this->scoleccion = $scoleccion;
+        $this->coleccion = $coleccion;
     }
 
     public function getColeccionVo(): ?ColeccionName
     {
-        return ColeccionName::fromNullable($this->scoleccion);
+        return ColeccionName::fromNullable($this->coleccion);
     }
 
     public function setColeccionVo(?ColeccionName $coleccion): void
     {
-        $this->scoleccion = $coleccion?->value();
+        $this->coleccion = $coleccion?->value();
     }
 
     /**
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_publicacion
      * @deprecated Usar getFechaPublicacionVo()->value()
      */
     public function getF_publicacion(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_publicacion ?? new NullDateTimeLocal;
+        return $this->f_publicacion ?? new NullDateTimeLocal;
     }
 
     /**
-     * @param DateTimeLocal|null $df_publicacion
      * @deprecated Usar setFechaPublicacionVo(FechaPublicacion $vo)
      */
-    public function setF_publicacion(DateTimeLocal|null $df_publicacion = null): void
+    public function setF_publicacion(DateTimeLocal|null $f_publicacion = null): void
     {
-        $this->df_publicacion = $df_publicacion;
+        $this->f_publicacion = $f_publicacion;
     }
 
     public function getFechaPublicacionVo(): ?FechaPublicacion
     {
-        return FechaPublicacion::fromNullable($this->df_publicacion);
+        return FechaPublicacion::fromNullable($this->f_publicacion);
     }
 
     public function setFechaPublicacionVo(?FechaPublicacion $fecha): void
     {
-        $this->df_publicacion = $fecha?->value();
+        $this->f_publicacion = $fecha?->value();
     }
 
-    /**
-     *
-     * @return bool|null $bpendiente
-     */
+
     public function isPendiente(): ?bool
     {
-        return $this->bpendiente;
+        return $this->pendiente;
     }
 
-    /**
-     *
-     * @param bool|null $bpendiente
-     */
-    public function setPendiente(?bool $bpendiente = null): void
+
+    public function setPendiente(?bool $pendiente = null): void
     {
-        $this->bpendiente = $bpendiente;
+        $this->pendiente = $pendiente;
     }
 
     /**
-     * @return string|null $sreferencia
      * @deprecated Usar getReferenciaVo()->value()
      */
     public function getReferencia(): ?string
     {
-        return $this->sreferencia;
+        return $this->referencia;
     }
 
     /**
-     * @param string|null $sreferencia
      * @deprecated Usar setReferenciaVo(ReferenciaText $vo)
      */
-    public function setReferencia(?string $sreferencia = null): void
+    public function setReferencia(?string $referencia = null): void
     {
-        $this->sreferencia = $sreferencia;
+        $this->referencia = $referencia;
     }
 
     public function getReferenciaVo(): ?ReferenciaText
     {
-        return ReferenciaText::fromNullable($this->sreferencia);
+        return ReferenciaText::fromNullable($this->referencia);
     }
 
     public function setReferenciaVo(?ReferenciaText $referencia): void
     {
-        $this->sreferencia = $referencia?->value();
+        $this->referencia = $referencia?->value();
     }
 
     /**
-     * @return string|null $slugar
      * @deprecated Usar getLugarVo()->value()
      */
     public function getLugar(): ?string
     {
-        return $this->slugar;
+        return $this->lugar;
     }
 
     /**
-     * @param string|null $slugar
      * @deprecated Usar setLugarVo(LugarPublicacionName $vo)
      */
-    public function setLugar(?string $slugar = null): void
+    public function setLugar(?string $lugar = null): void
     {
-        $this->slugar = $slugar;
+        $this->lugar = $lugar;
     }
 
     public function getLugarVo(): ?LugarPublicacionName
     {
-        return LugarPublicacionName::fromNullable($this->slugar);
+        return LugarPublicacionName::fromNullable($this->lugar);
     }
 
     public function setLugarVo(?LugarPublicacionName $lugar): void
     {
-        $this->slugar = $lugar?->value();
+        $this->lugar = $lugar?->value();
     }
 
     /**
-     * @return string|null $sobserv
      * @deprecated Usar getObservVo()->value()
      */
     public function getObserv(): ?string
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
     /**
-     * @param string|null $sobserv
      * @deprecated Usar setObservVo(ObservacionText $vo)
      */
-    public function setObserv(?string $sobserv = null): void
+    public function setObserv(?string $observ = null): void
     {
-        $this->sobserv = $sobserv;
+        $this->observ = $observ;
     }
 
     public function getObservVo(): ?ObservacionText
     {
-        return ObservacionText::fromNullable($this->sobserv);
+        return ObservacionText::fromNullable($this->observ);
     }
 
     public function setObservVo(?ObservacionText $observ): void
     {
-        $this->sobserv = $observ?->value();
+        $this->observ = $observ?->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -429,7 +299,7 @@ class ProfesorPublicacion
         return 'id_item';
     }
 
-    function getDatosCampos(): array
+  public function getDatosCampos(): array
     {
         $oProfesorPublicacionSet = new Set();
 
@@ -446,7 +316,7 @@ class ProfesorPublicacion
         return $oProfesorPublicacionSet->getTot();
     }
 
-    function getDatosId_nom(): DatosCampo
+    private function getDatosId_nom(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_nom');
@@ -458,7 +328,7 @@ class ProfesorPublicacion
         return $oDatosCampo;
     }
 
-    function getDatosTipo_publicacion(): DatosCampo
+    private function getDatosTipo_publicacion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo_publicacion');
@@ -470,7 +340,7 @@ class ProfesorPublicacion
         return $oDatosCampo;
     }
 
-    function getDatosTitulo(): DatosCampo
+    private function getDatosTitulo(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('titulo');
@@ -482,7 +352,7 @@ class ProfesorPublicacion
         return $oDatosCampo;
     }
 
-    function getDatosEditorial(): DatosCampo
+    private function getDatosEditorial(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('editorial');
@@ -494,7 +364,7 @@ class ProfesorPublicacion
         return $oDatosCampo;
     }
 
-    function getDatosColeccion(): DatosCampo
+    private function getDatosColeccion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('coleccion');
@@ -506,7 +376,7 @@ class ProfesorPublicacion
         return $oDatosCampo;
     }
 
-    function getDatosF_publicacion(): DatosCampo
+    private function getDatosF_publicacion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_publicacion');
@@ -517,7 +387,7 @@ class ProfesorPublicacion
         return $oDatosCampo;
     }
 
-    function getDatosPendiente(): DatosCampo
+    private function getDatosPendiente(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('pendiente');
@@ -528,7 +398,7 @@ class ProfesorPublicacion
         return $oDatosCampo;
     }
 
-    function getDatosReferencia(): DatosCampo
+    private function getDatosReferencia(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('referencia');
@@ -540,7 +410,7 @@ class ProfesorPublicacion
         return $oDatosCampo;
     }
 
-    function getDatosLugar(): DatosCampo
+    private function getDatosLugar(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('lugar');
@@ -552,7 +422,7 @@ class ProfesorPublicacion
         return $oDatosCampo;
     }
 
-    function getDatosObserv(): DatosCampo
+    private function getDatosObserv(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('observ');

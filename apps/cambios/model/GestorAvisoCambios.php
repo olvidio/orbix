@@ -2,10 +2,7 @@
 
 namespace cambios\model;
 
-use actividadcargos\legacy\ActividadCargoNoSacd;
-use actividadcargos\legacy\ActividadCargoSacd;
 use core\ConfigGlobal;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividadescentro\domain\entity\CentroEncargado;
@@ -13,6 +10,7 @@ use src\asistentes\domain\entity\Asistente;
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use web\DateTimeLocal;
 use function core\is_true;
 
@@ -65,13 +63,13 @@ class GestorAvisoCambios
                 $spath = ActividadAll::class;
                 break;
             case 'ActividadCargoSacd':
-                $spath = ActividadCargoSacd::class;
+                $spath = 'ActividadCargoSacd';
                 break;
             case 'CentroEncargado':
                 $spath = CentroEncargado::class;
                 break;
             case 'ActividadCargoNoSacd':
-                $spath = ActividadCargoNoSacd::class;
+                $spath = 'ActividadCargoNoSacd';
                 break;
             case 'Asistente':
             case 'AsistenteDl':
@@ -104,7 +102,7 @@ class GestorAvisoCambios
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function addCanvi($sObjeto, $sTipoCambio, $iid_activ, $aDadesNew, $aDadesActuals)
+    public function addCanvi($sObjeto, $sTipoCambio, $iid_activ, $aDadesNew, $aDadesActuals): void
     {
         // pongo el nombre del objeto (no el de la tabla).
         $id_user = ConfigGlobal::mi_id_usuario();
@@ -144,18 +142,15 @@ class GestorAvisoCambios
 
         if (ConfigGlobal::is_app_installed('cambios')) {
             $CambioRepository = $GLOBALS['container']->get(CambioDlRepositoryInterface::class);
-            $newIdItem = $CambioRepository->getNewIdItem();
-            $oActividadCambio = new Cambio();
-            $oActividadCambio->setId_item_cambio($newIdItem);
             // si no tengo instalado procesos, la fase es el status.
             if (ConfigGlobal::is_app_installed('procesos')) {
-                $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
+                $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
                 // para sv:
-                $oGestorActividadProcesoTarea->setNomTabla('a_actividad_proceso_sv');
-                $aFases_sv = $oGestorActividadProcesoTarea->getFasesCompletadas($iid_activ);
+                $ActividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sv');
+                $aFases_sv = $ActividadProcesoTareaRepository->getFasesCompletadas($iid_activ);
                 // para sf
-                $oGestorActividadProcesoTarea->setNomTabla('a_actividad_proceso_sf');
-                $aFases_sf = $oGestorActividadProcesoTarea->getFasesCompletadas($iid_activ);
+                $ActividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sf');
+                $aFases_sf = $ActividadProcesoTareaRepository->getFasesCompletadas($iid_activ);
             } else {
                 $aFases_sv = [$id_status];
                 $aFases_sf = [$id_status];
@@ -164,15 +159,15 @@ class GestorAvisoCambios
             // Si no tengo instalado el módulo de 'cambios', no tengo la tabla en mi esquema.
             // Lo anoto en public. Como fase anoto el estado de la actividad.
             $CambioRepository = $GLOBALS['container']->get(CambioRepositoryInterface::class);
-            $newIdItem = $CambioRepository->getNewIdItem();
-            $oActividadCambio = new Cambio();
-            $oActividadCambio->setId_item_cambio($newIdItem);
             $aFases_sv = [$id_status];
             $aFases_sf = [$id_status];
         }
 
         switch ($sTipoCambio) {
             case 'INSERT':
+                $newIdItem = $CambioRepository->getNewId();
+                $oActividadCambio = new Cambio();
+                $oActividadCambio->setId_item_cambio($newIdItem);
                 $oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_INSERT);
                 $oActividadCambio->setId_activ($iid_activ);
                 $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
@@ -211,14 +206,15 @@ class GestorAvisoCambios
             case 'UPDATE':
                 $result = array_diff_assoc($aDadesNew, $aDadesActuals);
                 // OJO para los campos bool no basta... ("false" != false).
-                $classname = get_class($oActividadCambio);
                 foreach ($result as $key => $value) {
                     // amb els boolean no s'aclara: 0,1,false ,true,f,t...
                     if (!is_null(is_true($value)) &&
                         is_true($aDadesActuals[$key]) === is_true($value)) {
                         continue;
                     }
-                    $oActividadCambio = new $classname();
+                    $newIdItem = $CambioRepository->getNewId();
+                    $oActividadCambio = new Cambio();
+                    $oActividadCambio->setId_item_cambio($newIdItem);
                     $oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_UPDATE);
                     $oActividadCambio->setId_activ($iid_activ);
                     $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
@@ -237,6 +233,9 @@ class GestorAvisoCambios
                 }
                 break;
             case 'DELETE':
+                $newIdItem = $CambioRepository->getNewId();
+                $oActividadCambio = new Cambio();
+                $oActividadCambio->setId_item_cambio($newIdItem);
                 $oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_DELETE);
                 $oActividadCambio->setId_activ($iid_activ);
                 $oActividadCambio->setId_tipo_activ($iId_tipo_activ);

@@ -3,10 +3,10 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use permisos\model\PermisosActividades;
-use procesos\model\entity\GestorActividadFase;
-use procesos\model\entity\GestorPermUsuarioActividad;
 use procesos\model\PermAccion;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -87,11 +87,13 @@ $oActividadTipo->setPerm_jefe($perm_jefe);
 $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
 $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $Qdl_propia);
 
-$oGesFases = new GestorActividadFase();
-$oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
+$ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+$aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
+$oDesplFases = new Desplegable();
+$oDesplFases->setOpciones($aOpciones);
 
 $aPerm = [];
-$gesPermUsuarioActividad = new GestorPermUsuarioActividad();
+$PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
 $i = 0;
 asort($aAfecta_a);
 foreach ($aAfecta_a as $afecta_a_txt => $num) {
@@ -106,8 +108,8 @@ foreach ($aAfecta_a as $afecta_a_txt => $num) {
     $perm_on = '';
     $perm_off = '';
     $afecta_a = '';
-    $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
-    // Solo deberia haber uno???
+    $cPermUsuarioActividad = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere);
+    // Solo debería haber uno???
     foreach ($cPermUsuarioActividad as $oPermiso) {
         $fase_ref = $oPermiso->getFase_ref();
         $afecta_a = $oPermiso->getAfecta_a();
@@ -115,7 +117,10 @@ foreach ($aAfecta_a as $afecta_a_txt => $num) {
         $perm_off = $oPermiso->getPerm_off();
     }
 
-    $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
+    $aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
+    $oDesplFases = new Desplegable();
+    $oDesplFases->setOpciones($aOpciones);
+    $oDesplFases->setBlanco(true);
     $oDesplFases->setNombre("fase_ref[]");
     $oDesplFases->setOpcion_sel($fase_ref);
 

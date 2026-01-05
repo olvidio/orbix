@@ -93,8 +93,7 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $App = new App();
-            $App->setAllAttributes($aDatos);
+            $App =  App::fromArray($aDatos);
             $AppSet->add($App);
         }
         return $AppSet->getTot();
@@ -167,7 +166,7 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         if (!is_array($aDatos)) {
             return null;
         }
-        return (new App())->setAllAttributes($aDatos);
+        return App::fromArray($aDatos);
     }
 
     public function getNewId()

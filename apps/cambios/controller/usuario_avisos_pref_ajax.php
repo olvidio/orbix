@@ -1,15 +1,17 @@
 <?php
 
-use cambios\model\entity\CambioUsuarioObjetoPref;
-use cambios\model\entity\CambioUsuarioPropiedadPref;
-use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
-use procesos\model\entity\GestorActividadFase;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
+use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
+use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
+use src\cambios\domain\entity\CambioUsuarioObjetoPref;
+use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\entity\Role;
+use web\Desplegable;
 use web\DesplegableArray;
 use web\Hash;
 use function core\is_true;
@@ -45,15 +47,18 @@ switch ($Qsalida) {
 
 
         $id_cond = $Qobjeto . "_" . $Qpropiedad . "_cond";
+        $CambioUsuarioPropiedadPref = $GLOBALS['container']->get(CambioUsuarioPropiedadPref::class);
         if (!empty($Qid_item)) {
-            $oCambioUsuarioPropiedadPref = new CambioUsuarioPropiedadPref(array('id_item' => $Qid_item));
+            $oCambioUsuarioPropiedadPref = $CambioUsuarioPropiedadPref->findById($Qid_item);
         } else {
+            $newIdItem = $CambioUsuarioPropiedadPref->newId();
             $oCambioUsuarioPropiedadPref = new CambioUsuarioPropiedadPref();
+            $oCambioUsuarioPropiedadPref->setId_item($newIdItem);
         }
 
         if (!empty($Qpropiedad)) {
             $oCambioUsuarioPropiedadPref->setPropiedad($Qpropiedad);
-            if ($Qpropiedad == 'id_ubi') {
+            if ($Qpropiedad === 'id_ubi') {
                 $Qvalor = implode(",", $_POST['id_ubi']);
             }
         }
@@ -98,8 +103,9 @@ switch ($Qsalida) {
             "regexp" => _("regExp")
         );
 
+        $CambioUsuarioPropiedadPref = $GLOBALS['container']->get(CambioUsuarioPropiedadPref::class);
         if (!empty($Qid_item)) {
-            $oCambioUsuarioPropiedadPref = new CambioUsuarioPropiedadPref(array('id_item' => $Qid_item));
+            $oCambioUsuarioPropiedadPref = $CambioUsuarioPropiedadPref->findById($Qid_item);
 
             $valor = $oCambioUsuarioPropiedadPref->getValor();
             $operador = $oCambioUsuarioPropiedadPref->getOperador();
@@ -123,9 +129,9 @@ switch ($Qsalida) {
         $txt2 .= '<tr><td>' . _("es") . ':';
         foreach ($a_operadores as $op => $nom_op) {
             if (empty($operador)) {
-                $chk_radio = ($op == '=') ? 'checked' : '';
+                $chk_radio = ($op === '=') ? 'checked' : '';
             } else {
-                $chk_radio = ($op == $operador) ? 'checked' : '';
+                $chk_radio = ($op === $operador) ? 'checked' : '';
             }
             $txt2 .= "<input type=\"radio\" $chk_radio name=\"operador\" value=\"$op\">$nom_op";
         }
@@ -135,19 +141,19 @@ switch ($Qsalida) {
         if ($Qpropiedad === 'id_ubi') {
             // miro que rol tengo. Si soy casa, sólo veo la mía
             if ($oRole->isRolePau(Role::PAU_CDC)) { //casa
-                $id_pau = $oMiUsuario->getId_pau();
+                $id_pau = $oMiUsuario->getCsv_id_pau();
                 $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
                 //formulario para casas cuyo calendario de actividades interesa
-                $donde = "WHERE status='t' AND (id_ubi=$sDonde)";
+                $donde = "WHERE active='t' AND (id_ubi=$sDonde)";
             } else {
                 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
-                    $donde = "WHERE status='t'";
+                    $donde = "WHERE active='t'";
                 } else {
-                    if ($miSfsv == 1) {
-                        $donde = "WHERE status='t' AND sv='t'";
+                    if ($miSfsv === 1) {
+                        $donde = "WHERE active='t' AND sv='t'";
                     }
-                    if ($miSfsv == 2) {
-                        $donde = "WHERE status='t' AND sf='t'";
+                    if ($miSfsv === 2) {
+                        $donde = "WHERE active='t' AND sf='t'";
                     }
                 }
             }
@@ -224,8 +230,8 @@ switch ($Qsalida) {
         $a_condicion_sel = [];
         $a_cambio_propiedad_sel = [];
         if (!empty($Qid_item_usuario_objeto)) {
-            $GesCambiosUsuarioPropiedadPref = new GestorCambioUsuarioPropiedadPref();
-            $cListaCampos = $GesCambiosUsuarioPropiedadPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
+            $CambioUsuarioPropiedadPref = $GLOBALS['container']->get(CambioUsuarioPropiedadPref::class);
+            $cListaCampos = $CambioUsuarioPropiedadPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
             $c = 0;
             foreach ($cListaCampos as $oCambioUsuarioPropiedadPref) {
                 $c++;
@@ -263,7 +269,7 @@ switch ($Qsalida) {
             foreach ($cDatosCampos as $oDatosCampo) {
                 $nom_prop = $oDatosCampo->getNom_camp();
                 // me salto el id_schema.
-                if ($nom_prop == 'id_schema') continue;
+                if ($nom_prop === 'id_schema') continue;
                 // me salto los que pone FALSE en condicion aviso
                 $condicion_aviso = $oDatosCampo->getAviso();
                 if (!is_true($condicion_aviso)) continue;
@@ -277,8 +283,8 @@ switch ($Qsalida) {
                 } else {
                     // para el caso de las casas y los sacd, sólo puede avisar de un cambio suyo.
                     // miro que rol tengo. Si soy casa, sólo veo la mía
-                    if ($nom_prop == 'id_ubi' && $oRole->isRolePau(Role::PAU_CDC)) {
-                        $id_pau = $oMiUsuario->getId_pau();
+                    if ($nom_prop === 'id_ubi' && $oRole->isRolePau(Role::PAU_CDC)) {
+                        $id_pau = $oMiUsuario->getCsv_id_pau();
                         $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
 
                         $chk_prop = 'checked';
@@ -341,15 +347,18 @@ switch ($Qsalida) {
                 $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
                 // buscar los procesos posibles para estos tipos de actividad
                 $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $dl_propia);
-                $oGesFases = new GestorActividadFase();
-                $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
+                $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+                $aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
+                $oDesplFases = new Desplegable();
+                $oDesplFases->setBlanco(true);
+                $oDesplFases->setOpciones($aOpciones);
                 $oDesplFases->setNombre('id_fase_ref');
                 //$oDesplFases->setOpcion_sel($id_fase_ref);
 
             } else {
                 // Sólo los estado de la actividad
                 $a_status = StatusId::getArrayStatus();
-                // Quitar el status 'qualquiera'
+                // Quitar el status 'cualquiera'
                 unset($a_status[StatusId::ALL]);
                 $aFasesConPerm = array_flip($a_status);
             }
@@ -376,10 +385,11 @@ switch ($Qsalida) {
             $Qid_item_usuario_objeto = (integer)filter_input(INPUT_POST, 'id_item_usuario_objeto');
         }
 
-        $oCambioUsuarioObjeto = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
-        if ($oCambioUsuarioObjeto->DBEliminar() === false) {
+        $CambioUsuarioObjetoPrefRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
+        $oCambioUsuarioObjeto = $CambioUsuarioObjetoPrefRepository->findById($Qid_item_usuario_objeto);
+        if ($CambioUsuarioObjetoPrefRepository->Eliminar($oCambioUsuarioObjeto) === false) {
             echo _("Hay un error, no se ha eliminado");
-            echo "\n" . $oCambioUsuarioObjeto->getErrorTxt();
+            echo "\n" . $CambioUsuarioObjetoPrefRepository->getErrorTxt();
         }
         break;
     case "guardar_objeto":
@@ -396,14 +406,17 @@ switch ($Qsalida) {
         $Qa_casas = (array)filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
         $a_relleno = array(1 => '.', 2 => '..', 3 => '...', 4 => '....', 5 => '.....');
+        $CambioUsuarioObjetoPrefRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
         if (!empty($Qid_item_usuario_objeto)) {
-            $oCambioUsuarioObjeto = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
+            $oCambioUsuarioObjeto = $CambioUsuarioObjetoPrefRepository->findById($Qid_item_usuario_objeto);
         } else {
+            $newIdItem = $CambioUsuarioObjetoPrefRepository->newId();
             $oCambioUsuarioObjeto = new CambioUsuarioObjetoPref();
+            $oCambioUsuarioObjeto->setId_item_usuario_objeto($newIdItem);
         }
         $oCambioUsuarioObjeto->setId_usuario($Qid_usuario);
         if (is_true($Qdl_propia)) {
-            $isfsv = substr($Qid_tipo_activ, 0, 1);
+            $isfsv = (int)substr($Qid_tipo_activ, 0, 1);
             $dl_org = ConfigGlobal::mi_delef($isfsv);
         } else {
             $dl_org = 'x';
@@ -433,11 +446,11 @@ switch ($Qsalida) {
         // En el caso de filtrar por casas
         if (!empty($Qa_casas)) {
             $txt_casa = implode(",", $Qa_casas);
-            $oCambioUsuarioObjeto->setId_pau($txt_casa);
+            $oCambioUsuarioObjeto->setCsv_id_pau($txt_casa);
         }
-        if ($oCambioUsuarioObjeto->DBGuardar() === false) {
+        if ($CambioUsuarioObjetoPrefRepository->Guardar($oCambioUsuarioObjeto) === false) {
             echo _("Hay un error, no se ha guardado");
-            echo "\n" . $oCambioUsuarioObjeto->getErrorTxt();
+            echo "\n" . $CambioUsuarioObjetoPrefRepository->getErrorTxt();
             exit();
         }
         $id_item_usuario_objeto = $oCambioUsuarioObjeto->getId_item_usuario_objeto();
@@ -449,6 +462,7 @@ switch ($Qsalida) {
 
         $a_propiedades_sel = [];
         // Si es empty, no hay ninguna propiedad seleccionada, hay que borrar todas.
+        $CambioUsuarioPropiedadPrefRepository = $GLOBALS['container']->get(CambioUsuarioPropiedadPrefRepositoryInterface::class);
         if (!empty($_POST[$Qobjeto])) {
             foreach ($_POST[$Qobjeto] as $id_cond) {
                 $nom_prop_cond = substr(strstr($id_cond, '_'), 1);
@@ -470,23 +484,24 @@ switch ($Qsalida) {
                     $nom_item = str_replace('_cond', '_item', $id_cond);
 
                     if (!empty($_POST[$nom_item])) {
-                        $oCambioPropiedad = new CambioUsuarioPropiedadPref(array('id_item' => $_POST[$nom_item]));
+                        $oCambioPropiedad = $CambioUsuarioPropiedadPrefRepository->findById($_POST[$nom_item]);
                     } else {
+                        $newIdItem = $CambioUsuarioPropiedadPrefRepository->newId();
                         $oCambioPropiedad = new CambioUsuarioPropiedadPref();
+                        $oCambioPropiedad->setId_item($newIdItem);
                     }
                     $oCambioPropiedad->setId_item_usuario_objeto($Qid_item_usuario_objeto);
                     $oCambioPropiedad->setPropiedad($nom_prop);
                 }
-                if ($oCambioPropiedad->DBGuardar() === false) {
+                if ($CambioUsuarioPropiedadPrefRepository->Guardar($oCambioPropiedad) === false) {
                     echo _("Hay un error, no se ha guardado");
-                    echo "\n" . $oCambioPropiedad->getErrorTxt();
+                    echo "\n" . $CambioUsuarioPropiedadPrefRepository->getErrorTxt();
                 }
             }
         }
-        // Hay que borrar las propiedades/campos que no estan en la lista:
+        // Hay que borrar las propiedades/campos que no están en la lista:
         if (!empty($Qid_item_usuario_objeto)) {
-            $GesCambiosUsuarioPropiedadPref = new GestorCambioUsuarioPropiedadPref();
-            $cListaPropiedades = $GesCambiosUsuarioPropiedadPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
+            $cListaPropiedades = $CambioUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
             $c = 0;
             $a_item_tot = [];
             $a_propiedades_tot = [];
@@ -499,10 +514,10 @@ switch ($Qsalida) {
             //print_r($a_propiedades_borrar);
             foreach ($a_propiedades_borrar as $propiedad_borrar) {
                 $key = array_search($propiedad_borrar, $a_propiedades_tot);
-                $oCambioUsuarioPropiedadPref = new CambioUsuarioPropiedadPref(array('id_item' => $a_item_tot[$key]));
-                if ($oCambioUsuarioPropiedadPref->DBEliminar() === false) {
+                $oCambioUsuarioPropiedadPref = $CambioUsuarioPropiedadPrefRepository->findById($a_item_tot[$key]);
+                if ($CambioUsuarioPropiedadPrefRepository->Eliminar($oCambioUsuarioPropiedadPref) === false) {
                     echo _("Hay un error, no se ha eliminado");
-                    echo "\n" . $oCambioUsuarioPropiedadPref->getErrorTxt();
+                    echo "\n" . $CambioUsuarioPropiedadPrefRepository->getErrorTxt();
                 }
             }
         }

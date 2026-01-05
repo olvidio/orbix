@@ -7,121 +7,62 @@ use core\Set;
 use src\inventario\domain\value_objects\ColeccionAgrupar;
 use src\inventario\domain\value_objects\ColeccionId;
 use src\inventario\domain\value_objects\ColeccionName;
+use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 
-/**
- * Clase que implementa la entidad i_colecciones_dl
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 12/3/2025
- */
 class Coleccion
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_coleccion de Coleccion
-     *
-     * @var int
-     */
-    private int $iid_coleccion;
-    /**
-     * Nom_coleccion de Coleccion
-     *
-     * @var string
-     */
-    private string $snom_coleccion;
-    /**
-     * Agrupar de Coleccion
-     *
-     * @var bool|null
-     */
-    private bool|null $bagrupar = null;
+    private int $id_coleccion;
+
+    private string $nom_coleccion;
+
+    private bool|null $agrupar = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Coleccion
-     */
-    public function setAllAttributes(array $aDatos): Coleccion
-    {
-        if (array_key_exists('id_coleccion', $aDatos)) {
-            $this->setId_coleccion($aDatos['id_coleccion']);
-        }
-        if (array_key_exists('nom_coleccion', $aDatos)) {
-            $this->setNom_coleccion($aDatos['nom_coleccion']);
-        }
-        if (array_key_exists('agrupar', $aDatos)) {
-            $this->setAgrupar(is_true($aDatos['agrupar']));
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_coleccion
-     */
     public function getId_coleccion(): int
     {
-        return $this->iid_coleccion;
+        return $this->id_coleccion;
     }
 
-    /**
-     *
-     * @param int $iid_coleccion
-     */
-    public function setId_coleccion(int $iid_coleccion): void
+
+    public function setId_coleccion(int $id_coleccion): void
     {
-        $this->iid_coleccion = $iid_coleccion;
+        $this->id_coleccion = $id_coleccion;
     }
 
-    /**
-     *
-     * @return string $snom_coleccion
-     */
+
     public function getNom_coleccion(): string
     {
-        return $this->snom_coleccion;
+        return $this->nom_coleccion;
     }
 
-    /**
-     *
-     * @param string $snom_coleccion
-     */
-    public function setNom_coleccion(string $snom_coleccion): void
+
+    public function setNom_coleccion(string $nom_coleccion): void
     {
-        $this->snom_coleccion = $snom_coleccion;
+        $this->nom_coleccion = $nom_coleccion;
     }
 
-    /**
-     *
-     * @return bool|null $bagrupar
-     */
+
     public function isAgrupar(): ?bool
     {
-        return $this->bagrupar;
+        return $this->agrupar;
     }
 
-    /**
-     *
-     * @param bool|null $bagrupar
-     */
-    public function setAgrupar(?bool $bagrupar = null): void
+
+    public function setAgrupar(?bool $agrupar = null): void
     {
-        $this->bagrupar = $bagrupar;
+        $this->agrupar = $agrupar;
     }
 
     // Value Object API (duplicada con legacy)
     public function getIdColeccionVo(): ?ColeccionId
     {
-        return isset($this->iid_coleccion) ? new ColeccionId($this->iid_coleccion) : null;
+        return isset($this->id_coleccion) ? new ColeccionId($this->id_coleccion) : null;
     }
 
     public function setIdColeccionVo(?ColeccionId $id = null): void
@@ -130,27 +71,27 @@ class Coleccion
             // dejar como está; id puede ser seteado por repos
             return;
         }
-        $this->iid_coleccion = $id->value();
+        $this->id_coleccion = $id->value();
     }
 
     public function getNomColeccionVo(): ?ColeccionName
     {
-        return isset($this->snom_coleccion) && $this->snom_coleccion !== '' ? new ColeccionName($this->snom_coleccion) : null;
+        return isset($this->nom_coleccion) && $this->nom_coleccion !== '' ? new ColeccionName($this->nom_coleccion) : null;
     }
 
     public function setNomColeccionVo(?ColeccionName $name = null): void
     {
-        $this->snom_coleccion = $name?->value() ?? '';
+        $this->nom_coleccion = $name?->value() ?? '';
     }
 
     public function getAgruparVo(): ?ColeccionAgrupar
     {
-        return isset($this->bagrupar) ? new ColeccionAgrupar((bool)$this->bagrupar) : null;
+        return isset($this->agrupar) ? new ColeccionAgrupar((bool)$this->agrupar) : null;
     }
 
     public function setAgruparVo(?ColeccionAgrupar $agrupar = null): void
     {
-        $this->bagrupar = $agrupar?->value();
+        $this->agrupar = $agrupar?->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -159,7 +100,7 @@ class Coleccion
         return 'id_coleccion';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oSet = new Set();
 
@@ -168,7 +109,7 @@ class Coleccion
         return $oSet->getTot();
     }
 
-    function getDatosNom_coleccion()
+    private function getDatosNom_coleccion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nom_coleccion');
@@ -179,7 +120,7 @@ class Coleccion
         return $oDatosCampo;
     }
 
-    function getDatosAgrupar()
+    private function getDatosAgrupar(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('agrupar');

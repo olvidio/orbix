@@ -3,12 +3,13 @@
 namespace permisos\model;
 
 use core\ConfigGlobal;
-use procesos\model\entity\ActividadFase;
-use procesos\model\entity\GestorActividadProcesoTarea;
-use procesos\model\entity\GestorTareaProceso;
 use procesos\model\PermAccion;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
+use src\procesos\domain\entity\ActividadFase;
+use src\procesos\domain\value_objects\FaseId;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use function core\is_true;
 
@@ -229,8 +230,8 @@ class PermisosActividades
                 return FALSE;
             }
         }
-        $oGesActiv = new GestorActividadProcesoTarea();
-        $completada = $oGesActiv->faseCompletada($this->iid_activ, $id_fase);
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $completada = $ActividadProcesoTareaRepository->faseCompletada($this->iid_activ, $id_fase);
         return $completada;
     }
 
@@ -262,16 +263,16 @@ class PermisosActividades
         }
         // Cojo el primero
         $oPerm = FALSE;
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
         foreach ($aTiposDeProcesos as $id_tipo_proceso) {
             // Buscar la primera fase (no depende de fases previas)
-            $GesTareaProceso = new GestorTareaProceso();
-            $oTareaProceso = $GesTareaProceso->getFaseIndependiente($id_tipo_proceso);
+            $oTareaProceso = $TareaProcesoRepository->getFaseIndependiente($id_tipo_proceso);
             $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
             $status = $oTareaProceso->getStatus();
 
             // devolver false si no puedo crear
             $iAfecta = 1; //datos
-            $id_fase_ref = ActividadFase::FASE_APROBADA;
+            $id_fase_ref = FaseId::FASE_APROBADA;
             $on_off = 'off';
 
             if (($oP = $this->getPermisos($iAfecta)) === false) {

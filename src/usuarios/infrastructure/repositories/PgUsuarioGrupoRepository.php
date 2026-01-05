@@ -93,8 +93,7 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $UsuarioGrupo = new UsuarioGrupo();
-            $UsuarioGrupo->setAllAttributes($aDatos);
+            $UsuarioGrupo = UsuarioGrupo::fromArray($aDatos);
             $UsuarioGrupoSet->add($UsuarioGrupo);
         }
         return $UsuarioGrupoSet->getTot();
@@ -158,6 +157,6 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
         if (empty($aDatos)) {
             return null;
         }
-        return (new UsuarioGrupo())->setAllAttributes($aDatos);
+        return UsuarioGrupo::fromArray($aDatos);
     }
 }

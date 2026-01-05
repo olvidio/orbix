@@ -104,7 +104,7 @@ use function core\is_true;
             $nota_num_txt = empty($nota_num) ? '?' : $nota_num;
             $nota_max = $oMatricula->getNota_max();
             $nota_max_txt = empty($nota_max) ? '?' : $nota_max;
-            $preceptor = $oMatricula->getPreceptor();
+            $preceptor = $oMatricula->isPreceptor();
             if (is_true($preceptor)) {
                 $chk_tipo = "selected";
                 $tipo_txt = _("preceptor");

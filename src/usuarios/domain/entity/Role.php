@@ -2,76 +2,28 @@
 
 namespace src\usuarios\domain\entity;
 
+use src\shared\domain\traits\Hydratable;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\value_objects\RoleName;
 use src\usuarios\domain\value_objects\PauType;
-use function core\is_true;
 
-/**
- * Clase que implementa la entidad aux_roles
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 24/4/2025
- */
 class Role
 {
-
-    // pau constants.
-    const PAU_NONE = 'none'; // No corresponde a ninguna Persona o ubi.
-    const PAU_CDC = 'cdc'; // Casa.
-    const PAU_CTR = 'ctr'; // Centro.
-    const PAU_NOM = 'nom'; // Persona.
-    const PAU_SACD = 'sacd'; // Sacd.
-
-    const ARRAY_PAU_TXT = [
-        self::PAU_NONE => 'none',
-        self::PAU_CDC => 'cdc',
-        self::PAU_CTR => 'ctr',
-        self::PAU_NOM => 'nom',
-        self::PAU_SACD => 'sacd',
-    ];
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_role de Role
-     *
-     * @var int
-     */
-    private int $iid_role;
-    /**
-     * Role de Role
-     *
-     * @var RoleName|null
-     */
-    private ?RoleName $srole = null;
-    /**
-     * Sf de Role
-     *
-     * @var bool
-     */
-    private bool $bsf;
-    /**
-     * Sv de Role
-     *
-     * @var bool
-     */
-    private bool $bsv;
-    /**
-     * Pau de Role
-     *
-     * @var PauType|null
-     */
-    private ?PauType $spau = null;
-    /**
-     * Dmz de Role
-     *
-     * @var bool|null
-     */
-    private bool|null $bdmz = null;
+    private int $id_role;
+
+    private ?RoleName $role = null;
+
+    private bool $sf;
+
+    private bool $sv;
+
+    private ?PauType $pau = null;
+
+    private bool|null $dmz = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -80,8 +32,8 @@ class Role
         $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aPau = $RoleRepository->getArrayRoles();
 
-        $nom_role = strtolower($nom_role ?? '');
-        return !empty($aPau[$this->iid_role]) && $aPau[$this->iid_role] === $nom_role;
+        $nom_role = strtolower($nom_role);
+        return !empty($aPau[$this->id_role]) && $aPau[$this->id_role] === $nom_role;
     }
 
     public function isRolePau(string $nom_pau): bool
@@ -89,185 +41,106 @@ class Role
         $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aPauRoles = $RoleRepository->getArrayRolesPau();
 
-        $nom_pau = strtolower($nom_pau ?? '');
-        return !empty($aPauRoles[$this->iid_role]) && $aPauRoles[$this->iid_role] === $nom_pau;
+        $nom_pau = strtolower($nom_pau);
+        return !empty($aPauRoles[$this->id_role]) && $aPauRoles[$this->id_role] === $nom_pau;
     }
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Role
-     */
-    public function setAllAttributes(array $aDatos): Role
-    {
-        if (array_key_exists('id_role', $aDatos)) {
-            $this->setId_role($aDatos['id_role']);
-        }
-        if (array_key_exists('role', $aDatos)) {
-            if ($aDatos['role'] === null) {
-                $this->setRole(null);
-            } else {
-                // Check if it's already a RoleName object
-                if ($aDatos['role'] instanceof RoleName) {
-                    $this->setRole($aDatos['role']);
-                } else {
-                    $this->setRole(new RoleName($aDatos['role']));
-                }
-            }
-        }
-        if (array_key_exists('sf', $aDatos)) {
-            $this->setSf(is_true($aDatos['sf']));
-        }
-        if (array_key_exists('sv', $aDatos)) {
-            $this->setSv(is_true($aDatos['sv']));
-        }
-        if (array_key_exists('pau', $aDatos)) {
-            $pauVal = $aDatos['pau'];
-            if ($pauVal instanceof PauType) {
-                $this->setPau($pauVal);
-            } else {
-                // Normalize null/empty string to PAU_NONE
-                $pauStr = ($pauVal === null || $pauVal === '') ? PauType::PAU_NONE : (string)$pauVal;
-                $this->setPau(new PauType($pauStr));
-            }
-        }
-        if (array_key_exists('dmz', $aDatos)) {
-            $this->setDmz(is_true($aDatos['dmz']));
-        }
-        return $this;
-    }
 
-    /**
-     *
-     * @return int $iid_role
-     */
     public function getId_role(): int
     {
-        return $this->iid_role;
+        return $this->id_role;
     }
 
-    /**
-     *
-     * @param int $iid_role
-     */
-    public function setId_role(int $iid_role): void
+
+    public function setId_role(int $id_role): void
     {
-        $this->iid_role = $iid_role;
+        $this->id_role = $id_role;
     }
 
-    /**
-     *
-     * @return RoleName|null
-     */
-    public function getRole(): ?RoleName
+
+    public function getRoleVo(): ?RoleName
     {
-        return $this->srole;
+        return $this->role;
     }
 
-    /**
-     *
-     * @param RoleName|null $srole
-     */
-    public function setRole(?RoleName $srole = null): void
+
+    public function setRoleVo(RoleName|string|null $role = null): void
     {
-        $this->srole = $srole;
+        if ($role === null) {
+            $this->role = null;
+            return;
+        }
+
+        $this->role = $role instanceof RoleName
+            ? $role
+            : new RoleName($role);
     }
 
-    /**
-     * Get the role name as a string
-     *
-     * @return string|null
-     */
+
     public function getRoleAsString(): ?string
     {
-        return $this->srole ? $this->srole->value() : null;
+        return $this->role?->value();
     }
 
-    /**
-     *
-     * @return bool $bsf
-     */
+
     public function isSf(): bool
     {
-        return $this->bsf;
+        return $this->sf;
     }
 
-    /**
-     *
-     * @param bool $bsf
-     */
-    public function setSf(bool $bsf): void
+
+    public function setSf(bool $sf): void
     {
-        $this->bsf = $bsf;
+        $this->sf = $sf;
     }
 
-    /**
-     *
-     * @return bool $bsv
-     */
+
     public function isSv(): bool
     {
-        return $this->bsv;
+        return $this->sv;
     }
 
-    /**
-     *
-     * @param bool $bsv
-     */
-    public function setSv(bool $bsv): void
+
+    public function setSv(bool $sv): void
     {
-        $this->bsv = $bsv;
+        $this->sv = $sv;
     }
 
-    /**
-     *
-     * @return PauType|null
-     */
-    public function getPau(): PauType
+
+    public function getPauVo(): PauType
     {
         // Normalize: never return null; default to PAU_NONE
-        if ($this->spau === null) {
-            $this->spau = new PauType(PauType::PAU_NONE);
+        if ($this->pau === null) {
+            $this->pau = new PauType(PauType::PAU_NONE);
         }
-        return $this->spau;
+        return $this->pau;
     }
 
-    /**
-     *
-     * @param PauType|null $spau
-     */
-    public function setPau(?PauType $spau = null): void
+    public function setPauVo(PauType|string|null $pau = null): void
     {
         // Normalize null to PAU_NONE
-        $this->spau = $spau ?? new PauType(PauType::PAU_NONE);
+        if ($pau === null) {
+            $this->pau = new PauType(PauType::PAU_NONE);
+        } else {
+            $this->pau = $pau instanceof PauType ? $pau : new PauType($pau);
+        }
     }
 
-    /**
-     * Get the PAU type as a string
-     *
-     * @return string|null
-     */
+
     public function getPauAsString(): string
     {
-        return $this->getPau()->value();
+        return $this->getPauVo()->value();
     }
 
-    /**
-     *
-     * @return bool|null $bdmz
-     */
+
     public function isDmz(): ?bool
     {
-        return $this->bdmz;
+        return $this->dmz;
     }
 
-    /**
-     *
-     * @param bool|null $bdmz
-     */
-    public function setDmz(?bool $bdmz = null): void
+
+    public function setDmz(?bool $dmz = null): void
     {
-        $this->bdmz = $bdmz;
+        $this->dmz = $dmz;
     }
 }

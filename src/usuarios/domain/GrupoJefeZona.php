@@ -112,7 +112,7 @@ class GrupoJefeZona
         $cUsuarios = $UsuarioRepository->getUsuarios(['id_usuario' => $this->id_grupo_jefe_zona]);
         $a_miembros_jefeZona = [];
         foreach ($cUsuarios as $oUsuario) {
-            $a_miembros_jefeZona[$oUsuario->getId_pau()] = $oUsuario->getId_usuario();
+            $a_miembros_jefeZona[$oUsuario->getCsv_id_pau()] = $oUsuario->getId_usuario();
         }
         return $a_miembros_jefeZona;
     }

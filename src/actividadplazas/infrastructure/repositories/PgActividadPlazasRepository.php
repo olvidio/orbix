@@ -97,8 +97,7 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         foreach ($filas as $aDatos) {
             // para los json
             $aDatos['cedidas'] = (new ConverterJson($aDatos['cedidas'], true))->fromPg();
-            $ActividadPlazas = new ActividadPlazas();
-            $ActividadPlazas->setAllAttributes($aDatos);
+            $ActividadPlazas = ActividadPlazas::fromArray($aDatos);
             $ActividadPlazasSet->add($ActividadPlazas);
         }
         return $ActividadPlazasSet->getTot();
@@ -133,7 +132,7 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         $aDatos['cl'] = $ActividadPlazas->getCl();
         $aDatos['dl_tabla'] = $ActividadPlazas->getDl_tabla();
         // para los json
-        $aDatos['cedidas'] = (new ConverterJson($ActividadPlazas->getCedidas(), true))->toPg(true);
+        $aDatos['cedidas'] = (new ConverterJson($ActividadPlazas->getCedidas(), false))->toPg(false);
         array_walk($aDatos, 'core\poner_null');
 
         if ($bInsert === false) {
@@ -203,6 +202,6 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         if (empty($aDatos)) {
             return null;
         }
-        return (new ActividadPlazas())->setAllAttributes($aDatos);
+        return ActividadPlazas::fromArray($aDatos);
     }
 }

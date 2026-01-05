@@ -20,7 +20,7 @@ class UsuarioTest extends myTest
         parent::setUp();
         $this->usuario = new Usuario();
         $this->usuario->setId_usuario(1);
-        $this->usuario->setUsuario(new Username('testuser'));
+        $this->usuario->setUsuarioVo(new Username('testuser'));
         $this->usuario->setId_role(2);
     }
 
@@ -31,7 +31,7 @@ class UsuarioTest extends myTest
 
     public function test_get_usuario()
     {
-        $this->assertInstanceOf(Username::class, $this->usuario->getUsuario());
+        $this->assertInstanceOf(Username::class, $this->usuario->getUsuarioVo());
         $this->assertEquals('testuser', $this->usuario->getUsuarioAsString());
     }
 
@@ -43,33 +43,33 @@ class UsuarioTest extends myTest
     public function test_set_and_get_password()
     {
         $password = new Password('securepassword');
-        $this->usuario->setPassword($password);
-        $this->assertInstanceOf(Password::class, $this->usuario->getPassword());
+        $this->usuario->setPasswordVo($password);
+        $this->assertInstanceOf(Password::class, $this->usuario->getPasswordVo());
         $this->assertEquals('securepassword', $this->usuario->getPasswordAsString());
     }
 
     public function test_set_and_get_email()
     {
         $email = new Email('test@example.com');
-        $this->usuario->setEmail($email);
-        $this->assertInstanceOf(Email::class, $this->usuario->getEmail());
+        $this->usuario->setEmailVo($email);
+        $this->assertInstanceOf(Email::class, $this->usuario->getEmailVo());
         $this->assertEquals('test@example.com', $this->usuario->getEmailAsString());
     }
 
     public function test_set_and_get_id_pau()
     {
         $idPau = new IdPau('12345');
-        $this->usuario->setId_pau($idPau);
-        $this->assertInstanceOf(IdPau::class, $this->usuario->getId_pau());
-        $this->assertEquals('12345', $this->usuario->getId_pauAsString());
+        $this->usuario->setCsvIdPauVo($idPau);
+        $this->assertInstanceOf(IdPau::class, $this->usuario->getCsvIdPauVo());
+        $this->assertEquals('12345', $this->usuario->getCsvIdPauAsString());
     }
 
     public function test_set_and_get_nom_usuario()
     {
         $nombreUsuario = new NombreUsuario('John Doe');
-        $this->usuario->setNom_usuario($nombreUsuario);
-        $this->assertInstanceOf(NombreUsuario::class, $this->usuario->getNom_usuario());
-        $this->assertEquals('John Doe', $this->usuario->getNom_usuarioAsString());
+        $this->usuario->setNomUsuarioVo($nombreUsuario);
+        $this->assertInstanceOf(NombreUsuario::class, $this->usuario->getNomUsuarioVo());
+        $this->assertEquals('John Doe', $this->usuario->getNomUsuarioAsString());
     }
 
     public function test_set_and_get_has_2fa()
@@ -81,8 +81,8 @@ class UsuarioTest extends myTest
     public function test_set_and_get_secret_2fa()
     {
         $secret2fa = new Secret2FA('ABCDEFGHIJKLMNOP');
-        $this->usuario->setSecret2fa($secret2fa);
-        $this->assertInstanceOf(Secret2FA::class, $this->usuario->getSecret2fa());
+        $this->usuario->setSecret2faVo($secret2fa);
+        $this->assertInstanceOf(Secret2FA::class, $this->usuario->getSecret2faVo());
         $this->assertEquals('ABCDEFGHIJKLMNOP', $this->usuario->getSecret2faAsString());
     }
 
@@ -114,8 +114,8 @@ class UsuarioTest extends myTest
         $this->assertEquals(2, $usuario->getId_role());
         $this->assertEquals('securepassword', $usuario->getPasswordAsString());
         $this->assertEquals('test@example.com', $usuario->getEmailAsString());
-        $this->assertEquals('12345', $usuario->getId_pauAsString());
-        $this->assertEquals('John Doe', $usuario->getNom_usuarioAsString());
+        $this->assertEquals('12345', $usuario->getCsvIdPauAsString());
+        $this->assertEquals('John Doe', $usuario->getNomUsuarioAsString());
         $this->assertTrue($usuario->has2fa());
         $this->assertEquals('ABCDEFGHIJKLMNOP', $usuario->getSecret2faAsString());
         $this->assertTrue($usuario->isCambio_password());
@@ -143,8 +143,8 @@ class UsuarioTest extends myTest
         $this->assertEquals(2, $usuario->getId_role());
         $this->assertEquals('securepassword', $usuario->getPasswordAsString());
         $this->assertEquals('test@example.com', $usuario->getEmailAsString());
-        $this->assertEquals('12345', $usuario->getId_pauAsString());
-        $this->assertEquals('John Doe', $usuario->getNom_usuarioAsString());
+        $this->assertEquals('12345', $usuario->getCsvIdPauAsString());
+        $this->assertEquals('John Doe', $usuario->getNomUsuarioAsString());
         $this->assertTrue($usuario->has2fa());
         $this->assertEquals('ABCDEFGHIJKLMNOP', $usuario->getSecret2faAsString());
         $this->assertTrue($usuario->isCambio_password());

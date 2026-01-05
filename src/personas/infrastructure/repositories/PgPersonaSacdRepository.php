@@ -111,7 +111,7 @@ class PgPersonaSacdRepository extends PgPersonaPubRepository implements PersonaS
         if (empty($aDatos)) {
             return null;
         }
-        return (new PersonaEx())->setAllAttributes($aDatos);
+        return PersonaEx::fromArray($aDatos);
     }
 
 }

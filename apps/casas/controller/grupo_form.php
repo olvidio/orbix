@@ -31,7 +31,7 @@ if (!empty($Qid_item)) {
 }
 
 $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-$aCasas = $CasaDlRepository->getArrayCasas("WHERE status = 't'");
+$aCasas = $CasaDlRepository->getArrayCasas("WHERE active = 't'");
 
 $oDesplCasaMadre = new Desplegable('id_ubi_padre', $aCasas, $id_ubi_padre, '');
 $oDesplCasaHija = new Desplegable('id_ubi_hijo', $aCasas, $id_ubi_hijo, '');

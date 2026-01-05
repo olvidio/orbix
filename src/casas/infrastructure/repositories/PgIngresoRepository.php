@@ -94,8 +94,7 @@ class PgIngresoRepository extends ClaseRepository implements IngresoRepositoryIn
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Ingreso = new Ingreso();
-            $Ingreso->setAllAttributes($aDatos);
+            $Ingreso =  Ingreso::fromArray($aDatos);
             $IngresoSet->add($Ingreso);
         }
         return $IngresoSet->getTot();
@@ -192,6 +191,6 @@ class PgIngresoRepository extends ClaseRepository implements IngresoRepositoryIn
         if (empty($aDatos)) {
             return null;
         }
-        return (new Ingreso())->setAllAttributes($aDatos);
+        return Ingreso::fromArray($aDatos);
     }
 }

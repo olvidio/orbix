@@ -17,8 +17,8 @@
  */
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
-use notas\model\entity\GestorPersonaNotaDB;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 
@@ -39,7 +39,7 @@ $oPosicion->recordar($Qrefresh);
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack2 != '') {
+    if ($stack2 !== '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
@@ -246,20 +246,20 @@ $h = $oHash->linkSinVal();
     $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     $aWhere = [];
     $aOperador = [];
-    $aWhere['status'] = 't';
+    $aWhere['active'] = 't';
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel'] = 'BETWEEN';
     $aWhere['_ordre'] = 'id_nivel';
     $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
     // Asignaturas cursadas:
-    $GesNotas = new GestorPersonaNotaDB();
+    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
     $aWhere = [];
     $aOperador = [];
     $aWhere['id_nom'] = $id_nom;
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel'] = 'BETWEEN';
-    $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
+    $cNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
     $aAprobadas = [];
     $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     foreach ($cNotas as $oPersonaNota) {
@@ -275,7 +275,7 @@ $h = $oHash->linkSinVal();
         if ($id_asignatura > 3000) {
             $id_nivel_asig = $id_nivel;
         } else {
-            if (!$oAsignatura->isStatus()) continue;
+            if (!$oAsignatura->isActive()) continue;
             $id_nivel_asig = $oAsignatura->getId_nivel();
         }
         $n = $id_nivel_asig;

@@ -1,9 +1,10 @@
 <?php
 
-use actividadestudios\model\entity\ActividadAsignaturaDl;
-use dossiers\model\entity\Dossier;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
+use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
+use web\DateTimeLocal;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
@@ -36,35 +37,18 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $msg_err = '';
+$ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
 switch ($Qmod) {
     case 'eliminar':  //------------ BORRAR --------
         if ($Qpau === "a") {
-            $oActividadAsignatura = new ActividadAsignaturaDl();
-            $oActividadAsignatura->setId_activ($Qid_activ);
-            $oActividadAsignatura->setId_asignatura($Qid_asignatura);
-            if ($oActividadAsignatura->DBEliminar() === false) {
+            $oActividadAsignatura = $ActividadAsignaturaDlRepository->findById($Qid_activ, $Qid_asignatura);
+            if ($ActividadAsignaturaDlRepository->Elimiinar($oActividadAsignatura) === false) {
                 $msg_err = _("hay un error, no se ha borrado");
             }
-            /*
-            // hay que cerrar el dossier para esta actividad, si no tiene más personas:
-            $oDossier = new dossiers\Dossier(array('tabla'=>'a','id_pau'=>$id_activ,'id_tipo_dossier'=>3005));
-            $oDossier->cerrar();
-            $oDossier->DBGuardar();
-            //también debería borrar las matriculas
-            */
-            /*
-            $GesMatriculas = new GestorMatricula();
-            $cMatriculas = $GesMatriculas ->getMatriculas(array('id_activ'=>$id_activ,'id_asignatura'=>$id_asignatura));
-            foreach ($cMatriculas as $oMatricula) {
-                if ($oMatricula->DBElliminar() === false) {
-                    $msg_err = _("hay un error, no se ha borrado");
-                }
-            }
-            */
         }
         break;
     case 'nuevo': //------------ NUEVO --------
-        $oActividadAsignatura = new ActividadAsignaturaDl();
+        $oActividadAsignatura = new ActividadAsignatura();
         $oActividadAsignatura->setId_activ($Qid_activ);
         $oActividadAsignatura->setId_asignatura($Qid_asignatura);
 
@@ -77,9 +61,11 @@ switch ($Qmod) {
         $oActividadAsignatura->setId_profesor($Qid_profesor);
         $oActividadAsignatura->setAvis_profesor($Qavis_profesor);
         $oActividadAsignatura->setTipo($Qtipo);
-        $oActividadAsignatura->setF_ini($Qf_ini);
-        $oActividadAsignatura->setF_fin($Qf_fin);
-        if ($oActividadAsignatura->DBGuardar() === false) {
+        $oF_ini = DateTimeLocal::createFromLocal($Qf_ini);
+        $oActividadAsignatura->setF_ini($oF_ini);
+        $oF_fin = DateTimeLocal::createFromLocal($Qf_fin);
+        $oActividadAsignatura->setF_fin($oF_fin);
+        if ($ActividadAsignaturaDlRepository->Guardar($oActividadAsignatura) === false) {
             $msg_err = _("hay un error, no se ha creado");
         }
         // si es la primera asignatura, hay que abrir el dossier para esta actividad
@@ -95,16 +81,15 @@ switch ($Qmod) {
         $Qf_ini = (string)filter_input(INPUT_POST, 'f_ini');
         $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
 
-        $oActividadAsignatura = new ActividadAsignaturaDl();
-        $oActividadAsignatura->setId_activ($Qid_activ);
-        $oActividadAsignatura->setId_asignatura($Qid_asignatura);
-        $oActividadAsignatura->DBCarregar();
+        $oActividadAsignatura = $ActividadAsignaturaDlRepository->findById($Qid_activ, $Qid_asignatura);
         $oActividadAsignatura->setId_profesor($Qid_profesor);
         $oActividadAsignatura->setAvis_profesor($Qavis_profesor);
         $oActividadAsignatura->setTipo($Qtipo);
-        $oActividadAsignatura->setF_ini($Qf_ini);
-        $oActividadAsignatura->setF_fin($Qf_fin);
-        if ($oActividadAsignatura->DBGuardar() === false) {
+        $oF_ini = DateTimeLocal::createFromLocal($Qf_ini);
+        $oActividadAsignatura->setF_ini($oF_ini);
+        $oF_fin = DateTimeLocal::createFromLocal($Qf_fin);
+        $oActividadAsignatura->setF_fin($oF_fin);
+        if ($ActividadAsignaturaDlRepository->Guardar($oActividadAsignatura) === false) {
             $msg_err = _("hay un error, no se ha guardado");
         }
         break;
@@ -112,4 +97,4 @@ switch ($Qmod) {
 
 if (empty($msg_err)) {
     echo $msg_err;
-}	
+}

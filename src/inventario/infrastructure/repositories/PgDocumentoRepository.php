@@ -100,8 +100,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
             $aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $aDatos['f_ult_comprobacion']))->fromPg();
             $aDatos['f_perdido'] = (new ConverterDate('date', $aDatos['f_perdido']))->fromPg();
             $aDatos['f_eliminado'] = (new ConverterDate('date', $aDatos['f_eliminado']))->fromPg();
-            $Documento = new Documento();
-            $Documento->setAllAttributes($aDatos);
+            $Documento = Documento::fromArray($aDatos);
             $DocumentoSet->add($Documento);
         }
         return $DocumentoSet->getTot();
@@ -248,7 +247,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         if (empty($aDatos)) {
             return null;
         }
-        return (new Documento())->setAllAttributes($aDatos);
+        return Documento::fromArray($aDatos);
     }
 
     public function getNewId()

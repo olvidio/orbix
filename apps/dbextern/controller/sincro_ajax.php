@@ -80,7 +80,7 @@ switch ($que) {
             $cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas' => $id_nom_listas));
             if (!empty($cIdMatch[0]) && !empty($cIdMatch)) { // (a) unida
                 $id_orbix = $cIdMatch[0]->getId_orbix();
-                $oTrasladoDl = new personas\model\entity\trasladoDl();
+                $oTrasladoDl = new \src\personas\domain\trasladoDl();
                 $oTrasladoDl->getEsquemas($id_orbix, $tipo_persona);
             } else { //(b) mala suerte!
 
@@ -208,7 +208,7 @@ switch ($que) {
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
         $id_nom_orbix = (string)filter_input(INPUT_POST, 'id_nom_orbix');
 
-        $oTrasladoDl = new personas\model\entity\TrasladoDl();
+        $oTrasladoDl = new \src\personas\domain\TrasladoDl();
         $oTrasladoDl->setId_nom($id_nom_orbix);
 
         $aEsquemas = $oTrasladoDl->getEsquemas($id_nom_orbix, $tipo_persona);
@@ -236,7 +236,7 @@ switch ($que) {
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
         $id_nom_orbix = (string)filter_input(INPUT_POST, 'id_nom_orbix');
 
-        $oTrasladoDl = new personas\model\entity\TrasladoDl();
+        $oTrasladoDl = new \src\personas\domain\TrasladoDl();
         $oTrasladoDl->setId_nom($id_nom_orbix);
 
         $mi_dele = ConfigGlobal::mi_delef();
@@ -251,7 +251,7 @@ switch ($que) {
             $dl_dst = 'cr' . $dl;
         }
         $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $cDl = $repoDelegacion->getDelegaciones(['dl' => $dl_dst, 'status' => 't']);
+        $cDl = $repoDelegacion->getDelegaciones(['dl' => $dl_dst, 'active' => 't']);
         $region_dst = $cDl[0]->getRegionVo()->value();
 
         if ($region_dst !== ConfigGlobal::mi_region()) {
@@ -280,7 +280,7 @@ switch ($que) {
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
         $id_nom_orbix = (string)filter_input(INPUT_POST, 'id_nom_orbix');
 
-        $oTrasladoDl = new personas\model\entity\TrasladoDl();
+        $oTrasladoDl = new \src\personas\domain\TrasladoDl();
         $oTrasladoDl->setId_nom($id_nom_orbix);
 
         $mi_dele = ConfigGlobal::mi_delef();
@@ -376,7 +376,7 @@ switch ($que) {
             $cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas' => $id_nom_listas));
             if (!empty($cIdMatch[0]) && !empty($cIdMatch)) { // (a) unida
                 $id_orbix = $cIdMatch[0]->getId_orbix();
-                $oTrasladoDl = new personas\model\entity\trasladoDl();
+                $oTrasladoDl = new \src\personas\domain\trasladoDl();
                 $oTrasladoDl->getEsquemas($id_orbix, $tipo_persona);
             } else { //(b) mala suerte!
 

@@ -111,8 +111,7 @@ class PgEncargoSacdRepository extends ClaseRepository implements EncargoSacdRepo
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $EncargoSacd = new EncargoSacd();
-            $EncargoSacd->setAllAttributes($aDatos);
+            $EncargoSacd = EncargoSacd::fromArray($aDatos);
             $EncargoSacdSet->add($EncargoSacd);
         }
         return $EncargoSacdSet->getTot();
@@ -215,7 +214,7 @@ class PgEncargoSacdRepository extends ClaseRepository implements EncargoSacdRepo
         if (empty($aDatos)) {
             return null;
         }
-        return (new EncargoSacd())->setAllAttributes($aDatos);
+        return EncargoSacd::fromArray($aDatos);
     }
 
     public function getNewId()

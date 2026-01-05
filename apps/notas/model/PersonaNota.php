@@ -129,7 +129,7 @@ class PersonaNota
      */
     public function isAprobada()
     {
-        $nota_corte = $_SESSION['oConfig']->getNota_corte();
+        $nota_corte = $_SESSION['oConfig']->getNotaCorte();
         $this->aprobada = false;
         if ($this->id_situacion === Nota::NUMERICA) {
             $nota_num = $this->getNotaNum();

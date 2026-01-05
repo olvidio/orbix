@@ -99,7 +99,7 @@ $oForm->setTitulo(core\strtoupper_dlb(_("ocupación de casas compartidas")));
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $sDonde = '';
 //formulario para casas cuyo calendario de actividades interesa
-$donde = "WHERE status='t' $sDonde";
+$donde = "WHERE active='t' $sDonde";
 $oForm->setCasas('casa');
 $oForm->setPosiblesCasas($donde);
 $oForm->setSeleccionados($sel_ubis);

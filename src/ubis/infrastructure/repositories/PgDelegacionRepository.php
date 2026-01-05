@@ -68,7 +68,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         return $dele === $region_stgr;
     }
 
-    public function mi_region_stgr($dele = ''): array
+    public function mi_region_stgr(string $dele = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -297,8 +297,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Delegacion = new Delegacion();
-            $Delegacion->setAllAttributes($aDatos);
+            $Delegacion = Delegacion::fromArray($aDatos);
             $DelegacionSet->add($Delegacion);
         }
         return $DelegacionSet->getTot();
@@ -395,7 +394,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         if (empty($aDatos)) {
             return null;
         }
-        return (new Delegacion())->setAllAttributes($aDatos);
+        return Delegacion::fromArray($aDatos);
     }
 
     public function getNewId(): int

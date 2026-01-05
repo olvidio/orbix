@@ -65,7 +65,7 @@ if (empty($Qloc)) $Qloc = ConfigGlobal::mi_region_dl();
 if (empty($Qque_lista)) $Qque_lista = 'ctr_n';
 
 $aWhere = [];
-$aWhere['status'] = 't';
+$aWhere['active'] = 't';
 $aWhere['_ordre'] = 'nombre_ubi';
 $aOperador = [];
 

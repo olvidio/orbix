@@ -1,214 +1,140 @@
 <?php
 
 namespace src\inventario\domain\entity;
-use src\inventario\domain\value_objects\{EgmItemId, EgmEquipajeId, EgmGrupoId, EgmLugarId, EgmTexto};
-/**
- * Clase que implementa la entidad i_egm_dl
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 12/3/2025
- */
-class Egm {
 
-	/* ATRIBUTOS ----------------------------------------------------------------- */
+use src\inventario\domain\value_objects\{EgmEquipajeId, EgmGrupoId, EgmItemId, EgmLugarId, EgmTexto};
+use src\shared\domain\traits\Hydratable;
 
-	/**
-	 * Id_item de Egm
-	 *
-	 * @var int
-	 */
-	 private int $iid_item;
-	/**
-	 * Id_equipaje de Egm
-	 *
-	 * @var int|null
-	 */
-	 private int|null $iid_equipaje = null;
-	/**
-	 * Id_grupo de Egm
-	 *
-	 * @var int|null
-	 */
-	 private int|null $iid_grupo = null;
-	/**
-	 * Id_lugar de Egm
-	 *
-	 * @var int|null
-	 */
-	 private int|null $iid_lugar = null;
-	/**
-	 * Texto de Egm
-	 *
-	 * @var string|null
-	 */
-	 private string|null $stexto = null;
+class Egm
+{
+    use Hydratable;
 
-	/* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-	/**
-	 * Establece el valor de todos los atributos
-	 *
-	 * @param array $aDatos
-	 * @return Egm
-	 */
-	public function setAllAttributes(array $aDatos): Egm
-	{
-		if (array_key_exists('id_item',$aDatos))
-		{
-			$this->setId_item($aDatos['id_item']);
-		}
-		if (array_key_exists('id_equipaje',$aDatos))
-		{
-			$this->setId_equipaje($aDatos['id_equipaje']);
-		}
-		if (array_key_exists('id_grupo',$aDatos))
-		{
-			$this->setId_grupo($aDatos['id_grupo']);
-		}
-		if (array_key_exists('id_lugar',$aDatos))
-		{
-			$this->setId_lugar($aDatos['id_lugar']);
-		}
-		if (array_key_exists('texto',$aDatos))
-		{
-			$this->setTexto($aDatos['texto']);
-		}
-		return $this;
-	}
-	/**
-	 *
-	 * @return int $iid_item
-	 */
-	public function getId_item(): int
-	{
-		return $this->iid_item;
-	}
-	/**
-	 *
-	 * @param int $iid_item
-	 */
-	public function setId_item(int $iid_item): void
-	{
-		$this->iid_item = $iid_item;
-	}
-	/**
-	 *
-	 * @return int|null $iid_equipaje
-	 */
-	public function getId_equipaje(): ?int
-	{
-		return $this->iid_equipaje;
-	}
-	/**
-	 *
-	 * @param int|null $iid_equipaje
-	 */
-	public function setId_equipaje(?int $iid_equipaje = null): void
-	{
-		$this->iid_equipaje = $iid_equipaje;
-	}
-	/**
-	 *
-	 * @return int|null $iid_grupo
-	 */
-	public function getId_grupo(): ?int
-	{
-		return $this->iid_grupo;
-	}
-	/**
-	 *
-	 * @param int|null $iid_grupo
-	 */
-	public function setId_grupo(?int $iid_grupo = null): void
-	{
-		$this->iid_grupo = $iid_grupo;
-	}
-	/**
-	 *
-	 * @return int|null $iid_lugar
-	 */
-	public function getId_lugar(): ?int
-	{
-		return $this->iid_lugar;
-	}
-	/**
-	 *
-	 * @param int|null $iid_lugar
-	 */
-	public function setId_lugar(?int $iid_lugar = null): void
-	{
-		$this->iid_lugar = $iid_lugar;
-	}
-	/**
-	 *
-	 * @return string|null $stexto
-	 */
-	public function getTexto(): ?string
-	{
-		return $this->stexto;
-	}
-	/**
-	 *
-	 * @param string|null $stexto
-	 */
-	public function setTexto(?string $stexto = null): void
-	{
-		$this->stexto = $stexto;
-	}
+
+    private int $id_item;
+
+    private int|null $id_equipaje = null;
+
+    private int|null $id_grupo = null;
+
+    private int|null $id_lugar = null;
+
+    private string|null $texto = null;
+
+    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getId_item(): int
+    {
+        return $this->id_item;
+    }
+
+
+    public function setId_item(int $id_item): void
+    {
+        $this->id_item = $id_item;
+    }
+
+
+    public function getId_equipaje(): ?int
+    {
+        return $this->id_equipaje;
+    }
+
+
+    public function setId_equipaje(?int $id_equipaje = null): void
+    {
+        $this->id_equipaje = $id_equipaje;
+    }
+
+
+    public function getId_grupo(): ?int
+    {
+        return $this->id_grupo;
+    }
+
+
+    public function setId_grupo(?int $id_grupo = null): void
+    {
+        $this->id_grupo = $id_grupo;
+    }
+
+
+    public function getId_lugar(): ?int
+    {
+        return $this->id_lugar;
+    }
+
+
+    public function setId_lugar(?int $id_lugar = null): void
+    {
+        $this->id_lugar = $id_lugar;
+    }
+
+
+    public function getTexto(): ?string
+    {
+        return $this->texto;
+    }
+
+
+    public function setTexto(?string $texto = null): void
+    {
+        $this->texto = $texto;
+    }
 
     // Value Object API (duplicada con legacy)
     public function getIdItemVo(): EgmItemId
     {
-        return new EgmItemId($this->iid_item);
+        return new EgmItemId($this->id_item);
     }
 
     public function setIdItemVo(?EgmItemId $id = null): void
     {
-        if ($id === null) { return; }
-        $this->iid_item = $id->value();
+        if ($id === null) {
+            return;
+        }
+        $this->id_item = $id->value();
     }
 
     public function getIdEquipajeVo(): ?EgmEquipajeId
     {
-        return $this->iid_equipaje !== null ? new EgmEquipajeId($this->iid_equipaje) : null;
+        return $this->id_equipaje !== null ? new EgmEquipajeId($this->id_equipaje) : null;
     }
 
     public function setIdEquipajeVo(?EgmEquipajeId $id = null): void
     {
-        $this->iid_equipaje = $id?->value();
+        $this->id_equipaje = $id?->value();
     }
 
     public function getIdGrupoVo(): ?EgmGrupoId
     {
-        return $this->iid_grupo !== null ? new EgmGrupoId($this->iid_grupo) : null;
+        return $this->id_grupo !== null ? new EgmGrupoId($this->id_grupo) : null;
     }
 
     public function setIdGrupoVo(?EgmGrupoId $id = null): void
     {
-        $this->iid_grupo = $id?->value();
+        $this->id_grupo = $id?->value();
     }
 
     public function getIdLugarVo(): ?EgmLugarId
     {
-        return $this->iid_lugar !== null ? new EgmLugarId($this->iid_lugar) : null;
+        return $this->id_lugar !== null ? new EgmLugarId($this->id_lugar) : null;
     }
 
     public function setIdLugarVo(?EgmLugarId $id = null): void
     {
-        $this->iid_lugar = $id?->value();
+        $this->id_lugar = $id?->value();
     }
 
     public function getTextoVo(): ?EgmTexto
     {
-        return EgmTexto::fromNullableString($this->stexto);
+        return EgmTexto::fromNullableString($this->texto);
     }
 
     public function setTextoVo(?EgmTexto $texto = null): void
     {
-        $this->stexto = $texto?->value();
+        $this->texto = $texto?->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

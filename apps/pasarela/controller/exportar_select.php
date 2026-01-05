@@ -8,8 +8,8 @@ use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryI
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use ubis\model\entity\GestorTarifaUbi;
 use web\DateTimeLocal;
 use web\Lista;
 use web\Periodo;
@@ -145,6 +145,7 @@ $i = 0;
 $oHoy = new DateTimeLocal();
 $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
 $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
+$TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -233,8 +234,7 @@ foreach ($cActividades as $oActividad) {
         }
     }
     $year = $oF_ini->format('Y');
-    $oGesTarifa = new GestorTarifaUbi();
-    $cTarifas = $oGesTarifa->getTarifas(['id_ubi' => $id_ubi, 'year' => $year, 'id_tarifa' => $id_tarifa, '_ordre' => 'year,id_tarifa']);
+    $cTarifas = $TarifaUbiRepository->getTarifas(['id_ubi' => $id_ubi, 'year' => $year, 'id_tarifa' => $id_tarifa, '_ordre' => 'year,id_tarifa']);
     $cantidad = 0;
     $cantidad_estudiante = 0;
     if (empty($cTarifas)) {

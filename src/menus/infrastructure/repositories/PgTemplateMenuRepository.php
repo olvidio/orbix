@@ -107,8 +107,7 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TemplateMenu = new TemplateMenu();
-            $TemplateMenu->setAllAttributes($aDatos);
+            $TemplateMenu = TemplateMenu::fromArray($aDatos);
             $TemplateMenuSet->add($TemplateMenu);
         }
         return $TemplateMenuSet->getTot();
@@ -195,7 +194,7 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         if (empty($aDatos)) {
             return null;
         }
-        return (new TemplateMenu())->setAllAttributes($aDatos);
+        return TemplateMenu::fromArray($aDatos);
     }
 
     public function findByName(string $nombre): ?TemplateMenu
@@ -204,11 +203,11 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE nombre = '$nombre'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($aDatos)) {
             return null;
         }
-        return (new TemplateMenu())->setAllAttributes($aDatos);
+        return TemplateMenu::fromArray($aDatos);
     }
 
     public function getNewId()

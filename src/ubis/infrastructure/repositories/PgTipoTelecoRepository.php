@@ -156,8 +156,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoTeleco = new TipoTeleco();
-            $TipoTeleco->setAllAttributes($aDatos);
+            $TipoTeleco = TipoTeleco::fromArray($aDatos);
             $TipoTelecoSet->add($TipoTeleco);
         }
         return $TipoTelecoSet->getTot();
@@ -260,7 +259,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         if (empty($aDatos)) {
             return null;
         }
-        return (new TipoTeleco())->setAllAttributes($aDatos);
+        return TipoTeleco::fromArray($aDatos);
     }
 
     public function getNewId()

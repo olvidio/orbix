@@ -2,7 +2,6 @@
 
 namespace actividades\domain;
 
-use actividadplazas\legacy\ActividadPlazasDl;
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
@@ -13,6 +12,7 @@ use src\actividades\domain\entity\Importada;
 use src\actividades\domain\value_objects\IdTablaCode;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
+use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use ubis;
 use web\DateTimeLocal;
@@ -70,7 +70,7 @@ class ActividadNueva
         // permiso
         // para dl y dlf:
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $Qdl_org);
-        $dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f) ? TRUE : FALSE;
+        $dl_propia = ConfigGlobal::mi_dele() === $dl_org_no_f;
         if (ConfigGlobal::is_app_installed('procesos')) {
             $_SESSION['oPermActividades']->setId_tipo_activ($Qid_tipo_activ);
             if ($_SESSION['oPermActividades']->getPermisoCrear($dl_propia) === FALSE) {
@@ -85,7 +85,7 @@ class ActividadNueva
 
         $isfsv = substr($Qid_tipo_activ, 0, 1);
         $mi_dele = ConfigGlobal::mi_delef($isfsv);
-        if ($Qdl_org == $mi_dele) {
+        if ($Qdl_org === $mi_dele) {
             $ActividadRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
             $newId = $ActividadRepository->newId();
             $newIdActividad = $ActividadRepository->newIdActividad($newId);
@@ -111,7 +111,7 @@ class ActividadNueva
         $oActividad->setNom_activ($Qnom_activ);
 
         // En el caso de tener id_ubi (!=1) borro el campo lugar_esp.
-        if (!empty($Qid_ubi) && $Qid_ubi != 1) {
+        if (!empty($Qid_ubi) && $Qid_ubi !== 1) {
             $oActividad->setId_ubi($Qid_ubi);
             $oActividad->setLugar_esp('');
         } else {
@@ -120,10 +120,10 @@ class ActividadNueva
         }
         $oActividad->setDesc_activ($Qdesc_activ);
         // asegurar tipo correcto para f_ini
-        $oF_ini = empty($Qf_ini) ? null : new DateTimeLocal($Qf_ini);
+        $oF_ini = empty($Qf_ini) ? null : DateTimeLocal::createFromLocal($Qf_ini);
         $oActividad->setF_ini($oF_ini);
         // asegurar tipo correcto para f_fin
-        $oF_fin = empty($Qf_fin) ? null : new DateTimeLocal($Qf_fin);
+        $oF_fin = empty($Qf_fin) ? null : DateTimeLocal::createFromLocal($Qf_fin);
         $oActividad->setF_fin($oF_fin);
         //$oActividad->setTipo_horario($Qtipo_horario);
         $oActividad->setPrecio($Qprecio);
@@ -170,11 +170,12 @@ class ActividadNueva
                     $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
                 }
                 //Si es la dl_org, son plazas concedidas, sino pedidas.
-                $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));
+                $ActividadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
+                $oActividadPlazasDl = $ActividadPlazasDlRepository->getActividadesPlazas(['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele]);
                 $oActividadPlazasDl->setPlazas($Qplazas);
 
                 //print_r($oActividadPlazasDl);
-                if ($oActividadPlazasDl->DBGuardar() === false) {
+                if ($ActividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
                     throw new \RuntimeException(_("hay un error, no se ha guardado") . ": " . $ActividadPlazasDlRepository->getErrorTxt());
                 }
             }

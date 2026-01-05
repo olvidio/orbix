@@ -6,391 +6,238 @@ use src\inventario\domain\value_objects\{EquipajeId, UbiInventarioIdActiv,
 
 use core\DatosCampo;
 use core\Set;
+use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
-/**
- * Clase que implementa la entidad i_equipajes_dl
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 12/3/2025
- */
+
 class Equipaje
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_equipaje de Equipaje
-     *
-     * @var int
-     */
-    private int $iid_equipaje;
-    /**
-     * Ids_activ de Equipaje
-     *
-     * @var string|null
-     */
-    private string|null $sids_activ = null;
-    /**
-     * Lugar de Equipaje
-     *
-     * @var string|null
-     */
-    private string|null $slugar = null;
-    /**
-     * F_ini de Equipaje
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $df_ini = null;
-    /**
-     * F_fin de Equipaje
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $df_fin = null;
-    /**
-     * Id_ubi_activ de Equipaje
-     *
-     * @var int|null
-     */
-    private int|null $iid_ubi_activ = null;
-    /**
-     * Nom_equipaje de Equipaje
-     *
-     * @var string|null
-     */
-    private string|null $snom_equipaje = null;
-    /**
-     * Cabecera de Equipaje
-     *
-     * @var string|null
-     */
-    private string|null $scabecera = null;
-    /**
-     * Pie de Equipaje
-     *
-     * @var string|null
-     */
-    private string|null $spie = null;
-    /**
-     * Cabecerab de Equipaje
-     *
-     * @var string|null
-     */
-    private string|null $scabecerab = null;
+
+    private int $id_equipaje;
+
+    private string|null $ids_activ = null;
+
+    private string|null $lugar = null;
+
+    private DateTimeLocal|null $f_ini = null;
+
+    private DateTimeLocal|null $f_fin = null;
+
+    private int|null $id_ubi_activ = null;
+
+    private string|null $nom_equipaje = null;
+
+    private string|null $cabecera = null;
+
+    private string|null $pie = null;
+
+    private string|null $cabecerab = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Equipaje
-     */
-    public function setAllAttributes(array $aDatos): Equipaje
-    {
-        if (array_key_exists('id_equipaje', $aDatos)) {
-            $this->setId_equipaje($aDatos['id_equipaje']);
-        }
-        if (array_key_exists('ids_activ', $aDatos)) {
-            $this->setIds_activ($aDatos['ids_activ']);
-        }
-        if (array_key_exists('lugar', $aDatos)) {
-            $this->setLugar($aDatos['lugar']);
-        }
-        if (array_key_exists('f_ini', $aDatos)) {
-            $this->setF_ini($aDatos['f_ini']);
-        }
-        if (array_key_exists('f_fin', $aDatos)) {
-            $this->setF_fin($aDatos['f_fin']);
-        }
-        if (array_key_exists('id_ubi_activ', $aDatos)) {
-            $this->setId_ubi_activ($aDatos['id_ubi_activ']);
-        }
-        if (array_key_exists('nom_equipaje', $aDatos)) {
-            $this->setNom_equipaje($aDatos['nom_equipaje']);
-        }
-        if (array_key_exists('cabecera', $aDatos)) {
-            $this->setCabecera($aDatos['cabecera']);
-        }
-        if (array_key_exists('pie', $aDatos)) {
-            $this->setPie($aDatos['pie']);
-        }
-        if (array_key_exists('cabecerab', $aDatos)) {
-            $this->setCabecerab($aDatos['cabecerab']);
-        }
-        return $this;
-    }
 
-    /**
-     *
-     * @return int $iid_equipaje
-     */
     public function getId_equipaje(): int
     {
-        return $this->iid_equipaje;
+        return $this->id_equipaje;
     }
 
-    /**
-     *
-     * @param int $iid_equipaje
-     */
-    public function setId_equipaje(int $iid_equipaje): void
+
+    public function setId_equipaje(int $id_equipaje): void
     {
-        $this->iid_equipaje = $iid_equipaje;
+        $this->id_equipaje = $id_equipaje;
     }
 
-    /**
-     *
-     * @return string|null $sids_activ
-     */
+
     public function getIds_activ(): ?string
     {
-        return $this->sids_activ;
+        return $this->ids_activ;
     }
 
-    /**
-     *
-     * @param string|null $sids_activ
-     */
-    public function setIds_activ(?string $sids_activ = null): void
+
+    public function setIds_activ(?string $ids_activ = null): void
     {
-        $this->sids_activ = $sids_activ;
+        $this->ids_activ = $ids_activ;
     }
 
-    /**
-     *
-     * @return string|null $slugar
-     */
+
     public function getLugar(): ?string
     {
-        return $this->slugar;
+        return $this->lugar;
     }
 
-    /**
-     *
-     * @param string|null $slugar
-     */
-    public function setLugar(?string $slugar = null): void
+
+    public function setLugar(?string $lugar = null): void
     {
-        $this->slugar = $slugar;
+        $this->lugar = $lugar;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_ini
-     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
-     */
     public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_ini ?? new NullDateTimeLocal;
+        return $this->f_ini ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|NullDateTimeLocal|null $df_ini
-     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
-     */
-    public function setF_ini(DateTimeLocal|NullDateTimeLocal|null $df_ini = null): void
+    public function setF_ini(DateTimeLocal|NullDateTimeLocal|null $f_ini = null): void
     {
-        $this->df_ini = $df_ini instanceof NullDateTimeLocal ? null : $df_ini;
+        $this->f_ini = $f_ini instanceof NullDateTimeLocal ? null : $f_ini;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_fin
-     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
-     */
+
     public function getF_fin(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_fin ?? new NullDateTimeLocal;
+        return $this->f_fin ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|NullDateTimeLocal|null $df_fin
-     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
-     */
-    public function setF_fin(DateTimeLocal|NullDateTimeLocal|null $df_fin = null): void
+
+    public function setF_fin(DateTimeLocal|NullDateTimeLocal|null $f_fin = null): void
     {
-        $this->df_fin = $df_fin instanceof NullDateTimeLocal ? null : $df_fin;
+        $this->f_fin = $f_fin instanceof NullDateTimeLocal ? null : $f_fin;
     }
 
-    /**
-     *
-     * @return int|null $iid_ubi_activ
-     */
+
     public function getId_ubi_activ(): ?int
     {
-        return $this->iid_ubi_activ;
+        return $this->id_ubi_activ;
     }
 
-    /**
-     *
-     * @param int|null $iid_ubi_activ
-     */
-    public function setId_ubi_activ(?int $iid_ubi_activ = null): void
+
+    public function setId_ubi_activ(?int $id_ubi_activ = null): void
     {
-        $this->iid_ubi_activ = $iid_ubi_activ;
+        $this->id_ubi_activ = $id_ubi_activ;
     }
 
-    /**
-     *
-     * @return string|null $snom_equipaje
-     */
+
     public function getNom_equipaje(): ?string
     {
-        return $this->snom_equipaje;
+        return $this->nom_equipaje;
     }
 
-    /**
-     *
-     * @param string|null $snom_equipaje
-     */
-    public function setNom_equipaje(?string $snom_equipaje = null): void
+
+    public function setNom_equipaje(?string $nom_equipaje = null): void
     {
-        $this->snom_equipaje = $snom_equipaje;
+        $this->nom_equipaje = $nom_equipaje;
     }
 
-    /**
-     *
-     * @return string|null $scabecera
-     */
+
     public function getCabecera(): ?string
     {
-        return $this->scabecera;
+        return $this->cabecera;
     }
 
-    /**
-     *
-     * @param string|null $scabecera
-     */
-    public function setCabecera(?string $scabecera = null): void
+
+    public function setCabecera(?string $cabecera = null): void
     {
-        $this->scabecera = $scabecera;
+        $this->cabecera = $cabecera;
     }
 
-    /**
-     *
-     * @return string|null $spie
-     */
+
     public function getPie(): ?string
     {
-        return $this->spie;
+        return $this->pie;
     }
 
-    /**
-     *
-     * @param string|null $spie
-     */
-    public function setPie(?string $spie = null): void
+
+    public function setPie(?string $pie = null): void
     {
-        $this->spie = $spie;
+        $this->pie = $pie;
     }
 
-    /**
-     *
-     * @return string|null $scabecerab
-     */
+
     public function getCabecerab(): ?string
     {
-        return $this->scabecerab;
+        return $this->cabecerab;
     }
 
-    /**
-     *
-     * @param string|null $scabecerab
-     */
-    public function setCabecerab(?string $scabecerab = null): void
+
+    public function setCabecerab(?string $cabecerab = null): void
     {
-        $this->scabecerab = $scabecerab;
+        $this->cabecerab = $cabecerab;
     }
 
     // Value Object API (duplicada con legacy)
     public function getIdEquipajeVo(): EquipajeId
     {
-        return new EquipajeId($this->iid_equipaje);
+        return new EquipajeId($this->id_equipaje);
     }
 
     public function setIdEquipajeVo(?EquipajeId $id = null): void
     {
         if ($id === null) { return; }
-        $this->iid_equipaje = $id->value();
+        $this->id_equipaje = $id->value();
     }
 
     public function getIdsActivVo(): ?EquipajeIdsActiv
     {
-        return EquipajeIdsActiv::fromNullableString($this->sids_activ);
+        return EquipajeIdsActiv::fromNullableString($this->ids_activ);
     }
 
     public function setIdsActivVo(?EquipajeIdsActiv $ids = null): void
     {
-        $this->sids_activ = $ids?->value();
+        $this->ids_activ = $ids?->value();
     }
 
     public function getLugarVo(): ?EquipajeLugar
     {
-        return EquipajeLugar::fromNullableString($this->slugar);
+        return EquipajeLugar::fromNullableString($this->lugar);
     }
 
     public function setLugarVo(?EquipajeLugar $lugar = null): void
     {
-        $this->slugar = $lugar?->value();
+        $this->lugar = $lugar?->value();
     }
 
     public function getIdUbiActivVo(): ?UbiInventarioIdActiv
     {
-        return $this->iid_ubi_activ !== null ? new UbiInventarioIdActiv($this->iid_ubi_activ) : null;
+        return $this->id_ubi_activ !== null ? new UbiInventarioIdActiv($this->id_ubi_activ) : null;
     }
 
     public function setIdUbiActivVo(?UbiInventarioIdActiv $id = null): void
     {
-        $this->iid_ubi_activ = $id?->value();
+        $this->id_ubi_activ = $id?->value();
     }
 
     public function getNomEquipajeVo(): ?EquipajeNom
     {
-        return EquipajeNom::fromNullableString($this->snom_equipaje);
+        return EquipajeNom::fromNullableString($this->nom_equipaje);
     }
 
     public function setNomEquipajeVo(?EquipajeNom $nom = null): void
     {
-        $this->snom_equipaje = $nom?->value();
+        $this->nom_equipaje = $nom?->value();
     }
 
     public function getCabeceraVo(): ?EquipajeCabecera
     {
-        return EquipajeCabecera::fromNullableString($this->scabecera);
+        return EquipajeCabecera::fromNullableString($this->cabecera);
     }
 
     public function setCabeceraVo(?EquipajeCabecera $cabecera = null): void
     {
-        $this->scabecera = $cabecera?->value();
+        $this->cabecera = $cabecera?->value();
     }
 
     public function getCabecerabVo(): ?EquipajeCabecerab
     {
-        return EquipajeCabecerab::fromNullableString($this->scabecerab);
+        return EquipajeCabecerab::fromNullableString($this->cabecerab);
     }
 
     public function setCabecerabVo(?EquipajeCabecerab $cabecerab = null): void
     {
-        $this->scabecerab = $cabecerab?->value();
+        $this->cabecerab = $cabecerab?->value();
     }
 
     public function getPieVo(): ?EquipajePie
     {
-        return EquipajePie::fromNullableString($this->spie);
+        return EquipajePie::fromNullableString($this->pie);
     }
 
     public function setPieVo(?EquipajePie $pie = null): void
     {
-        $this->spie = $pie?->value();
+        $this->pie = $pie?->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -399,7 +246,7 @@ class Equipaje
         return 'id_equipaje';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oEquipajeSet = new Set();
 
@@ -415,7 +262,7 @@ class Equipaje
         return $oEquipajeSet->getTot();
     }
 
-    function getDatosIds_activ()
+    private function getDatosIds_activ(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('ids_activ');
@@ -425,7 +272,7 @@ class Equipaje
         return $oDatosCampo;
     }
 
-    function getDatosLugar()
+    private function getDatosLugar(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('lugar');
@@ -435,7 +282,7 @@ class Equipaje
         return $oDatosCampo;
     }
 
-    function getDatosF_ini()
+    private function getDatosF_ini(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_ini');
@@ -445,7 +292,7 @@ class Equipaje
         return $oDatosCampo;
     }
 
-    function getDatosF_fin()
+    private function getDatosF_fin(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_fin');
@@ -455,7 +302,7 @@ class Equipaje
         return $oDatosCampo;
     }
 
-    function getDatosId_ubi_activ()
+    private function getDatosId_ubi_activ(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_ubi_activ');
@@ -465,7 +312,7 @@ class Equipaje
         return $oDatosCampo;
     }
 
-    function getDatosNom_equipaje()
+    private function getDatosNom_equipaje(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nom_equipaje');
@@ -475,7 +322,7 @@ class Equipaje
         return $oDatosCampo;
     }
 
-    function getDatosCabecera()
+    private function getDatosCabecera(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('cabecera');
@@ -485,7 +332,7 @@ class Equipaje
         return $oDatosCampo;
     }
 
-    function getDatosCabeceraB()
+    private function getDatosCabeceraB(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('cabecerab');
@@ -495,7 +342,7 @@ class Equipaje
         return $oDatosCampo;
     }
 
-    function getDatosPie()
+    private function getDatosPie(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('pie');

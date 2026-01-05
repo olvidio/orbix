@@ -112,8 +112,7 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoTarifa = new TipoTarifa();
-            $TipoTarifa->setAllAttributes($aDatos);
+            $TipoTarifa =  TipoTarifa::fromArray($aDatos);
             $TipoTarifaSet->add($TipoTarifa);
         }
         return $TipoTarifaSet->getTot();
@@ -208,7 +207,7 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
         if (empty($aDatos)) {
             return null;
         }
-        return (new TipoTarifa())->setAllAttributes($aDatos);
+        return TipoTarifa::fromArray($aDatos);
     }
 
     public function getNewId()

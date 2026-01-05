@@ -94,8 +94,7 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Importada = new Importada();
-            $Importada->setAllAttributes($aDatos);
+            $Importada = Importada::fromArray($aDatos);
             $ImportadaSet->add($Importada);
         }
         return $ImportadaSet->getTot();
@@ -181,6 +180,6 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
         if (empty($aDatos)) {
             return null;
         }
-        return (new Importada())->setAllAttributes($aDatos);
+        return Importada::fromArray($aDatos);
     }
 }

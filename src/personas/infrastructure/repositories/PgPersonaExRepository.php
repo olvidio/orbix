@@ -39,7 +39,7 @@ class PgPersonaExRepository extends PgPersonaPubRepository implements PersonaExR
         if (empty($aDatos)) {
             return null;
         }
-        return (new PersonaEx())->setAllAttributes($aDatos);
+        return PersonaEx::fromArray($aDatos);
     }
 
     public function getNewId()

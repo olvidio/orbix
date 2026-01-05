@@ -44,26 +44,26 @@ if (empty($Qid_usuario)) {
 } else {
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 }
-$oUsuario->setUsuario(new Username($Qusuario));
+$oUsuario->setUsuarioVo(new Username($Qusuario));
 $oUsuario->setid_role($Qid_role);
-$oUsuario->setEmail(!empty($Qemail) ? new Email($Qemail) : null);
-$oUsuario->setNom_usuario(!empty($Qnom_usuario) ? new NombreUsuario($Qnom_usuario) : null);
+$oUsuario->setEmailVo(!empty($Qemail) ? new Email($Qemail) : null);
+$oUsuario->setNomUsuarioVo(!empty($Qnom_usuario) ? new NombreUsuario($Qnom_usuario) : null);
 $oUsuario->setCambio_password($Qcambio_password);
 $oUsuario->setHas2fa($Qhas_2fa);
 if (!empty($Qpassword)) {
     $oCrypt = new MyCrypt();
     $my_passwd = $oCrypt->encode($Qpassword);
-    $oUsuario->setPassword(new Password($my_passwd));
+    $oUsuario->setPasswordVo(new Password($my_passwd));
 }
 $oRole = $RoleRepository->findById($Qid_role);
 $pau = $oRole->getPauAsString();
 // sacd
 if (($pau === 'sacd' || $pau === 'nom') && !empty($Qid_nom)) {
-    $oUsuario->setId_pau(new IdPau((string)$Qid_nom));
+    $oUsuario->setCsvIdPauVo(new IdPau((string)$Qid_nom));
 }
 // centros (sv o sf)
 if (($pau === 'ctr') && !empty($Qid_ctr)) {
-    $oUsuario->setId_pau(new IdPau((string)$Qid_ctr));
+    $oUsuario->setCsvIdPauVo(new IdPau((string)$Qid_ctr));
 }
 // casas
 if ($pau === 'cdc' && !empty($Qcasas)) {
@@ -75,7 +75,7 @@ if ($pau === 'cdc' && !empty($Qcasas)) {
         if ($i > 1) $txt_casa .= ',';
         $txt_casa .= $id_ubi;
     }
-    $oUsuario->setId_pau(new IdPau($txt_casa));
+    $oUsuario->setCsvIdPauVo(new IdPau($txt_casa));
 }
 
 if ($UsuarioRepository->Guardar($oUsuario) === false) {

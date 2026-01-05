@@ -108,8 +108,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Whereis = new Whereis();
-            $Whereis->setAllAttributes($aDatos);
+            $Whereis = Whereis::fromArray($aDatos);
             $WhereisSet->add($Whereis);
         }
         return $WhereisSet->getTot();
@@ -198,7 +197,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         if (empty($aDatos)) {
             return null;
         }
-        return (new Whereis())->setAllAttributes($aDatos);
+        return Whereis::fromArray($aDatos);
     }
 
     public function getNewId()

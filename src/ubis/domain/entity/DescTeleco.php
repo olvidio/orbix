@@ -4,87 +4,33 @@ namespace src\ubis\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use function core\is_true;
 use src\ubis\domain\value_objects\{TipoTelecoCode, DescTelecoOrder, DescTelecoText};
 
-/**
- * Clase que implementa la entidad xd_desc_teleco
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 17/11/2025
- */
+
 class DescTeleco
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_item de DescTeleco
-     *
-     * @var int
-     */
-    private int $iid_item;
-    /**
-     * Orden de DescTeleco
-     */
+    
+    private int $id_item;
+    
     private ?DescTelecoOrder $orden = null;
-    /**
-     * Tipo_teleco de DescTeleco (código)
-     */
-    private TipoTelecoCode $idTipoTeleco;
-    /**
-     * desc_teleco de DescTeleco (texto)
-     */
-    private ?DescTelecoText $descTeleco = null;
-    /**
-     * Ubi de DescTeleco
-     *
-     * @var bool|null
-     */
-    private bool|null $bubi = null;
-    /**
-     * Persona de DescTeleco
-     *
-     * @var bool|null
-     */
-    private bool|null $bpersona = null;
+    
+    private TipoTelecoCode $id_tipo_teleco;
+    
+    private ?DescTelecoText $desc_teleco = null;
+    
+    private bool|null $ubi = null;
+    
+    private bool|null $persona = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return DescTeleco
-     */
-    public function setAllAttributes(array $aDatos): DescTeleco
-    {
-        if (array_key_exists('id_item', $aDatos)) {
-            $this->setId_item($aDatos['id_item']);
-        }
-        if (array_key_exists('orden', $aDatos)) {
-            $valor = $aDatos['orden'] ?? null;
-            $this->setOrdenVo(DescTelecoOrder::fromNullable(isset($valor) && $valor !== '' ? (int)$valor : null));
-        }
-        if (array_key_exists('id_tipo_teleco', $aDatos)) {
-            $valor = $aDatos['id_tipo_teleco'] ?? '';
-            $this->setIdTipoTelecoVo(isset($valor) && $valor !== '' ? new TipoTelecoCode((string)$valor) : null);
-        }
-        if (array_key_exists('desc_teleco', $aDatos)) {
-            $this->setDescTelecoVo(DescTelecoText::fromNullableString($aDatos['desc_teleco'] ?? null));
-        }
-        if (array_key_exists('ubi', $aDatos)) {
-            $this->setUbi(is_true($aDatos['ubi']));
-        }
-        if (array_key_exists('persona', $aDatos)) {
-            $this->setPersona(is_true($aDatos['persona']));
-        }
-        return $this;
-    }
 
     // -------- VO API --------
     public function getOrdenVo(): ?DescTelecoOrder
@@ -99,122 +45,92 @@ class DescTeleco
 
     public function getIdTipoTelecoVo(): TipoTelecoCode
     {
-        return $this->idTipoTeleco;
+        return $this->id_tipo_teleco;
     }
 
     public function setIdTipoTelecoVo(TipoTelecoCode $codigo): void
     {
-        $this->idTipoTeleco = $codigo;
+        $this->id_tipo_teleco = $codigo;
     }
 
     public function getDescTelecoVo(): ?DescTelecoText
     {
-        return $this->descTeleco;
+        return $this->desc_teleco;
     }
 
     public function setDescTelecoVo(?DescTelecoText $texto = null): void
     {
-        $this->descTeleco = $texto;
+        $this->desc_teleco = $texto;
     }
 
-    /**
-     *
-     * @return int $iid_item
-     */
+
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
-    /**
-     *
-     * @param int $iid_item
-     */
-    public function setId_item(int $iid_item): void
+
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 
-    /**
-     *
-     * @return int|null $iorden
-     */
+
     public function getOrden(): ?int
     {
         return $this->orden?->value();
     }
 
-    /**
-     *
-     * @param int|null $iorden
-     */
-    public function setOrden(?int $iorden = null): void
+
+    public function setOrden(?int $orden = null): void
     {
-        $this->orden = DescTelecoOrder::fromNullable($iorden);
+        $this->orden = DescTelecoOrder::fromNullable($orden);
     }
 
-    public function getIdTipo_teleco(): int
+    public function getIdTipoteleco(): int
     {
-        return $this->idTipoTeleco?->value();
+        return $this->id_tipo_teleco?->value();
     }
 
-    public function setIdTipo_teleco(int $id_tipo_teleco): void
+    public function setIdTipoteleco(int $id_tipo_teleco): void
     {
-        $this->idTipoTeleco = new TipoTelecoCode($id_tipo_teleco);
+        $this->id_tipo_teleco = new TipoTelecoCode($id_tipo_teleco);
     }
 
-    /**
-     *
-     * @return string|null $sdesc_teleco
-     */
+
     public function getDesc_teleco(): ?string
     {
-        return $this->descTeleco?->value();
+        return $this->desc_teleco?->value();
     }
 
-    /**
-     *
-     * @param string|null $sdesc_teleco
-     */
-    public function setDesc_teleco(?string $sdesc_teleco = null): void
+
+    public function setDesc_teleco(?string $desc_teleco = null): void
     {
-        $this->descTeleco = DescTelecoText::fromNullableString($sdesc_teleco);
+        $this->desc_teleco = DescTelecoText::fromNullableString($desc_teleco);
     }
 
-    /**
-     *
-     * @return bool|null $bubi
-     */
+
     public function isUbi(): ?bool
     {
-        return $this->bubi;
+        return $this->ubi;
     }
 
-    /**
-     *
-     * @param bool|null $bubi
-     */
-    public function setUbi(?bool $bubi = null): void
+
+    public function setUbi(?bool $ubi = null): void
     {
-        $this->bubi = $bubi;
+        $this->ubi = $ubi;
     }
 
-    /**
-     *
-     * @return bool|null $bpersona
-     */
+
     public function isPersona(): ?bool
     {
-        return $this->bpersona;
+        return $this->persona;
     }
 
-    /**
-     *
-     * @param bool|null $bpersona
-     */
-    public function setPersona(?bool $bpersona = null): void
+
+    public function setPersona(?bool $persona = null): void
     {
-        $this->bpersona = $bpersona;
+        $this->persona = $persona;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -223,7 +139,7 @@ class DescTeleco
         return 'id_item';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oDescTelecoSet = new Set();
 
@@ -236,12 +152,12 @@ class DescTeleco
     }
 
     /**
-     * Recupera les propietats de l'atribut iorden de DescTeleco
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo orden de DescTeleco
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosOrden()
+    private function getDatosOrden(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('orden');
@@ -254,12 +170,12 @@ class DescTeleco
     }
 
     /**
-     * Recupera les propietats de l'atribut stipo_teleco de DescTeleco
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo tipo_teleco de DescTeleco
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosId_tipo_teleco()
+    private function getDatosId_tipo_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_tipo_teleco');
@@ -274,12 +190,12 @@ class DescTeleco
     }
 
     /**
-     * Recupera les propietats de l'atribut sdesc_teleco de DescTeleco
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo desc_teleco de DescTeleco
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosDesc_teleco()
+    private function getDatosDesc_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_desc_teleco');
@@ -291,7 +207,7 @@ class DescTeleco
         return $oDatosCampo;
     }
 
-    function getDatosUbi()
+    private function getDatosUbi(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('ubi');
@@ -302,7 +218,7 @@ class DescTeleco
         return $oDatosCampo;
     }
 
-    function getDatosPersona()
+    private function getDatosPersona(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('persona');

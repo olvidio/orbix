@@ -119,8 +119,7 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ZonaGrupo = new ZonaGrupo();
-            $ZonaGrupo->setAllAttributes($aDatos);
+            $ZonaGrupo = ZonaGrupo::fromArray($aDatos);
             $ZonaGrupoSet->add($ZonaGrupo);
         }
         return $ZonaGrupoSet->getTot();
@@ -211,7 +210,7 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
         if (empty($aDatos)) {
             return null;
         }
-        return (new ZonaGrupo())->setAllAttributes($aDatos);
+        return ZonaGrupo::fromArray($aDatos);
     }
 
     public function getNewId()

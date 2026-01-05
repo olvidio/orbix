@@ -2,6 +2,9 @@
 
 namespace src\actividades\domain\entity;
 
+use src\actividades\domain\value_objects\TipoActivNombre;
+use src\shared\domain\traits\Hydratable;
+
 /**
  * Clase que implementa la entidad a_tipos_actividad
  *
@@ -13,18 +16,20 @@ namespace src\actividades\domain\entity;
  */
 class TipoDeActividad
 {
+    use Hydratable;
+
     /* OTROS MÉTODOS  ----------------------------------------------------------*/
 
     /**
      * Establece el valor del atributo iid_tipo_proceso_(sf/sv) de TipoDeActividad
      *
      */
-    public function setId_tipo_proceso(?int $iid_tipo_proceso, $isfsv)
+    public function setId_tipo_proceso(?int $id_tipo_proceso, $isfsv)
     {
         if ($isfsv === 1) {
-            $this->iid_tipo_proceso_sv = $iid_tipo_proceso;
+            $this->id_tipo_proceso_sv = $id_tipo_proceso;
         } else {
-            $this->iid_tipo_proceso_sf = $iid_tipo_proceso;
+            $this->id_tipo_proceso_sf = $id_tipo_proceso;
         }
     }
 
@@ -36,9 +41,9 @@ class TipoDeActividad
     public function getId_tipo_proceso($isfsv): ?int
     {
         if ($isfsv === 1) {
-            $id_tipo_proceso = $this->iid_tipo_proceso_sv;
+            $id_tipo_proceso = $this->id_tipo_proceso_sv;
         } else {
-            $id_tipo_proceso = $this->iid_tipo_proceso_sf;
+            $id_tipo_proceso = $this->id_tipo_proceso_sf;
         }
         return $id_tipo_proceso;
     }
@@ -46,12 +51,12 @@ class TipoDeActividad
     /**
      * Establece el valor del atributo iid_tipo_proceso_ex_(sf/sv) de TipoDeActividad
      */
-    public function setId_tipo_proceso_ex(?int $iid_tipo_proceso_ex, $isfsv)
+    public function setId_tipo_proceso_ex(?int $id_tipo_proceso_ex, $isfsv)
     {
         if ($isfsv === 1) {
-            $this->iid_tipo_proceso_ex_sv = $iid_tipo_proceso_ex;
+            $this->id_tipo_proceso_ex_sv = $id_tipo_proceso_ex;
         } else {
-            $this->iid_tipo_proceso_ex_sf = $iid_tipo_proceso_ex;
+            $this->id_tipo_proceso_ex_sf = $id_tipo_proceso_ex;
         }
     }
 
@@ -61,9 +66,9 @@ class TipoDeActividad
     public function getId_tipo_proceso_ex($isfsv): ?int
     {
         if ($isfsv === 1) {
-            $id_tipo_proceso_ex = $this->iid_tipo_proceso_ex_sv;
+            $id_tipo_proceso_ex = $this->id_tipo_proceso_ex_sv;
         } else {
-            $id_tipo_proceso_ex = $this->iid_tipo_proceso_ex_sf;
+            $id_tipo_proceso_ex = $this->id_tipo_proceso_ex_sf;
         }
         return $id_tipo_proceso_ex;
     }
@@ -75,174 +80,163 @@ class TipoDeActividad
      *
      * @var int
      */
-    private int $iid_tipo_activ;
+    private int $id_tipo_activ;
     /**
      * Nombre de TipoDeActividad
      *
      * @var string
      */
-    private string $snombre;
+    private string $nombre;
     /**
      * Id_tipo_proceso_sv de TipoDeActividad
      *
      * @var int|null
      */
-    private int|null $iid_tipo_proceso_sv = null;
+    private int|null $id_tipo_proceso_sv = null;
     /**
      * Id_tipo_proceso_ex_sv de TipoDeActividad
      *
      * @var int|null
      */
-    private int|null $iid_tipo_proceso_ex_sv = null;
+    private int|null $id_tipo_proceso_ex_sv = null;
     /**
      * Id_tipo_proceso_sf de TipoDeActividad
      *
      * @var int|null
      */
-    private int|null $iid_tipo_proceso_sf = null;
+    private int|null $id_tipo_proceso_sf = null;
     /**
      * Id_tipo_proceso_ex_sf de TipoDeActividad
      *
      * @var int|null
      */
-    private int|null $iid_tipo_proceso_ex_sf = null;
+    private int|null $id_tipo_proceso_ex_sf = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * Establece el valor de todos los atributos
      *
-     * @param array $aDatos
-     * @return TipoDeActividad
-     */
-    public function setAllAttributes(array $aDatos): TipoDeActividad
-    {
-        if (array_key_exists('id_tipo_activ', $aDatos)) {
-            $this->setId_tipo_activ($aDatos['id_tipo_activ']);
-        }
-        if (array_key_exists('nombre', $aDatos)) {
-            $this->setNombre($aDatos['nombre']);
-        }
-        if (array_key_exists('id_tipo_proceso_sv', $aDatos)) {
-            $this->setId_tipo_proceso_sv($aDatos['id_tipo_proceso_sv']);
-        }
-        if (array_key_exists('id_tipo_proceso_ex_sv', $aDatos)) {
-            $this->setId_tipo_proceso_ex_sv($aDatos['id_tipo_proceso_ex_sv']);
-        }
-        if (array_key_exists('id_tipo_proceso_sf', $aDatos)) {
-            $this->setId_tipo_proceso_sf($aDatos['id_tipo_proceso_sf']);
-        }
-        if (array_key_exists('id_tipo_proceso_ex_sf', $aDatos)) {
-            $this->setId_tipo_proceso_ex_sf($aDatos['id_tipo_proceso_ex_sf']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_tipo_activ
+     * @return int $id_tipo_activ
      */
     public function getId_tipo_activ(): int
     {
-        return $this->iid_tipo_activ;
+        return $this->id_tipo_activ;
     }
 
     /**
      *
-     * @param int $iid_tipo_activ
+     * @param int $id_tipo_activ
      */
-    public function setId_tipo_activ(int $iid_tipo_activ): void
+    public function setId_tipo_activ(int $id_tipo_activ): void
     {
-        $this->iid_tipo_activ = $iid_tipo_activ;
+        $this->id_tipo_activ = $id_tipo_activ;
     }
 
     /**
      *
      * @return string $snombre
+     * @deprecated use getNombreVo()
      */
     public function getNombre(): string
     {
-        return $this->snombre;
+        return $this->nombre;
     }
 
     /**
      *
      * @param string $snombre
+     * @deprecated use setNombreVo()
      */
     public function setNombre(string $snombre): void
     {
-        $this->snombre = $snombre;
+        $this->nombre = $snombre;
+    }
+
+    /**
+     * @return TipoActivNombre
+     */
+    public function getNombreVo(): TipoActivNombre
+    {
+        return new TipoActivNombre($this->nombre);
+    }
+
+    /**
+     * @param TipoActivNombre $oTipoActivNombre
+     */
+    public function setNombreVo(TipoActivNombre $oTipoActivNombre): void
+    {
+        $this->nombre = $oTipoActivNombre->value();
     }
 
     /**
      *
-     * @return int|null $iid_tipo_proceso_sv
+     * @return int|null $id_tipo_proceso_sv
      */
     public function getId_tipo_proceso_sv(): ?int
     {
-        return $this->iid_tipo_proceso_sv;
+        return $this->id_tipo_proceso_sv;
     }
 
     /**
      *
-     * @param int|null $iid_tipo_proceso_sv
+     * @param int|null $id_tipo_proceso_sv
      */
-    public function setId_tipo_proceso_sv(?int $iid_tipo_proceso_sv = null): void
+    public function setId_tipo_proceso_sv(?int $id_tipo_proceso_sv = null): void
     {
-        $this->iid_tipo_proceso_sv = $iid_tipo_proceso_sv;
+        $this->id_tipo_proceso_sv = $id_tipo_proceso_sv;
     }
 
     /**
      *
-     * @return int|null $iid_tipo_proceso_ex_sv
+     * @return int|null $id_tipo_proceso_ex_sv
      */
     public function getId_tipo_proceso_ex_sv(): ?int
     {
-        return $this->iid_tipo_proceso_ex_sv;
+        return $this->id_tipo_proceso_ex_sv;
     }
 
     /**
      *
-     * @param int|null $iid_tipo_proceso_ex_sv
+     * @param int|null $id_tipo_proceso_ex_sv
      */
-    public function setId_tipo_proceso_ex_sv(?int $iid_tipo_proceso_ex_sv = null): void
+    public function setId_tipo_proceso_ex_sv(?int $id_tipo_proceso_ex_sv = null): void
     {
-        $this->iid_tipo_proceso_ex_sv = $iid_tipo_proceso_ex_sv;
+        $this->id_tipo_proceso_ex_sv = $id_tipo_proceso_ex_sv;
     }
 
     /**
      *
-     * @return int|null $iid_tipo_proceso_sf
+     * @return int|null $id_tipo_proceso_sf
      */
     public function getId_tipo_proceso_sf(): ?int
     {
-        return $this->iid_tipo_proceso_sf;
+        return $this->id_tipo_proceso_sf;
     }
 
     /**
      *
-     * @param int|null $iid_tipo_proceso_sf
+     * @param int|null $id_tipo_proceso_sf
      */
-    public function setId_tipo_proceso_sf(?int $iid_tipo_proceso_sf = null): void
+    public function setId_tipo_proceso_sf(?int $id_tipo_proceso_sf = null): void
     {
-        $this->iid_tipo_proceso_sf = $iid_tipo_proceso_sf;
+        $this->id_tipo_proceso_sf = $id_tipo_proceso_sf;
     }
 
     /**
      *
-     * @return int|null $iid_tipo_proceso_ex_sf
+     * @return int|null $id_tipo_proceso_ex_sf
      */
     public function getId_tipo_proceso_ex_sf(): ?int
     {
-        return $this->iid_tipo_proceso_ex_sf;
+        return $this->id_tipo_proceso_ex_sf;
     }
 
     /**
      *
-     * @param int|null $iid_tipo_proceso_ex_sf
+     * @param int|null $id_tipo_proceso_ex_sf
      */
-    public function setId_tipo_proceso_ex_sf(?int $iid_tipo_proceso_ex_sf = null): void
+    public function setId_tipo_proceso_ex_sf(?int $id_tipo_proceso_ex_sf = null): void
     {
-        $this->iid_tipo_proceso_ex_sf = $iid_tipo_proceso_ex_sf;
+        $this->id_tipo_proceso_ex_sf = $id_tipo_proceso_ex_sf;
     }
 }

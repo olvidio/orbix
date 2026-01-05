@@ -117,8 +117,7 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ZonaSacd = new ZonaSacd();
-            $ZonaSacd->setAllAttributes($aDatos);
+            $ZonaSacd = ZonaSacd::fromArray($aDatos);
             $ZonaSacdSet->add($ZonaSacd);
         }
         return $ZonaSacdSet->getTot();
@@ -266,7 +265,7 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new ZonaSacd())->setAllAttributes($aDatos);
+        return ZonaSacd::fromArray($aDatos);
     }
 
     public function getNewId()

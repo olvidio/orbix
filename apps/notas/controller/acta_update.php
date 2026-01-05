@@ -1,11 +1,10 @@
 <?php
 
 use core\ConfigGlobal;
-use notas\model\entity\Acta;
-use notas\model\entity\ActaDl;
-use notas\model\entity\ActaEx;
-use notas\model\entity\ActaTribunalDl;
-use notas\model\entity\GestorActaTribunalDl;
+use src\notas\domain\contracts\ActaDlRepositoryInterface;
+use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
+use src\notas\domain\entity\Acta;
+use src\notas\domain\entity\ActaTribunal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -35,12 +34,8 @@ if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
 
 $dl_acta = strtok($Qacta, ' ');
 
-if ($dl_acta == $mi_dele || $dl_acta === "?") {
-    $oActa = new ActaDl();
-    $oActaTribunal = new ActaTribunalDl();
-} else {
+if ($dl_acta != $mi_dele && $dl_acta !== "?") {
     // Ojo si la dl ya existe no debería hacerse
-    $oActa = new ActaEx();
     switch ($Qmod) {
         case 'nueva':
             $msg = _("No puede generar un acta de otra dl");
@@ -66,6 +61,8 @@ $Qlinea = (integer)filter_input(INPUT_POST, 'linea');
 $Qlugar = (string)filter_input(INPUT_POST, 'lugar');
 $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
+$oActa = new Acta();
+$ActaDlRepository = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
 switch ($Qmod) {
     case 'nueva':
         // Si se pone un acta ya existente, modificará los datos de ésta. Hay que avisar:
@@ -86,18 +83,17 @@ switch ($Qmod) {
         $oActa->setLinea($Qlinea);
         $oActa->setLugar($Qlugar);
         $oActa->setObserv($Qobserv);
-        if ($oActa->DBGuardar() === false) {
+        if ($ActaDlRepository->Guardar($oActa) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oActa->getErrorTxt();
+            echo "\n" . $ActaDlRepository->getErrorTxt();
         }
         break;
     case 'eliminar':
-        $oActa->setActa($Qacta);
-        $oActa->DBCarregar();
+        $oActa = $ActaDlRepository->findById($Qacta);
 
-        if ($oActa->DBEliminar() === false) {
+        if ($ActaDlRepository->Eliminar($oActa) === false) {
             echo _("hay un error, no se ha eliminado");
-            echo "\n" . $oActa->getErrorTxt();
+            echo "\n" . $ActaDlRepository->getErrorTxt();
         }
         break;
     case 'modificar':
@@ -111,8 +107,7 @@ switch ($Qmod) {
         $Qlugar = (string)filter_input(INPUT_POST, 'lugar');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
-        $oActa->setActa($Qacta);
-        $oActa->DBCarregar();
+        $oActa = $ActaDlRepository->findById($Qacta);
 
         $oActa->setId_asignatura($Qid_asignatura);
         //	$oActa->setId_activ($Qid_activ);
@@ -122,20 +117,20 @@ switch ($Qmod) {
         $oActa->setLinea($Qlinea);
         $oActa->setLugar($Qlugar);
         $oActa->setObserv($Qobserv);
-        if ($oActa->DBGuardar() === false) {
+        if ($ActaDlRepository->Guardar($oActa) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oActa->getErrorTxt();
+            echo "\n" . $ActaDlRepository->getErrorTxt();
         }
         break;
 }
 
 //borrar todos (y después poner los nuevos)
-$oGesActaTribunal = new GestorActaTribunalDl();
-$cActaTribunal = $oGesActaTribunal->getActasTribunales(array('acta' => $Qacta));
+$ActaTribunalDlRepository = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
+$cActaTribunal = $ActaTribunalDlRepository->getActasTribunales(['acta' => $Qacta]);
 foreach ($cActaTribunal as $oActaTribunal) {
-    if ($oActaTribunal->DBEliminar() === false) {
+    if ($ActaTribunalDlRepository->Eliminar($oActaTribunal) === false) {
         echo _("hay un error, no se ha eliminado");
-        echo "\n" . $oActaTribunal->getErrorTxt();
+        echo "\n" . $ActaTribunalDlRepository->getErrorTxt();
     }
 }
 
@@ -148,13 +143,15 @@ if (!empty($Qexaminadores)) {
         if (empty($examinador)) {
             continue;
         }
-        $oActaTribunal = new ActaTribunalDl();
+        $newIdItem = $ActaTribunalDlRepository->getNewId();
+        $oActaTribunal = new ActaTribunal();
+        $oActaTribunal->setId_item($newIdItem);
         $oActaTribunal->setActa($Qacta);
         $oActaTribunal->setExaminador($examinador);
         $oActaTribunal->setOrden($i);
-        if ($oActaTribunal->DBGuardar() === false) {
+        if ($ActaTribunalDlRepository->Guardar($oActaTribunal) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oActaTribunal->getErrorTxt();
+            echo "\n" . $ActaTribunalDlRepository->getErrorTxt();
         }
     }
 }

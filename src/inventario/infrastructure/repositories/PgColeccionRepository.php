@@ -109,8 +109,7 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Coleccion = new Coleccion();
-            $Coleccion->setAllAttributes($aDatos);
+            $Coleccion = Coleccion::fromArray($aDatos);
             $ColeccionSet->add($Coleccion);
         }
         return $ColeccionSet->getTot();
@@ -206,7 +205,7 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
         if (empty($aDatos)) {
             return null;
         }
-        return (new Coleccion())->setAllAttributes($aDatos);
+        return Coleccion::fromArray($aDatos);
     }
 
     public function getNewId()

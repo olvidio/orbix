@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
-use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
+use src\profesores\domain\services\ProfesorStgrService;
 use web\Lista;
 
 /**
@@ -27,8 +27,8 @@ $a_cabeceras[5] = _("inicio");
 $a_cabeceras[6] = _("fin");
 $a_cabeceras[7] = _("organiza");
 
-$ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-$a_nomProfesor = $ProfesorRepository->getArrayProfesoresConDl();
+$ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
+$a_nomProfesor = $ProfesorStgrService->getArrayProfesoresConDl();
 
 $p = 0;
 $ProfesorCongresoRepository = $GLOBALS['container']->get(ProfesorCongresoRepositoryInterface::class);

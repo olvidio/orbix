@@ -92,8 +92,7 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $CartaPresentacion = new CartaPresentacion();
-            $CartaPresentacion->setAllAttributes($aDatos);
+            $CartaPresentacion =  CartaPresentacion::fromArray($aDatos);
             $CartaPresentacionSet->add($CartaPresentacion);
         }
         return $CartaPresentacionSet->getTot();
@@ -194,6 +193,6 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         if (empty($aDatos)) {
             return null;
         }
-        return (new CartaPresentacion())->setAllAttributes($aDatos);
+        return CartaPresentacion::fromArray($aDatos);
     }
 }

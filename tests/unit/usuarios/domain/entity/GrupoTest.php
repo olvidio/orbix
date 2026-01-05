@@ -20,7 +20,7 @@ class GrupoTest extends myTest
 
         $this->grupo = new Grupo();
         $this->grupo->setId_usuario(1);
-        $this->grupo->setUsuario(new Username('testgroup'));
+        $this->grupo->setUsuarioVo(new Username('testgroup'));
     }
 
     private Grupo $grupo;
@@ -38,13 +38,13 @@ class GrupoTest extends myTest
 
     public function test_get_usuario()
     {
-        $this->assertEquals('testgroup', $this->grupo->getUsuario());
+        $this->assertEquals('testgroup', $this->grupo->getUsuarioVo());
     }
 
     public function test_set_and_get_usuario()
     {
-        $this->grupo->setUsuario(new Username('newgroup'));
-        $this->assertEquals('newgroup', $this->grupo->getUsuario());
+        $this->grupo->setUsuarioVo(new Username('newgroup'));
+        $this->assertEquals('newgroup', $this->grupo->getUsuarioVo());
     }
 
     public function test_get_id_role()
@@ -69,7 +69,7 @@ class GrupoTest extends myTest
         $grupo->setAllAttributes($attributes);
 
         $this->assertEquals(1, $grupo->getId_usuario());
-        $this->assertEquals('testgroup', $grupo->getUsuario());
+        $this->assertEquals('testgroup', $grupo->getUsuarioVo());
         $this->assertEquals(3, $grupo->getId_role());
     }
 

@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
-use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
+use src\profesores\domain\services\ProfesorStgrService;
 use web\Lista;
 
 /**
@@ -38,8 +38,8 @@ $a_cabeceras[6] = _("acta");
 
 $a_valores = [];
 
-$ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-$a_nomProfesor = $ProfesorRepository->getArrayProfesoresConDl();
+$ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
+$a_nomProfesor = $ProfesorStgrService->getArrayProfesoresConDl();
 
 $ProfesorDocenciaStgrRepository = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
 $p = 0;

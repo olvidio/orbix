@@ -112,24 +112,24 @@ $oForm->setTitulo(strtoupper_dlb(_("búsqueda de casas cuyo planning interesa"))
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $donde = '';
 if ($oRole->isRolePau(Role::PAU_CDC)) { //casa
-    $id_pau = $oMiUsuario->getId_pau(); //pueden ser varios separados por comas
+    $id_pau = $oMiUsuario->getCsv_id_pau(); //pueden ser varios separados por comas
     //$sDonde = str_replace(",", " OR id_ubi=", $id_pau);
-    //$donde = "WHERE status='t' AND (id_ubi=$sDonde)";
+    //$donde = "WHERE active='t' AND (id_ubi=$sDonde)";
     //formulario para casas cuyo calendario de actividades interesa
-    $donde = "WHERE status='t' AND id_ubi IN ($id_pau)";
+    $donde = "WHERE active='t' AND id_ubi IN ($id_pau)";
     $oForm->setCasas('casa');
 } else {
     if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
         $oForm->setCasas('all');
-        $donde = "WHERE status='t'";
+        $donde = "WHERE active='t'";
     } else {
         if ($miSfsv === 1) {
             $oForm->setCasas('sv');
-            $donde = "WHERE status='t' AND sv='t'";
+            $donde = "WHERE active='t' AND sv='t'";
         }
         if ($miSfsv === 2) {
             $oForm->setCasas('sf');
-            $donde = "WHERE status='t' AND sf='t'";
+            $donde = "WHERE active='t' AND sf='t'";
         }
     }
 }

@@ -3,108 +3,71 @@
 namespace src\ubis\domain\entity;
 use core\DatosCampo;
 use core\Set;
+use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\value_objects\{TipoCentroCode, TipoCentroName};
 
-/**
- * Clase que implementa la entidad xu_tipo_ctr
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 14/11/2025
- */
 class TipoCentro
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /**
      * Código del Tipo de Centro
      */
-    private TipoCentroCode $tipoCentro;
+    private TipoCentroCode $tipo_centro;
     /**
      * Nombre del Tipo de Centro
      */
-    private ?TipoCentroName $nombreTipoCentro = null;
+    private ?TipoCentroName $nombre_tipo_centro = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return TipoCentro
-     */
-    public function setAllAttributes(array $aDatos): TipoCentro
-    {
-        if (array_key_exists('tipo_ctr', $aDatos)) {
-            $valor = $aDatos['tipo_ctr'] ?? '';
-            $this->setTipoCentroVo(isset($valor) && $valor !== '' ? new TipoCentroCode((string)$valor) : null);
-        }
-        if (array_key_exists('nombre_tipo_ctr', $aDatos)) {
-            $this->setNombreTipoCentroVo(TipoCentroName::fromNullableString($aDatos['nombre_tipo_ctr'] ?? null));
-        }
-        return $this;
-    }
 
     // VO API
     public function getTipoCentroVo(): TipoCentroCode
     {
-        return $this->tipoCentro;
+        return $this->tipo_centro;
     }
 
     public function setTipoCentroVo(?TipoCentroCode $tipoCentro = null): void
     {
-        $this->tipoCentro = $tipoCentro;
+        $this->tipo_centro = $tipoCentro;
     }
 
-    /**
-     *
-     * @return string $stipo_ctr
-     */
+
     public function getTipo_ctr(): string
     {
-        return $this->tipoCentro?->value();
+        return $this->tipo_centro?->value();
     }
 
-    /**
-     *
-     * @param string $stipo_ctr
-     */
-    public function setTipo_ctr(string $stipo_ctr): void
+
+    public function setTipo_ctr(string $tipo_ctr): void
     {
-        $stipo_ctr = trim($stipo_ctr);
-        $this->tipoCentro = $stipo_ctr !== '' ? new TipoCentroCode($stipo_ctr) : null;
+        $tipo_ctr = trim($tipo_ctr);
+        $this->tipo_centro = $tipo_ctr !== '' ? new TipoCentroCode($tipo_ctr) : null;
     }
 
     // VO API
     public function getNombreTipoCentroVo(): ?TipoCentroName
     {
-        return $this->nombreTipoCentro;
+        return $this->nombre_tipo_centro;
     }
 
     public function setNombreTipoCentroVo(?TipoCentroName $nombre = null): void
     {
-        $this->nombreTipoCentro = $nombre;
+        $this->nombre_tipo_centro = $nombre;
     }
 
-    /**
-     *
-     * @return string|null $snombre_tipo_ctr
-     */
+
     public function getNombre_tipo_ctr(): ?string
     {
-        return $this->nombreTipoCentro?->value();
+        return $this->nombre_tipo_centro?->value();
     }
 
-    /**
-     *
-     * @param string|null $snombre_tipo_ctr
-     */
-    public function setNombre_tipo_ctr(?string $snombre_tipo_ctr = null): void
+
+    public function setNombre_tipo_ctr(?string $nombre_tipo_ctr = null): void
     {
-        $this->nombreTipoCentro = TipoCentroName::fromNullableString($snombre_tipo_ctr);
+        $this->nombre_tipo_centro = TipoCentroName::fromNullableString($nombre_tipo_ctr);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -113,7 +76,7 @@ class TipoCentro
         return 'tipo_ctr';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oTipoCentroSet = new Set();
 
@@ -123,12 +86,12 @@ class TipoCentro
     }
 
     /**
-     * Recupera les propietats de l'atribut stipo_ctr de TipoCentro
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo tipo_ctr de TipoCentro
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosTipo_ctr()
+    private function getDatosTipo_ctr(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo_ctr');
@@ -141,12 +104,12 @@ class TipoCentro
     }
 
     /**
-     * Recupera les propietats de l'atribut snombre_tipo_ctr de TipoCentro
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo nombre_tipo_ctr de TipoCentro
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosNombre_tipo_ctr()
+    private function getDatosNombre_tipo_ctr(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nombre_tipo_ctr');

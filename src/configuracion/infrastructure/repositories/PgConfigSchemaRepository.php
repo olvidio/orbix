@@ -93,8 +93,7 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ConfigSchema = new ConfigSchema();
-            $ConfigSchema->setAllAttributes($aDatos);
+            $ConfigSchema = ConfigSchema::fromArray($aDatos);
             $ConfigSchemaSet->add($ConfigSchema);
         }
         return $ConfigSchemaSet->getTot();
@@ -180,6 +179,6 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         if (empty($aDatos)) {
             return null;
         }
-        return (new ConfigSchema())->setAllAttributes($aDatos);
+        return ConfigSchema::fromArray($aDatos);
     }
 }

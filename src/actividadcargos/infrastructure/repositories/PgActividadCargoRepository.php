@@ -15,7 +15,6 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use src\shared\domain\contracts\EventBusInterface;
 use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
@@ -32,11 +31,9 @@ use function core\is_true;
 class PgActividadCargoRepository extends ClaseRepository implements ActividadCargoRepositoryInterface
 {
     use HandlesPdoErrors;
-    private EventBusInterface $eventBus;
 
-    public function __construct(EventBusInterface $eventBus)
+    public function __construct()
     {
-        $this->eventBus = $eventBus;
         $oDbl = $GLOBALS['oDBE'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBE_Select'];
@@ -333,8 +330,7 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ActividadCargo = new ActividadCargo();
-            $ActividadCargo->setAllAttributes($aDatos);
+            $ActividadCargo = ActividadCargo::fromArray($aDatos);
             $ActividadCargoSet->add($ActividadCargo);
         }
         return $ActividadCargoSet->getTot();
@@ -355,9 +351,8 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         $success = $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         if ($success && $datosActuales) {
-            // Marcar como eliminada y despachar eventos
+            // Marcar como eliminada (los eventos se despacharán por el UnitOfWork)
             $ActividadCargo->marcarComoEliminada($datosActuales);
-            $this->dispatchDomainEvents($ActividadCargo);
         }
 
         return $success;
@@ -375,7 +370,7 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         $bInsert = $this->isNew($id_item);
 
         // Obtener datos actuales si es UPDATE
-        $datosActuales = $bInsert ? [] : ($this->datosById($id_item) ?: []);
+        $datosActuales = $bInsert ? [] : $this->datosById($id_item)?? [];
 
         $aDatos = [];
         $aDatos['id_activ'] = $ActividadCargo->getId_activ();
@@ -412,13 +407,12 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         $success =  $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 
         if ($success) {
-            // Emitir evento de dominio
+            // Marcar evento de dominio (se despachará por el UnitOfWork)
             if ($bInsert) {
                 $ActividadCargo->marcarComoNueva($datosActuales);
             } else {
                 $ActividadCargo->marcarComoModificada($datosActuales);
             }
-            $this->dispatchDomainEvents($ActividadCargo);
         }
 
         return $success;
@@ -450,8 +444,7 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 
@@ -464,7 +457,8 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         if (empty($aDatos)) {
             return null;
         }
-        return (new ActividadCargo())->setAllAttributes($aDatos);
+        return ActividadCargo::fromArray($aDatos);
+
     }
 
     public function getNewId()
@@ -474,16 +468,4 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         return $oDbl->query($sQuery)->fetchColumn();
     }
 
-    /**
-     * Despacha los eventos de dominio de la entidad
-     *
-     * @param ActividadCargo $ActividadCargo
-     * @return void
-     */
-    private function dispatchDomainEvents(ActividadCargo $ActividadCargo): void
-    {
-        foreach ($ActividadCargo->pullDomainEvents() as $event) {
-            $this->eventBus->dispatch($event);
-        }
-    }
 }

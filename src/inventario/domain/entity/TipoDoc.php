@@ -5,203 +5,85 @@ namespace src\inventario\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
+use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 use src\inventario\domain\value_objects\{TipoDocId, TipoDocName, TipoDocSigla, TipoDocObserv, ColeccionId, TipoDocBajoLlave, TipoDocVigente, TipoDocNumerado};
 
-/**
- * Clase que implementa la entidad i_tipo_documento_dl
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 12/3/2025
- */
+
 class TipoDoc
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_tipo_doc de TipoDoc
-     *
-     * @var int
-     */
-    private int $iid_tipo_doc;
-    /**
-     * Nom_doc de TipoDoc
-     *
-     * @var string|null
-     */
-    private string|null $snom_doc = null;
-    /**
-     * Sigla de TipoDoc
-     *
-     * @var string
-     */
-    private string $ssigla;
-    /**
-     * Observ de TipoDoc
-     *
-     * @var string|null
-     */
-    private string|null $sobserv = null;
-    /**
-     * Id_coleccion de TipoDoc
-     *
-     * @var int|null
-     */
-    private int|null $iid_coleccion = null;
-    /**
-     * Bajo_llave de TipoDoc
-     *
-     * @var bool|null
-     */
-    private bool|null $bbajo_llave = null;
-    /**
-     * Vigente de TipoDoc
-     *
-     * @var bool|null
-     */
-    private bool|null $bvigente = null;
-    /**
-     * Numerado de TipoDoc
-     *
-     * @var bool
-     */
-    private bool $bnumerado;
+    private int $id_tipo_doc;
+
+    private string|null $nom_doc = null;
+
+    private string $sigla;
+
+    private string|null $observ = null;
+
+    private int|null $id_coleccion = null;
+
+    private bool|null $bajo_llave = null;
+
+    private bool|null $vigente = null;
+
+    private bool $numerado;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return TipoDoc
-     */
-    public function setAllAttributes(array $aDatos): TipoDoc
-    {
-        if (array_key_exists('id_tipo_doc', $aDatos)) {
-            $this->setId_tipo_doc($aDatos['id_tipo_doc']);
-        }
-        if (array_key_exists('nom_doc', $aDatos)) {
-            $this->setNom_doc($aDatos['nom_doc']);
-        }
-        if (array_key_exists('sigla', $aDatos)) {
-            $this->setSigla($aDatos['sigla']);
-        }
-        if (array_key_exists('observ', $aDatos)) {
-            $this->setObserv($aDatos['observ']);
-        }
-        if (array_key_exists('id_coleccion', $aDatos)) {
-            $this->setId_coleccion($aDatos['id_coleccion']);
-        }
-        if (array_key_exists('bajo_llave', $aDatos)) {
-            $this->setBajo_llave(is_true($aDatos['bajo_llave']));
-        }
-        if (array_key_exists('vigente', $aDatos)) {
-            $this->setVigente(is_true($aDatos['vigente']));
-        }
-        if (array_key_exists('numerado', $aDatos)) {
-            $this->setNumerado(is_true($aDatos['numerado']));
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_tipo_doc
-     */
     public function getId_tipo_doc(): int
     {
-        return $this->iid_tipo_doc;
+        return $this->id_tipo_doc;
     }
 
-    /**
-     *
-     * @param int $iid_tipo_doc
-     */
-    public function setId_tipo_doc(int $iid_tipo_doc): void
+    public function setId_tipo_doc(int $id_tipo_doc): void
     {
-        $this->iid_tipo_doc = $iid_tipo_doc;
+        $this->id_tipo_doc = $id_tipo_doc;
     }
 
-    /**
-     *
-     * @return string|null $snom_doc
-     */
     public function getNom_doc(): ?string
     {
-        return $this->snom_doc;
+        return $this->nom_doc;
     }
 
-    /**
-     *
-     * @param string|null $snom_doc
-     */
-    public function setNom_doc(?string $snom_doc = null): void
+    public function setNom_doc(?string $nom_doc = null): void
     {
-        $this->snom_doc = $snom_doc;
+        $this->nom_doc = $nom_doc;
     }
 
-    /**
-     *
-     * @return string $ssigla
-     */
     public function getSigla(): string
     {
-        return $this->ssigla;
+        return $this->sigla;
     }
 
-    /**
-     *
-     * @param string $ssigla
-     */
-    public function setSigla(string $ssigla): void
+    public function setSigla(string $sigla): void
     {
-        $this->ssigla = $ssigla;
+        $this->sigla = $sigla;
     }
 
-    /**
-     *
-     * @return string|null $sobserv
-     */
     public function getObserv(): ?string
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
-    /**
-     *
-     * @param string|null $sobserv
-     */
-    public function setObserv(?string $sobserv = null): void
+    public function setObserv(?string $observ = null): void
     {
-        $this->sobserv = $sobserv;
+        $this->observ = $observ;
     }
 
-    /**
-     *
-     * @return int|null $iid_coleccion
-     */
     public function getId_coleccion(): ?int
     {
-        return $this->iid_coleccion;
+        return $this->id_coleccion;
     }
 
-    /**
-     *
-     * @param int|null $iid_coleccion
-     */
-    public function setId_coleccion(?int $iid_coleccion = null): void
+    public function setId_coleccion(?int $id_coleccion = null): void
     {
-        $this->iid_coleccion = $iid_coleccion;
+        $this->id_coleccion = $id_coleccion;
     }
 
-    /**
-     *
-     * @return bool|null $bbajo_llave
-     */
     /**
      * @deprecated Usar `isBajoLlave(): ?bool` en su lugar.
      */
@@ -212,142 +94,127 @@ class TipoDoc
 
     public function isBajoLlave(): ?bool
     {
-        return $this->bbajo_llave;
+        return $this->bajo_llave;
     }
 
-    /**
-     *
-     * @param bool|null $bbajo_llave
-     */
+
     /**
      * @deprecated Usar `setBajoLlave(?bool $bajoLlave = null): void` en su lugar.
      */
-    public function setBajo_llave(?bool $bbajo_llave = null): void
+    public function setBajo_llave(?bool $bajo_llave = null): void
     {
-        $this->setBajoLlave($bbajo_llave);
+        $this->setBajoLlave($bajo_llave);
     }
 
     public function setBajoLlave(?bool $bajoLlave = null): void
     {
-        $this->bbajo_llave = $bajoLlave;
+        $this->bajo_llave = $bajoLlave;
     }
 
-    /**
-     *
-     * @return bool|null $bvigente
-     */
+
     public function isVigente(): ?bool
     {
-        return $this->bvigente;
+        return $this->vigente;
     }
 
-    /**
-     *
-     * @param bool|null $bvigente
-     */
-    public function setVigente(?bool $bvigente = null): void
+
+    public function setVigente(?bool $vigente = null): void
     {
-        $this->bvigente = $bvigente;
+        $this->vigente = $vigente;
     }
 
-    /**
-     *
-     * @return bool $bnumerado
-     */
+
     public function isNumerado(): bool
     {
-        return $this->bnumerado;
+        return $this->numerado;
     }
 
-    /**
-     *
-     * @param bool $bnumerado
-     */
-    public function setNumerado(?bool $bnumerado): void
+
+    public function setNumerado(?bool $numerado): void
     {
-        $this->bnumerado = $bnumerado?? False;
+        $this->numerado = $numerado?? False;
     }
 
     // Value Object API (duplicada con legacy)
     public function getIdTipoDocVo(): TipoDocId
     {
-        return new TipoDocId($this->iid_tipo_doc);
+        return new TipoDocId($this->id_tipo_doc);
     }
 
     public function setIdTipoDocVo(?TipoDocId $id = null): void
     {
         if ($id === null) { return; }
-        $this->iid_tipo_doc = $id->value();
+        $this->id_tipo_doc = $id->value();
     }
 
     public function getNomDocVo(): ?TipoDocName
     {
-        return $this->snom_doc !== null && $this->snom_doc !== '' ? new TipoDocName($this->snom_doc) : null;
+        return $this->nom_doc !== null && $this->nom_doc !== '' ? new TipoDocName($this->nom_doc) : null;
     }
 
     public function setNomDocVo(?TipoDocName $name = null): void
     {
-        $this->snom_doc = $name?->value();
+        $this->nom_doc = $name?->value();
     }
 
     public function getSiglaVo(): ?TipoDocSigla
     {
-        return isset($this->ssigla) && $this->ssigla !== '' ? new TipoDocSigla($this->ssigla) : null;
+        return isset($this->sigla) && $this->sigla !== '' ? new TipoDocSigla($this->sigla) : null;
     }
 
     public function setSiglaVo(?TipoDocSigla $sigla = null): void
     {
-        $this->ssigla = $sigla?->value() ?? '';
+        $this->sigla = $sigla?->value() ?? '';
     }
 
     public function getObservVo(): ?TipoDocObserv
     {
-        return $this->sobserv !== null && $this->sobserv !== '' ? new TipoDocObserv($this->sobserv) : null;
+        return $this->observ !== null && $this->observ !== '' ? new TipoDocObserv($this->observ) : null;
     }
 
     public function setObservVo(?TipoDocObserv $obs = null): void
     {
-        $this->sobserv = $obs?->value();
+        $this->observ = $obs?->value();
     }
 
     public function getIdColeccionVo(): ?ColeccionId
     {
-        return $this->iid_coleccion !== null ? new ColeccionId($this->iid_coleccion) : null;
+        return $this->id_coleccion !== null ? new ColeccionId($this->id_coleccion) : null;
     }
 
     public function setIdColeccionVo(?ColeccionId $id = null): void
     {
-        $this->iid_coleccion = $id?->value();
+        $this->id_coleccion = $id?->value();
     }
 
     public function getBajoLlaveVo(): ?TipoDocBajoLlave
     {
-        return $this->bbajo_llave === null ? null : new TipoDocBajoLlave((bool)$this->bbajo_llave);
+        return $this->bajo_llave === null ? null : new TipoDocBajoLlave((bool)$this->bajo_llave);
     }
 
     public function setBajoLlaveVo(?TipoDocBajoLlave $bajoLlave = null): void
     {
-        $this->bbajo_llave = $bajoLlave?->value();
+        $this->bajo_llave = $bajoLlave?->value();
     }
 
     public function getVigenteVo(): ?TipoDocVigente
     {
-        return $this->bvigente === null ? null : new TipoDocVigente((bool)$this->bvigente);
+        return $this->vigente === null ? null : new TipoDocVigente((bool)$this->vigente);
     }
 
     public function setVigenteVo(?TipoDocVigente $vigente = null): void
     {
-        $this->bvigente = $vigente?->value();
+        $this->vigente = $vigente?->value();
     }
 
     public function getNumeradoVo(): TipoDocNumerado
     {
-        return new TipoDocNumerado((bool)$this->bnumerado);
+        return new TipoDocNumerado((bool)$this->numerado);
     }
 
     public function setNumeradoVo(TipoDocNumerado $numerado): void
     {
-        $this->bnumerado = $numerado->value();
+        $this->numerado = $numerado->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -356,7 +223,7 @@ class TipoDoc
         return 'id_tipo_doc';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oTipoDocSet = new Set();
 
@@ -370,7 +237,7 @@ class TipoDoc
         return $oTipoDocSet->getTot();
     }
 
-    function getDatosNom_doc()
+    private function getDatosNom_doc(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nom_doc');
@@ -382,7 +249,7 @@ class TipoDoc
         return $oDatosCampo;
     }
 
-    function getDatosSigla()
+    private function getDatosSigla(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('sigla');
@@ -394,7 +261,7 @@ class TipoDoc
         return $oDatosCampo;
     }
 
-    function getDatosObserv()
+    private function getDatosObserv(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('observ');
@@ -406,7 +273,7 @@ class TipoDoc
         return $oDatosCampo;
     }
 
-    function getDatosId_coleccion()
+    private function getDatosId_coleccion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_coleccion');
@@ -421,7 +288,7 @@ class TipoDoc
         return $oDatosCampo;
     }
 
-    function getDatosBajo_llave()
+    private function getDatosBajo_llave(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('bajo_llave');
@@ -432,7 +299,7 @@ class TipoDoc
         return $oDatosCampo;
     }
 
-    function getDatosVigente()
+    private function getDatosVigente(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('vigente');
@@ -443,7 +310,7 @@ class TipoDoc
         return $oDatosCampo;
     }
 
-    function getDatosNumerado()
+    private function getDatosNumerado(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('numerado');

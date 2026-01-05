@@ -110,7 +110,7 @@ switch ($Qn_agd) {
 }
 
 $oGesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-$aOpciones = $oGesCentros->getArrayCentros("WHERE status = 't' AND tipo_ctr ~ '^a|^n' ");
+$aOpciones = $oGesCentros->getArrayCentros("WHERE active = 't' AND tipo_ctr ~ '^a|^n' ");
 $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setBlanco(true);

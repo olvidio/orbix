@@ -36,7 +36,7 @@ foreach ($cTipoDossier as $oTipoDossier) {
         $status_dossier = 'f';
     } else {
         $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => $tabla_from, 'id_pau' => $id_pau, 'id_tipo_dossier' => $id_tipo_dossier]));
-        $status_dossier = $oDossier?->isStatus_dossier()?? false;
+        $status_dossier = $oDossier?->isActive()?? false;
     }
     switch ($status_dossier) {
         case "t":

@@ -24,13 +24,13 @@ if ($Qrole) {
         $oRole = new Role();
         $oRole->setId_role($id_role_new);
     }
-    $oRole->setRole(new RoleName($Qrole));
+    $oRole->setRoleVo(new RoleName($Qrole));
     $sf = !empty($Qsf) ? '1' : 0;
     $oRole->setSf($sf);
     $sv = !empty($Qsv) ? '1' : 0;
     $oRole->setSv($sv);
     $pauStr = ($Qpau === null || $Qpau === '') ? PauType::PAU_NONE : $Qpau;
-    $oRole->setPau(new PauType($pauStr));
+    $oRole->setPauVo(new PauType($pauStr));
     $dmz = !empty($Qdmz) ? '1' : 0;
     $oRole->setDmz($dmz);
     if ($RoleRepository->Guardar($oRole) === false) {

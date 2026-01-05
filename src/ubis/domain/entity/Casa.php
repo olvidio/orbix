@@ -2,6 +2,7 @@
 
 namespace src\ubis\domain\entity;
 
+use src\shared\domain\traits\Hydratable;
 use src\ubis\application\services\UbiContactsTrait;
 use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCasaDireccionRepositoryInterface;
@@ -12,6 +13,7 @@ use src\ubis\domain\value_objects\{CasaId, UbiNombreText, DelegacionCode, PaisNa
 
 class Casa
 {
+    use Hydratable;
     // Esto inyecta los métodos getDirecciones, emailPrincipalOPrimero y getTeleco aquí
     use UbiContactsTrait;
 
@@ -19,82 +21,40 @@ class Casa
     protected $repoDireccion;
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Tipo_ubi de Casa
-     *
-     * @var string|null
-     */
-    private string|null $stipo_ubi = null;
-    /**
-     * Id_ubi de Casa (VO)
-     */
-    private CasaId $iid_ubi;
-    /**
-     * Nombre_ubi de Casa (VO)
-     */
-    private UbiNombreText $snombre_ubi;
-    /**
-     * Dl de Casa (VO)
-     */
-    private ?DelegacionCode $sdl = null;
-    /**
-     * Pais de Casa (VO)
-     */
-    private ?PaisName $spais = null;
-    /**
-     * Region de Casa (VO)
-     */
-    private ?RegionNameText $sregion = null;
-    /**
-     * Status de Casa
-     *
-     * @var bool
-     */
-    private bool $bstatus;
-    /**
-     * F_status de Casa
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $df_status = null;
-    /**
-     * Sv de Casa
-     *
-     * @var bool|null
-     */
-    private bool|null $bsv = null;
-    /**
-     * Sf de Casa
-     *
-     * @var bool|null
-     */
-    private bool|null $bsf = null;
-    /**
-     * Tipo_casa de Casa (VO)
-     */
-    private ?TipoCasaText $stipo_casa = null;
-    /**
-     * Plazas de Casa (VO)
-     */
-    private ?Plazas $iplazas = null;
-    /**
-     * Plazas_min de Casa (VO)
-     */
-    private ?PlazasMin $iplazas_min = null;
-    /**
-     * Num_sacd de Casa (VO)
-     */
-    private ?NumSacerdotes $inum_sacd = null;
-    /**
-     * Biblioteca de Casa (VO)
-     */
-    private ?BibliotecaText $sbiblioteca = null;
-    /**
-     * Observ de Casa (VO)
-     */
-    private ?ObservCasaText $sobserv = null;
 
-    private int $iid_auto;
+    private string|null $tipo_ubi = null;
+
+    private CasaId $id_ubi;
+
+    private UbiNombreText $nombre_ubi;
+
+    private ?DelegacionCode $dl = null;
+
+    private ?PaisName $pais = null;
+
+    private ?RegionNameText $region = null;
+
+    private bool $active;
+
+    private DateTimeLocal|null $f_active = null;
+
+    private bool|null $sv = null;
+
+    private bool|null $sf = null;
+
+    private ?TipoCasaText $tipo_casa = null;
+
+    private ?Plazas $plazas = null;
+
+    private ?PlazasMin $plazas_min = null;
+
+    private ?NumSacerdotes $num_sacd = null;
+
+    private ?BibliotecaText $biblioteca = null;
+
+    private ?ObservCasaText $observ = null;
+
+    private int $id_auto;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -111,679 +71,386 @@ class Casa
     }
 
     /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Casa
-     */
-    public function setAllAttributes(array $aDatos): Casa
-    {
-        if (array_key_exists('tipo_ubi', $aDatos)) {
-            $this->setTipo_ubi($aDatos['tipo_ubi']);
-        }
-        if (array_key_exists('id_ubi', $aDatos)) {
-            $valor = $aDatos['id_ubi'];
-            if ($valor instanceof CasaId) {
-                $this->setIdUbiVo($valor);
-            } else {
-                $this->setId_ubi((int)$valor);
-            }
-        }
-        if (array_key_exists('nombre_ubi', $aDatos)) {
-            $valor = $aDatos['nombre_ubi'];
-            if ($valor instanceof UbiNombreText) {
-                $this->setNombreUbiVo($valor);
-            } else {
-                $this->setNombre_ubi((string)$valor);
-            }
-        }
-        if (array_key_exists('dl', $aDatos)) {
-            $valor = $aDatos['dl'] ?? null;
-            if ($valor instanceof DelegacionCode || $valor === null) {
-                $this->setDlVo($valor);
-            } else {
-                $this->setDl($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('pais', $aDatos)) {
-            $valor = $aDatos['pais'] ?? null;
-            if ($valor instanceof PaisName || $valor === null) {
-                $this->setPaisVo($valor);
-            } else {
-                $this->setPais($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('region', $aDatos)) {
-            $valor = $aDatos['region'] ?? null;
-            if ($valor instanceof RegionNameText || $valor === null) {
-                $this->setRegionVo($valor);
-            } else {
-                $this->setRegion($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('status', $aDatos)) {
-            $this->setStatus(is_true($aDatos['status']));
-        }
-        if (array_key_exists('f_status', $aDatos)) {
-            $this->setF_status($aDatos['f_status']);
-        }
-        if (array_key_exists('sv', $aDatos)) {
-            $this->setSv(is_true($aDatos['sv']));
-        }
-        if (array_key_exists('sf', $aDatos)) {
-            $this->setSf(is_true($aDatos['sf']));
-        }
-        if (array_key_exists('tipo_casa', $aDatos)) {
-            $valor = $aDatos['tipo_casa'] ?? null;
-            if ($valor instanceof TipoCasaText || $valor === null) {
-                $this->setTipoCasaVo($valor);
-            } else {
-                $this->setTipo_casa($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('plazas', $aDatos)) {
-            $valor = $aDatos['plazas'] ?? null;
-            if ($valor instanceof Plazas || $valor === null) {
-                $this->setPlazasVo($valor);
-            } else {
-                $this->setPlazas(isset($valor) && $valor !== '' ? (int)$valor : null);
-            }
-        }
-        if (array_key_exists('plazas_min', $aDatos)) {
-            $valor = $aDatos['plazas_min'] ?? null;
-            if ($valor instanceof PlazasMin || $valor === null) {
-                $this->setPlazasMinVo($valor);
-            } else {
-                $this->setPlazas_min(isset($valor) && $valor !== '' ? (int)$valor : null);
-            }
-        }
-        if (array_key_exists('num_sacd', $aDatos)) {
-            $valor = $aDatos['num_sacd'] ?? null;
-            if ($valor instanceof NumSacerdotes || $valor === null) {
-                $this->setNumSacdVo($valor);
-            } else {
-                $this->setNum_sacd(isset($valor) && $valor !== '' ? (int)$valor : null);
-            }
-        }
-        if (array_key_exists('biblioteca', $aDatos)) {
-            $valor = $aDatos['biblioteca'] ?? null;
-            if ($valor instanceof BibliotecaText || $valor === null) {
-                $this->setBibliotecaVo($valor);
-            } else {
-                $this->setBiblioteca($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('observ', $aDatos)) {
-            $valor = $aDatos['observ'] ?? null;
-            if ($valor instanceof ObservCasaText || $valor === null) {
-                $this->setObservVo($valor);
-            } else {
-                $this->setObserv($valor !== null ? (string)$valor : null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return string|null $stipo_ubi
-     */
-    /**
-     * @return string|null $stipo_ubi
-     *
      * @deprecated Usar la API VO específica si aplica, o mantener este método mientras la UI lo requiera.
      */
     public function getTipo_ubi(): ?string
     {
-        return $this->stipo_ubi;
+        return $this->tipo_ubi;
     }
 
+
     /**
-     *
-     * @param string|null $stipo_ubi
-     */
-    /**
-     * @param string|null $stipo_ubi
-     *
      * @deprecated Usar la API VO específica si aplica, o mantener este método mientras la UI lo requiera.
      */
-    public function setTipo_ubi(?string $stipo_ubi = null): void
+    public function setTipo_ubi(?string $tipo_ubi = null): void
     {
-        $this->stipo_ubi = $stipo_ubi;
+        $this->tipo_ubi = $tipo_ubi;
     }
 
+
     /**
-     *
-     * @return int $iid_ubi
-     */
-    /**
-     * @return int $iid_ubi
-     *
      * @deprecated Usar `getIdUbiVo(): CasaId` en su lugar.
      */
     public function getId_ubi(): int
     {
-        return $this->iid_ubi->value();
+        return $this->id_ubi->value();
     }
 
+
     /**
-     *
-     * @param int $iid_ubi
-     */
-    /**
-     * @param int $iid_ubi
-     *
      * @deprecated Usar `setIdUbiVo(CasaId $id): void` en su lugar.
      */
-    public function setId_ubi(int $iid_ubi): void
+    public function setId_ubi(int $id_ubi): void
     {
-        $this->iid_ubi = new CasaId($iid_ubi);
+        $this->id_ubi = new CasaId($id_ubi);
     }
 
     // -------- API VO (nueva) ---------
     /** Getter VO para id_ubi */
     public function getIdUbiVo(): CasaId
     {
-        return $this->iid_ubi;
+        return $this->id_ubi;
     }
 
     /** Setter VO para id_ubi */
     public function setIdUbiVo(CasaId $id): void
     {
-        $this->iid_ubi = $id;
+        $this->id_ubi = $id;
     }
 
+
     /**
-     *
-     * @return string $snombre_ubi
-     */
-    /**
-     * @return string $snombre_ubi
-     *
      * @deprecated Usar `getNombreUbiVo(): UbiNombreText` en su lugar.
      */
     public function getNombre_ubi(): string
     {
-        return $this->snombre_ubi->value();
+        return $this->nombre_ubi->value();
     }
 
+
     /**
-     *
-     * @param string $snombre_ubi
-     */
-    /**
-     * @param string $snombre_ubi
-     *
      * @deprecated Usar `setNombreUbiVo(UbiNombreText $texto): void` en su lugar.
      */
-    public function setNombre_ubi(string $snombre_ubi): void
+    public function setNombre_ubi(string $nombre_ubi): void
     {
-        $this->snombre_ubi = new UbiNombreText($snombre_ubi);
+        $this->nombre_ubi = new UbiNombreText($nombre_ubi);
     }
 
     public function getNombreUbiVo(): UbiNombreText
     {
-        return $this->snombre_ubi;
+        return $this->nombre_ubi;
     }
 
     public function setNombreUbiVo(UbiNombreText $texto): void
     {
-        $this->snombre_ubi = $texto;
+        $this->nombre_ubi = $texto;
     }
 
+
     /**
-     *
-     * @return string|null $sdl
-     */
-    /**
-     * @return string|null $sdl
-     *
      * @deprecated Usar `getDlVo(): ?DelegacionCode` en su lugar.
      */
     public function getDl(): ?string
     {
-        return $this->sdl?->value();
+        return $this->dl?->value();
     }
 
+
     /**
-     *
-     * @param string|null $sdl
-     */
-    /**
-     * @param string|null $sdl
-     *
      * @deprecated Usar `setDlVo(?DelegacionCode $codigo = null): void` en su lugar.
      */
-    public function setDl(?string $sdl = null): void
+    public function setDl(?string $dl = null): void
     {
-        $this->sdl = DelegacionCode::fromString($sdl);
+        $this->dl = DelegacionCode::fromString($dl);
     }
 
     public function getDlVo(): ?DelegacionCode
     {
-        return $this->sdl;
+        return $this->dl;
     }
 
     public function setDlVo(?DelegacionCode $codigo = null): void
     {
-        $this->sdl = $codigo;
+        $this->dl = $codigo;
     }
 
+
     /**
-     *
-     * @return string|null $spais
-     */
-    /**
-     * @return string|null $spais
-     *
      * @deprecated Usar `getPaisVo(): ?PaisName` en su lugar.
      */
     public function getPais(): ?string
     {
-        return $this->spais?->value();
+        return $this->pais?->value();
     }
 
+
     /**
-     *
-     * @param string|null $spais
-     */
-    /**
-     * @param string|null $spais
-     *
      * @deprecated Usar `setPaisVo(?PaisName $nombre = null): void` en su lugar.
      */
-    public function setPais(?string $spais = null): void
+    public function setPais(?string $pais = null): void
     {
-        $this->spais = PaisName::fromNullableString($spais);
+        $this->pais = PaisName::fromNullableString($pais);
     }
 
     public function getPaisVo(): ?PaisName
     {
-        return $this->spais;
+        return $this->pais;
     }
 
     public function setPaisVo(?PaisName $nombre = null): void
     {
-        $this->spais = $nombre;
+        $this->pais = $nombre;
     }
 
+
     /**
-     *
-     * @return string|null $sregion
-     */
-    /**
-     * @return string|null $sregion
-     *
      * @deprecated Usar `getRegionVo(): ?RegionNameText` en su lugar.
      */
     public function getRegion(): ?string
     {
-        return $this->sregion?->value();
+        return $this->region?->value();
     }
 
+
     /**
-     *
-     * @param string|null $sregion
-     */
-    /**
-     * @param string|null $sregion
-     *
      * @deprecated Usar `setRegionVo(?RegionNameText $texto = null): void` en su lugar.
      */
-    public function setRegion(?string $sregion = null): void
+    public function setRegion(?string $region = null): void
     {
-        $this->sregion = RegionNameText::fromNullableString($sregion);
+        $this->region = RegionNameText::fromNullableString($region);
     }
 
     public function getRegionVo(): ?RegionNameText
     {
-        return $this->sregion;
+        return $this->region;
     }
 
     public function setRegionVo(?RegionNameText $texto = null): void
     {
-        $this->sregion = $texto;
+        $this->region = $texto;
     }
 
-    /**
-     *
-     * @return bool $bstatus
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
-    public function isStatus(): bool
+
+    public function isActive(): bool
     {
-        return $this->bstatus;
+        return $this->active;
     }
 
-    /**
-     *
-     * @param bool $bstatus
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
-    public function setStatus(bool $bstatus): void
+
+    public function setActive(bool $active): void
     {
-        $this->bstatus = $bstatus;
+        $this->active = $active;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_status
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
-     */
-    /**
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_status
-     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
-     */
-    public function getF_status(): DateTimeLocal|NullDateTimeLocal|null
+
+    public function getF_active(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_status ?? new NullDateTimeLocal;
+        return $this->f_active ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|null $df_status
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
-     */
-    /**
-     * @param DateTimeLocal|NullDateTimeLocal|null $df_status
-     */
-    public function setF_status(DateTimeLocal|NullDateTimeLocal|null $df_status = null): void
+
+    public function setF_active(DateTimeLocal|NullDateTimeLocal|null $f_active = null): void
     {
-        $this->df_status = $df_status instanceof NullDateTimeLocal ? null : $df_status;
+        $this->f_active = $f_active instanceof NullDateTimeLocal ? null : $f_active;
     }
 
-    /**
-     *
-     * @return bool|null $bsv
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
+
+
     public function isSv(): ?bool
     {
-        return $this->bsv;
+        return $this->sv;
     }
 
-    /**
-     *
-     * @param bool|null $bsv
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
-    public function setSv(?bool $bsv = null): void
+    public function setSv(?bool $sv = null): void
     {
-        $this->bsv = $bsv;
+        $this->sv = $sv;
     }
 
-    /**
-     *
-     * @return bool|null $bsf
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
     public function isSf(): ?bool
     {
-        return $this->bsf;
+        return $this->sf;
     }
 
-    /**
-     *
-     * @param bool|null $bsf
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
-    public function setSf(?bool $bsf = null): void
+    public function setSf(?bool $sf = null): void
     {
-        $this->bsf = $bsf;
+        $this->sf = $sf;
     }
 
     /**
-     *
-     * @return string|null $stipo_casa
-     */
-    /**
-     * @return string|null $stipo_casa
-     *
      * @deprecated Usar `getTipoCasaVo(): ?TipoCasaText` en su lugar.
      */
     public function getTipo_casa(): ?string
     {
-        return $this->stipo_casa?->value();
+        return $this->tipo_casa?->value();
     }
 
+
     /**
-     *
-     * @param string|null $stipo_casa
-     */
-    /**
-     * @param string|null $stipo_casa
-     *
      * @deprecated Usar `setTipoCasaVo(?TipoCasaText $texto = null): void` en su lugar.
      */
-    public function setTipo_casa(?string $stipo_casa = null): void
+    public function setTipo_casa(?string $tipo_casa = null): void
     {
-        $this->stipo_casa = TipoCasaText::fromNullableString($stipo_casa);
+        $this->tipo_casa = TipoCasaText::fromNullableString($tipo_casa);
     }
 
     public function getTipoCasaVo(): ?TipoCasaText
     {
-        return $this->stipo_casa;
+        return $this->tipo_casa;
     }
 
     public function setTipoCasaVo(?TipoCasaText $texto = null): void
     {
-        $this->stipo_casa = $texto;
+        $this->tipo_casa = $texto;
     }
 
+
     /**
-     *
-     * @return int|null $iplazas
-     */
-    /**
-     * @return int|null $iplazas
-     *
      * @deprecated Usar `getPlazasVo(): ?Plazas` en su lugar.
      */
     public function getPlazas(): ?int
     {
-        return $this->iplazas?->value();
+        return $this->plazas?->value();
     }
 
+
     /**
-     *
-     * @param int|null $iplazas
-     */
-    /**
-     * @param int|null $iplazas
-     *
      * @deprecated Usar `setPlazasVo(?Plazas $valor = null): void` en su lugar.
      */
-    public function setPlazas(?int $iplazas = null): void
+    public function setPlazas(?int $plazas = null): void
     {
-        $this->iplazas = Plazas::fromNullable($iplazas);
+        $this->plazas = Plazas::fromNullable($plazas);
     }
 
     public function getPlazasVo(): ?Plazas
     {
-        return $this->iplazas;
+        return $this->plazas;
     }
 
     public function setPlazasVo(?Plazas $valor = null): void
     {
-        $this->iplazas = $valor;
+        $this->plazas = $valor;
     }
 
+
     /**
-     *
-     * @return int|null $iplazas_min
-     */
-    /**
-     * @return int|null $iplazas_min
-     *
      * @deprecated Usar `getPlazasMinVo(): ?PlazasMin` en su lugar.
      */
     public function getPlazas_min(): ?int
     {
-        return $this->iplazas_min?->value();
+        return $this->plazas_min?->value();
     }
 
+
     /**
-     *
-     * @param int|null $iplazas_min
-     */
-    /**
-     * @param int|null $iplazas_min
-     *
      * @deprecated Usar `setPlazasMinVo(?PlazasMin $valor = null): void` en su lugar.
      */
-    public function setPlazas_min(?int $iplazas_min = null): void
+    public function setPlazas_min(?int $plazas_min = null): void
     {
-        $this->iplazas_min = PlazasMin::fromNullable($iplazas_min);
+        $this->plazas_min = PlazasMin::fromNullable($plazas_min);
     }
 
     public function getPlazasMinVo(): ?PlazasMin
     {
-        return $this->iplazas_min;
+        return $this->plazas_min;
     }
 
     public function setPlazasMinVo(?PlazasMin $valor = null): void
     {
-        $this->iplazas_min = $valor;
+        $this->plazas_min = $valor;
     }
 
+
     /**
-     *
-     * @return int|null $inum_sacd
-     */
-    /**
-     * @return int|null $inum_sacd
-     *
      * @deprecated Usar `getNumSacdVo(): ?NumSacerdotes` en su lugar.
      */
     public function getNum_sacd(): ?int
     {
-        return $this->inum_sacd?->value();
+        return $this->num_sacd?->value();
     }
 
+
     /**
-     *
-     * @param int|null $inum_sacd
-     */
-    /**
-     * @param int|null $inum_sacd
-     *
      * @deprecated Usar `setNumSacdVo(?NumSacerdotes $valor = null): void` en su lugar.
      */
-    public function setNum_sacd(?int $inum_sacd = null): void
+    public function setNum_sacd(?int $num_sacd = null): void
     {
-        $this->inum_sacd = NumSacerdotes::fromNullable($inum_sacd);
+        $this->num_sacd = NumSacerdotes::fromNullable($num_sacd);
     }
 
     public function getNumSacdVo(): ?NumSacerdotes
     {
-        return $this->inum_sacd;
+        return $this->num_sacd;
     }
 
     public function setNumSacdVo(?NumSacerdotes $valor = null): void
     {
-        $this->inum_sacd = $valor;
+        $this->num_sacd = $valor;
     }
 
+
     /**
-     *
-     * @return string|null $sbiblioteca
-     */
-    /**
-     * @return string|null $sbiblioteca
-     *
      * @deprecated Usar `getBibliotecaVo(): ?BibliotecaText` en su lugar.
      */
     public function getBiblioteca(): ?string
     {
-        return $this->sbiblioteca?->value();
+        return $this->biblioteca?->value();
     }
 
+
     /**
-     *
-     * @param string|null $sbiblioteca
-     */
-    /**
-     * @param string|null $sbiblioteca
-     *
      * @deprecated Usar `setBibliotecaVo(?BibliotecaText $texto = null): void` en su lugar.
      */
-    public function setBiblioteca(?string $sbiblioteca = null): void
+    public function setBiblioteca(?string $biblioteca = null): void
     {
-        $this->sbiblioteca = BibliotecaText::fromNullableString($sbiblioteca);
+        $this->biblioteca = BibliotecaText::fromNullableString($biblioteca);
     }
 
     public function getBibliotecaVo(): ?BibliotecaText
     {
-        return $this->sbiblioteca;
+        return $this->biblioteca;
     }
 
     public function setBibliotecaVo(?BibliotecaText $texto = null): void
     {
-        $this->sbiblioteca = $texto;
+        $this->biblioteca = $texto;
     }
 
+
     /**
-     *
-     * @return string|null $sobserv
-     */
-    /**
-     * @return string|null $sobserv
-     *
      * @deprecated Usar `getObservVo(): ?ObservCasaText` en su lugar.
      */
     public function getObserv(): ?string
     {
-        return $this->sobserv?->value();
+        return $this->observ?->value();
     }
 
+
     /**
-     *
-     * @param string|null $sobserv
-     */
-    /**
-     * @param string|null $sobserv
-     *
      * @deprecated Usar `setObservVo(?ObservCasaText $texto = null): void` en su lugar.
      */
-    public function setObserv(?string $sobserv = null): void
+    public function setObserv(?string $observ = null): void
     {
-        $this->sobserv = ObservCasaText::fromNullableString($sobserv);
+        $this->observ = ObservCasaText::fromNullableString($observ);
     }
 
     public function getObservVo(): ?ObservCasaText
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
     public function setObservVo(?ObservCasaText $texto = null): void
     {
-        $this->sobserv = $texto;
+        $this->observ = $texto;
     }
 
-     public function getIdAuto(): int
+    public function getId_auto(): int
     {
-        return $this->iid_auto;
+        return $this->id_auto;
     }
 
-    public function setIdAuto(int $iid_auto): void
+    public function setId_auto(int $id_auto): void
     {
-        $this->iid_auto = $iid_auto;
+        $this->id_auto = $id_auto;
     }
 
     /* MÉTODOS PARA GESTIÓN DE DIRECCIONES ----------------------------------------*/

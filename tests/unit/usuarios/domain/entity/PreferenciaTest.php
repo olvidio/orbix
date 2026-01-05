@@ -15,35 +15,35 @@ class PreferenciaTest extends myTest
     {
         parent::setUp();
         $this->preferencia = new Preferencia();
-        $this->preferencia->setTipo(new TipoPreferencia('theme'));
+        $this->preferencia->setTipoVo(new TipoPreferencia('theme'));
         $this->preferencia->setId_usuario(1);
     }
 
     public function test_get_tipo()
     {
-        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipo());
+        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoVo());
         $this->assertEquals('theme', $this->preferencia->getTipoAsString());
     }
 
     public function test_set_and_get_tipo()
     {
         $tipoPreferencia = new TipoPreferencia('language');
-        $this->preferencia->setTipo($tipoPreferencia);
-        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipo());
+        $this->preferencia->setTipoVo($tipoPreferencia);
+        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoVo());
         $this->assertEquals('language', $this->preferencia->getTipoAsString());
     }
 
     public function test_get_preferencia()
     {
-        $this->assertNull($this->preferencia->getPreferencia());
+        $this->assertNull($this->preferencia->getPreferenciaVo());
         $this->assertNull($this->preferencia->getPreferenciaAsString());
     }
 
     public function test_set_and_get_preferencia()
     {
         $valorPreferencia = new ValorPreferencia('dark');
-        $this->preferencia->setPreferencia($valorPreferencia);
-        $this->assertInstanceOf(ValorPreferencia::class, $this->preferencia->getPreferencia());
+        $this->preferencia->setPreferenciaVo($valorPreferencia);
+        $this->assertInstanceOf(ValorPreferencia::class, $this->preferencia->getPreferenciaVo());
         $this->assertEquals('dark', $this->preferencia->getPreferenciaAsString());
     }
 

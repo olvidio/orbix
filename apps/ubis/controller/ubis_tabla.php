@@ -146,7 +146,7 @@ if (empty($sWhere)) {
                     $repoDir = DireccionCentroDlRepositoryInterface::class;
                     // Añado una condición para el caso de no poner, que salgan todos.
                     // Si no se pone, dice que hay que poner algún criterio de búsqueda
-                    $aWhere['status'] = 't';
+                    $aWhere['active'] = 't';
                     break;
                 case "ex":
                     $titulo = ucfirst(_("tabla de centros de fuera de la delegación"));
@@ -189,7 +189,7 @@ if (empty($sWhere)) {
                     $repoUbi = DireccionCasaDlRepositoryInterface::class;
                     // Añado una condición para el caso de no poner, que salgan todos.
                     // Si no se pone, dice que hay que poner algun criterio de busqueda
-                    $aWhere['status'] = 't';
+                    $aWhere['active'] = 't';
                     break;
                 case "ex":
                     $titulo = ucfirst(_("tabla de casas de fuera de la delegación"));
@@ -300,7 +300,7 @@ if (empty($aWhere) && empty($aWhereD)) {
 
 if (!empty($aWhere)) {
     if (empty($Qcmb)) {
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
     }
     // En el caso de las casas, hay que distinguir. Lo pongo aquí
     //porque si no hay una condición where anterior, busca todas las casas/centros sf o sv

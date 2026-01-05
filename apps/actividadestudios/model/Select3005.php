@@ -2,10 +2,10 @@
 
 namespace actividadestudios\model;
 
-use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
@@ -104,8 +104,8 @@ class Select3005
         $this->txt_eliminar = _("¿Está seguro que desea quitar esta asignatura?");
         $this->txt_no_permiso = _("No puede modificar una asignatura que depende de otra dl");
 
-        $GesActivAsignaturas = new entity\GestorActividadAsignatura();
-        $cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $this->id_pau, '_ordre' => 'id_asignatura'));
+        $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
+        $cActivAsignaturas = $ActividadAsignaturaRepository->getActividadAsignaturas(array('id_activ' => $this->id_pau, '_ordre' => 'id_asignatura'));
 
         $mi_dele = ConfigGlobal::mi_delef();
         $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
@@ -138,7 +138,7 @@ class Select3005
             $id_profesor = $oActividadAsignatura->getId_profesor();
             if (!empty($id_profesor)) {
                 $oPersona = Persona::findPersonaEnGlobal($id_profesor);
-                if (!is_object($oPersona)) {
+                if ($oPersona === null) {
                     $this->msg_err .= "<br>No encuentro a nadie con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
                     $nom = '';
                 } else {

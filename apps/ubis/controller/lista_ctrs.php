@@ -23,7 +23,7 @@ require_once("apps/core/global_object.inc");
 
 //Para los centros de la dlb
 $CentroRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-$cCentros = $CentroRepository->getCentros(array('tipo_ctr' => '^s[^s]', 'status' => 't', '_ordre' => 'nombre_ubi'), array('tipo_ctr' => '~'));
+$cCentros = $CentroRepository->getCentros(array('tipo_ctr' => '^s[^s]', 'active' => 't', '_ordre' => 'nombre_ubi'), array('tipo_ctr' => '~'));
 
 $PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
 $num_total_s = 0;

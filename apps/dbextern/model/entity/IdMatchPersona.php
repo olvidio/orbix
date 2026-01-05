@@ -101,7 +101,7 @@ class IdMatchPersona extends ClasePropiedades
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
-                $this->iid_listas = (integer)$a_id; 
+                $this->iid_listas = (integer)$a_id;
                 $this->aPrimary_key = array('id_listas' => $this->iid_listas);
             }
         }
@@ -378,7 +378,7 @@ class IdMatchPersona extends ClasePropiedades
      * Retorna una col·lecció d'objectes del tipus DatosCampo
      *
      */
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oIdMatchPersonaSet = new Set();
 
@@ -389,12 +389,12 @@ class IdMatchPersona extends ClasePropiedades
 
 
     /**
-     * Recupera les propietats de l'atribut iid_orbix de IdMatchPersona
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo id_orbix de IdMatchPersona
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosId_orbix()
+    private function getDatosId_orbix(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_orbix'));
@@ -403,12 +403,12 @@ class IdMatchPersona extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sid_tabla de IdMatchPersona
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo id_tabla de IdMatchPersona
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosId_tabla()
+    private function getDatosId_tabla(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tabla'));

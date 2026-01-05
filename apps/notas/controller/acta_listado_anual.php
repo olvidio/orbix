@@ -7,9 +7,9 @@ Hasta ahora, yo me manejaba con Access y tenía una manera de saber qué acta ib
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorActa;
-use notas\model\entity\GestorActaDl;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
+use src\notas\domain\contracts\ActaDlRepositoryInterface;
+use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
@@ -64,11 +64,11 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     }
     $aWhere['acta'] = '^(' . $Qacta_dl . ')';
     $aOperador['acta'] = '~';
-    $GesActas = new GestorActa();
+    $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
 } else {
-    $GesActas = new GestorActaDl();
+    $ActaRepository = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
 }
-$cActas = $GesActas->getActas($aWhere, $aOperador);
+$cActas = $ActaRepository->getActas($aWhere, $aOperador);
 
 $i = 0;
 $aActas = [];

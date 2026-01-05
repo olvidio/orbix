@@ -11,15 +11,6 @@ use src\actividadessacd\domain\entity\ActividadSacdTexto;
 use src\shared\traits\HandlesPdoErrors;
 
 
-/**
- * Clase que adapta la tabla a_sacd_textos a la interfaz del repositorio
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 19/12/2025
- */
 class PgActividadSacdTextoRepository extends ClaseRepository implements ActividadSacdTextoRepositoryInterface
 {
     use HandlesPdoErrors;
@@ -94,8 +85,7 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ActividadSacdTexto = new ActividadSacdTexto();
-            $ActividadSacdTexto->setAllAttributes($aDatos);
+            $ActividadSacdTexto = ActividadSacdTexto::fromArray($aDatos);
             $ActividadSacdTextoSet->add($ActividadSacdTexto);
         }
         return $ActividadSacdTextoSet->getTot();
@@ -188,7 +178,7 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
         if (empty($aDatos)) {
             return null;
         }
-        return (new ActividadSacdTexto())->setAllAttributes($aDatos);
+        return ActividadSacdTexto::fromArray($aDatos);
     }
 
     public function getNewId()

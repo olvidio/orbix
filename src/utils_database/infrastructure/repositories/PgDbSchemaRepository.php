@@ -145,8 +145,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $DbSchema = new DbSchema();
-            $DbSchema->setAllAttributes($aDatos);
+            $DbSchema = DbSchema::fromArray($aDatos);
             $DbSchemaSet->add($DbSchema);
         }
         return $DbSchemaSet->getTot();
@@ -232,7 +231,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new DbSchema())->setAllAttributes($aDatos);
+        return DbSchema::fromArray($aDatos);
     }
 
     /* -------------------- MÉTODOS PRIVADOS ---------------------------------------- */

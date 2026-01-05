@@ -92,8 +92,7 @@ class PgProfesorDocenciaStgrRepository extends ClaseRepository implements Profes
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ProfesorDocenciaStgr = new ProfesorDocenciaStgr();
-            $ProfesorDocenciaStgr->setAllAttributes($aDatos);
+            $ProfesorDocenciaStgr = ProfesorDocenciaStgr::fromArray($aDatos);
             $ProfesorDocenciaStgrSet->add($ProfesorDocenciaStgr);
         }
         return $ProfesorDocenciaStgrSet->getTot();
@@ -191,7 +190,7 @@ class PgProfesorDocenciaStgrRepository extends ClaseRepository implements Profes
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorDocenciaStgr())->setAllAttributes($aDatos);
+        return ProfesorDocenciaStgr::fromArray($aDatos);
     }
 
     public function getNewId()

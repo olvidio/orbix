@@ -2,6 +2,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -20,9 +21,10 @@ $a_ids_desaparecidos_de_listas = json_decode(urldecode($ids_desaparecidos_de_lis
 
 $a_persona_orbix = [];
 $i = 0;
+$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 foreach ($a_ids_desaparecidos_de_listas as $id_nom_orbix) {
     $i++;
-    $oPersonaDl = new personas\model\entity\PersonaDl($id_nom_orbix);
+    $oPersonaDl = $PersonaDlRepository->findBYId($id_nom_orbix);
 
     $a_persona_orbix[$i]['id_nom_orbix'] = $id_nom_orbix;
     $a_persona_orbix[$i]['ape_nom'] = $oPersonaDl->getPrefApellidosNombre();

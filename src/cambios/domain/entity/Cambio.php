@@ -3,15 +3,19 @@
 namespace src\cambios\domain\entity;
 
 use core\ConfigGlobal;
-use procesos\model\entity\GestorActividadFase;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
+use src\cambios\domain\value_objects\ObjetoNombre;
+use src\cambios\domain\value_objects\PropiedadNombre;
 use src\cambios\domain\value_objects\TipoCambioId;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\entity\Ubi;
+use src\ubis\domain\value_objects\DelegacionCode;
 use stdClass;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -28,6 +32,8 @@ use function core\is_true;
  */
 class Cambio
 {
+    use Hydratable;
+
     //  tipo cambio constants.
     public const TIPO_CMB_INSERT = 1;
     public const TIPO_CMB_UPDATE = 2;
@@ -285,7 +291,7 @@ class Cambio
             case Cambio::TIPO_CMB_FASE: // (4) cambio de fase o status.
                 // en el caso especial de completado fase, uso el valor_old para poner el id_fase, y el new el estado de completado.
                 $id_fase = $sValor_old;
-                $GesActividadFase = new GestorActividadFase();
+                $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
 
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $aFases = $this->getJson_fases_sv();
@@ -296,7 +302,7 @@ class Cambio
 
                 if (!$bEliminada) {
                     if (!empty($sPropiedad)) {
-                        $cFases = $GesActividadFase->getActividadFases(array('id_fase' => $id_fase));
+                        $cFases = $ActividadFaseRepository->getActividadFases(array('id_fase' => $id_fase));
                         $sFase = $cFases[0]->getDesc_fase();
 
                         if (is_true($sValor_new)) {
@@ -334,200 +340,68 @@ class Cambio
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_item_cambio de CambioDl
-     *
-     * @var int
-     */
-    private int $iid_item_cambio;
-    /**
-     * Id_tipo_cambio de CambioDl
-     *
-     * @var int
-     */
-    private int $iid_tipo_cambio;
-    /**
-     * Id_activ de CambioDl
-     *
-     * @var int
-     */
-    private int $iid_activ;
-    /**
-     * Id_tipo_activ de CambioDl
-     *
-     * @var int
-     */
-    private int $iid_tipo_activ;
-    /**
-     * Json_fases_sv de CambioDl
-     *
-     * @var array|stdClass|null
-     */
+    private int $id_schema;
+
+    private int $id_item_cambio;
+
+    private int $id_tipo_cambio;
+
+    private int $id_activ;
+
+    private int $id_tipo_activ;
+
     private array|stdClass|null $json_fases_sv = null;
-    /**
-     * Json_fases_sf de CambioDl
-     *
-     * @var array|stdClass|null
-     */
+
     private array|stdClass|null $json_fases_sf = null;
-    /**
-     * Id_status de CambioDl
-     *
-     * @var int|null
-     */
-    private int|null $iid_status = null;
-    /**
-     * Dl_org de CambioDl
-     *
-     * @var string|null
-     */
-    private string|null $sdl_org = null;
-    /**
-     * Objeto de CambioDl
-     *
-     * @var string|null
-     */
-    private string|null $sobjeto = null;
-    /**
-     * Propiedad de CambioDl
-     *
-     * @var string|null
-     */
-    private string|null $spropiedad = null;
-    /**
-     * Valor_old de CambioDl
-     *
-     * @var string|null
-     */
-    private string|null $svalor_old = null;
-    /**
-     * Valor_new de CambioDl
-     *
-     * @var string|null
-     */
-    private string|null $svalor_new = null;
-    /**
-     * Quien_cambia de CambioDl
-     *
-     * @var int|null
-     */
-    private int|null $iquien_cambia = null;
-    /**
-     * Sfsv_quien_cambia de CambioDl
-     *
-     * @var int|null
-     */
-    private int|null $isfsv_quien_cambia = null;
-    /**
-     * Timestamp_cambio de CambioDl
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $dtimestamp_cambio = null;
+
+    private int|null $id_status = null;
+
+    private DelegacionCode|null $dl_org = null;
+
+    private ObjetoNombre|null $objeto = null;
+
+    private PropiedadNombre|null $propiedad = null;
+
+    private string|null $valor_old = null;
+
+    private string|null $valor_new = null;
+
+    private int|null $quien_cambia = null;
+
+    private int|null $sfsv_quien_cambia = null;
+
+    private DateTimeLocal|null $timestamp_cambio = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Cambio
-     */
-    public function setAllAttributes(array $aDatos): Cambio
-    {
-        if (array_key_exists('id_schema', $aDatos)) {
-            $this->setId_schema($aDatos['id_schema']);
-        }
-        if (array_key_exists('id_item_cambio', $aDatos)) {
-            $this->setId_item_cambio($aDatos['id_item_cambio']);
-        }
-        if (array_key_exists('id_tipo_cambio', $aDatos)) {
-            $this->setId_tipo_cambio($aDatos['id_tipo_cambio']);
-        }
-        if (array_key_exists('id_activ', $aDatos)) {
-            $this->setId_activ($aDatos['id_activ']);
-        }
-        if (array_key_exists('id_tipo_activ', $aDatos)) {
-            $this->setId_tipo_activ($aDatos['id_tipo_activ']);
-        }
-        if (array_key_exists('json_fases_sv', $aDatos)) {
-            $this->setJson_fases_sv($aDatos['json_fases_sv']);
-        }
-        if (array_key_exists('json_fases_sf', $aDatos)) {
-            $this->setJson_fases_sf($aDatos['json_fases_sf']);
-        }
-        if (array_key_exists('id_status', $aDatos)) {
-            $this->setId_status($aDatos['id_status']);
-        }
-        if (array_key_exists('dl_org', $aDatos)) {
-            $this->setDl_org($aDatos['dl_org']);
-        }
-        if (array_key_exists('objeto', $aDatos)) {
-            $this->setObjeto($aDatos['objeto']);
-        }
-        if (array_key_exists('propiedad', $aDatos)) {
-            $this->setPropiedad($aDatos['propiedad']);
-        }
-        if (array_key_exists('valor_old', $aDatos)) {
-            $this->setValor_old($aDatos['valor_old']);
-        }
-        if (array_key_exists('valor_new', $aDatos)) {
-            $this->setValor_new($aDatos['valor_new']);
-        }
-        if (array_key_exists('quien_cambia', $aDatos)) {
-            $this->setQuien_cambia($aDatos['quien_cambia']);
-        }
-        if (array_key_exists('sfsv_quien_cambia', $aDatos)) {
-            $this->setSfsv_quien_cambia($aDatos['sfsv_quien_cambia']);
-        }
-        if (array_key_exists('timestamp_cambio', $aDatos)) {
-            $this->setTimestamp_cambio($aDatos['timestamp_cambio']);
-        }
-        return $this;
-    }
 
-    /**
-     *
-     * @return int $iid_schema
-     */
     public function getId_schema(): int
     {
-        return $this->iid_schema;
+        return $this->id_schema;
     }
 
-    /**
-     *
-     * @param int $iid_schema
-     */
-    public function setId_schema(int $iid_schema): void
+
+    public function setId_schema(int $id_schema): void
     {
-        $this->iid_schema = $iid_schema;
+        $this->id_schema = $id_schema;
     }
 
-    /**
-     *
-     * @return int $iid_item_cambio
-     */
+
     public function getId_item_cambio(): int
     {
-        return $this->iid_item_cambio;
+        return $this->id_item_cambio;
     }
 
-    /**
-     *
-     * @param int $iid_item_cambio
-     */
-    public function setId_item_cambio(int $iid_item_cambio): void
+
+    public function setId_item_cambio(int $id_item_cambio): void
     {
-        $this->iid_item_cambio = $iid_item_cambio;
+        $this->id_item_cambio = $id_item_cambio;
     }
 
-    /**
-     * @return TipoCambioId
-     */
+
     public function getTipoCambioVo(): TipoCambioId
     {
-        return new TipoCambioId($this->iid_tipo_cambio);
+        return new TipoCambioId($this->id_tipo_cambio);
     }
 
     /**
@@ -535,258 +409,225 @@ class Cambio
      */
     public function setTipoCambioVo(TipoCambioId $tipoCambioId): void
     {
-        $this->iid_tipo_cambio = $tipoCambioId->value();
+        $this->id_tipo_cambio = $tipoCambioId->value();
     }
 
     /**
      * @deprecated usar getTipoCambioVo()
-     * @return int $iid_tipo_cambio
      */
     public function getId_tipo_cambio(): int
     {
-        return $this->iid_tipo_cambio;
+        return $this->id_tipo_cambio;
     }
 
     /**
      * @deprecated usar setTipoCambioVo()
-     * @param int $iid_tipo_cambio
      */
-    public function setId_tipo_cambio(int $iid_tipo_cambio): void
+    public function setId_tipo_cambio(int $id_tipo_cambio): void
     {
-        $this->iid_tipo_cambio = $iid_tipo_cambio;
+        $this->id_tipo_cambio = $id_tipo_cambio;
     }
 
-    /**
-     *
-     * @return int $iid_activ
-     */
+
     public function getId_activ(): int
     {
-        return $this->iid_activ;
+        return $this->id_activ;
     }
 
-    /**
-     *
-     * @param int $iid_activ
-     */
-    public function setId_activ(int $iid_activ): void
+
+    public function setId_activ(int $id_activ): void
     {
-        $this->iid_activ = $iid_activ;
+        $this->id_activ = $id_activ;
     }
 
-    /**
-     *
-     * @return int $iid_tipo_activ
-     */
+
     public function getId_tipo_activ(): int
     {
-        return $this->iid_tipo_activ;
+        return $this->id_tipo_activ;
     }
 
-    /**
-     *
-     * @param int $iid_tipo_activ
-     */
-    public function setId_tipo_activ(int $iid_tipo_activ): void
+
+    public function setId_tipo_activ(int $id_tipo_activ): void
     {
-        $this->iid_tipo_activ = $iid_tipo_activ;
+        $this->id_tipo_activ = $id_tipo_activ;
     }
 
-    /**
-     *
-     * @return array|stdClass|null $json_fases_sv
-     */
     public function getJson_fases_sv(): array|stdClass|null
     {
         return $this->json_fases_sv;
     }
 
-    /**
-     *
-     * @param stdClass|array|null $json_fases_sv
-     */
+
     public function setJson_fases_sv(stdClass|array|null $json_fases_sv = null): void
     {
         $this->json_fases_sv = $json_fases_sv;
     }
 
-    /**
-     *
-     * @return array|stdClass|null $json_fases_sf
-     */
+
     public function getJson_fases_sf(): array|stdClass|null
     {
         return $this->json_fases_sf;
     }
 
-    /**
-     *
-     * @param stdClass|array|null $json_fases_sf
-     */
+
     public function setJson_fases_sf(stdClass|array|null $json_fases_sf = null): void
     {
         $this->json_fases_sf = $json_fases_sf;
     }
 
-    /**
-     *
-     * @return int|null $iid_status
-     */
+
     public function getId_status(): ?int
     {
-        return $this->iid_status;
+        return $this->id_status;
     }
 
-    /**
-     *
-     * @param int|null $iid_status
-     */
-    public function setId_status(?int $iid_status = null): void
+
+    public function setId_status(?int $id_status = null): void
     {
-        $this->iid_status = $iid_status;
+        $this->id_status = $id_status;
     }
 
+
     /**
-     *
-     * @return string|null $sdl_org
+     * @deprecated Usar `getDlOrgVo(): ?DelegacionCode` en su lugar.
      */
     public function getDl_org(): ?string
     {
-        return $this->sdl_org;
+        return $this->dl_org?->value();
     }
 
+
     /**
-     *
-     * @param string|null $sdl_org
+     * @deprecated Usar `setDlOrgVo(?DelegacionCode $vo): void` en su lugar.
      */
-    public function setDl_org(?string $sdl_org = null): void
+    public function setDl_org(?string $dl_org = null): void
     {
-        $this->sdl_org = $sdl_org;
+        $this->dl_org = $dl_org !== null ? new DelegacionCode($dl_org) : null;
     }
 
+    public function getDlOrgVo(): ?DelegacionCode
+    {
+        return $this->dl_org;
+    }
+
+    public function setDlOrgVo(?DelegacionCode $vo): void
+    {
+        $this->dl_org = $vo;
+    }
+
+
     /**
-     *
-     * @return string|null $sobjeto
+     * @deprecated Usar `getObjetoVo(): ?ObjetoNombre` en su lugar.
      */
     public function getObjeto(): ?string
     {
-        return $this->sobjeto;
+        return $this->objeto?->value();
     }
 
+
     /**
-     *
-     * @param string|null $sobjeto
+     * @deprecated Usar `setObjetoVo(?ObjetoNombre $vo): void` en su lugar.
      */
-    public function setObjeto(?string $sobjeto = null): void
+    public function setObjeto(?string $objeto = null): void
     {
-        $this->sobjeto = $sobjeto;
+        $this->objeto = $objeto !== null ? new ObjetoNombre($objeto) : null;
     }
 
+    public function getObjetoVo(): ?ObjetoNombre
+    {
+        return $this->objeto;
+    }
+
+    public function setObjetoVo(?ObjetoNombre $vo): void
+    {
+        $this->objeto = $vo;
+    }
+
+
     /**
-     *
-     * @return string|null $spropiedad
+     * @deprecated Usar `getPropiedadVo(): ?PropiedadNombre` en su lugar.
      */
     public function getPropiedad(): ?string
     {
-        return $this->spropiedad;
+        return $this->propiedad?->value();
     }
 
+
     /**
-     *
-     * @param string|null $spropiedad
+     * @deprecated Usar `setPropiedadVo(?PropiedadNombre $vo): void` en su lugar.
      */
-    public function setPropiedad(?string $spropiedad = null): void
+    public function setPropiedad(?string $propiedad = null): void
     {
-        $this->spropiedad = $spropiedad;
+        $this->propiedad = $propiedad !== null ? new PropiedadNombre($propiedad) : null;
     }
 
-    /**
-     *
-     * @return string|null $svalor_old
-     */
+    public function getPropiedadVo(): ?PropiedadNombre
+    {
+        return $this->propiedad;
+    }
+
+    public function setPropiedadVo(?PropiedadNombre $vo): void
+    {
+        $this->propiedad = $vo;
+    }
+
+
     public function getValor_old(): ?string
     {
-        return $this->svalor_old;
+        return $this->valor_old;
     }
 
-    /**
-     *
-     * @param string|null $svalor_old
-     */
-    public function setValor_old(?string $svalor_old = null): void
+
+    public function setValor_old(?string $valor_old = null): void
     {
-        $this->svalor_old = $svalor_old;
+        $this->valor_old = $valor_old;
     }
 
-    /**
-     *
-     * @return string|null $svalor_new
-     */
+
     public function getValor_new(): ?string
     {
-        return $this->svalor_new;
+        return $this->valor_new;
     }
 
-    /**
-     *
-     * @param string|null $svalor_new
-     */
-    public function setValor_new(?string $svalor_new = null): void
+
+    public function setValor_new(?string $valor_new = null): void
     {
-        $this->svalor_new = $svalor_new;
+        $this->valor_new = $valor_new;
     }
 
-    /**
-     *
-     * @return int|null $iquien_cambia
-     */
+
     public function getQuien_cambia(): ?int
     {
-        return $this->iquien_cambia;
+        return $this->quien_cambia;
     }
 
-    /**
-     *
-     * @param int|null $iquien_cambia
-     */
-    public function setQuien_cambia(?int $iquien_cambia = null): void
+
+    public function setQuien_cambia(?int $quien_cambia = null): void
     {
-        $this->iquien_cambia = $iquien_cambia;
+        $this->quien_cambia = $quien_cambia;
     }
 
-    /**
-     *
-     * @return int|null $isfsv_quien_cambia
-     */
+
     public function getSfsv_quien_cambia(): ?int
     {
-        return $this->isfsv_quien_cambia;
+        return $this->sfsv_quien_cambia;
     }
 
-    /**
-     *
-     * @param int|null $isfsv_quien_cambia
-     */
-    public function setSfsv_quien_cambia(?int $isfsv_quien_cambia = null): void
+
+    public function setSfsv_quien_cambia(?int $sfsv_quien_cambia = null): void
     {
-        $this->isfsv_quien_cambia = $isfsv_quien_cambia;
+        $this->sfsv_quien_cambia = $sfsv_quien_cambia;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $dtimestamp_cambio
-     */
+
     public function getTimestamp_cambio(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->dtimestamp_cambio ?? new NullDateTimeLocal;
+        return $this->timestamp_cambio ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|null $dtimestamp_cambio
-     */
-    public function setTimestamp_cambio(DateTimeLocal|null $dtimestamp_cambio = null): void
+
+    public function setTimestamp_cambio(DateTimeLocal|null $timestamp_cambio = null): void
     {
-        $this->dtimestamp_cambio = $dtimestamp_cambio;
+        $this->timestamp_cambio = $timestamp_cambio;
     }
 }

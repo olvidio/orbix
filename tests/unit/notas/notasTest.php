@@ -5,13 +5,8 @@ namespace Tests\unit\notas;
 use core\ConfigGlobal;
 use Exception;
 use notas\model\EditarPersonaNota;
-use notas\model\entity\GestorPersonaNotaDB;
-use notas\model\entity\GestorPersonaNotaDlDB;
-use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
-use notas\model\entity\PersonaNotaDB;
-use notas\model\entity\PersonaNotaDlDB;
-use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use RuntimeException;
+use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use Tests\factories\notas\NotasFactory;
@@ -104,8 +99,8 @@ class notasTest extends myTest
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
+        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
         $oPersonaNota2 = $cPersonaNota[0];
         $oPersonaNota2->DBCarregar();
 
@@ -155,8 +150,8 @@ class notasTest extends myTest
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
+        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
         $oPersonaNota2 = $cPersonaNota[0];
         $oPersonaNota2->DBCarregar();
 
@@ -209,8 +204,8 @@ class notasTest extends myTest
 
         // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
+        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
         if ($cPersonaNota !== null) {
             $oPersonaNota2 = $cPersonaNota[0];
             if (!is_null($oPersonaNota2)) {
@@ -296,8 +291,8 @@ class notasTest extends myTest
 
         // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
+        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
         if ($cPersonaNota !== null) {
             $oPersonaNota2 = $cPersonaNota[0];
             if (!is_null($oPersonaNota2)) {
@@ -456,6 +451,7 @@ class notasTest extends myTest
     public function test_save_PersonaNotaOtraRegionStgr(): void
     {
         $esquema_region_stgr = "H-Hv";
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
         $oPersonaNotaI = new PersonaNotaOtraRegionStgrDB($esquema_region_stgr);
         $oPersonaNota = $this->crear_PersonaNota($oPersonaNotaI);
         $oPersonaNota->DBGuardar();
@@ -465,8 +461,7 @@ class notasTest extends myTest
         $id_nom = $oPersonaNota->getId_nom();
         $id_asignatura = $oPersonaNota->getId_asignatura();
 
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
+        $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
         $oPersonaNota2 = $cPersonaNota[0];
         $oPersonaNota2->DBCarregar();
 

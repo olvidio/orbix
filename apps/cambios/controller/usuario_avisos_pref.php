@@ -1,12 +1,13 @@
 <?php
 
-use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use procesos\model\entity\GestorActividadFase;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
+use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
+use src\cambios\domain\value_objects\AvisoTipoId;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -60,7 +61,7 @@ $id_role = $oUsuario->getId_role();
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
 // Tipos de avisos
-$aTipos_aviso = CambioUsuarioObjetoPref::getTipos_aviso();
+$aTipos_aviso = AvisoTipoId::getArrayAvisoTipo();
 
 $oDesplTiposAviso = new Desplegable();
 $oDesplTiposAviso->setNombre('aviso_tipo');
@@ -78,12 +79,13 @@ $oDesplObjetos->setAction('fnjs_actualizar_fases(); fnjs_actualizar_propiedades(
 
 $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
 if ($Qsalida === 'modificar' && !empty($Qid_item_usuario_objeto)) {
-    $oCambioUsuarioObjetoPref = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
+    $CambioUsuarioObjetoPrefRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
+    $oCambioUsuarioObjetoPref = $CambioUsuarioObjetoPrefRepository->findById($Qid_item_usuario_objeto);
     $id_tipo_activ = $oCambioUsuarioObjetoPref->getId_tipo_activ_txt();
     $dl_org = $oCambioUsuarioObjetoPref->getDl_org();
     $objeto = $oCambioUsuarioObjetoPref->getObjeto();
     $aviso_tipo = $oCambioUsuarioObjetoPref->getAviso_tipo();
-    $id_pau = $oCambioUsuarioObjetoPref->getId_pau();
+    $id_pau = $oCambioUsuarioObjetoPref->getCsv_id_pau();
     $id_fase_ref = $oCambioUsuarioObjetoPref->getId_fase_ref();
     $aviso_off = $oCambioUsuarioObjetoPref->getAviso_off();
     $aviso_on = $oCambioUsuarioObjetoPref->getAviso_on();
@@ -110,8 +112,11 @@ if ($Qsalida === 'modificar' && !empty($Qid_item_usuario_objeto)) {
 }
 
 if (ConfigGlobal::is_app_installed('procesos')) {
-    $oGesFases = new GestorActividadFase();
-    $oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
+    $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+    $aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
+    $oDesplFases = new Desplegable();
+    $oDesplFases->setBlanco('true');
+    $oDesplFases->setOpciones($aOpciones);
     $oDesplFases->setOpcion_sel($id_fase_ref);
 } else {
     $a_status = StatusId::getArrayStatus();
@@ -138,10 +143,10 @@ $id_role = $oUsuario->getId_role();
 $oRole = new Role();
 $oRole->setId_role($id_role);
 if ($grupo === FALSE && $oRole->isRolePau(Role::PAU_CDC)) {
-    $id_pau = $oUsuario->getId_pau();
+    $id_pau = $oUsuario->getCsv_id_pau();
     $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para casas cuyo calendario de actividades interesa
-    $cond = "WHERE status='t' AND (id_ubi=$sDonde)";
+    $cond = "WHERE active='t' AND (id_ubi=$sDonde)";
 }
 $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 $oOpcionesCasas = $CasaDlRepository->getArrayCasas($cond);

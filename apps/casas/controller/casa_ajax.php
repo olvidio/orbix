@@ -4,18 +4,22 @@
 
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\entity\Ingreso;
+use src\casas\domain\value_objects\IngresoImporte;
+use src\casas\domain\value_objects\IngresoNumAsistentes;
+use src\casas\domain\value_objects\IngresoObserv;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\usuarios\domain\entity\Role;
-use ubis\model\entity\GestorTarifaUbi;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -191,7 +195,7 @@ switch ($Qque) {
         $IngresoRepository = $GLOBALS['container']->get(IngresoRepositoryInterface::class);
         foreach ($aGrupos as $id_ubi => $Titulo) {
             $aWhere['id_ubi'] = $id_ubi;
-            $aWhere['status'] = 4;
+            $aWhere['status'] = StatusId::BORRABLE;
             $aOperador['status'] = '<';
             $aWhere['_ordre'] = 'f_ini';
             $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
@@ -241,8 +245,8 @@ switch ($Qque) {
                 $oTipoTarifa = $TipoTarifaRepository->findById($id_tarifa);
                 $modo = $oTipoTarifa->getModo();
 
-                $gesTarifaUbi = new GestorTarifaUbi();
-                $cTarifasUbi = $gesTarifaUbi->getTarifas(['id_tarifa' => $id_tarifa, 'id_ubi' => $id_ubi, 'year' => $Qyear]);
+                $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
+                $cTarifasUbi = $TarifaUbiRepository->getTarifas(['id_tarifa' => $id_tarifa, 'id_ubi' => $id_ubi, 'year' => $Qyear]);
                 if (empty($cTarifasUbi)) {
                     $cantidad = 0;
                 } else {
@@ -418,7 +422,7 @@ switch ($Qque) {
                 $Qprecio = str_replace(',', '.', $Qprecio);
                 $oActividad->setPrecio($Qprecio);
             }
-            if ($oActividad->DBGuardar() === false) {
+            if ($ActividadAllRepository->Guardar($oActividad) === false) {
                 echo _("Hay un error, no se ha guardado la actividad.");
             }
         }
@@ -430,9 +434,9 @@ switch ($Qque) {
             $oIngreso->setId_activ($Qid_activ);
         }
         $Qingresos = str_replace(',', '.', $Qingresos);
-        $oIngreso->setIngresos($Qingresos);
-        $oIngreso->setNum_asistentes($Qnum_asistentes);
-        $oIngreso->setObserv($Qobserv);
+        $oIngreso->setIngresos(new IngresoImporte($Qingresos));
+        $oIngreso->setNum_asistentes(new IngresoNumAsistentes($Qnum_asistentes));
+        $oIngreso->setObserv(new IngresoObserv($Qobserv));
         if ($IngresoRepository->Guardar($oIngreso) === false) {
             echo _("Hay un error, no se ha guardado.");
         }
@@ -480,6 +484,7 @@ switch ($Qque) {
         $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
         $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
         foreach ($aGrupos as $id_ubi => $Titulo) {
             $aWhere['id_ubi'] = $id_ubi;
             $aWhere['f_ini'] = "'$inicioIso','$finIso'";
@@ -565,8 +570,7 @@ switch ($Qque) {
                     // sólo si tiene permiso
                     $aprobado = TRUE;
                     if (ConfigGlobal::mi_sfsv() == 2) {
-                        $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
-                        $aprobado = $gesActividadProcesoTarea->getSacdAprobado($id_activ);
+                        $aprobado = $ActividadProcesoTareaRepository->getSacdAprobado($id_activ);
                     }
                     if (!ConfigGlobal::is_app_installed('procesos')
                         || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {

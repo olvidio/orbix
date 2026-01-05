@@ -7,8 +7,8 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepositoryInterface;
+use src\shared\domain\entity\ColaMail;
 use src\shared\traits\HandlesPdoErrors;
 use web\NullDateTimeLocal;
 
@@ -95,8 +95,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['sended'] = (new ConverterDate('timestamp', $aDatos['sended']))->fromPg();
-            $ColaMail = new ColaMail();
-            $ColaMail->setAllAttributes($aDatos);
+            $ColaMail = ColaMail::fromArray($aDatos);
             $ColaMailSet->add($ColaMail);
         }
         return $ColaMailSet->getTot();
@@ -210,6 +209,6 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new ColaMail())->setAllAttributes($aDatos);
+        return ColaMail::fromArray($aDatos);
     }
 }

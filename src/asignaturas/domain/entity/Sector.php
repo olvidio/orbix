@@ -6,142 +6,91 @@ use core\DatosCampo;
 use core\Set;
 use src\asignaturas\domain\value_objects\{SectorId, SectorName, DepartamentoId};
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\shared\domain\traits\Hydratable;
 
-/**
- * Clase que implementa la entidad xe_sectores
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 14/11/2025
- */
+
 class Sector
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id del Sector
-     */
-    private SectorId $idSector;
-    /**
-     * Id del Departamento (FK)
-     */
-    private ?DepartamentoId $idDepartamento = null;
-    /**
-     * Nombre del Sector
-     */
-    private ?SectorName $nombreSector = null;
+
+    private SectorId $id_sector;
+
+    private ?DepartamentoId $id_departamento = null;
+
+    private ?SectorName $nombre_sector = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Sector
-     */
-    public function setAllAttributes(array $aDatos): Sector
-    {
-        if (array_key_exists('id_sector', $aDatos)) {
-            $this->setIdSectorVo(new SectorId((int)$aDatos['id_sector']));
-        }
-        if (array_key_exists('id_departamento', $aDatos)) {
-            $valor = $aDatos['id_departamento'] ?? null;
-            $this->setIdDepartamentoVo(isset($valor) && $valor !== '' ? new DepartamentoId((int)$valor) : null);
-        }
-        if (array_key_exists('sector', $aDatos)) {
-            $this->setNombreSectorVo(SectorName::fromNullableString($aDatos['sector'] ?? null));
-        }
-        return $this;
-    }
 
     // VO API
     public function getIdSectorVo(): SectorId
     {
-        return $this->idSector;
+        return $this->id_sector;
     }
 
     public function setIdSectorVo(SectorId $id): void
     {
-        $this->idSector = $id;
+        $this->id_sector = $id;
     }
 
-    /**
-     *
-     * @return int $iid_sector
-     */
+
     public function getId_sector(): int
     {
-        return $this->idSector->value();
+        return $this->id_sector->value();
     }
 
-    /**
-     *
-     * @param int $iid_sector
-     */
-    public function setId_sector(int $iid_sector): void
+
+    public function setId_sector(int $id_sector): void
     {
-        $this->idSector = new SectorId($iid_sector);
+        $this->id_sector = new SectorId($id_sector);
     }
 
     // VO API
     public function getIdDepartamentoVo(): ?DepartamentoId
     {
-        return $this->idDepartamento;
+        return $this->id_departamento;
     }
 
     public function setIdDepartamentoVo(?DepartamentoId $id = null): void
     {
-        $this->idDepartamento = $id;
+        $this->id_departamento = $id;
     }
 
-    /**
-     *
-     * @return int|null $iid_departamento
-     */
+
     public function getId_departamento(): ?int
     {
-        return $this->idDepartamento?->value();
+        return $this->id_departamento?->value();
     }
 
-    /**
-     *
-     * @param int|null $iid_departamento
-     */
-    public function setId_departamento(?int $iid_departamento = null): void
+
+    public function setId_departamento(?int $id_departamento = null): void
     {
-        $this->idDepartamento = $iid_departamento !== null ? new DepartamentoId($iid_departamento) : null;
+        $this->id_departamento = $id_departamento !== null ? new DepartamentoId($id_departamento) : null;
     }
 
     // VO API
     public function getNombreSectorVo(): ?SectorName
     {
-        return $this->nombreSector;
+        return $this->nombre_sector;
     }
 
     public function setNombreSectorVo(?SectorName $nombre = null): void
     {
-        $this->nombreSector = $nombre;
+        $this->nombre_sector = $nombre;
     }
 
-    /**
-     *
-     * @return string $ssector
-     */
+
     public function getSector(): string
     {
-        return $this->nombreSector?->value() ?? '';
+        return $this->nombre_sector?->value() ?? '';
     }
 
-    /**
-     *
-     * @param string $ssector
-     */
-    public function setSector(string $ssector): void
+
+    public function setSector(string $sector): void
     {
-        $this->nombreSector = SectorName::fromString($ssector);
+        $this->nombre_sector = SectorName::fromString($sector);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -150,7 +99,7 @@ class Sector
         return 'id_sector';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oSectorSet = new Set();
 
@@ -160,12 +109,12 @@ class Sector
     }
 
     /**
-     * Recupera les propietats de l'atribut iid_departamento de Sector
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo id_departamento de Sector
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosId_departamento()
+    private function getDatosId_departamento(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_departamento');
@@ -180,12 +129,12 @@ class Sector
     }
 
     /**
-     * Recupera les propietats de l'atribut ssector de Sector
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo sector de Sector
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosSector()
+    private function getDatosSector(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('sector');

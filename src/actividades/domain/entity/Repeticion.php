@@ -5,6 +5,7 @@ namespace src\actividades\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\actividades\domain\value_objects\{RepeticionId, RepeticionText, TemporadaCode, RepeticionTipo};
+use src\shared\domain\traits\Hydratable;
 
 /**
  * Clase que implementa la entidad xa_tipo_repeticion
@@ -17,6 +18,7 @@ use src\actividades\domain\value_objects\{RepeticionId, RepeticionText, Temporad
  */
 class Repeticion
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -25,104 +27,57 @@ class Repeticion
      *
      * @var RepeticionId
      */
-    private RepeticionId $iid_repeticion;
+    private RepeticionId $id_repeticion;
     /**
      * Repeticion de Repeticion
      *
      * @var RepeticionText
      */
-    private RepeticionText $srepeticion;
+    private RepeticionText $repeticion;
     /**
      * Temporada de Repeticion
      *
      * @var TemporadaCode
      */
-    private TemporadaCode $stemporada;
+    private TemporadaCode $temporada;
     /**
      * Tipo de Repeticion
      *
      * @var RepeticionTipo|null
      */
-    private RepeticionTipo|null $itipo = null;
+    private RepeticionTipo|null $tipo = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Repeticion
-     */
-    public function setAllAttributes(array $aDatos): Repeticion
-    {
-        if (array_key_exists('id_repeticion', $aDatos)) {
-            $val = $aDatos['id_repeticion'];
-            if ($val instanceof RepeticionId) {
-                $this->setId($val);
-            } else {
-                $this->setId_repeticion((int)$val);
-            }
-        }
-        if (array_key_exists('repeticion', $aDatos)) {
-            $val = $aDatos['repeticion'];
-            if ($val instanceof RepeticionText) {
-                $this->setRepeticionVO($val);
-            } else {
-                $this->setRepeticion((string)$val);
-            }
-        }
-        if (array_key_exists('temporada', $aDatos)) {
-            $val = $aDatos['temporada'];
-            if ($val instanceof TemporadaCode) {
-                $this->setTemporadaVO($val);
-            } else {
-                $this->setTemporada((string)$val);
-            }
-        }
-        if (array_key_exists('tipo', $aDatos)) {
-            $val = $aDatos['tipo'];
-            if ($val instanceof RepeticionTipo) {
-                $this->setTipoVO($val);
-            } else {
-                $this->setTipo($val === null ? null : (int)$val);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_repeticion
-     */
     /**
      * @deprecated usar getId()
      */
     public function getId_repeticion(): int
     {
-        return $this->iid_repeticion->value();
+        return $this->id_repeticion->value();
     }
 
     /**
      *
-     * @param int $iid_repeticion
+     * @param int $id_repeticion
      */
     /**
      * @deprecated usar setId(RepeticionId $id)
      */
-    public function setId_repeticion(int $iid_repeticion): void
+    public function setId_repeticion(int $id_repeticion): void
     {
-        $this->iid_repeticion = new RepeticionId($iid_repeticion);
+        $this->id_repeticion = new RepeticionId($id_repeticion);
     }
 
     // Nuevos métodos con Value Objects
     public function getId(): RepeticionId
     {
-        return $this->iid_repeticion;
+        return $this->id_repeticion;
     }
 
     public function setId(RepeticionId $id): void
     {
-        $this->iid_repeticion = $id;
+        $this->id_repeticion = $id;
     }
 
     /**
@@ -130,11 +85,11 @@ class Repeticion
      * @return string $srepeticion
      */
     /**
-     * @deprecated usar getRepeticionVO()
+     * @deprecated usar getRepeticionVo()
      */
     public function getRepeticion(): string
     {
-        return $this->srepeticion->value();
+        return $this->repeticion->value();
     }
 
     /**
@@ -142,21 +97,21 @@ class Repeticion
      * @param string $srepeticion
      */
     /**
-     * @deprecated usar setRepeticionVO(RepeticionText $repeticion)
+     * @deprecated usar setRepeticionVo(RepeticionText $repeticion)
      */
     public function setRepeticion(string $srepeticion): void
     {
-        $this->srepeticion = new RepeticionText($srepeticion);
+        $this->repeticion = new RepeticionText($srepeticion);
     }
 
-    public function getRepeticionVO(): RepeticionText
+    public function getRepeticionVo(): RepeticionText
     {
-        return $this->srepeticion;
+        return $this->repeticion;
     }
 
-    public function setRepeticionVO(RepeticionText $repeticion): void
+    public function setRepeticionVo(RepeticionText $repeticion): void
     {
-        $this->srepeticion = $repeticion;
+        $this->repeticion = $repeticion;
     }
 
     /**
@@ -164,11 +119,11 @@ class Repeticion
      * @return string $stemporada
      */
     /**
-     * @deprecated usar getTemporadaVO()
+     * @deprecated usar getTemporadaVo()
      */
     public function getTemporada(): string
     {
-        return $this->stemporada->value();
+        return $this->temporada->value();
     }
 
     /**
@@ -176,21 +131,21 @@ class Repeticion
      * @param string $stemporada
      */
     /**
-     * @deprecated usar setTemporadaVO(TemporadaCode $temporada)
+     * @deprecated usar setTemporadaVo(TemporadaCode $temporada)
      */
     public function setTemporada(string $stemporada): void
     {
-        $this->stemporada = new TemporadaCode($stemporada);
+        $this->temporada = new TemporadaCode($stemporada);
     }
 
-    public function getTemporadaVO(): TemporadaCode
+    public function getTemporadaVo(): TemporadaCode
     {
-        return $this->stemporada;
+        return $this->temporada;
     }
 
-    public function setTemporadaVO(TemporadaCode $temporada): void
+    public function setTemporadaVo(TemporadaCode $temporada): void
     {
-        $this->stemporada = $temporada;
+        $this->temporada = $temporada;
     }
 
     /**
@@ -198,11 +153,11 @@ class Repeticion
      * @return int|null $itipo
      */
     /**
-     * @deprecated usar getTipoVO()
+     * @deprecated usar getTipoVo()
      */
     public function getTipo(): ?int
     {
-        return $this->itipo?->value();
+        return $this->tipo?->value();
     }
 
     /**
@@ -210,21 +165,21 @@ class Repeticion
      * @param int|null $itipo
      */
     /**
-     * @deprecated usar setTipoVO(?RepeticionTipo $tipo)
+     * @deprecated usar setTipoVo(?RepeticionTipo $tipo)
      */
     public function setTipo(?int $itipo = null): void
     {
-        $this->itipo = $itipo === null ? null : new RepeticionTipo($itipo);
+        $this->tipo = $itipo === null ? null : new RepeticionTipo($itipo);
     }
 
-    public function getTipoVO(): ?RepeticionTipo
+    public function getTipoVo(): ?RepeticionTipo
     {
-        return $this->itipo;
+        return $this->tipo;
     }
 
-    public function setTipoVO(?RepeticionTipo $tipo): void
+    public function setTipoVo(?RepeticionTipo $tipo): void
     {
-        $this->itipo = $tipo;
+        $this->tipo = $tipo;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -233,7 +188,7 @@ class Repeticion
         return 'id_repeticion';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oRepeticionSet = new Set();
 
@@ -244,12 +199,12 @@ class Repeticion
     }
 
     /**
-     * Recupera les propietats de l'atribut srepeticion de Repeticion
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo repeticion de Repeticion
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosRepeticion()
+    private function getDatosRepeticion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('repeticion');
@@ -262,12 +217,12 @@ class Repeticion
     }
 
     /**
-     * Recupera les propietats de l'atribut stemporada de Repeticion
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo temporada de Repeticion
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosTemporada()
+    private function getDatosTemporada(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('temporada');
@@ -280,12 +235,12 @@ class Repeticion
     }
 
     /**
-     * Recupera les propietats de l'atribut stipo de Repeticion
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo tipo de Repeticion
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosTipo()
+    private function getDatosTipo(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo');

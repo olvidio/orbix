@@ -1,7 +1,9 @@
 <?php
 
 use core\ViewPhtml;
+use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\personas\domain\entity\PersonaPub;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Desplegable;
@@ -45,8 +47,7 @@ if (!is_object($oPersona)) {
     exit($msg_err);
 }
 
-if (get_class($oPersona) === 'personas\legacy\PersonaEx'
-    || get_class($oPersona) === 'personas\legacy\PersonaIn') {
+if (get_class($oPersona) === PersonaPub::class) {
     exit(_("con las personas de paso no tiene sentido."));
 }
 

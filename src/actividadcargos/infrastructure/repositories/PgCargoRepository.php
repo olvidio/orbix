@@ -141,8 +141,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Cargo = new Cargo();
-            $Cargo->setAllAttributes($aDatos);
+            $Cargo = Cargo::fromArray($aDatos);
             $CargoSet->add($Cargo);
         }
         return $CargoSet->getTot();
@@ -249,7 +248,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         if (empty($aDatos)) {
             return null;
         }
-        return (new Cargo())->setAllAttributes($aDatos);
+        return Cargo::fromArray($aDatos);
     }
 
     public function getNewId()

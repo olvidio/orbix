@@ -5,8 +5,8 @@ use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryI
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\actividadtarifas\domain\entity\TipoTarifa;
 use src\actividadtarifas\domain\value_objects\SerieId;
-use ubis\model\entity\GestorTarifaUbi;
-use ubis\model\entity\TarifaUbi;
+use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
+use src\ubis\domain\entity\TarifaUbi;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -33,6 +33,7 @@ switch ($Qque) {
         $letra = empty($Qletra) ? _("nueva") : $Qletra;
 
         $aTipoSerie = SerieId::getArraySerie();
+        $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
 
         $oDesplPosiblesSeries = new Desplegable();
         $oDesplPosiblesSeries->setNombre('id_serie');
@@ -48,7 +49,7 @@ switch ($Qque) {
         if (!empty($Qid_item)) {
             $a_camposHidden['id_item'] = $Qid_item;
             $camposForm = 'cantidad';
-            $oTarifaUbi = new TarifaUbi($Qid_item);
+            $oTarifaUbi = $TarifaUbiRepository->findById($Qid_item);
             $cantidad = $oTarifaUbi->getCantidad();
         } else {
             $camposForm = 'cantidad!id_tarifa!id_serie';
@@ -59,7 +60,6 @@ switch ($Qque) {
         $oHash->setArraycamposHidden($a_camposHidden);
 
 
-        $oGesTarifa = new GestorTarifaUbi();
         $txt = "<form id='frm_tarifa_ubi'>";
         $txt .= $oHash->getCamposHtml();
         $txt .= '<h3>' . sprintf(_("tarifa %s"), $letra) . '</h3>';
@@ -91,9 +91,9 @@ switch ($Qque) {
 
         $any_anterior = $Qyear -1;
         // listado de tarifas por casa y año
+        $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
         if (!empty($Qid_ubi) && !empty($any_anterior)) {
-            $oGesTarifa = new GestorTarifaUbi();
-            $oGesTarifa->copiar($Qyear, $Qid_ubi);
+            $TarifaUbiRepository->copiar($Qyear, $Qid_ubi);
         } else {
             $cTarifas = [];
         }
@@ -104,9 +104,9 @@ switch ($Qque) {
         $miSfsv = ConfigGlobal::mi_sfsv();
         $a_seccion = array(1 => _("sv"), 2 => _("sf"));
         // listado de tarifas por casa y año
+        $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
         if (!empty($Qid_ubi) && !empty($Qyear)) {
-            $oGesTarifa = new GestorTarifaUbi();
-            $cTarifas = $oGesTarifa->getTarifas(array('id_ubi' => $Qid_ubi, 'year' => $Qyear, '_ordre' => 'year,id_tarifa'));
+            $cTarifas = $TarifaUbiRepository->getTarifas(array('id_ubi' => $Qid_ubi, 'year' => $Qyear, '_ordre' => 'year,id_tarifa'));
         } else {
             $cTarifas = [];
         }
@@ -156,7 +156,7 @@ switch ($Qque) {
 
             $a_valores[$i][1] = $a_seccion[$seccion];
             // permiso
-            if ($miSfsv == $seccion && $_SESSION['oPerm']->have_perm_oficina('adl')) {
+            if ($miSfsv === $seccion && $_SESSION['oPerm']->have_perm_oficina('adl')) {
                 $a_valores[$i][2] = array('script' => $script, 'valor' => $letra_serie);
             } else {
                 $a_valores[$i][2] = $letra_serie;
@@ -213,11 +213,13 @@ switch ($Qque) {
         $Qcantidad = (string)filter_input(INPUT_POST, 'cantidad');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
+        $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
         if (!empty($Qid_item)) {
-            $oTarifaUbi = new TarifaUbi($Qid_item);
-            $oTarifaUbi->DBCarregar(); // para que coja los valores que ya tiene
+            $oTarifaUbi = $TarifaUbiRepository->findById($Qid_item);
         } else {
+            $newId = $TarifaUbiRepository->newId();
             $oTarifaUbi = new TarifaUbi();
+            $oTarifaUbi->setId_item($newId);
         }
         if (!empty($Qid_ubi)) $oTarifaUbi->setId_ubi($Qid_ubi);
         if (!empty($Qyear)) $oTarifaUbi->setYear($Qyear);
@@ -225,18 +227,19 @@ switch ($Qque) {
         if (!empty($Qid_serie)) $oTarifaUbi->setId_serie($Qid_serie);
         if (!empty($Qcantidad)) $oTarifaUbi->setCantidad($Qcantidad);
         if (!empty($Qobserv)) $oTarifaUbi->setObserv($Qobserv);
-        if ($oTarifaUbi->DBGuardar() === false) {
+        if ($TarifaUbiRepository->Guardar($oTarifaUbi) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oTarifaUbi->getErrorTxt();
+            echo "\n" . $TarifaUbiRepository->getErrorTxt();
         }
         break;
     case "borrar":
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         if (!empty($Qid_item)) {
-            $oTarifaUbi = new TarifaUbi($Qid_item);
-            if ($oTarifaUbi->DBEliminar() === false) {
+            $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
+            $oTarifaUbi = $TarifaUbiRepository->findById($Qid_item);
+            if ($TarifaUbiRepository->Eliminar($oTarifaUbi) === false) {
                 echo _("hay un error, no se ha eliminado");
-                echo "\n" . $oTarifaUbi->getErrorTxt();
+                echo "\n" . $TarifaUbiRepository->getErrorTxt();
             }
         } else {
             $Qque = (string)filter_input(INPUT_POST, 'que');
@@ -252,12 +255,12 @@ switch ($Qque) {
             $id_item = (integer)strtok('#');
             $cantidad = round($cantidad);
             if (empty($id_item) && empty($cantidad)) continue; // no hay ni había nada.
-            $oTarifaUbi = new TarifaUbi($id_item);
-            $oTarifaUbi->DBCarregar();
+            $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
+            $oTarifaUbi = $TarifaUbiRepository->findById($id_item);
             if (isset($cantidad)) $oTarifaUbi->setCantidad($cantidad);
-            if ($oTarifaUbi->DBGuardar() === false) {
+            if ($TarifaUbiRepository->Guardar($oTarifaUbi) === false) {
                 echo _("hay un error, no se ha guardado");
-                echo "\n" . $oTarifaUbi->getErrorTxt();
+                echo "\n" . $TarifaUbiRepository->getErrorTxt();
             }
         }
         break;
@@ -265,8 +268,8 @@ switch ($Qque) {
         //$oMiUsuario = new Usuario(\ConfigGlobal::mi_id_usuario());
         $a_seccion = array(1 => _("sv"), 2 => _("sf"));
         $a_opciones = array(0 => _("por dia"), 1 => _("total"));
-        $oGesTipoTarifa = new GestorTipoTarifa();
-        $oTipoTarifas = $oGesTipoTarifa->getTipoTarifas(array('_ordre' => 'sfsv,letra'));
+        $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
+        $oTipoTarifas = $TarifaUbiRepository->getTipoTarifas(array('_ordre' => 'sfsv,letra'));
         $t = 0;
         $txt = '';
         $error_txt = '';
@@ -297,7 +300,7 @@ switch ($Qque) {
             $a_valores[$t][4] = $a_opciones[$modo];
             $a_valores[$t][5] = $observ;
             // permiso
-            if (ConfigGlobal::mi_sfsv() == $sfsv && $_SESSION['oPerm']->have_perm_oficina('adl')) {
+            if (ConfigGlobal::mi_sfsv() === $sfsv && $_SESSION['oPerm']->have_perm_oficina('adl')) {
                 $script = "fnjs_modificar($id_tarifa)";
                 $a_valores[$t][6] = array('script' => $script, 'valor' => _("modificar"));
             }
@@ -319,7 +322,6 @@ switch ($Qque) {
             $observ = '';
         } else {
             $oTipoTarifa = $TipoTarifaRepository->findById($Qid_tarifa);
-            $oTipoTarifa->DBCarregar();
             $letra = $oTipoTarifa->getLetra();
             $modo = $oTipoTarifa->getModo();
             $observ = $oTipoTarifa->getObserv();
@@ -372,7 +374,7 @@ switch ($Qque) {
         if (isset($Qobserv)) $oTipoTarifa->setObserv($Qobserv);
         if ($TipoTarifaRepository->Guardar($oTipoTarifa) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oTipoTarifa->getErrorTxt();
+            echo "\n" . $TipoTarifaRepository->getErrorTxt();
         }
         break;
     case "tar_eliminar":
@@ -384,9 +386,9 @@ switch ($Qque) {
         break;
     case "tar_ubi_eliminar":
         $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
-        $oTarifaUbi = new TarifaUbi($Qid_item);
-        $oTarifaUbi->DBCarregar();
-        if ($oTarifaUbi->DBEliminar() === false) {
+        $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
+        $oTarifaUbi = $TarifaUbiRepository->findById($Qid_item);
+        if ($TarifaUbiRepository->Eliminar($oTarifaUbi) === false) {
             echo _("hay un error, no se ha borrado");
         }
         break;

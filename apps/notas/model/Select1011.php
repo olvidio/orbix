@@ -2,13 +2,13 @@
 
 namespace notas\model;
 
-use actividadestudios\model\entity\GestorMatricula;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorPersonaNotaDlDB;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\notas\infrastructure\repositories\PgPersonaNotaDBRepository;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
@@ -89,8 +89,8 @@ class Select1011
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 
         // Aviso si le faltan notas por poner
-        $gesMatriculas = new GestorMatricula();
-        $cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($this->id_pau);
+        $matriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
+        $cMatriculasPendientes = $matriculaRepository->getMatriculasPendientes($this->id_pau);
         if (count($cMatriculasPendientes) > 0) {
             $msg = '';
             $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
@@ -113,10 +113,10 @@ class Select1011
         }
 
 
-        $gesPersonaNotas = new GestorPersonaNotaDlDB();
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaDBRepository::class);
         // Que si muestre el "fin bienio, fin cuadrienio".
         //$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
-        $cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom' => $this->id_pau, '_ordre' => 'id_nivel'), array('id_asignatura' => '<'));
+        $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $this->id_pau, '_ordre' => 'id_nivel'), array('id_asignatura' => '<'));
 
         $i = 0;
         $a_valores = [];
@@ -129,7 +129,7 @@ class Select1011
             $id_situacion = $oPersonaNota->getId_situacion();
             $f_acta = $oPersonaNota->getF_acta()->getFromLocal();
             $acta = $oPersonaNota->getActa();
-            $preceptor = $oPersonaNota->getPreceptor();
+            $preceptor = $oPersonaNota->isPreceptor();
             $id_preceptor = $oPersonaNota->getId_preceptor();
             $epoca = $oPersonaNota->getEpoca();
             $detalle = $oPersonaNota->getDetalle();

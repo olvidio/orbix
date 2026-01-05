@@ -27,20 +27,18 @@
  *
  */
 
-use asistentes\model\entity\Asistente;
-
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\ResumenPlazas;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use src\ubis\domain\value_objects\DescTelecoOrder;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -138,7 +136,7 @@ if (!empty($Qid_nom)) { //caso de modificar
         if (!empty($propietario)) {
             $padre = strtok($propietario, '>');
             $child = strtok('>');
-            if ($obj_pau !== 'PersonaEx' && $child != ConfigGlobal::mi_delef()) {
+            if ($obj_pau !== 'PersonaEx' && $child !== ConfigGlobal::mi_delef()) {
                 exit (sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"), $child));
             }
         }
@@ -213,7 +211,7 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
             $dl_de_paso = $oPersona->getDl();
         }
     }
-    $gesActividadPlazas = new GestorResumenPlazas();
+    $gesActividadPlazas = new ResumenPlazas();
     $gesActividadPlazas->setId_activ($Qid_activ);
     $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
     $oDesplPosiblesPropietarios->setNombre('propietario');

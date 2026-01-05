@@ -146,8 +146,7 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Nota = new Nota();
-            $Nota->setAllAttributes($aDatos);
+            $Nota = Nota::fromArray($aDatos);
             $NotaSet->add($Nota);
         }
         return $NotaSet->getTot();
@@ -243,7 +242,7 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
         if (empty($aDatos)) {
             return null;
         }
-        return (new Nota())->setAllAttributes($aDatos);
+        return Nota::fromArray($aDatos);
     }
 
 }

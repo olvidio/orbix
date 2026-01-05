@@ -53,9 +53,9 @@ class DatosUpdate
             $nom_camp = $oDatosCampo->getNom_camp();
             // si es un checkbox y está vacío, no pasa nada
             $tipo = $oDatosCampo->getTipo();
-            if ($tipo == 'check' && empty($aCampos[$nom_camp])) $aCampos[$nom_camp] = 'f';
+            if ($tipo === 'check' && empty($aCampos[$nom_camp])) $aCampos[$nom_camp] = 'f';
             // si es con decimales, cambio coma por punto
-            if ($tipo == 'decimal' && !empty($aCampos[$nom_camp])) $aCampos[$nom_camp] = str_replace(',', '.', $aCampos[$nom_camp]);
+            if ($tipo === 'decimal' && !empty($aCampos[$nom_camp])) $aCampos[$nom_camp] = str_replace(',', '.', $aCampos[$nom_camp]);
             $oFicha->$nom_camp = $aCampos[$nom_camp];
         }
         if ($oFicha->DBGuardar() === false) {

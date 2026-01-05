@@ -2,7 +2,8 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use encargossacd\model\entity\Encargo;
+use misas\domain\repositories\EncargoDiaRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use web\DateTimeLocal;
 
 require_once("apps/core/global_header.inc");
@@ -22,7 +23,7 @@ switch ($Qperiodo) {
     case "esta_semana":
         $dia_week = date('N');
         $dia_week--;
-        if ($dia_week == -1) {
+        if ($dia_week === -1) {
             $dia_week = 6;
         }
         $empiezamin = new DateTimeLocal(date('Y-m-d'));
@@ -54,7 +55,7 @@ switch ($Qperiodo) {
         $empiezamin = new DateTimeLocal(date($anyo . '-' . $este_mes . '-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         $siguiente_mes = $este_mes + 1;
-        if ($siguiente_mes == 13) {
+        if ($siguiente_mes === 13) {
             $siguiente_mes = 1;
             $anyo++;
         }
@@ -66,14 +67,14 @@ switch ($Qperiodo) {
     case "proximo_mes":
         $proximo_mes = date('m') + 1;
         $anyo = date('Y');
-        if ($proximo_mes == 13) {
+        if ($proximo_mes === 13) {
             $proximo_mes = 1;
             $anyo++;
         }
         $empiezamin = new DateTimeLocal(date($anyo . '-' . $proximo_mes . '-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         $siguiente_mes = $proximo_mes + 1;
-        if ($siguiente_mes == 13) {
+        if ($siguiente_mes === 13) {
             $siguiente_mes = 1;
             $anyo++;
         }
@@ -123,7 +124,7 @@ $aOperador = [
 ];
 $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
-
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 foreach ($cEncargosDia as $oEncargoDia) {
     $id_enc = $oEncargoDia->getId_enc();
     $date = $oEncargoDia->getTstart();
@@ -134,15 +135,15 @@ foreach ($cEncargosDia as $oEncargoDia) {
     $dia = $a_dias_semana_breve[$dia_week] . ' ' . $num_dia . '.' . $num_mes;
     $hora_ini = $oEncargoDia->getTstart()->format('H:i');
     $hora_fin = $oEncargoDia->getTend()->format('H:i');
-    if ($hora_ini == '00:00')
+    if ($hora_ini === '00:00')
         $hora_ini = '';
-    if ($hora_fin == '00:00')
+    if ($hora_fin === '00:00')
         $hora_fin = '';
     $observ = $oEncargoDia->getObserv();
     $dia_y_hora = $dia;
-    if ($hora_ini != '') {
+    if ($hora_ini !== '') {
         $dia_y_hora .= ' ' . $hora_ini;
-        if ($hora_fin != '') {
+        if ($hora_fin !== '') {
             $dia_y_hora .= '-' . $hora_fin;
         }
     }
@@ -150,7 +151,7 @@ foreach ($cEncargosDia as $oEncargoDia) {
     $data_cols["dia"] = $dia_y_hora;
     $data_cols["observaciones"] = $observ;
 
-    $oEncargo = new Encargo($id_enc);
+    $oEncargo = $EncargoRepository->findById($id_enc);
     $desc_enc = $oEncargo->getDesc_enc();
 
     $data_cols["encargo"] = $desc_enc;

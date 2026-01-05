@@ -9,11 +9,10 @@ use dbextern\model\entity\GestorPersonaBDU;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\entity\PersonaBDU;
 use PDO;
-use personas\legacy\GestorTelecoPersonaDl;
-use personas\legacy\TelecoPersonaDl;
-use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\PersonaDl;
-use personas\model\entity\TrasladoDl;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
+use src\personas\domain\entity\TelecoPersona;
+use src\personas\domain\TrasladoDl;
 use web\DateTimeLocal;
 
 /**
@@ -220,8 +219,8 @@ class SincroDB
         $aWhere['f_nacimiento'] = "'$f_nacimiento'";
         $aWhere['nom'] = trim($nombre);
 
-        $oGesPersonasDl = new GestorPersonaDl();
-        $cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere, $aOperador);
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $cPersonasDl = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
         if ($cPersonasDl !== false && count($cPersonasDl) == 1) {
             $oPersonaDl = $cPersonasDl[0];
             $id_nom = $oPersonaDl->getId_nom();
@@ -250,8 +249,8 @@ class SincroDB
      */
     public function posiblesBDU(int $id_nom_orbix)
     {
-        $oPersonaDl = new PersonaDl($id_nom_orbix);
-        $oPersonaDl->DBCarregar();
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $oPersonaDl = $PersonaDlRepository->findById($id_nom_orbix);
 
         $apellido1 = $oPersonaDl->getApellido1();
         $apellido1 = str_replace("'","''", $apellido1);
@@ -359,7 +358,6 @@ class SincroDB
     public function posiblesOrbix($id_nom_listas, $esquema = '')
     {
         $oPersonaBDU = new PersonaBDU($id_nom_listas);
-        $oPersonaBDU->DBCarregar();
 
         $apellido1_sinprep = $oPersonaBDU->getApellido1_sinprep();
         // Si tiene más de una palabra cojo la primera
@@ -373,12 +371,12 @@ class SincroDB
         $aOperador['apellido1'] = 'sin_acentos';
         $aWhere['_ordre'] = 'apellido1, apellido2, nom';
 
-        $oGesPersonasDl = new GestorPersonaDl();
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         if (!empty($esquema)) {
             $oDB = $this->conexion($esquema);
-            $oGesPersonasDl->setoDbl($oDB);
+            $PersonaDlRepository->setoDbl($oDB);
         }
-        $cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere, $aOperador);
+        $cPersonasDl = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
         $i = 0;
         $a_lista_orbix = [];
         foreach ($cPersonasDl as $oPersonaDl) {
@@ -482,7 +480,6 @@ class SincroDB
         $obj = 'personas\\model\\entity\\' . $obj_pau;
         $oPersona = new $obj($id_orbix);
 
-        $oPersona->DBCarregar();
         //Las personas en listas siempre están en situación 'A'
         if ($oPersona->getSituacion() !== 'A') {
             $oPersona->setSituacion('A');
@@ -517,44 +514,46 @@ class SincroDB
         }
 
         //Dossiers
-        $GesTeleco = new GestorTelecoPersonaDl();
+        $TelecoPersonaDlRepository = $GLOBALS['container']->get(TelecoPersonaDlRepositoryInterface::class);
         // Telf movil  --particular(5)
         if (!empty($Tfno_Movil)) {
-            $cTelecos = $GesTeleco->getTelecos(array('id_nom' => $id_orbix, 'tipo_teleco' => 'móvil', 'id_desc_teleco' => 5));
+            $cTelecos = $TelecoPersonaDlRepository->getTelecosPersona(array('id_nom' => $id_orbix, 'tipo_teleco' => 'móvil', 'id_desc_teleco' => 5));
             if (!empty($cTelecos) && count($cTelecos) > 0) {
                 $oTeleco = $cTelecos[0];
-                $oTeleco->DBCarregar();
                 $oTeleco->setNum_teleco($Tfno_Movil);
                 $oTeleco->setObserv('de listas');
             } else {
-                $oTeleco = new TelecoPersonaDl();
+                $newIdItem = $TelecoPersonaDlRepository->nextId();
+                $oTeleco = new TelecoPersona();
+                $oTeleco->setId_item($newIdItem);
                 $oTeleco->setId_nom($id_orbix);
-                $oTeleco->setTipo_teleco('móvil');
+                $oTeleco->setId_tipo_teleco(2); // 2 -> móvil
                 $oTeleco->setId_desc_teleco(5);
                 $oTeleco->setNum_teleco($Tfno_Movil);
                 $oTeleco->setObserv('de listas');
             }
-            if ($oTeleco->DBGuardar() === false) {
+            if ($TelecoPersonaDlRepository->Guardar($oTeleco) === false) {
                 echo(_("hay un error, no se ha guardado"));
             }
         }
         // e-mail   --principal(13)
         if (!empty($Email)) {
-            $cTelecos = $GesTeleco->getTelecos(array('id_nom' => $id_orbix, 'tipo_teleco' => 'e-mail', 'id_desc_teleco' => 13));
+            $cTelecos = $TelecoPersonaDlRepository->getTelecosPersona(array('id_nom' => $id_orbix, 'tipo_teleco' => 'e-mail', 'id_desc_teleco' => 13));
             if (!empty($cTelecos) && count($cTelecos) > 0) {
                 $oTeleco = $cTelecos[0];
-                $oTeleco->DBCarregar();
                 $oTeleco->setNum_teleco($Email);
                 $oTeleco->setObserv('de listas');
             } else {
-                $oTeleco = new TelecoPersonaDl();
+                $newIdItem = $TelecoPersonaDlRepository->nextId();
+                $oTeleco = new TelecoPersona();
+                $oTeleco->setId_item($newIdItem);
                 $oTeleco->setId_nom($id_orbix);
-                $oTeleco->setTipo_teleco('e-mail');
+                $oTeleco->setId_tipo_teleco(3); // 3 -> email
                 $oTeleco->setId_desc_teleco(13);
                 $oTeleco->setNum_teleco($Email);
                 $oTeleco->setObserv('de listas');
             }
-            if ($oTeleco->DBGuardar() === false) {
+            if ($TelecoPersonaDlRepository->Guardar($oTeleco) === false) {
                 echo(_("hay un error, no se ha guardado"));
             }
 

@@ -1,14 +1,14 @@
 <?php
 
-use actividadestudios\model\entity\GestorMatriculaDl;
-use actividadestudios\model\entity\Matricula;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorPersonaNotaDB;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\profesores\domain\services\ProfesorStgrService;
 use web\Desplegable;
 use web\Hash;
 
@@ -48,11 +48,12 @@ $nom_activ = $oActividad->getNom_activ();
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 
 $oDesplProfesores = [];
+$MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
 if (!empty($id_asignatura_real)) { //caso de modificar
     $mod = "editar";
-    $oMatricula = new Matricula(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ, 'id_asignatura' => $id_asignatura_real));
+    $oMatricula = $MatriculaRepository->findById($Qid_activ,  $id_asignatura_real, $Qid_nom);
     $id_situacion = $oMatricula->getId_situacion();
-    $preceptor = $oMatricula->getPreceptor();
+    $preceptor = $oMatricula->isPreceptor();
     $id_preceptor = $oMatricula->getId_preceptor();
     $oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($id_asignatura_real);
     if ($oAsignatura === null) {
@@ -67,8 +68,8 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aFaltan = [];
     $oDesplNiveles = [];
     if (!empty($id_preceptor)) {
-        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-        $aOpciones = $ProfesorRepository->getArrayProfesoresDl();
+        $ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
+        $aOpciones = $ProfesorStgrService->getArrayProfesoresDl();
         $oDesplProfesores = new Desplegable();
         $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setBlanco(1);
@@ -87,7 +88,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     // todas las asignaturas
     $aWhere = [];
     $aOperador = [];
-    $aWhere['status'] = 't';
+    $aWhere['active'] = 't';
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
@@ -95,7 +96,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     // todas las opcionales
     $aWhere = [];
     $aOperador = [];
-    $aWhere['status'] = 't';
+    $aWhere['active'] = 't';
     $aWhere['id_nivel'] = '3000,5000';
     $aOperador['id_nivel'] = 'BETWEEN';
     $aWhere['_ordre'] = 'nombre_corto';
@@ -118,8 +119,8 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
-    $GesPersonaNotas = new GestorPersonaNotaDB();
-    $cAsignaturasSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
+    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+    $cAsignaturasSuperadas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
     $aSuperadas = [];
     foreach ($cAsignaturasSuperadas as $oAsignatura) {
         $id_nivel = $oAsignatura->getId_nivel();
@@ -127,8 +128,8 @@ if (!empty($id_asignatura_real)) { //caso de modificar
         $aSuperadas[$id_nivel] = $id_asignatura;
     }
     // También quito las ya matriculadas
-    $GesMatriculas = new GestorMatriculaDl();
-    $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ));
+    $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
+    $cMatriculas = $MatriculaDlRepository->getMatriculas(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ));
     $aMatriculadas = [];
     foreach ($cMatriculas as $oMatricula) {
         $id_asignatura = $oMatricula->getId_asignatura();
@@ -158,7 +159,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 // la condicion es que tengan id_sector=1
 $aWhere = [];
 $aOperador = [];
-$aWhere['status'] = 't';
+$aWhere['active'] = 't';
 $aWhere['id_sector'] = 1;
 $aWhere['id_nivel'] = 3000;
 $aOperador['id_nivel'] = '<';

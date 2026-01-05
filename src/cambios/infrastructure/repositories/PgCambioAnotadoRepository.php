@@ -111,8 +111,7 @@ class PgCambioAnotadoRepository extends ClaseRepository implements CambioAnotado
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $CambioAnotado = new CambioAnotado();
-            $CambioAnotado->setAllAttributes($aDatos);
+            $CambioAnotado = CambioAnotado::fromArray($aDatos);
             $CambioAnotadoSet->add($CambioAnotado);
         }
         return $CambioAnotadoSet->getTot();
@@ -213,7 +212,7 @@ class PgCambioAnotadoRepository extends ClaseRepository implements CambioAnotado
         if (empty($aDatos)) {
             return null;
         }
-        return (new CambioAnotado())->setAllAttributes($aDatos);
+        return CambioAnotado::fromArray($aDatos);
     }
 
     public function getNewId()

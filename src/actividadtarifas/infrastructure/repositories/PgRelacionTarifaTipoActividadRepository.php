@@ -94,8 +94,7 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $RelacionTarifaTipoActividad = new RelacionTarifaTipoActividad();
-            $RelacionTarifaTipoActividad->setAllAttributes($aDatos);
+            $RelacionTarifaTipoActividad = RelacionTarifaTipoActividad::fromArray($aDatos);
             $RelacionTarifaTipoActividadSet->add($RelacionTarifaTipoActividad);
         }
         return $RelacionTarifaTipoActividadSet->getTot();
@@ -188,7 +187,7 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
         if (empty($aDatos)) {
             return null;
         }
-        return (new RelacionTarifaTipoActividad())->setAllAttributes($aDatos);
+        return RelacionTarifaTipoActividad::fromArray($aDatos);
     }
 
     public function getNewId()

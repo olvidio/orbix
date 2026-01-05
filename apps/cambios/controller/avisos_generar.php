@@ -56,7 +56,7 @@ if ($_SESSION['oPerm']->only_perm('admin_sf') || $_SESSION['oPerm']->only_perm('
     }
 } else {
     $Qid_usuario = ConfigGlobal::mi_id_usuario();
-    $Qaviso_tipo = AvisoTipoId::LISTA; // de moment nomes "anotar en lista".
+    $Qaviso_tipo = AvisoTipoId::TIPO_LISTA; // de moment nomes "anotar en lista".
 }
 
 $aGoBack = [

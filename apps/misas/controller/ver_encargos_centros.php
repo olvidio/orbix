@@ -34,7 +34,7 @@ $data_cuadricula = [];
 $aCentros = [];
 if (isset($Qid_zona)) {
     $aWhere = [];
-    $aWhere['status'] = 't';
+    $aWhere['active'] = 't';
     $aWhere['id_zona'] = $Qid_zona;
     $aWhere['_ordre'] = 'nombre_ubi';
     $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
@@ -137,7 +137,7 @@ $oDesplZonasCtr->setOpcion_sel($Qid_zona);
 $oDesplZonasCtr->setAction('fnjs_prepara_select_ctr()');
 
 $aWhere = [];
-$aWhere['status'] = 't';
+$aWhere['active'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
 $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);

@@ -43,32 +43,32 @@ if ($miRolePau === Role::PAU_CTR) { //centro
     $id_pau = ConfigGlobal::mi_role_pau();
     $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para centros cuyo calendario de actividades interesa
-    $donde = "WHERE status='t' AND (id_ubi=$sDonde)";
+    $donde = "WHERE active='t' AND (id_ubi=$sDonde)";
     $oForm->setCentros('centro');
 } else {
     // para los listados de sg. sólo ctrs de sg
     if ($Qtipo_ctr === 'sg') {
         if (ConfigGlobal::mi_sfsv() === 1) {
             $oForm->setCentros('sv');
-            $donde = "WHERE status='t' AND sv='t' AND tipo_ctr ~ '^s[^s]'";
+            $donde = "WHERE active='t' AND sv='t' AND tipo_ctr ~ '^s[^s]'";
         } elseif (ConfigGlobal::mi_sfsv() === 2) {
             $oForm->setCentros('sf');
-            $donde = "WHERE status='t' AND sf='t' AND tipo_ctr ~ '^s[^s]'";
+            $donde = "WHERE active='t' AND sf='t' AND tipo_ctr ~ '^s[^s]'";
         }
     } else {
         // Sólo quiero ver las centros comunes.
-        //$donde="WHERE status='t' AND sf='t' AND sv='t'";
+        //$donde="WHERE active='t' AND sf='t' AND sv='t'";
         // o (ara) no:
         if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
             $oForm->setCentros('all');
-            $donde = "WHERE status='t'";
+            $donde = "WHERE active='t'";
         } else {
             if (ConfigGlobal::mi_sfsv() === 1) {
                 $oForm->setCentros('sv');
-                $donde = "WHERE status='t' AND sv='t'";
+                $donde = "WHERE active='t' AND sv='t'";
             } elseif (ConfigGlobal::mi_sfsv() === 2) {
                 $oForm->setCentros('sf');
-                $donde = "WHERE status='t' AND sf='t'";
+                $donde = "WHERE active='t' AND sf='t'";
             }
         }
     }

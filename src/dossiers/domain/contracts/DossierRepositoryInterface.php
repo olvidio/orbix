@@ -19,7 +19,7 @@ use src\dossiers\domain\value_objects\DossierPk as DossierPkAlias;
 interface DossierRepositoryInterface
 {
 
-    public function DossiersNotEmpty($pau = '', $id = ''): array|false;
+    //public function DossiersNotEmpty($pau = '', $id = ''): array|false;
 
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
@@ -47,7 +47,7 @@ interface DossierRepositoryInterface
     public function getNomTabla(): string;
 
     /**
-     * @deprecated usar datosByPkVO
+     * @deprecated usar datosByPk
      */
     public function datosById(int $id_tipo_dossier, int $id_pau, string $tabla): array|bool;
 
@@ -57,7 +57,7 @@ interface DossierRepositoryInterface
     public function datosByPk(DossierPkAlias $pk): array|bool;
 
     /**
-     * @deprecated usar findByPkVO
+     * @deprecated usar findByPk
      */
     public function findById(int $id_tipo_dossier, int $id_pau, string $tabla): ?Dossier;
 

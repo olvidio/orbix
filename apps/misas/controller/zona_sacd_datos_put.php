@@ -36,7 +36,6 @@ if (empty ($cZonaSacd)) {
     $error_txt .= _("No existe");
 } else {
     $oZonaSacd = $cZonaSacd[0];
-    $oZonaSacd->DBCarregar();
     $oZonaSacd->setDw1($Qdw1);
     $oZonaSacd->setDw2($Qdw2);
     $oZonaSacd->setDw3($Qdw3);
@@ -44,9 +43,8 @@ if (empty ($cZonaSacd)) {
     $oZonaSacd->setDw5($Qdw5);
     $oZonaSacd->setDw6($Qdw6);
     $oZonaSacd->setDw7($Qdw7);
-    $oZonaSacd->DBGuardar();
-      if ($oZonaSacd->DBGuardar() === FALSE) {
-        $error_txt .= $oZonaSacd->getErrorTxt();
+      if ($ZonaSacdRepository->Guardar($oZonaSacd) === FALSE) {
+        $error_txt .= $ZonaSacdRepository->getErrorTxt();
     }
 }
 

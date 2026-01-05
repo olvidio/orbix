@@ -58,12 +58,12 @@ $lugar_fecha = "$poblacion, $hoy_local";
 switch ($Qsfsv) {
     case "sv":
         $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $cCentros = $GesCentros->getCentros(array('status' => 't', '_ordre' => 'tipo_ctr,nombre_ubi'));
+        $cCentros = $GesCentros->getCentros(array('active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi'));
         $origen_txt = ConfigGlobal::mi_dele();
         break;
     case "sf":
         $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-        $cCentros = $GesCentros->getCentros(array('status' => 't', '_ordre' => 'tipo_ctr,nombre_ubi'));
+        $cCentros = $GesCentros->getCentros(array('active' => 't', '_ordre' => 'tipo_ctr,nombre_ubi'));
         $origen_txt = ConfigGlobal::mi_dele() . 'f';
         break;
 }

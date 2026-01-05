@@ -177,8 +177,7 @@ class PgEncargoTipoRepository extends ClaseRepository implements EncargoTipoRepo
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $EncargoTipo = new EncargoTipo();
-            $EncargoTipo->setAllAttributes($aDatos);
+            $EncargoTipo = EncargoTipo::fromArray($aDatos);
             $EncargoTipoSet->add($EncargoTipo);
         }
         return $EncargoTipoSet->getTot();
@@ -269,6 +268,6 @@ class PgEncargoTipoRepository extends ClaseRepository implements EncargoTipoRepo
         if (empty($aDatos)) {
             return null;
         }
-        return (new EncargoTipo())->setAllAttributes($aDatos);
+        return EncargoTipo::fromArray($aDatos);
     }
 }

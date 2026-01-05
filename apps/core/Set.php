@@ -2,19 +2,6 @@
 
 namespace core;
 
-use actividades\legacy\GestorActividad;
-
-/**
- * Set
- *
- * Classe per a gestionar una col·lecció d'objectes.
- *
- * @package delegación
- * @subpackage model
- * @author
- * @version 1.0
- * @created 22/9/2010
- */
 class Set
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
@@ -24,39 +11,29 @@ class Set
      *
      * @var array
      */
-    private $aCollection = [];
-    private $count = 0;
+    private array $aCollection = [];
+    private int $count = 0;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
-    /**
-     * Constructor de la classe.
-     *
-     * @return GestorActividad
-     *
-     */
-    function __construct()
-    {
-        // constructor buit
-    }
 
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
-    function add($oElement)
+    public function add($oElement): void
     {
         $this->aCollection[$this->count++] = $oElement;
     }
 
-    function getTot()
+    public function getTot(): array
     {
         return $this->aCollection;
     }
 
-    function getElement($count)
+    public function getElement($count)
     {
         return $this->aCollection[$count];
     }
 
-    function setElement($count, $oElement)
+    public function setElement($count, $oElement): void
     {
         $this->aCollection[$count] = $oElement;
     }

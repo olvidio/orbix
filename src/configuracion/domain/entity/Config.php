@@ -29,23 +29,11 @@ class Config
         'oE' => '&#0339;'
     );
 
-    /**
-     *
-     * @var array
-     */
-    private $aCursoStgr;
+   /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     *
-     * @var array
-     */
-    private $aCursoCrt;
-
-    /**
-     *
-     * @var string
-     */
-    private $msg;
+    private array $aCursoStgr;
+    private array $aCursoCrt;
+    private string $msg;
     private $repository;
 
     public function __construct()
@@ -123,7 +111,7 @@ class Config
         return $a_ce;
     }
 
-    public function get_region_latin()
+    public function getNomRegionLatin()
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'region_latin';

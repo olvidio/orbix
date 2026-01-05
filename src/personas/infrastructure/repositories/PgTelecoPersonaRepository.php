@@ -92,8 +92,7 @@ class PgTelecoPersonaRepository extends ClaseRepository implements TelecoPersona
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TelecoPersona = new TelecoPersona();
-            $TelecoPersona->setAllAttributes($aDatos);
+            $TelecoPersona = TelecoPersona::fromArray($aDatos);
             $TelecoPersonaSet->add($TelecoPersona);
         }
         return $TelecoPersonaSet->getTot();
@@ -189,6 +188,6 @@ class PgTelecoPersonaRepository extends ClaseRepository implements TelecoPersona
         if (empty($aDatos)) {
             return null;
         }
-        return (new TelecoPersona())->setAllAttributes($aDatos);
+        return TelecoPersona::fromArray($aDatos);
     }
 }

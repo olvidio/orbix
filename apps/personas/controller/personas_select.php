@@ -97,8 +97,8 @@ $oPosicion->setParametros($aGoBack, 1);
 //Si soy una persona la que consulta
 $oMiUsuario = ConfigGlobal::MiUsuario();
 $miRolePau = ConfigGlobal::mi_role_pau();
-if ($miRolePau == Role::PAU_NOM) { //persona
-    $id_nom = $oMiUsuario->getId_pau();
+if ($miRolePau === Role::PAU_NOM) { //persona
+    $id_nom = $oMiUsuario->getCsv_id_pau();
     $aWhere = ['id_nom' => $id_nom];
     $aOperador = [];
     $aWhereCtr = [];

@@ -6,93 +6,52 @@ use core\DatosCampo;
 use core\Set;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\value_objects\ModuloId;
+use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 
-/**
- * Clase que implementa la entidad m0_mods_installed_dl
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 13/11/2025
- */
 class ModuloInstalado
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_mod de ModuloInstalado
-     *
-     * @var int
-     */
-    private ModuloId $idMod;
-    private int $iid_mod;
-    /**
-     * Status de ModuloInstalado
-     *
-     * @var bool|null
-     */
-    private bool|null $bstatus = null;
+
+    private int $id_mod;
+    private bool|null $active = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return ModuloInstalado
-     */
-    public function setAllAttributes(array $aDatos): ModuloInstalado
-    {
-        if (array_key_exists('id_mod', $aDatos)) {
-            $this->setIdModVo(isset($aDatos['id_mod']) ? new ModuloId((int)$aDatos['id_mod']) : null);
-        }
-        if (array_key_exists('status', $aDatos)) {
-            $this->setStatus(is_true($aDatos['status']));
-        }
-        return $this;
-    }
 
     // VO API
     public function getIdModVo(): ModuloId
     {
-        return $this->idMod;
+        return new ModuloId($this->id_mod);
     }
 
     public function setIdModVo(ModuloId $id): void
     {
-        $this->idMod = $id;
+        $this->id_mod = $id->value();
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
     public function getId_mod(): int
     {
-        return $this->idMod->value();
+        return $this->id_mod;
     }
 
-    public function setId_mod(int $iid_mod): void
+    public function setId_mod(int $id_mod): void
     {
-        $this->idMod = new ModuloId($iid_mod);
+        $this->id_mod = $id_mod;
     }
 
-    /**
-     *
-     * @return bool|null $bstatus
-     */
-    public function isStatus(): ?bool
+
+    public function isActive(): ?bool
     {
-        return $this->bstatus;
+        return $this->active;
     }
 
-    /**
-     *
-     * @param bool|null $bstatus
-     */
-    public function setStatus(?bool $bstatus = null): void
+    public function setActive(?bool $active = null): void
     {
-        $this->bstatus = $bstatus;
+        $this->active = $active;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -104,7 +63,7 @@ class ModuloInstalado
      * Retorna una col·lecció d'objectes del tipus DatosCampo
      *
      */
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oModuloInstaladoSet = new Set();
 
@@ -113,7 +72,7 @@ class ModuloInstalado
         return $oModuloInstaladoSet->getTot();
     }
 
-    function getDatosId_mod()
+    private function getDatosId_mod(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_mod');
@@ -128,17 +87,17 @@ class ModuloInstalado
     }
 
     /**
-     * Recupera les propietats de l'atribut bstatus de ModuloInstalado
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo active de ModuloInstalado
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosStatus()
+    private function getDatosStatus(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
-        $oDatosCampo->setNom_camp('status');
-        $oDatosCampo->setMetodoGet('isStatus');
-        $oDatosCampo->setMetodoSet('setStatus');
+        $oDatosCampo->setNom_camp('active');
+        $oDatosCampo->setMetodoGet('isActive');
+        $oDatosCampo->setMetodoSet('setActive');
         $oDatosCampo->setEtiqueta(_("activo"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;

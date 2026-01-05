@@ -16,7 +16,6 @@ $Qstgr = (string)filter_input(INPUT_POST, 'stgr');
 $obj = 'personas\\model\\entity\\' . $Qobj_pau;
 $oPersona = new $obj($Qid_nom);
 
-$oPersona->DBCarregar();
 $oPersona->setStgr($Qstgr);
 if ($oPersona->DBGuardar() === false) {
     echo _("hay un error, no se ha guardado");

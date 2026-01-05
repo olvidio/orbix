@@ -120,8 +120,7 @@ class PgCambioUsuarioRepository extends ClaseRepository implements CambioUsuario
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $CambioUsuario = new CambioUsuario();
-            $CambioUsuario->setAllAttributes($aDatos);
+            $CambioUsuario =  CambioUsuario::fromArray($aDatos);
             $CambioUsuarioSet->add($CambioUsuario);
         }
         return $CambioUsuarioSet->getTot();
@@ -226,7 +225,7 @@ class PgCambioUsuarioRepository extends ClaseRepository implements CambioUsuario
         if (empty($aDatos)) {
             return null;
         }
-        return (new CambioUsuario())->setAllAttributes($aDatos);
+        return CambioUsuario::fromArray($aDatos);
     }
 
     public function getNewId()

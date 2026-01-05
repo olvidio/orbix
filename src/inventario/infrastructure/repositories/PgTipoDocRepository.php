@@ -112,8 +112,7 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoDoc = new TipoDoc();
-            $TipoDoc->setAllAttributes($aDatos);
+            $TipoDoc = TipoDoc::fromArray($aDatos);
             $TipoDocSet->add($TipoDoc);
         }
         return $TipoDocSet->getTot();
@@ -228,7 +227,7 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
         if (empty($aDatos)) {
             return null;
         }
-        return (new TipoDoc())->setAllAttributes($aDatos);
+        return TipoDoc::fromArray($aDatos);
     }
 
     public function getNewId()

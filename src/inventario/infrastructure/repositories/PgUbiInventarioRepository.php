@@ -47,8 +47,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $UbiInventario = new UbiInventario();
-            $UbiInventario->setAllAttributes($aDatos);
+            $UbiInventario = UbiInventario::fromArray($aDatos);
             $UbiInventarioSet->add($UbiInventario);
         }
         return $UbiInventarioSet->getTot();
@@ -131,8 +130,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $UbiInventario = new UbiInventario();
-            $UbiInventario->setAllAttributes($aDatos);
+            $UbiInventario = UbiInventario::fromArray($aDatos);
             $UbiInventarioSet->add($UbiInventario);
         }
         return $UbiInventarioSet->getTot();
@@ -221,7 +219,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
         if (empty($aDatos)) {
             return null;
         }
-        return (new UbiInventario())->setAllAttributes($aDatos);
+        return UbiInventario::fromArray($aDatos);
     }
 
     public function getNewId()

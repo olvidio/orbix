@@ -110,8 +110,7 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Departamento = new Departamento();
-            $Departamento->setAllAttributes($aDatos);
+            $Departamento =  Departamento::fromArray($aDatos);
             $DepartamentoSet->add($Departamento);
         }
         return $DepartamentoSet->getTot();
@@ -197,7 +196,7 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         if (empty($aDatos)) {
             return null;
         }
-        return (new Departamento())->setAllAttributes($aDatos);
+        return Departamento::fromArray($aDatos);
     }
 
     public function getNewId()

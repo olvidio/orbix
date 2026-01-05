@@ -9,71 +9,32 @@ use src\profesores\domain\value_objects\FechaFin;
 use src\profesores\domain\value_objects\FechaInicio;
 use src\profesores\domain\value_objects\LugarName;
 use src\profesores\domain\value_objects\OrganizaName;
+use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
-/**
- * Clase que implementa la entidad d_congresos
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 29/11/2025
- */
+
 class ProfesorCongreso
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_item de ProfesorCongreso
-     *
-     * @var int
-     */
-    private int $iid_item;
-    /**
-     * Id_nom de ProfesorCongreso
-     *
-     * @var int
-     */
-    private int $iid_nom;
-    /**
-     * Congreso de ProfesorCongreso
-     *
-     * @var string
-     */
-    private string $scongreso;
-    /**
-     * Lugar de ProfesorCongreso
-     *
-     * @var string|null
-     */
-    private string|null $slugar = null;
-    /**
-     * F_ini de ProfesorCongreso
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $df_ini = null;
-    /**
-     * F_fin de ProfesorCongreso
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $df_fin = null;
-    /**
-     * Organiza de ProfesorCongreso
-     *
-     * @var string|null
-     */
-    private string|null $sorganiza = null;
-    /**
-     * Tipo de ProfesorCongreso
-     *
-     * @var int|null
-     */
-    private int|null $itipo = null;
+    private int $id_item;
+
+    private int $id_nom;
+
+    private string $congreso;
+
+    private string|null $lugar = null;
+
+    private DateTimeLocal|null $f_ini = null;
+
+    private DateTimeLocal|null $f_fin = null;
+
+    private string|null $organiza = null;
+
+    private int|null $tipo = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
     public static function getTiposCongreso(): array
@@ -88,235 +49,171 @@ class ProfesorCongreso
         return $tipos_congreso;
     }
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return ProfesorCongreso
-     */
-    public function setAllAttributes(array $aDatos): ProfesorCongreso
-    {
-        if (array_key_exists('id_item', $aDatos)) {
-            $this->setId_item($aDatos['id_item']);
-        }
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom($aDatos['id_nom']);
-        }
-        if (array_key_exists('congreso', $aDatos)) {
-            $this->setCongresoVo(CongresoName::fromNullable($aDatos['congreso']));
-        }
-        if (array_key_exists('lugar', $aDatos)) {
-            $this->setLugarVo(LugarName::fromNullable($aDatos['lugar']));
-        }
-        if (array_key_exists('f_ini', $aDatos)) {
-            $this->setFIniVo(FechaInicio::fromNullable($aDatos['f_ini']));
-        }
-        if (array_key_exists('f_fin', $aDatos)) {
-            $this->setFFinVo(FechaFin::fromNullable($aDatos['f_fin']));
-        }
-        if (array_key_exists('organiza', $aDatos)) {
-            $this->setOrganizaVo(OrganizaName::fromNullable($aDatos['organiza']));
-        }
-        if (array_key_exists('tipo', $aDatos)) {
-            $this->setTipo($aDatos['tipo']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_item
-     */
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
-    /**
-     *
-     * @param int $iid_item
-     */
-    public function setId_item(int $iid_item): void
+
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 
-    /**
-     *
-     * @return int $iid_nom
-     */
+
     public function getId_nom(): int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
-    /**
-     *
-     * @param int $iid_nom
-     */
-    public function setId_nom(int $iid_nom): void
+
+    public function setId_nom(int $id_nom): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
     /**
-     * @return string $scongreso
      * @deprecated Usar getCongresoVo()->value()
      */
     public function getCongreso(): string
     {
-        return $this->scongreso;
+        return $this->congreso;
     }
 
     /**
-     * @param string $scongreso
      * @deprecated Usar setCongresoVo(CongresoName $vo)
      */
-    public function setCongreso(string $scongreso): void
+    public function setCongreso(string $congreso): void
     {
-        $this->scongreso = $scongreso;
+        $this->congreso = $congreso;
     }
 
     public function getCongresoVo(): CongresoName
     {
-        return new CongresoName($this->scongreso);
+        return new CongresoName($this->congreso);
     }
 
     public function setCongresoVo(?CongresoName $congreso): void
     {
         if ($congreso !== null) {
-            $this->scongreso = $congreso->value();
+            $this->congreso = $congreso->value();
         }
     }
 
     /**
-     * @return string|null $slugar
      * @deprecated Usar getLugarVo()->value()
      */
     public function getLugar(): ?string
     {
-        return $this->slugar;
+        return $this->lugar;
     }
 
     /**
-     * @param string|null $slugar
      * @deprecated Usar setLugarVo(LugarName $vo)
      */
-    public function setLugar(?string $slugar = null): void
+    public function setLugar(?string $lugar = null): void
     {
-        $this->slugar = $slugar;
+        $this->lugar = $lugar;
     }
 
     public function getLugarVo(): ?LugarName
     {
-        return LugarName::fromNullable($this->slugar);
+        return LugarName::fromNullable($this->lugar);
     }
 
     public function setLugarVo(?LugarName $lugar): void
     {
-        $this->slugar = $lugar?->value();
+        $this->lugar = $lugar?->value();
     }
 
     /**
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_ini
      * @deprecated Usar getFIniVo()->value()
      */
     public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_ini ?? new NullDateTimeLocal;
+        return $this->f_ini ?? new NullDateTimeLocal;
     }
 
     /**
-     * @param DateTimeLocal|null $df_ini
      * @deprecated Usar setFIniVo(FechaInicio $vo)
      */
-    public function setF_ini(DateTimeLocal|null $df_ini = null): void
+    public function setF_ini(DateTimeLocal|null $f_ini = null): void
     {
-        $this->df_ini = $df_ini;
+        $this->f_ini = $f_ini;
     }
 
     public function getFIniVo(): ?FechaInicio
     {
-        return FechaInicio::fromNullable($this->df_ini);
+        return FechaInicio::fromNullable($this->f_ini);
     }
 
     public function setFIniVo(?FechaInicio $fini): void
     {
-        $this->df_ini = $fini?->value();
+        $this->f_ini = $fini?->value();
     }
 
     /**
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_fin
      * @deprecated Usar getFFinVo()->value()
      */
     public function getF_fin(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_fin ?? new NullDateTimeLocal;
+        return $this->f_fin ?? new NullDateTimeLocal;
     }
 
     /**
-     * @param DateTimeLocal|null $df_fin
      * @deprecated Usar setFFinVo(FechaFin $vo)
      */
-    public function setF_fin(DateTimeLocal|null $df_fin = null): void
+    public function setF_fin(DateTimeLocal|null $f_fin = null): void
     {
-        $this->df_fin = $df_fin;
+        $this->f_fin = $f_fin;
     }
 
     public function getFFinVo(): ?FechaFin
     {
-        return FechaFin::fromNullable($this->df_fin);
+        return FechaFin::fromNullable($this->f_fin);
     }
 
     public function setFFinVo(?FechaFin $ffin): void
     {
-        $this->df_fin = $ffin?->value();
+        $this->f_fin = $ffin?->value();
     }
 
     /**
-     * @return string|null $sorganiza
      * @deprecated Usar getOrganizaVo()->value()
      */
     public function getOrganiza(): ?string
     {
-        return $this->sorganiza;
+        return $this->organiza;
     }
 
     /**
-     * @param string|null $sorganiza
      * @deprecated Usar setOrganizaVo(OrganizaName $vo)
      */
-    public function setOrganiza(?string $sorganiza = null): void
+    public function setOrganiza(?string $organiza = null): void
     {
-        $this->sorganiza = $sorganiza;
+        $this->organiza = $organiza;
     }
 
     public function getOrganizaVo(): ?OrganizaName
     {
-        return OrganizaName::fromNullable($this->sorganiza);
+        return OrganizaName::fromNullable($this->organiza);
     }
 
     public function setOrganizaVo(?OrganizaName $organiza): void
     {
-        $this->sorganiza = $organiza?->value();
+        $this->organiza = $organiza?->value();
     }
 
-    /**
-     *
-     * @return int|null $itipo
-     */
+
     public function getTipo(): ?int
     {
-        return $this->itipo;
+        return $this->tipo;
     }
 
-    /**
-     *
-     * @param int|null $itipo
-     */
-    public function setTipo(?int $itipo = null): void
+
+    public function setTipo(?int $tipo = null): void
     {
-        $this->itipo = $itipo;
+        $this->tipo = $tipo;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -325,7 +222,7 @@ class ProfesorCongreso
         return 'id_item';
     }
 
-    function getDatosCampos(): array
+  public function getDatosCampos(): array
     {
         $oProfesorCongresoSet = new Set();
 
@@ -339,7 +236,7 @@ class ProfesorCongreso
         return $oProfesorCongresoSet->getTot();
     }
 
-    function getDatosId_nom(): DatosCampo
+    private function getDatosId_nom(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_nom');
@@ -351,7 +248,7 @@ class ProfesorCongreso
         return $oDatosCampo;
     }
 
-    function getDatosCongreso(): DatosCampo
+    private function getDatosCongreso(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('congreso');
@@ -363,7 +260,7 @@ class ProfesorCongreso
         return $oDatosCampo;
     }
 
-    function getDatosLugar(): DatosCampo
+    private function getDatosLugar(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('lugar');
@@ -375,7 +272,7 @@ class ProfesorCongreso
         return $oDatosCampo;
     }
 
-    function getDatosF_ini(): DatosCampo
+    private function getDatosF_ini(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_ini');
@@ -386,7 +283,7 @@ class ProfesorCongreso
         return $oDatosCampo;
     }
 
-    function getDatosF_fin(): DatosCampo
+    private function getDatosF_fin(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_fin');
@@ -397,7 +294,7 @@ class ProfesorCongreso
         return $oDatosCampo;
     }
 
-    function getDatosOrganiza(): DatosCampo
+    private function getDatosOrganiza(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('organiza');
@@ -409,7 +306,7 @@ class ProfesorCongreso
         return $oDatosCampo;
     }
 
-    function getDatosTipo(): DatosCampo
+    private function getDatosTipo(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo');

@@ -94,8 +94,7 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $MapId = new MapId();
-            $MapId->setAllAttributes($aDatos);
+            $MapId = MapId::fromArray($aDatos);
             $MapIdSet->add($MapId);
         }
         return $MapIdSet->getTot();
@@ -184,6 +183,6 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         if (empty($aDatos)) {
             return null;
         }
-        return (new MapId())->setAllAttributes($aDatos);
+        return MapId::fromArray($aDatos);
     }
 }

@@ -391,7 +391,7 @@ foreach ($oDbl->query($sql) as $row) {
         $altres_gets .= '
 	/**
 	 * Recupera les propietats de l\'atribut ' . $tip . $nomcamp . ' de ' . $clase . '
-	 * en una clase del tipus DatosCampo
+	 * en una clase del tipo DatosCampo
 	 *
 	 * @return DatosCampo
 	 */
@@ -780,7 +780,8 @@ $txt .= '
 	 * Retorna una col·lecció d\'objectes del tipus DatosCampo
 	 *
 	 */
-	function getDatosCampos() {
+	public function getDatosCampos(): array
+	{
 		$o' . $clase . 'Set = new Set();
 ';
 $txt .= $altres_gets_set;

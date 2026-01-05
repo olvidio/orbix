@@ -72,9 +72,9 @@ $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia === null) {
     $oPreferencia = new Preferencia();
     $oPreferencia->setId_usuario($id_usuario);
-    $oPreferencia->setTipo(new TipoPreferencia($tipo));
+    $oPreferencia->setTipoVo(new TipoPreferencia($tipo));
 }
-$oPreferencia->setPreferencia(new ValorPreferencia($json_busqueda));
+$oPreferencia->setPreferenciaVo(new ValorPreferencia($json_busqueda));
 if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
     echo _("hay un error, no se ha guardado la preferencia");
     echo "\n" . $PreferenciaRepository->getErrorTxt();

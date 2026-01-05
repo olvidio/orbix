@@ -112,8 +112,7 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ModuloInstalado = new ModuloInstalado();
-            $ModuloInstalado->setAllAttributes($aDatos);
+            $ModuloInstalado = ModuloInstalado::fromArray($aDatos);
             $ModuloInstaladoSet->add($ModuloInstalado);
         }
         return $ModuloInstaladoSet->getTot();
@@ -141,26 +140,26 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
         $bInsert = $this->isNew($id_mod);
 
         $aDatos = [];
-        $aDatos['status'] = $ModuloInstalado->isStatus();
+        $aDatos['active'] = $ModuloInstalado->isActive();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['status'])) {
-            $aDatos['status'] = 'true';
+        if (is_true($aDatos['active'])) {
+            $aDatos['active'] = 'true';
         } else {
-            $aDatos['status'] = 'false';
+            $aDatos['active'] = 'false';
         }
 
         if ($bInsert === false) {
             //UPDATE
             $update = "
-					status                   = :status";
+					active                   = :active";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_mod = $id_mod";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
             $aDatos['id_mod'] = $ModuloInstalado->getIdModVo()->value();
-            $campos = "(id_mod,status)";
-            $valores = "(:id_mod,:status)";
+            $campos = "(id_mod,active)";
+            $valores = "(:id_mod,:active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -205,6 +204,6 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
         if (empty($aDatos)) {
             return null;
         }
-        return (new ModuloInstalado())->setAllAttributes($aDatos);
+        return ModuloInstalado::fromArray($aDatos);
     }
 }

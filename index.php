@@ -10,12 +10,12 @@ if (isset($_REQUEST['logout']) && $_REQUEST['logout'] === 'si') {
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
         $arr_cookie_options = array(
-            'Expires' => time() - 42000,
-            'Path' => $params["path"],
-            'Domain' => $params["domain"],
-            'Secure' => $params["secure"],
-            'HttpOnly' => true,
-            'SameSite' => 'None' // None || Lax  || Strict
+                'Expires' => time() - 42000,
+                'Path' => $params["path"],
+                'Domain' => $params["domain"],
+                'Secure' => $params["secure"],
+                'HttpOnly' => true,
+                'SameSite' => 'None' // None || Lax  || Strict
         );
         setcookie(session_name(), '', $arr_cookie_options);
     }
@@ -38,6 +38,7 @@ require_once("apps/core/global_object.inc");
 
 use core\ConfigGlobal;
 use DI\ContainerBuilder;
+use src\layouts\LayoutFactory;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
@@ -46,7 +47,6 @@ use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Hash;
-use src\layouts\LayoutFactory;
 
 // MODIFICACIÓN: Solo construimos el contenedor si no existe previamente
 if (!isset($container)) {
@@ -82,8 +82,10 @@ $GrupMenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInter
 $pag_ini = '';
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'inicio');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferencia();
-    [$inicio, $mi_id_grupmenu] = explode('#', $preferencia);
+    $preferencia = $oPreferencia->getPreferenciaAsString();
+    if ($preferencia !== null) {
+        [$inicio, $mi_id_grupmenu] = explode('#', $preferencia);
+    }
 } else {
     $inicio = '';
     $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $id_role));
@@ -166,7 +168,7 @@ $id_grupmenu = (integer)(empty($Qid_grupmenu) ? $mi_id_grupmenu : $Qid_grupmenu)
 
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'estilo');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferencia();
+    $preferencia = $oPreferencia->getPreferenciaAsString();
     [$estilo_color, $tipo_menu] = explode('#', $preferencia);
 } else {
     // valores por defecto
@@ -177,7 +179,7 @@ if ($oPreferencia !== null) {
 // Layout variable to control menu display
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'layout');
 if ($oPreferencia !== null) {
-    $layout = $oPreferencia->getPreferencia();
+    $layout = $oPreferencia->getPreferenciaAsString();
 } else {
     // valores por defecto
     $layout = 'legacy';
@@ -210,9 +212,9 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
 
     // Add group menu item to the data array
     $grupMenuData[$iorden] = [
-        'id_gm' => $id_gm,
-        'grup_menu' => $grup_menu,
-        'clase' => $clase
+            'id_gm' => $id_gm,
+            'grup_menu' => $grup_menu,
+            'clase' => $clase
     ];
     $listaGrupMenu[$id_gm] = $grup_menu;
 }
@@ -234,13 +236,13 @@ if ($gm === 1) {
 
 // Prepare parameters for the layout
 $layoutParams = [
-    'id_grupmenu' => $id_grupmenu,
-    'oPermisoMenu' => $oPermisoMenu,
-    'oUsuario' => $oUsuario,
-    'gm' => $gm,
-    'grupMenuData' => $grupMenuData,
-    'listaGrupMenu' => $listaGrupMenu,
-    'tipo_menu' => $tipo_menu
+        'id_grupmenu' => $id_grupmenu,
+        'oPermisoMenu' => $oPermisoMenu,
+        'oUsuario' => $oUsuario,
+        'gm' => $gm,
+        'grupMenuData' => $grupMenuData,
+        'listaGrupMenu' => $listaGrupMenu,
+        'tipo_menu' => $tipo_menu
 ];
 
 // Generate HTML components using the layout
@@ -277,7 +279,7 @@ $portada_html = ob_get_clean();
 
     // Include CSS using the layout
     $layoutParams = [
-        'tipo_menu' => $tipo_menu
+            'tipo_menu' => $tipo_menu
     ];
     echo $oLayout->includeCss($layoutParams);
     ?>
@@ -374,42 +376,42 @@ $portada_html = ob_get_clean();
 <?php
 // Render the final HTML structure
 $renderParams = [
-    'gm' => $gm
+        'gm' => $gm
 ];
 echo $oLayout->renderHtml($htmlComponents, $renderParams);
-    ?>
-    <div id="contenido_sin_menus">
-        <div id="cargando">
-            <img class="mb-4" src="<?= ConfigGlobal::getWeb_icons() ?>/loading.gif" alt="cargando" width="32" height="32">
-            <?= _("Cargando...") ?>
-        </div>
-        <div id="iframe_export" style="display: none;">
-            <form id="frm_export" method="POST" action="libs/export/export.php">
-                <input type="hidden" id="frm_export_orientation" name="frm_export_orientation"/>
-                <input type="hidden" id="frm_export_ref" name="frm_export_ref"/>
-                <input type="hidden" id="frm_export_titulo" name="frm_export_titulo"/>
-                <input type="hidden" id="frm_export_modo" name="frm_export_modo"/>
-                <input type="hidden" id="frm_export_tipo" name="frm_export_tipo"/>
-                <input type="hidden" id="frm_export_ex" name="frm_export_ex"/>
-            </form>
-        </div>
-        <div id="left_slide" class="left-slide">
-            <span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
-        </div>
-        <div class="main" id="main" refe="<?= $pag_ini ?>" >
-            <?php echo $portada_html ?>
-            <script>
-                $(function () {
-                    fnjs_cambiar_base_link();
-                    fnjs_left_side_hide(); // hide it initially
-                });
-                /* Hay que ponerlo aquí, para asegurar que haya terminado de cargar todos los scripts. */
-                $(document).ready(function () {
-                    $.datepicker.setDefaults($.datepicker.regional["es"]); // Para que quede por defecto.
-                    $.datepicker.setDefaults($.datepicker.regional["<?= ConfigGlobal::mi_Idioma_short() ?>"]);
-                });
-            </script>
-        </div>
+?>
+<div id="contenido_sin_menus">
+    <div id="cargando">
+        <img class="mb-4" src="<?= ConfigGlobal::getWeb_icons() ?>/loading.gif" alt="cargando" width="32" height="32">
+        <?= _("Cargando...") ?>
     </div>
+    <div id="iframe_export" style="display: none;">
+        <form id="frm_export" method="POST" action="libs/export/export.php">
+            <input type="hidden" id="frm_export_orientation" name="frm_export_orientation"/>
+            <input type="hidden" id="frm_export_ref" name="frm_export_ref"/>
+            <input type="hidden" id="frm_export_titulo" name="frm_export_titulo"/>
+            <input type="hidden" id="frm_export_modo" name="frm_export_modo"/>
+            <input type="hidden" id="frm_export_tipo" name="frm_export_tipo"/>
+            <input type="hidden" id="frm_export_ex" name="frm_export_ex"/>
+        </form>
+    </div>
+    <div id="left_slide" class="left-slide">
+        <span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
+    </div>
+    <div class="main" id="main" refe="<?= $pag_ini ?>">
+        <?php echo $portada_html ?>
+        <script>
+            $(function () {
+                fnjs_cambiar_base_link();
+                fnjs_left_side_hide(); // hide it initially
+            });
+            /* Hay que ponerlo aquí, para asegurar que haya terminado de cargar todos los scripts. */
+            $(document).ready(function () {
+                $.datepicker.setDefaults($.datepicker.regional["es"]); // Para que quede por defecto.
+                $.datepicker.setDefaults($.datepicker.regional["<?= ConfigGlobal::mi_Idioma_short() ?>"]);
+            });
+        </script>
+    </div>
+</div>
 </body>
 </html>

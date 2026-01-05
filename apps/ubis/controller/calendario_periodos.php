@@ -21,7 +21,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Sólo quiero ver las casas comunes.
-$donde = "WHERE status='t' AND sf='t' AND sv='t'";
+$donde = "WHERE active='t' AND sf='t' AND sv='t'";
 $oForm = new web\CasasQue();
 $oForm->setPosiblesCasas($donde);
 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {

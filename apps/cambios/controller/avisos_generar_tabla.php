@@ -54,16 +54,16 @@ $path = "$document_root/$dir_web";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 use cambios\model\Avisos;
-use cambios\model\entity\GestorCambioUsuarioObjetoPref;
-use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividades;
-use procesos\model\entity\GestorTareaProceso;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
+use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
+use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -115,6 +115,9 @@ $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInter
 $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
 $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
 $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+$TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+$CambioUsuarioObjetoPrefRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
+$CambiosUsuarioPropiedadPrefRepository = $GLOBALS['container']->get(CambioUsuarioPropiedadPrefRepositoryInterface::class);
 while ($num_cambios) {
     $num_cambios_inicial = $num_cambios;
     foreach ($cNuevosCambios as $oCambio) {
@@ -147,7 +150,7 @@ while ($num_cambios) {
             if ($propiedad_cmb === 'id_nom') {
                 $id_nom = empty($valor_new_cmb) ? $valor_old_cmb : $valor_new_cmb;
                 $oPersonaSacd = $PersonaSacdRepository->findById($id_nom);
-                if (is_true($oPersonaSacd->getSacd())) {
+                if ($oPersonaSacd->isSacd()) {
                     $afecta = 'asistentesSacd';
                 }
             }
@@ -186,8 +189,7 @@ while ($num_cambios) {
         $aWhere['id_tipo_activ_txt'] = $id_tipo_activ;
         $aOperador['id_tipo_activ_txt'] = '~INV';
         $aWhere['_ordre'] = 'aviso_tipo,id_usuario,id_tipo_activ_txt DESC'; // intento que el primero sea el más definido.
-        $GesCambioUsuarioObjeto = new GestorCambioUsuarioObjetoPref();
-        $cCambiosUsuarioObjeto = $GesCambioUsuarioObjeto->getCambioUsuarioObjetosPrefs($aWhere, $aOperador);
+        $cCambiosUsuarioObjeto = $CambioUsuarioObjetoPrefRepository->getCambioUsuarioObjetosPrefs($aWhere, $aOperador);
         if (($cCambiosUsuarioObjeto === false) || empty($cCambiosUsuarioObjeto)) {
             $oAvisos->anotado();
             continue;
@@ -208,7 +210,7 @@ while ($num_cambios) {
                 $aviso_tipo_anterior = $aviso_tipo;
                 $id_usuario_anterior = $id_usuario;
             }
-            $id_pau = $oCambioUsuarioObjetoPref->getId_pau();
+            $id_pau = $oCambioUsuarioObjetoPref->getCsv_id_pau();
             $id_fase_ref = $oCambioUsuarioObjetoPref->getId_fase_ref();
             $aviso_off = $oCambioUsuarioObjetoPref->getAviso_off();
             $aviso_on = $oCambioUsuarioObjetoPref->getAviso_on();
@@ -235,8 +237,7 @@ while ($num_cambios) {
                     $cTiposActividad = $TipoDeActividadRepository->getTiposDeActividades(['id_tipo_activ' => $id_tipo_activ]);
                     if (!empty($cTiposActividad)) {
                         $id_tipo_proceso = $cTiposActividad[0]->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
-                        $gesTareaProceso = new GestorTareaProceso();
-                        $cTareasProceso = $gesTareaProceso->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase_ref]);
+                        $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase_ref]);
                         if (!empty($cTareasProceso)) {
                             $status_de_fase = $cTareasProceso[0]->getStatus();
                         }
@@ -302,8 +303,7 @@ while ($num_cambios) {
 
             if ($fase_correcta === 1) {
                 //mirar el valor de la propiedad
-                $GesCambiosUsuarioPropiedadPref = new GestorCambioUsuarioPropiedadPref();
-                $cListaPropiedades = $GesCambiosUsuarioPropiedadPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $id_item_usuario_objeto));
+                $cListaPropiedades = $CambiosUsuarioPropiedadPrefRepository->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $id_item_usuario_objeto));
                 foreach ($cListaPropiedades as $oCambioUsuarioPropiedadPref) {
                     $propiedad = $oCambioUsuarioPropiedadPref->getPropiedad();
                     $operador = $oCambioUsuarioPropiedadPref->getOperador();

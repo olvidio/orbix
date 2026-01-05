@@ -133,8 +133,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $Equipaje = new Equipaje();
-            $Equipaje->setAllAttributes($aDatos);
+            $Equipaje = Equipaje::fromArray($aDatos);
             $EquipajeSet->add($Equipaje);
         }
         return $EquipajeSet->getTot();
@@ -242,7 +241,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new Equipaje())->setAllAttributes($aDatos);
+        return Equipaje::fromArray($aDatos);
     }
 
     public function getNewId()

@@ -12,10 +12,10 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorActa;
-use notas\model\entity\GestorActaDl;
-use notas\model\entity\GestorActaEx;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\ActaDlRepositoryInterface;
+use src\notas\domain\contracts\ActaExRepositoryInterface;
+use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -83,23 +83,23 @@ if (!empty($Qacta)) {
                 $Qacta_dl .= empty($matches[3]) ? "$dl " . $matches[1] . '/' . date("y") : "$dl $Qacta";
             }
             $aWhere['acta'] = $Qacta_dl;
-            $GesActas = new GestorActa();
+            $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
         } else {
             $aWhere['acta'] = empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date("y") : "$mi_dele $Qacta";
-            $GesActas = new GestorActaDl();
+            $repoActas = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
         }
-        $cActas = $GesActas->getActas($aWhere, $aOperador);
+        $cActas = $repoActas->getActas($aWhere, $aOperador);
     } else {
         // busca en la tabla de la dl, sin mirar el nombre:
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $GesActas = new GestorActa();
-            $cActas = $GesActas->getActas($aWhere, $aOperador);
+            $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+            $cActas = $repoActas->getActas($aWhere, $aOperador);
         } else {
-            $GesActas = new GestorActaDl();
-            $cActas = $GesActas->getActas($aWhere, $aOperador);
+            $repoActas = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
+            $cActas = $repoActas->getActas($aWhere, $aOperador);
             if (empty($cActas)) {
-                $GesActas = new GestorActaEx();
-                $cActas = $GesActas->getActas($aWhere, $aOperador);
+                $repoActas = $GLOBALS['container']->get(ActaExRepositoryInterface::class);
+                $cActas = $repoActas->getActas($aWhere, $aOperador);
             }
         }
     }
@@ -133,11 +133,11 @@ if (!empty($Qacta)) {
         $Qacta = "^($sReg )";
         $aWhere['acta'] = $Qacta;
         $aOperador['acta'] = '~';
-        $GesActas = new GestorActa();
+        $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
     } else {
-        $GesActas = new GestorActaDl();
+        $repoActas = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
     }
-    $cActas = $GesActas->getActas($aWhere, $aOperador);
+    $cActas = $repoActas->getActas($aWhere, $aOperador);
 }
 
 $botones = 0; // para 'añadir acta'
@@ -175,7 +175,9 @@ foreach ($cActas as $oActa) {
     $acta = $oActa->getActa();
     $f_acta = $oActa->getF_acta()->getFromLocal();
     $id_asignatura = $oActa->getId_asignatura();
-    $hasPdf = ($oActa->hasEmptyPdf())? '': _("Sí");
+    // TODO
+    $pdf = $oActa->getPdf();
+    $hasPdf = ($pdf === null)? '': _("Sí");
 
     if (empty($a_asignaturas[$id_asignatura])) {
         $nombre_corto = sprintf(_("nombre corto no definido para id asignatura: %s"), $id_asignatura);

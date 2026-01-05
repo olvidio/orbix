@@ -1,8 +1,9 @@
 <?php
 
-use notas\model\entity\Acta;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use src\notas\domain\contracts\ActaRepositoryInterface;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -38,8 +39,8 @@ function upload()
             $fp = fopen($tmpFilePath, 'rb');
             $contenido_doc = fread($fp, filesize($tmpFilePath));
 
-            $oActa = new Acta($Qacta);
-            $oActa->DBCarregar();
+            $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+            $oActa = $ActaRepository->findById($Qacta);
             $oActa->setPdf($contenido_doc);
 
             if ($oActa->DBGuardar() === FALSE) {

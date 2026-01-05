@@ -3,9 +3,11 @@
 namespace core;
 
 use PDO;
+use src\shared\domain\traits\Hydratable;
 
 abstract class ClaseRepository
 {
+    use Hydratable;
     /**
      * oDbl de ClasePropiedades
      *

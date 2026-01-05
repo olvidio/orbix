@@ -1,139 +1,85 @@
 <?php
 
 namespace src\encargossacd\domain\entity;
-/**
- * Clase que implementa la entidad encargo_textos
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 23/12/2025
- */
+use src\encargossacd\domain\value_objects\IdiomaCode;
+use src\shared\domain\traits\Hydratable;
+
 class EncargoTexto
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_item de EncargoTexto
-     *
-     * @var int
-     */
-    private int $iid_item;
-    /**
-     * Idioma de EncargoTexto
-     *
-     * @var string
-     */
-    private string $sidioma;
-    /**
-     * Clave de EncargoTexto
-     *
-     * @var string
-     */
-    private string $sclave;
-    /**
-     * Texto de EncargoTexto
-     *
-     * @var string|null
-     */
-    private string|null $stexto = null;
+
+    private int $id_item;
+
+    private string $idioma;
+
+    private string $clave;
+
+    private string|null $texto = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return EncargoTexto
-     */
-    public function setAllAttributes(array $aDatos): EncargoTexto
-    {
-        if (array_key_exists('id_item', $aDatos)) {
-            $this->setId_item($aDatos['id_item']);
-        }
-        if (array_key_exists('idioma', $aDatos)) {
-            $this->setIdioma($aDatos['idioma']);
-        }
-        if (array_key_exists('clave', $aDatos)) {
-            $this->setClave($aDatos['clave']);
-        }
-        if (array_key_exists('texto', $aDatos)) {
-            $this->setTexto($aDatos['texto']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_item
-     */
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
-    /**
-     *
-     * @param int $iid_item
-     */
-    public function setId_item(int $iid_item): void
+
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 
+
     /**
-     *
-     * @return string $sidioma
+     * @deprecated usar getIdiomaVo()
      */
     public function getIdioma(): string
     {
-        return $this->sidioma;
+        return $this->idioma;
     }
 
     /**
-     *
-     * @param string $sidioma
+     * @deprecated usar setIdiomaVo()
      */
-    public function setIdioma(string $sidioma): void
+    public function setIdioma(string $idioma): void
     {
-        $this->sidioma = $sidioma;
+        $this->idioma = $idioma;
     }
 
-    /**
-     *
-     * @return string $sclave
-     */
+    public function getIdiomaVo(): IdiomaCode
+    {
+        return new IdiomaCode($this->idioma);
+    }
+
+    public function setIdiomaVo(IdiomaCode $vo): void
+    {
+        $this->idioma = $vo->value();
+    }
+
+
     public function getClave(): string
     {
-        return $this->sclave;
+        return $this->clave;
     }
 
-    /**
-     *
-     * @param string $sclave
-     */
-    public function setClave(string $sclave): void
+
+    public function setClave(string $clave): void
     {
-        $this->sclave = $sclave;
+        $this->clave = $clave;
     }
 
-    /**
-     *
-     * @return string|null $stexto
-     */
+
     public function getTexto(): ?string
     {
-        return $this->stexto;
+        return $this->texto;
     }
 
-    /**
-     *
-     * @param string|null $stexto
-     */
-    public function setTexto(?string $stexto = null): void
+
+    public function setTexto(?string $texto = null): void
     {
-        $this->stexto = $stexto;
+        $this->texto = $texto;
     }
 }

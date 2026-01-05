@@ -10,8 +10,7 @@ use core\DBConnection;
 use core\ValueObject\Uuid;
 use permisos\model\MyCrypt;
 use shared\domain\ColaMailId;
-use shared\domain\entity\ColaMail;
-use shared\domain\repositories\ColaMailRepository;
+use src\shared\domain\entity\ColaMail;
 use web\ContestarJson;
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');

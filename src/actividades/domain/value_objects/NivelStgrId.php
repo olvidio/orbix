@@ -4,6 +4,52 @@ namespace src\actividades\domain\value_objects;
 
 final class NivelStgrId
 {
+
+    public const B = 1; //Bienio
+    public const C1 = 2; //	Cuadrienio Año I
+    public const C2 = 3; //	Cuadrienio Año II-IV
+    public const R = 4; //	Repaso
+    public const CE = 5; //	centro estudios	ce
+    public const NT = 6; //	Baja temporal
+    public const X = 7; //	ap, pa, o ad
+    public const N = 9; //	sin estudios
+    public const E = 10; //	est. Ecles.
+    public const BC = 11; //	bienio-cuadrienio
+
+
+    public static function getArrayNivelStgrOn(): array
+    {
+        $a_status = [
+            self::B => _("Bienio"),
+            self::C1 => _("Cuadrienio Año I"),
+            self::C2 => _("Cuadrienio Año II-IV"),
+        ];
+
+        return $a_status;
+    }
+
+    public static function getArrayNivelStgr(): array
+    {
+        $a_status = [
+            self::B => _("Bienio"),
+            self::C1 => _("Cuadrienio Año I"),
+            self::C2 => _("Cuadrienio Año II-IV"),
+            self::R => _("Repaso"),
+            self::CE => _("centro estudios"),
+            self::NT => _("Baja temporal"),
+            self::X => _("ap, pa, o ad"),
+            self::N => _("sin estudios"),
+            self::E => _("est. Ecles."),
+            self::BC => _("bienio-cuadrienio"),
+
+        ];
+
+        return $a_status;
+    }
+
+    // ---------------------------------------------------------------------------
+
+
     private int $value;
 
     public function __construct(int $value)
@@ -14,8 +60,9 @@ final class NivelStgrId
 
     private function validate(int $value): void
     {
-        if ($value <= 0) {
-            throw new \InvalidArgumentException('NivelStgrId must be a positive integer');
+        $aNivelStgr = self::getArrayNivelStgr();
+        if (!array_key_exists($value, $aNivelStgr)) {
+            throw new \InvalidArgumentException('NivelStgrId solo puede ser uno de los valores de la tabla');
         }
     }
 
@@ -31,7 +78,9 @@ final class NivelStgrId
 
     public static function fromNullableInt(?int $value): ?self
     {
-        if ($value === null) { return null; }
+        if ($value === null) {
+            return null;
+        }
         return new self($value);
     }
 

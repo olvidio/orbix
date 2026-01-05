@@ -45,7 +45,7 @@ class InfoProfesorDirector extends DatosInfoRepo
             //$aOperador['congreso'] ='sin_acentos';
         }
         $oLista = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $oLista->getProfesorDirectores($aWhere, $aOperador);
+        $Coleccion = $oLista->getProfesoresDirectores($aWhere, $aOperador);
 
         return $Coleccion;
     }

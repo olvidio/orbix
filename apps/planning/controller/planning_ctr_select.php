@@ -2,9 +2,9 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaDl;
 use planning\domain\ActividadesDePersona;
 use planning\domain\Planning;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Periodo;
@@ -104,6 +104,7 @@ if (empty($Qsacd)) {
 }
 
 $msg_txt = '';
+$PersonaDlrepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 if (!empty($Qctr)) {
     $Qtodos_n = '';
     $Qtodos_agd = '';
@@ -115,14 +116,13 @@ if (!empty($Qctr)) {
     $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
     if (!empty($cCentros)) {
         $cPersonas = []; // para unir todas las personas de más de un centro.
-        $GesPersonas = new GestorPersonaDl();
         foreach ($cCentros as $oCentro) {
             $id_ubi = $oCentro->getId_ubi();
             $nombre_ubi = $oCentro->getNombre_ubi();
             $cabecera_title = ucfirst(sprintf(_("personas de: %s"), $nombre_ubi));
             $aWhereP['id_ctr'] = $id_ubi;
             $aWhereP['_ordre'] = 'apellido1';
-            $cPersonas2 = $GesPersonas->getPersonas($aWhereP);
+            $cPersonas2 = $PersonaDlrepository->getPersonas($aWhereP);
             if (is_array($cPersonas2) && count($cPersonas2) >= 1) {
                 if (is_array($cPersonas)) {
                     $cPersonas = array_merge($cPersonas, $cPersonas2);
@@ -148,8 +148,7 @@ if (!empty($Qctr)) {
     if (!empty($Qtodos_agd)) $aWhereP['id_tabla'] = 'a';
     if (!empty($Qtodos_s)) $aWhereP['id_tabla'] = 's';
     $aWhereP['_ordre'] = 'id_ctr, apellido1';
-    $GesPersonas = new GestorPersonaDl();
-    $cPersonas = $GesPersonas->getPersonas($aWhereP);
+    $cPersonas = $PersonaDlrepository->getPersonas($aWhereP);
 }
 
 $aGoBack = [

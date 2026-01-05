@@ -1,7 +1,6 @@
 <?php
 
 use actividades\model\ActividadTipo;
-use actividadtarifas\model\entity\GestorTipoTarifa;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;

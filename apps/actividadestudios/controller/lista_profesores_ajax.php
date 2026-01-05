@@ -1,7 +1,9 @@
 <?php
 
-use profesores\model\entity\GestorProfesorActividad;
-use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
+use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\profesores\domain\services\ProfesorAsignaturaService;
+use src\profesores\domain\services\ProfesorStgrService;
+use src\profesores\domain\ProfesorActividad;
 use web\Desplegable;
 
 /*
@@ -22,8 +24,8 @@ $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 switch ($Qsalida) {
     case "asignatura":
         $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
-        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-        $aOpciones = $ProfesorRepository->getArrayTodosProfesoresAsignatura($Qid_asignatura);
+        $ProfesorAsignaturaService = $GLOBALS['container']->get(ProfesorAsignaturaService::class);
+        $aOpciones = $ProfesorAsignaturaService->getArrayTodosProfesoresAsignatura(new AsignaturaId($Qid_asignatura));
         $oDesplProfesores = new Desplegable();
         $oDesplProfesores->setOpciones($aOpciones);
 
@@ -35,9 +37,10 @@ switch ($Qsalida) {
         break;
     case "dl":
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
-        $GesProfesores = new GestorProfesorActividad();
-        $oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($Qid_activ));
-
+        $ProfesorActividad = new ProfesorActividad();
+        $aOpciones = $ProfesorActividad->getArrayProfesoresActividad(array($Qid_activ));
+        $oDesplProfesores = new Desplegable();
+        $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setNombre('id_profesor');
         $oDesplProfesores->setBlanco('t');
         $oDesplProfesores->setOpcion_sel(-1);
@@ -45,8 +48,8 @@ switch ($Qsalida) {
         echo $oDesplProfesores->desplegable();
         break;
     case "todos":
-        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-        $aOpciones = $ProfesorRepository->getArrayProfesoresPub();
+        $ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
+        $aOpciones = $ProfesorStgrService->getArrayProfesoresPub();
 
         $oDesplProfesores = new Desplegable('', $aOpciones, '', true);
 

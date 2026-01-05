@@ -104,8 +104,7 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
             // para las fechas del postgres (texto iso)
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado']))->fromPg();
             $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
-            $Certificado = new CertificadoRecibido();
-            $Certificado->setAllAttributes($aDatos);
+            $Certificado =  CertificadoRecibido::fromArray($aDatos);
             $CertificadoSet->add($Certificado);
         }
         return $CertificadoSet->getTot();
@@ -228,7 +227,7 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
         if (empty($aDatos)) {
             return null;
         }
-        return (new CertificadoRecibido())->setAllAttributes($aDatos);
+        return CertificadoRecibido::fromArray($aDatos);
     }
 
     public function getNewId_item()

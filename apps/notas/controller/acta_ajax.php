@@ -1,7 +1,7 @@
 <?php
 
-use notas\model\entity\GestorActaTribunal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 
 /**
  * Esta página sirve para dar una lista de examinadores para los inputs autocomplete
@@ -28,8 +28,8 @@ $sQuery = (string)filter_input(INPUT_POST, 'search');
 
 switch ($Qque) {
     case 'examinadores':
-        $GesActaTribunalDl = new GestorActaTribunal();
-        $json = $GesActaTribunalDl->getJsonExaminadores($sQuery);
+        $ActaTribunalDlRepository = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
+        $json = $ActaTribunalDlRepository->getJsonExaminadores($sQuery);
         break;
     case 'asignaturas':
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);

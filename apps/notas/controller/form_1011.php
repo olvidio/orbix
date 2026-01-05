@@ -24,12 +24,12 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorPersonaNotaDB;
-use notas\model\entity\PersonaNotaDB;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\notas\domain\entity\PersonaNotaDB;
 use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Desplegable;
@@ -84,6 +84,7 @@ foreach ($cNotas as $id_situacion) {
 }
 
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
 
 if (!empty($Qid_asignatura_real)) { //caso de modificar
     $mod = "editar";
@@ -96,8 +97,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $aWhere['_ordre'] = 'tipo_acta DESC';
     $aWhere['id_nom'] = $Qid_pau;
     $aWhere['id_asignatura'] = $Qid_asignatura_real;
-    $GesPersonaNotas = new GestorPersonaNotaDB();
-    $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere);
+    $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
     if ($cPersonaNotas === false) {
         exit("Error en la consulta a la base de datos en: " . __FILE__ . ": line " . __LINE__);
     }
@@ -110,7 +110,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $oF_acta = $oPersonaNota->getF_acta();
     $f_acta = $oF_acta->getFromLocal();
     $f_acta_iso = $oF_acta->format('Y-m-d');
-    $preceptor = $oPersonaNota->getPreceptor();
+    $preceptor = $oPersonaNota->isPreceptor();
     $id_preceptor = $oPersonaNota->getId_preceptor();
     $detalle = $oPersonaNota->getDetalle();
     $epoca = $oPersonaNota->getEpoca();
@@ -171,7 +171,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     // todas las asignaturas
     $aWhere = [];
     $aOperador = [];
-    $aWhere['status'] = 't';
+    $aWhere['active'] = 't';
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
@@ -179,7 +179,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     // todas las opcionales
     $aWhere = [];
     $aOperador = [];
-    $aWhere['status'] = 't';
+    $aWhere['active'] = 't';
     $aWhere['id_nivel'] = '3000,5000';
     $aOperador['id_nivel'] = 'BETWEEN';
     $aWhere['_ordre'] = 'nombre_corto';
@@ -195,8 +195,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
-    $GesPersonaNotas = new GestorPersonaNotaDB();
-    $cAsignaturasSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
+    $cAsignaturasSuperadas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
     $aSuperadas = [];
     foreach ($cAsignaturasSuperadas as $oAsignatura) {
         $id_nivel = $oAsignatura->getId_nivel();
@@ -237,12 +236,12 @@ if (!empty($preceptor)) {
 $oDesplNotas->setOpcion_sel($id_situacion);
 
 if (!empty($tipo_acta)) {
-    if ($tipo_acta == PersonaNotaDB::FORMATO_ACTA) {
+    if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
         $chk_acta = "checked";
     } else {
         $chk_acta = "";
     }
-    if ($tipo_acta == PersonaNotaDB::FORMATO_CERTIFICADO) {
+    if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO) {
         $chk_certificado = "checked";
     } else {
         $chk_certificado = "";
@@ -253,17 +252,17 @@ if (!empty($tipo_acta)) {
 }
 
 if (!empty($epoca)) {
-    if ($epoca == PersonaNotaDB::EPOCA_CA) {
+    if ($epoca === PersonaNotaDB::EPOCA_CA) {
         $chk_epoca_ca = "checked";
     } else {
         $chk_epoca_ca = "";
     }
-    if ($epoca == PersonaNotaDB::EPOCA_INVIERNO) {
+    if ($epoca === PersonaNotaDB::EPOCA_INVIERNO) {
         $chk_epoca_inv = "checked";
     } else {
         $chk_epoca_inv = "";
     }
-    if ($epoca == PersonaNotaDB::EPOCA_OTRO) {
+    if ($epoca === PersonaNotaDB::EPOCA_OTRO) {
         $chk_epoca_otro = "checked";
     } else {
         $chk_epoca_otro = "";
@@ -288,7 +287,7 @@ if (!empty($id_activ)) {
 // la condicion es que tengan id_sector=1
 $aWhere = [];
 $aOperador = [];
-$aWhere['status'] = 't';
+$aWhere['active'] = 't';
 $aWhere['id_sector'] = 1;
 $aWhere['id_nivel'] = 3000;
 $aOperador['id_nivel'] = '<';

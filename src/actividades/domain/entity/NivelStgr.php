@@ -5,6 +5,7 @@ namespace src\actividades\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\actividades\domain\value_objects\{NivelStgrId, NivelStgrDesc, NivelStgrBreve, NivelStgrOrden};
+use src\shared\domain\traits\Hydratable;
 
 /**
  * Clase que implementa la entidad xa_nivel_stgr
@@ -17,81 +18,35 @@ use src\actividades\domain\value_objects\{NivelStgrId, NivelStgrDesc, NivelStgrB
  */
 class NivelStgr
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /**
      * Nivel_stgr de NivelStgr
      */
-    private NivelStgrId $inivel_stgr;
+    private NivelStgrId $nivel_stgr;
     /**
      * Desc_nivel de NivelStgr
      */
-    private NivelStgrDesc $sdesc_nivel;
+    private NivelStgrDesc $desc_nivel;
     /**
      * Desc_breve de NivelStgr
      */
-    private ?NivelStgrBreve $sdesc_breve = null;
+    private ?NivelStgrBreve $desc_breve = null;
     /**
      * Orden de NivelStgr
      */
-    private ?NivelStgrOrden $iorden = null;
+    private ?NivelStgrOrden $orden = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return NivelStgr
-     */
-    public function setAllAttributes(array $aDatos): NivelStgr
-    {
-        if (array_key_exists('nivel_stgr', $aDatos)) {
-            $val = $aDatos['nivel_stgr'];
-            if ($val instanceof NivelStgrId) {
-                $this->setId($val);
-            } else {
-                $this->setNivel_stgr((int)$val);
-            }
-        }
-        if (array_key_exists('desc_nivel', $aDatos)) {
-            $val = $aDatos['desc_nivel'];
-            if ($val instanceof NivelStgrDesc) {
-                $this->setDescNivelVO($val);
-            } else {
-                $this->setDesc_nivel((string)$val);
-            }
-        }
-        if (array_key_exists('desc_breve', $aDatos)) {
-            $val = $aDatos['desc_breve'];
-            if ($val instanceof NivelStgrBreve || $val === null) {
-                $this->setDescBreveVO($val);
-            } else {
-                $this->setDesc_breve($val === '' ? null : (string)$val);
-            }
-        }
-        if (array_key_exists('orden', $aDatos)) {
-            $val = $aDatos['orden'];
-            if ($val instanceof NivelStgrOrden || $val === null) {
-                $this->setOrdenVO($val);
-            } else {
-                $this->setOrden($val === '' ? null : ($val === null ? null : (int)$val));
-            }
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $inivel_stgr
-     */
     /**
      * @deprecated usar getId()
      */
     public function getNivel_stgr(): int
     {
-        return $this->inivel_stgr->value();
+        return $this->nivel_stgr->value();
     }
 
     /**
@@ -103,18 +58,18 @@ class NivelStgr
      */
     public function setNivel_stgr(int $inivel_stgr): void
     {
-        $this->inivel_stgr = new NivelStgrId($inivel_stgr);
+        $this->nivel_stgr = new NivelStgrId($inivel_stgr);
     }
 
     // Nuevos métodos con Value Objects
     public function getId(): NivelStgrId
     {
-        return $this->inivel_stgr;
+        return $this->nivel_stgr;
     }
 
     public function setId(NivelStgrId $id): void
     {
-        $this->inivel_stgr = $id;
+        $this->nivel_stgr = $id;
     }
 
     /**
@@ -122,11 +77,11 @@ class NivelStgr
      * @return string $sdesc_nivel
      */
     /**
-     * @deprecated usar getDescNivelVO()
+     * @deprecated usar getDescNivelVo()
      */
     public function getDesc_nivel(): string
     {
-        return $this->sdesc_nivel->value();
+        return $this->desc_nivel->value();
     }
 
     /**
@@ -134,21 +89,21 @@ class NivelStgr
      * @param string $sdesc_nivel
      */
     /**
-     * @deprecated usar setDescNivelVO(NivelStgrDesc $desc)
+     * @deprecated usar setDescNivelVo(NivelStgrDesc $desc)
      */
     public function setDesc_nivel(string $sdesc_nivel): void
     {
-        $this->sdesc_nivel = new NivelStgrDesc($sdesc_nivel);
+        $this->desc_nivel = new NivelStgrDesc($sdesc_nivel);
     }
 
-    public function getDescNivelVO(): NivelStgrDesc
+    public function getDescNivelVo(): NivelStgrDesc
     {
-        return $this->sdesc_nivel;
+        return $this->desc_nivel;
     }
 
-    public function setDescNivelVO(NivelStgrDesc $desc): void
+    public function setDescNivelVo(NivelStgrDesc $desc): void
     {
-        $this->sdesc_nivel = $desc;
+        $this->desc_nivel = $desc;
     }
 
     /**
@@ -156,11 +111,11 @@ class NivelStgr
      * @return string|null $sdesc_breve
      */
     /**
-     * @deprecated usar getDescBreveVO()
+     * @deprecated usar getDescBreveVo()
      */
     public function getDesc_breve(): ?string
     {
-        return $this->sdesc_breve?->value();
+        return $this->desc_breve?->value();
     }
 
     /**
@@ -168,21 +123,21 @@ class NivelStgr
      * @param string|null $sdesc_breve
      */
     /**
-     * @deprecated usar setDescBreveVO(?NivelStgrBreve $breve)
+     * @deprecated usar setDescBreveVo(?NivelStgrBreve $breve)
      */
     public function setDesc_breve(?string $sdesc_breve = null): void
     {
-        $this->sdesc_breve = NivelStgrBreve::fromNullableString($sdesc_breve);
+        $this->desc_breve = NivelStgrBreve::fromNullableString($sdesc_breve);
     }
 
-    public function getDescBreveVO(): ?NivelStgrBreve
+    public function getDescBreveVo(): ?NivelStgrBreve
     {
-        return $this->sdesc_breve;
+        return $this->desc_breve;
     }
 
-    public function setDescBreveVO(?NivelStgrBreve $breve = null): void
+    public function setDescBreveVo(?NivelStgrBreve $breve = null): void
     {
-        $this->sdesc_breve = $breve;
+        $this->desc_breve = $breve;
     }
 
     /**
@@ -190,11 +145,11 @@ class NivelStgr
      * @return int|null $iorden
      */
     /**
-     * @deprecated usar getOrdenVO()
+     * @deprecated usar getOrdenVo()
      */
     public function getOrden(): ?int
     {
-        return $this->iorden?->value();
+        return $this->orden?->value();
     }
 
     /**
@@ -202,21 +157,21 @@ class NivelStgr
      * @param int|null $iorden
      */
     /**
-     * @deprecated usar setOrdenVO(?NivelStgrOrden $orden)
+     * @deprecated usar setOrdenVo(?NivelStgrOrden $orden)
      */
     public function setOrden(?int $iorden = null): void
     {
-        $this->iorden = NivelStgrOrden::fromNullable($iorden);
+        $this->orden = NivelStgrOrden::fromNullable($iorden);
     }
 
-    public function getOrdenVO(): ?NivelStgrOrden
+    public function getOrdenVo(): ?NivelStgrOrden
     {
-        return $this->iorden;
+        return $this->orden;
     }
 
-    public function setOrdenVO(?NivelStgrOrden $orden = null): void
+    public function setOrdenVo(?NivelStgrOrden $orden = null): void
     {
-        $this->iorden = $orden;
+        $this->orden = $orden;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -225,7 +180,7 @@ class NivelStgr
         return 'nivel_stgr';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oNivelStgrSet = new Set();
 
@@ -236,12 +191,12 @@ class NivelStgr
     }
 
     /**
-     * Recupera les propietats de l'atribut sdesc_nivel de NivelStgr
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo desc_nivel de NivelStgr
+     * en una clase del tipo DatosCampo
      *
      * @return object DatosCampo
      */
-    function getDatosDesc_nivel()
+    private function getDatosDesc_nivel(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('desc_nivel');
@@ -254,12 +209,12 @@ class NivelStgr
     }
 
     /**
-     * Recupera les propietats de l'atribut sdesc_breve de NivelStgr
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo desc_breve de NivelStgr
+     * en una clase del tipo DatosCampo
      *
      * @return object DatosCampo
      */
-    function getDatosDesc_breve()
+    private function getDatosDesc_breve(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('desc_breve');
@@ -272,12 +227,12 @@ class NivelStgr
     }
 
     /**
-     * Recupera les propietats de l'atribut iorden de NivelStgr
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo orden de NivelStgr
+     * en una clase del tipo DatosCampo
      *
      * @return object DatosCampo
      */
-    function getDatosOrden()
+    private function getDatosOrden(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('orden');

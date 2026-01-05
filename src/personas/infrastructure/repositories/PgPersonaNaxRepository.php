@@ -39,7 +39,7 @@ class PgPersonaNaxRepository extends PgPersonaDlRepository implements PersonaNax
         if (empty($aDatos)) {
             return null;
         }
-        return (new PersonaNax())->setAllAttributes($aDatos);
+        return PersonaNax::fromArray($aDatos);
     }
 
     public function getNewId()

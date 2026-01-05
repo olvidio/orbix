@@ -96,8 +96,7 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['f_publicacion'] = (new ConverterDate('date', $aDatos['f_publicacion']))->fromPg();
-            $Publicacion = new ProfesorPublicacion();
-            $Publicacion->setAllAttributes($aDatos);
+            $Publicacion = ProfesorPublicacion::fromArray($aDatos);
             $PublicacionSet->add($Publicacion);
         }
         return $PublicacionSet->getTot();
@@ -214,7 +213,7 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorPublicacion())->setAllAttributes($aDatos);
+        return ProfesorPublicacion::fromArray($aDatos);
     }
 
     public function getNewId()

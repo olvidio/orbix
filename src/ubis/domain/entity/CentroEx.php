@@ -2,6 +2,7 @@
 
 namespace src\ubis\domain\entity;
 
+use src\shared\domain\traits\Hydratable;
 use src\ubis\application\services\UbiContactsTrait;
 use src\ubis\domain\value_objects\{CentroId,
     DelegacionCode,
@@ -16,17 +17,9 @@ use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
 
-/**
- * Clase que implementa la entidad u_centros_ex
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 20/11/2025
- */
 class CentroEx
 {
+    use Hydratable;
     // Esto inyecta los métodos getDirecciones, emailPrincipalOPrimero y getTeleco aquí
     use UbiContactsTrait;
 
@@ -34,80 +27,36 @@ class CentroEx
     protected $repoDireccion;
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Tipo_ubi de CentroEx
-     *
-     * @var string|null
-     */
-    private string|null $stipo_ubi = null;
-    /**
-     * Id_ubi de CentroEx (VO)
-     */
-    private CentroId $iid_ubi;
-    /**
-     * Nombre_ubi de CentroEx (VO)
-     */
-    private UbiNombreText $snombre_ubi;
-    /**
-     * Dl de CentroEx (VO)
-     */
-    private ?DelegacionCode $sdl = null;
-    /**
-     * Pais de CentroEx (VO)
-     */
-    private ?PaisName $spais = null;
-    /**
-     * Region de CentroEx (VO)
-     */
-    private ?RegionNameText $sregion = null;
-    /**
-     * Status de CentroEx
-     *
-     * @var bool
-     */
-    private bool $bstatus;
-    /**
-     * F_status de CentroEx
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $df_status = null;
-    /**
-     * Sv de CentroEx
-     *
-     * @var bool|null
-     */
-    private bool|null $bsv = null;
-    /**
-     * Sf de CentroEx
-     *
-     * @var bool|null
-     */
-    private bool|null $bsf = null;
-    /**
-     * Tipo_ctr de CentroEx (VO código)
-     */
-    private ?TipoCentroCode $stipo_ctr = null;
-    /**
-     * Tipo_labor de CentroEx (VO id)
-     */
-    private ?TipoLaborId $itipo_labor = null;
-    /**
-     * Cdc de CentroEx
-     *
-     * @var bool|null
-     */
-    private bool|null $bcdc = null;
-    /**
-     * Id_ctr_padre de CentroEx (VO)
-     */
-    private ?CentroId $iid_ctr_padre = null;
-    /**
-     * Id_auto de CentroEx
-     *
-     * @var int
-     */
-    private int $iid_auto;
+
+    private string|null $tipo_ubi = null;
+
+    private CentroId $id_ubi;
+
+    private UbiNombreText $nombre_ubi;
+
+    private ?DelegacionCode $dl = null;
+
+    private ?PaisName $pais = null;
+
+    private ?RegionNameText $region = null;
+
+    private bool $active;
+
+    private DateTimeLocal|null $f_active = null;
+
+    private bool|null $sv = null;
+
+    private bool|null $sf = null;
+
+    private ?TipoCentroCode $tipo_ctr = null;
+
+    private ?TipoLaborId $tipo_labor = null;
+
+    private bool|null $cdc = null;
+
+    private ?CentroId $id_ctr_padre = null;
+
+    private int $id_auto;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -123,531 +72,318 @@ class CentroEx
         $this->repoDireccion = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
     }
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return CentroEx
-     */
-    public function setAllAttributes(array $aDatos): CentroEx
-    {
-        if (array_key_exists('tipo_ubi', $aDatos)) {
-            $this->setTipo_ubi($aDatos['tipo_ubi']);
-        }
-        if (array_key_exists('id_ubi', $aDatos)) {
-            $valor = $aDatos['id_ubi'];
-            if ($valor instanceof CentroId) {
-                $this->setIdUbiVo($valor);
-            } else {
-                $this->setId_ubi((int)$valor);
-            }
-        }
-        if (array_key_exists('nombre_ubi', $aDatos)) {
-            $valor = $aDatos['nombre_ubi'];
-            if ($valor instanceof UbiNombreText) {
-                $this->setNombreUbiVo($valor);
-            } else {
-                $this->setNombre_ubi((string)$valor);
-            }
-        }
-        if (array_key_exists('dl', $aDatos)) {
-            $valor = $aDatos['dl'] ?? null;
-            if ($valor instanceof DelegacionCode || $valor === null) {
-                $this->setDlVo($valor);
-            } else {
-                $this->setDl($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('pais', $aDatos)) {
-            $valor = $aDatos['pais'] ?? null;
-            if ($valor instanceof PaisName || $valor === null) {
-                $this->setPaisVo($valor);
-            } else {
-                $this->setPais($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('region', $aDatos)) {
-            $valor = $aDatos['region'] ?? null;
-            if ($valor instanceof RegionNameText || $valor === null) {
-                $this->setRegionVo($valor);
-            } else {
-                $this->setRegion($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('status', $aDatos)) {
-            $this->setStatus(is_true($aDatos['status']));
-        }
-        if (array_key_exists('f_status', $aDatos)) {
-            $this->setF_status($aDatos['f_status']);
-        }
-        if (array_key_exists('sv', $aDatos)) {
-            $this->setSv(is_true($aDatos['sv']));
-        }
-        if (array_key_exists('sf', $aDatos)) {
-            $this->setSf(is_true($aDatos['sf']));
-        }
-        if (array_key_exists('tipo_ctr', $aDatos)) {
-            $valor = $aDatos['tipo_ctr'] ?? null;
-            if ($valor instanceof TipoCentroCode || $valor === null) {
-                $this->setTipoCtrVo($valor);
-            } else {
-                $this->setTipo_ctr($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('tipo_labor', $aDatos)) {
-            $valor = $aDatos['tipo_labor'] ?? null;
-            if ($valor instanceof TipoLaborId || $valor === null) {
-                $this->setTipoLaborVo($valor);
-            } else {
-                $this->setTipo_labor(isset($valor) && $valor !== '' ? (int)$valor : null);
-            }
-        }
-        if (array_key_exists('cdc', $aDatos)) {
-            $this->setCdc(is_true($aDatos['cdc']));
-        }
-        if (array_key_exists('id_ctr_padre', $aDatos)) {
-            $valor = $aDatos['id_ctr_padre'] ?? null;
-            if ($valor instanceof CentroId || $valor === null) {
-                $this->setIdCtrPadreVo($valor);
-            } else {
-                $this->setId_ctr_padre(isset($valor) && $valor !== '' ? (int)$valor : null);
-            }
-        }
-        if (array_key_exists('id_auto', $aDatos)) {
-            $this->setId_auto($aDatos['id_auto']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return string|null $stipo_ubi
-     */
     public function getTipo_ubi(): ?string
     {
-        return $this->stipo_ubi;
+        return $this->tipo_ubi;
     }
 
-    /**
-     *
-     * @param string|null $stipo_ubi
-     */
-    public function setTipo_ubi(?string $stipo_ubi = null): void
+
+    public function setTipo_ubi(?string $tipo_ubi = null): void
     {
-        $this->stipo_ubi = $stipo_ubi;
+        $this->tipo_ubi = $tipo_ubi;
     }
 
-    /**
-     *
-     * @return int $iid_ubi
-     */
+
     /**
      * @deprecated Usar `getIdUbiVo(): CentroId` en su lugar.
      */
     public function getId_ubi(): int
     {
-        return $this->iid_ubi->value();
+        return $this->id_ubi->value();
     }
 
-    /**
-     *
-     * @param int $iid_ubi
-     */
+
     /**
      * @deprecated Usar `setIdUbiVo(CentroId $id): void` en su lugar.
      */
-    public function setId_ubi(int $iid_ubi): void
+    public function setId_ubi(int $id_ubi): void
     {
-        $this->iid_ubi = new CentroId($iid_ubi);
+        $this->id_ubi = new CentroId($id_ubi);
     }
 
     // -------- API VO (nueva) ---------
     public function getIdUbiVo(): CentroId
     {
-        return $this->iid_ubi;
+        return $this->id_ubi;
     }
 
     public function setIdUbiVo(CentroId $id): void
     {
-        $this->iid_ubi = $id;
+        $this->id_ubi = $id;
     }
 
-    /**
-     *
-     * @return string $snombre_ubi
-     */
+
     /**
      * @deprecated Usar `getNombreUbiVo(): UbiNombreText` en su lugar.
      */
     public function getNombre_ubi(): string
     {
-        return $this->snombre_ubi->value();
+        return $this->nombre_ubi->value();
     }
 
-    /**
-     *
-     * @param string $snombre_ubi
-     */
+
     /**
      * @deprecated Usar `setNombreUbiVo(UbiNombreText $texto): void` en su lugar.
      */
-    public function setNombre_ubi(string $snombre_ubi): void
+    public function setNombre_ubi(string $nombre_ubi): void
     {
-        $this->snombre_ubi = new UbiNombreText($snombre_ubi);
+        $this->nombre_ubi = new UbiNombreText($nombre_ubi);
     }
 
     public function getNombreUbiVo(): UbiNombreText
     {
-        return $this->snombre_ubi;
+        return $this->nombre_ubi;
     }
 
     public function setNombreUbiVo(UbiNombreText $texto): void
     {
-        $this->snombre_ubi = $texto;
+        $this->nombre_ubi = $texto;
     }
 
-    /**
-     *
-     * @return string|null $sdl
-     */
+
     /**
      * @deprecated Usar `getDlVo(): ?DelegacionCode` en su lugar.
      */
     public function getDl(): ?string
     {
-        return $this->sdl?->value();
+        return $this->dl?->value();
     }
 
-    /**
-     *
-     * @param string|null $sdl
-     */
+
     /**
      * @deprecated Usar `setDlVo(?DelegacionCode $codigo = null): void` en su lugar.
      */
-    public function setDl(?string $sdl = null): void
+    public function setDl(?string $dl = null): void
     {
-        $this->sdl = DelegacionCode::fromString($sdl);
+        $this->dl = DelegacionCode::fromString($dl);
     }
 
     public function getDlVo(): ?DelegacionCode
     {
-        return $this->sdl;
+        return $this->dl;
     }
 
     public function setDlVo(?DelegacionCode $codigo = null): void
     {
-        $this->sdl = $codigo;
+        $this->dl = $codigo;
     }
 
-    /**
-     *
-     * @return string|null $spais
-     */
+
     /**
      * @deprecated Usar `getPaisVo(): ?PaisName` en su lugar.
      */
     public function getPais(): ?string
     {
-        return $this->spais?->value();
+        return $this->pais?->value();
     }
 
-    /**
-     *
-     * @param string|null $spais
-     */
+
     /**
      * @deprecated Usar `setPaisVo(?PaisName $nombre = null): void` en su lugar.
      */
-    public function setPais(?string $spais = null): void
+    public function setPais(?string $pais = null): void
     {
-        $this->spais = PaisName::fromNullableString($spais);
+        $this->pais = PaisName::fromNullableString($pais);
     }
 
     public function getPaisVo(): ?PaisName
     {
-        return $this->spais;
+        return $this->pais;
     }
 
     public function setPaisVo(?PaisName $nombre = null): void
     {
-        $this->spais = $nombre;
+        $this->pais = $nombre;
     }
 
-    /**
-     *
-     * @return string|null $sregion
-     */
+
     /**
      * @deprecated Usar `getRegionVo(): ?RegionNameText` en su lugar.
      */
     public function getRegion(): ?string
     {
-        return $this->sregion?->value();
+        return $this->region?->value();
     }
 
-    /**
-     *
-     * @param string|null $sregion
-     */
+
     /**
      * @deprecated Usar `setRegionVo(?RegionNameText $texto = null): void` en su lugar.
      */
-    public function setRegion(?string $sregion = null): void
+    public function setRegion(?string $region = null): void
     {
-        $this->sregion = RegionNameText::fromNullableString($sregion);
+        $this->region = RegionNameText::fromNullableString($region);
     }
 
     public function getRegionVo(): ?RegionNameText
     {
-        return $this->sregion;
+        return $this->region;
     }
 
     public function setRegionVo(?RegionNameText $texto = null): void
     {
-        $this->sregion = $texto;
+        $this->region = $texto;
     }
 
-    /**
-     *
-     * @return bool $bstatus
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
-    public function isStatus(): bool
+
+    public function isActive(): bool
     {
-        return $this->bstatus;
+        return $this->active;
     }
 
-    /**
-     *
-     * @param bool $bstatus
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
-    public function setStatus(bool $bstatus): void
+
+    public function setActive(bool $active): void
     {
-        $this->bstatus = $bstatus;
+        $this->active = $active;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_status
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
-     */
-    /**
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_status
-     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
-     */
-    public function getF_status(): DateTimeLocal|NullDateTimeLocal|null
+
+    public function getF_active(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_status ?? new NullDateTimeLocal;
+        return $this->f_active ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|null $df_status
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
-     */
-    /**
-     * @param DateTimeLocal|NullDateTimeLocal|null $df_status
-     */
-    public function setF_status(DateTimeLocal|NullDateTimeLocal|null $df_status = null): void
+
+    public function setF_active(DateTimeLocal|NullDateTimeLocal|null $f_active = null): void
     {
-        $this->df_status = $df_status instanceof NullDateTimeLocal ? null : $df_status;
+        $this->f_active = $f_active instanceof NullDateTimeLocal ? null : $f_active;
     }
 
-    /**
-     *
-     * @return bool|null $bsv
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
+
+
     public function isSv(): ?bool
     {
-        return $this->bsv;
+        return $this->sv;
     }
 
-    /**
-     *
-     * @param bool|null $bsv
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
-    public function setSv(?bool $bsv = null): void
+
+
+    public function setSv(?bool $sv = null): void
     {
-        $this->bsv = $bsv;
+        $this->sv = $sv;
     }
 
-    /**
-     *
-     * @return bool|null $bsf
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
+
+
     public function isSf(): ?bool
     {
-        return $this->bsf;
+        return $this->sf;
     }
 
-    /**
-     *
-     * @param bool|null $bsf
-     */
-    /**
-     * @deprecated Mantener por compatibilidad UI; no se define VO para booleanos.
-     */
-    public function setSf(?bool $bsf = null): void
+
+
+    public function setSf(?bool $sf = null): void
     {
-        $this->bsf = $bsf;
+        $this->sf = $sf;
     }
 
-    /**
-     *
-     * @return string|null $stipo_ctr
-     */
+
     /**
      * @deprecated Usar `getTipoCtrVo(): ?TipoCentroCode` en su lugar.
      */
     public function getTipo_ctr(): ?string
     {
-        return $this->stipo_ctr?->value();
+        return $this->tipo_ctr?->value();
     }
 
-    /**
-     *
-     * @param string|null $stipo_ctr
-     */
+
     /**
      * @deprecated Usar `setTipoCtrVo(?TipoCentroCode $codigo = null): void` en su lugar.
      */
-    public function setTipo_ctr(?string $stipo_ctr = null): void
+    public function setTipo_ctr(?string $tipo_ctr = null): void
     {
-        $this->stipo_ctr = $stipo_ctr !== null && $stipo_ctr !== '' ? new TipoCentroCode($stipo_ctr) : null;
+        $this->tipo_ctr = $tipo_ctr !== null && $tipo_ctr !== '' ? new TipoCentroCode($tipo_ctr) : null;
     }
 
     public function getTipoCtrVo(): ?TipoCentroCode
     {
-        return $this->stipo_ctr;
+        return $this->tipo_ctr;
     }
 
     public function setTipoCtrVo(?TipoCentroCode $codigo = null): void
     {
-        $this->stipo_ctr = $codigo;
+        $this->tipo_ctr = $codigo;
     }
 
-    /**
-     *
-     * @return int|null $itipo_labor
-     */
+
     /**
      * @deprecated Usar `getTipoLaborVo(): ?TipoLaborId` en su lugar.
      */
     public function getTipo_labor(): ?int
     {
-        return $this->itipo_labor?->value();
+        return $this->tipo_labor?->value();
     }
 
-    /**
-     *
-     * @param int|null $itipo_labor
-     */
+
     /**
      * @deprecated Usar `setTipoLaborVo(?TipoLaborId $valor = null): void` en su lugar.
      */
-    public function setTipo_labor(?int $itipo_labor = null): void
+    public function setTipo_labor(?int $tipo_labor = null): void
     {
-        $this->itipo_labor = TipoLaborId::fromNullable($itipo_labor);
+        $this->tipo_labor = TipoLaborId::fromNullable($tipo_labor);
     }
 
     public function getTipoLaborVo(): ?TipoLaborId
     {
-        return $this->itipo_labor;
+        return $this->tipo_labor;
     }
 
     public function setTipoLaborVo(?TipoLaborId $valor = null): void
     {
-        $this->itipo_labor = $valor;
+        $this->tipo_labor = $valor;
     }
 
-    /**
-     *
-     * @return bool|null $bcdc
-     */
+
     public function isCdc(): ?bool
     {
-        return $this->bcdc;
+        return $this->cdc;
     }
 
-    /**
-     *
-     * @param bool|null $bcdc
-     */
-    public function setCdc(?bool $bcdc = null): void
+
+    public function setCdc(?bool $cdc = null): void
     {
-        $this->bcdc = $bcdc;
+        $this->cdc = $cdc;
     }
 
-    /**
-     *
-     * @return int|null $iid_ctr_padre
-     */
+
     /**
      * @deprecated Usar `getIdCtrPadreVo(): ?CentroId` en su lugar.
      */
     public function getId_ctr_padre(): ?int
     {
-        return $this->iid_ctr_padre?->value();
+        return $this->id_ctr_padre?->value();
     }
 
-    /**
-     *
-     * @param int|null $iid_ctr_padre
-     */
+
     /**
      * @deprecated Usar `setIdCtrPadreVo(?CentroId $id = null): void` en su lugar.
      */
-    public function setId_ctr_padre(?int $iid_ctr_padre = null): void
+    public function setId_ctr_padre(?int $id_ctr_padre = null): void
     {
-        $this->iid_ctr_padre = $iid_ctr_padre !== null ? new CentroId($iid_ctr_padre) : null;
+        $this->id_ctr_padre = $id_ctr_padre !== null ? new CentroId($id_ctr_padre) : null;
     }
 
     public function getIdCtrPadreVo(): ?CentroId
     {
-        return $this->iid_ctr_padre;
+        return $this->id_ctr_padre;
     }
 
     public function setIdCtrPadreVo(?CentroId $id = null): void
     {
-        $this->iid_ctr_padre = $id;
+        $this->id_ctr_padre = $id;
     }
 
-    /**
-     *
-     * @return int $iid_auto
-     */
+
     public function getId_auto(): int
     {
-        return $this->iid_auto;
+        return $this->id_auto;
     }
 
-    /**
-     *
-     * @param int $iid_auto
-     */
-    public function setId_auto(int $iid_auto): void
+
+    public function setId_auto(int $id_auto): void
     {
-        $this->iid_auto = $iid_auto;
+        $this->id_auto = $id_auto;
     }
+
     /* MÉTODOS PARA GESTIÓN DE DIRECCIONES ----------------------------------------*/
 
     /**

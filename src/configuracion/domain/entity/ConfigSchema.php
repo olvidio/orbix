@@ -4,108 +4,64 @@ namespace src\configuracion\domain\entity;
 
 use src\configuracion\domain\value_objects\ConfigParametroCode;
 use src\configuracion\domain\value_objects\ConfigValor;
-/**
- * Clase que implementa la entidad x_config_schema
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 12/11/2025
- */
+use src\shared\domain\traits\Hydratable;
+
 class ConfigSchema
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Parametro de ConfigSchema
-     *
-     * @var string
-     */
-    private string $sparametro;
-    /**
-     * Valor de ConfigSchema
-     *
-     * @var string|null
-     */
-    private string|null $svalor = null;
+
+    private string $parametro;
+
+    private string|null $valor = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return ConfigSchema
-     */
-    public function setAllAttributes(array $aDatos): ConfigSchema
-    {
-        if (array_key_exists('parametro', $aDatos)) {
-            $this->setParametroVo(ConfigParametroCode::fromString($aDatos['parametro'] ?? ''));
-        }
-        if (array_key_exists('valor', $aDatos)) {
-            // permitir null
-            $this->setValorVo($aDatos['valor'] === null ? null : ConfigValor::fromString((string)$aDatos['valor']));
-        }
-        return $this;
-    }
 
-    /**
-     * LEGACY
-     * @return string $sparametro
-     */
     public function getParametro(): string
     {
-        return $this->sparametro;
+        return $this->parametro;
     }
 
-    /**
-     * LEGACY
-     * @param string $sparametro
-     */
-    public function setParametro(string $sparametro): void
+
+    public function setParametro(string $parametro): void
     {
-        $this->sparametro = $sparametro;
+        $this->parametro = $parametro;
     }
 
     // Value Object API for parametro
     public function getParametroVo(): ConfigParametroCode
     {
-        return new ConfigParametroCode($this->sparametro);
+        return new ConfigParametroCode($this->parametro);
     }
 
     public function setParametroVo(ConfigParametroCode $code): void
     {
-        $this->sparametro = $code->value();
+        $this->parametro = $code->value();
     }
 
-    /**
-     * LEGACY
-     * @return string|null $svalor
-     */
+
     public function getValor(): ?string
     {
-        return $this->svalor;
+        return $this->valor;
     }
 
-    /**
-     * LEGACY
-     * @param string|null $svalor
-     */
-    public function setValor(?string $svalor = null): void
+
+    public function setValor(?string $valor = null): void
     {
-        $this->svalor = $svalor;
+        $this->valor = $valor;
     }
 
     // Value Object API for valor
     public function getValorVo(): ?ConfigValor
     {
-        return $this->svalor !== null ? new ConfigValor($this->svalor) : null;
+        return $this->valor !== null ? new ConfigValor($this->valor) : null;
     }
 
     public function setValorVo(?ConfigValor $valor = null): void
     {
-        $this->svalor = $valor?->value();
+        $this->valor = $valor?->value();
     }
 }

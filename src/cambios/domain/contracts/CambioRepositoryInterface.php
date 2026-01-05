@@ -39,7 +39,7 @@ interface CambioRepositoryInterface
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(Cambio $CambioDl): bool;
+    public function Eliminar(Cambio $Cambio): bool;
 
     public function Guardar(Cambio $Cambio): bool;
 

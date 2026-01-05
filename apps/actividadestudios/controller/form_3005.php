@@ -1,11 +1,13 @@
 <?php
 
-use actividadestudios\model\entity\ActividadAsignaturaDl;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use profesores\model\entity\GestorProfesorActividad;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
+use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\profesores\domain\services\ProfesorAsignaturaService;
+use src\profesores\domain\services\ProfesorStgrService;
+use src\profesores\domain\ProfesorActividad;
 use web\Desplegable;
 use web\Hash;
 
@@ -17,7 +19,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$obj = 'actividadestudios\\model\\entity\\ActividadAsignatura';
+$obj = 'ActividadAsignatura';
 
 $oPosicion->recordar();
 
@@ -47,20 +49,18 @@ $oDesplAsignaturas = [];
 if (!empty($Qid_asignatura)) { //caso de modificar
     $mod = "editar";
 
-    $oActividadAsignatura = new ActividadAsignaturaDl();
-    $oActividadAsignatura->setId_activ($Qid_activ);
-    $oActividadAsignatura->setId_asignatura($Qid_asignatura);
-    $oActividadAsignatura->DBCarregar();
+    $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
+    $oActividadAsignatura = $ActividadAsignaturaDlRepository->findById($Qid_activ, $Qid_asignatura);
 
-    $ProfesorReposiroty = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-    $aOpciones = $ProfesorReposiroty->getDesplProfesoresAsignatura($Qid_asignatura);
+    $ProfesorAsignaturaService = $GLOBALS['container']->get(ProfesorAsignaturaService::class);
+    $aOpciones = $ProfesorAsignaturaService->getArrayTodosProfesoresAsignatura(new AsignaturaId($Qid_asignatura));
     $oDesplProfesores = new Desplegable();
     $oDesplProfesores->setOpciones($aOpciones);
 
     $id_profesor = $oActividadAsignatura->getId_profesor();
     if (!empty($id_profesor)) {
-        $ProfesorReposiroty = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-        $aOpciones = $ProfesorReposiroty->getArrayProfesoresPub();
+        $ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
+        $aOpciones = $ProfesorStgrService->getArrayProfesoresPub();
         $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setOpcion_sel($id_profesor);
     }
@@ -75,7 +75,7 @@ if (!empty($Qid_asignatura)) { //caso de modificar
 
     $oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($Qid_asignatura);
     if ($oAsignatura === null) {
-        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $Qid_asignatura));
+        throw new Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $Qid_asignatura));
     }
     $nombre_corto = $oAsignatura->getNombre_corto();
     $creditos = $oAsignatura->getCreditos();
@@ -84,8 +84,11 @@ if (!empty($Qid_asignatura)) { //caso de modificar
 } else { //caso de nueva asignatura
     $mod = "nuevo";
     $nombre_corto = '';
-    $GesProfesores = new GestorProfesorActividad();
-    $oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($Qid_activ));
+    $ProfesorActividad = new ProfesorActividad();
+    $aOpciones = $ProfesorActividad->getArrayProfesoresActividad(array($Qid_activ));
+    $oDesplProfesores = new Desplegable();
+    $oDesplProfesores->setOpciones($aOpciones);
+    $oDesplProfesores->setBlanco(true);
     $oDesplProfesores->setOpcion_sel(-1);
 
     $f_ini = '';
@@ -98,11 +101,6 @@ if (!empty($Qid_asignatura)) { //caso de modificar
         $oDesplAsignaturas->setAction("fnjs_mas_profes('asignatura')");
     } else {
         exit (_("debería haber un nombre de asignatura"));
-        $id_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
-        $tabla_pau = (string)filter_input(INPUT_POST, 'tabla_pau');
-        $go_to = urlencode(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?pau=a&id_pau=$Qid_activ&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
-        $oPosicion2 = new web\Posicion();
-        echo $oPosicion2->ir_a($go_to);
     }
 }
 

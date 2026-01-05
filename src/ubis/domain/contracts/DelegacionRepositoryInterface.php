@@ -64,7 +64,7 @@ interface DelegacionRepositoryInterface
      * Devuelve información de región STGR y esquemas relacionados de la dl dada.
      * Retorna array asociativo con claves: region_stgr, esquema_region_stgr, mi_id_schema, esquema_dl
      */
-    public function mi_region_stgr($dele = '');
+    public function mi_region_stgr(string $dele = ''): array;
 
     /**
      * Devuelve un array [schema => id] para la región STGR indicada (incluye la propia).

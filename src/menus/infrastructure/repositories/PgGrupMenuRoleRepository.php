@@ -92,8 +92,7 @@ class PgGrupMenuRoleRepository extends ClaseRepository implements GrupMenuRoleRe
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $GrupMenuRole = new GrupMenuRole();
-            $GrupMenuRole->setAllAttributes($aDatos);
+            $GrupMenuRole = GrupMenuRole::fromArray($aDatos);
             $GrupMenuRoleSet->add($GrupMenuRole);
         }
         return $GrupMenuRoleSet->getTot();
@@ -182,7 +181,7 @@ class PgGrupMenuRoleRepository extends ClaseRepository implements GrupMenuRoleRe
         if (empty($aDatos)) {
             return null;
         }
-        return (new GrupMenuRole())->setAllAttributes($aDatos);
+        return GrupMenuRole::fromArray($aDatos);
     }
 
     public function getNewId()

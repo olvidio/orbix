@@ -7,8 +7,9 @@ use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
-use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\ResumenPlazas;
 use src\actividadplazas\domain\value_objects\PlazaId;
+use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
@@ -116,10 +117,11 @@ class ListaPlazas
         $aGrupos = [];
         $a_activ = [];
         $msg_err = '';
-        $gesActividadPlazas = new GestorResumenPlazas();
+        $gesActividadPlazas = new ResumenPlazas();
         $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
         $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
-        $CasaDlRepository = $GLOBALS['container']-get(CasaRepositoryInterface::class);
+        $CasaDlRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
+        $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
         foreach ($cActividades as $oActividad) {
             $k++;  // recorro todas las actividades seleccionadas, utilizo el contador k
             $id_activ = $oActividad->getId_activ();
@@ -213,7 +215,7 @@ class ListaPlazas
                     }
                 }
 
-                $cAsistentes = $AsistenteRepository->getAsistentesDeActividad($id_pau);
+                $cAsistentes = $AsistenteActividadService->getAsistentesDeActividad($id_pau);
                 foreach ($cAsistentes as $oAsistente) {
                     $id_nom = $oAsistente->getId_nom();
                     if (in_array($id_nom, $aIdCargos)) continue; // si ya está como cargo, no lo pongo.

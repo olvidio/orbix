@@ -108,8 +108,7 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $AsignaturaTipo = new AsignaturaTipo();
-            $AsignaturaTipo->setAllAttributes($aDatos);
+            $AsignaturaTipo =  AsignaturaTipo::fromArray($aDatos);
             $AsignaturaTipoSet->add($AsignaturaTipo);
         }
         return $AsignaturaTipoSet->getTot();
@@ -201,6 +200,6 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
         if (empty($aDatos)) {
             return null;
         }
-        return (new AsignaturaTipo())->setAllAttributes($aDatos);
+        return AsignaturaTipo::fromArray($aDatos);
     }
 }

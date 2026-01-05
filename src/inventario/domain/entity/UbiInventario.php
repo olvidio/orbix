@@ -7,145 +7,87 @@ use core\Set;
 use src\inventario\domain\value_objects\UbiInventarioId;
 use src\inventario\domain\value_objects\UbiInventarioIdActiv;
 use src\inventario\domain\value_objects\UbiInventarioName;
+use src\shared\domain\traits\Hydratable;
 
-/**
- * Clase que implementa la entidad i_ubis_dl
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 12/3/2025
- */
+
 class UbiInventario
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_ubi de UbiInventario
-     *
-     * @var int
-     */
-    private int $iid_ubi;
-    /**
-     * Nom_ubi de UbiInventario
-     *
-     * @var string
-     */
-    private string $snom_ubi;
-    /**
-     * Id_ubi_activ de UbiInventario
-     *
-     * @var int|null
-     */
-    private int|null $iid_ubi_activ = null;
+    private int $id_ubi;
+
+    private string $nom_ubi;
+
+    private int|null $id_ubi_activ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return UbiInventario
-     */
-    public function setAllAttributes(array $aDatos): UbiInventario
-    {
-        if (array_key_exists('id_ubi', $aDatos)) {
-            $this->setId_ubi($aDatos['id_ubi']);
-        }
-        if (array_key_exists('nom_ubi', $aDatos)) {
-            $this->setNom_ubi($aDatos['nom_ubi']);
-        }
-        if (array_key_exists('id_ubi_activ', $aDatos)) {
-            $this->setId_ubi_activ($aDatos['id_ubi_activ']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_ubi
-     */
     public function getId_ubi(): int
     {
-        return $this->iid_ubi;
+        return $this->id_ubi;
     }
 
-    /**
-     *
-     * @param int $iid_ubi
-     */
-    public function setId_ubi(int $iid_ubi): void
+
+    public function setId_ubi(int $id_ubi): void
     {
-        $this->iid_ubi = $iid_ubi;
+        $this->id_ubi = $id_ubi;
     }
 
-    /**
-     *
-     * @return string $snom_ubi
-     */
+
     public function getNom_ubi(): string
     {
-        return $this->snom_ubi;
+        return $this->nom_ubi;
     }
 
-    /**
-     *
-     * @param string $snom_ubi
-     */
-    public function setNom_ubi(string $snom_ubi): void
+
+    public function setNom_ubi(string $nom_ubi): void
     {
-        $this->snom_ubi = $snom_ubi;
+        $this->nom_ubi = $nom_ubi;
     }
 
-    /**
-     *
-     * @return int|null $iid_ubi_activ
-     */
+
     public function getId_ubi_activ(): ?int
     {
-        return $this->iid_ubi_activ;
+        return $this->id_ubi_activ;
     }
 
-    /**
-     *
-     * @param int|null $iid_ubi_activ
-     */
-    public function setId_ubi_activ(?int $iid_ubi_activ = null): void
+
+    public function setId_ubi_activ(?int $id_ubi_activ = null): void
     {
-        $this->iid_ubi_activ = $iid_ubi_activ;
+        $this->id_ubi_activ = $id_ubi_activ;
     }
 
     // Value Object API (duplicada con legacy)
     public function getIdUbiVo(): UbiInventarioId
     {
-        return new UbiInventarioId($this->iid_ubi);
+        return new UbiInventarioId($this->id_ubi);
     }
 
     public function setIdUbiVo(UbiInventarioId $id): void
     {
-        $this->iid_ubi = $id->value();
+        $this->id_ubi = $id->value();
     }
 
     public function getNomUbiVo(): UbiInventarioName
     {
-        return new UbiInventarioName($this->snom_ubi);
+        return new UbiInventarioName($this->nom_ubi);
     }
 
     public function setNomUbiVo(UbiInventarioName $name): void
     {
-        $this->snom_ubi = $name->value();
+        $this->nom_ubi = $name->value();
     }
 
     public function getIdUbiActivVo(): ?UbiInventarioIdActiv
     {
-        return new UbiInventarioIdActiv($this->iid_ubi_activ);
+        return new UbiInventarioIdActiv($this->id_ubi_activ);
     }
 
     public function setIdUbiActivVo(?UbiInventarioIdActiv $id = null): void
     {
-        $this->iid_ubi_activ = $id?->value();
+        $this->id_ubi_activ = $id?->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

@@ -4,6 +4,7 @@ namespace src\actividadcargos\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 use src\actividadcargos\domain\value_objects\{CargoCode, OrdenCargo, TipoCargoCode};
 
@@ -18,13 +19,13 @@ use src\actividadcargos\domain\value_objects\{CargoCode, OrdenCargo, TipoCargoCo
  */
 class Cargo
 {
-
+    use Hydratable;
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /**
      * Id_cargo de Cargo
      */
-    private int $iid_cargo;
+    private int $id_cargo;
     /**
      * Código del Cargo
      */
@@ -38,13 +39,13 @@ class Cargo
      *
      * @var bool|null
      */
-    private bool|null $bsf = null;
+    private bool|null $sf = null;
     /**
      * Sv de Cargo
      *
      * @var bool|null
      */
-    private bool|null $bsv = null;
+    private bool|null $sv = null;
     /**
      * Tipo del Cargo (código)
      */
@@ -52,52 +53,6 @@ class Cargo
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Cargo
-     */
-    public function setAllAttributes(array $aDatos): Cargo
-    {
-        if (array_key_exists('id_cargo', $aDatos)) {
-            $this->setId_cargo($aDatos['id_cargo']);
-        }
-        if (array_key_exists('cargo', $aDatos)) {
-            $val = $aDatos['cargo'];
-            if ($val instanceof CargoCode) {
-                $this->setCargoVo($val);
-            } else {
-                $this->setCargo((string)$val);
-            }
-        }
-        if (array_key_exists('orden_cargo', $aDatos)) {
-            $val = $aDatos['orden_cargo'];
-            if ($val instanceof OrdenCargo) {
-                $this->setOrdenCargoVo($val);
-            } else {
-                $this->setOrden_cargo($val === '' ? null : ($val === null ? null : (int)$val));
-            }
-        }
-        if (array_key_exists('sf', $aDatos)) {
-            $this->setSf(is_true($aDatos['sf']));
-        }
-        if (array_key_exists('sv', $aDatos)) {
-            $this->setSv(is_true($aDatos['sv']));
-        }
-        if (array_key_exists('tipo_cargo', $aDatos)) {
-            $val = $aDatos['tipo_cargo'] ?? null;
-            if ($val instanceof TipoCargoCode) {
-                $this->setTipoCargoVo($val);
-            } else {
-                // admite null o string legacy
-                $this->setTipo_cargo($val === '' ? null : ($val === null ? null : (string)$val));
-            }
-        }
-        return $this;
-    }
-
-    // -------- VO API --------
     public function getCargoVo(): CargoCode
     {
         return $this->cargo;
@@ -128,28 +83,16 @@ class Cargo
         $this->tipoCargo = $tipo;
     }
 
-    /**
-     *
-     * @return int $iid_cargo
-     */
     public function getId_cargo(): int
     {
-        return $this->iid_cargo;
+        return $this->id_cargo;
     }
 
-    /**
-     *
-     * @param int $iid_cargo
-     */
-    public function setId_cargo(int $iid_cargo): void
+    public function setId_cargo(int $id_cargo): void
     {
-        $this->iid_cargo = $iid_cargo;
+        $this->id_cargo = $id_cargo;
     }
 
-    /**
-     *
-     * @return string $scargo
-     */
     /**
      * @deprecated usar getCargoVo()
      */
@@ -158,10 +101,6 @@ class Cargo
         return $this->cargo->value();
     }
 
-    /**
-     *
-     * @param string $scargo
-     */
     /**
      * @deprecated usar setCargoVo(CargoCode $codigo)
      */
@@ -172,10 +111,6 @@ class Cargo
     }
 
     /**
-     *
-     * @return int|null $iorden_cargo
-     */
-    /**
      * @deprecated usar getOrdenCargoVo()
      */
     public function getOrden_cargo(): ?int
@@ -184,10 +119,6 @@ class Cargo
     }
 
     /**
-     *
-     * @param int|null $iorden_cargo
-     */
-    /**
      * @deprecated usar setOrdenCargoVo(?OrdenCargo $orden)
      */
     public function setOrden_cargo(?int $iorden_cargo = null): void
@@ -195,46 +126,26 @@ class Cargo
         $this->ordenCargo = OrdenCargo::fromNullable($iorden_cargo);
     }
 
-    /**
-     *
-     * @return bool|null $bsf
-     */
     public function isSf(): ?bool
     {
-        return $this->bsf;
+        return $this->sf;
     }
 
-    /**
-     *
-     * @param bool|null $bsf
-     */
     public function setSf(?bool $bsf = null): void
     {
-        $this->bsf = $bsf;
+        $this->sf = $bsf;
     }
 
-    /**
-     *
-     * @return bool|null $bsv
-     */
     public function isSv(): ?bool
     {
-        return $this->bsv;
+        return $this->sv;
     }
 
-    /**
-     *
-     * @param bool|null $bsv
-     */
     public function setSv(?bool $bsv = null): void
     {
-        $this->bsv = $bsv;
+        $this->sv = $bsv;
     }
 
-    /**
-     *
-     * @return string|null $stipo_cargo
-     */
     /**
      * @deprecated usar getTipoCargoVo()
      */
@@ -243,10 +154,6 @@ class Cargo
         return $this->tipoCargo?->value();
     }
 
-    /**
-     *
-     * @param string|null $stipo_cargo
-     */
     /**
      * @deprecated usar setTipoCargoVo(?TipoCargoCode $tipo)
      */
@@ -265,7 +172,7 @@ class Cargo
      * Retorna una col·lecció d'objectes del tipus DatosCampo
      *
      */
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $ocargoSet = new Set();
 
@@ -278,12 +185,12 @@ class Cargo
     }
 
     /**
-     * Recupera les propietats de l'atribut scargo de cargo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo cargo de cargo
+     * en una clase del tipo DatosCampo
      *
      * @return object DatosCampo
      */
-    function getDatosCargo()
+    private function getDatosCargo(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('cargo');
@@ -296,12 +203,12 @@ class Cargo
     }
 
     /**
-     * Recupera les propietats de l'atribut iorden_cargo de cargo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo orden_cargo de cargo
+     * en una clase del tipo DatosCampo
      *
      * @return object DatosCampo
      */
-    function getDatosOrden_cargo()
+    private function getDatosOrden_cargo(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('orden_cargo');
@@ -314,12 +221,12 @@ class Cargo
     }
 
     /**
-     * Recupera les propietats de l'atribut bsf de cargo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo sf de cargo
+     * en una clase del tipo DatosCampo
      *
      * @return object DatosCampo
      */
-    function getDatosSf()
+    private function getDatosSf(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('sf');
@@ -331,12 +238,12 @@ class Cargo
     }
 
     /**
-     * Recupera les propietats de l'atribut bsv de cargo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo sv de cargo
+     * en una clase del tipo DatosCampo
      *
      * @return object DatosCampo
      */
-    function getDatosSv()
+    private function getDatosSv(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('sv');
@@ -348,12 +255,12 @@ class Cargo
     }
 
     /**
-     * Recupera les propietats de l'atribut stipo_cargo de cargo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo tipo_cargo de cargo
+     * en una clase del tipo DatosCampo
      *
      * @return object DatosCampo
      */
-    function getDatosTipo_cargo()
+    private function getDatosTipo_cargo(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo_cargo');

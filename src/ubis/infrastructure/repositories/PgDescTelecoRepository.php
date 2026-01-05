@@ -122,8 +122,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $DescTeleco = new DescTeleco();
-            $DescTeleco->setAllAttributes($aDatos);
+            $DescTeleco = DescTeleco::fromArray($aDatos);
             $DescTelecoSet->add($DescTeleco);
         }
         return $DescTelecoSet->getTot();
@@ -231,7 +230,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         if (empty($aDatos)) {
             return null;
         }
-        return (new DescTeleco())->setAllAttributes($aDatos);
+        return DescTeleco::fromArray($aDatos);
     }
 
     public function getNewId(): int

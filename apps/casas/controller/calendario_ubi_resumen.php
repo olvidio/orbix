@@ -28,12 +28,12 @@ $oMiUsuario = ConfigGlobal::MiUsuario();
 $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 
 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
-    $donde = "WHERE status='t'";
+    $donde = "WHERE active='t'";
 } else {
     if (ConfigGlobal::mi_sfsv() == 1) {
-        $donde = "WHERE status='t' AND sv='t'";
+        $donde = "WHERE active='t' AND sv='t'";
     } elseif (ConfigGlobal::mi_sfsv() == 2) {
-        $donde = "WHERE status='t' AND sf='t'";
+        $donde = "WHERE active='t' AND sf='t'";
     }
 }
 

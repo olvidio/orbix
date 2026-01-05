@@ -123,8 +123,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Egm = new Egm();
-            $Egm->setAllAttributes($aDatos);
+            $Egm = Egm::fromArray($aDatos);
             $EgmSet->add($Egm);
         }
         return $EgmSet->getTot();
@@ -217,7 +216,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         if (empty($aDatos)) {
             return null;
         }
-        return (new Egm())->setAllAttributes($aDatos);
+        return Egm::fromArray($aDatos);
     }
 
     public function getNewId()

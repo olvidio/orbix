@@ -1,15 +1,11 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\GestorPersonaDl;
-use personas\model\entity\GestorPersonaSSSC;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Periodo;
@@ -39,14 +35,14 @@ $oPosicion->recordar();
 
 $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
 
-if (ConfigGlobal::mi_sfsv() == 1) {
+if (ConfigGlobal::mi_sfsv() === 1) {
     if ($Qssfsv === 'sf' && (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des')))) {
         $ssfsv = 'sf';
     } else {
         $ssfsv = 'sv';
     }
 }
-if (ConfigGlobal::mi_sfsv() == 2) {
+if (ConfigGlobal::mi_sfsv() === 2) {
     $ssfsv = 'sf';
 }
 
@@ -150,7 +146,7 @@ switch ($Qn_agd) {
         $aOperador['tipo_ctr'] = [];
         break;
 }
-$aWhere['status'] = 't';
+$aWhere['active'] = 't';
 $aWhere['_ordre'] = 'nombre_ubi';
 // primero selecciono los centros y las personas que dependen de él
 $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
@@ -168,9 +164,9 @@ foreach ($cCentros as $oCentro) {
     $nombre_ubi = $oCentro->getNombre_ubi();
     //consulta para buscar personas de cada ctr
     if ($tabla === "p_sssc") {
-        $cPersonas = $PersonaSSSCRepository->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1'));
+        $cPersonas = $PersonaSSSCRepository->getPersonasDl(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1'));
     } else {
-        $cPersonas = $PersonaDlRepository->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom'));
+        $cPersonas = $PersonaDlRepository->getPersonasDl(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom'));
     }
 
     $aCentros[$id_ubi]['nombre_ubi'] = $nombre_ubi;
@@ -191,7 +187,7 @@ foreach ($cCentros as $oCentro) {
 
         $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
         $aActividades = [];
-        if (is_array($cAsistencias) && count($cAsistencias) == 0) {
+        if (is_array($cAsistencias) && count($cAsistencias) === 0) {
             $nom_activ = _("pendiente de solicitar");
         } else {
             $a = 0;

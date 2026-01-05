@@ -17,45 +17,42 @@ use src\usuarios\domain\entity\Preferencia;
 interface PreferenciaRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Preferencia
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo Preferencia
-	
-	 */
-	public function getPreferencias(array $aWhere=[], array $aOperators=[]): array|false;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /**
+     * devuelve una colección (array) de objetos de tipo Preferencia
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo Preferencia
+     */
+    public function getPreferencias(array $aWhere = [], array $aOperators = []): array|false;
 
-	public function Eliminar(Preferencia $Preferencia): bool;
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Guardar(Preferencia $Preferencia): bool;
+    public function Eliminar(Preferencia $Preferencia): bool;
 
-	public function getErrorTxt(): string;
+    public function Guardar(Preferencia $Preferencia): bool;
 
-	public function getoDbl(): PDO;
+    public function getErrorTxt(): string;
 
-	public function setoDbl(PDO $oDbl): void;
+    public function getoDbl(): PDO;
 
-	public function getNomTabla(): string;
-	
+    public function setoDbl(PDO $oDbl): void;
+
+    public function getNomTabla(): string;
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
+     *
      * @param string $tipo
      * @return array|bool
-	
      */
     public function datosById(int $id_usuario, string $tipo): array|bool;
-	
+
     /**
      * Busca la clase con tipo en el repositorio.
-	
      */
     public function findById(int $id_usuario, string $tipo): ?Preferencia;
 }

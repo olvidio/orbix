@@ -48,10 +48,10 @@ if ($QTipoPlantilla !== 'p') {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo(new TipoPreferencia('ultima_plantilla'));
+        $oPreferencia->setTipoVo(new TipoPreferencia('ultima_plantilla'));
     }
 
-    $oPreferencia->setPreferencia(new ValorPreferencia($QTipoPlantilla));
+    $oPreferencia->setPreferenciaVo(new ValorPreferencia($QTipoPlantilla));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         echo _("hay un error, no se ha guardado");
         echo "\n" . $PreferenciaRepository->getErrorTxt();

@@ -2,114 +2,67 @@
 
 namespace src\utils_database\domain\entity;
 
+use src\shared\domain\traits\Hydratable;
 use src\utils_database\domain\value_objects\DbSchemaCode;
 use src\utils_database\domain\value_objects\DbSchemaId;
 
-/**
- * Clase que implementa la entidad db_idschema
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 13/11/2025
- */
+
 class DbSchema
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Schema de DbSchema
-     *
-     * @var string
-     */
-    private string $sschema;
-    /**
-     * Id de DbSchema
-     *
-     * @var int
-     */
-    private int $iid;
+
+    private string $schema;
+
+    private int $id;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return DbSchema
-     */
-    public function setAllAttributes(array $aDatos): DbSchema
-    {
-        if (array_key_exists('schema', $aDatos)) {
-            $this->setSchemaVo(DbSchemaCode::fromString($aDatos['schema'] ?? null));
-        }
-        if (array_key_exists('id', $aDatos)) {
-            $this->setIdVo(isset($aDatos['id']) ? new DbSchemaId((int)$aDatos['id']) : null);
-        }
-        return $this;
-    }
-
-    /**
-     * LEGACY
-     * @return string $sschema
+     * @deprecated
      */
     public function getSchema(): string
     {
-        return $this->sschema;
+        return $this->schema;
     }
 
     /**
-     * LEGACY
-     * @param string $sschema
+     * @deprecated
      */
-    public function setSchema(string $sschema): void
+    public function setSchema(string $schema): void
     {
-        $this->sschema = $sschema;
+        $this->schema = $schema;
     }
 
-    /**
-     * Value Object API for schema code
-     */
     public function getSchemaVo(): DbSchemaCode
     {
-        return new DbSchemaCode($this->sschema);
+        return new DbSchemaCode($this->schema);
     }
 
     public function setSchemaVo(DbSchemaCode $code): void
     {
-        $this->sschema = $code->value();
+        $this->schema = $code->value();
     }
 
-    /**
-     * LEGACY
-     * @return int $iid
-     */
     public function getId(): int
     {
-        return $this->iid;
+        return $this->id;
     }
 
-    /**
-     * LEGACY
-     * @param int $iid
-     */
-    public function setId(int $iid): void
+    public function setId(int $id): void
     {
-        $this->iid = $iid;
+        $this->id = $id;
     }
 
-    /**
-     * Value Object API for id
-     */
     public function getIdVo(): DbSchemaId
     {
-        return new DbSchemaId($this->iid);
+        return new DbSchemaId($this->id);
     }
 
     public function setIdVo(DbSchemaId $id): void
     {
-        $this->iid = $id->value();
+        $this->id = $id->value();
     }
 }

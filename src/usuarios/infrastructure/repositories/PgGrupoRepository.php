@@ -93,8 +93,7 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Grupo = new Grupo();
-            $Grupo->setAllAttributes($aDatos);
+            $Grupo = Grupo::fromArray($aDatos);
             $GrupoSet->add($Grupo);
         }
         return $GrupoSet->getTot();
@@ -123,7 +122,7 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
         $bInsert = $this->isNew($id_usuario);
 
         $aDatos = [];
-        $aDatos['usuario'] = $Grupo->getUsuario();
+        $aDatos['usuario'] = $Grupo->getUsuarioVo();
         $aDatos['id_role'] = $Grupo->getId_role();
         array_walk($aDatos, 'core\poner_null');
 
@@ -184,7 +183,7 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
         if (empty($aDatos)) {
             return null;
         }
-        return (new Grupo())->setAllAttributes($aDatos);
+        return Grupo::fromArray($aDatos);
     }
 
     public function getNewId()

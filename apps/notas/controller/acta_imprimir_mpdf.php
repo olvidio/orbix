@@ -1,8 +1,13 @@
 <?php
 
 
-use core\ConfigGlobal;use notas\model\entity\Acta;use notas\model\entity\GestorActaTribunal;use notas\model\getDatosActa;use personas\model\entity\GestorNombreLatin;use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;use src\personas\domain\entity\Persona;
-
+use core\ConfigGlobal;
+use notas\model\getDatosActa;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
+use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
+use src\personas\domain\entity\Persona;
 
 
 /**
@@ -32,7 +37,8 @@ $nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
 $reg_stgr = "Stgr".ConfigGlobal::mi_region();
 
 // acta
-$oActa = new Acta($acta); // $acta está en el archivo que hace un include de este.
+$ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+$oActa = $ActaRepository->findById($acta); // $acta está en el archivo que hace un include de este.
 $id_asignatura = $oActa->getId_asignatura();
 $id_activ = $oActa->getId_activ();
 $oF_acta = $oActa->getF_acta();
@@ -81,7 +87,6 @@ $cPersonaNotas = getDatosActa::getNotasActa($acta);
 // para ordenar
 $errores = '';
 $aPersonasNotas = [];
-$oGesNomLatin = new GestorNombreLatin();
 foreach($cPersonaNotas as $oPersonaNota) {
 	$id_situacion=$oPersonaNota->getId_situacion();
 	$id_nom=$oPersonaNota->getId_nom();
@@ -103,8 +108,8 @@ uksort($aPersonasNotas, "core\strsinacentocmp"); // compara sin contar los acent
 $num_alumnos=count($aPersonasNotas);
 
 // tribunal:
-$GesTribunal = new GestorActaTribunal();
-$cTribunal = $GesTribunal->getActasTribunales(array('acta'=>$acta,'_ordre'=>'orden')); 
+$ActaTribunalRepository = $GLOBALS['container']->get(ActaTribunalRepositoryInterface::class);
+$cTribunal = $ActaTribunalRepository->getActasTribunales(array('acta'=>$acta,'_ordre'=>'orden'));
 $num_examinadores=count($cTribunal);
 
 // Definición del número de lineas de las páginas y los numeros de alumnos----------------

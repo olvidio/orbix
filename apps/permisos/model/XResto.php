@@ -2,11 +2,6 @@
 
 namespace permisos\model;
 
-use actividades\model\entity\TipoDeActividad;
-use core\ConfigGlobal;
-use procesos\model\entity\GestorActividadFase;
-use procesos\model\entity\GestorActividadProcesoTarea;
-
 class XResto
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */

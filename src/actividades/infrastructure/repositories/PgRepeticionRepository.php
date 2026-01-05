@@ -111,8 +111,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Repeticion = new Repeticion();
-            $Repeticion->setAllAttributes($aDatos);
+            $Repeticion =  Repeticion::fromArray($aDatos);
             $RepeticionSet->add($Repeticion);
         }
         return $RepeticionSet->getTot();
@@ -195,7 +194,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
 
     }
 
-    public function datosByIdVO(RepeticionId $id): array|bool
+    public function datosByIdVo(RepeticionId $id): array|bool
     {
         return $this->datosById($id->value());
     }
@@ -209,10 +208,10 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         if (empty($aDatos)) {
             return null;
         }
-        return (new Repeticion())->setAllAttributes($aDatos);
+        return Repeticion::fromArray($aDatos);
     }
 
-    public function findByIdVO(RepeticionId $id): ?Repeticion
+    public function findByIdVo(RepeticionId $id): ?Repeticion
     {
         return $this->findById($id->value());
     }
@@ -224,7 +223,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         return $oDbl->query($sQuery)->fetchColumn();
     }
 
-    public function getNewIdVO(): RepeticionId
+    public function getNewIdVo(): RepeticionId
     {
         return new RepeticionId((int)$this->getNewId());
     }

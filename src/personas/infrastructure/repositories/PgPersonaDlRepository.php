@@ -100,8 +100,7 @@ class PgPersonaDlRepository extends ClaseRepository implements PersonaDlReposito
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
-            $PersonaDl = new PersonaDl();
-            $PersonaDl->setAllAttributes($aDatos);
+            $PersonaDl = PersonaDl::fromArray($aDatos);
             $PersonaDlSet->add($PersonaDl);
         }
         return $PersonaDlSet->getTot();
@@ -247,6 +246,6 @@ class PgPersonaDlRepository extends ClaseRepository implements PersonaDlReposito
         if (empty($aDatos)) {
             return null;
         }
-        return (new PersonaDl())->setAllAttributes($aDatos);
+        return PersonaDl::fromArray($aDatos);
     }
 }

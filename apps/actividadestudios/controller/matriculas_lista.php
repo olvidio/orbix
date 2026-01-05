@@ -1,9 +1,9 @@
 <?php
 
-use actividadestudios\model\entity\GestorMatriculaDl;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\services\TelecoPersonaService;
@@ -28,7 +28,7 @@ require_once("apps/core/global_object.inc");
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -75,8 +75,8 @@ $str_actividades = "{" . implode(', ', $a_IdActividades) . "}";
 $aWhere = ['id_activ' => $str_actividades];
 $aOperador = ['id_activ' => 'ANY'];
 
-$gesMatriculasDl = new GestorMatriculaDl();
-$cMatriculas = $gesMatriculasDl->getMatriculas($aWhere, $aOperador);
+$MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
+$cMatriculas = $MatriculaDlRepository->getMatriculas($aWhere, $aOperador);
 
 // Convertir las fechas inicio y fin a formato local:
 $oF_qini = new DateTimeLocal($inicioIso);
@@ -111,15 +111,15 @@ foreach ($cMatriculas as $oMatricula) {
     $id_activ = $oMatricula->getId_activ();
     $id_asignatura = $oMatricula->getId_asignatura();
     $nota_txt = $oMatricula->getNotaSobre();
-    $preceptor = $oMatricula->getPreceptor();
+    $preceptor = $oMatricula->isPreceptor();
     if (is_true($preceptor)) {
         $preceptor = 'x';
         $id_preceptor = $oMatricula->getId_preceptor();
         $mails_preceptor = '';
         if (!empty($id_preceptor)) {
             $oPersona = Persona::findPersonaEnGlobal($id_preceptor);
-            if (!is_object($oPersona)) {
-                $msg_err .= "<br>preceptor: $oPersona con id_nom: $id_preceptor en  " . __FILE__ . ": line " . __LINE__;
+            if ($oPersona === null) {
+                $msg_err .= "<br>preceptor: No encuentro a nadie con id_nom: $id_preceptor en  " . __FILE__ . ": line " . __LINE__;
             } else {
                 $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
                 $preceptor = $oPersona->getPrefApellidosNombre();
@@ -139,7 +139,7 @@ foreach ($cMatriculas as $oMatricula) {
     $oActividad = $ActividadAllRepository->findById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
 
-    if ($id_nom != $id_nom_anterior) {
+    if ($id_nom !== $id_nom_anterior) {
         $mails_alumno = '';
         $oPersona = Persona::findPersonaEnGlobal($id_nom);
         if ($oPersona === null) {

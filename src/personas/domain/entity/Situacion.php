@@ -5,49 +5,21 @@ namespace src\personas\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\personas\domain\value_objects\{SituacionCode, SituacionName};
+use src\shared\domain\traits\Hydratable;
 
-/**
- * Clase que implementa la entidad xp_situacion
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 17/11/2025
- */
+
 class Situacion
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Código de Situación
-     */
+
     private SituacionCode $situacion;
-    /**
-     * Nombre de la Situación
-     */
+
     private ?SituacionName $nombreSituacion = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Situacion
-     */
-    public function setAllAttributes(array $aDatos): Situacion
-    {
-        if (array_key_exists('situacion', $aDatos)) {
-            $valor = $aDatos['situacion'] ?? '';
-            $this->setSituacionVo(new SituacionCode((string)$valor));
-        }
-        if (array_key_exists('nombre_situacion', $aDatos)) {
-            $this->setNombreSituacionVo(SituacionName::fromNullableString($aDatos['nombre_situacion'] ?? null));
-        }
-        return $this;
-    }
 
     // VO API
     public function getSituacionVo(): SituacionCode
@@ -70,41 +42,29 @@ class Situacion
         $this->nombreSituacion = $nombre;
     }
 
-    /**
-     *
-     * @return string $ssituacion
-     */
+
     public function getSituacion(): string
     {
         return $this->situacion->value();
     }
 
-    /**
-     *
-     * @param string $ssituacion
-     */
-    public function setSituacion(string $ssituacion): void
+
+    public function setSituacion(string $situacion): void
     {
-        $ssituacion = trim($ssituacion);
-        $this->situacion = new SituacionCode($ssituacion);
+        $situacion = trim($situacion);
+        $this->situacion = new SituacionCode($situacion);
     }
 
-    /**
-     *
-     * @return string|null $snombre_situacion
-     */
+
     public function getNombre_situacion(): ?string
     {
         return $this->nombreSituacion?->value();
     }
 
-    /**
-     *
-     * @param string|null $snombre_situacion
-     */
-    public function setNombre_situacion(?string $snombre_situacion = null): void
+
+    public function setNombre_situacion(?string $nombre_situacion = null): void
     {
-        $this->nombreSituacion = SituacionName::fromNullableString($snombre_situacion);
+        $this->nombreSituacion = SituacionName::fromNullableString($nombre_situacion);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -113,7 +73,7 @@ class Situacion
         return 'situacion';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oSituacionSet = new Set();
 
@@ -122,7 +82,7 @@ class Situacion
         return $oSituacionSet->getTot();
     }
 
-    function getDatosSituacion()
+    private function getDatosSituacion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('situacion');
@@ -135,12 +95,12 @@ class Situacion
     }
 
     /**
-     * Recupera les propietats de l'atribut snombre_situacion de Situacion
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo nombre_situacion de Situacion
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosNombre_situacion()
+    private function getDatosNombre_situacion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nombre_situacion');

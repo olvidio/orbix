@@ -27,9 +27,8 @@ switch ($Qque) {
         $plazas_previstas = $obj->$dl;
 
         $oIngreso = $IngresoRepository->finndById($id_activ);
-        $oIngreso->DBCarregar();
         $oIngreso->setNum_asistentes_previstos($plazas_previstas);
-        if ($oIngreso->DBGuardar() === false) {
+        if ($IngresoRepository->Guardar($oIngreso) === false) {
             echo _('Hay un error, no se ha guardado');
         }
         break;

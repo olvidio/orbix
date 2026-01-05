@@ -1,13 +1,12 @@
 <?php
 
-use actividadcargos\model\entity\GestorActividadCargo;
-use actividadestudios\model\entity\GestorActividadAsignatura;
-use actividadestudios\model\entity\GestorMatricula;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 
@@ -67,10 +66,11 @@ if (empty($id_nom_dtor_est)) {
 // por cada asignatura
 $a = 0;
 $tipo_old = 0;
-$GesActividadAsignaturas = new GestorActividadAsignatura();
-$cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ));
+$ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
+$cActividadAsignaturas = $ActividadAsignaturaRepository->getActividadAsignaturas(array('id_activ' => $id_activ));
 $datos_asignatura = [];
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+$MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
 foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $a++;
     $id_asignatura = $oActividadAsignatura->getId_asignatura();
@@ -105,8 +105,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $datos_asignatura[$a]['nombre_corto'] = $nombre_corto;
 
     // busco las matriculas
-    $GesMatriculas = new GestorMatricula();
-    $cMatriculas = $GesMatriculas->getMatriculas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
+    $cMatriculas = $MatriculaRepository->getMatriculas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
     $aMatriculados = [];
     foreach ($cMatriculas as $oMatricula) {
         $id_nom = $oMatricula->getId_nom();

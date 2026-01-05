@@ -5,174 +5,102 @@ namespace src\asignaturas\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\asignaturas\domain\value_objects\{AsignaturaTipoId, AsignaturaTipoName, AsignaturaTipoShortName, AsignaturaTipoYear, AsignaturaTipoLatin};
+use src\shared\domain\traits\Hydratable;
 
-/**
- * Clase que implementa la entidad xa_tipo_asig
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 14/11/2025
- */
 class AsignaturaTipo
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_tipo de AsignaturaTipo
-     */
-    private AsignaturaTipoId $idTipo;
-    /**
-     * Tipo_asignatura de AsignaturaTipo
-     */
-    private AsignaturaTipoName $tipoAsignatura;
-    /**
-     * Tipo_breve de AsignaturaTipo
-     */
-    private AsignaturaTipoShortName $tipoBreve;
-    /**
-     * Año de AsignaturaTipo (texto corto)
-     */
+
+    private AsignaturaTipoId $id_tipo;
+
+    private AsignaturaTipoName $tipo_asignatura;
+
+    private AsignaturaTipoShortName $tipo_breve;
+
     private ?AsignaturaTipoYear $year = null;
-    /**
-     * Tipo_latin de AsignaturaTipo
-     */
-    private ?AsignaturaTipoLatin $tipoLatin = null;
+
+    private ?AsignaturaTipoLatin $tipo_latin = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return AsignaturaTipo
-     */
-    public function setAllAttributes(array $aDatos): AsignaturaTipo
-    {
-        if (array_key_exists('id_tipo', $aDatos)) {
-            $this->setIdTipoVo(new AsignaturaTipoId((int)$aDatos['id_tipo']));
-        }
-        if (array_key_exists('tipo_asignatura', $aDatos)) {
-            $this->setTipoAsignaturaVo(AsignaturaTipoName::fromString((string)$aDatos['tipo_asignatura']));
-        }
-        if (array_key_exists('tipo_breve', $aDatos)) {
-            $this->setTipoBreveVo(AsignaturaTipoShortName::fromString((string)$aDatos['tipo_breve']));
-        }
-        if (array_key_exists('año', $aDatos)) {
-            $this->setYearVo(AsignaturaTipoYear::fromNullableString($aDatos['año'] ?? null));
-        }
-        if (array_key_exists('tipo_latin', $aDatos)) {
-            $this->setTipoLatinVo(AsignaturaTipoLatin::fromNullableString($aDatos['tipo_latin'] ?? null));
-        }
-        return $this;
-    }
-
     // ---------- VO API ----------
-    public function getIdTipoVo(): AsignaturaTipoId { return $this->idTipo; }
-    public function setIdTipoVo(AsignaturaTipoId $id): void { $this->idTipo = $id; }
+    public function getIdTipoVo(): AsignaturaTipoId { return $this->id_tipo; }
+    public function setIdTipoVo(AsignaturaTipoId $id): void { $this->id_tipo = $id; }
 
-    public function getTipoAsignaturaVo(): AsignaturaTipoName { return $this->tipoAsignatura; }
-    public function setTipoAsignaturaVo(AsignaturaTipoName $nombre): void { $this->tipoAsignatura = $nombre; }
+    public function getTipoAsignaturaVo(): AsignaturaTipoName { return $this->tipo_asignatura; }
+    public function setTipoAsignaturaVo(AsignaturaTipoName $nombre): void { $this->tipo_asignatura = $nombre; }
 
-    public function getTipoBreveVo(): AsignaturaTipoShortName { return $this->tipoBreve; }
-    public function setTipoBreveVo(AsignaturaTipoShortName $nombre): void { $this->tipoBreve = $nombre; }
+    public function getTipoBreveVo(): AsignaturaTipoShortName { return $this->tipo_breve; }
+    public function setTipoBreveVo(AsignaturaTipoShortName $nombre): void { $this->tipo_breve = $nombre; }
 
     public function getYearVo(): ?AsignaturaTipoYear { return $this->year; }
     public function setYearVo(?AsignaturaTipoYear $year = null): void { $this->year = $year; }
 
-    public function getTipoLatinVo(): ?AsignaturaTipoLatin { return $this->tipoLatin; }
-    public function setTipoLatinVo(?AsignaturaTipoLatin $latin = null): void { $this->tipoLatin = $latin; }
+    public function getTipoLatinVo(): ?AsignaturaTipoLatin { return $this->tipo_latin; }
+    public function setTipoLatinVo(?AsignaturaTipoLatin $latin = null): void { $this->tipo_latin = $latin; }
 
-    /**
-     *
-     * @return int $iid_tipo
-     */
+    // ---------- LEGACY ----------
+
     public function getId_tipo(): int
     {
-        return $this->idTipo->value();
+        return $this->id_tipo->value();
     }
 
-    /**
-     *
-     * @param int $iid_tipo
-     */
-    public function setId_tipo(int $iid_tipo): void
+
+    public function setId_tipo(int $id_tipo): void
     {
-        $this->idTipo = new AsignaturaTipoId($iid_tipo);
+        $this->id_tipo = new AsignaturaTipoId($id_tipo);
     }
 
-    /**
-     *
-     * @return string $stipo_asignatura
-     */
+
     public function getTipo_asignatura(): string
     {
-        return $this->tipoAsignatura->value();
+        return $this->tipo_asignatura->value();
     }
 
-    /**
-     *
-     * @param string $stipo_asignatura
-     */
-    public function setTipo_asignatura(string $stipo_asignatura): void
+
+    public function setTipo_asignatura(string $tipo_asignatura): void
     {
-        $this->tipoAsignatura = new AsignaturaTipoName($stipo_asignatura);
+        $this->tipo_asignatura = new AsignaturaTipoName($tipo_asignatura);
     }
 
-    /**
-     *
-     * @return string $stipo_breve
-     */
+
     public function getTipo_breve(): string
     {
-        return $this->tipoBreve->value();
+        return $this->tipo_breve->value();
     }
 
-    /**
-     *
-     * @param string $stipo_breve
-     */
-    public function setTipo_breve(string $stipo_breve): void
+
+    public function setTipo_breve(string $tipo_breve): void
     {
-        $this->tipoBreve = new AsignaturaTipoShortName($stipo_breve);
+        $this->tipo_breve = new AsignaturaTipoShortName($tipo_breve);
     }
 
-    /**
-     *
-     * @return string|null $saño
-     */
+
     public function getYear(): ?string
     {
         return $this->year?->value();
     }
 
-    /**
-     *
-     * @param string|null $year
-     */
+
     public function setYear(?string $year = null): void
     {
         $this->year = AsignaturaTipoYear::fromNullableString($year);
     }
 
-    /**
-     *
-     * @return string|null $stipo_latin
-     */
+
     public function getTipo_latin(): ?string
     {
-        return $this->tipoLatin?->value();
+        return $this->tipo_latin?->value();
     }
 
-    /**
-     *
-     * @param string|null $stipo_latin
-     */
-    public function setTipo_latin(?string $stipo_latin = null): void
+
+    public function setTipo_latin(?string $tipo_latin = null): void
     {
-        $this->tipoLatin = AsignaturaTipoLatin::fromNullableString($stipo_latin);
+        $this->tipo_latin = AsignaturaTipoLatin::fromNullableString($tipo_latin);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -181,7 +109,7 @@ class AsignaturaTipo
         return 'id_tipo';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oAsignaturaTipoSet = new Set();
 
@@ -193,12 +121,12 @@ class AsignaturaTipo
     }
 
     /**
-     * Recupera les propietats de l'atribut stipo_asignatura de AsignaturaTipo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo tipo_asignatura de AsignaturaTipo
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosTipo_asignatura()
+    private function getDatosTipo_asignatura(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo_asignatura');
@@ -209,12 +137,12 @@ class AsignaturaTipo
     }
 
     /**
-     * Recupera les propietats de l'atribut stipo_breve de AsignaturaTipo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo tipo_breve de AsignaturaTipo
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosTipo_breve()
+    private function getDatosTipo_breve(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo_breve');
@@ -226,14 +154,14 @@ class AsignaturaTipo
 
     /**
      * Recupera les propietats de l'atribut saño de AsignaturaTipo
-     * en una clase del tipus DatosCampo
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosYear()
+    private function getDatosYear(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
-        $oDatosCampo->setNom_camp('año');
+        $oDatosCampo->setNom_camp('year');
         $oDatosCampo->setMetodoGet('getYear');
         $oDatosCampo->setMetodoSet('setYear');
         $oDatosCampo->setEtiqueta(_("año"));
@@ -241,12 +169,12 @@ class AsignaturaTipo
     }
 
     /**
-     * Recupera les propietats de l'atribut stipo_latin de AsignaturaTipo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo tipo_latin de AsignaturaTipo
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosTipo_latin()
+    private function getDatosTipo_latin(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo_latin');

@@ -97,8 +97,7 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['f_gasto'] = (new ConverterDate('date', $aDatos['f_gasto']))->fromPg();
-            $UbiGasto = new UbiGasto();
-            $UbiGasto->setAllAttributes($aDatos);
+            $UbiGasto =  UbiGasto::fromArray($aDatos);
             $UbiGastoSet->add($UbiGasto);
         }
         return $UbiGastoSet->getTot();
@@ -198,7 +197,7 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new UbiGasto())->setAllAttributes($aDatos);
+        return UbiGasto::fromArray($aDatos);
     }
 
     public function getNewId(): int

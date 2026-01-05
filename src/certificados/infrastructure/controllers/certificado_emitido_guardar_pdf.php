@@ -1,7 +1,7 @@
 <?php
 
-use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use web\ContestarJson;
 
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
@@ -26,9 +26,9 @@ if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
 $oF_certificado = $oCertificadoEmitido->getF_certificado();
 // Se supone que si accedo a esta página es porque soy una región del stgr.
 $esquema_region_stgr = $_SESSION['session_auth']['esquema'];
-$gesPersonaNotaOtraRegionStgr = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+$PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
 try {
-    $gesPersonaNotaOtraRegionStgr->addCertificado($Qid_nom, $certificado, $oF_certificado);
+    $PersonaNotaOtraRegionStgrRepository->addCertificado($Qid_nom, $certificado, $oF_certificado);
 } catch (\Exception $e) {
     $error_txt .= $e->getMessage();
 }

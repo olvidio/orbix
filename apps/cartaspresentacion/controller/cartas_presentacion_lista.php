@@ -82,7 +82,7 @@ switch ($Qque) {
                 $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
                 foreach ($cId_ubis as $aUbi) {
                     $oCentro = $CentroRepository->findById($aUbi['id_ubi']);
-                    if ($oCentro->isStatus()) {
+                    if ($oCentro->isActive()) {
                         $cCentros[] = $oCentro;
                     }
                 }

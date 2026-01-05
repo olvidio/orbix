@@ -21,7 +21,7 @@ final class ActividadNomText
         if (mb_strlen($value) > 255) {
             throw new \InvalidArgumentException('ActividadNomText length must be <= 255');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+\/\*]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'’`´:_\-()\+\/\*]+$/u", $value)) {
             throw new \InvalidArgumentException('ActividadNomText contiene caracteres no válidos');
         }
     }

@@ -15,11 +15,11 @@
 
 use core\ViewTwig;
 use notas\model\AsignaturasPendientes;
-use notas\model\entity\GestorPersonaNotaDB;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\personas\domain\entity\Persona;
 
 require_once("apps/core/global_header.inc");
@@ -43,22 +43,13 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 //posibles valores de stgr
-$NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
-$aTipos_stgr = $NivelStgrRepository->getArrayNivelesStgrCa();
-/*  "n"=> _("no cursa est."),
-    "b"=> _("bienio"),
-    "c1"=>  _("cuadrienio año I"),
-    "c2"=> _("cuadrienio año II-IV"),
-    "r"=> _("repaso"),
-*/
-// Quito los que no hacen estudios:
-unset ($aTipos_stgr["n"]);
-unset ($aTipos_stgr["r"]);
+$aTipos_stgr = NivelStgrId::getArrayNivelStgrOn();
 
 // ----------------------- Selección de Alumnos -----------------
 $a_alumnos_fin_c = [];
 $a_alumnos = [];
 $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
+$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
 foreach ($AsistenteRepository->getAsistentes(array('id_activ' => $id_activ)) as $oAsistente) {
     $id_nom = $oAsistente->getId_nom();
     $oPersona = Persona::findPersonaEnGlobal($id_nom);
@@ -80,13 +71,12 @@ foreach ($AsistenteRepository->getAsistentes(array('id_activ' => $id_activ)) as 
         $a_alumnos_fin_c[] = ['apellidos_nombre' => $ap_nom, 'asignaturas' => $aNomAsignaturasFaltan];
     }
     // busco las asignaturas aprobadas
-    $GesNotas = new GestorPersonaNotaDB();
     $aWhere = [];
     $aOperador = [];
     $aWhere['id_nom'] = $id_nom;
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel'] = 'BETWEEN';
-    $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
+    $cNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
     $aAprobadas = [];
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
@@ -127,7 +117,7 @@ foreach ($cAsignaturas as $oAsignatura) {
             $aNombresAlumnos[] = $datos['oPersona']->getPrefApellidosNombre();
         }
     }
-    if ($posibles_alumnos == 0) {
+    if ($posibles_alumnos === 0) {
         continue;
     }
     $aAsignaturas_alumnos[] = ['nom_asignatura' => $nom_asignatura,

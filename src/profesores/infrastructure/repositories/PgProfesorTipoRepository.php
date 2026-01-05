@@ -109,8 +109,7 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ProfesorTipo = new ProfesorTipo();
-            $ProfesorTipo->setAllAttributes($aDatos);
+            $ProfesorTipo = ProfesorTipo::fromArray($aDatos);
             $ProfesorTipoSet->add($ProfesorTipo);
         }
         return $ProfesorTipoSet->getTot();
@@ -198,7 +197,7 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorTipo())->setAllAttributes($aDatos);
+        return ProfesorTipo::fromArray($aDatos);
     }
 
     public function getNewId()

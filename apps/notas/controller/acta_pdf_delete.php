@@ -1,7 +1,8 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 use Illuminate\Http\JsonResponse;
-use notas\model\entity\Acta;
+use src\notas\domain\contracts\ActaDlRepositoryInterface;
+use src\notas\domain\contracts\ActaRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -17,11 +18,11 @@ require_once("apps/core/global_object.inc");
 $Qacta = (string)filter_input(INPUT_POST, 'acta_num');
 
 if (!empty($Qacta)) {
-    $oActa = new Acta($Qacta);
-    $oActa->DBCarregar('');
+    $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+    $oActa = $ActaRepository->findById($Qacta);
     $oActa->setPdf('');
-    if ($oActa->DBGuardar() === FALSE) {
-        $error_txt .= $oActa->getErrorTxt();
+    if ($ActaRepository->Guardar($oActa) === FALSE) {
+        $error_txt = $ActaRepository->getErrorTxt();
     }
 } else {
     $error_txt = _("No se encuentra el acta");

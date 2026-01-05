@@ -100,8 +100,7 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
             $aDatos['h_ini'] = (new ConverterDate('time', $aDatos['h_ini']))->fromPg();
             $aDatos['h_fin'] = (new ConverterDate('time', $aDatos['h_fin']))->fromPg();
-            $EncargoHorario = new EncargoHorario();
-            $EncargoHorario->setAllAttributes($aDatos);
+            $EncargoHorario =  EncargoHorario::fromArray($aDatos);
             $EncargoHorarioSet->add($EncargoHorario);
         }
         return $EncargoHorarioSet->getTot();
@@ -222,7 +221,7 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
         if (empty($aDatos)) {
             return null;
         }
-        return (new EncargoHorario())->setAllAttributes($aDatos);
+        return EncargoHorario::fromArray($aDatos);
     }
 
     public function getNewId()

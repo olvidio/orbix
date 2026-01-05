@@ -1,14 +1,13 @@
 <?php
 
-use actividadestudios\model\entity\ActividadAsignaturaDl;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\Acta;
-use notas\model\entity\GestorActa;
-use notas\model\entity\GestorActaTribunal;
-use notas\model\entity\GestorActaTribunalDl;
-use personas\model\entity\PersonaDl;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
+use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use web\Hash;
 use function core\urlsafe_b64encode;
 
@@ -43,7 +42,7 @@ $notas = empty($notas) ? '' : $notas;
 $permiso = empty($permiso) ? 3 : $permiso;
 
 // Si soy region del stgr, no puedo modificar actas (que lo hagan las dl).
-if (ConfigGlobal::mi_ambito() == 'rstgr') {
+if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $permiso = 0;
 }
 
@@ -63,7 +62,7 @@ $Qacta = (string)filter_input(INPUT_POST, 'acta');
 $Qnotas = (string)filter_input(INPUT_POST, 'notas');
 
 if (empty($notas) && empty($Qnotas)) {
-    echo $oPosicion->recordar();
+    $oPosicion->recordar();
 }
 
 //$acta=urldecode($acta);
@@ -79,11 +78,11 @@ $dl = ($dlEsquema=='cr')? ConfigGlobal::mi_region() : $mi_dele;
 */
 $dl = $mi_dele;
 
-$GesActas = new GestorActa();
-$ult_lib = $GesActas->getUltimoLibro();
-$ult_pag = $GesActas->getUltimaPagina($ult_lib);
-$ult_lin = $GesActas->getUltimaLinea($ult_lib);
-$ult_acta = $GesActas->getUltimaActa($any, $dl);
+$ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+$ult_lib = ''; //$GesActas->getUltimoLibro();
+$ult_pag = ''; // $GesActas->getUltimaPagina($ult_lib);
+$ult_lin =  ''; //$GesActas->getUltimaLinea($ult_lib);
+$ult_acta =  $ActaRepository->getUltimaActa($any, $dl);
 $acta_new = '';
 $pdf = '';
 
@@ -129,7 +128,7 @@ if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //signifi
         $observ = (string)filter_input(INPUT_POST, 'observ');
         $permiso = (integer)filter_input(INPUT_POST, 'permiso');
     } else {
-        $oActa = new Acta($acta_actual);
+        $oActa = $ActaRepository->findById($acta_actual);
         $id_asignatura = $oActa->getId_asignatura();
         $id_activ = $oActa->getId_activ();
         $f_acta = $oActa->getF_acta()->getFromLocal();
@@ -149,25 +148,24 @@ if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //signifi
     $ult_acta = "$dl {$ult_acta}/{$any}";
     $acta_new = "$dl {$num_acta}/{$any}";
 
-    if ($notas == "nuevo") { //vengo de un ca
+    if ($notas === "nuevo") { //vengo de un ca
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
         $id_activ = empty($id_activ) ? $Qid_activ : $id_activ;
         $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
         $id_asignatura_actual = empty($id_asignatura) ? $Qid_asignatura : $id_asignatura;
         // Busco al profesor como examinador principal.
-        $oActividadAsignatura = new ActividadAsignaturaDl();
-        $oActividadAsignatura->setId_activ($id_activ);
-        $oActividadAsignatura->setId_asignatura($id_asignatura_actual);
-        $oActividadAsignatura->DBCarregar();
+        $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
+        $oActividadAsignatura = $ActividadAsignaturaDlRepository->findById($id_activ, $id_asignatura_actual);
         $id_profesor = $oActividadAsignatura->getId_profesor();
-        $oPersonaDl = new PersonaDl($id_profesor);
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $oPersonaDl = $PersonaDlRepository->findById($id_profesor);
         $ap_nom = $oPersonaDl->getTituloNombre();
         $examinador = $ap_nom;
     } else { // estoy actualizando la página
         if (!empty($a_sel) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
             $id_activ = (integer)strtok($a_sel[0], '#');
             $id_asignatura = (integer)strtok('#');
-            $cActas = $GesActas->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
+            $cActas = $ActaRepository->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
             $oActa = $cActas[0];
             $id_asignatura = $oActa->getId_asignatura();
             $id_activ = $oActa->getId_activ();
@@ -200,11 +198,11 @@ if (!empty($ult_acta)) {
 if (!empty($acta_actual)) {
     // Si es cr, se mira en todas:
     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-        $GesTribunal = new GestorActaTribunal();
+        $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalRepositoryInterface::class);
     } else {
-        $GesTribunal = new GestorActaTribunalDl();
+        $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
     }
-    $cTribunal = $GesTribunal->getActasTribunales(array('acta' => $acta_actual, '_ordre' => 'orden'));
+    $cTribunal = $repoActaTribunal->getActasTribunales(array('acta' => $acta_actual, '_ordre' => 'orden'));
 } else {
     $cTribunal = [];
 }

@@ -16,7 +16,7 @@ class RoleTest extends myTest
         parent::setUp();
         $this->role = new Role();
         $this->role->setId_role(1);
-        $this->role->setRole(new RoleName('admin'));
+        $this->role->setRoleVo(new RoleName('admin'));
         $this->role->setSf(true);
         $this->role->setSv(false);
     }
@@ -34,15 +34,15 @@ class RoleTest extends myTest
 
     public function test_get_role()
     {
-        $this->assertInstanceOf(RoleName::class, $this->role->getRole());
+        $this->assertInstanceOf(RoleName::class, $this->role->getRoleVo());
         $this->assertEquals('admin', $this->role->getRoleAsString());
     }
 
     public function test_set_and_get_role()
     {
         $roleName = new RoleName('user');
-        $this->role->setRole($roleName);
-        $this->assertInstanceOf(RoleName::class, $this->role->getRole());
+        $this->role->setRoleVo($roleName);
+        $this->assertInstanceOf(RoleName::class, $this->role->getRoleVo());
         $this->assertEquals('user', $this->role->getRoleAsString());
     }
 
@@ -71,15 +71,15 @@ class RoleTest extends myTest
     public function test_get_pau()
     {
         // Default should normalize to PAU_NONE
-        $this->assertInstanceOf(PauType::class, $this->role->getPau());
+        $this->assertInstanceOf(PauType::class, $this->role->getPauVo());
         $this->assertEquals(PauType::PAU_NONE, $this->role->getPauAsString());
     }
 
     public function test_set_and_get_pau()
     {
         $pauType = new PauType(PauType::PAU_CDC);
-        $this->role->setPau($pauType);
-        $this->assertInstanceOf(PauType::class, $this->role->getPau());
+        $this->role->setPauVo($pauType);
+        $this->assertInstanceOf(PauType::class, $this->role->getPauVo());
         $this->assertEquals(PauType::PAU_CDC, $this->role->getPauAsString());
     }
 

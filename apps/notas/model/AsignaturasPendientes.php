@@ -4,6 +4,7 @@ namespace notas\model;
 
 use core\ClasePropiedades;
 use core\ConfigGlobal;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use function core\is_true;
 
@@ -113,7 +114,7 @@ class AsignaturasPendientes extends ClasePropiedades
     {
         if (empty($this->iasignaturasB)) {
             $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-            $cAsignaturasB = $AsignaturaRepository->getAsignaturas(array('status' => 't', 'id_nivel' => '1100,1300'), array('id_nivel' => 'BETWEEN'));
+            $cAsignaturasB = $AsignaturaRepository->getAsignaturas(array('active' => 't', 'id_nivel' => '1100,1300'), array('id_nivel' => 'BETWEEN'));
 
             $this->iasignaturasB = count($cAsignaturasB);
             $aIdNivel = [];
@@ -134,7 +135,7 @@ class AsignaturasPendientes extends ClasePropiedades
     {
         if (empty($this->iasignaturasC)) {
             $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-            $cAsignaturasC = $AsignaturaRepository->getAsignaturas(array('status' => 't', 'id_nivel' => '2100,2500'), array('id_nivel' => 'BETWEEN'));
+            $cAsignaturasC = $AsignaturaRepository->getAsignaturas(array('active' => 't', 'id_nivel' => '2100,2500'), array('id_nivel' => 'BETWEEN'));
 
             $this->iasignaturasC = count($cAsignaturasC);
             $aIdNivel = [];
@@ -155,7 +156,7 @@ class AsignaturasPendientes extends ClasePropiedades
     {
         if (empty($this->iasignaturasC1)) {
             $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-            $cAsignaturasC1 = $AsignaturaRepository->getAsignaturas(array('status' => 't', 'id_nivel' => '2100,2113'), array('id_nivel' => 'BETWEEN'));
+            $cAsignaturasC1 = $AsignaturaRepository->getAsignaturas(array('active' => 't', 'id_nivel' => '2100,2113'), array('id_nivel' => 'BETWEEN'));
             $this->iasignaturasC1 = count($cAsignaturasC1);
             $aIdNivel = [];
             foreach ($cAsignaturasC1 as $oAsignatura) {
@@ -175,7 +176,7 @@ class AsignaturasPendientes extends ClasePropiedades
     {
         if (empty($this->iasignaturasC2)) {
             $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-            $cAsignaturasC2 = $AsignaturaRepository->getAsignaturas(array('status' => 't', 'id_nivel' => '2200,2500'), array('id_nivel' => 'BETWEEN'));
+            $cAsignaturasC2 = $AsignaturaRepository->getAsignaturas(array('active' => 't', 'id_nivel' => '2200,2500'), array('id_nivel' => 'BETWEEN'));
             $this->iasignaturasC2 = count($cAsignaturasC2);
             $aIdNivel = [];
             foreach ($cAsignaturasC2 as $oAsignatura) {
@@ -198,22 +199,22 @@ class AsignaturasPendientes extends ClasePropiedades
             case 'bienio':
                 $num_curso = $this->getAsignaturasB();
                 $condicion = "AND id_nivel IN (" . implode(',', $this->aIdNivel) . ")";
-                $condicion_stgr = "AND p.stgr = 'b'";
+                $condicion_stgr = "AND p.nivel_stgr = ".NivelStgrId::B;
                 break;
             case 'cuadrienio':
                 $num_curso = $this->getAsignaturasC();
                 $condicion = "AND id_nivel IN (" . implode(',', $this->aIdNivel) . ")";
-                $condicion_stgr = "AND p.stgr ~ '^c'";
+                $condicion_stgr = "AND p.nivel_stgr IN (".NivelStgrId::C1.",".NivelStgrId::C2.",".NivelStgrId::BC.")";
                 break;
             case 'c1':
                 $num_curso = $this->getAsignaturasC1();
                 $condicion = "AND id_nivel IN (" . implode(',', $this->aIdNivel) . ")";
-                $condicion_stgr = "AND p.stgr = 'c1'";
+                $condicion_stgr = "AND p.nivel_stgr = ". NivelStgrId::C1;
                 break;
             case 'c2':
                 $num_curso = $this->getAsignaturasC2();
                 $condicion = "AND id_nivel IN (" . implode(',', $this->aIdNivel) . ")";
-                $condicion_stgr = "AND p.stgr = 'c2'";
+                $condicion_stgr = "AND p.nivel_stgr = ". NivelStgrId::C2;
                 break;
         }
         return array('num' => (int)$num_curso, 'condicion' => $condicion, 'condicion_stgr' => $condicion_stgr);
@@ -338,11 +339,11 @@ class AsignaturasPendientes extends ClasePropiedades
 
     public function createAsignaturas()
     {
-        //Como ahora las asignaturas estan en otra base de datos(comun) hago una copia para poder hacer unions...
+        //Como ahora las asignaturas están en otra base de datos(comun) hago una copia para poder hacer unions...
         $oDbl = $this->getoDbl();
         $asignaturas = $this->getNomAsignaturas();
 
-        // No hace falta DELETE si pongo TEMP. (Por alguna razon SI existe)
+        // No hace falta DELETE si pongo TEMP. (Por alguna razón SI existe)
         $sqlDelete = "DROP TABLE IF EXISTS $asignaturas";
         $sqlCreate = "CREATE TEMP TABLE $asignaturas(
 						id_asignatura integer,
@@ -352,7 +353,7 @@ class AsignaturasPendientes extends ClasePropiedades
 						creditos numeric(4,2),
 						year character varying(3),
 						id_sector smallint,
-						status boolean DEFAULT true NOT NULL,
+						active boolean DEFAULT true NOT NULL,
 						id_tipo integer
 					 )";
 
@@ -363,9 +364,9 @@ class AsignaturasPendientes extends ClasePropiedades
         $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_id_asignatura" . " ON $asignaturas (id_asignatura)");
 
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('status' => 'true'));
+        $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('active' => 'true'));
 
-        $prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
+        $prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :active, :id_tipo)");
         foreach ($cAsignaturas as $oAsignatura) {
             $aDades = [];
             $aDades['id_asignatura'] = $oAsignatura->getId_asignatura();
@@ -375,7 +376,7 @@ class AsignaturasPendientes extends ClasePropiedades
             $aDades['creditos'] = $oAsignatura->getCreditos();
             $aDades['year'] = $oAsignatura->getYear();
             $aDades['id_sector'] = $oAsignatura->getId_sector();
-            $aDades['status'] = $oAsignatura->getStatus();
+            $aDades['active'] = $oAsignatura->isActive();
             $aDades['id_tipo'] = $oAsignatura->getId_tipo();
 
             $prep->execute($aDades);

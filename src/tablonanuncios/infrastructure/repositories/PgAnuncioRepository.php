@@ -97,8 +97,7 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
             // para las fechas del postgres (texto iso)
             $aDatos['tanotado'] = (new ConverterDate('timestamp', $aDatos['tanotado']))->fromPg();
             $aDatos['teliminado'] = (new ConverterDate('timestamp', $aDatos['teliminado']))->fromPg();
-            $Anuncio = new Anuncio();
-            $Anuncio->setAllAttributes($aDatos);
+            $Anuncio = Anuncio::fromArray($aDatos);
             $AnuncioSet->add($Anuncio);
         }
         return $AnuncioSet->getTot();
@@ -208,7 +207,7 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         if (empty($aDatos)) {
             return null;
         }
-        return (new Anuncio())->setAllAttributes($aDatos);
+        return Anuncio::fromArray($aDatos);
     }
 
 }

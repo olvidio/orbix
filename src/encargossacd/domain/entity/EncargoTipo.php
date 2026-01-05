@@ -6,18 +6,12 @@ use core\Set;
 use src\encargossacd\domain\value_objects\EncargoTipoId;
 use src\encargossacd\domain\value_objects\EncargoTipoText;
 use src\encargossacd\domain\value_objects\EncargoModHorarioId;
+use src\shared\domain\traits\Hydratable;
 
-/**
- * Clase que implementa la entidad encargo_tipo
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 23/12/2025
- */
 class EncargoTipo
 {
+    use Hydratable;
+
     // NO se usan, son solo para asegurar que exista la traducción
     private function traduccion()
     {
@@ -50,147 +44,96 @@ class EncargoTipo
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_tipo_enc de EncargoTipo
-     *
-     * @var EncargoTipoId
-     */
-    private EncargoTipoId $iid_tipo_enc;
-    /**
-     * Tipo_enc de EncargoTipo
-     *
-     * @var EncargoTipoText
-     */
-    private EncargoTipoText $stipo_enc;
-    /**
-     * Mod_horario de EncargoTipo
-     *
-     * @var EncargoModHorarioId
-     */
-    private EncargoModHorarioId $imod_horario;
+
+    private EncargoTipoId $id_tipo_enc;
+
+    private EncargoTipoText $tipo_enc;
+
+    private EncargoModHorarioId $mod_horario;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return EncargoTipo
-     */
-    public function setAllAttributes(array $aDatos): EncargoTipo
-    {
-        if (array_key_exists('id_tipo_enc', $aDatos)) {
-            $this->setId_tipo_enc($aDatos['id_tipo_enc']);
-        }
-        if (array_key_exists('tipo_enc', $aDatos)) {
-            $this->setTipo_enc($aDatos['tipo_enc']);
-        }
-        if (array_key_exists('mod_horario', $aDatos)) {
-            $this->setMod_horario($aDatos['mod_horario']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_tipo_enc
-     */
-    /**
-     * @deprecated Usar `getTipo_enc_idVo(): EncargoTipoId` en su lugar.
+     * @deprecated Usar `getTipoEncIdVo(): EncargoTipoId` en su lugar.
      */
     public function getId_tipo_enc(): int
     {
-        return $this->iid_tipo_enc->value();
+        return $this->id_tipo_enc->value();
     }
 
+
     /**
-     *
-     * @param int $iid_tipo_enc
+     * @deprecated Usar `setTipoEncIdVo(EncargoTipoId $vo): void` en su lugar.
      */
-    /**
-     * @deprecated Usar `setTipo_enc_idVo(EncargoTipoId $vo): void` en su lugar.
-     */
-    public function setId_tipo_enc(int $iid_tipo_enc): void
+    public function setId_tipo_enc(int $id_tipo_enc): void
     {
-        $this->iid_tipo_enc = new EncargoTipoId($iid_tipo_enc);
+        $this->id_tipo_enc = new EncargoTipoId($id_tipo_enc);
     }
 
-    public function getTipo_enc_idVo(): EncargoTipoId
+    public function getTipoEncIdVo(): EncargoTipoId
     {
-        return $this->iid_tipo_enc;
+        return $this->id_tipo_enc;
     }
 
-    public function setTipo_enc_idVo(EncargoTipoId $vo): void
+    public function setTipoEncIdVo(EncargoTipoId $vo): void
     {
-        $this->iid_tipo_enc = $vo;
+        $this->id_tipo_enc = $vo;
     }
 
+
     /**
-     *
-     * @return string $stipo_enc
-     */
-    /**
-     * @deprecated Usar `getTipo_encVo(): EncargoTipoText` en su lugar.
+     * @deprecated Usar `getTipoEncVo(): EncargoTipoText` en su lugar.
      */
     public function getTipo_enc(): string
     {
-        return $this->stipo_enc->value();
+        return $this->tipo_enc->value();
     }
 
+
     /**
-     *
-     * @param string $stipo_enc
+     * @deprecated Usar `setTipoEncVo(EncargoTipoText $vo): void` en su lugar.
      */
-    /**
-     * @deprecated Usar `setTipo_encVo(EncargoTipoText $vo): void` en su lugar.
-     */
-    public function setTipo_enc(string $stipo_enc): void
+    public function setTipo_enc(string $tipo_enc): void
     {
-        $this->stipo_enc = new EncargoTipoText($stipo_enc);
+        $this->tipo_enc = new EncargoTipoText($tipo_enc);
     }
 
-    public function getTipo_encVo(): EncargoTipoText
+    public function getTipoEncVo(): EncargoTipoText
     {
-        return $this->stipo_enc;
+        return $this->tipo_enc;
     }
 
-    public function setTipo_encVo(EncargoTipoText $vo): void
+    public function setTipoEncVo(EncargoTipoText $vo): void
     {
-        $this->stipo_enc = $vo;
+        $this->tipo_enc = $vo;
     }
 
+
     /**
-     *
-     * @return int $imod_horario
-     */
-    /**
-     * @deprecated Usar `getMod_horarioVo(): EncargoModHorarioId` en su lugar.
+     * @deprecated Usar `getModHorarioVo(): EncargoModHorarioId` en su lugar.
      */
     public function getMod_horario(): int
     {
-        return $this->imod_horario->value();
+        return $this->mod_horario->value();
     }
+
 
     /**
-     *
-     * @param int $imod_horario
+     * @deprecated Usar `setModHorarioVo(EncargoModHorarioId $vo): void` en su lugar.
      */
-    /**
-     * @deprecated Usar `setMod_horarioVo(EncargoModHorarioId $vo): void` en su lugar.
-     */
-    public function setMod_horario(int $imod_horario): void
+    public function setMod_horario(int $mod_horario): void
     {
-        $this->imod_horario = new EncargoModHorarioId($imod_horario);
+        $this->mod_horario = new EncargoModHorarioId($mod_horario);
     }
 
-    public function getMod_horarioVo(): EncargoModHorarioId
+    public function getModHorarioVo(): EncargoModHorarioId
     {
-        return $this->imod_horario;
+        return $this->mod_horario;
     }
 
-    public function setMod_horarioVo(EncargoModHorarioId $vo): void
+    public function setModHorarioVo(EncargoModHorarioId $vo): void
     {
-        $this->imod_horario = $vo;
+        $this->mod_horario = $vo;
     }
 
 
@@ -200,7 +143,7 @@ class EncargoTipo
         return 'id_tipo_enc';
     }
 
-    function getDatosCampos(): array
+  public function getDatosCampos(): array
     {
         $oEncargoTipoSet = new Set();
         $oEncargoTipoSet->add($this->getDatosId_tipo_enc());
@@ -210,12 +153,12 @@ class EncargoTipo
     }
 
     /**
-     * Recupera les propietats de l'atribut stipo_enc de EncargoTipo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo tipo_enc de EncargoTipo
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosId_tipo_enc()
+    private function getDatosId_tipo_enc(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_tipo_enc');
@@ -228,12 +171,12 @@ class EncargoTipo
     }
 
     /**
-     * Recupera les propietats de l'atribut stipo_enc de EncargoTipo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo tipo_enc de EncargoTipo
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosTipo_enc()
+    private function getDatosTipo_enc(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo_enc');
@@ -246,12 +189,12 @@ class EncargoTipo
     }
 
     /**
-     * Recupera les propietats de l'atribut imod_horario de EncargoTipo
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo mod_horario de EncargoTipo
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosMod_horario()
+    private function getDatosMod_horario(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('mod_horario');

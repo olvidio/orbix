@@ -2,12 +2,15 @@
 
 namespace src\tablonanuncios\domain\entity;
 
+use src\shared\domain\traits\Hydratable;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
 class Anuncio
 {
+    use Hydratable;
+
     public const CAT_ALERTA = 1;
     public const CAT_AVISO = 2;
 
@@ -22,44 +25,6 @@ class Anuncio
     private DateTimeLocal|NullDateTimeLocal $tanotado;
     private DateTimeLocal|NullDateTimeLocal $teliminado;
     private int $categoria;
-
-    public function setAllAttributes(array $aDatos): Anuncio
-    {
-        if (array_key_exists('uuid_item', $aDatos)) {
-            $uuid_item = new AnuncioId($aDatos['uuid_item']);
-            $this->setUuid_item($uuid_item);
-        }
-        if (array_key_exists('usuario_creador', $aDatos)) {
-            $this->setUsuarioCreador($aDatos['usuario_creador']);
-        }
-        if (array_key_exists('esquema_emisor', $aDatos)) {
-            $this->setEsquemaEmisor($aDatos['esquema_emisor']);
-        }
-        if (array_key_exists('esquema_destino', $aDatos)) {
-            $this->setEsquemaDestino($aDatos['esquema_destino']);
-        }
-        if (array_key_exists('texto_anuncio', $aDatos)) {
-            $this->setTextoAnuncio($aDatos['texto_anuncio']);
-        }
-        if (array_key_exists('idioma', $aDatos)) {
-            $this->setIdioma($aDatos['idioma']);
-        }
-        if (array_key_exists('tablon', $aDatos)) {
-            $this->setTablon($aDatos['tablon']);
-        }
-        if (array_key_exists('tanotado', $aDatos)) {
-            $tanotado = $aDatos['tanotado'] ?? new NullDateTimeLocal();
-            $this->setTanotado($tanotado);
-        }
-        if (array_key_exists('teliminado', $aDatos)) {
-            $teliminado = $aDatos['teliminado'] ?? new NullDateTimeLocal();
-            $this->setTeliminado($teliminado);
-        }
-        if (array_key_exists('categoria', $aDatos)) {
-            $this->setCategoria($aDatos['categoria']);
-        }
-        return $this;
-    }
 
     public function getUuid_item(): AnuncioId
     {

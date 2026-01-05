@@ -1,6 +1,5 @@
 <?php
 
-use notas\model\entity\GestorPersonaNotaDB;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -17,6 +16,8 @@ use notas\model\entity\GestorPersonaNotaDB;
  * Funciones más comunes de la aplicación
  */
 // INICIO Cabecera global de URL de controlador *********************************
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -28,12 +29,12 @@ require_once("apps/core/global_object.inc");
 $id_nom_org = (integer)filter_input(INPUT_POST, 'id_nom_org');
 $id_nom_dst = (integer)filter_input(INPUT_POST, 'id_nom_dst');
 
-$gesPersonaNota = new GestorPersonaNotaDB();
-$cPersonaOrgNotas = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom_org]);
+$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+$cPersonaOrgNotas = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom_org]);
 
 $error = '';
+// TODO
 foreach ($cPersonaOrgNotas as $oPersonaNota) {
-    $oPersonaNota->DBCarregar();
     //print_r($oPersonaNota);
     $NuevoObj = clone $oPersonaNota;
     $NuevoObj->setId_nom($id_nom_dst);
@@ -44,7 +45,7 @@ foreach ($cPersonaOrgNotas as $oPersonaNota) {
 
 if (!empty($error)) {
     $jsondata['success'] = FALSE;
-    $jsondata['mensaje'] = $error_txt;
+    $jsondata['mensaje'] = $error;
 } else {
     $jsondata['success'] = TRUE;
 }

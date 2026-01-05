@@ -1,12 +1,11 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use core\ViewPhtml;
-use notas\model\entity\Acta;
-use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
-use personas\model\entity\GestorPersonaStgr;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
+use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
@@ -26,7 +25,7 @@ require_once("apps/core/global_object.inc");
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -62,9 +61,17 @@ $titulo = '';
 
 ////// Apellidos
 if (!empty($Qapellido1)) {
+    $PersonaPubRepository = $GLOBALS['container']->make(PersonaPubRepositoryInterface::class);
+    // Buscar todos los que han hecho cv fuera de su dl. están en publicv.p_de_paso
+    $aWhere = [];
+    $aWhere['apellido1'] = '^' . $Qapellido1;
+    $aOperador['apellido1'] = 'sin_acentos';
 
-    $GesPersonas = new GestorPersonaStgr();
-    $cPersonas = $GesPersonas->getPerosnasOtrosStgr($Qapellido1);
+    $aWhere['situacion'] = 'A';
+    //$aWhere['stgr'] = 'b|c1|c2';
+    //$aOperador['stgr'] = '~';
+    $aWhere['_ordre'] = 'dl,stgr,apellido1,nom';
+    $cPersonas = $PersonaPubRepository->getPerosnas($Qapellido1);
     $i = 0;
     $a_Nombre = [];
     $a_valores = [];
@@ -90,8 +97,8 @@ if (!empty($Qapellido1)) {
 
     $aWhere = ['json_certificados' => 'x', '_ordre' => 'id_nom'];
     $aOperador = ['json_certificados' => 'IS NULL'];
-    $gesPersonaNotaOtraRegionDB = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-    $a_notas_otras_regiones_stgr_sin_cert = $gesPersonaNotaOtraRegionDB->getPersonaNotas($aWhere, $aOperador);
+    $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
+    $a_notas_otras_regiones_stgr_sin_cert = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas($aWhere, $aOperador);
 
     // lista asignaturas
     $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
@@ -105,14 +112,15 @@ if (!empty($Qapellido1)) {
     $id_nom_anterior = '';
     $alert = '';
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
     foreach ($a_notas_otras_regiones_stgr_sin_cert as $oPersonaNotaOtraRegionDB) {
         $i++;
         $id_nom = $oPersonaNotaOtraRegionDB->getId_nom();
 
-        if (!empty($id_nom_anterior) && $id_nom != $id_nom_anterior) {
+        if (!empty($id_nom_anterior) && $id_nom !== $id_nom_anterior) {
             $oPersona = Persona::findPersonaEnGlobal($id_nom_anterior);
-            if (!is_object($oPersona)) {
-                $msg_err .= "<br>$oPersona en  " . __FILE__ . ": line " . __LINE__;
+            if ($oPersona === null) {
+                $msg_err .= "<br>No encuentro a nadio con id_nom $id_nom_anterior en  " . __FILE__ . ": line " . __LINE__;
                 $id_nom_anterior = $id_nom;
                 continue;
             }
@@ -121,7 +129,7 @@ if (!empty($Qapellido1)) {
             $ctr = $oPersona->getCentro_o_dl();
             $dl = $oPersona->getDl();
 
-            $a_valores[$i]['sel'] = "$id_nom_anterior";
+            $a_valores[$i]['sel'] = (string)$id_nom_anterior;
             $a_valores[$i][5] = $id_nom_anterior;
             $a_valores[$i][1] = $apellidos_nombre;
             $a_valores[$i][2] = $dl;
@@ -137,7 +145,7 @@ if (!empty($Qapellido1)) {
         $id_activ = $oPersonaNotaOtraRegionDB->getId_activ();
         // comprobar si ya se ha subido el acta firmada
         $acta = $oPersonaNotaOtraRegionDB->getActa();
-        $Acta = new Acta($acta);
+        $Acta = $ActaRepository->findById($acta);
         if ($Acta->hasEmptyPdf()) {
             $alert .= '!';
         }
@@ -163,7 +171,7 @@ if (!empty($Qapellido1)) {
             $ctr = $oPersona->getCentro_o_dl();
             $dl = $oPersona->getDl();
 
-            $a_valores[$i + 1]['sel'] = "$id_nom";
+            $a_valores[$i + 1]['sel'] = (string)$id_nom;
             $a_valores[$i + 1][5] = $id_nom;
             $a_valores[$i + 1][1] = $apellidos_nombre;
             $a_valores[$i + 1][2] = $dl;

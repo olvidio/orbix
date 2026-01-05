@@ -27,7 +27,13 @@ use src\personas\infrastructure\repositories\PgTelecoPersonaDlRepository;
 use src\personas\infrastructure\repositories\PgTelecoPersonaExRepository;
 use src\personas\infrastructure\repositories\PgTelecoPersonaRepository;
 use src\personas\domain\services\TelecoPersonaService;
+use src\personas\domain\contracts\TrasladoRepositoryInterface;
+use src\personas\infrastructure\repositories\PgTrasladoRepository;
+use src\personas\domain\contracts\UltimaAsistenciaRepositoryInterface;
+use src\personas\infrastructure\repositories\PgUltimaAsistenciaRepository;
+use src\personas\application\services\PersonaFinderService;
 use function DI\autowire;
+use function DI\get;
 
 return [
     // Mapeo simple: Interfaz => Clase
@@ -47,4 +53,16 @@ return [
 
     // Services
     TelecoPersonaService::class => autowire(TelecoPersonaService::class),
+    TrasladoRepositoryInterface::class => autowire(PgTrasladoRepository::class),
+    UltimaAsistenciaRepositoryInterface::class => autowire(PgUltimaAsistenciaRepository::class),
+
+    // Application Services
+    PersonaFinderService::class => autowire(PersonaFinderService::class)
+        ->constructor(
+            get(PersonaDlRepositoryInterface::class),
+            get(PersonaPubRepositoryInterface::class),
+            get(PersonaExRepositoryInterface::class),
+            get('oDB'),
+            get('oDBR')
+        ),
 ];

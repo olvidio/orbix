@@ -17,37 +17,37 @@ class LocalTest extends myTest
     {
         parent::setUp();
         $this->local = new Local();
-        $this->local->setId_locale(new IdLocale('en_US'));
+        $this->local->setIdLocaleVo(new IdLocale('en_US'));
     }
 
     public function test_get_id_locale()
     {
-        $this->assertInstanceOf(IdLocale::class, $this->local->getId_locale());
-        $this->assertEquals('en_US', $this->local->getId_localeAsString());
+        $this->assertInstanceOf(IdLocale::class, $this->local->getIdLocaleVo());
+        $this->assertEquals('en_US', $this->local->getIdLocaleAsString());
     }
 
     public function test_set_and_get_nom_locale()
     {
         $nombreLocale = new NombreLocale('English (United States)');
-        $this->local->setNom_locale($nombreLocale);
-        $this->assertInstanceOf(NombreLocale::class, $this->local->getNom_locale());
-        $this->assertEquals('English (United States)', $this->local->getNom_localeAsString());
+        $this->local->setNomLocaleVo($nombreLocale);
+        $this->assertInstanceOf(NombreLocale::class, $this->local->getNomLocaleVo());
+        $this->assertEquals('English (United States)', $this->local->getNomLocaleAsString());
     }
 
     public function test_set_and_get_idioma()
     {
         $idioma = new Idioma('en');
-        $this->local->setIdioma($idioma);
-        $this->assertInstanceOf(Idioma::class, $this->local->getIdioma());
+        $this->local->setIdiomaVo($idioma);
+        $this->assertInstanceOf(Idioma::class, $this->local->getIdiomaVo());
         $this->assertEquals('en', $this->local->getIdiomaAsString());
     }
 
     public function test_set_and_get_nom_idioma()
     {
         $nombreIdioma = new NombreIdioma('English');
-        $this->local->setNom_idioma($nombreIdioma);
-        $this->assertInstanceOf(NombreIdioma::class, $this->local->getNom_idioma());
-        $this->assertEquals('English', $this->local->getNom_idiomaAsString());
+        $this->local->setNomIdiomaVo($nombreIdioma);
+        $this->assertInstanceOf(NombreIdioma::class, $this->local->getNomIdiomaVo());
+        $this->assertEquals('English', $this->local->getNomIdiomaAsString());
     }
 
     public function test_set_and_get_activo()
@@ -68,10 +68,10 @@ class LocalTest extends myTest
         ];
         $local->setAllAttributes($attributes);
 
-        $this->assertEquals('en_US', $local->getId_localeAsString());
-        $this->assertEquals('English (United States)', $local->getNom_localeAsString());
+        $this->assertEquals('en_US', $local->getIdLocaleAsString());
+        $this->assertEquals('English (United States)', $local->getNomLocaleAsString());
         $this->assertEquals('en', $local->getIdiomaAsString());
-        $this->assertEquals('English', $local->getNom_idiomaAsString());
+        $this->assertEquals('English', $local->getNomIdiomaAsString());
         $this->assertTrue($local->isActivo());
     }
 
@@ -87,10 +87,10 @@ class LocalTest extends myTest
         ];
         $local->setAllAttributes($attributes);
 
-        $this->assertEquals('en_US', $local->getId_localeAsString());
-        $this->assertEquals('English (United States)', $local->getNom_localeAsString());
+        $this->assertEquals('en_US', $local->getIdLocaleAsString());
+        $this->assertEquals('English (United States)', $local->getNomLocaleAsString());
         $this->assertEquals('en', $local->getIdiomaAsString());
-        $this->assertEquals('English', $local->getNom_idiomaAsString());
+        $this->assertEquals('English', $local->getNomIdiomaAsString());
         $this->assertTrue($local->isActivo());
     }
 }

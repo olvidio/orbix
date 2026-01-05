@@ -165,7 +165,7 @@ $oDesplNoms->setOpcion_sel($id_tipo_enc);
 $oDesplNoms->setBlanco('t');
 
 $aWhere = [];
-$aWhere['status'] = 't';
+$aWhere['active'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
 $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);

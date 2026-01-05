@@ -3,24 +3,23 @@
 namespace src\asistentes\domain\entity;
 
 use core\ConfigGlobal;
-use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\ResumenPlazas;
 use src\actividadplazas\domain\value_objects\PlazaId;
-use src\shared\domain\events\EntidadModificada;
-use src\shared\domain\traits\EmitsDomainEvents;
-use function core\is_true;
+use src\asistentes\domain\value_objects\AsistenteEncargo;
+use src\asistentes\domain\value_objects\AsistenteObserv;
+use src\asistentes\domain\value_objects\AsistenteObservEst;
+use src\asistentes\domain\value_objects\AsistentePropietario;
+use src\personas\domain\value_objects\PersonaTablaCode;
+use src\shared\domain\contracts\AggregateRoot;
+use src\shared\domain\entity\Entity;
+use src\shared\domain\traits\Hydratable;
+use src\ubis\domain\value_objects\DelegacionCode;
 
-/**
- * Clase que implementa la entidad d_asistentes_dl
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 16/12/2025
- */
-class Asistente
+
+class Asistente extends Entity implements AggregateRoot
 {
-    use EmitsDomainEvents;
+    use Hydratable;
+
     /**
      * Saber si puedo modificar.
      * - true para asistentes de mi dl, y para los de paso que he puesto yo
@@ -35,446 +34,282 @@ class Asistente
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_activ de Asistente
-     *
-     * @var int
-     */
-    private int $iid_activ;
-    /**
-     * Id_nom de Asistente
-     *
-     * @var int
-     */
-    private int $iid_nom;
-    /**
-     * Propio de Asistente
-     *
-     * @var bool
-     */
-    private bool $bpropio;
-    /**
-     * Est_ok de Asistente
-     *
-     * @var bool
-     */
-    private bool $best_ok;
-    /**
-     * Cfi de Asistente
-     *
-     * @var bool
-     */
-    private bool $bcfi;
-    /**
-     * Cfi_con de Asistente
-     *
-     * @var int|null
-     */
-    private int|null $icfi_con = null;
-    /**
-     * Falta de Asistente
-     *
-     * @var bool
-     */
-    private bool $bfalta;
-    /**
-     * Encargo de Asistente
-     *
-     * @var string|null
-     */
-    private string|null $sencargo = null;
-    /**
-     * Dl_responsable de Asistente
-     *
-     * @var string|null
-     */
-    private string|null $sdl_responsable = null;
-    /**
-     * Observ de Asistente
-     *
-     * @var string|null
-     */
-    private string|null $sobserv = null;
-    /**
-     * Id_tabla de Asistente
-     *
-     * @var string|null
-     */
-    private string|null $sid_tabla = null;
-    /**
-     * Plaza de Asistente
-     *
-     * @var int|null
-     */
-    private int|null $iplaza = null;
-    /**
-     * Propietario de Asistente
-     *
-     * @var string|null
-     */
-    private string|null $spropietario = null;
-    /**
-     * Observ_est de Asistente
-     *
-     * @var string|null
-     */
-    private string|null $sobserv_est = null;
+
+    private int $id_activ;
+
+    private int $id_nom;
+
+    private bool $propio;
+
+    private bool $est_ok;
+
+    private bool $cfi;
+
+    private int|null $cfi_con = null;
+
+    private bool $falta;
+
+    private string|null $encargo = null;
+
+    private string|null $dl_responsable = null;
+
+    private string|null $observ = null;
+
+    private string|null $id_tabla = null;
+
+    private int|null $plaza = null;
+
+    private string|null $propietario = null;
+
+    private string|null $observ_est = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Asistente
-     */
-    public function setAllAttributes(array $aDatos): Asistente
-    {
-        if (array_key_exists('id_activ', $aDatos)) {
-            $this->setId_activ($aDatos['id_activ']);
-        }
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom($aDatos['id_nom']);
-        }
-        if (array_key_exists('propio', $aDatos)) {
-            $this->setPropio(is_true($aDatos['propio']));
-        }
-        if (array_key_exists('est_ok', $aDatos)) {
-            $this->setEst_ok(is_true($aDatos['est_ok']));
-        }
-        if (array_key_exists('cfi', $aDatos)) {
-            $this->setCfi(is_true($aDatos['cfi']));
-        }
-        if (array_key_exists('cfi_con', $aDatos)) {
-            $this->setCfi_con($aDatos['cfi_con']);
-        }
-        if (array_key_exists('falta', $aDatos)) {
-            $this->setFalta(is_true($aDatos['falta']));
-        }
-        if (array_key_exists('encargo', $aDatos)) {
-            $this->setEncargo($aDatos['encargo']);
-        }
-        if (array_key_exists('dl_responsable', $aDatos)) {
-            $this->setDl_responsable($aDatos['dl_responsable']);
-        }
-        if (array_key_exists('observ', $aDatos)) {
-            $this->setObserv($aDatos['observ']);
-        }
-        if (array_key_exists('id_tabla', $aDatos)) {
-            $this->setId_tabla($aDatos['id_tabla']);
-        }
-        if (array_key_exists('plaza', $aDatos)) {
-            $this->setPlaza($aDatos['plaza']);
-        }
-        if (array_key_exists('propietario', $aDatos)) {
-            $this->setPropietario($aDatos['propietario']);
-        }
-        if (array_key_exists('observ_est', $aDatos)) {
-            $this->setObserv_est($aDatos['observ_est']);
-        }
-        return $this;
-    }
-
-    /**
-     * Marca esta entidad como nueva (INSERT) y emite el evento correspondiente
-     *
-     * @param array $datosActuales Datos actuales de la entidad (opcional para contexto)
-     * @return void
-     */
-    public function marcarComoNueva(array $datosActuales = []): void
-    {
-        $datosNuevos = $this->toArray();
-
-        $this->recordEvent(new EntidadModificada(
-            objeto: 'Asistente',
-            tipoCambio: 'INSERT',
-            idActiv: $this->iid_activ,
-            datosNuevos: $datosNuevos,
-            datosActuales: $datosActuales
-        ));
-    }
-
-    /**
-     * Marca esta entidad como modificada (UPDATE) y emite el evento correspondiente
-     *
-     * @param array $datosActuales Datos anteriores antes de la modificación
-     * @return void
-     */
-    public function marcarComoModificada(array $datosActuales): void
-    {
-        $datosNuevos = $this->toArray();
-
-        $this->recordEvent(new EntidadModificada(
-            objeto: 'Asistente',
-            tipoCambio: 'UPDATE',
-            idActiv: $this->iid_activ,
-            datosNuevos: $datosNuevos,
-            datosActuales: $datosActuales
-        ));
-    }
-
-    /**
-     * Marca esta entidad como eliminada (DELETE) y emite el evento correspondiente
-     *
-     * @param array $datosActuales Datos actuales antes de eliminar
-     * @return void
-     */
-    public function marcarComoEliminada(array $datosActuales): void
-    {
-        $this->recordEvent(new EntidadModificada(
-            objeto: 'Asistente',
-            tipoCambio: 'DELETE',
-            idActiv: $this->iid_activ,
-            datosNuevos: [],
-            datosActuales: $datosActuales
-        ));
-    }
-
-    /**
-     * Convierte la entidad a un array asociativo
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [
-            'id_activ' => $this->iid_activ,
-            'id_nom' => $this->iid_nom,
-            'propio' => $this->bpropio,
-            'est_ok' => $this->best_ok,
-            'cfi' => $this->bcfi,
-            'cfi_con' => $this->icfi_con,
-            'falta' => $this->bfalta,
-            'encargo' => $this->sencargo,
-            'dl_responsable' => $this->sdl_responsable,
-            'observ' => $this->sobserv,
-            'id_tabla' => $this->sid_tabla,
-            'plaza' => $this->iplaza,
-            'propietario' => $this->spropietario,
-            'observ_est' => $this->sobserv_est,
-        ];
-    }
-
-    /**
-     *
-     * @return int $iid_activ
-     */
     public function getId_activ(): int
     {
-        return $this->iid_activ;
+        return $this->id_activ;
     }
 
-    /**
-     *
-     * @param int $iid_activ
-     */
-    public function setId_activ(int $iid_activ): void
+    public function setId_activ(int $id_activ): void
     {
-        $this->iid_activ = $iid_activ;
+        $this->id_activ = $id_activ;
     }
 
-    /**
-     *
-     * @return int $iid_nom
-     */
     public function getId_nom(): int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
-    /**
-     *
-     * @param int $iid_nom
-     */
-    public function setId_nom(int $iid_nom): void
+    public function setId_nom(int $id_nom): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
-    /**
-     *
-     * @return bool $bpropio
-     */
+
     public function isPropio(): bool
     {
-        return $this->bpropio;
+        return $this->propio;
     }
 
-    /**
-     *
-     * @param bool $bpropio
-     */
-    public function setPropio(bool $bpropio): void
+
+    public function setPropio(bool $propio): void
     {
-        $this->bpropio = $bpropio;
+        $this->propio = $propio;
     }
 
-    /**
-     *
-     * @return bool $best_ok
-     */
+
     public function isEst_ok(): bool
     {
-        return $this->best_ok;
+        return $this->est_ok;
     }
 
-    /**
-     *
-     * @param bool $best_ok
-     */
-    public function setEst_ok(bool $best_ok): void
+
+    public function setEst_ok(bool $est_ok): void
     {
-        $this->best_ok = $best_ok;
+        $this->est_ok = $est_ok;
     }
 
-    /**
-     *
-     * @return bool $bcfi
-     */
+
     public function isCfi(): bool
     {
-        return $this->bcfi;
+        return $this->cfi;
     }
 
-    /**
-     *
-     * @param bool $bcfi
-     */
-    public function setCfi(bool $bcfi): void
+
+    public function setCfi(bool $cfi): void
     {
-        $this->bcfi = $bcfi;
+        $this->cfi = $cfi;
     }
 
-    /**
-     *
-     * @return int|null $icfi_con
-     */
+
     public function getCfi_con(): ?int
     {
-        return $this->icfi_con;
+        return $this->cfi_con;
     }
 
-    /**
-     *
-     * @param int|null $icfi_con
-     */
-    public function setCfi_con(?int $icfi_con = null): void
+
+    public function setCfi_con(?int $cfi_con = null): void
     {
-        $this->icfi_con = $icfi_con;
+        $this->cfi_con = $cfi_con;
     }
 
-    /**
-     *
-     * @return bool $bfalta
-     */
+
     public function isFalta(): bool
     {
-        return $this->bfalta;
+        return $this->falta;
     }
 
-    /**
-     *
-     * @param bool $bfalta
-     */
-    public function setFalta(bool $bfalta): void
+
+    public function setFalta(bool $falta): void
     {
-        $this->bfalta = $bfalta;
+        $this->falta = $falta;
     }
 
     /**
-     *
-     * @return string|null $sencargo
+     * @deprecated usar getEncargoVo()
      */
     public function getEncargo(): ?string
     {
-        return $this->sencargo;
+        return $this->encargo;
     }
 
     /**
-     *
-     * @param string|null $sencargo
+     * @deprecated usar setEncargoVo()
      */
-    public function setEncargo(?string $sencargo = null): void
+    public function setEncargo(?string $encargo = null): void
     {
-        $this->sencargo = $sencargo;
+        $this->encargo = $encargo;
     }
 
     /**
-     *
-     * @return string|null $sdl_responsable
+     * @return AsistenteEncargo|null
+     */
+    public function getEncargoVo(): ?AsistenteEncargo
+    {
+        return AsistenteEncargo::fromNullableString($this->encargo);
+    }
+
+    /**
+     * @param AsistenteEncargo|null $oAsistenteEncargo
+     */
+    public function setEncargoVo(?AsistenteEncargo $oAsistenteEncargo = null): void
+    {
+        $this->encargo = $oAsistenteEncargo?->value();
+    }
+
+    /**
+     * @deprecated usar getDlResponsableVo()
      */
     public function getDl_responsable(): ?string
     {
-        return $this->sdl_responsable;
+        return $this->dl_responsable;
     }
 
     /**
-     *
-     * @param string|null $sdl_responsable
+     * @deprecated usar setDlResponsableVo()
      */
-    public function setDl_responsable(?string $sdl_responsable = null): void
+    public function setDl_responsable(?string $dl_responsable = null): void
     {
-        $this->sdl_responsable = $sdl_responsable;
+        $this->dl_responsable = $dl_responsable;
     }
 
     /**
-     *
-     * @return string|null $sobserv
+     * @return DelegacionCode|null
+     */
+    public function getDlResponsableVo(): ?DelegacionCode
+    {
+        return DelegacionCode::fromString($this->dl_responsable);
+    }
+
+    /**
+     * @param DelegacionCode|null $oDelegacionCode
+     */
+    public function setDlResponsableVo(?DelegacionCode $oDelegacionCode = null): void
+    {
+        $this->dl_responsable = $oDelegacionCode?->value();
+    }
+
+    /**
+     * @deprecated usar getObservVo()
      */
     public function getObserv(): ?string
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
     /**
-     *
-     * @param string|null $sobserv
+     * @deprecated usar setObservVo()
      */
-    public function setObserv(?string $sobserv = null): void
+    public function setObserv(?string $observ = null): void
     {
-        $this->sobserv = $sobserv;
+        $this->observ = $observ;
     }
 
     /**
-     *
-     * @return string|null $sid_tabla
+     * @return AsistenteObserv|null
+     */
+    public function getObservVo(): ?AsistenteObserv
+    {
+        return AsistenteObserv::fromNullableString($this->observ);
+    }
+
+    /**
+     * @param AsistenteObserv|null $oAsistenteObserv
+     */
+    public function setObservVo(?AsistenteObserv $oAsistenteObserv = null): void
+    {
+        $this->observ = $oAsistenteObserv?->value();
+    }
+
+    /**
+     * @deprecated usar getIdTablaVo()
      */
     public function getId_tabla(): ?string
     {
-        return $this->sid_tabla;
+        return $this->id_tabla;
     }
 
     /**
-     *
-     * @param string|null $sid_tabla
+     * @deprecated usar setIdTablaVo()
      */
-    public function setId_tabla(?string $sid_tabla = null): void
+    public function setId_tabla(?string $id_tabla = null): void
     {
-        $this->sid_tabla = $sid_tabla;
+        $this->id_tabla = $id_tabla;
     }
 
     /**
-     *
-     * @return int|null $iplaza
+     * @return PersonaTablaCode|null
+     */
+    public function getIdTablaVo(): ?PersonaTablaCode
+    {
+        return PersonaTablaCode::fromNullableString($this->id_tabla);
+    }
+
+    /**
+     * @param PersonaTablaCode|null $oPersonaTablaCode
+     */
+    public function setIdTablaVo(?PersonaTablaCode $oPersonaTablaCode = null): void
+    {
+        $this->id_tabla = $oPersonaTablaCode?->value();
+    }
+
+    /**
+     * @deprecated usar getPlazaVo()
      */
     public function getPlaza(): ?int
     {
-        return $this->iplaza;
+        return $this->plaza;
     }
 
     /**
-     *
-     * @param int|null $iplaza
+     * @deprecated usar setPlazaVo()
      */
-    public function setPlaza(?int $iplaza = null): void
+    public function setPlaza(?int $plaza = null): void
     {
-        $this->iplaza = $iplaza;
+        $this->plaza = $plaza;
     }
+
+    /**
+     * @return PlazaId|null
+     */
+    public function getPlazaVo(): ?PlazaId
+    {
+        return $this->plaza !== null ? new PlazaId($this->plaza) : null;
+    }
+
+    /**
+     * @param PlazaId|null $oPlazaId
+     */
+    public function setPlazaVo(?PlazaId $oPlazaId = null): void
+    {
+        $this->plaza = $oPlazaId?->value();
+    }
+
     /**
      * No puede estar en setPlaza, porque cuando se hidrata con la DB entra en un bucle infinito
-     * @param int|null $iplaza
+     * @deprecated usar setPlazaVoComprobando()
      */
-    public function setPlazaComprobando(?int $iplaza = null): void
+    public function setPlazaComprobando(?int $plaza = null): void
     {
         // tipos de actividad para los que no hay que comprobar la plaza
         // 132500 => agd ca sem invierno
@@ -488,10 +323,10 @@ class Asistente
         //hacer comprobaciones de plazas disponibles...
         $plaza_actual = $this->getPlaza();
 
-        if ($plaza_actual < PlazaId::DENEGADA && $iplaza > PlazaId::DENEGADA) {
-            $this->iplaza = $iplaza;
-            $gesActividadPlazasR = new GestorResumenPlazas();
-            $gesActividadPlazasR->setId_activ($this->iid_activ);
+        if ($plaza_actual < PlazaId::DENEGADA && $plaza > PlazaId::DENEGADA) {
+            $this->plaza = $plaza;
+            $gesActividadPlazasR = new ResumenPlazas();
+            $gesActividadPlazasR->setId_activ($this->id_activ);
             if ($gesActividadPlazasR->getLibres() > 0) {
                 //debe asignarse un propietario. Sólo si es asignada o confirmada
                 $rta = $gesActividadPlazasR->getPropiedadPlazaLibre();
@@ -508,46 +343,112 @@ class Asistente
                     exit ($err_txt);
                 }
             } else {
-                $this->iplaza = PlazaId::PEDIDA;
+                $this->plaza = PlazaId::PEDIDA;
             }
         } else {
-            $this->iplaza = $iplaza;
+            $this->plaza = $plaza;
         }
     }
 
     /**
-     *
-     * @return string|null $spropietario
+     * No puede estar en setPlaza, porque cuando se hidrata con la DB entra en un bucle infinito
+     * @param PlazaId|null $oPlazaId
+     */
+    public function setPlazaVoComprobando(?PlazaId $oPlazaId = null): void
+    {
+        $iplaza = $oPlazaId?->value();
+
+        //hacer comprobaciones de plazas disponibles...
+        $plaza_actual = $this->getPlaza();
+
+        if ($plaza_actual < PlazaId::DENEGADA && $iplaza > PlazaId::DENEGADA) {
+            $this->plaza = $iplaza;
+            $gesActividadPlazasR = new ResumenPlazas();
+            $gesActividadPlazasR->setId_activ($this->id_activ);
+            if ($gesActividadPlazasR->getLibres() > 0) {
+                //debe asignarse un propietario. Sólo si es asignada o confirmada
+                $rta = $gesActividadPlazasR->getPropiedadPlazaLibre();
+                if ($rta['success']) {
+                    $propiedad = $rta['propiedad'];
+                    if (empty($propiedad)) {
+                        exit (_("no debería pasar. No puede haber una plaza libre sin propietario"));
+                    } else {
+                        $prop = key($propiedad);
+                        $this->setPropietario($prop);
+                    }
+                } else {
+                    $err_txt = $rta['mensaje'];
+                    exit ($err_txt);
+                }
+            } else {
+                $this->plaza = PlazaId::PEDIDA;
+            }
+        } else {
+            $this->plaza = $iplaza;
+        }
+    }
+
+    /**
+     * @deprecated usar getPropietarioVo()
      */
     public function getPropietario(): ?string
     {
-        return $this->spropietario;
+        return $this->propietario;
     }
 
     /**
-     *
-     * @param string|null $spropietario
+     * @deprecated usar setPropietarioVo()
      */
-    public function setPropietario(?string $spropietario = null): void
+    public function setPropietario(?string $propietario = null): void
     {
-        $this->spropietario = $spropietario;
+        $this->propietario = $propietario;
     }
 
     /**
-     *
-     * @return string|null $sobserv_est
+     * @return AsistentePropietario|null
+     */
+    public function getPropietarioVo(): ?AsistentePropietario
+    {
+        return AsistentePropietario::fromNullableString($this->propietario);
+    }
+
+    /**
+     * @param AsistentePropietario|null $oAsistentePropietario
+     */
+    public function setPropietarioVo(?AsistentePropietario $oAsistentePropietario = null): void
+    {
+        $this->propietario = $oAsistentePropietario?->value();
+    }
+
+    /**
+     * @deprecated usar getObservEstVo()
      */
     public function getObserv_est(): ?string
     {
-        return $this->sobserv_est;
+        return $this->observ_est;
     }
 
     /**
-     *
-     * @param string|null $sobserv_est
+     * @deprecated usar setObservEstVo()
      */
-    public function setObserv_est(?string $sobserv_est = null): void
+    public function setObserv_est(?string $observ_est = null): void
     {
-        $this->sobserv_est = $sobserv_est;
+        $this->observ_est = $observ_est;
+    }
+
+    /**
+     * @return AsistenteObservEst|null
+     */
+    public function getObservEstVo(): ?AsistenteObservEst
+    {
+        return AsistenteObservEst::fromNullableString($this->observ_est);
+    }
+
+    /**
+     * @param AsistenteObservEst|null $oAsistenteObservEst
+     */
+    public function setObservEstVo(?AsistenteObservEst $oAsistenteObservEst = null): void
+    {
+        $this->observ_est = $oAsistenteObservEst?->value();
     }
 }

@@ -38,7 +38,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $nom_tabla = $this->getNomTabla();
         //$orden = 'nombre_ubi';
 
-        $sWhere = "WHERE status = 't' AND cdc='t' ";
+        $sWhere = "WHERE active = 't' AND cdc='t' ";
         if (!empty($condicion)) {
             $sWhere .= 'AND ' . $condicion;
         }
@@ -61,7 +61,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $orden = 'nombre_ubi';
-        if (empty($condicion)) $condicion = "WHERE status = 't'";
+        if (empty($condicion)) $condicion = "WHERE active = 't'";
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $condicion ORDER BY $orden";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
@@ -137,9 +137,8 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
-            $Centro = new Centro();
-            $Centro->setAllAttributes($aDatos);
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+            $Centro = Centro::fromArray($aDatos);
             $CentroSet->add($Centro);
         }
         return $CentroSet->getTot();
@@ -172,7 +171,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $aDatos['dl'] = $Centro->getDl();
         $aDatos['pais'] = $Centro->getPais();
         $aDatos['region'] = $Centro->getRegion();
-        $aDatos['status'] = $Centro->isStatus();
+        $aDatos['active'] = $Centro->isActive();
         $aDatos['sv'] = $Centro->isSv();
         $aDatos['sf'] = $Centro->isSf();
         $aDatos['tipo_ctr'] = $Centro->getTipo_ctr();
@@ -180,13 +179,13 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $aDatos['cdc'] = $Centro->isCdc();
         $aDatos['id_ctr_padre'] = $Centro->getId_ctr_padre();
         // para las fechas
-        $aDatos['f_status'] = (new ConverterDate('date', $Centro->getF_status()))->toPg();
+        $aDatos['f_active'] = (new ConverterDate('date', $Centro->getF_active()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['status'])) {
-            $aDatos['status'] = 'true';
+        if (is_true($aDatos['active'])) {
+            $aDatos['active'] = 'true';
         } else {
-            $aDatos['status'] = 'false';
+            $aDatos['active'] = 'false';
         }
         if (is_true($aDatos['sv'])) {
             $aDatos['sv'] = 'true';
@@ -212,8 +211,8 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
 					dl                       = :dl,
 					pais                     = :pais,
 					region                   = :region,
-					status                   = :status,
-					f_status                 = :f_status,
+					active                   = :active,
+					f_active                 = :f_active,
 					sv                       = :sv,
 					sf                       = :sf,
 					tipo_ctr                 = :tipo_ctr,
@@ -225,8 +224,8 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         } else {
             //INSERT
             $aDatos['id_ubi'] = $Centro->getId_ubi();
-            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre)";
-            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre)";
+            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre)";
+            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -261,7 +260,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
         }
         return $aDatos;
     }
@@ -275,6 +274,6 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         if (empty($aDatos)) {
             return null;
         }
-        return (new Centro())->setAllAttributes($aDatos);
+        return Centro::fromArray($aDatos);
     }
 }

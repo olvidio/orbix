@@ -15,7 +15,6 @@ use src\usuarios\domain\entity\Role;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\DateTimeLocal;
-use zonassacd\legacy\GestorZonaSacd;
 use function core\is_true;
 
 
@@ -146,7 +145,7 @@ class Avisos
             $oCambioUsuario->setAviso_tipo($aviso_tipo);
 
             $resultado = $CambioUsuarioRepository->Guardar($oCambioUsuario);
-            $msg = "fn_apuntar: Resultado DBGuardar: " . ($resultado ? 'SUCCESS' : 'FAILED');
+            $msg = "fn_apuntar: Resultado Guardar: " . ($resultado ? 'SUCCESS' : 'FAILED');
             (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
 
             if ($resultado === false) {

@@ -1,7 +1,7 @@
 <?php
 
-use actividadestudios\model\entity\GestorMatriculaDl;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
@@ -43,8 +43,8 @@ if (!empty($traslados)) {
     // Periodo??
 
 } else {
-    $gesMatriculasDl = new GestorMatriculaDl();
-    $cMatriculasPendientes = $gesMatriculasDl->getMatriculasPendientes();
+    $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
+    $cMatriculasPendientes = $MatriculaDlRepository->getMatriculasPendientes();
 }
 
 $titulo = _("lista de matrículas pendientes de poner nota");
@@ -71,13 +71,13 @@ foreach ($cMatriculasPendientes as $oMatricula) {
     $id_nom = $oMatricula->getId_nom();
     $id_activ = $oMatricula->getId_activ();
     $id_asignatura = $oMatricula->getId_asignatura();
-    $preceptor = $oMatricula->getPreceptor();
+    $preceptor = $oMatricula->isPreceptor();
     $preceptor = is_true($preceptor) ? 'x' : '';
-
-    //echo "id_activ: $id_activ<br>";
-    //echo "id_asignatura: $id_asignatura<br>";
-
     $oActividad = $ActividadAllRepository->findById($id_activ);
+    if ($oActividad === null) {
+        $msg_err .= "<br>No encuentro ninguna actividad con id: $id_activ en  " . __FILE__ . ": line " . __LINE__;
+        continue;
+    }
     $nom_activ = $oActividad->getNom_activ();
     $oPersona = Persona::findPersonaEnGlobal($id_nom);
     if ($oPersona === null) {
@@ -119,8 +119,6 @@ echo $oPosicion->mostrar_left_slide(1);
     fnjs_ver_ca = function (formulario, n) {
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
-            var mod = "#mod";
-            //$(mod).val("editar");
             $("#pau").val("a");
             $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
             fnjs_enviar_formulario(formulario, '#main');

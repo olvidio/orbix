@@ -4,19 +4,21 @@ namespace src\dossiers\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\dossiers\domain\value_objects\TipoDossierApp;
+use src\dossiers\domain\value_objects\TipoDossierCampoTo;
+use src\dossiers\domain\value_objects\TipoDossierClass;
+use src\dossiers\domain\value_objects\TipoDossierDb;
+use src\dossiers\domain\value_objects\TipoDossierDescripcion;
+use src\dossiers\domain\value_objects\TipoDossierTablaFrom;
+use src\dossiers\domain\value_objects\TipoDossierTablaTo;
+use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 
-/**
- * Clase que implementa la entidad d_tipos_dossiers
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 2/12/2025
- */
+
 class TipoDossier
 {
+    use Hydratable;
+
     // db constantes.
     const DB_COMUN = 1; // Base de datos comun
     const DB_INTERIOR = 2; // Base de datos interior (sv)
@@ -24,342 +26,307 @@ class TipoDossier
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_tipo_dossier de TipoDossier
-     *
-     * @var int
-     */
-    private int $iid_tipo_dossier;
-    /**
-     * Descripcion de TipoDossier
-     *
-     * @var string|null
-     */
-    private string|null $sdescripcion = null;
-    /**
-     * Tabla_from de TipoDossier
-     *
-     * @var string
-     */
-    private string $stabla_from;
-    /**
-     * Tabla_to de TipoDossier
-     *
-     * @var string|null
-     */
-    private string|null $stabla_to = null;
-    /**
-     * Campo_to de TipoDossier
-     *
-     * @var string|null
-     */
-    private string|null $scampo_to = null;
-    /**
-     * Id_tipo_dossier_rel de TipoDossier
-     *
-     * @var int|null
-     */
-    private int|null $iid_tipo_dossier_rel = null;
-    /**
-     * Permiso_lectura de TipoDossier
-     *
-     * @var int
-     */
-    private int $ipermiso_lectura;
-    /**
-     * Permiso_escritura de TipoDossier
-     *
-     * @var int|null
-     */
-    private int|null $ipermiso_escritura = null;
-    /**
-     * Depende_modificar de TipoDossier
-     *
-     * @var bool
-     */
-    private bool $bdepende_modificar;
-    /**
-     * App de TipoDossier
-     *
-     * @var string|null
-     */
-    private string|null $sapp = null;
-    /**
-     * Class de TipoDossier
-     *
-     * @var string|null
-     */
-    private string|null $sclass = null;
-    /**
-     * Db de TipoDossier
-     *
-     * @var int|null
-     */
-    private int|null $idb = null;
+    private int $id_tipo_dossier;
+
+    private string|null $descripcion = null;
+
+    private string $tabla_from;
+
+    private string|null $tabla_to = null;
+
+    private string|null $campo_to = null;
+
+    private int|null $id_tipo_dossier_rel = null;
+
+    private int $permiso_lectura;
+
+    private int|null $permiso_escritura = null;
+
+    private bool $depende_modificar;
+
+    private string|null $app = null;
+
+    private string|null $class = null;
+
+    private int|null $db = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return TipoDossier
-     */
-    public function setAllAttributes(array $aDatos): TipoDossier
-    {
-        if (array_key_exists('id_tipo_dossier', $aDatos)) {
-            $this->setId_tipo_dossier($aDatos['id_tipo_dossier']);
-        }
-        if (array_key_exists('descripcion', $aDatos)) {
-            $this->setDescripcion($aDatos['descripcion']);
-        }
-        if (array_key_exists('tabla_from', $aDatos)) {
-            $this->setTabla_from($aDatos['tabla_from']);
-        }
-        if (array_key_exists('tabla_to', $aDatos)) {
-            $this->setTabla_to($aDatos['tabla_to']);
-        }
-        if (array_key_exists('campo_to', $aDatos)) {
-            $this->setCampo_to($aDatos['campo_to']);
-        }
-        if (array_key_exists('id_tipo_dossier_rel', $aDatos)) {
-            $this->setId_tipo_dossier_rel($aDatos['id_tipo_dossier_rel']);
-        }
-        if (array_key_exists('permiso_lectura', $aDatos)) {
-            $this->setPermiso_lectura($aDatos['permiso_lectura']);
-        }
-        if (array_key_exists('permiso_escritura', $aDatos)) {
-            $this->setPermiso_escritura($aDatos['permiso_escritura']);
-        }
-        if (array_key_exists('depende_modificar', $aDatos)) {
-            $this->setDepende_modificar(is_true($aDatos['depende_modificar']));
-        }
-        if (array_key_exists('app', $aDatos)) {
-            $this->setApp($aDatos['app']);
-        }
-        if (array_key_exists('class', $aDatos)) {
-            $this->setClass($aDatos['class']);
-        }
-        if (array_key_exists('db', $aDatos)) {
-            $this->setDb($aDatos['db']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_tipo_dossier
-     */
     public function getId_tipo_dossier(): int
     {
-        return $this->iid_tipo_dossier;
+        return $this->id_tipo_dossier;
     }
 
-    /**
-     *
-     * @param int $iid_tipo_dossier
-     */
-    public function setId_tipo_dossier(int $iid_tipo_dossier): void
+
+    public function setId_tipo_dossier(int $id_tipo_dossier): void
     {
-        $this->iid_tipo_dossier = $iid_tipo_dossier;
+        $this->id_tipo_dossier = $id_tipo_dossier;
     }
 
-    /**
-     *
-     * @return string|null $sdescripcion
-     */
+
+    public function getDescripcionVo(): ?TipoDossierDescripcion
+    {
+        return $this->descripcion !== null ? new TipoDossierDescripcion($this->descripcion) : null;
+    }
+
+
+    public function setDescripcionVo(?TipoDossierDescripcion $oTipoDossierDescripcion = null): void
+    {
+        $this->descripcion = $oTipoDossierDescripcion?->value();
+    }
+
+
     public function getDescripcion(): ?string
     {
-        return $this->sdescripcion;
+        return $this->descripcion;
     }
 
     /**
-     *
-     * @param string|null $sdescripcion
+     * @deprecated use setDescripcionVo()
      */
-    public function setDescripcion(?string $sdescripcion = null): void
+    public function setDescripcion(?string $descripcion = null): void
     {
-        $this->sdescripcion = $sdescripcion;
+        $this->descripcion = $descripcion;
     }
 
     /**
-     *
-     * @return string $stabla_from
+     * @return TipoDossierTablaFrom
+     */
+    public function getTablaFromVo(): TipoDossierTablaFrom
+    {
+        return new TipoDossierTablaFrom($this->tabla_from);
+    }
+
+    /**
+     * @param TipoDossierTablaFrom $oTipoDossierTablaFrom
+     */
+    public function setTablaFromVo(TipoDossierTablaFrom $oTipoDossierTablaFrom): void
+    {
+        $this->tabla_from = $oTipoDossierTablaFrom->value();
+    }
+
+    /**
+     * @deprecated use getTablaFromVo()
      */
     public function getTabla_from(): string
     {
-        return $this->stabla_from;
+        return $this->tabla_from;
     }
 
     /**
-     *
-     * @param string $stabla_from
+     * @deprecated use setTablaFromVo()
      */
-    public function setTabla_from(string $stabla_from): void
+    public function setTabla_from(string $tabla_from): void
     {
-        $this->stabla_from = $stabla_from;
+        $this->tabla_from = $tabla_from;
     }
 
     /**
-     *
-     * @return string|null $stabla_to
+     * @return TipoDossierTablaTo|null
+     */
+    public function getTablaToVo(): ?TipoDossierTablaTo
+    {
+        return $this->tabla_to !== null ? new TipoDossierTablaTo($this->tabla_to) : null;
+    }
+
+    /**
+     * @param TipoDossierTablaTo|null $oTipoDossierTablaTo
+     */
+    public function setTablaToVo(?TipoDossierTablaTo $oTipoDossierTablaTo = null): void
+    {
+        $this->tabla_to = $oTipoDossierTablaTo?->value();
+    }
+
+    /**
+     * @deprecated use getTablaToVo()
      */
     public function getTabla_to(): ?string
     {
-        return $this->stabla_to;
+        return $this->tabla_to;
     }
 
     /**
-     *
-     * @param string|null $stabla_to
+     * @deprecated use setTablaToVo()
      */
-    public function setTabla_to(?string $stabla_to = null): void
+    public function setTabla_to(?string $tabla_to = null): void
     {
-        $this->stabla_to = $stabla_to;
+        $this->tabla_to = $tabla_to;
     }
 
     /**
-     *
-     * @return string|null $scampo_to
+     * @return TipoDossierCampoTo|null
+     */
+    public function getCampoToVo(): ?TipoDossierCampoTo
+    {
+        return $this->campo_to !== null ? new TipoDossierCampoTo($this->campo_to) : null;
+    }
+
+    /**
+     * @param TipoDossierCampoTo|null $oTipoDossierCampoTo
+     */
+    public function setCampoToVo(?TipoDossierCampoTo $oTipoDossierCampoTo = null): void
+    {
+        $this->campo_to = $oTipoDossierCampoTo?->value();
+    }
+
+    /**
+     * @deprecated use getCampoToVo()
      */
     public function getCampo_to(): ?string
     {
-        return $this->scampo_to;
+        return $this->campo_to;
     }
 
     /**
-     *
-     * @param string|null $scampo_to
+     * @deprecated use setCampoToVo()
      */
-    public function setCampo_to(?string $scampo_to = null): void
+    public function setCampo_to(?string $campo_to = null): void
     {
-        $this->scampo_to = $scampo_to;
+        $this->campo_to = $campo_to;
     }
 
-    /**
-     *
-     * @return int|null $iid_tipo_dossier_rel
-     */
+
     public function getId_tipo_dossier_rel(): ?int
     {
-        return $this->iid_tipo_dossier_rel;
+        return $this->id_tipo_dossier_rel;
     }
 
-    /**
-     *
-     * @param int|null $iid_tipo_dossier_rel
-     */
-    public function setId_tipo_dossier_rel(?int $iid_tipo_dossier_rel = null): void
+
+    public function setId_tipo_dossier_rel(?int $id_tipo_dossier_rel = null): void
     {
-        $this->iid_tipo_dossier_rel = $iid_tipo_dossier_rel;
+        $this->id_tipo_dossier_rel = $id_tipo_dossier_rel;
     }
 
-    /**
-     *
-     * @return int $ipermiso_lectura
-     */
+
     public function getPermiso_lectura(): int
     {
-        return $this->ipermiso_lectura;
+        return $this->permiso_lectura;
     }
 
-    /**
-     *
-     * @param int $ipermiso_lectura
-     */
-    public function setPermiso_lectura(int $ipermiso_lectura): void
+
+    public function setPermiso_lectura(int $permiso_lectura): void
     {
-        $this->ipermiso_lectura = $ipermiso_lectura;
+        $this->permiso_lectura = $permiso_lectura;
     }
 
-    /**
-     *
-     * @return int|null $ipermiso_escritura
-     */
+
     public function getPermiso_escritura(): ?int
     {
-        return $this->ipermiso_escritura;
+        return $this->permiso_escritura;
     }
 
-    /**
-     *
-     * @param int|null $ipermiso_escritura
-     */
-    public function setPermiso_escritura(?int $ipermiso_escritura = null): void
+
+    public function setPermiso_escritura(?int $permiso_escritura = null): void
     {
-        $this->ipermiso_escritura = $ipermiso_escritura;
+        $this->permiso_escritura = $permiso_escritura;
     }
 
-    /**
-     *
-     * @return bool $bdepende_modificar
-     */
+
     public function isDepende_modificar(): bool
     {
-        return $this->bdepende_modificar;
+        return $this->depende_modificar;
     }
 
-    /**
-     *
-     * @param bool $bdepende_modificar
-     */
-    public function setDepende_modificar(bool $bdepende_modificar): void
+
+    public function setDepende_modificar(bool $depende_modificar): void
     {
-        $this->bdepende_modificar = $bdepende_modificar;
+        $this->depende_modificar = $depende_modificar;
     }
 
     /**
-     *
-     * @return string|null $sapp
+     * @return TipoDossierApp|null
+     */
+    public function getAppVo(): ?TipoDossierApp
+    {
+        return $this->app !== null ? new TipoDossierApp($this->app) : null;
+    }
+
+    /**
+     * @param TipoDossierApp|null $oTipoDossierApp
+     */
+    public function setAppVo(?TipoDossierApp $oTipoDossierApp = null): void
+    {
+        $this->app = $oTipoDossierApp?->value();
+    }
+
+    /**
+     * @deprecated use getAppVo()
      */
     public function getApp(): ?string
     {
-        return $this->sapp;
+        return $this->app;
     }
 
     /**
-     *
-     * @param string|null $sapp
+     * @deprecated use setAppVo()
      */
-    public function setApp(?string $sapp = null): void
+    public function setApp(?string $app = null): void
     {
-        $this->sapp = $sapp;
+        $this->app = $app;
     }
 
     /**
-     *
-     * @return string|null $sclass
+     * @return TipoDossierClass|null
+     */
+    public function getClassVo(): ?TipoDossierClass
+    {
+        return $this->class !== null ? new TipoDossierClass($this->class) : null;
+    }
+
+    /**
+     * @param TipoDossierClass|null $oTipoDossierClass
+     */
+    public function setClassVo(?TipoDossierClass $oTipoDossierClass = null): void
+    {
+        $this->class = $oTipoDossierClass?->value();
+    }
+
+    /**
+     * @deprecated use getClassVo()
      */
     public function getClass(): ?string
     {
-        return $this->sclass;
+        return $this->class;
     }
 
     /**
-     *
-     * @param string|null $sclass
+     * @deprecated use setClassVo()
      */
-    public function setClass(?string $sclass = null): void
+    public function setClass(?string $class = null): void
     {
-        $this->sclass = $sclass;
+        $this->class = $class;
     }
 
     /**
-     *
-     * @return int|null $idb
+     * @return TipoDossierDb|null
+     */
+    public function getDbVo(): ?TipoDossierDb
+    {
+        return $this->db !== null ? new TipoDossierDb($this->db) : null;
+    }
+
+    /**
+     * @param TipoDossierDb|null $oTipoDossierDb
+     */
+    public function setDbVo(?TipoDossierDb $oTipoDossierDb = null): void
+    {
+        $this->db = $oTipoDossierDb?->value();
+    }
+
+    /**
+     * @deprecated use getDbVo()
      */
     public function getDb(): ?int
     {
-        return $this->idb;
+        return $this->db;
     }
 
     /**
-     *
-     * @param int|null $idb
+     * @deprecated use setDbVo()
      */
-    public function setDb(?int $idb = null): void
+    public function setDb(?int $db = null): void
     {
-        $this->idb = $idb;
+        $this->db = $db;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -369,7 +336,7 @@ class TipoDossier
     }
 
 
-    function getDatosCampos():array
+    public function getDatosCampos():array
     {
         $oTipoDossierSet = new Set();
 
@@ -388,7 +355,7 @@ class TipoDossier
     }
 
 
-    function getDatosDescripcion():DatosCampo
+    public function getDatosDescripcion():DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('descripcion');
@@ -400,7 +367,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosTabla_from():DatosCampo
+    public function getDatosTabla_from():DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tabla_from');
@@ -412,7 +379,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosTabla_to():DatosCampo
+    public function getDatosTabla_to():DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tabla_to');
@@ -424,7 +391,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosCampo_to():DatosCampo
+    public function getDatosCampo_to():DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('campo_to');
@@ -436,7 +403,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosId_tipo_dossier_rel():DatosCampo
+    public function getDatosId_tipo_dossier_rel():DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_tipo_dossier_rel');
@@ -448,7 +415,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosPermiso_lectura():DatosCampo
+    public function getDatosPermiso_lectura():DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('permiso_lectura');
@@ -460,7 +427,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosPermiso_escritura():DatosCampo
+    public function getDatosPermiso_escritura():DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('permiso_escritura');
@@ -472,7 +439,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosDepende_modificar():DatosCampo
+    public function getDatosDepende_modificar():DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('depende_modificar');
@@ -483,7 +450,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosApp(): DatosCampo
+    private function getDatosApp(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('app');
@@ -495,7 +462,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosClass(): DatosCampo
+    private function getDatosClass(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('Class');
@@ -507,7 +474,7 @@ class TipoDossier
         return $oDatosCampo;
     }
 
-    function getDatosDb(): DatosCampo
+    private function getDatosDb(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('db');

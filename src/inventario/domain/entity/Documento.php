@@ -7,6 +7,7 @@ use core\Set;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
+use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -15,377 +16,157 @@ use src\inventario\domain\value_objects\{DocumentoId, TipoDocId, UbiInventarioId
     DocumentoNumReg, DocumentoNumIni, DocumentoNumFin, DocumentoNumEjemplares,
     DocumentoEnBusqueda, DocumentoPerdido, DocumentoEliminado};
 
-/**
- * Clase que implementa la entidad i_documentos_dl
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 12/3/2025
- */
 class Documento
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_doc de Documento
-     *
-     * @var int
-     */
-    private int $iid_doc;
-    /**
-     * Id_tipo_doc de Documento
-     *
-     * @var int
-     */
-    private int $iid_tipo_doc;
-    /**
-     * Id_ubi de Documento
-     *
-     * @var int
-     */
-    private int $iid_ubi;
-    /**
-     * Id_lugar de Documento
-     *
-     * @var int|null
-     */
-    private int|null $iid_lugar = null;
-    /**
-     * F_recibido de Documento
-     *
-     * @var DateTimeLocal|NullDateTimeLocal|null
-     */
-    private DateTimeLocal|NullDateTimeLocal|null $df_recibido = null;
-    /**
-     * F_asignado de Documento
-     *
-     * @var DateTimeLocal|NullDateTimeLocal|null
-     */
-    private DateTimeLocal|NullDateTimeLocal|null $df_asignado = null;
-    /**
-     * Observ de Documento
-     *
-     * @var string|null
-     */
-    private string|null $sobserv = null;
-    /**
-     * ObservCtr de Documento
-     *
-     * @var string|null
-     */
-    private string|null $sobservCtr = null;
-    /**
-     * F_ult_comprobacion de Documento
-     *
-     * @var DateTimeLocal|NullDateTimeLocal|null
-     */
-    private DateTimeLocal|NullDateTimeLocal|null $df_ult_comprobacion = null;
-    /**
-     * En_busqueda de Documento
-     *
-     * @var bool|null
-     */
-    private bool|null $ben_busqueda = null;
-    /**
-     * Perdido de Documento
-     *
-     * @var bool|null
-     */
-    private bool|null $bperdido = null;
-    /**
-     * F_perdido de Documento
-     *
-     * @var DateTimeLocal|NullDateTimeLocal|null
-     */
-    private DateTimeLocal|NullDateTimeLocal|null $df_perdido = null;
-    /**
-     * Eliminado de Documento
-     *
-     * @var bool|null
-     */
-    private bool|null $beliminado = null;
-    /**
-     * F_eliminado de Documento
-     *
-     * @var DateTimeLocal|NullDateTimeLocal|null
-     */
-    private DateTimeLocal|NullDateTimeLocal|null $df_eliminado = null;
-    /**
-     * Num_reg de Documento
-     *
-     * @var int|null
-     */
-    private int|null $inum_reg = null;
-    /**
-     * Num_ini de Documento
-     *
-     * @var int|null
-     */
-    private int|null $inum_ini = null;
-    /**
-     * Num_fin de Documento
-     *
-     * @var int|null
-     */
-    private int|null $inum_fin = null;
-    /**
-     * Identificador de Documento
-     *
-     * @var string|null
-     */
-    private string|null $sidentificador = null;
-    /**
-     * Num_ejemplares de Documento
-     *
-     * @var int|null
-     */
-    private int|null $inum_ejemplares = null;
+    private int $id_doc;
+
+    private int $id_tipo_doc;
+
+    private int $id_ubi;
+
+    private int|null $id_lugar = null;
+
+    private DateTimeLocal|NullDateTimeLocal|null $f_recibido = null;
+
+    private DateTimeLocal|NullDateTimeLocal|null $f_asignado = null;
+
+    private string|null $observ = null;
+
+    private string|null $observCtr = null;
+
+    private DateTimeLocal|NullDateTimeLocal|null $f_ult_comprobacion = null;
+
+    private bool|null $en_busqueda = null;
+
+    private bool|null $perdido = null;
+
+    private DateTimeLocal|NullDateTimeLocal|null $f_perdido = null;
+
+    private bool|null $eliminado = null;
+
+    private DateTimeLocal|NullDateTimeLocal|null $f_eliminado = null;
+
+    private int|null $num_reg = null;
+
+    private int|null $num_ini = null;
+
+    private int|null $num_fin = null;
+
+    private string|null $identificador = null;
+
+    private int|null $num_ejemplares = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Documento
-     */
-    public function setAllAttributes(array $aDatos): Documento
-    {
-        if (array_key_exists('id_doc', $aDatos)) {
-            $this->setId_doc($aDatos['id_doc']);
-        }
-        if (array_key_exists('id_tipo_doc', $aDatos)) {
-            $this->setId_tipo_doc($aDatos['id_tipo_doc']);
-        }
-        if (array_key_exists('id_ubi', $aDatos)) {
-            $this->setId_ubi($aDatos['id_ubi']);
-        }
-        if (array_key_exists('id_lugar', $aDatos)) {
-            $this->setId_lugar($aDatos['id_lugar']);
-        }
-        if (array_key_exists('f_recibido', $aDatos)) {
-            $this->setF_recibido($aDatos['f_recibido']);
-        }
-        if (array_key_exists('f_asignado', $aDatos)) {
-            $this->setF_asignado($aDatos['f_asignado']);
-        }
-        if (array_key_exists('observ', $aDatos)) {
-            $this->setObserv($aDatos['observ']);
-        }
-        if (array_key_exists('observ_ctr', $aDatos)) {
-            $this->setObservCtr($aDatos['observ_ctr']);
-        }
-        if (array_key_exists('f_ult_comprobacion', $aDatos)) {
-            $this->setF_ult_comprobacion($aDatos['f_ult_comprobacion']);
-        }
-        if (array_key_exists('en_busqueda', $aDatos)) {
-            $this->setEn_busqueda(is_true($aDatos['en_busqueda']));
-        }
-        if (array_key_exists('perdido', $aDatos)) {
-            $this->setPerdido(is_true($aDatos['perdido']));
-        }
-        if (array_key_exists('f_perdido', $aDatos)) {
-            $this->setF_perdido($aDatos['f_perdido']);
-        }
-        if (array_key_exists('eliminado', $aDatos)) {
-            $this->setEliminado(is_true($aDatos['eliminado']));
-        }
-        if (array_key_exists('f_eliminado', $aDatos)) {
-            $this->setF_eliminado($aDatos['f_eliminado']);
-        }
-        if (array_key_exists('num_reg', $aDatos)) {
-            $this->setNum_reg($aDatos['num_reg']);
-        }
-        if (array_key_exists('num_ini', $aDatos)) {
-            $this->setNum_ini($aDatos['num_ini']);
-        }
-        if (array_key_exists('num_fin', $aDatos)) {
-            $this->setNum_fin($aDatos['num_fin']);
-        }
-        if (array_key_exists('identificador', $aDatos)) {
-            $this->setIdentificador($aDatos['identificador']);
-        }
-        if (array_key_exists('num_ejemplares', $aDatos)) {
-            $this->setNum_ejemplares($aDatos['num_ejemplares']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_doc
-     */
     public function getId_doc(): int
     {
-        return $this->iid_doc;
+        return $this->id_doc;
     }
 
-    /**
-     *
-     * @param int $iid_doc
-     */
-    public function setId_doc(int $iid_doc): void
+
+    public function setId_doc(int $id_doc): void
     {
-        $this->iid_doc = $iid_doc;
+        $this->id_doc = $id_doc;
     }
 
-    /**
-     *
-     * @return int $iid_tipo_doc
-     */
+
     public function getId_tipo_doc(): int
     {
-        return $this->iid_tipo_doc;
+        return $this->id_tipo_doc;
     }
 
-    /**
-     *
-     * @param int $iid_tipo_doc
-     */
-    public function setId_tipo_doc(int $iid_tipo_doc): void
+
+    public function setId_tipo_doc(int $id_tipo_doc): void
     {
-        $this->iid_tipo_doc = $iid_tipo_doc;
+        $this->id_tipo_doc = $id_tipo_doc;
     }
 
-    /**
-     *
-     * @return int $iid_ubi
-     */
+
     public function getId_ubi(): int
     {
-        return $this->iid_ubi;
+        return $this->id_ubi;
     }
 
-    /**
-     *
-     * @param int $iid_ubi
-     */
-    public function setId_ubi(int $iid_ubi): void
+
+    public function setId_ubi(int $id_ubi): void
     {
-        $this->iid_ubi = $iid_ubi;
+        $this->id_ubi = $id_ubi;
     }
 
-    /**
-     *
-     * @return int|null $iid_lugar
-     */
+
     public function getId_lugar(): ?int
     {
-        return $this->iid_lugar;
+        return $this->id_lugar;
     }
 
-    /**
-     *
-     * @param int|null $iid_lugar
-     */
-    public function setId_lugar(?int $iid_lugar = null): void
+
+    public function setId_lugar(?int $id_lugar = null): void
     {
-        $this->iid_lugar = $iid_lugar;
+        $this->id_lugar = $id_lugar;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_recibido
-     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
-     */
     public function getF_recibido(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_recibido ?? new NullDateTimeLocal;
+        return $this->f_recibido ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|NullDateTimeLocal|null $df_recibido
-     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
-     */
-    public function setF_recibido(DateTimeLocal|NullDateTimeLocal|null $df_recibido = null): void
+
+    public function setF_recibido(DateTimeLocal|NullDateTimeLocal|null $f_recibido = null): void
     {
-        $this->df_recibido = $df_recibido instanceof NullDateTimeLocal ? null : $df_recibido;
+        $this->f_recibido = $f_recibido instanceof NullDateTimeLocal ? null : $f_recibido;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_asignado
-     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
-     */
     public function getF_asignado(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_asignado ?? new NullDateTimeLocal;
+        return $this->f_asignado ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|NullDateTimeLocal|null $df_asignado
-     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
-     */
-    public function setF_asignado(DateTimeLocal|NullDateTimeLocal|null $df_asignado = null): void
+
+    public function setF_asignado(DateTimeLocal|NullDateTimeLocal|null $f_asignado = null): void
     {
-        $this->df_asignado = $df_asignado instanceof NullDateTimeLocal ? null : $df_asignado;
+        $this->f_asignado = $f_asignado instanceof NullDateTimeLocal ? null : $f_asignado;
     }
 
-    /**
-     *
-     * @return string|null $sobserv
-     */
+
     public function getObserv(): ?string
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
-    /**
-     *
-     * @param string|null $sobserv
-     */
-    public function setObserv(?string $sobserv = null): void
+
+    public function setObserv(?string $observ = null): void
     {
-        $this->sobserv = $sobserv;
+        $this->observ = $observ;
     }
 
-    /**
-     *
-     * @return string|null $sobserv_ctr
-     */
+
     public function getObservCtr(): ?string
     {
-        return $this->sobservCtr;
+        return $this->observCtr;
     }
 
-    /**
-     *
-     * @param string|null $sobservCtr
-     */
-    public function setObservCtr(?string $sobservCtr = null): void
+
+    public function setObservCtr(?string $observCtr = null): void
     {
-        $this->sobservCtr = $sobservCtr;
+        $this->observCtr = $observCtr;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_ult_comprobacion
-     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
-     */
+
     public function getF_ult_comprobacion(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_ult_comprobacion ?? new NullDateTimeLocal;
+        return $this->f_ult_comprobacion ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|NullDateTimeLocal|null $df_ult_comprobacion
-     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
-     */
-    public function setF_ult_comprobacion(DateTimeLocal|NullDateTimeLocal|null $df_ult_comprobacion = null): void
+
+    public function setF_ult_comprobacion(DateTimeLocal|NullDateTimeLocal|null $f_ult_comprobacion = null): void
     {
-        $this->df_ult_comprobacion = $df_ult_comprobacion instanceof NullDateTimeLocal ? null : $df_ult_comprobacion;
+        $this->f_ult_comprobacion = $f_ult_comprobacion instanceof NullDateTimeLocal ? null : $f_ult_comprobacion;
     }
 
-    /**
-     *
-     * @return bool|null $ben_busqueda
-     */
     /**
      * @deprecated Usar `isEnBusqueda(): ?bool` en su lugar.
      */
@@ -396,334 +177,273 @@ class Documento
 
     public function isEnBusqueda(): ?bool
     {
-        return $this->ben_busqueda;
+        return $this->en_busqueda;
     }
 
-    /**
-     *
-     * @param bool|null $ben_busqueda
-     */
+
     /**
      * @deprecated Usar `setEnBusqueda(?bool $enBusqueda = null): void` en su lugar.
      */
-    public function setEn_busqueda(?bool $ben_busqueda = null): void
+    public function setEn_busqueda(?bool $en_busqueda = null): void
     {
-        $this->setEnBusqueda($ben_busqueda);
+        $this->setEnBusqueda($en_busqueda);
     }
 
     public function setEnBusqueda(?bool $enBusqueda = null): void
     {
-        $this->ben_busqueda = $enBusqueda;
+        $this->en_busqueda = $enBusqueda;
     }
 
-    /**
-     *
-     * @return bool|null $bperdido
-     */
+
     public function isPerdido(): ?bool
     {
-        return $this->bperdido;
+        return $this->perdido;
     }
 
-    /**
-     *
-     * @param bool|null $bperdido
-     */
-    public function setPerdido(?bool $bperdido = null): void
+
+    public function setPerdido(?bool $perdido = null): void
     {
-        $this->bperdido = $bperdido;
+        $this->perdido = $perdido;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_perdido
-     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
-     */
+
     public function getF_perdido(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_perdido ?? new NullDateTimeLocal;
+        return $this->f_perdido ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|NullDateTimeLocal|null $df_perdido
-     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
-     */
-    public function setF_perdido(DateTimeLocal|NullDateTimeLocal|null $df_perdido = null): void
+
+    public function setF_perdido(DateTimeLocal|NullDateTimeLocal|null $f_perdido = null): void
     {
-        $this->df_perdido = $df_perdido instanceof NullDateTimeLocal ? null : $df_perdido;
+        $this->f_perdido = $f_perdido instanceof NullDateTimeLocal ? null : $f_perdido;
     }
 
-    /**
-     *
-     * @return bool|null $beliminado
-     */
+
     public function isEliminado(): ?bool
     {
-        return $this->beliminado;
+        return $this->eliminado;
     }
 
-    /**
-     *
-     * @param bool|null $beliminado
-     */
-    public function setEliminado(?bool $beliminado = null): void
+
+    public function setEliminado(?bool $eliminado = null): void
     {
-        $this->beliminado = $beliminado;
+        $this->eliminado = $eliminado;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_eliminado
-     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
-     */
+
     public function getF_eliminado(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_eliminado ?? new NullDateTimeLocal;
+        return $this->f_eliminado ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|NullDateTimeLocal|null $df_eliminado
-     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
-     */
-    public function setF_eliminado(DateTimeLocal|NullDateTimeLocal|null $df_eliminado = null): void
+
+    public function setF_eliminado(DateTimeLocal|NullDateTimeLocal|null $f_eliminado = null): void
     {
-        $this->df_eliminado = $df_eliminado instanceof NullDateTimeLocal ? null : $df_eliminado;
+        $this->f_eliminado = $f_eliminado instanceof NullDateTimeLocal ? null : $f_eliminado;
     }
 
-    /**
-     *
-     * @return int|null $inum_reg
-     */
+
     public function getNum_reg(): ?int
     {
-        return $this->inum_reg;
+        return $this->num_reg;
     }
 
-    /**
-     *
-     * @param int|null $inum_reg
-     */
-    public function setNum_reg(?int $inum_reg = null): void
+
+    public function setNum_reg(?int $num_reg = null): void
     {
-        $this->inum_reg = $inum_reg;
+        $this->num_reg = $num_reg;
     }
 
-    /**
-     *
-     * @return int|null $inum_ini
-     */
+
     public function getNum_ini(): ?int
     {
-        return $this->inum_ini;
+        return $this->num_ini;
     }
 
-    /**
-     *
-     * @param int|null $inum_ini
-     */
-    public function setNum_ini(?int $inum_ini = null): void
+
+    public function setNum_ini(?int $num_ini = null): void
     {
-        $this->inum_ini = $inum_ini;
+        $this->num_ini = $num_ini;
     }
 
-    /**
-     *
-     * @return int|null $inum_fin
-     */
+
     public function getNum_fin(): ?int
     {
-        return $this->inum_fin;
+        return $this->num_fin;
     }
 
-    /**
-     *
-     * @param int|null $inum_fin
-     */
-    public function setNum_fin(?int $inum_fin = null): void
+
+    public function setNum_fin(?int $num_fin = null): void
     {
-        $this->inum_fin = $inum_fin;
+        $this->num_fin = $num_fin;
     }
 
-    /**
-     *
-     * @return string|null $sidentificador
-     */
+
     public function getIdentificador(): ?string
     {
-        return $this->sidentificador;
+        return $this->identificador;
     }
 
-    /**
-     *
-     * @param string|null $sidentificador
-     */
-    public function setIdentificador(?string $sidentificador = null): void
+
+    public function setIdentificador(?string $identificador = null): void
     {
-        $this->sidentificador = $sidentificador;
+        $this->identificador = $identificador;
     }
 
-    /**
-     *
-     * @return int|null $inum_ejemplares
-     */
+
     public function getNum_ejemplares(): ?int
     {
-        return $this->inum_ejemplares;
+        return $this->num_ejemplares;
     }
 
-    /**
-     *
-     * @param int|null $inum_ejemplares
-     */
-    public function setNum_ejemplares(?int $inum_ejemplares = null): void
+
+    public function setNum_ejemplares(?int $num_ejemplares = null): void
     {
-        $this->inum_ejemplares = $inum_ejemplares;
+        $this->num_ejemplares = $num_ejemplares;
     }
 
     // Value Object API (duplicada con legacy)
     public function getIdDocVo(): DocumentoId
     {
-        return new DocumentoId($this->iid_doc);
+        return new DocumentoId($this->id_doc);
     }
 
     public function setIdDocVo(?DocumentoId $id = null): void
     {
         if ($id === null) { return; }
-        $this->iid_doc = $id->value();
+        $this->id_doc = $id->value();
     }
 
     public function getIdTipoDocVo(): TipoDocId
     {
-        return new TipoDocId($this->iid_tipo_doc);
+        return new TipoDocId($this->id_tipo_doc);
     }
 
     public function setIdTipoDocVo(?TipoDocId $id = null): void
     {
         if ($id === null) { return; }
-        $this->iid_tipo_doc = $id->value();
+        $this->id_tipo_doc = $id->value();
     }
 
     public function getIdUbiVo(): UbiInventarioId
     {
-        return new UbiInventarioId($this->iid_ubi);
+        return new UbiInventarioId($this->id_ubi);
     }
 
     public function setIdUbiVo(?UbiInventarioId $id = null): void
     {
         if ($id === null) { return; }
-        $this->iid_ubi = $id->value();
+        $this->id_ubi = $id->value();
     }
 
     public function getIdLugarVo(): ?LugarId
     {
-        return $this->iid_lugar !== null ? new LugarId($this->iid_lugar) : null;
+        return $this->id_lugar !== null ? new LugarId($this->id_lugar) : null;
     }
 
     public function setIdLugarVo(?LugarId $id = null): void
     {
-        $this->iid_lugar = $id?->value();
+        $this->id_lugar = $id?->value();
     }
 
     public function getObservVo(): ?DocumentoObserv
     {
-        return DocumentoObserv::fromNullableString($this->sobserv);
+        return DocumentoObserv::fromNullableString($this->observ);
     }
 
     public function setObservVo(?DocumentoObserv $obs = null): void
     {
-        $this->sobserv = $obs?->value();
+        $this->observ = $obs?->value();
     }
 
     public function getObservCtrVo(): ?DocumentoObservCtr
     {
-        return DocumentoObservCtr::fromNullableString($this->sobservCtr);
+        return DocumentoObservCtr::fromNullableString($this->observCtr);
     }
 
     public function setObservCtrVo(?DocumentoObservCtr $obs = null): void
     {
-        $this->sobservCtr = $obs?->value();
+        $this->observCtr = $obs?->value();
     }
 
     public function getIdentificadorVo(): ?DocumentoIdentificador
     {
-        return DocumentoIdentificador::fromNullableString($this->sidentificador);
+        return DocumentoIdentificador::fromNullableString($this->identificador);
     }
 
     public function setIdentificadorVo(?DocumentoIdentificador $ident = null): void
     {
-        $this->sidentificador = $ident?->value();
+        $this->identificador = $ident?->value();
     }
 
     public function getNumRegVo(): ?DocumentoNumReg
     {
-        return $this->inum_reg !== null ? new DocumentoNumReg($this->inum_reg) : null;
+        return $this->num_reg !== null ? new DocumentoNumReg($this->num_reg) : null;
     }
 
     public function setNumRegVo(?DocumentoNumReg $num = null): void
     {
-        $this->inum_reg = $num?->value();
+        $this->num_reg = $num?->value();
     }
 
     public function getNumIniVo(): ?DocumentoNumIni
     {
-        return $this->inum_ini !== null ? new DocumentoNumIni($this->inum_ini) : null;
+        return $this->num_ini !== null ? new DocumentoNumIni($this->num_ini) : null;
     }
 
     public function setNumIniVo(?DocumentoNumIni $num = null): void
     {
-        $this->inum_ini = $num?->value();
+        $this->num_ini = $num?->value();
     }
 
     public function getNumFinVo(): ?DocumentoNumFin
     {
-        return $this->inum_fin !== null ? new DocumentoNumFin($this->inum_fin) : null;
+        return $this->num_fin !== null ? new DocumentoNumFin($this->num_fin) : null;
     }
 
     public function setNumFinVo(?DocumentoNumFin $num = null): void
     {
-        $this->inum_fin = $num?->value();
+        $this->num_fin = $num?->value();
     }
 
     public function getNumEjemplaresVo(): ?DocumentoNumEjemplares
     {
-        return $this->inum_ejemplares !== null ? new DocumentoNumEjemplares($this->inum_ejemplares) : null;
+        return $this->num_ejemplares !== null ? new DocumentoNumEjemplares($this->num_ejemplares) : null;
     }
 
     public function setNumEjemplaresVo(?DocumentoNumEjemplares $num = null): void
     {
-        $this->inum_ejemplares = $num?->value();
+        $this->num_ejemplares = $num?->value();
     }
 
     public function getEnBusquedaVo(): ?DocumentoEnBusqueda
     {
-        return $this->ben_busqueda === null ? null : new DocumentoEnBusqueda((bool)$this->ben_busqueda);
+        return $this->en_busqueda === null ? null : new DocumentoEnBusqueda((bool)$this->en_busqueda);
     }
 
     public function setEnBusquedaVo(?DocumentoEnBusqueda $flag = null): void
     {
-        $this->ben_busqueda = $flag?->value();
+        $this->en_busqueda = $flag?->value();
     }
 
     public function getPerdidoVo(): ?DocumentoPerdido
     {
-        return $this->bperdido === null ? null : new DocumentoPerdido((bool)$this->bperdido);
+        return $this->perdido === null ? null : new DocumentoPerdido((bool)$this->perdido);
     }
 
     public function setPerdidoVo(?DocumentoPerdido $flag = null): void
     {
-        $this->bperdido = $flag?->value();
+        $this->perdido = $flag?->value();
     }
 
     public function getEliminadoVo(): ?DocumentoEliminado
     {
-        return $this->beliminado === null ? null : new DocumentoEliminado((bool)$this->beliminado);
+        return $this->eliminado === null ? null : new DocumentoEliminado((bool)$this->eliminado);
     }
 
     public function setEliminadoVo(?DocumentoEliminado $flag = null): void
     {
-        $this->beliminado = $flag?->value();
+        $this->eliminado = $flag?->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -732,7 +452,7 @@ class Documento
         return 'id_doc';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oDocumentoSet = new Set();
 
@@ -757,7 +477,7 @@ class Documento
         return $oDocumentoSet->getTot();
     }
 
-    function getDatosId_tipo_doc()
+    private function getDatosId_tipo_doc(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_tipo_doc');
@@ -771,7 +491,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosId_ubi()
+    private function getDatosId_ubi(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_ubi');
@@ -786,7 +506,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosId_lugar()
+    private function getDatosId_lugar(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_lugar');
@@ -801,7 +521,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosF_recibido()
+    private function getDatosF_recibido(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_recibido');
@@ -812,7 +532,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosF_asignado()
+    private function getDatosF_asignado(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_asignado');
@@ -823,7 +543,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosObserv()
+    private function getDatosObserv(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('observ');
@@ -835,7 +555,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosObservCtr()
+    private function getDatosObservCtr(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('observ_ctr');
@@ -847,7 +567,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosF_ult_comprobacion()
+    private function getDatosF_ult_comprobacion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_ult_comprobacion');
@@ -858,7 +578,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosEn_busqueda()
+    private function getDatosEn_busqueda(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('en_busqueda');
@@ -869,7 +589,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosPerdido()
+    private function getDatosPerdido(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('perdido');
@@ -880,7 +600,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosF_perdido()
+    private function getDatosF_perdido(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_perdido');
@@ -891,7 +611,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosEliminado()
+    private function getDatosEliminado(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('eliminado');
@@ -902,7 +622,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosF_eliminado()
+    private function getDatosF_eliminado(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_eliminado');
@@ -914,7 +634,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosNum_reg()
+    private function getDatosNum_reg(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('num_reg');
@@ -926,7 +646,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosNum_ini()
+    private function getDatosNum_ini(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('num_ini');
@@ -938,7 +658,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosNum_fin()
+    private function getDatosNum_fin(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('num_fin');
@@ -950,7 +670,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosIdentificador()
+    private function getDatosIdentificador(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('identificador');
@@ -962,7 +682,7 @@ class Documento
         return $oDatosCampo;
     }
 
-    function getDatosNum_ejemplares()
+    private function getDatosNum_ejemplares(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('num_ejemplares');

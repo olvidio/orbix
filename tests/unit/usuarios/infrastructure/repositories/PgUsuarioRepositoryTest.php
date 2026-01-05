@@ -75,7 +75,7 @@ class PgUsuarioRepositoryTest extends myTest
 
         $usuario = new Usuario();
         $usuario->setId_usuario(1);
-        $usuario->setUsuario(new Username('testuser'));
+        $usuario->setUsuarioVo(new Username('testuser'));
         $result = $this->repository->Guardar($usuario);
         $this->assertTrue($result);
     }

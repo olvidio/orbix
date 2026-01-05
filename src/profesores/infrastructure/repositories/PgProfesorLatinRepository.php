@@ -93,8 +93,7 @@ class PgProfesorLatinRepository extends ClaseRepository implements ProfesorLatin
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $ProfesorLatin = new ProfesorLatin();
-            $ProfesorLatin->setAllAttributes($aDatos);
+            $ProfesorLatin = ProfesorLatin::fromArray($aDatos);
             $ProfesorLatinSet->add($ProfesorLatin);
         }
         return $ProfesorLatinSet->getTot();
@@ -188,6 +187,6 @@ class PgProfesorLatinRepository extends ClaseRepository implements ProfesorLatin
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorLatin())->setAllAttributes($aDatos);
+        return ProfesorLatin::fromArray($aDatos);
     }
 }

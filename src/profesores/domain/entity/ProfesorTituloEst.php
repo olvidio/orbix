@@ -7,228 +7,143 @@ use core\Set;
 use src\profesores\domain\value_objects\CentroDntName;
 use src\profesores\domain\value_objects\TituloName;
 use src\profesores\domain\value_objects\YearNumber;
+use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 
-/**
- * Clase que implementa la entidad d_titulo_est
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 29/11/2025
- */
+
 class ProfesorTituloEst
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_item de ProfesorTituloEst
-     *
-     * @var int
-     */
-    private int $iid_item;
-    /**
-     * Id_nom de ProfesorTituloEst
-     *
-     * @var int
-     */
-    private int $iid_nom;
-    /**
-     * Titulo de ProfesorTituloEst
-     *
-     * @var string
-     */
-    private string $stitulo;
-    /**
-     * Centro_dnt de ProfesorTituloEst
-     *
-     * @var string|null
-     */
-    private string|null $scentro_dnt = null;
-    /**
-     * Eclesiastico de ProfesorTituloEst
-     *
-     * @var bool|null
-     */
-    private bool|null $beclesiastico = null;
-    /**
-     * Year de ProfesorTituloEst
-     *
-     * @var int|null
-     */
-    private int|null $iyear = null;
+    private int $id_item;
+
+    private int $id_nom;
+
+    private string $titulo;
+
+    private string|null $centro_dnt = null;
+
+    private bool|null $eclesiastico = null;
+
+    private int|null $year = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return ProfesorTituloEst
-     */
-    public function setAllAttributes(array $aDatos): ProfesorTituloEst
-    {
-        if (array_key_exists('id_item', $aDatos)) {
-            $this->setId_item($aDatos['id_item']);
-        }
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom($aDatos['id_nom']);
-        }
-        if (array_key_exists('titulo', $aDatos)) {
-            $this->setTituloVo(TituloName::fromNullable($aDatos['titulo']));
-        }
-        if (array_key_exists('centro_dnt', $aDatos)) {
-            $this->setCentroDntVo(CentroDntName::fromNullable($aDatos['centro_dnt']));
-        }
-        if (array_key_exists('eclesiastico', $aDatos)) {
-            $this->setEclesiastico(is_true($aDatos['eclesiastico']));
-        }
-        if (array_key_exists('year', $aDatos)) {
-            $this->setYearVo(YearNumber::fromNullable($aDatos['year']));
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_item
-     */
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
-    /**
-     *
-     * @param int $iid_item
-     */
-    public function setId_item(int $iid_item): void
+
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 
-    /**
-     *
-     * @return int $iid_nom
-     */
+
     public function getId_nom(): int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
-    /**
-     *
-     * @param int $iid_nom
-     */
-    public function setId_nom(int $iid_nom): void
+
+    public function setId_nom(int $id_nom): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
     /**
-     * @return string $stitulo
      * @deprecated Usar getTituloVo()->value()
      */
     public function getTitulo(): string
     {
-        return $this->stitulo;
+        return $this->titulo;
     }
 
     /**
-     * @param string $stitulo
      * @deprecated Usar setTituloVo(TituloName $vo)
      */
-    public function setTitulo(string $stitulo): void
+    public function setTitulo(string $titulo): void
     {
-        $this->stitulo = $stitulo;
+        $this->titulo = $titulo;
     }
 
     public function getTituloVo(): TituloName
     {
-        return new TituloName($this->stitulo);
+        return new TituloName($this->titulo);
     }
 
     public function setTituloVo(?TituloName $titulo): void
     {
         if ($titulo !== null) {
-            $this->stitulo = $titulo->value();
+            $this->titulo = $titulo->value();
         }
     }
 
     /**
-     * @return string|null $scentro_dnt
      * @deprecated Usar getCentroDntVo()->value()
      */
     public function getCentro_dnt(): ?string
     {
-        return $this->scentro_dnt;
+        return $this->centro_dnt;
     }
 
     /**
-     * @param string|null $scentro_dnt
      * @deprecated Usar setCentroDntVo(CentroDntName $vo)
      */
-    public function setCentro_dnt(?string $scentro_dnt = null): void
+    public function setCentro_dnt(?string $centro_dnt = null): void
     {
-        $this->scentro_dnt = $scentro_dnt;
+        $this->centro_dnt = $centro_dnt;
     }
 
     public function getCentroDntVo(): ?CentroDntName
     {
-        return CentroDntName::fromNullable($this->scentro_dnt);
+        return CentroDntName::fromNullable($this->centro_dnt);
     }
 
     public function setCentroDntVo(?CentroDntName $centro): void
     {
-        $this->scentro_dnt = $centro?->value();
+        $this->centro_dnt = $centro?->value();
     }
 
-    /**
-     *
-     * @return bool|null $beclesiastico
-     */
+
     public function isEclesiastico(): ?bool
     {
-        return $this->beclesiastico;
+        return $this->eclesiastico;
     }
 
-    /**
-     *
-     * @param bool|null $beclesiastico
-     */
-    public function setEclesiastico(?bool $beclesiastico = null): void
+
+    public function setEclesiastico(?bool $eclesiastico = null): void
     {
-        $this->beclesiastico = $beclesiastico;
+        $this->eclesiastico = $eclesiastico;
     }
 
     /**
-     * @return int|null $iyear
      * @deprecated Usar getYearVo()->value()
      */
     public function getYear(): ?int
     {
-        return $this->iyear;
+        return $this->year;
     }
 
     /**
-     * @param int|null $iyear
      * @deprecated Usar setYearVo(YearNumber $vo)
      */
-    public function setYear(?int $iyear = null): void
+    public function setYear(?int $year = null): void
     {
-        $this->iyear = $iyear;
+        $this->year = $year;
     }
 
     public function getYearVo(): ?YearNumber
     {
-        return YearNumber::fromNullable($this->iyear);
+        return YearNumber::fromNullable($this->year);
     }
 
     public function setYearVo(?YearNumber $year): void
     {
-        $this->iyear = $year?->value();
+        $this->year = $year?->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -237,7 +152,7 @@ class ProfesorTituloEst
         return 'id_item';
     }
 
-    function getDatosCampos(): array
+  public function getDatosCampos(): array
     {
         $oProfesorTituloEstSet = new Set();
 
@@ -249,7 +164,7 @@ class ProfesorTituloEst
         return $oProfesorTituloEstSet->getTot();
     }
 
-    function getDatosId_nom(): DatosCampo
+    private function getDatosId_nom(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_nom');
@@ -261,7 +176,7 @@ class ProfesorTituloEst
         return $oDatosCampo;
     }
 
-    function getDatosTitulo(): DatosCampo
+    private function getDatosTitulo(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('titulo');
@@ -273,7 +188,7 @@ class ProfesorTituloEst
         return $oDatosCampo;
     }
 
-    function getDatosCentro_dnt(): DatosCampo
+    private function getDatosCentro_dnt(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('centro_dnt');
@@ -285,7 +200,7 @@ class ProfesorTituloEst
         return $oDatosCampo;
     }
 
-    function getDatosEclesiastico(): DatosCampo
+    private function getDatosEclesiastico(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('eclesiastico');
@@ -296,7 +211,7 @@ class ProfesorTituloEst
         return $oDatosCampo;
     }
 
-    function getDatosYear(): DatosCampo
+    private function getDatosYear(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('year');

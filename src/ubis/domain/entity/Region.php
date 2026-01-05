@@ -4,179 +4,109 @@ namespace src\ubis\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 use src\ubis\domain\value_objects\RegionCode;
 use src\ubis\domain\value_objects\RegionId;
 
-/**
- * Clase que implementa la entidad xu_region
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 5/11/2025
- */
+
 class Region
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_region de Region
-     *
-     * @var int|null
-     */
-    private int|null $iid_region = null;
-    /**
-     * Region de Region
-     *
-     * @var string
-     */
-    private string $sregion;
-    /**
-     * Nombre_region de Region
-     *
-     * @var string|null
-     */
-    private string|null $snombre_region = null;
-    /**
-     * Status de Region
-     *
-     * @var bool|null
-     */
-    private bool|null $bstatus = null;
+
+    private int|null $id_region = null;
+
+    private string $region;
+
+    private string|null $nombre_region = null;
+
+    private bool|null $active = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Region
-     */
-    public function setAllAttributes(array $aDatos): Region
-    {
-        if (array_key_exists('id_region', $aDatos)) {
-            $this->setId_region($aDatos['id_region']);
-        }
-        if (array_key_exists('region', $aDatos)) {
-            $this->setRegion($aDatos['region']);
-        }
-        if (array_key_exists('nombre_region', $aDatos)) {
-            $this->setNombre_region($aDatos['nombre_region']);
-        }
-        if (array_key_exists('status', $aDatos)) {
-            $this->setStatus(is_true($aDatos['status']));
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int|null $iid_region
-     */
     /**
      * @deprecated Usar `getIdRegionVo(): ?RegionId` en su lugar.
      */
     public function getId_region(): ?int
     {
-        return $this->iid_region;
+        return $this->id_region;
     }
 
-    /**
-     *
-     * @param int|null $iid_region
-     */
+
     /**
      * @deprecated Usar `setIdRegionVo(?RegionId $id): void` en su lugar.
      */
-    public function setId_region(?int $iid_region = null): void
+    public function setId_region(?int $id_region = null): void
     {
-        $this->iid_region = $iid_region;
+        $this->id_region = $id_region;
     }
 
     // Value Object API for id_region
     public function getIdRegionVo(): ?RegionId
     {
-        return $this->iid_region !== null ? new RegionId($this->iid_region) : null;
+        return $this->id_region !== null ? new RegionId($this->id_region) : null;
     }
 
     public function setIdRegionVo(?RegionId $id = null): void
     {
-        $this->iid_region = $id?->value();
+        $this->id_region = $id?->value();
     }
 
-    /**
-     *
-     * @return string $sregion
-     */
+
     /**
      * @deprecated Usar `getRegionVo(): ?RegionCode` en su lugar.
      */
     public function getRegion(): string
     {
-        return $this->sregion;
+        return $this->region;
     }
 
-    /**
-     *
-     * @param string $sregion
-     */
+
     /**
      * @deprecated Usar `setRegionVo(?RegionCode $code): void` en su lugar.
      */
-    public function setRegion(string $sregion): void
+    public function setRegion(string $region): void
     {
-        $this->sregion = $sregion;
+        $this->region = $region;
     }
 
     // Value Object API for region code (sigla)
     public function getRegionVo(): ?RegionCode
     {
         // Return null if empty or unset to allow optional usage
-        return isset($this->sregion) && $this->sregion !== '' ? new RegionCode($this->sregion) : null;
+        return isset($this->region) && $this->region !== '' ? new RegionCode($this->region) : null;
     }
 
     public function setRegionVo(?RegionCode $code = null): void
     {
-        $this->sregion = $code?->value() ?? '';
+        $this->region = $code?->value() ?? '';
     }
 
-    /**
-     *
-     * @return string|null $snombre_region
-     */
+
     public function getNombre_region(): ?string
     {
-        return $this->snombre_region;
+        return $this->nombre_region;
     }
 
-    /**
-     *
-     * @param string|null $snombre_region
-     */
-    public function setNombre_region(?string $snombre_region = null): void
+
+    public function setNombre_region(?string $nombre_region = null): void
     {
-        $this->snombre_region = $snombre_region;
+        $this->nombre_region = $nombre_region;
     }
 
-    /**
-     *
-     * @return bool|null $bstatus
-     */
-    public function isStatus(): ?bool
+
+    public function isActive(): ?bool
     {
-        return $this->bstatus;
+        return $this->active;
     }
 
-    /**
-     *
-     * @param bool|null $bstatus
-     */
-    public function setStatus(?bool $bstatus = null): void
+
+    public function setActive(?bool $active = null): void
     {
-        $this->bstatus = $bstatus;
+        $this->active = $active;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -185,7 +115,7 @@ class Region
         return 'id_region';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oRegionSet = new Set();
 
@@ -197,12 +127,12 @@ class Region
     }
 
     /**
-     * Recupera les propietats de l'atribut iid_region de Region
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo id_region de Region
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosRegion()
+    private function getDatosRegion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('region');
@@ -215,12 +145,12 @@ class Region
     }
 
     /**
-     * Recupera les propietats de l'atribut snombre_region de Region
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo nombre_region de Region
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosNombre_region()
+    private function getDatosNombre_region(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nombre_region');
@@ -233,17 +163,17 @@ class Region
     }
 
     /**
-     * Recupera les propietats de l'atribut bstatus de Region
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo active de Region
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosStatus()
+    private function getDatosStatus(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
-        $oDatosCampo->setNom_camp('status');
-        $oDatosCampo->setMetodoGet('isStatus');
-        $oDatosCampo->setMetodoSet('setStatus');
+        $oDatosCampo->setNom_camp('active');
+        $oDatosCampo->setMetodoGet('isActive');
+        $oDatosCampo->setMetodoSet('setActive');
         $oDatosCampo->setEtiqueta(_("en activo"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;

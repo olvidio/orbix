@@ -4,7 +4,7 @@ use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\ResumenPlazas;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -58,7 +58,7 @@ if ($oActividad->getDl_org() != ConfigGlobal::mi_delef()) {
     $otra_dl = TRUE;
 }
 
-$gesActividadPlazas = new GestorResumenPlazas();
+$gesActividadPlazas = new ResumenPlazas();
 $gesActividadPlazas->setId_activ($id_activ);
 $a_plazas = $gesActividadPlazas->getResumen();
 

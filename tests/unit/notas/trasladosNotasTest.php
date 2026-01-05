@@ -7,10 +7,10 @@ use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
 use notas\model\EditarPersonaNota;
-use notas\model\entity\GestorPersonaNotaDlDB;
-use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
-use personas\model\entity\TrasladoDl;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\personas\domain\TrasladoDl;
 use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use Tests\factories\notas\NotasFactory;
@@ -88,11 +88,11 @@ class trasladosNotasTest extends myTest
 
         // 3.1.- No existen en e_notas_otra_region. de cr B
         $oDBdst = $this->setConexion($esquemaB . 'v');
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgrB]);
+        $PersonaNotaOtraRegionStgrRepository->setoDbl($oDBdst);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrB);
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -100,11 +100,11 @@ class trasladosNotasTest extends myTest
 
         // 3.2.- No existen en e_notas_dl de crB
         $oDBdst = $this->setConexion($esquemaB . 'v');
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $PersonaNotaDBRepository->setoDbl($oDBdst);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -112,11 +112,11 @@ class trasladosNotasTest extends myTest
 
         // 3.3.- No existen en e_notas_otra_region de la region de dlA
         $oDBdst = $this->setConexion($esquema_region_stgrA);
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgrA]);
+        $PersonaNotaOtraRegionStgrRepository->setoDbl($oDBdst);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrA);
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -126,9 +126,9 @@ class trasladosNotasTest extends myTest
         $oDBdst = $this->setConexion($esquemaA . 'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $PersonaNotaDBRepository->setoDbl($oDBdst);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
@@ -184,10 +184,10 @@ class trasladosNotasTest extends myTest
         // 3.4.- Existen en e_notas_dl. de crA
 
         // 3.1.- No existen en e_notas_otra_region. de cr A
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgrA]);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrA);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -197,9 +197,9 @@ class trasladosNotasTest extends myTest
         $oDBdst = $this->setConexion($esquemaB . 'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $PersonaNotaDBRepository->setoDbl($oDBdst);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -207,11 +207,11 @@ class trasladosNotasTest extends myTest
 
         // 3.3.- No existen en e_notas_otra_region de la region de dlB
         $oDBdst = $this->setConexion($esquema_region_stgrB);
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgrB]);
+        $PersonaNotaOtraRegionStgrRepository->setoDbl($oDBdst);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrB);
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -221,9 +221,9 @@ class trasladosNotasTest extends myTest
         $oDBdst = $this->setConexion($esquemaA . 'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $PersonaNotaDBRepository->setoDbl($oDBdst);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
@@ -271,10 +271,10 @@ class trasladosNotasTest extends myTest
         // 3.- Comprobar:
 
         // 3.1.-Existen en e_notas_otra_region.
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
@@ -293,9 +293,9 @@ class trasladosNotasTest extends myTest
         $oDBdst = $this->setConexion($esquemaB . 'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $PersonaNotaDBRepository->setoDbl($oDBdst);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
@@ -313,8 +313,8 @@ class trasladosNotasTest extends myTest
         // 3.3.- No existen en origen crA.e_notas_dl
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -322,9 +322,9 @@ class trasladosNotasTest extends myTest
 
         // 4.- borrar las pruebas
         $oDBdst = $this->setConexion($esquemaA . 'v');
-        $gesPersonaNota = new GestorPersonaNotaDlDB();
-        $gesPersonaNota->setoDbl($oDBdst);
-        $cPersonaNotasC = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom]);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $PersonaNotaDBRepository->setoDbl($oDBdst);
+        $cPersonaNotasC = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom]);
         foreach ($cPersonaNotasC as $oPersonaNotaC) {
             $oPersonaNotaC->DBEliminar();
         }
@@ -379,10 +379,10 @@ class trasladosNotasTest extends myTest
         // 3.- Comprobar:
 
         // 3.1.-Existen en e_notas_otra_region.
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
@@ -401,9 +401,9 @@ class trasladosNotasTest extends myTest
         $oDBdst = $this->conexionDst();
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $PersonaNotaDBRepository->setoDbl($oDBdst);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
@@ -421,8 +421,8 @@ class trasladosNotasTest extends myTest
         // 3.3.- No existen en origen crA.e_notas_dl
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -482,10 +482,10 @@ class trasladosNotasTest extends myTest
         $oDBdst = $this->conexionDst();
 
         // 3.1.-Existen en e_notas_otra_region.
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
@@ -503,9 +503,9 @@ class trasladosNotasTest extends myTest
         // 3.2.- Existen en e_notas_dl region destino con 'falta certificado'
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $PersonaNotaDBRepository->setoDbl($oDBdst);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
@@ -522,9 +522,8 @@ class trasladosNotasTest extends myTest
         // 3.3.- No existen en origen
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            //$gesPersonaNota->setoDbl($oDBorg);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -579,9 +578,9 @@ class trasladosNotasTest extends myTest
 
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $PersonaNotaDBRepository->setoDbl($oDBdst);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
 
@@ -599,9 +598,8 @@ class trasladosNotasTest extends myTest
         // 3.2.- No existen en origen
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            //$gesPersonaNota->setoDbl($oDBorg);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
@@ -731,10 +729,10 @@ class trasladosNotasTest extends myTest
     {
         $oDBdst = $this->setConexion($esquema . 'v');
 
-        $gesPersonaNotas = new GestorPersonaNotaDlDB();
-        $gesPersonaNotas->setoDbl($oDBdst);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $PersonaNotaDBRepository->setoDbl($oDBdst);
         $aWhere = ['id_nom' => $id_nom];
-        $cPersonaNotas = $gesPersonaNotas->getPersonaNotas($aWhere);
+        $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
         foreach ($cPersonaNotas as $oPersonaNota) {
             $oPersonaNota->DBEliminar();
         }

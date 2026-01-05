@@ -5,10 +5,10 @@
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use procesos\model\entity\ActividadFase;
 use src\actividades\domain\value_objects\StatusId;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use web\TiposActividades;
@@ -47,7 +47,7 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
         array('prefix' => 'av', 'txt' => _("eliminar"), 'click' => "fnjs_del_cambio(\"#avisos\")")
     ];
     $a_valores_avisos = [];
-    $oFase = new ActividadFase();
+    $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
     $CambioUsuarioPropiedadesPref = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
     foreach ($cListaTablas as $oCambioUsuarioObjetoPref) {
         $i++;
@@ -77,10 +77,9 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
         $a_valores_avisos[$i][3] = $oTipoActividad->getNom();
         $txt_fases = '';
         if (ConfigGlobal::is_app_installed('procesos')) {
-            $oFase->setId_fase($id_fase_ref);
-            $oFase->DBCarregar();
+            $oActividadFase = $ActividadFaseRepository->findById($id_fase_ref);
             $txt_fases .= empty($txt_fases) ? '' : ', ';
-            $txt_fases .= $oFase->getDesc_fase();
+            $txt_fases .= $oActividadFase->getDesc_fase();
         } else {
             $txt_fases .= empty($txt_fases) ? '' : ', ';
             $txt_fases .= $a_status[$id_fase_ref];

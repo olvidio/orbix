@@ -8,168 +8,84 @@ use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\menus\domain\value_objects\MetaMenuUrl;
 use src\menus\domain\value_objects\MetaMenuParametros;
 use src\menus\domain\value_objects\MetaMenuDescripcion;
+use src\shared\domain\traits\Hydratable;
 
-/**
- * Clase que implementa la entidad aux_metamenus
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 15/4/2025
- */
 class MetaMenu
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_metamenu de MetaMenu
-     *
-     * @var int
-     */
-    private int $iid_metamenu;
-    /**
-     * Id_mod de MetaMenu
-     *
-     * @var int|null
-     */
-    private int|null $iid_mod = null;
-    /**
-     * Url de MetaMenu
-     *
-     * @var string|null
-     */
-    private string|null $surl = null;
-    /**
-     * Parametros de MetaMenu
-     *
-     * @var string|null
-     */
-    private string|null $sparametros = null;
-    /**
-     * Descripcion de MetaMenu
-     *
-     * @var string|null
-     */
-    private string|null $sdescripcion = null;
+
+    private int $id_metamenu;
+
+    private int|null $id_mod = null;
+
+    private string|null $url = null;
+
+    private string|null $parametros = null;
+
+    private string|null $descripcion = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return MetaMenu
-     */
-    public function setAllAttributes(array $aDatos): MetaMenu
-    {
-        if (array_key_exists('id_metamenu', $aDatos)) {
-            $this->setId_metamenu($aDatos['id_metamenu']);
-        }
-        if (array_key_exists('id_mod', $aDatos)) {
-            $this->setId_mod($aDatos['id_mod']);
-        }
-        if (array_key_exists('url', $aDatos)) {
-            $this->setUrl($aDatos['url']);
-        }
-        if (array_key_exists('parametros', $aDatos)) {
-            $this->setParametros($aDatos['parametros']);
-        }
-        if (array_key_exists('descripcion', $aDatos)) {
-            $this->setDescripcion($aDatos['descripcion']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_metamenu
-     */
     public function getId_metamenu(): int
     {
-        return $this->iid_metamenu;
+        return $this->id_metamenu;
     }
 
-    /**
-     *
-     * @param int $iid_metamenu
-     */
-    public function setId_metamenu(int $iid_metamenu): void
+
+    public function setId_metamenu(int $id_metamenu): void
     {
-        $this->iid_metamenu = $iid_metamenu;
+        $this->id_metamenu = $id_metamenu;
     }
 
-    /**
-     *
-     * @return int|null $iid_mod
-     */
+
     public function getId_mod(): ?int
     {
-        return $this->iid_mod;
+        return $this->id_mod;
     }
 
-    /**
-     *
-     * @param int|null $iid_mod
-     */
-    public function setId_mod(?int $iid_mod = null): void
+
+    public function setId_mod(?int $id_mod = null): void
     {
-        $this->iid_mod = $iid_mod;
+        $this->id_mod = $id_mod;
     }
 
-    /**
-     *
-     * @return string|null $surl
-     */
+
     public function getUrl(): ?string
     {
-        return $this->surl;
+        return $this->url;
     }
 
-    /**
-     *
-     * @param string|null $surl
-     */
-    public function setUrl(string|MetaMenuUrl|null $surl = null): void
+
+    public function setUrl(string|MetaMenuUrl|null $url = null): void
     {
-        $this->surl = $surl instanceof MetaMenuUrl ? $surl->value() : $surl;
+        $this->url = $url instanceof MetaMenuUrl ? $url->value() : $url;
     }
 
-    /**
-     *
-     * @return string|null $sparametros
-     */
+
     public function getParametros(): ?string
     {
-        return $this->sparametros;
+        return $this->parametros;
     }
 
-    /**
-     *
-     * @param string|null $sparametros
-     */
-    public function setParametros(string|MetaMenuParametros|null $sparametros = null): void
+
+    public function setParametros(string|MetaMenuParametros|null $parametros = null): void
     {
-        $this->sparametros = $sparametros instanceof MetaMenuParametros ? $sparametros->value() : $sparametros;
+        $this->parametros = $parametros instanceof MetaMenuParametros ? $parametros->value() : $parametros;
     }
 
-    /**
-     *
-     * @return string|null $sdescripcion
-     */
+
     public function getDescripcion(): ?string
     {
-        return $this->sdescripcion;
+        return $this->descripcion;
     }
 
-    /**
-     *
-     * @param string|null $sdescripcion
-     */
-    public function setDescripcion(string|MetaMenuDescripcion|null $sdescripcion = null): void
+
+    public function setDescripcion(string|MetaMenuDescripcion|null $descripcion = null): void
     {
-        $this->sdescripcion = $sdescripcion instanceof MetaMenuDescripcion ? $sdescripcion->value() : $sdescripcion;
+        $this->descripcion = $descripcion instanceof MetaMenuDescripcion ? $descripcion->value() : $descripcion;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -178,7 +94,7 @@ class MetaMenu
         return 'id_metamenu';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oMetamenuSet = new Set();
 
@@ -189,7 +105,7 @@ class MetaMenu
         return $oMetamenuSet->getTot();
     }
 
-    function getDatosModulo()
+    private function getDatosModulo(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_mod');
@@ -203,7 +119,7 @@ class MetaMenu
         return $oDatosCampo;
     }
 
-    function getDatosUrl()
+    private function getDatosUrl(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('url');
@@ -215,7 +131,7 @@ class MetaMenu
         return $oDatosCampo;
     }
 
-    function getDatosParametros()
+    private function getDatosParametros(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('parametros');
@@ -227,7 +143,7 @@ class MetaMenu
         return $oDatosCampo;
     }
 
-    function getDatosDescripcion()
+    private function getDatosDescripcion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('descripcion');

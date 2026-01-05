@@ -146,8 +146,7 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Role = new Role();
-            $Role->setAllAttributes($aDatos);
+            $Role = Role::fromArray($aDatos);
             $RoleSet->add($Role);
         }
         return $RoleSet->getTot();
@@ -259,7 +258,7 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
         if (empty($aDatos)) {
             return null;
         }
-        return (new Role())->setAllAttributes($aDatos);
+        return Role::fromArray($aDatos);
     }
 
     public function getNewId()

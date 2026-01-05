@@ -4,7 +4,6 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\Lista;
-use zonassacd\model\entity\Zona;
 
 /**
  * Esta página devuelve una tabla con los nombres de los centros que perteneces a una zona de Misas.
@@ -51,7 +50,7 @@ switch ($Qque) {
         /*miro las condiciones. */
         switch ($Qid_zona) {
             case "no":
-                $aWhere['status'] = 't';
+                $aWhere['active'] = 't';
                 $aWhere['id_zona'] = '';
                 $aOperador['id_zona'] = 'IS NULL';
                 $aWhere['_ordre'] = 'nombre_ubi';
@@ -59,7 +58,7 @@ switch ($Qque) {
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             case "no_sf":
-                $aWhere['status'] = 't';
+                $aWhere['active'] = 't';
                 $aWhere['id_zona'] = '';
                 $aOperador['id_zona'] = 'IS NULL';
                 $aWhere['_ordre'] = 'nombre_ubi';
@@ -67,7 +66,7 @@ switch ($Qque) {
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             default:
-                $aWhere['status'] = 't';
+                $aWhere['active'] = 't';
                 $aWhere['id_zona'] = $Qid_zona;
                 $aWhere['_ordre'] = 'nombre_ubi';
                 $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);

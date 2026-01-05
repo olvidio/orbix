@@ -26,7 +26,6 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use permisos\model\PermisosActividadesTrue;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
@@ -34,6 +33,7 @@ use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
@@ -331,6 +331,7 @@ if (empty($aRolesPau[$id_role]) || ($aRolesPau[$id_role] !== Role::PAU_CTR)) {
 }
 $a_cabeceras[] = ucfirst(_("centro"));
 $a_cabeceras[] = ucfirst(_("observaciones"));
+$a_cabeceras[] = ucfirst(_("idioma"));
 
 if (!empty($Qmodo) && $Qmodo === 'importar') {
     // actividades publicadas
@@ -381,7 +382,7 @@ $tipo = 'tabla_presentacion';
 $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia !== null) {
-    $sPrefs = $oPreferencia->getPreferencia();
+    $sPrefs = $oPreferencia->getPreferenciaAsString();
 }
 $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
 $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
@@ -399,6 +400,7 @@ foreach ($cActividades as $oActividad) {
     $h_fin = $oActividad->getH_fin()?->format('H:i')?? '';
     $tarifa = $oActividad->getTarifa();
     $observ = $oActividad->getObserv();
+    $idioma = $oActividad->getIdiomaVo()?->value();
     // Si es para importar, quito las que ya están importadas
     // y no miro permisos de procesos
     //echo "nom: $nom_activ<br>";
@@ -415,8 +417,8 @@ foreach ($cActividades as $oActividad) {
         if (ConfigGlobal::is_app_installed('procesos')) {
             //mirar por la seleccion
             if (!empty($Qfases_on) || !empty($Qfases_off)) {
-                $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
-                $aFasesCompletadas = $gesActividadProcesoTarea->getFasesCompletadas($id_activ);
+                $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+                $aFasesCompletadas = $ActividadProcesoTareaRepository->getFasesCompletadas($id_activ);
                 if (!empty($Qfases_on)) {
                     foreach ($Qfases_on as $id_fase) {
                         if (!in_array($id_fase, $aFasesCompletadas)) {
@@ -494,8 +496,8 @@ foreach ($cActividades as $oActividad) {
             // sólo si tiene permiso
             $aprobado = TRUE;
             if (ConfigGlobal::mi_sfsv() === 2 && ConfigGlobal::is_app_installed('procesos')) {
-                $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
-                $aprobado = $gesActividadProcesoTarea->getSacdAprobado($id_activ);
+                $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+                $aprobado = $ActividadProcesoTareaRepository->getSacdAprobado($id_activ);
             }
             if (!ConfigGlobal::is_app_installed('procesos')
                 || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
@@ -564,9 +566,11 @@ foreach ($cActividades as $oActividad) {
             $a_valores[$i][9] = $dl_org;
             $a_valores[$i][10] = $ctrs;
             $a_valores[$i][11] = $observ;
+            $a_valores[$i][12] = $idioma;
         } else {
             $a_valores[$i][8] = $ctrs;
             $a_valores[$i][9] = $observ;
+            $a_valores[$i][10] = $idioma;
         }
     }
     // para poder ordenar por fecha y casa

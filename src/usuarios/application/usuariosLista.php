@@ -67,7 +67,7 @@ class usuariosLista
             $i++;
             $id_usuario = $oUsuario->getId_usuario();
             $usuario = $oUsuario->getUsuarioAsString();
-            $nom_usuario = $oUsuario->getNom_usuarioAsString();
+            $nom_usuario = $oUsuario->getNomUsuarioAsString();
             $email = $oUsuario->getEmailAsString();
             $id_role = $oUsuario->getId_role();
 

@@ -98,8 +98,7 @@ class PgMenuDbRepository extends ClaseRepository implements MenuDbRepositoryInte
         foreach ($filas as $aDatos) {
             // para los array del postgres
             $aDatos['orden'] = array_pgInteger2php($aDatos['orden']);
-            $MenuDb = new MenuDb();
-            $MenuDb->setAllAttributes($aDatos);
+            $MenuDb = MenuDb::fromArray($aDatos);
             $MenuDbSet->add($MenuDb);
         }
         return $MenuDbSet->getTot();
@@ -210,7 +209,7 @@ class PgMenuDbRepository extends ClaseRepository implements MenuDbRepositoryInte
         if (empty($aDatos)) {
             return null;
         }
-        return (new MenuDb())->setAllAttributes($aDatos);
+        return MenuDb::fromArray($aDatos);
     }
 
     public function getNewId()

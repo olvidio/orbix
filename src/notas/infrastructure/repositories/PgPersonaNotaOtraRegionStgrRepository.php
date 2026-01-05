@@ -1,0 +1,408 @@
+<?php
+
+namespace src\notas\infrastructure\repositories;
+
+use core\ClaseRepository;
+use core\Condicion;
+use core\ConfigDB;
+use core\ConfigGlobal;
+use core\ConverterDate;
+use core\DBConnection;
+use core\Set;
+use notas\model\EditarPersonaNota;
+use notas\model\PersonaNota;
+use PDO;
+use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
+use src\notas\domain\entity\Nota;
+use src\notas\domain\entity\PersonaNotaDB;
+use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
+use src\notas\domain\value_objects\PersonaNotaPk;
+use src\shared\traits\HandlesPdoErrors;
+use stdClass;
+
+
+/**
+ * Clase que adapta la tabla e_actas_tribunal_dl a la interfaz del repositorio
+ *
+ * @package orbix
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 2.0
+ * @created 27/12/2025
+ */
+class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements PersonaNotaOtraRegionStgrRepositoryInterface
+{
+    use HandlesPdoErrors;
+
+    protected string $esquema_region_stgr;
+
+    function __construct(string $esquema_region_stgr)
+    {
+        $this->esquema_region_stgr = $esquema_region_stgr;
+        $db = (ConfigGlobal::mi_sfsv() === 1) ? 'sv' : 'sf';
+        // se debe conectar con la region del stgr padre
+        $oConfigDB = new ConfigDB($db); //de la database sv/sf
+        $config = $oConfigDB->getEsquema($esquema_region_stgr);
+        $oConexion = new DBConnection($config);
+        $oDbl = $oConexion->getPDO();
+
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('e_notas_otra_region_stgr');
+    }
+
+    public function addCertificado(int $id_nom, string $certificado, $oF_certificado)
+    {
+        $cPersonaNotaOtraRegionStgr = $this->getPersonaNotas(['id_nom' => $id_nom]);
+        foreach ($cPersonaNotaOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
+            // miro los que hay para añadir este
+            $a_json_certificados = (array)$oPersonaNotaOtraRegionStgr->getJson_certificados();
+            $oCert = new stdClass();
+            $oCert->certificado = $certificado;
+            $oCert->estado = 'guardado';
+            $a_json_certificados[] = $oCert;
+            $oPersonaNotaOtraRegionStgr->setJson_certificados($a_json_certificados);
+            $oPersonaNotaOtraRegionStgr->DBGuardar();
+
+            // miro de guardarlo en su dl.
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaDBRepository::class);
+            $aWhere = ['id_nom' => $id_nom,
+                'id_nivel' => $oPersonaNotaOtraRegionStgr->getId_nivel(),
+                'id_asignatura' => $oPersonaNotaOtraRegionStgr->getId_asignatura(),
+                'tipo_acta' => PersonaNotaDB::FORMATO_CERTIFICADO, // si no habrá 2, una con formato acta y otra certificado
+                //'id_situacion' => Nota::FALTA_CERTIFICADO,
+            ];
+            $cPersonNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
+            if (empty($cPersonNotas)) {
+                $id_asignatura = $oPersonaNotaOtraRegionStgr->getId_asignatura();
+                $msg = sprintf(_("Nota no encontrada. id_asignatura: %s, id_nom: %s"), $id_asignatura, $id_nom);
+                //throw new \Exception($msg);
+                $oPersonaNota = new PersonaNota();
+                $oPersonaNota->setIdNivel($oPersonaNotaOtraRegionStgr->getId_nivel());
+                $oPersonaNota->setIdAsignatura($id_asignatura);
+                $oPersonaNota->setIdNom($id_nom);
+                $oPersonaNota->setTipoActa(PersonaNotaDB::FORMATO_CERTIFICADO);
+                $oPersonaNota->setIdSituacion($oPersonaNotaOtraRegionStgr->getId_situacion());
+                $oPersonaNota->setActa($oPersonaNotaOtraRegionStgr->getActa());
+                $oPersonaNota->setDetalle($oPersonaNotaOtraRegionStgr->getDetalle());
+                $oPersonaNota->setFacta($oF_certificado);
+                $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
+                $oPersonaNota->setIdpreceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
+                $oPersonaNota->setEpoca($oPersonaNotaOtraRegionStgr->getEpoca());
+                $oPersonaNota->setIdactiv($oPersonaNotaOtraRegionStgr->getId_activ());
+                $oPersonaNota->setNotanum($oPersonaNotaOtraRegionStgr->getNota_num());
+                $oPersonaNota->setNotamax($oPersonaNotaOtraRegionStgr->getNota_max());
+
+                $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+                $rta = $oEditarPersonaNota->nuevoSolamenteDl();
+                if (!empty($rta['nota_certificado'])) {
+                    $oPersonaNota = $rta['nota_certificado'];
+                    $oPersonaNota->setActa($certificado);
+                    $oPersonaNota->setId_situacion(NOTA::NUMERICA);
+                    $PersonaNotaDBRepository->Guardar($oPersonaNota);
+                }
+
+            } else {
+                $oPersonaNota = $cPersonNotas[0];
+                if (!empty($oPersonaNota)) {
+                    $oPersonaNota->setId_situacion($oPersonaNotaOtraRegionStgr->getId_situacion());
+                    $oPersonaNota->setF_acta($oF_certificado);
+                    $oPersonaNota->setActa($certificado);
+                    //$oPersonaNota->setDetalle($detalle); // dejo lo que hay
+                    $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
+                    $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
+                    $oPersonaNota->setEpoca($oPersonaNotaOtraRegionStgr->getEpoca());
+                    $oPersonaNota->setId_activ($oPersonaNotaOtraRegionStgr->getId_activ());
+                    $oPersonaNota->setNota_num($oPersonaNotaOtraRegionStgr->getNota_num());
+                    $oPersonaNota->setNota_max($oPersonaNotaOtraRegionStgr->getNota_max());
+                    $PersonaNotaDBRepository->Guardar($oPersonaNota);
+                }
+            }
+        }
+
+    }
+
+    public function deleteCertificado(?string $certificado)
+    {
+        $cPersonaNotasOtraRegionStgr = $this->getPersonaNotasConCertificado($certificado);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaDBRepository::class);
+        foreach ($cPersonaNotasOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
+            $a_json_certificados = (array)$oPersonaNotaOtraRegionStgr->getJson_certificados();
+            foreach ($a_json_certificados as $key => $json_certificado) {
+                if ($json_certificado->certificado === $certificado) {
+                    unset($a_json_certificados[$key]);
+                    // miro de guardarlo en su dl (poner que falta certificado).
+                    $aWhere = ['id_nom' => $oPersonaNotaOtraRegionStgr->getId_nom(),
+                        'id_nivel' => $oPersonaNotaOtraRegionStgr->getId_nivel(),
+                        'id_asignatura' => $oPersonaNotaOtraRegionStgr->getId_asignatura(),
+                        'tipo_acta' => PersonaNotaDB::FORMATO_CERTIFICADO,
+                        'acta' => $certificado,
+                    ];
+                    $personaNotasDB = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
+                    $oPersonaNotaDB = $personaNotasDB[0] ?? '';
+                    if (!empty($oPersonaNotaDB)) {
+                        $oPersonaNotaDB->setId_situacion(Nota::FALTA_CERTIFICADO);
+                        $oPersonaNotaDB->setF_acta('');
+                        $oPersonaNotaDB->setActa(_("falta certificado"));
+                        $PersonaNotaDBRepository->Guardar($oPersonaNotaDB);
+                    }
+                }
+            }
+            $oPersonaNotaOtraRegionStgr->setJson_certificados($a_json_certificados);
+            $this->Guardar($oPersonaNotaOtraRegionStgr);
+        }
+    }
+
+    private function getPersonaNotasConCertificado(?string $certificado, ?string $estado = null): array|false
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $oPersonaNotaOtraRegionStgrSet = new Set();
+
+        $json = '';
+        if (!empty($certificado)) {
+            $json .= empty($json) ? '' : ',';
+            $json .= "\"certificado\":\"$certificado\"";
+
+        }
+        if (!empty($estado)) {
+            $json .= empty($json) ? '' : ',';
+            $json .= "\"estado\":\"$estado\"";
+        }
+
+        if (!empty($json)) {
+            $Where_json = "json_certificados @> '[{" . $json . "}]'";
+        }
+
+        if (empty($json)) {
+            $where_condi = '';
+        } else {
+            $where_condi = $Where_json;
+        }
+        $where_condi = empty($where_condi) ? '' : "WHERE " . $where_condi;
+
+        $sQry = "SELECT * FROM $nom_tabla $where_condi ";
+
+        $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+
+        foreach ($stmt as $aDatos) {
+            $oPersonaNotaOtraRegionStgr = new PersonaNotaOtraRegionStgr();
+            $oPersonaNotaOtraRegionStgr->setId_nom($aDatos['id_nom']);
+            $oPersonaNotaOtraRegionStgr->setId_nivel($aDatos['id_nivel']);
+            $oPersonaNotaOtraRegionStgr->setId_asignatura($aDatos['id_asignatura']);
+            $oPersonaNotaOtraRegionStgr->setId_situacion($aDatos['id_situacion']);
+            $oPersonaNotaOtraRegionStgr->setTipo_acta($aDatos['tipo_acta']);
+            $oPersonaNotaOtraRegionStgrSet->add($oPersonaNotaOtraRegionStgr);
+        }
+        return $oPersonaNotaOtraRegionStgrSet->getTot();
+    }
+
+    /* -------------------- GESTOR BASE ---------------------------------------- */
+
+    /**
+     * devuelve una colección (array) de objetos de tipo ActaTribunalDl
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array Una colección de objetos de tipo ActaTribunalDl
+     */
+    public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $PersonaNotaSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') {
+                continue;
+            }
+            if ($camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = " WHERE " . $sCondicion;
+        }
+        $sOrdre = '';
+        $sLimit = '';
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($filas as $aDatos) {
+            // para las fechas del postgres (texto iso)
+            $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
+            $a_pkey = array('id_nom' => $aDatos['id_nom'],
+                'id_nivel' => $aDatos['id_nivel'],
+                'tipo_acta' => $aDatos['tipo_acta']);
+            $PersonaNota = $this->chooseNewObject($a_pkey);
+            $PersonaNota->setAllAttributes($aDatos);
+            $PersonaNotaSet->add($PersonaNota);
+        }
+        return $PersonaNotaSet->getTot();
+    }
+
+    protected function chooseNewObject($a_pkey): PersonaNotaDB|PersonaNotaOtraRegionStgr
+    {
+        if ($this->sNomTabla === "e_notas_otra_region_stgr") {
+            $oPersonaNota = new PersonaNotaOtraRegionStgr($this->esquema_region_stgr, $a_pkey);
+        } else {
+            $oPersonaNota = new PersonaNotaDB($a_pkey);
+        }
+        return $oPersonaNota;
+    }
+
+    /* -------------------- ENTIDAD --------------------------------------------- */
+
+    public function Eliminar(PersonaNotaOtraRegionStgr $PersonaNotaDB): bool
+    {
+        $id_nom = $PersonaNotaDB->getId_nom();
+        $id_nivel = $PersonaNotaDB->getId_nivel();
+        $tipo_acta = $PersonaNotaDB->getTipo_acta();
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "DELETE FROM $nom_tabla WHERE id_nom=$id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+    }
+
+
+    /**
+     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     */
+    public function Guardar(PersonaNotaOtraRegionStgr $PersonaNotaDB): bool
+    {
+        $id_nom = $PersonaNotaDB->getId_nom();
+        $id_nivel = $PersonaNotaDB->getId_nivel();
+        $tipo_acta = $PersonaNotaDB->getTipo_acta();
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $bInsert = $this->isNew($id_nom, $id_nivel, $tipo_acta);
+
+        $aDatos = [];
+        $aDatos['id_nivel'] = $PersonaNotaDB->getId_nivel();
+        $aDatos['id_asignatura'] = $PersonaNotaDB->getId_asignatura();
+        $aDatos['id_situacion'] = $PersonaNotaDB->getId_situacion();
+        $aDatos['acta'] = $PersonaNotaDB->getActa();
+        $aDatos['detalle'] = $PersonaNotaDB->getDetalle();
+        $aDatos['preceptor'] = $PersonaNotaDB->isPreceptor();
+        $aDatos['id_preceptor'] = $PersonaNotaDB->getId_preceptor();
+        $aDatos['epoca'] = $PersonaNotaDB->getEpoca();
+        $aDatos['id_activ'] = $PersonaNotaDB->getId_activ();
+        $aDatos['nota_num'] = $PersonaNotaDB->getNota_num();
+        $aDatos['nota_max'] = $PersonaNotaDB->getNota_max();
+        $aDatos['tipo_acta'] = $PersonaNotaDB->getTipo_acta();
+        $aDatos['json_certificados'] = $PersonaNotaDB->getJson_certificados();
+        // para las fechas
+        $aDatos['f_acta'] = (new ConverterDate('date', $PersonaNotaDB->getF_acta()))->toPg();
+        array_walk($aDatos, 'core\poner_null');
+
+        if ($bInsert === false) {
+            //UPDATE
+            $update = "
+           	        id_nivel	             = :id_nivel,
+					id_asignatura            = :id_asignatura,
+					id_situacion             = :id_situacion,
+					acta                     = :acta,
+					f_acta                   = :f_acta,
+					detalle                  = :detalle,
+					preceptor                = :preceptor,
+					id_preceptor             = :id_preceptor,
+					epoca                    = :epoca,
+					id_activ                 = :id_activ,
+					nota_num                 = :nota_num,
+					nota_max                 = :nota_max,
+					tipo_acta                = :tipo_acta,
+                    json_certificados        = :json_certificados";
+            $sql = "UPDATE $nom_tabla SET $update WHERE  id_nom = $id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        } else {
+            // INSERT
+            $aDatos['id_nom'] = $PersonaNotaDB->getId_nom();
+            $campos = "(id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max,tipo_acta,json_certificados)";
+            $valores = "(:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max,:tipo_acta,:json_certificados)";
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+    }
+
+    private function isNew(int $id_nom, int $id_nivel, int $tipo_acta): bool
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "SELECT * FROM $nom_tabla WHERE id_nom = $id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
+            return TRUE;
+        }
+        return false;
+    }
+
+    /**
+     * Devuelve los campos de la base de datos en un array asociativo.
+     * Devuelve false si no existe la fila en la base de datos
+     *
+     * @param int $id_item
+     * @return array|bool
+     */
+    public function datosById(int $id_nom, int $id_nivel, int $tipo_acta): array|bool
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "SELECT * FROM $nom_tabla WHERE  id_nom = $id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        // para las fechas del postgres (texto iso)
+        if ($aDatos !== false) {
+            $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
+        }
+        return $aDatos;
+    }
+
+
+    /**
+     * Busca la clase con id_item en la base de datos .
+     */
+    public function findById(int $id_nom, int $id_nivel, int $tipo_acta): ?PersonaNotaOtraRegionStgr
+    {
+        $aDatos = $this->datosById($id_nom, $id_nivel, $tipo_acta);
+        if (empty($aDatos)) {
+            return null;
+        }
+        return PersonaNotaOtraRegionStgr::fromArray($aDatos);
+    }
+
+    public function findByPk(PersonaNotaPk $pk): ?PersonaNotaOtraRegionStgr
+    {
+        return $this->findById($pk->idNom(), $pk->idNivel(), $pk->tipoActa());
+    }
+
+}

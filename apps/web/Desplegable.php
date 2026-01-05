@@ -9,7 +9,7 @@ class Desplegable
     protected $oOpciones;
     protected $sOpcion_sel;
     protected $aOpcion_no;
-    protected $bBlanco;
+    protected $Blanco;
     protected $valorBlanco;
     protected $sAction;
     protected $iSize;
@@ -30,7 +30,7 @@ class Desplegable
             if (isset($sNombre) && $sNombre !== '') $this->sNombre = $sNombre;
             if (isset($oOpciones) && $oOpciones !== '') $this->oOpciones = $oOpciones;
             if (isset($sOpcion_sel) && $sOpcion_sel !== '') $this->sOpcion_sel = $sOpcion_sel;
-            if (isset($bBlanco) && $bBlanco !== '') $this->bBlanco = $bBlanco;
+            if (isset($bBlanco) && $bBlanco !== '') $this->Blanco = $bBlanco;
         }
     }
 
@@ -41,7 +41,7 @@ class Desplegable
         $clase = $this->sClase ?? '';
         $action = $this->sAction ?? '';
         $nombre = $this->sNombre ?? '';
-        $blanco = $this->bBlanco ?? false;
+        $blanco = $this->Blanco ?? false;
         $valorBlanco = $this->valorBlanco ?? '';
         $opcion_sel = $this->sOpcion_sel?? '';
         $options = $this->getArrayOpciones();
@@ -67,7 +67,7 @@ class Desplegable
         $this->sClase = $data['clase'];
         $this->sAction = $data['action'];
         $this->sNombre = $data['nombre'];
-        $this->bBlanco = $data['blanco'];
+        $this->Blanco = $data['blanco'];
         $this->valorBlanco = $data['valorBlanco'];
         $this->sOpcion_sel = $data['opcion_sel'];
         $this->oOpciones = $data['options'];
@@ -156,7 +156,7 @@ class Desplegable
     public function options()
     {
         $txt = '';
-        if (!empty($this->bBlanco)) {
+        if (!empty($this->Blanco)) {
             if (!empty($this->valorBlanco)) {
                 $txt .= "<option value=\"$this->valorBlanco\"></option>";
             } else {
@@ -209,7 +209,7 @@ class Desplegable
 
     public function setBlanco($bBlanco)
     {
-        $this->bBlanco = $bBlanco;
+        $this->Blanco = $bBlanco;
     }
 
     public function setValBlanco($valorBlanco)

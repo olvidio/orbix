@@ -37,57 +37,6 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
         $this->setNomTabla('d_dossiers_abiertos');
     }
 
-    public function DossiersNotEmpty($pau = '', $id = ''): array|false
-    {
-        $esquema = ConfigGlobal::mi_region_dl();
-        $oDbl = $this->getoDbl();
-        $oDossierSet = new Set();
-        $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
-        $cTiposDossier = $TipoDossierRepository->getTiposDossiers(array('tabla_from' => $pau));
-        $db_anterior = 0;
-        foreach ($cTiposDossier as $oTipoDossier) {
-            $id_tipo_dossier = $oTipoDossier->getId_tipo_dossier();
-            $tabla_to = $oTipoDossier->getTabla_to();
-            $campo_to = $oTipoDossier->getCampo_to();
-            $db = $oTipoDossier->getDb();
-            // Cambiar la conexión a la DB si está en otra:
-            if ($db != $db_anterior) {
-                $this->cambiarConexion($db);
-                $oDbl = $this->getoDbl();
-            }
-            //comprobar que la tabla existe
-            if (empty($tabla_to)) {
-                continue;
-            }
-            $sQry = "SELECT to_regclass('\"$esquema\".$tabla_to')";
-            $exist = $oDbl->query($sQry)->fetchColumn();
-            if (empty($exist)) {
-                $db_anterior = $db;
-                continue;
-            }
-            //miro si tiene contenido
-            $sQuery = "SELECT * FROM $tabla_to WHERE $campo_to = $id LIMIT 2";
-            if (($oDblSt = $oDbl->query($sQuery)) === false) {
-                $sClauError = 'GestorDossier.comprobar.query';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                return false;
-            }
-            if ($oDblSt->rowCount() > 0) {
-                $a_pkey = array('tabla' => $pau,
-                    'id_pau' => $id,
-                    'id_tipo_dossier' => $id_tipo_dossier);
-                $oDossier = new Dossier($a_pkey);
-                $oDossier->DBCarregar();
-                $oDossierSet->add($oDossier);
-            }
-            $db_anterior = $db;
-        }
-        // Volver la conexión al orignal, por si acaso.
-        $this->cambiarConexion(TipoDossier::DB_INTERIOR);
-
-        return $oDossierSet->getTot();
-    }
-
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
     /**
@@ -152,9 +101,8 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_camb_dossier'] = (new ConverterDate('date', $aDatos['f_camb_dossier']))->fromPg();
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
-            $Dossier = new Dossier();
-            $Dossier->setAllAttributes($aDatos);
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+            $Dossier = Dossier::fromArray($aDatos);
             $DossierSet->add($Dossier);
         }
         return $DossierSet->getTot();
@@ -190,17 +138,17 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
         $bInsert = $this->isNew($id_tipo_dossier, $id_pau, $tabla);
 
         $aDatos = [];
-        $aDatos['status_dossier'] = $Dossier->isStatus_dossier();
+        $aDatos['active'] = $Dossier->isActive();
         // para las fechas
         $aDatos['f_ini'] = (new ConverterDate('date', $Dossier->getF_ini()))->toPg();
         $aDatos['f_camb_dossier'] = (new ConverterDate('date', $Dossier->getF_camb_dossier()))->toPg();
-        $aDatos['f_status'] = (new ConverterDate('date', $Dossier->getF_status()))->toPg();
+        $aDatos['f_active'] = (new ConverterDate('date', $Dossier->getF_active()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['status_dossier'])) {
-            $aDatos['status_dossier'] = 'true';
+        if (is_true($aDatos['active'])) {
+            $aDatos['active'] = 'true';
         } else {
-            $aDatos['status_dossier'] = 'false';
+            $aDatos['active'] = 'false';
         }
 
         if ($bInsert === false) {
@@ -208,8 +156,8 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
             $update = "
 					f_ini                    = :f_ini,
 					f_camb_dossier           = :f_camb_dossier,
-					status_dossier           = :status_dossier,
-					f_status                 = :f_status";
+					active                   = :active,
+					f_active                 = :f_active";
             $sql = "UPDATE $nom_tabla SET $update WHERE tabla = '$tabla'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
@@ -217,8 +165,8 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
             $aDatos['id_tipo_dossier'] = $id_tipo_dossier;
             $aDatos['id_pau'] = $id_pau;
             $aDatos['tabla'] = $tabla;
-            $campos = "(id_tipo_dossier,id_pau,tabla,f_ini,f_camb_dossier,status_dossier,f_status)";
-            $valores = "(:id_tipo_dossier,:id_pau,:tabla,:f_ini,:f_camb_dossier,:status_dossier,:f_status)";
+            $campos = "(id_tipo_dossier,id_pau,tabla,f_ini,f_camb_dossier,active,f_active)";
+            $valores = "(:id_tipo_dossier,:id_pau,:tabla,:f_ini,:f_camb_dossier,:active,:f_active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -250,7 +198,7 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
         if ($aDatos !== false) {
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_camb_dossier'] = (new ConverterDate('date', $aDatos['f_camb_dossier']))->fromPg();
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
         }
         return $aDatos;
     }
@@ -266,7 +214,7 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
         $aDatos['id_pau'] = $pk->idPau();
         $aDatos['id_tipo_dossier'] = $pk->idTipoDossier();
 
-        return (new Dossier())->setAllAttributes($aDatos);
+        return Dossier::fromArray($aDatos);
     }
 
     /**
@@ -278,7 +226,7 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
         if (empty($aDatos)) {
             return null;
         }
-        return (new Dossier())->setAllAttributes($aDatos);
+        return Dossier::fromArray($aDatos);
     }
 
     public function findByPk(DossierPk $pk): ?Dossier

@@ -1,6 +1,5 @@
 <?php
 
-use actividades\model\entity\ActividadAll;
 use asistentes\model\ListaPlazas;
 use core\ConfigGlobal;
 use src\actividades\domain\value_objects\StatusId;

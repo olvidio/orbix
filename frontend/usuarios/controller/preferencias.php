@@ -1,6 +1,6 @@
 <?php
 
-use cambios\model\entity\CambioUsuario;
+use src\cambios\domain\value_objects\AvisoTipoId;
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
@@ -81,8 +81,8 @@ $oDesplZonaGMT->setOpcion_sel($id_zona_sel);
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $url_avisos = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
-$url_avisos_lista = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_LISTA)));
-$url_avisos_mails = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_MAIL)));
+$url_avisos_lista = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => AvisoTipoId::TIPO_LISTA)));
+$url_avisos_mails = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => AvisoTipoId::TIPO_MAIL)));
 $url_cambio_password = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_pwd.php');
 $url_cambio_mail = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_mail.php');
 $url_2fa_settings = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_2fa.php');

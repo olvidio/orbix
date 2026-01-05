@@ -75,7 +75,7 @@ $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-    $Qid_nom = $oMiUsuario->getId_pau();
+    $Qid_nom = $oMiUsuario->getCsv_id_pau();
     $Qque = 'un_sacd';
 }
 

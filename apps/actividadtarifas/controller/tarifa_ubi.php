@@ -16,18 +16,18 @@ $oForm = new web\CasasQue();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 // Sólo quiero ver las casas comunes.
-//$donde="WHERE status='t' AND sf='t' AND sv='t'";
+//$donde="WHERE active='t' AND sf='t' AND sv='t'";
 // o (ara) no:
 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
     $oForm->setCasas('all');
-    $donde = "WHERE status='t'";
+    $donde = "WHERE active='t'";
 } else {
     if ($miSfsv == 1) {
         $oForm->setCasas('sv');
-        $donde = "WHERE status='t' AND sv='t'";
+        $donde = "WHERE active='t' AND sv='t'";
     } elseif ($miSfsv == 2) {
         $oForm->setCasas('sf');
-        $donde = "WHERE status='t' AND sf='t'";
+        $donde = "WHERE active='t' AND sf='t'";
     }
 }
 $oForm->setPosiblesCasas($donde);

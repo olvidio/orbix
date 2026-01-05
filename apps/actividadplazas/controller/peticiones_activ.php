@@ -1,12 +1,12 @@
 <?php
 
-use actividadplazas\model\entity\GestorPlazaPeticion;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\model\entity\PersonaDl;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
+use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\DesplegableArray;
 use web\Hash;
@@ -19,13 +19,13 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qtodos = (string)filter_input(INPUT_POST, 'todos');
+$Qtodos = (int)filter_input(INPUT_POST, 'todos');
 
 $oPosicion->recordar();
 //Si vengo de actualizar borro la ultima posicion
 if (isset($_POST['stack'])) {
     $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack2 != '') {
+    if ($stack2 !== '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
@@ -56,11 +56,12 @@ if (($Qna === 'a' || $Qna === 'agd') && $Qsactividad === 'ca') {
     $Qsactividad = 'cv';
 }
 
-$oPersona = new PersonaDl($Qid_nom);
+$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+$oPersona = $PersonaDlRepository->findById($Qid_nom);
 $ap_nom = $oPersona->getPrefApellidosNombre();
 
 // Posibles:
-if (!empty($Qtodos) && $Qtodos != 1) {
+if (!empty($Qtodos) && $Qtodos !== 1) {
     $grupo_estudios = $Qtodos;
     $GesGrupoEst = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios' => $grupo_estudios));
@@ -173,8 +174,8 @@ foreach ($cActividades as $oActividad) {
 }
 
 //Miro los actuales
-$gesPlazasPeticion = new GestorPlazaPeticion();
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom' => $Qid_nom, 'tipo' => $Qsactividad, '_ordre' => 'orden'));
+$PlazaPeticionRepository = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
+$cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion(array('id_nom' => $Qid_nom, 'tipo' => $Qsactividad, '_ordre' => 'orden'));
 $sid_activ = '';
 foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
     $id_activ = $oPlazaPeticion->getId_activ();

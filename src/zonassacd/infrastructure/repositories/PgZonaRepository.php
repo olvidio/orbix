@@ -132,8 +132,7 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Zona = new Zona();
-            $Zona->setAllAttributes($aDatos);
+            $Zona = Zona::fromArray($aDatos);
             $ZonaSet->add($Zona);
         }
         return $ZonaSet->getTot();
@@ -228,7 +227,7 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
         if (empty($aDatos)) {
             return null;
         }
-        return (new Zona())->setAllAttributes($aDatos);
+        return Zona::fromArray($aDatos);
     }
 
     public function getNewId()

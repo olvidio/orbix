@@ -4,302 +4,166 @@ namespace src\certificados\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
 
-/**
- * Clase que implementa la entidad e_certificados_rstgr
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 27/2/2023
- */
+
 class CertificadoRecibido
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_item de Certificado
-     *
-     * @var int
-     */
-    private int $iid_item;
-    /**
-     * Id_nom de Certificado
-     *
-     * @var int|null
-     */
-    private ?int $iid_nom = null;
-    /**
-     * Nombre de Certificado
-     *
-     * @var string|null
-     */
-    private ?string $snom = null;
-    /**
-     * idioma de Certificado
-     *
-     * @var string|null
-     */
-    private ?string $sidioma = null;
-    /**
-     * destino de Certificado
-     *
-     * @var string|null
-     */
-    private ?string $sdestino = null;
-    /**
-     * Certificado de Certificado
-     *
-     * @var string|null
-     */
-    private ?string $scertificado = null;
+    private int $id_item;
 
-    private DateTimeLocal|NullDateTimeLocal $df_certificado;
-    /**
-     * Esquema emisor de Certificado
-     *
-     * @var string|null
-     */
-    private ?string $sesquema_emisor = null;
-    /**
-     * firmado de Certificado
-     *
-     * @var bool|null
-     */
-    private ?bool $bfirmado = null;
-    /**
-     * Documento de Certificado
-     *
-     * @var string|null
-     */
-    private ?string $sdocumento = null;
+    private ?int $id_nom = null;
 
-    private DateTimeLocal|NullDateTimeLocal $df_recibido;
+    private ?string $nom = null;
+
+    private ?string $idioma = null;
+
+    private ?string $destino = null;
+
+    private ?string $certificado = null;
+
+    private DateTimeLocal|NullDateTimeLocal $f_certificado;
+
+    private ?string $esquema_emisor = null;
+
+    private ?bool $firmado = null;
+
+    private ?string $documento = null;
+
+    private DateTimeLocal|NullDateTimeLocal $f_recibido;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return CertificadoRecibido
-     */
-    public function setAllAttributes(array $aDatos): CertificadoRecibido
-    {
-        if (array_key_exists('id_item', $aDatos)) {
-            $this->setId_item($aDatos['id_item']);
-        }
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom($aDatos['id_nom']);
-        }
-        if (array_key_exists('nom', $aDatos)) {
-            $this->setNom($aDatos['nom']);
-        }
-        if (array_key_exists('idioma', $aDatos)) {
-            $this->setIdioma($aDatos['idioma']);
-        }
-        if (array_key_exists('destino', $aDatos)) {
-            $this->setDestino($aDatos['destino']);
-        }
-        if (array_key_exists('certificado', $aDatos)) {
-            $this->setCertificado($aDatos['certificado']);
-        }
-        if (array_key_exists('f_certificado', $aDatos)) {
-            $this->setF_certificado($aDatos['f_certificado']);
-        }
-        if (array_key_exists('esquema_emisor', $aDatos)) {
-            $this->setEsquema_emisor($aDatos['esquema_emisor']);
-        }
-        if (array_key_exists('firmado', $aDatos)) {
-            $this->setFirmado(is_true($aDatos['firmado']));
-        }
-        if (array_key_exists('documento', $aDatos)) {
-            $this->setDocumento($aDatos['documento']);
-        }
-        if (array_key_exists('f_recibido', $aDatos)) {
-            $this->setF_recibido($aDatos['f_recibido']?? new NullDateTimeLocal());
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_item
-     */
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
-    /**
-     *
-     * @param int $iid_item
-     */
-    public function setId_item(int $iid_item): void
+
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 
-    /**
-     *
-     * @return int|null $iid_nom
-     */
+
     public function getId_nom(): ?int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
-    /**
-     *
-     * @param int|null $iid_nom
-     */
-    public function setId_nom(?int $iid_nom = null): void
+
+    public function setId_nom(?int $id_nom = null): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
-    /**
-     * @return string|null
-     */
+
     public function getNom(): ?string
     {
-        return $this->snom;
+        return $this->nom;
     }
 
-    /**
-     * @param string|null $nom
-     */
+
     public function setNom(?string $nom): void
     {
-        $this->snom = $nom;
+        $this->nom = $nom;
     }
 
-    /**
-     * @return string|null
-     */
+
     public function getIdioma(): ?string
     {
-        return $this->sidioma;
+        return $this->idioma;
     }
 
-    /**
-     * @param string|null $idioma
-     */
+
     public function setIdioma(?string $idioma): void
     {
-        $this->sidioma = $idioma;
+        $this->idioma = $idioma;
     }
 
-    /**
-     * @return string|null
-     */
+
     public function getDestino(): ?string
     {
-        return $this->sdestino;
+        return $this->destino;
     }
 
-    /**
-     * @param string|null $destino
-     */
+
     public function setDestino(?string $destino): void
     {
-        $this->sdestino = $destino;
+        $this->destino = $destino;
     }
 
-    /**
-     *
-     * @return string|null $scertificado
-     */
+
     public function getCertificado(): ?string
     {
-        return $this->scertificado;
+        return $this->certificado;
     }
 
-    /**
-     *
-     * @param string|null $scertificado
-     */
-    public function setCertificado(?string $scertificado = null): void
+
+    public function setCertificado(?string $certificado = null): void
     {
-        $this->scertificado = $scertificado;
+        $this->certificado = $certificado;
     }
 
     public function getF_certificado(): DateTimeLocal|NullDateTimeLocal
     {
-        return $this->df_certificado ?? new NullDateTimeLocal;
+        return $this->f_certificado ?? new NullDateTimeLocal;
     }
 
-    public function setF_certificado(DateTimeLocal|NullDateTimeLocal $df_certificado): void
+    public function setF_certificado(DateTimeLocal|NullDateTimeLocal $f_certificado): void
     {
-        $this->df_certificado = $df_certificado;
+        $this->f_certificado = $f_certificado;
     }
 
-    /**
-     *
-     * @return ?string $sesquema_emisor
-     */
+
     public function getEsquema_emisor(): ?string
     {
-        return $this->sesquema_emisor;
+        return $this->esquema_emisor;
     }
 
-    /**
-     *
-     * @param ?string $sesquema_emisor
-     */
-    public function setEsquema_emisor(?string $sesquema_emisor = null): void
+
+    public function setEsquema_emisor(?string $esquema_emisor = null): void
     {
-        $this->sesquema_emisor = $sesquema_emisor;
+        $this->esquema_emisor = $esquema_emisor;
     }
 
-    /**
-     *
-     * @return bool|null $bfirmado
-     */
+
     public function isFirmado(): ?bool
     {
-        return $this->bfirmado;
+        return $this->firmado;
     }
 
-    /**
-     *
-     * @param bool|null $bfirmado
-     */
+
     public function setFirmado(?bool $bfirmado = null): void
     {
-        $this->bfirmado = $bfirmado;
+        $this->firmado = $bfirmado;
     }
 
-    /**
-     *
-     * @return string|null $sdocumento
-     */
+
     public function getDocumento(): ?string
     {
-        return $this->sdocumento;
+        return $this->documento;
     }
 
-    /**
-     *
-     * @param string|null $sdocumento
-     */
-    public function setDocumento(?string $sdocumento = null): void
+
+    public function setDocumento(?string $documento = null): void
     {
-        $this->sdocumento = $sdocumento;
+        $this->documento = $documento;
     }
 
     public function getF_recibido(): DateTimeLocal|NullDateTimeLocal
     {
-        return $this->df_recibido ?? new NullDateTimeLocal;
+        return $this->f_recibido ?? new NullDateTimeLocal;
     }
 
-    public function setF_recibido(DateTimeLocal|NullDateTimeLocal $df_recibido): void
+    public function setF_recibido(DateTimeLocal|NullDateTimeLocal $f_recibido): void
     {
-        $this->df_recibido = $df_recibido;
+        $this->f_recibido = $f_recibido;
     }
 }

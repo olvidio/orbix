@@ -15,6 +15,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use core\ViewTwig;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
@@ -38,7 +39,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $rstgr = TRUE;
 }
 
-if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro != 1) {
+if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro !== 1) {
 
     $aChecked = $Qdl;
     $region_stgr = ConfigGlobal::mi_dele();
@@ -102,12 +103,16 @@ foreach ($cDepartamentos as $oDepartamento) {
         $aWhere['_ordre'] = 'id_dl';
     }
 
-    $cProfesorDirector = $ProfesorTipoRepository->getProfesoresDirectores($aWhere, $aOperador);
+    $cProfesorDirector = $ProfesorDirectorRepository->getProfesoresDirectores($aWhere, $aOperador);
     $aProfesores = [];
     $aDirs = [];
+    $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
     foreach ($cProfesorDirector as $oProfesorDirector) {
         $id_nom = $oProfesorDirector->getId_nom();
-        $oPersonaDl = new personas\model\entity\PersonaDl($id_nom);
+        $oPersonaDl = $PersonaDlRepository->findById($id_nom);
+        if ($oPersonaDl === null) {
+            continue;
+        }
         if ($oPersonaDl->getSituacion() !== 'A') {
             continue;
         }
@@ -137,7 +142,10 @@ foreach ($cDepartamentos as $oDepartamento) {
         $aProfes = [];
         foreach ($cProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = new personas\model\entity\PersonaDl($id_nom);
+            $oPersonaDl = $PersonaDlRepository->findById($id_nom);
+            if ($oPersonaDl === null) {
+                continue;
+            }
             if ($oPersonaDl->getSituacion() !== 'A') {
                 continue;
             }

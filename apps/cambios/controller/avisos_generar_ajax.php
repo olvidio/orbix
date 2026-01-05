@@ -1,7 +1,8 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 
-use cambios\model\entity\GestorCambioUsuario;
+
+use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -17,14 +18,14 @@ switch ($Qque) {
     case 'eliminar_fecha':
         $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
 
-        $GesCambioUsuario = new GestorCambioUsuario();
-        $GesCambioUsuario->eliminarHastaFecha($Qf_fin);
+        $CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
+        $CambioUsuarioRepository->eliminarHastaFecha($Qf_fin);
 
         break;
     case 'eliminar':
-
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
+        $CambioUsuarioRepository = $GLOBALS['container']->get(CambioUsuarioRepositoryInterface::class);
         foreach ($a_sel as $id) {
             $id_item_cmb = strtok($id, '#');
             $id_usuario = strtok('#');
@@ -35,8 +36,7 @@ switch ($Qque) {
                 'sfsv' => $sfsv,
                 'aviso_tipo' => $aviso_tipo,
             ];
-            $GesCambioUsuario = new GestorCambioUsuario();
-            $cCambiosUsuario = $GesCambioUsuario->getCambiosUsuario($aWhere);
+            $cCambiosUsuario = $CambioUsuarioRepository->getCambiosUsuario($aWhere);
             foreach ($cCambiosUsuario as $oCambioUsuario) {
                 if ($oCambioUsuario->DBEliminar() === false) {
                     echo _("Hay un error, no se ha eliminado");

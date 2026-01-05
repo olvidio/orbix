@@ -4,147 +4,57 @@ namespace src\personas\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\ubis\domain\value_objects\{NumTelecoText, ObservTelecoText, TipoTelecoCode};
 
-/**
- * Clase que implementa la entidad d_teleco_personas
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 12/12/2025
- */
 class TelecoPersona
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_nom de TelecoPersona
-     *
-     * @var int
-     */
-    private int $iid_nom;
-    /**
-     * Id_item de TelecoPersona
-     *
-     * @var int
-     */
-    private int $iid_item;
-    /**
-     * Tipo_teleco de TelecoPersona
-     *
-     * @var int
-     */
+
+    private int $id_nom;
+
+    private int $id_item;
+
     private int $id_tipo_teleco;
-    /**
-     * Num_teleco de TelecoPersona
-     *
-     * @var string
-     */
-    private string $snum_teleco;
-    /**
-     * Observ de TelecoPersona
-     *
-     * @var string|null
-     */
-    private string|null $sobserv = null;
-    /**
-     * id_desc_teleco de TelecoPersona
-     *
-     * @var int|null
-     */
+
+    private string $num_teleco;
+
+    private string|null $observ = null;
+
     private int|null $id_desc_teleco = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return TelecoPersona
-     */
-    public function setAllAttributes(array $aDatos): TelecoPersona
-    {
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom((int)$aDatos['id_nom']);
-        }
-        if (array_key_exists('id_item', $aDatos)) {
-            $this->setId_item((int)$aDatos['id_item']);
-        }
-        if (array_key_exists('id_tipo_teleco', $aDatos)) {
-            $valor = $aDatos['id_tipo_teleco'];
-            if ($valor instanceof TipoTelecoCode) {
-                $this->setTipoTelecoVo($valor);
-            } else {
-                $this->setId_tipo_teleco((string)$valor);
-            }
-        }
-        if (array_key_exists('num_teleco', $aDatos)) {
-            $valor = $aDatos['num_teleco'];
-            if ($valor instanceof NumTelecoText) {
-                $this->setNumTelecoVo($valor);
-            } else {
-                $this->setNum_teleco((string)$valor);
-            }
-        }
-        if (array_key_exists('observ', $aDatos)) {
-            $valor = $aDatos['observ'];
-            if ($valor instanceof ObservTelecoText || $valor === null) {
-                $this->setObservVo($valor);
-            } else {
-                $this->setObserv($valor !== null ? (string)$valor : null);
-            }
-        }
-        if (array_key_exists('id_desc_teleco', $aDatos)) {
-            // En personas, id_desc_teleco es un id (int|null). Mantener como tal.
-            $this->setId_desc_teleco($aDatos['id_desc_teleco'] !== null ? (int)$aDatos['id_desc_teleco'] : null);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_nom
-     */
     public function getId_nom(): int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
-    /**
-     *
-     * @param int $iid_nom
-     */
-    public function setId_nom(int $iid_nom): void
+
+    public function setId_nom(int $id_nom): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
-    /**
-     *
-     * @return int $iid_item
-     */
+
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
-    /**
-     *
-     * @param int $iid_item
-     */
-    public function setId_item(int $iid_item): void
+
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 
     /**
-     *
-     * @return int $stipo_teleco
+     * @deprecated use getTipoTelecoVo()
      */
     public function getId_tipo_teleco(): int
     {
@@ -152,12 +62,11 @@ class TelecoPersona
     }
 
     /**
-     *
-     * @param int $id_tipo_teleco
+     * @deprecated use setTipoTelecoVo()
      */
-    public function setId_tipo_teleco(int $itipo_teleco): void
+    public function setId_tipo_teleco(int $id_tipo_teleco): void
     {
-        $this->id_tipo_teleco = $itipo_teleco;
+        $this->id_tipo_teleco = $id_tipo_teleco;
     }
 
     /**
@@ -174,74 +83,64 @@ class TelecoPersona
     }
 
     /**
-     *
-     * @return string $snum_teleco
+     * @deprecated use getNumTelecoVo()
      */
     public function getNum_teleco(): string
     {
-        return $this->snum_teleco;
+        return $this->num_teleco;
     }
 
     /**
-     *
-     * @param string $snum_teleco
+     * @deprecated use setNumTelecoVo()
      */
-    public function setNum_teleco(string $snum_teleco): void
+    public function setNum_teleco(string $num_teleco): void
     {
-        $this->snum_teleco = $snum_teleco;
+        $this->num_teleco = $num_teleco;
     }
 
     public function getNumTelecoVo(): NumTelecoText
     {
-        return new NumTelecoText($this->snum_teleco);
+        return new NumTelecoText($this->num_teleco);
     }
 
     public function setNumTelecoVo(NumTelecoText $texto): void
     {
-        $this->snum_teleco = $texto->value();
+        $this->num_teleco = $texto->value();
     }
 
     /**
-     *
-     * @return string|null $sobserv
+     * @deprecated use getObservVo()
      */
     public function getObserv(): ?string
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
     /**
-     *
-     * @param string|null $sobserv
+     * @deprecated use setObservVo()
      */
-    public function setObserv(?string $sobserv = null): void
+    public function setObserv(?string $observ = null): void
     {
-        $this->sobserv = $sobserv;
+        $this->observ = $observ;
     }
 
     public function getObservVo(): ?ObservTelecoText
     {
-        return ObservTelecoText::fromNullableString($this->sobserv);
+        return ObservTelecoText::fromNullableString($this->observ);
     }
 
     public function setObservVo(?ObservTelecoText $texto = null): void
     {
-        $this->sobserv = $texto?->value();
+        $this->observ = $texto?->value();
     }
 
-    /**
-     *
-     * @return int|null $idesc_teleco
-     */
+
     public function getId_desc_teleco(): ?int
     {
         return $this->id_desc_teleco;
     }
 
-    /**
-     *
-     * @param int|null $id_desc_teleco
-     */
+
     public function setId_desc_teleco(?int $id_desc_teleco = null): void
     {
         $this->id_desc_teleco = $id_desc_teleco;
@@ -256,7 +155,7 @@ class TelecoPersona
         return 'id_item';
     }
 
-    public function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oSet = new Set();
         $oSet->add($this->getDatosId_nom());
@@ -267,7 +166,7 @@ class TelecoPersona
         return $oSet->getTot();
     }
 
-    function getDatosId_nom(): DatosCampo
+    private function getDatosId_nom(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_nom');
@@ -279,7 +178,7 @@ class TelecoPersona
         return $oDatosCampo;
     }
 
-    public function getDatosId_tipo_teleco()
+    private function getDatosId_tipo_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_tipo_teleco');
@@ -294,7 +193,7 @@ class TelecoPersona
         return $oDatosCampo;
     }
 
-    public function getDatosId_desc_teleco()
+    private function getDatosId_desc_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_desc_teleco');
@@ -309,7 +208,7 @@ class TelecoPersona
         return $oDatosCampo;
     }
 
-    public function getDatosNum_teleco()
+    private function getDatosNum_teleco(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('num_teleco');
@@ -321,7 +220,7 @@ class TelecoPersona
         return $oDatosCampo;
     }
 
-    public function getDatosObserv()
+    private function getDatosObserv(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('observ');

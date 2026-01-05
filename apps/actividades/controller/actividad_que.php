@@ -16,9 +16,9 @@ use actividades\model\ActividadLugar;
 use actividades\model\ActividadTipo;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use procesos\model\entity\GestorActividadFase;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Hash;
@@ -281,8 +281,8 @@ if (ConfigGlobal::is_app_installed('procesos')) {
         $Qid_tipo_activ = ConfigGlobal::mi_sfsv();
     }
     $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $dl_propia);
-    $oGesFases = new GestorActividadFase();
-    $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
+    $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+    $aFases = $ActividadFaseRepository->getArrayFasesProcesos($aTiposDeProcesos);
     foreach ($aFases as $descripcion => $id_fase) {
         if (in_array($id_fase, $Qfases_on, true)) {
             $chk = 'checked';

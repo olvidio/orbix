@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use notas\model\entity\GestorPersonaNotaDB;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\personas\domain\entity\Persona;
 
 /**
@@ -225,20 +225,20 @@ $rowEmpty = [
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $aWhere = [];
         $aOperador = [];
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['id_nivel'] = '1100,2500';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'id_nivel';
         $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
         // Asignaturas cursadas:
-        $GesNotas = new GestorPersonaNotaDB();
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
         $aWhere = [];
         $aOperador = [];
         $aWhere['id_nom'] = $id_nom;
         $aWhere['id_nivel'] = '1100,2500';
         $aOperador['id_nivel'] = 'BETWEEN';
-        $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
+        $cNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
         $aAprobadas = [];
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cNotas as $oPersonaNota) {
@@ -254,7 +254,7 @@ $rowEmpty = [
             if ($id_asignatura > 3000) {
                 $id_nivel_asig = $id_nivel;
             } else {
-                if (!$oAsignatura->isStatus()) {
+                if (!$oAsignatura->isActive()) {
                     continue;
                 }
                 $id_nivel_asig = $oAsignatura->getId_nivel();

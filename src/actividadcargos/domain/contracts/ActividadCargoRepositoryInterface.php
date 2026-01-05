@@ -58,15 +58,15 @@ interface ActividadCargoRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_activ
+     * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_activ): array|bool;
+    public function datosById(int $id_item): array|bool;
 
     /**
-     * Busca la clase con id_activ en el repositorio.
+     * Busca la clase con id_item en el repositorio.
      */
-    public function findById(int $id_activ): ?ActividadCargo;
+    public function findById(int $id_item): ?ActividadCargo;
 
     public function getNewId();
 }

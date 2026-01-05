@@ -1,13 +1,14 @@
 <?php
 
-use actividadestudios\model\entity\GestorActividadAsignaturaDl;
-use actividadestudios\model\entity\PosiblesCa;
-use actividadplazas\model\entity\GestorPlazaPeticion;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
+use src\actividadestudios\domain\PosiblesCa;
+use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
+use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -50,17 +51,15 @@ if ($oAsistente->perm_modificar() === FALSE) {
     ];
 } else {
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-
-    $oPosiblesCa = new PosiblesCa();
-
     $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-    $gesActividadPlazas = new GestorActividadPlazas();
+    $ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
     $service = $GLOBALS['container']->get(AsistenteActividadService::class);
     $mi_dele = ConfigGlobal::mi_delef();
     $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
-    $oDelegacion = $cDelegaciones[0] ?? null;
-    $id_dl = $oDelegacion?->getIdDlVo()->value() ?? 0;
+    $oDelegacion = $cDelegaciones[0];
+    $id_dl = $oDelegacion->getIdDlVo()->value();
 
+    $oPosiblesCa = new PosiblesCa();
     //borrar el actual y poner la nueva
     $propietario = '';
     if (!empty($Qid_activ_old) && !empty($Qid_nom)) {
@@ -116,14 +115,14 @@ if ($oAsistente->perm_modificar() === FALSE) {
             //primero las que se han pedido
             $cActividadesPreferidas = [];
             //Miro los actuales
-            $gesPlazasPeticion = new GestorPlazaPeticion();
-            $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom' => $Qid_nom, 'tipo' => $sactividad, '_ordre' => 'orden'));
+            $PlazaPeticionRepository = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
+            $cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion(array('id_nom' => $Qid_nom, 'tipo' => $sactividad, '_ordre' => 'orden'));
             $sid_activ = '';
             foreach ($cPlazasPeticion as $oPlazaPeticion) {
                 $id_activ = $oPlazaPeticion->getId_activ();
                 $oActividad = $ActividadAllRepository->findById($id_activ);
                 // Asegurar que es una actividad actual (No terminada)
-                if ($oActividad->getStatus() != StatusId::ACTUAL) {
+                if ($oActividad->getStatus() !== StatusId::ACTUAL) {
                     continue;
                 }
                 // Asegurar que es una actividad del periodo
@@ -157,7 +156,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
         // para el separador '-------'
         if (is_object($oActividad)) {
             $id_activ = $oActividad->getId_activ();
-            if ($id_activ == $Qid_activ_old) {
+            if ($id_activ === $Qid_activ_old) {
                 continue;
             }
             $nom_activ = $oActividad->getNom_activ();
@@ -165,10 +164,10 @@ if ($oAsistente->perm_modificar() === FALSE) {
             // plazas libres
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $concedidas = 0;
-                $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
+                $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
                 foreach ($cActividadPlazas as $oActividadPlazas) {
                     $dl_tabla = $oActividadPlazas->getDl_tabla();
-                    if ($dl_org == $dl_tabla) {
+                    if ($dl_org === $dl_tabla) {
                         $concedidas = $oActividadPlazas->getPlazas();
                     }
                 }
@@ -184,8 +183,8 @@ if ($oAsistente->perm_modificar() === FALSE) {
             }
             // creditos
             // por cada ca creo un array con las asignaturas y los créditos.
-            $GesActividadAsignaturas = new GestorActividadAsignaturaDl();
-            $aAsignaturasCa = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
+            $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
+            $aAsignaturasCa = $ActividadAsignaturaDlRepository->getAsignaturasCa($id_activ);
 
             $result = $oPosiblesCa->contar_creditos($Qid_nom, $aAsignaturasCa);
             $creditos = $result['suma'];

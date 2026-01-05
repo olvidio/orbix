@@ -1,10 +1,7 @@
 <?php
 
-use asistentes\legacy\AsistenteDl;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
-use procesos\model\entity\ActividadFase;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -13,10 +10,15 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
+use src\asistentes\domain\entity\Asistente;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\procesos\domain\value_objects\FaseId;
 use web\Periodo;
 use function core\is_true;
 
@@ -140,7 +142,8 @@ switch ($Qque) {
                     $error_txt = _("hay un error, no se ha eliminado el cargo");
                 }
                 // también la asistencia
-                $oAsisActiv = new AsistenteDl(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom));
+                $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
+                $oAsisActiv = $AsistenteDlRepository->finsById($Qid_activ, $Qid_nom);
                 if ($oAsisActiv->DBEliminar() === false) {
                     $error_txt = _("hay un error, no se ha eliminado la asistencia");
                 }
@@ -292,9 +295,14 @@ switch ($Qque) {
         $oActividad = $ActividadDlRepository->findById($Qid_activ);
         $id_tipo_activ = (string)$oActividad->getId_tipo_activ();
         if ($id_tipo_activ[0] == 1) {
-            $oAsisActiv = new AsistenteDl(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom, 'propio' => 'f', 'falta' => 'f'));
+            $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
+            $oAsisActiv = new Asistente();
+            $oAsisActiv->setId_activ($Qid_activ);
+            $oAsisActiv->setId_nom($Qid_nom);
+            $oAsisActiv->setPropio('f');
+            $oAsisActiv->setFalta('f');
             $oAsisActiv->setDl_responsable(ConfigGlobal::mi_delef());
-            if ($oAsisActiv->DBGuardar() === false) {
+            if ($AsistenteDlRepository->Guardaar($oAsisActiv) === false) {
                 echo _("hay un error, no se ha guardado la asistencia");
             }
         }
@@ -366,7 +374,8 @@ switch ($Qque) {
                 unset($aWhere['id_tipo_activ']);
                 unset($aOperador['id_tipo_activ']);
 
-                $oActividadFase = new ActividadFase(ActividadFase::FASE_OK_SACD);
+                $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+                $oActividadFase = $ActividadFaseRepository->findById(FaseId::FASE_OK_SACD);
                 $txt_fase_ok_sacd = $oActividadFase->getDesc_fase();
                 break;
         }
@@ -384,6 +393,7 @@ switch ($Qque) {
         $i = 0;
         $sin = 0;
         $a_valores = [];
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
         foreach ($cActividades as $oActividad) {
             $i++;
             $id_activ = $oActividad->getId_activ();
@@ -415,8 +425,7 @@ switch ($Qque) {
                 $a_valores[$i][1] = $nom_activ;
                 // Fase en la que se encuentra
                 if (ConfigGlobal::is_app_installed('procesos')) {
-                    $GesActividadProceso = new GestorActividadProcesoTarea();
-                    $sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
+                    $sacd_aprobado = $ActividadProcesoTareaRepository->getSacdAprobado($id_activ);
                 } else {
                     $sacd_aprobado = TRUE;
                 }
@@ -566,7 +575,8 @@ switch ($Qque) {
         $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
         $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-        $oActividadFase = new ActividadFase(ActividadFase::FASE_OK_SACD);
+        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+        $oActividadFase = $ActividadFaseRepository->findById(FaseId::FASE_OK_SACD);
         $txt_fase_ok_sacd = $oActividadFase->getDesc_fase();
 
         // periodo.
@@ -614,6 +624,7 @@ switch ($Qque) {
         $i = 0;
         $sin = 0;
         $a_valores = [];
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
         foreach ($a_solapes as $id_nom => $aId_activ) {
             $i++;
 
@@ -636,8 +647,7 @@ switch ($Qque) {
                 $id_ubi = $oActividad->getId_ubi();
                 $status = $oActividad->getStatus();
                 // Fase en la que se encuentra
-                $GesActividadProceso = new GestorActividadProcesoTarea();
-                $sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
+                $sacd_aprobado = $ActividadProcesoTareaRepository->getSacdAprobado($id_activ);
                 if ($sacd_aprobado === TRUE) {
                     $clase = 'plaza4'; // color de plaza asignada.
                 } else {

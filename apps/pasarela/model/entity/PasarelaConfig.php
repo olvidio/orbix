@@ -375,7 +375,7 @@ class PasarelaConfig extends ClasePropiedades
      * Retorna una col·lecció d'objectes del tipus DatosCampo
      *
      */
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oPasarelaConfigSet = new Set();
 
@@ -386,11 +386,11 @@ class PasarelaConfig extends ClasePropiedades
 
     /**
      * Recupera les propietats de l'atribut json_valor de PasarelaConfig
-     * en una clase del tipus DatosCampo
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosValor()
+    private function getDatosValor(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'json_valor'));

@@ -110,8 +110,7 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $MetaMenu = new MetaMenu();
-            $MetaMenu->setAllAttributes($aDatos);
+            $MetaMenu = MetaMenu::fromArray($aDatos);
             $MetaMenuSet->add($MetaMenu);
         }
         return $MetaMenuSet->getTot();
@@ -204,7 +203,7 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new MetaMenu())->setAllAttributes($aDatos);
+        return MetaMenu::fromArray($aDatos);
     }
 
     public function getNewId()

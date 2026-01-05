@@ -4,8 +4,8 @@ use core\ConfigDB;
 use core\DBConnection;
 use core\ValueObject\Uuid;
 use shared\domain\ColaMailId;
-use shared\domain\entity\ColaMail;
-use shared\domain\repositories\ColaMailRepository;
+use shared\domain\repositories\ColaMailRepositoryInterface;
+use src\shared\domain\entity\ColaMail;
 use src\usuarios\domain\entity\Usuario;
 use web\ContestarJson;
 
@@ -51,7 +51,7 @@ $error_txt = '';
 $success = false;
 
 if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
-    $MiUsuario = (new Usuario())->setAllAttributes($row);
+    $MiUsuario = Usuario::fromArray($row);
     $id_usuario = $MiUsuario->getId_usuario();
     $email = $MiUsuario->getEmailAsString();
 
@@ -59,7 +59,7 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
         $error_txt = _("No hay email asociado a este usuario");
     } else {
         // Recuperar código de seguridad
-        $codigo = $MiUsuario->getSecret2fa();
+        $codigo = $MiUsuario->getSecret2faVo();
 
         // Enviar email con la nueva contraseña
         $subject = _("Recuperación de código de seguridad");

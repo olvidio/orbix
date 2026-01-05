@@ -1,8 +1,9 @@
 <?php
 
-use notas\model\entity\Acta;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use src\notas\domain\contracts\ActaRepositoryInterface;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -17,7 +18,8 @@ require_once("apps/core/global_object.inc");
 $Qacta = (string)filter_input(INPUT_GET, 'key');
 
 if (!empty($Qacta)) {
-    $oActa = new Acta($Qacta);
+    $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+    $oActa = $ActaRepository->findById($Qacta);
     $nombre_fichero = $Qacta;
     $nombre_fichero .= '.pdf';
     $doc = $oActa->getpdf();

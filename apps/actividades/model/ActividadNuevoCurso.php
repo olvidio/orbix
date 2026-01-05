@@ -4,12 +4,13 @@ namespace actividades\model;
 
 use core\ConfigGlobal;
 use DateInterval;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\IdTablaCode;
+use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use web\DateTimeLocal;
 
 /**
@@ -212,11 +213,11 @@ class ActividadNuevoCurso
         $sustitucion = '$1(' . $fechas_new . ')$3';
         $nom_activ_new = preg_replace($patron, $sustitucion, $nom_activ);
 
-        if ($this->bVer_lista) {
+        if ($this->Ver_lista) {
             echo "$tipo=> $fechas_new :: $nom_activ_new<br>";
         }
         //cambio el status a proyecto:
-        $status = 1;
+        $status = StatusId::PROYECTO;
         $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
         $newId = $ActividadDlRepository->newId();
         $newIdActividad = $ActividadDlRepository->newIdActividad($newId);
@@ -261,7 +262,7 @@ class ActividadNuevoCurso
             foreach ($cEncargados as $oCentroEncargado) {
                 $newEncargado = clone $oCentroEncargado;
                 $newEncargado->setId_activ($id_actividad_new);
-                if ($newEncargado->DBGuardar() === false) {
+                if ($CentroEncargadoRepository->Guardar($newEncargado) === false) {
                     echo _("hay un error, no se ha guardado");
                     echo "\n" . $newEncargado->getErrorTxt();
                 }
@@ -276,8 +277,8 @@ class ActividadNuevoCurso
     private function crear_fases($id_activ)
     {
         //echo "generando fases de $id_activ,$id_tipo_activ...<br>";
-        $oGesActividadProcesoTarea = new GestorActividadProcesoTarea();
-        $oGesActividadProcesoTarea->generarProceso($id_activ);
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $ActividadProcesoTareaRepository->generarProceso($id_activ);
     }
 
 

@@ -2,8 +2,9 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use encargossacd\model\entity\Encargo;
 use Illuminate\Http\JsonResponse;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\entity\Encargo;
 use src\ubis\domain\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
@@ -16,6 +17,7 @@ require_once("apps/core/global_object.inc");
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
 $error_txt = '';
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
     $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
     $Qid_tipo_enc = (string)filter_input(INPUT_POST, 'id_tipo_enc');
@@ -30,10 +32,11 @@ if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
     $Qdia = (string)filter_input(INPUT_POST, 'dia');
 
     if (empty($Qid_enc)) { // nuevo
+        $newIdItem = $EncargoRepository->getNewId();
         $EncargoZona = new Encargo();
+        $EncargoZona->setId_enc($newIdItem);
     } else {
-        $EncargoZona = new Encargo($Qid_enc);
-        $EncargoZona->DBCarregar();
+        $EncargoZona = $EncargoRepository->findById($Qid_enc);
     }
     $EncargoZona->setId_tipo_enc($Qid_tipo_enc);
     $EncargoZona->setsf_sv(8);
@@ -55,16 +58,16 @@ if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
     $jsondata['lugar'] = $nombre_ubi;
     $jsondata['que'] = $Qque;
 
-    if ($EncargoZona->DBGuardar() === FALSE) {
-        $error_txt .= $EncargoZona->getErrorTxt();
+    if ($EncargoRepository->Guardar($EncargoZona) === FALSE) {
+        $error_txt .= $EncargoRepository->getErrorTxt();
     }
 }
 
 if ($Qque === 'borrar') {
     $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
-    $EncargoZona = new Encargo($Qid_enc);
-    if ($EncargoZona->DBEliminar() === FALSE) {
-        $error_txt .= $EncargoZona->getErrorTxt();
+    $EncargoZona = $EncargoRepository->findById($Qid_enc);
+    if ($EncargoRepository->Eliminar($EncargoZona) === FALSE) {
+        $error_txt .= $EncargoRepository->getErrorTxt();
     }
 }
 

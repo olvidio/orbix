@@ -3,295 +3,180 @@
 namespace src\cambios\domain\entity;
 
 use src\cambios\domain\value_objects\AvisoTipoId;
+use src\cambios\domain\value_objects\ObjetoNombre;
+use src\cambios\domain\value_objects\PauId;
+use src\shared\domain\traits\Hydratable;
+use src\ubis\domain\value_objects\DelegacionCode;
 use function core\is_true;
 
-/**
- * Clase que implementa la entidad av_cambios_usuario_objeto_pref
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 20/12/2025
- */
 class CambioUsuarioObjetoPref
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_item_usuario_objeto de CambioUsuarioObjetoPref
-     *
-     * @var int
-     */
-    private int $iid_item_usuario_objeto;
-    /**
-     * Id_usuario de CambioUsuarioObjetoPref
-     *
-     * @var int
-     */
-    private int $iid_usuario;
-    /**
-     * Dl_org de CambioUsuarioObjetoPref
-     *
-     * @var string
-     */
-    private string $sdl_org;
-    /**
-     * Id_tipo_activ_txt de CambioUsuarioObjetoPref
-     *
-     * @var string
-     */
-    private string $sid_tipo_activ_txt;
-    /**
-     * Id_fase_ref de CambioUsuarioObjetoPref
-     *
-     * @var int
-     */
-    private int $iid_fase_ref;
-    /**
-     * Aviso_off de CambioUsuarioObjetoPref
-     *
-     * @var bool
-     */
-    private bool $baviso_off;
-    /**
-     * Aviso_on de CambioUsuarioObjetoPref
-     *
-     * @var bool
-     */
-    private bool $baviso_on;
-    /**
-     * Aviso_outdate de CambioUsuarioObjetoPref
-     *
-     * @var bool
-     */
-    private bool $baviso_outdate;
-    /**
-     * Objeto de CambioUsuarioObjetoPref
-     *
-     * @var string
-     */
-    private string $sobjeto;
-    /**
-     * Aviso_tipo de CambioUsuarioObjetoPref
-     *
-     * @var int
-     */
-    private int $iaviso_tipo;
-    /**
-     * Id_pau de CambioUsuarioObjetoPref
-     *
-     * @var string|null
-     */
-    private string|null $sid_pau = null;
+
+    private int $id_item_usuario_objeto;
+
+    private int $id_usuario;
+
+    private DelegacionCode $dl_org;
+
+    private string $id_tipo_activ_txt;
+
+    private int $id_fase_ref;
+
+    private bool $aviso_off;
+
+    private bool $aviso_on;
+
+    private bool $aviso_outdate;
+
+    private ObjetoNombre $objeto;
+
+    private AvisoTipoId $aviso_tipo;
+
+    private PauId|null $csv_id_pau = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return CambioUsuarioObjetoPref
-     */
-    public function setAllAttributes(array $aDatos): CambioUsuarioObjetoPref
-    {
-        if (array_key_exists('id_item_usuario_objeto', $aDatos)) {
-            $this->setId_item_usuario_objeto($aDatos['id_item_usuario_objeto']);
-        }
-        if (array_key_exists('id_usuario', $aDatos)) {
-            $this->setId_usuario($aDatos['id_usuario']);
-        }
-        if (array_key_exists('dl_org', $aDatos)) {
-            $this->setDl_org($aDatos['dl_org']);
-        }
-        if (array_key_exists('id_tipo_activ_txt', $aDatos)) {
-            $this->setId_tipo_activ_txt($aDatos['id_tipo_activ_txt']);
-        }
-        if (array_key_exists('id_fase_ref', $aDatos)) {
-            $this->setId_fase_ref($aDatos['id_fase_ref']);
-        }
-        if (array_key_exists('aviso_off', $aDatos)) {
-            $this->setAviso_off(is_true($aDatos['aviso_off']));
-        }
-        if (array_key_exists('aviso_on', $aDatos)) {
-            $this->setAviso_on(is_true($aDatos['aviso_on']));
-        }
-        if (array_key_exists('aviso_outdate', $aDatos)) {
-            $this->setAviso_outdate(is_true($aDatos['aviso_outdate']));
-        }
-        if (array_key_exists('objeto', $aDatos)) {
-            $this->setObjeto($aDatos['objeto']);
-        }
-        if (array_key_exists('aviso_tipo', $aDatos)) {
-            $this->setAviso_tipo($aDatos['aviso_tipo']);
-        }
-        if (array_key_exists('id_pau', $aDatos)) {
-            $this->setId_pau($aDatos['id_pau']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_item_usuario_objeto
-     */
     public function getId_item_usuario_objeto(): int
     {
-        return $this->iid_item_usuario_objeto;
+        return $this->id_item_usuario_objeto;
     }
 
-    /**
-     *
-     * @param int $iid_item_usuario_objeto
-     */
-    public function setId_item_usuario_objeto(int $iid_item_usuario_objeto): void
+
+    public function setId_item_usuario_objeto(int $id_item_usuario_objeto): void
     {
-        $this->iid_item_usuario_objeto = $iid_item_usuario_objeto;
+        $this->id_item_usuario_objeto = $id_item_usuario_objeto;
     }
 
-    /**
-     *
-     * @return int $iid_usuario
-     */
+
     public function getId_usuario(): int
     {
-        return $this->iid_usuario;
+        return $this->id_usuario;
     }
 
-    /**
-     *
-     * @param int $iid_usuario
-     */
-    public function setId_usuario(int $iid_usuario): void
+
+    public function setId_usuario(int $id_usuario): void
     {
-        $this->iid_usuario = $iid_usuario;
+        $this->id_usuario = $id_usuario;
     }
 
+
     /**
-     *
-     * @return string $sdl_org
+     * @deprecated Usar `getDlOrgVo(): DelegacionCode` en su lugar.
      */
     public function getDl_org(): string
     {
-        return $this->sdl_org;
+        return $this->dl_org->value();
     }
 
+
     /**
-     *
-     * @param string $sdl_org
+     * @deprecated Usar `setDlOrgVo(DelegacionCode $vo): void` en su lugar.
      */
-    public function setDl_org(string $sdl_org): void
+    public function setDl_org(string $dl_org): void
     {
-        $this->sdl_org = $sdl_org;
+        $this->dl_org = new DelegacionCode($dl_org);
     }
 
-    /**
-     *
-     * @return string $sid_tipo_activ_txt
-     */
+    public function getDlOrgVo(): DelegacionCode
+    {
+        return $this->dl_org;
+    }
+
+    public function setDlOrgVo(DelegacionCode $vo): void
+    {
+        $this->dl_org = $vo;
+    }
+
+
     public function getId_tipo_activ_txt(): string
     {
-        return $this->sid_tipo_activ_txt;
+        return $this->id_tipo_activ_txt;
     }
 
-    /**
-     *
-     * @param string $sid_tipo_activ_txt
-     */
-    public function setId_tipo_activ_txt(string $sid_tipo_activ_txt): void
+
+    public function setId_tipo_activ_txt(string $id_tipo_activ_txt): void
     {
-        $this->sid_tipo_activ_txt = $sid_tipo_activ_txt;
+        $this->id_tipo_activ_txt = $id_tipo_activ_txt;
     }
 
-    /**
-     *
-     * @return int $iid_fase_ref
-     */
+
     public function getId_fase_ref(): int
     {
-        return $this->iid_fase_ref;
+        return $this->id_fase_ref;
     }
 
-    /**
-     *
-     * @param int $iid_fase_ref
-     */
-    public function setId_fase_ref(int $iid_fase_ref): void
+
+    public function setId_fase_ref(int $id_fase_ref): void
     {
-        $this->iid_fase_ref = $iid_fase_ref;
+        $this->id_fase_ref = $id_fase_ref;
     }
 
-    /**
-     *
-     * @return bool $baviso_off
-     */
+
     public function isAviso_off(): bool
     {
-        return $this->baviso_off;
+        return $this->aviso_off;
     }
 
-    /**
-     *
-     * @param bool $baviso_off
-     */
-    public function setAviso_off(bool $baviso_off): void
+
+    public function setAviso_off(bool $aviso_off): void
     {
-        $this->baviso_off = $baviso_off;
+        $this->aviso_off = $aviso_off;
     }
 
-    /**
-     *
-     * @return bool $baviso_on
-     */
+
     public function isAviso_on(): bool
     {
-        return $this->baviso_on;
+        return $this->aviso_on;
     }
 
-    /**
-     *
-     * @param bool $baviso_on
-     */
-    public function setAviso_on(bool $baviso_on): void
+
+    public function setAviso_on(bool $aviso_on): void
     {
-        $this->baviso_on = $baviso_on;
+        $this->aviso_on = $aviso_on;
     }
 
-    /**
-     *
-     * @return bool $baviso_outdate
-     */
+
     public function isAviso_outdate(): bool
     {
-        return $this->baviso_outdate;
+        return $this->aviso_outdate;
     }
 
-    /**
-     *
-     * @param bool $baviso_outdate
-     */
-    public function setAviso_outdate(bool $baviso_outdate): void
+
+    public function setAviso_outdate(bool $aviso_outdate): void
     {
-        $this->baviso_outdate = $baviso_outdate;
+        $this->aviso_outdate = $aviso_outdate;
     }
 
+
     /**
-     *
-     * @return string $sobjeto
+     * @deprecated Usar `getObjetoVo(): ObjetoNombre` en su lugar.
      */
     public function getObjeto(): string
     {
-        return $this->sobjeto;
+        return $this->objeto->value();
     }
 
+
     /**
-     *
-     * @param string $sobjeto
+     * @deprecated Usar `setObjetoVo(ObjetoNombre $vo): void` en su lugar.
      */
-    public function setObjeto(string $sobjeto): void
+    public function setObjeto(string $objeto): void
     {
-        $this->sobjeto = $sobjeto;
+        $this->objeto = new ObjetoNombre($objeto);
+    }
+
+    public function getObjetoVo(): ObjetoNombre
+    {
+        return $this->objeto;
+    }
+
+    public function setObjetoVo(ObjetoNombre $vo): void
+    {
+        $this->objeto = $vo;
     }
 
     /**
@@ -299,7 +184,7 @@ class CambioUsuarioObjetoPref
      */
     public function getAvisoTipoVo(): AvisoTipoId
     {
-        return new AvisoTipoId($this->iaviso_tipo);
+        return $this->aviso_tipo;
     }
 
     /**
@@ -307,42 +192,48 @@ class CambioUsuarioObjetoPref
      */
     public function setAvisoTipoVo(AvisoTipoId $avisoTipoId): void
     {
-        $this->iaviso_tipo = $avisoTipoId->value();
+        $this->aviso_tipo = $avisoTipoId;
     }
 
     /**
-     * @deprecated usar getAvisoTipoVo()
-     * @return int $iaviso_tipo
+     * @deprecated Usar `getAvisoTipoVo(): AvisoTipoId` en su lugar.
      */
     public function getAviso_tipo(): int
     {
-        return $this->iaviso_tipo;
+        return $this->aviso_tipo->value();
     }
 
     /**
-     * @deprecated usar setAvisoTipoVo()
-     * @param int $iaviso_tipo
+     * @deprecated Usar `setAvisoTipoVo(AvisoTipoId $vo): void` en su lugar.
      */
-    public function setAviso_tipo(int $iaviso_tipo): void
+    public function setAviso_tipo(int $aviso_tipo): void
     {
-        $this->iaviso_tipo = $iaviso_tipo;
+        $this->aviso_tipo = new AvisoTipoId($aviso_tipo);
     }
 
     /**
-     *
-     * @return string|null $sid_pau
+     * @deprecated Usar `getIdPauVo(): ?PauId` en su lugar.
      */
-    public function getId_pau(): ?string
+    public function getCsv_id_pau(): ?string
     {
-        return $this->sid_pau;
+        return $this->csv_id_pau?->value();
     }
 
     /**
-     *
-     * @param string|null $sid_pau
+     * @deprecated Usar `setIdPauVo(?PauId $vo): void` en su lugar.
      */
-    public function setId_pau(?string $sid_pau = null): void
+    public function setCsv_id_pau(?string $csv_id_pau = null): void
     {
-        $this->sid_pau = $sid_pau;
+        $this->csv_id_pau = $csv_id_pau !== null ? new PauId($csv_id_pau) : null;
+    }
+
+    public function getCsvIdPauVo(): ?PauId
+    {
+        return $this->csv_id_pau;
+    }
+
+    public function setCsvIdPauVo(?PauId $vo): void
+    {
+        $this->csv_id_pau = $vo;
     }
 }

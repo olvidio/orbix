@@ -1,7 +1,7 @@
 <?php
 
-use actividadplazas\legacy\ActividadPlazasDl;
 use core\ConfigGlobal;
+use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -23,8 +23,8 @@ switch ($que) {
         $dl = substr($reg_dl, strpos($reg_dl, '-') + 1);
 
         $mi_dele = ConfigGlobal::mi_delef();
-        // OJO, para sf todavia hay que quitar la f:
-        if (ConfigGlobal::mi_sfsv() == 2) {
+        // OJO, para sf todavía hay que quitar la f:
+        if (ConfigGlobal::mi_sfsv() === 2) {
             $dl_sigla = substr($mi_dele, 0, -1);
         } else {
             $dl_sigla = $mi_dele;
@@ -38,27 +38,26 @@ switch ($que) {
             $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
         }
         //Si es la dl_org, son plazas concedidas, sino pedidas.
-        $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));
+        $ActvidadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
+        $cActividadPlazasDl = $ActvidadPlazasDlRepository->getActividadPlazas(['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele]);
+        $oActividadPlazasDl = $cActividadPlazasDl[0];
 
-        $oActividadPlazasDl->DBCarregar();
-
-        $json_cedidas = $oActividadPlazasDl->getCedidas()?? '';
-        $oCedidas = json_decode($json_cedidas);
-        if (empty($oCedidas)) {
-            $oCedidas = new stdClass;
+        $aCedidas = $oActividadPlazasDl->getCedidas() ?? '';
+        if (empty($aCedidas)) {
+            $aCedidas = [];
         }
-        if ($num_plazas == 0) {
-            if (isset($oCedidas->$dl)) {
-                unset($oCedidas->$dl);
+        if ($num_plazas === 0) {
+            if (isset($aCedidas[$dl])) {
+                unset($aCedidas[$dl]);
             }
         } else {
-            $oCedidas->$dl = $num_plazas;
+            $aCedidas[$dl] = $num_plazas;
         }
-        $json_cedidas = json_encode($oCedidas);
+        $json_cedidas = json_encode($aCedidas);
         $oActividadPlazasDl->setCedidas($json_cedidas);
 
         //print_r($oActividadPlazasDl);
-        if ($oActividadPlazasDl->DBGuardar() === false) {
+        if ($ActvidadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
             echo _("hay un error, no se ha guardado");
             echo "\n" . $oActividadPlazasDl->getErrorTxt();
         }

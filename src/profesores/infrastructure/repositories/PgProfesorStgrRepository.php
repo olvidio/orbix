@@ -7,13 +7,6 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use personas\model\entity\GestorPersonaPub;
-use personas\model\entity\PersonaDl;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\asignaturas\domain\contracts\SectorRepositoryInterface;
-use src\asignaturas\domain\value_objects\AsignaturaId;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorStgr;
 use src\shared\traits\HandlesPdoErrors;
@@ -38,172 +31,6 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         $oDbl = $GLOBALS['oDB'];
         $this->setoDbl($oDbl);
         $this->setNomTabla('d_profesor_stgr');
-    }
-
-    /**
-     * @deprecated Usar getArrayProfesoresAsignaturaVo(AsignaturaId $id_asignatura)
-     */
-    public function getArrayProfesoresAsignatura($id_asignatura): array
-    {
-        $oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($id_asignatura);
-        if ($oAsignatura === null) {
-            throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
-        }
-        $id_sector = $oAsignatura->getId_sector();
-        $SectorRepository = $GLOBALS['container']->get(SectorRepositoryInterface::class);
-        $id_departamento = $SectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
-        // Profesores departamento
-        $aProfesoresDepartamento = $this->getArrayProfesoresDepartamento($id_departamento);
-        //profesor ampliación
-        $ProfesoresAmpliacionRepository = $GLOBALS['container']->get(ProfesorAmpliacionRepositoryInterface::class);
-        $aProfesoresAmpliacion = $ProfesoresAmpliacionRepository->getArrayProfesoresAsignatura($id_asignatura);
-
-        $Opciones['departamento'] = $aProfesoresDepartamento;
-        $Opciones['ampliacion'] = $aProfesoresAmpliacion;
-
-        return $Opciones;
-
-    }
-
-    public function getArrayProfesoresAsignaturaVo(AsignaturaId $id_asignatura): array
-    {
-        return $this->getArrayProfesoresAsignatura($id_asignatura->value());
-    }
-
-    /**
-     * @deprecated Usar getArrayTodosProfesoresAsignaturaVo(AsignaturaId $id_asignatura)
-     */
-    public function getArrayTodosProfesoresAsignatura($id_asignatura): array
-    {
-        $oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($id_asignatura);
-        if ($oAsignatura === null) {
-            throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
-        }
-        $id_sector = $oAsignatura->getId_sector();
-        $SectorRepository = $GLOBALS['container']->get(SectorRepositoryInterface::class);
-        $id_departamento = $SectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
-        // Profesores departamento
-        $aProfesoresDepartamento = $this->getArrayProfesoresDepartamento($id_departamento);
-        //profesor ampliación
-        $ProfesoresAmpliacionRepository = $GLOBALS['container']->get(ProfesorAmpliacionRepositoryInterface::class);
-        $aProfesoresAmpliacion = $ProfesoresAmpliacionRepository->getArrayProfesoresAsignatura($id_asignatura);
-
-        return $aProfesoresDepartamento + array("----------") + $aProfesoresAmpliacion;
-    }
-
-    public function getArrayTodosProfesoresAsignaturaVo(AsignaturaId $id_asignatura): array
-    {
-        return $this->getArrayTodosProfesoresAsignatura($id_asignatura->value());
-    }
-
-    public function getListaProfesoresPub(): array
-    {
-        $gesPersonaPub = new GestorPersonaPub();
-        $cPersonasPub = $gesPersonaPub->getPersonas(array('profesor_stgr' => 't'));
-
-        $aProfesores = [];
-        $aAp1 = [];
-        $aAp2 = [];
-        $aNom = [];
-        foreach ($cPersonasPub as $oPersona) {
-            $id_nom = $oPersona->getId_nom();
-            // comprobar situación
-            $situacion = $oPersona->getSituacion();
-            if ($situacion !== 'A') {
-                continue;
-            }
-            $ap_nom = $oPersona->getPrefApellidosNombre();
-            $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
-            $aAp1[] = $oPersona->getApellido1();
-            $aAp2[] = $oPersona->getApellido2();
-            $aNom[] = $oPersona->getNom();
-        }
-        $multisort_args = [];
-        $multisort_args[] = $aAp1;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aAp2;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aNom;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
-        call_user_func_array("array_multisort", $multisort_args);
-
-        $aOpciones = [];
-        foreach ($aProfesores as $aClave) {
-            $clave = $aClave['id_nom'];
-            $val = $aClave['ap_nom'];
-            $aOpciones[$clave] = $val;
-        }
-        return $aOpciones;
-    }
-
-    public function getArrayProfesoresConDl(): array
-    {
-        $gesProfesores = $this->getProfesoresStgr(array('f_cese' => ''), array('f_cese' => 'IS NULL'));
-        $aProfesores = [];
-        $aAp1 = [];
-        $aAp2 = [];
-        $aNom = [];
-        foreach ($gesProfesores as $oProfesor) {
-            $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = new PersonaDl($id_nom);
-            // comprobar situación
-            $situacion = $oPersonaDl->getSituacion();
-            if ($situacion !== 'A') {
-                continue;
-            }
-            $ap_nom = $oPersonaDl->getPrefApellidosNombre();
-            $dl = $oPersonaDl->getDl();
-            $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom, 'dl' => $dl);
-            $aAp1[] = $oPersonaDl->getApellido1();
-            $aAp2[] = $oPersonaDl->getApellido2();
-            $aNom[] = $oPersonaDl->getNom();
-        }
-        $multisort_args = [];
-        $multisort_args[] = $aAp1;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aAp2;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aNom;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
-        call_user_func_array("array_multisort", $multisort_args);
-
-        $aOpciones = [];
-        foreach ($aProfesores as $aClave) {
-            $clave = $aClave['id_nom'];
-            //$val=$aClave['ap_nom'];
-            //$dl=$aClave['dl'];
-            $aOpciones[$clave] = $aClave;
-        }
-        return $aOpciones;
-    }
-
-    public function getArrayProfesoresDl(): array
-    {
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $gesProfesores = $this->getProfesoresStgr(array('f_cese' => ''), array('f_cese' => 'IS NULL'));
-        $aProfesores = [];
-        foreach ($gesProfesores as $oProfesor) {
-            $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = $PersonaDlRepository->findById($id_nom);
-            // comprobar situación
-            $situacion = $oPersonaDl?->getSituacion();
-            if ($situacion !== 'A') {
-                continue;
-            }
-            $ap_nom = $oPersonaDl->getPrefApellidosNombre();
-            $aProfesores[$id_nom] = $ap_nom;
-        }
-        uasort($aProfesores, 'core\strsinacentocmp');
-
-        return $aProfesores;
     }
 
     /* -------------------- GESTOR BASE ---------------------------------------- */
@@ -270,8 +97,7 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
             // para las fechas del postgres (texto iso)
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
             $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
-            $ProfesorStgr = new ProfesorStgr();
-            $ProfesorStgr->setAllAttributes($aDatos);
+            $ProfesorStgr = ProfesorStgr::fromArray($aDatos);
             $ProfesorStgrSet->add($ProfesorStgr);
         }
         return $ProfesorStgrSet->getTot();
@@ -377,7 +203,7 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorStgr())->setAllAttributes($aDatos);
+        return ProfesorStgr::fromArray($aDatos);
     }
 
     public function getNewId()
@@ -386,48 +212,4 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         $sQuery = "select nextval('d_profesor_stgr_id_item_seq'::regclass)";
         return $oDbl->query($sQuery)->fetchColumn();
     }
-
-    private function getArrayProfesoresDepartamento($id_departamento): array
-    {
-        $gesProfesores = $this->getProfesoresStgr(array('id_departamento' => $id_departamento, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
-        $aProfesores = [];
-        $aAp1 = [];
-        $aAp2 = [];
-        $aNom = [];
-        foreach ($gesProfesores as $oProfesor) {
-            $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = new PersonaDl($id_nom);
-            // comprobar situación
-            $situacion = $oPersonaDl->getSituacion();
-            if ($situacion !== 'A') {
-                continue;
-            }
-            $ap_nom = $oPersonaDl->getPrefApellidosNombre();
-            $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
-            $aAp1[] = $oPersonaDl->getApellido1();
-            $aAp2[] = $oPersonaDl->getApellido2();
-            $aNom[] = $oPersonaDl->getNom();
-        }
-        $multisort_args = [];
-        $multisort_args[] = $aAp1;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aAp2;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = $aNom;
-        $multisort_args[] = SORT_ASC;
-        $multisort_args[] = SORT_STRING;
-        $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
-        call_user_func_array("array_multisort", $multisort_args);
-
-        $aOpciones = [];
-        foreach ($aProfesores as $aClave) {
-            $clave = $aClave['id_nom'];
-            $val = $aClave['ap_nom'];
-            $aOpciones[$clave] = $val;
-        }
-        return $aOpciones;
-    }
-
 }

@@ -10,14 +10,12 @@
  * @param string $sasistentes
  */
 
-use actividadplazas\model\entity\GestorPlazaPeticion;
-use asistentes\legacy\AsistenteDl;
-use asistentes\legacy\AsistenteOut;
 use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
+use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
@@ -57,10 +55,10 @@ $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
 $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
 
 $mi_sfsv = ConfigGlobal::mi_sfsv();
-if ($mi_sfsv == 1) {
+if ($mi_sfsv === 1) {
     $ssfsv = 'sv';
 }
-if ($mi_sfsv == 2) {
+if ($mi_sfsv === 2) {
     $ssfsv = 'sf';
 }
 
@@ -149,11 +147,11 @@ foreach ($cActividades as $oActividad) {
     $aId_activ[$id_activ] = $dl_org;
 }
 //Miro las peticiones actuales
-$gesPlazasPeticion = new GestorPlazaPeticion();
+$PlazaPeticionRepository = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
 $aWhereP = ['orden' => 1, 'tipo' => $Qsactividad];
 $aWhereP['id_nom'] = '^\d{4}' . $filtro_id_nom;
 $aOperadorP = ['id_nom' => '~'];
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion($aWhereP, $aOperadorP);
+$cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion($aWhereP, $aOperadorP);
 $msg_err = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
     // solo apunto la primera (según orden)

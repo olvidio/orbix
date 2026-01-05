@@ -1,8 +1,8 @@
 <?php
 
-use procesos\model\entity\GestorPermUsuarioActividad;
-use procesos\model\entity\PermUsuarioActividad;
 use procesos\model\PermAfectados;
+use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
+use src\procesos\domain\entity\PermUsuarioActividad;
 use web\ContestarJson;
 use function core\is_true;
 
@@ -37,7 +37,7 @@ if (empty($Qid_tipo_activ)) {
 // afecta a:
 $oCuadros = new PermAfectados();
 $aAfecta_a = $oCuadros->getPermissions();
-$gesPermUsuarioActividad = new GestorPermUsuarioActividad();
+$PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
 foreach ($aAfecta_a as $afecta_a) {
     $aWhere = [
         'id_usuario' => $Qid_usuario,
@@ -60,36 +60,37 @@ foreach ($aAfecta_a as $afecta_a) {
         } else {
             $perm_off = empty($QaPerm_off[$i]) ? 0 : $QaPerm_off[$i];
             $perm_on = empty($QaPerm_on[$i]) ? 0 : $QaPerm_on[$i];
-            $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
+            $cPermUsuarioActividad = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere);
             // Solamente debería haber uno???
             if (count($cPermUsuarioActividad) === 1) {
-                $oUsuarioPerm = $cPermUsuarioActividad[0];
-                $oUsuarioPerm->DBCarregar();
+                $oPermUsuarioActividad = $cPermUsuarioActividad[0];
             } else {
-                $oUsuarioPerm = new PermUsuarioActividad();
+                $newId_item = $PermUsuarioActividadRepository->getNewId();
+                $oPermUsuarioActividad = new PermUsuarioActividad();
+                $oPermUsuarioActividad->setId_item($newId_item);
             }
-            $oUsuarioPerm->setId_usuario($Qid_usuario);
-            $oUsuarioPerm->setId_tipo_activ_txt($id_tipo_activ_txt);
-            $oUsuarioPerm->setDl_propia($Qdl_propia);
-            $oUsuarioPerm->setAfecta_a($afecta_a);
-            $oUsuarioPerm->setFase_ref($fase_ref);
-            $oUsuarioPerm->setperm_on($perm_on);
-            $oUsuarioPerm->setperm_off($perm_off);
-            if ($oUsuarioPerm->DBGuardar() === false) {
+            $oPermUsuarioActividad->setId_usuario($Qid_usuario);
+            $oPermUsuarioActividad->setId_tipo_activ_txt($id_tipo_activ_txt);
+            $oPermUsuarioActividad->setDl_propia($Qdl_propia);
+            $oPermUsuarioActividad->setAfecta_a($afecta_a);
+            $oPermUsuarioActividad->setFase_ref($fase_ref);
+            $oPermUsuarioActividad->setperm_on($perm_on);
+            $oPermUsuarioActividad->setperm_off($perm_off);
+            if ($PermUsuarioActividadRepository->Guardar($oPermUsuarioActividad) === false) {
                 $error_txt .= _("hay un error, no se ha guardado");
-                $error_txt .= "\n" . $oUsuarioPerm->getErrorTxt();
+                $error_txt .= "\n" . $PermUsuarioActividadRepository->getErrorTxt();
             }
             $eliminar = false;
         }
     }
     if (is_true($eliminar)) {
-        $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
+        $cPermUsuarioActividad = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere);
         // Solamente debería haber uno???
         if (count($cPermUsuarioActividad) === 1) {
-            $oUsuarioPerm = $cPermUsuarioActividad[0];
-            if ($oUsuarioPerm->DBEliminar() === false) {
+            $oPermUsuarioActividad = $cPermUsuarioActividad[0];
+            if ($PermUsuarioActividadRepository->Eliminar($oPermUsuarioActividad) === false) {
                 $error_txt .= _("hay un error.");
-                $error_txt .= "\n" . $oUsuarioPerm->getErrorTxt();
+                $error_txt .= "\n" . $PermUsuarioActividadRepository->getErrorTxt();
             }
         }
     }

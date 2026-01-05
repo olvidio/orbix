@@ -10,149 +10,73 @@ use src\profesores\domain\value_objects\EscritoCese;
 use src\profesores\domain\value_objects\EscritoNombramiento;
 use src\profesores\domain\value_objects\FechaCese;
 use src\profesores\domain\value_objects\FechaNombramiento;
+use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
-/**
- * Clase que implementa la entidad d_profesor_stgr
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 29/11/2025
- */
 class ProfesorStgr
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_item de ProfesorStgr
-     *
-     * @var int
-     */
-    private int $iid_item;
-    /**
-     * Id_nom de ProfesorStgr
-     *
-     * @var int
-     */
-    private int $iid_nom;
-    /**
-     * Id_departamento de ProfesorStgr
-     *
-     * @var int
-     */
-    private int $iid_departamento;
-    /**
-     * Escrito_nombramiento de ProfesorStgr
-     *
-     * @var string|null
-     */
-    private string|null $sescrito_nombramiento = null;
-    /**
-     * F_nombramiento de ProfesorStgr
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $df_nombramiento = null;
-    /**
-     * Id_tipo_profesor de ProfesorStgr
-     *
-     * @var int|null
-     */
-    private int|null $iid_tipo_profesor = null;
-    /**
-     * Escrito_cese de ProfesorStgr
-     *
-     * @var string|null
-     */
-    private string|null $sescrito_cese = null;
-    /**
-     * F_cese de ProfesorStgr
-     *
-     * @var DateTimeLocal|null
-     */
-    private DateTimeLocal|null $df_cese = null;
+    private int $id_item;
+
+    private int $id_nom;
+
+    private int $id_departamento;
+
+    private string|null $escrito_nombramiento = null;
+
+    private DateTimeLocal|null $f_nombramiento = null;
+
+    private int|null $id_tipo_profesor = null;
+
+    private string|null $escrito_cese = null;
+
+    private DateTimeLocal|null $f_cese = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return ProfesorStgr
-     */
-    public function setAllAttributes(array $aDatos): ProfesorStgr
-    {
-        if (array_key_exists('id_item', $aDatos)) {
-            $this->setId_item($aDatos['id_item']);
-        }
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom($aDatos['id_nom']);
-        }
-        if (array_key_exists('id_departamento', $aDatos)) {
-            $this->setId_departamento($aDatos['id_departamento']);
-        }
-        if (array_key_exists('escrito_nombramiento', $aDatos)) {
-            // manterner compatibilidad con string
-            $this->setEscritoNombramientoVo(EscritoNombramiento::fromNullable($aDatos['escrito_nombramiento']));
-        }
-        if (array_key_exists('f_nombramiento', $aDatos)) {
-            $this->setFechaNombramientoVo(FechaNombramiento::fromNullable($aDatos['f_nombramiento']));
-        }
-        if (array_key_exists('id_tipo_profesor', $aDatos)) {
-            $this->setId_tipo_profesor($aDatos['id_tipo_profesor']);
-        }
-        if (array_key_exists('escrito_cese', $aDatos)) {
-            $this->setEscritoCeseVo(EscritoCese::fromNullable($aDatos['escrito_cese']));
-        }
-        if (array_key_exists('f_cese', $aDatos)) {
-            $this->setFechaCeseVo(FechaCese::fromNullable($aDatos['f_cese']));
-        }
-        return $this;
-    }
 
     // Nuevos métodos basados en ValueObjects
     public function getEscritoNombramientoVo(): ?EscritoNombramiento
     {
-        return EscritoNombramiento::fromNullable($this->sescrito_nombramiento);
+        return EscritoNombramiento::fromNullable($this->escrito_nombramiento);
     }
 
     public function setEscritoNombramientoVo(?EscritoNombramiento $escrito): void
     {
-        $this->sescrito_nombramiento = $escrito?->value();
+        $this->escrito_nombramiento = $escrito?->value();
     }
 
     public function getFechaNombramientoVo(): ?FechaNombramiento
     {
-        return FechaNombramiento::fromNullable($this->df_nombramiento);
+        return FechaNombramiento::fromNullable($this->f_nombramiento);
     }
 
     public function setFechaNombramientoVo(?FechaNombramiento $fecha): void
     {
-        $this->df_nombramiento = $fecha?->value();
+        $this->f_nombramiento = $fecha?->value();
     }
 
     public function getEscritoCeseVo(): ?EscritoCese
     {
-        return EscritoCese::fromNullable($this->sescrito_cese);
+        return EscritoCese::fromNullable($this->escrito_cese);
     }
 
     public function setEscritoCeseVo(?EscritoCese $escrito): void
     {
-        $this->sescrito_cese = $escrito?->value();
+        $this->escrito_cese = $escrito?->value();
     }
 
     public function getFechaCeseVo(): ?FechaCese
     {
-        return FechaCese::fromNullable($this->df_cese);
+        return FechaCese::fromNullable($this->f_cese);
     }
 
     public function setFechaCeseVo(?FechaCese $fecha): void
     {
-        $this->df_cese = $fecha?->value();
+        $this->f_cese = $fecha?->value();
     }
 
     /**
@@ -160,7 +84,7 @@ class ProfesorStgr
      */
     public function getEscrito_nombramiento(): ?string
     {
-        return $this->sescrito_nombramiento;
+        return $this->escrito_nombramiento;
     }
 
     /**
@@ -168,7 +92,7 @@ class ProfesorStgr
      */
     public function setEscrito_nombramiento(?string $escrito_nombramiento = null): void
     {
-        $this->sescrito_nombramiento = $escrito_nombramiento;
+        $this->escrito_nombramiento = $escrito_nombramiento;
     }
 
     /**
@@ -176,7 +100,7 @@ class ProfesorStgr
      */
     public function getF_nombramiento(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_nombramiento;
+        return $this->f_nombramiento;
     }
 
     /**
@@ -184,7 +108,7 @@ class ProfesorStgr
      */
     public function setF_nombramiento(DateTimeLocal|NullDateTimeLocal|null $f_nombramiento = null): void
     {
-        $this->df_nombramiento = $f_nombramiento instanceof NullDateTimeLocal ? null : $f_nombramiento;
+        $this->f_nombramiento = $f_nombramiento instanceof NullDateTimeLocal ? null : $f_nombramiento;
     }
 
     /**
@@ -192,7 +116,7 @@ class ProfesorStgr
      */
     public function getEscrito_cese(): ?string
     {
-        return $this->sescrito_cese;
+        return $this->escrito_cese;
     }
 
     /**
@@ -200,7 +124,7 @@ class ProfesorStgr
      */
     public function setEscrito_cese(?string $escrito_cese = null): void
     {
-        $this->sescrito_cese = $escrito_cese;
+        $this->escrito_cese = $escrito_cese;
     }
 
     /**
@@ -208,7 +132,7 @@ class ProfesorStgr
      */
     public function getF_cese(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_cese;
+        return $this->f_cese;
     }
 
     /**
@@ -216,79 +140,55 @@ class ProfesorStgr
      */
     public function setF_cese(DateTimeLocal|NullDateTimeLocal|null $f_cese = null): void
     {
-        $this->df_cese = $f_cese instanceof NullDateTimeLocal ? null : $f_cese;
+        $this->f_cese = $f_cese instanceof NullDateTimeLocal ? null : $f_cese;
     }
 
-    /**
-     *
-     * @return int $iid_item
-     */
+
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
-    /**
-     *
-     * @param int $iid_item
-     */
-    public function setId_item(int $iid_item): void
+
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 
-    /**
-     *
-     * @return int $iid_nom
-     */
+
     public function getId_nom(): int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
-    /**
-     *
-     * @param int $iid_nom
-     */
-    public function setId_nom(int $iid_nom): void
+
+    public function setId_nom(int $id_nom): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
-    /**
-     *
-     * @return int $iid_departamento
-     */
+
     public function getId_departamento(): int
     {
-        return $this->iid_departamento;
+        return $this->id_departamento;
     }
 
-    /**
-     *
-     * @param int $iid_departamento
-     */
-    public function setId_departamento(int $iid_departamento): void
+
+    public function setId_departamento(int $id_departamento): void
     {
-        $this->iid_departamento = $iid_departamento;
+        $this->id_departamento = $id_departamento;
     }
 
-    /**
-     *
-     * @return int|null $iid_tipo_profesor
-     */
+
     public function getId_tipo_profesor(): ?int
     {
-        return $this->iid_tipo_profesor;
+        return $this->id_tipo_profesor;
     }
 
-    /**
-     *
-     * @param int|null $iid_tipo_profesor
-     */
-    public function setId_tipo_profesor(?int $iid_tipo_profesor = null): void
+
+    public function setId_tipo_profesor(?int $id_tipo_profesor = null): void
     {
-        $this->iid_tipo_profesor = $iid_tipo_profesor;
+        $this->id_tipo_profesor = $id_tipo_profesor;
     }
 
 
@@ -298,7 +198,7 @@ class ProfesorStgr
         return 'id_item';
     }
 
-    function getDatosCampos(): array
+  public function getDatosCampos(): array
     {
         $oProfesorSet = new Set();
         $oProfesorSet->add($this->getDatosId_nom());
@@ -311,7 +211,7 @@ class ProfesorStgr
         return $oProfesorSet->getTot();
     }
 
-    function getDatosId_nom(): DatosCampo
+    private function getDatosId_nom(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_nom');
@@ -323,7 +223,7 @@ class ProfesorStgr
         return $oDatosCampo;
     }
 
-    function getDatosId_departamento()
+    private function getDatosId_departamento(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_departamento');
@@ -337,7 +237,7 @@ class ProfesorStgr
         return $oDatosCampo;
     }
 
-    function getDatosEscrito_nombramiento(): DatosCampo
+    private function getDatosEscrito_nombramiento(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('escrito_nombramiento');
@@ -349,7 +249,7 @@ class ProfesorStgr
         return $oDatosCampo;
     }
 
-    function getDatosF_nombramiento(): DatosCampo
+    private function getDatosF_nombramiento(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_nombramiento');
@@ -360,7 +260,7 @@ class ProfesorStgr
         return $oDatosCampo;
     }
 
-    function getDatosId_tipo_profesor(): DatosCampo
+    private function getDatosId_tipo_profesor(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_tipo_profesor');
@@ -374,7 +274,7 @@ class ProfesorStgr
         return $oDatosCampo;
     }
 
-    function getDatosEscrito_cese(): DatosCampo
+    private function getDatosEscrito_cese(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('escrito_cese');
@@ -386,7 +286,7 @@ class ProfesorStgr
         return $oDatosCampo;
     }
 
-    function getDatosF_cese(): DatosCampo
+    private function getDatosF_cese(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('f_cese');

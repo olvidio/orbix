@@ -3,30 +3,14 @@ namespace core;
 
 abstract class ClasePropiedades
 {
-    /**
-     * oDbl de ClasePropiedades
-     *
-     * @var object
-     */
     protected $oDbl;
     protected $oDbl_Select;
-    /**
-     * NomTabla de ClasePropiedades
-     *
-     * @var string
-     */
-    protected $sNomTabla;
-    /**
-     * ErrorTxt de ClasePropiedades
-     *
-     * @var string
-     */
-    protected $sErrorTxt;
+    protected string $sNomTabla;
+    protected string $sErrorTxt;
+
     /* MÉTODOS GET y SET --------------------------------------------------------*/
-    /**
-     * @var mixed|string
-     */
-    private $iid_schema;
+
+    private int $iid_schema;
 
 
     /**
@@ -36,9 +20,6 @@ abstract class ClasePropiedades
      */
     function getId_schema()
     {
-        if (!isset($this->iid_schema) && !$this->bLoaded) {
-            $this->DBCarregar();
-        }
         return $this->iid_schema;
     }
 
@@ -78,6 +59,7 @@ abstract class ClasePropiedades
     {
         $this->oDbl = $oDbl;
     }
+
     public function setoDbl_Select($oDbl_Select)
     {
         $this->oDbl_Select = $oDbl_Select;
@@ -104,6 +86,7 @@ abstract class ClasePropiedades
     }
 
 
+    /*
     public function __get($nombre)
     {
         $metodo = 'get' . ucfirst($nombre);
@@ -115,6 +98,7 @@ abstract class ClasePropiedades
         $metodo = 'set' . ucfirst($nombre);
         if (method_exists($this, $metodo)) $this->$metodo($valor);
     }
+    */
 
     /**
      * sErrorTxt

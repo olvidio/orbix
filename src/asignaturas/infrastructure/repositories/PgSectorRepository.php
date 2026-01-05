@@ -130,8 +130,7 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Sector = new Sector();
-            $Sector->setAllAttributes($aDatos);
+            $Sector =  Sector::fromArray($aDatos);
             $SectorSet->add($Sector);
         }
         return $SectorSet->getTot();
@@ -219,7 +218,7 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         if (empty($aDatos)) {
             return null;
         }
-        return (new Sector())->setAllAttributes($aDatos);
+        return Sector::fromArray($aDatos);
     }
 
     public function getNewId()

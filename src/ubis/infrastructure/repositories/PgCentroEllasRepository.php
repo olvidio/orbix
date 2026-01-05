@@ -39,7 +39,7 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $orden = 'nombre_ubi';
-        if (empty($sCondicion)) $sCondicion = "WHERE status = 't'";
+        if (empty($sCondicion)) $sCondicion = "WHERE active = 't'";
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sCondicion ORDER BY $orden";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
@@ -116,9 +116,8 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
-            $CentroEllas = new CentroEllas();
-            $CentroEllas->setAllAttributes($aDatos);
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+            $CentroEllas = CentroEllas::fromArray($aDatos);
             $CentroEllasSet->add($CentroEllas);
         }
         return $CentroEllasSet->getTot();
@@ -151,7 +150,7 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
         $aDatos['dl'] = $CentroEllas->getDl();
         $aDatos['pais'] = $CentroEllas->getPais();
         $aDatos['region'] = $CentroEllas->getRegion();
-        $aDatos['status'] = $CentroEllas->isStatus();
+        $aDatos['active'] = $CentroEllas->isActive();
         $aDatos['sv'] = $CentroEllas->isSv();
         $aDatos['sf'] = $CentroEllas->isSf();
         $aDatos['tipo_ctr'] = $CentroEllas->getTipo_ctr();
@@ -160,13 +159,13 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
         $aDatos['id_ctr_padre'] = $CentroEllas->getId_ctr_padre();
         $aDatos['id_zona'] = $CentroEllas->getId_zona();
         // para las fechas
-        $aDatos['f_status'] = (new ConverterDate('date', $CentroEllas->getF_status()))->toPg();
+        $aDatos['f_active'] = (new ConverterDate('date', $CentroEllas->getF_active()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['status'])) {
-            $aDatos['status'] = 'true';
+        if (is_true($aDatos['active'])) {
+            $aDatos['active'] = 'true';
         } else {
-            $aDatos['status'] = 'false';
+            $aDatos['active'] = 'false';
         }
         if (is_true($aDatos['sv'])) {
             $aDatos['sv'] = 'true';
@@ -192,8 +191,8 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
                     dl                       = :dl,
                     pais                     = :pais,
                     region                   = :region,
-                    status                   = :status,
-                    f_status                 = :f_status,
+                    active                   = :active,
+                    f_active                 = :f_active,
                     sv                       = :sv,
                     sf                       = :sf,
                     tipo_ctr                 = :tipo_ctr,
@@ -206,8 +205,8 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
         } else {
             //INSERT
             $aDatos['id_ubi'] = $CentroEllas->getId_ubi();
-            $campos = "(id_ubi,tipo_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_zona)";
-            $valores = "(:id_ubi,:tipo_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:id_zona)";
+            $campos = "(id_ubi,tipo_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_zona)";
+            $valores = "(:id_ubi,:tipo_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:id_zona)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -242,7 +241,7 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
         }
         return $aDatos;
     }
@@ -256,6 +255,6 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
         if (empty($aDatos)) {
             return null;
         }
-        return (new CentroEllas())->setAllAttributes($aDatos);
+        return CentroEllas::fromArray($aDatos);
     }
 }

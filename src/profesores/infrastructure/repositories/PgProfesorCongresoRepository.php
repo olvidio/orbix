@@ -96,8 +96,7 @@ class PgProfesorCongresoRepository extends ClaseRepository implements ProfesorCo
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
-            $ProfesorCongreso = new ProfesorCongreso();
-            $ProfesorCongreso->setAllAttributes($aDatos);
+            $ProfesorCongreso = ProfesorCongreso::fromArray($aDatos);
             $ProfesorCongresoSet->add($ProfesorCongreso);
         }
         return $ProfesorCongresoSet->getTot();
@@ -203,7 +202,7 @@ class PgProfesorCongresoRepository extends ClaseRepository implements ProfesorCo
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorCongreso())->setAllAttributes($aDatos);
+        return ProfesorCongreso::fromArray($aDatos);
     }
 
     public function getNewId()

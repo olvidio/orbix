@@ -15,6 +15,7 @@ use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryI
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use web\TiposActividades;
@@ -99,6 +100,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $id_repeticion = $oActividad->getId_repeticion();
     $publicado = $oActividad->isPublicado();
     $plazas = $oActividad->getPlazas();
+    $idioma = $oActividad->getIdiomaVo()?->value();
 
     // mirar permisos.
     $_SESSION['oPermActividades']->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
@@ -133,7 +135,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     // Valores por defecto
     $dl_org = ConfigGlobal::mi_delef();
     // si es nueva, obligatorio estado: proyecto (14.X.2011)
-    $status = 1;
+    $status = StatusId::PROYECTO;
     $id_ubi = 0;
     $lugar_esp = '';
     $tarifa = '';
@@ -191,6 +193,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $f_fin = '';
     $h_fin = '';
     $plazas = '';
+    $idioma = '';
     $precio = '';
     $observ = '';
     $publicado = '';
@@ -275,6 +278,15 @@ $oDesplNivelStgr->setOpciones($aOpciones);
 $oDesplNivelStgr->setNombre('nivel_stgr');
 $oDesplNivelStgr->setOpcion_sel($nivel_stgr);
 
+//Idiomas
+$LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
+$aOpciones = $LocalRepository->getArrayLocales();
+$oDesplIdioma = new Desplegable();
+$oDesplIdioma->setBlanco(true);
+$oDesplIdioma->setOpciones($aOpciones);
+$oDesplIdioma->setNombre('idioma');
+$oDesplIdioma->setOpcion_sel($idioma);
+
 $RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
 $aOpciones = $RepeticionRepository->getArrayRepeticion();
 $oDesplRepeticion = new Desplegable();
@@ -283,7 +295,7 @@ $oDesplRepeticion->setNombre('id_repeticion');
 $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
 $oHash = new Hash();
-$camposForm = 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!id_tarifa!publicado!plazas';
+$camposForm = 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!id_tarifa!publicado!plazas!idioma';
 $camposNo = 'mod';
 if ($Qmod === 'nuevo' or $Qmod === 'cambiar_tipo') {
     $camposForm .= '!extendida!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val';
@@ -355,6 +367,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'observ' => $observ,
     'oDesplRepeticion' => $oDesplRepeticion,
     'oDesplNivelStgr' => $oDesplNivelStgr,
+    'oDesplIdioma' => $oDesplIdioma,
     'publicado' => $publicado,
     'mod' => $Qmod,
     'oActividadTipo' => $oActividadTipo,

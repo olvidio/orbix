@@ -2,178 +2,153 @@
 
 namespace src\actividadplazas\domain\entity;
 
+use src\actividadplazas\domain\value_objects\DelegacionTablaCode;
+use src\actividadplazas\domain\value_objects\PlazaClCode;
+use src\actividadplazas\domain\value_objects\PlazasNumero;
+use src\shared\domain\traits\Hydratable;
+use src\shared\traits\HandlesPdoErrors;
 use stdClass;
 
-/**
- * Clase que implementa la entidad da_plazas
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 16/12/2025
- */
 class ActividadPlazas
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_activ de ActividadPlazas
-     *
-     * @var int
-     */
-    private int $iid_activ;
-    /**
-     * Id_dl de ActividadPlazas
-     *
-     * @var int
-     */
-    private int $iid_dl;
-    /**
-     * Plazas de ActividadPlazas
-     *
-     * @var int|null
-     */
-    private int|null $iplazas = null;
-    /**
-     * Cl de ActividadPlazas
-     *
-     * @var string|null
-     */
-    private string|null $scl = null;
-    /**
-     * Dl_tabla de ActividadPlazas
-     *
-     * @var string
-     */
-    private string $sdl_tabla;
-    /**
-     * Cedidas de ActividadPlazas
-     *
-     * @var array|stdClass|null
-     */
+
+    private int $id_activ;
+
+    private int $id_dl;
+
+    private int|null $plazas = null;
+
+    private string|null $cl = null;
+
+    private string $dl_tabla;
+
     private array|stdClass|null $cedidas = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return ActividadPlazas
-     */
-    public function setAllAttributes(array $aDatos): ActividadPlazas
-    {
-        if (array_key_exists('id_activ', $aDatos)) {
-            $this->setId_activ($aDatos['id_activ']);
-        }
-        if (array_key_exists('id_dl', $aDatos)) {
-            $this->setId_dl($aDatos['id_dl']);
-        }
-        if (array_key_exists('plazas', $aDatos)) {
-            $this->setPlazas($aDatos['plazas']);
-        }
-        if (array_key_exists('cl', $aDatos)) {
-            $this->setCl($aDatos['cl']);
-        }
-        if (array_key_exists('dl_tabla', $aDatos)) {
-            $this->setDl_tabla($aDatos['dl_tabla']);
-        }
-        if (array_key_exists('cedidas', $aDatos)) {
-            $this->setCedidas($aDatos['cedidas']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_activ
-     */
     public function getId_activ(): int
     {
-        return $this->iid_activ;
+        return $this->id_activ;
     }
 
-    /**
-     *
-     * @param int $iid_activ
-     */
-    public function setId_activ(int $iid_activ): void
+
+    public function setId_activ(int $id_activ): void
     {
-        $this->iid_activ = $iid_activ;
+        $this->id_activ = $id_activ;
     }
 
-    /**
-     *
-     * @return int $iid_dl
-     */
+
     public function getId_dl(): int
     {
-        return $this->iid_dl;
+        return $this->id_dl;
     }
 
-    /**
-     *
-     * @param int $iid_dl
-     */
-    public function setId_dl(int $iid_dl): void
+
+    public function setId_dl(int $id_dl): void
     {
-        $this->iid_dl = $iid_dl;
+        $this->id_dl = $id_dl;
     }
 
     /**
-     *
-     * @return int|null $iplazas
+     * @return PlazasNumero|null
+     */
+    public function getPlazasVo(): ?PlazasNumero
+    {
+        return $this->plazas !== null ? new PlazasNumero($this->plazas) : null;
+    }
+
+    /**
+     * @param PlazasNumero|null $oPlazasNumero
+     */
+    public function setPlazasVo(?PlazasNumero $oPlazasNumero = null): void
+    {
+        $this->plazas = $oPlazasNumero?->value();
+    }
+
+    /**
+     * @deprecated use getPlazasVo()
      */
     public function getPlazas(): ?int
     {
-        return $this->iplazas;
+        return $this->plazas;
     }
 
     /**
-     *
-     * @param int|null $iplazas
+     * @deprecated use setPlazasVo()
      */
-    public function setPlazas(?int $iplazas = null): void
+    public function setPlazas(?int $plazas = null): void
     {
-        $this->iplazas = $iplazas;
+        $this->plazas = $plazas;
+    }
+
+    /**
+     * @return PlazaClCode|null
+     */
+    public function getClVo(): ?PlazaClCode
+    {
+        return $this->cl !== null ? new PlazaClCode($this->cl) : null;
+    }
+
+    /**
+     * @param PlazaClCode|null $oPlazaClCode
+     */
+    public function setClVo(?PlazaClCode $oPlazaClCode = null): void
+    {
+        $this->cl = $oPlazaClCode?->value();
     }
 
     /**
      *
-     * @return string|null $scl
+     * @deprecated use getClVo()
      */
     public function getCl(): ?string
     {
-        return $this->scl;
+        return $this->cl;
     }
 
     /**
      *
-     * @param string|null $scl
+     * @deprecated use setClVo()
      */
-    public function setCl(?string $scl = null): void
+    public function setCl(?string $cl = null): void
     {
-        $this->scl = $scl;
+        $this->cl = $cl;
     }
 
     /**
-     *
-     * @return string $sdl_tabla
+     * @return DelegacionTablaCode
+     */
+    public function getDlTablaVo(): DelegacionTablaCode
+    {
+        return new DelegacionTablaCode($this->dl_tabla);
+    }
+
+    /**
+     * @param DelegacionTablaCode $oDelegacionTablaCode
+     */
+    public function setDlTablaVo(DelegacionTablaCode $oDelegacionTablaCode): void
+    {
+        $this->dl_tabla = $oDelegacionTablaCode->value();
+    }
+
+    /**
+     * @deprecated use getDlTablaVo()
      */
     public function getDl_tabla(): string
     {
-        return $this->sdl_tabla;
+        return $this->dl_tabla;
     }
 
     /**
-     *
-     * @param string $sdl_tabla
+     * @deprecated use setDlTablaVo()
      */
-    public function setDl_tabla(string $sdl_tabla): void
+    public function setDlTabla(string $dl_tabla): void
     {
-        $this->sdl_tabla = $sdl_tabla;
+        $this->dl_tabla = $dl_tabla;
     }
 
     /**

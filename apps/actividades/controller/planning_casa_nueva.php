@@ -9,7 +9,6 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-use actividadtarifas\model\entity\GestorTipoTarifa;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
@@ -74,8 +73,8 @@ if (!empty($id_ubi) && $id_ubi != 1) {
     $nombre_ubi = $oCasa->getNombre_ubi();
     $delegacion = $oCasa->getDl();
     $region = $oCasa->getRegion();
-    $sv = $oCasa->getSv();
-    $sf = $oCasa->getSf();
+    $sv = $oCasa->isSv();
+    $sf = $oCasa->isSf();
 } else {
     if ($id_ubi == 1 && $lugar_esp) {
         $nombre_ubi = $lugar_esp;

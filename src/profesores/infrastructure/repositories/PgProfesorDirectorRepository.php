@@ -41,7 +41,7 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|false Una colección de objetos de tipo ProfesorDirector
      */
-    public function getProfesorDirectores(array $aWhere = [], array $aOperators = []): array|false
+    public function getProfesoresDirectores(array $aWhere = [], array $aOperators = []): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -96,8 +96,7 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
             // para las fechas del postgres (texto iso)
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
             $aDatos['f_cese'] = (new ConverterDate('date', $aDatos['f_cese']))->fromPg();
-            $ProfesorDirector = new ProfesorDirector();
-            $ProfesorDirector->setAllAttributes($aDatos);
+            $ProfesorDirector = ProfesorDirector::fromArray($aDatos);
             $ProfesorDirectorSet->add($ProfesorDirector);
         }
         return $ProfesorDirectorSet->getTot();
@@ -201,7 +200,7 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorDirector())->setAllAttributes($aDatos);
+        return ProfesorDirector::fromArray($aDatos);
     }
 
     public function getNewId(): int

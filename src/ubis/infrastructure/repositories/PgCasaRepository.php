@@ -111,9 +111,8 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
-            $Casa = new Casa();
-            $Casa->setAllAttributes($aDatos);
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+            $Casa = Casa::fromArray($aDatos);
             $CasaSet->add($Casa);
         }
         return $CasaSet->getTot();
@@ -147,7 +146,7 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         $aDatos['dl'] = $Casa->getDl();
         $aDatos['pais'] = $Casa->getPais();
         $aDatos['region'] = $Casa->getRegion();
-        $aDatos['status'] = $Casa->isStatus();
+        $aDatos['active'] = $Casa->isActive();
         $aDatos['sv'] = $Casa->isSv();
         $aDatos['sf'] = $Casa->isSf();
         $aDatos['tipo_casa'] = $Casa->getTipo_casa();
@@ -157,13 +156,13 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         $aDatos['biblioteca'] = $Casa->getBiblioteca();
         $aDatos['observ'] = $Casa->getObserv();
         // para las fechas
-        $aDatos['f_status'] = (new ConverterDate('date', $Casa->getF_status()))->toPg();
+        $aDatos['f_active'] = (new ConverterDate('date', $Casa->getF_active()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['status'])) {
-            $aDatos['status'] = 'true';
+        if (is_true($aDatos['active'])) {
+            $aDatos['active'] = 'true';
         } else {
-            $aDatos['status'] = 'false';
+            $aDatos['active'] = 'false';
         }
         if (is_true($aDatos['sv'])) {
             $aDatos['sv'] = 'true';
@@ -184,8 +183,8 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
                     dl                       = :dl,
                     pais                     = :pais,
                     region                   = :region,
-                    status                   = :status,
-                    f_status                 = :f_status,
+                    active                   = :active,
+                    f_active                 = :f_active,
                     sv                       = :sv,
                     sf                       = :sf,
                     tipo_casa                = :tipo_casa,
@@ -199,8 +198,8 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         } else {
             //INSERT
             $aDatos['id_ubi'] = $Casa->getId_ubi();
-            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_casa,plazas,plazas_min,num_sacd,biblioteca,observ)";
-            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_casa,:plazas,:plazas_min,:num_sacd,:biblioteca,:observ)";
+            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_casa,plazas,plazas_min,num_sacd,biblioteca,observ)";
+            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_casa,:plazas,:plazas_min,:num_sacd,:biblioteca,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -235,7 +234,7 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
         }
         return $aDatos;
     }
@@ -250,6 +249,6 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         if (empty($aDatos)) {
             return null;
         }
-        return (new Casa())->setAllAttributes($aDatos);
+        return Casa::fromArray($aDatos);
     }
 }

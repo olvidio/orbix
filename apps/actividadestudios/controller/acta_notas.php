@@ -1,11 +1,11 @@
 <?php
 
-use actividadestudios\model\entity\GestorActividadAsignatura;
-use actividadestudios\model\entity\GestorMatricula;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorActa;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\personas\domain\entity\Persona;
@@ -35,7 +35,7 @@ $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
 // Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -61,8 +61,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 // los permisos depende de cada asignatura
 $mi_dele = ConfigGlobal::mi_delef();
 $permiso = (integer)filter_input(INPUT_POST, 'permiso');
-$GesActivAsignaturas = new GestorActividadAsignatura();
-$cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
+$ActividadAsignaturaRepository =$GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
+$cActivAsignaturas = $ActividadAsignaturaRepository->getActividadAsignaturas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
 $oActividadAsignatura = $cActivAsignaturas[0];
 $id_schema = $oActividadAsignatura->getId_schema();
 $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
@@ -85,8 +85,8 @@ $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInter
 $oActividad = $ActividadAllRepository->findById($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 
-$GesMatriculas = new GestorMatricula();
-$cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura' => $id_asignatura, 'id_activ' => $id_activ));
+$MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
+$cMatriculados = $MatriculaRepository->getMatriculas(array('id_asignatura' => $id_asignatura, 'id_activ' => $id_activ));
 $matriculados = count($cMatriculados);
 $aPersonasMatriculadas = [];
 if ($matriculados > 0) {
@@ -113,8 +113,8 @@ $Qopcional = (string)filter_input(INPUT_POST, 'opcional');
 $Qprimary_key_s = (string)filter_input(INPUT_POST, 'primary_key_s');
 $Qid_nivel = (integer)filter_input(INPUT_POST, 'id_nivel');
 
-$GesActas = new GestorActa();
-$cActas = $GesActas->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura, '_ordre' => 'f_acta'));
+$ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+$cActas = $ActaRepository->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura, '_ordre' => 'f_acta'));
 $acta_principal = '';
 if (is_array($cActas) && !empty($cActas)) {
     $a_actas = [0 => '', Nota::CURSADA => Nota::getStatusTxt(Nota::CURSADA)];
@@ -127,7 +127,7 @@ if (is_array($cActas) && !empty($cActas)) {
     $oDesplActas->setNombre('acta_nota[]');
     $oDesplActas->setOpciones($a_actas);
     // Si sólo hay una, la selecciono por defecto.
-    if (count($cActas) == 1) {
+    if (count($cActas) === 1) {
         $acta_principal = $nom_acta;
     }
 } else {

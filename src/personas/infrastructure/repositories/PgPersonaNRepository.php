@@ -39,7 +39,7 @@ class PgPersonaNRepository extends PgPersonaDlRepository implements PersonaNRepo
         if (empty($aDatos)) {
             return null;
         }
-        return (new PersonaN())->setAllAttributes($aDatos);
+        return PersonaN::fromArray($aDatos);
     }
 
     public function getNewId()

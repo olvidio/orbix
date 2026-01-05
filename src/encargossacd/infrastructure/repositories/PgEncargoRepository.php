@@ -94,8 +94,7 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Encargo = new Encargo();
-            $Encargo->setAllAttributes($aDatos);
+            $Encargo = Encargo::fromArray($aDatos);
             $EncargoSet->add($Encargo);
         }
         return $EncargoSet->getTot();
@@ -202,7 +201,7 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
         if (empty($aDatos)) {
             return null;
         }
-        return (new Encargo())->setAllAttributes($aDatos);
+        return Encargo::fromArray($aDatos);
     }
 
     public function getNewId()

@@ -1,7 +1,5 @@
 <?php
 
-use actividadestudios\model\entity\GestorActividadAsignatura;
-use actividadestudios\model\entity\PosiblesCa;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
@@ -9,6 +7,8 @@ use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
+use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
+use src\actividadestudios\domain\PosiblesCa;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
@@ -295,8 +295,8 @@ if (!empty($Qidca)) {
             $aAsignaturasCa = array("dd");
         } else {
             // por cada ca creo un array con las asignaturas y los créditos.
-            $GesActividadAsignaturas = new GestorActividadAsignatura();
-            $aAsignaturasCa = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
+            $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
+            $aAsignaturasCa = $ActividadAsignaturaRepository->getAsignaturasCa($id_activ);
             if (count($aAsignaturasCa) == 0 && $nivel_stgr) {
                 $msg_txt .= sprintf(_("el ca: %s no tiene puesta ninguna asignatura.") . "<br>", $nom_activ);
                 continue;

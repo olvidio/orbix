@@ -27,17 +27,15 @@
  *
  */
 
-use asistentes\model\entity\Asistente;
-
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use personas\legacy\PersonaEx;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
-use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\ResumenPlazas;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -136,7 +134,7 @@ if (!empty($id_activ)) { //caso de modificar
 
     // supongo que es de mi dl
     // TODO: si es otro??
-    $obj = 'asistentes\\legacy\\AsistenteDl';
+    $obj = 'AsistenteDl';
 }
 $propio_chk = (!empty($propio) && is_true($propio)) ? 'checked' : '';
 $falta_chk = (!empty($falta) && is_true($falta)) ? 'checked' : '';
@@ -152,13 +150,14 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
     $dl_de_paso = FALSE;
     if ($obj_pau === 'PersonaEx') {
         if (!empty($Qid_nom)) { //caso de modificar
-            $oPersona = new PersonaEx(['id_nom' => $Qid_nom]);
+            $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+            $oPersona = $PersonaExRepository->findById($Qid_nom);
             $dl_de_paso = $oPersona->getDl();
         } else {
 
         }
     }
-    $gesActividadPlazas = new GestorResumenPlazas();
+    $gesActividadPlazas = new ResumenPlazas();
     if (!empty($id_activ)) {
         $gesActividadPlazas->setId_activ($id_activ);
         $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);

@@ -2,12 +2,11 @@
 
 namespace notas\model;
 
-use notas\model\entity\GestorPersonaNotaDB;
-use notas\model\entity\GestorPersonaNotaDlDB;
-use personas\model\entity\GestorPersonaDl;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use web\Lista;
 
 /**
@@ -22,7 +21,7 @@ use web\Lista;
 class TablaAlumnosAsignaturas
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
-    private $a_delegacionesStgr = [];
+    private array $a_delegacionesStgr = [];
 
 
     public function getTablaCr($a_dl)
@@ -32,7 +31,7 @@ class TablaAlumnosAsignaturas
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $aWhere = [];
         $aOperador = [];
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['id_nivel'] = '1100,2500';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'id_nivel';
@@ -40,7 +39,7 @@ class TablaAlumnosAsignaturas
 
         $a_cabeceras = [];
         $a_cabeceras[0] = _("n/a");
-        $a_cabeceras[1] = _("stgr");
+        $a_cabeceras[1] = _("nivel stgr");
         $a_cabeceras[2] = _("centro");
         $a_cabeceras[3] = _("apellidos, nombre");
         $a = 3;
@@ -64,10 +63,10 @@ class TablaAlumnosAsignaturas
         $aWhere = [];
         $aOperador = [];
         $aWhere['situacion'] = 'A';
-        $aWhere['stgr'] = 'b|c1|c2';
-        $aWhere['_ordre'] = 'dl,stgr,apellido1,nom';
+        $aWhere['nivel_stgr'] = 'b|c1|c2';
+        $aWhere['_ordre'] = 'dl,nivel_stgr,apellido1,nom';
 
-        $aOperador['stgr'] = '~';
+        $aOperador['nivel_stgr'] = '~';
 
         $dl_txt = '';
         foreach ($a_dl as $id_dl) {
@@ -78,9 +77,9 @@ class TablaAlumnosAsignaturas
         $aOperador['dl'] = 'IN';
 
 
-        $GesPersonas = new GestorPersonaDl();
-        $cPersonas = $GesPersonas->getPersonasDl($aWhere, $aOperador);
-        $GesPersonaNotas = new GestorPersonaNotaDB();
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $cPersonas = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
+        $PersonNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
         $p = 0;
         $a_valores = [];
         foreach ($cPersonas as $oPersona) {
@@ -88,18 +87,18 @@ class TablaAlumnosAsignaturas
             $id_nom = $oPersona->getId_nom();
             $id_tabla = $oPersona->getId_tabla();
             $ap_nom = $oPersona->getPrefApellidosNombre();
-            $stgr = $oPersona->getNivel_stgr();
+            $nivel_stgr = $oPersona->getNivel_stgr();
             $centro = $oPersona->getCentro_o_dl();
             $dl = $oPersona->getDl();
 
             $a_valores[$p][1] = $id_tabla;
-            $a_valores[$p][2] = $stgr;
+            $a_valores[$p][2] = $nivel_stgr;
             $a_valores[$p][3] = $dl;
             $a_valores[$p][4] = $ap_nom;
 
             // Asignaturas cursadas:
             // Busco fin_bienio, cuadrienio
-            $cFin = $GesPersonaNotas->getPersonaNotas(array('id_nom' => $id_nom, 'id_nivel' => 9990), array('id_nivel' => '>'));
+            $cFin = $PersonNotaDBRepository->getPersonaNotas(array('id_nom' => $id_nom, 'id_nivel' => 9990), array('id_nivel' => '>'));
             $fin_bienio = false;
             $fin_cuadrienio = false;
             foreach ($cFin as $oPersonaNota) {
@@ -113,7 +112,7 @@ class TablaAlumnosAsignaturas
             }
 
             //$cPersonaNotas = $GesPersonaNotas->getPersonaNotasSuperadas($id_nom,'t');
-            $cPersonaNotas = $GesPersonaNotas->getPersonaNotas(['id_nom' => $id_nom]);
+            $cPersonaNotas = $PersonNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom]);
             $aAprobadas = [];
             foreach ($cPersonaNotas as $oPersonaNota) {
                 $id_asignatura = $oPersonaNota->getId_asignatura();
@@ -135,7 +134,7 @@ class TablaAlumnosAsignaturas
             }
 
 
-            $a = 4; // 1: id_tabla, 2: stgr, 3: centro, 4: ap_nom.
+            $a = 4; // 1: id_tabla, 2: nivel_stgr, 3: centro, 4: ap_nom.
             foreach ($cAsignaturas as $oAsignatura) {
                 $a++;
                 $id_nivel = $oAsignatura->getId_nivel();
@@ -168,7 +167,7 @@ class TablaAlumnosAsignaturas
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $aWhere = [];
         $aOperador = [];
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['id_nivel'] = '1100,2500';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'id_nivel';
@@ -176,7 +175,7 @@ class TablaAlumnosAsignaturas
 
         $a_cabeceras = [];
         $a_cabeceras[0] = _("n/a");
-        $a_cabeceras[1] = _("stgr");
+        $a_cabeceras[1] = _("nivel stgr");
         $a_cabeceras[2] = _("centro");
         $a_cabeceras[3] = _("apellidos, nombre");
         $a = 3;
@@ -190,7 +189,7 @@ class TablaAlumnosAsignaturas
         $cAsignaturasTodas = $AsignaturaRepository->getAsignaturas(array('_ordre' => 'id_asignatura'));
         foreach ($cAsignaturasTodas as $oAsignatura) {
             $id_asignatura = $oAsignatura->getId_asignatura();
-            $a_Asig_status[$id_asignatura] = $oAsignatura->getStatus();
+            $a_Asig_status[$id_asignatura] = $oAsignatura->isActive();
             $a_Asig_nivel[$id_asignatura] = $oAsignatura->getId_nivel();
         }
 
@@ -201,14 +200,14 @@ class TablaAlumnosAsignaturas
         $aWhere = [];
         $aOperador = [];
         $aWhere['situacion'] = 'A';
-        $aWhere['stgr'] = 'b|c1|c2';
-        $aWhere['_ordre'] = 'stgr,apellido1,nom';
+        $aWhere['nivel_stgr'] = 'b|c1|c2';
+        $aWhere['_ordre'] = 'nivel_stgr,apellido1,nom';
 
-        $aOperador['stgr'] = '~';
+        $aOperador['nivel_stgr'] = '~';
 
-        $GesPersonas = new GestorPersonaDl();
-        $cPersonas = $GesPersonas->getPersonasDl($aWhere, $aOperador);
-        $GesPersonaNotas = new GestorPersonaNotaDlDB();
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $cPersonas = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
+        $PersonNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
         $p = 0;
         $a_valores = [];
         foreach ($cPersonas as $oPersona) {
@@ -216,17 +215,17 @@ class TablaAlumnosAsignaturas
             $id_nom = $oPersona->getId_nom();
             $id_tabla = $oPersona->getId_tabla();
             $ap_nom = $oPersona->getPrefApellidosNombre();
-            $stgr = $oPersona->getNivel_stgr();
+            $nivel_stgr = $oPersona->getNivel_stgr();
             $centro = $oPersona->getCentro_o_dl();
 
             $a_valores[$p][1] = $id_tabla;
-            $a_valores[$p][2] = $stgr;
+            $a_valores[$p][2] = $nivel_stgr;
             $a_valores[$p][3] = $centro;
             $a_valores[$p][4] = $ap_nom;
 
             // Asignaturas cursadas:
             // Busco fin_bienio, cuadrienio
-            $cFin = $GesPersonaNotas->getPersonaNotas(array('id_nom' => $id_nom, 'id_nivel' => 9990), array('id_nivel' => '>'));
+            $cFin = $PersonNotaDBRepository->getPersonaNotas(array('id_nom' => $id_nom, 'id_nivel' => 9990), array('id_nivel' => '>'));
             $fin_bienio = false;
             $fin_cuadrienio = false;
             foreach ($cFin as $oPersonaNota) {
@@ -240,7 +239,7 @@ class TablaAlumnosAsignaturas
             }
 
             //$cPersonaNotas = $GesPersonaNotas->getPersonaNotasSuperadas($id_nom,'t');
-            $cPersonaNotas = $GesPersonaNotas->getPersonaNotas(['id_nom' => $id_nom]);
+            $cPersonaNotas = $PersonNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom]);
             $aAprobadas = [];
             foreach ($cPersonaNotas as $oPersonaNota) {
                 $id_asignatura = $oPersonaNota->getId_asignatura();
@@ -262,7 +261,7 @@ class TablaAlumnosAsignaturas
             }
 
 
-            $a = 4; // 1: id_tabla, 2: stgr, 3: centro, 4: ap_nom.
+            $a = 4; // 1: id_tabla, 2: nivel_stgr, 3: centro, 4: ap_nom.
             foreach ($cAsignaturas as $oAsignatura) {
                 $a++;
                 $id_nivel = $oAsignatura->getId_nivel();

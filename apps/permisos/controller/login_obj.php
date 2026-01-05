@@ -118,7 +118,7 @@ function getModsPosibles()
 function getModsInstalados($oDB_Select)
 {
     $a_mods = getModsPosibles();
-    $sQuery = "SELECT * FROM m0_mods_installed_dl WHERE status = 't'";
+    $sQuery = "SELECT * FROM m0_mods_installed_dl WHERE active = 't'";
     $a_mods_installed = [];
     foreach ($oDB_Select->query($sQuery) as $aDades) {
         $id_mod = $aDades['id_mod'];

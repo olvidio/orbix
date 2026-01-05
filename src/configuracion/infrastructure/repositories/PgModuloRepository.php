@@ -112,8 +112,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
             // para los array del postgres
             $aDatos['mods_req'] = array_pgInteger2php($aDatos['mods_req']);
             $aDatos['apps_req'] = array_pgInteger2php($aDatos['apps_req']);
-            $Modulo = new Modulo();
-            $Modulo->setAllAttributes($aDatos);
+            $Modulo = Modulo::fromArray($aDatos);
             $ModuloSet->add($Modulo);
         }
         return $ModuloSet->getTot();
@@ -211,7 +210,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         if (empty($aDatos)) {
             return null;
         }
-        return (new Modulo())->setAllAttributes($aDatos);
+        return Modulo::fromArray($aDatos);
     }
 
     public function getNewId()

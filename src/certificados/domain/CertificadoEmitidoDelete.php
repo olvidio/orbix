@@ -2,8 +2,8 @@
 
 namespace src\certificados\domain;
 
-use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 
 class CertificadoEmitidoDelete
 {
@@ -43,9 +43,9 @@ class CertificadoEmitidoDelete
             // Hay que borrar también el certificado de las notas_otra_region_stgr
             // Se supone que si accedo a esta página es porque soy una región del stgr.
             $esquema_region_stgr = $_SESSION['session_auth']['esquema'];
-            $gesPersonaNotaOtraRegionStgr = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-            $gesPersonaNotaOtraRegionStgr->setoDbl($this->oDbl);
-            $gesPersonaNotaOtraRegionStgr->deleteCertificado($certificado);
+            $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
+            $PersonaNotaOtraRegionStgrRepository->setoDbl($this->oDbl);
+            $PersonaNotaOtraRegionStgrRepository->deleteCertificado($certificado);
         } else {
             $error_txt = _("No se encuentra el certificado");
         }

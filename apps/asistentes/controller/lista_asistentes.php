@@ -1,6 +1,5 @@
 <?php
 
-use actividadcargos\model\entity\GestorActividadCargo;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;

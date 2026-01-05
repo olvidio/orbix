@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use procesos\model\entity\GestorProcesoTipo;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
 use web\Lista;
 use web\TiposActividades;
 use function core\is_true;
@@ -24,8 +24,8 @@ switch ($Qque) {
         $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
         $cTiposDeActividades = $TipoDeActividadRepository->getTiposDeActividades($aWhere);
 
-        $oGesProcesosTipo = new GestorProcesoTipo();
-        $cProcesosTipo = $oGesProcesosTipo->getProcesoTipos();
+        $ProcesoTipoRepository = $GLOBALS['container']->get(ProcesoTipoRepositoryInterface::class);
+        $cProcesosTipo = $ProcesoTipoRepository->getProcesoTipos();
         $a_procesos_tipo = [];
         foreach ($cProcesosTipo as $oProcesoTipo) {
             $id_tipo = $oProcesoTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
@@ -45,7 +45,7 @@ switch ($Qque) {
             $i++;
             $id_tipo_activ = $oTipo->getId_tipo_activ();
             $id_tipo_proceso = $oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
-            $id_tipo_proceso_ex = $oTipo->getId_tipo_proceso_ex();
+            $id_tipo_proceso_ex = $oTipo->getId_tipo_proceso_ex(ConfigGlobal::mi_sfsv());
             $oTiposActividades = new TiposActividades($id_tipo_activ);
             $a_valores[$i][1] = $id_tipo_activ;
             $a_valores[$i][2] = $oTiposActividades->getNom();
@@ -81,8 +81,8 @@ switch ($Qque) {
         $Qpropio = (string)filter_input(INPUT_POST, 'propio');
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $aWhere = ['sfsv' => $mi_sfsv, '_ordre' => 'nom_proceso'];
-        $GesProcesoTipo = new GestorProcesoTipo();
-        $cProcesosTipo = $GesProcesoTipo->getProcesoTipos($aWhere);
+        $ProcesoTipoRepository = $GLOBALS['container']->get(ProcesoTipoRepositoryInterface::class);
+        $cProcesosTipo = $ProcesoTipoRepository->getProcesoTipos($aWhere);
         $txt_lista = '';
         foreach ($cProcesosTipo as $oProcesoTipo) {
             $id_tipo_proceso = $oProcesoTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());

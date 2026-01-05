@@ -21,7 +21,7 @@ if (empty($Qid_usuario)) {
 } else {
     $oGrupo = $GrupoRepository->findById($Qid_usuario);
 }
-$oGrupo->setUsuario(new Username($Qusuario));
+$oGrupo->setUsuarioVo(new Username($Qusuario));
 
 if ($GrupoRepository->Guardar($oGrupo) === false) {
     $error_txt .= _("hay un error, no se ha guardado");

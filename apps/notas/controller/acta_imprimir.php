@@ -2,13 +2,12 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\Acta;
-use notas\model\entity\GestorActaTribunal;
-use notas\model\entity\GestorActaTribunalDl;
 use notas\model\getDatosActa;
-use personas\model\entity\GestorNombreLatin;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
+use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
+use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 
@@ -57,7 +56,8 @@ $nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
 $reg_stgr = "Stgr" . ConfigGlobal::mi_region();
 
 // acta
-$oActa = new Acta($acta);
+$ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+$oActa = $ActaRepository->findById($acta);
 $id_asignatura = $oActa->getId_asignatura();
 $id_activ = $oActa->getId_activ();
 $oF_acta = $oActa->getF_acta();
@@ -106,7 +106,6 @@ $cPersonaNotas = getDatosActa::getNotasActa($acta);
 // para ordenar
 $errores = '';
 $aPersonasNotas = [];
-$oGesNomLatin = new GestorNombreLatin();
 foreach ($cPersonaNotas as $oPersonaNota) {
     $id_situacion = $oPersonaNota->getId_situacion();
     $id_nom = $oPersonaNota->getId_nom();
@@ -127,11 +126,11 @@ $num_alumnos = count($aPersonasNotas);
 // tribunal:
 // Si es cr, se mira en todas:
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
-    $GesTribunal = new GestorActaTribunal();
+    $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalRepositoryInterface::class);
 } else {
-    $GesTribunal = new GestorActaTribunalDl();
+    $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
 }
-$cTribunal = $GesTribunal->getActasTribunales(array('acta' => $acta, '_ordre' => 'orden'));
+$cTribunal = $repoActaTribunal->getActasTribunales(array('acta' => $acta, '_ordre' => 'orden'));
 $num_examinadores = count($cTribunal);
 
 // Definición del número de lineas de las páginas y los numeros de alumnos----------------

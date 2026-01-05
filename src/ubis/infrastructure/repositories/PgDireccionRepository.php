@@ -140,8 +140,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
             }
             // para las fechas del postgres (texto iso)
             $aDatos['f_direccion'] = (new ConverterDate('date', $aDatos['f_direccion']))->fromPg();
-            $Direccion = new Direccion();
-            $Direccion->setAllAttributes($aDatos);
+            $Direccion = Direccion::fromArray($aDatos);
             $DireccionSet->add($Direccion);
         }
         return $DireccionSet->getTot();
@@ -275,6 +274,6 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         if (empty($aDatos)) {
             return null;
         }
-        return (new Direccion())->setAllAttributes($aDatos);
+        return Direccion::fromArray($aDatos);
     }
 }

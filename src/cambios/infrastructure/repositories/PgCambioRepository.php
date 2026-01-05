@@ -178,9 +178,8 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
                 ORDER BY dl_org,id_tipo_activ,timestamp_cambio
                 ";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-        foreach ($stmt as $aDades) {
-            $oCambio = new Cambio();
-            $oCambio->setAllAttributes($aDades);
+        foreach ($stmt as $aDatos) {
+            $oCambio = Cambio::fromArray($aDatos);
             $oCambioSet->add($oCambio);
         }
 
@@ -194,9 +193,8 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
                 ORDER BY dl_org,id_tipo_activ,timestamp_cambio
                 ";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-        foreach ($stmt as $aDades) {
-            $oCambio = new Cambio();
-            $oCambio->setAllAttributes($aDades);
+        foreach ($stmt as $aDatos) {
+            $oCambio = Cambio::fromArray($aDatos);
             $oCambioSet->add($oCambio);
         }
 
@@ -269,10 +267,9 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
             // para las fechas del postgres (texto iso)
             $aDatos['timestamp_cambio'] = (new ConverterDate('timestamp', $aDatos['timestamp_cambio']))->fromPg();
             // para los json
-            $aDatos['json_fases_sv'] = (new ConverterJson($aDatos['json_fases_sv']))->fromPg();
-            $aDatos['json_fases_sf'] = (new ConverterJson($aDatos['json_fases_sf']))->fromPg();
-            $CambioDl = new Cambio();
-            $CambioDl->setAllAttributes($aDatos);
+            $aDatos['json_fases_sv'] = (new ConverterJson($aDatos['json_fases_sv'],true))->fromPg();
+            $aDatos['json_fases_sf'] = (new ConverterJson($aDatos['json_fases_sf'], true))->fromPg();
+            $CambioDl = Cambio::fromArray($aDatos);
             $CambioDlSet->add($CambioDl);
         }
         return $CambioDlSet->getTot();
@@ -316,8 +313,8 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         // para las fechas
         $aDatos['timestamp_cambio'] = (new ConverterDate('timestamp', $Cambio->getTimestamp_cambio()))->toPg();
         // para los json
-        $aDatos['json_fases_sv'] = (new ConverterJson($Cambio->getJson_fases_sv()))->toPg();
-        $aDatos['json_fases_sf'] = (new ConverterJson($Cambio->getJson_fases_sf()))->toPg();
+        $aDatos['json_fases_sv'] = (new ConverterJson($Cambio->getJson_fases_sv(),false))->toPg(false);
+        $aDatos['json_fases_sf'] = (new ConverterJson($Cambio->getJson_fases_sf(), false))->toPg(false);
         array_walk($aDatos, 'core\poner_null');
 
         if ($bInsert === false) {
@@ -390,8 +387,8 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         }
         // para los json
         if ($aDatos !== false) {
-            $aDatos['json_fases_sv'] = (new ConverterJson($aDatos['json_fases_sv']))->fromPg();
-            $aDatos['json_fases_sf'] = (new ConverterJson($aDatos['json_fases_sf']))->fromPg();
+            $aDatos['json_fases_sv'] = (new ConverterJson($aDatos['json_fases_sv'],true))->fromPg();
+            $aDatos['json_fases_sf'] = (new ConverterJson($aDatos['json_fases_sf'], true))->fromPg();
         }
         return $aDatos;
     }
@@ -407,7 +404,7 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         if (empty($aDatos)) {
             return null;
         }
-        return (new Cambio())->setAllAttributes($aDatos);
+        return Cambio::fromArray($aDatos);
     }
 
     public function getNewId()

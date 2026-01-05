@@ -211,7 +211,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|false Una colección de objetos de tipo TipoDeActividad
      */
-    public function getTiposDeActividad(array $aWhere = [], array $aOperators = []): array|false
+    public function getTiposDeActividades(array $aWhere = [], array $aOperators = []): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -263,8 +263,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoDeActividad = new TipoDeActividad();
-            $TipoDeActividad->setAllAttributes($aDatos);
+            $TipoDeActividad =  TipoDeActividad::fromArray($aDatos);
             $TipoDeActividadSet->add($TipoDeActividad);
         }
         return $TipoDeActividadSet->getTot();
@@ -361,6 +360,6 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         if (empty($aDatos)) {
             return null;
         }
-        return (new TipoDeActividad())->setAllAttributes($aDatos);
+        return TipoDeActividad::fromArray($aDatos);
     }
 }

@@ -2,7 +2,6 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use dossiers\model\entity\TipoDossier;
 use dossiers\model\PermisoDossier;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use web\Hash;

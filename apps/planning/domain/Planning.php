@@ -2,7 +2,7 @@
 
 namespace planning\domain;
 
-use ubis\model\entity\GestorCasaPeriodo;
+use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use web\DateTimeLocal;
 
 /**
@@ -188,6 +188,7 @@ class Planning
         $ancho = 0;
         $periodos_sv = [];
         //print_r($this->a_actividades);
+        $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
         foreach ($this->a_actividades as $ww) {
             foreach ($ww as $per => $actividad) {
                 //list($pau,$id_pau,$persona,$centro) = preg_split('/#/', $per ); //separo el id_ubi del nombre
@@ -195,8 +196,7 @@ class Planning
 
                 if ($pau === 'u') { // para los ubis...
                     $id_ubi = $id_pau;
-                    $gesCasaPeriodo = new GestorCasaPeriodo();
-                    $periodos_sv[$id_ubi] = $gesCasaPeriodo->getArrayCasaPeriodos($id_ubi, $this->oInicio, $this->oFin);
+                    $periodos_sv[$id_ubi] = $CasaPeriodoRepository->getArrayCasaPeriodos($id_ubi, $this->oInicio, $this->oFin);
                 }
                 //mido el tamaño de los nombres
                 $long = strlen($persona);

@@ -372,7 +372,7 @@ class DlListas extends ClasePropiedades
      * Retorna una col·lecció d'objectes del tipus DatosCampo
      *
      */
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oListasSet = new Set();
 
@@ -385,12 +385,12 @@ class DlListas extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sDl de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Dl de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosDl()
+    private function getDatosDl(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
@@ -399,12 +399,12 @@ class DlListas extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sNombre_dl de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Nombre_dl de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosNombre_dl()
+    private function getDatosNombre_dl(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_dl'));
@@ -413,8 +413,8 @@ class DlListas extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut iNumero_dl de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Numero_dl de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
@@ -427,12 +427,12 @@ class DlListas extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sAbr_r de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Abr_r de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosAbr_r()
+    private function getDatosAbr_r(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'abr_r'));
@@ -441,8 +441,8 @@ class DlListas extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut iNumero_r de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Numero_r de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */

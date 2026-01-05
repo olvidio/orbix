@@ -5,7 +5,6 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use misas\domain\entity\InicialesSacd;
-use personas\legacy\GestorPersonaSacd;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;

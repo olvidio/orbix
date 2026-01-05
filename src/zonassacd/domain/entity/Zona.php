@@ -1,172 +1,104 @@
 <?php
 
 namespace src\zonassacd\domain\entity;
+
 use core\DatosCampo;
 use core\Set;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\shared\domain\traits\Hydratable;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
+use src\zonassacd\domain\value_objects\NombreZona;
 
-/**
- * Clase que implementa la entidad zonas
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 24/12/2025
- */
+
 class Zona
 {
+    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_zona de Zona
-     *
-     * @var int
-     */
-    private int $iid_zona;
-    /**
-     * Nombre_zona de Zona
-     *
-     * @var string
-     */
-    private string $snombre_zona;
-    /**
-     * Orden de Zona
-     *
-     * @var int|null
-     */
-    private int|null $iorden = null;
-    /**
-     * Id_grupo de Zona
-     *
-     * @var int|null
-     */
-    private int|null $iid_grupo = null;
-    /**
-     * Id_nom de Zona
-     *
-     * @var int|null
-     */
-    private int|null $iid_nom = null;
+
+    private int $id_zona;
+
+    private NombreZona $nombre_zona;
+
+    private int|null $orden = null;
+
+    private int|null $id_grupo = null;
+
+    private int|null $id_nom = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Zona
-     */
-    public function setAllAttributes(array $aDatos): Zona
-    {
-        if (array_key_exists('id_zona', $aDatos)) {
-            $this->setId_zona($aDatos['id_zona']);
-        }
-        if (array_key_exists('nombre_zona', $aDatos)) {
-            $this->setNombre_zona($aDatos['nombre_zona']);
-        }
-        if (array_key_exists('orden', $aDatos)) {
-            $this->setOrden($aDatos['orden']);
-        }
-        if (array_key_exists('id_grupo', $aDatos)) {
-            $this->setId_grupo($aDatos['id_grupo']);
-        }
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom($aDatos['id_nom']);
-        }
-        return $this;
-    }
-
-    /**
-     *
-     * @return int $iid_zona
-     */
     public function getId_zona(): int
     {
-        return $this->iid_zona;
+        return $this->id_zona;
     }
 
-    /**
-     *
-     * @param int $iid_zona
-     */
-    public function setId_zona(int $iid_zona): void
+    public function setId_zona(int $id_zona): void
     {
-        $this->iid_zona = $iid_zona;
+        $this->id_zona = $id_zona;
+    }
+
+    public function getNombreZonaVo(): NombreZona
+    {
+        return $this->nombre_zona;
+    }
+
+    public function setNombreZonaVo(NombreZona|string $oNombreZona): void
+    {
+        $this->nombre_zona = $oNombreZona instanceof NombreZona? $oNombreZona : new NombreZona($oNombreZona);
     }
 
     /**
-     *
-     * @return string $snombre_zona
+     * @deprecated use getNombreZonaVo()
      */
     public function getNombre_zona(): string
     {
-        return $this->snombre_zona;
+        return $this->nombre_zona->value();
     }
 
     /**
-     *
-     * @param string $snombre_zona
+     * @deprecated use setNombreZonaVo()
      */
-    public function setNombre_zona(string $snombre_zona): void
+    public function setNombre_zona(string $nombre_zona): void
     {
-        $this->snombre_zona = $snombre_zona;
+        $this->nombre_zona = new NombreZona($nombre_zona);
     }
 
-    /**
-     *
-     * @return int|null $iorden
-     */
+
     public function getOrden(): ?int
     {
-        return $this->iorden;
+        return $this->orden;
     }
 
-    /**
-     *
-     * @param int|null $iorden
-     */
-    public function setOrden(?int $iorden = null): void
+
+    public function setOrden(?int $orden = null): void
     {
-        $this->iorden = $iorden;
+        $this->orden = $orden;
     }
 
-    /**
-     *
-     * @return int|null $iid_grupo
-     */
+
     public function getId_grupo(): ?int
     {
-        return $this->iid_grupo;
+        return $this->id_grupo;
     }
 
-    /**
-     *
-     * @param int|null $iid_grupo
-     */
-    public function setId_grupo(?int $iid_grupo = null): void
+
+    public function setId_grupo(?int $id_grupo = null): void
     {
-        $this->iid_grupo = $iid_grupo;
+        $this->id_grupo = $id_grupo;
     }
 
-    /**
-     *
-     * @return int|null $iid_nom
-     */
+
     public function getId_nom(): ?int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
-    /**
-     *
-     * @param int|null $iid_nom
-     */
-    public function setId_nom(?int $iid_nom = null): void
+
+    public function setId_nom(?int $id_nom = null): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -174,7 +106,8 @@ class Zona
     {
         return 'id_zona';
     }
- function getDatosCampos(): array
+
+    public function getDatosCampos(): array
     {
         $oProfesorSet = new Set();
         $oProfesorSet->add($this->getDatosNombre_zona());
@@ -185,12 +118,12 @@ class Zona
     }
 
     /**
-     * Recupera les propietats de l'atribut snombre_zona de Zona
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo nombre_zona de Zona
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosNombre_zona()
+    private function getDatosNombre_zona(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nombre_zona');
@@ -203,12 +136,12 @@ class Zona
     }
 
     /**
-     * Recupera les propietats de l'atribut iorden de Zona
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo orden de Zona
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosOrden()
+    private function getDatosOrden(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('orden');
@@ -221,12 +154,12 @@ class Zona
     }
 
     /**
-     * Recupera les propietats de l'atribut iid_grupo de Zona
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo id_grupo de Zona
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosId_grupo()
+    private function getDatosId_grupo(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_grupo');
@@ -241,12 +174,12 @@ class Zona
     }
 
     /**
-     * Recupera les propietats de l'atribut iid_nom de Zona
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo id_nom de Zona
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosId_nom()
+    private function getDatosId_nom(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_nom');

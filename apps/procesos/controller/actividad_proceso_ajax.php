@@ -1,11 +1,10 @@
 <?php
 
 use core\ConfigGlobal;
-use procesos\model\entity\ActividadFase;
-use procesos\model\entity\ActividadProcesoTarea;
-use procesos\model\entity\ActividadTarea;
-use procesos\model\entity\GestorActividadProcesoTarea;
-use procesos\model\entity\GestorTareaProceso;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
+use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use function core\is_true;
 
 
@@ -22,19 +21,22 @@ $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
 switch ($Qque) {
     case 'generar':
-        $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
-        $oGestorActividadProcesoTarea->generarProceso($Qid_activ, ConfigGlobal::mi_sfsv(), TRUE);
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $ActividadProcesoTareaRepository->generarProceso($Qid_activ, ConfigGlobal::mi_sfsv(), TRUE);
         break;
     case 'get':
         $aWhere = [
             'id_activ' => $Qid_activ,
             '_ordre' => 'id_fase',
         ];
-        $GesActividadProceso = new GestorActividadProcesoTarea();
-        $oLista = $GesActividadProceso->getActividadProcesoTareas($aWhere);
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $oLista = $ActividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
         $txt = '<table>';
         $txt .= '<tr><th>' . _("ok") . '</th><th>' . _("fase (tarea)") . '</th><th>' . _("responsable") . '</th><th>' . _("observaciones") . '</th><th></th></tr>';
         $i = 0;
+        $ActividadFseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+        $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
         foreach ($oLista as $oActividadProcesoTarea) {
             $id_item = $oActividadProcesoTarea->getId_item();
             $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
@@ -43,17 +45,16 @@ switch ($Qque) {
             $completado = $oActividadProcesoTarea->getCompletado();
             $observ = $oActividadProcesoTarea->getObserv();
 
-            $oFase = new ActividadFase($id_fase);
+            $oFase = $ActividadFseRepository->findById($id_fase);
             $fase = $oFase->getDesc_fase();
             if (empty($fase)) {
                 continue;
             } // No existe
-            $oTarea = new ActividadTarea($id_tarea);
+            $oTarea = $ActividadTareaRepository->findById($id_tarea);
             $tarea = $oTarea->getDesc_tarea();
             $chk = is_true($completado)? 'checked' : '';
             //buscar of responsable
-            $GesTareaProceso = new GestorTareaProceso();
-            $cTareasProceso = $GesTareaProceso->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso,
+            $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso,
                 'id_fase' => $id_fase,
                 'id_tarea' => $id_tarea]);
             // sólo debería haber uno
@@ -87,7 +88,7 @@ switch ($Qque) {
             $txt .= "<td>$of_responsable_txt</td>";
             $txt .= $obs;
             if (empty($of_responsable_txt) || ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt))) {
-                $txt .= "<td><input type='button' name='b_guardar' value='" . _("guardar") . "' onclick='fnjs_guardar($id_item);'></td>";
+                $txt .= "<td><input type='button' name='b_guardar' value='" . _("guardar") . "' onclick='fnjs_guardar($id_item)'></td>";
             } else {
                 $txt .= '<td></td>';
             }
@@ -101,15 +102,15 @@ switch ($Qque) {
         $Qcompletado = (string)filter_input(INPUT_POST, 'completado');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
         $Qforce = (string)filter_input(INPUT_POST, 'force');
-
-        $oFicha = new ActividadProcesoTarea(array('id_item' => $Qid_item));
-        $oFicha->DBCarregar(); // perque tingui tots els valors, y no esbori al grabar.
+        $ProcesoActividadService = $GLOBALS['container']->get(ProcesoActividadService::class);
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $oFicha = $ActividadProcesoTareaRepository->findById($Qid_item);
         $oFicha->setCompletado($Qcompletado);
         $oFicha->setObserv($Qobserv);
-        $oFicha->setForce($Qforce);
-        if ($oFicha->DBGuardar() === false) {
+        //$oFicha->setForce($Qforce); // Esto no parece existir en la entidad nueva, pero ProcesoActividadService puede manejar force
+        if ($ProcesoActividadService->guardar($oFicha) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oFicha->getErrorTxt();
+            echo "\n" . $ActividadProcesoTareaRepository->getErrorTxt();
         }
         break;
 }

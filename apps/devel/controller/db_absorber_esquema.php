@@ -83,7 +83,7 @@ $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 
 $tabla = 'u_cdc_dl';
 // quito los campos dl y region para que se llenen con el default de la dl destino.
-$campos = 'tipo_ubi, id_ubi, nombre_ubi, pais, status, f_status, sv, sf, tipo_casa, plazas, plazas_min, num_sacd, biblioteca, observ';
+$campos = 'tipo_ubi, id_ubi, nombre_ubi, pais, active, f_active, sv, sf, tipo_casa, plazas, plazas_min, num_sacd, biblioteca, observ';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'u_dir_cdc_dl';
 $campos = 'id_direccion, direccion, c_p, poblacion, provincia, a_p, pais, f_direccion, observ, cp_dcha, latitud, longitud, plano_doc, plano_extension, plano_nom, nom_sede';
@@ -143,7 +143,7 @@ $tabla = 'd_docencia_stgr';
 $campos = 'id_nom, id_asignatura, id_activ, tipo, curso_inicio, acta';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'd_dossiers_abiertos';
-$campos = 'tabla, id_pau, id_tipo_dossier, f_ini, f_camb_dossier, status_dossier, f_status';
+$campos = 'tabla, id_pau, id_tipo_dossier, f_ini, f_camb_dossier, active, f_active';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'd_matriculas_activ_dl';
 $campos = 'id_activ, id_asignatura, id_nom, id_situacion, preceptor, id_nivel, nota_num, nota_max, id_preceptor, acta';
@@ -220,7 +220,7 @@ $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'u_centros_dl';
 // quito el campo dl, region para que se llene con el default de la dl destino.
 // quite el id_zona para dejarlo null.
-$campos = 'tipo_ubi, id_ubi, nombre_ubi, pais, status, f_status, sv, sf, tipo_ctr, tipo_labor, cdc, id_ctr_padre, n_buzon, num_pi, num_cartas, observ, num_habit_indiv, plazas, sede, num_cartas_mensuales';
+$campos = 'tipo_ubi, id_ubi, nombre_ubi, pais, active, f_active, sv, sf, tipo_ctr, tipo_labor, cdc, id_ctr_padre, n_buzon, num_pi, num_cartas, observ, num_habit_indiv, plazas, sede, num_cartas_mensuales';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'u_dir_ctr_dl';
 $campos = 'id_direccion, direccion, c_p, poblacion, provincia, a_p, pais, f_direccion, observ, cp_dcha, latitud, longitud, plano_doc, plano_extension, plano_nom, nom_sede';
@@ -315,7 +315,7 @@ $oAlterSchema->insertarCargos();
 // Poner la dl en inactivo:
 $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $oDelegacion = $DelegacionRepository->findById($id_dl_old);
-$oDelegacion->setStatus(FALSE);
+$oDelegacion->isActive(FALSE);
 if ($DelegacionRepository->Guardar($oDelegacion) === false) {
     $error_txt = _("hay un error, no se ha guardado");
     $error_txt .= "\n" . $DelegacionRepository->getErrorTxt();

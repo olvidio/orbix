@@ -110,8 +110,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Local = new Local();
-            $Local->setAllAttributes($aDatos);
+            $Local = Local::fromArray($aDatos);
             $LocalSet->add($Local);
         }
         return $LocalSet->getTot();
@@ -121,7 +120,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 
     public function Eliminar(Local $Local): bool
     {
-        $id_locale = $Local->getId_locale();
+        $id_locale = $Local->getIdLocaleVo();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_locale = '$id_locale'";
@@ -134,15 +133,15 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
      */
     public function Guardar(Local $Local): bool
     {
-        $id_locale = $Local->getId_locale();
+        $id_locale = $Local->getIdLocaleVo();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_locale);
 
         $aDatos = [];
-        $aDatos['nom_locale'] = $Local->getNom_locale();
-        $aDatos['idioma'] = $Local->getIdioma();
-        $aDatos['nom_idioma'] = $Local->getNom_idioma();
+        $aDatos['nom_locale'] = $Local->getNomLocaleVo();
+        $aDatos['idioma'] = $Local->getIdiomaVo();
+        $aDatos['nom_idioma'] = $Local->getNomIdiomaVo();
         $aDatos['activo'] = $Local->isActivo();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
@@ -163,7 +162,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_locale'] = $Local->getId_locale();
+            $aDatos['id_locale'] = $Local->getIdLocaleVo();
             $campos = "(id_locale,nom_locale,idioma,nom_idioma,activo)";
             $valores = "(:id_locale,:nom_locale,:idioma,:nom_idioma,:activo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
@@ -211,6 +210,6 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
         if (empty($aDatos)) {
             return null;
         }
-        return (new Local())->setAllAttributes($aDatos);
+        return Local::fromArray($aDatos);
     }
 }

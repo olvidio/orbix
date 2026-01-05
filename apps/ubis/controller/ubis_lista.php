@@ -53,8 +53,8 @@ switch ($miSfsv) {
 	    exit ($err_switch);
 }
 
-$aWhereCasa['status'] = 't';
-$aWhereCtr['status'] = 't';
+$aWhereCasa['active'] = 't';
+$aWhereCtr['active'] = 't';
 $aWhereCtr['cdc'] = 't';
 
 $a_ubis = [];

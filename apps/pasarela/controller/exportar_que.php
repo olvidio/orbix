@@ -120,7 +120,7 @@ $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class)
 $aCasas = $CasaDlRepository->getArrayCasas();
 $a_id_ubi = array_keys($aCasas);
 $csv_id_ubi = implode(',', $a_id_ubi);
-$condicion = "WHERE status='t' AND id_ubi IN($csv_id_ubi)";
+$condicion = "WHERE active='t' AND id_ubi IN($csv_id_ubi)";
 $oForm->setCasas('casa');
 $oForm->setPosiblesCasas($condicion);
 

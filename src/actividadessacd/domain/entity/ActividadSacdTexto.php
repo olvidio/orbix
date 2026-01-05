@@ -1,134 +1,128 @@
 <?php
 
 namespace src\actividadessacd\domain\entity;
-/**
- * Clase que implementa la entidad a_sacd_textos
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 19/12/2025
- */
-class ActividadSacdTexto {
 
-	/* ATRIBUTOS ----------------------------------------------------------------- */
+use src\actividadessacd\domain\value_objects\SacdTextoClave;
+use src\actividadessacd\domain\value_objects\SacdTextoTexto;
+use src\encargossacd\domain\value_objects\IdiomaCode;
+use src\shared\domain\traits\Hydratable;
 
-	/**
-	 * Id_item de ActividadSacdTexto
-	 *
-	 * @var int
-	 */
-	 private int $iid_item;
-	/**
-	 * Idioma de ActividadSacdTexto
-	 *
-	 * @var string
-	 */
-	 private string $sidioma;
-	/**
-	 * Clave de ActividadSacdTexto
-	 *
-	 * @var string
-	 */
-	 private string $sclave;
-	/**
-	 * Texto de ActividadSacdTexto
-	 *
-	 * @var string|null
-	 */
-	 private string|null $stexto = null;
+class ActividadSacdTexto
+{
+    use Hydratable;
 
-	/* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-	/**
-	 * Establece el valor de todos los atributos
-	 *
-	 * @param array $aDatos
-	 * @return ActividadSacdTexto
-	 */
-	public function setAllAttributes(array $aDatos): ActividadSacdTexto
-	{
-		if (array_key_exists('id_item',$aDatos))
-		{
-			$this->setId_item($aDatos['id_item']);
-		}
-		if (array_key_exists('idioma',$aDatos))
-		{
-			$this->setIdioma($aDatos['idioma']);
-		}
-		if (array_key_exists('clave',$aDatos))
-		{
-			$this->setClave($aDatos['clave']);
-		}
-		if (array_key_exists('texto',$aDatos))
-		{
-			$this->setTexto($aDatos['texto']);
-		}
-		return $this;
-	}
-	/**
-	 *
-	 * @return int $iid_item
-	 */
-	public function getId_item(): int
-	{
-		return $this->iid_item;
-	}
-	/**
-	 *
-	 * @param int $iid_item
-	 */
-	public function setId_item(int $iid_item): void
-	{
-		$this->iid_item = $iid_item;
-	}
-	/**
-	 *
-	 * @return string $sidioma
-	 */
-	public function getIdioma(): string
-	{
-		return $this->sidioma;
-	}
-	/**
-	 *
-	 * @param string $sidioma
-	 */
-	public function setIdioma(string $sidioma): void
-	{
-		$this->sidioma = $sidioma;
-	}
-	/**
-	 *
-	 * @return string $sclave
-	 */
-	public function getClave(): string
-	{
-		return $this->sclave;
-	}
-	/**
-	 *
-	 * @param string $sclave
-	 */
-	public function setClave(string $sclave): void
-	{
-		$this->sclave = $sclave;
-	}
-	/**
-	 *
-	 * @return string|null $stexto
-	 */
-	public function getTexto(): ?string
-	{
-		return $this->stexto;
-	}
-	/**
-	 *
-	 * @param string|null $stexto
-	 */
-	public function setTexto(?string $stexto = null): void
-	{
-		$this->stexto = $stexto;
-	}
+    private int $id_item;
+    private string $idioma;
+    private string $clave;
+    private string|null $texto = null;
+
+    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getId_item(): int
+    {
+        return $this->id_item;
+    }
+
+    public function setId_item(int $id_item): void
+    {
+        $this->id_item = $id_item;
+    }
+
+    /**
+     * @deprecated use getIdiomaVo()
+     */
+    public function getIdioma(): string
+    {
+        return $this->idioma;
+    }
+
+    /**
+     * @deprecated use setIdiomaVo()
+     */
+    public function setIdioma(string $sidioma): void
+    {
+        $this->idioma = $sidioma;
+    }
+
+    /**
+     * @return IdiomaCode
+     */
+    public function getIdiomaVo(): IdiomaCode
+    {
+        return new IdiomaCode($this->idioma);
+    }
+
+    /**
+     * @param IdiomaCode $oIdiomaCode
+     */
+    public function setIdiomaVo(IdiomaCode $oIdiomaCode): void
+    {
+        $this->idioma = $oIdiomaCode->value();
+    }
+
+    /**
+     * @deprecated use getClaveVo()
+     */
+    public function getClave(): string
+    {
+        return $this->clave;
+    }
+
+    /**
+     * @deprecated use setClaveVo()
+     */
+    public function setClave(string $sclave): void
+    {
+        $this->clave = $sclave;
+    }
+
+    /**
+     * @return SacdTextoClave
+     */
+    public function getClaveVo(): SacdTextoClave
+    {
+        return new SacdTextoClave($this->clave);
+    }
+
+    /**
+     * @param SacdTextoClave $oSacdTextoClave
+     */
+    public function setClaveVo(SacdTextoClave $oSacdTextoClave): void
+    {
+        $this->clave = $oSacdTextoClave->value();
+    }
+
+    /**
+     * @deprecated use getTextoVo()
+     */
+    public function getTexto(): ?string
+    {
+        return $this->texto;
+    }
+
+    /**
+     * @deprecated use setTextoVo()
+     */
+    public function setTexto(?string $stexto = null): void
+    {
+        $this->texto = $stexto;
+    }
+
+    /**
+     * @return SacdTextoTexto|null
+     */
+    public function getTextoVo(): ?SacdTextoTexto
+    {
+        return SacdTextoTexto::fromNullableString($this->texto);
+    }
+
+    /**
+     * @param SacdTextoTexto|null $oSacdTextoTexto
+     */
+    public function setTextoVo(?SacdTextoTexto $oSacdTextoTexto = null): void
+    {
+        $this->texto = $oSacdTextoTexto?->value();
+    }
 }

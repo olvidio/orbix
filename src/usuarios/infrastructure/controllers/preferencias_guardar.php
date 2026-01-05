@@ -23,18 +23,18 @@ if ($Qque === "slickGrid") {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo(new TipoPreferencia($tipo));
+        $oPreferencia->setTipoVo(new TipoPreferencia($tipo));
     }
     // si no se han cambiado las columnas visibles, pongo las actuales (sino las borra).
     $aPrefs = json_decode($QsPrefs, true, 512, JSON_THROW_ON_ERROR);
     if ($aPrefs['colVisible'] === 'noCambia') {
-        $sPrefs_old = $oPreferencia->getPreferencia();
+        $sPrefs_old = $oPreferencia->getPreferenciaVo();
         $aPrefs_old = json_decode($sPrefs_old, true);
         $aPrefs['colVisible'] = empty($aPrefs_old['colVisible']) ? '' : $aPrefs_old['colVisible'];
         $QsPrefs = json_encode($aPrefs, true);
     }
 
-    $oPreferencia->setPreferencia(new ValorPreferencia($QsPrefs));
+    $oPreferencia->setPreferenciaVo(new ValorPreferencia($QsPrefs));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
@@ -46,9 +46,9 @@ if ($Qque === "slickGrid") {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo(new TipoPreferencia('layout'));
+        $oPreferencia->setTipoVo(new TipoPreferencia('layout'));
     }
-    $oPreferencia->setPreferencia(new ValorPreferencia($Qlayout));
+    $oPreferencia->setPreferenciaVo(new ValorPreferencia($Qlayout));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
@@ -66,9 +66,9 @@ if ($Qque === "slickGrid") {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo(new TipoPreferencia('inicio'));
+        $oPreferencia->setTipoVo(new TipoPreferencia('inicio'));
     }
-    $oPreferencia->setPreferencia(new ValorPreferencia($inicio));
+    $oPreferencia->setPreferenciaVo(new ValorPreferencia($inicio));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
@@ -82,9 +82,9 @@ if ($Qque === "slickGrid") {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo(new TipoPreferencia('estilo'));
+        $oPreferencia->setTipoVo(new TipoPreferencia('estilo'));
     }
-    $oPreferencia->setPreferencia(new ValorPreferencia($estilo));
+    $oPreferencia->setPreferenciaVo(new ValorPreferencia($estilo));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
@@ -96,9 +96,9 @@ if ($Qque === "slickGrid") {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo(new TipoPreferencia('tabla_presentacion'));
+        $oPreferencia->setTipoVo(new TipoPreferencia('tabla_presentacion'));
     }
-    $oPreferencia->setPreferencia(new ValorPreferencia($Qtipo_tabla));
+    $oPreferencia->setPreferenciaVo(new ValorPreferencia($Qtipo_tabla));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
@@ -110,9 +110,9 @@ if ($Qque === "slickGrid") {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo(new TipoPreferencia('ordenApellidos'));
+        $oPreferencia->setTipoVo(new TipoPreferencia('ordenApellidos'));
     }
-    $oPreferencia->setPreferencia(new ValorPreferencia($QordenApellidos));
+    $oPreferencia->setPreferenciaVo(new ValorPreferencia($QordenApellidos));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
@@ -125,9 +125,9 @@ if ($Qque === "slickGrid") {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo(new TipoPreferencia('idioma'));
+        $oPreferencia->setTipoVo(new TipoPreferencia('idioma'));
     }
-    $oPreferencia->setPreferencia(new ValorPreferencia($Qidioma_nou));
+    $oPreferencia->setPreferenciaVo(new ValorPreferencia($Qidioma_nou));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
@@ -142,9 +142,9 @@ if ($Qque === "slickGrid") {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo(new TipoPreferencia('zona_horaria'));
+        $oPreferencia->setTipoVo(new TipoPreferencia('zona_horaria'));
     }
-    $oPreferencia->setPreferencia(new ValorPreferencia($zona_horaria_txt));
+    $oPreferencia->setPreferenciaVo(new ValorPreferencia($zona_horaria_txt));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();

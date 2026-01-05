@@ -1,17 +1,15 @@
 <?php
 
 use core\ConfigGlobal;
-use procesos\model\entity\ActividadFase;
-use procesos\model\entity\ActividadTarea;
-use procesos\model\entity\GestorActividadProcesoTarea;
-use procesos\model\entity\GestorActividadTarea;
-use procesos\model\entity\GestorTareaProceso;
-use procesos\model\entity\TareaProceso;
-use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\StatusId;
 use src\menus\domain\PermisoMenu;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
+use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use web\Desplegable;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -23,12 +21,12 @@ require_once("apps/core/global_object.inc");
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-function dibujar_tree(array $aPadres)
+function dibujar_tree(array $aPadres): string
 {
     $html_tree = '<div id="tree">';
     ksort($aPadres);
     // supongo que el primero siempre es 0, (la fase previa)
-    foreach ($aPadres[0] as $i => $padre) {
+    foreach ($aPadres[0] as $padre) {
         $id_fase_i = $padre['id'];
         $nom = $padre['nom'];
         // si tiene hijos: branch
@@ -52,7 +50,7 @@ function dibujar_tree(array $aPadres)
 function dibujar2($aPadres, $id_fase)
 {
     $html = '';
-    foreach ($aPadres[$id_fase] as $i => $padre) {
+    foreach ($aPadres[$id_fase] as $padre) {
         $id_fase_i = $padre['id'];
         $nom = $padre['nom'];
         // si tiene hijos: branch
@@ -77,19 +75,19 @@ switch ($Qque) {
         // para cada fase del proceso
         // mirar que actividades les falta y añadir.
         $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
-        $GesTareaPorceso = new GestorTareaProceso();
-        $cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso]);
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso]);
         $i = 0;
-        $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
         foreach ($cTareasProceso as $oTareaProceso) {
             $i++;
             $id_item = $oTareaProceso->getId_item();
             $id_fase = $oTareaProceso->getId_fase();
             $id_tarea = $oTareaProceso->getId_tarea();
-            $gesActividadProcesoTarea->añadirFaseTarea($Qid_tipo_proceso, $id_fase, $id_tarea);
+            $ActividadProcesoTareaRepository->añadirFaseTarea($Qid_tipo_proceso, $id_fase, $id_tarea);
         }
         // buscar las fases a eliminar
-        $gesActividadProcesoTarea->borrarFaseTareaInexistente($Qid_tipo_proceso, $id_fase, $id_tarea);
+        $ActividadProcesoTareaRepository->borrarFaseTareaInexistente($Qid_tipo_proceso, $id_fase, $id_tarea);
 
         break;
     case 'clonar':
@@ -97,14 +95,13 @@ switch ($Qque) {
         $Qid_tipo_proceso_ref = (integer)filter_input(INPUT_POST, 'id_tipo_proceso_ref');
 
         // borrar lo anterior:
-        $GesTareaPorceso = new GestorTareaProceso();
-        $cTareasProceso = $GesTareaPorceso->getTareasProceso(array('id_tipo_proceso' => $Qid_tipo_proceso));
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        $cTareasProceso = $TareaProcesoRepository->getTareasProceso(array('id_tipo_proceso' => $Qid_tipo_proceso));
         foreach ($cTareasProceso as $oTareaProceso) {
-            $oTareaProceso->DBEliminar();
+            $TareaProcesoRepository->Eliminar($oTareaProceso);
         }
         // clonar
-        $GesTareaPorceso = new GestorTareaProceso();
-        $cTareasProceso = $GesTareaPorceso->getTareasProceso(array('id_tipo_proceso' => $Qid_tipo_proceso_ref));
+        $cTareasProceso = $TareaProcesoRepository->getTareasProceso(array('id_tipo_proceso' => $Qid_tipo_proceso_ref));
         foreach ($cTareasProceso as $oTareaProceso) {
             $id_fase = $oTareaProceso->getId_fase();
             $id_tarea = $oTareaProceso->getId_tarea();
@@ -112,21 +109,19 @@ switch ($Qque) {
             $id_of_responsable = $oTareaProceso->getId_of_responsable();
             $json_fases_previas = $oTareaProceso->getJson_fases_previas();
 
-            $oTareaProcesoNew = new TareaProceso();
-            $oTareaProcesoNew->setId_tipo_proceso($Qid_tipo_proceso,);
-            $oTareaProcesoNew->setId_fase($id_fase);
-            $oTareaProcesoNew->setId_tarea($id_tarea);
-            $oTareaProcesoNew->setStatus($status);
-            $oTareaProcesoNew->setId_of_responsable($id_of_responsable);
-            $oTareaProcesoNew->setJson_fases_previas($json_fases_previas);
-            $oTareaProcesoNew->DBGuardar();
+            $oTareaProceso->setId_tipo_proceso($Qid_tipo_proceso,);
+            $newId_item = $TareaProcesoRepository->getNewId();
+            $oTareaProceso->setId_item($newId_item);
+            $TareaProcesoRepository->Guardar($oTareaProceso);
         }
     // Omito el break, para que a haga el get.
     case 'get':
+        if (!isset($TareaProcesoRepository)) {
+            $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        }
         if (!isset($Qid_tipo_proceso)) {
             $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
-            $GesTareaPorceso = new GestorTareaProceso();
-            $cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso, '_ordre' => 'status,id_of_responsable']);
+            $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso, '_ordre' => 'status,id_of_responsable']);
         }
         $a_status = StatusId::getArrayStatus();
 
@@ -158,6 +153,8 @@ switch ($Qque) {
 
         $j = 0;
         $aPadres = [];
+        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+        $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
         foreach ($cTareasProceso as $oTareaProceso) {
             $j++;
             $clase = ($j % 2 == 0) ? 'tono2' : 'tono4';
@@ -168,16 +165,16 @@ switch ($Qque) {
             $id_of_responsable = $oTareaProceso->getId_of_responsable();
             $responsable = empty($aOpcionesOficinas[$id_of_responsable]) ? '' : $aOpcionesOficinas[$id_of_responsable];
 
-            $oFase = new ActividadFase($id_fase);
+            $oFase = $ActividadFaseRepository->findById($id_fase);
             $fase = $oFase->getDesc_fase();
-            $sf = ($oFase->getSf()) ? 2 : 0;
-            $sv = ($oFase->getSv()) ? 1 : 0;
+            $sf = ($oFase->isSf()) ? 2 : 0;
+            $sv = ($oFase->isSv()) ? 1 : 0;
             //ojo, que puede ser las dos a la vez
             if (!(($soy & $sf) || ($soy & $sv))) {
                 $j--;
                 continue;
             }
-            $oTarea = new ActividadTarea($oTareaProceso->getId_tarea());
+            $oTarea = $ActividadTareaRepository->findById($oTareaProceso->getId_tarea());
             $tarea = $oTarea->getDesc_tarea();
             $tarea_txt = empty($tarea) ? '' : "($tarea)";
             $fase_previa = '';
@@ -189,7 +186,7 @@ switch ($Qque) {
                 if (empty($id_fase_previa)) continue;
                 //$id_tarea_previa = $oFaseP['id_tarea'];
                 //$mensaje_requisito = $oFaseP['mensaje'];
-                $oFase_previa = new ActividadFase($id_fase_previa);
+                $oFase_previa = $ActividadFaseRepository->findById($id_fase_previa);
                 $fase_previa .= empty($fase_previa) ? '' : ' ' . _("y") . ' ';
                 $fase_previa .= $oFase_previa->getDesc_fase();
                 $tarea_previa_txt = empty($tarea_previa) ? '' : "($tarea_previa)";
@@ -234,12 +231,14 @@ switch ($Qque) {
             }
         }
 
-        $GesTareaPorceso = new GestorTareaProceso();
-        $cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso, '_ordre' => 'status,id_of_responsable']);
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso, '_ordre' => 'status,id_of_responsable']);
         $txt = '<table>';
         $txt .= '<tr><th>' . _("status") . '</th><th>' . _("responsable") . '</th>';
         $txt .= '<th colspan=3>' . _("fase - tarea") . '</th><th>' . _("modificar") . '</th><th>' . _("eliminar") . '</th></tr>';
         $i = 0;
+        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+        $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
         foreach ($cTareasProceso as $oTareaProceso) {
             $i++;
             $clase = ($i % 2 == 0) ? 'tono2' : 'tono4';
@@ -249,16 +248,18 @@ switch ($Qque) {
             $id_of_responsable = $oTareaProceso->getId_of_responsable();
             $responsable = empty($aOpcionesOficinas[$id_of_responsable]) ? '' : $aOpcionesOficinas[$id_of_responsable];
 
-            $oFase = new ActividadFase($oTareaProceso->getId_fase());
+            $id_fase = $oTareaProceso->getId_fase();
+            $oFase = $ActividadFaseRepository->findById($id_fase);
             $fase = $oFase->getDesc_fase();
-            $sf = ($oFase->getSf()) ? 2 : 0;
-            $sv = ($oFase->getSv()) ? 1 : 0;
+            $sf = ($oFase->isSf()) ? 2 : 0;
+            $sv = ($oFase->isSv()) ? 1 : 0;
             //ojo, que puede ser las dos a la vez
             if (!(($soy & $sf) || ($soy & $sv))) {
                 $i--;
                 continue;
             }
-            $oTarea = new ActividadTarea($oTareaProceso->getId_tarea());
+            $id_tarea = $oTareaProceso->getId_tarea();
+            $oTarea = $ActividadTareaRepository->findById($id_tarea);
             $tarea = $oTarea->getDesc_tarea();
             $tarea_txt = empty($tarea) ? '' : "($tarea)";
             $fase_previa = '';
@@ -269,7 +270,7 @@ switch ($Qque) {
                 if (empty($id_fase_previa)) continue;
                 //$id_tarea_previa = $oFaseP['id_tarea'];
                 //$mensaje_requisito = $oFaseP['mensaje'];
-                $oFase_previa = new ActividadFase($id_fase_previa);
+                $oFase_previa = $ActividadFaseRepository->findById($id_fase_previa);
                 $fase_previa .= empty($fase_previa) ? '' : ' ' . _("y") . ' ';
                 $fase_previa .= $oFase_previa->getDesc_fase();
                 $tarea_previa_txt = empty($tarea_previa) ? '' : "($tarea_previa)";
@@ -288,19 +289,22 @@ switch ($Qque) {
         $Qacc = (string)filter_input(INPUT_POST, 'acc');
         $Qvalor_depende = (string)filter_input(INPUT_POST, 'valor_depende');
         //caso de actualizar el campo depende
-        if ($Qacc == '#id_tarea') {
-            $oDepende = new GestorActividadTarea();
-            $oDesplegable = $oDepende->getListaActividadTareas($Qvalor_depende);
+        $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
+        if ($Qacc === '#id_tarea') {
+            $aOpciones = $ActividadTareaRepository->getArrayActividadTareas($Qvalor_depende);
+            $oDesplegable = new Desplegable();
+            $oDesplegable->setOpciones($aOpciones);
+            $oDesplegable->setBlanco(true);
             if (is_object($oDesplegable)) {
-                $oDesplegable->setBlanco(true);
                 echo $oDesplegable->options();
             } else {
                 echo "";
             }
         }
-        if ($Qacc == '#id_tarea_previa') {
-            $oDepende = new GestorActividadTarea();
-            $oDesplegable = $oDepende->getListaActividadTareas($Qvalor_depende);
+        if ($Qacc === '#id_tarea_previa') {
+            $aOpciones = $ActividadTareaRepository->getArrayActividadTareas($Qvalor_depende);
+            $oDesplegable = new Desplegable();
+            $oDesplegable->setOpciones($aOpciones);
             $oDesplegable->setBlanco(true);
             echo $oDesplegable->options();
         }
@@ -329,24 +333,26 @@ switch ($Qque) {
         }
         if (empty($Qid_tarea)) $Qid_tarea = 0; // no puede ser NULL.
 
-        $oTareaProceso = new TareaProceso(array('id_item' => $Qid_item));
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        $oTareaProceso = $TareaProcesoRepository->findById($Qid_item);
         $oTareaProceso->setId_tipo_proceso($Qid_tipo_proceso);
         $oTareaProceso->setStatus($Qstatus);
         $oTareaProceso->setId_of_responsable($Qid_of_responsable);
         $oTareaProceso->setId_fase($Qid_fase);
         $oTareaProceso->setId_tarea($Qid_tarea);
         $oTareaProceso->setJson_fases_previas($aFases_previas);
-        if ($oTareaProceso->DBGuardar() === false) {
+        if ($TareaProcesoRepository->Guardar($oTareaProceso) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oTareaProceso->getErrorTxt();
+            echo "\n" . $TareaProcesoRepository->getErrorTxt();
         }
         break;
     case 'eliminar':
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-        $oTareaProceso = new TareaProceso(array('id_item' => $Qid_item));
-        if ($oTareaProceso->DBEliminar() === false) {
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        $oTareaProceso = $TareaProcesoRepository->findById($Qid_item);
+        if ($TareaProcesoRepository->Eliminar($oTareaProceso) === false) {
             echo _("hay un error, no se ha eliminado");
-            echo "\n" . $oTareaProceso->getErrorTxt();
+            echo "\n" . $TareaProcesoRepository->getErrorTxt();
         }
         break;
 }

@@ -95,8 +95,7 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['f_juramento'] = (new ConverterDate('date', $aDatos['f_juramento']))->fromPg();
-            $ProfesorJuramento = new ProfesorJuramento();
-            $ProfesorJuramento->setAllAttributes($aDatos);
+            $ProfesorJuramento = ProfesorJuramento::fromArray($aDatos);
             $ProfesorJuramentoSet->add($ProfesorJuramento);
         }
         return $ProfesorJuramentoSet->getTot();
@@ -191,7 +190,7 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
         if (empty($aDatos)) {
             return null;
         }
-        return (new ProfesorJuramento())->setAllAttributes($aDatos);
+        return ProfesorJuramento::fromArray($aDatos);
     }
 
     public function getNewId(): int

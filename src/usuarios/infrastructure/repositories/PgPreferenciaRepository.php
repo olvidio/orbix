@@ -94,8 +94,7 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Preferencia = new Preferencia();
-            $Preferencia->setAllAttributes($aDatos);
+            $Preferencia = Preferencia::fromArray($aDatos);
             $PreferenciaSet->add($Preferencia);
         }
         return $PreferenciaSet->getTot();
@@ -106,7 +105,7 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
     public function Eliminar(Preferencia $Preferencia): bool
     {
         $id_usuario = $Preferencia->getId_usuario();
-        $tipo = $Preferencia->getTipo();
+        $tipo = $Preferencia->getTipoVo();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_usuario = $id_usuario AND tipo = '$tipo'";
@@ -119,13 +118,13 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
     public function Guardar(Preferencia $Preferencia): bool
     {
         $id_usuario = $Preferencia->getId_usuario();
-        $tipo = $Preferencia->getTipo();
+        $tipo = $Preferencia->getTipoVo();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_usuario, $tipo);
 
         $aDatos = [];
-        $aDatos['preferencia'] = $Preferencia->getPreferencia();
+        $aDatos['preferencia'] = $Preferencia->getPreferenciaVo();
         array_walk($aDatos, 'core\poner_null');
 
         if ($bInsert === false) {
@@ -138,7 +137,7 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
         } else {
             //INSERT
             $aDatos['id_usuario'] = $id_usuario;
-            $aDatos['tipo'] = $Preferencia->getTipo();
+            $aDatos['tipo'] = $Preferencia->getTipoVo();
             $campos = "(tipo,preferencia,id_usuario)";
             $valores = "(:tipo,:preferencia,:id_usuario)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
@@ -185,6 +184,6 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
         if (empty($aDatos)) {
             return null;
         }
-        return (new Preferencia())->setAllAttributes($aDatos);
+        return Preferencia::fromArray($aDatos);
     }
 }

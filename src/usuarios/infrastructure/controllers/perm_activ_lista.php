@@ -1,11 +1,11 @@
 <?php
 
 use core\ConfigGlobal;
-use procesos\model\entity\GestorActividadFase;
-use procesos\model\entity\GestorPermUsuarioActividad;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use web\ContestarJson;
 use web\TiposActividades;
 use function core\is_true;
@@ -14,10 +14,10 @@ $oCuadrosAfecta = new PermAfectados();
 
 $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
 
-$oGesPerm = new GestorPermUsuarioActividad();
+$PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
 $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt, afecta_a'];
 $aOperador = [];
-$cUsuarioPerm = $oGesPerm->getPermUsuarioActividades($aWhere, $aOperador);
+$cUsuarioPerm = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
 // No se pueden mandar objetos de php por json. Deben se arrays
 $cUsuarioPermArray = [];
 foreach ($cUsuarioPerm as $oUsuarioPerm) {
@@ -60,6 +60,7 @@ $a_valores = [];
 $id_tipo_activ_anterior = '';
 $dl_propia_anterior = '';
 $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+$ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
 foreach ($cUsuarioPermArray as $aUsuarioPerm) {
     $i++;
     $id_item = $aUsuarioPerm['id_item'];
@@ -89,8 +90,7 @@ foreach ($cUsuarioPermArray as $aUsuarioPerm) {
 
     $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $dl_propia);
 
-    $oGesFases = new GestorActividadFase();
-    $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
+    $aFases = $ActividadFaseRepository->getArrayFasesProcesos($aTiposDeProcesos);
     $fase_ref_txt = array_search($fase_ref, $aFases);
 
     if ($dl_propia === $dl_propia_anterior && $id_tipo_activ === $id_tipo_activ_anterior) {

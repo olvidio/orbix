@@ -3,9 +3,9 @@
 namespace src\actividadcargos\domain\entity;
 
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
-use src\shared\domain\events\EntidadModificada;
-use src\shared\domain\traits\EmitsDomainEvents;
-use function core\is_true;
+use src\actividadcargos\domain\value_objects\ObservacionesCargo;
+use src\shared\domain\entity\Entity;
+use src\shared\domain\traits\Hydratable;
 
 /**
  * Clase que implementa la entidad d_cargos_activ_dl
@@ -16,233 +16,130 @@ use function core\is_true;
  * @version 2.0
  * @created 18/12/2025
  */
-class ActividadCargo
+class ActividadCargo extends Entity
 {
-
-    use EmitsDomainEvents;
-
+    use Hydratable;
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private int $iid_schema;
+    private int $id_schema;
     /**
      * Id_activ de ActividadCargo
      *
      * @var int
      */
-    private int $iid_activ;
+    private int $id_activ;
     /**
      * Id_cargo de ActividadCargo
      *
      * @var int
      */
-    private int $iid_cargo;
+    private int $id_cargo;
     /**
      * Id_nom de ActividadCargo
      *
      * @var int|null
      */
-    private int|null $iid_nom = null;
+    private int|null $id_nom = null;
     /**
      * Puede_agd de ActividadCargo
      *
      * @var bool
      */
-    private bool $bpuede_agd;
+    private bool $puede_agd;
     /**
      * Observ de ActividadCargo
      *
      * @var string|null
      */
-    private string|null $sobserv = null;
+    private string|null $observ = null;
     /**
      * Id_item de ActividadCargo
      *
      * @var int
      */
-    private int $iid_item;
+    private int $id_item;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return ActividadCargo
-     */
-    public function setAllAttributes(array $aDatos): ActividadCargo
+
+
+    protected function getEntityName(): string
     {
-        if (array_key_exists('id_schema', $aDatos)) {
-            $this->setId_schema($aDatos['id_schema']);
-        }
-        if (array_key_exists('id_activ', $aDatos)) {
-            $this->setId_activ($aDatos['id_activ']);
-        }
-        if (array_key_exists('id_cargo', $aDatos)) {
-            $this->setId_cargo($aDatos['id_cargo']);
-        }
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom($aDatos['id_nom']);
-        }
-        if (array_key_exists('puede_agd', $aDatos)) {
-            $this->setPuede_agd(is_true($aDatos['puede_agd']));
-        }
-        if (array_key_exists('observ', $aDatos)) {
-            $this->setObserv($aDatos['observ']);
-        }
-        if (array_key_exists('id_item', $aDatos)) {
-            $this->setId_item($aDatos['id_item']);
-        }
-        return $this;
+        return $this->isSacd() ? 'ActividadCargoSacd' : 'ActividadCargoNoSacd';
     }
 
-
-    private function isSacd() {
+    private function isSacd():bool
+    {
         $a_id_cargo_sacd = $GLOBALS['container']->get(CargoRepositoryInterface::class)->getArrayIdCargosSacd();
-        return in_array($this->iid_cargo, $a_id_cargo_sacd);
-    }
-    /**
-     * Marca esta entidad como nueva (INSERT) y emite el evento correspondiente
-     *
-     * @param array $datosActuales Datos actuales de la entidad (opcional para contexto)
-     * @return void
-     */
-    public function marcarComoNueva(array $datosActuales = []): void
-    {
-        $datosNuevos = $this->toArray();
-
-        $EntidadName = $this->isSacd() ? 'ActividadCargoSacd' : 'ActividadCargoNoSacd';
-
-        $this->recordEvent(new EntidadModificada(
-            objeto: $EntidadName,
-            tipoCambio: 'INSERT',
-            idActiv: $this->iid_activ,
-            datosNuevos: $datosNuevos,
-            datosActuales: $datosActuales
-        ));
-    }
-
-    /**
-     * Marca esta entidad como modificada (UPDATE) y emite el evento correspondiente
-     *
-     * @param array $datosActuales Datos anteriores antes de la modificación
-     * @return void
-     */
-    public function marcarComoModificada(array $datosActuales): void
-    {
-        $datosNuevos = $this->toArray();
-
-        $EntidadName = $this->isSacd() ? 'ActividadCargoSacd' : 'ActividadCargoNoSacd';
-
-        $this->recordEvent(new EntidadModificada(
-            objeto: $EntidadName,
-            tipoCambio: 'UPDATE',
-            idActiv: $this->iid_activ,
-            datosNuevos: $datosNuevos,
-            datosActuales: $datosActuales
-        ));
-    }
-
-    /**
-     * Marca esta entidad como eliminada (DELETE) y emite el evento correspondiente
-     *
-     * @param array $datosActuales Datos actuales antes de eliminar
-     * @return void
-     */
-    public function marcarComoEliminada(array $datosActuales): void
-    {
-        $EntidadName = $this->isSacd() ? 'ActividadCargoSacd' : 'ActividadCargoNoSacd';
-
-        $this->recordEvent(new EntidadModificada(
-            objeto: $EntidadName,
-            tipoCambio: 'DELETE',
-            idActiv: $this->iid_activ,
-            datosNuevos: [],
-            datosActuales: $datosActuales
-        ));
-    }
-
-    /**
-     * Convierte la entidad a un array asociativo
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [
-            'id_activ' => $this->iid_activ,
-            'id_cargo' => $this->iid_cargo,
-            'id_nom' => $this->iid_nom,
-            'puede_agd' => $this->bpuede_agd,
-            'observ' => $this->sobserv,
-        ];
+        return in_array($this->id_cargo, $a_id_cargo_sacd);
     }
 
     public function getId_schema(): int
     {
-        return $this->iid_schema;
+        return $this->id_schema;
     }
 
     /**
      *
-     * @param int $iid_schema
+     * @param int $id_schema
      */
-    public function setId_schema(int $iid_schema): void
+    public function setId_schema(int $id_schema): void
     {
-        $this->iid_schema = $iid_schema;
+        $this->id_schema = $id_schema;
     }
 
     /**
      *
-     * @return int $iid_activ
+     * @return int $id_activ
      */
     public function getId_activ(): int
     {
-        return $this->iid_activ;
+        return $this->id_activ;
     }
 
     /**
      *
-     * @param int $iid_activ
+     * @param int $id_activ
      */
-    public function setId_activ(int $iid_activ): void
+    public function setId_activ(int $id_activ): void
     {
-        $this->iid_activ = $iid_activ;
+        $this->id_activ = $id_activ;
     }
 
     /**
      *
-     * @return int $iid_cargo
+     * @return int $id_cargo
      */
     public function getId_cargo(): int
     {
-        return $this->iid_cargo;
+        return $this->id_cargo;
     }
 
     /**
      *
-     * @param int $iid_cargo
+     * @param int $id_cargo
      */
-    public function setId_cargo(int $iid_cargo): void
+    public function setId_cargo(int $id_cargo): void
     {
-        $this->iid_cargo = $iid_cargo;
+        $this->id_cargo = $id_cargo;
     }
 
     /**
      *
-     * @return int|null $iid_nom
+     * @return int|null $id_nom
      */
     public function getId_nom(): ?int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
     /**
      *
-     * @param int|null $iid_nom
+     * @param int|null $id_nom
      */
-    public function setId_nom(?int $iid_nom = null): void
+    public function setId_nom(?int $id_nom = null): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
     /**
@@ -251,7 +148,7 @@ class ActividadCargo
      */
     public function isPuede_agd(): bool
     {
-        return $this->bpuede_agd;
+        return $this->puede_agd;
     }
 
     /**
@@ -260,42 +157,60 @@ class ActividadCargo
      */
     public function setPuede_agd(bool $bpuede_agd): void
     {
-        $this->bpuede_agd = $bpuede_agd;
+        $this->puede_agd = $bpuede_agd;
+    }
+
+    /**
+     * @return ObservacionesCargo|null
+     */
+    public function getObservVo(): ?ObservacionesCargo
+    {
+        return $this->observ !== null ? new ObservacionesCargo($this->observ) : null;
+    }
+
+    /**
+     * @param ObservacionesCargo|null $oObservacionesCargo
+     */
+    public function setObservVo(?ObservacionesCargo $oObservacionesCargo = null): void
+    {
+        $this->observ = $oObservacionesCargo?->value();
     }
 
     /**
      *
      * @return string|null $sobserv
+     * @deprecated use getObservVo()
      */
     public function getObserv(): ?string
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
     /**
      *
      * @param string|null $sobserv
+     * @deprecated use setObservVo()
      */
     public function setObserv(?string $sobserv = null): void
     {
-        $this->sobserv = $sobserv;
+        $this->observ = $sobserv;
     }
 
     /**
      *
-     * @return int $iid_item
+     * @return int $id_item
      */
     public function getId_item(): int
     {
-        return $this->iid_item;
+        return $this->id_item;
     }
 
     /**
      *
-     * @param int $iid_item
+     * @param int $id_item
      */
-    public function setId_item(int $iid_item): void
+    public function setId_item(int $id_item): void
     {
-        $this->iid_item = $iid_item;
+        $this->id_item = $id_item;
     }
 }

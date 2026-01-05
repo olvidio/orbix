@@ -9,7 +9,7 @@ use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
-use src\actividadplazas\domain\GestorResumenPlazas;
+use src\actividadplazas\domain\ResumenPlazas;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -176,7 +176,7 @@ class Select3101
     }
 
 
-    private function getDatosActividad()
+    private function getDatosActividad(): DatosCampo
     {
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($this->id_pau);
@@ -220,7 +220,7 @@ class Select3101
         $a_plazas_resumen = [];
         $a_plazas_conseguidas = [];
 
-        $gesActividadPlazasR = new GestorResumenPlazas();
+        $gesActividadPlazasR = new ResumenPlazas();
         $gesActividadPlazasR->setId_activ($this->id_pau);
 
         $this->a_plazas_conseguidas = [];

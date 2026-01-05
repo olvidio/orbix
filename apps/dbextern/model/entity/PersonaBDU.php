@@ -1142,7 +1142,7 @@ class PersonaBDU extends ClasePropiedades
      * Retorna una col·lecció d'objectes del tipus DatosCampo
      *
      */
-    function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oListasSet = new Set();
 
@@ -1163,12 +1163,12 @@ class PersonaBDU extends ClasePropiedades
 
 
     /**
-     * Recupera les propietats de l'atribut sApenom de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Apenom de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosApenom()
+    private function getDatosApenom(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apenom'));
@@ -1177,12 +1177,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sdl de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo dl de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosDl()
+    private function getDatosDl(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
@@ -1191,12 +1191,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sctr de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo ctr de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosCtr()
+    private function getDatosCtr(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Ctr'));
@@ -1205,12 +1205,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sLugar_Naci de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Lugar_Naci de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosLugar_Naci()
+    private function getDatosLugar_Naci(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar_naci'));
@@ -1219,12 +1219,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut dFecha_Naci de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Fecha_Naci de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosFecha_Naci()
+    private function getDatosFecha_Naci(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'fecha_naci'));
@@ -1234,12 +1234,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sEmail de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Email de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosEmail()
+    private function getDatosEmail(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'email'));
@@ -1248,12 +1248,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sTfno_Movil de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Tfno_Movil de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosTfno_Movil()
+    private function getDatosTfno_Movil(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tfno_movil'));
@@ -1262,12 +1262,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sCe de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Ce de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosCe()
+    private function getDatosCe(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce'));
@@ -1276,12 +1276,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sProfesion_cargo de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Profesion_cargo de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosProfesion_cargo()
+    private function getDatosProfesion_cargo(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'prof_carg'));
@@ -1290,12 +1290,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sEncargos de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Encargos de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosEncargos()
+    private function getDatosEncargos(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'encargos'));
@@ -1304,12 +1304,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sTitulo_Estudios de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Titulo_Estudios de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosTitulo_estudios()
+    private function getDatosTitulo_estudios(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'titu_estu'));
@@ -1318,12 +1318,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sIncorporacion de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Incorporacion de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosIncorporacion()
+    private function getDatosIncorporacion(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'incorp'));
@@ -1332,12 +1332,12 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sIncorporacion de Listas
-     * en una clase del tipus DatosCampo
+     * Recupera las propiedades del atributo Incorporacion de Listas
+     * en una clase del tipo DatosCampo
      *
      * @return DatosCampo
      */
-    function getDatosPertenece_r()
+    private function getDatosPertenece_r(): DatosCampo
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pertenece_r'));

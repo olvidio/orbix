@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use web\DateTimeLocal;
@@ -46,7 +47,7 @@ $superada = "(n.id_situacion = " . Nota::NUMERICA . " OR n.id_situacion::text ~ 
 if ($Qactualizar === 'c1') {
     $ssql = "SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-		WHERE p.stgr != 'b' AND p.stgr !='c1' AND p.stgr !='n'
+		WHERE p.nivel_stgr != " . NivelStgrId::B . " AND p.nivel_stgr != "  . NivelStgrId::C1 . " AND p.nivel_stgr != " . NivelStgrId::N . "
 			AND n.id_nivel BETWEEN 2100 AND 2113
 		GROUP BY p.id_nom
 		HAVING count(*) < 13 
@@ -57,7 +58,7 @@ if ($Qactualizar === 'c1') {
 
     foreach ($oDBSt_sql->fetchAll() as $row) {
         $id_nom = $row["id_nom"];
-        $ssql_1 = "UPDATE $tabla SET stgr='c1'
+        $ssql_1 = "UPDATE $tabla SET nivel_stgr=" . NivelStgrId::C1 . "
 			WHERE id_nom=$id_nom
 			";
         $oDBSt_sql_1 = $oDB->query($ssql_1);
@@ -66,7 +67,7 @@ if ($Qactualizar === 'c1') {
 if ($Qactualizar === 'c2') {
     $ssql = "SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-		WHERE p.stgr != 'b' AND p.stgr !='c2' AND p.stgr !='n'
+		WHERE p.nivel_stgr != " . NivelStgrId::B . " AND p.nivel_stgr != " . NivelStgrId::C2 . " AND p.nivel_stgr != " . NivelStgrId::N . "
 			AND n.id_nivel BETWEEN 2100 AND 2113
 		GROUP BY p.id_nom
 		HAVING count(*) > 12 
@@ -79,7 +80,7 @@ if ($Qactualizar === 'c2') {
     foreach ($oDBSt_sql->fetchAll() as $row) {
         $i++;
         $id_nom = $row["id_nom"];
-        $ssql_1 = "UPDATE $tabla SET stgr='c2'
+        $ssql_1 = "UPDATE $tabla SET nivel_stgr= ". NivelStgrId::C2 ."
 			WHERE id_nom=$id_nom
 			";
         $oDBSt_sql_1 = $oDB->query($ssql_1);
@@ -88,7 +89,7 @@ if ($Qactualizar === 'c2') {
 if ($Qactualizar === 'r') {
     $ssql = "SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-		WHERE p.stgr != 'r' AND n.id_asignatura = 9998 
+		WHERE p.nivel_stgr != " . NivelStgrId::R . " AND n.id_asignatura = 9998 
 		";
 
     $oDBSt_sql = $oDB->query($ssql);
@@ -98,7 +99,7 @@ if ($Qactualizar === 'r') {
     foreach ($oDBSt_sql->fetchAll() as $row) {
         $i++;
         $id_nom = $row["id_nom"];
-        $ssql_1 = "UPDATE $tabla SET stgr='r'
+        $ssql_1 = "UPDATE $tabla SET nivel_stgr=" . NivelStgrId::R . "
 			WHERE id_nom=$id_nom
 			";
         $oDBSt_sql_1 = $oDB->query($ssql_1);
@@ -118,7 +119,7 @@ if ($Qactualizar === 'borrar_cursada') {
     $oDBSt_sql = $oDB->query($ssql);
 }
 if ($Qactualizar === 'caduca_cursada') {
-    $caduca_cursada = $_SESSION['oConfig']->getCaduca_cursada();
+    $caduca_cursada = $_SESSION['oConfig']->getCaducaCursada();
     $oHoy = new DateTimeLocal();
     $interval = 'P' . $caduca_cursada . 'Y';
     $oHoy->sub(new DateInterval($interval));
@@ -145,11 +146,11 @@ if ($Qactualizar === 'caduca_cursada') {
     }
 }
 if ($Qactualizar == "9999") {
-    $ssql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*),stgr
+    $ssql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*),nivel_stgr
 		FROM $tabla p,e_notas_dl n
 		WHERE p.id_nom=n.id_nom AND $superada
 			AND (n.id_nivel BETWEEN 1000 AND 2000 OR id_nivel=9999)
-		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,stgr
+		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,nivel_stgr
 		HAVING count(*) >= 28 AND Max(n.id_nivel)<>9999
 		ORDER BY p.apellido1 ASC,p.apellido2 ";
 
@@ -174,7 +175,7 @@ if ($Qactualizar == "9999") {
             $f_acta = $oHoy->getFromLocal();
         }
 
-        $ssql_2 = "UPDATE $tabla SET stgr='c1'
+        $ssql_2 = "UPDATE $tabla SET nivel_stgr=" . NivelStgrId::C1 . "
 			WHERE id_nom=$id_nom
 			";
         $oDBSt_sql_2 = $oDB->query($ssql_2);
@@ -185,11 +186,11 @@ if ($Qactualizar == "9999") {
     }
 }
 if ($Qactualizar == "9998") {
-    $ssql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*),stgr
+    $ssql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*),nivel_stgr
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE $superada
 			AND (n.id_nivel BETWEEN 2100 AND 2500 OR n.id_nivel=9998)
-		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,stgr
+		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,nivel_stgr
 		HAVING count(*) >= 53 AND Max(n.id_nivel)<>9998
 		ORDER BY p.apellido1,p.apellido2,nom ";
 
@@ -208,7 +209,7 @@ if ($Qactualizar == "9998") {
         $oDBSt_sql_1 = $oDB->query($ssql_1);
         $f_acta = $oDBSt_sql_1->fetchColumn();
 
-        $ssql_2 = "UPDATE $tabla SET stgr='r'
+        $ssql_2 = "UPDATE $tabla SET nivel_stgr=" . NivelStgrId::R . "
 			WHERE id_nom=$id_nom
 			";
         $oDBSt_sql_2 = $oDB->query($ssql_2);
@@ -274,11 +275,11 @@ if (!empty($nf)) {
 echo "<br>";
 
 /*1. Numerarios con el bienio terminado y sin poner que lo ha terminado */
-$sql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,stgr
+$sql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,nivel_stgr
 FROM $tabla p,e_notas_dl n
 WHERE p.id_nom=n.id_nom AND $superada
 	AND (n.id_nivel BETWEEN 1000 AND 2000 OR n.id_nivel=9999)
-GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,stgr
+GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,nivel_stgr
 HAVING count(*) >= 28 AND Max(n.id_nivel)<>9999
 ORDER BY p.apellido1 ASC,p.apellido2 ";
 
@@ -292,9 +293,9 @@ if (!empty($nf)) {
     foreach ($oDBSt_bienio->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
         $numasig = $algo['num_asig'];
-        $stgr = $algo['stgr'];
+        $nivel_stgr = $algo['nivel_stgr'];
         echo "<tr><td width=20></td>";
-        echo "<td>$nom</td><td>$numasig</td><td>$stgr</td></tr>";
+        echo "<td>$nom</td><td>$numasig</td><td>$nivel_stgr</td></tr>";
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
@@ -307,11 +308,11 @@ if (!empty($nf)) {
 }
 
 /*2. Numerarios con el cuadrienio terminado y sin poner que lo ha terminado */
-$sql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,stgr
+$sql = "SELECT p.id_nom, p.nom, p.apellido1,p.apellido2,count(*) as num_asig,nivel_stgr
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE $superada
 			AND (n.id_nivel BETWEEN 2100 AND 2500 OR n.id_nivel=9998)
-		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,stgr
+		GROUP BY p.id_nom,p.nom, p.apellido1,p.apellido2,nivel_stgr
 		HAVING count(*) >= 53 AND Max(n.id_nivel)<>9998
 		ORDER BY p.apellido1,p.apellido2,nom ";
 
@@ -325,9 +326,9 @@ if (!empty($nf)) {
     foreach ($oDBSt_cuadrienio->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
         $numasig = $algo['num_asig'];
-        $stgr = $algo['stgr'];
+        $nivel_stgr = $algo['nivel_stgr'];
         echo "<tr><td width=20></td>";
-        echo "<td>$nom</td><td>$numasig</td><td>$stgr</td></tr>";
+        echo "<td>$nom</td><td>$numasig</td><td>$nivel_stgr</td></tr>";
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
@@ -372,11 +373,11 @@ echo "</table>";
 /* end lista */
 
 // 5. Comprobar que los de año I tienen puesto c1
-$ssql = "SELECT p.stgr,p.nom, p.apellido1, p.apellido2, count(*) AS NumAsig
+$ssql = "SELECT p.nivel_stgr,p.nom, p.apellido1, p.apellido2, count(*) AS NumAsig
 	FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-	WHERE p.stgr != 'b' AND p.stgr != 'r' AND p.stgr !='c1' AND p.stgr !='n'
-		AND ((n.id_nivel BETWEEN 2100 AND 2113) OR n.id_nivel=2430)
-	GROUP BY p.id_nom,p.stgr,p.nom, p.apellido1, p.apellido2
+	WHERE p.nivel_stgr != " . NivelStgrId::B . " AND p.nivel_stgr != " . NivelStgrId::R . " AND p.nivel_stgr != " . NivelStgrId::C1 . " AND p.nivel_stgr != " . NivelStgrId::N . "
+			AND ((n.id_nivel BETWEEN 2100 AND 2113) OR n.id_nivel=2430)
+	GROUP BY p.id_nom,p.nivel_stgr,p.nom, p.apellido1, p.apellido2
 	HAVING count(*) < 14 
 	ORDER BY apellido1,apellido2,nom";
 
@@ -388,10 +389,10 @@ if (!empty($nf)) {
     echo "<table>";
     foreach ($oDBSt_sql->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
-        $stgr = $algo['stgr'];
+        $nivel_stgr = $algo['nivel_stgr'];
         $asig = $algo['numasig'];
         echo "<tr><td width=20></td>";
-        echo "<td>$nom</td><td>$stgr</td><td>$asig</td></tr>";
+        echo "<td>$nom</td><td>$nivel_stgr</td><td>$asig</td></tr>";
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
@@ -403,11 +404,11 @@ if (!empty($nf)) {
 }
 
 // 6. Comprobar que los de año II-IV tienen puesto c2
-$ssql = "SELECT p.stgr,p.nom, p.apellido1, p.apellido2, count(*) AS NumAsig
+$ssql = "SELECT p.nivel_stgr,p.nom, p.apellido1, p.apellido2, count(*) AS NumAsig
 	FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-	WHERE p.stgr != 'b' AND p.stgr != 'r' AND p.stgr !='c2' AND p.stgr !='n'
+	WHERE p.nivel_stgr != " . NivelStgrId::B . " AND p.nivel_stgr != " . NivelStgrId::R . " AND p.nivel_stgr != " . NivelStgrId::C2 . " AND p.nivel_stgr != " . NivelStgrId::N . "
 		AND ((n.id_nivel BETWEEN 2100 AND 2113) OR n.id_nivel=2430)
-	GROUP BY p.id_nom,p.stgr,p.nom, p.apellido1, p.apellido2
+	GROUP BY p.id_nom,p.nivel_stgr,p.nom, p.apellido1, p.apellido2
 	HAVING count(*) > 13 
 	ORDER BY apellido1,apellido2,nom";
 
@@ -420,10 +421,10 @@ if (!empty($nf)) {
     echo "<table>";
     foreach ($oDBSt_sql->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
-        $stgr = $algo['stgr'];
+        $nivel_stgr = $algo['nivel_stgr'];
         $asig = $algo['numasig'];
         echo "<tr><td width=20></td>";
-        echo "<td>$nom</td><td>$stgr</td><td>$asig</td></tr>";
+        echo "<td>$nom</td><td>$nivel_stgr</td><td>$asig</td></tr>";
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
@@ -436,9 +437,9 @@ if (!empty($nf)) {
 }
 
 // 7. Comprobar que los han terminado tienen pueso r
-$ssql = "SELECT p.stgr,p.nom, p.apellido1, p.apellido2
+$ssql = "SELECT p.nivel_stgr,p.nom, p.apellido1, p.apellido2
 	FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
-	WHERE p.stgr != 'r' AND n.id_asignatura = 9998
+	WHERE p.nivel_stgr != " . NivelStgrId::R . " AND n.id_asignatura = 9998
 	ORDER BY apellido1,apellido2,nom";
 
 $oDBSt_sql = $oDB->query($ssql);
@@ -450,9 +451,9 @@ if (!empty($nf)) {
     echo "<table>";
     foreach ($oDBSt_sql->fetchAll() as $algo) {
         $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
-        $stgr = $algo['stgr'];
+        $nivel_stgr = $algo['nivel_stgr'];
         echo "<tr><td width=20></td>";
-        echo "<td>$nom</td><td>$stgr</td></tr>";
+        echo "<td>$nom</td><td>$nivel_stgr</td></tr>";
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
@@ -477,7 +478,7 @@ echo "<br><p>8. $tabla_txt con asignaturas cursadas sin examinar: $nf</p>";
 
 /* Para sacar una lista*/
 $go = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'caduca_cursada')));
-$caduca_cursada = $_SESSION['oConfig']->getCaduca_cursada();
+$caduca_cursada = $_SESSION['oConfig']->getCaducaCursada();
 
 echo "<table>";
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
@@ -493,9 +494,9 @@ foreach ($oDBSt_sql->fetchAll() as $algo) {
     $id_nom = $algo['id_nom'];
 
     $aParam = ['id_nom' => $id_nom,
-        'id_asignatura' => $id_asignatura,
-        'id_tabla' => $Qid_tabla,
-        'actualizar' => 'borrar_cursada'];
+            'id_asignatura' => $id_asignatura,
+            'id_tabla' => $Qid_tabla,
+            'actualizar' => 'borrar_cursada'];
     $go_borrar = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/comprobar_notas.php?' . http_build_query($aParam));
     $pag_borrar = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go_borrar');\">" . _("borrar") . "</span>";
     echo "<tr><td width=20></td>";

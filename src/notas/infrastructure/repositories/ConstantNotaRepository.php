@@ -149,6 +149,6 @@ class zzConstantNotaRepository implements NotaRepositoryInterface
         if (empty($aDatos)) {
             return null;
         }
-        return (new Nota())->setAllAttributes($aDatos);
+        return Nota::fromArray($aDatos);
     }
 }

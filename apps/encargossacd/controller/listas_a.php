@@ -76,7 +76,7 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
 
     $aWhere = [];
     $aOperador = [];
-    $aWhere['status'] = 't';
+    $aWhere['active'] = 't';
     $aWhere['tipo_ctr'] = "^$tipo_ctr_que";
     $aOperador['tipo_ctr'] = '~';
     $aWhere['_ordre'] = 'nombre_ubi';
@@ -182,27 +182,6 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
     }
     $Html .= "</table></div>";
 }
-
-/*
-if (empty($Qsf)) {
-	// Añadir los sacd que trabajan en la dl y en que departamento.
-	$GesCargoCl = new GestorCargoCl();
-	$cCargosCl = $GesCargoCl->getCargosCl(array('elencum'=>'8/6','f_cese'=>'null','_ordre'=>'cargo'),array('f_cese'=>'IS NULL'));
-	$Html .= "<div class=salta_pag><table><tr><td class=grupo colspan=2>"._("5. Oficiales de dl")."</td></tr><tr><td><br></td></tr>"; 
-	foreach($cCargosCl as $oCargoCl) {
-		$id_nom = $oCargoCl->getId_nom();
-		$cargo = $oCargoCl->getCargo();
-		$oPersona = Persona::findPersonaEnGlobal($id_nom);
-		$sacd = $oPersona->getSacd();
-		if ($sacd === false) continue; // sólo listo a los sacd.
-		$nom_ap = $oPersona->getNombreApellidosCrSin();
-		$sacd_titular="$nom_ap ($cargo)";
-		$Html .= "<tr><td>$sacd_titular</td></tr>";
-	}
-	$Html .= "<tr><td class=izquierda></td><td class=derecha>$lugar_fecha</td></tr>";
-	$Html .= "</table></div>";
-}
-*/
 
 $Html .= "<table>";
 $Html .= "<tr><td class=izquierda></td><td class=derecha>$lugar_fecha</td></tr>";

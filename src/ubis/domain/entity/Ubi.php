@@ -10,15 +10,7 @@ use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 
-/**
- * Clase que implementa la entidad ubis
- *
- * @package delegación
- * @subpackage model
- * @author Daniel Serrabou
- * @version 1.0
- * @created 01/10/2010
- */
+
 class Ubi
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */

@@ -110,8 +110,7 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $GrupMenu = new GrupMenu();
-            $GrupMenu->setAllAttributes($aDatos);
+            $GrupMenu = GrupMenu::fromArray($aDatos);
             $GrupMenuSet->add($GrupMenu);
         }
         return $GrupMenuSet->getTot();
@@ -200,7 +199,7 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new GrupMenu())->setAllAttributes($aDatos);
+        return GrupMenu::fromArray($aDatos);
     }
 
     public function getNewId()

@@ -47,7 +47,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $sCondi = '';
         foreach ($aWhere as $camp => $val) {
             if ($camp === 'nombre_asignatura' && !empty($val)) {
-                $sCondi .= "WHERE status=true AND nombre_asignatura ILIKE '%$val%'";
+                $sCondi .= "WHERE active=true AND nombre_asignatura ILIKE '%$val%'";
             }
             if ($camp === 'id' && !empty($val)) {
                 if (!empty($sCondi)) {
@@ -109,7 +109,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sWhere = "WHERE status = 't' ";
+        $sWhere = "WHERE active = 't' ";
         if (!$op_genericas) {
             $genericas = $this->getListaOpGenericas('csv');
             $sWhere .= " AND id_nivel NOT IN ($genericas)";
@@ -207,12 +207,11 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         foreach ($stmt as $aDatos) {
-            $oAsignatura = new Asignatura();
-            $oAsignatura->setAllAttributes($aDatos);
+            $oAsignatura =  Asignatura::fromArray($aDatos);
             $oMin = new stdClass();
             $oMin->id_asignatura = $oAsignatura->getId_asignatura();
             $oMin->id_nivel = $oAsignatura->getId_nivel();
-            $oMin->nombre_asignatura = $oAsignatura->getNombre_asignatura();
+            $oMin->nombre_asignatura = $oAsignatura->getNombre_signatura();
             $oMin->creditos = $oAsignatura->getCreditos();
             $jsonAsignaturas[] = json_encode($oMin);
         }
@@ -280,8 +279,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Asignatura = new Asignatura();
-            $Asignatura->setAllAttributes($aDatos);
+            $Asignatura =  Asignatura::fromArray($aDatos);
             $AsignaturaSet->add($Asignatura);
         }
         return $AsignaturaSet->getTot();
@@ -310,19 +308,19 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
 
         $aDatos = [];
         $aDatos['id_nivel'] = $Asignatura->getId_nivel();
-        $aDatos['nombre_asignatura'] = $Asignatura->getNombre_asignatura();
+        $aDatos['nombre_asignatura'] = $Asignatura->getNombre_signatura();
         $aDatos['nombre_corto'] = $Asignatura->getNombre_corto();
         $aDatos['creditos'] = $Asignatura->getCreditos();
         $aDatos['year'] = $Asignatura->getYear();
         $aDatos['id_sector'] = $Asignatura->getId_sector();
-        $aDatos['status'] = $Asignatura->isStatus();
+        $aDatos['active'] = $Asignatura->isActive();
         $aDatos['id_tipo'] = $Asignatura->getId_tipo();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['status'])) {
-            $aDatos['status'] = 'true';
+        if (is_true($aDatos['active'])) {
+            $aDatos['active'] = 'true';
         } else {
-            $aDatos['status'] = 'false';
+            $aDatos['active'] = 'false';
         }
 
         if ($bInsert === false) {
@@ -334,15 +332,15 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
 					creditos                 = :creditos,
 					year                     = :year,
 					id_sector                = :id_sector,
-					status                   = :status,
+					active                   = :active,
 					id_tipo                  = :id_tipo";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_asignatura = $id_asignatura";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
             $aDatos['id_asignatura'] = $Asignatura->getId_asignatura();
-            $campos = "(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,status,id_tipo)";
-            $valores = "(:id_asignatura,:id_nivel,:nombre_asignatura,:nombre_corto,:creditos,:year,:id_sector,:status,:id_tipo)";
+            $campos = "(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,active,id_tipo)";
+            $valores = "(:id_asignatura,:id_nivel,:nombre_asignatura,:nombre_corto,:creditos,:year,:id_sector,:active,:id_tipo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -388,7 +386,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         if (empty($aDatos)) {
             return null;
         }
-        return (new Asignatura())->setAllAttributes($aDatos);
+        return Asignatura::fromArray($aDatos);
     }
 
     public function getNewId()

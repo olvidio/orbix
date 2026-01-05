@@ -1,8 +1,8 @@
 <?php
 
+use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
+use src\ubis\domain\entity\CasaPeriodo;
 use web\DateTimeLocal;
-use ubis\model\entity\CasaPeriodo;
-use ubis\model\entity\GestorCasaPeriodo;
 use web\Hash;
 use web\Lista;
 
@@ -38,8 +38,8 @@ switch ($Qque) {
             $aWhere['f_fin'] = $fin;
             $aOperador['f_fin'] = '<=';
             $aWhere['_ordre'] = 'f_fin DESC';
-            $GesCasaPeriodos = new GestorCasaPeriodo();
-            $cCasaPeriodos = $GesCasaPeriodos->getCasaPeriodos($aWhere, $aOperador);
+            $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+            $cCasaPeriodos = $CasaPeriodoRepository->getCasaPeriodos($aWhere, $aOperador);
             // Cojo el último
             if (!empty($cCasaPeriodos)) {
                 $oCasaPeriodo = $cCasaPeriodos[0];
@@ -47,7 +47,7 @@ switch ($Qque) {
                 $oF_next = $oF_fin->add(new DateInterval('P1D'));
                 $f_next = $oF_next->getFromLocal();
                 $sfsv = $oCasaPeriodo->getSfsv();
-                if ($sfsv == 1) {
+                if ($sfsv === 1) {
                     $sf_chk = 'selected';
                     $sv_chk = '';
                 } else {
@@ -83,21 +83,22 @@ switch ($Qque) {
         break;
     case 'form_periodo':
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-        $oCasaPeriodo = new CasaPeriodo(array('id_item' => $Qid_item));
+        $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+        $oCasaPeriodo = $CasaPeriodoRepository->findById($Qid_item);
         $f_ini = $oCasaPeriodo->getF_ini()->getFromLocal();
         $f_fin = $oCasaPeriodo->getF_fin()->getFromLocal();
         $sfsv = $oCasaPeriodo->getSfsv();
-        if ($sfsv == 1) {
+        if ($sfsv === 1) {
             $sel_sv = "selected";
         } else {
             $sel_sv = "";
         }
-        if ($sfsv == 2) {
+        if ($sfsv === 2) {
             $sel_sf = "selected";
         } else {
             $sel_sf = "";
         }
-        if ($sfsv == 3) {
+        if ($sfsv === 3) {
             $sel_res = "selected";
         } else {
             $sel_res = "";
@@ -151,8 +152,8 @@ switch ($Qque) {
             $aWhere['f_fin'] = $fin;
             $aOperador['f_fin'] = '<=';
             $aWhere['_ordre'] = 'f_ini';
-            $GesCasaPeriodos = new GestorCasaPeriodo();
-            $cCasaPeriodos = $GesCasaPeriodos->getCasaPeriodos($aWhere, $aOperador);
+            $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+            $cCasaPeriodos = $CasaPeriodoRepository->getCasaPeriodos($aWhere, $aOperador);
         } else {
             $cCasaPeriodos = [];
         }
@@ -185,7 +186,7 @@ switch ($Qque) {
 
             $a_valores[$i][1] = $f_ini;
             $a_valores[$i][2] = $f_fin;
-            if ($permiso == 'modificar') {
+            if ($permiso === 'modificar') {
                 $script = "fnjs_modificar($id_item)";
                 $a_valores[$i][3] = array('script' => $script, 'valor' => $ssfsv);
             } else {
@@ -203,7 +204,7 @@ switch ($Qque) {
             echo "<span class='alert'>$error_txt</span>";
         }
         // Per afegir un periode
-        if ($permiso == 'modificar') {
+        if ($permiso === 'modificar') {
             $txt = "<br><input type='button' value='" . _("nuevo") . "' onclick=\"fnjs_modificar();\" >";
             echo $txt;
         }
@@ -214,8 +215,8 @@ switch ($Qque) {
          */
         $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         // listado de periodos por casa
-        $GesCasaPeriodos = new GestorCasaPeriodo();
-        $cCasaPeriodos = $GesCasaPeriodos->getCasaPeriodos(array('id_ubi' => $Qid_ubi, '_ordre' => 'f_ini'));
+        $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+        $cCasaPeriodos = $CasaPeriodoRepository->getCasaPeriodos(array('id_ubi' => $Qid_ubi, '_ordre' => 'f_ini'));
 
         $oHash = new Hash();
         $i = 0;
@@ -228,17 +229,17 @@ switch ($Qque) {
             $f_fin = $oCasaPeriodo->getF_fin()->getFromLocal();
             $sfsv = $oCasaPeriodo->getSfsv();
 
-            if ($sfsv == 1) {
+            if ($sfsv === 1) {
                 $sel_sv = "selected";
             } else {
                 $sel_sv = "";
             }
-            if ($sfsv == 2) {
+            if ($sfsv === 2) {
                 $sel_sf = "selected";
             } else {
                 $sel_sf = "";
             }
-            if ($sfsv == 3) {
+            if ($sfsv === 3) {
                 $sel_res = "selected";
             } else {
                 $sel_res = "";
@@ -277,28 +278,38 @@ switch ($Qque) {
         $Qf_ini = (string)filter_input(INPUT_POST, 'f_ini');
         $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
         $Qsfsv = (integer)filter_input(INPUT_POST, 'sfsv');
+
+        $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
         if (!empty($Qid_item)) {
-            $oCasaPeriodo = new CasaPeriodo($Qid_item);
-            $oCasaPeriodo->DBCarregar(); //perque agafi els valor que ja té.
+            $oCasaPeriodo = $CasaPeriodoRepository->findById($Qid_item);
         } else {
+            $newIdItem = $CasaPeriodoRepository->nextId();
             $oCasaPeriodo = new CasaPeriodo();
+            $oCasaPeriodo->setId_item($newIdItem);
         }
         if (!empty($Qid_ubi)) $oCasaPeriodo->setId_ubi($Qid_ubi);
-        if (!empty($Qf_ini)) $oCasaPeriodo->setF_ini($Qf_ini);
-        if (!empty($Qf_fin)) $oCasaPeriodo->setF_fin($Qf_fin);
+        if (!empty($Qf_ini)) {
+            $oF_ini = DateTimeLocal::createFromLocal($Qf_ini);
+            $oCasaPeriodo->setF_ini($oF_ini);
+        }
+        if (!empty($Qf_fin)) {
+            $oF_fin = DateTimeLocal::createFromLocal($Qf_fin);
+            $oCasaPeriodo->setF_fin($oF_fin);
+        }
         if (!empty($Qsfsv)) $oCasaPeriodo->setSfsv($Qsfsv);
-        if ($oCasaPeriodo->DBGuardar() === false) {
+        if ($CasaPeriodoRepository->Guardar($oCasaPeriodo) === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oCasaPeriodo->getErrorTxt();
+            echo "\n" . $CasaPeriodoRepository->getErrorTxt();
         }
         break;
     case "eliminar":
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
         if (!empty($Qid_item)) {
-            $oCasaPeriodo = new CasaPeriodo($Qid_item);
-            if ($oCasaPeriodo->DBEliminar() === false) {
+            $oCasaPeriodo = $CasaPeriodoRepository->findById($Qid_item);
+            if ($CasaPeriodoRepository->Eliminar($oCasaPeriodo) === false) {
                 echo _("hay un error, no se ha eliminado");
-                echo "\n" . $oCasaPeriodo->getErrorTxt();
+                echo "\n" . $CasaPeriodoRepository->getErrorTxt();
             }
         } else {
             $error_txt = _("no sé cuál he de borar");

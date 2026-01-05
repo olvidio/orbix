@@ -111,8 +111,7 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoCasa = new TipoCasa();
-            $TipoCasa->setAllAttributes($aDatos);
+            $TipoCasa = TipoCasa::fromArray($aDatos);
             $TipoCasaSet->add($TipoCasa);
         }
         return $TipoCasaSet->getTot();
@@ -200,6 +199,6 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new TipoCasa())->setAllAttributes($aDatos);
+        return TipoCasa::fromArray($aDatos);
     }
 }

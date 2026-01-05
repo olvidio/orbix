@@ -1,7 +1,7 @@
 <?php
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
-use procesos\model\entity\GestorActividadFase;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -19,8 +19,7 @@ $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 
 $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
 $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);
-$oGesFases = new GestorActividadFase();
-$oDesplFases = $oGesFases->getListaActividadFases($aTiposDeProcesos);
+$ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+$aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
 
-
-echo $oDesplFases->options();
+echo $aOpciones;

@@ -110,8 +110,7 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Lugar = new Lugar();
-            $Lugar->setAllAttributes($aDatos);
+            $Lugar = Lugar::fromArray($aDatos);
             $LugarSet->add($Lugar);
         }
         return $LugarSet->getTot();
@@ -200,7 +199,7 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
         if (empty($aDatos)) {
             return null;
         }
-        return (new Lugar())->setAllAttributes($aDatos);
+        return Lugar::fromArray($aDatos);
     }
 
     public function getNewId()

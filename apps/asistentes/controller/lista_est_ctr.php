@@ -1,9 +1,7 @@
 <?php
 
-use actividadestudios\model\entity\GestorMatricula;
-
-use personas\model\entity\GestorPersonaDl;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
@@ -141,6 +139,7 @@ foreach ($cCentros as $oCentroDl) {
     $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
     $i = 0;
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+    $MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
     foreach ($cPersonas as $oPersonaDl) {
         $i++;
         $id_nom = $oPersonaDl->getId_nom();
@@ -178,12 +177,11 @@ foreach ($cCentros as $oCentroDl) {
                         break;
                     default:
                         $asignaturas = '';
-                        $GesMatriculas = new GestorMatricula();
-                        $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ));
+                        $cMatriculas = $MatriculaRepository->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ));
                         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
                         foreach ($cMatriculas as $oMatricula) {
                             $id_asignatura = $oMatricula->getId_asignatura();
-                            $preceptor = $oMatricula->getPreceptor();
+                            $preceptor = $oMatricula->isPreceptor();
                             $id_preceptor = $oMatricula->getId_preceptor();
                             $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
                             if ($oAsignatura === null) {

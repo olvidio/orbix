@@ -2,8 +2,6 @@
 
 namespace core;
 
-use actividades\model\entity\ActividadDl;
-use actividades\model\entity\GestorActividadDl;
 use devel\model\DBAbstract;
 use PDO;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
@@ -20,6 +18,7 @@ use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
+use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
 use src\utils_database\domain\contracts\MapIdRepositoryInterface;
@@ -331,8 +330,7 @@ class DBTrasvase extends DBAbstract
                 $CasaDlReposiroty = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
                 foreach ($cCasasEx as $oCasaEx) {
                     $aDades = $oCasaEx->getTot();
-                    $oCasaDl = new Casa();
-                    $oCasaDl->setAllAttributes($aDades, TRUE);
+                    $oCasaDl =  Casa::fromArray($aDades);
                     // actualizar el tipo_ubi.
                     $oCasaDl->setTipo_casa('cdcdl');
                     $CasaDlReposiroty->setoDbl($oDbl);
@@ -461,7 +459,6 @@ class DBTrasvase extends DBAbstract
                 $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $CentroEllosRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
                 foreach ($cCentroEx as $oCentroEx) {
-                    $oCentroEx->DBCarregar();
                     $aDades = $oCentroEx->getTot();
                     // actualizar el tipo_ubi.
                     $aDades['tipo_ubi'] = 'ctrdl';
@@ -502,7 +499,6 @@ class DBTrasvase extends DBAbstract
                         foreach ($cUbixDirecciones as $oUbixDireccion) {
                             $id_direccion_old = $oUbixDireccion->getId_direccion();
                             $oDireccion = new DireccionCentroEx($id_direccion_old);
-                            $oDireccion->DBCarregar();
                             $aDades = $oDireccion->getTot();
                             $oDireccionCentroDl = new DireccionCentroDl();
                             $oDireccionCentroDl->setoDbl($oDbl);

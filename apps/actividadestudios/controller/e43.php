@@ -2,6 +2,10 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
@@ -44,7 +48,8 @@ $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 $dl_origen = ConfigGlobal::mi_delef();
 $dl_destino = $oPersona->getDl();
 
-$oActividad = new actividades\model\entity\ActividadAll($Qid_activ);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$oActividad = $ActividadAllRepository->findById($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 $id_ubi = $oActividad->getId_ubi();
 $f_ini = $oActividad->getF_ini()->getFromLocal();
@@ -54,20 +59,21 @@ $lugar = $oUbi->getNombre_ubi();
 
 $txt_actividad = "$lugar, $f_ini-$f_fin";
 
-$GesMatriculas = new actividadestudios\model\entity\GestorMatricula();
-$cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ));
+$MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
+$cMatriculas = $MatriculaRepository->getMatriculas(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ));
 $matriculas = count($cMatriculas);
 $aAsignaturasMatriculadas = [];
 if ($matriculas > 0) {
     // para ordenar
+    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
     foreach ($cMatriculas as $oMatricula) {
         $id_asignatura = $oMatricula->getId_asignatura();
-        $oAsignatura = new asignaturas\model\entity\Asignatura($id_asignatura);
+        $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
         $nombre_corto = $oAsignatura->getNombre_corto();
         //$nota = $oMatricula->getNota_txt();
 
-        $GesNotas = new notas\model\entity\GestorPersonaNotaDB();
-        $cNotas = $GesNotas->getPersonaNotas(array('id_nom' => $Qid_nom, 'id_asignatura' => $id_asignatura));
+        $cNotas = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $Qid_nom, 'id_asignatura' => $id_asignatura));
         if ($cNotas !== FALSE && count($cNotas) > 0) {
             $oNota = $cNotas[0];
             $nota = $oNota->getNota_txt();

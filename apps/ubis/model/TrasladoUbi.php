@@ -122,13 +122,13 @@ class TrasladoUbi
             $tabla_dir = 'u_dir_ctr_dl';
             $tabla_cross = 'u_cross_ctr_dl_dir';
             $constrain = 'u_cross_ctr_dl_dir_pkey';
-            $campos_ubi = 'tipo_ubi, id_ubi, nombre_ubi, pais, status, f_status, sv, sf, tipo_ctr, tipo_labor, cdc, id_ctr_padre, n_buzon, num_pi, num_cartas, observ, num_habit_indiv, plazas, sede, num_cartas_mensuales';
+            $campos_ubi = 'tipo_ubi, id_ubi, nombre_ubi, pais, active, f_active, sv, sf, tipo_ctr, tipo_labor, cdc, id_ctr_padre, n_buzon, num_pi, num_cartas, observ, num_habit_indiv, plazas, sede, num_cartas_mensuales';
         } else {
             $tabla_ubi = 'u_cdc_dl';
             $tabla_dir = 'u_dir_cdc_dl';
             $tabla_cross = 'u_cross_cdc_dl_dir';
             $constrain = 'u_cross_cdc_dl_dir_pkey';
-            $campos_ubi = 'tipo_ubi, id_ubi, nombre_ubi, pais, status, f_status, sv, sf, tipo_casa, plazas, plazas_min, num_sacd, biblioteca, observ';
+            $campos_ubi = 'tipo_ubi, id_ubi, nombre_ubi, pais, active, f_active, sv, sf, tipo_casa, plazas, plazas_min, num_sacd, biblioteca, observ';
         }
 
         $full_name_ubi_org = "\"$this->esquema_org$sv\".$tabla_ubi";

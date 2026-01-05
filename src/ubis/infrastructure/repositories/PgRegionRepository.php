@@ -94,8 +94,7 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Region = new Region();
-            $Region->setAllAttributes($aDatos);
+            $Region = Region::fromArray($aDatos);
             $RegionSet->add($Region);
         }
         return $RegionSet->getTot();
@@ -126,13 +125,13 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
         $aDatos = [];
         $aDatos['region'] = $Region->getRegionVo()?->value() ?? '';
         $aDatos['nombre_region'] = $Region->getNombre_region();
-        $aDatos['status'] = $Region->isStatus();
+        $aDatos['active'] = $Region->isActive();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['status'])) {
-            $aDatos['status'] = 'true';
+        if (is_true($aDatos['active'])) {
+            $aDatos['active'] = 'true';
         } else {
-            $aDatos['status'] = 'false';
+            $aDatos['active'] = 'false';
         }
 
         if ($bInsert === false) {
@@ -140,14 +139,14 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
             $update = "
 					region                   = :region,
 					nombre_region            = :nombre_region,
-					status                   = :status";
+					active                   = :active";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_region = $id_region ";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
             $aDatos['id_region'] = $Region->getIdRegionVo()?->value();
-            $campos = "(id_region,region,nombre_region,status)";
-            $valores = "(:id_region,:region,:nombre_region,:status)";
+            $campos = "(id_region,region,nombre_region,active)";
+            $valores = "(:id_region,:region,:nombre_region,:active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -183,7 +182,7 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
         if (empty($aDatos)) {
             return null;
         }
-        return (new Region())->setAllAttributes($aDatos);
+        return Region::fromArray($aDatos);
     }
 
     public function getNewId()

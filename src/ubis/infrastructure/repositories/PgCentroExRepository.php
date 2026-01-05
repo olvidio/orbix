@@ -41,7 +41,7 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $orden = 'nombre_ubi';
-        if (empty($sCondicion)) $sCondicion = "WHERE status = 't'";
+        if (empty($sCondicion)) $sCondicion = "WHERE active = 't'";
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sCondicion ORDER BY $orden";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
@@ -116,9 +116,8 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
 
         foreach ($stmt as $aDatos) {
             // para las fechas del postgres (texto iso)
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
-            $CentroEx = new CentroEx();
-            $CentroEx->setAllAttributes($aDatos);
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
+            $CentroEx = CentroEx::fromArray($aDatos);
             $CentroExSet->add($CentroEx);
         }
         return $CentroExSet->getTot();
@@ -152,7 +151,7 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         $aDatos['dl'] = $CentroEx->getDl();
         $aDatos['pais'] = $CentroEx->getPais();
         $aDatos['region'] = $CentroEx->getRegion();
-        $aDatos['status'] = $CentroEx->isStatus();
+        $aDatos['active'] = $CentroEx->isActive();
         $aDatos['sv'] = $CentroEx->isSv();
         $aDatos['sf'] = $CentroEx->isSf();
         $aDatos['tipo_ctr'] = $CentroEx->getTipo_ctr();
@@ -160,13 +159,13 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         $aDatos['cdc'] = $CentroEx->isCdc();
         $aDatos['id_ctr_padre'] = $CentroEx->getId_ctr_padre();
         // para las fechas
-        $aDatos['f_status'] = (new ConverterDate('date', $CentroEx->getF_status()))->toPg();
+        $aDatos['f_active'] = (new ConverterDate('date', $CentroEx->getF_active()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['status'])) {
-            $aDatos['status'] = 'true';
+        if (is_true($aDatos['active'])) {
+            $aDatos['active'] = 'true';
         } else {
-            $aDatos['status'] = 'false';
+            $aDatos['active'] = 'false';
         }
         if (is_true($aDatos['sv'])) {
             $aDatos['sv'] = 'true';
@@ -192,8 +191,8 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
 					dl                       = :dl,
 					pais                     = :pais,
 					region                   = :region,
-					status                   = :status,
-					f_status                 = :f_status,
+					active                   = :active,
+					f_active                 = :f_active,
 					sv                       = :sv,
 					sf                       = :sf,
 					tipo_ctr                 = :tipo_ctr,
@@ -205,8 +204,8 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         } else {
             //INSERT
             $aDatos['id_ubi'] = $CentroEx->getId_ubi();
-            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_auto)";
-            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:id_auto)";
+            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_auto)";
+            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:id_auto)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -241,7 +240,7 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
-            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
+            $aDatos['f_active'] = (new ConverterDate('date', $aDatos['f_active']))->fromPg();
         }
         return $aDatos;
     }
@@ -256,7 +255,7 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new CentroEx())->setAllAttributes($aDatos);
+        return CentroEx::fromArray($aDatos);
     }
 
     public function getNewId()

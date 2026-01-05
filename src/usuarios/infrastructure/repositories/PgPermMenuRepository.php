@@ -93,8 +93,7 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $PermMenu = new PermMenu();
-            $PermMenu->setAllAttributes($aDatos);
+            $PermMenu = PermMenu::fromArray($aDatos);
             $PermMenuSet->add($PermMenu);
         }
         return $PermMenuSet->getTot();
@@ -183,7 +182,7 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
         if (empty($aDatos)) {
             return null;
         }
-        return (new PermMenu())->setAllAttributes($aDatos);
+        return PermMenu::fromArray($aDatos);
     }
 
     public function getNewId()

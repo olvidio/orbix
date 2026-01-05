@@ -8,8 +8,7 @@ use core\ConverterDate;
 use core\Set;
 use PDO;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
-use src\personas\domain\entity\PersonaDl;
-use src\personas\domain\entity\PersonaEx;
+use src\personas\domain\entity\PersonaPub;
 use src\personas\infrastructure\repositories\traits\PersonaGlobalListsTrait;
 use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
@@ -102,8 +101,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
-            $PersonaDl = new PersonaDl();
-            $PersonaDl->setAllAttributes($aDatos);
+            $PersonaDl = PersonaPub::fromArray($aDatos);
             $PersonaDlSet->add($PersonaDl);
         }
         return $PersonaDlSet->getTot();
@@ -111,9 +109,9 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(PersonaEx $PersonaEx): bool
+    public function Eliminar(PersonaPub $PersonaPub): bool
     {
-        $id_nom = $PersonaEx->getId_nom();
+        $id_nom = $PersonaPub->getId_nom();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_nom = $id_nom";
@@ -124,36 +122,36 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(PersonaEx $PersonaEx): bool
+    public function Guardar(PersonaPub $PersonaPub): bool
     {
-        $id_nom = $PersonaEx->getId_nom();
+        $id_nom = $PersonaPub->getId_nom();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom);
 
         $aDatos = [];
-        $aDatos['id_tabla'] = $PersonaEx->getId_tabla();
-        $aDatos['dl'] = $PersonaEx->getDl();
-        $aDatos['sacd'] = $PersonaEx->isSacd();
-        $aDatos['trato'] = $PersonaEx->getTrato();
-        $aDatos['nom'] = $PersonaEx->getNom();
-        $aDatos['nx1'] = $PersonaEx->getNx1();
-        $aDatos['apellido1'] = $PersonaEx->getApellido1();
-        $aDatos['nx2'] = $PersonaEx->getNx2();
-        $aDatos['apellido2'] = $PersonaEx->getApellido2();
-        $aDatos['idioma_preferido'] = $PersonaEx->getIdioma_preferido();
-        $aDatos['situacion'] = $PersonaEx->getSituacion();
-        $aDatos['apel_fam'] = $PersonaEx->getApel_fam();
-        $aDatos['inc'] = $PersonaEx->getInc();
-        $aDatos['nivel_stgr'] = $PersonaEx->getNivel_stgr();
-        $aDatos['profesion'] = $PersonaEx->getProfesion();
-        $aDatos['eap'] = $PersonaEx->getEap();
-        $aDatos['observ'] = $PersonaEx->getObserv();
-        $aDatos['lugar_nacimiento'] = $PersonaEx->getLugar_nacimiento();
+        $aDatos['id_tabla'] = $PersonaPub->getId_tabla();
+        $aDatos['dl'] = $PersonaPub->getDl();
+        $aDatos['sacd'] = $PersonaPub->isSacd();
+        $aDatos['trato'] = $PersonaPub->getTrato();
+        $aDatos['nom'] = $PersonaPub->getNom();
+        $aDatos['nx1'] = $PersonaPub->getNx1();
+        $aDatos['apellido1'] = $PersonaPub->getApellido1();
+        $aDatos['nx2'] = $PersonaPub->getNx2();
+        $aDatos['apellido2'] = $PersonaPub->getApellido2();
+        $aDatos['idioma_preferido'] = $PersonaPub->getIdioma_preferido();
+        $aDatos['situacion'] = $PersonaPub->getSituacion();
+        $aDatos['apel_fam'] = $PersonaPub->getApel_fam();
+        $aDatos['inc'] = $PersonaPub->getInc();
+        $aDatos['nivel_stgr'] = $PersonaPub->getNivel_stgr();
+        $aDatos['profesion'] = $PersonaPub->getProfesion();
+        $aDatos['eap'] = $PersonaPub->getEap();
+        $aDatos['observ'] = $PersonaPub->getObserv();
+        $aDatos['lugar_nacimiento'] = $PersonaPub->getLugar_nacimiento();
         // para las fechas
-        $aDatos['f_nacimiento'] = (new ConverterDate('date', $PersonaEx->getF_nacimiento()))->toPg();
-        $aDatos['f_situacion'] = (new ConverterDate('date', $PersonaEx->getF_situacion()))->toPg();
-        $aDatos['f_inc'] = (new ConverterDate('date', $PersonaEx->getF_inc()))->toPg();
+        $aDatos['f_nacimiento'] = (new ConverterDate('date', $PersonaPub->getF_nacimiento()))->toPg();
+        $aDatos['f_situacion'] = (new ConverterDate('date', $PersonaPub->getF_situacion()))->toPg();
+        $aDatos['f_inc'] = (new ConverterDate('date', $PersonaPub->getF_inc()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['sacd'])) {
@@ -191,7 +189,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_nom'] = $PersonaEx->getId_nom();
+            $aDatos['id_nom'] = $PersonaPub->getId_nom();
             $campos = "(id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento)";
             $valores = "(:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
@@ -240,12 +238,12 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     /**
      * Busca la clase con id_nom en la base de datos .
      */
-    public function findById(int $id_nom): ?PersonaEx
+    public function findById(int $id_nom): ?PersonaPub
     {
         $aDatos = $this->datosById($id_nom);
         if (empty($aDatos)) {
             return null;
         }
-        return (new PersonaEx())->setAllAttributes($aDatos);
+        return PersonaPub::fromArray($aDatos);
     }
 }

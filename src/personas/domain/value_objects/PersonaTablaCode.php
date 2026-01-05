@@ -40,4 +40,9 @@ final class PersonaTablaCode
     {
         return new self($value);
     }
+
+    public static function fromNullableString(?string $value): ?self
+    {
+        return $value !== null ? new self($value) : null;
+    }
 }

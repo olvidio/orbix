@@ -2,10 +2,10 @@
 
 use core\ConfigGlobal;
 use Illuminate\Http\JsonResponse;
-use procesos\model\entity\GestorPermUsuarioActividad;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -27,7 +27,7 @@ $miSfsv = ConfigGlobal::mi_sfsv();
 $error_txt = _("no tiene permisos para ver esto");
 if ($miRole < 4) { // es administrador
     $error_txt = '';
-    if ($miRole != 1) {
+    if ($miRole !== 1) {
         $cond_role = "WHERE id_role <> 1 ";
     } else {
         $cond_role = "WHERE id_role > 0 "; //absurda cond, pero para que no se borre el role del superadmin
@@ -63,7 +63,7 @@ if ($miRole < 4) { // es administrador
 
         $seccion = $miSfsv;
         $usuario = $oUsuario->getUsuarioAsString();
-        $nom_usuario = $oUsuario->getNom_usuarioAsString();
+        $nom_usuario = $oUsuario->getNomUsuarioAsString();
         $cambio_password = $oUsuario->isCambio_password();
         $chk_cambio_password = is_true($cambio_password) ? 'checked' : '';
         $has_2fa = $oUsuario->has2fa();
@@ -120,7 +120,7 @@ if ($miRole < 4) { // es administrador
             $aDataDespl['opcion_sel'] = $id_pau;
             $camposMas = 'id_ctr';
         }
-        if ($pau == Role::PAU_NOM || $pau == Role::PAU_SACD) { //sacd //personas dl
+        if ($pau === Role::PAU_NOM || $pau === Role::PAU_SACD) { //sacd //personas dl
             $id_pau = $oUsuario->getId_pauAsString();
 
             $nom_role = $oRole->getRoleAsString();
@@ -150,10 +150,10 @@ if ($miRole < 4) { // es administrador
         }
 
         if (ConfigGlobal::is_app_installed('procesos')) {
-            $oGesPerm = new GestorPermUsuarioActividad();
+            $PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
             $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt'];
             $aOperador = [];
-            $cUsuarioPerm = $oGesPerm->getPermUsuarioActividades($aWhere, $aOperador);
+            $cUsuarioPerm = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere, $aOperador);
         }
     } else {
         $que_user = 'nuevo';

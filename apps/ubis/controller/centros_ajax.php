@@ -179,7 +179,7 @@ switch ($Qque) {
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
         $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
+        $aWhere = array('active' => 't', '_ordre' => 'nombre_ubi');
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         $c = 0;
         $a_valores = [];
@@ -216,7 +216,7 @@ switch ($Qque) {
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
         $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
+        $aWhere = array('active' => 't', '_ordre' => 'nombre_ubi');
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         $c = 0;
         foreach ($cCentrosDl as $oCentro) {
@@ -257,7 +257,7 @@ switch ($Qque) {
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
         $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
+        $aWhere = array('active' => 't', '_ordre' => 'nombre_ubi');
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         $c = 0;
         foreach ($cCentrosDl as $oCentro) {

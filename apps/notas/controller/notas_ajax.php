@@ -1,14 +1,14 @@
 <?php
 
 use core\ConfigGlobal;
-use notas\model\entity\GestorActa;
-use notas\model\entity\GestorPersonaNotaDB;
-use notas\model\entity\PersonaNotaDB;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\entity\PersonaNotaDB;
+use src\profesores\domain\services\ProfesorStgrService;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;
 use web\Hash;
@@ -34,8 +34,8 @@ switch ($Qque) {
             $mi_dele = ConfigGlobal::mi_delef();
             $Qacta = empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date("y") : "$mi_dele $Qacta";
         }
-        $GesActas = new GestorActa();
-        $cActas = $GesActas->getActas(['acta' => $Qacta]);
+        $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
+        $cActas = $ActaRepository->getActas(['acta' => $Qacta]);
         $json = "{\"id_asignatura\":\"no\"}";
         if (count($cActas) === 1) {
             $oActa = $cActas[0];
@@ -156,7 +156,7 @@ switch ($Qque) {
         // todas las opcionales
         $aWhere = [];
         $aOperador = [];
-        $aWhere['status'] = 't';
+        $aWhere['active'] = 't';
         $aWhere['id_nivel'] = '3000,5000';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'nombre_corto';
@@ -167,15 +167,13 @@ switch ($Qque) {
         $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
         $aWhere = [];
         $aOperador = [];
-        $aWhere = [];
-        $aOperador = [];
         $aWhere['id_situacion'] = implode(',', $aSuperadas);
         $aOperador['id_situacion'] = 'IN';
         $aWhere['id_nom'] = $Qid_nom;
         $aWhere['id_asignatura'] = 3000;
         $aOperador['id_asignatura'] = '>';
-        $GesPersonaNotas = new GestorPersonaNotaDB();
-        $cAsignaturasOpSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $cAsignaturasOpSuperadas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
         $aOpSuperadas = [];
         foreach ($cAsignaturasOpSuperadas as $oAsignatura) {
             $id_asignatura = $oAsignatura->getId_asignatura();
@@ -199,8 +197,8 @@ switch ($Qque) {
         break;
 
     case 'posibles_preceptores':
-        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-        $aOpciones = $ProfesorRepository->getArrayProfesoresDl();
+        $ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
+        $aOpciones = $ProfesorStgrService->getArrayProfesoresDl();
         $oDesplProfesores = new Desplegable();
         $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setBlanco(1);

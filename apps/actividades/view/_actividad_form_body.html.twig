@@ -72,11 +72,15 @@
 {{ oDesplNivelStgr.desplegable()|raw }}
 </td>
 </tr>
-	<tr>
-	<td class=etiqueta>{{ "publicado"|trans|raw }}:</td>
-	<td>
-		<input type="Radio" id="pub_1" name="publicado" value="t" {% if publicado == true %} checked {% endif %} >{{ "sí"|trans|raw }}
-		<input type="Radio" id="pub_2" name="publicado" value="f" {% if publicado == false %} checked {% endif %} >{{ "no"|trans|raw }}
+<tr>
+<td class=etiqueta>{{ "publicado"|trans|raw }}:</td>
+<td>
+	<input type="Radio" id="pub_1" name="publicado" value="t" {% if publicado == true %} checked {% endif %} >{{ "sí"|trans|raw }}
+	<input type="Radio" id="pub_2" name="publicado" value="f" {% if publicado == false %} checked {% endif %} >{{ "no"|trans|raw }}
+</td>
+	<td class=etiqueta>{{ "idioma"|trans|capitalize }}:</td>
+	<td colspan=2>
+		{{ oDesplIdioma.desplegable()|raw }}
 	</td>
 </tr>
 </table>

@@ -27,7 +27,7 @@ interface ProfesorDirectorRepositoryInterface
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|false Una colección de objetos de tipo ProfesorDirector
      */
-    public function getProfesorDirectores(array $aWhere = [], array $aOperators = []): array|false;
+    public function getProfesoresDirectores(array $aWhere = [], array $aOperators = []): array|false;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

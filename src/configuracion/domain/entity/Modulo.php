@@ -9,122 +9,70 @@ use src\configuracion\domain\value_objects\ModuloDescription;
 use src\configuracion\domain\value_objects\ModuloId;
 use src\configuracion\domain\value_objects\ModuloName;
 use src\configuracion\domain\value_objects\ModsReq;
+use src\shared\domain\traits\Hydratable;
 
-/**
- * Clase que implementa la entidad m0_modulos
- *
- * @package orbix
- * @subpackage model
- * @author Daniel Serrabou
- * @version 2.0
- * @created 11/11/2025
- */
+
 class Modulo
 {
+    use Hydratable;
+
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id del Módulo
-     */
-    private ModuloId $idMod;
-    /**
-     * Nombre del Módulo
-     */
-    private ModuloName $nombreMod;
-    /**
-     * Descripción del Módulo
-     */
+
+    private ModuloId $id_mod;
+
+    private ModuloName $nom;
+
     private ?ModuloDescription $descripcion = null;
-    /**
-     * Módulos requeridos
-     */
-    private ?ModsReq $modsReq = null;
-    /**
-     * Apps requeridas
-     */
-    private ?AppsReq $appsReq = null;
+
+    private ?ModsReq $mods_req = null;
+
+    private ?AppsReq $apps_req = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return Modulo
-     */
-    public function setAllAttributes(array $aDatos): Modulo
-    {
-        if (array_key_exists('id_mod', $aDatos)) {
-            $this->setIdModVo(isset($aDatos['id_mod']) ? new ModuloId((int)$aDatos['id_mod']) : null);
-        }
-        if (array_key_exists('nom', $aDatos)) {
-            $this->setNombreModVo(ModuloName::fromString($aDatos['nom'] ?? null));
-        }
-        if (array_key_exists('descripcion', $aDatos)) {
-            $this->setDescripcionVo(ModuloDescription::fromNullableString($aDatos['descripcion'] ?? null));
-        }
-        if (array_key_exists('mods_req', $aDatos)) {
-            $this->setModsReqVo(ModsReq::fromNullableArray($aDatos['mods_req'] ?? null));
-        }
-        if (array_key_exists('apps_req', $aDatos)) {
-            $this->setAppsReqVo(AppsReq::fromNullableArray($aDatos['apps_req'] ?? null));
-        }
-        return $this;
-    }
 
     // VO API
     public function getIdModVo(): ModuloId
     {
-        return $this->idMod;
+        return $this->id_mod;
     }
 
     public function setIdModVo(ModuloId $id): void
     {
-        $this->idMod = $id;
+        $this->id_mod = $id;
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
     public function getId_mod(): int
     {
-        return $this->idMod->value();
+        return $this->id_mod->value();
     }
 
-    public function setId_mod(int $iid_mod): void
+    public function setId_mod(int $id_mod): void
     {
-        $this->idMod = new ModuloId($iid_mod);
+        $this->id_mod = new ModuloId($id_mod);
     }
 
     // VO API
-    public function getNombreModVo(): ModuloName
+    public function getNomVo(): ModuloName
     {
-        return $this->nombreMod;
+        return $this->nom;
     }
 
-    public function setNombreModVo(ModuloName $nombre): void
+    public function setNomVo(ModuloName $nombre): void
     {
-        $this->nombreMod = $nombre;
+        $this->nom = $nombre;
     }
 
     // Legacy scalar API
-    public function getNombreMod(): string
-    {
-        return $this->nombreMod->value();
-    }
-
-    public function setNombreMod(string $nombre): void
-    {
-        $this->nombreMod = ModuloName::fromString($nombre);
-    }
-
-    // Aliases for historical getNom/setNom
     public function getNom(): string
     {
-        return $this->getNombreMod();
+        return $this->nom->value();
     }
 
-    public function setNom(string $snom): void
+    public function setNom(string $nom): void
     {
-        $this->setNombreMod($snom);
+        $this->nom = ModuloName::fromString($nom);
     }
 
     // VO API
@@ -144,53 +92,53 @@ class Modulo
         return $this->descripcion?->value();
     }
 
-    public function setDescripcion(?string $sdescripcion = null): void
+    public function setDescripcion(?string $descripcion = null): void
     {
-        $this->descripcion = ModuloDescription::fromNullableString($sdescripcion);
+        $this->descripcion = ModuloDescription::fromNullableString($descripcion);
     }
 
     // VO API
     public function getModsReqVo(): ?ModsReq
     {
-        return $this->modsReq;
+        return $this->mods_req;
     }
 
     public function setModsReqVo(?ModsReq $mods = null): void
     {
-        $this->modsReq = $mods;
+        $this->mods_req = $mods;
     }
 
     // Legacy scalar API
     public function getMods_req(): ?array
     {
-        return $this->modsReq?->toArray();
+        return $this->mods_req?->toArray();
     }
 
     public function setMods_req(?array $a_mods_req = null): void
     {
-        $this->modsReq = ModsReq::fromNullableArray($a_mods_req);
+        $this->mods_req = ModsReq::fromNullableArray($a_mods_req);
     }
 
     // VO API
     public function getAppsReqVo(): ?AppsReq
     {
-        return $this->appsReq;
+        return $this->apps_req;
     }
 
     public function setAppsReqVo(?AppsReq $apps = null): void
     {
-        $this->appsReq = $apps;
+        $this->apps_req = $apps;
     }
 
     // Legacy scalar API
     public function getApps_req(): ?array
     {
-        return $this->appsReq?->toArray();
+        return $this->apps_req?->toArray();
     }
 
     public function setApps_req(?array $a_apps_req = null): void
     {
-        $this->appsReq = AppsReq::fromNullableArray($a_apps_req);
+        $this->apps_req = AppsReq::fromNullableArray($a_apps_req);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -199,7 +147,7 @@ class Modulo
         return 'id_mod';
     }
 
-    public function getDatosCampos()
+    public function getDatosCampos(): array
     {
         $oModuloSet = new Set();
 
@@ -211,9 +159,9 @@ class Modulo
     }
 
     /**
-     * Recupera les propietats de l'atribut snom de Modulo en DatosCampo
+     * Recupera las propiedades del atributo nom de Modulo en DatosCampo
      */
-    public function getDatosNom(): DatosCampo
+    private function getDatosNom(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nom');
@@ -226,9 +174,9 @@ class Modulo
     }
 
     /**
-     * Recupera les propietats de l'atribut sdescripcion de Modulo en DatosCampo
+     * Recupera las propiedades del atributo descripcion de Modulo en DatosCampo
      */
-    public function getDatosDescripcion(): DatosCampo
+    private function getDatosDescripcion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('descripcion');
@@ -241,9 +189,9 @@ class Modulo
     }
 
     /**
-     * Recupera les propietats de l'atribut smods_req de Modulo en DatosCampo
+     * Recupera las propiedades del atributo mods_req de Modulo en DatosCampo
      */
-    public function getDatosMods_req(): DatosCampo
+    private function getDatosMods_req(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('mods_req');
@@ -256,9 +204,9 @@ class Modulo
     }
 
     /**
-     * Recupera les propietats de l'atribut sapps_req de Modulo en DatosCampo
+     * Recupera las propiedades del atributo apps_req de Modulo en DatosCampo
      */
-    public function getDatosApps_req(): DatosCampo
+    private function getDatosApps_req(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('apps_req');

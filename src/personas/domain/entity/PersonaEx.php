@@ -18,30 +18,20 @@ class PersonaEx extends PersonaPub
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * Id_auto de PersonaN
-     *
-     * @var int
-     */
-    private int $iid_auto;
+
+    private int $id_auto;
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    /**
-     *
-     * @return int $iid_auto
-     */
+
     public function getId_auto(): int
     {
-        return $this->iid_auto;
+        return $this->id_auto;
     }
 
-    /**
-     *
-     * @param int $iid_auto
-     */
-    public function setId_auto(int $iid_auto): void
+
+    public function setId_auto(int $id_auto): void
     {
-        $this->iid_auto = $iid_auto;
+        $this->id_auto = $id_auto;
     }
 
 }

@@ -89,7 +89,6 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
         foreach ($stmt as $aDades) {
             $id_activ = $aDades['id_activ'];
             $oActividad = $ActividadDlRepository->finfById($id_activ);
-            $oActividad->setAllAttributes($aDades);
             $oActividadSet->add($oActividad);
         }
         return $oActividadSet->getTot();
@@ -110,18 +109,15 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
         $oUbiSet = new Set();
-        foreach ($stmt as $aDades) {
-            $id_ubi = $aDades['id_ubi'];
+        foreach ($stmt as $aDatos) {
+            $id_ubi = $aDatos['id_ubi'];
             $sfsv = (int)substr($id_ubi, 0, 1);
             if (ConfigGlobal::mi_sfsv() === $sfsv) {
                 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $oUbi = $CentroDlRepository->findById($id_ubi);
             } else {
-                $oUbi = new CentroEllas();
-                $oUbi->setId_ubi($id_ubi);
+                $oUbi = CentroEllas::fromArray($aDatos);
             }
-
-            $oUbi->setAllAttributes($aDades);
             $oUbiSet->add($oUbi);
         }
         return $oUbiSet->getTot();
@@ -189,8 +185,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $CentroEncargado = new CentroEncargado();
-            $CentroEncargado->setAllAttributes($aDatos);
+            $CentroEncargado = CentroEncargado::fromArray($aDatos);
             $CentroEncargadoSet->add($CentroEncargado);
         }
         return $CentroEncargadoSet->getTot();
@@ -284,6 +279,6 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
         if (empty($aDatos)) {
             return null;
         }
-        return (new CentroEncargado())->setAllAttributes($aDatos);
+        return CentroEncargado::fromArray($aDatos);
     }
 }

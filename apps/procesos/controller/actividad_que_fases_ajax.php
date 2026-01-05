@@ -1,8 +1,8 @@
 <?php
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use function core\is_true;
-use procesos\model\entity\GestorActividadFase;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -28,8 +28,8 @@ if (is_true($Qdl_propia)) {
 // buscar los procesos posibles para estos tipos de actividad
 $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
 $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $dl_propia);
-$oGesFases = new GestorActividadFase();
-$aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
+$ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+$aFases = $ActividadFaseRepository->getArrayFasesProcesos($aTiposDeProcesos);
 
 // buscar las fases para estos procesos
 switch ($Qsalida) {
