@@ -86,7 +86,7 @@ if (is_array($cZonas) && count($cZonas) > 0) {
             $InicialesSacd = new InicialesSacd();
             $sacd=$InicialesSacd->nombre_sacd($id_nom);
             $iniciales=$InicialesSacd->iniciales($id_nom);
-            $key = $id_nom . '#' . $iniciales;
+            $key =  $iniciales . '#' . $id_nom;
             $a_sacd[$key] = $sacd ?? '?';
         }
     }
@@ -98,7 +98,7 @@ if (is_array($cZonas) && count($cZonas) > 0) {
         $sacd=$InicialesSacd->nombre_sacd($id_sacd);
 //        echo is_null($id_sacd).'-->'.$sacd.'<br>';
         $iniciales=$InicialesSacd->iniciales($id_sacd);
-        $key = $id_sacd . '#' . $iniciales;
+        $key = $iniciales . '#' . $id_sacd;
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
@@ -120,10 +120,11 @@ if (($aRoles[$id_role]==='Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendar
         $InicialesSacd = new InicialesSacd();
         $sacd=$InicialesSacd->nombre_sacd($id_nom);
         $iniciales=$InicialesSacd->iniciales($id_nom);
-        $key = $id_nom . '#' . $iniciales;
+        $key = $iniciales . '#' . $id_nom;
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
+ksort($a_sacd);
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
 $oDesplSacd->setOpciones($a_sacd);

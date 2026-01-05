@@ -32,7 +32,11 @@ $GesZonas = new GestorZona();
 $cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
 $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 
-$Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
+$Qid_sacd_key = (string)filter_input(INPUT_POST, 'id_sacd');
+$exp_id_sacd=explode('#', $Qid_sacd_key);
+$Qid_sacd=$exp_id_sacd[1];
+//echo 'id_sacd: '.$Qid_sacd;
+
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qorden = (string)filter_input(INPUT_POST, 'orden');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');

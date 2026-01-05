@@ -1,15 +1,13 @@
 <script>
 fnjs_ver_ficha=function(id_nom,historial){
-alert('hola');
 	var filtro_sacd='n';
-alert('hola2');
 	if (!id_nom ) { var id_nom=$('#id_sacd').val(); }
-alert('hola3');
 
 	if (id_nom ) {
 		var url='{{ url_get }}';
-		var parametros='filtro_sacd='+filtro_sacd+'&id_nom='+id_nom+'&historial='+historial+'{{ h_get|raw }}';
-alert(parametros);
+		var key_split=id_nom.split('#');
+		id_sacd=key_split[1];
+		var parametros='filtro_sacd='+filtro_sacd+'&id_nom='+id_sacd+'&historial='+historial+'{{ h_get|raw }}';
 		$.ajax({
 			url: url,
 			type: 'post',
