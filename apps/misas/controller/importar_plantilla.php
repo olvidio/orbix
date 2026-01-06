@@ -160,7 +160,7 @@ foreach ($cEncargosZona as $oEncargo) {
 for ($i=0;$i<$ndias;$i++) {
     echo 'I: '.$i.'<br>';
     $num_dia=$oDiaDestino->format('d-m-Y');
-//    echo 'destino: '.$oDiaDestino->format('d-m-Y').'<---';
+    echo 'destino: '.$oDiaDestino->format('d-m-Y').'<---<br>';
     if (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)  || ($QTipoPlantillaDestino == EncargoDia::PLANTILLA_MENSUAL_TRES)){
         $num_dia2=$oDiaDestino2->format('d-m-Y');
         $num_dia3=$oDiaDestino3->format('d-m-Y');
@@ -228,15 +228,15 @@ for ($i=0;$i<$ndias;$i++) {
 //        echo 'origen3: '.$oDiaOrigen3->format('d-m-Y').'<br>';
     }
 
-    $inicio_dia_plantilla = $oDiaOrigen->format('Y-m-d').' 00:00:00';
-    $fin_dia_plantilla = $oDiaOrigen->format('Y-m-d').' 23:59:59';
-//    echo 'inicio dia platilla: '.$inicio_dia_plantilla.'<br>';
 
     foreach ($cEncargosZona as $oEncargo) {
-        $id_enc = $oEncargo->getId_enc();
+        $inicio_dia_plantilla = $oDiaOrigen->format('Y-m-d').' 00:00:00';
+        $fin_dia_plantilla = $oDiaOrigen->format('Y-m-d').' 23:59:59';
+    //    echo 'inicio dia platilla: '.$inicio_dia_plantilla.'<br>';
+            $id_enc = $oEncargo->getId_enc();
         $desc_enc = $oEncargo->getDesc_enc();
 
-//        echo 'foreach id_enc: '.$id_enc.'<br>';
+        echo 'foreach id_enc: '.$desc_enc.'<br>';
 
         $aWhere = [
             'id_enc' => $id_enc,
@@ -247,6 +247,7 @@ for ($i=0;$i<$ndias;$i++) {
         ];
         $EncargoDiaRepository = new EncargoDiaRepository();
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+        echo '#enc1: '.count($cEncargosDia).'<br>'; 
         if (count($cEncargosDia) > 1) {
 //            echo 'III'.$inicio_dia_plantilla.'<br>';
             exit(_("sólo debería haber uno"));
@@ -260,7 +261,7 @@ for ($i=0;$i<$ndias;$i++) {
 //            echo 'id_enc: '.$id_enc;
 //            echo ' desc_enc: '.$desc_enc;
 //            echo ' count:'.count($cEncargosDia);
-//            echo ' id_nom: '.$id_nom.'<br>';
+            echo ' id_nom: '.$id_nom.'<br>';
             $oEncargoDia = new EncargoDia();
             $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
             $oEncargoDia->setUuid_item($Uuid);
@@ -295,6 +296,7 @@ for ($i=0;$i<$ndias;$i++) {
             ];
             $EncargoDiaRepository = new EncargoDiaRepository();
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+            echo '#enc2: '.count($cEncargosDia).'<br>'; 
             if (count($cEncargosDia) > 1) {
 //                echo 'III1'.$inicio_dia_plantilla.'<br>';
                 exit(_("sólo debería haber uno"));
@@ -308,7 +310,7 @@ for ($i=0;$i<$ndias;$i++) {
 //                echo 'id_enc: '.$id_enc;
 //                echo ' desc_enc: '.$desc_enc;
 //                echo ' count:'.count($cEncargosDia);
-//                echo ' id_nom: '.$id_nom.'<br>';
+                echo ' id_nom2: '.$id_nom.'<br>';
                 $oEncargoDia = new EncargoDia();
                 $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
                 $oEncargoDia->setUuid_item($Uuid);
@@ -343,6 +345,7 @@ for ($i=0;$i<$ndias;$i++) {
             ];
             $EncargoDiaRepository = new EncargoDiaRepository();
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+            echo '#enc3: '.count($cEncargosDia).'<br>'; 
             if (count($cEncargosDia) > 1) {
 //                echo 'III1'.$inicio_dia_plantilla.'<br>';
                 exit(_("sólo debería haber uno"));
@@ -356,7 +359,7 @@ for ($i=0;$i<$ndias;$i++) {
 //                echo 'id_enc: '.$id_enc;
 //                echo ' desc_enc: '.$desc_enc;
 //                echo ' count:'.count($cEncargosDia);
-//                echo ' id_nom: '.$id_nom.'<br>';
+                echo ' id_nom3: '.$id_nom.'<br>';
                 $oEncargoDia = new EncargoDia();
                 $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
                 $oEncargoDia->setUuid_item($Uuid);
