@@ -832,8 +832,17 @@ foreach ($cEncargosZona as $oEncargo) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
                 $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                if ($hora_ini=='00:00')
+                if ($hora_ini=='00:00') {
                     $hora_ini='';
+                }
+                $hora_fi = $oEncargoDia->getTend()->format('H:i');
+                if ($hora_fi=='00:00') {
+                    $hora_fi='';
+                }
+                if ($hora_fi!='') {
+                    $hora_ini.='-'.$hora_fin;
+                }
+                
                 $InicialesSacd = new InicialesSacd();
                 $iniciales=$InicialesSacd->iniciales($id_nom);
                 $color = '';

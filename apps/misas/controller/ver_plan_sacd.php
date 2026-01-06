@@ -173,9 +173,9 @@ foreach ($date_range as $date) {
         $dia_y_hora=$dia;
         if ($hora_ini!='') {
             $dia_y_hora .= ' '.$hora_ini;
-            if ($hora_fin!='') {
-                $dia_y_hora .= '-'.$hora_fin;
-            }
+        }
+        if ($hora_fin!='') {
+            $dia_y_hora .= '-'.$hora_fin;
         }
 
         $oEncargo = new Encargo($id_enc);
