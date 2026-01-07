@@ -67,14 +67,14 @@ class EncargoDia
      *
      * @var int|null
      */
-    private int|null $iid_nom = null;
+    private ?int $iid_nom = null;
     /**
      * Observ de EncargoDia
      *
      * @var string|null
      */
-    private string|null $sobserv = null;
-    private int|null $istatus = self::STATUS_PROPUESTA;
+    private ?string $sobserv = null;
+    private ?int $istatus = self::STATUS_PROPUESTA;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

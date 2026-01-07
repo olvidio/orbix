@@ -4,7 +4,7 @@ namespace src\cambios\domain\entity;
 
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\cambios\domain\value_objects\ObjetoNombre;
-use src\cambios\domain\value_objects\PauId;
+use src\cambios\domain\value_objects\CsvPauId;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\value_objects\DelegacionCode;
 use function core\is_true;
@@ -36,7 +36,7 @@ class CambioUsuarioObjetoPref
 
     private AvisoTipoId $aviso_tipo;
 
-    private PauId|null $csv_id_pau = null;
+    private ?CsvPauId $csv_id_pau = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -72,13 +72,12 @@ class CambioUsuarioObjetoPref
         return $this->dl_org->value();
     }
 
-
     /**
      * @deprecated Usar `setDlOrgVo(DelegacionCode $vo): void` en su lugar.
      */
     public function setDl_org(string $dl_org): void
     {
-        $this->dl_org = new DelegacionCode($dl_org);
+        $this->dl_org = DelegacionCode::fromNullableString($dl_org);
     }
 
     public function getDlOrgVo(): DelegacionCode
@@ -86,9 +85,11 @@ class CambioUsuarioObjetoPref
         return $this->dl_org;
     }
 
-    public function setDlOrgVo(DelegacionCode $vo): void
+    public function setDlOrgVo(DelegacionCode|string $texto): void
     {
-        $this->dl_org = $vo;
+        $this->dl_org = $texto instanceof DelegacionCode
+            ? $texto
+            : DelegacionCode::fromNullableString($texto);
     }
 
 
@@ -166,7 +167,7 @@ class CambioUsuarioObjetoPref
      */
     public function setObjeto(string $objeto): void
     {
-        $this->objeto = new ObjetoNombre($objeto);
+        $this->objeto = ObjetoNombre::fromNullableString($objeto);
     }
 
     public function getObjetoVo(): ObjetoNombre
@@ -174,9 +175,11 @@ class CambioUsuarioObjetoPref
         return $this->objeto;
     }
 
-    public function setObjetoVo(ObjetoNombre $vo): void
+    public function setObjetoVo(ObjetoNombre|string $texto): void
     {
-        $this->objeto = $vo;
+        $this->objeto = $texto instanceof ObjetoNombre
+            ? $texto
+            : ObjetoNombre::fromNullableString($texto);
     }
 
     /**
@@ -190,9 +193,11 @@ class CambioUsuarioObjetoPref
     /**
      * @param AvisoTipoId $avisoTipoId
      */
-    public function setAvisoTipoVo(AvisoTipoId $avisoTipoId): void
+    public function setAvisoTipoVo(AvisoTipoId|int $valor): void
     {
-        $this->aviso_tipo = $avisoTipoId;
+        $this->aviso_tipo = $valor instanceof AvisoTipoId
+            ? $valor
+            : AvisoTipoId::fromNullable($valor);
     }
 
     /**
@@ -208,7 +213,7 @@ class CambioUsuarioObjetoPref
      */
     public function setAviso_tipo(int $aviso_tipo): void
     {
-        $this->aviso_tipo = new AvisoTipoId($aviso_tipo);
+        $this->aviso_tipo = AvisoTipoId::fromNullable($aviso_tipo);
     }
 
     /**
@@ -224,16 +229,18 @@ class CambioUsuarioObjetoPref
      */
     public function setCsv_id_pau(?string $csv_id_pau = null): void
     {
-        $this->csv_id_pau = $csv_id_pau !== null ? new PauId($csv_id_pau) : null;
+        $this->csv_id_pau = CsvPauId::fromNullableString($csv_id_pau);
     }
 
-    public function getCsvIdPauVo(): ?PauId
+    public function getCsvIdPauVo(): ?CsvPauId
     {
         return $this->csv_id_pau;
     }
 
-    public function setCsvIdPauVo(?PauId $vo): void
+    public function setCsvIdPauVo(CsvPauId|string|null $valor): void
     {
-        $this->csv_id_pau = $vo;
+        $this->csv_id_pau = $valor instanceof CsvPauId
+            ? $valor
+            : CsvPauId::fromNullableString($valor);
     }
 }

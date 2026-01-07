@@ -9,6 +9,7 @@ use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\entity\UsuarioGrupo;
+use src\usuarios\domain\value_objects\PauType;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 class GrupoJefeZona
@@ -73,7 +74,7 @@ class GrupoJefeZona
     private function usuariosSacd()
     {
         $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-        $cRoles = $RoleRepository->getRoles(['pau' => Role::PAU_SACD]);
+        $cRoles = $RoleRepository->getRoles(['pau' => PauType::PAU_SACD]);
         $RoleSacd = $cRoles[0];
         $id_role = $RoleSacd->getId_role();
 

@@ -29,7 +29,9 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\notas\domain\entity\Nota;
-use src\notas\domain\entity\PersonaNotaDB;
+use src\notas\domain\value_objects\NotaEpoca;
+use src\notas\domain\value_objects\NotaSituacion;
+use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Desplegable;
@@ -226,7 +228,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 // Valores por defecto
 $nota_max_default = $_SESSION['oConfig']->getNotaMax();
 $nota_max = empty($nota_max) ? $nota_max_default : $nota_max;
-$id_situacion = empty($id_situacion) ? Nota::NUMERICA : $id_situacion;
+$id_situacion = empty($id_situacion) ? NotaSituacion::NUMERICA : $id_situacion;
 
 if (!empty($preceptor)) {
     $chk_preceptor = "checked";
@@ -236,12 +238,12 @@ if (!empty($preceptor)) {
 $oDesplNotas->setOpcion_sel($id_situacion);
 
 if (!empty($tipo_acta)) {
-    if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
+    if ($tipo_acta === TipoActa::FORMATO_ACTA) {
         $chk_acta = "checked";
     } else {
         $chk_acta = "";
     }
-    if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO) {
+    if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO) {
         $chk_certificado = "checked";
     } else {
         $chk_certificado = "";
@@ -252,17 +254,17 @@ if (!empty($tipo_acta)) {
 }
 
 if (!empty($epoca)) {
-    if ($epoca === PersonaNotaDB::EPOCA_CA) {
+    if ($epoca === NotaEpoca::EPOCA_CA) {
         $chk_epoca_ca = "checked";
     } else {
         $chk_epoca_ca = "";
     }
-    if ($epoca === PersonaNotaDB::EPOCA_INVIERNO) {
+    if ($epoca === NotaEpoca::EPOCA_INVIERNO) {
         $chk_epoca_inv = "checked";
     } else {
         $chk_epoca_inv = "";
     }
-    if ($epoca === PersonaNotaDB::EPOCA_OTRO) {
+    if ($epoca === NotaEpoca::EPOCA_OTRO) {
         $chk_epoca_otro = "checked";
     } else {
         $chk_epoca_otro = "";

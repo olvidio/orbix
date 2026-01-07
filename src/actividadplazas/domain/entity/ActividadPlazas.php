@@ -20,11 +20,11 @@ class ActividadPlazas
 
     private int $id_dl;
 
-    private int|null $plazas = null;
+    private ?PlazasNumero $plazas = null;
 
-    private string|null $cl = null;
+    private ?PlazaClCode $cl = null;
 
-    private string $dl_tabla;
+    private DelegacionTablaCode $dl_tabla;
 
     private array|stdClass|null $cedidas = null;
 
@@ -58,23 +58,25 @@ class ActividadPlazas
      */
     public function getPlazasVo(): ?PlazasNumero
     {
-        return $this->plazas !== null ? new PlazasNumero($this->plazas) : null;
+        return $this->plazas;
     }
 
     /**
      * @param PlazasNumero|null $oPlazasNumero
      */
-    public function setPlazasVo(?PlazasNumero $oPlazasNumero = null): void
+    public function setPlazasVo(PlazasNumero|int|null $valor = null): void
     {
-        $this->plazas = $oPlazasNumero?->value();
+        $this->plazas = $valor instanceof PlazasNumero
+            ? $valor
+            : PlazasNumero::fromNullable($valor);
     }
 
     /**
      * @deprecated use getPlazasVo()
      */
-    public function getPlazas(): ?int
+    public function getPlazas(): ?string
     {
-        return $this->plazas;
+        return $this->plazas?->value();
     }
 
     /**
@@ -82,7 +84,7 @@ class ActividadPlazas
      */
     public function setPlazas(?int $plazas = null): void
     {
-        $this->plazas = $plazas;
+        $this->plazas = PlazasNumero::fromNullable($plazas);
     }
 
     /**
@@ -90,15 +92,17 @@ class ActividadPlazas
      */
     public function getClVo(): ?PlazaClCode
     {
-        return $this->cl !== null ? new PlazaClCode($this->cl) : null;
+        return $this->cl;
     }
 
     /**
      * @param PlazaClCode|null $oPlazaClCode
      */
-    public function setClVo(?PlazaClCode $oPlazaClCode = null): void
+    public function setClVo(PlazaClCode|string|null $texto = null): void
     {
-        $this->cl = $oPlazaClCode?->value();
+        $this->cl = $texto instanceof PlazaClCode
+            ? $texto
+            : PlazaClCode::fromNullableString($texto);
     }
 
     /**
@@ -107,7 +111,7 @@ class ActividadPlazas
      */
     public function getCl(): ?string
     {
-        return $this->cl;
+        return $this->cl?->value();
     }
 
     /**
@@ -116,7 +120,7 @@ class ActividadPlazas
      */
     public function setCl(?string $cl = null): void
     {
-        $this->cl = $cl;
+        $this->cl = PlazaClCode::fromNullableString($cl);
     }
 
     /**
@@ -124,15 +128,17 @@ class ActividadPlazas
      */
     public function getDlTablaVo(): DelegacionTablaCode
     {
-        return new DelegacionTablaCode($this->dl_tabla);
+        return $this->dl_tabla;
     }
 
     /**
      * @param DelegacionTablaCode $oDelegacionTablaCode
      */
-    public function setDlTablaVo(DelegacionTablaCode $oDelegacionTablaCode): void
+    public function setDlTablaVo(DelegacionTablaCode|string $texto): void
     {
-        $this->dl_tabla = $oDelegacionTablaCode->value();
+        $this->dl_tabla = $texto instanceof DelegacionTablaCode
+            ? $texto
+            : DelegacionTablaCode::fromNullableString($texto);
     }
 
     /**
@@ -140,7 +146,7 @@ class ActividadPlazas
      */
     public function getDl_tabla(): string
     {
-        return $this->dl_tabla;
+        return $this->dl_tabla->value();
     }
 
     /**
@@ -148,7 +154,7 @@ class ActividadPlazas
      */
     public function setDlTabla(string $dl_tabla): void
     {
-        $this->dl_tabla = $dl_tabla;
+        $this->dl_tabla = DelegacionTablaCode::fromNullableString($dl_tabla);
     }
 
     /**

@@ -55,9 +55,11 @@ class TipoCasa
         return $this->nombre_tipo_casa;
     }
 
-    public function setNombreTipoCasaVo(?TipoCasaName $nombre = null): void
+    public function setNombreTipoCasaVo(TipoCasaName|string|null $texto = null): void
     {
-        $this->nombre_tipo_casa = $nombre;
+        $this->nombre_tipo_casa = $texto instanceof TipoCasaName
+            ? $texto
+            : TipoCasaName::fromNullableString($texto);
     }
 
 

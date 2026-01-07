@@ -375,7 +375,7 @@ class IdMatchPersona extends ClasePropiedades
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 
     /**
-     * Retorna una col·lecció d'objectes del tipus DatosCampo
+     * Devuelve una colección de objetor tipo DatosCampo
      *
      */
     public function getDatosCampos(): array

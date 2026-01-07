@@ -19,6 +19,7 @@ use src\shared\domain\traits\Hydratable;
 class ActividadCargo extends Entity
 {
     use Hydratable;
+
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private int $id_schema;
@@ -39,7 +40,7 @@ class ActividadCargo extends Entity
      *
      * @var int|null
      */
-    private int|null $id_nom = null;
+    private ?int $id_nom = null;
     /**
      * Puede_agd de ActividadCargo
      *
@@ -49,9 +50,8 @@ class ActividadCargo extends Entity
     /**
      * Observ de ActividadCargo
      *
-     * @var string|null
      */
-    private string|null $observ = null;
+    private ?ObservacionesCargo $observ = null;
     /**
      * Id_item de ActividadCargo
      *
@@ -61,17 +61,15 @@ class ActividadCargo extends Entity
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-
-
     protected function getEntityName(): string
     {
         return $this->isSacd() ? 'ActividadCargoSacd' : 'ActividadCargoNoSacd';
     }
 
-    private function isSacd():bool
+    private function isSacd(): bool
     {
         $a_id_cargo_sacd = $GLOBALS['container']->get(CargoRepositoryInterface::class)->getArrayIdCargosSacd();
-        return in_array($this->id_cargo, $a_id_cargo_sacd);
+        return in_array($this->id_cargo, $a_id_cargo_sacd, true);
     }
 
     public function getId_schema(): int
@@ -144,7 +142,7 @@ class ActividadCargo extends Entity
 
     /**
      *
-     * @return bool $bpuede_agd
+     * @return bool $puede_agd
      */
     public function isPuede_agd(): bool
     {
@@ -153,11 +151,11 @@ class ActividadCargo extends Entity
 
     /**
      *
-     * @param bool $bpuede_agd
+     * @param bool $puede_agd
      */
-    public function setPuede_agd(bool $bpuede_agd): void
+    public function setPuede_agd(bool $puede_agd): void
     {
-        $this->puede_agd = $bpuede_agd;
+        $this->puede_agd = $puede_agd;
     }
 
     /**
@@ -165,35 +163,33 @@ class ActividadCargo extends Entity
      */
     public function getObservVo(): ?ObservacionesCargo
     {
-        return $this->observ !== null ? new ObservacionesCargo($this->observ) : null;
+        return $this->observ;
     }
 
-    /**
-     * @param ObservacionesCargo|null $oObservacionesCargo
-     */
-    public function setObservVo(?ObservacionesCargo $oObservacionesCargo = null): void
+
+    public function setObservVo(ObservacionesCargo|string|null $texto = null): void
     {
-        $this->observ = $oObservacionesCargo?->value();
+        $this->observ = $texto instanceof ObservacionesCargo
+            ? $texto
+            : ObservacionesCargo::fromNullableString($texto);
     }
 
     /**
      *
-     * @return string|null $sobserv
      * @deprecated use getObservVo()
      */
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ?->value();
     }
 
     /**
      *
-     * @param string|null $sobserv
      * @deprecated use setObservVo()
      */
-    public function setObserv(?string $sobserv = null): void
+    public function setObserv(?string $texto = null): void
     {
-        $this->observ = $sobserv;
+        $this->observ = ObservacionesCargo::fromNullableString($texto);
     }
 
     /**

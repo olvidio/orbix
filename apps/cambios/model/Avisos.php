@@ -12,6 +12,7 @@ use src\cambios\domain\entity\CambioAnotado;
 use src\cambios\domain\entity\CambioUsuario;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\DateTimeLocal;
@@ -238,7 +239,7 @@ class Avisos
         $oRole->setId_role($oMiUsuario->getId_role());
 
         //casa
-        if ($oRole->isRolePau(Role::PAU_CDC)) {
+        if ($oRole->isRolePau(PauType::PAU_CDC)) {
             $mis_id_ubis = $oMiUsuario->getId_pauAsString(); // puede ser una lista separada por comas.
             if (!empty($mis_id_ubis)) { //casa o un listado de ubis en la preferencia del aviso.
                 $a_mis_id_ubis = explode(',', $mis_id_ubis);
@@ -269,7 +270,7 @@ class Avisos
             }
         }
         // si soy un sacd.
-        if ($oRole->isRolePau(Role::PAU_SACD)) {
+        if ($oRole->isRolePau(PauType::PAU_SACD)) {
             $id_nom_usuario = $oMiUsuario->getId_pauAsString();
             // soy jefe zona?
             // si soy jefe de zona me afectan todos los sacd de la zona.

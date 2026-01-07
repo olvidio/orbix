@@ -122,7 +122,9 @@ class Role
         if ($pau === null) {
             $this->pau = new PauType(PauType::PAU_NONE);
         } else {
-            $this->pau = $pau instanceof PauType ? $pau : new PauType($pau);
+            $this->pau = $pau instanceof PauType
+                ? $pau
+                : new PauType($pau);
         }
     }
 

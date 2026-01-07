@@ -8,6 +8,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use web\Desplegable;
@@ -117,7 +118,7 @@ $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
 $cActas = $ActaRepository->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura, '_ordre' => 'f_acta'));
 $acta_principal = '';
 if (is_array($cActas) && !empty($cActas)) {
-    $a_actas = [0 => '', Nota::CURSADA => Nota::getStatusTxt(Nota::CURSADA)];
+    $a_actas = [0 => '', NotaSituacion::CURSADA => Nota::getStatusTxt(NotaSituacion::CURSADA)];
     foreach ($cActas as $oActa) {
         $nom_acta = $oActa->getActa();
         $a_actas[$nom_acta] = $oActa->getActa();

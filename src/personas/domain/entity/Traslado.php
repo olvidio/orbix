@@ -21,19 +21,19 @@ class Traslado
 
     private int $id_nom;
 
-    private DateTimeLocal|null $f_traslado = null;
+   private ?DateTimeLocal $f_traslado = null;
 
-    private string $tipo_cmb;
+    private TrasladoTipoCmbCode $tipo_cmb;
 
-    private int|null $id_ctr_origen = null;
+    private ?int $id_ctr_origen = null;
 
-    private string|null $ctr_origen = null;
+    private ?NombreCentroText $ctr_origen = null;
 
-    private int|null $id_ctr_destino = null;
+    private ?int $id_ctr_destino = null;
 
-    private string $ctr_destino;
+    private NombreCentroText $ctr_destino;
 
-    private string|null $observ = null;
+    private ?ObservText $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -41,8 +41,6 @@ class Traslado
     {
         return $this->id_item;
     }
-
-
     public function setId_item(int $id_item): void
     {
         $this->id_item = $id_item;
@@ -53,8 +51,6 @@ class Traslado
     {
         return $this->id_nom;
     }
-
-
     public function setId_nom(int $id_nom): void
     {
         $this->id_nom = $id_nom;
@@ -65,8 +61,6 @@ class Traslado
     {
         return $this->f_traslado ?? new NullDateTimeLocal;
     }
-
-
     public function setF_traslado(DateTimeLocal|null $f_traslado = null): void
     {
         $this->f_traslado = $f_traslado;
@@ -77,25 +71,24 @@ class Traslado
      */
     public function getTipo_cmb(): string
     {
-        return $this->tipo_cmb;
+        return $this->tipo_cmb->value();
     }
-
     /**
      * @deprecated use setTipoCmbVo()
      */
     public function setTipo_cmb(string $tipo_cmb): void
     {
-        $this->tipo_cmb = $tipo_cmb;
+        $this->tipo_cmb =  TrasladoTipoCmbCode::fromString($tipo_cmb);
     }
-
     public function getTipoCmbVo(): TrasladoTipoCmbCode
     {
-        return new TrasladoTipoCmbCode($this->tipo_cmb);
+        return $this->tipo_cmb;
     }
-
-    public function setTipoCmbVo(TrasladoTipoCmbCode $vo): void
+    public function setTipoCmbVo(TrasladoTipoCmbCode|string|null $vo): void
     {
-        $this->tipo_cmb = $vo->value();
+        $this->tipo_cmb = $vo instanceof TrasladoTipoCmbCode
+            ? $vo
+            : TrasladoTipoCmbCode::fromNullableString($vo);
     }
 
 
@@ -103,8 +96,6 @@ class Traslado
     {
         return $this->id_ctr_origen;
     }
-
-
     public function setId_ctr_origen(?int $id_ctr_origen = null): void
     {
         $this->id_ctr_origen = $id_ctr_origen;
@@ -115,25 +106,24 @@ class Traslado
      */
     public function getCtr_origen(): ?string
     {
-        return $this->ctr_origen;
+        return $this->ctr_origen?->value();
     }
-
     /**
      * @deprecated use setCtrOrigenVo()
      */
     public function setCtr_origen(?string $ctr_origen = null): void
     {
-        $this->ctr_origen = $ctr_origen;
+        $this->ctr_origen = NombreCentroText::fromNullableString($ctr_origen);
     }
-
     public function getCtrOrigenVo(): ?NombreCentroText
     {
-        return NombreCentroText::fromNullableString($this->ctr_origen);
+        return $this->ctr_origen;
     }
-
-    public function setCtrOrigenVo(?NombreCentroText $vo = null): void
+    public function setCtrOrigenVo(NombreCentroText|string|null $vo = null): void
     {
-        $this->ctr_origen = $vo?->value();
+        $this->ctr_origen = $vo instanceof NombreCentroText
+            ? $vo
+            : NombreCentroText::fromNullableString($vo);
     }
 
 
@@ -141,8 +131,6 @@ class Traslado
     {
         return $this->id_ctr_destino;
     }
-
-
     public function setId_ctr_destino(?int $id_ctr_destino = null): void
     {
         $this->id_ctr_destino = $id_ctr_destino;
@@ -153,25 +141,24 @@ class Traslado
      */
     public function getCtr_destino(): string
     {
-        return $this->ctr_destino;
+        return $this->ctr_destino->value();
     }
-
     /**
      * @deprecated use setCtrDestinoVo()
      */
     public function setCtr_destino(string $ctr_destino): void
     {
-        $this->ctr_destino = $ctr_destino;
+        $this->ctr_destino =  NombreCentroText::fromNullableString($ctr_destino);
     }
-
     public function getCtrDestinoVo(): NombreCentroText
     {
-        return new NombreCentroText($this->ctr_destino);
+        return $this->ctr_destino;
     }
-
-    public function setCtrDestinoVo(NombreCentroText $vo): void
+    public function setCtrDestinoVo(NombreCentroText|string|null $vo = null): void
     {
-        $this->ctr_destino = $vo->value();
+        $this->ctr_destino = $vo instanceof NombreCentroText
+            ? $vo
+            : NombreCentroText::fromNullableString($vo);
     }
 
     /**
@@ -179,24 +166,23 @@ class Traslado
      */
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ?->value();
     }
-
     /**
      * @deprecated use setObservVo()
      */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = ObservText::fromNullableString($observ);
     }
-
     public function getObservVo(): ?ObservText
     {
-        return ObservText::fromNullableString($this->observ);
+        return $this->observ;
     }
-
-    public function setObservVo(?ObservText $vo = null): void
+    public function setObservVo(ObservText|string|null $vo = null): void
     {
-        $this->observ = $vo?->value();
+        $this->observ = $vo instanceof ObservText
+            ? $vo
+            : ObservText::fromNullableString($vo);
     }
 }

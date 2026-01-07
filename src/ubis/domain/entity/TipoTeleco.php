@@ -33,9 +33,11 @@ class TipoTeleco
         return $this->tipo_teleco;
     }
 
-    public function setTipoTelecoVo(?TipoTelecoCode $codigo = null): void
+    public function setTipoTelecoVo(TipoTelecoCode|string|null $texto = null): void
     {
-        $this->tipo_teleco = $codigo;
+        $this->tipo_teleco = $texto instanceof TipoTelecoCode
+            ? $texto
+            : TipoTelecoCode::fromNullableString($texto);
     }
 
     public function getNombreTelecoVo(): ?TipoTelecoName
@@ -43,9 +45,11 @@ class TipoTeleco
         return $this->nombre_teleco;
     }
 
-    public function setNombreTelecoVo(?TipoTelecoName $nombre = null): void
+    public function setNombreTelecoVo(TipoTelecoName|string|null $texto = null): void
     {
-        $this->nombre_teleco = $nombre;
+        $this->nombre_teleco = $texto instanceof TipoTelecoName
+            ? $texto
+            : TipoTelecoName::fromNullableString($texto);
     }
 
 

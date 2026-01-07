@@ -37,9 +37,11 @@ class Modulo
         return $this->id_mod;
     }
 
-    public function setIdModVo(ModuloId $id): void
+    public function setIdModVo(ModuloId|int $id): void
     {
-        $this->id_mod = $id;
+        $this->id_mod = $id instanceof ModuloId
+            ? $id
+            : ModuloId::fromNullable($id);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -50,7 +52,7 @@ class Modulo
 
     public function setId_mod(int $id_mod): void
     {
-        $this->id_mod = new ModuloId($id_mod);
+        $this->id_mod = ModuloId::fromNullable($id_mod);
     }
 
     // VO API
@@ -59,9 +61,11 @@ class Modulo
         return $this->nom;
     }
 
-    public function setNomVo(ModuloName $nombre): void
+    public function setNomVo(ModuloName|string|null $nombre): void
     {
-        $this->nom = $nombre;
+        $this->nom = $nombre instanceof ModuloName
+            ? $nombre
+            : ModuloName::fromNullableString($nombre);
     }
 
     // Legacy scalar API
@@ -81,9 +85,11 @@ class Modulo
         return $this->descripcion;
     }
 
-    public function setDescripcionVo(?ModuloDescription $desc = null): void
+    public function setDescripcionVo(ModuloDescription|string|null $texto = null): void
     {
-        $this->descripcion = $desc;
+        $this->descripcion = $texto instanceof ModuloDescription
+            ? $texto
+            : ModuloDescription::fromNullableString($texto);
     }
 
     // Legacy scalar API
@@ -103,9 +109,11 @@ class Modulo
         return $this->mods_req;
     }
 
-    public function setModsReqVo(?ModsReq $mods = null): void
+    public function setModsReqVo(ModsReq|array|null $a_mods_req = null): void
     {
-        $this->mods_req = $mods;
+        $this->mods_req = $a_mods_req instanceof ModsReq
+            ? $a_mods_req
+            : ModsReq::fromNullableArray($a_mods_req);
     }
 
     // Legacy scalar API
@@ -125,9 +133,11 @@ class Modulo
         return $this->apps_req;
     }
 
-    public function setAppsReqVo(?AppsReq $apps = null): void
+    public function setAppsReqVo(AppsReq|array|null $a_apps_req = null): void
     {
-        $this->apps_req = $apps;
+        $this->apps_req = $a_apps_req instanceof AppsReq
+            ? $a_apps_req
+            : AppsReq::fromNullableArray($a_apps_req);
     }
 
     // Legacy scalar API

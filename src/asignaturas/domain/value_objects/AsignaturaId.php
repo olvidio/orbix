@@ -17,7 +17,7 @@ final class AsignaturaId
         // Debe ser un entero positivo de 4 dígitos que empiece por 1, 2 o 3
         // excepto que se permite explícitamente 9998 y 9999.
         $esRangoNormal = ($value >= 1000 && $value <= 3999);
-        $esExcepcion   = ($value === 9998 || $value === 9999);
+        $esExcepcion = ($value === 9998 || $value === 9999);
 
         if (!($esRangoNormal || $esExcepcion)) {
             throw new \InvalidArgumentException(
@@ -54,5 +54,13 @@ final class AsignaturaId
         }
 
         return new self((int)$value);
+    }
+
+    public static function fromNullable(?int $value): ?self
+    {
+        if ($value === null) {
+            return null;
+        }
+        return new self($value);
     }
 }

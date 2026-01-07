@@ -4,7 +4,6 @@ namespace src\profesores\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
-use src\profesores\domain\value_objects\FechaJuramento;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -21,6 +20,8 @@ class ProfesorJuramento
 
     private DateTimeLocal $f_juramento;
 
+    
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function getId_item(): int
@@ -28,51 +29,32 @@ class ProfesorJuramento
         return $this->id_item;
     }
 
-
-    public function setId_item(int $id_item): void
+    public function setId_item(int $valor): void
     {
-        $this->id_item = $id_item;
+        $this->id_item = $valor;
     }
-
 
     public function getId_nom(): int
     {
         return $this->id_nom;
     }
 
-
-    public function setId_nom(int $id_nom): void
+    public function setId_nom(int $valor): void
     {
-        $this->id_nom = $id_nom;
+        $this->id_nom = $valor;
     }
 
-    /**
-     * @deprecated Usar getFechaJuramentoVo()->value()
-     */
-    public function getF_juramento(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_juramento(): DateTimeLocal
     {
-        return $this->f_juramento ?? new NullDateTimeLocal;
+        return $this->f_juramento;
     }
 
-    /**
-     * @deprecated Usar setFechaJuramentoVo(FechaJuramento $vo)
-     */
-    public function setF_juramento(DateTimeLocal|null $df_juramento = null): void
+    public function setF_juramento(DateTimeLocal $valor): void
     {
-        $this->f_juramento = $df_juramento;
+        $this->f_juramento = $valor;
     }
 
-    public function getFechaJuramentoVo(): ?FechaJuramento
-    {
-        return FechaJuramento::fromNullable($this->f_juramento);
-    }
-
-    public function setFechaJuramentoVo(?FechaJuramento $fecha): void
-    {
-        $this->f_juramento = $fecha?->value();
-    }
-
-    /* ------------------- PARA el mod_tabla  -------------------------------*/
+/* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
         return 'id_item';

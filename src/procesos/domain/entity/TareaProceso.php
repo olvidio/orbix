@@ -2,6 +2,7 @@
 
 namespace src\procesos\domain\entity;
 
+use src\actividades\domain\value_objects\StatusId;
 use src\procesos\domain\value_objects\FaseId;
 use src\procesos\domain\value_objects\ProcesoTipoId;
 use src\procesos\domain\value_objects\TareaId;
@@ -23,9 +24,9 @@ class TareaProceso
 
     private TareaId $id_tarea;
 
-    private int $status;
+    private StatusId $status;
 
-    private int|null $id_of_responsable = null;
+    private ?int $id_of_responsable = null;
 
     private array|stdClass|null $json_fases_previas = null;
 
@@ -43,19 +44,21 @@ class TareaProceso
     }
 
 
-    public function getProcesoTipoId(): ProcesoTipoId
+    public function getIdTipoProcesoVo(): ProcesoTipoId
     {
         return $this->id_tipo_proceso;
     }
 
 
-    public function setProcesoTipoId(ProcesoTipoId $id_tipo_proceso): void
+    public function setIdTipoProcesoVo(ProcesoTipoId|int|null $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = $id_tipo_proceso;
+        $this->id_tipo_proceso = $id_tipo_proceso instanceof ProcesoTipoId
+            ? $id_tipo_proceso
+            : ProcesoTipoId::fromNullable($id_tipo_proceso);
     }
 
     /**
-     * @deprecated use getProcesoTipoId()
+     * @deprecated use getIdTipoProcesoVo()
      */
     public function getId_tipo_proceso(): int
     {
@@ -63,27 +66,29 @@ class TareaProceso
     }
 
     /**
-     * @deprecated use setProcesoTipoId()
+     * @deprecated use setIdTipoProcesoVo()
      */
     public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = new ProcesoTipoId($id_tipo_proceso);
+        $this->id_tipo_proceso = ProcesoTipoId::fromNullable($id_tipo_proceso);
     }
 
 
-    public function getFaseId(): FaseId
+    public function getIdFaseVo(): FaseId
     {
         return $this->id_fase;
     }
 
 
-    public function setFaseId(FaseId $id_fase): void
+    public function setIdFaseVo(FaseId|int|null $id_fase): void
     {
-        $this->id_fase = $id_fase;
+        $this->id_fase = $id_fase instanceof FaseId
+            ? $id_fase
+            : FaseId::fromNullable($id_fase);
     }
 
     /**
-     * @deprecated use getFaseId()
+     * @deprecated use getIdFaseVo()
      */
     public function getId_fase(): int
     {
@@ -91,27 +96,29 @@ class TareaProceso
     }
 
     /**
-     * @deprecated use setFaseId()
+     * @deprecated use setIdFaseVo()
      */
     public function setId_fase(int $id_fase): void
     {
-        $this->id_fase = new FaseId($id_fase);
+        $this->id_fase = FaseId::fromNullable($id_fase);
     }
 
 
-    public function getTareaId(): TareaId
+    public function getIdTareaVo(): TareaId
     {
         return $this->id_tarea;
     }
 
 
-    public function setTareaId(TareaId $id_tarea): void
+    public function setIdTareaVo(TareaId|int|null $id_tarea): void
     {
-        $this->id_tarea = $id_tarea;
+        $this->id_tarea = $id_tarea instanceof TareaId
+            ? $id_tarea
+            : TareaId::fromNullable($id_tarea);
     }
 
     /**
-     * @deprecated use getTareaId()
+     * @deprecated use getIdTareaVo()
      */
     public function getId_tarea(): int
     {
@@ -119,23 +126,38 @@ class TareaProceso
     }
 
     /**
-     * @deprecated use setTareaId()
+     * @deprecated use setIdTareaVo()
      */
     public function setId_tarea(int $id_tarea): void
     {
-        $this->id_tarea = new TareaId($id_tarea);
+        $this->id_tarea = TareaId::fromNullable($id_tarea);
     }
 
 
+    /**
+     * @deprecated use getStatusVo()
+     */
     public function getStatus(): int
+    {
+        return $this->status->value();
+    }
+
+    /**
+     * @deprecated use setStatusVo()
+     */
+    public function setStatus(int $istatus): void
+    {
+        $this->status = StatusId::fromNullable($istatus);
+    }
+    public function getStatusVo(): StatusId
     {
         return $this->status;
     }
-
-
-    public function setStatus(int $istatus): void
+    public function setStatusVo(StatusId|int|null $status): void
     {
-        $this->status = $istatus;
+        $this->status = $status instanceof StatusId
+            ? $status
+            : StatusId::fromNullable($status);
     }
 
 

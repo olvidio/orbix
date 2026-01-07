@@ -5,11 +5,11 @@ namespace src\personas\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\value_objects\ActividadTipoId;
 use src\personas\domain\value_objects\AsistenciaDescripcionText;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
-use function core\is_true;
 
 
 class UltimaAsistencia
@@ -22,13 +22,13 @@ class UltimaAsistencia
 
     private int $id_nom;
 
-    private int|null $id_tipo_activ = null;
+    private ?ActividadTipoId $id_tipo_activ = null;
 
-    private DateTimeLocal|null $f_ini = null;
+    private ?DateTimeLocal $f_ini = null;
 
-    private string|null $descripcion = null;
+    private ?AsistenciaDescripcionText $descripcion = null;
 
-    private bool|null $cdr = null;
+    private ?bool $cdr = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -36,7 +36,6 @@ class UltimaAsistencia
     {
         return $this->id_item;
     }
-
 
     public function setId_item(int $id_item): void
     {
@@ -49,22 +48,31 @@ class UltimaAsistencia
         return $this->id_nom;
     }
 
-
     public function setId_nom(int $id_nom): void
     {
         $this->id_nom = $id_nom;
     }
 
+    public function getId_tipo_activ(): ?string
+    {
+        return $this->id_tipo_activ?->value();
+    }
 
-    public function getId_tipo_activ(): ?int
+    public function setId_tipo_activ(?int $id_tipo_activ = null): void
+    {
+        $this->id_tipo_activ = ActividadTipoId::fromInt($id_tipo_activ);
+    }
+
+    public function getTipoActivVo(): ActividadTipoId
     {
         return $this->id_tipo_activ;
     }
 
-
-    public function setId_tipo_activ(?int $id_tipo_activ = null): void
+    public function setTipoActivVo(ActividadTipoId|int|null $tipoActiv = null): void
     {
-        $this->id_tipo_activ = $id_tipo_activ;
+        $this->id_tipo_activ = $tipoActiv instanceof ActividadTipoId
+            ? $tipoActiv
+            : ActividadTipoId::fromInt($tipoActiv);
     }
 
 
@@ -72,7 +80,6 @@ class UltimaAsistencia
     {
         return $this->f_ini ?? new NullDateTimeLocal;
     }
-
 
     public function setF_ini(DateTimeLocal|null $f_ini = null): void
     {
@@ -84,7 +91,7 @@ class UltimaAsistencia
      */
     public function getDescripcion(): ?string
     {
-        return $this->descripcion;
+        return $this->descripcion?->value();
     }
 
     /**
@@ -92,17 +99,19 @@ class UltimaAsistencia
      */
     public function setDescripcion(?string $description = null): void
     {
-        $this->descripcion = $description;
+        $this->descripcion = AsistenciaDescripcionText::fromNullableString($description);
     }
 
     public function getDescripcionVo(): ?AsistenciaDescripcionText
     {
-        return AsistenciaDescripcionText::fromNullableString($this->descripcion);
+        return $this->descripcion;
     }
 
-    public function setDescripcionVo(?AsistenciaDescripcionText $vo = null): void
+    public function setDescripcionVo(AsistenciaDescripcionText|string|null $vo = null): void
     {
-        $this->descripcion = $vo?->value();
+        $this->descripcion = $vo instanceof AsistenciaDescripcionText
+            ? $vo
+            : AsistenciaDescripcionText::fromNullableString($vo);
     }
 
 
@@ -110,7 +119,6 @@ class UltimaAsistencia
     {
         return $this->cdr;
     }
-
 
     public function setCdr(?bool $cdr = null): void
     {

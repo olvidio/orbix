@@ -44,9 +44,13 @@ final class NivelStgrBreve
 
     public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null || $value === '') {
+        if ($value === null) {
             return null;
         }
-        return new self($value);
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
     }
 }

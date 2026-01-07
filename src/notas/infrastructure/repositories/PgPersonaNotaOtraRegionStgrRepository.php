@@ -16,7 +16,9 @@ use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\entity\PersonaNotaDB;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\PersonaNotaPk;
+use src\notas\domain\value_objects\TipoActa;
 use src\shared\traits\HandlesPdoErrors;
 use stdClass;
 
@@ -68,8 +70,8 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             $aWhere = ['id_nom' => $id_nom,
                 'id_nivel' => $oPersonaNotaOtraRegionStgr->getId_nivel(),
                 'id_asignatura' => $oPersonaNotaOtraRegionStgr->getId_asignatura(),
-                'tipo_acta' => PersonaNotaDB::FORMATO_CERTIFICADO, // si no habrá 2, una con formato acta y otra certificado
-                //'id_situacion' => Nota::FALTA_CERTIFICADO,
+                'tipo_acta' => TipoActa::FORMATO_CERTIFICADO, // si no habrá 2, una con formato acta y otra certificado
+                //'id_situacion' => NotaSituacion::FALTA_CERTIFICADO,
             ];
             $cPersonNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
             if (empty($cPersonNotas)) {
@@ -80,7 +82,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
                 $oPersonaNota->setIdNivel($oPersonaNotaOtraRegionStgr->getId_nivel());
                 $oPersonaNota->setIdAsignatura($id_asignatura);
                 $oPersonaNota->setIdNom($id_nom);
-                $oPersonaNota->setTipoActa(PersonaNotaDB::FORMATO_CERTIFICADO);
+                $oPersonaNota->setTipoActa(TipoActa::FORMATO_CERTIFICADO);
                 $oPersonaNota->setIdSituacion($oPersonaNotaOtraRegionStgr->getId_situacion());
                 $oPersonaNota->setActa($oPersonaNotaOtraRegionStgr->getActa());
                 $oPersonaNota->setDetalle($oPersonaNotaOtraRegionStgr->getDetalle());
@@ -134,13 +136,13 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
                     $aWhere = ['id_nom' => $oPersonaNotaOtraRegionStgr->getId_nom(),
                         'id_nivel' => $oPersonaNotaOtraRegionStgr->getId_nivel(),
                         'id_asignatura' => $oPersonaNotaOtraRegionStgr->getId_asignatura(),
-                        'tipo_acta' => PersonaNotaDB::FORMATO_CERTIFICADO,
+                        'tipo_acta' => TipoActa::FORMATO_CERTIFICADO,
                         'acta' => $certificado,
                     ];
                     $personaNotasDB = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
                     $oPersonaNotaDB = $personaNotasDB[0] ?? '';
                     if (!empty($oPersonaNotaDB)) {
-                        $oPersonaNotaDB->setId_situacion(Nota::FALTA_CERTIFICADO);
+                        $oPersonaNotaDB->setId_situacion(NotaSituacion::FALTA_CERTIFICADO);
                         $oPersonaNotaDB->setF_acta('');
                         $oPersonaNotaDB->setActa(_("falta certificado"));
                         $PersonaNotaDBRepository->Guardar($oPersonaNotaDB);

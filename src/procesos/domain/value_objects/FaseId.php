@@ -2,8 +2,6 @@
 
 namespace src\procesos\domain\value_objects;
 
-use InvalidArgumentException;
-
 final class FaseId
 {
     public const FASE_PROYECTO = 1;
@@ -21,7 +19,7 @@ final class FaseId
 
     private function validate(int $value): void
     {
-         // Permitimos positivos
+        // Permitimos positivos
         if ($value < 0) {
             throw new \InvalidArgumentException('FaseId must be a non-negative integer');
         }
@@ -35,5 +33,13 @@ final class FaseId
     public function equals(FaseId $other): bool
     {
         return $this->value === $other->value();
+    }
+
+    public static function fromNullable(?int $value): ?self
+    {
+        if ($value === null) {
+            return null;
+        }
+        return new self($value);
     }
 }

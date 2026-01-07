@@ -96,6 +96,10 @@ class DateTimeLocal extends DateTime
 
     static public function createFromLocal($data)
     {
+        // para distinguir false de null. En caso de no tener, devuelve null
+        if (empty($data)) {
+            return null;
+        }
         // Cambiar '-' por '/':
         $data = str_replace('-', '/', $data);
         $format = self::getFormat();
@@ -108,7 +112,7 @@ class DateTimeLocal extends DateTime
         }
 
         $extnd_dt->setTimestamp($parent_dt->getTimestamp());
-        /* corregir en el caso que el año tenga dos digitos
+        /* corregir en el caso que el año tenga dos dígitos
          * No sirve para el siglo I (0-99) ;-) */
         $yy = $extnd_dt->format('y');
         $yyyy = $extnd_dt->format('Y');

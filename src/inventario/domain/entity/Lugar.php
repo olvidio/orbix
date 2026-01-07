@@ -5,6 +5,7 @@ namespace src\inventario\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
+use src\inventario\domain\value_objects\LugarId;
 use src\inventario\domain\value_objects\LugarName;
 use src\shared\domain\traits\Hydratable;
 
@@ -16,23 +17,23 @@ class Lugar
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private int $id_lugar;
+    private LugarId $id_lugar;
 
     private int $id_ubi;
 
-    private string $nom_lugar;
+    private LugarName $nom_lugar;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function getId_lugar(): int
     {
-        return $this->id_lugar;
+        return $this->id_lugar->value();
     }
 
 
     public function setId_lugar(int $id_lugar): void
     {
-        $this->id_lugar = $id_lugar;
+        $this->id_lugar = LugarId::fromNullable( $id_lugar);
     }
 
 
@@ -50,24 +51,26 @@ class Lugar
 
     public function getNom_lugar(): string
     {
-        return $this->nom_lugar;
+        return $this->nom_lugar->value();
     }
 
 
     public function setNom_lugar(string $nom_lugar): void
     {
-        $this->nom_lugar = $nom_lugar;
+        $this->nom_lugar = LugarName::fromNullableString( $nom_lugar);
     }
 
     // Value Object API (duplicada con legacy)
     public function getNomLugarVo(): LugarName
     {
-        return new LugarName($this->nom_lugar);
+        return $this->nom_lugar;
     }
 
-    public function setNomLugarVo(LugarName $name): void
+    public function setNomLugarVo(LugarName|string $name): void
     {
-        $this->nom_lugar = $name->value();
+        $this->nom_lugar = $name instanceof LugarName
+            ? $name
+            : LugarName::fromNullableString($name);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

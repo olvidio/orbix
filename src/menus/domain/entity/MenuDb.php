@@ -16,19 +16,19 @@ class MenuDb
 
     private int $id_menu;
 
-    private array|null $orden = null;
+    private ?array $orden = null;
 
-    private string|null $menu = null;
+    private ?MenuName $menu = null;
 
-    private string|null $parametros = null;
+    private ?MenuParametros $parametros = null;
 
-    private int|null $id_metamenu = null;
+    private ?int $id_metamenu = null;
 
-    private int|null $menu_perm = null;
+    private ?int $menu_perm = null;
 
-    private int|null $id_grupmenu = null;
+    private ?int $id_grupmenu = null;
 
-    private bool|null $ok = null;
+    private ?bool $ok = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -58,27 +58,47 @@ class MenuDb
 
     public function getMenu(): ?string
     {
+        return $this->menu?->value();
+    }
+
+    public function getMenuVo(): MenuName
+    {
         return $this->menu;
     }
 
-
-    public function setMenu(string|MenuName|null $menu = null): void
+    public function setMenu(?string $menu = null): void
     {
-        $this->menu = $menu instanceof MenuName ? $menu->value() : $menu;
+        $this->menu = MenuName::fromNullableString($menu);
     }
 
+    public function setMenuVo(MenuName|string|null $texto): void
+    {
+        $this->menu = $texto instanceof MenuName
+            ? $texto
+            : MenuName::fromNullableString($texto);
+    }
 
     public function getParametros(): ?string
+    {
+        return $this->parametros?->value();
+    }
+
+    public function getParametrosVo(): MenuParametros
     {
         return $this->parametros;
     }
 
-
-    public function setParametros(string|MenuParametros|null $parametros = null): void
+    public function setParametros(?string $parametros = null): void
     {
-        $this->parametros = $parametros instanceof MenuParametros ? $parametros->value() : $parametros;
+        $this->parametros = MenuParametros::fromNullableString($parametros);
     }
 
+    public function setParametrosVo(MenuParametros|string|null $texto): void
+    {
+        $this->parametros = $texto instanceof MenuParametros
+            ? $texto
+            : MenuParametros::fromNullableString($texto);
+    }
 
     public function getId_metamenu(): ?int
     {

@@ -2,30 +2,23 @@
 
 namespace src\personas\domain\entity;
 
-use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use function core\is_true;
-
-use src\personas\domain\value_objects\{CeNumber, CeLugarText};
-
+use src\personas\domain\value_objects\{CeCurso, CeLugarText, CeNumber};
 
 class PersonaSSSC extends PersonaDl
 {
-    use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
     private int $id_auto;
 
-    private int|null $ce = null;
+    private ?CeCurso $ce = null;
 
-    private int|null $ce_ini = null;
+    private ?CeNumber $ce_ini = null;
 
-    private int|null $ce_fin = null;
+    private ?CeNumber $ce_fin = null;
 
-    private string|null $ce_lugar = null;
+    private ?CeLugarText $ce_lugar = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -40,107 +33,117 @@ class PersonaSSSC extends PersonaDl
         $this->id_auto = $id_auto;
     }
 
+
     /**
-     * @deprecated use getCeVo()
+     * @deprecated use getCeVo() instead
      */
-    public function getCe(): ?int
+    public function getCe(): ?string
+    {
+        return $this->ce?->value();
+    }
+
+
+    /**
+     * @deprecated use setCeVo() instead
+     */
+    public function setCe(?int $ce = null): void
+    {
+        $this->ce = CeCurso::fromNullableInt($ce);
+    }
+
+    public function getCeVo(): ?CeCurso
     {
         return $this->ce;
     }
 
-    /**
-     * @deprecated use setCeVo()
-     */
-    public function setCe(?int $ce = null): void
+    public function setCeVo(CeCurso|int|null $ce = null): void
     {
-        $this->ce = $ce;
-    }
-
-    public function getCeVo(): ?CeNumber
-    {
-        return $this->ce !== null ? new CeNumber($this->ce) : null;
-    }
-
-    public function setCeVo(?CeNumber $ce = null): void
-    {
-        $this->ce = $ce?->value();
+        $this->ce = $ce instanceof CeCurso
+            ? $ce
+            : CeCurso::fromNullable($ce);
     }
 
     /**
-     * @deprecated use getCeIniVo()
+     * @deprecated use getCeIniVo() instead
      */
-    public function getCe_ini(): ?int
+    public function getCe_ini(): ?string
+    {
+        return $this->ce_ini?->value();
+    }
+
+    public function getCeIniVo(): ?CeNumber
     {
         return $this->ce_ini;
     }
 
     /**
-     * @deprecated use setCeIniVo()
+     * @deprecated use setCeIniVo() instead
      */
     public function setCe_ini(?int $ce_ini = null): void
     {
-        $this->ce_ini = $ce_ini;
+        $this->ce_ini = CeNumber::fromNullableInt($ce_ini);
     }
 
-    public function getCeIniVo(): ?CeNumber
+    public function setCeIniVo(CeNumber|int|null $ce = null): void
     {
-        return $this->ce_ini !== null ? new CeNumber($this->ce_ini) : null;
-    }
-
-    public function setCeIniVo(?CeNumber $ce = null): void
-    {
-        $this->ce_ini = $ce?->value();
+        $this->ce_ini = $ce instanceof CeNumber
+            ? $ce
+            : CeNumber::fromNullable($ce);
     }
 
     /**
-     * @deprecated use getCeFinVo()
+     * @deprecated use getCeFinVo() instead
      */
-    public function getCe_fin(): ?int
+    public function getCe_fin(): ?string
+    {
+        return $this->ce_fin?->value();
+    }
+
+    public function getCeFinVo(): ?CeNumber
     {
         return $this->ce_fin;
     }
 
     /**
-     * @deprecated use setCeFinVo()
+     * @deprecated use setCeFinVo() instead
      */
     public function setCe_fin(?int $ce_fin = null): void
     {
-        $this->ce_fin = $ce_fin;
+        $this->ce_fin = CeNumber::fromNullableInt($ce_fin);
     }
 
-    public function getCeFinVo(): ?CeNumber
+    public function setCeFinVo(CeNumber|int|null $ce = null): void
     {
-        return $this->ce_fin !== null ? new CeNumber($this->ce_fin) : null;
-    }
-
-    public function setCeFinVo(?CeNumber $ce = null): void
-    {
-        $this->ce_fin = $ce?->value();
+        $this->ce_fin = $ce instanceof CeNumber
+            ? $ce
+            : CeNumber::fromNullable($ce);
     }
 
     /**
-     * @deprecated use getCeLugarVo()
+     * @deprecated use getCeLugarVo() instead
      */
     public function getCe_lugar(): ?string
+    {
+        return $this->ce_lugar?->value();
+    }
+
+    public function getCeLugarVo(): ?CeLugarText
     {
         return $this->ce_lugar;
     }
 
     /**
-     * @deprecated use setCeLugarVo()
+     * @deprecated use setCeLugarVo() instead
      */
     public function setCe_lugar(?string $ce_lugar = null): void
     {
-        $this->ce_lugar = $ce_lugar;
+        $this->ce_lugar = CeLugarText::fromNullableString($ce_lugar);
     }
 
-    public function getCeLugarVo(): ?CeLugarText
+    public function setCeLugarVo(CeLugarText|string|null $lugar = null): void
     {
-        return CeLugarText::fromNullableString($this->ce_lugar);
-    }
-
-    public function setCeLugarVo(?CeLugarText $lugar = null): void
-    {
-        $this->ce_lugar = $lugar?->value();
+        $this->ce_lugar = $lugar instanceof CeLugarText
+            ? $lugar
+            : CeLugarText::fromNullableString($lugar);
     }
 }

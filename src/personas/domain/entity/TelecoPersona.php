@@ -20,13 +20,13 @@ class TelecoPersona
 
     private int $id_item;
 
-    private int $id_tipo_teleco;
+    private TipoTelecoCode $id_tipo_teleco;
 
-    private string $num_teleco;
+    private NumTelecoText $num_teleco;
 
-    private string|null $observ = null;
+    private ?ObservTelecoText $observ = null;
 
-    private int|null $id_desc_teleco = null;
+    private ?int $id_desc_teleco = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -58,15 +58,14 @@ class TelecoPersona
      */
     public function getId_tipo_teleco(): int
     {
-        return $this->id_tipo_teleco;
+        return $this->id_tipo_teleco->value();
     }
-
     /**
      * @deprecated use setTipoTelecoVo()
      */
     public function setId_tipo_teleco(int $id_tipo_teleco): void
     {
-        $this->id_tipo_teleco = $id_tipo_teleco;
+        $this->id_tipo_teleco = TipoTelecoCode::fromNullableString($id_tipo_teleco);
     }
 
     /**
@@ -74,12 +73,14 @@ class TelecoPersona
      */
     public function getTipoTelecoVo(): TipoTelecoCode
     {
-        return new TipoTelecoCode($this->id_tipo_teleco);
+        return $this->id_tipo_teleco;
     }
 
-    public function setTipoTelecoVo(TipoTelecoCode $code): void
+    public function setTipoTelecoVo(TipoTelecoCode|string|null $code): void
     {
-        $this->id_tipo_teleco = $code->value();
+        $this->id_tipo_teleco = $code instanceof TipoTelecoCode
+            ? $code
+            : TipoTelecoCode::fromNullableString($code);
     }
 
     /**
@@ -87,25 +88,24 @@ class TelecoPersona
      */
     public function getNum_teleco(): string
     {
-        return $this->num_teleco;
+        return $this->num_teleco->value();
     }
-
     /**
      * @deprecated use setNumTelecoVo()
      */
     public function setNum_teleco(string $num_teleco): void
     {
-        $this->num_teleco = $num_teleco;
+        $this->num_teleco = NumTelecoText::fromNullableString($num_teleco);
     }
-
     public function getNumTelecoVo(): NumTelecoText
     {
-        return new NumTelecoText($this->num_teleco);
+        return $this->num_teleco;
     }
-
-    public function setNumTelecoVo(NumTelecoText $texto): void
+    public function setNumTelecoVo(NumTelecoText|string|null $texto): void
     {
-        $this->num_teleco = $texto->value();
+        $this->num_teleco = $texto instanceof   NumTelecoText
+            ? $texto
+            : NumTelecoText::fromNullableString($texto);
     }
 
     /**
@@ -113,34 +113,31 @@ class TelecoPersona
      */
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ?->value();
     }
-
     /**
      * @deprecated use setObservVo()
      */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = ObservTelecoText::fromNullableString($observ);
     }
-
     public function getObservVo(): ?ObservTelecoText
     {
-        return ObservTelecoText::fromNullableString($this->observ);
+        return $this->observ;
     }
 
-    public function setObservVo(?ObservTelecoText $texto = null): void
+    public function setObservVo(ObservTelecoText|string|null $texto = null): void
     {
-        $this->observ = $texto?->value();
+        $this->observ = $texto instanceof ObservTelecoText
+            ? $texto
+            : ObservTelecoText::fromNullableString($texto);
     }
-
 
     public function getId_desc_teleco(): ?int
     {
         return $this->id_desc_teleco;
     }
-
-
     public function setId_desc_teleco(?int $id_desc_teleco = null): void
     {
         $this->id_desc_teleco = $id_desc_teleco;

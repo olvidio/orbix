@@ -34,57 +34,69 @@ class PersonaPub
     use Hydratable;
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
-
+    private int $id_schema;
 
     private int $id_nom;
 
-    private string $id_tabla;
+    private PersonaTablaCode $id_tabla;
 
-    private string|null $dl = null;
+    private ?DelegacionCode $dl = null;
 
-    private bool|null $sacd = null;
+    private ?bool $sacd = null;
 
-    private string|null $trato = null;
+    private ?PersonaTratoCode $trato = null;
 
-    private string|null $nom = null;
+    private ?PersonaNombreText $nom = null;
 
-    private string|null $nx1 = null;
+    private ?PersonaNx1Text $nx1 = null;
 
-    private string $apellido1;
+    private PersonaApellido1Text $apellido1;
 
-    private string|null $nx2 = null;
+    private ?PersonaNx2Text $nx2 = null;
 
-    private string|null $apellido2 = null;
+    private ?PersonaApellido2Text $apellido2 = null;
 
-    private DateTimeLocal|null $f_nacimiento = null;
+    private ?DateTimeLocal $f_nacimiento = null;
 
-    private string|null $idioma_preferido = null;
+    private ?LenguaCode $idioma_preferido = null;
 
-    private string $situacion;
+    private SituacionCode $situacion;
 
-    private DateTimeLocal|null $f_situacion = null;
+    private ?DateTimeLocal $f_situacion = null;
 
-    private string|null $apel_fam = null;
+    private ?ApelFamText $apel_fam = null;
 
-    private string|null $inc = null;
+    private ?IncCode $inc = null;
 
-    private DateTimeLocal|null $f_inc = null;
+    private ?DateTimeLocal $f_inc = null;
 
-    private int|null $nivel_stgr = null;
+    private ?NivelStgrId $nivel_stgr = null;
 
-    private string|null $profesion = null;
+    private ?ProfesionText $profesion = null;
 
-    private string|null $eap = null;
+    private ?EapText $eap = null;
 
-    private string|null $observ = null;
+    private ?ObservText $observ = null;
 
-    private string|null $lugar_nacimiento = null;
+    private ?int $id_ctr = null;
 
-    private int|null $edad = null;
+    private ?LugarNacimientoText $lugar_nacimiento = null;
+
+    private ?int $edad = null;
 
     private ?bool $profesor_stgr = false;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+    public function getId_schema(): int
+    {
+        return $this->id_schema;
+    }
+
+    public function setId_schema(int $id_schema): void
+    {
+        $this->id_schema = $id_schema;
+    }
+
 
     public function getId_nom(): int
     {
@@ -97,55 +109,60 @@ class PersonaPub
         $this->id_nom = $id_nom;
     }
 
-
+    /**
+     * @deprecated use getIdTablaVo()
+     */
     public function getId_tabla(): string
+    {
+        return $this->id_tabla->value();
+    }
+
+    /**
+     * @deprecated use setIdTablaVo()
+     */
+    public function setId_tabla(string $sid_tabla): void
+    {
+        $this->id_tabla = PersonaTablaCode::fromNullableString($sid_tabla);
+    }
+
+    public function getIdTablaVo(): PersonaTablaCode
     {
         return $this->id_tabla;
     }
 
-
-    public function setId_tabla(string $sid_tabla): void
+    public function setIdTablaVo(PersonaTablaCode|string|null $idTabla): void
     {
-        $this->id_tabla = $sid_tabla;
+        $this->id_tabla = $idTabla instanceof PersonaTablaCode
+            ? $idTabla
+            : PersonaTablaCode::fromNullableString($idTabla);
     }
-
-    // VO API -------------------------------------------------------------------
-    public function getIdTablaVo(): PersonaTablaCode
-    {
-        return new PersonaTablaCode($this->id_tabla);
-    }
-
-    public function setIdTablaVo(PersonaTablaCode $idTabla): void
-    {
-        $this->id_tabla = $idTabla->value();
-    }
-
 
     /**
      * @deprecated use getDlVo() instead
      */
     public function getDl(): ?string
     {
-        return $this->dl;
+        return $this->dl?->value();
     }
-
 
     /**
      * @deprecated use setDlVo() instead
      */
     public function setDl(?string $dl = null): void
     {
-        $this->dl = $dl;
+        $this->dl = DelegacionCode::fromNullableString($dl);
     }
 
     public function getDlVo(): ?DelegacionCode
     {
-        return isset($this->dl) && $this->dl !== '' ? new DelegacionCode($this->dl) : null;
+        return $this->dl;
     }
 
-    public function setDlVo(?DelegacionCode $dl = null): void
+    public function setDlVo(DelegacionCode|string|null $dl = null): void
     {
-        $this->dl = $dl?->value();
+        $this->dl = $dl instanceof DelegacionCode
+            ? $dl
+            : DelegacionCode::fromNullableString($dl);
     }
 
 
@@ -153,7 +170,6 @@ class PersonaPub
     {
         return $this->sacd;
     }
-
 
     public function setSacd(?bool $sacd = null): void
     {
@@ -166,274 +182,271 @@ class PersonaPub
      */
     public function getTrato(): ?string
     {
-        return $this->trato;
+        return $this->trato?->value();
     }
-
 
     /**
      * @deprecated use setTratoVo() instead
      */
     public function setTrato(?string $trato = null): void
     {
-        $this->trato = $trato;
+        $this->trato = PersonaTratoCode::fromNullableString($trato);
     }
 
     public function getTratoVo(): ?PersonaTratoCode
     {
-        return PersonaTratoCode::fromNullableString($this->trato);
+        return $this->trato;
     }
 
-    public function setTratoVo(?PersonaTratoCode $trato = null): void
+    public function setTratoVo(PersonaTratoCode|string|null $trato = null): void
     {
-        $this->trato = $trato?->value();
+        $this->trato = $trato instanceof PersonaTratoCode
+            ? $trato
+            : PersonaTratoCode::fromNullableString($trato);
     }
-
 
     /**
      * @deprecated use getNomVo() instead
      */
     public function getNom(): ?string
     {
-        return $this->nom;
+        return $this->nom?->value();
     }
-
 
     /**
      * @deprecated use setNomVo() instead
      */
     public function setNom(?string $nom = null): void
     {
-        $this->nom = $nom;
+        $this->nom = PersonaNombreText::fromNullableString($nom);
     }
 
     public function getNomVo(): ?PersonaNombreText
     {
-        return PersonaNombreText::fromNullableString($this->nom);
+        return $this->nom;
     }
 
-    public function setNomVo(?PersonaNombreText $nom = null): void
+    public function setNomVo(PersonaNombreText|string|null $nom = null): void
     {
-        $this->nom = $nom?->value();
+        $this->nom = $nom instanceof PersonaNombreText
+            ? $nom
+            : PersonaNombreText::fromNullableString($nom);
     }
-
 
     /**
      * @deprecated use getNx1Vo() instead
      */
     public function getNx1(): ?string
     {
-        return $this->nx1;
+        return $this->nx1?->value();
     }
-
 
     /**
      * @deprecated use setNx1Vo() instead
      */
     public function setNx1(?string $nx1 = null): void
     {
-        $this->nx1 = $nx1;
+        $this->nx1 = PersonaNx1Text::fromNullableString($nx1);
     }
 
     public function getNx1Vo(): ?PersonaNx1Text
     {
-        return PersonaNx1Text::fromNullableString($this->nx1);
+        return $this->nx1;
     }
 
-    public function setNx1Vo(?PersonaNx1Text $nx1 = null): void
+    public function setNx1Vo(PersonaNx1Text|string|null $nx1 = null): void
     {
-        $this->nx1 = $nx1?->value();
+        $this->nx1 = $nx1 instanceof PersonaNx1Text
+            ? $nx1
+            : PersonaNx1Text::fromNullableString($nx1);
     }
-
 
     /**
      * @deprecated use getApellido1Vo() instead
      */
     public function getApellido1(): string
     {
-        return $this->apellido1;
+        return $this->apellido1->value();
     }
-
 
     /**
      * @deprecated use setApellido1Vo() instead
      */
     public function setApellido1(string $apellido1): void
     {
-        $this->apellido1 = $apellido1;
+        $this->apellido1 = PersonaApellido1Text::fromNullableString($apellido1);
     }
 
     public function getApellido1Vo(): PersonaApellido1Text
     {
-        return PersonaApellido1Text::fromString($this->apellido1);
+        return $this->apellido1;
     }
 
-    public function setApellido1Vo(PersonaApellido1Text $apellido1): void
+    public function setApellido1Vo(PersonaApellido1Text|string|null $apellido1): void
     {
-        $this->apellido1 = $apellido1->value();
+        $this->apellido1 = $apellido1 instanceof PersonaApellido1Text
+            ? $apellido1
+            : PersonaApellido1Text::fromNullableString($apellido1);
     }
-
 
     /**
      * @deprecated use getNx2Vo() instead
      */
     public function getNx2(): ?string
     {
-        return $this->nx2;
+        return $this->nx2?->value();
     }
-
 
     /**
      * @deprecated use setNx2Vo() instead
      */
     public function setNx2(?string $nx2 = null): void
     {
-        $this->nx2 = $nx2;
+        $this->nx2 = PersonaNx2Text::fromNullableString($nx2);
     }
 
     public function getNx2Vo(): ?PersonaNx2Text
     {
-        return PersonaNx2Text::fromNullableString($this->nx2);
+        return $this->nx2;
     }
 
-    public function setNx2Vo(?PersonaNx2Text $nx2 = null): void
+    public function setNx2Vo(PersonaNx2Text|string|null $nx2 = null): void
     {
-        $this->nx2 = $nx2?->value();
+        $this->nx2 = $nx2 instanceof PersonaNx2Text
+            ? $nx2
+            : PersonaNx2Text::fromNullableString($nx2);
     }
-
 
     /**
      * @deprecated use getApellido2Vo() instead
      */
     public function getApellido2(): ?string
     {
-        return $this->apellido2;
+        return $this->apellido2?->value();
     }
-
 
     /**
      * @deprecated use setApellido2Vo() instead
      */
     public function setApellido2(?string $apellido2 = null): void
     {
-        $this->apellido2 = $apellido2;
+        $this->apellido2 = PersonaApellido2Text::fromNullableString($apellido2);
     }
 
     public function getApellido2Vo(): ?PersonaApellido2Text
     {
-        return PersonaApellido2Text::fromNullableString($this->apellido2);
+        return $this->apellido2;
     }
 
-    public function setApellido2Vo(?PersonaApellido2Text $apellido2 = null): void
+    public function setApellido2Vo(PersonaApellido2Text|string|null $apellido2 = null): void
     {
-        $this->apellido2 = $apellido2?->value();
+        $this->apellido2 = $apellido2 instanceof PersonaApellido2Text
+            ? $apellido2
+            : PersonaApellido2Text::fromNullableString($apellido2);
     }
-
 
     public function getF_nacimiento(): DateTimeLocal|NullDateTimeLocal|null
     {
         return $this->f_nacimiento ?? new NullDateTimeLocal;
     }
 
-
     public function setF_nacimiento(DateTimeLocal|null $f_nacimiento = null): void
     {
         $this->f_nacimiento = $f_nacimiento;
     }
-
 
     /**
      * @deprecated use getIdiomaPreferidoVo() instead
      */
     public function getIdioma_preferido(): ?string
     {
-        return $this->idioma_preferido;
+        return $this->idioma_preferido?->value();
     }
-
 
     /**
      * @deprecated use setIdiomaPreferidoVo() instead
      */
     public function setIdioma_preferido(?string $idioma_preferido = null): void
     {
-        $this->idioma_preferido = $idioma_preferido;
+        $this->idioma_preferido = LenguaCode::fromNullableString($idioma_preferido);
     }
 
-    public function getIdiomaPreferidoVo(): ?LenguaCode
+    public function getIdiomaPreferido(): ?LenguaCode
     {
-        return LenguaCode::fromNullableString($this->idioma_preferido);
+        return $this->idioma_preferido;
     }
 
-    public function setIdiomaPreferidoVo(?LenguaCode $idioma_preferido = null): void
+    public function setIdiomaPreferidoVo(LenguaCode|string|null $lengua = null): void
     {
-        $this->idioma_preferido = $idioma_preferido?->value();
+        $this->idioma_preferido = $lengua instanceof LenguaCode
+            ? $lengua
+            : LenguaCode::fromNullableString($lengua);
     }
-
 
     /**
      * @deprecated use getSituacionVo() instead
      */
     public function getSituacion(): string
     {
-        return $this->situacion;
+        return $this->situacion->value();
     }
-
 
     /**
      * @deprecated use setSituacionVo() instead
      */
     public function setSituacion(string $situacion): void
     {
-        $this->situacion = $situacion;
+        $this->situacion = SituacionCode::fromNullableString($situacion);
     }
 
     public function getSituacionVo(): SituacionCode
     {
-        return new SituacionCode($this->situacion);
+        return $this->situacion;
     }
 
-    public function setSituacionVo(SituacionCode $situacion): void
+    public function setSituacionVo(SituacionCode|string|null $situacion): void
     {
-        $this->situacion = $situacion->value();
+        $this->situacion = $situacion instanceof SituacionCode
+            ? $situacion
+            : SituacionCode::fromNullableString($situacion);
     }
-
 
     public function getF_situacion(): DateTimeLocal|NullDateTimeLocal|null
     {
         return $this->f_situacion ?? new NullDateTimeLocal;
     }
 
-
-    public function setF_situacion(DateTimeLocal|null $df_situacion = null): void
+    public function setF_situacion(DateTimeLocal|null $f_situacion = null): void
     {
-        $this->f_situacion = $df_situacion;
+        $this->f_situacion = $f_situacion;
     }
-
 
     /**
      * @deprecated use getApelFamVo() instead
      */
     public function getApel_fam(): ?string
     {
-        return $this->apel_fam;
+        return $this->apel_fam?->value();
     }
-
 
     /**
      * @deprecated use setApelFamVo() instead
      */
     public function setApel_fam(?string $apel_fam = null): void
     {
-        $this->apel_fam = $apel_fam;
+        $this->apel_fam = ApelFamText::fromNullableString($apel_fam);
     }
 
     public function getApelFamVo(): ?ApelFamText
     {
-        return ApelFamText::fromNullableString($this->apel_fam);
+        return $this->apel_fam;
     }
 
-    public function setApelFamVo(?ApelFamText $apelFam = null): void
+    public function setApelFamVo(ApelFamText|string|null $apelFam = null): void
     {
-        $this->apel_fam = $apelFam?->value();
+        $this->apel_fam = $apelFam instanceof ApelFamText
+            ? $apelFam
+            : ApelFamText::fromNullableString($apelFam);
     }
 
 
@@ -442,46 +455,45 @@ class PersonaPub
      */
     public function getInc(): ?string
     {
-        return $this->inc;
+        return $this->inc?->value();
     }
-
 
     /**
      * @deprecated use setIncVo() instead
      */
     public function setInc(?string $inc = null): void
     {
-        $this->inc = $inc;
+        $this->inc = IncCode::fromNullableString($inc);
     }
 
     public function getIncVo(): ?IncCode
     {
-        return IncCode::fromNullableString($this->inc);
+        return $this->inc;
     }
 
-    public function setIncVo(?IncCode $inc = null): void
+    public function setIncVo(IncCode|string|null $inc = null): void
     {
-        $this->inc = $inc?->value();
+        $this->inc = $inc instanceof IncCode
+            ? $inc
+            : IncCode::fromNullableString($inc);
     }
-
 
     public function getF_inc(): DateTimeLocal|NullDateTimeLocal|null
     {
         return $this->f_inc ?? new NullDateTimeLocal;
     }
 
-
-    public function setF_inc(DateTimeLocal|null $df_inc = null): void
+    public function setF_inc(DateTimeLocal|null $f_inc = null): void
     {
-        $this->f_inc = $df_inc;
+        $this->f_inc = $f_inc;
     }
 
     /**
      * @deprecated use getNivelStgrVo() instead
      */
-    public function getNivel_stgr(): ?int
+    public function getNivel_stgr(): ?string
     {
-        return $this->nivel_stgr;
+        return $this->nivel_stgr?->value();
     }
 
     /**
@@ -489,101 +501,113 @@ class PersonaPub
      */
     public function setNivel_stgr(?int $nivel_stgr = null): void
     {
-        $this->nivel_stgr = $nivel_stgr;
+        $this->nivel_stgr = NivelStgrId::fromNullableInt($nivel_stgr);
     }
 
     public function getNivelStgrVo(): ?NivelStgrId
     {
-        return NivelStgrId::fromNullableInt($this->nivel_stgr ?? null);
+        return $this->nivel_stgr;
     }
 
-    public function setNivelStgrVo(?NivelStgrId $nivel = null): void
+    public function setNivelStgrVo(NivelStgrId|int|null $nivel = null): void
     {
-        $this->nivel_stgr = $nivel?->value();
+        $this->nivel_stgr = $nivel instanceof NivelStgrId
+            ? $nivel
+            : NivelStgrId::fromNullableInt($nivel);
     }
-
 
     /**
      * @deprecated use getProfesionVo() instead
      */
     public function getProfesion(): ?string
     {
-        return $this->profesion;
+        return $this->profesion?->value();
     }
-
 
     /**
      * @deprecated use setProfesionVo() instead
      */
     public function setProfesion(?string $profesion = null): void
     {
-        $this->profesion = $profesion;
+        $this->profesion = ProfesionText::fromNullableString($profesion);
     }
 
     public function getProfesionVo(): ?ProfesionText
     {
-        return ProfesionText::fromNullableString($this->profesion);
+        return $this->profesion;
     }
 
-    public function setProfesionVo(?ProfesionText $profesion = null): void
+    public function setProfesionVo(ProfesionText|string|null $profesion = null): void
     {
-        $this->profesion = $profesion?->value();
+        $this->profesion = $profesion instanceof ProfesionText
+            ? $profesion
+            : ProfesionText::fromNullableString($profesion);
     }
-
 
     /**
      * @deprecated use getEapVo() instead
      */
     public function getEap(): ?string
     {
-        return $this->eap;
+        return $this->eap?->value();
     }
-
 
     /**
      * @deprecated use setEapVo() instead
      */
     public function setEap(?string $eap = null): void
     {
-        $this->eap = $eap;
+        $this->eap = EapText::fromNullableString($eap);
     }
 
     public function getEapVo(): ?EapText
     {
-        return EapText::fromNullableString($this->eap);
+        return $this->eap;
     }
 
-    public function setEapVo(?EapText $eap = null): void
+    public function setEapVo(EapText|string|null $eap = null): void
     {
-        $this->eap = $eap?->value();
+        $this->eap = $eap instanceof EapText
+            ? $eap
+            : EapText::fromNullableString($eap);
     }
-
 
     /**
      * @deprecated use getObservVo() instead
      */
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ?->value();
     }
-
 
     /**
      * @deprecated use setObservVo() instead
      */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = ObservText::fromNullableString($observ);
     }
 
     public function getObservVo(): ?ObservText
     {
-        return ObservText::fromNullableString($this->observ);
+        return $this->observ;
     }
 
-    public function setObservVo(?ObservText $observ = null): void
+    public function setObservVo(ObservText|string|null $observ = null): void
     {
-        $this->observ = $observ?->value();
+        $this->observ = $observ instanceof ObservText
+            ? $observ
+            : ObservText::fromNullableString($observ);
+    }
+
+    public function getId_ctr(): ?int
+    {
+        return $this->id_ctr;
+    }
+
+    public function setId_ctr(?int $id_ctr = null): void
+    {
+        $this->id_ctr = $id_ctr;
     }
 
     /**
@@ -591,26 +615,27 @@ class PersonaPub
      */
     public function getLugar_nacimiento(): ?string
     {
-        return $this->lugar_nacimiento;
+        return $this->lugar_nacimiento?->value();
     }
-
 
     /**
      * @deprecated use setLugarNacimientoVo() instead
      */
     public function setLugar_nacimiento(?string $lugar_nacimiento = null): void
     {
-        $this->lugar_nacimiento = $lugar_nacimiento;
+        $this->lugar_nacimiento = LugarNacimientoText::fromNullableString($lugar_nacimiento);
     }
 
     public function getLugarNacimientoVo(): ?LugarNacimientoText
     {
-        return LugarNacimientoText::fromNullableString($this->lugar_nacimiento);
+        return $this->lugar_nacimiento;
     }
 
-    public function setLugarNacimientoVo(?LugarNacimientoText $lugar = null): void
+    public function setLugarNacimientoVo(LugarNacimientoText|string|null $lugar = null): void
     {
-        $this->lugar_nacimiento = $lugar?->value();
+        $this->lugar_nacimiento = $lugar instanceof LugarNacimientoText
+            ? $lugar
+            : LugarNacimientoText::fromNullableString($lugar);
     }
 
     public function getEdad(): ?int
@@ -628,7 +653,7 @@ class PersonaPub
         return $this->profesor_stgr;
     }
 
-    public function setProfesor_stgr(bool $profesor_stgr = null): void
+    public function setProfesor_stgr(?bool $profesor_stgr = null): void
     {
         $this->profesor_stgr = $profesor_stgr;
     }
@@ -636,14 +661,13 @@ class PersonaPub
 
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 
-    private string $sApellidos;
-    private string $sApellidosNombre;
-    private string $sApellidosNombreCr1_05;
-    private string $sNombreApellidos;
-    private string $sNombreApellidosCrSin;
-    private string $sTituloNombre;
-    private string $sCentro_o_dl;
-    private string $sTituloNombreLatin;
+    private string $Apellidos;
+    private string $ApellidosNombre;
+    private string $ApellidosNombreCr1_05;
+    private string $NombreApellidos;
+    private string $NombreApellidosCrSin;
+    private string $TituloNombre;
+    private string $Centro_o_dl;
 
     public function getClassName(): string
     {
@@ -661,32 +685,24 @@ class PersonaPub
         return $this->getApellidosNombre();
     }
 
-    /**
-     * Recupera el atributo sApellidos de Persona
-     *
-     * @return string sApellidos
-     */
+
     public function getApellidos(): string
     {
-        if (!isset($this->sApellidos)) {
+        if (!isset($this->Apellidos)) {
             $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
             $ap_nom .= $this->apellido1;
             $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
             $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->sApellidos = $ap_nom;
+            $this->Apellidos = $ap_nom;
         }
-        return $this->sApellidos;
+        return $this->Apellidos;
     }
 
-    /**
-     * Recupera el atributo sApellidosNombre de Persona
-     *
-     * @return string sApellidosNombre
-     */
+
     public function getApellidosNombre(): string
     {
-        if (!isset($this->sApellidosNombre)) {
+        if (!isset($this->ApellidosNombre)) {
             if (empty($this->apellido1)) {
                 $ap_nom = '';
             } else {
@@ -698,9 +714,9 @@ class PersonaPub
                 $ap_nom .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
                 $ap_nom .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
             }
-            $this->sApellidosNombre = trim($ap_nom);
+            $this->ApellidosNombre = trim($ap_nom);
         }
-        return $this->sApellidosNombre;
+        return $this->ApellidosNombre;
     }
 
     public function getApellidosUpperNombre(): string
@@ -718,24 +734,16 @@ class PersonaPub
         return $ap_nom;
     }
 
-    /**
-     * Establece el valor del atributo sApellidosNombre de Persona
-     *
-     * @param string sApellidosNombre
-     */
+
     public function setApellidosNombre($sApellidosNombre): void
     {
-        $this->sApellidosNombre = $sApellidosNombre;
+        $this->ApellidosNombre = $sApellidosNombre;
     }
 
-    /**
-     * Recupera el atributo sApellidosNombreCr1_05 de Persona (según cr 1/05).
-     *
-     * @return string sApellidosNombreCr1_05
-     */
+
     public function getApellidosNombreCr1_05(): string
     {
-        if (!isset($this->sApellidosNombreCr1_05)) {
+        if (!isset($this->ApellidosNombreCr1_05)) {
             $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
             $ap_nom .= $this->apellido1;
             $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
@@ -743,29 +751,21 @@ class PersonaPub
             $ap_nom .= ', ';
             $ap_nom .= $this->nom;
 
-            $this->sApellidosNombreCr1_05 = $ap_nom;
+            $this->ApellidosNombreCr1_05 = $ap_nom;
         }
-        return $this->sApellidosNombreCr1_05;
+        return $this->ApellidosNombreCr1_05;
     }
 
-    /**
-     * Establece el valor del atributo sApellidosNombreCr1_05 de Persona
-     *
-     * @param string sApellidosNombreCr1_05
-     */
+
     public function setApellidosNombreCr1_05($sApellidosNombreCr1_05): void
     {
-        $this->sApellidosNombreCr1_05 = $sApellidosNombreCr1_05;
+        $this->ApellidosNombreCr1_05 = $sApellidosNombreCr1_05;
     }
 
-    /**
-     * Recupera el atributo sNombreApellidos de Persona
-     *
-     * @return string sNombreApellidos
-     */
+
     public function getNombreApellidos(): string
     {
-        if (!isset($this->sNombreApellidos)) {
+        if (!isset($this->NombreApellidos)) {
             $nom_ap = !empty($this->trato) ? $this->trato . ' ' : '';
             $nom_ap .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
             $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
@@ -773,40 +773,29 @@ class PersonaPub
             $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
             $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->sNombreApellidos = $nom_ap;
+            $this->NombreApellidos = $nom_ap;
         }
-        return $this->sNombreApellidos;
+        return $this->NombreApellidos;
     }
 
-    /**
-     * Recupera el atributo sNombreApellidosCrSin de Persona
-     * el nombre más los nexos más los apellidos, sin el tratamiento (para des).
-     *
-     * @return string sNombreApellidosCrSin
-     */
+
     public function getNombreApellidosCrSin(): string
     {
-        if (!isset($this->sNombreApellidosCrSin)) {
+        if (!isset($this->NombreApellidosCrSin)) {
             $nom_ap = $this->nom;
             $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
             $nom_ap .= ' ' . $this->apellido1;
             $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
             $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->sNombreApellidosCrSin = $nom_ap;
+            $this->NombreApellidosCrSin = $nom_ap;
         }
-        return $this->sNombreApellidosCrSin;
+        return $this->NombreApellidosCrSin;
     }
 
-    /**
-     * Recupera el atributo sTituloNombre de Persona
-     * el nombre más los nexos más los apellidos (para des actas).
-     *
-     * @return string sTituloNombre
-     */
     public function getTituloNombre(): string
     {
-        if (!isset($this->sTituloNombre)) {
+        if (!isset($this->TituloNombre)) {
             $nom_ap = 'Dnus. Dr. ';
             $nom_ap .= $this->nom;
             $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
@@ -814,22 +803,18 @@ class PersonaPub
             $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
             $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->sTituloNombre = $nom_ap;
+            $this->TituloNombre = $nom_ap;
         }
-        return $this->sTituloNombre;
+        return $this->TituloNombre;
     }
 
-    /**
-     * Recupera el atributo sCentro_o_dl de Persona
-     *
-     * @return string sCentro_o_dl
-     */
+
     public function getCentro_o_dl(): string
     {
-        if (!isset($this->sCentro_o_dl)) {
+        if (!isset($this->Centro_o_dl)) {
             $classname = get_class($this);
             $matches = [];
-            if (preg_match('@\\\\([\w]+)$@', $classname, $matches)) {
+            if (preg_match('@\\\\(\w+)$@', $classname, $matches)) {
                 $classname = $matches[1];
             }
             switch ($classname) {
@@ -838,23 +823,29 @@ class PersonaPub
                     if ($ctr === ConfigGlobal::mi_dele()) {
                         $oPersonasDl = new PersonaDl($this->getId_nom());
                         $id_ctr = $oPersonasDl->getId_ctr();
-                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                        $oCentroDl = $CentroDlRepository->findById($id_ctr);
+                        $oCentroDl = null;
+                        if ($id_ctr !== null) {
+                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                            $oCentroDl = $CentroDlRepository->findById($id_ctr);
+                        }
                         $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
                     }
                     break;
                 case 'PersonaEx':
                 case 'PersonaIn':
-                case 'PersonaPub':
                     $ctr = $this->getDl();
                     break;
                 case 'PersonaGlobal':
-                    if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                        $oCentroDl = $CentroRepository->findById($this->getId_ctr());
-                    } else {
-                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                        $oCentroDl = $CentroDlRepository->findById($this->getId_ctr());
+                    $oCentroDl = null;
+                    if ($this->getId_ctr() !== null) {
+                        // OJO CON las regiones de stgr
+                        if (ConfigGlobal::mi_ambito() === 'rstgr') {
+                            $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                            $oCentroDl = $CentroRepository->findById($this->getId_ctr());
+                        } else {
+                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                            $oCentroDl = $CentroDlRepository->findById($this->getId_ctr());
+                        }
                     }
                     $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
                     break;
@@ -864,20 +855,23 @@ class PersonaPub
                 case 'PersonaNax':
                 case 'PersonaS':
                 case 'PersonaSSSC':
-                    // OJO CON las regiones de stgr
-                    if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                        $oCentro = $CentroRepository->findById($this->getId_ctr());
-                    } else {
-                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                        $oCentro = $CentroDlRepository->findById($this->getId_ctr());
+                    $oCentro = null;
+                    if ($this->getId_ctr() !== null) {
+                        // OJO CON las regiones de stgr
+                        if (ConfigGlobal::mi_ambito() === 'rstgr') {
+                            $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                            $oCentro = $CentroRepository->findById($this->getId_ctr());
+                        } else {
+                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                            $oCentro = $CentroDlRepository->findById($this->getId_ctr());
+                        }
                     }
                     $ctr = $oCentro?->getNombre_ubi() ?? '?';
                     break;
             }
-            $this->sCentro_o_dl = $ctr;
+            $this->Centro_o_dl = $ctr;
         }
-        return $this->sCentro_o_dl;
+        return $this->Centro_o_dl;
     }
 
 

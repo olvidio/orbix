@@ -14,9 +14,9 @@ class ActividadSacdTexto
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private int $id_item;
-    private string $idioma;
-    private string $clave;
-    private string|null $texto = null;
+    private IdiomaCode $idioma;
+    private SacdTextoClave $clave;
+    private ?SacdTextoTexto $texto = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -35,15 +35,15 @@ class ActividadSacdTexto
      */
     public function getIdioma(): string
     {
-        return $this->idioma;
+        return $this->idioma->value();
     }
 
     /**
      * @deprecated use setIdiomaVo()
      */
-    public function setIdioma(string $sidioma): void
+    public function setIdioma(string $idioma): void
     {
-        $this->idioma = $sidioma;
+        $this->idioma = IdiomaCode::fromNullableString($idioma);
     }
 
     /**
@@ -51,15 +51,14 @@ class ActividadSacdTexto
      */
     public function getIdiomaVo(): IdiomaCode
     {
-        return new IdiomaCode($this->idioma);
+        return $this->idioma;
     }
 
-    /**
-     * @param IdiomaCode $oIdiomaCode
-     */
-    public function setIdiomaVo(IdiomaCode $oIdiomaCode): void
+    public function setIdiomaVo(IdiomaCode|string $texto): void
     {
-        $this->idioma = $oIdiomaCode->value();
+        $this->idioma = $texto instanceof IdiomaCode
+            ? $texto
+            : IdiomaCode::fromNullableString($texto);
     }
 
     /**
@@ -73,9 +72,9 @@ class ActividadSacdTexto
     /**
      * @deprecated use setClaveVo()
      */
-    public function setClave(string $sclave): void
+    public function setClave(string $clave): void
     {
-        $this->clave = $sclave;
+        $this->clave = SacdTextoClave::fromNullableString($clave);
     }
 
     /**
@@ -86,12 +85,12 @@ class ActividadSacdTexto
         return new SacdTextoClave($this->clave);
     }
 
-    /**
-     * @param SacdTextoClave $oSacdTextoClave
-     */
-    public function setClaveVo(SacdTextoClave $oSacdTextoClave): void
+
+    public function setClaveVo(SacdTextoClave|string $texto): void
     {
-        $this->clave = $oSacdTextoClave->value();
+        $this->clave = $texto instanceof SacdTextoClave
+            ? $texto
+            : SacdTextoClave::fromNullableString($texto);
     }
 
     /**
@@ -105,9 +104,9 @@ class ActividadSacdTexto
     /**
      * @deprecated use setTextoVo()
      */
-    public function setTexto(?string $stexto = null): void
+    public function setTexto(?string $texto = null): void
     {
-        $this->texto = $stexto;
+        $this->texto = SacdTextoTexto::fromNullableString($texto);
     }
 
     /**
@@ -115,14 +114,13 @@ class ActividadSacdTexto
      */
     public function getTextoVo(): ?SacdTextoTexto
     {
-        return SacdTextoTexto::fromNullableString($this->texto);
+        return $this->texto;
     }
 
-    /**
-     * @param SacdTextoTexto|null $oSacdTextoTexto
-     */
-    public function setTextoVo(?SacdTextoTexto $oSacdTextoTexto = null): void
+    public function setTextoVo(SacdTextoTexto|string|null $texto = null): void
     {
-        $this->texto = $oSacdTextoTexto?->value();
+        $this->texto = $texto instanceof SacdTextoTexto
+            ? $texto
+            : SacdTextoTexto::fromNullableString($texto);
     }
 }

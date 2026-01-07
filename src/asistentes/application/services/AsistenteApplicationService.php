@@ -1,6 +1,6 @@
 <?php
 
-namespace src\asistentes\application;
+namespace src\asistentes\application\services;
 
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;

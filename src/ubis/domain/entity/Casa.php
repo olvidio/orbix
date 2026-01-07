@@ -6,14 +6,25 @@ use src\shared\domain\traits\Hydratable;
 use src\ubis\application\services\UbiContactsTrait;
 use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCasaDireccionRepositoryInterface;
+use src\ubis\domain\value_objects\{BibliotecaText,
+    CasaId,
+    DelegacionCode,
+    NumSacerdotes,
+    ObservCasaText,
+    PaisName,
+    Plazas,
+    PlazasMin,
+    RegionNameText,
+    TipoCasaText,
+    UbiNombreText};
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
-use src\ubis\domain\value_objects\{CasaId, UbiNombreText, DelegacionCode, PaisName, RegionNameText, TipoCasaText, BibliotecaText, ObservCasaText, Plazas, PlazasMin, NumSacerdotes};
 
 class Casa
 {
     use Hydratable;
+
     // Esto inyecta los métodos getDirecciones, emailPrincipalOPrimero y getTeleco aquí
     use UbiContactsTrait;
 
@@ -22,7 +33,7 @@ class Casa
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private string|null $tipo_ubi = null;
+    private ?string $tipo_ubi = null;
 
     private CasaId $id_ubi;
 
@@ -36,7 +47,7 @@ class Casa
 
     private bool $active;
 
-    private DateTimeLocal|null $f_active = null;
+    private ?DateTimeLocal $f_active = null;
 
     private bool|null $sv = null;
 
@@ -106,6 +117,7 @@ class Casa
     }
 
     // -------- API VO (nueva) ---------
+
     /** Getter VO para id_ubi */
     public function getIdUbiVo(): CasaId
     {
@@ -113,9 +125,11 @@ class Casa
     }
 
     /** Setter VO para id_ubi */
-    public function setIdUbiVo(CasaId $id): void
+    public function setIdUbiVo(CasaId|int $id): void
     {
-        $this->id_ubi = $id;
+        $this->id_ubi = $id instanceof CasaId
+            ? $id
+            : new CasaId($id);
     }
 
 
@@ -141,9 +155,11 @@ class Casa
         return $this->nombre_ubi;
     }
 
-    public function setNombreUbiVo(UbiNombreText $texto): void
+    public function setNombreUbiVo(UbiNombreText|string $texto): void
     {
-        $this->nombre_ubi = $texto;
+        $this->nombre_ubi = $texto instanceof UbiNombreText
+            ? $texto
+            : new UbiNombreText($texto);
     }
 
 
@@ -169,9 +185,11 @@ class Casa
         return $this->dl;
     }
 
-    public function setDlVo(?DelegacionCode $codigo = null): void
+    public function setDlVo(DelegacionCode|string|null $texto = null): void
     {
-        $this->dl = $codigo;
+        $this->dl = $texto instanceof DelegacionCode
+            ? $texto
+            : DelegacionCode::fromNullableString($texto);
     }
 
 
@@ -197,9 +215,11 @@ class Casa
         return $this->pais;
     }
 
-    public function setPaisVo(?PaisName $nombre = null): void
+    public function setPaisVo(PaisName|string|null $texto = null): void
     {
-        $this->pais = $nombre;
+        $this->pais = $texto instanceof PaisName
+            ? $texto
+            : PaisName::fromNullableString($texto);
     }
 
 
@@ -225,9 +245,11 @@ class Casa
         return $this->region;
     }
 
-    public function setRegionVo(?RegionNameText $texto = null): void
+    public function setRegionVo(RegionNameText|string|null $texto = null): void
     {
-        $this->region = $texto;
+        $this->region = $texto instanceof RegionNameText
+            ? $texto
+            : RegionNameText::fromNullableString($texto);
     }
 
 
@@ -243,17 +265,18 @@ class Casa
     }
 
 
-    public function getF_active(): DateTimeLocal|NullDateTimeLocal|null
+    public function getF_active(): DateTimeLocal|null
     {
-        return $this->f_active ?? new NullDateTimeLocal;
+        return $this->f_active;
     }
 
 
-    public function setF_active(DateTimeLocal|NullDateTimeLocal|null $f_active = null): void
+    public function setF_active(DateTimeLocal|null $f_active = null): void
     {
-        $this->f_active = $f_active instanceof NullDateTimeLocal ? null : $f_active;
+        $this->f_active = $f_active instanceof DateTimeLocal
+            ? $f_active
+            : null;
     }
-
 
 
     public function isSv(): ?bool
@@ -298,9 +321,11 @@ class Casa
         return $this->tipo_casa;
     }
 
-    public function setTipoCasaVo(?TipoCasaText $texto = null): void
+    public function setTipoCasaVo(TipoCasaText|string|null $texto = null): void
     {
-        $this->tipo_casa = $texto;
+        $this->tipo_casa = $texto instanceof TipoCasaText
+            ? $texto
+            : TipoCasaText::fromNullableString($texto);
     }
 
 
@@ -326,9 +351,11 @@ class Casa
         return $this->plazas;
     }
 
-    public function setPlazasVo(?Plazas $valor = null): void
+    public function setPlazasVo(Plazas|int|null $valor = null): void
     {
-        $this->plazas = $valor;
+        $this->plazas = $valor instanceof Plazas
+            ? $valor
+            : Plazas::fromNullable($valor);
     }
 
 
@@ -354,9 +381,11 @@ class Casa
         return $this->plazas_min;
     }
 
-    public function setPlazasMinVo(?PlazasMin $valor = null): void
+    public function setPlazasMinVo(PlazasMin|string|null $texto = null): void
     {
-        $this->plazas_min = $valor;
+        $this->plazas_min = $texto instanceof PlazasMin
+            ? $texto
+            : PlazasMin::fromNullableString($texto);
     }
 
 
@@ -382,9 +411,11 @@ class Casa
         return $this->num_sacd;
     }
 
-    public function setNumSacdVo(?NumSacerdotes $valor = null): void
+    public function setNumSacdVo(NumSacerdotes|int|null $valor = null): void
     {
-        $this->num_sacd = $valor;
+        $this->num_sacd = $valor instanceof NumSacerdotes
+            ? $valor
+            : NumSacerdotes::fromNullable($valor);
     }
 
 
@@ -410,9 +441,11 @@ class Casa
         return $this->biblioteca;
     }
 
-    public function setBibliotecaVo(?BibliotecaText $texto = null): void
+    public function setBibliotecaVo(BibliotecaText|string|null $texto = null): void
     {
-        $this->biblioteca = $texto;
+        $this->biblioteca = $texto instanceof BibliotecaText
+            ? $texto
+            : BibliotecaText::fromNullableString($texto);
     }
 
 
@@ -438,9 +471,11 @@ class Casa
         return $this->observ;
     }
 
-    public function setObservVo(?ObservCasaText $texto = null): void
+    public function setObservVo(ObservCasaText|string|null $texto = null): void
     {
-        $this->observ = $texto;
+        $this->observ = $texto instanceof ObservCasaText
+            ? $texto
+            : ObservCasaText::fromNullableString($texto);
     }
 
     public function getId_auto(): int

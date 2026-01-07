@@ -27,7 +27,9 @@ class Preferencia
 
     public function setTipoVo(TipoPreferencia|string $tipo): void
     {
-        $this->tipo = $tipo instanceof TipoPreferencia ? $tipo : new TipoPreferencia($tipo);
+        $this->tipo = $tipo instanceof TipoPreferencia
+            ? $tipo
+            : new TipoPreferencia($tipo);
     }
 
 

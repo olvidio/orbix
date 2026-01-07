@@ -28,6 +28,13 @@ final class SacdTextoTexto
 
     public static function fromNullableString(?string $value): ?self
     {
-        return $value !== null ? new self($value) : null;
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
     }
 }

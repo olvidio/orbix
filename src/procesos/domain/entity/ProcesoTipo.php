@@ -16,25 +16,27 @@ class ProcesoTipo
 
     private ProcesoTipoId $id_tipo_proceso;
 
-    private string|null $nom_proceso = null;
+    private ?string $nom_proceso = null;
 
-    private int|null $sfsv = null;
+    private ?int $sfsv = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getProcesoTipoId(): ProcesoTipoId
+    public function getIdTipoProcesoVo(): ProcesoTipoId
     {
         return $this->id_tipo_proceso;
     }
 
 
-    public function setProcesoTipoId(ProcesoTipoId $id_tipo_proceso): void
+    public function setIdTipoProcesoVo(ProcesoTipoId|int|null $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = $id_tipo_proceso;
+        $this->id_tipo_proceso = $id_tipo_proceso instanceof ProcesoTipoId
+            ? $id_tipo_proceso
+            : ProcesoTipoId::fromNullable($id_tipo_proceso);
     }
 
     /**
-     * @deprecated use getProcesoTipoId()
+     * @deprecated use getIdTipoProcesoVo()
      */
     public function getId_tipo_proceso(): int
     {
@@ -42,11 +44,11 @@ class ProcesoTipo
     }
 
     /**
-     * @deprecated use setProcesoTipoId()
+     * @deprecated use setIdTipoProcesoVo()
      */
     public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = new ProcesoTipoId($id_tipo_proceso);
+        $this->id_tipo_proceso = ProcesoTipoId::fromNullable($id_tipo_proceso);
     }
 
 

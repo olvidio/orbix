@@ -10,6 +10,7 @@ use notas\model\EditarPersonaNota;
 use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\TrasladoDl;
 use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -304,7 +305,7 @@ class trasladosNotasTest extends myTest
             $this->assertEquals($oPersonaNotaA->getIdNivel(), $oPersonaNotaB->getId_nivel());
             $this->assertEquals($oPersonaNotaA->getIdAsignatura(), $oPersonaNotaB->getId_asignatura());
             $this->assertEquals($oPersonaNotaA->getNotaNum(), $oPersonaNotaB->getNota_num());
-            $this->assertEquals(Nota::FALTA_CERTIFICADO, $oPersonaNotaB->getId_situacion());
+            $this->assertEquals(NotaSituacion::FALTA_CERTIFICADO, $oPersonaNotaB->getId_situacion());
 
             // 4.- borrar las pruebas
             $oPersonaNotaB->DBEliminar();
@@ -412,7 +413,7 @@ class trasladosNotasTest extends myTest
             $this->assertEquals($oPersonaNotaA->getIdNivel(), $oPersonaNotaB->getId_nivel());
             $this->assertEquals($oPersonaNotaA->getIdAsignatura(), $oPersonaNotaB->getId_asignatura());
             $this->assertEquals($oPersonaNotaA->getNotaNum(), $oPersonaNotaB->getNota_num());
-            $this->assertEquals(Nota::FALTA_CERTIFICADO, $oPersonaNotaB->getId_situacion());
+            $this->assertEquals(NotaSituacion::FALTA_CERTIFICADO, $oPersonaNotaB->getId_situacion());
 
             // 4.- borrar las pruebas
             $oPersonaNotaB->DBEliminar();
@@ -514,7 +515,7 @@ class trasladosNotasTest extends myTest
             $this->assertEquals($oPersonaNotaA->getIdNivel(), $oPersonaNotaB->getId_nivel());
             $this->assertEquals($oPersonaNotaA->getIdAsignatura(), $oPersonaNotaB->getId_asignatura());
             $this->assertEquals($oPersonaNotaA->getNotaNum(), $oPersonaNotaB->getNota_num());
-            $this->assertEquals(Nota::FALTA_CERTIFICADO, $oPersonaNotaB->getId_situacion());
+            $this->assertEquals(NotaSituacion::FALTA_CERTIFICADO, $oPersonaNotaB->getId_situacion());
 
             // 4.- borrar las pruebas
             $oPersonaNotaB->DBEliminar();

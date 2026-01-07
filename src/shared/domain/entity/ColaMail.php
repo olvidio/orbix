@@ -16,17 +16,17 @@ class ColaMail
 
     private ColaMailId $uuid_item;
 
-    private string|null $mail_to = null;
+    private ?string $mail_to = null;
 
-    private string|null $message = null;
+    private ?string $message = null;
 
-    private string|null $subject = null;
+    private ?string $subject = null;
 
-    private string|null $headers = null;
+    private ?string $headers = null;
 
-    private string|null $writed_by = null;
+    private ?string $writed_by = null;
 
-    private DateTimeLocal|null $dsended = null;
+   private ?DateTimeLocal $dsended = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

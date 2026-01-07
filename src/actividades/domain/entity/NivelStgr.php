@@ -56,9 +56,9 @@ class NivelStgr
     /**
      * @deprecated usar setId(NivelStgrId $id)
      */
-    public function setNivel_stgr(int $inivel_stgr): void
+    public function setNivel_stgr(int $nivel_stgr): void
     {
-        $this->nivel_stgr = new NivelStgrId($inivel_stgr);
+        $this->nivel_stgr = new NivelStgrId($nivel_stgr);
     }
 
     // Nuevos métodos con Value Objects
@@ -74,7 +74,7 @@ class NivelStgr
 
     /**
      *
-     * @return string $sdesc_nivel
+     * @return string $desc_nivel
      */
     /**
      * @deprecated usar getDescNivelVo()
@@ -91,9 +91,9 @@ class NivelStgr
     /**
      * @deprecated usar setDescNivelVo(NivelStgrDesc $desc)
      */
-    public function setDesc_nivel(string $sdesc_nivel): void
+    public function setDesc_nivel(string $desc_nivel): void
     {
-        $this->desc_nivel = new NivelStgrDesc($sdesc_nivel);
+        $this->desc_nivel = new NivelStgrDesc($desc_nivel);
     }
 
     public function getDescNivelVo(): NivelStgrDesc
@@ -101,14 +101,16 @@ class NivelStgr
         return $this->desc_nivel;
     }
 
-    public function setDescNivelVo(NivelStgrDesc $desc): void
+    public function setDescNivelVo(NivelStgrDesc|string|null $texto): void
     {
-        $this->desc_nivel = $desc;
+        $this->desc_nivel = $texto instanceof NivelStgrDesc
+            ? $texto
+            : NivelStgrBreve::fromNullableString($texto);
     }
 
     /**
      *
-     * @return string|null $sdesc_breve
+     * @return string|null $desc_breve
      */
     /**
      * @deprecated usar getDescBreveVo()
@@ -125,9 +127,9 @@ class NivelStgr
     /**
      * @deprecated usar setDescBreveVo(?NivelStgrBreve $breve)
      */
-    public function setDesc_breve(?string $sdesc_breve = null): void
+    public function setDesc_breve(?string $desc_breve = null): void
     {
-        $this->desc_breve = NivelStgrBreve::fromNullableString($sdesc_breve);
+        $this->desc_breve = NivelStgrBreve::fromNullableString($desc_breve);
     }
 
     public function getDescBreveVo(): ?NivelStgrBreve
@@ -135,14 +137,16 @@ class NivelStgr
         return $this->desc_breve;
     }
 
-    public function setDescBreveVo(?NivelStgrBreve $breve = null): void
+    public function setDescBreveVo(NivelStgrBreve|string|null $texto = null): void
     {
-        $this->desc_breve = $breve;
+        $this->desc_breve = $texto instanceof NivelStgrBreve
+            ? $texto
+            : NivelStgrBreve::fromNullableString($texto);
     }
 
     /**
      *
-     * @return int|null $iorden
+     * @return int|null $orden
      */
     /**
      * @deprecated usar getOrdenVo()
@@ -159,9 +163,9 @@ class NivelStgr
     /**
      * @deprecated usar setOrdenVo(?NivelStgrOrden $orden)
      */
-    public function setOrden(?int $iorden = null): void
+    public function setOrden(?int $orden = null): void
     {
-        $this->orden = NivelStgrOrden::fromNullable($iorden);
+        $this->orden = NivelStgrOrden::fromNullable($orden);
     }
 
     public function getOrdenVo(): ?NivelStgrOrden
@@ -169,9 +173,11 @@ class NivelStgr
         return $this->orden;
     }
 
-    public function setOrdenVo(?NivelStgrOrden $orden = null): void
+    public function setOrdenVo(NivelStgrOrden|int|null $valor = null): void
     {
-        $this->orden = $orden;
+        $this->orden = $valor instanceof NivelStgrOrden
+            ? $valor
+            : NivelStgrOrden::fromNullable($valor);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -194,7 +200,6 @@ class NivelStgr
      * Recupera las propiedades del atributo desc_nivel de NivelStgr
      * en una clase del tipo DatosCampo
      *
-     * @return object DatosCampo
      */
     private function getDatosDesc_nivel(): DatosCampo
     {
@@ -212,7 +217,6 @@ class NivelStgr
      * Recupera las propiedades del atributo desc_breve de NivelStgr
      * en una clase del tipo DatosCampo
      *
-     * @return object DatosCampo
      */
     private function getDatosDesc_breve(): DatosCampo
     {
@@ -230,7 +234,6 @@ class NivelStgr
      * Recupera las propiedades del atributo orden de NivelStgr
      * en una clase del tipo DatosCampo
      *
-     * @return object DatosCampo
      */
     private function getDatosOrden(): DatosCampo
     {

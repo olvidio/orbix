@@ -15,7 +15,7 @@ class PermMenu
 
     private int $id_usuario;
 
-    private int|null $menu_perm = null;
+    private ?int $menu_perm = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

@@ -7,8 +7,12 @@ use core\Set;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\notas\domain\value_objects\ActaNumero;
+use src\procesos\domain\value_objects\ActividadId;
 use src\profesores\domain\value_objects\Acta;
 use src\profesores\domain\value_objects\CursoInicio;
+use src\profesores\domain\value_objects\ProfesorTipoName;
 use src\shared\domain\traits\Hydratable;
 
 
@@ -23,130 +27,163 @@ class ProfesorDocenciaStgr
 
     private int $id_nom;
 
-    private int $id_asignatura;
+    private AsignaturaId $id_asignatura;
 
-    private int|null $id_activ = null;
+    private ?ActividadId $id_activ = null;
 
-    private string|null $tipo = null;
+    private ?TipoActividadAsignatura $tipo = null;
 
     private int $curso_inicio;
 
-    private string|null $acta = null;
+    private ?ActaNumero $acta = null;
+
+    
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getIdAsignaturaVo(): AsignaturaId
+    {
+        return $this->id_asignatura;
+    }
+
+    public function setIdAsignaturaVo(AsignaturaId|int $valor = null): void
+    {
+        $this->id_asignatura = $valor instanceof AsignaturaId
+            ? $valor
+            : AsignaturaId::fromNullable($valor);
+    }
+
+    /**
+     * @deprecated use getIdAsignaturaVo()
+     */
+    public function getId_asignatura(): int
+    {
+        return $this->id_asignatura->value();
+    }
+
+    /**
+     * @deprecated use setIdAsignaturaVo()
+     */
+    public function setId_asignatura(int $valor = null): void
+    {
+        $this->id_asignatura = AsignaturaId::fromNullable($valor);
+    }
+
+    public function getIdActivVo(): ?ActividadId
+    {
+        return $this->id_activ;
+    }
+
+    public function setIdActivVo(ActividadId|int|null $valor = null): void
+    {
+        $this->id_activ = $valor instanceof ActividadId
+            ? $valor
+            : ActividadId::fromNullable($valor);
+    }
+
+    /**
+     * @deprecated use getIdActivVo()
+     */
+    public function getId_activ(): ?int
+    {
+        return $this->id_activ?->value();
+    }
+
+    /**
+     * @deprecated use setIdActivVo()
+     */
+    public function setId_activ(?int $valor = null): void
+    {
+        $this->id_activ = ActividadId::fromNullable($valor);
+    }
+
+    public function getTipoVo(): ?TipoActividadAsignatura
+    {
+        return $this->tipo;
+    }
+
+    public function setTipoVo(TipoActividadAsignatura|string|null $valor = null): void
+    {
+        $this->tipo = $valor instanceof TipoActividadAsignatura
+            ? $valor
+            : TipoActividadAsignatura::fromNullableString($valor);
+    }
+
+    /**
+     * @deprecated use getTipoVo()
+     */
+    public function getTipo(): ?string
+    {
+        return $this->tipo?->value();
+    }
+
+    /**
+     * @deprecated use setTipoVo()
+     */
+    public function setTipo(?string $valor = null): void
+    {
+        $this->tipo = TipoActividadAsignatura::fromNullableString($valor);
+    }
+
+    public function getActaVo(): ?ActaNumero
+    {
+        return $this->acta;
+    }
+
+    public function setActaVo(ActaNumero|int|null $valor = null): void
+    {
+        $this->acta = $valor instanceof ActaNumero
+            ? $valor
+            : ActaNumero::fromNullableString($valor);
+    }
+
+    /**
+     * @deprecated use getActaVo()
+     */
+    public function getActa(): ?int
+    {
+        return $this->acta?->value();
+    }
+
+    /**
+     * @deprecated use setActaVo()
+     */
+    public function setActa(?int $valor = null): void
+    {
+        $this->acta = ActaNumero::fromNullableString($valor);
+    }
 
     public function getId_item(): int
     {
         return $this->id_item;
     }
 
-
-    public function setId_item(int $id_item): void
+    public function setId_item(int $valor): void
     {
-        $this->id_item = $id_item;
+        $this->id_item = $valor;
     }
-
 
     public function getId_nom(): int
     {
         return $this->id_nom;
     }
 
-
-    public function setId_nom(int $id_nom): void
+    public function setId_nom(int $valor): void
     {
-        $this->id_nom = $id_nom;
+        $this->id_nom = $valor;
     }
 
-
-    public function getId_asignatura(): int
-    {
-        return $this->id_asignatura;
-    }
-
-
-    public function setId_asignatura(int $id_asignatura): void
-    {
-        $this->id_asignatura = $id_asignatura;
-    }
-
-
-    public function getId_activ(): ?int
-    {
-        return $this->id_activ;
-    }
-
-
-    public function setId_activ(?int $id_activ = null): void
-    {
-        $this->id_activ = $id_activ;
-    }
-
-
-    public function getTipo(): ?string
-    {
-        return $this->tipo;
-    }
-
-
-    public function setTipo(?string $tipo = null): void
-    {
-        $this->tipo = $tipo;
-    }
-
-    /**
-     * @deprecated Usar getCursoInicioVo()->value()
-     */
     public function getCurso_inicio(): int
     {
         return $this->curso_inicio;
     }
 
-    /**
-     * @deprecated Usar setCursoInicioVo(CursoInicio $vo)
-     */
-    public function setCurso_inicio(int $curso_inicio): void
+    public function setCurso_inicio(int $valor): void
     {
-        $this->curso_inicio = $curso_inicio;
+        $this->curso_inicio = $valor;
     }
 
-    public function getCursoInicioVo(): CursoInicio
-    {
-        return new CursoInicio($this->curso_inicio);
-    }
-
-    public function setCursoInicioVo(CursoInicio $curso): void
-    {
-        $this->curso_inicio = $curso->value();
-    }
-
-    /**
-     * @deprecated Usar getActaVo()->value()
-     */
-    public function getActa(): ?string
-    {
-        return $this->acta;
-    }
-
-    /**
-     * @deprecated Usar setActaVo(Acta $vo)
-     */
-    public function setActa(?string $acta = null): void
-    {
-        $this->acta = $acta;
-    }
-
-    public function getActaVo(): ?Acta
-    {
-        return Acta::fromNullable($this->acta);
-    }
-
-    public function setActaVo(?Acta $acta): void
-    {
-        $this->acta = $acta?->value();
-    }
-
-    /* ------------------- PARA el mod_tabla  -------------------------------*/
+/* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
         return 'id_item';

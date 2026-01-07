@@ -117,4 +117,12 @@ final class NivelStgrId
         }
         return $nivel_stgr;
     }
+
+public static function fromNullable(?int $value): ?self
+{
+    if ($value === null) {
+        return null;
+    }
+    return new self($value);
+}
 }

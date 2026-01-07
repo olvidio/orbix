@@ -16,7 +16,7 @@ class EncargoSacdObserv
 
     private int $id_nom;
 
-    private ObservText|null $observ = null;
+    private ?ObservText $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -56,7 +56,7 @@ class EncargoSacdObserv
      */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ !== null ? new ObservText($observ) : null;
+        $this->observ = ObservText::fromNullableString($observ);
     }
 
     public function getObservVo(): ?ObservText
@@ -64,8 +64,10 @@ class EncargoSacdObserv
         return $this->observ;
     }
 
-    public function setObservVo(?ObservText $vo): void
+    public function setObservVo(ObservText|string|null $vo): void
     {
-        $this->observ = $vo;
+        $this->observ = $vo instanceof ObservText
+            ? $vo
+            : ObservText::fromNullableString($vo);
     }
 }

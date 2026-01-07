@@ -10,6 +10,9 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\entity\PersonaNotaDB;
+use src\notas\domain\value_objects\NotaEpoca;
+use src\notas\domain\value_objects\NotaSituacion;
+use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use web\TiposActividades;
 use function core\is_true;
@@ -40,12 +43,12 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
     $oActividad = $ActividadAllRepository->findById($Qid_activ);
     $id_tipo_activ = $oActividad->getId_tipo_activ();
-    $iepoca = PersonaNotaDB::EPOCA_CA;
+    $iepoca = NotaEpoca::EPOCA_CA;
     $oTipoActividad = new TiposActividades($id_tipo_activ);
     $asistentes = $oTipoActividad->getAsistentesText();
     $actividad = $oTipoActividad->getActividadText();
     if ($asistentes === 'agd' && $actividad === 'ca') {
-        $iepoca = PersonaNotaDB::EPOCA_INVIERNO;
+        $iepoca = NotaEpoca::EPOCA_INVIERNO;
     }
 
     $cMatriculados = $MatriculaRepository->getMatriculas(array('id_asignatura' => $Qid_asignatura, 'id_activ' => $Qid_activ));
@@ -84,7 +87,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                 $error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"), $oPersona->getNombreApellidos(), $nn) . "\n";
                 continue;
             }
-            if ((int)$acta === Nota::CURSADA) {
+            if ((int)$acta === NotaSituacion::CURSADA) {
                 $error .= _("no se puede definir cursada con preceptor") . "\n";
                 exit($error);
             }
@@ -97,7 +100,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             }
         } else {
             // para las cursadas o examinadas no aprobadas
-            if ($id_situacion === NOTA::CURSADA || $id_situacion === NOTA::EXAMINADO || empty($id_situacion)) {
+            if ($id_situacion === NotaSituacion::CURSADA || $id_situacion === NotaSituacion::EXAMINADO || empty($id_situacion)) {
                 //conseguir una fecha para poner como fecha acta. las cursadas se guardan durante 2 años
                 $oF_acta = $cActas[0]->getF_acta();
             } else {
@@ -116,7 +119,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
         // Acepto nota_num=0 para borrar.
         if (!empty($nota_num) && $nota_num / $nota_max < $nota_corte) {
             $nn = $nota_num / $nota_max * 10;
-            $id_situacion = NOTA::EXAMINADO; // examinado
+            $id_situacion = NotaSituacion::EXAMINADO; // examinado
         }
 
         if ($preceptor) { //miro cuál
@@ -217,16 +220,16 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                         $oPersonaNotaAnterior->DBEliminar();
                     }
                     continue 2;
-                case Nota::CURSADA:
-                    $id_situacion = NOTA::CURSADA;
+                case NotaSituacion::CURSADA:
+                    $id_situacion = NotaSituacion::CURSADA;
                     break;
                 default:
                     if (empty($id_situacion)) {
                         if (!empty($nota_num)) {
                             if ($nota_num / $nota_max < $nota_corte) {
-                                $id_situacion = NOTA::EXAMINADO;
+                                $id_situacion = NotaSituacion::EXAMINADO;
                             } else {
-                                $id_situacion = NOTA::NUMERICA;
+                                $id_situacion = NotaSituacion::NUMERICA;
                             }
                         } else {
                             if (isset($oPersonaNotaAnterior)) {
@@ -246,7 +249,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             $oPersonaNota->setActa($acta);
             $oPersonaNota->setFActa($oF_acta);
             $oPersonaNota->setDetalle('');
-            $oPersonaNota->setTipoActa(PersonaNotaDB::FORMATO_ACTA);
+            $oPersonaNota->setTipoActa(TipoActa::FORMATO_ACTA);
             $oPersonaNota->setPreceptor($preceptor);
             $oPersonaNota->setIdPreceptor($id_preceptor);
             $oPersonaNota->setEpoca($iepoca);
@@ -316,7 +319,7 @@ if ($Qque === 1) { // Grabar las notas en la matricula
                 }
             }
         } else {
-            if ((int)$Qacta[$n] === Nota::CURSADA && $preceptor === TRUE) {
+            if ((int)$Qacta[$n] === NotaSituacion::CURSADA && $preceptor === TRUE) {
                 $error = _("no se puede definir cursada con preceptor") . "\n";
                 exit($error);
             }

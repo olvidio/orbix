@@ -82,7 +82,7 @@ class Repeticion
 
     /**
      *
-     * @return string $srepeticion
+     * @return string $repeticion
      */
     /**
      * @deprecated usar getRepeticionVo()
@@ -99,9 +99,9 @@ class Repeticion
     /**
      * @deprecated usar setRepeticionVo(RepeticionText $repeticion)
      */
-    public function setRepeticion(string $srepeticion): void
+    public function setRepeticion(string $repeticion): void
     {
-        $this->repeticion = new RepeticionText($srepeticion);
+        $this->repeticion = new RepeticionText($repeticion);
     }
 
     public function getRepeticionVo(): RepeticionText
@@ -109,14 +109,16 @@ class Repeticion
         return $this->repeticion;
     }
 
-    public function setRepeticionVo(RepeticionText $repeticion): void
+    public function setRepeticionVo(RepeticionText|string|null $texto): void
     {
-        $this->repeticion = $repeticion;
+        $this->repeticion = $texto instanceof RepeticionText
+            ? $texto
+            : RepeticionText::fromNullableString($texto);
     }
 
     /**
      *
-     * @return string $stemporada
+     * @return string $temporada
      */
     /**
      * @deprecated usar getTemporadaVo()
@@ -133,9 +135,9 @@ class Repeticion
     /**
      * @deprecated usar setTemporadaVo(TemporadaCode $temporada)
      */
-    public function setTemporada(string $stemporada): void
+    public function setTemporada(string $temporada): void
     {
-        $this->temporada = new TemporadaCode($stemporada);
+        $this->temporada = new TemporadaCode($temporada);
     }
 
     public function getTemporadaVo(): TemporadaCode
@@ -143,14 +145,16 @@ class Repeticion
         return $this->temporada;
     }
 
-    public function setTemporadaVo(TemporadaCode $temporada): void
+    public function setTemporadaVo(TemporadaCode|string|null $texto): void
     {
-        $this->temporada = $temporada;
+        $this->temporada = $texto instanceof TemporadaCode
+            ? $texto
+            : TemporadaCode::fromNullableString($texto);
     }
 
     /**
      *
-     * @return int|null $itipo
+     * @return int|null $tipo
      */
     /**
      * @deprecated usar getTipoVo()
@@ -162,14 +166,14 @@ class Repeticion
 
     /**
      *
-     * @param int|null $itipo
+     * @param int|null $tipo
      */
     /**
      * @deprecated usar setTipoVo(?RepeticionTipo $tipo)
      */
-    public function setTipo(?int $itipo = null): void
+    public function setTipo(?int $tipo = null): void
     {
-        $this->tipo = $itipo === null ? null : new RepeticionTipo($itipo);
+        $this->tipo = $tipo === null ? null : new RepeticionTipo($tipo);
     }
 
     public function getTipoVo(): ?RepeticionTipo
@@ -177,9 +181,11 @@ class Repeticion
         return $this->tipo;
     }
 
-    public function setTipoVo(?RepeticionTipo $tipo): void
+    public function setTipoVo(RepeticionTipo|int|null $tipo): void
     {
-        $this->tipo = $tipo;
+        $this->tipo = $tipo instanceof RepeticionTipo
+            ? $tipo
+            : RepeticionTipo::fromNullable($tipo);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

@@ -17,11 +17,11 @@ class RelacionTarifaTipoActividad
 
     private int $id_item;
 
-    private int $id_tarifa;
+    private TarifaId $id_tarifa;
 
-    private int $id_tipo_activ;
+    private ActividadTipoId $id_tipo_activ;
 
-    private int $id_serie;
+    private SerieId $id_serie;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -41,7 +41,7 @@ class RelacionTarifaTipoActividad
      */
     public function getId_tarifa(): int
     {
-        return $this->id_tarifa;
+        return $this->id_tarifa->value();
     }
 
     /**
@@ -49,17 +49,19 @@ class RelacionTarifaTipoActividad
      */
     public function setId_tarifa(int $id_tarifa): void
     {
-        $this->id_tarifa = $id_tarifa;
+        $this->id_tarifa = TarifaId::fromNullable($id_tarifa);
     }
 
     public function getIdTarifaVo(): TarifaId
     {
-        return new TarifaId($this->id_tarifa);
+        return $this->id_tarifa;
     }
 
-    public function setIdTarifaVo(TarifaId $id): void
+    public function setIdTarifaVo(TarifaId|int $id): void
     {
-        $this->id_tarifa = $id->value();
+        $this->id_tarifa = $id instanceof TarifaId
+            ? $id
+            : TarifaId::fromNullable($id);
     }
 
     /**
@@ -67,7 +69,7 @@ class RelacionTarifaTipoActividad
      */
     public function getId_tipo_activ(): int
     {
-        return $this->id_tipo_activ;
+        return $this->id_tipo_activ->value();
     }
 
     /**
@@ -75,17 +77,19 @@ class RelacionTarifaTipoActividad
      */
     public function setId_tipo_activ(int $id_tipo_activ): void
     {
-        $this->id_tipo_activ = $id_tipo_activ;
+        $this->id_tipo_activ = ActividadTipoId::fromString($id_tipo_activ);
     }
 
     public function getIdTipoActividadVo(): ActividadTipoId
     {
-        return new ActividadTipoId($this->id_tipo_activ);
+        return $this->id_tipo_activ;
     }
 
-    public function setIdTipoActividadVo(ActividadTipoId $id): void
+    public function setIdTipoActividadVo(ActividadTipoId|string $id): void
     {
-        $this->id_tipo_activ = $id->value();
+        $this->id_tipo_activ = $id instanceof ActividadTipoId
+            ? $id
+            : ActividadTipoId::fromString($id);
     }
 
     /**
@@ -93,7 +97,7 @@ class RelacionTarifaTipoActividad
      */
     public function getId_serie(): int
     {
-        return $this->id_serie;
+        return $this->id_serie->value();
     }
 
     /**
@@ -101,16 +105,18 @@ class RelacionTarifaTipoActividad
      */
     public function setId_serie(int $id_serie): void
     {
-        $this->id_serie = $id_serie;
+        $this->id_serie = SerieId::fromNullable($id_serie);
     }
 
     public function getIdSerieVo(): SerieId
     {
-        return new SerieId($this->id_serie);
+        return $this->id_serie;
     }
 
-    public function setIdSerieVo(SerieId $id): void
+    public function setIdSerieVo(SerieId|int $id): void
     {
-        $this->id_serie = $id->value();
+        $this->id_serie = $id instanceof SerieId
+            ? $id
+            : SerieId::fromNullable($id);
     }
 }

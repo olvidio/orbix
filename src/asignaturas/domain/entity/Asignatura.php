@@ -58,9 +58,11 @@ class Asignatura
         return $this->id_asignatura;
     }
 
-    public function setIdAsignaturaVo(AsignaturaId $id): void
+    public function setIdAsignaturaVo(AsignaturaId|int $id): void
     {
-        $this->id_asignatura = $id;
+        $this->id_asignatura = $id instanceof AsignaturaId
+            ? $id
+            : AsignaturaId::fromNullable($id);
     }
 
     public function getIdNivelVo(): NivelId
@@ -68,9 +70,11 @@ class Asignatura
         return $this->id_nivel;
     }
 
-    public function setIdNivelVo(NivelId $id): void
+    public function setIdNivelVo(NivelId|int|null $id): void
     {
-        $this->id_nivel = $id;
+        $this->id_nivel = $id instanceof NivelId
+            ? $id
+            : NivelId::fromNullable($id);
     }
 
     public function getNombreAsignaturaVo(): AsignaturaName
@@ -78,9 +82,11 @@ class Asignatura
         return $this->nombre_signatura;
     }
 
-    public function setNombreAsignaturaVo(AsignaturaName $nombre): void
+    public function setNombreAsignaturaVo(AsignaturaName|string $nombre): void
     {
-        $this->nombre_signatura = $nombre;
+        $this->nombre_signatura = $nombre instanceof AsignaturaName
+            ? $nombre
+            : AsignaturaName::fromNullableString($nombre);
     }
 
     public function getNombreCortoVo(): ?AsignaturaShortName
@@ -88,9 +94,11 @@ class Asignatura
         return $this->nombre_corto;
     }
 
-    public function setNombreCortoVo(?AsignaturaShortName $nombre = null): void
+    public function setNombreCortoVo(AsignaturaShortName|string|null $texto = null): void
     {
-        $this->nombre_corto = $nombre;
+        $this->nombre_corto = $texto instanceof AsignaturaShortName
+            ? $texto
+            : AsignaturaShortName::fromNullableString($texto);
     }
 
     public function getCreditosVo(): ?Creditos
@@ -98,9 +106,11 @@ class Asignatura
         return $this->creditos;
     }
 
-    public function setCreditosVo(?Creditos $creditos = null): void
+    public function setCreditosVo(Creditos|float|null $texto = null): void
     {
-        $this->creditos = $creditos;
+        $this->creditos = $texto instanceof Creditos
+            ? $texto
+            : Creditos::fromNullable($texto);
     }
 
     public function getYearVo(): ?YearText
@@ -108,9 +118,11 @@ class Asignatura
         return $this->year;
     }
 
-    public function setYearVo(?YearText $year = null): void
+    public function setYearVo(YearText|string|null $texto = null): void
     {
-        $this->year = $year;
+        $this->year = $texto instanceof YearText
+            ? $texto
+            : YearText::fromNullableString($texto);
     }
 
     public function getIdSectorVo(): ?SectorId
@@ -118,9 +130,11 @@ class Asignatura
         return $this->id_sector;
     }
 
-    public function setIdSectorVo(?SectorId $id = null): void
+    public function setIdSectorVo(SectorId|int|null $valor = null): void
     {
-        $this->id_sector = $id;
+        $this->id_sector = $valor instanceof SectorId
+            ? $valor
+            : SectorId::fromNullable($valor);
     }
 
     public function isActive(): bool
@@ -138,9 +152,11 @@ class Asignatura
         return $this->id_tipo;
     }
 
-    public function setIdTipoVo(?AsignaturaTipoId $id = null): void
+    public function setIdTipoVo(AsignaturaTipoId|int|null $valor = null): void
     {
-        $this->id_tipo = $id;
+        $this->id_tipo = $valor instanceof AsignaturaTipoId
+            ? $valor
+            : AsignaturaTipoId::fromNullable($valor);
     }
 
     // ---------------- LEGACY -----------------
@@ -165,7 +181,7 @@ class Asignatura
 
     public function setId_nivel(int $id_nivel): void
     {
-        $this->id_nivel = $id_nivel !== null ? new NivelId($id_nivel) : null;
+        $this->id_nivel = NivelId::fromNullable($id_nivel);
     }
 
 
@@ -177,7 +193,7 @@ class Asignatura
 
     public function setNombre_signatura(string $nombre_asignatura): void
     {
-        $this->nombre_signatura = new AsignaturaName($nombre_asignatura);
+        $this->nombre_signatura = AsignaturaName::fromNullableString($nombre_asignatura);
     }
 
 
@@ -225,7 +241,7 @@ class Asignatura
 
     public function setId_sector(?int $id_sector = null): void
     {
-        $this->id_sector = $id_sector !== null ? new SectorId($id_sector) : null;
+        $this->id_sector = SectorId::fromNullable($id_sector);
     }
 
     public function getId_tipo(): ?int
@@ -236,7 +252,7 @@ class Asignatura
 
     public function setId_tipo(?int $id_tipo = null): void
     {
-        $this->id_tipo = $id_tipo !== null ? new AsignaturaTipoId($id_tipo) : null;
+        $this->id_tipo = AsignaturaTipoId::fromNullable($id_tipo);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

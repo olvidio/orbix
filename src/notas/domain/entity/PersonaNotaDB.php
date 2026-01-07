@@ -3,12 +3,17 @@
 namespace src\notas\domain\entity;
 
 use NumberFormatter;
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\notas\domain\value_objects\ActaNumero;
 use src\notas\domain\value_objects\Detalle;
-use src\notas\domain\value_objects\Epoca;
+use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaNum;
 use src\notas\domain\value_objects\NotaMax;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
+use src\personas\domain\value_objects\SituacionCode;
+use src\procesos\domain\value_objects\ActividadId;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -16,15 +21,6 @@ use web\NullDateTimeLocal;
 class PersonaNotaDB
 {
     use Hydratable;
-
-    // tipo_acta constants.
-    public const FORMATO_ACTA = 1; // Acta.
-    public const FORMATO_CERTIFICADO = 2; // Certificado.
-
-    public const EPOCA_CA = 1; // ca verano.
-    public const EPOCA_INVIERNO = 2; // semestre invierno.
-    public const EPOCA_OTRO = 3; // sin especificar.
-
 
     public function __construct(?array $a_id = null)
     {
@@ -51,29 +47,29 @@ class PersonaNotaDB
 
     protected int $id_nivel;
 
-    protected int $id_asignatura;
+    protected AsignaturaId $id_asignatura;
 
-    protected int $id_situacion;
+    protected NotaSituacion $id_situacion;
 
-    protected ?string $acta;
+    protected ?ActaNumero $acta;
 
     protected DateTimeLocal $f_acta;
 
-    protected ?string $detalle;
+    protected ?Detalle $detalle;
 
     protected ?bool $preceptor;
 
     protected ?int $id_preceptor;
 
-    protected ?int $epoca;
+    protected ?NotaEpoca $epoca;
 
-    protected ?int $id_activ;
+    protected ?ActividadId $id_activ;
 
-    protected ?float $nota_num;
+    protected ?NotaNum $nota_num;
 
-    protected ?int $nota_max;
+    protected ?NotaMax $nota_max;
 
-    protected ?int $tipo_acta;
+    protected ?TipoActa $tipo_acta;
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
 
@@ -88,7 +84,7 @@ class PersonaNotaDB
     {
         $nota_corte = $_SESSION['oConfig']->getNotaCorte();
         $this->aprobada = 'f';
-        if ($this->id_situacion === Nota::NUMERICA) {
+        if ($this->id_situacion === NotaSituacion::NUMERICA) {
             $nota_num = $this->getNota_num();
             $nota_max = $this->getNota_max();
             // deben ser números.
@@ -100,7 +96,7 @@ class PersonaNotaDB
         } else {
             $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
             $aNotas = $NotaRepository->getArrayNotas();
-            $this->aprobada = $aNotas[$this->id_situacion];
+            $this->aprobada = $aNotas[$this->id_situacion->value()];
         }
         return $this->aprobada;
     }
@@ -188,34 +184,89 @@ class PersonaNotaDB
         $this->id_nivel = $id_nivel;
     }
 
+    /**
+     * @deprecated use getIdAsignaturaVo()
+     */
     public function getId_asignatura(): int
+    {
+        return $this->id_asignatura->value();
+    }
+
+    public function getIdAsignaturaVo(): AsignaturaId
     {
         return $this->id_asignatura;
     }
 
+    /**
+     * @deprecated use getIdAsignaturaVo()
+     */
     public function setId_asignatura(int $id_asignatura): void
     {
-        $this->id_asignatura = $id_asignatura;
+        $this->id_asignatura = AsignaturaId::fromNullable($id_asignatura);
     }
 
+    public function setIdAsignaturaVo(AsignaturaId|int|null $oIdAsignatura): void
+    {
+        $this->id_asignatura = $oIdAsignatura instanceof AsignaturaId
+            ? $oIdAsignatura
+            : AsignaturaId::fromNullable($oIdAsignatura);
+    }
+
+    /**
+     * @deprecated use getIdSituacionVo()
+     */
     public function getId_situacion(): int
+    {
+        return $this->id_situacion->value();
+    }
+
+    public function getIdSituacionVo(): NotaSituacion
     {
         return $this->id_situacion;
     }
 
+    /**
+     * @deprecated use setIdSituacionVo()
+     */
     public function setId_situacion(int $id_situacion): void
     {
-        $this->id_situacion = $id_situacion;
+        $this->id_situacion = NotaSituacion::fromNullable($id_situacion);
     }
 
+    public function setIdSituacionVo(NotaSituacion|int|null $oIdSituacion): void
+    {
+        $this->id_situacion = $oIdSituacion instanceof NotaSituacion
+            ? $oIdSituacion
+            : NotaSituacion::fromNullable($oIdSituacion);
+    }
+
+    /**
+     * @deprecated use getActaVo()
+     */
     public function getActa(): string
     {
-        return $this->acta;
+        return $this->acta->value();
     }
 
+    public function getActaVo(): ActaNumero
+    {
+        return $this->acta;
+
+    }
+
+    /**
+     * @deprecated use setActaVo()
+     */
     public function setActa(string $acta): void
     {
-        $this->acta = $acta;
+        $this->acta = ActaNumero::fromNullableString($acta);
+    }
+
+    public function setActaVo(ActaNumero|string|null $texto = null): void
+    {
+        $this->acta = $texto instanceof ActaNumero
+            ? $texto
+            : ActaNumero::fromNullableString($texto);
     }
 
     public function getF_acta(): DateTimeLocal|NullDateTimeLocal|null
@@ -231,13 +282,15 @@ class PersonaNotaDB
 
     public function getDetalleVo(): ?Detalle
     {
-        return Detalle::fromNullable($this->detalle);
+        return $this->detalle;
     }
 
 
-    public function setDetalleVo(?Detalle $oDetalle): void
+    public function setDetalleVo(Detalle|string|null $oDetalle): void
     {
-        $this->detalle = $oDetalle?->value();
+        $this->detalle = $oDetalle instanceof Detalle
+            ? $oDetalle
+            : Detalle::fromNullableString($oDetalle);
     }
 
     /**
@@ -245,7 +298,7 @@ class PersonaNotaDB
      */
     public function getDetalle(): ?string
     {
-        return $this->detalle;
+        return $this->detalle?->value();
     }
 
     /**
@@ -253,7 +306,7 @@ class PersonaNotaDB
      */
     public function setDetalle(?string $detalle = null): void
     {
-        $this->detalle = $detalle;
+        $this->detalle = Detalle::fromNullableString($detalle);
     }
 
     public function isPreceptor(): bool
@@ -277,23 +330,25 @@ class PersonaNotaDB
     }
 
 
-    public function getEpocaVo(): ?Epoca
+    public function getEpocaVo(): ?NotaEpoca
     {
-        return Epoca::fromNullable($this->epoca);
+        return $this->epoca;
     }
 
 
-    public function setEpocaVo(?Epoca $oEpoca): void
+    public function setEpocaVo(NotaEpoca|int|null $oEpoca): void
     {
-        $this->epoca = $oEpoca?->value();
+        $this->epoca = $oEpoca instanceof NotaEpoca
+            ? $oEpoca
+            : NotaEpoca::fromNullable($oEpoca);
     }
 
     /**
      * @deprecated use getEpocaVo()
      */
-    public function getEpoca(): ?int
+    public function getEpoca(): ?string
     {
-        return $this->epoca;
+        return $this->epoca?->value();
     }
 
     /**
@@ -301,37 +356,53 @@ class PersonaNotaDB
      */
     public function setEpoca(?int $epoca = null): void
     {
-        $this->epoca = $epoca;
+        $this->epoca = NotaEpoca::fromNullable($epoca);
     }
 
-    public function getId_activ(): ?int
+    /**
+     * @deprecated use getIdActivVo()
+     */
+    public function getId_activ(): ?string
+    {
+        return $this->id_activ?->value();
+    }
+
+    public function getIdActivVo(): ActividadId
     {
         return $this->id_activ;
     }
 
     public function setId_activ(?int $id_activ): void
     {
-        $this->id_activ = $id_activ;
+        $this->id_activ = ActividadId::fromNullable($id_activ);
     }
 
+    public function setIdActivVo(ActividadId|int|null $valor)
+    {
+        $this->id_activ = $valor instanceof ActividadId
+            ? $valor
+            : ActividadId::fromNullable($valor);
+    }
 
     public function getNotaNumVo(): ?NotaNum
     {
-        return NotaNum::fromNullable($this->nota_num);
+        return $this->nota_num;
     }
 
 
-    public function setNotaNumVo(?NotaNum $oNota_num): void
+    public function setNotaNumVo(NotaNum|float|null $oNota_num): void
     {
-        $this->nota_num = $oNota_num?->value();
+        $this->nota_num = $oNota_num instanceof NotaNum
+            ? $oNota_num
+            : NotaNum::fromNullableFloat($oNota_num);
     }
 
     /**
      * @deprecated use getNotaNumVo()
      */
-    public function getNota_num(): ?float
+    public function getNota_num(): ?string
     {
-        return $this->nota_num;
+        return $this->nota_num?->value();
     }
 
     /**
@@ -339,27 +410,29 @@ class PersonaNotaDB
      */
     public function setNota_num(?float $nota_num = null): void
     {
-        $this->nota_num = $nota_num;
+        $this->nota_num = NotaNum::fromNullableFloat($nota_num);
     }
 
 
     public function getNotaMaxVo(): ?NotaMax
     {
-        return NotaMax::fromNullable($this->nota_max);
+        return $this->nota_max;
     }
 
 
-    public function setNotaMaxVo(?NotaMax $oNota_max): void
+    public function setNotaMaxVo(NotaMax|int|null $oNota_max): void
     {
-        $this->nota_max = $oNota_max?->value();
+        $this->nota_max = $oNota_max instanceof NotaMax
+            ? $oNota_max
+            : NotaMax::fromNullable($oNota_max);
     }
 
     /**
      * @deprecated use getNotaMaxVo()
      */
-    public function getNota_max(): ?int
+    public function getNota_max(): ?string
     {
-        return $this->nota_max;
+        return $this->nota_max?->value();
     }
 
     /**
@@ -367,27 +440,29 @@ class PersonaNotaDB
      */
     public function setNota_max(?int $nota_max = null): void
     {
-        $this->nota_max = $nota_max;
+        $this->nota_max = NotaMax::fromNullable($nota_max);
     }
 
 
     public function getTipoActaVo(): ?TipoActa
     {
-        return TipoActa::fromNullable($this->tipo_acta);
+        return $this->tipo_acta;
     }
 
 
-    public function setTipoActaVo(?TipoActa $oTipo_acta): void
+    public function setTipoActaVo(TipoActa|int|null $oTipo_acta): void
     {
-        $this->tipo_acta = $oTipo_acta?->value();
+        $this->tipo_acta = $oTipo_acta instanceof TipoActa
+            ? $oTipo_acta
+            : TipoActa::fromNullable($oTipo_acta);
     }
 
     /**
      * @deprecated use getTipoActaVo()
      */
-    public function getTipo_acta(): ?int
+    public function getTipo_acta(): ?string
     {
-        return $this->tipo_acta;
+        return $this->tipo_acta?->value();
     }
 
     /**
@@ -395,7 +470,7 @@ class PersonaNotaDB
      */
     public function setTipo_acta(?int $tipo_acta = null): void
     {
-        $this->tipo_acta = $tipo_acta;
+        $this->tipo_acta = TipoActa::fromNullable($tipo_acta);
     }
 
 }

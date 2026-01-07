@@ -2,6 +2,7 @@
 
 namespace src\procesos\domain\entity;
 
+use src\actividades\domain\value_objects\ActividadTipoId;
 use src\procesos\domain\value_objects\FaseId;
 use src\shared\domain\traits\Hydratable;
 use function core\is_true;
@@ -16,19 +17,19 @@ class PermUsuarioActividad
 
     private int $id_item;
 
-    private int|null $id_usuario = null;
+    private ?int $id_usuario = null;
 
     private bool $dl_propia;
 
-    private string|null $id_tipo_activ_txt = null;
+    private ?ActividadTipoId $id_tipo_activ_txt = null;
 
-    private FaseId|null $fase_ref = null;
+    private ?FaseId $fase_ref = null;
 
-    private int|null $afecta_a = null;
+    private ?int $afecta_a = null;
 
-    private int|null $perm_on = null;
+    private ?int $perm_on = null;
 
-    private int|null $perm_off = null;
+    private ?int $perm_off = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -70,29 +71,39 @@ class PermUsuarioActividad
 
     public function getId_tipo_activ_txt(): ?string
     {
+        return $this->id_tipo_activ_txt?->value();
+    }
+    public function getIdTipoActivTxtVo(): ActividadTipoId
+    {
         return $this->id_tipo_activ_txt;
     }
-
 
     public function setId_tipo_activ_txt(?string $id_tipo_activ_txt = null): void
     {
         $this->id_tipo_activ_txt = $id_tipo_activ_txt;
     }
+    public function setIdTipoActivTxtVo(ActividadTipoId|string|int|null $id_tipo_activ_txt): void
+    {
+        $this->id_tipo_activ_txt = $id_tipo_activ_txt instanceof ActividadTipoId
+            ? $id_tipo_activ_txt
+            : ActividadTipoId::fromInt($id_tipo_activ_txt);
+    }
 
 
-    public function getFaseId(): ?FaseId
+    public function getFaseRefVo(): ?FaseId
     {
         return $this->fase_ref;
     }
 
-
-    public function setFaseId(?FaseId $fase_ref = null): void
+    public function setFaseRefVo(FaseId|int|null $fase_ref = null): void
     {
-        $this->fase_ref = $fase_ref;
+        $this->fase_ref = $fase_ref instanceof FaseId
+            ? $fase_ref
+            : FaseId::fromNullable($fase_ref);
     }
 
     /**
-     * @deprecated use getFaseId()
+     * @deprecated use getFaseRefVo()
      */
     public function getFase_ref(): ?int
     {
@@ -100,11 +111,11 @@ class PermUsuarioActividad
     }
 
     /**
-     * @deprecated use setFaseId()
+     * @deprecated use setFaseRefVo()
      */
     public function setFase_ref(?int $fase_ref = null): void
     {
-        $this->fase_ref = $fase_ref !== null ? new FaseId($fase_ref) : null;
+        $this->fase_ref = FaseId::fromNullable($fase_ref);
     }
 
 

@@ -10,49 +10,49 @@ class CargoOAsistente
     private bool $propio;
     private int $id_cargo;
 
-    function __construct(int $id_activ)
+    public function __construct(int $id_activ)
     {
         $this->id_activ = $id_activ;
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    function getId_activ()
+    public function getId_activ(): int
     {
         return $this->id_activ;
     }
 
-    function setId_activ($id_activ)
+    public function setId_activ(int $id_activ): void
     {
         $this->id_activ = $id_activ;
     }
 
-    function getId_nom()
+    public function getId_nom(): int
     {
         return $this->id_nom;
     }
 
-    function setId_nom($id_nom)
+    public function setId_nom(int $id_nom): void
     {
         $this->id_nom = $id_nom;
     }
 
-    function isPropio()
+    public function isPropio(): bool
     {
         return $this->propio;
     }
 
-    function setPropio($bpropio = 'f')
+    public function setPropio(bool $propio): void
     {
-        $this->propio = $bpropio;
+        $this->propio = $propio;
     }
 
-    function getId_cargo()
+    public function getId_cargo(): int
     {
         return $this->id_cargo;
     }
 
-    function setId_cargo($id_cargo)
+    public function setId_cargo(int $id_cargo): void
     {
         $this->id_cargo = $id_cargo;
     }

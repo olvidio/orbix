@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use web\CasasQue;
 use web\Hash;
 use web\PeriodoQue;
@@ -111,7 +112,7 @@ $oForm = new CasasQue();
 $oForm->setTitulo(strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $donde = '';
-if ($oRole->isRolePau(Role::PAU_CDC)) { //casa
+if ($oRole->isRolePau(PauType::PAU_CDC)) { //casa
     $id_pau = $oMiUsuario->getCsv_id_pau(); //pueden ser varios separados por comas
     //$sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //$donde = "WHERE active='t' AND (id_ubi=$sDonde)";

@@ -16,119 +16,99 @@ class TipoDoc
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private int $id_tipo_doc;
+    private TipoDocId $id_tipo_doc;
 
-    private string|null $nom_doc = null;
+    private ?TipoDocName $nom_doc = null;
 
-    private string $sigla;
+    private TipoDocSigla $sigla;
 
-    private string|null $observ = null;
+    private ?TipoDocObserv $observ = null;
 
-    private int|null $id_coleccion = null;
+    private ?ColeccionId $id_coleccion = null;
 
-    private bool|null $bajo_llave = null;
+    private ?bool $bajo_llave = null;
 
-    private bool|null $vigente = null;
+    private ?bool $vigente = null;
 
-    private bool $numerado;
+    private ?bool $numerado;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function getId_tipo_doc(): int
     {
-        return $this->id_tipo_doc;
+        return $this->id_tipo_doc->value();
     }
 
     public function setId_tipo_doc(int $id_tipo_doc): void
     {
-        $this->id_tipo_doc = $id_tipo_doc;
+        $this->id_tipo_doc =TipoDocId::fromNullable($id_tipo_doc);
     }
 
     public function getNom_doc(): ?string
     {
-        return $this->nom_doc;
+        return $this->nom_doc->value() ?? '';
     }
 
     public function setNom_doc(?string $nom_doc = null): void
     {
-        $this->nom_doc = $nom_doc;
+        $this->nom_doc = TipoDocName::fromNullableString($nom_doc);
     }
 
     public function getSigla(): string
     {
-        return $this->sigla;
+        return $this->sigla->value();
     }
 
     public function setSigla(string $sigla): void
     {
-        $this->sigla = $sigla;
+        $this->sigla = TipoDocSigla::fromNullableString($sigla);
     }
 
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ->value() ?? '';
     }
 
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = TipoDocObserv::fromNullableString($observ);
     }
 
-    public function getId_coleccion(): ?int
+    public function getId_coleccion(): ?string
     {
-        return $this->id_coleccion;
+        return $this->id_coleccion?->value();
     }
 
     public function setId_coleccion(?int $id_coleccion = null): void
     {
-        $this->id_coleccion = $id_coleccion;
+        $this->id_coleccion = ColeccionId::fromNullable($id_coleccion);
     }
 
-    /**
-     * @deprecated Usar `isBajoLlave(): ?bool` en su lugar.
-     */
+
     public function isBajo_llave(): ?bool
-    {
-        return $this->isBajoLlave();
-    }
-
-    public function isBajoLlave(): ?bool
     {
         return $this->bajo_llave;
     }
 
-
-    /**
-     * @deprecated Usar `setBajoLlave(?bool $bajoLlave = null): void` en su lugar.
-     */
     public function setBajo_llave(?bool $bajo_llave = null): void
     {
-        $this->setBajoLlave($bajo_llave);
+        $this->bajo_llave = $bajo_llave;
     }
-
-    public function setBajoLlave(?bool $bajoLlave = null): void
-    {
-        $this->bajo_llave = $bajoLlave;
-    }
-
 
     public function isVigente(): ?bool
     {
         return $this->vigente;
     }
 
-
     public function setVigente(?bool $vigente = null): void
     {
         $this->vigente = $vigente;
     }
 
-
     public function isNumerado(): bool
     {
         return $this->numerado;
     }
-
 
     public function setNumerado(?bool $numerado): void
     {
@@ -138,83 +118,62 @@ class TipoDoc
     // Value Object API (duplicada con legacy)
     public function getIdTipoDocVo(): TipoDocId
     {
-        return new TipoDocId($this->id_tipo_doc);
+        return $this->id_tipo_doc;
     }
 
-    public function setIdTipoDocVo(?TipoDocId $id = null): void
+    public function setIdTipoDocVo(TipoDocId|int|null $id = null): void
     {
-        if ($id === null) { return; }
-        $this->id_tipo_doc = $id->value();
+        $this->id_tipo_doc = $id instanceof TipoDocId
+            ? $id
+            : TipoDocId::fromNullable($id);
     }
 
     public function getNomDocVo(): ?TipoDocName
     {
-        return $this->nom_doc !== null && $this->nom_doc !== '' ? new TipoDocName($this->nom_doc) : null;
+        return $this->nom_doc;
     }
 
-    public function setNomDocVo(?TipoDocName $name = null): void
+    public function setNomDocVo(TipoDocName|string|null $name = null): void
     {
-        $this->nom_doc = $name?->value();
+        $this->nom_doc = $name instanceof TipoDocName
+            ? $name
+            : TipoDocName::fromNullableString($name);
     }
 
     public function getSiglaVo(): ?TipoDocSigla
     {
-        return isset($this->sigla) && $this->sigla !== '' ? new TipoDocSigla($this->sigla) : null;
+        return $this->sigla;
     }
 
-    public function setSiglaVo(?TipoDocSigla $sigla = null): void
+    public function setSiglaVo(TipoDocSigla|string|null $sigla = null): void
     {
-        $this->sigla = $sigla?->value() ?? '';
+        $this->sigla = $sigla instanceof TipoDocSigla
+            ? $sigla
+            : TipoDocSigla::fromNullableString($sigla);
     }
 
     public function getObservVo(): ?TipoDocObserv
     {
-        return $this->observ !== null && $this->observ !== '' ? new TipoDocObserv($this->observ) : null;
+        return $this->observ;
     }
 
-    public function setObservVo(?TipoDocObserv $obs = null): void
+    public function setObservVo(TipoDocObserv|string|null $obs = null): void
     {
-        $this->observ = $obs?->value();
+        $this->observ = $obs instanceof TipoDocObserv
+            ? $obs
+            : TipoDocObserv::fromNullableString($obs);
     }
 
     public function getIdColeccionVo(): ?ColeccionId
     {
-        return $this->id_coleccion !== null ? new ColeccionId($this->id_coleccion) : null;
+        return $this->id_coleccion;
     }
 
-    public function setIdColeccionVo(?ColeccionId $id = null): void
+    public function setIdColeccionVo(ColeccionId|int|null $id = null): void
     {
-        $this->id_coleccion = $id?->value();
-    }
-
-    public function getBajoLlaveVo(): ?TipoDocBajoLlave
-    {
-        return $this->bajo_llave === null ? null : new TipoDocBajoLlave((bool)$this->bajo_llave);
-    }
-
-    public function setBajoLlaveVo(?TipoDocBajoLlave $bajoLlave = null): void
-    {
-        $this->bajo_llave = $bajoLlave?->value();
-    }
-
-    public function getVigenteVo(): ?TipoDocVigente
-    {
-        return $this->vigente === null ? null : new TipoDocVigente((bool)$this->vigente);
-    }
-
-    public function setVigenteVo(?TipoDocVigente $vigente = null): void
-    {
-        $this->vigente = $vigente?->value();
-    }
-
-    public function getNumeradoVo(): TipoDocNumerado
-    {
-        return new TipoDocNumerado((bool)$this->numerado);
-    }
-
-    public function setNumeradoVo(TipoDocNumerado $numerado): void
-    {
-        $this->numerado = $numerado->value();
+        $this->id_coleccion = $id instanceof ColeccionId
+            ? $id
+            : ColeccionId::fromNullable($id);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

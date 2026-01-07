@@ -18,15 +18,15 @@ class CartaPresentacion
 
     private int $id_ubi;
 
-    private string|null $pres_nom = null;
+    private ?PresNombreText $pres_nom = null;
 
-    private string|null $pres_telf = null;
+    private ?PresTelefonoText $pres_telf = null;
 
-    private string|null $pres_mail = null;
+    private ?PresEmailText $pres_mail = null;
 
-    private string|null $zona = null;
+    private ?PresZonaText $zona = null;
 
-    private string|null $observ = null;
+    private ?PresObservText $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -58,15 +58,17 @@ class CartaPresentacion
      */
     public function getPresNomVo(): ?PresNombreText
     {
-        return PresNombreText::fromNullableString($this->pres_nom);
+        return $this->pres_nom;
     }
 
     /**
      * @param PresNombreText|null $oPresNombreText
      */
-    public function setPresNomVo(?PresNombreText $oPresNombreText = null): void
+    public function setPresNomVo(PresNombreText|string|null $texto = null): void
     {
-        $this->pres_nom = $oPresNombreText?->value();
+        $this->pres_nom = $texto instanceof PresNombreText
+            ? $texto
+            : PresNombreText::fromNullableString($texto);
     }
 
     /**
@@ -74,7 +76,7 @@ class CartaPresentacion
      */
     public function getPres_nom(): ?string
     {
-        return $this->pres_nom;
+        return $this->pres_nom?->value();
     }
 
     /**
@@ -82,7 +84,7 @@ class CartaPresentacion
      */
     public function setPres_nom(?string $pres_nom = null): void
     {
-        $this->pres_nom = $pres_nom;
+        $this->pres_nom = PresNombreText::fromNullableString($pres_nom);
     }
 
     /**
@@ -90,15 +92,17 @@ class CartaPresentacion
      */
     public function getPresTelfVo(): ?PresTelefonoText
     {
-        return PresTelefonoText::fromNullableString($this->pres_telf);
+        return $this->pres_telf;
     }
 
     /**
      * @param PresTelefonoText|null $oPresTelefonoText
      */
-    public function setPresTelfVo(?PresTelefonoText $oPresTelefonoText = null): void
+    public function setPresTelfVo(PresTelefonoText|string|null $texto = null): void
     {
-        $this->pres_telf = $oPresTelefonoText?->value();
+        $this->pres_telf = $texto instanceof PresTelefonoText
+            ? $texto
+            : PresTelefonoText::fromNullableString($texto);
     }
 
     /**
@@ -106,7 +110,7 @@ class CartaPresentacion
      */
     public function getPres_telf(): ?string
     {
-        return $this->pres_telf;
+        return $this->pres_telf?->value();
     }
 
     /**
@@ -114,7 +118,7 @@ class CartaPresentacion
      */
     public function setPres_telf(?string $pres_telf = null): void
     {
-        $this->pres_telf = $pres_telf;
+        $this->pres_telf = PresTelefonoText::fromNullableString($pres_telf);
     }
 
     /**
@@ -122,15 +126,17 @@ class CartaPresentacion
      */
     public function getPresMailVo(): ?PresEmailText
     {
-        return PresEmailText::fromNullableString($this->pres_mail);
+        return $this->pres_mail;
     }
 
     /**
      * @param PresEmailText|null $oPresEmailText
      */
-    public function setPresMailVo(?PresEmailText $oPresEmailText = null): void
+    public function setPresMailVo(PresEmailText|string|null $texto = null): void
     {
-        $this->pres_mail = $oPresEmailText?->value();
+        $this->pres_mail = $texto instanceof PresEmailText
+            ? $texto
+            : PresEmailText::fromNullableString($texto);
     }
 
     /**
@@ -139,7 +145,7 @@ class CartaPresentacion
      */
     public function getPres_mail(): ?string
     {
-        return $this->pres_mail;
+        return $this->pres_mail?->value();
     }
 
     /**
@@ -147,7 +153,7 @@ class CartaPresentacion
      */
     public function setPres_mail(?string $pres_mail = null): void
     {
-        $this->pres_mail = $pres_mail;
+        $this->pres_mail = PresEmailText::fromNullableString($pres_mail);
     }
 
     /**
@@ -155,15 +161,17 @@ class CartaPresentacion
      */
     public function getZonaVo(): ?PresZonaText
     {
-        return PresZonaText::fromNullableString($this->zona);
+        return $this->zona;
     }
 
     /**
      * @param PresZonaText|null $oPresZonaText
      */
-    public function setZonaVo(?PresZonaText $oPresZonaText = null): void
+    public function setZonaVo(PresZonaText|string|null $texto = null): void
     {
-        $this->zona = $oPresZonaText?->value();
+        $this->zona = $texto instanceof PresZonaText
+            ? $texto
+            : PresZonaText::fromNullableString($texto);
     }
 
     /**
@@ -171,7 +179,7 @@ class CartaPresentacion
      */
     public function getZona(): ?string
     {
-        return $this->zona;
+        return $this->zona?->value();
     }
 
     /**
@@ -179,7 +187,7 @@ class CartaPresentacion
      */
     public function setZona(?string $zona = null): void
     {
-        $this->zona = $zona;
+        $this->zona = PresZonaText::fromNullableString($zona);
     }
 
     /**
@@ -187,15 +195,17 @@ class CartaPresentacion
      */
     public function getObservVo(): ?PresObservText
     {
-        return PresObservText::fromNullableString($this->observ);
+        return $this->observ;
     }
 
     /**
      * @param PresObservText|null $oPresObservText
      */
-    public function setObservVo(?PresObservText $oPresObservText = null): void
+    public function setObservVo(PresObservText|string|null $texto = null): void
     {
-        $this->observ = $oPresObservText?->value();
+        $this->observ = $texto instanceof PresObservText
+            ? $texto
+            : PresObservText::fromNullableString($texto);
     }
 
     /**
@@ -203,7 +213,7 @@ class CartaPresentacion
      */
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ?->value();
     }
 
     /**
@@ -211,6 +221,6 @@ class CartaPresentacion
      */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = PresObservText::fromNullableString($observ);
     }
 }

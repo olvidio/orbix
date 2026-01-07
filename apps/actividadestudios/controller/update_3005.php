@@ -3,6 +3,7 @@
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\entity\Dossier;
 use src\dossiers\domain\value_objects\DossierPk;
 use web\DateTimeLocal;
 
@@ -71,6 +72,12 @@ switch ($Qmod) {
         // si es la primera asignatura, hay que abrir el dossier para esta actividad
         $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
         $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3005]));
+        if ($oDossier === null) {
+            $oDossier = new Dossier();
+            $oDossier->setTabla('a');
+            $oDossier->setId_pau($Qid_activ);
+            $oDossier->setId_tipo_dossier(3005);
+        }
         $oDossier->abrir();
         $DosierRepository->Guardar($oDossier);
         break;

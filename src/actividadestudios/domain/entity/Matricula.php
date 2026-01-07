@@ -2,8 +2,9 @@
 
 namespace src\actividadestudios\domain\entity;
 
+use src\actividades\domain\value_objects\NivelStgrId;
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
 use src\actividadestudios\domain\value_objects\Acta;
 use src\actividadestudios\domain\value_objects\NotaMax;
 use src\actividadestudios\domain\value_objects\NotaNum;
@@ -15,15 +16,15 @@ class Matricula
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private int $id_activ;
-    private int $id_asignatura;
+    private AsignaturaId $id_asignatura;
     private int $id_nom;
-    private int|null $id_situacion = null;
-    private bool|null $preceptor = null;
-    private int|null $id_nivel = null;
-    private float|null $nota_num = null;
-    private int|null $nota_max = null;
-    private int|null $id_preceptor = null;
-    private string|null $acta = null;
+    private ?int $id_situacion = null;
+    private ?bool $preceptor = null;
+    private ?NivelStgrId $id_nivel = null;
+    private ?NotaNum $nota_num = null;
+    private ?NotaMax $nota_max = null;
+    private ?int $id_preceptor = null;
+    private ?Acta $acta = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -41,13 +42,13 @@ class Matricula
 
     public function getId_asignatura(): int
     {
-        return $this->id_asignatura;
+        return $this->id_asignatura->value();
     }
 
 
     public function setId_asignatura(int $id_asignatura): void
     {
-        $this->id_asignatura = $id_asignatura;
+        $this->id_asignatura = AsignaturaId::fromString($id_asignatura);
     }
 
 
@@ -81,85 +82,101 @@ class Matricula
     }
 
 
-    public function setPreceptor(?bool $bpreceptor = null): void
+    public function setPreceptor(?bool $preceptor = null): void
     {
-        $this->preceptor = $bpreceptor;
+        $this->preceptor = $preceptor;
     }
 
+    /**
+     * @deprecated usar getIdNivelVo()
+     */
+    public function getId_nivel(): ?string
+    {
+        return $this->id_nivel?->value();
+    }
 
-    public function getId_nivel(): ?int
+    public function getIdNivelVo(): ?NivelStgrId
     {
         return $this->id_nivel;
     }
 
-
+    /**
+     * @deprecated usar setIdNivelVo()
+     */
     public function setId_nivel(?int $id_nivel = null): void
     {
-        $this->id_nivel = $id_nivel;
+        $this->id_nivel = NivelStgrId::fromNullable($id_nivel);
+    }
+
+    public function setIdNivelVo(NivelStgrId|int|null $valor = null): void
+    {
+        $this->id_nivel = $valor instanceof NivelStgrId
+            ? $valor
+            : NivelStgrId::fromNullable($valor);
     }
 
     /**
-     * @deprecated usar getNota_numVo()
+     * @deprecated usar getNotaNumVo()
      */
-    public function getNota_num(): ?float
+    public function getNota_num(): ?string
     {
-        return $this->nota_num;
+        return $this->nota_num?->value();
     }
 
     /**
      * @return NotaNum|null
      */
-    public function getNota_numVo(): ?NotaNum
+    public function getNotaNumVo(): ?NotaNum
     {
-        return NotaNum::fromNullable($this->nota_num);
+        return $this->nota_num;
     }
 
     /**
-     * @deprecated usar setNota_numVo()
+     * @deprecated usar setNotaNumVo()
      */
     public function setNota_num(?float $nota_num = null): void
     {
-        $this->nota_num = $nota_num;
+        $this->nota_num = NotaNum::fromNullable($nota_num);
+    }
+
+
+    public function setNotaNumVo(NotaNum|float|null $valor = null): void
+    {
+        $this->nota_num = $valor instanceof NotaNum
+            ? $valor
+            : NotaNum::fromNullable($valor);
     }
 
     /**
-     * @param NotaNum|null $NotaNum
+     * @deprecated usar getNotaMaxVo()
      */
-    public function setNota_numVo(?NotaNum $NotaNum = null): void
+    public function getNota_max(): ?string
     {
-        $this->nota_num = $NotaNum?->value();
-    }
-
-    /**
-     * @deprecated usar getNota_maxVo()
-     */
-    public function getNota_max(): ?int
-    {
-        return $this->nota_max;
+        return $this->nota_max?->value();
     }
 
     /**
      * @return NotaMax|null
      */
-    public function getNota_maxVo(): ?NotaMax
+    public function getNotaMaxVo(): ?NotaMax
     {
-        return NotaMax::fromNullable($this->nota_max);
+        return $this->nota_max;
     }
 
     /**
-     * @deprecated usar setNota_maxVo()
+     * @deprecated usar setNotaMaxVo()
      */
     public function setNota_max(?int $nota_max = null): void
     {
-        $this->nota_max = $nota_max;
+        $this->nota_max = NotaMax::fromNullable($nota_max);
     }
 
-    /**
-     * @param NotaMax|null $NotaMax
-     */
-    public function setNota_maxVo(?NotaMax $NotaMax = null): void
+
+    public function setNotaMaxVo(NotaMax|int|null $valor = null): void
     {
-        $this->nota_max = $NotaMax?->value();
+        $this->nota_max = $valor instanceof NotaMax
+            ? $valor
+            : NotaMax::fromNullable($valor);
     }
 
 
@@ -179,7 +196,7 @@ class Matricula
      */
     public function getActa(): ?string
     {
-        return $this->acta;
+        return $this->acta?->value();
     }
 
     /**
@@ -187,7 +204,7 @@ class Matricula
      */
     public function getActaVo(): ?Acta
     {
-        return Acta::fromNullable($this->acta);
+        return $this->acta;
     }
 
     /**
@@ -195,14 +212,14 @@ class Matricula
      */
     public function setActa(?string $acta = null): void
     {
-        $this->acta = $acta;
+        $this->acta = Acta::fromNullableString($acta);
     }
 
-    /**
-     * @param Acta|null $Acta
-     */
-    public function setActaVo(?Acta $Acta = null): void
+
+    public function setActaVo(Acta|string|null $texto = null): void
     {
-        $this->acta = $Acta?->value();
+        $this->acta = $texto instanceof Acta
+            ? $texto
+            : Acta::fromNullableString($texto);
     }
 }

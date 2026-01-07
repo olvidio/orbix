@@ -10,11 +10,9 @@ use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
-use function core\is_true;
 use src\inventario\domain\value_objects\{DocumentoId, TipoDocId, UbiInventarioId, LugarId,
     DocumentoObserv, DocumentoObservCtr, DocumentoIdentificador,
-    DocumentoNumReg, DocumentoNumIni, DocumentoNumFin, DocumentoNumEjemplares,
-    DocumentoEnBusqueda, DocumentoPerdido, DocumentoEliminado};
+    DocumentoNumReg, DocumentoNumIni, DocumentoNumFin, DocumentoNumEjemplares};
 
 class Documento
 {
@@ -22,91 +20,91 @@ class Documento
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private int $id_doc;
+    private DocumentoId $id_doc;
 
-    private int $id_tipo_doc;
+    private TipoDocId $id_tipo_doc;
 
-    private int $id_ubi;
+    private UbiInventarioId $id_ubi;
 
-    private int|null $id_lugar = null;
+    private ?LugarId $id_lugar = null;
 
     private DateTimeLocal|NullDateTimeLocal|null $f_recibido = null;
 
     private DateTimeLocal|NullDateTimeLocal|null $f_asignado = null;
 
-    private string|null $observ = null;
+    private ?DocumentoObserv $observ = null;
 
-    private string|null $observCtr = null;
+    private ?DocumentoObservCtr $observCtr = null;
 
     private DateTimeLocal|NullDateTimeLocal|null $f_ult_comprobacion = null;
 
-    private bool|null $en_busqueda = null;
+    private ?bool $en_busqueda = null;
 
-    private bool|null $perdido = null;
+    private ?bool $perdido = null;
 
     private DateTimeLocal|NullDateTimeLocal|null $f_perdido = null;
 
-    private bool|null $eliminado = null;
+    private ?bool $eliminado = null;
 
     private DateTimeLocal|NullDateTimeLocal|null $f_eliminado = null;
 
-    private int|null $num_reg = null;
+    private ?DocumentoNumReg $num_reg = null;
 
-    private int|null $num_ini = null;
+    private ?DocumentoNumIni $num_ini = null;
 
-    private int|null $num_fin = null;
+    private ?DocumentoNumFin $num_fin = null;
 
-    private string|null $identificador = null;
+    private ?DocumentoIdentificador $identificador = null;
 
-    private int|null $num_ejemplares = null;
+    private ?DocumentoNumEjemplares $num_ejemplares = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function getId_doc(): int
     {
-        return $this->id_doc;
+        return $this->id_doc->value();
     }
 
 
     public function setId_doc(int $id_doc): void
     {
-        $this->id_doc = $id_doc;
+        $this->id_doc = DocumentoId::fromNullable($id_doc);
     }
 
 
     public function getId_tipo_doc(): int
     {
-        return $this->id_tipo_doc;
+        return $this->id_tipo_doc->value();
     }
 
 
     public function setId_tipo_doc(int $id_tipo_doc): void
     {
-        $this->id_tipo_doc = $id_tipo_doc;
+        $this->id_tipo_doc = TipoDocId::fromNullable($id_tipo_doc);
     }
 
 
     public function getId_ubi(): int
     {
-        return $this->id_ubi;
+        return $this->id_ubi->value();
     }
 
 
     public function setId_ubi(int $id_ubi): void
     {
-        $this->id_ubi = $id_ubi;
+        $this->id_ubi = UbiInventarioId::fromNullable($id_ubi);
     }
 
 
-    public function getId_lugar(): ?int
+    public function getId_lugar(): ?string
     {
-        return $this->id_lugar;
+        return $this->id_lugar?->value();
     }
 
 
     public function setId_lugar(?int $id_lugar = null): void
     {
-        $this->id_lugar = $id_lugar;
+        $this->id_lugar = LugarId::fromNullable($id_lugar);
     }
 
     public function getF_recibido(): DateTimeLocal|NullDateTimeLocal|null
@@ -134,25 +132,25 @@ class Documento
 
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ?->value();
     }
 
 
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = DocumentoObserv::fromNullableString($observ);
     }
 
 
     public function getObservCtr(): ?string
     {
-        return $this->observCtr;
+        return $this->observCtr?->value();
     }
 
 
     public function setObservCtr(?string $observCtr = null): void
     {
-        $this->observCtr = $observCtr;
+        $this->observCtr = DocumentoObservCtr::fromNullableString($observCtr);
     }
 
 
@@ -243,207 +241,226 @@ class Documento
     }
 
 
-    public function getNum_reg(): ?int
+    public function getNum_reg(): ?string
     {
-        return $this->num_reg;
+        return $this->num_reg?->value();
     }
 
 
     public function setNum_reg(?int $num_reg = null): void
     {
-        $this->num_reg = $num_reg;
+        $this->num_reg = DocumentoNumReg::fromNullable($num_reg);
     }
 
 
-    public function getNum_ini(): ?int
+    public function getNum_ini(): ?string
     {
-        return $this->num_ini;
+        return $this->num_ini?->value();
     }
 
 
     public function setNum_ini(?int $num_ini = null): void
     {
-        $this->num_ini = $num_ini;
+        $this->num_ini = DocumentoNumIni::fromNullable($num_ini);
     }
 
 
-    public function getNum_fin(): ?int
+    public function getNum_fin(): ?string
     {
-        return $this->num_fin;
+        return $this->num_fin?->value();
     }
 
 
     public function setNum_fin(?int $num_fin = null): void
     {
-        $this->num_fin = $num_fin;
+        $this->num_fin = DocumentoNumFin::fromNullable($num_fin);
     }
 
 
     public function getIdentificador(): ?string
     {
-        return $this->identificador;
+        return $this->identificador?->value();
     }
 
 
     public function setIdentificador(?string $identificador = null): void
     {
-        $this->identificador = $identificador;
+        $this->identificador = DocumentoIdentificador::fromNullableString($identificador);
     }
 
 
-    public function getNum_ejemplares(): ?int
+    public function getNum_ejemplares(): ?string
     {
-        return $this->num_ejemplares;
+        return $this->num_ejemplares?->value();
     }
 
 
     public function setNum_ejemplares(?int $num_ejemplares = null): void
     {
-        $this->num_ejemplares = $num_ejemplares;
+        $this->num_ejemplares = DocumentoNumEjemplares::fromNullable($num_ejemplares);
     }
 
     // Value Object API (duplicada con legacy)
     public function getIdDocVo(): DocumentoId
     {
-        return new DocumentoId($this->id_doc);
+        return this->id_doc;
     }
 
-    public function setIdDocVo(?DocumentoId $id = null): void
+    public function setIdDocVo(DocumentoId|int|null $id = null): void
     {
-        if ($id === null) { return; }
-        $this->id_doc = $id->value();
+        $this->id_doc = $id instanceof DocumentoId
+            ? $id
+            : DocumentoId::fromNullable($id);
     }
 
     public function getIdTipoDocVo(): TipoDocId
     {
-        return new TipoDocId($this->id_tipo_doc);
+        return $this->id_tipo_doc;
     }
 
-    public function setIdTipoDocVo(?TipoDocId $id = null): void
+    public function setIdTipoDocVo(TipoDocId|int|null $id = null): void
     {
-        if ($id === null) { return; }
-        $this->id_tipo_doc = $id->value();
+        $this->id_tipo_doc = $id instanceof TipoDocId
+            ? $id
+            : TipoDocId::fromNullable($id);
     }
 
     public function getIdUbiVo(): UbiInventarioId
     {
-        return new UbiInventarioId($this->id_ubi);
+        return $this->id_ubi;
     }
 
-    public function setIdUbiVo(?UbiInventarioId $id = null): void
+    public function setIdUbiVo(UbiInventarioId|int|null $id = null): void
     {
-        if ($id === null) { return; }
-        $this->id_ubi = $id->value();
+        $this->id_ubi = $id instanceof UbiInventarioId
+            ? $id
+            : UbiInventarioId::fromNullable($id);
     }
 
     public function getIdLugarVo(): ?LugarId
     {
-        return $this->id_lugar !== null ? new LugarId($this->id_lugar) : null;
+        return $this->id_lugar;
     }
 
-    public function setIdLugarVo(?LugarId $id = null): void
+    public function setIdLugarVo(LugarId|int|null $valor = null): void
     {
-        $this->id_lugar = $id?->value();
+        $this->id_lugar = $valor instanceof LugarId
+            ? $valor
+            : LugarId::fromNullable($valor);
     }
 
     public function getObservVo(): ?DocumentoObserv
     {
-        return DocumentoObserv::fromNullableString($this->observ);
+        return $this->observ;
     }
 
-    public function setObservVo(?DocumentoObserv $obs = null): void
+    public function setObservVo(DocumentoObserv|string|null $texto = null): void
     {
-        $this->observ = $obs?->value();
+        $this->observ = $texto instanceof DocumentoObserv
+            ? $texto
+            : DocumentoObserv::fromNullableString($texto);
     }
 
     public function getObservCtrVo(): ?DocumentoObservCtr
     {
-        return DocumentoObservCtr::fromNullableString($this->observCtr);
+        return $this->observCtr;
     }
 
-    public function setObservCtrVo(?DocumentoObservCtr $obs = null): void
+    public function setObservCtrVo(DocumentoObservCtr|string|null $texto = null): void
     {
-        $this->observCtr = $obs?->value();
+        $this->observCtr = $texto instanceof DocumentoObservCtr
+            ? $texto
+            : DocumentoObservCtr::fromNullableString($texto);
     }
 
     public function getIdentificadorVo(): ?DocumentoIdentificador
     {
-        return DocumentoIdentificador::fromNullableString($this->identificador);
+        return $this->identificador;
     }
 
-    public function setIdentificadorVo(?DocumentoIdentificador $ident = null): void
+    public function setIdentificadorVo(DocumentoIdentificador|string|null $texto = null): void
     {
-        $this->identificador = $ident?->value();
+        $this->identificador = $texto instanceof DocumentoIdentificador
+            ? $texto
+            : DocumentoIdentificador::fromNullableString($texto);
     }
 
     public function getNumRegVo(): ?DocumentoNumReg
     {
-        return $this->num_reg !== null ? new DocumentoNumReg($this->num_reg) : null;
+        return $this->num_reg;
     }
 
-    public function setNumRegVo(?DocumentoNumReg $num = null): void
+    public function setNumRegVo(DocumentoNumReg|int|null $valor = null): void
     {
-        $this->num_reg = $num?->value();
+        $this->num_reg = $valor instanceof DocumentoNumReg
+            ? $valor
+            : DocumentoNumReg::fromNullable($valor);
     }
 
     public function getNumIniVo(): ?DocumentoNumIni
     {
-        return $this->num_ini !== null ? new DocumentoNumIni($this->num_ini) : null;
+        return $this->num_ini;
     }
 
-    public function setNumIniVo(?DocumentoNumIni $num = null): void
+    public function setNumIniVo(DocumentoNumIni|int|null $valor = null): void
     {
-        $this->num_ini = $num?->value();
+        $this->num_ini = $valor instanceof DocumentoNumIni
+            ? $valor
+            : DocumentoNumIni::fromNullable($valor);
     }
 
     public function getNumFinVo(): ?DocumentoNumFin
     {
-        return $this->num_fin !== null ? new DocumentoNumFin($this->num_fin) : null;
+        return $this->num_fin;
     }
 
-    public function setNumFinVo(?DocumentoNumFin $num = null): void
+    public function setNumFinVo(DocumentoNumFin|int|null $valor = null): void
     {
-        $this->num_fin = $num?->value();
+        $this->num_fin = $valor instanceof DocumentoNumFin
+            ? $valor
+            : DocumentoNumFin::fromNullable($valor);
     }
 
     public function getNumEjemplaresVo(): ?DocumentoNumEjemplares
     {
-        return $this->num_ejemplares !== null ? new DocumentoNumEjemplares($this->num_ejemplares) : null;
+        return $this->num_ejemplares;
     }
 
-    public function setNumEjemplaresVo(?DocumentoNumEjemplares $num = null): void
+    public function setNumEjemplaresVo(DocumentoNumEjemplares|int|null $valor = null): void
     {
-        $this->num_ejemplares = $num?->value();
+        $this->num_ejemplares = $valor instanceof DocumentoNumEjemplares
+            ? $valor
+            : DocumentoNumEjemplares::fromNullable($valor);
     }
 
-    public function getEnBusquedaVo(): ?DocumentoEnBusqueda
+    public function getEnBusquedaVo(): ?bool
     {
-        return $this->en_busqueda === null ? null : new DocumentoEnBusqueda((bool)$this->en_busqueda);
+        return $this->en_busqueda;
     }
 
-    public function setEnBusquedaVo(?DocumentoEnBusqueda $flag = null): void
+    public function setEnBusquedaVo(?bool $flag = null): void
     {
-        $this->en_busqueda = $flag?->value();
+        $this->en_busqueda = $flag;
     }
 
-    public function getPerdidoVo(): ?DocumentoPerdido
+    public function getPerdidoVo(): ?bool
     {
-        return $this->perdido === null ? null : new DocumentoPerdido((bool)$this->perdido);
+        return $this->perdido;
     }
 
-    public function setPerdidoVo(?DocumentoPerdido $flag = null): void
+    public function setPerdidoVo(?bool $flag = null): void
     {
-        $this->perdido = $flag?->value();
+        $this->perdido = $flag;
     }
 
-    public function getEliminadoVo(): ?DocumentoEliminado
+    public function getEliminadoVo(): ?bool
     {
-        return $this->eliminado === null ? null : new DocumentoEliminado((bool)$this->eliminado);
+        return $this->eliminado;
     }
 
-    public function setEliminadoVo(?DocumentoEliminado $flag = null): void
+    public function setEliminadoVo(?bool $flag = null): void
     {
-        $this->eliminado = $flag?->value();
+        $this->eliminado = $flag;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

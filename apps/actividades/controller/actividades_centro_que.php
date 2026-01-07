@@ -13,6 +13,7 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use web\CentrosQue;
 use web\DesplegableArray;
 use web\Hash;
@@ -39,7 +40,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $oForm = new CentrosQue();
 // miro que rol tengo. Si soy centro, sólo veo la mía
 $miRolePau = ConfigGlobal::mi_role_pau();
-if ($miRolePau === Role::PAU_CTR) { //centro
+if ($miRolePau === PauType::PAU_CTR) { //centro
     $id_pau = ConfigGlobal::mi_role_pau();
     $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para centros cuyo calendario de actividades interesa

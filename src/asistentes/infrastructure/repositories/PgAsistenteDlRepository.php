@@ -29,5 +29,4 @@ class PgAsistenteDlRepository extends PgAsistenteRepository implements Asistente
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('d_asistentes_dl');
     }
-
 }

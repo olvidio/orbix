@@ -2,13 +2,14 @@
 
 namespace src\notas\domain\entity;
 
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\value_objects\ActaNumero;
 use src\notas\domain\value_objects\Libro;
-use src\notas\domain\value_objects\Pagina;
 use src\notas\domain\value_objects\Linea;
 use src\notas\domain\value_objects\Lugar;
 use src\notas\domain\value_objects\Observ;
+use src\notas\domain\value_objects\Pagina;
 use src\notas\domain\value_objects\Pdf;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
@@ -22,37 +23,39 @@ class Acta
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private string $acta;
+    private ActaNumero $acta;
 
-    private int|null $id_asignatura = null;
+    private ?AsignaturaId $id_asignatura = null;
 
-    private int|null $id_activ = null;
+    private ?int $id_activ = null;
 
     private DateTimeLocal $f_acta;
 
-    private int|null $libro = null;
+    private ?Libro $libro = null;
 
-    private int|null $pagina = null;
+    private ?Pagina $pagina = null;
 
-    private int|null $linea = null;
+    private ?Linea $linea = null;
 
-    private string|null $lugar = null;
+    private ?Lugar $lugar = null;
 
-    private string|null $observ = null;
+    private ?Observ $observ = null;
 
-    private string|null $pdf = null;
+    private ?Pdf $pdf = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function getActaVo(): ActaNumero
     {
-        return new ActaNumero($this->acta);
+        return $this->acta;
     }
 
 
-    public function setActaVo(ActaNumero $oActaNumero): void
+    public function setActaVo(ActaNumero|string|null $oActaNumero): void
     {
-        $this->acta = $oActaNumero->value();
+        $this->acta = $oActaNumero instanceof ActaNumero
+            ? $oActaNumero
+            : ActaNumero::fromNullableString($oActaNumero);
     }
 
     /**
@@ -60,7 +63,7 @@ class Acta
      */
     public function getActa(): string
     {
-        return $this->acta;
+        return $this->acta->value();
     }
 
     /**
@@ -68,19 +71,33 @@ class Acta
      */
     public function setActa(string $acta): void
     {
-        $this->acta = $acta;
+        $this->acta = ActaNumero::fromNullableString($acta);
     }
 
 
-    public function getId_asignatura(): ?int
+    /**
+     * @deprecated use getIdAsignaturaVo()
+     */
+    public function getId_asignatura(): ?string
+    {
+        return $this->id_asignatura?->value();
+    }
+
+    public function getIdAsignaturaVo(): AsignaturaId
     {
         return $this->id_asignatura;
     }
 
-
     public function setId_asignatura(?int $id_asignatura = null): void
     {
-        $this->id_asignatura = $id_asignatura;
+        $this->id_asignatura = AsignaturaId::fromNullable($id_asignatura);
+    }
+
+    public function setIdAsignaturaVo(AsignaturaId|int|null $id_asignatura): void
+    {
+        $this->id_asignatura = $id_asignatura instanceof AsignaturaId
+            ? $id_asignatura
+            : AsignaturaId::fromNullable($id_asignatura);
     }
 
 
@@ -110,21 +127,23 @@ class Acta
 
     public function getLibroVo(): ?Libro
     {
-        return Libro::fromNullable($this->libro);
+        return $this->libro;
     }
 
 
-    public function setLibroVo(?Libro $oLibro): void
+    public function setLibroVo(Libro|int|null $valor = null): void
     {
-        $this->libro = $oLibro?->value();
+        $this->libro = $valor instanceof Libro
+            ? $valor
+            : Libro::fromNullable($valor);
     }
 
     /**
      * @deprecated use getLibroVo()
      */
-    public function getLibro(): ?int
+    public function getLibro(): ?string
     {
-        return $this->libro;
+        return $this->libro?->value();
     }
 
     /**
@@ -132,27 +151,28 @@ class Acta
      */
     public function setLibro(?int $libro = null): void
     {
-        $this->libro = $libro;
+        $this->libro = Libro::fromNullable($libro);
     }
 
 
     public function getPaginaVo(): ?Pagina
     {
-        return Pagina::fromNullable($this->pagina);
+        return $this->pagina;
     }
 
-
-    public function setPaginaVo(?Pagina $oPagina): void
+    public function setPaginaVo(Pagina|int|null $valor = null): void
     {
-        $this->pagina = $oPagina?->value();
+        $this->pagina = $valor instanceof Pagina
+            ? $valor
+            : Pagina::fromNullable($valor);
     }
 
     /**
      * @deprecated use getPaginaVo()
      */
-    public function getPagina(): ?int
+    public function getPagina(): ?string
     {
-        return $this->pagina;
+        return $this->pagina?->value();
     }
 
     /**
@@ -160,27 +180,29 @@ class Acta
      */
     public function setPagina(?int $pagina = null): void
     {
-        $this->pagina = $pagina;
+        $this->pagina = Pagina::fromNullable($pagina);
     }
 
 
     public function getLineaVo(): ?Linea
     {
-        return Linea::fromNullable($this->linea);
+        return $this->linea;
     }
 
 
-    public function setLineaVo(?Linea $oLinea): void
+    public function setLineaVo(Linea|int|null $valor = null): void
     {
-        $this->linea = $oLinea?->value();
+        $this->linea = $valor instanceof Linea
+            ? $valor
+            : Linea::fromNullable($valor);
     }
 
     /**
      * @deprecated use getLineaVo()
      */
-    public function getLinea(): ?int
+    public function getLinea(): ?string
     {
-        return $this->linea;
+        return $this->linea?->value();
     }
 
     /**
@@ -188,19 +210,21 @@ class Acta
      */
     public function setLinea(?int $linea = null): void
     {
-        $this->linea = $linea;
+        $this->linea = Linea::fromNullable($linea);
     }
 
 
     public function getLugarVo(): ?Lugar
     {
-        return Lugar::fromNullable($this->lugar);
+        return $this->lugar;
     }
 
 
-    public function setLugarVo(?Lugar $oLugar): void
+    public function setLugarVo(Lugar|string|null $texto = null): void
     {
-        $this->lugar = $oLugar?->value();
+        $this->lugar = $texto instanceof Lugar
+            ? $texto
+            : Lugar::fromNullableString($texto);
     }
 
     /**
@@ -208,7 +232,7 @@ class Acta
      */
     public function getLugar(): ?string
     {
-        return $this->lugar;
+        return $this->lugar?->value();
     }
 
     /**
@@ -216,19 +240,21 @@ class Acta
      */
     public function setLugar(?string $lugar = null): void
     {
-        $this->lugar = $lugar;
+        $this->lugar = Lugar::fromNullableString($lugar);
     }
 
 
     public function getObservVo(): ?Observ
     {
-        return Observ::fromNullable($this->observ);
+        return $this->observ;
     }
 
 
-    public function setObservVo(?Observ $oObserv): void
+    public function setObservVo(Observ|string|null $texto = null): void
     {
-        $this->observ = $oObserv?->value();
+        $this->observ = $texto instanceof Observ
+            ? $texto
+            : Observ::fromNullableString($texto);
     }
 
     /**
@@ -236,7 +262,7 @@ class Acta
      */
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ?->value();
     }
 
     /**
@@ -244,19 +270,21 @@ class Acta
      */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = Observ::fromNullableString($observ);
     }
 
 
     public function getPdfVo(): ?Pdf
     {
-        return Pdf::fromNullable($this->pdf);
+        return $this->pdf;
     }
 
 
-    public function setPdfVo(?Pdf $oPdf): void
+    public function setPdfVo(Pdf|string|null $texto = null): void
     {
-        $this->pdf = $oPdf?->value();
+        $this->pdf = $texto instanceof Pdf
+            ? $texto
+            : Pdf::fromNullableString($texto);
     }
 
     /**
@@ -264,7 +292,7 @@ class Acta
      */
     public function getPdf(): ?string
     {
-        return $this->pdf;
+        return $this->pdf?->value();
     }
 
     /**
@@ -272,7 +300,7 @@ class Acta
      */
     public function setPdf(?string $pdf = null): void
     {
-        $this->pdf = $pdf;
+        $this->pdf = Pdf::fromNullableString($pdf);
     }
 
     public function hasEmptyPdf(): bool
@@ -282,7 +310,7 @@ class Acta
     }
 
 
-   /**
+    /**
      * inventa el valor del acta, si no es correcto
      *
      */

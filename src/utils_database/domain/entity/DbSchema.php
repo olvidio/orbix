@@ -14,9 +14,9 @@ class DbSchema
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private string $schema;
+    private DbSchemaCode $schema;
 
-    private int $id;
+    private DbSchemaId $id;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -25,7 +25,7 @@ class DbSchema
      */
     public function getSchema(): string
     {
-        return $this->schema;
+        return $this->schema->value();
     }
 
     /**
@@ -33,36 +33,40 @@ class DbSchema
      */
     public function setSchema(string $schema): void
     {
-        $this->schema = $schema;
+        $this->schema = new DbSchemaCode($schema);
     }
 
     public function getSchemaVo(): DbSchemaCode
     {
-        return new DbSchemaCode($this->schema);
+        return $this->schema;
     }
 
-    public function setSchemaVo(DbSchemaCode $code): void
+    public function setSchemaVo(DbSchemaCode|string $code): void
     {
-        $this->schema = $code->value();
+        $this->schema = $code instanceof DbSchemaCode
+            ? $code
+            : new DbSchemaCode($code);
     }
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->id->value();
     }
 
     public function setId(int $id): void
     {
-        $this->id = $id;
+        $this->id = new DbSchemaId($id);
     }
 
     public function getIdVo(): DbSchemaId
     {
-        return new DbSchemaId($this->id);
+        return $this->id;
     }
 
-    public function setIdVo(DbSchemaId $id): void
+    public function setIdVo(DbSchemaId|int  $id): void
     {
-        $this->id = $id->value();
+        $this->id = $id instanceof DbSchemaId
+            ? $id
+            : new DbSchemaId($id);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace src\notas\domain\value_objects;
 
 final class Detalle
@@ -21,9 +22,15 @@ final class Detalle
         return $this->value;
     }
 
-    public static function fromNullable(?string $value): ?self
+    public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null) { return null; }
-        return new self($value);
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
     }
 }

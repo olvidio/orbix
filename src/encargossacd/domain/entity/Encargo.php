@@ -26,9 +26,9 @@ class Encargo
 
     private SfsvId $sf_sv;
 
-    private int|null $id_ubi = null;
+    private ?int $id_ubi = null;
 
-    private int|null $id_zona = null;
+    private ?int $id_zona = null;
 
     private EncargoDescText|null $desc_enc = null;
 
@@ -76,9 +76,11 @@ class Encargo
         return $this->id_tipo_enc;
     }
 
-    public function setTipoEncVo(EncargoTipoId $vo): void
+    public function setTipoEncVo(EncargoTipoId|int $vo): void
     {
-        $this->id_tipo_enc = $vo;
+        $this->id_tipo_enc = $vo instanceof EncargoTipoId
+            ? $vo
+            : EncargoTipoId::fromNullable($vo);
     }
 
 
@@ -103,9 +105,11 @@ class Encargo
         return $this->sf_sv;
     }
 
-    public function setSfSvVo(SfsvId $vo): void
+    public function setSfSvVo(SfsvId|int $vo): void
     {
-        $this->sf_sv = $vo;
+        $this->sf_sv = $vo instanceof SfsvId
+            ? $vo
+            : SfsvId::fromNullable($vo);
     }
 
 
@@ -145,7 +149,7 @@ class Encargo
      */
     public function setDesc_enc(?string $desc_enc = null): void
     {
-        $this->desc_enc = $desc_enc !== null ? new EncargoDescText($desc_enc) : null;
+        $this->desc_enc = EncargoDescText::fromNullableString($desc_enc);
     }
 
     public function getDescEncVo(): ?EncargoDescText
@@ -153,9 +157,11 @@ class Encargo
         return $this->desc_enc;
     }
 
-    public function setDescEncVo(?EncargoDescText $vo): void
+    public function setDescEncVo(EncargoDescText|string|null $texto): void
     {
-        $this->desc_enc = $vo;
+        $this->desc_enc = $texto instanceof EncargoDescText
+            ? $texto
+            : EncargoDescText::fromNullableString($texto);
     }
 
 
@@ -172,7 +178,7 @@ class Encargo
      */
     public function setIdioma_enc(?string $idioma_enc = null): void
     {
-        $this->idioma_enc = $idioma_enc !== null ? new IdiomaCode($idioma_enc) : null;
+        $this->idioma_enc = IdiomaCode::fromNullableString($idioma_enc);
     }
 
     public function getIdiomaEncVo(): ?IdiomaCode
@@ -180,9 +186,11 @@ class Encargo
         return $this->idioma_enc;
     }
 
-    public function setIdiomaEncVo(?IdiomaCode $vo): void
+    public function setIdiomaEncVo(IdiomaCode|string|null $texto): void
     {
-        $this->idioma_enc = $vo;
+        $this->idioma_enc = $texto instanceof IdiomaCode
+            ? $texto
+            : IdiomaCode::fromNullableString($texto);
     }
 
 
@@ -199,7 +207,7 @@ class Encargo
      */
     public function setDesc_lugar(?string $desc_lugar = null): void
     {
-        $this->desc_lugar = $desc_lugar !== null ? new LugarDescText($desc_lugar) : null;
+        $this->desc_lugar = LugarDescText::fromNullableString($desc_lugar);
     }
 
     public function getDescLugarVo(): ?LugarDescText
@@ -207,9 +215,11 @@ class Encargo
         return $this->desc_lugar;
     }
 
-    public function setDescLugarVo(?LugarDescText $vo): void
+    public function setDescLugarVo(LugarDescText|string|null $texto): void
     {
-        $this->desc_lugar = $vo;
+        $this->desc_lugar = $texto instanceof LugarDescText
+            ? $texto
+            : LugarDescText::fromNullableString($texto);
     }
 
 
@@ -226,7 +236,7 @@ class Encargo
      */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ !== null ? new ObservText($observ) : null;
+        $this->observ = ObservText::fromNullableString($observ);
     }
 
     public function getObservVo(): ?ObservText
@@ -234,9 +244,11 @@ class Encargo
         return $this->observ;
     }
 
-    public function setObservVo(?ObservText $vo): void
+    public function setObservVo(ObservText|string|null $texto): void
     {
-        $this->observ = $vo;
+        $this->observ = $texto instanceof ObservText
+            ? $texto
+            : ObservText::fromNullableString($texto);
     }
 
     /**
@@ -252,7 +264,7 @@ class Encargo
      */
     public function setOrden(?int $orden = null): void
     {
-        $this->orden = $orden !== null ? new EncargoOrden($orden) : null;
+        $this->orden = EncargoOrden::fromNullable($orden);
     }
 
     public function getOrdenVo(): ?EncargoOrden
@@ -260,9 +272,11 @@ class Encargo
         return $this->orden;
     }
 
-    public function setOrdenVo(?EncargoOrden $vo): void
+    public function setOrdenVo(EncargoOrden|int|null $valor): void
     {
-        $this->orden = $vo;
+        $this->orden = $valor instanceof EncargoOrden
+            ? $valor
+            : EncargoOrden::fromNullable($valor);
     }
 
 
@@ -279,7 +293,7 @@ class Encargo
      */
     public function setPrioridad(?int $prioridad = null): void
     {
-        $this->prioridad = $prioridad !== null ? new EncargoPrioridad($prioridad) : null;
+        $this->prioridad = EncargoPrioridad::fromNullable($prioridad);
     }
 
     public function getPrioridadVo(): ?EncargoPrioridad
@@ -287,8 +301,10 @@ class Encargo
         return $this->prioridad;
     }
 
-    public function setPrioridadVo(?EncargoPrioridad $vo): void
+    public function setPrioridadVo(EncargoPrioridad|int|null $valor): void
     {
-        $this->prioridad = $vo;
+        $this->prioridad = $valor instanceof EncargoPrioridad
+            ? $valor
+            : EncargoPrioridad::fromNullable($valor);
     }
 }

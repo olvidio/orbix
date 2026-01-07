@@ -24,23 +24,23 @@ class EncargoHorario
 
     private DateTimeLocal $f_ini;
 
-    private DateTimeLocal|null $f_fin = null;
+    private ?DateTimeLocal $f_fin = null;
 
-    private DiaRefCode|null $dia_ref = null;
+    private ?DiaRefCode $dia_ref = null;
 
-    private int|null $dia_num = null;
+    private ?int $dia_num = null;
 
-    private MasMenosCode|null $mas_menos = null;
+    private ?MasMenosCode $mas_menos = null;
 
-    private int|null $dia_inc = null;
+    private ?int $dia_inc = null;
 
-    private TimeLocal|null $h_ini = null;
+    private ?TimeLocal $h_ini = null;
 
-    private TimeLocal|null $h_fin = null;
+    private ?TimeLocal $h_fin = null;
 
-    private int|null $n_sacd = null;
+    private ?int $n_sacd = null;
 
-    private MesNum|null $mes = null;
+    private ?MesNum $mes = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -104,7 +104,7 @@ class EncargoHorario
      */
     public function setDia_ref(?string $dia_ref = null): void
     {
-        $this->dia_ref = $dia_ref !== null ? new DiaRefCode($dia_ref) : null;
+        $this->dia_ref = DiaRefCode::fromNullableString($dia_ref);
     }
 
     public function getDiaRefVo(): ?DiaRefCode
@@ -112,9 +112,11 @@ class EncargoHorario
         return $this->dia_ref;
     }
 
-    public function setDiaRefVo(?DiaRefCode $vo): void
+    public function setDiaRefVo(DiaRefCode|string|null $vo): void
     {
-        $this->dia_ref = $vo;
+        $this->dia_ref = $vo instanceof DiaRefCode
+            ? $vo
+            : DiaRefCode::fromNullableString($vo);
     }
 
 
@@ -142,7 +144,7 @@ class EncargoHorario
      */
     public function setMas_menos(?string $mas_menos = null): void
     {
-        $this->mas_menos = $mas_menos !== null ? new MasMenosCode($mas_menos) : null;
+        $this->mas_menos = MasMenosCode::fromNullableString($mas_menos);
     }
 
     public function getMasMenosVo(): ?MasMenosCode
@@ -150,9 +152,11 @@ class EncargoHorario
         return $this->mas_menos;
     }
 
-    public function setMasMenosVo(?MasMenosCode $vo): void
+    public function setMasMenosVo(MasMenosCode|string|null $vo): void
     {
-        $this->mas_menos = $vo;
+        $this->mas_menos = $vo instanceof MasMenosCode
+            ? $vo
+            : MasMenosCode::fromNullableString($vo);
     }
 
 
@@ -216,7 +220,7 @@ class EncargoHorario
      */
     public function setMes(?int $mes = null): void
     {
-        $this->mes = $mes !== null ? new MesNum($mes) : null;
+        $this->mes = MesNum::fromNullable($mes);
     }
 
     public function getMesVo(): ?MesNum
@@ -224,8 +228,10 @@ class EncargoHorario
         return $this->mes;
     }
 
-    public function setMesVo(?MesNum $vo): void
+    public function setMesVo(MesNum|int|null $vo): void
     {
-        $this->mes = $vo;
+        $this->mes = $vo instanceof MesNum
+            ? $vo
+            : MesNum::fromNullable($vo);
     }
 }

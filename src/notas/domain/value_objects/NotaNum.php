@@ -5,12 +5,12 @@ final class NotaNum
 {
     private int $value;
 
-    public function __construct(int $value)
+    public function __construct(float $value)
     {
         $this->value = $value;
     }
 
-    public function value(): int
+    public function value(): float
     {
         return $this->value;
     }
@@ -20,9 +20,11 @@ final class NotaNum
         return (string)$this->value;
     }
 
-    public static function fromNullable(?int $value): ?self
+    public static function fromNullableFloat(?float $value): ?self
     {
-        if ($value === null) { return null; }
+        if ($value === null) {
+            return null;
+        }
         return new self($value);
     }
 }

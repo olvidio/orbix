@@ -26,8 +26,9 @@
 
 use core\ConfigGlobal;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
-use src\asistentes\application\AsistenteApplicationService;
 use src\asistentes\application\services\AsistenteActividadService;
+use src\asistentes\application\services\AsistenteApplicationService;
+use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
 use function core\is_true;
@@ -111,7 +112,6 @@ function eliminar($id_activ, $id_nom): string
 {
     $msg_err = '';
     $service = $GLOBALS['container']->get(AsistenteActividadService::class);
-    $AsistenteRepositoryInterface = $service->getRepoAsistente($id_nom, $id_activ);
     $asistenteAppService = $GLOBALS['container']->get(AsistenteApplicationService::class);
     $oAsistente = $asistenteAppService->findById($id_activ, $id_nom);
 
@@ -178,7 +178,10 @@ function editar($id_activ, $id_nom, $mod)
     $oAsistente = $asistenteAppService->findById($id_activ, $id_nom);
 
     if ($oAsistente === null) {
-        return sprintf(_("no se encuentra el asistente (id_nom: %s, id_activ: %s)"), $id_nom, $id_activ);
+        //return sprintf(_("no se encuentra el asistente (id_nom: %s, id_activ: %s)"), $id_nom, $id_activ);
+        $oAsistente = new Asistente();
+        $oAsistente->setId_activ($id_activ);
+        $oAsistente->setId_nom($id_nom);
     }
 
     // comprobar si puedo (si es nuevo o mover, SI):
@@ -201,8 +204,8 @@ function editar($id_activ, $id_nom, $mod)
 
         $oAsistente->setEncargo($Qencargo);
         $oAsistente->setObserv($Qobserv);
-        $oAsistente->setObserv_est($Qobserv_est);
-        $oAsistente->setPlazaComprobando($Qplaza);
+        $oAsistente->setObservEstVo($Qobserv_est);
+        $oAsistente->setPlazaVoComprobando($Qplaza);
         $oAsistente->setPropio(is_true($Qpropio));
         $oAsistente->setEst_ok(is_true($Qest_ok));
         $oAsistente->setCfi(is_true($Qcfi));
@@ -213,10 +216,10 @@ function editar($id_activ, $id_nom, $mod)
             $oAsistente->setPropio('t');
         }
         // siempre soy la dl
-        $oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
+        $oAsistente->setDlResponsableVo(ConfigGlobal::mi_delef());
         // Si no es especificado, al poner la plaza ya se pone al propietario
         if (!empty($Qpropietario)) {
-            $oAsistente->setPropietario($Qpropietario);
+            $oAsistente->setPropietarioVo($Qpropietario);
         }
         // Usar el servicio de aplicación que maneja transacciones y eventos
         if ($asistenteAppService->guardar($oAsistente) === false) {

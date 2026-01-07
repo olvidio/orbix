@@ -19,17 +19,36 @@ class ProfesorTipo
 
     private ?ProfesorTipoName $tipo_profesor = null;
 
+    
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    // -------- VO API --------
     public function getIdTipoProfesorVo(): ProfesorTipoId
     {
         return $this->id_tipo_profesor;
     }
 
-    public function setIdTipoProfesorVo(ProfesorTipoId $id): void
+    public function setIdTipoProfesorVo(ProfesorTipoId|int $valor = null): void
     {
-        $this->id_tipo_profesor = $id;
+        $this->id_tipo_profesor = $valor instanceof ProfesorTipoId
+            ? $valor
+            : ProfesorTipoId::fromNullable($valor);
+    }
+
+    /**
+     * @deprecated use getIdTipoProfesorVo()
+     */
+    public function getId_tipo_profesor(): int
+    {
+        return $this->id_tipo_profesor->value();
+    }
+
+    /**
+     * @deprecated use setIdTipoProfesorVo()
+     */
+    public function setId_tipo_profesor(int $valor = null): void
+    {
+        $this->id_tipo_profesor = ProfesorTipoId::fromNullable($valor);
     }
 
     public function getTipoProfesorVo(): ?ProfesorTipoName
@@ -37,36 +56,30 @@ class ProfesorTipo
         return $this->tipo_profesor;
     }
 
-    public function setTipoProfesorVo(?ProfesorTipoName $nombre = null): void
+    public function setTipoProfesorVo(ProfesorTipoName|string|null $valor = null): void
     {
-        $this->tipo_profesor = $nombre;
+        $this->tipo_profesor = $valor instanceof ProfesorTipoName
+            ? $valor
+            : ProfesorTipoName::fromNullableString($valor);
     }
 
-
-    public function getId_tipoprofesor(): int
-    {
-        return $this->id_tipo_profesor->value();
-    }
-
-
-    public function setId_tipoprofesor(int $id_tipo_profesor): void
-    {
-        $this->id_tipo_profesor = new ProfesorTipoId($id_tipo_profesor);
-    }
-
-
+    /**
+     * @deprecated use getTipoProfesorVo()
+     */
     public function getTipo_profesor(): ?string
     {
         return $this->tipo_profesor?->value();
     }
 
-
-    public function setTipo_profesor(?string $tipo_profesor = null): void
+    /**
+     * @deprecated use setTipoProfesorVo()
+     */
+    public function setTipo_profesor(?string $valor = null): void
     {
-        $this->tipo_profesor = ProfesorTipoName::fromNullableString($tipo_profesor);
+        $this->tipo_profesor = ProfesorTipoName::fromNullableString($valor);
     }
 
-    /* ------------------- PARA el mod_tabla  -------------------------------*/
+/* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
         return 'id_tipo_profesor';

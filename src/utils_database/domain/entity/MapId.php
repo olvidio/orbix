@@ -17,9 +17,9 @@ class MapId
 
     private MapObjectCode $objeto;
 
-    private int $id_resto;
+    private MapIdResto $id_resto;
 
-    private int $id_dl;
+    private MapIdDl $id_dl;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -55,7 +55,7 @@ class MapId
      */
     public function getId_resto(): int
     {
-        return $this->id_resto;
+        return $this->id_resto->value();
     }
 
     /**
@@ -63,18 +63,20 @@ class MapId
      */
     public function setId_resto(int $id_resto): void
     {
-        $this->id_resto = $id_resto;
+        $this->id_resto = new MapIdResto($id_resto);
     }
 
     // Value Object API for id_resto
     public function getIdRestoVo(): MapIdResto
     {
-        return new MapIdResto($this->id_resto);
+        return $this->id_resto;
     }
 
-    public function setIdRestoVo(MapIdResto $id): void
+    public function setIdRestoVo(MapIdResto|int $id): void
     {
-        $this->id_resto = $id->value();
+        $this->id_resto = $id instanceof MapIdResto
+            ? $id
+            : new MapIdResto($id);
     }
 
     /**
@@ -82,7 +84,7 @@ class MapId
      */
     public function getId_dl(): int
     {
-        return $this->id_dl;
+        return $this->id_dl->value();
     }
 
     /**
@@ -90,17 +92,19 @@ class MapId
      */
     public function setId_dl(int $id_dl): void
     {
-        $this->id_dl = $id_dl;
+        $this->id_dl = new MapIdDl($id_dl);
     }
 
     // Value Object API for id_dl
     public function getIdDlVo(): MapIdDl
     {
-        return new MapIdDl($this->id_dl);
+        return $this->id_dl;
     }
 
-    public function setIdDlVo(MapIdDl $id): void
+    public function setIdDlVo(MapIdDl|int $id): void
     {
-        $this->id_dl = $id->value();
+        $this->id_dl = $id instanceof MapIdDl
+            ? $id
+            : new MapIdDl($id);
     }
 }

@@ -21,11 +21,11 @@ class Zona
 
     private NombreZona $nombre_zona;
 
-    private int|null $orden = null;
+    private ?int $orden = null;
 
-    private int|null $id_grupo = null;
+    private ?int $id_grupo = null;
 
-    private int|null $id_nom = null;
+    private ?int $id_nom = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

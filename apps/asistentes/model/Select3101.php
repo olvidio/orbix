@@ -8,7 +8,6 @@ use dossiers\model\PermDossier;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadplazas\domain\ResumenPlazas;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
@@ -176,7 +175,7 @@ class Select3101
     }
 
 
-    private function getDatosActividad(): DatosCampo
+    private function getDatosActividad(): void
     {
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($this->id_pau);
@@ -185,7 +184,6 @@ class Select3101
         $this->plazas_totales = $oActividad->getPlazas();
         $this->id_ubi = $oActividad->getId_ubi();
         $this->publicado = $oActividad->isPublicado();
-
     }
 
     private function getTituloPlazas()

@@ -44,9 +44,13 @@ final class AsignaturaShortName
 
     public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null) { return null; }
-        $value = trim($value);
-        if ($value === '') { return null; }
-        return new self($value);
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
     }
 }

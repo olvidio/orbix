@@ -34,11 +34,4 @@ final class DelegacionId
         return $this->value === $other->value();
     }
 
-    public static function fromString(string $value): self
-    {
-        if (!ctype_digit($value)) {
-            throw new \InvalidArgumentException('DelegacionId string must be digits');
-        }
-        return new self((int)$value);
-    }
 }

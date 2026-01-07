@@ -67,7 +67,7 @@ class EncargoTipo
      */
     public function setId_tipo_enc(int $id_tipo_enc): void
     {
-        $this->id_tipo_enc = new EncargoTipoId($id_tipo_enc);
+        $this->id_tipo_enc = EncargoTipoId::fromNullable($id_tipo_enc);
     }
 
     public function getTipoEncIdVo(): EncargoTipoId
@@ -75,9 +75,11 @@ class EncargoTipo
         return $this->id_tipo_enc;
     }
 
-    public function setTipoEncIdVo(EncargoTipoId $vo): void
+    public function setTipoEncIdVo(EncargoTipoId|int|null $vo): void
     {
-        $this->id_tipo_enc = $vo;
+        $this->id_tipo_enc = $vo instanceof EncargoTipoId
+            ? $vo
+            : EncargoTipoId::fromNullable($vo);
     }
 
 
@@ -95,7 +97,7 @@ class EncargoTipo
      */
     public function setTipo_enc(string $tipo_enc): void
     {
-        $this->tipo_enc = new EncargoTipoText($tipo_enc);
+        $this->tipo_enc = EncargoTipoText::fromNullableString($tipo_enc);
     }
 
     public function getTipoEncVo(): EncargoTipoText
@@ -103,9 +105,11 @@ class EncargoTipo
         return $this->tipo_enc;
     }
 
-    public function setTipoEncVo(EncargoTipoText $vo): void
+    public function setTipoEncVo(EncargoTipoText|string|null $vo): void
     {
-        $this->tipo_enc = $vo;
+        $this->tipo_enc = $vo instanceof EncargoTipoText
+            ? $vo
+            : EncargoTipoText::fromNullableString($vo);
     }
 
 
@@ -123,7 +127,7 @@ class EncargoTipo
      */
     public function setMod_horario(int $mod_horario): void
     {
-        $this->mod_horario = new EncargoModHorarioId($mod_horario);
+        $this->mod_horario = EncargoModHorarioId::fromNullable($mod_horario);
     }
 
     public function getModHorarioVo(): EncargoModHorarioId
@@ -131,9 +135,11 @@ class EncargoTipo
         return $this->mod_horario;
     }
 
-    public function setModHorarioVo(EncargoModHorarioId $vo): void
+    public function setModHorarioVo(EncargoModHorarioId|int|null $vo): void
     {
-        $this->mod_horario = $vo;
+        $this->mod_horario = $vo instanceof EncargoModHorarioId
+            ? $vo
+            : EncargoModHorarioId::fromNullable($vo);
     }
 
 

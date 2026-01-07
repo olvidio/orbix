@@ -36,33 +36,33 @@ class CentroEllas
 
     private int $id_ubi;
 
-    private string|null $tipo_ubi = null;
+    private ?string $tipo_ubi = null;
 
     private string $nombre_ubi;
 
-    private string|null $dl = null;
+    private ?string $dl = null;
 
-    private string|null $pais = null;
+    private ?string $pais = null;
 
-    private string|null $region = null;
+    private ?string $region = null;
 
     private bool $active;
 
-    private DateTimeLocal|null $f_active = null;
+   private ?DateTimeLocal $f_active = null;
 
     private bool|null $sv = null;
 
     private bool|null $sf = null;
 
-    private string|null $tipo_ctr = null;
+    private ?string $tipo_ctr = null;
 
-    private int|null $tipo_labor = null;
+    private ?int $tipo_labor = null;
 
     private bool|null $cdc = null;
 
-    private int|null $id_ctr_padre = null;
+    private ?int $id_ctr_padre = null;
 
-    private int|null $id_zona = null;
+    private ?int $id_zona = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

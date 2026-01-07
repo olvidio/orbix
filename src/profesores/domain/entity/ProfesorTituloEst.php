@@ -5,6 +5,7 @@ namespace src\profesores\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\profesores\domain\value_objects\CentroDntName;
+use src\profesores\domain\value_objects\PublicacionTitulo;
 use src\profesores\domain\value_objects\TituloName;
 use src\profesores\domain\value_objects\YearNumber;
 use src\shared\domain\traits\Hydratable;
@@ -21,132 +22,133 @@ class ProfesorTituloEst
 
     private int $id_nom;
 
-    private string $titulo;
+    private PublicacionTitulo $titulo;
 
-    private string|null $centro_dnt = null;
+    private ?CentroDntName $centro_dnt = null;
 
-    private bool|null $eclesiastico = null;
+    private ?bool $eclesiastico = null;
 
-    private int|null $year = null;
+    private ?YearNumber $year = null;
+
+    
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getTituloVo(): PublicacionTitulo
+    {
+        return $this->titulo;
+    }
+
+    public function setTituloVo(PublicacionTitulo|string $valor = null): void
+    {
+        $this->titulo = $valor instanceof PublicacionTitulo
+            ? $valor
+            : PublicacionTitulo::fromNullableString($valor);
+    }
+
+    /**
+     * @deprecated use getTituloVo()
+     */
+    public function getTitulo(): string
+    {
+        return $this->titulo->value();
+    }
+
+    /**
+     * @deprecated use setTituloVo()
+     */
+    public function setTitulo(string $valor = null): void
+    {
+        $this->titulo = PublicacionTitulo::fromNullableString($valor);
+    }
+
+    public function getCentroDntVo(): ?CentroDntName
+    {
+        return $this->centro_dnt;
+    }
+
+    public function setCentroDntVo(CentroDntName|string|null $valor = null): void
+    {
+        $this->centro_dnt = $valor instanceof CentroDntName
+            ? $valor
+            : CentroDntName::fromNullableString($valor);
+    }
+
+    /**
+     * @deprecated use getCentroDntVo()
+     */
+    public function getCentro_dnt(): ?string
+    {
+        return $this->centro_dnt?->value();
+    }
+
+    /**
+     * @deprecated use setCentroDntVo()
+     */
+    public function setCentro_dnt(?string $valor = null): void
+    {
+        $this->centro_dnt = CentroDntName::fromNullableString($valor);
+    }
+
+    public function getYearVo(): ?YearNumber
+    {
+        return $this->year;
+    }
+
+    public function setYearVo(YearNumber|int|null $valor = null): void
+    {
+        $this->year = $valor instanceof YearNumber
+            ? $valor
+            : YearNumber::fromNullable($valor);
+    }
+
+    /**
+     * @deprecated use getYearVo()
+     */
+    public function getYear(): ?int
+    {
+        return $this->year?->value();
+    }
+
+    /**
+     * @deprecated use setYearVo()
+     */
+    public function setYear(?int $valor = null): void
+    {
+        $this->year = YearNumber::fromNullable($valor);
+    }
 
     public function getId_item(): int
     {
         return $this->id_item;
     }
 
-
-    public function setId_item(int $id_item): void
+    public function setId_item(int $valor): void
     {
-        $this->id_item = $id_item;
+        $this->id_item = $valor;
     }
-
 
     public function getId_nom(): int
     {
         return $this->id_nom;
     }
 
-
-    public function setId_nom(int $id_nom): void
+    public function setId_nom(int $valor): void
     {
-        $this->id_nom = $id_nom;
+        $this->id_nom = $valor;
     }
 
-    /**
-     * @deprecated Usar getTituloVo()->value()
-     */
-    public function getTitulo(): string
-    {
-        return $this->titulo;
-    }
-
-    /**
-     * @deprecated Usar setTituloVo(TituloName $vo)
-     */
-    public function setTitulo(string $titulo): void
-    {
-        $this->titulo = $titulo;
-    }
-
-    public function getTituloVo(): TituloName
-    {
-        return new TituloName($this->titulo);
-    }
-
-    public function setTituloVo(?TituloName $titulo): void
-    {
-        if ($titulo !== null) {
-            $this->titulo = $titulo->value();
-        }
-    }
-
-    /**
-     * @deprecated Usar getCentroDntVo()->value()
-     */
-    public function getCentro_dnt(): ?string
-    {
-        return $this->centro_dnt;
-    }
-
-    /**
-     * @deprecated Usar setCentroDntVo(CentroDntName $vo)
-     */
-    public function setCentro_dnt(?string $centro_dnt = null): void
-    {
-        $this->centro_dnt = $centro_dnt;
-    }
-
-    public function getCentroDntVo(): ?CentroDntName
-    {
-        return CentroDntName::fromNullable($this->centro_dnt);
-    }
-
-    public function setCentroDntVo(?CentroDntName $centro): void
-    {
-        $this->centro_dnt = $centro?->value();
-    }
-
-
-    public function isEclesiastico(): ?bool
+    public function getEclesiastico(): ?bool
     {
         return $this->eclesiastico;
     }
 
-
-    public function setEclesiastico(?bool $eclesiastico = null): void
+    public function setEclesiastico(?bool $valor): void
     {
-        $this->eclesiastico = $eclesiastico;
+        $this->eclesiastico = $valor;
     }
 
-    /**
-     * @deprecated Usar getYearVo()->value()
-     */
-    public function getYear(): ?int
-    {
-        return $this->year;
-    }
-
-    /**
-     * @deprecated Usar setYearVo(YearNumber $vo)
-     */
-    public function setYear(?int $year = null): void
-    {
-        $this->year = $year;
-    }
-
-    public function getYearVo(): ?YearNumber
-    {
-        return YearNumber::fromNullable($this->year);
-    }
-
-    public function setYearVo(?YearNumber $year): void
-    {
-        $this->year = $year?->value();
-    }
-
-    /* ------------------- PARA el mod_tabla  -------------------------------*/
+/* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
         return 'id_item';

@@ -23,7 +23,7 @@ class TarifaUbi
 
     private float $cantidad;
 
-    private string|null $observ = null;
+    private ?string $observ = null;
 
     private int $id_serie;
 

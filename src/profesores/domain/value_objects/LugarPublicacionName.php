@@ -35,9 +35,25 @@ final class LugarPublicacionName
 
     public static function fromNullable(?string $value): ?self
     {
-        if ($value === null) { return null; }
+        if ($value === null) {
+            return null;
+        }
         $value = trim($value);
-        if ($value === '') { return null; }
+        if ($value === '') {
+            return null;
+        }
         return new self($value);
+    }
+
+    public static function fromNullableString(?string $value): ?self
+    {
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
     }
 }

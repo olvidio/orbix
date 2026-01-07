@@ -28,27 +28,27 @@ class TipoDossier
 
     private int $id_tipo_dossier;
 
-    private string|null $descripcion = null;
+    private ?TipoDossierDescripcion $descripcion = null;
 
-    private string $tabla_from;
+    private TipoDossierTablaFrom $tabla_from;
 
-    private string|null $tabla_to = null;
+    private ?TipoDossierTablaTo $tabla_to = null;
 
-    private string|null $campo_to = null;
+    private ?TipoDossierCampoTo $campo_to = null;
 
-    private int|null $id_tipo_dossier_rel = null;
+    private ?int $id_tipo_dossier_rel = null;
 
-    private int $permiso_lectura;
+    private ?int $permiso_lectura;
 
-    private int|null $permiso_escritura = null;
+    private ?int $permiso_escritura = null;
 
-    private bool $depende_modificar;
+    private ?bool $depende_modificar;
 
-    private string|null $app = null;
+    private ?TipoDossierApp $app = null;
 
-    private string|null $class = null;
+    private ?TipoDossierClass $class = null;
 
-    private int|null $db = null;
+    private ?TipoDossierDb $db = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -66,19 +66,24 @@ class TipoDossier
 
     public function getDescripcionVo(): ?TipoDossierDescripcion
     {
-        return $this->descripcion !== null ? new TipoDossierDescripcion($this->descripcion) : null;
+        return $this->descripcion;
     }
 
 
-    public function setDescripcionVo(?TipoDossierDescripcion $oTipoDossierDescripcion = null): void
+    public function setDescripcionVo(TipoDossierDescripcion|string|null $texto = null): void
     {
-        $this->descripcion = $oTipoDossierDescripcion?->value();
+        $this->descripcion = $texto instanceof TipoDossierDescripcion
+            ? $texto
+            : TipoDossierDescripcion::fromNullableString($texto);
     }
 
 
+    /**
+     * @deprecated use getDescripcionVo()
+     */
     public function getDescripcion(): ?string
     {
-        return $this->descripcion;
+        return $this->descripcion?->value();
     }
 
     /**
@@ -86,7 +91,7 @@ class TipoDossier
      */
     public function setDescripcion(?string $descripcion = null): void
     {
-        $this->descripcion = $descripcion;
+        $this->descripcion = TipodossierDescripcion::fromNullableString($descripcion);
     }
 
     /**
@@ -94,15 +99,15 @@ class TipoDossier
      */
     public function getTablaFromVo(): TipoDossierTablaFrom
     {
-        return new TipoDossierTablaFrom($this->tabla_from);
+        return $this->tabla_from;
     }
 
-    /**
-     * @param TipoDossierTablaFrom $oTipoDossierTablaFrom
-     */
-    public function setTablaFromVo(TipoDossierTablaFrom $oTipoDossierTablaFrom): void
+
+    public function setTablaFromVo(TipoDossierTablaFrom|string|null $texto): void
     {
-        $this->tabla_from = $oTipoDossierTablaFrom->value();
+        $this->tabla_from = $texto instanceof TipoDossierTablaFrom
+            ? $texto
+            : TipoDossierTablaFrom::fromNullableString($texto);
     }
 
     /**
@@ -110,7 +115,7 @@ class TipoDossier
      */
     public function getTabla_from(): string
     {
-        return $this->tabla_from;
+        return $this->tabla_from->value();
     }
 
     /**
@@ -118,7 +123,7 @@ class TipoDossier
      */
     public function setTabla_from(string $tabla_from): void
     {
-        $this->tabla_from = $tabla_from;
+        $this->tabla_from = TipoDossierTablaFrom::fromNullableString($tabla_from);
     }
 
     /**
@@ -126,15 +131,15 @@ class TipoDossier
      */
     public function getTablaToVo(): ?TipoDossierTablaTo
     {
-        return $this->tabla_to !== null ? new TipoDossierTablaTo($this->tabla_to) : null;
+        return $this->tabla_to;
     }
 
-    /**
-     * @param TipoDossierTablaTo|null $oTipoDossierTablaTo
-     */
-    public function setTablaToVo(?TipoDossierTablaTo $oTipoDossierTablaTo = null): void
+
+    public function setTablaToVo(TipoDossierTablaTo|string|null $texto = null): void
     {
-        $this->tabla_to = $oTipoDossierTablaTo?->value();
+        $this->tabla_to = $texto instanceof TipoDossierTablaTo
+            ? $texto
+            : TipoDossierTablaTo::fromNullableString($texto);
     }
 
     /**
@@ -142,7 +147,7 @@ class TipoDossier
      */
     public function getTabla_to(): ?string
     {
-        return $this->tabla_to;
+        return $this->tabla_to?->value();
     }
 
     /**
@@ -150,7 +155,7 @@ class TipoDossier
      */
     public function setTabla_to(?string $tabla_to = null): void
     {
-        $this->tabla_to = $tabla_to;
+        $this->tabla_to = TipoDossierTablaTo::fromNullableString($tabla_to);
     }
 
     /**
@@ -158,15 +163,15 @@ class TipoDossier
      */
     public function getCampoToVo(): ?TipoDossierCampoTo
     {
-        return $this->campo_to !== null ? new TipoDossierCampoTo($this->campo_to) : null;
+        return $this->campo_to;
     }
 
-    /**
-     * @param TipoDossierCampoTo|null $oTipoDossierCampoTo
-     */
-    public function setCampoToVo(?TipoDossierCampoTo $oTipoDossierCampoTo = null): void
+
+    public function setCampoToVo(TipoDossierCampoTo|string|null $texto = null): void
     {
-        $this->campo_to = $oTipoDossierCampoTo?->value();
+        $this->campo_to = $texto instanceof TipoDossierCampoTo
+            ? $texto
+            : TipoDossierCampoTo::fromNullableString($texto);
     }
 
     /**
@@ -174,7 +179,7 @@ class TipoDossier
      */
     public function getCampo_to(): ?string
     {
-        return $this->campo_to;
+        return $this->campo_to?->value();
     }
 
     /**
@@ -182,7 +187,7 @@ class TipoDossier
      */
     public function setCampo_to(?string $campo_to = null): void
     {
-        $this->campo_to = $campo_to;
+        $this->campo_to = TipoDossierCampoTo::fromNullableString($campo_to);
     }
 
 
@@ -238,15 +243,15 @@ class TipoDossier
      */
     public function getAppVo(): ?TipoDossierApp
     {
-        return $this->app !== null ? new TipoDossierApp($this->app) : null;
+        return $this->app;
     }
 
-    /**
-     * @param TipoDossierApp|null $oTipoDossierApp
-     */
-    public function setAppVo(?TipoDossierApp $oTipoDossierApp = null): void
+
+    public function setAppVo(TipoDossierApp|string|null $texto = null): void
     {
-        $this->app = $oTipoDossierApp?->value();
+        $this->app = $texto instanceof TipoDossierApp
+            ? $texto
+            : TipoDossierApp::fromNullableString($texto);
     }
 
     /**
@@ -254,7 +259,7 @@ class TipoDossier
      */
     public function getApp(): ?string
     {
-        return $this->app;
+        return $this->app?->value();
     }
 
     /**
@@ -262,7 +267,7 @@ class TipoDossier
      */
     public function setApp(?string $app = null): void
     {
-        $this->app = $app;
+        $this->app = TipoDossierApp::fromNullableString($app);
     }
 
     /**
@@ -270,15 +275,17 @@ class TipoDossier
      */
     public function getClassVo(): ?TipoDossierClass
     {
-        return $this->class !== null ? new TipoDossierClass($this->class) : null;
+        return $this->class;
     }
 
     /**
      * @param TipoDossierClass|null $oTipoDossierClass
      */
-    public function setClassVo(?TipoDossierClass $oTipoDossierClass = null): void
+    public function setClassVo(TipoDossierClass|string|null $texto = null): void
     {
-        $this->class = $oTipoDossierClass?->value();
+        $this->class = $texto instanceof TipoDossierClass
+            ? $texto
+            : TipoDossierClass::fromNullableString($texto);
     }
 
     /**
@@ -286,7 +293,7 @@ class TipoDossier
      */
     public function getClass(): ?string
     {
-        return $this->class;
+        return $this->class?->value();
     }
 
     /**
@@ -294,7 +301,7 @@ class TipoDossier
      */
     public function setClass(?string $class = null): void
     {
-        $this->class = $class;
+        $this->class = TipoDossierClass::fromNullableString($class);
     }
 
     /**
@@ -302,23 +309,23 @@ class TipoDossier
      */
     public function getDbVo(): ?TipoDossierDb
     {
-        return $this->db !== null ? new TipoDossierDb($this->db) : null;
+        return $this->db;
     }
 
-    /**
-     * @param TipoDossierDb|null $oTipoDossierDb
-     */
-    public function setDbVo(?TipoDossierDb $oTipoDossierDb = null): void
+
+    public function setDbVo(TipoDossierDb|int|null $valor = null): void
     {
-        $this->db = $oTipoDossierDb?->value();
+        $this->db = $valor instanceof TipoDossierDb
+            ? $valor
+            : TipoDossierDb::fromNullable($valor);
     }
 
     /**
      * @deprecated use getDbVo()
      */
-    public function getDb(): ?int
+    public function getDb(): ?string
     {
-        return $this->db;
+        return $this->db?->value();
     }
 
     /**
@@ -326,7 +333,7 @@ class TipoDossier
      */
     public function setDb(?int $db = null): void
     {
-        $this->db = $db;
+        $this->db = TipoDossierDb::fromNullable($db);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

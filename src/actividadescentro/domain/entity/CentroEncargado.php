@@ -14,8 +14,8 @@ class CentroEncargado
 
     private int $id_activ;
     private int $id_ubi;
-    private int|null $num_orden = null;
-    private string|null $encargo = null;
+    private ?CentroEncargadoOrden $num_orden = null;
+    private ?CentroEncargadoTexto $encargo = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -42,9 +42,9 @@ class CentroEncargado
     /**
      * @deprecated use getNumOrdenVo()
      */
-    public function getNum_orden(): ?int
+    public function getNum_orden(): ?string
     {
-        return $this->num_orden;
+        return $this->num_orden?->value();
     }
 
     /**
@@ -52,7 +52,7 @@ class CentroEncargado
      */
     public function setNum_orden(?int $num_orden = null): void
     {
-        $this->num_orden = $num_orden;
+        $this->num_orden = CentroEncargadoOrden::fromNullable($num_orden);
     }
 
     /**
@@ -60,15 +60,14 @@ class CentroEncargado
      */
     public function getNumOrdenVo(): ?CentroEncargadoOrden
     {
-        return $this->num_orden !== null ? new CentroEncargadoOrden($this->num_orden) : null;
+        return $this->num_orden;
     }
 
-    /**
-     * @param CentroEncargadoOrden|null $oCentroEncargadoOrden
-     */
-    public function setNumOrdenVo(?CentroEncargadoOrden $oCentroEncargadoOrden = null): void
+    public function setNumOrdenVo(CentroEncargadoOrden|int|null $valor = null): void
     {
-        $this->num_orden = $oCentroEncargadoOrden?->value();
+        $this->num_orden = $valor instanceof CentroEncargadoOrden
+            ? $valor
+            : CentroEncargadoOrden::fromNullable($valor);
     }
 
     /**
@@ -76,7 +75,7 @@ class CentroEncargado
      */
     public function getEncargo(): ?string
     {
-        return $this->encargo;
+        return $this->encargo?->value();
     }
 
     /**
@@ -84,7 +83,7 @@ class CentroEncargado
      */
     public function setEncargo(?string $encargo = null): void
     {
-        $this->encargo = $encargo;
+        $this->encargo = CentroEncargadoTexto::fromNullableString($encargo);
     }
 
     /**
@@ -92,14 +91,13 @@ class CentroEncargado
      */
     public function getEncargoVo(): ?CentroEncargadoTexto
     {
-        return $this->encargo !== null ? new CentroEncargadoTexto($this->encargo) : null;
+        return $this->encargo;
     }
 
-    /**
-     * @param CentroEncargadoTexto|null $oCentroEncargadoTexto
-     */
-    public function setEncargoVo(?CentroEncargadoTexto $oCentroEncargadoTexto = null): void
+    public function setEncargoVo(CentroEncargadoTexto|string|null $texto = null): void
     {
-        $this->encargo = $oCentroEncargadoTexto?->value();
+        $this->encargo = $texto instanceof CentroEncargadoTexto
+            ? $texto
+            : CentroEncargadoTexto::fromNullableString($texto);
     }
 }

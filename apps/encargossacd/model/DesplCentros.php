@@ -9,7 +9,7 @@ use web\Desplegable;
 class DesplCentros
 {
 
-    private int|null $id_zona = null;
+    private ?int $id_zona = null;
 
     public function getDesplPorFiltro($filtro_ctr)
     {

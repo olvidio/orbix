@@ -13,9 +13,9 @@ class GrupMenuRole
 
     private int $id_item;
 
-    private int|null $id_grupmenu = null;
+    private ?int $id_grupmenu = null;
 
-    private int|null $id_role = null;
+    private ?int $id_role = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

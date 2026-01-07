@@ -48,7 +48,7 @@ class Plantilla
      *
      * @var int|null
      */
-    private int|null $isemana = null;
+    private ?int $isemana = null;
 
     private DateTimeLocal|NullDateTimeLocal $tt_start;
     private DateTimeLocal|NullDateTimeLocal $tt_end;
@@ -57,13 +57,13 @@ class Plantilla
      *
      * @var int|null
      */
-    private int|null $iid_nom = null;
+    private ?int $iid_nom = null;
     /**
      * Observ de Plantilla
      *
      * @var string|null
      */
-    private string|null $sobserv = null;
+    private ?string $sobserv = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

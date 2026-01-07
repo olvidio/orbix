@@ -38,9 +38,11 @@ class DescTeleco
         return $this->orden;
     }
 
-    public function setOrdenVo(?DescTelecoOrder $orden = null): void
+    public function setOrdenVo(DescTelecoOrder|int|null $valor = null): void
     {
-        $this->orden = $orden;
+        $this->orden = $valor instanceof DescTelecoOrder
+            ? $valor
+            : DescTelecoOrder::fromNullable($valor);
     }
 
     public function getIdTipoTelecoVo(): TipoTelecoCode
@@ -58,9 +60,11 @@ class DescTeleco
         return $this->desc_teleco;
     }
 
-    public function setDescTelecoVo(?DescTelecoText $texto = null): void
+    public function setDescTelecoVo(DescTelecoText|string|null $texto = null): void
     {
-        $this->desc_teleco = $texto;
+        $this->desc_teleco = $texto instanceof DescTelecoText
+            ? $texto
+            : DescTelecoText::fromNullableString($texto);
     }
 
 

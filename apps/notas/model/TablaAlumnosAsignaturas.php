@@ -6,6 +6,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use web\Lista;
 
@@ -126,7 +127,7 @@ class TablaAlumnosAsignaturas
                 }
 
                 // En el caso de las cursadas (id_situacion = 2) pongo 2.
-                if ($id_situacion == Nota::CURSADA) {
+                if ($id_situacion == NotaSituacion::CURSADA) {
                     $aAprobadas[$id_nivel_asig]['nota'] = 2;
                 } elseif (in_array($id_situacion, $a_notas_superada)) {
                     $aAprobadas[$id_nivel_asig]['nota'] = '';
@@ -253,7 +254,7 @@ class TablaAlumnosAsignaturas
                 }
 
                 // En el caso de las cursadas (id_situacion = 2) pongo 2.
-                if ($id_situacion == Nota::CURSADA) {
+                if ($id_situacion == NotaSituacion::CURSADA) {
                     $aAprobadas[$id_nivel_asig]['nota'] = 2;
                 } elseif (in_array($id_situacion, $a_notas_superada)) {
                     $aAprobadas[$id_nivel_asig]['nota'] = '';

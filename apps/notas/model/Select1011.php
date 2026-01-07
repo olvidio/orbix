@@ -8,6 +8,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\infrastructure\repositories\PgPersonaNotaDBRepository;
 use src\personas\domain\entity\Persona;
 use web\Hash;
@@ -142,7 +143,7 @@ class Select1011
                 $nom_activ = $oActividad?->getNom_activ()?? '';
             }
             $nota = $oPersonaNota->getNota_txt();
-            if ($acta == Nota::CURSADA) {
+            if ($acta == NotaSituacion::CURSADA) {
                 $acta = '';
             }
 

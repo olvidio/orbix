@@ -1,10 +1,11 @@
 <?php
 
 namespace src\configuracion\domain\entity;
-use src\configuracion\domain\value_objects\AppId;
-use src\configuracion\domain\value_objects\AppName;
+
 use core\DatosCampo;
 use core\Set;
+use src\configuracion\domain\value_objects\AppId;
+use src\configuracion\domain\value_objects\AppName;
 use src\shared\domain\traits\Hydratable;
 
 class App
@@ -20,15 +21,17 @@ class App
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
 
-       // VO API
+    // VO API
     public function getIdAppVo(): AppId
     {
         return $this->id_app;
     }
 
-    public function setIdAppVo(AppId $id_app): void
+    public function setIdAppVo(AppId|int $id_app): void
     {
-        $this->id_app = $id_app;
+        $this->id_app = $id_app instanceof AppId
+            ? $id_app
+            : AppId::fromNullable($id_app);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -39,7 +42,7 @@ class App
 
     public function setId_app(int $id_app): void
     {
-        $this->id_app = new AppId($id_app);
+        $this->id_app = AppId::fromNullable($id_app);
     }
 
     // VO API
@@ -48,9 +51,11 @@ class App
         return $this->nombre_app;
     }
 
-    public function setNombreAppVo(AppName $nombre_app): void
+    public function setNombreAppVo(AppName|string|null $nombre_app): void
     {
-        $this->nombre_app = $nombre_app;
+        $this->nombre_app = $nombre_app instanceof AppName
+            ? $nombre_app
+            : AppName::fromNullableString($nombre_app);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -71,7 +76,7 @@ class App
     }
 
     /**
-     * Retorna una col·lecció d'objectes del tipus DatosCampo
+     * Devuelve una colección de objetor tipo DatosCampo
      *
      */
     public function getDatosCampos(): array

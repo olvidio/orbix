@@ -1139,7 +1139,7 @@ class PersonaBDU extends ClasePropiedades
     }
 
     /**
-     * Retorna una col·lecció d'objectes del tipus DatosCampo
+     * Devuelve una colección de objetor tipo DatosCampo
      *
      */
     public function getDatosCampos(): array

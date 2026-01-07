@@ -12,6 +12,7 @@ use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use web\Desplegable;
 use web\DesplegableArray;
 use web\Hash;
@@ -142,7 +143,7 @@ switch ($mi_sfsv) {
 $id_role = $oUsuario->getId_role();
 $oRole = new Role();
 $oRole->setId_role($id_role);
-if ($grupo === FALSE && $oRole->isRolePau(Role::PAU_CDC)) {
+if ($grupo === FALSE && $oRole->isRolePau(PauType::PAU_CDC)) {
     $id_pau = $oUsuario->getCsv_id_pau();
     $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para casas cuyo calendario de actividades interesa
@@ -161,7 +162,7 @@ if (!empty($id_tipo_activ)) {
     if ($mi_sfsv === 1) $ssfsv = 'sv';
     if ($mi_sfsv === 2) $ssfsv = 'sf';
     // las casas, sf y sv
-    if ($grupo === FALSE && $oRole->isRolePau(Role::PAU_CDC)) {
+    if ($grupo === FALSE && $oRole->isRolePau(PauType::PAU_CDC)) {
         $ssfsv = '';
     }
     $oTipoActiv = new TiposActividades();
@@ -191,8 +192,8 @@ $oActividadTipo->setQue('buscar');
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
     || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv === 1)
-    || ($grupo === FALSE && $oRole->isRolePau(Role::PAU_CDC))
-    || ($grupo === FALSE && $oRole->isRolePau(Role::PAU_SACD))
+    || ($grupo === FALSE && $oRole->isRolePau(PauType::PAU_CDC))
+    || ($grupo === FALSE && $oRole->isRolePau(PauType::PAU_SACD))
     || ($_SESSION['oPerm']->have_perm_oficina('calendario'))
 ) {
     $perm_jefe = TRUE;

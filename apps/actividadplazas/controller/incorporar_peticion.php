@@ -183,7 +183,7 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
     //1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
     $oAsistenteNew->setPlazaComprobando(PlazaId::ASIGNADA);
     // IMPORTANT: Propietario del a plaza
-    $oAsistenteNew->setPropietario("$dl>$mi_dele");
+    $oAsistenteNew->setPropietarioVo("$dl>$mi_dele");
     $oAsistenteNew->setDl_responsable($mi_dele);
     if ($AsistenteRepository->Guardar($oAsistenteNew) === false) {
         $msg_err = _("hay un error, no se ha guardado");

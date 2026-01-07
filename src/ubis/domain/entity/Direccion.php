@@ -29,21 +29,21 @@ class Direccion
 
     private int $id_direccion;
 
-    private string|null $direccion = null;
+    private ?string $direccion = null;
 
-    private string|null $c_p = null;
+    private ?string $c_p = null;
 
     private string $poblacion;
 
-    private string|null $provincia = null;
+    private ?string $provincia = null;
 
-    private string|null $a_p = null;
+    private ?string $a_p = null;
 
-    private string|null $pais = null;
+    private ?string $pais = null;
 
-    private DateTimeLocal|null $f_direccion = null;
+   private ?DateTimeLocal $f_direccion = null;
 
-    private string|null $observ = null;
+    private ?string $observ = null;
 
     private bool|null $cp_dcha = null;
 
@@ -51,13 +51,13 @@ class Direccion
 
     private float|null $longitud = null;
 
-    private string|null $plano_doc = null;
+    private ?string $plano_doc = null;
 
-    private string|null $plano_extension = null;
+    private ?string $plano_extension = null;
 
-    private string|null $plano_nom = null;
+    private ?string $plano_nom = null;
 
-    private string|null $nom_sede = null;
+    private ?string $nom_sede = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

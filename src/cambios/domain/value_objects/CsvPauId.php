@@ -2,7 +2,7 @@
 
 namespace src\cambios\domain\value_objects;
 
-final class PauId
+final class CsvPauId
 {
     private string $value;
 
@@ -30,8 +30,20 @@ final class PauId
         return $this->value;
     }
 
-    public function equals(PauId $other): bool
+    public function equals(CsvPauId $other): bool
     {
         return $this->value === $other->value();
+    }
+
+    public static function fromNullableString(?string $value): ?self
+    {
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
     }
 }

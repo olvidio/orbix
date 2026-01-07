@@ -21,23 +21,25 @@ class ActividadTarea
 
     private TareaId $id_tarea;
 
-    private string|null $desc_tarea = null;
+    private ?string $desc_tarea = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getFaseId(): FaseId
+    public function getIdFaseVo(): FaseId
     {
         return $this->id_fase;
     }
 
 
-    public function setFaseId(FaseId $id_fase): void
+    public function setIdFaseVo(FaseId|int|null $id_fase): void
     {
-        $this->id_fase = $id_fase;
+        $this->id_fase = $id_fase instanceof FaseId
+            ? $id_fase
+            : FaseId::fromNullable($id_fase);
     }
 
     /**
-     * @deprecated use getFaseId()
+     * @deprecated use getIdFaseVo()
      */
     public function getId_fase(): int
     {
@@ -45,27 +47,29 @@ class ActividadTarea
     }
 
     /**
-     * @deprecated use setFaseId()
+     * @deprecated use setIdFaseVo()
      */
     public function setId_fase(int $id_fase): void
     {
-        $this->id_fase = new FaseId($id_fase);
+        $this->id_fase = FaseId::fromNullable($id_fase);
     }
 
 
-    public function getTareaId(): TareaId
+    public function getIdTareaVo(): TareaId
     {
         return $this->id_tarea;
     }
 
 
-    public function setTareaId(TareaId $id_tarea): void
+    public function setIdTareaVo(TareaId|int|null $id_tarea): void
     {
-        $this->id_tarea = $id_tarea;
+        $this->id_tarea = $id_tarea instanceof TareaId
+            ? $id_tarea
+            : TareaId::fromNullable($id_tarea);
     }
 
     /**
-     * @deprecated use getTareaId()
+     * @deprecated use getIdTareaVo()
      */
     public function getId_tarea(): int
     {
@@ -73,7 +77,7 @@ class ActividadTarea
     }
 
     /**
-     * @deprecated use setTareaId()
+     * @deprecated use setIdTareaVo()
      */
     public function setId_tarea(int $id_tarea): void
     {
@@ -98,7 +102,7 @@ class ActividadTarea
         return 'id_tarea';
     }
 
-  public function getDatosCampos(): array
+    public function getDatosCampos(): array
     {
         $oActividadFaseSet = new Set();
         $oActividadFaseSet->add($this->getDatosId_fase());

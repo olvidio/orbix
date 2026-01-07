@@ -19,7 +19,6 @@ use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use web\NullTimeLocal;
 use web\TimeLocal;
-use function core\is_true;
 
 class ActividadAll
 {
@@ -40,12 +39,12 @@ class ActividadAll
     private ?TimeLocal $h_fin = null;
     private ?int $tipo_horario = null;
     private ?Dinero $precio = null;
-    private int|null $num_asistentes = null;
+    private ?int $num_asistentes = null;
     private StatusId $status;
-    private string|null $observ = null;
+    private ?string $observ = null;
     private ?NivelStgrId $nivel_stgr = null;
-    private string|null $observ_material = null;
-    private string|null $lugar_esp = null;
+    private ?string $observ_material = null;
+    private ?string $lugar_esp = null;
     private ?TarifaId $tarifa = null;
     private ?RepeticionId $id_repeticion = null;
     private ?bool $publicado = false;
@@ -129,9 +128,11 @@ class ActividadAll
         return $this->dl_org;
     }
 
-    public function setDlOrgVo(?DelegacionCode $codigo = null): void
+    public function setDlOrgVo(DelegacionCode|string|null $texto = null): void
     {
-        $this->dl_org = $codigo?->value();
+        $this->dl_org = $texto instanceof DelegacionCode
+            ? $texto
+            : DelegacionCode::fromNullableString($texto);
     }
 
     /**
@@ -145,9 +146,9 @@ class ActividadAll
     /**
      * @deprecated Usar `setNomActivVo(ActividadNomText $vo): void` en su lugar.
      */
-    public function setNom_activ(string $snom_activ): void
+    public function setNom_activ(string $nom_activ): void
     {
-        $this->nom_activ = new ActividadNomText($snom_activ);
+        $this->nom_activ = new ActividadNomText($nom_activ);
     }
 
     public function getNomActivVo(): ActividadNomText
@@ -181,9 +182,9 @@ class ActividadAll
     /**
      * @deprecated Usar `setDescActivVo(?ActividadDescText $vo = null): void` en su lugar.
      */
-    public function setDesc_activ(?string $sdesc_activ = null): void
+    public function setDesc_activ(?string $desc_activ = null): void
     {
-        $this->desc_activ = ActividadDescText::fromNullableString($sdesc_activ);
+        $this->desc_activ = ActividadDescText::fromNullableString($desc_activ);
     }
 
     public function getDescActivVo(): ?ActividadDescText
@@ -191,9 +192,11 @@ class ActividadAll
         return $this->desc_activ;
     }
 
-    public function setDescActivVo(?ActividadDescText $vo = null): void
+    public function setDescActivVo(ActividadDescText|string|null $valor = null): void
     {
-        $this->desc_activ = $vo?->value();
+        $this->desc_activ = $valor instanceof ActividadDescText
+            ? $valor
+            : ActividadDescText::fromNullableString($valor);
     }
 
     public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
@@ -241,9 +244,9 @@ class ActividadAll
         return $this->tipo_horario;
     }
 
-    public function setTipo_horario(?int $itipo_horario = null): void
+    public function setTipo_horario(?int $tipo_horario = null): void
     {
-        $this->tipo_horario = $itipo_horario;
+        $this->tipo_horario = $tipo_horario;
     }
 
     /**
@@ -257,9 +260,9 @@ class ActividadAll
     /**
      * @deprecated Usar `setPrecioVo(?Dinero $vo = null): void` en su lugar.
      */
-    public function setPrecio(?float $iprecio = null): void
+    public function setPrecio(?float $precio = null): void
     {
-        $this->precio = Dinero::fromNullable($iprecio);
+        $this->precio = Dinero::fromNullable($precio);
     }
 
     public function getPrecioVo(): ?Dinero
@@ -267,9 +270,11 @@ class ActividadAll
         return $this->precio;
     }
 
-    public function setPrecioVo(?Dinero $vo = null): void
+    public function setPrecioVo(Dinero|float|null $texto = null): void
     {
-        $this->precio = $vo;
+        $this->precio = $texto instanceof Dinero
+            ? $texto
+            : Dinero::fromNullable($texto);
     }
 
     public function getNum_asistentes(): ?int
@@ -277,9 +282,9 @@ class ActividadAll
         return $this->num_asistentes;
     }
 
-    public function setNum_asistentes(?int $inum_asistentes = null): void
+    public function setNum_asistentes(?int $num_asistentes = null): void
     {
-        $this->num_asistentes = $inum_asistentes;
+        $this->num_asistentes = $num_asistentes;
     }
 
     /**
@@ -293,9 +298,9 @@ class ActividadAll
     /**
      * @deprecated Usar `setStatusVo(StatusId $vo): void` en su lugar.
      */
-    public function setStatus(int $istatus): void
+    public function setStatus(int $status): void
     {
-        $this->status = new StatusId($istatus);
+        $this->status = new StatusId($status);
     }
 
     public function getStatusVo(): StatusId
@@ -329,9 +334,9 @@ class ActividadAll
     /**
      * @deprecated Usar `setNivelStgrVo(?NivelStgrId $vo = null): void` en su lugar.
      */
-    public function setNivel_stgr(?int $inivel_stgr = null): void
+    public function setNivel_stgr(?int $nivel_stgr = null): void
     {
-        $this->nivel_stgr = new NivelStgrId($inivel_stgr);
+        $this->nivel_stgr = NivelStgrId::fromNullable($nivel_stgr);
     }
 
     public function getNivelStgrVo(): ?NivelStgrId
@@ -339,9 +344,11 @@ class ActividadAll
         return $this->nivel_stgr;
     }
 
-    public function setNivelStgrVo(?NivelStgrId $vo = null): void
+    public function setNivelStgrVo(NivelStgrId|int|null $valor = null): void
     {
-        $this->nivel_stgr = $vo?->value();
+        $this->nivel_stgr = $valor instanceof NivelStgrId
+            ? $valor
+            : NivelStgrId::fromNullable($valor);
     }
 
     public function getObserv_material(): ?string
@@ -349,9 +356,9 @@ class ActividadAll
         return $this->observ_material;
     }
 
-    public function setObserv_material(?string $sobserv_material = null): void
+    public function setObserv_material(?string $observ_material = null): void
     {
-        $this->observ_material = $sobserv_material;
+        $this->observ_material = $observ_material;
     }
 
     public function getLugar_esp(): ?string
@@ -359,9 +366,9 @@ class ActividadAll
         return $this->lugar_esp;
     }
 
-    public function setLugar_esp(?string $slugar_esp = null): void
+    public function setLugar_esp(?string $lugar_esp = null): void
     {
-        $this->lugar_esp = $slugar_esp;
+        $this->lugar_esp = $lugar_esp;
     }
 
     /**
@@ -375,9 +382,9 @@ class ActividadAll
     /**
      * @deprecated Usar `setTarifaVo(?TarifaId $vo = null): void` en su lugar.
      */
-    public function setTarifa(?int $itarifa = null): void
+    public function setTarifa(?int $tarifa = null): void
     {
-        $this->tarifa = TarifaId::fromNullable($itarifa);
+        $this->tarifa = TarifaId::fromNullable($tarifa);
     }
 
     public function getTarifaVo(): ?TarifaId
@@ -385,9 +392,11 @@ class ActividadAll
         return $this->tarifa;
     }
 
-    public function setTarifaVo(?TarifaId $vo = null): void
+    public function setTarifaVo(TarifaId|int|null $valor = null): void
     {
-        $this->tarifa = $vo;
+        $this->tarifa = $valor instanceof TarifaId
+            ? $valor
+            : TarifaId::fromNullable($valor);
     }
 
     /**
@@ -411,9 +420,11 @@ class ActividadAll
         return $this->id_repeticion;
     }
 
-    public function setIdRepeticionVo(?RepeticionId $id_repeticion = null): void
+    public function setIdRepeticionVo(RepeticionId|int|null $valor = null): void
     {
-        $this->id_repeticion = $id_repeticion;
+        $this->id_repeticion = $valor instanceof RepeticionId
+            ? $valor
+            : RepeticionId::fromNullable($valor);
     }
 
     public function isPublicado(): ?bool
@@ -421,9 +432,9 @@ class ActividadAll
         return $this->publicado;
     }
 
-    public function setPublicado(?bool $bpublicado = null): void
+    public function setPublicado(?bool $publicado = null): void
     {
-        $this->publicado = $bpublicado;
+        $this->publicado = $publicado;
     }
 
     /**
@@ -447,9 +458,11 @@ class ActividadAll
         return IdTablaCode::fromString($this->id_tabla);
     }
 
-    public function setIdTablaVo(?IdTablaCode $vo = null): void
+    public function setIdTablaVo(IdTablaCode|string|null $valor = null): void
     {
-        $this->id_tabla = $vo?->value();
+        $this->id_tabla = $valor instanceof IdTablaCode
+            ? $valor
+            : IdTablaCode::fromNullableString($valor);
     }
 
     public function getPlazas(): ?int
@@ -457,9 +470,9 @@ class ActividadAll
         return $this->plazas;
     }
 
-    public function setPlazas(?int $iplazas = null): void
+    public function setPlazas(?int $plazas = null): void
     {
-        $this->plazas = $iplazas;
+        $this->plazas = $plazas;
     }
 
 
@@ -468,9 +481,11 @@ class ActividadAll
         return ($this->idioma === null) ? null : new IdLocale($this->idioma);
     }
 
-    public function setIdiomaVo(?IdLocale $vo = null): void
+    public function setIdiomaVo(IdLocale|string|null $valor = null): void
     {
-        $this->idioma = $vo;
+        $this->idioma = $valor instanceof IdLocale
+            ? $valor
+            : IdLocale::fromNullableString($valor);
     }
 
 }

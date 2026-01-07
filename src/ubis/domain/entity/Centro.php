@@ -30,7 +30,7 @@ class Centro
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private string|null $tipo_ubi = null;
+    private ?string $tipo_ubi = null;
 
     private CentroId $id_ubi;
 
@@ -44,7 +44,7 @@ class Centro
 
     private bool $active;
 
-    private DateTimeLocal|null $f_active = null;
+   private ?DateTimeLocal $f_active = null;
 
     private bool|null $sv = null;
 
@@ -168,9 +168,11 @@ class Centro
         return $this->dl;
     }
 
-    public function setDlVo(?DelegacionCode $codigo = null): void
+    public function setDlVo(DelegacionCode|string|null $texto = null): void
     {
-        $this->dl = $codigo;
+        $this->dl = $texto instanceof DelegacionCode
+            ? $texto
+            : DelegacionCode::fromNullableString($texto);
     }
 
 
@@ -196,9 +198,11 @@ class Centro
         return $this->pais;
     }
 
-    public function setPaisVo(?PaisName $nombre = null): void
+    public function setPaisVo(PaisName|string|null $texto = null): void
     {
-        $this->pais = $nombre;
+        $this->pais = $texto instanceof PaisName
+            ? $texto
+            : PaisName::fromNullableString($texto);
     }
 
 
@@ -224,9 +228,11 @@ class Centro
         return $this->region;
     }
 
-    public function setRegionVo(?RegionNameText $texto = null): void
+    public function setRegionVo(RegionNameText|string|null $texto = null): void
     {
-        $this->region = $texto;
+        $this->region = $texto instanceof RegionNameText
+            ? $texto
+            : RegionNameText::fromNullableString($texto);
     }
 
     /**
@@ -316,9 +322,11 @@ class Centro
         return $this->tipo_ctr;
     }
 
-    public function setTipoCtrVo(?TipoCentroCode $codigo = null): void
+    public function setTipoCtrVo(TipoCentroCode|string|null $texto = null): void
     {
-        $this->tipo_ctr = $codigo;
+        $this->tipo_ctr = $texto instanceof TipoCentroCode
+            ? $texto
+            : TipoCentroCode::fromNullableString($texto);
     }
 
 
@@ -344,9 +352,11 @@ class Centro
         return $this->tipo_labor;
     }
 
-    public function setTipoLaborVo(?TipoLaborId $valor = null): void
+    public function setTipoLaborVo(TipoLaborId|int|null $valor = null): void
     {
-        $this->tipo_labor = $valor;
+        $this->tipo_labor = $valor instanceof TipoLaborId
+            ? $valor
+            : TipoLaborId::fromNullable($valor);
     }
 
 
@@ -386,9 +396,11 @@ class Centro
         return $this->id_ctr_padre;
     }
 
-    public function setIdCtrPadreVo(?CentroId $id = null): void
+    public function setIdCtrPadreVo(CentroId|int|null $valor = null): void
     {
-        $this->id_ctr_padre = $id;
+        $this->id_ctr_padre = $valor instanceof CentroId
+            ? $valor
+            : CentroId::fromNullable($valor);
     }
 
     public function getIdAuto(): int

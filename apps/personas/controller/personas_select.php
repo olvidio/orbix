@@ -14,6 +14,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use web\Hash;
 use web\Lista;
 
@@ -97,7 +98,7 @@ $oPosicion->setParametros($aGoBack, 1);
 //Si soy una persona la que consulta
 $oMiUsuario = ConfigGlobal::MiUsuario();
 $miRolePau = ConfigGlobal::mi_role_pau();
-if ($miRolePau === Role::PAU_NOM) { //persona
+if ($miRolePau === PauType::PAU_NOM) { //persona
     $id_nom = $oMiUsuario->getCsv_id_pau();
     $aWhere = ['id_nom' => $id_nom];
     $aOperador = [];

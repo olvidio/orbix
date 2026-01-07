@@ -25,7 +25,7 @@ class CambioUsuario
 
     private AvisoTipoId $aviso_tipo;
 
-    private bool|null $avisado = null;
+    private ?bool $avisado = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -96,12 +96,12 @@ class CambioUsuario
         return $this->aviso_tipo;
     }
 
-    /**
-     * @param AvisoTipoId $avisoTipoId
-     */
-    public function setAvisoTipoVo(AvisoTipoId $avisoTipoId): void
+
+    public function setAvisoTipoVo(AvisoTipoId|int $valor): void
     {
-        $this->aviso_tipo = $avisoTipoId;
+        $this->aviso_tipo = $valor instanceof AvisoTipoId
+            ? $valor
+            : AvisoTipoId::fromNullable($valor);
     }
 
     /**
@@ -117,7 +117,7 @@ class CambioUsuario
      */
     public function setAviso_tipo(int $aviso_tipo): void
     {
-        $this->aviso_tipo = new AvisoTipoId($aviso_tipo);
+        $this->aviso_tipo = AvisoTipoId::fromNullable($aviso_tipo);
     }
 
 

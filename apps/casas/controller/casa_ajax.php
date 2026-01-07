@@ -20,6 +20,7 @@ use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -147,7 +148,7 @@ switch ($Qque) {
         // permisos:
         // miro que rol tengo. Si soy casa, sólo veo la mía
         $miRolePau = ConfigGlobal::mi_role_pau();
-        if ($miRolePau == Role::PAU_CDC || ($_SESSION['oPerm']->have_perm_oficina('pr'))) {
+        if ($miRolePau === PauType::PAU_CDC || ($_SESSION['oPerm']->have_perm_oficina('pr'))) {
             $permiso = 'modificar';
         } else {
             $permiso = '';
@@ -434,9 +435,9 @@ switch ($Qque) {
             $oIngreso->setId_activ($Qid_activ);
         }
         $Qingresos = str_replace(',', '.', $Qingresos);
-        $oIngreso->setIngresos(new IngresoImporte($Qingresos));
-        $oIngreso->setNum_asistentes(new IngresoNumAsistentes($Qnum_asistentes));
-        $oIngreso->setObserv(new IngresoObserv($Qobserv));
+        $oIngreso->setIngresosVo(new IngresoImporte($Qingresos));
+        $oIngreso->setNumAsistentesVo(new IngresoNumAsistentes($Qnum_asistentes));
+        $oIngreso->setObservVo(new IngresoObserv($Qobserv));
         if ($IngresoRepository->Guardar($oIngreso) === false) {
             echo _("Hay un error, no se ha guardado.");
         }

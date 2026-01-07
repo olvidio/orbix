@@ -11,6 +11,7 @@ use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use web\Desplegable;
 use web\DesplegableArray;
 use web\Hash;
@@ -140,7 +141,7 @@ switch ($Qsalida) {
         $txt3 = '<input type="input" name="valor" value="' . $valor . '">';
         if ($Qpropiedad === 'id_ubi') {
             // miro que rol tengo. Si soy casa, sólo veo la mía
-            if ($oRole->isRolePau(Role::PAU_CDC)) { //casa
+            if ($oRole->isRolePau(PauType::PAU_CDC)) { //casa
                 $id_pau = $oMiUsuario->getCsv_id_pau();
                 $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
                 //formulario para casas cuyo calendario de actividades interesa
@@ -283,7 +284,7 @@ switch ($Qsalida) {
                 } else {
                     // para el caso de las casas y los sacd, sólo puede avisar de un cambio suyo.
                     // miro que rol tengo. Si soy casa, sólo veo la mía
-                    if ($nom_prop === 'id_ubi' && $oRole->isRolePau(Role::PAU_CDC)) {
+                    if ($nom_prop === 'id_ubi' && $oRole->isRolePau(PauType::PAU_CDC)) {
                         $id_pau = $oMiUsuario->getCsv_id_pau();
                         $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
 

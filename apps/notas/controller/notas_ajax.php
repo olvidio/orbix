@@ -8,6 +8,7 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\notas\domain\entity\PersonaNotaDB;
+use src\notas\domain\value_objects\NotaEpoca;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;
@@ -47,13 +48,13 @@ switch ($Qque) {
                 $oActividad = $ActividadAllRepository->findById($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $id_tipo_actividad = $oActividad->getId_tipo_activ();
-                $epoca = PersonaNotaDB::EPOCA_CA;
+                $epoca = NotaEpoca::EPOCA_CA;
                 if ($id_tipo_actividad === 132500) { //sem invierno
-                    $epoca = PersonaNotaDB::EPOCA_INVIERNO;
+                    $epoca = NotaEpoca::EPOCA_INVIERNO;
                 }
             } else {
                 $nom_activ = '';
-                $epoca = PersonaNotaDB::EPOCA_OTRO;
+                $epoca = NotaEpoca::EPOCA_OTRO;
             }
             // hace falta el id_nivel (para las no opcionales):
             $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);

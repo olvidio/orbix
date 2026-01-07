@@ -12,6 +12,7 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\procesos\application\ProcesoActividadService;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\entity\ActividadFase;
 use src\procesos\domain\entity\ActividadProcesoTarea;
@@ -329,8 +330,10 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             'id_tipo_proceso' => $iid_tipo_proceso,
             '_ordre' => '(json_fases_previas::json->0)::text DESC'
         ];
-        $GesTareaProceso = new GestorTareaProceso();
-        $cTareasProceso = $GesTareaProceso->getTareasProceso($aWhere);
+        $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+        $cTareasProceso = $TareaProcesoRepository->getTareasProceso($aWhere);
+
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
 
         // OJO: cuando se accede actividades ya existentes,
         // hay que intentar conservar el status que tenga. Para las actividades anteriores
@@ -366,14 +369,16 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 } else {
                     $completado = 'f';
                 }
+                $newIdItem = $ActividadProcesoTareaRepository->getNewId();
                 $oActividadProcesoTarea = new ActividadProcesoTarea();
-                $oActividadProcesoTarea->setSfsv($isfsv);
+                $oActividadProcesoTarea->setId_item($newIdItem);
+                //??? $oActividadProcesoTarea->setSfsv($isfsv);
                 $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
                 $oActividadProcesoTarea->setId_activ($iid_activ);
                 $oActividadProcesoTarea->setId_fase($id_fase);
                 $oActividadProcesoTarea->setId_tarea($id_tarea);
                 $oActividadProcesoTarea->setCompletado($completado);
-                if (($oActividadProcesoTarea->DBGuardar(1)) === false) {
+                if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
                     echo "1.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
                     //return false;
                 }
@@ -389,8 +394,10 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                     $id_fase = $oTareaProceso->getId_fase();
                     $id_tarea = $oTareaProceso->getId_tarea();
                     $statusFase = $oTareaProceso->getStatus();
+                    $newIdItem = $ActividadProcesoTareaRepository->getNewId();
                     $oActividadProcesoTarea = new ActividadProcesoTarea();
-                    $oActividadProcesoTarea->setSfsv($isfsv);
+                    $oActividadProcesoTarea->setId_item($newIdItem);
+                    //??? $oActividadProcesoTarea->setSfsv($isfsv);
                     $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
                     $oActividadProcesoTarea->setId_activ($iid_activ);
                     $oActividadProcesoTarea->setId_fase($id_fase);
@@ -401,7 +408,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                         // un bucle recurrente al modificar una actividad nueva que todavía no tienen el proceso.
                         $statusNew = $statusFase;
                     }
-                    if (($oActividadProcesoTarea->DBGuardar(1)) === false) {
+                    if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
                         echo "2.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
                         //return false;
                     }
@@ -410,7 +417,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $dl_org = $oActividad->getDl_org();
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
                 // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
-                if ($dl_org_no_f == ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
+                if ($dl_org_no_f === ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
                     $oActividad->setStatus($statusNew);
                     $quiet = 1; // Para que no anote el cambio.
                     $oActividad->DBGuardar($quiet);
@@ -423,13 +430,15 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                     $id_fase = $oTareaProceso->getId_fase();
                     $id_tarea = $oTareaProceso->getId_tarea();
                     $statusFase = $oTareaProceso->getStatus();
+                    $newIdItem = $ActividadProcesoTareaRepository->getNewId();
                     $oActividadProcesoTarea = new ActividadProcesoTarea();
-                    $oActividadProcesoTarea->setSfsv($isfsv);
+                    $oActividadProcesoTarea->setId_item($newIdItem);
+                    //??? $oActividadProcesoTarea->setSfsv($isfsv);
                     $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
                     $oActividadProcesoTarea->setId_activ($iid_activ);
                     $oActividadProcesoTarea->setId_fase($id_fase);
                     $oActividadProcesoTarea->setId_tarea($id_tarea);
-                    if (($oActividadProcesoTarea->DBGuardar(1)) === false) {
+                    if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
                         echo "3.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
                         //return false;
                     }
@@ -472,7 +481,8 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         if (!empty($cTareasProceso[0])) {
             return $cTareasProceso[0]->getId_fase();
         } else {
-            $oProcesoTipo = new ProcesoTipo($iid_tipo_proceso);
+            $ProcesoTipoRepository = $GLOBALS['container']->get(ProcesoTipoRepositoryInterface::class);
+            $oProcesoTipo = $ProcesoTipoRepository->findById($iid_tipo_proceso);
             $nom_proceso = empty($oProcesoTipo->getNom_proceso()) ? $iid_tipo_proceso : $oProcesoTipo->getNom_proceso();
             $nom_activ = empty($nom_activ) ? $iid_activ : $nom_activ;
 

@@ -22,11 +22,11 @@ class TelecoUbi
 
     private int $id_tipo_teleco;
 
-    private string|null $desc_teleco = null;
+    private ?string $desc_teleco = null;
 
     private string $num_teleco;
 
-    private string|null $observ = null;
+    private ?string $observ = null;
 
     private int $id_item;
 

@@ -66,9 +66,11 @@ class UbiGasto
     }
 
 
-    public function setTipoVo(?UbiGastoTipo $tipo = null): void
+    public function setTipoVo(UbiGastoTipo|int|null $texto = null): void
     {
-        $this->tipo = $tipo;
+        $this->tipo = $texto instanceof UbiGastoTipo
+            ? $texto
+            : UbiGastoTipo::fromNullable($texto);
     }
 
 
@@ -78,8 +80,10 @@ class UbiGasto
     }
 
 
-    public function setCantidadVo(?UbiGastoCantidad $cantidad = null): void
+    public function setCantidadVo(UbiGastoCantidad|float|null $valor = null): void
     {
-        $this->cantidad = $cantidad;
+        $this->cantidad = $valor instanceof UbiGastoCantidad
+            ? $valor
+            : UbiGastoCantidad::fromNullableFloat($valor);
     }
 }

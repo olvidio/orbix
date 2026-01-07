@@ -64,11 +64,11 @@ class CambioUsuarioPropiedadPref
 
     private OperadorPref|null $operador = null;
 
-    private string|null $valor = null;
+    private ?string $valor = null;
 
-    private bool|null $valor_old = null;
+    private ?bool $valor_old = null;
 
-    private bool|null $valor_new = null;
+    private ?bool $valor_new = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -110,7 +110,7 @@ class CambioUsuarioPropiedadPref
      */
     public function setPropiedad(string $propiedad): void
     {
-        $this->propiedad = new PropiedadNombre($propiedad);
+        $this->propiedad = PropiedadNombre::fromNullableString($propiedad);
     }
 
     public function getPropiedadVo(): PropiedadNombre
@@ -118,9 +118,11 @@ class CambioUsuarioPropiedadPref
         return $this->propiedad;
     }
 
-    public function setPropiedadVo(PropiedadNombre $vo): void
+    public function setPropiedadVo(PropiedadNombre|string|null $texto): void
     {
-        $this->propiedad = $vo;
+        $this->propiedad = $texto instanceof PropiedadNombre
+            ? $texto
+            : PropiedadNombre::fromNullableString($texto);
     }
 
     /**
@@ -131,12 +133,12 @@ class CambioUsuarioPropiedadPref
         return $this->operador;
     }
 
-    /**
-     * @param OperadorPref|null $operador
-     */
-    public function setOperadorVo(?OperadorPref $operador): void
+
+    public function setOperadorVo(OperadorPref|string|null $texto): void
     {
-        $this->operador = $operador;
+        $this->operador = $texto instanceof OperadorPref
+            ? $texto
+            : OperadorPref::fromNullableString($texto);
     }
 
     /**
@@ -152,7 +154,7 @@ class CambioUsuarioPropiedadPref
      */
     public function setOperador(?string $operador = null): void
     {
-        $this->operador = $operador !== null ? new OperadorPref($operador) : null;
+        $this->operador = OperadorPref::fromNullableString($operador);
     }
 
 

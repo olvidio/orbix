@@ -17,7 +17,7 @@ class TemplateMenu
 
     private int $id_template_menu;
 
-    private string|null $nombre = null;
+    private ?TemplateMenuName $nombre = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -32,16 +32,32 @@ class TemplateMenu
         $this->id_template_menu = $id_template_menu;
     }
 
-
+    /**
+     * @deprecated use getNombreVo
+     */
     public function getNombre(): ?string
+    {
+        return $this->nombre?->value();
+    }
+
+    public function getNombreVo(): TemplateMenuName
     {
         return $this->nombre;
     }
 
-
-    public function setNombre(string|TemplateMenuName|null $nombre = null): void
+    /**
+     * @deprecated use setNombreVo
+     */
+    public function setNombre(?string $nombre = null): void
     {
-        $this->nombre = $nombre instanceof TemplateMenuName ? $nombre->value() : $nombre;
+        $this->nombre = TemplateMenuName::fromNullableString($nombre);
+    }
+
+    public function setNombreVo(TemplateMenuName|string|null $texto): void
+    {
+        $this->nombre = $texto instanceof TemplateMenuName
+            ? $texto
+            : TemplateMenuName::fromNullableString($texto);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

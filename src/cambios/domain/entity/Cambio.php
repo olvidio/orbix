@@ -6,6 +6,8 @@ use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividades\domain\value_objects\ActividadTipoId;
+use src\actividades\domain\value_objects\StatusId;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\value_objects\ObjetoNombre;
@@ -344,17 +346,17 @@ class Cambio
 
     private int $id_item_cambio;
 
-    private int $id_tipo_cambio;
+    private TipoCambioId $id_tipo_cambio;
 
     private int $id_activ;
 
-    private int $id_tipo_activ;
+    private ActividadTipoId $id_tipo_activ;
 
     private array|stdClass|null $json_fases_sv = null;
 
     private array|stdClass|null $json_fases_sf = null;
 
-    private int|null $id_status = null;
+    private ?StatusId $id_status = null;
 
     private DelegacionCode|null $dl_org = null;
 
@@ -362,15 +364,15 @@ class Cambio
 
     private PropiedadNombre|null $propiedad = null;
 
-    private string|null $valor_old = null;
+    private ?string $valor_old = null;
 
-    private string|null $valor_new = null;
+    private ?string $valor_new = null;
 
-    private int|null $quien_cambia = null;
+    private ?int $quien_cambia = null;
 
-    private int|null $sfsv_quien_cambia = null;
+    private ?int $sfsv_quien_cambia = null;
 
-    private DateTimeLocal|null $timestamp_cambio = null;
+   private ?DateTimeLocal $timestamp_cambio = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -401,15 +403,15 @@ class Cambio
 
     public function getTipoCambioVo(): TipoCambioId
     {
-        return new TipoCambioId($this->id_tipo_cambio);
+        return $this->id_tipo_cambio;
     }
 
-    /**
-     * @param TipoCambioId $tipoCambioId
-     */
-    public function setTipoCambioVo(TipoCambioId $tipoCambioId): void
+
+    public function setTipoCambioVo(TipoCambioId|int $valor): void
     {
-        $this->id_tipo_cambio = $tipoCambioId->value();
+        $this->id_tipo_cambio = $valor instanceof TipoCambioId
+            ? $valor
+            : TipoCambioId::fromNullable($valor);
     }
 
     /**
@@ -417,7 +419,7 @@ class Cambio
      */
     public function getId_tipo_cambio(): int
     {
-        return $this->id_tipo_cambio;
+        return $this->id_tipo_cambio->value();
     }
 
     /**
@@ -425,7 +427,7 @@ class Cambio
      */
     public function setId_tipo_cambio(int $id_tipo_cambio): void
     {
-        $this->id_tipo_cambio = $id_tipo_cambio;
+        $this->id_tipo_cambio = TipoCambioId::fromNullable($id_tipo_cambio);
     }
 
 
@@ -440,16 +442,32 @@ class Cambio
         $this->id_activ = $id_activ;
     }
 
-
+    /**
+     * @deprecated Usar `getIdTipoActivVo(): ActividadTipoId` en su lugar.
+     */
     public function getId_tipo_activ(): int
+    {
+        return $this->id_tipo_activ->value();
+    }
+
+    public function getIdTipoActivVo(): ActividadTipoId
     {
         return $this->id_tipo_activ;
     }
 
-
+    /**
+     * @deprecated Usar `getIdTipoActivVo(): ActividadTipoId` en su lugar.
+     */
     public function setId_tipo_activ(int $id_tipo_activ): void
     {
-        $this->id_tipo_activ = $id_tipo_activ;
+        $this->id_tipo_activ = ActividadTipoId::fromString($id_tipo_activ);
+    }
+
+    public function setIdTipoActivVo(ActividadTipoId|string|int|null $texto): void
+    {
+        $this->id_tipo_activ = $texto instanceof ActividadTipoId
+            ? $texto
+            : ActividadTipoId::fromString($texto);
     }
 
     public function getJson_fases_sv(): array|stdClass|null
@@ -476,15 +494,32 @@ class Cambio
     }
 
 
-    public function getId_status(): ?int
+    /**
+     * @deprecated Usar `getIdStatusVo(): ?StatusId` en su lugar.
+     */
+    public function getId_status(): ?string
+    {
+        return $this->id_status?->value();
+    }
+
+    public function getIdStatusVo(): ?StatusId
     {
         return $this->id_status;
     }
 
-
+    /**
+     * @deprecated Usar `setIdStatusVo(?StatusId $vo): void` en su lugar.
+     */
     public function setId_status(?int $id_status = null): void
     {
         $this->id_status = $id_status;
+    }
+
+    public function setIdStatusVo(StatusId|int|null $texto): void
+    {
+        $this->id_status = $texto instanceof StatusId
+            ? $texto
+            : StatusId::fromNullable($texto);
     }
 
 
@@ -502,7 +537,7 @@ class Cambio
      */
     public function setDl_org(?string $dl_org = null): void
     {
-        $this->dl_org = $dl_org !== null ? new DelegacionCode($dl_org) : null;
+        $this->dl_org = DelegacionCode::fromNullableString($dl_org);
     }
 
     public function getDlOrgVo(): ?DelegacionCode
@@ -510,9 +545,11 @@ class Cambio
         return $this->dl_org;
     }
 
-    public function setDlOrgVo(?DelegacionCode $vo): void
+    public function setDlOrgVo(DelegacionCode|string|null $texto): void
     {
-        $this->dl_org = $vo;
+        $this->dl_org = $texto instanceof DelegacionCode
+            ? $texto
+            : DelegacionCode::fromNullableString($texto);
     }
 
 
@@ -530,7 +567,7 @@ class Cambio
      */
     public function setObjeto(?string $objeto = null): void
     {
-        $this->objeto = $objeto !== null ? new ObjetoNombre($objeto) : null;
+        $this->objeto = ObjetoNombre::fromNullableString($objeto);
     }
 
     public function getObjetoVo(): ?ObjetoNombre
@@ -538,9 +575,11 @@ class Cambio
         return $this->objeto;
     }
 
-    public function setObjetoVo(?ObjetoNombre $vo): void
+    public function setObjetoVo(ObjetoNombre|string|null $texto): void
     {
-        $this->objeto = $vo;
+        $this->objeto = $texto instanceof ObjetoNombre
+            ? $texto
+            : ObjetoNombre::fromNullableString($texto);
     }
 
 
@@ -558,7 +597,7 @@ class Cambio
      */
     public function setPropiedad(?string $propiedad = null): void
     {
-        $this->propiedad = $propiedad !== null ? new PropiedadNombre($propiedad) : null;
+        $this->propiedad = PropiedadNombre::fromNullableString($propiedad);
     }
 
     public function getPropiedadVo(): ?PropiedadNombre
@@ -566,9 +605,11 @@ class Cambio
         return $this->propiedad;
     }
 
-    public function setPropiedadVo(?PropiedadNombre $vo): void
+    public function setPropiedadVo(PropiedadNombre|string|null $texto): void
     {
-        $this->propiedad = $vo;
+        $this->propiedad = $texto instanceof PropiedadNombre
+            ? $texto
+            : PropiedadNombre::fromNullableString($texto);
     }
 
 

@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use web\CasasQue;
 use web\Hash;
 use web\PeriodoQue;
@@ -49,7 +50,7 @@ $oForm = new CasasQue();
 $oForm->setTitulo(strtoupper_dlb(_('búsqueda de casas cuyo resumen económico interesa')));
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $miRolePau = ConfigGlobal::mi_role_pau();
-if ($miRolePau == Role::PAU_CDC) { //casa
+if ($miRolePau === PauType::PAU_CDC) { //casa
     $id_pau = $oMiUsuario->getCsv_id_pau();
     $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para casas cuyo calendario de actividades interesa

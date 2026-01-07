@@ -6,7 +6,6 @@ use core\DatosCampo;
 use core\Set;
 use src\procesos\domain\value_objects\FaseId;
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
 
 
 class ActividadFase
@@ -17,7 +16,7 @@ class ActividadFase
 
     private FaseId $id_fase;
 
-    private string|null $desc_fase = null;
+    private ?string $desc_fase = null;
 
     private bool $sf;
 
@@ -25,19 +24,8 @@ class ActividadFase
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getFaseId(): FaseId
-    {
-        return $this->id_fase;
-    }
-
-
-    public function setFaseId(FaseId $id_fase): void
-    {
-        $this->id_fase = $id_fase;
-    }
-
     /**
-     * @return int $id_fase
+     * @deprecated Use getIdFaseVo() instead
      */
     public function getId_fase(): int
     {
@@ -45,19 +33,29 @@ class ActividadFase
     }
 
     /**
-     * @param int $id_fase
+     * @deprecated Use setIdFaseVo() instead
      */
     public function setId_fase(int $id_fase): void
     {
         $this->id_fase = new FaseId($id_fase);
     }
 
+    public function getFaseIdVo(): FaseId
+    {
+        return $this->id_fase;
+    }
+
+    public function setFaseIdVo(FaseId|int|null $id_fase): void
+    {
+        $this->id_fase = $id_fase instanceof FaseId
+            ? $id_fase
+            : new FaseId($id_fase);
+    }
 
     public function getDesc_fase(): ?string
     {
         return $this->desc_fase;
     }
-
 
     public function setDesc_fase(?string $desc_fase = null): void
     {
@@ -70,7 +68,6 @@ class ActividadFase
         return $this->sf;
     }
 
-
     public function setSf(bool $sf): void
     {
         $this->sf = $sf;
@@ -81,7 +78,6 @@ class ActividadFase
     {
         return $this->sv;
     }
-
 
     public function setSv(bool $sv): void
     {
@@ -94,7 +90,7 @@ class ActividadFase
         return 'id_fase';
     }
 
-  public function getDatosCampos(): array
+    public function getDatosCampos(): array
     {
         $oActividadFaseSet = new Set();
         $oActividadFaseSet->add($this->getDatosDesc_fase());

@@ -13,11 +13,11 @@ class EncargoTexto
 
     private int $id_item;
 
-    private string $idioma;
+    private IdiomaCode $idioma;
 
     private string $clave;
 
-    private string|null $texto = null;
+    private ?string $texto = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -38,7 +38,7 @@ class EncargoTexto
      */
     public function getIdioma(): string
     {
-        return $this->idioma;
+        return $this->idioma->value();
     }
 
     /**
@@ -46,17 +46,19 @@ class EncargoTexto
      */
     public function setIdioma(string $idioma): void
     {
-        $this->idioma = $idioma;
+        $this->idioma = IdiomaCode::fromNullableString($idioma);
     }
 
     public function getIdiomaVo(): IdiomaCode
     {
-        return new IdiomaCode($this->idioma);
+        return $this->idioma;
     }
 
-    public function setIdiomaVo(IdiomaCode $vo): void
+    public function setIdiomaVo(IdiomaCode|string|null $vo): void
     {
-        $this->idioma = $vo->value();
+        $this->idioma = $vo instanceof IdiomaCode
+            ? $vo
+            : IdiomaCode::fromNullableString($vo);
     }
 
 

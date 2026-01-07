@@ -16,30 +16,29 @@ class EncargoSacdHorario
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-
     private int $id_item;
 
     private int $id_enc;
 
     private int $id_nom;
 
-    private DateTimeLocal|null $f_ini = null;
+    private ?DateTimeLocal $f_ini = null;
 
-    private DateTimeLocal|null $f_fin = null;
+    private ?DateTimeLocal $f_fin = null;
 
-    private string|null $dia_ref = null;
+    private ?DiaRefCode $dia_ref = null;
 
-    private int|null $dia_num = null;
+    private ?int $dia_num = null;
 
-    private string|null $mas_menos = null;
+    private ?MasMenosCode $mas_menos = null;
 
-    private int|null $dia_inc = null;
+    private ?int $dia_inc = null;
 
-    private TimeLocal|null $h_ini = null;
+    private ?TimeLocal $h_ini = null;
 
-    private TimeLocal|null $h_fin = null;
+    private ?TimeLocal $h_fin = null;
 
-    private int|null $id_item_tarea_sacd = null;
+    private ?int $id_item_tarea_sacd = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -107,7 +106,7 @@ class EncargoSacdHorario
      */
     public function getDia_ref(): ?string
     {
-        return $this->dia_ref;
+        return $this->dia_ref?->value();
     }
 
     /**
@@ -115,7 +114,7 @@ class EncargoSacdHorario
      */
     public function setDia_ref(?string $dia_ref = null): void
     {
-        $this->dia_ref = $dia_ref;
+        $this->dia_ref = DiaRefCode::fromNullableString($dia_ref);
     }
 
     /**
@@ -123,15 +122,17 @@ class EncargoSacdHorario
      */
     public function getDiaRefVo(): ?DiaRefCode
     {
-        return $this->dia_ref !== null ? new DiaRefCode($this->dia_ref) : null;
+        return $this->dia_ref;
     }
 
     /**
      * @param DiaRefCode|null $vo
      */
-    public function setDiaRefVo(?DiaRefCode $vo = null): void
+    public function setDiaRefVo(DiaRefCode|string|null $vo = null): void
     {
-        $this->dia_ref = $vo?->value();
+        $this->dia_ref = $vo instanceof DiaRefCode
+            ? $vo
+            : DiaRefCode::fromNullableString($vo);
     }
 
 
@@ -151,7 +152,7 @@ class EncargoSacdHorario
      */
     public function getMas_menos(): ?string
     {
-        return $this->mas_menos;
+        return $this->mas_menos?->value();
     }
 
     /**
@@ -159,7 +160,7 @@ class EncargoSacdHorario
      */
     public function setMas_menos(?string $mas_menos = null): void
     {
-        $this->mas_menos = $mas_menos;
+        $this->mas_menos = MasMenosCode::fromNullableString($mas_menos);
     }
 
     /**
@@ -167,17 +168,18 @@ class EncargoSacdHorario
      */
     public function getMasMenosVo(): ?MasMenosCode
     {
-        return $this->mas_menos !== null ? new MasMenosCode($this->mas_menos) : null;
+        return $this->mas_menos;
     }
 
     /**
      * @param MasMenosCode|null $vo
      */
-    public function setMasMenosVo(?MasMenosCode $vo = null): void
+    public function setMasMenosVo(MasMenosCode|string|null $vo = null): void
     {
-        $this->mas_menos = $vo?->value();
+        $this->mas_menos = $vo instanceof MasMenosCode
+            ? $vo
+            : MasMenosCode::fromNullableString($vo);
     }
-
 
     public function getDia_inc(): ?int
     {

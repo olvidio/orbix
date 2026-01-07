@@ -29,7 +29,6 @@ final class DossierPk
             // Permitimos solo una letra para evitar valores inesperados.
             throw new \InvalidArgumentException('tabla debe ser una sola letra');
         }
-        $this->tabla = $tabla;
     }
 
     public static function fromArray(array $pk): self

@@ -4,7 +4,7 @@ use core\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
-use src\notas\domain\entity\PersonaNotaDB;
+use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\ContestarJson;
@@ -134,7 +134,7 @@ if (empty($error_txt)) {
     $aWhere['id_nom'] = $id_nom;
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel'] = 'BETWEEN';
-    $aWhere['tipo_acta'] = PersonaNotaDB::FORMATO_ACTA;
+    $aWhere['tipo_acta'] = TipoActa::FORMATO_ACTA;
     $cNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
     $aAprobadas = [];
     $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);

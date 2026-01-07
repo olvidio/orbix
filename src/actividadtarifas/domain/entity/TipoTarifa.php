@@ -19,11 +19,11 @@ class TipoTarifa
 
     private int $modo;
 
-    private string|null $letra = null;
+    private ?string $letra = null;
 
-    private int|null $sfsv = null;
+    private ?int $sfsv = null;
 
-    private string|null $observ = null;
+    private ?string $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

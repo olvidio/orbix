@@ -16,31 +16,33 @@ class ModuloInstalado
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private int $id_mod;
-    private bool|null $active = null;
+    private ModuloId $id_mod;
+    private ?bool $active = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     // VO API
     public function getIdModVo(): ModuloId
     {
-        return new ModuloId($this->id_mod);
+        return $this->id_mod;
     }
 
-    public function setIdModVo(ModuloId $id): void
+    public function setIdModVo(ModuloId|int $id): void
     {
-        $this->id_mod = $id->value();
+        $this->id_mod = $id instanceof ModuloId
+            ? $id
+            : ModuloId::fromNullable($id);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
     public function getId_mod(): int
     {
-        return $this->id_mod;
+        return $this->id_mod->value();
     }
 
     public function setId_mod(int $id_mod): void
     {
-        $this->id_mod = $id_mod;
+        $this->id_mod = ModuloId::fromNullable($id_mod);
     }
 
 
@@ -60,7 +62,7 @@ class ModuloInstalado
         return 'id_mod';
     }
     /**
-     * Retorna una col·lecció d'objectes del tipus DatosCampo
+     * Devuelve una colección de objetor tipo DatosCampo
      *
      */
     public function getDatosCampos(): array

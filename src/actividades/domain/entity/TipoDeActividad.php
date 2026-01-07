@@ -24,9 +24,9 @@ class TipoDeActividad
      * Establece el valor del atributo iid_tipo_proceso_(sf/sv) de TipoDeActividad
      *
      */
-    public function setId_tipo_proceso(?int $id_tipo_proceso, $isfsv)
+    private function setId_tipo_proceso(?int $id_tipo_proceso, int $sfsv): void
     {
-        if ($isfsv === 1) {
+        if ($sfsv === 1) {
             $this->id_tipo_proceso_sv = $id_tipo_proceso;
         } else {
             $this->id_tipo_proceso_sf = $id_tipo_proceso;
@@ -38,9 +38,9 @@ class TipoDeActividad
      * Si el parametro isfsv no existe, se toma el del usuario.
      *
      */
-    public function getId_tipo_proceso($isfsv): ?int
+    public function getId_tipo_proceso(int $sfsv): ?int
     {
-        if ($isfsv === 1) {
+        if ($sfsv === 1) {
             $id_tipo_proceso = $this->id_tipo_proceso_sv;
         } else {
             $id_tipo_proceso = $this->id_tipo_proceso_sf;
@@ -51,9 +51,9 @@ class TipoDeActividad
     /**
      * Establece el valor del atributo iid_tipo_proceso_ex_(sf/sv) de TipoDeActividad
      */
-    public function setId_tipo_proceso_ex(?int $id_tipo_proceso_ex, $isfsv)
+    public function setId_tipo_proceso_ex(?int $id_tipo_proceso_ex, int $sfsv): void
     {
-        if ($isfsv === 1) {
+        if ($sfsv === 1) {
             $this->id_tipo_proceso_ex_sv = $id_tipo_proceso_ex;
         } else {
             $this->id_tipo_proceso_ex_sf = $id_tipo_proceso_ex;
@@ -63,9 +63,9 @@ class TipoDeActividad
     /**
      * Recupera el atributo iid_tipo_proceso_ex_(sv/sf) de TipoDeActividad
      */
-    public function getId_tipo_proceso_ex($isfsv): ?int
+    public function getId_tipo_proceso_ex(int $sfsv): ?int
     {
-        if ($isfsv === 1) {
+        if ($sfsv === 1) {
             $id_tipo_proceso_ex = $this->id_tipo_proceso_ex_sv;
         } else {
             $id_tipo_proceso_ex = $this->id_tipo_proceso_ex_sf;
@@ -84,33 +84,32 @@ class TipoDeActividad
     /**
      * Nombre de TipoDeActividad
      *
-     * @var string
      */
-    private string $nombre;
+    private TipoActivNombre $nombre;
     /**
      * Id_tipo_proceso_sv de TipoDeActividad
      *
      * @var int|null
      */
-    private int|null $id_tipo_proceso_sv = null;
+    private ?int $id_tipo_proceso_sv = null;
     /**
      * Id_tipo_proceso_ex_sv de TipoDeActividad
      *
      * @var int|null
      */
-    private int|null $id_tipo_proceso_ex_sv = null;
+    private ?int $id_tipo_proceso_ex_sv = null;
     /**
      * Id_tipo_proceso_sf de TipoDeActividad
      *
      * @var int|null
      */
-    private int|null $id_tipo_proceso_sf = null;
+    private ?int $id_tipo_proceso_sf = null;
     /**
      * Id_tipo_proceso_ex_sf de TipoDeActividad
      *
      * @var int|null
      */
-    private int|null $id_tipo_proceso_ex_sf = null;
+    private ?int $id_tipo_proceso_ex_sf = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -134,7 +133,6 @@ class TipoDeActividad
 
     /**
      *
-     * @return string $snombre
      * @deprecated use getNombreVo()
      */
     public function getNombre(): string
@@ -144,28 +142,25 @@ class TipoDeActividad
 
     /**
      *
-     * @param string $snombre
      * @deprecated use setNombreVo()
      */
-    public function setNombre(string $snombre): void
+    public function setNombre(string $nombre): void
     {
-        $this->nombre = $snombre;
+        $this->nombre = new TipoActivNombre($nombre);
     }
 
-    /**
-     * @return TipoActivNombre
-     */
+
     public function getNombreVo(): TipoActivNombre
     {
-        return new TipoActivNombre($this->nombre);
+        return $this->nombre;
     }
 
-    /**
-     * @param TipoActivNombre $oTipoActivNombre
-     */
-    public function setNombreVo(TipoActivNombre $oTipoActivNombre): void
+
+    public function setNombreVo(TipoActivNombre|string $texto): void
     {
-        $this->nombre = $oTipoActivNombre->value();
+        $this->nombre = $texto instanceof TipoActivNombre
+            ? $texto
+            : TipoActivNombre::fromNullableString($texto);
     }
 
     /**

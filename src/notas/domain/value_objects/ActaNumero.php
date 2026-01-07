@@ -36,11 +36,15 @@ final class ActaNumero
         return $this->value;
     }
 
-    public static function fromNullable(?string $value): ?self
+    public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null) { return null; }
-        $value = trim($value);
-        if ($value === '') { return null; }
-        return new self($value);
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
     }
 }

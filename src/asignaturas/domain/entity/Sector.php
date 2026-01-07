@@ -4,8 +4,8 @@ namespace src\asignaturas\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
-use src\asignaturas\domain\value_objects\{SectorId, SectorName, DepartamentoId};
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\asignaturas\domain\value_objects\{DepartamentoId, SectorId, SectorName};
 use src\shared\domain\traits\Hydratable;
 
 
@@ -30,9 +30,11 @@ class Sector
         return $this->id_sector;
     }
 
-    public function setIdSectorVo(SectorId $id): void
+    public function setIdSectorVo(SectorId|int $id): void
     {
-        $this->id_sector = $id;
+        $this->id_sector = $id instanceof SectorId
+            ? $id
+            : SectorId::fromNullable($id);
     }
 
 
@@ -44,7 +46,7 @@ class Sector
 
     public function setId_sector(int $id_sector): void
     {
-        $this->id_sector = new SectorId($id_sector);
+        $this->id_sector = SectorId::fromNullable($id_sector);
     }
 
     // VO API
@@ -53,9 +55,11 @@ class Sector
         return $this->id_departamento;
     }
 
-    public function setIdDepartamentoVo(?DepartamentoId $id = null): void
+    public function setIdDepartamentoVo(DepartamentoId|int|null $valor = null): void
     {
-        $this->id_departamento = $id;
+        $this->id_departamento = $valor instanceof DepartamentoId
+            ? $valor
+            : DepartamentoId::fromNullable($valor);
     }
 
 
@@ -76,15 +80,17 @@ class Sector
         return $this->nombre_sector;
     }
 
-    public function setNombreSectorVo(?SectorName $nombre = null): void
+    public function setNombreSectorVo(SectorName|string|null $texto = null): void
     {
-        $this->nombre_sector = $nombre;
+        $this->nombre_sector = $texto instanceof SectorName
+            ? $texto
+            : SectorName::fromNullableString($texto);
     }
 
 
     public function getSector(): string
     {
-        return $this->nombre_sector?->value() ?? '';
+        return $this->nombre_sector->value();
     }
 
 

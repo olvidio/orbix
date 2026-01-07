@@ -25,7 +25,7 @@ class EncargoSacd
 
     private DateTimeLocal $f_ini;
 
-    private DateTimeLocal|null $f_fin = null;
+   private ?DateTimeLocal $f_fin = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -77,7 +77,7 @@ class EncargoSacd
      */
     public function setModo(int $modo): void
     {
-        $this->modo = new EncargoModoId($modo);
+        $this->modo = EncargoModoId::fromNullable($modo);
     }
 
     public function getModoVo(): EncargoModoId
@@ -85,9 +85,11 @@ class EncargoSacd
         return $this->modo;
     }
 
-    public function setModoVo(EncargoModoId $vo): void
+    public function setModoVo(EncargoModoId|int|null $vo): void
     {
-        $this->modo = $vo;
+        $this->modo = $vo instanceof EncargoModoId
+            ? $vo
+            : EncargoModoId::fromNullable($vo);
     }
 
 

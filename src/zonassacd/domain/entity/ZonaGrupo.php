@@ -17,7 +17,7 @@ class ZonaGrupo
 
     private ?NombreGrupoZona $nombre_grupo = null;
 
-    private int|null $orden = null;
+    private ?int $orden = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -56,7 +56,7 @@ class ZonaGrupo
      */
     public function getNombre_grupo(): ?string
     {
-        return $this->nombre_grupo->value();
+        return $this->nombre_grupo?->value();
     }
 
     /**

@@ -7,9 +7,9 @@ class InicialesSacdDB
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private int|null $iid_nom = null;
-    private string|null $siniciales = null;
-    private string|null $scolor = null;
+    private ?int $iid_nom = null;
+    private ?string $siniciales = null;
+    private ?string $scolor = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

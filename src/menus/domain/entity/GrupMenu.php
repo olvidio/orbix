@@ -17,9 +17,9 @@ class GrupMenu
 
     private int $id_grupmenu;
 
-    private string $grup_menu;
+    private GrupMenuName $grup_menu;
 
-    private int|null $orden = null;
+    private ?int $orden = null;
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
 
@@ -51,19 +51,30 @@ class GrupMenu
 
     public function getGrup_menu($dl_r = 'dl'): string
     {
-        $sgrupmenu = $this->grup_menu;
+        $sgrupmenu = $this->grup_menu->value();
         if ($dl_r === 'r' || $dl_r === 'rstgr') {
-            if (!empty($this->aEquivalencias[$this->grup_menu])) {
-                $sgrupmenu = $this->aEquivalencias[$this->grup_menu];
+            if (!empty($this->aEquivalencias[$this->grup_menu->value()])) {
+                $sgrupmenu = $this->aEquivalencias[$this->grup_menu->value()];
             }
         }
         return $sgrupmenu;
     }
 
-
-    public function setGrup_menu(string|GrupMenuName $grup_menu): void
+    public function setGrup_menu(string $grup_menu): void
     {
-        $this->grup_menu = $grup_menu instanceof GrupMenuName ? $grup_menu->value() : $grup_menu;
+        $this->grup_menu = GrupMenuName::fromNullableString($grup_menu);
+    }
+
+    public function getGrupMenuVo(): GrupMenuName
+    {
+        return $this->grup_menu;
+    }
+
+    public function setGrupMenuVo(GrupMenuName|string $texto): void
+    {
+        $this->grup_menu = $texto instanceof GrupMenuName
+            ? $texto
+            : GrupMenuName::fromNullableString($texto);
     }
 
 

@@ -29,7 +29,13 @@ final class IngresoObserv
 
     public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null) { return null; }
-        return new self($value);
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
     }
 }

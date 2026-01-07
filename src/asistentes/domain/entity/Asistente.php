@@ -39,29 +39,29 @@ class Asistente extends Entity implements AggregateRoot
 
     private int $id_nom;
 
-    private bool $propio;
+    private ?bool $propio;
 
-    private bool $est_ok;
+    private ?bool $est_ok;
 
-    private bool $cfi;
+    private ?bool $cfi;
 
-    private int|null $cfi_con = null;
+    private ?int $cfi_con = null;
 
-    private bool $falta;
+    private ?bool $falta;
 
-    private string|null $encargo = null;
+    private ?AsistenteEncargo $encargo = null;
 
-    private string|null $dl_responsable = null;
+    private ?DelegacionCode $dl_responsable = null;
 
-    private string|null $observ = null;
+    private ?AsistenteObserv $observ = null;
 
-    private string|null $id_tabla = null;
+    private ?PersonaTablaCode $id_tabla = null;
 
-    private int|null $plaza = null;
+    private ?PlazaId $plaza = null;
 
-    private string|null $propietario = null;
+    private ?AsistentePropietario $propietario = null;
 
-    private string|null $observ_est = null;
+    private ?AsistenteObservEst $observ_est = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -150,7 +150,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getEncargo(): ?string
     {
-        return $this->encargo;
+        return $this->encargo?->value();
     }
 
     /**
@@ -158,7 +158,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setEncargo(?string $encargo = null): void
     {
-        $this->encargo = $encargo;
+        $this->encargo = AsistenteEncargo::fromNullableString($encargo);
     }
 
     /**
@@ -166,15 +166,15 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getEncargoVo(): ?AsistenteEncargo
     {
-        return AsistenteEncargo::fromNullableString($this->encargo);
+        return $this->encargo;
     }
 
-    /**
-     * @param AsistenteEncargo|null $oAsistenteEncargo
-     */
-    public function setEncargoVo(?AsistenteEncargo $oAsistenteEncargo = null): void
+
+    public function setEncargoVo(AsistenteEncargo|string|null $texto = null): void
     {
-        $this->encargo = $oAsistenteEncargo?->value();
+        $this->encargo = $texto instanceof AsistenteEncargo
+            ? $texto
+            : AsistenteEncargo::fromNullableString($texto);
     }
 
     /**
@@ -182,7 +182,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getDl_responsable(): ?string
     {
-        return $this->dl_responsable;
+        return $this->dl_responsable?->value();
     }
 
     /**
@@ -190,7 +190,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setDl_responsable(?string $dl_responsable = null): void
     {
-        $this->dl_responsable = $dl_responsable;
+        $this->dl_responsable = DelegacionCode::fromNullableString($dl_responsable);
     }
 
     /**
@@ -198,15 +198,15 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getDlResponsableVo(): ?DelegacionCode
     {
-        return DelegacionCode::fromString($this->dl_responsable);
+        return $this->dl_responsable;
     }
 
-    /**
-     * @param DelegacionCode|null $oDelegacionCode
-     */
-    public function setDlResponsableVo(?DelegacionCode $oDelegacionCode = null): void
+
+    public function setDlResponsableVo(DelegacionCode|string|null $texto = null): void
     {
-        $this->dl_responsable = $oDelegacionCode?->value();
+        $this->dl_responsable = $texto instanceof DelegacionCode
+            ? $texto
+            : DelegacionCode::fromNullableString($texto);
     }
 
     /**
@@ -214,7 +214,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ?->value();
     }
 
     /**
@@ -222,7 +222,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = AsistenteObserv::fromNullableString($observ);
     }
 
     /**
@@ -230,15 +230,15 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getObservVo(): ?AsistenteObserv
     {
-        return AsistenteObserv::fromNullableString($this->observ);
+        return $this->observ;
     }
 
-    /**
-     * @param AsistenteObserv|null $oAsistenteObserv
-     */
-    public function setObservVo(?AsistenteObserv $oAsistenteObserv = null): void
+
+    public function setObservVo(AsistenteObserv|string|null $texto = null): void
     {
-        $this->observ = $oAsistenteObserv?->value();
+        $this->observ = $texto instanceof AsistenteObserv
+            ? $texto
+            : AsistenteObserv::fromNullableString($texto);
     }
 
     /**
@@ -246,7 +246,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getId_tabla(): ?string
     {
-        return $this->id_tabla;
+        return $this->id_tabla?->value();
     }
 
     /**
@@ -254,7 +254,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setId_tabla(?string $id_tabla = null): void
     {
-        $this->id_tabla = $id_tabla;
+        $this->id_tabla = PersonaTablaCode::fromNullableString($id_tabla);
     }
 
     /**
@@ -262,23 +262,23 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getIdTablaVo(): ?PersonaTablaCode
     {
-        return PersonaTablaCode::fromNullableString($this->id_tabla);
+        return $this->id_tabla;
     }
 
-    /**
-     * @param PersonaTablaCode|null $oPersonaTablaCode
-     */
-    public function setIdTablaVo(?PersonaTablaCode $oPersonaTablaCode = null): void
+
+    public function setIdTablaVo(PersonaTablaCode|string|null $texto = null): void
     {
-        $this->id_tabla = $oPersonaTablaCode?->value();
+        $this->id_tabla = $texto instanceof PersonaTablaCode
+            ? $texto
+            : PersonaTablaCode::fromNullableString($texto);
     }
 
     /**
      * @deprecated usar getPlazaVo()
      */
-    public function getPlaza(): ?int
+    public function getPlaza(): ?string
     {
-        return $this->plaza;
+        return $this->plaza?->value();
     }
 
     /**
@@ -286,7 +286,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setPlaza(?int $plaza = null): void
     {
-        $this->plaza = $plaza;
+        $this->plaza = PlazaId::fromNullable($plaza);
     }
 
     /**
@@ -294,15 +294,15 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getPlazaVo(): ?PlazaId
     {
-        return $this->plaza !== null ? new PlazaId($this->plaza) : null;
+        return $this->plaza;
     }
 
-    /**
-     * @param PlazaId|null $oPlazaId
-     */
-    public function setPlazaVo(?PlazaId $oPlazaId = null): void
+
+    public function setPlazaVo(PlazaId|int|null $valor = null): void
     {
-        $this->plaza = $oPlazaId?->value();
+        $this->plaza = $valor instanceof PlazaId
+            ? $valor
+            : PlazaId::fromNullable($valor);
     }
 
     /**
@@ -336,7 +336,7 @@ class Asistente extends Entity implements AggregateRoot
                         exit (_("no debería pasar. No puede haber una plaza libre sin propietario"));
                     } else {
                         $prop = key($propiedad);
-                        $this->setPropietario($prop);
+                        $this->setPropietarioVo($prop);
                     }
                 } else {
                     $err_txt = $rta['mensaje'];
@@ -354,15 +354,17 @@ class Asistente extends Entity implements AggregateRoot
      * No puede estar en setPlaza, porque cuando se hidrata con la DB entra en un bucle infinito
      * @param PlazaId|null $oPlazaId
      */
-    public function setPlazaVoComprobando(?PlazaId $oPlazaId = null): void
+    public function setPlazaVoComprobando(PlazaId|int|null $oPlazaId = null): void
     {
-        $iplaza = $oPlazaId?->value();
+        $iplaza = $oPlazaId instanceof PlazaId
+            ? $oPlazaId?->value()
+            : $oPlazaId;
 
         //hacer comprobaciones de plazas disponibles...
         $plaza_actual = $this->getPlaza();
 
         if ($plaza_actual < PlazaId::DENEGADA && $iplaza > PlazaId::DENEGADA) {
-            $this->plaza = $iplaza;
+            $this->plaza = PlazaId::fromNullable($iplaza);
             $gesActividadPlazasR = new ResumenPlazas();
             $gesActividadPlazasR->setId_activ($this->id_activ);
             if ($gesActividadPlazasR->getLibres() > 0) {
@@ -374,14 +376,14 @@ class Asistente extends Entity implements AggregateRoot
                         exit (_("no debería pasar. No puede haber una plaza libre sin propietario"));
                     } else {
                         $prop = key($propiedad);
-                        $this->setPropietario($prop);
+                        $this->setPropietarioVo($prop);
                     }
                 } else {
                     $err_txt = $rta['mensaje'];
                     exit ($err_txt);
                 }
             } else {
-                $this->plaza = PlazaId::PEDIDA;
+                $this->plaza = PlazaId::fromNullable(PlazaId::PEDIDA);
             }
         } else {
             $this->plaza = $iplaza;
@@ -393,7 +395,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getPropietario(): ?string
     {
-        return $this->propietario;
+        return $this->propietario?->value();
     }
 
     /**
@@ -401,7 +403,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setPropietario(?string $propietario = null): void
     {
-        $this->propietario = $propietario;
+        $this->propietario = AsistentePropietario::fromNullableString($propietario);
     }
 
     /**
@@ -409,15 +411,17 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getPropietarioVo(): ?AsistentePropietario
     {
-        return AsistentePropietario::fromNullableString($this->propietario);
+        return $this->propietario;
     }
 
     /**
      * @param AsistentePropietario|null $oAsistentePropietario
      */
-    public function setPropietarioVo(?AsistentePropietario $oAsistentePropietario = null): void
+    public function setPropietarioVo(AsistentePropietario|string|null $texto = null): void
     {
-        $this->propietario = $oAsistentePropietario?->value();
+        $this->propietario = $texto instanceof AsistentePropietario
+            ? $texto
+            : AsistentePropietario::fromNullableString($texto);
     }
 
     /**
@@ -425,7 +429,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getObserv_est(): ?string
     {
-        return $this->observ_est;
+        return $this->observ_est?->value();
     }
 
     /**
@@ -433,7 +437,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setObserv_est(?string $observ_est = null): void
     {
-        $this->observ_est = $observ_est;
+        $this->observ_est = AsistenteObservEst::fromNullableString($observ_est);
     }
 
     /**
@@ -441,14 +445,16 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function getObservEstVo(): ?AsistenteObservEst
     {
-        return AsistenteObservEst::fromNullableString($this->observ_est);
+        return $this->observ_est;
     }
 
     /**
      * @param AsistenteObservEst|null $oAsistenteObservEst
      */
-    public function setObservEstVo(?AsistenteObservEst $oAsistenteObservEst = null): void
+    public function setObservEstVo(AsistenteObservEst|string|null $texto = null): void
     {
-        $this->observ_est = $oAsistenteObservEst?->value();
+        $this->observ_est = $texto instanceof AsistenteObservEst
+            ? $texto
+            : AsistenteObservEst::fromNullableString($texto);
     }
 }

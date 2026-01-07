@@ -39,7 +39,7 @@ $shoy = $ohoy ->format('d/m/Y');
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
 
-$id_nom_jefe = '';
+$id_nom_jefe = null;
 
 $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());

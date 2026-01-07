@@ -25,9 +25,8 @@ return [
     }),
 
     // Unit of Work - Gestión de transacciones y eventos
-    UnitOfWorkInterface::class => factory(function () {
+    UnitOfWorkInterface::class => factory(function (EventBusInterface $eventBus) {
         $pdo = $GLOBALS['oDBE'];
-        $eventBus = \DI\ContainerSingleton::getInstance()->get(EventBusInterface::class);
         return new PdoUnitOfWork($pdo, $eventBus);
     }),
 ];

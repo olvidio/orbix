@@ -45,4 +45,16 @@ final class TipoDocSigla
     {
         return new self($value);
     }
+
+public static function fromNullableString(?string $value): ?self
+    {
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
+    }
 }

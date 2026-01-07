@@ -15,6 +15,8 @@ use src\notas\domain\entity\Nota;
 use src\notas\domain\entity\PersonaNotaCertificadoDB;
 use src\notas\domain\entity\PersonaNotaDB;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
+use src\notas\domain\value_objects\NotaSituacion;
+use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
@@ -112,7 +114,7 @@ class EditarPersonaNota
             }
 
             // En el caso de traslados, si el tipo de acta es un certificado,
-            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
+            if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
                 // puede ser que haga referencia a e_notas_dl o a e_notas_otra_region_stgr
                 if ($oPersonaNotaDB instanceof PersonaNotaOtraRegionStgr) {
                     // Si es certificado debería de ser de otra región, y por tanto no guardo nada
@@ -129,10 +131,10 @@ class EditarPersonaNota
             $oPersonaNotaDB->setTipo_acta($tipo_acta);
             // comprobar valor del acta
             if (!empty($acta)) {
-                if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO) {
+                if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO) {
                     $oPersonaNotaDB->setActa($acta);
                 }
-                if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
+                if ($tipo_acta === TipoActa::FORMATO_ACTA) {
                     $valor = Acta::inventarActa($acta, $f_acta);
                     $oPersonaNotaDB->setActa($valor);
                 }
@@ -165,8 +167,8 @@ class EditarPersonaNota
         if (array_key_exists('nota_certificado', $a_ObjetosPersonaNota)) {
             // en el caso de traslados, comprobar que no se tenga la nota real
             // buscarla en OtraRegionStgr (sobreescribo todos los valores por los originales)
-            //???if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO && $oPersonaNotaDB instanceof PersonaNotaDB && !empty($esquema_region_stgr)) {
-            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
+            //???if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO && $oPersonaNotaDB instanceof PersonaNotaDB && !empty($esquema_region_stgr)) {
+            if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
                 $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
                 $cPersonaNotasOtraRegion = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
                 if (!empty($cPersonaNotasOtraRegion)) {
@@ -187,10 +189,10 @@ class EditarPersonaNota
                 }
             } else {
                 // valores que se cambian:
-                $id_situacion = Nota::FALTA_CERTIFICADO;
+                $id_situacion = NotaSituacion::FALTA_CERTIFICADO;
                 $detalle = empty($detalle) ? "$acta" : "$acta ($detalle)";
                 $acta = _("falta certificado");
-                $tipo_acta = PersonaNotaDB::FORMATO_CERTIFICADO;
+                $tipo_acta = TipoActa::FORMATO_CERTIFICADO;
             }
 
             $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['nota_certificado'];
@@ -262,10 +264,10 @@ class EditarPersonaNota
         $oPersonaNotaDB->setTipo_acta($tipo_acta);
         // comprobar valor del acta
         if (!empty($acta)) {
-            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO) {
+            if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO) {
                 $oPersonaNotaDB->setActa($acta);
             }
-            if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
+            if ($tipo_acta === TipoActa::FORMATO_ACTA) {
                 $valor = Acta::inventarActa($acta, $f_acta);
                 $oPersonaNotaDB->setActa($valor);
             }
@@ -301,7 +303,7 @@ class EditarPersonaNota
                 $gesPersonaNota->setoDbl($oDbl);
                 $aWhere = ['id_nom' => $id_nom,
                     'id_nivel' => $id_nivel,
-                    'id_situacion' => Nota::FALTA_CERTIFICADO,
+                    'id_situacion' => NotaSituacion::FALTA_CERTIFICADO,
                 ];
                 $aOperador = ['id_situacion' => '!='];
                 $cPersonaNota = $gesPersonaNota->getPersonaNotas($aWhere, $aOperador);
@@ -309,7 +311,7 @@ class EditarPersonaNota
                     $oPersonaNota2 = $cPersonaNota[0];
                     if (!is_null($oPersonaNota2)) {
                         $oPersona = Persona::findPersonaEnGlobal($id_nom);
-                        $nom = $oPersona?->getPrefApellidosNombre()?? _("No encuentro");
+                        $nom = $oPersona?->getPrefApellidosNombre() ?? _("No encuentro");
 
                         $err = sprintf(_("%s ya tiene puesta nota para esta asignatura en su r/dl."), $nom);
                         $err .= "\n" . _("Si ha guardado este acta anteriormente puede ignorar este aviso.");
@@ -326,10 +328,10 @@ class EditarPersonaNota
                 $oPersonaNotaDB->setId_asignatura($id_asignatura_real);
             }
             $oPersonaNotaCertificadoDB->setId_asignatura($id_asignatura);
-            $oPersonaNotaCertificadoDB->setId_situacion(Nota::FALTA_CERTIFICADO);
+            $oPersonaNotaCertificadoDB->setId_situacion(NotaSituacion::FALTA_CERTIFICADO);
             $oPersonaNotaCertificadoDB->setActa(_("falta certificado"));
             $oPersonaNotaCertificadoDB->setDetalle($new_detalle);
-            $oPersonaNotaCertificadoDB->setTipo_acta(PersonaNotaDB::FORMATO_CERTIFICADO);
+            $oPersonaNotaCertificadoDB->setTipo_acta(TipoActa::FORMATO_CERTIFICADO);
 
             $oPersonaNotaCertificadoDB->setF_acta($f_acta);
             $oPersonaNotaCertificadoDB->setPreceptor($preceptor);

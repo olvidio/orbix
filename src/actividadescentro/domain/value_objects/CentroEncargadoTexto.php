@@ -40,10 +40,10 @@ final class CentroEncargadoTexto
         if ($value === null) {
             return null;
         }
-        $value = trim($value);
-        if ($value === '') {
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
             return null;
         }
-        return new self($value);
+        return new self($value_trimmed);
     }
 }

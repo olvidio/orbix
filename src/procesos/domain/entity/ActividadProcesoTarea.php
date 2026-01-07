@@ -7,7 +7,6 @@ use src\procesos\domain\value_objects\FaseId;
 use src\procesos\domain\value_objects\ProcesoTipoId;
 use src\procesos\domain\value_objects\TareaId;
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
 
 
 class ActividadProcesoTarea
@@ -27,9 +26,9 @@ class ActividadProcesoTarea
 
     private TareaId|null $id_tarea = null;
 
-    private bool|null $completado = null;
+    private ?bool $completado = null;
 
-    private string|null $observ = null;
+    private ?string $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -45,15 +44,16 @@ class ActividadProcesoTarea
     }
 
 
-    public function getProcesoTipoId(): ProcesoTipoId
+    public function getIdTipoProcesoVo(): ProcesoTipoId
     {
         return $this->id_tipo_proceso;
     }
 
-
-    public function setProcesoTipoId(ProcesoTipoId $id_tipo_proceso): void
+    public function setIdTipoProcesoVo(ProcesoTipoId|int|null $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = $id_tipo_proceso;
+        $this->id_tipo_proceso = $id_tipo_proceso instanceof ProcesoTipoId
+            ? $id_tipo_proceso
+            : new ProcesoTipoId($id_tipo_proceso);
     }
 
     /**
@@ -69,23 +69,24 @@ class ActividadProcesoTarea
      */
     public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = new ProcesoTipoId($id_tipo_proceso);
+        $this->id_tipo_proceso = ProcesoTipoId::fromNullable($id_tipo_proceso);
     }
 
 
-    public function getActividadId(): ActividadId
+    public function getIdActividadVo(): ActividadId
     {
         return $this->id_activ;
     }
 
-
-    public function setActividadId(ActividadId $id_activ): void
+    public function setIdActividadVo(ActividadId|int|null $id_activ): void
     {
-        $this->id_activ = $id_activ;
+        $this->id_activ = $id_activ instanceof ActividadId
+            ? $id_activ
+            : ActividadId::fromNullable($id_activ);
     }
 
     /**
-     * @deprecated use getActividadId()
+     * @deprecated use getIdActividadVo()
      */
     public function getId_activ(): int
     {
@@ -93,23 +94,24 @@ class ActividadProcesoTarea
     }
 
     /**
-     * @deprecated use setActividadId()
+     * @deprecated use setIdActividadVo()
      */
     public function setId_activ(int $id_activ): void
     {
-        $this->id_activ = new ActividadId($id_activ);
+        $this->id_activ = ActividadId::fromNullable($id_activ);
     }
 
 
-    public function getFaseId(): ?FaseId
+    public function getIdFaseVo(): ?FaseId
     {
         return $this->id_fase;
     }
 
-
-    public function setFaseId(?FaseId $id_fase = null): void
+    public function setIdFaseVo(FaseId|int|null $id_fase = null): void
     {
-        $this->id_fase = $id_fase;
+        $this->id_fase = $id_fase instanceof FaseId
+            ? $id_fase
+            : FaseId::fromNullable($id_fase);
     }
 
     /**
@@ -125,19 +127,21 @@ class ActividadProcesoTarea
      */
     public function setId_fase(?int $id_fase = null): void
     {
-        $this->id_fase = $id_fase !== null ? new FaseId($id_fase) : null;
+        $this->id_fase = FaseId::fromNullable($id_fase);
     }
 
 
-    public function getTareaId(): ?TareaId
+    public function getIdTareaVo(): ?TareaId
     {
         return $this->id_tarea;
     }
 
 
-    public function setTareaId(?TareaId $id_tarea = null): void
+    public function setIdTareaVo(TareaId|int|null $id_tarea = null): void
     {
-        $this->id_tarea = $id_tarea;
+        $this->id_tarea = $id_tarea instanceof TareaId
+            ? $id_tarea
+            : TareaId::fromNullable($id_tarea);
     }
 
     /**
@@ -153,7 +157,7 @@ class ActividadProcesoTarea
      */
     public function setId_tarea(?int $id_tarea = null): void
     {
-        $this->id_tarea = $id_tarea !== null ? new TareaId($id_tarea) : null;
+        $this->id_tarea = TareaId::fromNullable($id_tarea);
     }
 
 

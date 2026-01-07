@@ -2,13 +2,11 @@
 
 namespace src\actividadestudios\domain\entity;
 
+use src\actividadestudios\domain\value_objects\AvisProfesor;
+use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
-use src\actividadestudios\domain\value_objects\AvisProfesor;
-use src\actividadestudios\domain\value_objects\FechaFin;
-use src\actividadestudios\domain\value_objects\FechaInicio;
-use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 
 class ActividadAsignatura
 {
@@ -19,11 +17,11 @@ class ActividadAsignatura
     private int $id_schema;
     private int $id_activ;
     private int $id_asignatura;
-    private int|null $id_profesor = null;
-    private string|null $avis_profesor = null;
-    private string|null $tipo = null;
-    private DateTimeLocal|null $df_ini = null;
-    private DateTimeLocal|null $df_fin = null;
+    private ?int $id_profesor = null;
+    private ?AvisProfesor $avis_profesor = null;
+    private ?TipoActividadAsignatura $tipo = null;
+    private ?DateTimeLocal $df_ini = null;
+    private ?DateTimeLocal $df_fin = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -79,15 +77,15 @@ class ActividadAsignatura
      */
     public function getAvis_profesor(): ?string
     {
-        return $this->avis_profesor;
+        return $this->avis_profesor?->value();
     }
 
     /**
      * @return AvisProfesor|null
      */
-    public function getAvisProfesor(): ?AvisProfesor
+    public function getAvisProfesorVo(): ?AvisProfesor
     {
-        return AvisProfesor::fromNullable($this->avis_profesor);
+        return $this->avis_profesor;
     }
 
     /**
@@ -95,15 +93,15 @@ class ActividadAsignatura
      */
     public function setAvis_profesor(?string $avis_profesor = null): void
     {
-        $this->avis_profesor = $avis_profesor;
+        $this->avis_profesor = AvisProfesor::fromNullableString($avis_profesor);
     }
 
-    /**
-     * @param AvisProfesor|null $AvisProfesor
-     */
-    public function setAvisProfesor(?AvisProfesor $AvisProfesor = null): void
+
+    public function setAvisProfesorVo(AvisProfesor|string|null $texto = null): void
     {
-        $this->avis_profesor = $AvisProfesor?->value();
+        $this->avis_profesor = $texto instanceof AvisProfesor
+            ? $texto
+            : AvisProfesor::fromNullableString($texto);
     }
 
     /**
@@ -111,7 +109,7 @@ class ActividadAsignatura
      */
     public function getTipo(): ?string
     {
-        return $this->tipo;
+        return $this->tipo?->value();
     }
 
     /**
@@ -119,7 +117,7 @@ class ActividadAsignatura
      */
     public function getTipoVo(): ?TipoActividadAsignatura
     {
-        return TipoActividadAsignatura::fromNullable($this->tipo);
+        return $this->tipo;
     }
 
     /**
@@ -127,15 +125,15 @@ class ActividadAsignatura
      */
     public function setTipo(string|null $tipo = null): void
     {
-        $this->tipo = $tipo;
+        $this->tipo = TipoActividadAsignatura::fromNullableString($tipo);
     }
 
-    /**
-     * @param TipoActividadAsignatura|null $Tipo
-     */
-    public function setTipoVo(?TipoActividadAsignatura $Tipo = null): void
+
+    public function setTipoVo(TipoActividadAsignatura|string|null $texto = null): void
     {
-        $this->tipo = $Tipo?->value();
+        $this->tipo = $texto instanceof TipoActividadAsignatura
+            ? $texto
+            : TipoActividadAsignatura::fromNullableString($texto);
     }
 
     public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null

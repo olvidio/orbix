@@ -27,9 +27,11 @@ class Situacion
         return $this->situacion;
     }
 
-    public function setSituacionVo(SituacionCode $codigo): void
+    public function setSituacionVo(SituacionCode|string|null $codigo): void
     {
-        $this->situacion = $codigo;
+        $this->situacion = $codigo instanceof SituacionCode
+            ? $codigo
+            : SituacionCode::fromNullableString($codigo);
     }
 
     public function getNombreSituacionVo(): ?SituacionName
@@ -37,9 +39,11 @@ class Situacion
         return $this->nombreSituacion;
     }
 
-    public function setNombreSituacionVo(?SituacionName $nombre = null): void
+    public function setNombreSituacionVo(SituacionName|string|null $texto = null): void
     {
-        $this->nombreSituacion = $nombre;
+        $this->nombreSituacion = $texto instanceof SituacionName
+            ? $texto
+            : SituacionName::fromNullableString($texto);
     }
 
 

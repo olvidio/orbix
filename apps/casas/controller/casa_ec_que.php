@@ -15,6 +15,7 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use web\CasasQue;
 use web\DesplegableArray;
 use web\Hash;
@@ -39,7 +40,7 @@ $oForm = new CasasQue();
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $oMiUsuario = ConfigGlobal::MiUsuario();
 $miRolePau = ConfigGlobal::mi_role_pau();
-if ($miRolePau == Role::PAU_CDC) { //casa
+if ($miRolePau === PauType::PAU_CDC) { //casa
     $id_pau = $oMiUsuario->getCsv_id_pau();
     $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para casas cuyo calendario de actividades interesa

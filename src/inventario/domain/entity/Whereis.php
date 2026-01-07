@@ -14,9 +14,9 @@ class Whereis
 
     private int $id_item_whereis;
 
-    private int|null $id_item_egm = null;
+    private ?WhereisItemEgmId $id_item_egm = null;
 
-    private int|null $id_doc = null;
+    private ?WhereisDocId $id_doc = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -32,61 +32,51 @@ class Whereis
     }
 
 
-    public function getId_item_egm(): ?int
+    public function getId_item_egm(): ?string
     {
-        return $this->id_item_egm;
+        return $this->id_item_egm?->value();
     }
 
 
     public function setId_item_egm(?int $id_item_egm = null): void
     {
-        $this->id_item_egm = $id_item_egm;
+        $this->id_item_egm = WhereisItemEgmId::fromNullable($id_item_egm);
     }
 
 
-    public function getId_doc(): ?int
+    public function getId_doc(): ?string
     {
-        return $this->id_doc;
+        return $this->id_doc?->value();
     }
 
 
     public function setId_doc(?int $id_doc = null): void
     {
-        $this->id_doc = $id_doc;
-    }
-
-    // Value Object API (duplicada con legacy)
-    public function getIdItemWhereisVo(): WhereisItemId
-    {
-        return new WhereisItemId($this->id_item_whereis);
-    }
-
-    public function setIdItemWhereisVo(?WhereisItemId $id = null): void
-    {
-        if ($id === null) {
-            return;
-        }
-        $this->id_item_whereis = $id->value();
+        $this->id_doc = WhereisDocId::fromNullable($id_doc);
     }
 
     public function getIdItemEgmVo(): ?WhereisItemEgmId
     {
-        return $this->id_item_egm !== null ? new WhereisItemEgmId($this->id_item_egm) : null;
+        return $this->id_item_egm;
     }
 
-    public function setIdItemEgmVo(?WhereisItemEgmId $id = null): void
+    public function setIdItemEgmVo(WhereisItemEgmId|int|null $id = null): void
     {
-        $this->id_item_egm = $id?->value();
+        $this->id_item_egm = $id instanceof WhereisItemEgmId
+            ? $id
+            : WhereisItemEgmId::fromNullable($id);
     }
 
     public function getIdDocVo(): ?WhereisDocId
     {
-        return $this->id_doc !== null ? new WhereisDocId($this->id_doc) : null;
+        return $this->id_doc;
     }
 
-    public function setIdDocVo(?WhereisDocId $id = null): void
+    public function setIdDocVo(WhereisDocId|int|null $id = null): void
     {
-        $this->id_doc = $id?->value();
+        $this->id_doc = $id instanceof WhereisDocId
+            ? $id
+            : WhereisDocId::fromNullable($id);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

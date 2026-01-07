@@ -4,11 +4,12 @@ namespace src\profesores\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
-use src\profesores\domain\value_objects\EscritoNombramiento;
-use src\profesores\domain\value_objects\FechaNombramiento;
-use src\profesores\domain\value_objects\EscritoCese;
-use src\profesores\domain\value_objects\FechaCese;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\asignaturas\domain\value_objects\DepartamentoId;
+use src\profesores\domain\value_objects\EscritoCese;
+use src\profesores\domain\value_objects\EscritoNombramiento;
+use src\profesores\domain\value_objects\FechaCese;
+use src\profesores\domain\value_objects\FechaNombramiento;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -23,166 +24,151 @@ class ProfesorDirector
 
     private int $id_nom;
 
-    private int $id_departamento;
+    private DepartamentoId $id_departamento;
 
-    private string|null $escrito_nombramiento = null;
+    private ?EscritoNombramiento $escrito_nombramiento = null;
 
-    private DateTimeLocal|null $f_nombramiento = null;
+    private ?DateTimeLocal $f_nombramiento = null;
 
-    private string|null $escrito_cese = null;
+    private ?EscritoCese $escrito_cese = null;
 
-    private DateTimeLocal|null $f_cese = null;
+    private ?DateTimeLocal $f_cese = null;
+
+    
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getIdDepartamentoVo(): DepartamentoId
+    {
+        return $this->id_departamento;
+    }
+
+    public function setIdDepartamentoVo(DepartamentoId|int $valor = null): void
+    {
+        $this->id_departamento = $valor instanceof DepartamentoId
+            ? $valor
+            : DepartamentoId::fromNullable($valor);
+    }
+
+    /**
+     * @deprecated use getIdDepartamentoVo()
+     */
+    public function getId_departamento(): int
+    {
+        return $this->id_departamento->value();
+    }
+
+    /**
+     * @deprecated use setIdDepartamentoVo()
+     */
+    public function setId_departamento(int $valor = null): void
+    {
+        $this->id_departamento = DepartamentoId::fromNullable($valor);
+    }
+
+    public function getEscritoNombramientoVo(): ?EscritoNombramiento
+    {
+        return $this->escrito_nombramiento;
+    }
+
+    public function setEscritoNombramientoVo(EscritoNombramiento|string|null $valor = null): void
+    {
+        $this->escrito_nombramiento = $valor instanceof EscritoNombramiento
+            ? $valor
+            : EscritoNombramiento::fromNullableString($valor);
+    }
+
+    /**
+     * @deprecated use getEscritoNombramientoVo()
+     */
+    public function getEscrito_nombramiento(): ?string
+    {
+        return $this->escrito_nombramiento?->value();
+    }
+
+    /**
+     * @deprecated use setEscritoNombramientoVo()
+     */
+    public function setEscrito_nombramiento(?string $valor = null): void
+    {
+        $this->escrito_nombramiento = EscritoNombramiento::fromNullableString($valor);
+    }
+
+    public function getEscritoCeseVo(): ?EscritoCese
+    {
+        return $this->escrito_cese;
+    }
+
+    public function setEscritoCeseVo(EscritoCese|string|null $valor = null): void
+    {
+        $this->escrito_cese = $valor instanceof EscritoCese
+            ? $valor
+            : EscritoCese::fromNullableString($valor);
+    }
+
+    /**
+     * @deprecated use getEscritoCeseVo()
+     */
+    public function getEscrito_cese(): ?string
+    {
+        return $this->escrito_cese?->value();
+    }
+
+    /**
+     * @deprecated use setEscritoCeseVo()
+     */
+    public function setEscrito_cese(?string $valor = null): void
+    {
+        $this->escrito_cese = EscritoCese::fromNullableString($valor);
+    }
 
     public function getId_item(): int
     {
         return $this->id_item;
     }
 
-
-    public function setId_item(int $id_item): void
+    public function setId_item(int $valor): void
     {
-        $this->id_item = $id_item;
+        $this->id_item = $valor;
     }
-
 
     public function getId_nom(): int
     {
         return $this->id_nom;
     }
 
-
-    public function setId_nom(int $id_nom): void
+    public function setId_nom(int $valor): void
     {
-        $this->id_nom = $id_nom;
+        $this->id_nom = $valor;
     }
 
-
-    public function getId_departamento(): int
+    public function getF_nombramiento(): ?DateTimeLocal
     {
-        return $this->id_departamento;
+        return $this->f_nombramiento;
     }
 
-
-    public function setId_departamento(int $id_departamento): void
+    public function setF_nombramiento(?DateTimeLocal $valor): void
     {
-        $this->id_departamento = $id_departamento;
+        $this->f_nombramiento = $valor;
     }
 
-    // Métodos VO nuevos
-    public function getEscritoNombramientoVo(): ?EscritoNombramiento
+    public function getF_cese(): ?DateTimeLocal
     {
-        return EscritoNombramiento::fromNullable($this->escrito_nombramiento);
+        return $this->f_cese;
     }
 
-    public function setEscritoNombramientoVo(?EscritoNombramiento $escrito): void
+    public function setF_cese(?DateTimeLocal $valor): void
     {
-        $this->escrito_nombramiento = $escrito?->value();
+        $this->f_cese = $valor;
     }
 
-    public function getFechaNombramientoVo(): ?FechaNombramiento
-    {
-        return FechaNombramiento::fromNullable($this->f_nombramiento);
-    }
-
-    public function setFechaNombramientoVo(?FechaNombramiento $fecha): void
-    {
-        $this->f_nombramiento = $fecha?->value();
-    }
-
-    public function getEscritoCeseVo(): ?EscritoCese
-    {
-        return EscritoCese::fromNullable($this->escrito_cese);
-    }
-
-    public function setEscritoCeseVo(?EscritoCese $escrito): void
-    {
-        $this->escrito_cese = $escrito?->value();
-    }
-
-    public function getFechaCeseVo(): ?FechaCese
-    {
-        return FechaCese::fromNullable($this->f_cese);
-    }
-
-    public function setFechaCeseVo(?FechaCese $fecha): void
-    {
-        $this->f_cese = $fecha?->value();
-    }
-
-    /**
-     * @deprecated Usar getEscritoNombramientoVo()->value()
-     */
-    public function getEscrito_nombramiento(): ?string
-    {
-        return $this->escrito_nombramiento;
-    }
-
-    /**
-     * @deprecated Usar setEscritoNombramientoVo(EscritoNombramiento $vo)
-     */
-    public function setEscrito_nombramiento(?string $escrito_nombramiento = null): void
-    {
-        $this->escrito_nombramiento = $escrito_nombramiento;
-    }
-
-    /**
-     * @deprecated Usar getFechaNombramientoVo()->value()
-     */
-    public function getF_nombramiento(): DateTimeLocal|NullDateTimeLocal|null
-    {
-        return $this->f_nombramiento ?? new NullDateTimeLocal;
-    }
-
-    /**
-     * @deprecated Usar setFechaNombramientoVo(FechaNombramiento $vo)
-     */
-    public function setF_nombramiento(DateTimeLocal|null $f_nombramiento = null): void
-    {
-        $this->f_nombramiento = $f_nombramiento;
-    }
-
-    /**
-     * @deprecated Usar getEscritoCeseVo()->value()
-     */
-    public function getEscrito_cese(): ?string
-    {
-        return $this->escrito_cese;
-    }
-
-    /**
-     * @deprecated Usar setEscritoCeseVo(EscritoCese $vo)
-     */
-    public function setEscrito_cese(?string $escrito_cese = null): void
-    {
-        $this->escrito_cese = $escrito_cese;
-    }
-
-    /**
-     * @deprecated Usar getFechaCeseVo()->value()
-     */
-    public function getF_cese(): DateTimeLocal|NullDateTimeLocal|null
-    {
-        return $this->f_cese ?? new NullDateTimeLocal;
-    }
-
-    /**
-     * @deprecated Usar setFechaCeseVo(FechaCese $vo)
-     */
-    public function setF_cese(DateTimeLocal|null $f_cese = null): void
-    {
-        $this->f_cese = $f_cese;
-    }
-
-
-    /* ------------------- PARA el mod_tabla  -------------------------------*/
+/* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
         return 'id_item';
     }
 
-    public function getDatosCampos():array
+    public function getDatosCampos(): array
     {
         $oProfesorDirectorSet = new Set();
 
@@ -194,6 +180,7 @@ class ProfesorDirector
         $oProfesorDirectorSet->add($this->getDatosF_cese());
         return $oProfesorDirectorSet->getTot();
     }
+
     private function getDatosId_nom(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
@@ -205,6 +192,7 @@ class ProfesorDirector
 
         return $oDatosCampo;
     }
+
     private function getDatosId_departamento(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();

@@ -13,55 +13,59 @@ class ConfigSchema
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private string $parametro;
+    private ConfigParametroCode $parametro;
 
-    private string|null $valor = null;
+    private ?ConfigValor $valor = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
 
     public function getParametro(): string
     {
-        return $this->parametro;
+        return $this->parametro->value();
     }
 
 
     public function setParametro(string $parametro): void
     {
-        $this->parametro = $parametro;
+        $this->parametro = ConfigParametroCode::fromNullableString($parametro);
     }
 
     // Value Object API for parametro
     public function getParametroVo(): ConfigParametroCode
     {
-        return new ConfigParametroCode($this->parametro);
+        return $this->parametro;
     }
 
-    public function setParametroVo(ConfigParametroCode $code): void
+    public function setParametroVo(ConfigParametroCode|string $code): void
     {
-        $this->parametro = $code->value();
+        $this->parametro = $code instanceof ConfigParametroCode
+            ? $code
+            : ConfigParametroCode::fromNullableString($code);
     }
 
 
     public function getValor(): ?string
     {
-        return $this->valor;
+        return $this->valor?->value();
     }
 
 
     public function setValor(?string $valor = null): void
     {
-        $this->valor = $valor;
+        $this->valor = ConfigValor::fromNullableString($valor);
     }
 
     // Value Object API for valor
     public function getValorVo(): ?ConfigValor
     {
-        return $this->valor !== null ? new ConfigValor($this->valor) : null;
+        return $this->valor;
     }
 
-    public function setValorVo(?ConfigValor $valor = null): void
+    public function setValorVo(ConfigValor|string|null $valor = null): void
     {
-        $this->valor = $valor?->value();
+        $this->valor = $valor instanceof ConfigValor
+            ? $valor
+            : ConfigValor::fromNullableString($valor);
     }
 }

@@ -5,20 +5,12 @@ namespace notas\model;
 use NumberFormatter;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\notas\domain\value_objects\NotaSituacion;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
 class PersonaNota
 {
-
-    // tipo_acta constants.
-    public const FORMATO_ACTA = 1; // Acta.
-    public const FORMATO_CERTIFICADO = 2; // Certificado.
-
-    public const EPOCA_CA = 1; // ca verano.
-    public const EPOCA_INVIERNO = 2; // semestre invierno.
-    public const EPOCA_OTRO = 3; // sin especificar.
-
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private array $primaryKey;
@@ -131,7 +123,7 @@ class PersonaNota
     {
         $nota_corte = $_SESSION['oConfig']->getNotaCorte();
         $this->aprobada = false;
-        if ($this->id_situacion === Nota::NUMERICA) {
+        if ($this->id_situacion === NotaSituacion::NUMERICA) {
             $nota_num = $this->getNotaNum();
             $nota_max = $this->getNotaMax();
             // deben ser números.

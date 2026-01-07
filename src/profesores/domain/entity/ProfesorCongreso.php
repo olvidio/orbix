@@ -5,13 +5,11 @@ namespace src\profesores\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\profesores\domain\value_objects\CongresoName;
-use src\profesores\domain\value_objects\FechaFin;
-use src\profesores\domain\value_objects\FechaInicio;
+use src\profesores\domain\value_objects\CongresoTipo;
 use src\profesores\domain\value_objects\LugarName;
 use src\profesores\domain\value_objects\OrganizaName;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 
 
 class ProfesorCongreso
@@ -24,29 +22,130 @@ class ProfesorCongreso
 
     private int $id_nom;
 
-    private string $congreso;
+    private CongresoName $congreso;
 
-    private string|null $lugar = null;
+    private ?LugarName $lugar = null;
 
-    private DateTimeLocal|null $f_ini = null;
+    private ?DateTimeLocal $f_ini = null;
 
-    private DateTimeLocal|null $f_fin = null;
+    private ?DateTimeLocal $f_fin = null;
 
-    private string|null $organiza = null;
+    private ?OrganizaName $organiza = null;
 
-    private int|null $tipo = null;
+    private ?CongresoTipo $tipo = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-    public static function getTiposCongreso(): array
-    {
-        $tipos_congreso = [
-            1 => _("cv"),
-            2 => _("congreso"),
-            3 => _("reunión"),
-            4 => _("claustro"),
-        ];
 
-        return $tipos_congreso;
+    public function getCongresoVo(): CongresoName
+    {
+        return $this->congreso;
+    }
+
+    public function setCongresoVo(CongresoName|string $valor = null): void
+    {
+        $this->congreso = $valor instanceof CongresoName
+            ? $valor
+            : CongresoName::fromNullableString($valor);
+    }
+
+    /**
+     * @deprecated use getCongresoVo()
+     */
+    public function getCongreso(): string
+    {
+        return $this->congreso->value();
+    }
+
+    /**
+     * @deprecated use setCongresoVo()
+     */
+    public function setCongreso(string $valor = null): void
+    {
+        $this->congreso = CongresoName::fromNullableString($valor);
+    }
+
+    public function getLugarVo(): ?LugarName
+    {
+        return $this->lugar;
+    }
+
+    public function setLugarVo(LugarName|string|null $valor = null): void
+    {
+        $this->lugar = $valor instanceof LugarName
+            ? $valor
+            : LugarName::fromNullableString($valor);
+    }
+
+    /**
+     * @deprecated use getLugarVo()
+     */
+    public function getLugar(): ?string
+    {
+        return $this->lugar?->value();
+    }
+
+    /**
+     * @deprecated use setLugarVo()
+     */
+    public function setLugar(?string $valor = null): void
+    {
+        $this->lugar = LugarName::fromNullableString($valor);
+    }
+
+    public function getOrganizaVo(): ?OrganizaName
+    {
+        return $this->organiza;
+    }
+
+    public function setOrganizaVo(OrganizaName|string|null $valor = null): void
+    {
+        $this->organiza = $valor instanceof OrganizaName
+            ? $valor
+            : OrganizaName::fromNullableString($valor);
+    }
+
+    /**
+     * @deprecated use getOrganizaVo()
+     */
+    public function getOrganiza(): ?string
+    {
+        return $this->organiza?->value();
+    }
+
+    /**
+     * @deprecated use setOrganizaVo()
+     */
+    public function setOrganiza(?string $valor = null): void
+    {
+        $this->organiza = OrganizaName::fromNullableString($valor);
+    }
+
+    public function getTipoVo(): ?CongresoTipo
+    {
+        return $this->tipo;
+    }
+
+    public function setTipoVo(CongresoTipo|string|null $valor = null): void
+    {
+        $this->tipo = $valor instanceof CongresoTipo
+            ? $valor
+            : CongresoTipo::fromNullable($valor);
+    }
+
+    /**
+     * @deprecated use getTipoVo()
+     */
+    public function getTipo(): ?string
+    {
+        return $this->tipo?->value();
+    }
+
+    /**
+     * @deprecated use setTipoVo()
+     */
+    public function setTipo(?string $valor = null): void
+    {
+        $this->tipo = CongresoTipo::fromNullable($valor);
     }
 
     public function getId_item(): int
@@ -54,175 +153,48 @@ class ProfesorCongreso
         return $this->id_item;
     }
 
-
-    public function setId_item(int $id_item): void
+    public function setId_item(int $valor): void
     {
-        $this->id_item = $id_item;
+        $this->id_item = $valor;
     }
-
 
     public function getId_nom(): int
     {
         return $this->id_nom;
     }
 
-
-    public function setId_nom(int $id_nom): void
+    public function setId_nom(int $valor): void
     {
-        $this->id_nom = $id_nom;
+        $this->id_nom = $valor;
     }
 
-    /**
-     * @deprecated Usar getCongresoVo()->value()
-     */
-    public function getCongreso(): string
+    public function getF_ini(): ?DateTimeLocal
     {
-        return $this->congreso;
+        return $this->f_ini;
     }
 
-    /**
-     * @deprecated Usar setCongresoVo(CongresoName $vo)
-     */
-    public function setCongreso(string $congreso): void
+    public function setF_ini(?DateTimeLocal $valor): void
     {
-        $this->congreso = $congreso;
+        $this->f_ini = $valor;
     }
 
-    public function getCongresoVo(): CongresoName
+    public function getF_fin(): ?DateTimeLocal
     {
-        return new CongresoName($this->congreso);
+        return $this->f_fin;
     }
 
-    public function setCongresoVo(?CongresoName $congreso): void
+    public function setF_fin(?DateTimeLocal $valor): void
     {
-        if ($congreso !== null) {
-            $this->congreso = $congreso->value();
-        }
+        $this->f_fin = $valor;
     }
 
-    /**
-     * @deprecated Usar getLugarVo()->value()
-     */
-    public function getLugar(): ?string
-    {
-        return $this->lugar;
-    }
-
-    /**
-     * @deprecated Usar setLugarVo(LugarName $vo)
-     */
-    public function setLugar(?string $lugar = null): void
-    {
-        $this->lugar = $lugar;
-    }
-
-    public function getLugarVo(): ?LugarName
-    {
-        return LugarName::fromNullable($this->lugar);
-    }
-
-    public function setLugarVo(?LugarName $lugar): void
-    {
-        $this->lugar = $lugar?->value();
-    }
-
-    /**
-     * @deprecated Usar getFIniVo()->value()
-     */
-    public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
-    {
-        return $this->f_ini ?? new NullDateTimeLocal;
-    }
-
-    /**
-     * @deprecated Usar setFIniVo(FechaInicio $vo)
-     */
-    public function setF_ini(DateTimeLocal|null $f_ini = null): void
-    {
-        $this->f_ini = $f_ini;
-    }
-
-    public function getFIniVo(): ?FechaInicio
-    {
-        return FechaInicio::fromNullable($this->f_ini);
-    }
-
-    public function setFIniVo(?FechaInicio $fini): void
-    {
-        $this->f_ini = $fini?->value();
-    }
-
-    /**
-     * @deprecated Usar getFFinVo()->value()
-     */
-    public function getF_fin(): DateTimeLocal|NullDateTimeLocal|null
-    {
-        return $this->f_fin ?? new NullDateTimeLocal;
-    }
-
-    /**
-     * @deprecated Usar setFFinVo(FechaFin $vo)
-     */
-    public function setF_fin(DateTimeLocal|null $f_fin = null): void
-    {
-        $this->f_fin = $f_fin;
-    }
-
-    public function getFFinVo(): ?FechaFin
-    {
-        return FechaFin::fromNullable($this->f_fin);
-    }
-
-    public function setFFinVo(?FechaFin $ffin): void
-    {
-        $this->f_fin = $ffin?->value();
-    }
-
-    /**
-     * @deprecated Usar getOrganizaVo()->value()
-     */
-    public function getOrganiza(): ?string
-    {
-        return $this->organiza;
-    }
-
-    /**
-     * @deprecated Usar setOrganizaVo(OrganizaName $vo)
-     */
-    public function setOrganiza(?string $organiza = null): void
-    {
-        $this->organiza = $organiza;
-    }
-
-    public function getOrganizaVo(): ?OrganizaName
-    {
-        return OrganizaName::fromNullable($this->organiza);
-    }
-
-    public function setOrganizaVo(?OrganizaName $organiza): void
-    {
-        $this->organiza = $organiza?->value();
-    }
-
-
-    public function getTipo(): ?int
-    {
-        return $this->tipo;
-    }
-
-
-    public function setTipo(?int $tipo = null): void
-    {
-        $this->tipo = $tipo;
-    }
-
-    /* ------------------- PARA el mod_tabla  -------------------------------*/
+/* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
         return 'id_item';
     }
 
-  public function getDatosCampos(): array
+    public function getDatosCampos(): array
     {
         $oProfesorCongresoSet = new Set();
 
@@ -314,7 +286,7 @@ class ProfesorCongreso
         $oDatosCampo->setMetodoSet('setTipo');
         $oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('array');
-        $oDatosCampo->setLista(self::getTiposCongreso());
+        $oDatosCampo->setLista(CongresoTipo::getArrayTiposCongreso());
         return $oDatosCampo;
     }
 }

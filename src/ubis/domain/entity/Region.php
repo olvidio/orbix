@@ -17,11 +17,11 @@ class Region
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private int|null $id_region = null;
+    private ?int $id_region = null;
 
     private string $region;
 
-    private string|null $nombre_region = null;
+    private ?string $nombre_region = null;
 
     private bool|null $active = null;
 

@@ -2,6 +2,7 @@
 
 namespace src\notas\domain\entity;
 
+use src\notas\domain\value_objects\ActaNumero;
 use src\notas\domain\value_objects\Examinador;
 use src\notas\domain\value_objects\Orden;
 use src\shared\domain\traits\Hydratable;
@@ -13,36 +14,55 @@ class ActaTribunal
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private string $acta;
+    private ActaNumero $acta;
 
-    private string|null $examinador = null;
+    private ?Examinador $examinador = null;
 
-    private int|null $orden = null;
+    private ?Orden $orden = null;
 
     private int $id_item;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
+    /**
+     * @deprecated use getActaVo()
+     */
     public function getActa(): string
+    {
+        return $this->acta->value();
+    }
+
+    public function getActaVo(): ActaNumero
     {
         return $this->acta;
     }
 
+    /**
+     * @deprecated use setActaVo()
+     */
     public function setActa(string $acta): void
     {
-        $this->acta = $acta;
+        $this->acta = ActaNumero::fromNullableString($acta);
     }
 
+    public function setActaVo(ActaNumero|string|null $texto = null): void
+    {
+        $this->acta = $texto instanceof ActaNumero
+            ? $texto
+            : ActaNumero::fromNullableString($texto);
+    }
 
     public function getExaminadorVo(): ?Examinador
     {
-        return Examinador::fromNullable($this->examinador);
+        return $this->examinador;
     }
 
 
-    public function setExaminadorVo(?Examinador $oExaminador): void
+    public function setExaminadorVo(Examinador|string|null $texto = null): void
     {
-        $this->examinador = $oExaminador?->value();
+        $this->examinador = $texto instanceof Examinador
+            ? $texto
+            : Examinador::fromNullableString($texto);
     }
 
     /**
@@ -50,7 +70,7 @@ class ActaTribunal
      */
     public function getExaminador(): ?string
     {
-        return $this->examinador;
+        return $this->examinador?->value();
     }
 
     /**
@@ -58,25 +78,27 @@ class ActaTribunal
      */
     public function setExaminador(?string $examinador = null): void
     {
-        $this->examinador = $examinador;
+        $this->examinador = Examinador::fromNullableString($examinador);
     }
 
     public function getOrdenVo(): ?Orden
     {
-        return Orden::fromNullable($this->orden);
+        return $this->orden;
     }
 
-    public function setOrdenVo(?Orden $oOrden): void
+    public function setOrdenVo(Orden|int|null $valor = null): void
     {
-        $this->orden = $oOrden?->value();
+        $this->orden = $valor instanceof Orden
+            ? $valor
+            : Orden::fromNullable($valor);
     }
 
     /**
      * @deprecated use getOrdenVo()
      */
-    public function getOrden(): ?int
+    public function getOrden(): ?string
     {
-        return $this->orden;
+        return $this->orden?->value();
     }
 
     /**
@@ -84,7 +106,7 @@ class ActaTribunal
      */
     public function setOrden(?int $orden = null): void
     {
-        $this->orden = $orden;
+        $this->orden = Orden::fromNullable($orden);
     }
 
 

@@ -19,13 +19,13 @@ class MetaMenu
 
     private int $id_metamenu;
 
-    private int|null $id_mod = null;
+    private ?int $id_mod = null;
 
-    private string|null $url = null;
+    private ?MetaMenuUrl $url = null;
 
-    private string|null $parametros = null;
+    private ?MetaMenuParametros $parametros = null;
 
-    private string|null $descripcion = null;
+    private ?MetaMenuDescripcion $descripcion = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -52,40 +52,88 @@ class MetaMenu
         $this->id_mod = $id_mod;
     }
 
-
+    /**
+     * @deprecated use getUrlVo
+     */
     public function getUrl(): ?string
+    {
+        return $this->url?->value();
+    }
+
+    public function getUrlVo(): MetaMenuUrl
     {
         return $this->url;
     }
 
-
-    public function setUrl(string|MetaMenuUrl|null $url = null): void
+    /**
+     * @deprecated use setUrlVo
+     */
+    public function setUrl(?string $url = null): void
     {
-        $this->url = $url instanceof MetaMenuUrl ? $url->value() : $url;
+        $this->url = MetaMenuUrl::fromNullableString($url);
     }
 
+    public  function setUrlVo(MetaMenuUrl|string|null $texto): void
+    {
+        $this->url = $texto instanceof MetaMenuUrl
+            ? $texto
+            : MetaMenuUrl::fromNullableString($texto);
+    }
 
+    /**
+     * @deprecated use getParametrosVo
+     */
     public function getParametros(): ?string
+    {
+        return $this->parametros?->value();
+    }
+
+    public function getParametrosVo(): MetaMenuParametros
     {
         return $this->parametros;
     }
 
-
-    public function setParametros(string|MetaMenuParametros|null $parametros = null): void
+    /**
+     * @deprecated use setParametrosVo
+     */
+    public function setParametros(?string $parametros = null): void
     {
-        $this->parametros = $parametros instanceof MetaMenuParametros ? $parametros->value() : $parametros;
+        $this->parametros =  MetaMenuParametros::fromNullableString($parametros);
     }
 
+    public function setParametrosVo(MetaMenuParametros|string|null $texto): void
+    {
+        $this->parametros = $texto instanceof MetaMenuParametros
+            ? $texto
+            : MetaMenuParametros::fromNullableString($texto);
+    }
 
+    /**
+     * @deprecated use getDescripcionVo
+     */
     public function getDescripcion(): ?string
+    {
+        return $this->descripcion?->value();
+    }
+
+    public function getDescripcionVo(): MetaMenuDescripcion
     {
         return $this->descripcion;
     }
 
-
-    public function setDescripcion(string|MetaMenuDescripcion|null $descripcion = null): void
+    /**
+     * @deprecated use setDescripcionVo
+     */
+    public function setDescripcion(?string $descripcion = null): void
     {
-        $this->descripcion = $descripcion instanceof MetaMenuDescripcion ? $descripcion->value() : $descripcion;
+        $this->descripcion = MetaMenuDescripcion::fromNullableString($descripcion);
+    }
+
+    public function setDescripcionVo(MetaMenuDescripcion|string|null $texto): void
+    {
+        $this->descripcion = $texto instanceof MetaMenuDescripcion
+            ? $texto
+            : MetaMenuDescripcion::fromNullableString($texto);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

@@ -27,6 +27,7 @@ use src\profesores\domain\InfoProfesorLatin;
 use src\profesores\domain\InfoProfesorPublicacion;
 use src\profesores\domain\InfoProfesorStgr;
 use src\profesores\domain\InfoProfesorTituloEst;
+use src\profesores\domain\value_objects\CongresoTipo;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use web\Hash;
@@ -353,7 +354,7 @@ $go_cosas['ampliacion'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/
 
 // Convivencias y congresos  //////////////////////////////
 $ProfesorCongresoReposiroty = $GLOBALS['container']->get(ProfesorCongresoRepositoryInterface::class);
-$a_tipos_congreso = ProfesorCongreso::getTiposCongreso();
+$a_tipos_congreso = CongresoTipo::getArrayTiposCongreso();
 $cProfesorCongresos = $ProfesorCongresoReposiroty->getProfesorCongresos(array('id_nom' => $id_nom, '_ordre' => 'f_ini'));
 $a_cosas['clase_info'] = InfoProfesorCongreso::class;
 $go_cosas['congresos'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));

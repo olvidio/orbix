@@ -18,11 +18,8 @@ final class LenguaCode
         if ($value === '') {
             throw new \InvalidArgumentException('LenguaCode cannot be empty');
         }
-        if (mb_strlen($value) > 3) {
-            throw new \InvalidArgumentException('LenguaCode must be at most 3 characters');
-        }
-        if (!preg_match('/^[A-Za-z]{1,3}$/', $value)) {
-            throw new \InvalidArgumentException('LenguaCode must be alphabetic up to 3 chars');
+        if (!preg_match('/^[a-z]{2}_[A-Z]{2}\.[A-Z0-9\-]+$/', $value)) {
+            throw new \InvalidArgumentException('LenguaCode must follow the format: xx_XX.ENCODING (e.g., es_ES.UTF-8)');
         }
     }
 
@@ -31,9 +28,13 @@ final class LenguaCode
 
     public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null) { return null; }
-        $value = trim($value);
-        if ($value === '') { return null; }
-        return new self($value);
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
     }
 }

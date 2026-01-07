@@ -22,7 +22,7 @@ class CasaPeriodo
 
     private DateTimeLocal $f_fin;
 
-    private int|null $sfsv = null;
+    private ?int $sfsv = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

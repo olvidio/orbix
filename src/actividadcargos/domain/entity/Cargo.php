@@ -5,7 +5,6 @@ namespace src\actividadcargos\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
 use src\actividadcargos\domain\value_objects\{CargoCode, OrdenCargo, TipoCargoCode};
 
 /**
@@ -68,9 +67,11 @@ class Cargo
         return $this->ordenCargo;
     }
 
-    public function setOrdenCargoVo(?OrdenCargo $orden = null): void
+    public function setOrdenCargoVo(OrdenCargo|int|null $texto = null): void
     {
-        $this->ordenCargo = $orden;
+        $this->ordenCargo = $texto instanceof OrdenCargo
+            ? $texto
+            : OrdenCargo::fromNullable($texto);
     }
 
     public function getTipoCargoVo(): ?TipoCargoCode
@@ -78,9 +79,11 @@ class Cargo
         return $this->tipoCargo;
     }
 
-    public function setTipoCargoVo(?TipoCargoCode $tipo = null): void
+    public function setTipoCargoVo(TipoCargoCode|string|null $texto = null): void
     {
-        $this->tipoCargo = $tipo;
+        $this->tipoCargo = $texto instanceof TipoCargoCode
+            ? $texto
+            : TipoCargoCode::fromNullableString($texto);
     }
 
     public function getId_cargo(): int
@@ -104,10 +107,10 @@ class Cargo
     /**
      * @deprecated usar setCargoVo(CargoCode $codigo)
      */
-    public function setCargo(string $scargo): void
+    public function setCargo(string $cargo): void
     {
-        $scargo = trim($scargo);
-        $this->cargo = new CargoCode($scargo);
+        $cargo = trim($cargo);
+        $this->cargo = new CargoCode($cargo);
     }
 
     /**
@@ -121,9 +124,9 @@ class Cargo
     /**
      * @deprecated usar setOrdenCargoVo(?OrdenCargo $orden)
      */
-    public function setOrden_cargo(?int $iorden_cargo = null): void
+    public function setOrden_cargo(?int $orden_cargo = null): void
     {
-        $this->ordenCargo = OrdenCargo::fromNullable($iorden_cargo);
+        $this->ordenCargo = OrdenCargo::fromNullable($orden_cargo);
     }
 
     public function isSf(): ?bool
@@ -169,26 +172,25 @@ class Cargo
     }
 
     /**
-     * Retorna una col·lecció d'objectes del tipus DatosCampo
+     * Devuelve una colección de objetor tipo DatosCampo
      *
      */
     public function getDatosCampos(): array
     {
-        $ocargoSet = new Set();
+        $oCargoSet = new Set();
 
-        $ocargoSet->add($this->getDatosCargo());
-        $ocargoSet->add($this->getDatosOrden_cargo());
-        $ocargoSet->add($this->getDatosSf());
-        $ocargoSet->add($this->getDatosSv());
-        $ocargoSet->add($this->getDatosTipo_cargo());
-        return $ocargoSet->getTot();
+        $oCargoSet->add($this->getDatosCargo());
+        $oCargoSet->add($this->getDatosOrden_cargo());
+        $oCargoSet->add($this->getDatosSf());
+        $oCargoSet->add($this->getDatosSv());
+        $oCargoSet->add($this->getDatosTipo_cargo());
+        return $oCargoSet->getTot();
     }
 
     /**
      * Recupera las propiedades del atributo cargo de cargo
      * en una clase del tipo DatosCampo
      *
-     * @return object DatosCampo
      */
     private function getDatosCargo(): DatosCampo
     {
@@ -206,7 +208,6 @@ class Cargo
      * Recupera las propiedades del atributo orden_cargo de cargo
      * en una clase del tipo DatosCampo
      *
-     * @return object DatosCampo
      */
     private function getDatosOrden_cargo(): DatosCampo
     {
@@ -224,7 +225,6 @@ class Cargo
      * Recupera las propiedades del atributo sf de cargo
      * en una clase del tipo DatosCampo
      *
-     * @return object DatosCampo
      */
     private function getDatosSf(): DatosCampo
     {
@@ -241,7 +241,6 @@ class Cargo
      * Recupera las propiedades del atributo sv de cargo
      * en una clase del tipo DatosCampo
      *
-     * @return object DatosCampo
      */
     private function getDatosSv(): DatosCampo
     {
@@ -258,7 +257,6 @@ class Cargo
      * Recupera las propiedades del atributo tipo_cargo de cargo
      * en una clase del tipo DatosCampo
      *
-     * @return object DatosCampo
      */
     private function getDatosTipo_cargo(): DatosCampo
     {

@@ -173,7 +173,7 @@ class GestorAvisoCambios
                 $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
                 $oActividadCambio->setJson_fases_sv($aFases_sv);
                 $oActividadCambio->setJson_fases_sf($aFases_sf);
-                $oActividadCambio->setId_status($id_status);
+                $oActividadCambio->setIdStatusVo($id_status);
                 $oActividadCambio->setDl_org($dl_org);
                 $oActividadCambio->setObjeto($sObjeto);
                 $oActividadCambio->setQuien_cambia($id_user);
@@ -220,7 +220,7 @@ class GestorAvisoCambios
                     $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
                     $oActividadCambio->setJson_fases_sv($aFases_sv);
                     $oActividadCambio->setJson_fases_sf($aFases_sf);
-                    $oActividadCambio->setId_status($id_status);
+                    $oActividadCambio->setIdStatusVo($id_status);
                     $oActividadCambio->setDl_org($dl_org);
                     $oActividadCambio->setObjeto($sObjeto);
                     $oActividadCambio->setPropiedad($key);
@@ -241,7 +241,7 @@ class GestorAvisoCambios
                 $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
                 $oActividadCambio->setJson_fases_sv($aFases_sv);
                 $oActividadCambio->setJson_fases_sf($aFases_sf);
-                $oActividadCambio->setId_status($id_status);
+                $oActividadCambio->setIdStatusVo($id_status);
                 $oActividadCambio->setDl_org($dl_org);
                 $oActividadCambio->setObjeto($sObjeto);
                 $oActividadCambio->setValor_new();

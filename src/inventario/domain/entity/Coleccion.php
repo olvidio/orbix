@@ -16,35 +16,60 @@ class Coleccion
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private int $id_coleccion;
+    private ColeccionId $id_coleccion;
 
-    private string $nom_coleccion;
+    private ColeccionName $nom_coleccion;
 
-    private bool|null $agrupar = null;
+    private ?bool $agrupar = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function getId_coleccion(): int
     {
-        return $this->id_coleccion;
+        return $this->id_coleccion->value();
     }
 
 
     public function setId_coleccion(int $id_coleccion): void
     {
-        $this->id_coleccion = $id_coleccion;
+        $this->id_coleccion = ColeccionId::fromNullable($id_coleccion);
+    }
+
+    // Value Object API
+    public function getIdColeccionVo(): ?ColeccionId
+    {
+        return $this->id_coleccion;
+    }
+
+    public function setIdColeccionVo(ColeccionId|int|null $id = null): void
+    {
+        $this->id_coleccion = $id instanceof ColeccionId
+            ? $id
+            : ColeccionId::fromNullable($id);
     }
 
 
     public function getNom_coleccion(): string
     {
-        return $this->nom_coleccion;
+        return $this->nom_coleccion->value();
     }
 
 
     public function setNom_coleccion(string $nom_coleccion): void
     {
-        $this->nom_coleccion = $nom_coleccion;
+        $this->nom_coleccion = ColeccionName::fromNullableString($nom_coleccion);
+    }
+
+    public function getNomColeccionVo(): ?ColeccionName
+    {
+        return $this->nom_coleccion;
+    }
+
+    public function setNomColeccionVo(ColeccionName|string|null $name = null): void
+    {
+        $this->nom_coleccion = $name instanceof ColeccionName
+            ? $name
+            : ColeccionName::fromNullableString($name);
     }
 
 
@@ -59,40 +84,6 @@ class Coleccion
         $this->agrupar = $agrupar;
     }
 
-    // Value Object API (duplicada con legacy)
-    public function getIdColeccionVo(): ?ColeccionId
-    {
-        return isset($this->id_coleccion) ? new ColeccionId($this->id_coleccion) : null;
-    }
-
-    public function setIdColeccionVo(?ColeccionId $id = null): void
-    {
-        if ($id === null) {
-            // dejar como está; id puede ser seteado por repos
-            return;
-        }
-        $this->id_coleccion = $id->value();
-    }
-
-    public function getNomColeccionVo(): ?ColeccionName
-    {
-        return isset($this->nom_coleccion) && $this->nom_coleccion !== '' ? new ColeccionName($this->nom_coleccion) : null;
-    }
-
-    public function setNomColeccionVo(?ColeccionName $name = null): void
-    {
-        $this->nom_coleccion = $name?->value() ?? '';
-    }
-
-    public function getAgruparVo(): ?ColeccionAgrupar
-    {
-        return isset($this->agrupar) ? new ColeccionAgrupar((bool)$this->agrupar) : null;
-    }
-
-    public function setAgruparVo(?ColeccionAgrupar $agrupar = null): void
-    {
-        $this->agrupar = $agrupar?->value();
-    }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key()

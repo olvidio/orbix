@@ -17,9 +17,9 @@ class PlazaPeticion
 
     private int $id_activ;
 
-    private int $orden;
+    private PeticionOrden $orden;
 
-    private string|null $tipo = null;
+    private ?PeticionTipo $tipo = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -51,15 +51,15 @@ class PlazaPeticion
      */
     public function getOrdenVo(): PeticionOrden
     {
-        return new PeticionOrden($this->orden);
+        return $this->orden;
     }
 
-    /**
-     * @param PeticionOrden $oPeticionOrden
-     */
-    public function setOrdenVo(PeticionOrden $oPeticionOrden): void
+
+    public function setOrdenVo(PeticionOrden|int|null $valor): void
     {
-        $this->orden = $oPeticionOrden->value();
+        $this->orden = $valor instanceof PeticionOrden
+            ? $valor
+            : PeticionOrden::fromNullable($valor);
     }
 
     /**
@@ -67,7 +67,7 @@ class PlazaPeticion
      */
     public function getOrden(): int
     {
-        return $this->orden;
+        return $this->orden->value();
     }
 
     /**
@@ -75,7 +75,7 @@ class PlazaPeticion
      */
     public function setOrden(int $orden): void
     {
-        $this->orden = $orden;
+        $this->orden = PeticionOrden::fromNullable($orden);
     }
 
     /**
@@ -83,15 +83,15 @@ class PlazaPeticion
      */
     public function getTipoVo(): ?PeticionTipo
     {
-        return $this->tipo !== null ? new PeticionTipo($this->tipo) : null;
+        return $this->tipo;
     }
 
-    /**
-     * @param PeticionTipo|null $oPeticionTipo
-     */
-    public function setTipoVo(?PeticionTipo $oPeticionTipo = null): void
+
+    public function setTipoVo(PeticionTipo|string|null $texto = null): void
     {
-        $this->tipo = $oPeticionTipo?->value();
+        $this->tipo = $texto instanceof PeticionTipo
+            ? $texto
+            : PeticionTipo::fromNullableString($texto);
     }
 
     /**
@@ -99,7 +99,7 @@ class PlazaPeticion
      */
     public function getTipo(): ?string
     {
-        return $this->tipo;
+        return $this->tipo?->value();
     }
 
     /**
@@ -107,6 +107,6 @@ class PlazaPeticion
      */
     public function setTipo(?string $tipo = null): void
     {
-        $this->tipo = $tipo;
+        $this->tipo = PeticionTipo::fromNullableString($tipo);
     }
 }

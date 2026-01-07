@@ -42,63 +42,70 @@ class Ingreso
      *
      * @return IngresoImporte|null $ingresos
      */
-    public function getIngresos(): ?IngresoImporte
+    public function getIngresosVo(): ?IngresoImporte
     {
         return $this->ingresos;
     }
 
-    /**
-     *
-     * @param IngresoImporte|null $ingresos
-     */
-    public function setIngresos(?IngresoImporte $ingresos = null): void
+
+    public function setIngresosVo(IngresoImporte|float|null $ingresos = null): void
     {
-        $this->ingresos = $ingresos;
+        $this->ingresos = $ingresos instanceof IngresoImporte
+            ? $ingresos
+            : IngresoImporte::fromNullableFloat($ingresos);
     }
 
-    public function getNum_asistentes(): ?IngresoNumAsistentes
+    public function getNumAsistentesVo(): ?IngresoNumAsistentes
     {
         return $this->num_asistentes;
     }
 
-    public function setNum_asistentes(?IngresoNumAsistentes $num_asistentes = null): void
+    public function setNumAsistentesVo(IngresoNumAsistentes|int|null $num_asistentes = null): void
     {
-        $this->num_asistentes = $num_asistentes;
+        $this->num_asistentes = $num_asistentes instanceof IngresoNumAsistentes
+            ? $num_asistentes
+            : IngresoNumAsistentes::fromNullableInt($num_asistentes);
     }
 
 
-    public function getIngresos_previstos(): ?IngresoImporte
+    public function getIngresosPrevistosVo(): ?IngresoImporte
     {
         return $this->ingresos_previstos;
     }
 
 
-    public function setIngresos_previstos(?IngresoImporte $ingresos_previstos = null): void
+    public function setIngresosPrevistosVo(IngresoImporte|float|null $ingresos_previstos = null): void
     {
-        $this->ingresos_previstos = $ingresos_previstos;
+        $this->ingresos_previstos = $ingresos_previstos instanceof IngresoImporte
+            ? $ingresos_previstos
+            : IngresoImporte::fromNullableFloat($ingresos_previstos);
     }
 
 
-    public function getNum_asistentes_previstos(): ?IngresoNumAsistentes
+    public function getNumAsistentesPrevistosVo(): ?IngresoNumAsistentes
     {
         return $this->num_asistentes_previstos;
     }
 
 
-    public function setNum_asistentes_previstos(?IngresoNumAsistentes $num_asistentes_previstos = null): void
+    public function setNumAsistentesPrevistosVo(IngresoNumAsistentes|int|null $num_asistentes_previstos = null): void
     {
-        $this->num_asistentes_previstos = $num_asistentes_previstos;
+        $this->num_asistentes_previstos = $num_asistentes_previstos instanceof IngresoNumAsistentes
+            ? $num_asistentes_previstos
+            : IngresoNumAsistentes::fromNullableInt($num_asistentes_previstos);
     }
 
 
-    public function getObserv(): ?IngresoObserv
+    public function getObservVo(): ?IngresoObserv
     {
         return $this->observ;
     }
 
 
-    public function setObserv(?IngresoObserv $sobserv = null): void
+    public function setObservVo(IngresoObserv|string|null $texto = null): void
     {
-        $this->observ = $sobserv;
+        $this->observ = $texto instanceof IngresoObserv
+            ? $texto
+            : IngresoObserv::fromNullableString($texto);
     }
 }

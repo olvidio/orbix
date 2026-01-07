@@ -49,7 +49,9 @@ class InicialesSacd extends InicialesSacdDB
         if ($id_nom>0) {
             $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
             $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
-            $nombre_sacd = $PersonaSacd->getNombreApellidos().' ('.$this->iniciales($id_nom).')';
+            if ($PersonaSacd !== null) {
+                $nombre_sacd = $PersonaSacd->getNombreApellidos() . ' (' . $this->iniciales($id_nom) . ')';
+            }
         }
 //        if ($id_nom<0) {
 //            $PersonaEx = new PersonaEx($id_nom);

@@ -20,13 +20,13 @@ class Dossier
 
     private int $id_tipo_dossier;
 
-    private DateTimeLocal|null $f_ini = null;
+   private ?DateTimeLocal $f_ini = null;
 
-    private DateTimeLocal|null $f_camb_dossier = null;
+   private ?DateTimeLocal $f_camb_dossier = null;
 
-    private bool $active;
+    private ?bool $active;
 
-    private DateTimeLocal|null $f_active = null;
+   private ?DateTimeLocal $f_active = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

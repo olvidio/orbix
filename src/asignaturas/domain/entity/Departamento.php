@@ -26,21 +26,23 @@ class Departamento
         return $this->id_departamento;
     }
 
-    public function setIdDepartamentoVo(DepartamentoId $id): void
+    public function setIdDepartamentoVo(DepartamentoId|int $id): void
     {
-        $this->id_departamento = $id;
+        $this->id_departamento = $id instanceof DepartamentoId
+            ? $id
+            : DepartamentoId::fromNullable($id);
     }
 
 
     public function getId_departamento(): int
     {
-        return $this->id_departamento?->value() ?? 0;
+        return $this->id_departamento->value();
     }
 
 
     public function setId_departamento(int $id_departamento): void
     {
-        $this->id_departamento = new DepartamentoId($id_departamento);
+        $this->id_departamento = DepartamentoId::fromNullable($id_departamento);
     }
 
     // VO API
@@ -49,9 +51,11 @@ class Departamento
         return $this->nombre_departamento;
     }
 
-    public function setNombreDepartamentoVo(DepartamentoName $nombre): void
+    public function setNombreDepartamentoVo(DepartamentoName|string $nombre): void
     {
-        $this->nombre_departamento = $nombre;
+        $this->nombre_departamento = $nombre instanceof DepartamentoName
+            ? $nombre
+            : DepartamentoName::fromNullableString($nombre);
     }
 
 

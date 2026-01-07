@@ -16,78 +16,84 @@ class UbiInventario
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private int $id_ubi;
+    private UbiInventarioId $id_ubi;
 
-    private string $nom_ubi;
+    private UbiInventarioName $nom_ubi;
 
-    private int|null $id_ubi_activ = null;
+    private ?UbiInventarioIdActiv $id_ubi_activ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function getId_ubi(): int
     {
-        return $this->id_ubi;
+        return $this->id_ubi->value();
     }
 
 
     public function setId_ubi(int $id_ubi): void
     {
-        $this->id_ubi = $id_ubi;
+        $this->id_ubi = UbiInventarioId::fromNullable($id_ubi);
     }
 
 
     public function getNom_ubi(): string
     {
-        return $this->nom_ubi;
+        return $this->nom_ubi->value();
     }
 
 
     public function setNom_ubi(string $nom_ubi): void
     {
-        $this->nom_ubi = $nom_ubi;
+        $this->nom_ubi = UbiInventarioName::fromNullableString($nom_ubi);
     }
 
 
-    public function getId_ubi_activ(): ?int
+    public function getId_ubi_activ(): ?string
     {
-        return $this->id_ubi_activ;
+        return $this->id_ubi_activ?->value();
     }
 
 
     public function setId_ubi_activ(?int $id_ubi_activ = null): void
     {
-        $this->id_ubi_activ = $id_ubi_activ;
+        $this->id_ubi_activ = UbiInventarioIdActiv::fromNullable($id_ubi_activ);
     }
 
     // Value Object API (duplicada con legacy)
     public function getIdUbiVo(): UbiInventarioId
     {
-        return new UbiInventarioId($this->id_ubi);
+        return $this->id_ubi;
     }
 
-    public function setIdUbiVo(UbiInventarioId $id): void
+    public function setIdUbiVo(UbiInventarioId|int $id): void
     {
-        $this->id_ubi = $id->value();
+        $this->id_ubi = $id instanceof UbiInventarioId
+            ? $id
+            : UbiInventarioId::fromNullable($id);
     }
 
     public function getNomUbiVo(): UbiInventarioName
     {
-        return new UbiInventarioName($this->nom_ubi);
+        return $this->nom_ubi;
     }
 
-    public function setNomUbiVo(UbiInventarioName $name): void
+    public function setNomUbiVo(UbiInventarioName|int $name): void
     {
-        $this->nom_ubi = $name->value();
+        $this->nom_ubi = $name instanceof UbiInventarioName
+            ? $name
+            : UbiInventarioName::fromNullableString($name);
     }
 
     public function getIdUbiActivVo(): ?UbiInventarioIdActiv
     {
-        return new UbiInventarioIdActiv($this->id_ubi_activ);
+        return $this->id_ubi_activ;
     }
 
-    public function setIdUbiActivVo(?UbiInventarioIdActiv $id = null): void
+    public function setIdUbiActivVo(UbiInventarioIdActiv|int|null $id = null): void
     {
-        $this->id_ubi_activ = $id?->value();
+        $this->id_ubi_activ = $id instanceof UbiInventarioIdActiv
+            ? $id
+            : UbiInventarioIdActiv::fromNullable($id);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

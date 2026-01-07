@@ -4,7 +4,11 @@ namespace src\asignaturas\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
-use src\asignaturas\domain\value_objects\{AsignaturaTipoId, AsignaturaTipoName, AsignaturaTipoShortName, AsignaturaTipoYear, AsignaturaTipoLatin};
+use src\asignaturas\domain\value_objects\{AsignaturaTipoId,
+    AsignaturaTipoLatin,
+    AsignaturaTipoName,
+    AsignaturaTipoShortName,
+    AsignaturaTipoYear};
 use src\shared\domain\traits\Hydratable;
 
 class AsignaturaTipo
@@ -27,20 +31,65 @@ class AsignaturaTipo
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     // ---------- VO API ----------
-    public function getIdTipoVo(): AsignaturaTipoId { return $this->id_tipo; }
-    public function setIdTipoVo(AsignaturaTipoId $id): void { $this->id_tipo = $id; }
+    public function getIdTipoVo(): AsignaturaTipoId
+    {
+        return $this->id_tipo;
+    }
 
-    public function getTipoAsignaturaVo(): AsignaturaTipoName { return $this->tipo_asignatura; }
-    public function setTipoAsignaturaVo(AsignaturaTipoName $nombre): void { $this->tipo_asignatura = $nombre; }
+    public function setIdTipoVo(AsignaturaTipoId|int $id): void
+    {
+        $this->id_tipo = $id instanceof AsignaturaTipoId
+            ? $id
+            : AsignaturaTipoId::fromNullable($id);
+    }
 
-    public function getTipoBreveVo(): AsignaturaTipoShortName { return $this->tipo_breve; }
-    public function setTipoBreveVo(AsignaturaTipoShortName $nombre): void { $this->tipo_breve = $nombre; }
+    public function getTipoAsignaturaVo(): AsignaturaTipoName
+    {
+        return $this->tipo_asignatura;
+    }
 
-    public function getYearVo(): ?AsignaturaTipoYear { return $this->year; }
-    public function setYearVo(?AsignaturaTipoYear $year = null): void { $this->year = $year; }
+    public function setTipoAsignaturaVo(AsignaturaTipoName|string $nombre): void
+    {
+        $this->tipo_asignatura = $nombre instanceof AsignaturaTipoName
+            ? $nombre
+            : AsignaturaTipoName::fromNullableString($nombre);
+    }
 
-    public function getTipoLatinVo(): ?AsignaturaTipoLatin { return $this->tipo_latin; }
-    public function setTipoLatinVo(?AsignaturaTipoLatin $latin = null): void { $this->tipo_latin = $latin; }
+    public function getTipoBreveVo(): AsignaturaTipoShortName
+    {
+        return $this->tipo_breve;
+    }
+
+    public function setTipoBreveVo(AsignaturaTipoShortName|string $nombre): void
+    {
+        $this->tipo_breve = $nombre instanceof AsignaturaTipoShortName
+            ? $nombre
+            : AsignaturaTipoShortName::fromNullableString($nombre);
+    }
+
+    public function getYearVo(): ?AsignaturaTipoYear
+    {
+        return $this->year;
+    }
+
+    public function setYearVo(AsignaturaTipoYear|string|null $texto = null): void
+    {
+        $this->year = $texto instanceof AsignaturaTipoYear
+            ? $texto
+            : AsignaturaTipoYear::fromNullableString($texto);
+    }
+
+    public function getTipoLatinVo(): ?AsignaturaTipoLatin
+    {
+        return $this->tipo_latin;
+    }
+
+    public function setTipoLatinVo(AsignaturaTipoLatin|string|null $texto = null): void
+    {
+        $this->tipo_latin = $texto instanceof AsignaturaTipoLatin
+            ? $texto
+            : AsignaturaTipoLatin::fromNullableString($texto);
+    }
 
     // ---------- LEGACY ----------
 
@@ -52,7 +101,7 @@ class AsignaturaTipo
 
     public function setId_tipo(int $id_tipo): void
     {
-        $this->id_tipo = new AsignaturaTipoId($id_tipo);
+        $this->id_tipo = AsignaturaTipoId::fromNullable($id_tipo);
     }
 
 
@@ -64,7 +113,7 @@ class AsignaturaTipo
 
     public function setTipo_asignatura(string $tipo_asignatura): void
     {
-        $this->tipo_asignatura = new AsignaturaTipoName($tipo_asignatura);
+        $this->tipo_asignatura = AsignaturaTipoName::fromNullableString($tipo_asignatura);
     }
 
 
@@ -76,7 +125,7 @@ class AsignaturaTipo
 
     public function setTipo_breve(string $tipo_breve): void
     {
-        $this->tipo_breve = new AsignaturaTipoShortName($tipo_breve);
+        $this->tipo_breve = AsignaturaTipoShortName::fromNullableString($tipo_breve);
     }
 
 

@@ -18,7 +18,7 @@ class CambioAnotado
 
     private int $id_item_cambio;
 
-    private bool|null $anotado = null;
+    private ?bool $anotado = null;
 
     private int $server;
 

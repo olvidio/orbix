@@ -17,7 +17,7 @@ class Grupo
 
     private UserName $usuario;
 
-    private int|null $id_role = null;
+    private ?int $id_role = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -41,7 +41,9 @@ class Grupo
 
     public function setUsuarioVo(Username|string $usuario): void
     {
-        $this->usuario = $usuario instanceof Username ? $usuario : new Username($usuario);
+        $this->usuario = $usuario instanceof Username
+            ? $usuario
+            : new Username($usuario);
     }
 
 

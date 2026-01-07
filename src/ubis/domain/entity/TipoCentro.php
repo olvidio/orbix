@@ -53,9 +53,11 @@ class TipoCentro
         return $this->nombre_tipo_centro;
     }
 
-    public function setNombreTipoCentroVo(?TipoCentroName $nombre = null): void
+    public function setNombreTipoCentroVo(TipoCentroName|string|null $texto = null): void
     {
-        $this->nombre_tipo_centro = $nombre;
+        $this->nombre_tipo_centro = $texto instanceof TipoCentroName
+            ? $texto
+            : TipoCentroName::fromNullableString($texto);
     }
 
 
