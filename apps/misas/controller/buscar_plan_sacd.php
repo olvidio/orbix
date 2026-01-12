@@ -29,7 +29,7 @@ $aPeriodo = array(
     'proximo_mes' => _("próximo mes"),
     'separador' => '---------',
     'otro' => _("otro")
-);
+); 
 
 $oDesplPeriodo = new Desplegable();
 $oDesplPeriodo->setOpciones($aPeriodo);
@@ -53,7 +53,7 @@ $oFormP->setDesplPeriodosOpcion_sel('esta_semana');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy->format('d/m/Y');
+$shoy = $ohoy ->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
@@ -74,23 +74,8 @@ $id_sacd = $oMiUsuario->getId_pauAsString();
 $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
-//echo 'aRoles'.$aRoles[$id_role].'<br>';
-
-if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-
-    if ($_SESSION['oConfig']->is_jefeCalendario()) {
-        $id_nom_jefe = '';
-    } else {
-        $id_nom_jefe = $oMiUsuario->getId_pauAsString();
-        if (empty($id_nom_jefe)) {
-            exit(_("No tiene permiso para ver esta página"));
-        }
-    }
-}
-//echo 'jefe: '.$id_nom_jefe.'<br>';
-
-$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-$cZonas = $ZonaRepository->getZonas(array('id_nom' => $id_sacd));
+$GesZonas = new GestorZona();
+$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
 //echo 'count zonas: '.count($cZonas).'<br>';
 if (is_array($cZonas) && count($cZonas) > 0) {
     $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
@@ -118,8 +103,9 @@ if (is_array($cZonas) && count($cZonas) > 0) {
     }
 }
 
-if ($aRoles[$id_role] === 'Oficial_dl') {
-    echo 'OFICIAL DL<br>';
+if (($aRoles[$id_role]==='Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendario()))
+{
+//    echo 'OFICIAL DL<br>';
     $aWhere = [];
     $aOperador = [];
     $aWhere['sacd'] = 't';
@@ -141,7 +127,8 @@ if ($aRoles[$id_role] === 'Oficial_dl') {
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
 $oDesplSacd->setOpciones($a_sacd);
-$oDesplSacd->setBlanco(TRUE);
+//$oDesplSacd->setBlanco(TRUE);
+$oDesplSacd->setBlanco(FALSE);
 $oDesplSacd->setAction('fnjs_ver_plan_sacd()');
 
 $url_ver_plan_sacd = 'apps/misas/controller/ver_plan_sacd.php';

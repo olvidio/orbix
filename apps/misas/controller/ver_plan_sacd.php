@@ -13,6 +13,15 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$id_usuario = ConfigGlobal::mi_id_usuario();
+$UsuarioRepository = new UsuarioRepository();
+$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$id_sacd = $oMiUsuario->getId_pauAsString();
+$id_role = $oMiUsuario->getId_role();
+$GesZonas = new GestorZona();
+$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+$jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
+
 $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qorden = (string)filter_input(INPUT_POST, 'orden');
@@ -128,6 +137,7 @@ $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::clas
 foreach ($cEncargosDia as $oEncargoDia) {
     $id_enc = $oEncargoDia->getId_enc();
     $date = $oEncargoDia->getTstart();
+    $status = $oEncargoDia->getStatus();
 //    $dia = $date->format('d-m-Y');
     $num_dia = $date->format('j');
     $num_mes = $date->format('n');
@@ -153,14 +163,17 @@ foreach ($cEncargosDia as $oEncargoDia) {
 
     $oEncargo = $EncargoRepository->findById($id_enc);
     $desc_enc = $oEncargo->getDesc_enc();
-
     $data_cols["encargo"] = $desc_enc;
 
-    $data_cuadricula[] = $data_cols;
-    echo '</TR>';
-    echo '<TR><TD>' . $dia_y_hora . '</TD>';
-    echo '<TD>' . $desc_enc . '</TD>';
-    echo '<TD>' . $observ . '</TD>';
+    //echo 'jefe: '.$jefe_zona.' s: '.$status.'<br>';
+    if ($jefe_zona || ($status==EncargoDia::STATUS_COMUNICADO_SACD) || ($status==EncargoDia::STATUS_COMUNICADO_CTR))
+    {
+        $data_cuadricula[] = $data_cols;
+        echo '</TR>';
+        echo '<TR><TD>' . $dia_y_hora . '</TD>';
+        echo '<TD>' . $desc_enc . '</TD>';
+        echo '<TD>' . $observ . '</TD>';
+    }
 }
 
 echo '</TR>';

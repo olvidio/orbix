@@ -31,29 +31,42 @@ class Ubi
 
     public static function NewUbi($id_ubi)
     {
-        // para la sf (comienza por 2).
-        if (substr($id_ubi, 0, 1) == 2) {
-            // Si soy sv solo tengo acceso a los de la dl,
-            // En caso contrario puedo ver los de todas las regiones.
-            if (ConfigGlobal::mi_sfsv() == 1) {
+        $oUbi = null;
+        if (ConfigGlobal::is_dmz()) {
+            $gesCentro = new GestorCentroEllos();
+            // para la sf (comienza por 2).
+            if (substr($id_ubi, 0, 1) == 2) {
                 $gesCentro = new GestorCentroEllas();
-            } else {
-                $gesCentro = new GestorCentro();
+            }
+            $cCentros = $gesCentro->getCentros(array('id_ubi' => $id_ubi));
+            if (!empty($cCentros)) {
+                $oUbi = $cCentros[0];
             }
         } else {
-            // Si soy sf solo tengo acceso a los de la dl,
-            // En caso contrario puedo ver los de todas las regiones.
-            if (ConfigGlobal::mi_sfsv() == 2) {
-                $gesCentro = new GestorCentroEllos();
+            // para la sf (comienza por 2).
+            if (substr($id_ubi, 0, 1) == 2) {
+                // Si soy sv solo tengo acceso a los de la dl,
+                // En caso contrario puedo ver los de todas las regiones.
+                if (ConfigGlobal::mi_sfsv() == 1) {
+                    $gesCentro = new GestorCentroEllas();
+                } else {
+                    $gesCentro = new GestorCentro();
+                }
             } else {
-                $gesCentro = new GestorCentro();
+                // Si soy sf solo tengo acceso a los de la dl,
+                // En caso contrario puedo ver los de todas las regiones.
+                if (ConfigGlobal::mi_sfsv() == 2) {
+                    $gesCentro = new GestorCentroEllos();
+                } else {
+                    $gesCentro = new GestorCentro();
+                }
             }
-        }
-        $cCentros = $gesCentro->getCentros(array('id_ubi' => $id_ubi));
-        if (!empty($cCentros)) {
-            $oUbi = $cCentros[0];
-        } else {
-            $oUbi = new Casa($id_ubi);
+            $cCentros = $gesCentro->getCentros(array('id_ubi' => $id_ubi));
+            if (!empty($cCentros)) {
+                $oUbi = $cCentros[0];
+            } else {
+                $oUbi = new Casa($id_ubi);
+            }
         }
         return $oUbi;
     }

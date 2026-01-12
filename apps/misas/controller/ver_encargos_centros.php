@@ -37,11 +37,11 @@ if (isset($Qid_zona)) {
     $aWhere['active'] = 't';
     $aWhere['id_zona'] = $Qid_zona;
     $aWhere['_ordre'] = 'nombre_ubi';
-    $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-    $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
+    $GesCentrosSv = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
+    $cCentrosSv = $GesCentrosSv->getCentros($aWhere);
     $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
     $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-    $cCentros = array_merge($cCentrosDl, $cCentrosSf);
+    $cCentros = array_merge($cCentrosSv, $cCentrosSf);
 
     $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
     foreach ($cCentros as $oCentro) {
@@ -140,11 +140,11 @@ $aWhere = [];
 $aWhere['active'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-$cCentrosDl = $GesCentrosDl->getCentros($aWhere);
+$GesCentrosSv = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
+$cCentrosSv = $GesCentrosSv->getCentros($aWhere);
 $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-$cCentros = array_merge($cCentrosDl, $cCentrosSf);
+$cCentros = array_merge($cCentrosSv, $cCentrosSf);
 
 $aCentros = [];
 foreach ($cCentros as $oCentro) {

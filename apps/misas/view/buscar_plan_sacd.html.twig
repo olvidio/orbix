@@ -15,7 +15,7 @@
             </tr>
             <tr>
                 <td>
-                    {{ "Periodo:"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ "Periodo"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                 </td>
                 {{ oFormP.getTd()|raw }}   
             </tr>
@@ -55,4 +55,5 @@
 	$(document).ready($('#periodo').change(function(){funjs_activar_fecha();fnjs_ver_plan_sacd();}));
 	$(document).ready($('#empiezamin').change(function(){funjs_activar_fecha();fnjs_ver_plan_sacd();}));
 	$(document).ready($('#empiezamax').change(function(){funjs_activar_fecha();fnjs_ver_plan_sacd();}));
+fnjs_ver_plan_sacd();
 </script>

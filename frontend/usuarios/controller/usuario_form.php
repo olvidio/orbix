@@ -72,15 +72,19 @@ $a_campos['oDesplRoles'] = $oDesplRoles;
 if (!empty($a_campos_src['aDataDespl'])) {
     $tipo = $a_campos_src['aDataDespl']['tipo'];
     if ($tipo === 'simple') {
-        $oDesplArrayCtrCasas = new DesplegableArray();
+        $oDesplArrayCtrCasas = new Desplegable();
+        $oDesplArrayCtrCasas->setNombre($a_campos_src['aDataDespl']['nom']);
+        $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
+        $oDesplArrayCtrCasas->setOpcion_sel($a_campos_src['aDataDespl']['opcion_sel']);
+        $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
     } else {
         $oDesplArrayCtrCasas = new DesplegableArray();
         $oDesplArrayCtrCasas->setAccionConjunto($a_campos_src['aDataDespl']['accionConjunto']);
+        $oDesplArrayCtrCasas->setNomConjunto($a_campos_src['aDataDespl']['nom']);
+        $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
+        $oDesplArrayCtrCasas->setSeleccionados($a_campos_src['aDataDespl']['opcion_sel']);
+        $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
     }
-    $oDesplArrayCtrCasas->setNomConjunto($a_campos_src['aDataDespl']['nom']);
-    $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
-    $oDesplArrayCtrCasas->setSeleccionados($a_campos_src['aDataDespl']['opcion_sel']);
-    $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
 } else {
     $oDesplArrayCtrCasas = new DesplegableArray();
 }
@@ -93,7 +97,7 @@ $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien
 );
-if(!empty($camposMas)) {
+if (!empty($camposMas)) {
     $camposForm .= '!' . $camposMas;
     //$a_camposHidden []= $camposMas;
 }
