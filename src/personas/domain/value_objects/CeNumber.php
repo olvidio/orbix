@@ -20,16 +20,17 @@ final class CeNumber
         }
     }
 
-    public function value(): int { return $this->value; }
-    public function __toString(): string { return (string)$this->value; }
-
-    public static function fromNullableInt(?int $value): ?self
+    public function value(): int
     {
-        if ($value === null) { return null; }
-        return new self($value);
+        return $this->value;
     }
 
-public static function fromNullable(?int $value): ?self
+    public function __toString(): string
+    {
+        return (string)$this->value;
+    }
+
+    public static function fromNullableInt(?int $value): ?self
     {
         if ($value === null) {
             return null;

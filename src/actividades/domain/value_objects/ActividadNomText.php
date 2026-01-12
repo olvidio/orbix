@@ -21,7 +21,7 @@ final class ActividadNomText
         if (mb_strlen($value) > 255) {
             throw new \InvalidArgumentException('ActividadNomText length must be <= 255');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’`´:_\-()\+\/\*]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]*$/u", $value)) {
             throw new \InvalidArgumentException('ActividadNomText contiene caracteres no válidos');
         }
     }
@@ -41,15 +41,15 @@ final class ActividadNomText
         return $this->value === $other->value();
     }
 
-     public static function fromNullableString(?string $value): ?self
-     {
-         if ($value === null) {
-             return null;
-         }
-         $value_trimmed = trim($value);
-         if ($value_trimmed === '') {
-             return null;
-         }
-         return new self($value_trimmed);
-     }
+    public static function fromNullableString(?string $value): ?self
+    {
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
+    }
 }

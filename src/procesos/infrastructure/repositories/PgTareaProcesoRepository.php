@@ -4,6 +4,7 @@ namespace src\procesos\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
+use core\ConverterDate;
 use core\ConverterJson;
 use core\Set;
 use JsonException;
@@ -162,13 +163,14 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
                     $id_tarea_previa = $json_fase_previa->id_tarea;
                     if (!empty($id_fase_previa)) {
                         $f++;
-                        $aF2 = $this->getListaFasesDependientes($iid_tipo_proceso, $id_fase_previa, $id_tarea_previa, $f);
+                        $aF2 = $this->zzzgetListaFasesDependientes($iid_tipo_proceso, $id_fase_previa, $id_tarea_previa, $f);
                         $aFases = $aFases + $aF2;
                     }
                 }
                 return $aFases;
             }
         }
+        return true;
     }
 
     /**
@@ -346,15 +348,21 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
+        $aDatos = $TareaProceso->toArrayForDatabase([
+            'json_fases_previas' => fn($v) =>  (new ConverterJson($v,false))->toPg(false),
+        ]);
+
+        /*
         $aDatos = [];
-        $aDatos['id_tipo_proceso'] = $TareaProceso->getId_tipo_proceso();
-        $aDatos['id_fase'] = $TareaProceso->getId_fase();
-        $aDatos['id_tarea'] = $TareaProceso->getId_tarea();
-        $aDatos['status'] = $TareaProceso->getStatus();
+        $aDatos['id_tipo_proceso'] = $TareaProceso->getIdTipoProcesoVo()->value();
+        $aDatos['id_fase'] = $TareaProceso->getIdFaseVo()->value();
+        $aDatos['id_tarea'] = $TareaProceso->getIdTareaVo()->value();
+        $aDatos['status'] = $TareaProceso->getStatusVo()->value();
         $aDatos['id_of_responsable'] = $TareaProceso->getId_of_responsable();
         // para los json
         $aDatos['json_fases_previas'] = (new ConverterJson($TareaProceso->getJson_fases_previas(),false))->toPg(false);
         array_walk($aDatos, 'core\poner_null');
+        */
 
         if ($bInsert === false) {
             //UPDATE

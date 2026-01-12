@@ -123,11 +123,9 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $ProfesorJuramento->getId_nom();
-        // para las fechas
-        $aDatos['f_juramento'] = (new ConverterDate('date', $ProfesorJuramento->getF_juramento()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $ProfesorJuramento->toArrayForDatabase([
+            'f_juramento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

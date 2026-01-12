@@ -11,6 +11,7 @@ use src\personas\domain\TrasladoDl;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 use src\tablonanuncios\domain\entity\Anuncio;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
+use src\tablonanuncios\domain\value_objects\Categoria;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\DateTimeLocal;
 
@@ -54,7 +55,7 @@ class CertificadoEmitidoEnviar
 
         if (!$b_saltar) {
             $nombre_apellidos = $cPersonas[0]->getApellidosNombre();
-            $dl_destino = $cPersonas[0]->getDl();
+            $dl_destino = $cPersonas[0]->getDlVo()->value();
 
             $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
             try {
@@ -90,18 +91,18 @@ class CertificadoEmitidoEnviar
                 //3.- enviar aviso
                 $texto_anuncio = sprintf(_("se ha recibido el certificado %s para %s."), $certificado, $nombre_apellidos);
                 $Anuncio = new Anuncio();
-                $uuid_item = AnuncioId::random();
+                $uuid_itemVo = AnuncioId::random();
                 $tanotado = new DateTimeLocal();
 
-                $Anuncio->setUuid_item($uuid_item);
-                $Anuncio->setUsuarioCreador(ConfigGlobal::mi_usuario());
-                $Anuncio->setEsquemaEmisor(ConfigGlobal::mi_region_dl());
-                $Anuncio->setEsquemaDestino($esquema_region_stgr_dst);
-                $Anuncio->setTextoAnuncio($texto_anuncio);
-                $Anuncio->setIdioma('');
-                $Anuncio->setTablon('vest|Estudios');
-                $Anuncio->setTanotado($tanotado);
-                $Anuncio->setCategoria(Anuncio::CAT_AVISO);
+                $Anuncio->setUuid_item($uuid_itemVo);
+                $Anuncio->setUsuarioCreadorVo(ConfigGlobal::mi_usuario());
+                $Anuncio->setEsquemaEmisorVo(ConfigGlobal::mi_region_dl());
+                $Anuncio->setEsquemaDestinoVo($esquema_region_stgr_dst);
+                $Anuncio->setTextoAnuncioVo($texto_anuncio);
+                $Anuncio->setIdiomaVo('');
+                $Anuncio->setTablonVo('vest|Estudios');
+                $Anuncio->setAnotado($tanotado);
+                $Anuncio->setCategoriaVo(Categoria::CAT_AVISO);
 
                 $AnuncioRepository = $GLOBALS['container']->get(AnuncioRepositoryInterface::class);
                 $AnuncioRepository->Guardar($Anuncio);

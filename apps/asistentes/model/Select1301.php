@@ -145,8 +145,8 @@ class Select1301
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $dl_org = $oActividad->getDl_org();
-            $f_ini = $oActividad->getF_ini()->getFromLocal();
-            $f_fin = $oActividad->getF_fin()->getFromLocal();
+            $f_ini = $oActividad->getF_ini()?->getFromLocal();
+            $f_fin = $oActividad->getF_fin()?->getFromLocal();
 
             $propio = $oAsistente->isPropio();
             $falta = $oAsistente->isFalta();

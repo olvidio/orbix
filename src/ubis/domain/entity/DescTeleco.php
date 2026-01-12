@@ -6,8 +6,7 @@ use core\DatosCampo;
 use core\Set;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
-use function core\is_true;
-use src\ubis\domain\value_objects\{TipoTelecoCode, DescTelecoOrder, DescTelecoText};
+use src\ubis\domain\value_objects\{DescTelecoOrder, DescTelecoText, TipoTelecoCode};
 
 
 class DescTeleco
@@ -16,18 +15,18 @@ class DescTeleco
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    
+
     private int $id_item;
-    
+
     private ?DescTelecoOrder $orden = null;
-    
+
     private TipoTelecoCode $id_tipo_teleco;
-    
+
     private ?DescTelecoText $desc_teleco = null;
-    
-    private bool|null $ubi = null;
-    
-    private bool|null $persona = null;
+
+    private?bool $ubi = null;
+
+    private?bool $persona = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -42,7 +41,7 @@ class DescTeleco
     {
         $this->orden = $valor instanceof DescTelecoOrder
             ? $valor
-            : DescTelecoOrder::fromNullable($valor);
+            : DescTelecoOrder::fromNullableInt($valor);
     }
 
     public function getIdTipoTelecoVo(): TipoTelecoCode
@@ -50,9 +49,11 @@ class DescTeleco
         return $this->id_tipo_teleco;
     }
 
-    public function setIdTipoTelecoVo(TipoTelecoCode $codigo): void
+    public function setIdTipoTelecoVo(TipoTelecoCode|string|null $codigo): void
     {
-        $this->id_tipo_teleco = $codigo;
+        $this->id_tipo_teleco = $codigo instanceof TipoTelecoCode
+            ? $codigo
+            : TipoTelecoCode::fromNullableString($codigo);
     }
 
     public function getDescTelecoVo(): ?DescTelecoText
@@ -88,7 +89,7 @@ class DescTeleco
 
     public function setOrden(?int $orden = null): void
     {
-        $this->orden = DescTelecoOrder::fromNullable($orden);
+        $this->orden = DescTelecoOrder::fromNullableInt($orden);
     }
 
     public function getIdTipoteleco(): int

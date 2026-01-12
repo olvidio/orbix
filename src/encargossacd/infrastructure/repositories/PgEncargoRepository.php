@@ -122,19 +122,7 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_enc);
 
-        $aDatos = [];
-        $aDatos['id_tipo_enc'] = $Encargo->getId_tipo_enc();
-        $aDatos['sf_sv'] = $Encargo->getSf_sv();
-        $aDatos['id_ubi'] = $Encargo->getId_ubi();
-        $aDatos['id_zona'] = $Encargo->getId_zona();
-        $aDatos['desc_enc'] = $Encargo->getDesc_enc();
-        $aDatos['idioma_enc'] = $Encargo->getIdioma_enc();
-        $aDatos['desc_lugar'] = $Encargo->getDesc_lugar();
-        $aDatos['observ'] = $Encargo->getObserv();
-        $aDatos['orden'] = $Encargo->getOrden();
-        $aDatos['prioridad'] = $Encargo->getPrioridad();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Encargo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

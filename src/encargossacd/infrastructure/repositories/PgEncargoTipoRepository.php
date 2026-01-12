@@ -205,11 +205,7 @@ class PgEncargoTipoRepository extends ClaseRepository implements EncargoTipoRepo
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tipo_enc);
 
-        $aDatos = [];
-        $aDatos['tipo_enc'] = $EncargoTipo->getTipo_enc();
-        $aDatos['mod_horario'] = $EncargoTipo->getMod_horario();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $EncargoTipo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

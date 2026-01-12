@@ -49,9 +49,9 @@ class Casa
 
     private ?DateTimeLocal $f_active = null;
 
-    private bool|null $sv = null;
+    private?bool $sv = null;
 
-    private bool|null $sf = null;
+    private?bool $sf = null;
 
     private ?TipoCasaText $tipo_casa = null;
 
@@ -343,7 +343,7 @@ class Casa
      */
     public function setPlazas(?int $plazas = null): void
     {
-        $this->plazas = Plazas::fromNullable($plazas);
+        $this->plazas = Plazas::fromNullableInt($plazas);
     }
 
     public function getPlazasVo(): ?Plazas
@@ -355,7 +355,7 @@ class Casa
     {
         $this->plazas = $valor instanceof Plazas
             ? $valor
-            : Plazas::fromNullable($valor);
+            : Plazas::fromNullableInt($valor);
     }
 
 
@@ -373,7 +373,7 @@ class Casa
      */
     public function setPlazas_min(?int $plazas_min = null): void
     {
-        $this->plazas_min = PlazasMin::fromNullable($plazas_min);
+        $this->plazas_min = PlazasMin::fromNullableInt($plazas_min);
     }
 
     public function getPlazasMinVo(): ?PlazasMin
@@ -385,7 +385,7 @@ class Casa
     {
         $this->plazas_min = $texto instanceof PlazasMin
             ? $texto
-            : PlazasMin::fromNullableString($texto);
+            : PlazasMin::fromNullableInt($texto);
     }
 
 
@@ -403,7 +403,7 @@ class Casa
      */
     public function setNum_sacd(?int $num_sacd = null): void
     {
-        $this->num_sacd = NumSacerdotes::fromNullable($num_sacd);
+        $this->num_sacd = NumSacerdotes::fromNullableInt($num_sacd);
     }
 
     public function getNumSacdVo(): ?NumSacerdotes
@@ -415,7 +415,7 @@ class Casa
     {
         $this->num_sacd = $valor instanceof NumSacerdotes
             ? $valor
-            : NumSacerdotes::fromNullable($valor);
+            : NumSacerdotes::fromNullableInt($valor);
     }
 
 

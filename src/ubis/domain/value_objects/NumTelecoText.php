@@ -47,4 +47,9 @@ final class NumTelecoText
     {
         return new self($value);
     }
+
+    public static function fromNullableString(?string $value): ?self
+    {
+
+    }
 }

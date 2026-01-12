@@ -14,7 +14,7 @@ $error_txt = '';
 $EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
 $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
 $id_ubi_activ = $oEquipaje->getId_ubi_activ();
-$nombre_lugar = $oEquipaje->getLugar();
+$nombre_lugar = $oEquipaje->getLugarVo()->value();
 
 $DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
 $TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
@@ -47,7 +47,7 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
         $d++;
         $identificador = $oDocumento->getIdentificador();
         $num_ejemplares = $oDocumento->getNum_ejemplares();
-        $observ = $oDocumento->getObserv();
+        $observ = $oDocumento->getObservVo()->value();
         $id_tipo_doc = $oDocumento->getId_tipo_doc();
         $id_lugar_doc = $oDocumento->getId_lugar();
         $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);

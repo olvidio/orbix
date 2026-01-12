@@ -183,24 +183,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id);
 
-        $aDatos = [];
-        $aDatos['tipo_teleco'] = $TipoTeleco->getTipoTelecoVo()?->value() ?? '';
-        $aDatos['nombre_teleco'] = $TipoTeleco->getNombreTelecoVo()?->value() ?? '';
-        $aDatos['ubi'] = $TipoTeleco->isUbi();
-        $aDatos['persona'] = $TipoTeleco->isPersona();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['ubi'])) {
-            $aDatos['ubi'] = 'true';
-        } else {
-            $aDatos['ubi'] = 'false';
-        }
-        if (is_true($aDatos['persona'])) {
-            $aDatos['persona'] = 'true';
-        } else {
-            $aDatos['persona'] = 'false';
-        }
-
+        $aDatos = $TipoTeleco->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

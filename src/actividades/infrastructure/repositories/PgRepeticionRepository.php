@@ -138,12 +138,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_repeticion);
 
-        $aDatos = [];
-        $aDatos['repeticion'] = $Repeticion->getRepeticion();
-        $aDatos['temporada'] = $Repeticion->getTemporada();
-        $aDatos['tipo'] = $Repeticion->getTipo();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Repeticion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

@@ -1,9 +1,10 @@
 <?php
 
-namespace configuracion\db;
+namespace src\configuracion\db;
 
 use core\ConfigGlobal;
-use src\configuracion\domain\DBAbstract;
+use core\ServerConf;
+use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema.
@@ -12,7 +13,7 @@ use src\configuracion\domain\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ConfigGlobal::DIR . "/apps/config/db";
+    private $dir_base = ServerConf::DIR . "/apps/config/db";
 
     public function __construct($esquema_sfsv = NULL)
     {

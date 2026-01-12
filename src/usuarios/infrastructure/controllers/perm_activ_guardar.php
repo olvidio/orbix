@@ -73,7 +73,7 @@ foreach ($aAfecta_a as $afecta_a) {
             $oPermUsuarioActividad->setId_tipo_activ_txt($id_tipo_activ_txt);
             $oPermUsuarioActividad->setDl_propia($Qdl_propia);
             $oPermUsuarioActividad->setAfecta_a($afecta_a);
-            $oPermUsuarioActividad->setFase_ref($fase_ref);
+            $oPermUsuarioActividad->setFaseRefVo($fase_ref);
             $oPermUsuarioActividad->setperm_on($perm_on);
             $oPermUsuarioActividad->setperm_off($perm_off);
             if ($PermUsuarioActividadRepository->Guardar($oPermUsuarioActividad) === false) {

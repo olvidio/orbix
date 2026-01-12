@@ -173,7 +173,7 @@ $a_valores = [];
 foreach ($cActas as $oActa) {
     $i++;
     $acta = $oActa->getActa();
-    $f_acta = $oActa->getF_acta()->getFromLocal();
+    $f_acta = $oActa->getF_acta()?->getFromLocal();
     $id_asignatura = $oActa->getId_asignatura();
     // TODO
     $pdf = $oActa->getPdf();

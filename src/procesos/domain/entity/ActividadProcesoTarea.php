@@ -6,6 +6,7 @@ use src\procesos\domain\value_objects\ActividadId;
 use src\procesos\domain\value_objects\FaseId;
 use src\procesos\domain\value_objects\ProcesoTipoId;
 use src\procesos\domain\value_objects\TareaId;
+use src\procesos\domain\value_objects\TareaObserv;
 use src\shared\domain\traits\Hydratable;
 
 
@@ -28,7 +29,7 @@ class ActividadProcesoTarea
 
     private ?bool $completado = null;
 
-    private ?string $observ = null;
+    private ?TareaObserv $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -69,7 +70,7 @@ class ActividadProcesoTarea
      */
     public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = ProcesoTipoId::fromNullable($id_tipo_proceso);
+        $this->id_tipo_proceso = ProcesoTipoId::fromNullableInt($id_tipo_proceso);
     }
 
 
@@ -82,7 +83,7 @@ class ActividadProcesoTarea
     {
         $this->id_activ = $id_activ instanceof ActividadId
             ? $id_activ
-            : ActividadId::fromNullable($id_activ);
+            : ActividadId::fromNullableInt($id_activ);
     }
 
     /**
@@ -98,7 +99,7 @@ class ActividadProcesoTarea
      */
     public function setId_activ(int $id_activ): void
     {
-        $this->id_activ = ActividadId::fromNullable($id_activ);
+        $this->id_activ = ActividadId::fromNullableInt($id_activ);
     }
 
 
@@ -111,7 +112,7 @@ class ActividadProcesoTarea
     {
         $this->id_fase = $id_fase instanceof FaseId
             ? $id_fase
-            : FaseId::fromNullable($id_fase);
+            : FaseId::fromNullableInt($id_fase);
     }
 
     /**
@@ -127,7 +128,7 @@ class ActividadProcesoTarea
      */
     public function setId_fase(?int $id_fase = null): void
     {
-        $this->id_fase = FaseId::fromNullable($id_fase);
+        $this->id_fase = FaseId::fromNullableInt($id_fase);
     }
 
 
@@ -141,7 +142,7 @@ class ActividadProcesoTarea
     {
         $this->id_tarea = $id_tarea instanceof TareaId
             ? $id_tarea
-            : TareaId::fromNullable($id_tarea);
+            : TareaId::fromNullableInt($id_tarea);
     }
 
     /**
@@ -157,7 +158,7 @@ class ActividadProcesoTarea
      */
     public function setId_tarea(?int $id_tarea = null): void
     {
-        $this->id_tarea = TareaId::fromNullable($id_tarea);
+        $this->id_tarea = TareaId::fromNullableInt($id_tarea);
     }
 
 
@@ -172,15 +173,29 @@ class ActividadProcesoTarea
         $this->completado = $completado;
     }
 
-
+    /**
+     * @deprecated use getObservVo()
+     */
     public function getObserv(): ?string
+    {
+        return $this->observ?->value();
+    }
+    public function getObservVo(): ?TareaObserv
     {
         return $this->observ;
     }
 
-
+    /**
+     * @deprecated use setObservVo()
+     */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = TareaObserv::fromNullableString($observ);
+    }
+    public function setObservVo(TareaObserv|string|null $texto = null): void
+    {
+        $this->observ = $texto instanceof TareaObserv
+            ? $texto
+            : TareaObserv::fromNullableString($texto);
     }
 }

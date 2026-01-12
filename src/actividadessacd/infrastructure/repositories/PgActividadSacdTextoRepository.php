@@ -113,12 +113,7 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['idioma'] = $ActividadSacdTexto->getIdioma();
-        $aDatos['clave'] = $ActividadSacdTexto->getClave();
-        $aDatos['texto'] = $ActividadSacdTexto->getTexto();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $ActividadSacdTexto->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

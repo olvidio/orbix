@@ -28,4 +28,10 @@ final class DireccionId
     {
         return (string)$this->value;
     }
+
+    public static function fromNullableInt(?int $value): self
+    {
+        if ($value === null) { return new self(0); }
+        return new self($value);
+    }
 }

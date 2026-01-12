@@ -65,7 +65,7 @@ trait UbiContactsTrait
                 $repoDireccion = $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class);
                 break;
         }
-        $cUbixDireccion = $repoCasaDireccion->getDireccionesPorUbi($this->getId_ubi());
+        $cUbixDireccion = $repoCasaDireccion->getDireccionesPorUbi($this->getIdUbiVo()->value());
         $dirs = [];
         if ($cUbixDireccion !== false) {
             foreach ($cUbixDireccion as $aUbixDireccion) {
@@ -122,7 +122,7 @@ trait UbiContactsTrait
         $cTelecos = $TelecoUbiRepository->getTelecos($aWhere);
         if (!empty($cTelecos) && count($cTelecos) > 0) {
             $oTeleco = $cTelecos[0];
-            $e_mail = $oTeleco->getNum_teleco();
+            $e_mail = $oTeleco->getNumTelecoVo()->value();
         }
         return $e_mail;
     }
@@ -182,7 +182,7 @@ trait UbiContactsTrait
             $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
             foreach ($cTelecos as $oTelecoUbi) {
                 $iDescTel = $oTelecoUbi->getId_desc_teleco();
-                $num_teleco = trim($oTelecoUbi->getNum_teleco());
+                $num_teleco = trim($oTelecoUbi->getNumTelecoVo()->value());
                 if ($desc_teleco === "*" && !empty($iDescTel)) {
                     $oDescTel = $DescTelecoRepository->findById((int)$iDescTel);
                     $desc = $oDescTel?->getDescTelecoVo()?->value() ?? '';

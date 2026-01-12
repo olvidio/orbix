@@ -1,9 +1,10 @@
 <?php
 
-namespace cambios\db;
+namespace src\cambios\db;
 
 use core\ConfigGlobal;
-use src\configuracion\domain\DBAbstract;
+use core\ServerConf;
+use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema.
@@ -12,7 +13,7 @@ use src\configuracion\domain\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ConfigGlobal::DIR . "/apps/cambios/db";
+    private $dir_base = ServerConf::DIR . "/apps/cambios/db";
 
     public function __construct($esquema_sfsv = NULL)
     {
@@ -164,6 +165,7 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
+        return TRUE;
     }
 
     public function eliminar_av_cambios_dl()
@@ -253,6 +255,7 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
+        return true;
     }
 
     public function eliminar_av_cambios_anotados()
@@ -272,6 +275,7 @@ class DBEsquema extends DBAbstract
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal('comun');
+        return true;
     }
 
     /**
@@ -340,6 +344,7 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
+        return true;
     }
 
     public function eliminar_av_cambios_anotados_sf()
@@ -424,6 +429,7 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('comun');
+        return true;
     }
 
     public function eliminar_av_cambios_usuario()

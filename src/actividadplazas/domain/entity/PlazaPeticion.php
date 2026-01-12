@@ -59,7 +59,7 @@ class PlazaPeticion
     {
         $this->orden = $valor instanceof PeticionOrden
             ? $valor
-            : PeticionOrden::fromNullable($valor);
+            : PeticionOrden::fromNullableInt($valor);
     }
 
     /**
@@ -75,19 +75,19 @@ class PlazaPeticion
      */
     public function setOrden(int $orden): void
     {
-        $this->orden = PeticionOrden::fromNullable($orden);
+        $this->orden = PeticionOrden::fromNullableInt($orden);
     }
 
     /**
      * @return PeticionTipo|null
      */
-    public function getTipoVo(): ?PeticionTipo
+    public function getTipoPlazaPeticionVo(): ?PeticionTipo
     {
         return $this->tipo;
     }
 
 
-    public function setTipoVo(PeticionTipo|string|null $texto = null): void
+    public function setTipoPlazaPeticionVo(PeticionTipo|string|null $texto = null): void
     {
         $this->tipo = $texto instanceof PeticionTipo
             ? $texto
@@ -95,17 +95,17 @@ class PlazaPeticion
     }
 
     /**
-     * @deprecated use getTipoVo()
+     * @deprecated use getTipoPlazaPeticionVo()
      */
-    public function getTipo(): ?string
+    public function getTipoPlazaPeticion(): ?string
     {
         return $this->tipo?->value();
     }
 
     /**
-     * @deprecated use setTipoVo()
+     * @deprecated use setTipoPlazaPeticionVo()
      */
-    public function setTipo(?string $tipo = null): void
+    public function setTipoPlazaPeticion(?string $tipo = null): void
     {
         $this->tipo = PeticionTipo::fromNullableString($tipo);
     }

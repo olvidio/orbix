@@ -4,6 +4,7 @@ namespace src\actividadestudios\domain\entity;
 
 use src\actividadestudios\domain\value_objects\AvisProfesor;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -16,7 +17,7 @@ class ActividadAsignatura
 
     private int $id_schema;
     private int $id_activ;
-    private int $id_asignatura;
+    private AsignaturaId $id_asignatura;
     private ?int $id_profesor = null;
     private ?AvisProfesor $avis_profesor = null;
     private ?TipoActividadAsignatura $tipo = null;
@@ -48,16 +49,30 @@ class ActividadAsignatura
         $this->id_activ = $id_activ;
     }
 
-
+    /**
+     * @deprecated Usar `getIdAsignaturaVo(): AsignaturaId` en su lugar.
+     */
     public function getId_asignatura(): int
+    {
+        return $this->id_asignatura->value();
+    }
+    public function getIdAsignaturaVo(): AsignaturaId
     {
         return $this->id_asignatura;
     }
 
-
+    /**
+     * @deprecated usar setIdAsignaturaVo()
+     */
     public function setId_asignatura(int $id_asignatura): void
     {
-        $this->id_asignatura = $id_asignatura;
+        $this->id_asignatura = AsignaturaId::fromNullableInt($id_asignatura);
+    }
+    public function setIdAsignaturaVo(AsignaturaId|int $id_asignatura): void
+    {
+        $this->id_asignatura = $id_asignatura instanceof AsignaturaId
+            ? $id_asignatura
+            : AsignaturaId::fromNullableInt($id_asignatura);
     }
 
 
@@ -105,9 +120,9 @@ class ActividadAsignatura
     }
 
     /**
-     * @deprecated usar getTipoVo()
+     * @deprecated usar getTipoActividadAsignaturaVo()
      */
-    public function getTipo(): ?string
+    public function getTipoActividadAsignatura(): ?string
     {
         return $this->tipo?->value();
     }
@@ -115,21 +130,21 @@ class ActividadAsignatura
     /**
      * @return TipoActividadAsignatura|null
      */
-    public function getTipoVo(): ?TipoActividadAsignatura
+    public function getTipoActividadAsignaturaVo(): ?TipoActividadAsignatura
     {
         return $this->tipo;
     }
 
     /**
-     * @deprecated usar setTipoVo()
+     * @deprecated usar setTipoActividadAsignaturaVo()
      */
-    public function setTipo(string|null $tipo = null): void
+    public function setTipoActividadAsignatura(?string $tipo = null): void
     {
         $this->tipo = TipoActividadAsignatura::fromNullableString($tipo);
     }
 
 
-    public function setTipoVo(TipoActividadAsignatura|string|null $texto = null): void
+    public function setTipoActividadAsignaturaVo(TipoActividadAsignatura|string|null $texto = null): void
     {
         $this->tipo = $texto instanceof TipoActividadAsignatura
             ? $texto

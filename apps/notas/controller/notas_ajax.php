@@ -40,7 +40,7 @@ switch ($Qque) {
         $json = "{\"id_asignatura\":\"no\"}";
         if (count($cActas) === 1) {
             $oActa = $cActas[0];
-            $f_acta = $oActa->getF_acta()->getFromLocal();
+            $f_acta = $oActa->getF_acta()?->getFromLocal();
             $id_asignatura = $oActa->getId_asignatura();
             $id_activ = $oActa->getId_activ();
             if (!empty($id_activ)) {

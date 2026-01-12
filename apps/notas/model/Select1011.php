@@ -128,7 +128,7 @@ class Select1011
             $id_asignatura = $oPersonaNota->getId_asignatura();
 
             $id_situacion = $oPersonaNota->getId_situacion();
-            $f_acta = $oPersonaNota->getF_acta()->getFromLocal();
+            $f_acta = $oPersonaNota->getF_acta()?->getFromLocal();
             $acta = $oPersonaNota->getActa();
             $preceptor = $oPersonaNota->isPreceptor();
             $id_preceptor = $oPersonaNota->getId_preceptor();

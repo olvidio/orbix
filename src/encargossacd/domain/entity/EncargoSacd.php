@@ -77,7 +77,7 @@ class EncargoSacd
      */
     public function setModo(int $modo): void
     {
-        $this->modo = EncargoModoId::fromNullable($modo);
+        $this->modo = EncargoModoId::fromNullableInt($modo);
     }
 
     public function getModoVo(): EncargoModoId
@@ -89,7 +89,7 @@ class EncargoSacd
     {
         $this->modo = $vo instanceof EncargoModoId
             ? $vo
-            : EncargoModoId::fromNullable($vo);
+            : EncargoModoId::fromNullableInt($vo);
     }
 
 

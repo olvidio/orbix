@@ -157,13 +157,13 @@ if (!empty($Qnuevo)) {
     $nx2 = $oPersona->getNx2();
     $apellido2 = $oPersona->getApellido2();
     $lugar_nacimiento = $oPersona->getLugar_nacimiento();
-    $f_nacimiento = $oPersona->getF_nacimiento()->getFromLocal();
-    $f_situacion = $oPersona->getF_situacion()->getFromLocal();
+    $f_nacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
+    $f_situacion = $oPersona->getF_situacion()?->getFromLocal();
     $profesion = $oPersona->getProfesion();
     $sacd = $oPersona->isSacd();
     $eap = $oPersona->getEap();
     $inc = $oPersona->getInc();
-    $f_inc = $oPersona->getF_inc()->getFromLocal();
+    $f_inc = $oPersona->getF_inc()?->getFromLocal();
     $ce = $oPersona->getCe();
     $ce_lugar = $oPersona->getCe_lugar();
     $ce_ini = $oPersona->getCe_ini();

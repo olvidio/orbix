@@ -36,7 +36,7 @@ if (empty($Qid_cdc)) {
     }
 
     $oUbi = Ubi::NewUbi($Qid_cdc);
-    $nombre_ubi = empty($oUbi->getNombre_ubi()) ? 'sin determinar' : $oUbi->getNombre_ubi();
+    $nombre_ubi = empty($oUbi->getNombreUbiVo()->value()) ? 'sin determinar' : $oUbi->getNombreUbiVo()->value();
 
     $aWhere['id_ubi'] = $Qid_cdc;
     $aWhere['dl_org'] = ConfigGlobal::mi_dele();
@@ -56,10 +56,10 @@ if (empty($Qid_cdc)) {
     foreach ($cActividades as $oActividad) {
         $a++;
         $id_activ = $oActividad->getId_activ();
-        $f_ini = $oActividad->getF_ini()->getFromLocal();
-        $f_fin = $oActividad->getF_fin()->getFromLocal();
+        $f_ini = $oActividad->getF_ini()?->getFromLocal();
+        $f_fin = $oActividad->getF_fin()?->getFromLocal();
         $nom_activ = $oActividad->getNom_activ();
-        $observ = $oActividad->getObserv();
+        $observ = $oActividad->getObservVo()->value();
 
         $a_valores[$a]['sel'] = ['id' => $id_activ, 'select' => ''];
         $a_valores[$a][1] = $f_ini;

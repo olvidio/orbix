@@ -25,9 +25,9 @@ class EncargoAplicacionService
             $EncargoTextoRepository = $GLOBALS['container']->get(EncargoTextoRepositoryInterface::class);
             $cEncargoTextos = $EncargoTextoRepository->getEncargoTextos();
             foreach ($cEncargoTextos as $oEncargoTexto) {
-                $clave = $oEncargoTexto->getClave();
-                $idioma_x = $oEncargoTexto->getIdioma();
-                $texto = $oEncargoTexto->getTexto();
+                $clave = $oEncargoTexto->getClaveVo()->value();
+                $idioma_x = $oEncargoTexto->getIdiomaVo()->value();
+                $texto = $oEncargoTexto->getTextoVo()->value();
                 $this->a_txt[$idioma_x][$clave] = $texto;
             }
         }
@@ -138,7 +138,7 @@ class EncargoAplicacionService
         $dedicacion_t_txt = "";
         $dedicacion_v_txt = "";
         foreach ($cEncargoHorarios as $oEncargoHorario) {
-            $dia_ref = $oEncargoHorario->getDia_ref();
+            $dia_ref = $oEncargoHorario->getDiaRefVo()->value();
             $dia_inc = $oEncargoHorario->getDia_inc();
             switch ($dia_ref) {
                 case "m":
@@ -223,7 +223,7 @@ class EncargoAplicacionService
         $oEncargoHorario->setid_enc($id_enc);
         $oEncargoHorario->setF_ini($this->getF_ini());
         $oEncargoHorario->setF_fin(NULL);
-        $oEncargoHorario->setDia_ref($modulo);
+        $oEncargoHorario->setDiaRefVo($modulo);
         $oEncargoHorario->setDia_inc($dedicacion);
         $oEncargoHorario->setN_sacd($n_sacd);
         if ($EncargoHorarioRepository->Guardar($oEncargoHorario) === false) {
@@ -273,7 +273,7 @@ class EncargoAplicacionService
         $oEncargoSacdHorario->setId_nom($id_nom);
         $oEncargoSacdHorario->setF_ini($this->getF_fin());
         $oEncargoSacdHorario->setF_fin(NULL);
-        $oEncargoSacdHorario->setDia_ref($modulo);
+        $oEncargoSacdHorario->setDiaRefVo($modulo);
         $oEncargoSacdHorario->setDia_inc($dedicacion);
         $oEncargoSacdHorario->setId_item_tarea_sacd($id_item_t_sacd);
         if ($EncargoSacdHorarioRepository->Guardar($oEncargoSacdHorario) === false) {
@@ -424,7 +424,7 @@ class EncargoAplicacionService
         $oEncargo->setDesc_enc($desc_enc);
         $oEncargo->setIdioma_enc($idioma_enc);
         $oEncargo->setDesc_lugar($desc_lugar);
-        $oEncargo->setObserv($observ);
+        $oEncargo->setObservVo($observ);
         if ($EncargoRepository->Guardar($oEncargo) === false) {
             echo _("hay un error, no se ha guardado");
             echo "\n" . $EncargoRepository->getErrorTxt();

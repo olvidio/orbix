@@ -236,8 +236,8 @@ foreach ($cActividades as $oActividad) {
     $dl_org = $oActividad->getDl_org();
     $id_ubi = $oActividad->getId_ubi();
     $lugar_esp = $oActividad->getLugar_esp();
-    $f_ini = $oActividad->getF_ini()->getFromLocal();
-    $f_fin = $oActividad->getF_fin()->getFromLocal();
+    $f_ini = $oActividad->getF_ini()?->getFromLocal();
+    $f_fin = $oActividad->getF_fin()?->getFromLocal();
     $h_ini = $oActividad->getH_ini();
     $h_fin = $oActividad->getH_fin();
     $precio = $oActividad->getPrecio();

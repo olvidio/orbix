@@ -67,7 +67,7 @@ class ProfesorAmpliacion
     {
         $this->id_asignatura = $valor instanceof AsignaturaId
             ? $valor
-            : AsignaturaId::fromNullable($valor);
+            : AsignaturaId::fromNullableInt($valor);
     }
 
     /**
@@ -83,7 +83,7 @@ class ProfesorAmpliacion
      */
     public function setId_asignatura(int $valor = null): void
     {
-        $this->id_asignatura = AsignaturaId::fromNullable($valor);
+        $this->id_asignatura = AsignaturaId::fromNullableInt($valor);
     }
 
     public function getEscritoNombramientoVo(): ?EscritoNombramiento

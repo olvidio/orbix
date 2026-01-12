@@ -155,8 +155,8 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
         foreach ($cProfesorCongresos as $oProfesorCongreso) {
             $congreso = $oProfesorCongreso->getCongreso();
             $lugar = $oProfesorCongreso->getLugar();
-            $f_ini = $oProfesorCongreso->getF_ini()->getFromLocal();
-            $f_fin = $oProfesorCongreso->getF_fin()->getFromLocal();
+            $f_ini = $oProfesorCongreso->getF_ini()?->getFromLocal();
+            $f_fin = $oProfesorCongreso->getF_fin()?->getFromLocal();
             echo "<tr><td>$congreso</td><td>$lugar</td><td>$f_ini</td><td>$f_fin</td></tr>";
         }
         ?>

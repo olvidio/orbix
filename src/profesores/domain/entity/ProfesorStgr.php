@@ -48,7 +48,7 @@ class ProfesorStgr
     {
         $this->id_departamento = $valor instanceof DepartamentoId
             ? $valor
-            : DepartamentoId::fromNullable($valor);
+            : DepartamentoId::fromNullableInt($valor);
     }
 
     /**
@@ -64,7 +64,7 @@ class ProfesorStgr
      */
     public function setId_departamento(int $valor = null): void
     {
-        $this->id_departamento = DepartamentoId::fromNullable($valor);
+        $this->id_departamento = DepartamentoId::fromNullableInt($valor);
     }
 
     public function getEscritoNombramientoVo(): ?EscritoNombramiento
@@ -104,7 +104,7 @@ class ProfesorStgr
     {
         $this->id_tipo_profesor = $valor instanceof ProfesorTipoId
             ? $valor
-            : ProfesorTipoId::fromNullable($valor);
+            : ProfesorTipoId::fromNullableInt($valor);
     }
 
     /**
@@ -120,7 +120,7 @@ class ProfesorStgr
      */
     public function setId_tipo_profesor(?int $valor = null): void
     {
-        $this->id_tipo_profesor = ProfesorTipoId::fromNullable($valor);
+        $this->id_tipo_profesor = ProfesorTipoId::fromNullableInt($valor);
     }
 
     public function getEscritoCeseVo(): ?EscritoCese

@@ -37,7 +37,7 @@ class TablonAnunciosParaGM
             $esquema_emisor = $Anuncio->getEsquemaEmisor();
             $esquema_destino = $Anuncio->getEsquemaDestino();
             $texto_anuncio = $Anuncio->getTextoAnuncio();
-            $idioma = $Anuncio->getIdioma();
+            $idioma = $Anuncio->getIdiomaVo()->value();
             $tablon = $Anuncio->getTablon();
             $tanotado = $Anuncio->getTanotado();
             $teliminado = $Anuncio->getTeliminado();

@@ -42,7 +42,7 @@ if (!is_object($oPersona)) {
 
 $nom = $oPersona->getNombreApellidos();
 $lugar_nacimiento = $oPersona->getLugar_nacimiento();
-$f_nacimiento = $oPersona->getF_nacimiento()->getFromLocal();
+$f_nacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
 $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 
 $dl_origen = ConfigGlobal::mi_delef();
@@ -52,8 +52,8 @@ $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInter
 $oActividad = $ActividadAllRepository->findById($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 $id_ubi = $oActividad->getId_ubi();
-$f_ini = $oActividad->getF_ini()->getFromLocal();
-$f_fin = $oActividad->getF_fin()->getFromLocal();
+$f_ini = $oActividad->getF_ini()?->getFromLocal();
+$f_fin = $oActividad->getF_fin()?->getFromLocal();
 $oUbi = Ubi::NewUbi($id_ubi);
 $lugar = $oUbi->getNombre_ubi();
 
@@ -78,7 +78,7 @@ if ($matriculas > 0) {
             $oNota = $cNotas[0];
             $nota = $oNota->getNota_txt();
             $acta = $oNota->getActa();
-            $f_acta = $oNota->getF_acta()->getFromLocal();
+            $f_acta = $oNota->getF_acta()?->getFromLocal();
         } else {
             $nota = '';
             $acta = '';

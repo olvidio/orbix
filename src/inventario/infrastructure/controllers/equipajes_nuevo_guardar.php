@@ -31,7 +31,7 @@ $newId = $EquipajesRepository->getNewId();
 $oEquipaje = new Equipaje();
 $oEquipaje->setId_equipaje($newId);
 $oEquipaje->setIds_activ($Qids_activ);
-$oEquipaje->setLugar($Qlugar);
+$oEquipaje->setLugarVo($Qlugar);
 $oEquipaje->setF_ini($oF_ini);
 $oEquipaje->setF_fin($oF_fin);
 $oEquipaje->setId_ubi_activ($Qid_ubi_activ);

@@ -40,7 +40,7 @@ class AsignaturaTipo
     {
         $this->id_tipo = $id instanceof AsignaturaTipoId
             ? $id
-            : AsignaturaTipoId::fromNullable($id);
+            : AsignaturaTipoId::fromNullableInt($id);
     }
 
     public function getTipoAsignaturaVo(): AsignaturaTipoName
@@ -101,7 +101,7 @@ class AsignaturaTipo
 
     public function setId_tipo(int $id_tipo): void
     {
-        $this->id_tipo = AsignaturaTipoId::fromNullable($id_tipo);
+        $this->id_tipo = AsignaturaTipoId::fromNullableInt($id_tipo);
     }
 
 

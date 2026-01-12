@@ -53,7 +53,7 @@ class TelecoPersonaService
 
         foreach ($cTelecos as $oTelecoPersona) {
             $iDescTel = $oTelecoPersona->getId_desc_teleco();
-            $num_teleco = $oTelecoPersona->getNum_teleco();
+            $num_teleco = $oTelecoPersona->getNumTelecoVo()->value();
 
             if ($desc_teleco === "*" && !empty($iDescTel) && $bDescripcion) {
                 $oDescTel = $this->descTelecoRepository->findById((int)$iDescTel);
@@ -96,7 +96,7 @@ class TelecoPersonaService
 
         if (!empty($cTelecos) && count($cTelecos) > 0) {
             $oTeleco = $cTelecos[0];
-            $e_mail = $oTeleco->getNum_teleco();
+            $e_mail = $oTeleco->getNumTelecoVo()->value();
         }
 
         return $e_mail;

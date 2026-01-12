@@ -27,7 +27,7 @@ foreach ($cTipoDossier as $oTipoDossier) {
     $descripcion = $oTipoDossier->getDescripcion();
     $permiso_lectura = $oTipoDossier->getPermiso_lectura();
     $permiso_escritura = $oTipoDossier->getPermiso_escritura();
-    //$depende_modificar = $oTipoDossier->getDepende_modificar();
+    //$depende_modificar = $oTipoDossier->isDepende_modificar();
     $depende_modificar = 1;
     $id_dossier = $id_tipo_dossier;
     // Miro si la app está instalada

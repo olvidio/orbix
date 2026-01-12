@@ -137,10 +137,7 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_departamento);
 
-        $aDatos = [];
-        $aDatos['departamento'] = $Departamento->getNombreDepartamentoVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Departamento->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

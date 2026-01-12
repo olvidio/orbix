@@ -31,8 +31,8 @@ $nom = $oCertificadoRecibido->getNom();
 $idioma = $oCertificadoRecibido->getIdioma();
 $destino = $oCertificadoRecibido->getDestino();
 $certificado = $oCertificadoRecibido->getCertificado();
-$f_certificado = $oCertificadoRecibido->getF_certificado()->getFromLocal();
-$f_recibido = $oCertificadoRecibido->getF_recibido()->getFromLocal();
+$f_certificado = $oCertificadoRecibido->getF_certificado()?->getFromLocal();
+$f_recibido = $oCertificadoRecibido->getF_recibido()?->getFromLocal();
 $firmado = $oCertificadoRecibido->isFirmado();
 
 

@@ -152,40 +152,34 @@ class Repeticion
             : TemporadaCode::fromNullableString($texto);
     }
 
+
     /**
-     *
-     * @return int|null $tipo
+     * @deprecated usar getTipoRepeticionVo()
      */
-    /**
-     * @deprecated usar getTipoVo()
-     */
-    public function getTipo(): ?int
+    public function getTipoRepeticion(): ?int
     {
         return $this->tipo?->value();
     }
 
+
     /**
-     *
-     * @param int|null $tipo
+     * @deprecated usar setTipoRepeticionVo(?RepeticionTipo $tipo)
      */
-    /**
-     * @deprecated usar setTipoVo(?RepeticionTipo $tipo)
-     */
-    public function setTipo(?int $tipo = null): void
+    public function setTipoRepeticion(?int $tipo = null): void
     {
         $this->tipo = $tipo === null ? null : new RepeticionTipo($tipo);
     }
 
-    public function getTipoVo(): ?RepeticionTipo
+    public function getTipoRepeticionVo(): ?RepeticionTipo
     {
         return $this->tipo;
     }
 
-    public function setTipoVo(RepeticionTipo|int|null $tipo): void
+    public function setTipoRepeticionVo(RepeticionTipo|int|null $tipo): void
     {
         $this->tipo = $tipo instanceof RepeticionTipo
             ? $tipo
-            : RepeticionTipo::fromNullable($tipo);
+            : RepeticionTipo::fromNullableInt($tipo);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

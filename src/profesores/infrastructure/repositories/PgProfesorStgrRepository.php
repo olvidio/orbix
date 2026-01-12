@@ -125,16 +125,10 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $ProfesorStgr->getId_nom();
-        $aDatos['id_departamento'] = $ProfesorStgr->getId_departamento();
-        $aDatos['escrito_nombramiento'] = $ProfesorStgr->getEscrito_nombramiento();
-        $aDatos['id_tipo_profesor'] = $ProfesorStgr->getId_tipo_profesor();
-        $aDatos['escrito_cese'] = $ProfesorStgr->getEscrito_cese();
-        // para las fechas
-        $aDatos['f_nombramiento'] = (new ConverterDate('date', $ProfesorStgr->getF_nombramiento()))->toPg();
-        $aDatos['f_cese'] = (new ConverterDate('date', $ProfesorStgr->getF_cese()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $ProfesorStgr->toArrayForDatabase([
+            'f_nombramiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_cese' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

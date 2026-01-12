@@ -19,19 +19,19 @@ class ZonaSacd
 
     private bool $propia;
 
-    private bool|null $dw1 = null;
+    private?bool $dw1 = null;
 
-    private bool|null $dw2 = null;
+    private?bool $dw2 = null;
 
-    private bool|null $dw3 = null;
+    private?bool $dw3 = null;
 
-    private bool|null $dw4 = null;
+    private?bool $dw4 = null;
 
-    private bool|null $dw5 = null;
+    private?bool $dw5 = null;
 
-    private bool|null $dw6 = null;
+    private?bool $dw6 = null;
 
-    private bool|null $dw7 = null;
+    private?bool $dw7 = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

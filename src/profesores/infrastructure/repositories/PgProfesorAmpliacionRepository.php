@@ -173,15 +173,10 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $ProfesorAmpliacion->getId_nom();
-        $aDatos['id_asignatura'] = $ProfesorAmpliacion->getId_asignatura();
-        $aDatos['escrito_nombramiento'] = $ProfesorAmpliacion->getEscrito_nombramiento();
-        $aDatos['escrito_cese'] = $ProfesorAmpliacion->getEscrito_cese();
-        // para las fechas
-        $aDatos['f_nombramiento'] = (new ConverterDate('date', $ProfesorAmpliacion->getF_nombramiento()))->toPg();
-        $aDatos['f_cese'] = (new ConverterDate('date', $ProfesorAmpliacion->getF_cese()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $ProfesorAmpliacion->toArrayForDatabase([
+            'f_nombramiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_cese' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

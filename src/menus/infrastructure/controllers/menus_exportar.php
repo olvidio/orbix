@@ -30,7 +30,7 @@ if (!empty($oTemplateMenu)) {
     $id_template_menu = $TemplateMenuRepository->getNewId();
     $oTemplateMenu = new TemplateMenu();
     $oTemplateMenu->setId_template_menu($id_template_menu);
-    $oTemplateMenu->setNombre($Qnombre);
+    $oTemplateMenu->setNombreVo($Qnombre);
     $TemplateMenuRepository->Guardar($oTemplateMenu);
 }
 

@@ -70,8 +70,8 @@ if (!empty($Qid_asignatura)) { //caso de modificar
     $chk_confirmado = ($aviso === "c") ? "selected" : '';
     $tipo = $oActividadAsignatura->getTipo();
     $chk_preceptor = ($tipo === "p") ? "selected" : '';
-    $f_ini = $oActividadAsignatura->getF_ini()->getFromLocal();
-    $f_fin = $oActividadAsignatura->getF_fin()->getFromLocal();
+    $f_ini = $oActividadAsignatura->getF_ini()?->getFromLocal();
+    $f_fin = $oActividadAsignatura->getF_fin()?->getFromLocal();
 
     $oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($Qid_asignatura);
     if ($oAsignatura === null) {

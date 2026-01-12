@@ -121,11 +121,7 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_usuario);
 
-        $aDatos = [];
-        $aDatos['usuario'] = $Grupo->getUsuarioVo();
-        $aDatos['id_role'] = $Grupo->getId_role();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Grupo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

@@ -172,10 +172,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($schema);
 
-        $aDatos = [];
-        $aDatos['id'] = $DbSchema->getIdVo()->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $DbSchema->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

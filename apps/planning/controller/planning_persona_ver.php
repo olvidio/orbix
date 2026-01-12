@@ -261,8 +261,8 @@ foreach ($cPersonas as $oPersona) {
      $oActividad = new actividades\Actividad($id_activ);
      $nom_activ = $oActividad->getNom_activ();
 
-     $f_ini = $oActividadAsignatura->getF_ini()->getFromLocal();
-     $f_fin = $oActividadAsignatura->getF_fin()->getFromLocal();
+     $f_ini = $oActividadAsignatura->getF_ini()?->getFromLocal();
+     $f_fin = $oActividadAsignatura->getF_fin()?->getFromLocal();
 
      $nom_curt = _("clases stgr");
      $nom_llarg = $nom_curt." "._("en")." ".$nom_activ;

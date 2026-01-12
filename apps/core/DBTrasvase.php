@@ -2,7 +2,6 @@
 
 namespace core;
 
-use devel\model\DBAbstract;
 use PDO;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadExRepositoryInterface;
@@ -22,6 +21,7 @@ use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
 use src\utils_database\domain\contracts\MapIdRepositoryInterface;
+use src\utils_database\domain\entity\DBAbstract;
 use src\utils_database\domain\value_objects\MapIdDl;
 
 class DBTrasvase extends DBAbstract

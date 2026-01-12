@@ -117,7 +117,7 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
 
         $id_tipo_dossier = $Dossier->getId_tipo_dossier();
         $id_pau = $Dossier->getId_pau();
-        $tabla = $Dossier->getTabla();
+        $tabla = $Dossier->getTablaVo()->value();
 
         $sql = "DELETE FROM $nom_tabla WHERE id_pau = $id_pau AND id_tipo_dossier = $id_tipo_dossier AND tabla = '$tabla' ";
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
@@ -134,22 +134,14 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
 
         $id_tipo_dossier = $Dossier->getId_tipo_dossier();
         $id_pau = $Dossier->getId_pau();
-        $tabla = $Dossier->getTabla();
+        $tabla = $Dossier->getTablaVo()->value();
         $bInsert = $this->isNew($id_tipo_dossier, $id_pau, $tabla);
 
-        $aDatos = [];
-        $aDatos['active'] = $Dossier->isActive();
-        // para las fechas
-        $aDatos['f_ini'] = (new ConverterDate('date', $Dossier->getF_ini()))->toPg();
-        $aDatos['f_camb_dossier'] = (new ConverterDate('date', $Dossier->getF_camb_dossier()))->toPg();
-        $aDatos['f_active'] = (new ConverterDate('date', $Dossier->getF_active()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['active'])) {
-            $aDatos['active'] = 'true';
-        } else {
-            $aDatos['active'] = 'false';
-        }
+        $aDatos = $Dossier->toArrayForDatabase([
+            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_camb_dossier' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_active' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

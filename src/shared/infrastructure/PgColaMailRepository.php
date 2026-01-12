@@ -131,19 +131,9 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($uuid_item);
 
-        $aDatos = [];
-        $aDatos['mail_to'] = $ColaMail->getMail_to();
-        $aDatos['message'] = $ColaMail->getMessage();
-        $aDatos['subject'] = $ColaMail->getSubject();
-        $aDatos['headers'] = $ColaMail->getHeaders();
-        $aDatos['writed_by'] = $ColaMail->getWrited_by();
-        // para las fechas
-        if (is_a($ColaMail->getSended(), NullDateTimeLocal::class)) {
-            $aDatos['sended'] = NULL;
-        } else {
-            $aDatos['sended'] = (new ConverterDate('timestamp', $ColaMail->getSended()))->toPg();
-        }
-        //array_walk($aDatos, 'core\poner_null');
+        $aDatos = $ColaMail->toArrayForDatabase([
+            'sended' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

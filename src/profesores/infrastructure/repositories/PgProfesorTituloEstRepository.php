@@ -121,20 +121,7 @@ class PgProfesorTituloEstRepository extends ClaseRepository implements ProfesorT
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $ProfesorTituloEst->getId_nom();
-        $aDatos['titulo'] = $ProfesorTituloEst->getTitulo();
-        $aDatos['centro_dnt'] = $ProfesorTituloEst->getCentro_dnt();
-        $aDatos['eclesiastico'] = $ProfesorTituloEst->isEclesiastico();
-        $aDatos['year'] = $ProfesorTituloEst->getYear();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['eclesiastico'])) {
-            $aDatos['eclesiastico'] = 'true';
-        } else {
-            $aDatos['eclesiastico'] = 'false';
-        }
-
+        $aDatos = $ProfesorTituloEst->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

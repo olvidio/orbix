@@ -103,7 +103,7 @@ if (empty($id)) {
         $a_persona_orbix['nx1'] = $oPersonaOrbix->getNx1();
         $a_persona_orbix['apellido2'] = $oPersonaOrbix->getApellido2();
         $a_persona_orbix['nx2'] = $oPersonaOrbix->getNx2();
-        $a_persona_orbix['f_nacimiento'] = $oPersonaOrbix->getF_nacimiento()->getFromLocal();
+        $a_persona_orbix['f_nacimiento'] = $oPersonaOrbix->getF_nacimiento()?->getFromLocal();
 
         // incremento antes para empezar en 1 y no en 0.
         $i++;

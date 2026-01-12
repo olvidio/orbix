@@ -174,30 +174,7 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_role);
 
-        $aDatos = [];
-        $aDatos['role'] = $Role->getRoleAsString();
-        $aDatos['sf'] = $Role->isSf();
-        $aDatos['sv'] = $Role->isSv();
-        $aDatos['pau'] = $Role->getPauAsString();
-        $aDatos['dmz'] = $Role->isDmz();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['sf'])) {
-            $aDatos['sf'] = 'true';
-        } else {
-            $aDatos['sf'] = 'false';
-        }
-        if (is_true($aDatos['sv'])) {
-            $aDatos['sv'] = 'true';
-        } else {
-            $aDatos['sv'] = 'false';
-        }
-        if (is_true($aDatos['dmz'])) {
-            $aDatos['dmz'] = 'true';
-        } else {
-            $aDatos['dmz'] = 'false';
-        }
-
+        $aDatos = $Role->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

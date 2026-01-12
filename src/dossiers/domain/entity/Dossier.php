@@ -2,6 +2,7 @@
 
 namespace src\dossiers\domain\entity;
 
+use src\dossiers\domain\value_objects\DossierTabla;
 use src\shared\domain\traits\Hydratable;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -14,7 +15,7 @@ class Dossier
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private string $tabla;
+    private DossierTabla $tabla;
 
     private int $id_pau;
 
@@ -44,15 +45,30 @@ class Dossier
         $this->setActive('f');
     }
 
+    /**
+     * @deprecated use getTablaVo()
+     */
     public function getTabla(): string
+    {
+        return $this->tabla->value();
+    }
+    public function getTablaVo(): DossierTabla
     {
         return $this->tabla;
     }
 
-
+    /**
+     * @deprecated use setTablaVo()
+     */
     public function setTabla(string $tabla): void
     {
-        $this->tabla = $tabla;
+        $this->tabla = DossierTabla::fromNullableString($tabla);
+    }
+    public function setTablaVo(DossierTabla|string|null $vo): void
+    {
+        $this->tabla = $vo instanceof DossierTabla
+            ? $vo
+            : DossierTabla::fromNullableString($vo);
     }
 
 

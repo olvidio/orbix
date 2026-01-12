@@ -44,7 +44,7 @@ class Egm
 
     public function setId_equipaje(?int $id_equipaje = null): void
     {
-        $this->id_equipaje = EgmEquipajeId::fromNullable($id_equipaje);
+        $this->id_equipaje = EgmEquipajeId::fromNullableInt($id_equipaje);
     }
 
 
@@ -56,7 +56,7 @@ class Egm
 
     public function setId_grupo(?int $id_grupo = null): void
     {
-        $this->id_grupo = EgmGrupoId::fromNullable($id_grupo);
+        $this->id_grupo = EgmGrupoId::fromNullableInt($id_grupo);
     }
 
 
@@ -68,7 +68,7 @@ class Egm
 
     public function setId_lugar(?int $id_lugar = null): void
     {
-        $this->id_lugar = EgmLugarId::fromNullable($id_lugar);
+        $this->id_lugar = EgmLugarId::fromNullableInt($id_lugar);
     }
 
 
@@ -103,7 +103,7 @@ class Egm
     {
         $this->id_equipaje = $id instanceof EgmEquipajeId
             ? $id
-            : EgmEquipajeId::fromNullable($id);
+            : EgmEquipajeId::fromNullableInt($id);
     }
 
     public function getIdGrupoVo(): ?EgmGrupoId
@@ -115,7 +115,7 @@ class Egm
     {
         $this->id_grupo = $id instanceof EgmGrupoId
             ? $id
-            : EgmGrupoId::fromNullable($id);
+            : EgmGrupoId::fromNullableInt($id);
     }
 
     public function getIdLugarVo(): ?EgmLugarId
@@ -127,7 +127,7 @@ class Egm
     {
         $this->id_lugar = $id instanceof EgmLugarId
             ? $id
-            : EgmLugarId::fromNullable($id);
+            : EgmLugarId::fromNullableInt($id);
     }
 
     public function getTextoVo(): ?EgmTexto

@@ -85,8 +85,8 @@ switch ($Qque) {
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
         $oCasaPeriodo = $CasaPeriodoRepository->findById($Qid_item);
-        $f_ini = $oCasaPeriodo->getF_ini()->getFromLocal();
-        $f_fin = $oCasaPeriodo->getF_fin()->getFromLocal();
+        $f_ini = $oCasaPeriodo->getF_ini()?->getFromLocal();
+        $f_fin = $oCasaPeriodo->getF_fin()?->getFromLocal();
         $sfsv = $oCasaPeriodo->getSfsv();
         if ($sfsv === 1) {
             $sel_sv = "selected";
@@ -225,8 +225,8 @@ switch ($Qque) {
             $i++;
             $id_item = $oCasaPeriodo->getId_item();
             $id_ubi = $oCasaPeriodo->getId_ubi();
-            $f_ini = $oCasaPeriodo->getF_ini()->getFromLocal();
-            $f_fin = $oCasaPeriodo->getF_fin()->getFromLocal();
+            $f_ini = $oCasaPeriodo->getF_ini()?->getFromLocal();
+            $f_fin = $oCasaPeriodo->getF_fin()?->getFromLocal();
             $sfsv = $oCasaPeriodo->getSfsv();
 
             if ($sfsv === 1) {

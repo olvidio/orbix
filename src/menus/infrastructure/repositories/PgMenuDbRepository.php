@@ -126,23 +126,7 @@ class PgMenuDbRepository extends ClaseRepository implements MenuDbRepositoryInte
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_menu);
 
-        $aDatos = [];
-        $aDatos['menu'] = $MenuDb->getMenu();
-        $aDatos['parametros'] = $MenuDb->getParametros();
-        $aDatos['id_metamenu'] = $MenuDb->getId_metamenu();
-        $aDatos['menu_perm'] = $MenuDb->getMenu_perm();
-        $aDatos['id_grupmenu'] = $MenuDb->getId_grupmenu();
-        $aDatos['ok'] = $MenuDb->isOk();
-        // para los array
-        $aDatos['orden'] = array_php2pg($MenuDb->getOrden());
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['ok'])) {
-            $aDatos['ok'] = 'true';
-        } else {
-            $aDatos['ok'] = 'false';
-        }
-
+        $aDatos = $MenuDb->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

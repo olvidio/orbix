@@ -137,10 +137,7 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tipo_profesor);
 
-        $aDatos = [];
-        $aDatos['tipo_profesor'] = $ProfesorTipo->getTipoProfesorVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $ProfesorTipo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

@@ -23,7 +23,7 @@ class Role
 
     private ?PauType $pau = null;
 
-    private bool|null $dmz = null;
+    private?bool $dmz = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 

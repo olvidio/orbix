@@ -15,22 +15,22 @@ class PreferenciaTest extends myTest
     {
         parent::setUp();
         $this->preferencia = new Preferencia();
-        $this->preferencia->setTipoVo(new TipoPreferencia('theme'));
+        $this->preferencia->setTipoPreferenciaVo(new TipoPreferencia('theme'));
         $this->preferencia->setId_usuario(1);
     }
 
     public function test_get_tipo()
     {
-        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoVo());
-        $this->assertEquals('theme', $this->preferencia->getTipoAsString());
+        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoPreferenciaVo());
+        $this->assertEquals('theme', $this->preferencia->getTipoPreferenciaAsString());
     }
 
     public function test_set_and_get_tipo()
     {
         $tipoPreferencia = new TipoPreferencia('language');
-        $this->preferencia->setTipoVo($tipoPreferencia);
-        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoVo());
-        $this->assertEquals('language', $this->preferencia->getTipoAsString());
+        $this->preferencia->setTipoPreferenciaVo($tipoPreferencia);
+        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoPreferenciaVo());
+        $this->assertEquals('language', $this->preferencia->getTipoPreferenciaAsString());
     }
 
     public function test_get_preferencia()
@@ -68,7 +68,7 @@ class PreferenciaTest extends myTest
         ];
         $preferencia->setAllAttributes($attributes);
 
-        $this->assertEquals('theme', $preferencia->getTipoAsString());
+        $this->assertEquals('theme', $preferencia->getTipoPreferenciaAsString());
         $this->assertEquals('dark', $preferencia->getPreferenciaAsString());
         $this->assertEquals(1, $preferencia->getId_usuario());
     }
@@ -83,7 +83,7 @@ class PreferenciaTest extends myTest
         ];
         $preferencia->setAllAttributes($attributes);
 
-        $this->assertEquals('theme', $preferencia->getTipoAsString());
+        $this->assertEquals('theme', $preferencia->getTipoPreferenciaAsString());
         $this->assertEquals('dark', $preferencia->getPreferenciaAsString());
         $this->assertEquals(1, $preferencia->getId_usuario());
     }

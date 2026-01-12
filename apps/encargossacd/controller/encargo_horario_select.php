@@ -83,8 +83,8 @@ foreach ($cEncargoHorarios as $oEncargoHorario) {
     $h_fin = $oEncargoHorario->getH_fin();
     $n_sacd = $oEncargoHorario->getN_sacd();
     $mes = $oEncargoHorario->getMes();
-    $f_ini = empty($oEncargoHorario->getF_ini()) ? null : $oEncargoHorario->getF_ini()->getFromLocal();
-    $f_fin = empty($oEncargoHorario->getF_fin()) ? null : $oEncargoHorario->getF_fin()->getFromLocal();
+    $f_ini = empty($oEncargoHorario->getF_ini()) ? null : $oEncargoHorario->getF_ini()?->getFromLocal();
+    $f_fin = empty($oEncargoHorario->getF_fin()) ? null : $oEncargoHorario->getF_fin()?->getFromLocal();
 
     $aQuery = ['mod' => 'editar',
         'id_enc' => $id_enc,

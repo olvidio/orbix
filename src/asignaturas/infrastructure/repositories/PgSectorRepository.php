@@ -157,11 +157,7 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_sector);
 
-        $aDatos = [];
-        $aDatos['id_departamento'] = $Sector->getIdDepartamentoVo()?->value();
-        $aDatos['sector'] = $Sector->getNombreSectorVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Sector->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

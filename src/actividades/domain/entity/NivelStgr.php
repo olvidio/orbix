@@ -50,26 +50,24 @@ class NivelStgr
     }
 
     /**
-     *
-     * @param int $inivel_stgr
-     */
-    /**
      * @deprecated usar setId(NivelStgrId $id)
      */
     public function setNivel_stgr(int $nivel_stgr): void
     {
-        $this->nivel_stgr = new NivelStgrId($nivel_stgr);
+        $this->nivel_stgr = NivelStgrId::fromNullableInt($nivel_stgr);
     }
 
     // Nuevos métodos con Value Objects
-    public function getId(): NivelStgrId
+    public function getNivelStgrVo(): NivelStgrId
     {
         return $this->nivel_stgr;
     }
 
-    public function setId(NivelStgrId $id): void
+    public function setNivelStgrVo(NivelStgrId|int $id): void
     {
-        $this->nivel_stgr = $id;
+        $this->nivel_stgr = $id instanceof NivelStgrId
+            ? $id
+            :  NivelStgrId::fromNullableInt($id);
     }
 
     /**
@@ -165,7 +163,7 @@ class NivelStgr
      */
     public function setOrden(?int $orden = null): void
     {
-        $this->orden = NivelStgrOrden::fromNullable($orden);
+        $this->orden = NivelStgrOrden::fromNullableInt($orden);
     }
 
     public function getOrdenVo(): ?NivelStgrOrden
@@ -177,7 +175,7 @@ class NivelStgr
     {
         $this->orden = $valor instanceof NivelStgrOrden
             ? $valor
-            : NivelStgrOrden::fromNullable($valor);
+            : NivelStgrOrden::fromNullableInt($valor);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

@@ -128,15 +128,24 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_doc);
 
+        $aDatos = $Documento->toArrayForDatabase([
+            'f_recibido' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_asignado' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_ult_comprobacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_perdido' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_eliminado' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
+
+        /*
         $aDatos = [];
         $aDatos['id_tipo_doc'] = $Documento->getIdTipoDocVo()->value();
-        $aDatos['id_ubi'] = $Documento->getIdUbiVo()->value();
+        $aDatos['id_ubi'] = $Documento->getId_ubi();
         $aDatos['id_lugar'] = $Documento->getIdLugarVo()?->value();
         $aDatos['observ'] = $Documento->getObservVo()?->value();
         $aDatos['observ_ctr'] = $Documento->getObservCtrVo()?->value();
-        $aDatos['en_busqueda'] = $Documento->getEnBusquedaVo()?->value();
-        $aDatos['perdido'] = $Documento->getPerdidoVo()?->value();
-        $aDatos['eliminado'] = $Documento->getEliminadoVo()?->value();
+        $aDatos['en_busqueda'] = $Documento->isEn_busqueda();
+        $aDatos['perdido'] = $Documento->isPerdido();
+        $aDatos['eliminado'] = $Documento->isEliminado();
         $aDatos['num_reg'] = $Documento->getNumRegVo()?->value();
         $aDatos['num_ini'] = $Documento->getNumIniVo()?->value();
         $aDatos['num_fin'] = $Documento->getNumFinVo()?->value();
@@ -165,6 +174,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         } else {
             $aDatos['eliminado'] = 'false';
         }
+        */
 
         if ($bInsert === false) {
             //UPDATE

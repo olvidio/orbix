@@ -120,15 +120,7 @@ class PgProfesorDocenciaStgrRepository extends ClaseRepository implements Profes
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $ProfesorDocenciaStgr->getId_nom();
-        $aDatos['id_asignatura'] = $ProfesorDocenciaStgr->getId_asignatura();
-        $aDatos['id_activ'] = $ProfesorDocenciaStgr->getId_activ();
-        $aDatos['tipo'] = $ProfesorDocenciaStgr->getTipo();
-        $aDatos['curso_inicio'] = $ProfesorDocenciaStgr->getCurso_inicio();
-        $aDatos['acta'] = $ProfesorDocenciaStgr->getActa();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $ProfesorDocenciaStgr->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

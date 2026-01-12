@@ -4,8 +4,9 @@ namespace src\notas\domain\entity;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
+use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 
-class PersonaNotaCertificadoDB extends PersonaNotaDB
+class PersonaNotaCertificadoDBRepository
 {
 
     public function __construct(string $nombre_schema)
@@ -19,8 +20,8 @@ class PersonaNotaCertificadoDB extends PersonaNotaDB
         $oConexion = new DBConnection($config);
         $oDbl = $oConexion->getPDO();
 
-        $this->setoDbl($oDbl);
-        $this->setNomTabla('e_notas_dl');
+        $repoPersonaNotaCertificado = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $repoPersonaNotaCertificado->setDbl($oDbl);
     }
 
 }

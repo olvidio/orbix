@@ -139,14 +139,10 @@ class PgEncargoSacdRepository extends ClaseRepository implements EncargoSacdRepo
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_enc'] = $EncargoSacd->getId_enc();
-        $aDatos['id_nom'] = $EncargoSacd->getId_nom();
-        $aDatos['modo'] = $EncargoSacd->getModo();
-        // para las fechas
-        $aDatos['f_ini'] = (new ConverterDate('date', $EncargoSacd->getF_ini()))->toPg();
-        $aDatos['f_fin'] = (new ConverterDate('date', $EncargoSacd->getF_fin()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $EncargoSacd->toArrayForDatabase([
+            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_fin' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

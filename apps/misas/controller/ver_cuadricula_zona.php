@@ -48,7 +48,7 @@ if ($QTipoPlantilla !== 'p') {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipoVo(new TipoPreferencia('ultima_plantilla'));
+        $oPreferencia->setTipoPreferenciaVo(new TipoPreferencia('ultima_plantilla'));
     }
 
     $oPreferencia->setPreferenciaVo(new ValorPreferencia($QTipoPlantilla));

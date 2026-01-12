@@ -19,13 +19,11 @@ $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
 $Qfirmado = (string)filter_input(INPUT_POST, 'firmado');
 $Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
 $Qf_enviado = (string)filter_input(INPUT_POST, 'f_enviado');
-$Qf_enviado = (string)filter_input(INPUT_POST, 'f_enviado');
 
 $Qcertificado_old = (string)filter_input(INPUT_POST, 'certificado_old');
 
 /* convertir las fechas a DateTimeLocal */
 $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
-$oF_enviado = DateTimeLocal::createFromLocal($Qf_enviado);
 $oF_enviado = DateTimeLocal::createFromLocal($Qf_enviado);
 
 $error_txt = '';

@@ -39,7 +39,7 @@ $url_update = "apps/dossiers/controller/perm_dossier_update.php";
 
 $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
 $oTipoDossier = $TipoDossierRepository->findById($Qid_tipo_dossier);
-$depende_modificar = $oTipoDossier->getDepende_modificar();
+$depende_modificar = $oTipoDossier->isDepende_modificar();
 
 $botones = 0;
 /*

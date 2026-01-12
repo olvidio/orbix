@@ -34,7 +34,7 @@ class AnunciosFactory
         $cAnuncios = [];
         for($i=0;$i <= $count;$i++) {
 
-            $uuid_item = AnuncioId::random();
+            $uuid_itemVo = AnuncioId::random();
             $usuario_creador = 'dani';
             $cEsquemas = $faker->randomElements($this->a_esquemas, 2);
             $esquema_emisor = $cEsquemas[0];
@@ -55,16 +55,16 @@ class AnunciosFactory
             $categoria = $faker->numberBetween(1, 5);
 
             $Anuncio = new Anuncio();
-            $Anuncio->setUuid_item($uuid_item);
-            $Anuncio->setUsuarioCreador($usuario_creador);
-            $Anuncio->setEsquemaEmisor($esquema_emisor);
-            $Anuncio->setEsquemaDestino($esquema_destino);
-            $Anuncio->setTextoAnuncio($texto_anuncio);
-            $Anuncio->setIdioma($idioma);
-            $Anuncio->setTablon($tablon);
-            $Anuncio->setTanotado($tanotado);
-            $Anuncio->setTeliminado($teliminado);
-            $Anuncio->setCategoria($categoria);
+            $Anuncio->setUuid_item($uuid_itemVo);
+            $Anuncio->setUsuarioCreadorVo($usuario_creador);
+            $Anuncio->setEsquemaEmisorVo($esquema_emisor);
+            $Anuncio->setEsquemaDestinoVo($esquema_destino);
+            $Anuncio->setTextoAnuncioVo($texto_anuncio);
+            $Anuncio->setIdiomaVo($idioma);
+            $Anuncio->setTablonVo($tablon);
+            $Anuncio->setAnotado($tanotado);
+            $Anuncio->setEliminado($teliminado);
+            $Anuncio->setCategoriaVo($categoria);
 
             $cAnuncios[] = $Anuncio;
         }

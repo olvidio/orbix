@@ -120,14 +120,7 @@ class PgTelecoPersonaRepository extends ClaseRepository implements TelecoPersona
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $TelecoPersona->getId_nom();
-        $aDatos['id_tipo_teleco'] = $TelecoPersona->getId_tipo_teleco();
-        $aDatos['num_teleco'] = $TelecoPersona->getNum_teleco();
-        $aDatos['observ'] = $TelecoPersona->getObserv();
-        $aDatos['id_desc_teleco'] = $TelecoPersona->getId_desc_teleco();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $TelecoPersona->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

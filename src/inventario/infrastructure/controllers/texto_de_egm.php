@@ -18,7 +18,7 @@ if (!empty($Qid_item_egm)) {
     $oEgm = $cEgm[0];
 }
 
-$texto = $oEgm->getTexto();
+$texto = $oEgm->getTextoVo()->value();
 
 $data = [
     'texto' => $texto,

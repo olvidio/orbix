@@ -123,26 +123,7 @@ class PgCambioUsuarioPropiedadPrefRepository extends ClaseRepository implements 
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_item_usuario_objeto'] = $CambioUsuarioPropiedadPref->getId_item_usuario_objeto();
-        $aDatos['propiedad'] = $CambioUsuarioPropiedadPref->getPropiedad();
-        $aDatos['operador'] = $CambioUsuarioPropiedadPref->getOperador();
-        $aDatos['valor'] = $CambioUsuarioPropiedadPref->getValor();
-        $aDatos['valor_old'] = $CambioUsuarioPropiedadPref->isValor_old();
-        $aDatos['valor_new'] = $CambioUsuarioPropiedadPref->isValor_new();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['valor_old'])) {
-            $aDatos['valor_old'] = 'true';
-        } else {
-            $aDatos['valor_old'] = 'false';
-        }
-        if (is_true($aDatos['valor_new'])) {
-            $aDatos['valor_new'] = 'true';
-        } else {
-            $aDatos['valor_new'] = 'false';
-        }
-
+        $aDatos = $CambioUsuarioPropiedadPref->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

@@ -5,6 +5,7 @@ namespace src\actividadcargos\infrastructure\repositories;
 use core\ClaseRepository;
 use core\Condicion;
 use core\ConfigGlobal;
+use core\ConverterDate;
 use core\Set;
 use PDO;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
@@ -191,7 +192,7 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         foreach ($cAsistentes as $f_ini_iso => $oAsistente) {
             $id_activ = $oAsistente->getId_activ();
             $propio = $oAsistente->isPropio();
-            $plaza = $oAsistente->getPlaza();
+            $plaza = $oAsistente->getPlazaVo()->value();
             $aAsis[$id_activ] = ['id_activ' => $id_activ,
                 'id_nom' => $id_nom,
                 'propio' => $propio,
@@ -372,12 +373,15 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         // Obtener datos actuales si es UPDATE
         $datosActuales = $bInsert ? [] : $this->datosById($id_item)?? [];
 
+        $aDatos = $ActividadCargo->toArrayForDatabase();
+
+        /*
         $aDatos = [];
         $aDatos['id_activ'] = $ActividadCargo->getId_activ();
         $aDatos['id_cargo'] = $ActividadCargo->getId_cargo();
         $aDatos['id_nom'] = $ActividadCargo->getId_nom();
         $aDatos['puede_agd'] = $ActividadCargo->isPuede_agd();
-        $aDatos['observ'] = $ActividadCargo->getObserv();
+        $aDatos['observ'] = $ActividadCargo->getObservVo()?->value();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['puede_agd'])) {
@@ -385,6 +389,7 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         } else {
             $aDatos['puede_agd'] = 'false';
         }
+        */
 
         if ($bInsert === false) {
             //UPDATE

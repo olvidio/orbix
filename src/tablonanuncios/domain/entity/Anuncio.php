@@ -4,6 +4,13 @@ namespace src\tablonanuncios\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
+use src\tablonanuncios\domain\value_objects\Categoria;
+use src\tablonanuncios\domain\value_objects\EsquemaDestino;
+use src\tablonanuncios\domain\value_objects\EsquemaEmisor;
+use src\tablonanuncios\domain\value_objects\Idioma;
+use src\tablonanuncios\domain\value_objects\Tablon;
+use src\tablonanuncios\domain\value_objects\TextoAnuncio;
+use src\tablonanuncios\domain\value_objects\UsuarioCreador;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -11,20 +18,16 @@ class Anuncio
 {
     use Hydratable;
 
-    public const CAT_ALERTA = 1;
-    public const CAT_AVISO = 2;
-
-
     private AnuncioId $uuid_item;
-    private string $usuario_creador;
-    private string $esquema_emisor;
-    private string $esquema_destino;
-    private string $texto_anuncio;
-    private ?string $idioma;
-    private string $tablon;
-    private DateTimeLocal|NullDateTimeLocal $tanotado;
-    private DateTimeLocal|NullDateTimeLocal $teliminado;
-    private int $categoria;
+    private UsuarioCreador $usuario_creador;
+    private EsquemaEmisor $esquema_emisor;
+    private EsquemaDestino $esquema_destino;
+    private TextoAnuncio $texto_anuncio;
+    private ?Idioma $idioma;
+    private Tablon $tablon;
+    private DateTimeLocal|NullDateTimeLocal $timestamp_anotado;
+    private DateTimeLocal|NullDateTimeLocal $timestamp_eliminado;
+    private Categoria $categoria;
 
     public function getUuid_item(): AnuncioId
     {
@@ -36,94 +39,108 @@ class Anuncio
         $this->uuid_item = $uuid_item;
     }
 
-    public function getUsuarioCreador(): string
+    public function getUsuarioCreadorVo(): UsuarioCreador
     {
         return $this->usuario_creador;
     }
 
-    public function setUsuarioCreador(string $usuario_creador): void
+    public function setUsuarioCreadorVo(UsuarioCreador|string|null $usuario_creador): void
     {
-        $this->usuario_creador = $usuario_creador;
+        $this->usuario_creador = $usuario_creador instanceof UsuarioCreador
+            ? $usuario_creador
+            : UsuarioCreador::fromNullableString($usuario_creador);
     }
 
-    public function getEsquemaEmisor(): string
+    public function getEsquemaEmisorVo(): EsquemaEmisor
     {
         return $this->esquema_emisor;
     }
 
-    public function setEsquemaEmisor(string $esquema_emisor): void
+    public function setEsquemaEmisorVo(EsquemaEmisor|string|null $esquema_emisor): void
     {
-        $this->esquema_emisor = $esquema_emisor;
+        $this->esquema_emisor = $esquema_emisor instanceof EsquemaEmisor
+            ? $esquema_emisor
+            : EsquemaEmisor::fromNullableString($esquema_emisor);
     }
 
-    public function getEsquemaDestino(): string
+    public function getEsquemaDestinoVo(): EsquemaDestino
     {
         return $this->esquema_destino;
     }
 
-    public function setEsquemaDestino(string $esquema_destino): void
+    public function setEsquemaDestinoVo(EsquemaDestino|string|null $esquema_destino): void
     {
-        $this->esquema_destino = $esquema_destino;
+        $this->esquema_destino = $esquema_destino instanceof EsquemaDestino
+            ? $esquema_destino
+            : EsquemaDestino::fromNullableString($esquema_destino);
     }
 
-    public function getTextoAnuncio(): string
+    public function getTextoAnuncioVo(): TextoAnuncio
     {
         return $this->texto_anuncio;
     }
 
-    public function setTextoAnuncio(string $texto_anuncio): void
+    public function setTextoAnuncioVo(TextoAnuncio|string|null $texto_anuncio): void
     {
-        $this->texto_anuncio = $texto_anuncio;
+        $this->texto_anuncio = $texto_anuncio instanceof TextoAnuncio
+            ? $texto_anuncio
+            : TextoAnuncio::fromNullableString($texto_anuncio);
     }
 
-    public function getIdioma(): ?string
+    public function getIdiomaVo(): ?Idioma
     {
         return $this->idioma;
     }
 
-    public function setIdioma(?string $idioma): void
+    public function setIdiomaVo(Idioma|string|null $idioma): void
     {
-        $this->idioma = $idioma;
+        $this->idioma = $idioma instanceof Idioma
+            ? $idioma
+            : Idioma::fromNullableString($idioma);
     }
 
-    public function getTablon(): string
+    public function getTablonVo(): Tablon
     {
         return $this->tablon;
     }
 
-    public function setTablon(string $tablon): void
+    public function setTablonVo(Tablon|string|null $tablon): void
     {
-        $this->tablon = $tablon;
+        $this->tablon = $tablon instanceof Tablon
+            ? $tablon
+            : Tablon::fromNullableString($tablon);
     }
 
-    public function getTanotado(): DateTimeLocal|NullDateTimeLocal
+    public function getAnotado(): DateTimeLocal|NullDateTimeLocal
     {
-        return $this->tanotado ?? new NullDateTimeLocal();
+        return $this->timestamp_anotado ?? new NullDateTimeLocal();
     }
 
-    public function setTanotado(DateTimeLocal|NullDateTimeLocal $tanotado): void
+    public function setAnotado(DateTimeLocal|NullDateTimeLocal $timestamp_anotado): void
     {
-        $this->tanotado = $tanotado;
+        $this->timestamp_anotado = $timestamp_anotado;
     }
 
-    public function getTeliminado(): DateTimeLocal|NullDateTimeLocal
+    public function getEliminado(): DateTimeLocal|NullDateTimeLocal
     {
-        return $this->teliminado ?? new NullDateTimeLocal();
+        return $this->timestamp_eliminado ?? new NullDateTimeLocal();
     }
 
-    public function setTeliminado(DateTimeLocal|NullDateTimeLocal $teliminado): void
+    public function setEliminado(DateTimeLocal|NullDateTimeLocal $timestamp_eliminado): void
     {
-        $this->teliminado = $teliminado;
+        $this->timestamp_eliminado = $timestamp_eliminado;
     }
 
-    public function getCategoria(): int
+    public function getCategoriaVo(): Categoria
     {
         return $this->categoria;
     }
 
-    public function setCategoria(int $categoria): void
+    public function setCategoriaVo(Categoria|int|null $categoria): void
     {
-        $this->categoria = $categoria;
+        $this->categoria = $categoria instanceof Categoria
+            ? $categoria
+            : Categoria::fromNullableInt($categoria);
     }
 
 

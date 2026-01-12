@@ -43,8 +43,8 @@ if ($Qmod !== 'nuevo') { //significa que no es nuevo
         $id_item_h = strtok($_POST['sel'][0], "#");
     }
     $EncargoHorario = $EncargoHorarioRepository->findBYId($id_item_h);
-    $f_ini = $EncargoHorario->getF_ini() === null ? '' : $EncargoHorario->getF_ini()->getFromLocal();
-    $f_fin = $EncargoHorario->getF_fin() === null ? '' : $EncargoHorario->getF_fin()->getFromLocal();
+    $f_ini = $EncargoHorario->getF_ini() === null ? '' : $EncargoHorario->getF_ini()?->getFromLocal();
+    $f_fin = $EncargoHorario->getF_fin() === null ? '' : $EncargoHorario->getF_fin()?->getFromLocal();
     $dia_ref = $EncargoHorario->getDia_ref();
     $dia_num = $EncargoHorario->getDia_num();
     $mas_menos = $EncargoHorario->getMas_menos();

@@ -134,26 +134,7 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tipo_dossier);
 
-        $aDatos = [];
-        $aDatos['descripcion'] = $TipoDossier->getDescripcion();
-        $aDatos['tabla_from'] = $TipoDossier->getTabla_from();
-        $aDatos['tabla_to'] = $TipoDossier->getTabla_to();
-        $aDatos['campo_to'] = $TipoDossier->getCampo_to();
-        $aDatos['id_tipo_dossier_rel'] = $TipoDossier->getId_tipo_dossier_rel();
-        $aDatos['permiso_lectura'] = $TipoDossier->getPermiso_lectura();
-        $aDatos['permiso_escritura'] = $TipoDossier->getPermiso_escritura();
-        $aDatos['depende_modificar'] = $TipoDossier->isDepende_modificar();
-        $aDatos['app'] = $TipoDossier->getApp();
-        $aDatos['class'] = $TipoDossier->getClass();
-        $aDatos['db'] = $TipoDossier->getDb();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['depende_modificar'])) {
-            $aDatos['depende_modificar'] = 'true';
-        } else {
-            $aDatos['depende_modificar'] = 'false';
-        }
-
+        $aDatos = $TipoDossier->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

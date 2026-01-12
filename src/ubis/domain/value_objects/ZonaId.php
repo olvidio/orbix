@@ -34,7 +34,7 @@ final class ZonaId
         return $this->value === $other->value();
     }
 
-    public static function fromNullable(?int $value): ?self
+    public static function fromNullableInt(?int $value): ?self
     {
         if ($value === null) { return null; }
         return new self($value);

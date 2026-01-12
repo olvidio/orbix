@@ -25,7 +25,7 @@ foreach ($selected_id as $id_ubi) {
         $id_new = $DocumentoRepository->getNewId();
         $oDocumento = new Documento();
         $oDocumento->setId_doc($id_new);
-        $oDocumento->setId_ubi($id_ubi);
+        $oDocumento->setIdUbiVo($id_ubi);
         $oDocumento->setId_tipo_doc($Qid_tipo_doc);
     } else {
         $oDocumento = $cDocumentos[0];

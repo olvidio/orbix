@@ -148,21 +148,7 @@ class PgCambioUsuarioRepository extends ClaseRepository implements CambioUsuario
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_schema_cambio'] = $CambioUsuario->getId_schema_cambio();
-        $aDatos['id_item_cambio'] = $CambioUsuario->getId_item_cambio();
-        $aDatos['id_usuario'] = $CambioUsuario->getId_usuario();
-        $aDatos['sfsv'] = $CambioUsuario->getSfsv();
-        $aDatos['aviso_tipo'] = $CambioUsuario->getAviso_tipo();
-        $aDatos['avisado'] = $CambioUsuario->isAvisado();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['avisado'])) {
-            $aDatos['avisado'] = 'true';
-        } else {
-            $aDatos['avisado'] = 'false';
-        }
-
+        $aDatos = $CambioUsuario->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

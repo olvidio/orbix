@@ -139,16 +139,7 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_mod);
 
-        $aDatos = [];
-        $aDatos['active'] = $ModuloInstalado->isActive();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['active'])) {
-            $aDatos['active'] = 'true';
-        } else {
-            $aDatos['active'] = 'false';
-        }
-
+        $aDatos = $ModuloInstalado->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

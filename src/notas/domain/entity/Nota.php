@@ -63,14 +63,14 @@ class Nota
      */
     public function setId_situacion(int $id_situacion): void
     {
-        $this->id_situacion = NotaSituacion::fromNullable( $id_situacion);
+        $this->id_situacion = NotaSituacion::fromNullableInt( $id_situacion);
     }
 
     public function setIdSituacionVo(NotaSituacion|int|null $oIdSituacion): void
     {
         $this->id_situacion = $oIdSituacion instanceof NotaSituacion
             ? $oIdSituacion
-            : NotaSituacion::fromNullable( $oIdSituacion);
+            : NotaSituacion::fromNullableInt( $oIdSituacion);
     }
 
     public function getDescripcionVo(): ?Descripcion

@@ -158,8 +158,8 @@ class Select3005
                     $aviso = "";
             }
             $tipo = $oActividadAsignatura->getTipo();
-            $f_ini = $oActividadAsignatura->getF_ini()->getFromLocal();
-            $f_fin = $oActividadAsignatura->getF_fin()->getFromLocal();
+            $f_ini = $oActividadAsignatura->getF_ini()?->getFromLocal();
+            $f_fin = $oActividadAsignatura->getF_fin()?->getFromLocal();
 
             $a_valores[$c]['sel'] = "$id_activ#$id_asignatura#$permiso";
             $a_valores[$c][1] = "$nombre_corto";

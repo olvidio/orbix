@@ -286,7 +286,7 @@ class Asistente extends Entity implements AggregateRoot
      */
     public function setPlaza(?int $plaza = null): void
     {
-        $this->plaza = PlazaId::fromNullable($plaza);
+        $this->plaza = PlazaId::fromNullableInt($plaza);
     }
 
     /**
@@ -302,7 +302,7 @@ class Asistente extends Entity implements AggregateRoot
     {
         $this->plaza = $valor instanceof PlazaId
             ? $valor
-            : PlazaId::fromNullable($valor);
+            : PlazaId::fromNullableInt($valor);
     }
 
     /**
@@ -364,7 +364,7 @@ class Asistente extends Entity implements AggregateRoot
         $plaza_actual = $this->getPlaza();
 
         if ($plaza_actual < PlazaId::DENEGADA && $iplaza > PlazaId::DENEGADA) {
-            $this->plaza = PlazaId::fromNullable($iplaza);
+            $this->plaza = PlazaId::fromNullableInt($iplaza);
             $gesActividadPlazasR = new ResumenPlazas();
             $gesActividadPlazasR->setId_activ($this->id_activ);
             if ($gesActividadPlazasR->getLibres() > 0) {
@@ -383,7 +383,7 @@ class Asistente extends Entity implements AggregateRoot
                     exit ($err_txt);
                 }
             } else {
-                $this->plaza = PlazaId::fromNullable(PlazaId::PEDIDA);
+                $this->plaza = PlazaId::fromNullableInt(PlazaId::PEDIDA);
             }
         } else {
             $this->plaza = $iplaza;

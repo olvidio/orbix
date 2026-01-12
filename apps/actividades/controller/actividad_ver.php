@@ -84,9 +84,9 @@ if (!empty($Qid_activ)) { // caso de modificar
     $nom_activ = $oActividad->getNom_activ();
     $id_ubi = $oActividad->getId_ubi();
     //$desc_activ = $oActividad->['desc_activ'];
-    $f_ini = $oActividad->getF_ini()->getFromLocal();
+    $f_ini = $oActividad->getF_ini()?->getFromLocal();
     $h_ini = $oActividad->getH_ini()?->format('H:i');
-    $f_fin = $oActividad->getF_fin()->getFromLocal();
+    $f_fin = $oActividad->getF_fin()?->getFromLocal();
     $h_fin = $oActividad->getH_fin()?->format('H:i');
     //$tipo_horario = $oActividad->['tipo_horario'];
     $precio = $oActividad->getPrecio();

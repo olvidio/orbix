@@ -475,7 +475,7 @@ class TrasladoDl
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($cMatriculasPendientes as $oMatricula) {
             $id_activ = $oMatricula->getId_activ();
-            $id_asignatura = $oMatricula->getId_asignatura();
+            $id_asignatura = $oMatricula->getIdAsignaturaVo()->value();
             $oActividad = $ActividadAllRepository->findById($id_activ);
             $nom_activ = $oActividad->getNom_activ();
             $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
@@ -507,9 +507,9 @@ class TrasladoDl
         // dar permisos al usuario orbixv para acceder a personas_dl (?) o buscar tipo de persona
         $PersonaDlRepossitory = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $oPersonaDl = $PersonaDlRepossitory->findById($this->iid_nom);
-        $oPersonaDl->setSituacion($this->ssituacion);
+        $oPersonaDl->setSituacionVo($this->ssituacion);
         $oPersonaDl->setF_situacion($this->df_dl, FALSE);
-        $oPersonaDl->setDl($this->sdl_dst);
+        $oPersonaDl->setDlVo($this->sdl_dst);
         if ($PersonaDlRepossitory->Guardar($oPersonaDl) === false) {
             $error .= '<br>' . _("hay un error, no se ha guardado");
         }
@@ -622,7 +622,7 @@ class TrasladoDl
             $error = sprintf(_("no existe el esquema destino %s en la base de datos"), $this->snew_esquema);
         }
         if (!empty($aDades['existe']) && $aDades['existe'] === true) {
-            $id_tabla = $oPersonaDl->getId_tabla();
+            $id_tabla = $oPersonaDl->getIdTablaVo()->value();
             switch ($id_tabla) {
                 case 'n':
                     $obj = 'personas\model\entity\PersonaN';
@@ -646,8 +646,8 @@ class TrasladoDl
             $oPersona->DBCarregar();
             $oPersonaNew = clone $oPersona;
             $oPersonaNew->setoDbl($oDBdst);
-            $oPersonaNew->setDl($this->sdl_dst);
-            $oPersonaNew->setSituacion('A');
+            $oPersonaNew->setDlVo($this->sdl_dst);
+            $oPersonaNew->setSituacionVo('A');
             $oPersonaNew->setF_situacion($this->df_dl, FALSE);
             //$oPersonaNew->setId_ctr(''); // Por si también se traslada el ctr (Torreciudad de dlz a dlb)
             if ($oPersonaNew->DBGuardar() === false) {
@@ -695,19 +695,19 @@ class TrasladoDl
             foreach ($colection as $oPersonaNotaDB) {
                 $oPersonaNota = new PersonaNota();
                 $oPersonaNota->setIdNom($oPersonaNotaDB->getId_nom());
-                $oPersonaNota->setIdNivel($oPersonaNotaDB->getId_nivel());
-                $oPersonaNota->setIdAsignatura($oPersonaNotaDB->getId_asignatura());
-                $oPersonaNota->setIdSituacion($oPersonaNotaDB->getId_situacion());
-                $oPersonaNota->setActa($oPersonaNotaDB->getActa());
+                $oPersonaNota->setIdNivel($oPersonaNotaDB->getIdNivelVo()->value());
+                $oPersonaNota->setIdAsignatura($oPersonaNotaDB->getIdAsignaturaVo()->value());
+                $oPersonaNota->setIdSituacion($oPersonaNotaDB->getIdSituacionVo()->value());
+                $oPersonaNota->setActaVo($oPersonaNotaDB->getActaVo()->value());
                 $oPersonaNota->setFActa($oPersonaNotaDB->getF_acta());
-                $oPersonaNota->setTipoActa($oPersonaNotaDB->getTipo_acta());
+                $oPersonaNota->setTipoActa($oPersonaNotaDB->getTipoActaVo()->value());
                 $oPersonaNota->setPreceptor($oPersonaNotaDB->isPreceptor());
                 $oPersonaNota->setIdPreceptor($oPersonaNotaDB->getId_preceptor());
-                $oPersonaNota->setDetalle($oPersonaNotaDB->getDetalle());
-                $oPersonaNota->setEpoca($oPersonaNotaDB->getEpoca());
-                $oPersonaNota->setIdActiv($oPersonaNotaDB->getId_activ());
-                $oPersonaNota->setNotaNum($oPersonaNotaDB->getNota_num());
-                $oPersonaNota->setNotaMax($oPersonaNotaDB->getNota_max());
+                $oPersonaNota->setDetalleVo($oPersonaNotaDB->getDetalleVo()->value());
+                $oPersonaNota->setEpocaVo($oPersonaNotaDB->getEpocaVo()->value());
+                $oPersonaNota->setIdActiv($oPersonaNotaDB->getIdActividadVo()->value());
+                $oPersonaNota->setNotaNum($oPersonaNotaDB->getNotaNumVo()->value());
+                $oPersonaNota->setNotaMax($oPersonaNotaDB->getNotaMaxVo()->value());
 
                 $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
                 $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
@@ -814,8 +814,8 @@ class TrasladoDl
         foreach ($cDossiers as $oDossier) {
             $id_tipo_dossier = $oDossier->getId_tipo_dossier();
             $oTipoDossier = $TipoDossierRepository->findById($id_tipo_dossier);
-            $app = $oTipoDossier->getApp();
-            $class = $oTipoDossier->getClass();
+            $app = $oTipoDossier->getAppVo()->value();
+            $class = $oTipoDossier->getClassVo()->value();
             if (empty($class)) {
                 continue;
             }
@@ -1037,11 +1037,11 @@ class TrasladoDl
         $oTraslado->setId_item($newId_item);
         $oTraslado->setId_nom($this->iid_nom);
         $oTraslado->setF_traslado($this->df_dl, FALSE);
-        $oTraslado->setTipo_cmb('dl');
+        $oTraslado->setTipoCmbVo('dl');
         $oTraslado->setId_ctr_origen('');
-        $oTraslado->setCtr_origen($this->sdl_org);
+        $oTraslado->setCtrOrigenVo($this->sdl_org);
         $oTraslado->setId_ctr_destino('');
-        $oTraslado->setCtr_destino($this->sdl_dst);
+        $oTraslado->setCtrDestinoVo($this->sdl_dst);
         if ($TrasladoRepository->Guardar($oTraslado) === false) {
             $error .= '<br>' . _("hay un error, no se ha guardado");
         }
@@ -1058,18 +1058,18 @@ class TrasladoDl
     {
         // Hay que comprobar que la actividad existe,
         // TODO: y que esta accesible. Sino, ver si hay que importarla.
-        if ($this->testActividad($oOrigen->getId_activ())) {
-            $oDestino->setId_activ($oOrigen->getId_activ());
+        if ($this->testActividad($oOrigen->getIdActividadVo()->value())) {
+            $oDestino->setIdActividadVo($oOrigen->getIdActividadVo()->value());
             $oDestino->setId_nom($oOrigen->getId_nom());
             $oDestino->setPropio($oOrigen->isPropio());
             $oDestino->setEst_ok($oOrigen->isEst_ok());
             $oDestino->setCfi($oOrigen->isCfi());
             $oDestino->setCfi_con($oOrigen->getCfi_con());
             $oDestino->setFalta($oOrigen->isFalta());
-            $oDestino->setEncargo($oOrigen->getEncargo());
+            $oDestino->setEncargoVo($oOrigen->getEncargoVo()->value());
             // cambio para que la dl responsable sea la actual:
-            $oDestino->setDl_responsable(ConfigGlobal::mi_delef());
-            $oDestino->setObserv($oOrigen->getObserv());
+            $oDestino->setDlResponsableVo(ConfigGlobal::mi_delef());
+            $oDestino->setObservVo($oOrigen->getObservVo()->value());
             return $oDestino;
         }
         return null;
@@ -1116,8 +1116,8 @@ class TrasladoDl
     {
         $oCertificadoRecibido = new CertificadoRecibido();
         $oCertificadoRecibido->setId_nom($Certificado->getId_nom());
-        $oCertificadoRecibido->setNom($Certificado->getNom());
-        $oCertificadoRecibido->setIdioma($Certificado->getIdioma());
+        $oCertificadoRecibido->setNomVo($Certificado->getNomVo()->value());
+        $oCertificadoRecibido->setIdiomaVo($Certificado->getIdiomaVo()->value());
         $oCertificadoRecibido->setDestino($Certificado->getDestino());
         $oCertificadoRecibido->setCertificado($Certificado->getCertificado());
         $oCertificadoRecibido->setF_certificado($Certificado->getF_certificado());

@@ -383,7 +383,7 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
 
     public function Eliminar(ActividadFase $ActividadFase): bool
     {
-        $id_fase = $ActividadFase->getId_fase();
+        $id_fase = $ActividadFase->getIdFaseVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_fase = $id_fase";
@@ -396,28 +396,12 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
      */
     public function Guardar(ActividadFase $ActividadFase): bool
     {
-        $id_fase = $ActividadFase->getId_fase();
+        $id_fase = $ActividadFase->getIdFaseVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_fase);
 
-        $aDatos = [];
-        $aDatos['desc_fase'] = $ActividadFase->getDesc_fase();
-        $aDatos['sf'] = $ActividadFase->isSf();
-        $aDatos['sv'] = $ActividadFase->isSv();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['sf'])) {
-            $aDatos['sf'] = 'true';
-        } else {
-            $aDatos['sf'] = 'false';
-        }
-        if (is_true($aDatos['sv'])) {
-            $aDatos['sv'] = 'true';
-        } else {
-            $aDatos['sv'] = 'false';
-        }
-
+        $aDatos = $ActividadFase->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -428,7 +412,7 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_fase'] = $ActividadFase->getId_fase();
+            $aDatos['id_fase'] = $ActividadFase->getIdFaseVo()->value();
             $campos = "(id_fase,desc_fase,sf,sv)";
             $valores = "(:id_fase,:desc_fase,:sf,:sv)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

@@ -41,7 +41,7 @@ class Modulo
     {
         $this->id_mod = $id instanceof ModuloId
             ? $id
-            : ModuloId::fromNullable($id);
+            : ModuloId::fromNullableInt($id);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -52,7 +52,7 @@ class Modulo
 
     public function setId_mod(int $id_mod): void
     {
-        $this->id_mod = ModuloId::fromNullable($id_mod);
+        $this->id_mod = ModuloId::fromNullableInt($id_mod);
     }
 
     // VO API

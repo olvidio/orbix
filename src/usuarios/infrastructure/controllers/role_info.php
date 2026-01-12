@@ -5,7 +5,7 @@ use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
 use web\ContestarJson;
 
 $Qid_role = (string)filter_input(INPUT_POST, 'id_role');
@@ -98,7 +98,7 @@ $data['chk_dmz'] = $chk_dmz;
 $data['a_cabeceras'] = $a_cabeceras;
 $data['a_botones'] = $a_botones;
 $data['a_valores'] = $a_valores;
-$data['aOpcionesPau'] = Role::ARRAY_PAU_TXT;
+$data['aOpcionesPau'] = PauType::getArrayPau();
 
 ContestarJson::enviar($error_txt, $data);
 

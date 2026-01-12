@@ -121,11 +121,7 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_usuario'] = $PermMenu->getId_usuario();
-        $aDatos['menu_perm'] = $PermMenu->getMenu_perm();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $PermMenu->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

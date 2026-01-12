@@ -5,6 +5,8 @@ namespace src\actividades\domain\entity;
 use ReflectionClass;
 use src\actividades\domain\value_objects\ActividadDescText;
 use src\actividades\domain\value_objects\ActividadNomText;
+use src\actividades\domain\value_objects\ActividadObserv;
+use src\actividades\domain\value_objects\ActividadObservMaterial;
 use src\actividades\domain\value_objects\ActividadTipoId;
 use src\actividades\domain\value_objects\IdTablaCode;
 use src\actividades\domain\value_objects\NivelStgrId;
@@ -14,6 +16,7 @@ use src\actividadtarifas\domain\value_objects\TarifaId;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\Dinero;
 use src\ubis\domain\value_objects\DelegacionCode;
+use src\ubis\domain\value_objects\Plazas;
 use src\usuarios\domain\value_objects\IdLocale;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -41,15 +44,15 @@ class ActividadAll
     private ?Dinero $precio = null;
     private ?int $num_asistentes = null;
     private StatusId $status;
-    private ?string $observ = null;
+    private ?ActividadObserv $observ = null;
     private ?NivelStgrId $nivel_stgr = null;
-    private ?string $observ_material = null;
+    private ?ActividadObservMaterial $observ_material = null;
     private ?string $lugar_esp = null;
     private ?TarifaId $tarifa = null;
     private ?RepeticionId $id_repeticion = null;
     private ?bool $publicado = false;
     private ?IdTablaCode $id_tabla = null;
-    private ?int $plazas = null;
+    private ?Plazas $plazas = null;
     private ?IdLocale $idioma = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
@@ -97,14 +100,16 @@ class ActividadAll
         $this->id_tipo_activ = new ActividadTipoId($id_tipo_activ);
     }
 
-    public function getTipoActividadVo(): ActividadTipoId
+    public function getIdTipoActividadVo(): ActividadTipoId
     {
         return $this->id_tipo_activ;
     }
 
-    public function setTipoActividadVo(ActividadTipoId $vo): void
+    public function setIdTipoActividadVo(ActividadTipoId|int $vo): void
     {
-        $this->id_tipo_activ = $vo;
+        $this->id_tipo_activ = $vo instanceof ActividadTipoId
+            ? $vo
+            : ActividadTipoId::fromInt($vo);
     }
 
     /**
@@ -156,9 +161,11 @@ class ActividadAll
         return $this->nom_activ;
     }
 
-    public function setNomActivVo(ActividadNomText $vo): void
+    public function setNomActivVo(ActividadNomText|string|null $vo): void
     {
-        $this->nom_activ = $vo;
+        $this->nom_activ = $vo instanceof ActividadNomText
+            ? $vo
+            : ActividadNomText::fromNullableString($vo);
     }
 
     public function getId_ubi(): ?int
@@ -262,7 +269,7 @@ class ActividadAll
      */
     public function setPrecio(?float $precio = null): void
     {
-        $this->precio = Dinero::fromNullable($precio);
+        $this->precio = Dinero::fromNullableFloat($precio);
     }
 
     public function getPrecioVo(): ?Dinero
@@ -274,7 +281,7 @@ class ActividadAll
     {
         $this->precio = $texto instanceof Dinero
             ? $texto
-            : Dinero::fromNullable($texto);
+            : Dinero::fromNullableFloat($texto);
     }
 
     public function getNum_asistentes(): ?int
@@ -308,19 +315,37 @@ class ActividadAll
         return $this->status;
     }
 
-    public function setStatusVo(StatusId $vo): void
+    public function setStatusVo(StatusId|int|null $vo): void
     {
-        $this->status = $vo;
+        $this->status = $vo instanceof StatusId
+            ? $vo
+            : StatusId::fromNullableInt($vo);
     }
 
+    /**
+     * @deprecated Usar `getObservVo(): ?ActividadObserv` en su lugar.
+     */
     public function getObserv(): ?string
+    {
+        return $this->observ?->value();
+    }
+    public function getObservVo(): ?ActividadObserv
     {
         return $this->observ;
     }
 
+    /**
+     * @deprecated Usar `setObservVo(?ActividadObserv $vo = null): void` en su lugar.
+     */
     public function setObserv(?string $sobserv = null): void
     {
-        $this->observ = $sobserv;
+        $this->observ = ActividadObserv::fromNullableString($sobserv);
+    }
+    public function setObservVo(ActividadObserv|string|null $valor = null): void
+    {
+        $this->observ = $valor instanceof ActividadObserv
+            ? $valor
+            : ActividadObserv::fromNullableString($valor);
     }
 
     /**
@@ -336,7 +361,7 @@ class ActividadAll
      */
     public function setNivel_stgr(?int $nivel_stgr = null): void
     {
-        $this->nivel_stgr = NivelStgrId::fromNullable($nivel_stgr);
+        $this->nivel_stgr = NivelStgrId::fromNullableInt($nivel_stgr);
     }
 
     public function getNivelStgrVo(): ?NivelStgrId
@@ -348,17 +373,33 @@ class ActividadAll
     {
         $this->nivel_stgr = $valor instanceof NivelStgrId
             ? $valor
-            : NivelStgrId::fromNullable($valor);
+            : NivelStgrId::fromNullableInt($valor);
     }
 
+    /**
+     * @deprecated Usar `getObservMaterialVo(): ?ActividadObservMaterial` en su lugar.
+     */
     public function getObserv_material(): ?string
+    {
+        return $this->observ_material?->value();
+    }
+    public function getObserv_materialVo(): ?ActividadObservMaterial
     {
         return $this->observ_material;
     }
 
+    /**
+     * @deprecated Usar `setObservMaterialVo(?ActividadObservMaterial $vo = null): void` en su lugar.
+     */
     public function setObserv_material(?string $observ_material = null): void
     {
-        $this->observ_material = $observ_material;
+        $this->observ_material = ActividadObservMaterial::fromNullableString($observ_material);
+    }
+    public function setObserv_materialVo(ActividadObservMaterial|string|null $valor = null): void
+    {
+        $this->observ_material = $valor instanceof ActividadObservMaterial
+            ? $valor
+            : ActividadObservMaterial::fromNullableString($valor);
     }
 
     public function getLugar_esp(): ?string
@@ -384,7 +425,7 @@ class ActividadAll
      */
     public function setTarifa(?int $tarifa = null): void
     {
-        $this->tarifa = TarifaId::fromNullable($tarifa);
+        $this->tarifa = TarifaId::fromNullableInt($tarifa);
     }
 
     public function getTarifaVo(): ?TarifaId
@@ -396,7 +437,7 @@ class ActividadAll
     {
         $this->tarifa = $valor instanceof TarifaId
             ? $valor
-            : TarifaId::fromNullable($valor);
+            : TarifaId::fromNullableInt($valor);
     }
 
     /**
@@ -424,7 +465,7 @@ class ActividadAll
     {
         $this->id_repeticion = $valor instanceof RepeticionId
             ? $valor
-            : RepeticionId::fromNullable($valor);
+            : RepeticionId::fromNullableInt($valor);
     }
 
     public function isPublicado(): ?bool
@@ -455,7 +496,7 @@ class ActividadAll
 
     public function getIdTablaVo(): ?IdTablaCode
     {
-        return IdTablaCode::fromString($this->id_tabla);
+        return $this->id_tabla;
     }
 
     public function setIdTablaVo(IdTablaCode|string|null $valor = null): void
@@ -465,14 +506,30 @@ class ActividadAll
             : IdTablaCode::fromNullableString($valor);
     }
 
+    /**
+     * @deprecated Usar `getPlazasVo() en su lugar.
+     */
     public function getPlazas(): ?int
+    {
+        return $this->plazas?->value();
+    }
+    public  function getPlazasVo(): ?Plazas
     {
         return $this->plazas;
     }
 
+    /**
+     * @deprecated Usar `setPlazasVo(?Plazas $vo = null): void` en su lugar.
+     */
     public function setPlazas(?int $plazas = null): void
     {
-        $this->plazas = $plazas;
+        $this->plazas = Plazas::fromNullableInt($plazas);
+    }
+    public function setPlazasVo(Plazas|int|null $valor = null): void
+    {
+        $this->plazas = $valor instanceof Plazas
+            ? $valor
+            : Plazas::fromNullableInt($valor);
     }
 
 

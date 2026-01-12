@@ -120,9 +120,7 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $nom = $App->getNombreAppVo()->value();
         $bInsert = $this->isNew($id_app);
 
-        $aDatos = [];
-        $aDatos['nom'] = $nom;
-
+        $aDatos = $App->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = " nom=:nom";

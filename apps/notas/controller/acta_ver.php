@@ -131,7 +131,7 @@ if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //signifi
         $oActa = $ActaRepository->findById($acta_actual);
         $id_asignatura = $oActa->getId_asignatura();
         $id_activ = $oActa->getId_activ();
-        $f_acta = $oActa->getF_acta()->getFromLocal();
+        $f_acta = $oActa->getF_acta()?->getFromLocal();
         $libro = $oActa->getLibro();
         $pagina = $oActa->getPagina();
         $linea = $oActa->getLinea();
@@ -169,7 +169,7 @@ if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //signifi
             $oActa = $cActas[0];
             $id_asignatura = $oActa->getId_asignatura();
             $id_activ = $oActa->getId_activ();
-            $f_acta = $oActa->getF_acta()->getFromLocal();
+            $f_acta = $oActa->getF_acta()?->getFromLocal();
             $libro = $oActa->getLibro();
             $pagina = $oActa->getPagina();
             $linea = $oActa->getLinea();

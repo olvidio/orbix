@@ -140,32 +140,7 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tipo_doc);
 
-        $aDatos = [];
-        $aDatos['nom_doc'] = $TipoDoc->getNomDocVo()?->value();
-        $aDatos['sigla'] = $TipoDoc->getSiglaVo()?->value();
-        $aDatos['observ'] = $TipoDoc->getObservVo()?->value();
-        $aDatos['id_coleccion'] = $TipoDoc->getIdColeccionVo()?->value();
-        $aDatos['bajo_llave'] = $TipoDoc->getBajoLlaveVo()?->value();
-        $aDatos['vigente'] = $TipoDoc->getVigenteVo()?->value();
-        $aDatos['numerado'] = $TipoDoc->getNumeradoVo()->value();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['bajo_llave'])) {
-            $aDatos['bajo_llave'] = 'true';
-        } else {
-            $aDatos['bajo_llave'] = 'false';
-        }
-        if (is_true($aDatos['vigente'])) {
-            $aDatos['vigente'] = 'true';
-        } else {
-            $aDatos['vigente'] = 'false';
-        }
-        if (is_true($aDatos['numerado'])) {
-            $aDatos['numerado'] = 'true';
-        } else {
-            $aDatos['numerado'] = 'false';
-        }
-
+        $aDatos = $TipoDoc->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

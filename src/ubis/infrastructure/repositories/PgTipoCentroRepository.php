@@ -137,10 +137,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($tipo_ctr);
 
-        $aDatos = [];
-        $aDatos['nombre_tipo_ctr'] = $TipoCentro->getNombreTipoCentroVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $TipoCentro->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

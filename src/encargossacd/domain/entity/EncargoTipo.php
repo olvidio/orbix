@@ -67,7 +67,7 @@ class EncargoTipo
      */
     public function setId_tipo_enc(int $id_tipo_enc): void
     {
-        $this->id_tipo_enc = EncargoTipoId::fromNullable($id_tipo_enc);
+        $this->id_tipo_enc = EncargoTipoId::fromNullableInt($id_tipo_enc);
     }
 
     public function getTipoEncIdVo(): EncargoTipoId
@@ -79,7 +79,7 @@ class EncargoTipo
     {
         $this->id_tipo_enc = $vo instanceof EncargoTipoId
             ? $vo
-            : EncargoTipoId::fromNullable($vo);
+            : EncargoTipoId::fromNullableInt($vo);
     }
 
 
@@ -127,7 +127,7 @@ class EncargoTipo
      */
     public function setMod_horario(int $mod_horario): void
     {
-        $this->mod_horario = EncargoModHorarioId::fromNullable($mod_horario);
+        $this->mod_horario = EncargoModHorarioId::fromNullableInt($mod_horario);
     }
 
     public function getModHorarioVo(): EncargoModHorarioId
@@ -139,7 +139,7 @@ class EncargoTipo
     {
         $this->mod_horario = $vo instanceof EncargoModHorarioId
             ? $vo
-            : EncargoModHorarioId::fromNullable($vo);
+            : EncargoModHorarioId::fromNullableInt($vo);
     }
 
 

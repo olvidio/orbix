@@ -38,7 +38,7 @@ echo "<table>";
 echo "<th colspan=2>" . ucfirst(_("dossiers seleccionados")) . "</th>";
 foreach ($cTipoDossiers as $oTipoDossier) {
     $id_tipo_dossier = $oTipoDossier->getId_tipo_dossier();
-    $depende_modificar = $oTipoDossier->getDepende_modificar();
+    $depende_modificar = $oTipoDossier->isDepende_modificar();
     $descripcion = $oTipoDossier->getDescripcion();
 
     $pagina = Hash::link('apps/dossiers/controller/perm_dossier_ver.php?' . http_build_query(array('id_tipo_dossier' => $id_tipo_dossier, 'depende_modificar' => $depende_modificar, 'tipo' => $tipo)));

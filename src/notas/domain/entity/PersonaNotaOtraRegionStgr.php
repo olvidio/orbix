@@ -200,13 +200,13 @@ class PersonaNotaOtraRegionStgr
      */
     public function setId_asignatura(int $id_asignatura): void
     {
-        $this->id_asignatura = AsignaturaId::fromNullable($id_asignatura);
+        $this->id_asignatura = AsignaturaId::fromNullableInt($id_asignatura);
     }
     public function setIdAsignaturaVo(AsignaturaId|int|null $oIdAsignatura): void
     {
         $this->id_asignatura = $oIdAsignatura instanceof AsignaturaId
             ? $oIdAsignatura
-            : AsignaturaId::fromNullable($oIdAsignatura);
+            : AsignaturaId::fromNullableInt($oIdAsignatura);
     }
 
     /**
@@ -226,13 +226,13 @@ class PersonaNotaOtraRegionStgr
      */
     public function setId_situacion(int $id_situacion): void
     {
-        $this->id_situacion = NotaSituacion::fromNullable($id_situacion);
+        $this->id_situacion = NotaSituacion::fromNullableInt($id_situacion);
     }
     public function setIdSituacionVo(NotaSituacion|int|null $oIdSituacion): void
     {
         $this->id_situacion = $oIdSituacion instanceof NotaSituacion
             ? $oIdSituacion
-            : NotaSituacion::fromNullable($oIdSituacion);
+            : NotaSituacion::fromNullableInt($oIdSituacion);
     }
 
     /**
@@ -337,13 +337,13 @@ class PersonaNotaOtraRegionStgr
      */
     public function setEpoca(?int $epoca = null): void
     {
-        $this->epoca = NotaEpoca::fromNullable($epoca);
+        $this->epoca = NotaEpoca::fromNullableInt($epoca);
     }
     public function setEpocaVo(NotaEpoca|int|null $oEpoca): void
     {
         $this->epoca = $oEpoca instanceof NotaEpoca
             ? $oEpoca
-            : NotaEpoca::fromNullable($oEpoca);
+            : NotaEpoca::fromNullableInt($oEpoca);
     }
 
     /**
@@ -360,13 +360,13 @@ class PersonaNotaOtraRegionStgr
 
     public function setId_activ(?int $id_activ): void
     {
-        $this->id_activ = ActividadId::fromNullable($id_activ);
+        $this->id_activ = ActividadId::fromNullableInt($id_activ);
     }
     public function setIdActivVo(ActividadId|int|null $valor)
     {
         $this->id_activ = $valor instanceof ActividadId
             ? $valor
-            : ActividadId::fromNullable($valor);
+            : ActividadId::fromNullableInt($valor);
     }
 
     /**
@@ -413,13 +413,13 @@ class PersonaNotaOtraRegionStgr
      */
     public function setNota_max(?int $nota_max = null): void
     {
-        $this->nota_max = NotaMax::fromNullable($nota_max);
+        $this->nota_max = NotaMax::fromNullableInt($nota_max);
     }
     public function setNotaMaxVo(NotaMax|int|null $oNota_max): void
     {
         $this->nota_max = $oNota_max instanceof NotaMax
             ? $oNota_max
-            : NotaMax::fromNullable($oNota_max);
+            : NotaMax::fromNullableInt($oNota_max);
     }
 
     /**
@@ -439,13 +439,13 @@ class PersonaNotaOtraRegionStgr
      */
     public function setTipo_acta(?int $tipo_acta = null): void
     {
-        $this->tipo_acta = TipoActa::fromNullable($tipo_acta);
+        $this->tipo_acta = TipoActa::fromNullableInt($tipo_acta);
     }
     public function setTipoActaVo(TipoActa|int|null $oTipo_acta): void
     {
         $this->tipo_acta = $oTipo_acta instanceof TipoActa
             ? $oTipo_acta
-            : TipoActa::fromNullable($oTipo_acta);
+            : TipoActa::fromNullableInt($oTipo_acta);
     }
 
     /**

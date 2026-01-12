@@ -209,8 +209,8 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         foreach ($stmt as $aDatos) {
             $oAsignatura =  Asignatura::fromArray($aDatos);
             $oMin = new stdClass();
-            $oMin->id_asignatura = $oAsignatura->getId_asignatura();
-            $oMin->id_nivel = $oAsignatura->getId_nivel();
+            $oMin->id_asignatura = $oAsignatura->getIdAsignaturaVo()->value();
+            $oMin->id_nivel = $oAsignatura->getIdNivelVo()->value();
             $oMin->nombre_asignatura = $oAsignatura->getNombre_signatura();
             $oMin->creditos = $oAsignatura->getCreditos();
             $jsonAsignaturas[] = json_encode($oMin);
@@ -289,7 +289,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
 
     public function Eliminar(Asignatura $Asignatura): bool
     {
-        $id_asignatura = $Asignatura->getId_asignatura();
+        $id_asignatura = $Asignatura->getIdAsignaturaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_asignatura = $id_asignatura";
@@ -301,28 +301,12 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
      */
     public function Guardar(Asignatura $Asignatura): bool
     {
-        $id_asignatura = $Asignatura->getId_asignatura();
+        $id_asignatura = $Asignatura->getIdAsignaturaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_asignatura);
 
-        $aDatos = [];
-        $aDatos['id_nivel'] = $Asignatura->getId_nivel();
-        $aDatos['nombre_asignatura'] = $Asignatura->getNombre_signatura();
-        $aDatos['nombre_corto'] = $Asignatura->getNombre_corto();
-        $aDatos['creditos'] = $Asignatura->getCreditos();
-        $aDatos['year'] = $Asignatura->getYear();
-        $aDatos['id_sector'] = $Asignatura->getId_sector();
-        $aDatos['active'] = $Asignatura->isActive();
-        $aDatos['id_tipo'] = $Asignatura->getId_tipo();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['active'])) {
-            $aDatos['active'] = 'true';
-        } else {
-            $aDatos['active'] = 'false';
-        }
-
+        $aDatos = $Asignatura->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -338,7 +322,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_asignatura'] = $Asignatura->getId_asignatura();
+            $aDatos['id_asignatura'] = $Asignatura->getIdAsignaturaVo()->value();
             $campos = "(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,active,id_tipo)";
             $valores = "(:id_asignatura,:id_nivel,:nombre_asignatura,:nombre_corto,:creditos,:year,:id_sector,:active,:id_tipo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

@@ -132,6 +132,13 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
+        $aDatos = $Certificado->toArrayForDatabase([
+            'h_ini' => fn($v) => (new ConverterDate('time', $v))->toPg(),
+            'documento' => fn($v) => bin2hex($Certificado->getDocumento() ?? ''),
+            'f_certificado' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_enviado' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
+        /*
         $aDatos = [];
         $aDatos['id_nom'] = $Certificado->getId_nom();
         $aDatos['nom'] = $Certificado->getNom();
@@ -152,6 +159,7 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         } else {
             $aDatos['firmado'] = 'false';
         }
+        */
 
         if ($bInsert === false) {
             //UPDATE

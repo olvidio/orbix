@@ -139,10 +139,7 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($tipo_casa);
 
-        $aDatos = [];
-        $aDatos['nombre_tipo_casa'] = $TipoCasa->getNombreTipoCasaVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $TipoCasa->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

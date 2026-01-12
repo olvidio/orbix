@@ -30,7 +30,7 @@ class Departamento
     {
         $this->id_departamento = $id instanceof DepartamentoId
             ? $id
-            : DepartamentoId::fromNullable($id);
+            : DepartamentoId::fromNullableInt($id);
     }
 
 
@@ -42,7 +42,7 @@ class Departamento
 
     public function setId_departamento(int $id_departamento): void
     {
-        $this->id_departamento = DepartamentoId::fromNullable($id_departamento);
+        $this->id_departamento = DepartamentoId::fromNullableInt($id_departamento);
     }
 
     // VO API

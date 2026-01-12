@@ -2,7 +2,11 @@
 
 namespace src\ubis\domain\entity;
 
+use src\actividadtarifas\domain\value_objects\SerieId;
+use src\actividadtarifas\domain\value_objects\TarifaId;
+use src\profesores\domain\value_objects\YearNumber;
 use src\shared\domain\traits\Hydratable;
+use src\ubis\domain\value_objects\ObservCasaText;
 use src\ubis\domain\value_objects\TarifaCantidad;
 
 
@@ -17,15 +21,15 @@ class TarifaUbi
 
     private int $id_ubi;
 
-    private int $id_tarifa;
+    private TarifaId $id_tarifa;
 
-    private int $year;
+    private YearNumber $year;
 
-    private float $cantidad;
+    private TarifaCantidad $cantidad;
 
-    private ?string $observ = null;
+    private ?ObservCasaText $observ = null;
 
-    private int $id_serie;
+    private serieId $id_serie;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -52,73 +56,136 @@ class TarifaUbi
         $this->id_ubi = $id_ubi;
     }
 
-
+    /**
+     * @deprecated use getIdTarifaVo()
+     */
     public function getId_tarifa(): int
+    {
+        return $this->id_tarifa->value();
+    }
+
+    public function getIdTarifaVo(): TarifaId
     {
         return $this->id_tarifa;
     }
 
 
+    /**
+     * @deprecated use setIdTarifaVo()
+     */
     public function setId_tarifa(int $id_tarifa): void
     {
-        $this->id_tarifa = $id_tarifa;
+        $this->id_tarifa = TarifaId::fromNullableInt( $id_tarifa);
+    }
+    public function setIdTarifaVo(TarifaId|int|null $valor = null): void
+    {
+        $this->id_tarifa = $valor instanceof TarifaId
+            ? $valor
+            : TarifaId::fromNullableInt($valor);
     }
 
-
+    /**
+     * @deprecated use getYearVo()
+     */
     public function getYear(): int
+    {
+        return $this->year->value();
+    }
+    public function getYearVo(): YearNumber
     {
         return $this->year;
     }
 
-
+    /**
+     * @deprecated use setYearVo()
+     */
     public function setYear(int $year): void
     {
-        $this->year = $year;
+        $this->year = YearNumber::fromNullableInt($year);
     }
-
-
-    public function getCantidad(): float
+    public function setYearVo(YearNumber|int|null $valor = null): void
     {
-        return $this->cantidad;
+        $this->year = $valor instanceof YearNumber
+            ? $valor
+            : YearNumber::fromNullableInt($valor);
     }
 
+    /**
+     * @deprecated use getCantidadVo()
+     */
+    public function getCantidad(): ?float
+    {
+        return $this->cantidad?->value();
+    }
+    public function getCantidadVo(): ?TarifaCantidad
+    {
+       return $this->cantidad;
+    }
 
+    /**
+     * @deprecated use setCantidadVo()
+     */
     public function setCantidad(float $cantidad): void
     {
-        $this->cantidad = $cantidad;
+        $this->cantidad = TarifaCantidad::fromNullableFloat($cantidad);
     }
-
-    public function getCantidadVo(): TarifaCantidad
+    public function setCantidadVo(TarifaCantidad|float|null $vo): void
     {
-        return new TarifaCantidad($this->cantidad);
+        $this->cantidad = $vo instanceof TarifaCantidad
+            ? $vo
+            : TarifaCantidad::fromNullableFloat($vo);
     }
 
-    public function setCantidadVo(TarifaCantidad $vo): void
-    {
-        $this->cantidad = $vo->value();
-    }
-
-
+    /**
+     * @deprecated use getObservVo()
+     */
     public function getObserv(): ?string
+    {
+        return $this->observ?->value();
+    }
+    public function getObservVo(): ?ObservCasaText
     {
         return $this->observ;
     }
 
-
+    /**
+     * @deprecated use setObservVo()
+     */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = ObservCasaText::fromNullableString($observ);
+    }
+    public function setObservVo(ObservCasaText|string|null $texto = null): void
+    {
+        $this->observ = $texto instanceof ObservCasaText
+            ? $texto
+            : ObservCasaText::fromNullableString($texto);
     }
 
-
+    /**
+     * @deprecated use getIdSerieVo()
+     */
     public function getId_serie(): int
+    {
+        return $this->id_serie->value();
+    }
+    public function getIdSerieVo(): SerieId
     {
         return $this->id_serie;
     }
 
-
+    /**
+     * @deprecated use setIdSerieVo()
+     */
     public function setId_serie(int $id_serie): void
     {
-        $this->id_serie = $id_serie;
+        $this->id_serie = SerieId::fromNullableInt($id_serie);
     }
+    public function setIdSerieVo(SerieId|int|null $valor = null): void
+    {
+        $this->id_serie = $valor instanceof SerieId
+            ? $valor
+            : SerieId::fromNullableInt($valor);
+    }
+
 }

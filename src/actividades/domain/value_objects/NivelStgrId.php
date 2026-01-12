@@ -76,14 +76,6 @@ final class NivelStgrId
         return $this->value === $other->value();
     }
 
-    public static function fromNullableInt(?int $value): ?self
-    {
-        if ($value === null) {
-            return null;
-        }
-        return new self($value);
-    }
-
     public static function generarNivelStgr($id_tipo_activ)
     {
         //según la tabla común: public.xa_nivel_stgr
@@ -118,7 +110,7 @@ final class NivelStgrId
         return $nivel_stgr;
     }
 
-public static function fromNullable(?int $value): ?self
+public static function fromNullableInt(?int $value): ?self
 {
     if ($value === null) {
         return null;

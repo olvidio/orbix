@@ -18,7 +18,7 @@ use src\procesos\domain\entity\ActividadProcesoTarea;
 interface ActividadProcesoTareaRepositoryInterface
 {
 
-    public function añadirFaseTarea(int $id_tipo_proceso, int $id_fase, int $id_tarea): void;
+    public function addFaseTarea(int $id_tipo_proceso, int $id_fase, int $id_tarea): void;
 
     public function getListaFaseEstado(int $iid_activ): array;
     public function getSacdAprobado(int $iid_activ): ?bool;

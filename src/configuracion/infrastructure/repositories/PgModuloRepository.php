@@ -4,6 +4,7 @@ namespace src\configuracion\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
+use core\ConverterDate;
 use core\Set;
 use PDO;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
@@ -139,13 +140,19 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_mod);
 
+        $aDatos = $Modulo->toArrayForDatabase([
+            'mods_req' => fn($v) => array_php2pg($Modulo->getModsReqVo()?->toArray()),
+            'apps_req' => fn($v) => array_php2pg($Modulo->getAppsReqVo()?->toArray()),
+        ]);
+        /*
         $aDatos = [];
-        $aDatos['nom'] = $Modulo->getNom();
+        $aDatos['nom'] = $Modulo->getNomVo()->value();
         $aDatos['descripcion'] = $Modulo->getDescripcionVo()?->value();
         // para los array
         $aDatos['mods_req'] = array_php2pg($Modulo->getModsReqVo()?->toArray());
         $aDatos['apps_req'] = array_php2pg($Modulo->getAppsReqVo()?->toArray());
         array_walk($aDatos, 'core\poner_null');
+        */
 
         if ($bInsert === false) {
             //UPDATE

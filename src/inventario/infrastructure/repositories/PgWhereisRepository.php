@@ -118,7 +118,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
 
     public function Eliminar(Whereis $Whereis): bool
     {
-        $id_item_whereis = $Whereis->getIdItemWhereisVo()->value();
+        $id_item_whereis = $Whereis->getId_item_whereis();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis";
@@ -131,16 +131,12 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
      */
     public function Guardar(Whereis $Whereis): bool
     {
-        $id_item_whereis = $Whereis->getIdItemWhereisVo()->value();
+        $id_item_whereis = $Whereis->getId_item_whereis();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item_whereis);
 
-        $aDatos = [];
-        $aDatos['id_item_egm'] = $Whereis->getIdItemEgmVo()?->value();
-        $aDatos['id_doc'] = $Whereis->getIdDocVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Whereis->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -150,7 +146,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_item_whereis'] = $Whereis->getIdItemWhereisVo()->value();
+            $aDatos['id_item_whereis'] = $Whereis->getId_item_whereis();
             $campos = "(id_item_whereis,id_item_egm,id_doc)";
             $valores = "(:id_item_whereis,:id_item_egm,:id_doc)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

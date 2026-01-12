@@ -36,8 +36,8 @@ class BurgerLayout implements LayoutInterface
         // Esto permite un acceso rápido a cualquier nodo por su "ruta" única.
         $indexedNodes = [];
         foreach ($menus as $key => $itemObject) {
-            $pathKey = $itemObject->getId_grupmenu() . '_' . implode('_', $itemObject->getOrden());
-            $orden = $itemObject->getOrden();
+            $pathKey = $itemObject->getId_grupmenu() . '_' . implode('_', $itemObject->getOrdenVo()->value());
+            $orden = $itemObject->getOrdenVo()->value();
             if (empty($orden)) {
                 continue;
             }
@@ -90,7 +90,7 @@ class BurgerLayout implements LayoutInterface
         $groupedRootNodes = [];
         foreach ($menus as $itemObject) {
             $currentGroup = $itemObject->getId_grupmenu();
-            $currentOrder = $itemObject->getOrden();
+            $currentOrder = $itemObject->getOrdenVo()->value();
             $currentPathKey = $currentGroup . '_' . implode('_', $currentOrder);
 
             // Obtener una referencia al nodo actual de `$indexedNodes`.
@@ -320,7 +320,7 @@ class BurgerLayout implements LayoutInterface
         $indexedNodes = [];
         foreach ($cMenusUtilidades as $key => $itemObject) {
             $menu = $itemObject->getMenu();
-            $orden = $itemObject->getOrden();
+            $orden = $itemObject->getOrdenVo()->value();
             $id_grupmenu = $itemObject->getId_grupmenu();
             $pathKey = $id_grupmenu . '_' . implode('_', $orden);
             if (empty($orden)) {
@@ -368,7 +368,7 @@ class BurgerLayout implements LayoutInterface
         $groupedRootNodes = [];
         foreach ($cMenusUtilidades as $itemObject) {
             $currentGroup = $itemObject->getId_grupmenu();
-            $currentOrder = $itemObject->getOrden();
+            $currentOrder = $itemObject->getOrdenVo()->value();
             $currentPathKey = $currentGroup . '_' . implode('_', $currentOrder);
 
             // Obtener una referencia al nodo actual de `$indexedNodes`.

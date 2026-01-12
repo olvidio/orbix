@@ -317,8 +317,8 @@ foreach ($cActividades as $oActividad) {
     $id_ubi = $oActividad->getId_ubi();
     //$nom_activ = $oActividad->getNom_activ();
     //$dl_org = $oActividad->getDl_org();
-    $f_ini = $oActividad->getF_ini()->getFromLocal();
-    $f_fin = $oActividad->getF_fin()->getFromLocal();
+    $f_ini = $oActividad->getF_ini()?->getFromLocal();
+    $f_fin = $oActividad->getF_fin()?->getFromLocal();
     $h_ini = $oActividad->getH_ini();
     $h_fin = $oActividad->getH_fin();
     $tarifa = $oActividad->getTarifa();

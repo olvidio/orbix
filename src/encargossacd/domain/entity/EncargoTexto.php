@@ -1,6 +1,8 @@
 <?php
 
 namespace src\encargossacd\domain\entity;
+use src\encargossacd\domain\value_objects\EncargoText;
+use src\encargossacd\domain\value_objects\EncargoTextClave;
 use src\encargossacd\domain\value_objects\IdiomaCode;
 use src\shared\domain\traits\Hydratable;
 
@@ -15,9 +17,9 @@ class EncargoTexto
 
     private IdiomaCode $idioma;
 
-    private string $clave;
+    private EncargoTextClave $clave;
 
-    private ?string $texto = null;
+    private ?EncargoText $texto = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -61,27 +63,55 @@ class EncargoTexto
             : IdiomaCode::fromNullableString($vo);
     }
 
-
+    /**
+     * @deprecated usar getClaveVo()
+     */
     public function getClave(): string
+    {
+        return $this->clave->value();
+    }
+    public function getClaveVo(): EncargoTextClave
     {
         return $this->clave;
     }
 
-
+    /**
+     * @deprecated usar setClaveVo()
+     */
     public function setClave(string $clave): void
     {
-        $this->clave = $clave;
+        $this->clave = EncargoTextClave::fromNullableString($clave);
+    }
+    public function setClaveVo(EncargoTextClave|string|null $vo): void
+    {
+        $this->clave = $vo instanceof EncargoTextClave
+            ? $vo
+            : EncargoTextClave::fromNullableString($vo);
     }
 
-
+    /**
+     * @deprecated usar getTextoVo()
+     */
     public function getTexto(): ?string
+    {
+        return $this->texto?->value();
+    }
+    public function getTextoVo(): ?EncargoText
     {
         return $this->texto;
     }
 
-
+    /**
+     * @deprecated usar setTextoVo()
+     */
     public function setTexto(?string $texto = null): void
     {
         $this->texto = $texto;
+    }
+    public function setTextoVo(EncargoText|string|null $texto = null): void
+    {
+        $this->texto = $texto instanceof EncargoText
+            ? $texto
+            : EncargoText::fromNullableString($texto);
     }
 }

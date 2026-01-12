@@ -32,7 +32,7 @@ class ProfesorTipo
     {
         $this->id_tipo_profesor = $valor instanceof ProfesorTipoId
             ? $valor
-            : ProfesorTipoId::fromNullable($valor);
+            : ProfesorTipoId::fromNullableInt($valor);
     }
 
     /**
@@ -48,7 +48,7 @@ class ProfesorTipo
      */
     public function setId_tipo_profesor(int $valor = null): void
     {
-        $this->id_tipo_profesor = ProfesorTipoId::fromNullable($valor);
+        $this->id_tipo_profesor = ProfesorTipoId::fromNullableInt($valor);
     }
 
     public function getTipoProfesorVo(): ?ProfesorTipoName

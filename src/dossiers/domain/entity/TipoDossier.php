@@ -317,7 +317,7 @@ class TipoDossier
     {
         $this->db = $valor instanceof TipoDossierDb
             ? $valor
-            : TipoDossierDb::fromNullable($valor);
+            : TipoDossierDb::fromNullableInt($valor);
     }
 
     /**
@@ -333,7 +333,7 @@ class TipoDossier
      */
     public function setDb(?int $db = null): void
     {
-        $this->db = TipoDossierDb::fromNullable($db);
+        $this->db = TipoDossierDb::fromNullableInt($db);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

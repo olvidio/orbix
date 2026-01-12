@@ -4,6 +4,7 @@ namespace src\actividadplazas\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
+use core\ConverterDate;
 use core\ConverterJson;
 use core\Set;
 use JsonException;
@@ -126,14 +127,20 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_activ);
 
+        $aDatos = $ActividadPlazas->toArrayForDatabase([
+            'cedidas' => fn($v) => (new ConverterJson($ActividadPlazas->getCedidas(), false))->toPg(false),
+        ]);
+
+        /*
         $aDatos = [];
         $aDatos['id_dl'] = $ActividadPlazas->getId_dl();
-        $aDatos['plazas'] = $ActividadPlazas->getPlazas();
-        $aDatos['cl'] = $ActividadPlazas->getCl();
-        $aDatos['dl_tabla'] = $ActividadPlazas->getDl_tabla();
+        $aDatos['plazas'] = $ActividadPlazas->getPlazasVo()->value();
+        $aDatos['cl'] = $ActividadPlazas->getClVo()->value();
+        $aDatos['dl_tabla'] = $ActividadPlazas->getDlTablaVo()->value();
         // para los json
         $aDatos['cedidas'] = (new ConverterJson($ActividadPlazas->getCedidas(), false))->toPg(false);
         array_walk($aDatos, 'core\poner_null');
+        */
 
         if ($bInsert === false) {
             //UPDATE

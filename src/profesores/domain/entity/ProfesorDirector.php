@@ -47,7 +47,7 @@ class ProfesorDirector
     {
         $this->id_departamento = $valor instanceof DepartamentoId
             ? $valor
-            : DepartamentoId::fromNullable($valor);
+            : DepartamentoId::fromNullableInt($valor);
     }
 
     /**
@@ -63,7 +63,7 @@ class ProfesorDirector
      */
     public function setId_departamento(int $valor = null): void
     {
-        $this->id_departamento = DepartamentoId::fromNullable($valor);
+        $this->id_departamento = DepartamentoId::fromNullableInt($valor);
     }
 
     public function getEscritoNombramientoVo(): ?EscritoNombramiento

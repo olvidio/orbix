@@ -101,7 +101,7 @@ class CambioUsuario
     {
         $this->aviso_tipo = $valor instanceof AvisoTipoId
             ? $valor
-            : AvisoTipoId::fromNullable($valor);
+            : AvisoTipoId::fromNullableInt($valor);
     }
 
     /**
@@ -117,7 +117,7 @@ class CambioUsuario
      */
     public function setAviso_tipo(int $aviso_tipo): void
     {
-        $this->aviso_tipo = AvisoTipoId::fromNullable($aviso_tipo);
+        $this->aviso_tipo = AvisoTipoId::fromNullableInt($aviso_tipo);
     }
 
 

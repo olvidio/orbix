@@ -145,60 +145,7 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $ZonaSacd->getId_nom();
-        $aDatos['id_zona'] = $ZonaSacd->getId_zona();
-        $aDatos['propia'] = $ZonaSacd->isPropia();
-        $aDatos['dw1'] = $ZonaSacd->isDw1();
-        $aDatos['dw2'] = $ZonaSacd->isDw2();
-        $aDatos['dw3'] = $ZonaSacd->isDw3();
-        $aDatos['dw4'] = $ZonaSacd->isDw4();
-        $aDatos['dw5'] = $ZonaSacd->isDw5();
-        $aDatos['dw6'] = $ZonaSacd->isDw6();
-        $aDatos['dw7'] = $ZonaSacd->isDw7();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['propia'])) {
-            $aDatos['propia'] = 'true';
-        } else {
-            $aDatos['propia'] = 'false';
-        }
-        if (is_true($aDatos['dw1'])) {
-            $aDatos['dw1'] = 'true';
-        } else {
-            $aDatos['dw1'] = 'false';
-        }
-        if (is_true($aDatos['dw2'])) {
-            $aDatos['dw2'] = 'true';
-        } else {
-            $aDatos['dw2'] = 'false';
-        }
-        if (is_true($aDatos['dw3'])) {
-            $aDatos['dw3'] = 'true';
-        } else {
-            $aDatos['dw3'] = 'false';
-        }
-        if (is_true($aDatos['dw4'])) {
-            $aDatos['dw4'] = 'true';
-        } else {
-            $aDatos['dw4'] = 'false';
-        }
-        if (is_true($aDatos['dw5'])) {
-            $aDatos['dw5'] = 'true';
-        } else {
-            $aDatos['dw5'] = 'false';
-        }
-        if (is_true($aDatos['dw6'])) {
-            $aDatos['dw6'] = 'true';
-        } else {
-            $aDatos['dw6'] = 'false';
-        }
-        if (is_true($aDatos['dw7'])) {
-            $aDatos['dw7'] = 'true';
-        } else {
-            $aDatos['dw7'] = 'false';
-        }
-
+        $aDatos = $ZonaSacd->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

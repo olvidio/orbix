@@ -19,9 +19,9 @@ class TipoTeleco
 
     private ?TipoTelecoName $nombre_teleco = null;
 
-    private bool|null $ubi = null;
+    private?bool $ubi = null;
 
-    private bool|null $persona = null;
+    private?bool $persona = null;
 
     private int $id;
 

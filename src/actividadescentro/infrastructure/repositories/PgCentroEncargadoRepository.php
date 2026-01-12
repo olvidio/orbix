@@ -215,11 +215,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_activ, $id_ubi);
 
-        $aDatos = [];
-        $aDatos['num_orden'] = $CentroEncargado->getNum_orden();
-        $aDatos['encargo'] = $CentroEncargado->getEncargo();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $CentroEncargado->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

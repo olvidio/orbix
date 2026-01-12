@@ -99,7 +99,7 @@ class ProfesorTituloEst
     {
         $this->year = $valor instanceof YearNumber
             ? $valor
-            : YearNumber::fromNullable($valor);
+            : YearNumber::fromNullableInt($valor);
     }
 
     /**
@@ -115,7 +115,7 @@ class ProfesorTituloEst
      */
     public function setYear(?int $valor = null): void
     {
-        $this->year = YearNumber::fromNullable($valor);
+        $this->year = YearNumber::fromNullableInt($valor);
     }
 
     public function getId_item(): int
@@ -138,7 +138,7 @@ class ProfesorTituloEst
         $this->id_nom = $valor;
     }
 
-    public function getEclesiastico(): ?bool
+    public function isEclesiastico(): ?bool
     {
         return $this->eclesiastico;
     }

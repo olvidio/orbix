@@ -62,7 +62,7 @@ class Asignatura
     {
         $this->id_asignatura = $id instanceof AsignaturaId
             ? $id
-            : AsignaturaId::fromNullable($id);
+            : AsignaturaId::fromNullableInt($id);
     }
 
     public function getIdNivelVo(): NivelId
@@ -74,7 +74,7 @@ class Asignatura
     {
         $this->id_nivel = $id instanceof NivelId
             ? $id
-            : NivelId::fromNullable($id);
+            : NivelId::fromNullableInt($id);
     }
 
     public function getNombreAsignaturaVo(): AsignaturaName
@@ -110,7 +110,7 @@ class Asignatura
     {
         $this->creditos = $texto instanceof Creditos
             ? $texto
-            : Creditos::fromNullable($texto);
+            : Creditos::fromNullableFloat($texto);
     }
 
     public function getYearVo(): ?YearText
@@ -134,7 +134,7 @@ class Asignatura
     {
         $this->id_sector = $valor instanceof SectorId
             ? $valor
-            : SectorId::fromNullable($valor);
+            : SectorId::fromNullableInt($valor);
     }
 
     public function isActive(): bool
@@ -156,7 +156,7 @@ class Asignatura
     {
         $this->id_tipo = $valor instanceof AsignaturaTipoId
             ? $valor
-            : AsignaturaTipoId::fromNullable($valor);
+            : AsignaturaTipoId::fromNullableInt($valor);
     }
 
     // ---------------- LEGACY -----------------
@@ -181,7 +181,7 @@ class Asignatura
 
     public function setId_nivel(int $id_nivel): void
     {
-        $this->id_nivel = NivelId::fromNullable($id_nivel);
+        $this->id_nivel = NivelId::fromNullableInt($id_nivel);
     }
 
 
@@ -217,7 +217,7 @@ class Asignatura
 
     public function setCreditos(?float $creditos = null): void
     {
-        $this->creditos = Creditos::fromNullable($creditos);
+        $this->creditos = Creditos::fromNullableFloat($creditos);
     }
 
 
@@ -241,7 +241,7 @@ class Asignatura
 
     public function setId_sector(?int $id_sector = null): void
     {
-        $this->id_sector = SectorId::fromNullable($id_sector);
+        $this->id_sector = SectorId::fromNullableInt($id_sector);
     }
 
     public function getId_tipo(): ?int
@@ -252,7 +252,7 @@ class Asignatura
 
     public function setId_tipo(?int $id_tipo = null): void
     {
-        $this->id_tipo = AsignaturaTipoId::fromNullable($id_tipo);
+        $this->id_tipo = AsignaturaTipoId::fromNullableInt($id_tipo);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

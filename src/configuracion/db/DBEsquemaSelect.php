@@ -1,6 +1,6 @@
 <?php
 
-namespace configuracion\db;
+namespace src\configuracion\db;
 
 use core\DBRefresh;
 

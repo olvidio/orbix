@@ -4,6 +4,8 @@ namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
 use src\ubis\application\services\UbiContactsTrait;
+use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
 use src\ubis\domain\value_objects\{CentroId,
     DelegacionCode,
     NBuzon,
@@ -18,8 +20,6 @@ use src\ubis\domain\value_objects\{CentroId,
     TipoLaborId,
     UbiNombreText,
     ZonaId};
-use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
-use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -28,6 +28,7 @@ use function core\is_true;
 class CentroDl
 {
     use Hydratable;
+
     // Esto inyecta los métodos getDirecciones, emailPrincipalOPrimero y getTeleco aquí
     use UbiContactsTrait;
 
@@ -51,17 +52,17 @@ class CentroDl
 
     private bool $active;
 
-   private ?DateTimeLocal $f_active = null;
+    private ?DateTimeLocal $f_active = null;
 
-    private bool|null $sv = null;
+    private?bool $sv = null;
 
-    private bool|null $sf = null;
+    private?bool $sf = null;
 
     private ?TipoCentroCode $tipo_ctr = null;
 
     private ?TipoLaborId $tipo_labor = null;
 
-    private bool|null $cdc = null;
+    private?bool $cdc = null;
 
     private ?CentroId $id_ctr_padre = null;
 
@@ -81,7 +82,7 @@ class CentroDl
 
     private ?ZonaId $id_zona = null;
 
-    private bool|null $sede = null;
+    private?bool $sede = null;
 
     private ?NumCartas $num_cartas_mensuales = null;
 
@@ -129,9 +130,11 @@ class CentroDl
         return $this->id_ubi;
     }
 
-    public function setIdUbiVo(CentroId $id): void
+    public function setIdUbiVo(CentroId|int|null $id): void
     {
-        $this->id_ubi = $id;
+        $this->id_ubi = $id instanceof CentroId
+            ? $id
+            : CentroId::fromNullableInt($id);
     }
 
 
@@ -149,7 +152,7 @@ class CentroDl
      */
     public function setNombre_ubi(string $nombre_ubi): void
     {
-        $this->nombre_ubi = new UbiNombreText($nombre_ubi);
+        $this->nombre_ubi = UbiNombreText::fromNullableString($nombre_ubi);
     }
 
     public function getNombreUbiVo(): UbiNombreText
@@ -157,9 +160,11 @@ class CentroDl
         return $this->nombre_ubi;
     }
 
-    public function setNombreUbiVo(UbiNombreText $texto): void
+    public function setNombreUbiVo(UbiNombreText|string $texto): void
     {
-        $this->nombre_ubi = $texto;
+        $this->nombre_ubi = $texto instanceof UbiNombreText
+        ? $texto
+        : UbiNombreText::fromNullableString($texto);
     }
 
 
@@ -277,12 +282,10 @@ class CentroDl
     }
 
 
-
     public function isSv(): ?bool
     {
         return $this->sv;
     }
-
 
 
     public function setSv(?bool $sv = null): void
@@ -291,12 +294,10 @@ class CentroDl
     }
 
 
-
     public function isSf(): ?bool
     {
         return $this->sf;
     }
-
 
 
     public function setSf(?bool $sf = null): void
@@ -349,7 +350,7 @@ class CentroDl
      */
     public function setTipo_labor(?int $tipo_labor = null): void
     {
-        $this->tipo_labor = TipoLaborId::fromNullable($tipo_labor);
+        $this->tipo_labor = TipoLaborId::fromNullableInt($tipo_labor);
     }
 
     public function getTipoLaborVo(): ?TipoLaborId
@@ -361,7 +362,7 @@ class CentroDl
     {
         $this->tipo_labor = $valor instanceof TipoLaborId
             ? $valor
-            : TipoLaborId::fromNullable($valor);
+            : TipoLaborId::fromNullableInt($valor);
     }
 
 
@@ -403,7 +404,7 @@ class CentroDl
     {
         $this->id_ctr_padre = $valor instanceof CentroId
             ? $valor
-            : CentroId::fromNullable($valor);
+            : CentroId::fromNullableInt($valor);
     }
 
 
@@ -433,7 +434,7 @@ class CentroDl
      */
     public function setN_buzon(?int $n_buzon = null): void
     {
-        $this->n_buzon = NBuzon::fromNullable($n_buzon);
+        $this->n_buzon = NBuzon::fromNullableInt($n_buzon);
     }
 
     public function getNBuzonVo(): ?NBuzon
@@ -445,7 +446,7 @@ class CentroDl
     {
         $this->n_buzon = $texto instanceof NBuzon
             ? $texto
-            : NBuzon::fromNullableString($texto);
+            : NBuzon::fromNullableInt($texto);
     }
 
 
@@ -463,7 +464,7 @@ class CentroDl
      */
     public function setNum_pi(?int $num_pi = null): void
     {
-        $this->num_pi = NumPi::fromNullable($num_pi);
+        $this->num_pi = NumPi::fromNullableInt($num_pi);
     }
 
     public function getNumPiVo(): ?NumPi
@@ -475,7 +476,7 @@ class CentroDl
     {
         $this->num_pi = $valor instanceof NumPi
             ? $valor
-            : NumPi::fromNullable($valor);
+            : NumPi::fromNullableInt($valor);
     }
 
 
@@ -493,7 +494,7 @@ class CentroDl
      */
     public function setNum_cartas(?int $num_cartas = null): void
     {
-        $this->num_cartas = NumCartas::fromNullable($num_cartas);
+        $this->num_cartas = NumCartas::fromNullableInt($num_cartas);
     }
 
     public function getNumCartasVo(): ?NumCartas
@@ -505,7 +506,7 @@ class CentroDl
     {
         $this->num_cartas = $valor instanceof NumCartas
             ? $valor
-            : NumCartas::fromNullable($valor);
+            : NumCartas::fromNullableInt($valor);
     }
 
 
@@ -553,7 +554,7 @@ class CentroDl
      */
     public function setNum_habit_indiv(?int $num_habit_indiv = null): void
     {
-        $this->num_habit_indiv = NumHabitIndiv::fromNullable($num_habit_indiv);
+        $this->num_habit_indiv = NumHabitIndiv::fromNullableInt($num_habit_indiv);
     }
 
     public function getNumHabitIndivVo(): ?NumHabitIndiv
@@ -565,7 +566,7 @@ class CentroDl
     {
         $this->num_habit_indiv = $valor instanceof NumHabitIndiv
             ? $valor
-            : NumHabitIndiv::fromNullable($valor);
+            : NumHabitIndiv::fromNullableInt($valor);
     }
 
 
@@ -583,7 +584,7 @@ class CentroDl
      */
     public function setPlazas(?int $plazas = null): void
     {
-        $this->plazas = Plazas::fromNullable($plazas);
+        $this->plazas = Plazas::fromNullableInt($plazas);
     }
 
     public function getPlazasVo(): ?Plazas
@@ -595,7 +596,7 @@ class CentroDl
     {
         $this->plazas = $valor instanceof Plazas
             ? $valor
-            : Plazas::fromNullable($valor);
+            : Plazas::fromNullableInt($valor);
     }
 
 
@@ -613,7 +614,7 @@ class CentroDl
      */
     public function setId_zona(?int $id_zona = null): void
     {
-        $this->id_zona = ZonaId::fromNullable($id_zona);
+        $this->id_zona = ZonaId::fromNullableInt($id_zona);
     }
 
     public function getIdZonaVo(): ?ZonaId
@@ -625,16 +626,14 @@ class CentroDl
     {
         $this->id_zona = $valor instanceof ZonaId
             ? $valor
-            : ZonaId::fromNullable($valor);
+            : ZonaId::fromNullableInt($valor);
     }
-
 
 
     public function isSede(): ?bool
     {
         return $this->sede;
     }
-
 
 
     public function setSede(?bool $sede = null): void
@@ -657,7 +656,7 @@ class CentroDl
      */
     public function setNum_cartas_mensuales(?int $num_cartas_mensuales = null): void
     {
-        $this->num_cartas_mensuales = NumCartas::fromNullable($num_cartas_mensuales);
+        $this->num_cartas_mensuales = NumCartas::fromNullableInt($num_cartas_mensuales);
     }
 
     public function getNumCartasMensualesVo(): ?NumCartas
@@ -669,7 +668,7 @@ class CentroDl
     {
         $this->num_cartas_mensuales = $valor instanceof NumCartas
             ? $valor
-            : NumCartas::fromNullable($valor);
+            : NumCartas::fromNullableInt($valor);
     }
 
     /* MÉTODOS PARA GESTIÓN DE DIRECCIONES ----------------------------------------*/

@@ -342,7 +342,7 @@ class PersonaGlobal
     {
         $this->idioma_preferido = LenguaCode::fromNullableString($idioma_preferido);
     }
-    public function getIdiomaPreferido(): ?LenguaCode
+    public function getIdiomaPreferidoVo(): ?LenguaCode
     {
         return $this->idioma_preferido;
     }

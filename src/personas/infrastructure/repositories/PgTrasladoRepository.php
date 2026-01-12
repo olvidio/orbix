@@ -123,17 +123,9 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $Traslado->getId_nom();
-        $aDatos['tipo_cmb'] = $Traslado->getTipo_cmb();
-        $aDatos['id_ctr_origen'] = $Traslado->getId_ctr_origen();
-        $aDatos['ctr_origen'] = $Traslado->getCtr_origen();
-        $aDatos['id_ctr_destino'] = $Traslado->getId_ctr_destino();
-        $aDatos['ctr_destino'] = $Traslado->getCtr_destino();
-        $aDatos['observ'] = $Traslado->getObserv();
-        // para las fechas
-        $aDatos['f_traslado'] = (new ConverterDate('date', $Traslado->getF_traslado()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $Traslado->toArrayForDatabase([
+            'f_traslado' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

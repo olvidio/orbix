@@ -133,7 +133,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
 
     public function Eliminar(Egm $Egm): bool
     {
-        $id_item = $Egm->getIdItemVo()->value();
+        $id_item = $Egm->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
@@ -145,18 +145,12 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
      */
     public function Guardar(Egm $Egm): bool
     {
-        $id_item = $Egm->getIdItemVo()->value();
+        $id_item = $Egm->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_equipaje'] = $Egm->getIdEquipajeVo()?->value();
-        $aDatos['id_grupo'] = $Egm->getIdGrupoVo()?->value();
-        $aDatos['id_lugar'] = $Egm->getIdLugarVo()?->value();
-        $aDatos['texto'] = $Egm->getTextoVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Egm->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -169,7 +163,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
 
         } else {
             //INSERT
-            $aDatos['id_item'] = $Egm->getIdItemVo()->value();
+            $aDatos['id_item'] = $Egm->getId_item();
             $campos = "(id_item,id_equipaje,id_grupo,id_lugar,texto)";
             $valores = "(:id_item,:id_equipaje,:id_grupo,:id_lugar,:texto)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

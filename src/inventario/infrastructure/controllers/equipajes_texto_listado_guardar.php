@@ -46,7 +46,7 @@ switch ($Qloc) {
         $cEgm = $EgmRepository->getEgmes($aWhere);
         $oEgm = $cEgm[0];
 
-        $oEgm->setTexto($Qtexto);
+        $oEgm->setTextoVo($Qtexto);
         if ($EgmRepository->Guardar($oEgm) === false) {
             $error_txt .= _("hay un error, no se ha guardado");
             $error_txt .= "\n" . $EgmRepository->getErrorTxt();

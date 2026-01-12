@@ -273,7 +273,7 @@ class ProfesorPublicacion
         $this->f_publicacion = $valor;
     }
 
-    public function getPendiente(): ?bool
+    public function isPendiente(): ?bool
     {
         return $this->pendiente;
     }

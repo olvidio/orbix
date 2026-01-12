@@ -72,7 +72,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $this->pdoQuery($oDbl, $sQry_INSERT, __METHOD__, __FILE__, __LINE__);
     }
 
-    public function añadirFaseTarea(int $id_tipo_proceso, int $id_fase, int $id_tarea): void
+    public function addFaseTarea(int $id_tipo_proceso, int $id_fase, int $id_tarea): void
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -167,7 +167,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         */
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($iid_activ);
-        $iid_tipo_activ = $oActividad->getId_tipo_activ();
+        $iid_tipo_activ = $oActividad->getIdTipoActividadVo()->value();
         $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
         $oTipoDeActividad = $TipoDeActividadRepository->findById($iid_tipo_activ);
 
@@ -206,7 +206,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 // - y no se hace en una casa de la dl.
                 if ($isfsv != $sfsv) {
                     $id_ubi = $oActividad->getId_ubi();
-                    $dl_casa = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi)?->getDl();
+                    $dl_casa = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi)?->getDlVo()->value();
                     if ($dl_casa != ConfigGlobal::mi_dele()) {
                         continue;
                     }
@@ -224,7 +224,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 if (empty($cActividadProcesoTarea)) {
                     $iid_fase[$sfsv] = $this->generar($iid_activ, $id_tipo_proceso, $sfsv, $force);
                 } else {
-                    $iid_fase[$sfsv] = $cActividadProcesoTarea[0]->getId_fase();
+                    $iid_fase[$sfsv] = $cActividadProcesoTarea[0]->getIdFaseVo()->value();
                 }
             } else {
                 $iid_fase[$sfsv] = $this->generar($iid_activ, $id_tipo_proceso, $sfsv, $force);
@@ -344,7 +344,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($iid_activ);
         $nom_activ = $oActividad->getNom_activ();
-        $statusActividad = $oActividad->getStatus();
+        $statusActividad = $oActividad->getStatusVo()->value();
 
         // Si es borrable, hay que ver que hacemos: de momento nada.
         if ($statusActividad === StatusId::BORRABLE) {
@@ -361,9 +361,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         if ($oFini < $oHoy && $force === FALSE) {
             // Anterior
             foreach ($cTareasProceso as $oTareaProceso) {
-                $id_fase = $oTareaProceso->getId_fase();
-                $id_tarea = $oTareaProceso->getId_tarea();
-                $statusFase = $oTareaProceso->getStatus();
+                $id_fase = $oTareaProceso->getIdFaseVo()?->value();
+                $id_tarea = $oTareaProceso->getIdTareaVo()?->value();
+                $statusFase = $oTareaProceso->getStatusVo()->value();
                 if ($statusFase <= $statusActividad) {
                     $completado = 't';
                 } else {
@@ -372,11 +372,11 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $newIdItem = $ActividadProcesoTareaRepository->getNewId();
                 $oActividadProcesoTarea = new ActividadProcesoTarea();
                 $oActividadProcesoTarea->setId_item($newIdItem);
-                //??? $oActividadProcesoTarea->setSfsv($isfsv);
-                $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
-                $oActividadProcesoTarea->setId_activ($iid_activ);
-                $oActividadProcesoTarea->setId_fase($id_fase);
-                $oActividadProcesoTarea->setId_tarea($id_tarea);
+                //??? $oActividadProcesoTarea->setSfsvVo($isfsv);
+                $oActividadProcesoTarea->setIdTipoProcesoVo($iid_tipo_proceso);
+                $oActividadProcesoTarea->setIdActividadVo($iid_activ);
+                $oActividadProcesoTarea->setIdFaseVo($id_fase);
+                $oActividadProcesoTarea->setIdTareaVo($id_tarea);
                 $oActividadProcesoTarea->setCompletado($completado);
                 if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
                     echo "1.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
@@ -391,17 +391,17 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $statusNew = '';
                 foreach ($cTareasProceso as $oTareaProceso) {
                     $p++;
-                    $id_fase = $oTareaProceso->getId_fase();
-                    $id_tarea = $oTareaProceso->getId_tarea();
-                    $statusFase = $oTareaProceso->getStatus();
+                    $id_fase = $oTareaProceso->getIdFaseVo()?->value();
+                    $id_tarea = $oTareaProceso->getIdTareaVo()?->value();
+                    $statusFase = $oTareaProceso->getStatusVo()->value();
                     $newIdItem = $ActividadProcesoTareaRepository->getNewId();
                     $oActividadProcesoTarea = new ActividadProcesoTarea();
                     $oActividadProcesoTarea->setId_item($newIdItem);
-                    //??? $oActividadProcesoTarea->setSfsv($isfsv);
-                    $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
-                    $oActividadProcesoTarea->setId_activ($iid_activ);
-                    $oActividadProcesoTarea->setId_fase($id_fase);
-                    $oActividadProcesoTarea->setId_tarea($id_tarea);
+                    //??? $oActividadProcesoTarea->setSfsvVo($isfsv);
+                    $oActividadProcesoTarea->setIdTipoProcesoVo($iid_tipo_proceso);
+                    $oActividadProcesoTarea->setIdActividadVo($iid_activ);
+                    $oActividadProcesoTarea->setIdFaseVo($id_fase);
+                    $oActividadProcesoTarea->setIdTareaVo($id_tarea);
                     if ($p === 1) {
                         $oActividadProcesoTarea->setCompletado('t'); // Marco la primera fase como completado.
                         // marco el status correspondiente en la actividad. Hay que hacerlo al final para no entrar en
@@ -418,7 +418,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
                 // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
                 if ($dl_org_no_f === ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
-                    $oActividad->setStatus($statusNew);
+                    $oActividad->setStatusVo($statusNew);
                     $quiet = 1; // Para que no anote el cambio.
                     $oActividad->DBGuardar($quiet);
                 }
@@ -427,17 +427,17 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 // al hacer 'insert' no marca dependencias (sólo con 'update').
                 // por tanto doy dos vueltas, una para crear las fases y otra para marcar las completadas
                 foreach ($cTareasProceso as $oTareaProceso) {
-                    $id_fase = $oTareaProceso->getId_fase();
-                    $id_tarea = $oTareaProceso->getId_tarea();
-                    $statusFase = $oTareaProceso->getStatus();
+                    $id_fase = $oTareaProceso->getIdFaseVo()?->value();
+                    $id_tarea = $oTareaProceso->getIdTareaVo()?->value();
+                    $statusFase = $oTareaProceso->getStatusVo()->value();
                     $newIdItem = $ActividadProcesoTareaRepository->getNewId();
                     $oActividadProcesoTarea = new ActividadProcesoTarea();
                     $oActividadProcesoTarea->setId_item($newIdItem);
-                    //??? $oActividadProcesoTarea->setSfsv($isfsv);
-                    $oActividadProcesoTarea->setId_tipo_proceso($iid_tipo_proceso);
-                    $oActividadProcesoTarea->setId_activ($iid_activ);
-                    $oActividadProcesoTarea->setId_fase($id_fase);
-                    $oActividadProcesoTarea->setId_tarea($id_tarea);
+                    //??? $oActividadProcesoTarea->setSfsvVo($isfsv);
+                    $oActividadProcesoTarea->setIdTipoProcesoVo($iid_tipo_proceso);
+                    $oActividadProcesoTarea->setIdActividadVo($iid_activ);
+                    $oActividadProcesoTarea->setIdFaseVo($id_fase);
+                    $oActividadProcesoTarea->setIdTareaVo($id_tarea);
                     if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
                         echo "3.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
                         //return false;
@@ -449,7 +449,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 ];
                 $cActividadProcesoTarea = $this->getActividadProcesoTareas($aWhere);
                 foreach ($cActividadProcesoTarea as $oActividadProcesoTarea) {
-                    $id_fase = $oActividadProcesoTarea->getId_fase();
+                    $id_fase = $oActividadProcesoTarea->getIdFaseVo()?->value();
                     $completado = 'f';
                     // marco el status correspondiente en la actividad.
                     if ($statusActividad === StatusId::PROYECTO) {
@@ -479,7 +479,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         }
 
         if (!empty($cTareasProceso[0])) {
-            return $cTareasProceso[0]->getId_fase();
+            return $cTareasProceso[0]->getIdFaseVo()->value();
         } else {
             $ProcesoTipoRepository = $GLOBALS['container']->get(ProcesoTipoRepositoryInterface::class);
             $oProcesoTipo = $ProcesoTipoRepository->findById($iid_tipo_proceso);
@@ -493,6 +493,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             $msg .= "<br>";
             echo $msg;
         }
+        return true;
     }
 
     /**
@@ -508,12 +509,12 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $id_item = $ActividadProcesoTarea->getId_item();
 
         $aDades = [];
-        $aDades['id_tipo_proceso'] = $ActividadProcesoTarea->getId_tipo_proceso();
+        $aDades['id_tipo_proceso'] = $ActividadProcesoTarea->getIdTipoProcesoVo()->value();
         $aDades['id_activ'] = $ActividadProcesoTarea->getId_activ();
-        $aDades['id_fase'] = $ActividadProcesoTarea->getId_fase();
-        $aDades['id_tarea'] = $ActividadProcesoTarea->getId_tarea();
+        $aDades['id_fase'] = $ActividadProcesoTarea->getIdFaseVo()?->value();
+        $aDades['id_tarea'] = $ActividadProcesoTarea->getIdTareaVo()?->value();
         $aDades['completado'] = $ActividadProcesoTarea->isCompletado();
-        $aDades['observ'] = $ActividadProcesoTarea->getObserv();
+        $aDades['observ'] = $ActividadProcesoTarea->getObservVo()?->value();
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDades['completado'])) {
@@ -637,21 +638,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_tipo_proceso'] = $ActividadProcesoTarea->getId_tipo_proceso();
-        $aDatos['id_activ'] = $ActividadProcesoTarea->getId_activ();
-        $aDatos['id_fase'] = $ActividadProcesoTarea->getId_fase();
-        $aDatos['id_tarea'] = $ActividadProcesoTarea->getId_tarea();
-        $aDatos['completado'] = $ActividadProcesoTarea->isCompletado();
-        $aDatos['observ'] = $ActividadProcesoTarea->getObserv();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['completado'])) {
-            $aDatos['completado'] = 'true';
-        } else {
-            $aDatos['completado'] = 'false';
-        }
-
+        $aDatos = $ActividadProcesoTarea->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

@@ -62,7 +62,7 @@ class ProfesorActividad
                 continue;
             }
             // solo puede ser PersonaEx o PersonaIN;
-            $profesor_stgr = $oPersona->getProfesor_stgr();
+            $profesor_stgr = $oPersona->isProfesor_stgr();
             if (!is_true($profesor_stgr)) {
                 continue;
             }
@@ -71,9 +71,9 @@ class ProfesorActividad
             //$ctr_dl=$oPersona->getCentro_o_dl();
 
             $aProfesoresEx[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
-            $aAp1[] = $oPersona->getApellido1();
-            $aAp2[] = $oPersona->getApellido2();
-            $aNom[] = $oPersona->getNom();
+            $aAp1[] = $oPersona->getApellido1Vo()->value();
+            $aAp2[] = $oPersona->getApellido2Vo()->value();
+            $aNom[] = $oPersona->getNomVo()->value();
         }
         $multisort_args = [];
         $multisort_args[] = $aAp1;

@@ -60,7 +60,7 @@ class PersonaAgd extends PersonaDl
     {
         $this->ce = $ce instanceof CeCurso
             ? $ce
-            : CeCurso::fromNullable($ce);
+            : CeCurso::fromNullableInt($ce);
     }
 
     /**
@@ -88,7 +88,7 @@ class PersonaAgd extends PersonaDl
     {
         $this->ce_ini = $ce instanceof CeNumber
             ? $ce
-            : CeNumber::fromNullable($ce);
+            : CeNumber::fromNullableInt($ce);
     }
 
     /**
@@ -116,7 +116,7 @@ class PersonaAgd extends PersonaDl
     {
         $this->ce_fin = $ce instanceof CeNumber
             ? $ce
-            : CeNumber::fromNullable($ce);
+            : CeNumber::fromNullableInt($ce);
     }
 
     /**

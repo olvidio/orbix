@@ -44,17 +44,17 @@ class Centro
 
     private bool $active;
 
-   private ?DateTimeLocal $f_active = null;
+    private ?DateTimeLocal $f_active = null;
 
-    private bool|null $sv = null;
+    private?bool $sv = null;
 
-    private bool|null $sf = null;
+    private?bool $sf = null;
 
     private ?TipoCentroCode $tipo_ctr = null;
 
     private ?TipoLaborId $tipo_labor = null;
 
-    private bool|null $cdc = null;
+    private?bool $cdc = null;
 
     private ?CentroId $id_ctr_padre = null;
 
@@ -112,9 +112,11 @@ class Centro
     }
 
     /** Setter VO para id_ubi */
-    public function setIdUbiVo(CentroId $id): void
+    public function setIdUbiVo(CentroId|int|null $id): void
     {
-        $this->id_ubi = $id;
+        $this->id_ubi = $id instanceof CentroId
+            ? $id
+            : CentroId::fromNullableInt($id);
     }
 
 
@@ -140,9 +142,11 @@ class Centro
         return $this->nombre_ubi;
     }
 
-    public function setNombreUbiVo(UbiNombreText $texto): void
+    public function setNombreUbiVo(UbiNombreText|string|null $texto): void
     {
-        $this->nombre_ubi = $texto;
+        $this->nombre_ubi = $texto instanceof UbiNombreText
+            ? $texto
+            : new UbiNombreText($texto);
     }
 
 
@@ -272,12 +276,10 @@ class Centro
     }
 
 
-
     public function isSv(): ?bool
     {
         return $this->sv;
     }
-
 
 
     public function setSv(?bool $sv = null): void
@@ -286,12 +288,10 @@ class Centro
     }
 
 
-
     public function isSf(): ?bool
     {
         return $this->sf;
     }
-
 
 
     public function setSf(?bool $sf = null): void
@@ -344,7 +344,7 @@ class Centro
      */
     public function setTipo_labor(?int $tipo_labor = null): void
     {
-        $this->tipo_labor = TipoLaborId::fromNullable($tipo_labor);
+        $this->tipo_labor = TipoLaborId::fromNullableInt($tipo_labor);
     }
 
     public function getTipoLaborVo(): ?TipoLaborId
@@ -356,16 +356,14 @@ class Centro
     {
         $this->tipo_labor = $valor instanceof TipoLaborId
             ? $valor
-            : TipoLaborId::fromNullable($valor);
+            : TipoLaborId::fromNullableInt($valor);
     }
-
 
 
     public function isCdc(): ?bool
     {
         return $this->cdc;
     }
-
 
 
     public function setCdc(?bool $cdc = null): void
@@ -400,7 +398,7 @@ class Centro
     {
         $this->id_ctr_padre = $valor instanceof CentroId
             ? $valor
-            : CentroId::fromNullable($valor);
+            : CentroId::fromNullableInt($valor);
     }
 
     public function getIdAuto(): int

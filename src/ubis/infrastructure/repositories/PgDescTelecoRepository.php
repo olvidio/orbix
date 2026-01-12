@@ -150,26 +150,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        // Usar la API basada en Value Objects
-        $aDatos['orden'] = $DescTeleco->getOrdenVo()?->value();
-        $aDatos['id_tipo_teleco'] = $DescTeleco->getIdTipoTelecoVo()?->value();
-        $aDatos['desc_teleco'] = $DescTeleco->getDescTelecoVo()?->value();
-        $aDatos['ubi'] = $DescTeleco->isUbi();
-        $aDatos['persona'] = $DescTeleco->isPersona();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['ubi'])) {
-            $aDatos['ubi'] = 'true';
-        } else {
-            $aDatos['ubi'] = 'false';
-        }
-        if (is_true($aDatos['persona'])) {
-            $aDatos['persona'] = 'true';
-        } else {
-            $aDatos['persona'] = 'false';
-        }
-
+        $aDatos = $DescTeleco->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

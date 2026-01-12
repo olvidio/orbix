@@ -60,17 +60,17 @@ class UbiGasto
     }
 
 
-    public function getTipoVo(): ?UbiGastoTipo
+    public function getTipoGastoVo(): ?UbiGastoTipo
     {
         return $this->tipo;
     }
 
 
-    public function setTipoVo(UbiGastoTipo|int|null $texto = null): void
+    public function setTipoGastoVo(UbiGastoTipo|int|null $texto = null): void
     {
         $this->tipo = $texto instanceof UbiGastoTipo
             ? $texto
-            : UbiGastoTipo::fromNullable($texto);
+            : UbiGastoTipo::fromNullableInt($texto);
     }
 
 

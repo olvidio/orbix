@@ -191,10 +191,7 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($uuid_item);
 
-        $aDatos = [];
-        $aDatos['id_enc'] = $EncargoCtr->getId_enc();
-        $aDatos['id_ubi'] = $EncargoCtr->getId_ubi();
-
+        $aDatos = $EncargoCtr->toArrayForDatabase();
         if ($bInsert === FALSE) {
             //UPDATE
             $update = "

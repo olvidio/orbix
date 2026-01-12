@@ -94,11 +94,11 @@ $oPersona = $repoPersona->findById($id_nom);
 $nom = $oPersona->getNombreApellidos();
 $dl = $oPersona->getDl();
 $lengua = $oPersona->getIdioma_preferido();
-$f_nacimiento = $oPersona->getF_nacimiento()->getFromLocal();
+$f_nacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
 $santo = '';
 $celebra = '';
 $situacion = $oPersona->getSituacion();
-$f_situacion = $oPersona->getF_situacion()->getFromLocal();
+$f_situacion = $oPersona->getF_situacion()?->getFromLocal();
 $profesion = $oPersona->getProfesion();
 $stgr = $oPersona->getNivel_stgr();
 if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {

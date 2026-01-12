@@ -1,6 +1,6 @@
 <?php
 
-namespace devel\model;
+namespace src\utils_database\domain\entity;
 
 use core\ConfigDB;
 use core\ConfigGlobal;

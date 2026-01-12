@@ -151,4 +151,127 @@ trait Hydratable
 
         return $data;
     }
+
+    /**
+     * Convierte la entidad a un array asociativo con valores primitivos para base de datos.
+     *
+     * ESTRATEGIA DE CONVERSIÓN (prioridades):
+     * 1. Busca getXxxVo() y extrae value() si es un VO (método preferido)
+     * 2. Busca isXxx() para propiedades booleanas
+     * 3. Busca getXxx() estándar (fallback, incluye deprecated)
+     * 4. Convierte DateTimeLocal/TimeLocal a strings formato BD
+     * 5. Convierte arrays PHP a formato PostgreSQL con array_php2pg()
+     * 6. Aplica conversiones especiales definidas en $converters (JSON, timestamp, etc.)
+     *
+     * @param array $converters Array opcional con conversiones especiales por campo
+     *          Formato: ['campo' => callable] donde callable recibe el valor y devuelve convertido
+     *          Ejemplo: ['timestamp_cambio' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
+     *                    'json_fases_sv' => fn($v) => (new ConverterJson($v, false))->toPg(false),
+     *                   ]);
+     * @return array Array con valores primitivos listos para INSERT/UPDATE
+     *
+     * @example
+     * ```php
+     * $actividad = ActividadAll::fromArray($data);
+     * $dbData = $actividad->toArrayForDatabase();
+     * // ['id_activ' => 123, 'nom_activ' => 'Curso PHP', 'precio' => 50.00]
+     *
+     * // Con conversiones especiales
+     * $dbData = $cambio->toArrayForDatabase([
+     *     'timestamp_cambio' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
+     *     'json_fases_sv' => fn($v) => (new ConverterJson($v, false))->toPg(false),
+     * ]);
+     * ```
+     */
+    public function toArrayForDatabase(array $converters = []): array
+    {
+        $reflection = new \ReflectionClass($this);
+        $properties = $reflection->getProperties(\ReflectionProperty::IS_PRIVATE | \ReflectionProperty::IS_PROTECTED);
+        $data = [];
+
+        foreach ($properties as $property) {
+            $name = $property->getName();
+            if ($name === 'id_auto') { continue; }
+            $value = null;
+            $isBoolean = false; // Flag para saber si el campo es booleano
+
+            // Convertir snake_case a PascalCase para buscar métodos Vo
+            $methodNameVo = str_replace('_', '', ucwords($name, '_'));
+
+            // Prioridad 1: Buscar getter Vo (getXxxVo) y extraer value()
+            $methodVo = 'get' . $methodNameVo . 'Vo';
+            if (method_exists($this, $methodVo)) {
+                $vo = $this->$methodVo();
+                // Si es un VO con método toArray() (para VOs que encapsulan arrays)
+                if (is_object($vo) && method_exists($vo, 'toArray')) {
+                    $value = $vo->toArray();
+                }
+                // Si es un VO con método value(), extraerlo
+                elseif (is_object($vo) && method_exists($vo, 'value')) {
+                    $value = $vo->value();
+                }
+                // Si es un VO tipo Dinero con asFloat()
+                elseif (is_object($vo) && method_exists($vo, 'asFloat')) {
+                    $value = $vo->asFloat();
+                }
+                // Si es DateTimeLocal/TimeLocal, convertir a string
+                elseif (is_object($vo) && method_exists($vo, 'format')) {
+                    $value = $vo->format('Y-m-d H:i:s');
+                }
+                // Si es un objeto genérico, usar toString si existe
+                elseif (is_object($vo) && method_exists($vo, '__toString')) {
+                    $value = (string) $vo;
+                }
+                // Si es null o ya es primitivo, usarlo directamente
+                else {
+                    $value = $vo;
+                }
+            }
+            // Prioridad 2: Buscar getter de boolean (isXxx)
+            elseif (method_exists($this, 'is' . ucfirst($name))) {
+                $value = $this->{'is' . ucfirst($name)}();
+                $isBoolean = true; // Marcar como booleano
+            }
+            // Prioridad 3: Fallback a getter estándar (getXxx) - incluye deprecated
+            else {
+                $method = 'get' . ucfirst($name);
+                if (method_exists($this, $method)) {
+                    $value = $this->$method();
+                }
+            }
+
+            // Aplicar conversiones especiales primero (tienen prioridad máxima)
+            if (isset($converters[$name]) && is_callable($converters[$name])) {
+                $value = $converters[$name]($value);
+            }
+            // Para booleanos: null o false => 'false', true => 'true'
+            elseif ($isBoolean) {
+                $value = ($value === true) ? 'true' : 'false';
+            }
+            // Convertir tipos especiales a formato BD (si no hay converter específico)
+            elseif ($value instanceof \DateTimeInterface) {
+                $value = $value->format('Y-m-d H:i:s');
+            }
+            // Para TimeLocal sin fecha
+            elseif (is_object($value) && method_exists($value, 'format') && !($value instanceof \DateTimeInterface)) {
+                // Asumir que es TimeLocal
+                $value = $value->format('H:i:s');
+            }
+            // Para arrays PHP, convertir a formato PostgreSQL
+            elseif (is_array($value)) {
+                $value = \core\array_php2pg($value);
+            }
+            // Para booleanos que no vengan de isXxx() (detectados por tipo)
+            elseif (is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            }
+
+            $data[$name] = $value;
+        }
+
+        // Aplicar core\poner_null para convertir strings vacíos a NULL
+        array_walk($data, 'core\poner_null');
+
+        return $data;
+    }
 }

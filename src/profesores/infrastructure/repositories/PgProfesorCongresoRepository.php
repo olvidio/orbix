@@ -124,16 +124,10 @@ class PgProfesorCongresoRepository extends ClaseRepository implements ProfesorCo
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $ProfesorCongreso->getId_nom();
-        $aDatos['congreso'] = $ProfesorCongreso->getCongreso();
-        $aDatos['lugar'] = $ProfesorCongreso->getLugar();
-        $aDatos['organiza'] = $ProfesorCongreso->getOrganiza();
-        $aDatos['tipo'] = $ProfesorCongreso->getTipo();
-        // para las fechas
-        $aDatos['f_ini'] = (new ConverterDate('date', $ProfesorCongreso->getF_ini()))->toPg();
-        $aDatos['f_fin'] = (new ConverterDate('date', $ProfesorCongreso->getF_fin()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $ProfesorCongreso->toArrayForDatabase([
+            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_fin' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

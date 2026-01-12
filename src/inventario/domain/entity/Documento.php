@@ -68,7 +68,7 @@ class Documento
 
     public function setId_doc(int $id_doc): void
     {
-        $this->id_doc = DocumentoId::fromNullable($id_doc);
+        $this->id_doc = DocumentoId::fromNullableInt($id_doc);
     }
 
 
@@ -80,7 +80,7 @@ class Documento
 
     public function setId_tipo_doc(int $id_tipo_doc): void
     {
-        $this->id_tipo_doc = TipoDocId::fromNullable($id_tipo_doc);
+        $this->id_tipo_doc = TipoDocId::fromNullableInt($id_tipo_doc);
     }
 
 
@@ -92,7 +92,7 @@ class Documento
 
     public function setId_ubi(int $id_ubi): void
     {
-        $this->id_ubi = UbiInventarioId::fromNullable($id_ubi);
+        $this->id_ubi = UbiInventarioId::fromNullableInt($id_ubi);
     }
 
 
@@ -104,7 +104,7 @@ class Documento
 
     public function setId_lugar(?int $id_lugar = null): void
     {
-        $this->id_lugar = LugarId::fromNullable($id_lugar);
+        $this->id_lugar = LugarId::fromNullableInt($id_lugar);
     }
 
     public function getF_recibido(): DateTimeLocal|NullDateTimeLocal|null
@@ -249,7 +249,7 @@ class Documento
 
     public function setNum_reg(?int $num_reg = null): void
     {
-        $this->num_reg = DocumentoNumReg::fromNullable($num_reg);
+        $this->num_reg = DocumentoNumReg::fromNullableInt($num_reg);
     }
 
 
@@ -261,7 +261,7 @@ class Documento
 
     public function setNum_ini(?int $num_ini = null): void
     {
-        $this->num_ini = DocumentoNumIni::fromNullable($num_ini);
+        $this->num_ini = DocumentoNumIni::fromNullableInt($num_ini);
     }
 
 
@@ -273,7 +273,7 @@ class Documento
 
     public function setNum_fin(?int $num_fin = null): void
     {
-        $this->num_fin = DocumentoNumFin::fromNullable($num_fin);
+        $this->num_fin = DocumentoNumFin::fromNullableInt($num_fin);
     }
 
 
@@ -297,20 +297,20 @@ class Documento
 
     public function setNum_ejemplares(?int $num_ejemplares = null): void
     {
-        $this->num_ejemplares = DocumentoNumEjemplares::fromNullable($num_ejemplares);
+        $this->num_ejemplares = DocumentoNumEjemplares::fromNullableInt($num_ejemplares);
     }
 
     // Value Object API (duplicada con legacy)
     public function getIdDocVo(): DocumentoId
     {
-        return this->id_doc;
+        return $this->id_doc;
     }
 
     public function setIdDocVo(DocumentoId|int|null $id = null): void
     {
         $this->id_doc = $id instanceof DocumentoId
             ? $id
-            : DocumentoId::fromNullable($id);
+            : DocumentoId::fromNullableInt($id);
     }
 
     public function getIdTipoDocVo(): TipoDocId
@@ -322,7 +322,7 @@ class Documento
     {
         $this->id_tipo_doc = $id instanceof TipoDocId
             ? $id
-            : TipoDocId::fromNullable($id);
+            : TipoDocId::fromNullableInt($id);
     }
 
     public function getIdUbiVo(): UbiInventarioId
@@ -334,7 +334,7 @@ class Documento
     {
         $this->id_ubi = $id instanceof UbiInventarioId
             ? $id
-            : UbiInventarioId::fromNullable($id);
+            : UbiInventarioId::fromNullableInt($id);
     }
 
     public function getIdLugarVo(): ?LugarId
@@ -346,7 +346,7 @@ class Documento
     {
         $this->id_lugar = $valor instanceof LugarId
             ? $valor
-            : LugarId::fromNullable($valor);
+            : LugarId::fromNullableInt($valor);
     }
 
     public function getObservVo(): ?DocumentoObserv
@@ -394,7 +394,7 @@ class Documento
     {
         $this->num_reg = $valor instanceof DocumentoNumReg
             ? $valor
-            : DocumentoNumReg::fromNullable($valor);
+            : DocumentoNumReg::fromNullableInt($valor);
     }
 
     public function getNumIniVo(): ?DocumentoNumIni
@@ -406,7 +406,7 @@ class Documento
     {
         $this->num_ini = $valor instanceof DocumentoNumIni
             ? $valor
-            : DocumentoNumIni::fromNullable($valor);
+            : DocumentoNumIni::fromNullableInt($valor);
     }
 
     public function getNumFinVo(): ?DocumentoNumFin
@@ -418,7 +418,7 @@ class Documento
     {
         $this->num_fin = $valor instanceof DocumentoNumFin
             ? $valor
-            : DocumentoNumFin::fromNullable($valor);
+            : DocumentoNumFin::fromNullableInt($valor);
     }
 
     public function getNumEjemplaresVo(): ?DocumentoNumEjemplares
@@ -430,7 +430,7 @@ class Documento
     {
         $this->num_ejemplares = $valor instanceof DocumentoNumEjemplares
             ? $valor
-            : DocumentoNumEjemplares::fromNullable($valor);
+            : DocumentoNumEjemplares::fromNullableInt($valor);
     }
 
     public function getEnBusquedaVo(): ?bool

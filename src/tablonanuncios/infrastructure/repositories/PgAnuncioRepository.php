@@ -107,7 +107,7 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
 
     public function Eliminar(Anuncio $Anuncio): bool
     {
-        $uuid_item = $Anuncio->getUuid_item();
+        $uuid_item = $Anuncio->getUuid_item()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
@@ -120,24 +120,15 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
      */
     public function Guardar(Anuncio $Anuncio): bool
     {
-        $uuid_item = $Anuncio->getUuid_item();
+        $uuid_item = $Anuncio->getUuid_item()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($uuid_item);
+        $bInsert = $this->isNew($Anuncio->getUuid_item());
 
-        $aDatos = [];
-        $aDatos['usuario_creador'] = $Anuncio->getUsuarioCreador();
-        $aDatos['esquema_emisor'] = $Anuncio->getEsquemaEmisor();
-        $aDatos['esquema_destino'] = $Anuncio->getEsquemaDestino();
-        $aDatos['texto_anuncio'] = $Anuncio->getTextoAnuncio();
-        $aDatos['idioma'] = $Anuncio->getIdioma();
-        $aDatos['tablon'] = $Anuncio->getTablon();
-        $aDatos['categoria'] = $Anuncio->getCategoria();
-
-        // para las fechas
-        $aDatos['tanotado'] = (new ConverterDate('timestamp', $Anuncio->getTanotado()))->toPg();
-        $aDatos['teliminado'] = (new ConverterDate('timestamp', $Anuncio->getTeliminado()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $Anuncio->toArrayForDatabase([
+            'tanotado' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
+            'teliminado' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
+        ]);
 
         if ($bInsert === FALSE) {
             //UPDATE
@@ -154,7 +145,7 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['uuid_item'] = $Anuncio->getUuid_item();
+            $aDatos['uuid_item'] = $uuid_item;
             $campos = "(uuid_item,usuario_creador,esquema_emisor,esquema_destino,texto_anuncio,idioma,tablon,tanotado,teliminado,categoria)";
             $valores = "(:uuid_item,:usuario_creador,:esquema_emisor,:esquema_destino,:texto_anuncio,:idioma,:tablon,:tanotado,:teliminado,:categoria)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
@@ -163,10 +154,11 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
-    private function isNew(AnuncioId $uuid_item): bool
+    private function isNew(AnuncioId $vo): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
+        $uuid_item = $vo->value();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if (!$stmt->rowCount()) {
@@ -179,13 +171,14 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param AnuncioId $uuid_item
+     * @param AnuncioId $vo
      * @return array|bool
      */
-    public function datosById(AnuncioId $uuid_item): array|bool
+    public function datosById(AnuncioId $vo): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
+        $uuid_item = $vo->value();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -201,9 +194,9 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(AnuncioId $uuid_item): ?Anuncio
+    public function findById(AnuncioId $vo): ?Anuncio
     {
-        $aDatos = $this->datosById($uuid_item);
+        $aDatos = $this->datosById($vo);
         if (empty($aDatos)) {
             return null;
         }

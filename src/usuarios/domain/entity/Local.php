@@ -23,7 +23,7 @@ class Local
 
     private ?NombreIdioma $nom_idioma = null;
 
-    private bool $activo;
+    private bool $active;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -121,14 +121,14 @@ class Local
     }
 
 
-    public function isActivo(): bool
+    public function isActive(): bool
     {
-        return $this->activo;
+        return $this->active;
     }
 
 
-    public function setActivo(bool $activo): void
+    public function setActive(bool $active): void
     {
-        $this->activo = $activo;
+        $this->active = $active;
     }
 }

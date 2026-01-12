@@ -47,4 +47,12 @@ final class TipoTelecoCode
     {
         return new self($value);
     }
+
+    public static function fromNullableString(?string $value): ?self
+    {
+        if ($value === null) { return null; }
+        $value = trim($value);
+        if ($value === '') { return null; }
+        return new self($value);
+    }
 }

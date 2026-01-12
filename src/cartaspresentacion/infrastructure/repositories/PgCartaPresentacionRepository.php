@@ -122,14 +122,7 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_ubi, $id_direccion);
 
-        $aDatos = [];
-        $aDatos['pres_nom'] = $CartaPresentacion->getPres_nom();
-        $aDatos['pres_telf'] = $CartaPresentacion->getPres_telf();
-        $aDatos['pres_mail'] = $CartaPresentacion->getPres_mail();
-        $aDatos['zona'] = $CartaPresentacion->getZona();
-        $aDatos['observ'] = $CartaPresentacion->getObserv();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $CartaPresentacion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

@@ -13,9 +13,9 @@ if ($oPersona === null) {
     $data = 'ok';
 } else {
     $data['nombreApellidos'] = $oPersona->getNombreApellidos();
-    $data['lugar_nacimiento'] = $oPersona->getLugar_nacimiento();
+    $data['lugar_nacimiento'] = $oPersona->getLugarNacimientoVo()->value();
     $data['f_nacimiento'] = $oPersona->getF_nacimiento()->getFechaLatin();
-    $data['nivel_stgr'] = $oPersona->getNivel_stgr();
+    $data['nivel_stgr'] = $oPersona->getNivelStgrVo()->value();
 
     $data['region_latin'] = $_SESSION['oConfig']->getNomRegionLatin();
     $data['vstgr'] = $_SESSION['oConfig']->getNomVstgr();

@@ -122,18 +122,7 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_region);
 
-        $aDatos = [];
-        $aDatos['region'] = $Region->getRegionVo()?->value() ?? '';
-        $aDatos['nombre_region'] = $Region->getNombre_region();
-        $aDatos['active'] = $Region->isActive();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['active'])) {
-            $aDatos['active'] = 'true';
-        } else {
-            $aDatos['active'] = 'false';
-        }
-
+        $aDatos = $Region->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

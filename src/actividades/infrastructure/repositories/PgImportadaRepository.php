@@ -122,9 +122,7 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_activ);
 
-        $aDatos = [];
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Importada->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             /* No hacer nada, ya está en la lista */

@@ -124,25 +124,9 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $Publicacion->getId_nom();
-        $aDatos['tipo_publicacion'] = $Publicacion->getTipo_publicacion();
-        $aDatos['titulo'] = $Publicacion->getTitulo();
-        $aDatos['editorial'] = $Publicacion->getEditorial();
-        $aDatos['coleccion'] = $Publicacion->getColeccion();
-        $aDatos['pendiente'] = $Publicacion->isPendiente();
-        $aDatos['referencia'] = $Publicacion->getReferencia();
-        $aDatos['lugar'] = $Publicacion->getLugar();
-        $aDatos['observ'] = $Publicacion->getObserv();
-        // para las fechas
-        $aDatos['f_publicacion'] = (new ConverterDate('date', $Publicacion->getF_publicacion()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['pendiente'])) {
-            $aDatos['pendiente'] = 'true';
-        } else {
-            $aDatos['pendiente'] = 'false';
-        }
+        $aDatos = $Publicacion->toArrayForDatabase([
+            'f_publicacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

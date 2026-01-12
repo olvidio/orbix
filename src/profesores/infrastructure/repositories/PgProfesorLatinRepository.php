@@ -121,16 +121,7 @@ class PgProfesorLatinRepository extends ClaseRepository implements ProfesorLatin
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom);
 
-        $aDatos = [];
-        $aDatos['latin'] = $ProfesorLatin->isLatin();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['latin'])) {
-            $aDatos['latin'] = 'true';
-        } else {
-            $aDatos['latin'] = 'false';
-        }
-
+        $aDatos = $ProfesorLatin->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

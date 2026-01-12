@@ -21,7 +21,7 @@ foreach ($cEgm as $oEgm) {
     $a_egm[$i]['id_grupo'] = $id_grupo;
     $id_lugar = $oEgm->getId_lugar();
     $a_egm[$i]['id_lugar'] = $id_lugar;
-    $texto = $oEgm->getTexto();
+    $texto = $oEgm->getTextoVo()->value();
     $a_egm[$i]['texto'] = $texto;
 
     $oLugar = $LugarRepository->findById($id_lugar);

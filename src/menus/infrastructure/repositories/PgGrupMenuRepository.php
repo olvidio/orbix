@@ -138,11 +138,7 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_grupmenu);
 
-        $aDatos = [];
-        $aDatos['grup_menu'] = $GrupMenu->getGrup_menu();
-        $aDatos['orden'] = $GrupMenu->getOrden();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $GrupMenu->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -159,6 +155,7 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
         $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        return true;
     }
 
     private function isNew(int $id_grupmenu): bool

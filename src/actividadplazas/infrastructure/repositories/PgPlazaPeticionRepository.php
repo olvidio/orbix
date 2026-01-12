@@ -122,12 +122,7 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom, $id_activ);
 
-        $aDatos = [];
-        $aDatos['id_activ'] = $PlazaPeticion->getId_activ();
-        $aDatos['orden'] = $PlazaPeticion->getOrden();
-        $aDatos['tipo'] = $PlazaPeticion->getTipo();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $PlazaPeticion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

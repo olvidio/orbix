@@ -103,7 +103,7 @@ class ResumenPlazasService
         foreach ($cActividadPlazas as $oActividadPlazas) {
             $id_dl_otra = $oActividadPlazas->getId_dl();
             $dl_otra = $this->getDlText($id_dl_otra);
-            $dl_tabla = $oActividadPlazas->getDl_tabla();
+            $dl_tabla = $oActividadPlazas->getDlTablaVo()->value();
 
             $aCedidas = $oActividadPlazas->getCedidas();
             if (!empty($aCedidas)) {
@@ -152,7 +152,7 @@ class ResumenPlazasService
         $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(array('id_activ' => $id_activ, 'id_dl' => $id_mi_dl, 'dl_tabla' => $dl_org));
         $plazas_calendario = 0;
         foreach ($cActividadPlazas as $oActividadPlazas) {
-            $plazas_calendario += $oActividadPlazas->getPlazas();
+            $plazas_calendario += $oActividadPlazas->getPlazasVo()->value();
         }
         return $plazas_calendario;
     }
@@ -198,7 +198,7 @@ class ResumenPlazasService
         foreach ($cActividadPlazas as $oActividadPlazas) {
             $id_dl_otra = $oActividadPlazas->getId_dl();
             $dl_otra = $this->getDlText($id_dl_otra);
-            $dl_tabla = $oActividadPlazas->getDl_tabla();
+            $dl_tabla = $oActividadPlazas->getDlTablaVo()->value();
 
             $json_cedidas = $oActividadPlazas->getCedidas();
             if (!empty($json_cedidas)) {
@@ -238,7 +238,7 @@ class ResumenPlazasService
         if ($oActividad === null) {
             return '?';
         }
-        $plazas_totales = $oActividad->getPlazas();
+        $plazas_totales = $oActividad->getPlazasVo()->value();
         if (empty($plazas_totales)) {
             $id_ubi = $oActividad->getId_ubi();
             $plazas_totales = '';
@@ -246,7 +246,7 @@ class ResumenPlazasService
                 $oCasa = Ubi::NewUbi($id_ubi);
                 // Si la casa es un ctr de otra dl, no sé las plazas
                 if ($oCasa !== null && method_exists($oCasa, 'getPlazas')) {
-                    $plazas_totales = $oCasa->getPlazas();
+                    $plazas_totales = $oCasa->getPlazasVo()->value();
                 }
             }
             if (empty($plazas_totales)) {
@@ -298,7 +298,7 @@ class ResumenPlazasService
         foreach ($cActividadPlazas as $oActividadPlazas) {
             $id_dl = $oActividadPlazas->getId_dl();
             $dl = $this->getDlText($id_dl);
-            $dl_tabla = $oActividadPlazas->getDl_tabla();
+            $dl_tabla = $oActividadPlazas->getDlTablaVo()->value();
             if (empty($a_plazas[$dl]['cedidas'])) {
                 $a_plazas[$dl]['cedidas'] = [];
             }
@@ -307,7 +307,7 @@ class ResumenPlazasService
             }
             //$a_plazas[$dl]['calendario'] = 0;
             if ($dl_org == $dl_tabla) {
-                $a_plazas[$dl]['calendario'] = $oActividadPlazas->getPlazas();
+                $a_plazas[$dl]['calendario'] = $oActividadPlazas->getPlazasVo()->value();
                 // las cedidas se guardan en la tabla que pertenece a la dl
                 if ($dl === $dl_org) {
                     $json_cedidas = $oActividadPlazas->getCedidas();

@@ -138,11 +138,7 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_lugar);
 
-        $aDatos = [];
-        $aDatos['id_ubi'] = $Lugar->getId_ubi();
-        $aDatos['nom_lugar'] = $Lugar->getNomLugarVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Lugar->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

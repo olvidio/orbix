@@ -356,8 +356,8 @@ switch ($Qque) {
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $dl_org = $oActividad->getDl_org();
             $nom_activ = $oActividad->getNom_activ();
-            $f_ini = $oActividad->getF_ini()->getFromLocal();
-            $f_fin = $oActividad->getF_fin()->getFromLocal();
+            $f_ini = $oActividad->getF_ini()?->getFromLocal();
+            $f_fin = $oActividad->getF_fin()?->getFromLocal();
             $id_ubi_actividad = $oActividad->getId_ubi();
             // mirar permisos.
             if (ConfigGlobal::is_app_installed('procesos')) {

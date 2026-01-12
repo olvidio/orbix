@@ -73,15 +73,15 @@ class ProfesorAsignaturaService
                 continue;
             }
             // comprobar situación
-            $situacion = $oPersonaDl->getSituacion();
+            $situacion = $oPersonaDl->getSituacionVo()->value();
             if ($situacion !== 'A') {
                 continue;
             }
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
             $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
-            $aAp1[] = $oPersonaDl->getApellido1();
-            $aAp2[] = $oPersonaDl->getApellido2();
-            $aNom[] = $oPersonaDl->getNom();
+            $aAp1[] = $oPersonaDl->getApellido1Vo()->value();
+            $aAp2[] = $oPersonaDl->getApellido2Vo()->value();
+            $aNom[] = $oPersonaDl->getNomVo()->value();
         }
         $multisort_args = [];
         $multisort_args[] = $aAp1;

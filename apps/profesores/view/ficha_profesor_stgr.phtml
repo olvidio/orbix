@@ -277,8 +277,8 @@ include_once(ConfigGlobal::$dir_estilos . '/colores.php');
                             $tipo = $oProfesorCongreso->getTipo();
                             $lugar = $oProfesorCongreso->getLugar();
                             $organiza = $oProfesorCongreso->getOrganiza();
-                            $f_ini = $oProfesorCongreso->getF_ini()->getFromLocal();
-                            $f_fin = $oProfesorCongreso->getF_fin()->getFromLocal();
+                            $f_ini = $oProfesorCongreso->getF_ini()?->getFromLocal();
+                            $f_fin = $oProfesorCongreso->getF_fin()?->getFromLocal();
 
                             $tipo_congreso = empty($a_tipos_congreso[$tipo]) ? '' : $a_tipos_congreso[$tipo];
                             echo "<tr><td>$tipo_congreso</td><td>$congreso</td><td>$lugar</td><td>$f_ini</td><td>$f_fin</td><td>$organiza</td></tr>";

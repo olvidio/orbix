@@ -3,8 +3,8 @@
 namespace src\certificados\db;
 
 use core\ConfigGlobal;
-use devel\model\DBAbstract;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema.

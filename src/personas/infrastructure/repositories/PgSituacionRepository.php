@@ -124,7 +124,7 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
 
     public function Eliminar(Situacion $Situacion): bool
     {
-        $situacion = $Situacion->getSituacion();
+        $situacion = $Situacion->getSituacionVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE situacion = '$situacion'";
@@ -136,15 +136,12 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
      */
     public function Guardar(Situacion $Situacion): bool
     {
-        $situacion = $Situacion->getSituacion();
+        $situacion = $Situacion->getSituacionVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($situacion);
 
-        $aDatos = [];
-        $aDatos['nombre_situacion'] = $Situacion->getNombreSituacionVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Situacion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -153,7 +150,7 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['situacion'] = $Situacion->getSituacion();
+            $aDatos['situacion'] = $Situacion->getSituacionVo()->value();
             $campos = "(situacion,nombre_situacion)";
             $valores = "(:situacion,:nombre_situacion)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

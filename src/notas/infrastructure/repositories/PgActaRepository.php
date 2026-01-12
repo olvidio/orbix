@@ -200,7 +200,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
 
     public function Eliminar(Acta $Acta): bool
     {
-        $acta = $Acta->getActa();
+        $acta = $Acta->getActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE acta = '$acta'";
@@ -213,24 +213,32 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
      */
     public function Guardar(Acta $Acta): bool
     {
-        $acta = $Acta->getActa();
+        $acta = $Acta->getActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($acta);
 
+        $aDatos = $Acta->toArrayForDatabase([
+//            'idioma' => fn($v) => (new ConverterEnum('idioma', $v))->toPg(),
+            'pdf' => fn($v) => bin2hex($v),
+            'f_acta' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
+
+        /*
         $aDatos = [];
-        $aDatos['id_asignatura'] = $Acta->getId_asignatura();
+        $aDatos['id_asignatura'] = $Acta->getIdAsignaturaVo()->value();
         $aDatos['id_activ'] = $Acta->getId_activ();
-        $aDatos['libro'] = $Acta->getLibro();
-        $aDatos['pagina'] = $Acta->getPagina();
-        $aDatos['linea'] = $Acta->getLinea();
-        $aDatos['lugar'] = $Acta->getLugar();
-        $aDatos['observ'] = $Acta->getObserv();
+        $aDatos['libro'] = $Acta->getLibroVo()->value();
+        $aDatos['pagina'] = $Acta->getPaginaVo()->value();
+        $aDatos['linea'] = $Acta->getLineaVo()->value();
+        $aDatos['lugar'] = $Acta->getLugarVo()->value();
+        $aDatos['observ'] = $Acta->getObservVo()->value();
         // para los bytea
-        $aDatos['pdf'] = bin2hex($Acta->getPdf());
+        $aDatos['pdf'] = bin2hex($Acta->getPdfVo()->value());
         // para las fechas
         $aDatos['f_acta'] = (new ConverterDate('date', $Acta->getF_acta()))->toPg();
         array_walk($aDatos, 'core\poner_null');
+        */
 
         if ($bInsert === false) {
             //UPDATE
@@ -248,7 +256,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['acta'] = $Acta->getActa();
+            $aDatos['acta'] = $Acta->getActaVo()->value();
             $campos = "(acta,id_asignatura,id_activ,f_acta,libro,pagina,linea,lugar,observ,pdf)";
             $valores = "(:acta,:id_asignatura,:id_activ,:f_acta,:libro,:pagina,:linea,:lugar,:observ,:pdf)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

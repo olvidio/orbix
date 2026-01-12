@@ -26,7 +26,7 @@ final class ObservText
         return $this->value === $other->value();
     }
 
-public static function fromNullableString(?string $value): ?self
+    public static function fromNullableString(?string $value): ?self
     {
         if ($value === null) {
             return null;

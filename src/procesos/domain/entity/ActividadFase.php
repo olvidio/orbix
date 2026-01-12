@@ -40,12 +40,12 @@ class ActividadFase
         $this->id_fase = new FaseId($id_fase);
     }
 
-    public function getFaseIdVo(): FaseId
+    public function getIdFaseVo(): FaseId
     {
         return $this->id_fase;
     }
 
-    public function setFaseIdVo(FaseId|int|null $id_fase): void
+    public function setIdFaseVo(FaseId|int|null $id_fase): void
     {
         $this->id_fase = $id_fase instanceof FaseId
             ? $id_fase

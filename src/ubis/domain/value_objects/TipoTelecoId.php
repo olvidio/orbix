@@ -33,4 +33,10 @@ final class TipoTelecoId
     {
         return $this->value === $other->value();
     }
+
+    public static function fromNullableInt(int $value): ?self
+    {
+        if ($value === null) { return null; }
+        return new self($value);
+    }
 }

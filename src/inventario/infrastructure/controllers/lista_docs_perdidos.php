@@ -21,7 +21,7 @@ foreach ($cDocumentos as $oDocumento) {
     $id_lugar = $oDocumento->getId_lugar();
     $num_reg = $oDocumento->getNum_reg();
     $id_tipo_doc = $oDocumento->getId_tipo_doc();
-    $f_perdido = $oDocumento->getF_perdido()->getFromLocal();
+    $f_perdido = $oDocumento->getF_perdido()?->getFromLocal();
 
     $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);
     $nom_doc = $oTipoDoc->getNom_doc();

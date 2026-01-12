@@ -140,7 +140,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
 
     public function Eliminar(UbiInventario $UbiInventario): bool
     {
-        $id_ubi = $UbiInventario->getIdUbiVo()->value();
+        $id_ubi = $UbiInventario->getId_ubi();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi";
@@ -153,16 +153,12 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
      */
     public function Guardar(UbiInventario $UbiInventario): bool
     {
-        $id_ubi = $UbiInventario->getIdUbiVo()->value();
+        $id_ubi = $UbiInventario->getId_ubi();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_ubi);
 
-        $aDatos = [];
-        $aDatos['nom_ubi'] = $UbiInventario->getNomUbiVo()?->value();
-        $aDatos['id_ubi_activ'] = $UbiInventario->getIdUbiActivVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $UbiInventario->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -172,7 +168,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_ubi'] = $UbiInventario->getIdUbiVo()->value();
+            $aDatos['id_ubi'] = $UbiInventario->getId_ubi();
             $campos = "(id_ubi,nom_ubi,id_ubi_activ)";
             $valores = "(:id_ubi,:nom_ubi,:id_ubi_activ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

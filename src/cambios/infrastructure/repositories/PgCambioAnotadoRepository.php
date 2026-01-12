@@ -139,19 +139,7 @@ class PgCambioAnotadoRepository extends ClaseRepository implements CambioAnotado
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_schema_cambio'] = $CambioAnotado->getId_schema_cambio();
-        $aDatos['id_item_cambio'] = $CambioAnotado->getId_item_cambio();
-        $aDatos['anotado'] = $CambioAnotado->isAnotado();
-        $aDatos['server'] = $CambioAnotado->getServer();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['anotado'])) {
-            $aDatos['anotado'] = 'true';
-        } else {
-            $aDatos['anotado'] = 'false';
-        }
-
+        $aDatos = $CambioAnotado->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

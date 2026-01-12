@@ -120,32 +120,32 @@ class ProfesorCongreso
         $this->organiza = OrganizaName::fromNullableString($valor);
     }
 
-    public function getTipoVo(): ?CongresoTipo
+    public function getTipoCongresoVo(): ?CongresoTipo
     {
         return $this->tipo;
     }
 
-    public function setTipoVo(CongresoTipo|string|null $valor = null): void
+    public function setTipoCongresoVo(CongresoTipo|string|null $valor = null): void
     {
         $this->tipo = $valor instanceof CongresoTipo
             ? $valor
-            : CongresoTipo::fromNullable($valor);
+            : CongresoTipo::fromNullableInt($valor);
     }
 
     /**
-     * @deprecated use getTipoVo()
+     * @deprecated use getTipoCongresoVo()
      */
-    public function getTipo(): ?string
+    public function getTipoCongreso(): ?string
     {
         return $this->tipo?->value();
     }
 
     /**
-     * @deprecated use setTipoVo()
+     * @deprecated use setTipoCongresoVo()
      */
-    public function setTipo(?string $valor = null): void
+    public function setTipoCongreso(?string $valor = null): void
     {
-        $this->tipo = CongresoTipo::fromNullable($valor);
+        $this->tipo = CongresoTipo::fromNullableInt($valor);
     }
 
     public function getId_item(): int

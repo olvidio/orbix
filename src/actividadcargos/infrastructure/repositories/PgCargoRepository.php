@@ -169,25 +169,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_cargo);
 
-        $aDatos = [];
-        $aDatos['cargo'] = $Cargo->getCargoVo()->value();
-        $aDatos['orden_cargo'] = $Cargo->getOrdenCargoVo()?->value();
-        $aDatos['sf'] = $Cargo->isSf();
-        $aDatos['sv'] = $Cargo->isSv();
-        $aDatos['tipo_cargo'] = $Cargo->getTipoCargoVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['sf'])) {
-            $aDatos['sf'] = 'true';
-        } else {
-            $aDatos['sf'] = 'false';
-        }
-        if (is_true($aDatos['sv'])) {
-            $aDatos['sv'] = 'true';
-        } else {
-            $aDatos['sv'] = 'false';
-        }
-
+        $aDatos = $Cargo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

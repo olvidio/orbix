@@ -68,7 +68,7 @@ class ActividadPlazas
     {
         $this->plazas = $valor instanceof PlazasNumero
             ? $valor
-            : PlazasNumero::fromNullable($valor);
+            : PlazasNumero::fromNullableInt($valor);
     }
 
     /**
@@ -84,7 +84,7 @@ class ActividadPlazas
      */
     public function setPlazas(?int $plazas = null): void
     {
-        $this->plazas = PlazasNumero::fromNullable($plazas);
+        $this->plazas = PlazasNumero::fromNullableInt($plazas);
     }
 
     /**

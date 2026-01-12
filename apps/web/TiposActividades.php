@@ -367,7 +367,7 @@ class TiposActividades
      *
      * @return string
      */
-    public function getNom()
+    public function getNom(): string
     {
         $txt = $this->getSfsvText();
         if ($this->getAsistentesText() <> 'all') $txt .= ' ' . $this->getAsistentesText();

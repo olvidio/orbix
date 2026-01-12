@@ -14,7 +14,7 @@ foreach ($cGrupMenus as $GrupMenu) {
     $i++;
     $a_valores[$i]['sel'] = $GrupMenu->getId_grupmenu();
     $a_valores[$i]['grupmenu'] = $GrupMenu->getGrup_menu();
-    $a_valores[$i]['orden'] = $GrupMenu->getOrden();
+    $a_valores[$i]['orden'] = $GrupMenu->getOrdenVo()->value();
 
 }
 

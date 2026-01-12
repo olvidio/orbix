@@ -144,44 +144,9 @@ class PgCentroEllosRepository extends ClaseRepository implements CentroEllosRepo
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_ubi);
 
-        $aDatos = [];
-        $aDatos['tipo_ubi'] = $CentroEllos->getTipo_ubi();
-        $aDatos['nombre_ubi'] = $CentroEllos->getNombre_ubi();
-        $aDatos['dl'] = $CentroEllos->getDl();
-        $aDatos['pais'] = $CentroEllos->getPais();
-        $aDatos['region'] = $CentroEllos->getRegion();
-        $aDatos['active'] = $CentroEllos->isActive();
-        $aDatos['sv'] = $CentroEllos->isSv();
-        $aDatos['sf'] = $CentroEllos->isSf();
-        $aDatos['tipo_ctr'] = $CentroEllos->getTipo_ctr();
-        $aDatos['tipo_labor'] = $CentroEllos->getTipo_labor();
-        $aDatos['cdc'] = $CentroEllos->isCdc();
-        $aDatos['id_ctr_padre'] = $CentroEllos->getId_ctr_padre();
-        $aDatos['id_zona'] = $CentroEllos->getId_zona();
-        // para las fechas
-        $aDatos['f_active'] = (new ConverterDate('date', $CentroEllos->getF_active()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['active'])) {
-            $aDatos['active'] = 'true';
-        } else {
-            $aDatos['active'] = 'false';
-        }
-        if (is_true($aDatos['sv'])) {
-            $aDatos['sv'] = 'true';
-        } else {
-            $aDatos['sv'] = 'false';
-        }
-        if (is_true($aDatos['sf'])) {
-            $aDatos['sf'] = 'true';
-        } else {
-            $aDatos['sf'] = 'false';
-        }
-        if (is_true($aDatos['cdc'])) {
-            $aDatos['cdc'] = 'true';
-        } else {
-            $aDatos['cdc'] = 'false';
-        }
+        $aDatos = $CentroEllos->toArrayForDatabase([
+            'f_active' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

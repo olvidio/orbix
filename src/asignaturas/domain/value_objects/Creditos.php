@@ -41,7 +41,7 @@ final class Creditos
         return $this->value === $other->value();
     }
 
-    public static function fromNullable(?float $value): ?self
+    public static function fromNullableFloat(?float $value): ?self
     {
         if ($value === null) { return null; }
         return new self($value);

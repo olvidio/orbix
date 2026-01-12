@@ -160,13 +160,7 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_zona);
 
-        $aDatos = [];
-        $aDatos['nombre_zona'] = $Zona->getNombre_zona();
-        $aDatos['orden'] = $Zona->getOrden();
-        $aDatos['id_grupo'] = $Zona->getId_grupo();
-        $aDatos['id_nom'] = $Zona->getId_nom();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Zona->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

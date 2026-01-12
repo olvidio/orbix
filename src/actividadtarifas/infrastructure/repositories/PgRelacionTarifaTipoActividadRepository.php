@@ -122,12 +122,7 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_tarifa'] = $RelacionTarifaTipoActividad->getIdTarifaVo()->value();
-        $aDatos['id_tipo_activ'] = $RelacionTarifaTipoActividad->getIdTipoActividadVo()->value();
-        $aDatos['id_serie'] = $RelacionTarifaTipoActividad->getIdSerieVo()->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $RelacionTarifaTipoActividad->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

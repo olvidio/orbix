@@ -122,11 +122,7 @@ class PgEncargoSacdObservRepository extends ClaseRepository implements EncargoSa
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $EncargoSacdObserv->getId_nom();
-        $aDatos['observ'] = $EncargoSacdObserv->getObserv();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $EncargoSacdObserv->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

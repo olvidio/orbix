@@ -126,7 +126,7 @@ class PgProcesoTipoRepository extends ClaseRepository implements ProcesoTipoRepo
 
     public function Eliminar(ProcesoTipo $ProcesoTipo): bool
     {
-        $id_tipo_proceso = $ProcesoTipo->getId_tipo_proceso();
+        $id_tipo_proceso = $ProcesoTipo->getIdTipoProcesoVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_tipo_proceso = $id_tipo_proceso";
@@ -139,16 +139,12 @@ class PgProcesoTipoRepository extends ClaseRepository implements ProcesoTipoRepo
      */
     public function Guardar(ProcesoTipo $ProcesoTipo): bool
     {
-        $id_tipo_proceso = $ProcesoTipo->getId_tipo_proceso();
+        $id_tipo_proceso = $ProcesoTipo->getIdTipoProcesoVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tipo_proceso);
 
-        $aDatos = [];
-        $aDatos['nom_proceso'] = $ProcesoTipo->getNom_proceso();
-        $aDatos['sfsv'] = $ProcesoTipo->getSfsv();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $ProcesoTipo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -158,7 +154,7 @@ class PgProcesoTipoRepository extends ClaseRepository implements ProcesoTipoRepo
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_tipo_proceso'] = $ProcesoTipo->getId_tipo_proceso();
+            $aDatos['id_tipo_proceso'] = $ProcesoTipo->getIdTipoProcesoVo()->value();
             $campos = "(id_tipo_proceso,nom_proceso,sfsv)";
             $valores = "(:id_tipo_proceso,:nom_proceso,:sfsv)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

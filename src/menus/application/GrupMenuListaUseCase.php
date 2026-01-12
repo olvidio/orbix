@@ -20,7 +20,7 @@ class GrupMenuListaUseCase
             $i++;
             $a_valores[$i]['sel'] = $oGrupMenu->getId_grupmenu() .'#';
             $a_valores[$i][1] = $oGrupMenu->getGrup_menu();
-            $a_valores[$i][2] = $oGrupMenu->getOrden();
+            $a_valores[$i][2] = $oGrupMenu->getOrdenVo()->value();
         }
 
         $data = [

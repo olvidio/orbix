@@ -63,7 +63,7 @@ function datos($oPersona)
         case 'PersonaSSSC':
         case 'PersonaDl':
             $profesion = $oPersona->getProfesion();
-            $f_nacimiento = $oPersona->getF_nacimiento()->getFromLocal();
+            $f_nacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
             $inc = $oPersona->getInc();
             if (empty($inc) || $inc === "?") {
                 $f_inc = "?";
@@ -84,7 +84,7 @@ function datos($oPersona)
             $profesion = $oPersona->getProfesion();
             $edad = $oPersona->getEdad();
             $inc = $oPersona->getInc();
-            $f_inc = $oPersona->getF_inc()->getFromLocal();
+            $f_inc = $oPersona->getF_inc()?->getFromLocal();
             if (!empty($inc)) {
                 $inc_f_inc = $inc . ' : ' . $f_inc;
             }

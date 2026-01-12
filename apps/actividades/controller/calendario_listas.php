@@ -227,8 +227,8 @@ foreach (array_keys($aGrupos) as $key) {
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $nom_activ = $oActividad->getNom_activ();
             $dl_org = $oActividad->getDl_org();
-            $f_ini = $oActividad->getF_ini()->getFromLocal();
-            $f_fin = $oActividad->getF_fin()->getFromLocal();
+            $f_ini = $oActividad->getF_ini()?->getFromLocal();
+            $f_fin = $oActividad->getF_fin()?->getFromLocal();
             $h_ini = $oActividad->getH_ini();
             $h_fin = $oActividad->getH_fin();
             $tarifa = $oActividad->getTarifa();

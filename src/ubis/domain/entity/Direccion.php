@@ -3,22 +3,23 @@
 namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use function core\is_true;
 use src\ubis\domain\value_objects\{APText,
     CodigoPostalText,
+    DireccionId,
     DireccionText,
     LatitudDecimal,
     LongitudDecimal,
-    SedeNameText,
     ObservDireccionText,
     PaisName,
     PlanoDocText,
     PlanoExtensionText,
     PlanoNameText,
     PoblacionText,
-    ProvinciaText};
+    ProvinciaText,
+    SedeNameText};
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
+use function core\is_true;
 
 class Direccion
 {
@@ -27,37 +28,37 @@ class Direccion
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private int $id_direccion;
+    private DireccionId $id_direccion;
 
-    private ?string $direccion = null;
+    private ?DireccionText $direccion = null;
 
-    private ?string $c_p = null;
+    private ?CodigoPostalText $c_p = null;
 
-    private string $poblacion;
+    private PoblacionText $poblacion;
 
-    private ?string $provincia = null;
+    private ?ProvinciaText $provincia = null;
 
-    private ?string $a_p = null;
+    private ?APText $a_p = null;
 
-    private ?string $pais = null;
+    private ?PaisName $pais = null;
 
-   private ?DateTimeLocal $f_direccion = null;
+    private ?DateTimeLocal $f_direccion = null;
 
-    private ?string $observ = null;
+    private ?ObservDireccionText $observ = null;
 
-    private bool|null $cp_dcha = null;
+    private ?bool $cp_dcha = null;
 
-    private float|null $latitud = null;
+    private ?LatitudDecimal $latitud = null;
 
-    private float|null $longitud = null;
+    private ?LongitudDecimal $longitud = null;
 
-    private ?string $plano_doc = null;
+    private ?PlanoDocText $plano_doc = null;
 
-    private ?string $plano_extension = null;
+    private ?PlanoExtensionText $plano_extension = null;
 
-    private ?string $plano_nom = null;
+    private ?PlanoNameText $plano_nom = null;
 
-    private ?string $nom_sede = null;
+    private ?SedeNameText $nom_sede = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -66,7 +67,7 @@ class Direccion
      */
     public function getId_direccion(): int
     {
-        return $this->id_direccion;
+        return $this->id_direccion->value();
     }
 
 
@@ -75,27 +76,28 @@ class Direccion
      */
     public function setId_direccion(int $id_direccion): void
     {
-        $this->id_direccion = $id_direccion;
+        $this->id_direccion = DireccionId::fromNullableInt($id_direccion);
     }
 
     // VO API for id_direccion
-    public function getIdDireccionVo(): ?\src\ubis\domain\value_objects\DireccionId
+    public function getIdDireccionVo(): ?DireccionId
     {
-        return isset($this->id_direccion) && $this->id_direccion > 0 ? new \src\ubis\domain\value_objects\DireccionId($this->id_direccion) : null;
+        return $this->id_direccion;
     }
 
-    public function setIdDireccionVo(?\src\ubis\domain\value_objects\DireccionId $id = null): void
+    public function setIdDireccionVo(DireccionId|int|null $id = null): void
     {
-        $this->id_direccion = $id?->value() ?? 0;
+        $this->id_direccion = $id instanceof DireccionId
+            ? $id
+            : DireccionId::fromNullableInt($id);
     }
-
 
     /**
      * @deprecated Usar `getDireccionVo(): ?DireccionText` en su lugar.
      */
     public function getDireccion(): ?string
     {
-        return $this->direccion;
+        return $this->direccion->value();
     }
 
 
@@ -104,26 +106,27 @@ class Direccion
      */
     public function setDireccion(?string $direccion = null): void
     {
-        $this->direccion = $direccion;
+        $this->direccion = DireccionText::fromNullableString($direccion);
     }
 
     public function getDireccionVo(): ?DireccionText
     {
-        return DireccionText::fromNullableString($this->direccion);
+        return $this->direccion;
     }
 
-    public function setDireccionVo(?DireccionText $direccion = null): void
+    public function setDireccionVo(DireccionText|string|null $direccion = null): void
     {
-        $this->direccion = $direccion?->value();
+        $this->direccion = $direccion instanceof DireccionText
+            ? $direccion
+            : DireccionText::fromNullableString($direccion);
     }
-
 
     /**
      * @deprecated Usar `getCodigoPostalVo(): ?CodigoPostalText` en su lugar.
      */
     public function getC_p(): ?string
     {
-        return $this->c_p;
+        return $this->c_p?->value();
     }
 
 
@@ -132,17 +135,19 @@ class Direccion
      */
     public function setC_p(?string $c_p = null): void
     {
-        $this->c_p = $c_p;
+        $this->c_p = CodigoPostalText::fromNullableString($c_p);
     }
 
     public function getCodigoPostalVo(): ?CodigoPostalText
     {
-        return CodigoPostalText::fromNullableString($this->c_p);
+        return $this->c_p;
     }
 
-    public function setCodigoPostalVo(?CodigoPostalText $cp = null): void
+    public function setCodigoPostalVo(CodigoPostalText|string|null $cp = null): void
     {
-        $this->c_p = $cp?->value();
+        $this->c_p = $cp instanceof CodigoPostalText
+            ? $cp
+            : CodigoPostalText::fromNullableString($cp);
     }
 
 
@@ -151,7 +156,7 @@ class Direccion
      */
     public function getPoblacion(): string
     {
-        return $this->poblacion;
+        return $this->poblacion->value();
     }
 
 
@@ -160,17 +165,19 @@ class Direccion
      */
     public function setPoblacion(string $poblacion): void
     {
-        $this->poblacion = $poblacion;
+        $this->poblacion = PoblacionText::fromNullableString($poblacion);
     }
 
     public function getPoblacionVo(): PoblacionText
     {
-        return new PoblacionText($this->poblacion);
+        return $this->poblacion;
     }
 
-    public function setPoblacionVo(PoblacionText $poblacion): void
+    public function setPoblacionVo(PoblacionText|string|null $poblacion): void
     {
-        $this->poblacion = $poblacion->value();
+        $this->poblacion = $poblacion instanceof PoblacionText
+            ? $poblacion->value()
+            : $poblacion;
     }
 
 
@@ -179,7 +186,7 @@ class Direccion
      */
     public function getProvincia(): ?string
     {
-        return $this->provincia;
+        return $this->provincia?->value();
     }
 
 
@@ -188,17 +195,19 @@ class Direccion
      */
     public function setProvincia(?string $provincia = null): void
     {
-        $this->provincia = $provincia;
+        $this->provincia = ProvinciaText::fromNullableString($provincia);
     }
 
     public function getProvinciaVo(): ?ProvinciaText
     {
-        return ProvinciaText::fromNullableString($this->provincia);
+        return $this->provincia;
     }
 
-    public function setProvinciaVo(?ProvinciaText $provincia = null): void
+    public function setProvinciaVo(ProvinciaText|string|null $provincia = null): void
     {
-        $this->provincia = $provincia?->value();
+        $this->provincia = $provincia instanceof ProvinciaText
+            ? $provincia
+            : ProvinciaText::fromNullableString($provincia);
     }
 
 
@@ -207,7 +216,7 @@ class Direccion
      */
     public function getA_p(): ?string
     {
-        return $this->a_p;
+        return $this->a_p?->value();
     }
 
 
@@ -216,17 +225,19 @@ class Direccion
      */
     public function setA_p(?string $a_p = null): void
     {
-        $this->a_p = $a_p;
+        $this->a_p = APText::fromNullableString($a_p);
     }
 
     public function getAPVo(): ?APText
     {
-        return APText::fromNullableString($this->a_p);
+        return $this->a_p;
     }
 
-    public function setAPVo(?APText $ap = null): void
+    public function setAPVo(APText|string|null $ap = null): void
     {
-        $this->a_p = $ap?->value();
+        $this->a_p = $ap instanceof APText
+            ? $ap
+            : APText::fromNullableString($ap);
     }
 
 
@@ -235,7 +246,7 @@ class Direccion
      */
     public function getPais(): ?string
     {
-        return $this->pais;
+        return $this->pais?->value();
     }
 
 
@@ -244,17 +255,19 @@ class Direccion
      */
     public function setPais(?string $pais = null): void
     {
-        $this->pais = $pais;
+        $this->pais = PaisName::fromNullableString($pais);
     }
 
     public function getPaisVo(): ?PaisName
     {
-        return PaisName::fromNullableString($this->pais);
+        return $this->pais;
     }
 
-    public function setPaisVo(?PaisName $pais = null): void
+    public function setPaisVo(PaisName|string|null $pais = null): void
     {
-        $this->pais = $pais?->value();
+        $this->pais = $pais instanceof PaisName
+            ? $pais
+            : PaisName::fromNullableString($pais);
     }
 
 
@@ -282,7 +295,7 @@ class Direccion
      */
     public function getObserv(): ?string
     {
-        return $this->observ;
+        return $this->observ?->value();
     }
 
 
@@ -291,17 +304,19 @@ class Direccion
      */
     public function setObserv(?string $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = ObservDireccionText::fromNullableString($observ);
     }
 
     public function getObservVo(): ?ObservDireccionText
     {
-        return ObservDireccionText::fromNullableString($this->observ);
+        return $this->observ;
     }
 
-    public function setObservVo(?ObservDireccionText $observ = null): void
+    public function setObservVo(ObservDireccionText|string|null $observ = null): void
     {
-        $this->observ = $observ?->value();
+        $this->observ = $observ instanceof ObservDireccionText
+            ? $observ
+            : ObservDireccionText::fromNullableString($observ);
     }
 
 
@@ -338,7 +353,7 @@ class Direccion
      */
     public function getLatitud(): ?float
     {
-        return $this->latitud;
+        return $this->latitud?->value();
     }
 
 
@@ -347,17 +362,19 @@ class Direccion
      */
     public function setLatitud(?float $latitud = null): void
     {
-        $this->latitud = $latitud;
+        $this->latitud = LatitudDecimal::fromNullableFloat($latitud);
     }
 
     public function getLatitudVo(): ?LatitudDecimal
     {
-        return LatitudDecimal::fromNullableFloat($this->latitud);
+        return $this->latitud;
     }
 
-    public function setLatitudVo(?LatitudDecimal $lat = null): void
+    public function setLatitudVo(LatitudDecimal|float|null $lat = null): void
     {
-        $this->latitud = $lat?->value();
+        $this->latitud = $lat instanceof LatitudDecimal
+            ? $lat
+            : LatitudDecimal::fromNullableFloat($lat);
     }
 
 
@@ -366,7 +383,7 @@ class Direccion
      */
     public function getLongitud(): ?float
     {
-        return $this->longitud;
+        return $this->longitud?->value();
     }
 
 
@@ -375,17 +392,19 @@ class Direccion
      */
     public function setLongitud(?float $longitud = null): void
     {
-        $this->longitud = $longitud;
+        $this->longitud = LongitudDecimal::fromNullableFloat($longitud);
     }
 
     public function getLongitudVo(): ?LongitudDecimal
     {
-        return LongitudDecimal::fromNullableFloat($this->longitud);
+        return $this->longitud;
     }
 
-    public function setLongitudVo(?LongitudDecimal $lon = null): void
+    public function setLongitudVo(LongitudDecimal|float|null $lon = null): void
     {
-        $this->longitud = $lon?->value();
+        $this->longitud = $lon instanceof LongitudDecimal
+            ? $lon
+            : LongitudDecimal::fromNullableFloat($lon);
     }
 
 
@@ -394,7 +413,7 @@ class Direccion
      */
     public function getPlano_doc(): ?string
     {
-        return $this->plano_doc;
+        return $this->plano_doc?->value();
     }
 
 
@@ -403,17 +422,19 @@ class Direccion
      */
     public function setPlano_doc(?string $plano_doc = null): void
     {
-        $this->plano_doc = $plano_doc;
+        $this->plano_doc = PlanoDocText::fromNullableString($plano_doc);
     }
 
     public function getPlanoDocVo(): ?PlanoDocText
     {
-        return PlanoDocText::fromNullableString($this->plano_doc);
+        return $this->plano_doc;
     }
 
-    public function setPlanoDocVo(?PlanoDocText $doc = null): void
+    public function setPlanoDocVo(PlanoDocText|string|null $doc = null): void
     {
-        $this->plano_doc = $doc?->value();
+        $this->plano_doc = $doca instanceof PlanoDocText
+            ? $doc
+            : PlanoDocText::fromNullableString($doc);
     }
 
 
@@ -422,7 +443,7 @@ class Direccion
      */
     public function getPlano_extension(): ?string
     {
-        return $this->plano_extension;
+        return $this->plano_extension?->value();
     }
 
 
@@ -431,17 +452,19 @@ class Direccion
      */
     public function setPlano_extension(?string $plano_extension = null): void
     {
-        $this->plano_extension = $plano_extension;
+        $this->plano_extension = PlanoDocText::fromNullableString($plano_extension);
     }
 
     public function getPlanoExtensionVo(): ?PlanoExtensionText
     {
-        return PlanoExtensionText::fromNullableString($this->plano_extension);
+        return $this->plano_extension;
     }
 
-    public function setPlanoExtensionVo(?PlanoExtensionText $ext = null): void
+    public function setPlanoExtensionVo(PlanoExtensionText|string|null $ext = null): void
     {
-        $this->plano_extension = $ext?->value();
+        $this->plano_extension = $ext instanceof PlanoExtensionText
+            ? $ext
+            : PlanoExtensionText::fromNullableString($ext);
     }
 
 
@@ -450,7 +473,7 @@ class Direccion
      */
     public function getPlano_nom(): ?string
     {
-        return $this->plano_nom;
+        return $this->plano_nom?->value();
     }
 
 
@@ -459,17 +482,19 @@ class Direccion
      */
     public function setPlano_nom(?string $plano_nom = null): void
     {
-        $this->plano_nom = $plano_nom;
+        $this->plano_nom = PlanoNameText::fromNullableString($plano_nom);
     }
 
     public function getPlanoNomVo(): ?PlanoNameText
     {
-        return PlanoNameText::fromNullableString($this->plano_nom);
+        return $this->plano_nom;
     }
 
-    public function setPlanoNomVo(?PlanoNameText $nom = null): void
+    public function setPlanoNomVo(PlanoNameText|string|null $nom = null): void
     {
-        $this->plano_nom = $nom?->value();
+        $this->plano_nom = $nom instanceof PlanoNameText
+            ? $nom
+            : PlanoNameText::fromNullableString($nom);
     }
 
 
@@ -478,7 +503,7 @@ class Direccion
      */
     public function getNom_sede(): ?string
     {
-        return $this->nom_sede;
+        return $this->nom_sede?->value();
     }
 
 
@@ -487,17 +512,19 @@ class Direccion
      */
     public function setNom_sede(?string $nom_sede = null): void
     {
-        $this->nom_sede = $nom_sede;
+        $this->nom_sede = SedeNameText::fromNullableString($nom_sede);
     }
 
     public function getNomSedeVo(): ?SedeNameText
     {
-        return SedeNameText::fromNullableString($this->nom_sede);
+        return $this->nom_sede;
     }
 
-    public function setNomSedeVo(?SedeNameText $nomSede = null): void
+    public function setNomSedeVo(SedeNameText|string|null $nomSede = null): void
     {
-        $this->nom_sede = $nomSede?->value();
+        $this->nom_sede = $nomSede instanceof SedeNameText
+            ? $nomSede
+            : SedeNameText::fromNullableString($nomSede);
     }
 
     /*  -------------------------------------------------------------------------   */
@@ -520,7 +547,7 @@ class Direccion
             if (!empty($this->poblacion)) $txt .= $this->poblacion;
         }
         $txt .= $rtn;
-        if (!empty($this->a_p)) $txt .= $this->a_p . $rtn;
+        if ($this->a_p !== null) $txt .= $this->a_p->value() . $rtn;
 
         return $txt;
     }

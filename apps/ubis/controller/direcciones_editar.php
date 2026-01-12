@@ -131,7 +131,7 @@ if ($Qmod === 'nuevo') {
         $provincia = $oDireccion->getProvincia();
         $pais = $oDireccion->getPais();
         $observ = $oDireccion->getObserv();
-        $f_direccion = $oDireccion->getF_direccion()->getFromLocal();
+        $f_direccion = $oDireccion->getF_direccion()?->getFromLocal();
         $latitud = $oDireccion->getLatitud();
         $longitud = $oDireccion->getLongitud();
 

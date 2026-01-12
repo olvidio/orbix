@@ -128,38 +128,11 @@ class PgPersonaDlRepository extends ClaseRepository implements PersonaDlReposito
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom);
 
-        $aDatos = [];
-        $aDatos['id_tabla'] = $PersonaDl->getId_tabla();
-        $aDatos['dl'] = $PersonaDl->getDl();
-        $aDatos['sacd'] = $PersonaDl->isSacd();
-        $aDatos['trato'] = $PersonaDl->getTrato();
-        $aDatos['nom'] = $PersonaDl->getNom();
-        $aDatos['nx1'] = $PersonaDl->getNx1();
-        $aDatos['apellido1'] = $PersonaDl->getApellido1();
-        $aDatos['nx2'] = $PersonaDl->getNx2();
-        $aDatos['apellido2'] = $PersonaDl->getApellido2();
-        $aDatos['idioma_preferido'] = $PersonaDl->getIdioma_preferido();
-        $aDatos['situacion'] = $PersonaDl->getSituacion();
-        $aDatos['apel_fam'] = $PersonaDl->getApel_fam();
-        $aDatos['inc'] = $PersonaDl->getInc();
-        $aDatos['nivel_stgr'] = $PersonaDl->getNivel_stgr();
-        $aDatos['profesion'] = $PersonaDl->getProfesion();
-        $aDatos['eap'] = $PersonaDl->getEap();
-        $aDatos['observ'] = $PersonaDl->getObserv();
-        $aDatos['id_ctr'] = $PersonaDl->getId_ctr();
-        $aDatos['lugar_nacimiento'] = $PersonaDl->getLugar_nacimiento();
-        $aDatos['es_publico'] = $PersonaDl->isEs_publico();
-        // para las fechas
-        $aDatos['f_nacimiento'] = (new ConverterDate('date', $PersonaDl->getF_nacimiento()))->toPg();
-        $aDatos['f_situacion'] = (new ConverterDate('date', $PersonaDl->getF_situacion()))->toPg();
-        $aDatos['f_inc'] = (new ConverterDate('date', $PersonaDl->getF_inc()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['sacd'])) {
-            $aDatos['sacd'] = 'true';
-        } else {
-            $aDatos['sacd'] = 'false';
-        }
+        $aDatos = $PersonaDl->toArrayForDatabase([
+            'f_nacimiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_situacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_inc' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

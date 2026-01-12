@@ -46,10 +46,10 @@ class ProcesoActividadService
      */
     public function guardar(ActividadProcesoTarea $ActividadProcesoTarea): bool
     {
-        $id_tipo_proceso = $ActividadProcesoTarea->getId_tipo_proceso();
+        $id_tipo_proceso = $ActividadProcesoTarea->getIdTipoProcesoVo()->value();
         $id_activ = $ActividadProcesoTarea->getId_activ();
-        $id_fase = $ActividadProcesoTarea->getId_fase();
-        $id_tarea = $ActividadProcesoTarea->getId_tarea();
+        $id_fase = $ActividadProcesoTarea->getIdFaseVo()->value();
+        $id_tarea = $ActividadProcesoTarea->getIdTareaVo()->value();
 
         $completado = $ActividadProcesoTarea->isCompletado();
 
@@ -57,7 +57,7 @@ class ProcesoActividadService
         // en caso de completar la fase. Si se quita el 'completado' habría que buscar la fase anterior para saber que status corresponde.
         $permitido = TRUE;
         $oActividad = $this->actividadAllRepository->findById($id_activ);
-        $statusActividad = $oActividad->getStatus();
+        $statusActividad = $oActividad->getStatusVo()->value();
         $cTareasProceso = $this->tareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso, 'id_fase' => $id_fase, 'id_tarea' => $id_tarea]);
         // sólo debería haber uno
         if (!empty($cTareasProceso)) {
@@ -75,7 +75,7 @@ class ProcesoActividadService
         }
         $this->cargarFases($id_activ, $id_tipo_proceso);
         if (is_true($completado)) {
-            $statusProceso = $oTareaProceso->getStatus();
+            $statusProceso = $oTareaProceso->getStatusVo()->value();
             $this->marcar($id_activ, $id_tipo_proceso, $fase_tarea);
         } else {
             $this->desmarcar($id_activ, $id_tipo_proceso, $fase_tarea);
@@ -84,7 +84,7 @@ class ProcesoActividadService
         if ($statusProceso !== $statusActividad) { // cambiar el status de la actividad.
             // OJO si la actividad no es de la dl, no puedo cambiarla.
             $dl_org = $oActividad->getDl_org();
-            $id_tabla = $oActividad->getId_tabla();
+            $id_tabla = $oActividad->getIdTablaVo()->value();
             // Sólo dre puede aprobar (pasar de proyecto a actual) las actividades
             // ojo marcha atrás tampoco debería poderse.
             if (($statusProceso == StatusId::ACTUAL && $statusActividad < StatusId::ACTUAL)
@@ -93,8 +93,8 @@ class ProcesoActividadService
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
                 if ($dl_org === ConfigGlobal::mi_delef() || $dl_org_no_f === ConfigGlobal::mi_dele()) {
                     if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-                        $oActividad->setStatus($statusProceso);
-                        $oActividad->DBGuardar();
+                        $oActividad->setStatusVo($statusProceso);
+                        $this->actividadProcesoTareaRepository->Guardar($oActividad);
                         // además debería marcar como completado la fase correspondiente del proceso de la sf.
                         $this->marcarFaseEnSf($id_activ, $statusProceso, $statusActividad);
                     } else {
@@ -107,22 +107,22 @@ class ProcesoActividadService
                         echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"), $dl_org);
                         $permitido = FALSE;
                     } else {
-                        $oActividad->setStatus($statusProceso);
-                        $oActividad->DBGuardar();
+                        $oActividad->setStatusVo($statusProceso);
+                        $this->actividadProcesoTareaRepository->Guardar($oActividad);
                     }
                 }
             } else {
                 if ($dl_org === ConfigGlobal::mi_delef()) {
-                    $oActividad->setStatus($statusProceso);
-                    $oActividad->DBGuardar();
+                    $oActividad->setStatusVo($statusProceso);
+                    $this->actividadProcesoTareaRepository->Guardar($oActividad);
                 } else {
                     if ($id_tabla === 'dl') {
                         // No se puede modificar una actividad de otra dl
                         echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"), $dl_org);
                         //$permitido = FALSE;
                     } else {
-                        $oActividad->setStatus($statusProceso);
-                        $oActividad->DBGuardar();
+                        $oActividad->setStatusVo($statusProceso);
+                        $this->actividadProcesoTareaRepository->Guardar($oActividad);
                     }
                 }
             }

@@ -266,7 +266,7 @@ $h = $oHash->linkSinVal();
         $id_asignatura = $oPersonaNota->getId_asignatura();
         $id_nivel = $oPersonaNota->getId_nivel();
         $acta = $oPersonaNota->getActa();
-        $f_acta = $oPersonaNota->getF_acta()->getFromLocal();
+        $f_acta = $oPersonaNota->getF_acta()?->getFromLocal();
 
         $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
         if ($oAsignatura === null) {

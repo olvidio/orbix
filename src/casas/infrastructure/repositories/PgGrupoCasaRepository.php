@@ -122,11 +122,7 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_ubi_padre'] = $GrupoCasa->getId_ubi_padre();
-        $aDatos['id_ubi_hijo'] = $GrupoCasa->getId_ubi_hijo();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $GrupoCasa->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

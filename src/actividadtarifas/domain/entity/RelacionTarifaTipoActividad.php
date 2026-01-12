@@ -49,7 +49,7 @@ class RelacionTarifaTipoActividad
      */
     public function setId_tarifa(int $id_tarifa): void
     {
-        $this->id_tarifa = TarifaId::fromNullable($id_tarifa);
+        $this->id_tarifa = TarifaId::fromNullableInt($id_tarifa);
     }
 
     public function getIdTarifaVo(): TarifaId
@@ -61,7 +61,7 @@ class RelacionTarifaTipoActividad
     {
         $this->id_tarifa = $id instanceof TarifaId
             ? $id
-            : TarifaId::fromNullable($id);
+            : TarifaId::fromNullableInt($id);
     }
 
     /**
@@ -105,7 +105,7 @@ class RelacionTarifaTipoActividad
      */
     public function setId_serie(int $id_serie): void
     {
-        $this->id_serie = SerieId::fromNullable($id_serie);
+        $this->id_serie = SerieId::fromNullableInt($id_serie);
     }
 
     public function getIdSerieVo(): SerieId
@@ -117,6 +117,6 @@ class RelacionTarifaTipoActividad
     {
         $this->id_serie = $id instanceof SerieId
             ? $id
-            : SerieId::fromNullable($id);
+            : SerieId::fromNullableInt($id);
     }
 }

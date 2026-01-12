@@ -122,15 +122,7 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_ubi'] = $TarifaUbi->getId_ubi();
-        $aDatos['id_tarifa'] = $TarifaUbi->getId_tarifa();
-        $aDatos['year'] = $TarifaUbi->getYear();
-        $aDatos['cantidad'] = $TarifaUbi->getCantidad();
-        $aDatos['observ'] = $TarifaUbi->getObserv();
-        $aDatos['id_serie'] = $TarifaUbi->getId_serie();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $TarifaUbi->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

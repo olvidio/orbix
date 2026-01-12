@@ -5,6 +5,8 @@ namespace src\ubis\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\shared\domain\traits\Hydratable;
+use src\ubis\domain\value_objects\RegionName;
+use src\ubis\domain\value_objects\RegionNameText;
 use function core\is_true;
 use src\ubis\domain\value_objects\RegionCode;
 use src\ubis\domain\value_objects\RegionId;
@@ -17,13 +19,13 @@ class Region
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private ?int $id_region = null;
+    private ?RegionId $id_region = null;
 
-    private string $region;
+    private RegionCode $region;
 
-    private ?string $nombre_region = null;
+    private ?RegionNameText $nombre_region = null;
 
-    private bool|null $active = null;
+    private?bool $active = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -32,7 +34,7 @@ class Region
      */
     public function getId_region(): ?int
     {
-        return $this->id_region;
+        return $this->id_region?->value();
     }
 
 
@@ -41,18 +43,20 @@ class Region
      */
     public function setId_region(?int $id_region = null): void
     {
-        $this->id_region = $id_region;
+        $this->id_region = RegionId::fromNullableInt($id_region);
     }
 
     // Value Object API for id_region
     public function getIdRegionVo(): ?RegionId
     {
-        return $this->id_region !== null ? new RegionId($this->id_region) : null;
+        return $this->id_region;
     }
 
-    public function setIdRegionVo(?RegionId $id = null): void
+    public function setIdRegionVo(RegionId|int|null $id = null): void
     {
-        $this->id_region = $id?->value();
+        $this->id_region = $id instanceof RegionId
+            ? $id
+            : RegionId::fromNullableInt($id);
     }
 
 
@@ -61,7 +65,7 @@ class Region
      */
     public function getRegion(): string
     {
-        return $this->region;
+        return $this->region->value();
     }
 
 
@@ -70,32 +74,50 @@ class Region
      */
     public function setRegion(string $region): void
     {
-        $this->region = $region;
+        $this->region = RegionCode::fromNullableString($region);
     }
 
     // Value Object API for region code (sigla)
     public function getRegionVo(): ?RegionCode
     {
         // Return null if empty or unset to allow optional usage
-        return isset($this->region) && $this->region !== '' ? new RegionCode($this->region) : null;
+        return $this->region;
     }
 
     public function setRegionVo(?RegionCode $code = null): void
     {
-        $this->region = $code?->value() ?? '';
+        $this->region = $code instanceof RegionCode
+            ? $code
+            : RegionCode::fromNullableString($code);
     }
 
 
+    /**
+     * @deprecated use getNombreRegionVo()
+     */
     public function getNombre_region(): ?string
+    {
+        return $this->nombre_region?->value();
+    }
+
+    public function getNombreRegionVo(): ?RegionNameText
     {
         return $this->nombre_region;
     }
 
-
+    /**
+     * @deprecated use setNombreRegionVo()
+     */
     public function setNombre_region(?string $nombre_region = null): void
     {
-        $this->nombre_region = $nombre_region;
+        $this->nombre_region = RegionNameText::fromNullableString($nombre_region);
     }
+     public function setNombreRegionVo(?RegionNameText $nombre_region = null): void
+     {
+         $this->nombre_region = $nombre_region instanceof RegionNameText
+             ? $nombre_region
+             : RegionNameText::fromNullableString($nombre_region);
+     }
 
 
     public function isActive(): ?bool

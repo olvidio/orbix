@@ -31,7 +31,7 @@ class App
     {
         $this->id_app = $id_app instanceof AppId
             ? $id_app
-            : AppId::fromNullable($id_app);
+            : AppId::fromNullableInt($id_app);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -42,7 +42,7 @@ class App
 
     public function setId_app(int $id_app): void
     {
-        $this->id_app = AppId::fromNullable($id_app);
+        $this->id_app = AppId::fromNullableInt($id_app);
     }
 
     // VO API

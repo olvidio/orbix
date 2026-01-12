@@ -39,7 +39,7 @@ class CertificadoRecibidoUpload
         $nom = $apellidos_nombre;
 
         if (empty($destino)) {
-            $destino = $oPersona->getDl();
+            $destino = $oPersona->getDlVo()->value();
         }
 
         $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);

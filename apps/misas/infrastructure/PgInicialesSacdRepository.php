@@ -134,12 +134,7 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom);
 
-        $aDatos = [];
-        $aDatos['iniciales'] = $InicialesSacd->getIniciales();
-        $aDatos['color'] = $InicialesSacd->getColor();
-
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $InicialesSacd->toArrayForDatabase();
         if ($bInsert === FALSE) {
             //UPDATE
             $update = "

@@ -220,7 +220,7 @@ class EncargoHorario
      */
     public function setMes(?int $mes = null): void
     {
-        $this->mes = MesNum::fromNullable($mes);
+        $this->mes = MesNum::fromNullableInt($mes);
     }
 
     public function getMesVo(): ?MesNum
@@ -232,6 +232,6 @@ class EncargoHorario
     {
         $this->mes = $vo instanceof MesNum
             ? $vo
-            : MesNum::fromNullable($vo);
+            : MesNum::fromNullableInt($vo);
     }
 }

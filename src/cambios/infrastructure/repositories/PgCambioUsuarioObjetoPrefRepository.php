@@ -123,35 +123,7 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item_usuario_objeto);
 
-        $aDatos = [];
-        $aDatos['id_usuario'] = $CambioUsuarioObjetoPref->getId_usuario();
-        $aDatos['dl_org'] = $CambioUsuarioObjetoPref->getDl_org();
-        $aDatos['id_tipo_activ_txt'] = $CambioUsuarioObjetoPref->getId_tipo_activ_txt();
-        $aDatos['id_fase_ref'] = $CambioUsuarioObjetoPref->getId_fase_ref();
-        $aDatos['aviso_off'] = $CambioUsuarioObjetoPref->isAviso_off();
-        $aDatos['aviso_on'] = $CambioUsuarioObjetoPref->isAviso_on();
-        $aDatos['aviso_outdate'] = $CambioUsuarioObjetoPref->isAviso_outdate();
-        $aDatos['objeto'] = $CambioUsuarioObjetoPref->getObjeto();
-        $aDatos['aviso_tipo'] = $CambioUsuarioObjetoPref->getAviso_tipo();
-        $aDatos['id_pau'] = $CambioUsuarioObjetoPref->getCsv_id_pau();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['aviso_off'])) {
-            $aDatos['aviso_off'] = 'true';
-        } else {
-            $aDatos['aviso_off'] = 'false';
-        }
-        if (is_true($aDatos['aviso_on'])) {
-            $aDatos['aviso_on'] = 'true';
-        } else {
-            $aDatos['aviso_on'] = 'false';
-        }
-        if (is_true($aDatos['aviso_outdate'])) {
-            $aDatos['aviso_outdate'] = 'true';
-        } else {
-            $aDatos['aviso_outdate'] = 'false';
-        }
-
+        $aDatos = $CambioUsuarioObjetoPref->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

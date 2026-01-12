@@ -90,14 +90,14 @@ class Acta
 
     public function setId_asignatura(?int $id_asignatura = null): void
     {
-        $this->id_asignatura = AsignaturaId::fromNullable($id_asignatura);
+        $this->id_asignatura = AsignaturaId::fromNullableInt($id_asignatura);
     }
 
     public function setIdAsignaturaVo(AsignaturaId|int|null $id_asignatura): void
     {
         $this->id_asignatura = $id_asignatura instanceof AsignaturaId
             ? $id_asignatura
-            : AsignaturaId::fromNullable($id_asignatura);
+            : AsignaturaId::fromNullableInt($id_asignatura);
     }
 
 
@@ -135,7 +135,7 @@ class Acta
     {
         $this->libro = $valor instanceof Libro
             ? $valor
-            : Libro::fromNullable($valor);
+            : Libro::fromNullableInt($valor);
     }
 
     /**
@@ -151,7 +151,7 @@ class Acta
      */
     public function setLibro(?int $libro = null): void
     {
-        $this->libro = Libro::fromNullable($libro);
+        $this->libro = Libro::fromNullableInt($libro);
     }
 
 
@@ -164,7 +164,7 @@ class Acta
     {
         $this->pagina = $valor instanceof Pagina
             ? $valor
-            : Pagina::fromNullable($valor);
+            : Pagina::fromNullableInt($valor);
     }
 
     /**
@@ -180,7 +180,7 @@ class Acta
      */
     public function setPagina(?int $pagina = null): void
     {
-        $this->pagina = Pagina::fromNullable($pagina);
+        $this->pagina = Pagina::fromNullableInt($pagina);
     }
 
 
@@ -194,7 +194,7 @@ class Acta
     {
         $this->linea = $valor instanceof Linea
             ? $valor
-            : Linea::fromNullable($valor);
+            : Linea::fromNullableInt($valor);
     }
 
     /**
@@ -210,7 +210,7 @@ class Acta
      */
     public function setLinea(?int $linea = null): void
     {
-        $this->linea = Linea::fromNullable($linea);
+        $this->linea = Linea::fromNullableInt($linea);
     }
 
 

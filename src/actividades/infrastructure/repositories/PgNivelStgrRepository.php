@@ -191,12 +191,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($nivel_stgr);
 
-        $aDatos = [];
-        $aDatos['desc_nivel'] = $NivelStgr->getDesc_nivel();
-        $aDatos['desc_breve'] = $NivelStgr->getDesc_breve();
-        $aDatos['orden'] = $NivelStgr->getOrden();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $NivelStgr->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

@@ -2,9 +2,11 @@
 
 namespace src\notas\infrastructure\repositories;
 
+use core\ClaseRepository;
 use PDO;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
@@ -17,26 +19,30 @@ use function core\is_true;
  * @version 2.0
  * @created 18/11/2025
  */
-class zzConstantNotaRepository implements NotaRepositoryInterface
+class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryInterface
 {
     use HandlesPdoErrors;
 
     public function __construct()
     {
-        Nota::traduccion_init();
+        $oDbl = $GLOBALS['oDBPC'];
+        $this->setoDbl($oDbl);
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $this->setoDbl_select($oDbl_Select);
+        $this->setNomTabla('e_notas_situacion');
     }
 
     public function getArrayNotasNoSuperadas(): array
     {
         $aNoSuperadas = [
-            Nota::DESCONOCIDO,
-            Nota::CURSADA,
-            Nota::PREVISTA_CA,
-            Nota::PREVISTA_INV,
-            Nota::NO_HECHA_CA,
-            Nota::NO_HECHA_INV,
-            Nota::EXAMINADO,
-            Nota::FALTA_CERTIFICADO,
+            NotaSituacion::DESCONOCIDO,
+            NotaSituacion::CURSADA,
+            NotaSituacion::PREVISTA_CA,
+            NotaSituacion::PREVISTA_INV,
+            NotaSituacion::NO_HECHA_CA,
+            NotaSituacion::NO_HECHA_INV,
+            NotaSituacion::EXAMINADO,
+            NotaSituacion::FALTA_CERTIFICADO,
         ];
 
         return $aNoSuperadas;
@@ -45,15 +51,21 @@ class zzConstantNotaRepository implements NotaRepositoryInterface
     public function getArrayNotasSuperadas(): array
     {
         $aSuperadas = [
-            Nota::SUPERADA,
-            Nota::MAGNA,
-            Nota::SUMMA,
-            Nota::CONVALIDADA,
-            Nota::NUMERICA,
-            Nota::EXENTO,
+            NotaSituacion::SUPERADA,
+            NotaSituacion::MAGNA,
+            NotaSituacion::SUMMA,
+            NotaSituacion::CONVALIDADA,
+            NotaSituacion::NUMERICA,
+            NotaSituacion::EXENTO,
         ];
 
         return $aSuperadas;
+    }
+
+    public function getArrayNotas(): array
+    {
+        $aNotas = NotaSituacion::getArraySituacionTxt();
+        return $aNotas;
     }
 
     /* -------------------- GESTOR BASE ---------------------------------------- */
@@ -62,7 +74,7 @@ class zzConstantNotaRepository implements NotaRepositoryInterface
 
     public function Eliminar(Nota $Nota): bool
     {
-        $id_situacion = $Nota->getId_situacion();
+        $id_situacion = $Nota->getIdSituacionVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_situacion = $id_situacion";
@@ -74,23 +86,12 @@ class zzConstantNotaRepository implements NotaRepositoryInterface
      */
     public function Guardar(Nota $Nota): bool
     {
-        $id_situacion = $Nota->getId_situacion();
+        $id_situacion = $Nota->getIdSituacionVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_situacion);
 
-        $aDatos = [];
-        $aDatos['descripcion'] = $Nota->getDescripcion();
-        $aDatos['superada'] = $Nota->isSuperada();
-        $aDatos['breve'] = $Nota->getBreve();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['superada'])) {
-            $aDatos['superada'] = 'true';
-        } else {
-            $aDatos['superada'] = 'false';
-        }
-
+        $aDatos = $Nota->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -102,7 +103,7 @@ class zzConstantNotaRepository implements NotaRepositoryInterface
 
         } else {
             //INSERT
-            $aDatos['id_situacion'] = $Nota->getId_situacion();
+            $aDatos['id_situacion'] = $Nota->getIdSituacionVo()->value();
             $campos = "(id_situacion,descripcion,superada,breve)";
             $valores = "(:id_situacion,:descripcion,:superada,:breve)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

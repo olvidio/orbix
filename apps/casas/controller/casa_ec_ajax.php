@@ -60,7 +60,7 @@ switch ($Qque) {
             $oUbiGasto->setId_item($newId);
             $oUbiGasto->setF_gasto($oFecha);
             $oUbiGasto->setId_ubi($Qid_ubi);
-            $oUbiGasto->setTipoVo(UbiGastoTipo::GASTO);
+            $oUbiGasto->setTipoGastoVo(UbiGastoTipo::GASTO);
             $oUbiGasto->setCantidadVo($g);
             if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
                 echo _("Hay un error, no se ha guardado.");
@@ -71,7 +71,7 @@ switch ($Qque) {
             $oUbiGasto->setId_item($newId);
             $oUbiGasto->setF_gasto($oFecha);
             $oUbiGasto->setId_ubi($Qid_ubi);
-            $oUbiGasto->setTipoVo(UbiGastoTipo::APORTACION_SV);
+            $oUbiGasto->setTipoGastoVo(UbiGastoTipo::APORTACION_SV);
             $oUbiGasto->setCantidadVo($ap_sv);
             if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
                 echo _("Hay un error, no se ha guardado.");
@@ -82,7 +82,7 @@ switch ($Qque) {
             $oUbiGasto->setId_item($newId);
             $oUbiGasto->setF_gasto($oFecha);
             $oUbiGasto->setId_ubi($Qid_ubi);
-            $oUbiGasto->setTipoVo(UbiGastoTipo::APORTACION_SF);
+            $oUbiGasto->setTipoGastoVo(UbiGastoTipo::APORTACION_SF);
             $oUbiGasto->setCantidadVo($ap_sf);
             if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
                 echo _("Hay un error, no se ha guardado.");

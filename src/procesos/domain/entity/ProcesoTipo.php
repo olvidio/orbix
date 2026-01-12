@@ -32,7 +32,7 @@ class ProcesoTipo
     {
         $this->id_tipo_proceso = $id_tipo_proceso instanceof ProcesoTipoId
             ? $id_tipo_proceso
-            : ProcesoTipoId::fromNullable($id_tipo_proceso);
+            : ProcesoTipoId::fromNullableInt($id_tipo_proceso);
     }
 
     /**
@@ -48,7 +48,7 @@ class ProcesoTipo
      */
     public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = ProcesoTipoId::fromNullable($id_tipo_proceso);
+        $this->id_tipo_proceso = ProcesoTipoId::fromNullableInt($id_tipo_proceso);
     }
 
 

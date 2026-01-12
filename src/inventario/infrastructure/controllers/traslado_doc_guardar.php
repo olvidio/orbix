@@ -13,7 +13,7 @@ $DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::
 if (!empty($Qid_ubi_new)) {
     foreach ($a_sel as $id_doc) {
         $oDocumento = $DocumentoRepository->findById($id_doc);
-        $oDocumento->setId_ubi($Qid_ubi_new);
+        $oDocumento->setIdUbiVo($Qid_ubi_new);
         if (!empty($Qid_lugar_new)) {
             $oDocumento->setId_lugar($Qid_lugar_new);
         }
@@ -25,7 +25,7 @@ if (!empty($Qid_ubi_new)) {
 } else {
     foreach ($a_sel as $id_doc) {
         $oDocumento = $DocumentoRepository->findById($id_doc);
-        $oDocumento->setId_ubi('');
+        $oDocumento->setIdUbiVo('');
         if ($DocumentoRepository->Guardar($oDocumento) === false) {
             $error_txt .= _("hay un error, no se ha guardado");
             $error_txt .= "\n" . $DocumentoRepository->getErrorTxt();

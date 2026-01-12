@@ -137,13 +137,7 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_metamenu);
 
-        $aDatos = [];
-        $aDatos['id_mod'] = $MetaMenu->getId_mod();
-        $aDatos['url'] = $MetaMenu->getUrl();
-        $aDatos['parametros'] = $MetaMenu->getParametros();
-        $aDatos['descripcion'] = $MetaMenu->getDescripcion();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $MetaMenu->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

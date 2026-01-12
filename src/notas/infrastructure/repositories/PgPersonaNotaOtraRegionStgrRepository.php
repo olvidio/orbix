@@ -68,54 +68,54 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             // miro de guardarlo en su dl.
             $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaDBRepository::class);
             $aWhere = ['id_nom' => $id_nom,
-                'id_nivel' => $oPersonaNotaOtraRegionStgr->getId_nivel(),
-                'id_asignatura' => $oPersonaNotaOtraRegionStgr->getId_asignatura(),
+                'id_nivel' => $oPersonaNotaOtraRegionStgr->getIdNivelVo()->value(),
+                'id_asignatura' => $oPersonaNotaOtraRegionStgr->getIdAsignaturaVo()->value(),
                 'tipo_acta' => TipoActa::FORMATO_CERTIFICADO, // si no habrá 2, una con formato acta y otra certificado
                 //'id_situacion' => NotaSituacion::FALTA_CERTIFICADO,
             ];
             $cPersonNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
             if (empty($cPersonNotas)) {
-                $id_asignatura = $oPersonaNotaOtraRegionStgr->getId_asignatura();
+                $id_asignatura = $oPersonaNotaOtraRegionStgr->getIdAsignaturaVo()->value();
                 $msg = sprintf(_("Nota no encontrada. id_asignatura: %s, id_nom: %s"), $id_asignatura, $id_nom);
                 //throw new \Exception($msg);
                 $oPersonaNota = new PersonaNota();
-                $oPersonaNota->setIdNivel($oPersonaNotaOtraRegionStgr->getId_nivel());
+                $oPersonaNota->setIdNivel($oPersonaNotaOtraRegionStgr->getIdNivelVo()->value());
                 $oPersonaNota->setIdAsignatura($id_asignatura);
                 $oPersonaNota->setIdNom($id_nom);
                 $oPersonaNota->setTipoActa(TipoActa::FORMATO_CERTIFICADO);
-                $oPersonaNota->setIdSituacion($oPersonaNotaOtraRegionStgr->getId_situacion());
-                $oPersonaNota->setActa($oPersonaNotaOtraRegionStgr->getActa());
-                $oPersonaNota->setDetalle($oPersonaNotaOtraRegionStgr->getDetalle());
+                $oPersonaNota->setIdSituacion($oPersonaNotaOtraRegionStgr->getIdSituacionVo()->value());
+                $oPersonaNota->setActaVo($oPersonaNotaOtraRegionStgr->getActaVo()->value());
+                $oPersonaNota->setDetalle($oPersonaNotaOtraRegionStgr->getDetalleVo()->value());
                 $oPersonaNota->setFacta($oF_certificado);
                 $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
                 $oPersonaNota->setIdpreceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
-                $oPersonaNota->setEpoca($oPersonaNotaOtraRegionStgr->getEpoca());
-                $oPersonaNota->setIdactiv($oPersonaNotaOtraRegionStgr->getId_activ());
-                $oPersonaNota->setNotanum($oPersonaNotaOtraRegionStgr->getNota_num());
-                $oPersonaNota->setNotamax($oPersonaNotaOtraRegionStgr->getNota_max());
+                $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo()->value());
+                $oPersonaNota->setIdactiv($oPersonaNotaOtraRegionStgr->getIdActividadVo()->value());
+                $oPersonaNota->setNotanum($oPersonaNotaOtraRegionStgr->getNotaNumVo()->value());
+                $oPersonaNota->setNotamax($oPersonaNotaOtraRegionStgr->getNotaMaxVo()->value());
 
                 $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
                 $rta = $oEditarPersonaNota->nuevoSolamenteDl();
                 if (!empty($rta['nota_certificado'])) {
                     $oPersonaNota = $rta['nota_certificado'];
-                    $oPersonaNota->setActa($certificado);
-                    $oPersonaNota->setId_situacion(NOTA::NUMERICA);
+                    $oPersonaNota->setActaVo($certificado);
+                    $oPersonaNota->setIdSituacionVo(NotaSituacion::NUMERICA);
                     $PersonaNotaDBRepository->Guardar($oPersonaNota);
                 }
 
             } else {
                 $oPersonaNota = $cPersonNotas[0];
                 if (!empty($oPersonaNota)) {
-                    $oPersonaNota->setId_situacion($oPersonaNotaOtraRegionStgr->getId_situacion());
+                    $oPersonaNota->setIdSituacionVo($oPersonaNotaOtraRegionStgr->getIdSituacionVo()->value());
                     $oPersonaNota->setF_acta($oF_certificado);
-                    $oPersonaNota->setActa($certificado);
-                    //$oPersonaNota->setDetalle($detalle); // dejo lo que hay
+                    $oPersonaNota->setActaVo($certificado);
+                    //$oPersonaNota->setDetalleVo($detalle); // dejo lo que hay
                     $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
                     $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
-                    $oPersonaNota->setEpoca($oPersonaNotaOtraRegionStgr->getEpoca());
-                    $oPersonaNota->setId_activ($oPersonaNotaOtraRegionStgr->getId_activ());
-                    $oPersonaNota->setNota_num($oPersonaNotaOtraRegionStgr->getNota_num());
-                    $oPersonaNota->setNota_max($oPersonaNotaOtraRegionStgr->getNota_max());
+                    $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo()->value());
+                    $oPersonaNota->setIdActividadVo($oPersonaNotaOtraRegionStgr->getIdActividadVo()->value());
+                    $oPersonaNota->setNotaNumVo($oPersonaNotaOtraRegionStgr->getNotaNumVo()->value());
+                    $oPersonaNota->setNotaMaxVo($oPersonaNotaOtraRegionStgr->getNotaMaxVo()->value());
                     $PersonaNotaDBRepository->Guardar($oPersonaNota);
                 }
             }
@@ -134,17 +134,17 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
                     unset($a_json_certificados[$key]);
                     // miro de guardarlo en su dl (poner que falta certificado).
                     $aWhere = ['id_nom' => $oPersonaNotaOtraRegionStgr->getId_nom(),
-                        'id_nivel' => $oPersonaNotaOtraRegionStgr->getId_nivel(),
-                        'id_asignatura' => $oPersonaNotaOtraRegionStgr->getId_asignatura(),
+                        'id_nivel' => $oPersonaNotaOtraRegionStgr->getIdNivelVo()->value(),
+                        'id_asignatura' => $oPersonaNotaOtraRegionStgr->getIdAsignaturaVo()->value(),
                         'tipo_acta' => TipoActa::FORMATO_CERTIFICADO,
                         'acta' => $certificado,
                     ];
                     $personaNotasDB = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
                     $oPersonaNotaDB = $personaNotasDB[0] ?? '';
                     if (!empty($oPersonaNotaDB)) {
-                        $oPersonaNotaDB->setId_situacion(NotaSituacion::FALTA_CERTIFICADO);
+                        $oPersonaNotaDB->setIdSituacionVo(NotaSituacion::FALTA_CERTIFICADO);
                         $oPersonaNotaDB->setF_acta('');
-                        $oPersonaNotaDB->setActa(_("falta certificado"));
+                        $oPersonaNotaDB->setActaVo(_("falta certificado"));
                         $PersonaNotaDBRepository->Guardar($oPersonaNotaDB);
                     }
                 }
@@ -190,9 +190,9 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             $oPersonaNotaOtraRegionStgr = new PersonaNotaOtraRegionStgr();
             $oPersonaNotaOtraRegionStgr->setId_nom($aDatos['id_nom']);
             $oPersonaNotaOtraRegionStgr->setId_nivel($aDatos['id_nivel']);
-            $oPersonaNotaOtraRegionStgr->setId_asignatura($aDatos['id_asignatura']);
-            $oPersonaNotaOtraRegionStgr->setId_situacion($aDatos['id_situacion']);
-            $oPersonaNotaOtraRegionStgr->setTipo_acta($aDatos['tipo_acta']);
+            $oPersonaNotaOtraRegionStgr->setIdAsignaturaVo($aDatos['id_asignatura']);
+            $oPersonaNotaOtraRegionStgr->setIdSituacionVo($aDatos['id_situacion']);
+            $oPersonaNotaOtraRegionStgr->setTipoActaVo($aDatos['tipo_acta']);
             $oPersonaNotaOtraRegionStgrSet->add($oPersonaNotaOtraRegionStgr);
         }
         return $oPersonaNotaOtraRegionStgrSet->getTot();
@@ -287,7 +287,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     {
         $id_nom = $PersonaNotaDB->getId_nom();
         $id_nivel = $PersonaNotaDB->getId_nivel();
-        $tipo_acta = $PersonaNotaDB->getTipo_acta();
+        $tipo_acta = $PersonaNotaDB->getTipoActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_nom=$id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
@@ -302,28 +302,14 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     {
         $id_nom = $PersonaNotaDB->getId_nom();
         $id_nivel = $PersonaNotaDB->getId_nivel();
-        $tipo_acta = $PersonaNotaDB->getTipo_acta();
+        $tipo_acta = $PersonaNotaDB->getTipoActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom, $id_nivel, $tipo_acta);
 
-        $aDatos = [];
-        $aDatos['id_nivel'] = $PersonaNotaDB->getId_nivel();
-        $aDatos['id_asignatura'] = $PersonaNotaDB->getId_asignatura();
-        $aDatos['id_situacion'] = $PersonaNotaDB->getId_situacion();
-        $aDatos['acta'] = $PersonaNotaDB->getActa();
-        $aDatos['detalle'] = $PersonaNotaDB->getDetalle();
-        $aDatos['preceptor'] = $PersonaNotaDB->isPreceptor();
-        $aDatos['id_preceptor'] = $PersonaNotaDB->getId_preceptor();
-        $aDatos['epoca'] = $PersonaNotaDB->getEpoca();
-        $aDatos['id_activ'] = $PersonaNotaDB->getId_activ();
-        $aDatos['nota_num'] = $PersonaNotaDB->getNota_num();
-        $aDatos['nota_max'] = $PersonaNotaDB->getNota_max();
-        $aDatos['tipo_acta'] = $PersonaNotaDB->getTipo_acta();
-        $aDatos['json_certificados'] = $PersonaNotaDB->getJson_certificados();
-        // para las fechas
-        $aDatos['f_acta'] = (new ConverterDate('date', $PersonaNotaDB->getF_acta()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $PersonaNotaDB->toArrayForDatabase([
+            'f_acta' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

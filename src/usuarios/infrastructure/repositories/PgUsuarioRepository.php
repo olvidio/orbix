@@ -4,6 +4,7 @@ namespace src\usuarios\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
+use core\ConverterDate;
 use core\Set;
 use PDO;
 use src\shared\traits\HandlesPdoErrors;
@@ -144,6 +145,15 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_usuario);
 
+        /*
+        $aDatos = $usuario->toArrayForDatabase([
+//            'idioma' => fn($v) => (new ConverterEnum('idioma', $v))->toPg(),
+            'h_ini' => fn($v) => (new ConverterDate('time', $v))->toPg(),
+            'h_fin' => fn($v) => (new ConverterDate('time', $v))->toPg(),
+            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_fin' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
+        */
         $aDatos = [];
         $aDatos['usuario'] = $usuario->getUsuarioAsString();
         $aDatos['id_role'] = $usuario->getId_role();

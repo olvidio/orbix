@@ -42,7 +42,7 @@ final class AppId
         return new self((int)$value);
     }
 
-    public static function fromNullable(?int $value): ?self
+    public static function fromNullableInt(?int $value): ?self
     {
         if ($value === null) {
             return null;

@@ -52,7 +52,7 @@ class CentroEncargado
      */
     public function setNum_orden(?int $num_orden = null): void
     {
-        $this->num_orden = CentroEncargadoOrden::fromNullable($num_orden);
+        $this->num_orden = CentroEncargadoOrden::fromNullableInt($num_orden);
     }
 
     /**
@@ -67,7 +67,7 @@ class CentroEncargado
     {
         $this->num_orden = $valor instanceof CentroEncargadoOrden
             ? $valor
-            : CentroEncargadoOrden::fromNullable($valor);
+            : CentroEncargadoOrden::fromNullableInt($valor);
     }
 
     /**

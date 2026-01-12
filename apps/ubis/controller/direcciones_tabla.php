@@ -80,7 +80,7 @@ foreach ($cDirecciones as $oDireccion) {
     $a_valores[$i][6] = $oDireccion->getProvincia();
     $a_valores[$i][7] = $oDireccion->getA_p();
     $a_valores[$i][8] = $oDireccion->getPais();
-    $a_valores[$i][9] = $oDireccion->getF_direccion()->getFromLocal();
+    $a_valores[$i][9] = $oDireccion->getF_direccion()?->getFromLocal();
     $a_valores[$i][10] = $oDireccion->getObserv();
 }
 

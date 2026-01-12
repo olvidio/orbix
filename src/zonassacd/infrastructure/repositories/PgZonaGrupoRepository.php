@@ -147,11 +147,7 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_grupo);
 
-        $aDatos = [];
-        $aDatos['nombre_grupo'] = $ZonaGrupo->getNombre_grupo();
-        $aDatos['orden'] = $ZonaGrupo->getOrden();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $ZonaGrupo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

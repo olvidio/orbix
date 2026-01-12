@@ -126,7 +126,7 @@ class PgPersonaNotaDBRepository extends ClaseRepository implements PersonaNotaDB
     {
         $id_nom = $PersonaNotaDB->getId_nom();
         $id_nivel = $PersonaNotaDB->getId_nivel();
-        $tipo_acta = $PersonaNotaDB->getTipo_acta();
+        $tipo_acta = $PersonaNotaDB->getTipoActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_nom=$id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
@@ -141,27 +141,14 @@ class PgPersonaNotaDBRepository extends ClaseRepository implements PersonaNotaDB
     {
         $id_nom = $PersonaNotaDB->getId_nom();
         $id_nivel = $PersonaNotaDB->getId_nivel();
-        $tipo_acta = $PersonaNotaDB->getTipo_acta();
+        $tipo_acta = $PersonaNotaDB->getTipoActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom, $id_nivel, $tipo_acta);
 
-        $aDatos = [];
-        $aDatos['id_nivel'] = $PersonaNotaDB->getId_nivel();
-        $aDatos['id_asignatura'] = $PersonaNotaDB->getId_asignatura();
-        $aDatos['id_situacion'] = $PersonaNotaDB->getId_situacion();
-        $aDatos['acta'] = $PersonaNotaDB->getActa();
-        $aDatos['detalle'] = $PersonaNotaDB->getDetalle();
-        $aDatos['preceptor'] = $PersonaNotaDB->isPreceptor();
-        $aDatos['id_preceptor'] = $PersonaNotaDB->getId_preceptor();
-        $aDatos['epoca'] = $PersonaNotaDB->getEpoca();
-        $aDatos['id_activ'] = $PersonaNotaDB->getId_activ();
-        $aDatos['nota_num'] = $PersonaNotaDB->getNota_num();
-        $aDatos['nota_max'] = $PersonaNotaDB->getNota_max();
-        $aDatos['tipo_acta'] = $PersonaNotaDB->getTipo_acta();
-        // para las fechas
-        $aDatos['f_acta'] = (new ConverterDate('date', $PersonaNotaDB->getF_acta()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $PersonaNotaDB->toArrayForDatabase([
+            'f_acta' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

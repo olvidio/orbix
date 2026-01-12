@@ -122,12 +122,7 @@ class PgEncargoTextoRepository extends ClaseRepository implements EncargoTextoRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['idioma'] = $EncargoTexto->getIdioma();
-        $aDatos['clave'] = $EncargoTexto->getClave();
-        $aDatos['texto'] = $EncargoTexto->getTexto();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $EncargoTexto->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

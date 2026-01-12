@@ -17,18 +17,9 @@ class UsuarioGrupo
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function  getIdUsuarioVo()
-    {
-        return $this->id_usuario;
-    }
     public function getId_usuario(): int
     {
         return $this->id_usuario;
-    }
-
-    public function setIdUsuarioVo(int $id_usuario): void
-    {
-        $this->id_usuario = $id_usuario;
     }
 
     public function setId_usuario(int $id_usuario): void
@@ -36,20 +27,9 @@ class UsuarioGrupo
         $this->id_usuario = $id_usuario;
     }
 
-
-    public function getIdGrupoVo(): int
-    {
-        return $this->id_grupo;
-    }
-
     public function getId_grupo(): int
     {
         return $this->id_grupo;
-    }
-
-    public function setIdGrupoVo(int $id_grupo): void
-    {
-        $this->id_grupo = $id_grupo;
     }
 
     public function setId_grupo(int $id_grupo): void

@@ -155,7 +155,7 @@ class AsistenteActividadService
         /* Mirar si la actividad es mia o no */
         $oActividad = $this->actividadAllRepository->findById($iid_activ);
         $dl_org = $oActividad->getDl_org();
-        $id_tabla = $oActividad->getId_tabla();
+        $id_tabla = $oActividad->getIdTablaVo()->value();
 
         $aWhere['id_activ'] = $iid_activ;
         $aOperators = [];
@@ -197,7 +197,7 @@ class AsistenteActividadService
         $numAsis = 0;
         foreach ($cAsistentes as $oAsistente) {
             $id_nom = $oAsistente->getId_nom();
-            $propietario = $oAsistente->getPropietario() ?? '';
+            $propietario = $oAsistente->getPropietarioVo()->value() ?? '';
             $padre = strtok($propietario, '>');
             $child = strtok('>');
 
@@ -208,7 +208,7 @@ class AsistenteActividadService
             if ($oPersona === null) {
                 $msg_err .= "<br>No encuentro a nadie con id_nom $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 $msg_err .= "<br>" . _("borro la asistencia");
-                $id_tabla = $oAsistente->getId_tabla();
+                $id_tabla = $oAsistente->getIdTablaVo()->value();
                 switch ($id_tabla) {
                     case 'dl':
                         $repo = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
@@ -224,7 +224,7 @@ class AsistenteActividadService
                 continue;
             }
 
-            $plaza = empty($oAsistente->getPlaza()) ? PlazaId::PEDIDA : $oAsistente->getPlaza();
+            $plaza = empty($oAsistente->getPlazaVo()->value()) ? PlazaId::PEDIDA : $oAsistente->getPlazaVo()->value();
             // Sólo cuento las asignadas
             if ($plaza < PlazaId::ASIGNADA) continue;
 
@@ -248,7 +248,7 @@ class AsistenteActividadService
     {
         /* Mirar si la actividad es mia o no */
         $oActividad = $this->actividadAllRepository->findById($iid_activ);
-        $id_tabla = $oActividad->getId_tabla();
+        $id_tabla = $oActividad->getIdTablaVo()->value();
         // Si es de la sf quito la 'f'
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 
@@ -326,7 +326,7 @@ class AsistenteActividadService
             $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             exit($msg_err);
         }
-        $dl_persona = $oPersona->getDl();
+        $dl_persona = $oPersona->getDlVo()->value();
         $clasePersona = $oPersona->getClassName();
         // hay que averiguar si la actividad es de la dl o de fuera.
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);

@@ -123,22 +123,7 @@ class PgPermUsuarioActividadRepository extends ClaseRepository implements PermUs
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_usuario'] = $PermUsuarioActividad->getId_usuario();
-        $aDatos['dl_propia'] = $PermUsuarioActividad->isDl_propia();
-        $aDatos['id_tipo_activ_txt'] = $PermUsuarioActividad->getId_tipo_activ_txt();
-        $aDatos['fase_ref'] = $PermUsuarioActividad->getFase_ref();
-        $aDatos['afecta_a'] = $PermUsuarioActividad->getAfecta_a();
-        $aDatos['perm_on'] = $PermUsuarioActividad->getPerm_on();
-        $aDatos['perm_off'] = $PermUsuarioActividad->getPerm_off();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['dl_propia'])) {
-            $aDatos['dl_propia'] = 'true';
-        } else {
-            $aDatos['dl_propia'] = 'false';
-        }
-
+        $aDatos = $PermUsuarioActividad->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

@@ -24,7 +24,7 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $a_usuario_perm['id_item'] = $oUsuarioPerm->getId_item();
     $a_usuario_perm['id_tipo_activ_txt'] = $oUsuarioPerm->getId_tipo_activ_txt();
     $a_usuario_perm['dl_propia'] = $oUsuarioPerm->getDl_propia();
-    $a_usuario_perm['fase_ref'] = $oUsuarioPerm->getFase_ref();
+    $a_usuario_perm['fase_ref'] = $oUsuarioPerm->getFaseRefVo()->value();
     $a_usuario_perm['afecta_a'] = $oUsuarioPerm->getAfecta_a();
     $a_usuario_perm['perm_on'] = $oUsuarioPerm->getPerm_on();
     $a_usuario_perm['perm_off'] = $oUsuarioPerm->getPerm_off();

@@ -33,7 +33,7 @@ $cRepeticion = $RepeticionRepository->getRepeticiones();
 
 $texto .= "//tipos de repetición actividades\n";
 foreach ($cRepeticion as $oRepeticion) {
-    $repe = $oRepeticion->getRepeticion();
+    $repe = $oRepeticion->getRepeticionVo()->value();
     if (!empty($repe)) {
         $texto .= " _(\"$repe\"); \n";
     }

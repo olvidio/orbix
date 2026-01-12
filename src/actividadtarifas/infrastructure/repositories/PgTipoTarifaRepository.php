@@ -140,13 +140,7 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tarifa);
 
-        $aDatos = [];
-        $aDatos['modo'] = $TipoTarifa->getModoVo()->value();
-        $aDatos['letra'] = $TipoTarifa->getLetraVo()?->value();
-        $aDatos['sfsv'] = $TipoTarifa->getSfsvVo()?->value();
-        $aDatos['observ'] = $TipoTarifa->getObserv();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $TipoTarifa->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

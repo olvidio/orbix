@@ -80,7 +80,7 @@ class Encargo
     {
         $this->id_tipo_enc = $vo instanceof EncargoTipoId
             ? $vo
-            : EncargoTipoId::fromNullable($vo);
+            : EncargoTipoId::fromNullableInt($vo);
     }
 
 
@@ -109,7 +109,7 @@ class Encargo
     {
         $this->sf_sv = $vo instanceof SfsvId
             ? $vo
-            : SfsvId::fromNullable($vo);
+            : SfsvId::fromNullableInt($vo);
     }
 
 
@@ -264,7 +264,7 @@ class Encargo
      */
     public function setOrden(?int $orden = null): void
     {
-        $this->orden = EncargoOrden::fromNullable($orden);
+        $this->orden = EncargoOrden::fromNullableInt($orden);
     }
 
     public function getOrdenVo(): ?EncargoOrden
@@ -276,7 +276,7 @@ class Encargo
     {
         $this->orden = $valor instanceof EncargoOrden
             ? $valor
-            : EncargoOrden::fromNullable($valor);
+            : EncargoOrden::fromNullableInt($valor);
     }
 
 
@@ -293,7 +293,7 @@ class Encargo
      */
     public function setPrioridad(?int $prioridad = null): void
     {
-        $this->prioridad = EncargoPrioridad::fromNullable($prioridad);
+        $this->prioridad = EncargoPrioridad::fromNullableInt($prioridad);
     }
 
     public function getPrioridadVo(): ?EncargoPrioridad
@@ -305,6 +305,6 @@ class Encargo
     {
         $this->prioridad = $valor instanceof EncargoPrioridad
             ? $valor
-            : EncargoPrioridad::fromNullable($valor);
+            : EncargoPrioridad::fromNullableInt($valor);
     }
 }

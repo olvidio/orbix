@@ -99,7 +99,7 @@ class PermUsuarioActividad
     {
         $this->fase_ref = $fase_ref instanceof FaseId
             ? $fase_ref
-            : FaseId::fromNullable($fase_ref);
+            : FaseId::fromNullableInt($fase_ref);
     }
 
     /**
@@ -115,7 +115,7 @@ class PermUsuarioActividad
      */
     public function setFase_ref(?int $fase_ref = null): void
     {
-        $this->fase_ref = FaseId::fromNullable($fase_ref);
+        $this->fase_ref = FaseId::fromNullableInt($fase_ref);
     }
 
 

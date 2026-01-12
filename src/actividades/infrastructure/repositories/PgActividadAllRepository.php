@@ -410,42 +410,16 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_activ);
 
-        $aDatos = [];
-        $aDatos['id_tipo_activ'] = $ActividadAll->getId_tipo_activ();
-        $aDatos['dl_org'] = $ActividadAll->getDl_org();
-        $aDatos['nom_activ'] = $ActividadAll->getNom_activ();
-        $aDatos['id_ubi'] = $ActividadAll->getId_ubi();
-        $aDatos['desc_activ'] = $ActividadAll->getDesc_activ();
-        $aDatos['tipo_horario'] = $ActividadAll->getTipo_horario();
-        $aDatos['precio'] = $ActividadAll->getPrecio();
-        $aDatos['num_asistentes'] = $ActividadAll->getNum_asistentes();
-        $aDatos['status'] = $ActividadAll->getStatus();
-        $aDatos['observ'] = $ActividadAll->getObserv();
-        $aDatos['nivel_stgr'] = $ActividadAll->getNivel_stgr();
-        $aDatos['observ_material'] = $ActividadAll->getObserv_material();
-        $aDatos['lugar_esp'] = $ActividadAll->getLugar_esp();
-        $aDatos['tarifa'] = $ActividadAll->getTarifa();
-        $aDatos['id_repeticion'] = $ActividadAll->getId_repeticion();
-        $aDatos['publicado'] = $ActividadAll->isPublicado();
-        $aDatos['id_tabla'] = $ActividadAll->getId_tabla();
-        $aDatos['plazas'] = $ActividadAll->getPlazas();
-        $aDatos['idioma'] = $ActividadAll->getIdiomaVo()?->value();
-        // para las horas
-        $aDatos['h_ini'] = (new ConverterDate('time', $ActividadAll->getH_ini()))->toPg();
-        $aDatos['h_fin'] = (new ConverterDate('time', $ActividadAll->getH_fin()))->toPg();
-        // para las fechas
-        $aDatos['f_ini'] = (new ConverterDate('date', $ActividadAll->getF_ini()))->toPg();
-        $aDatos['f_fin'] = (new ConverterDate('date', $ActividadAll->getF_fin()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['publicado'])) {
-            $aDatos['publicado'] = 'true';
-        } else {
-            $aDatos['publicado'] = 'false';
-        }
+        $aDatos = $ActividadAll->toArrayForDatabase([
+            'h_ini' => fn($v) => (new ConverterDate('time', $v))->toPg(),
+            'h_fin' => fn($v) => (new ConverterDate('time', $v))->toPg(),
+            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_fin' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE
+            unset ($aDatos['id_activ']);
             $update = "
 					id_tipo_activ            = :id_tipo_activ,
 					dl_org                   = :dl_org,

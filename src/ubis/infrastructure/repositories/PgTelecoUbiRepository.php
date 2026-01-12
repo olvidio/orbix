@@ -111,14 +111,7 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_ubi'] = $TelecoCdc->getId_ubi();
-        $aDatos['id_tipo_teleco'] = $TelecoCdc->getId_tipo_teleco();
-        $aDatos['id_desc_teleco'] = $TelecoCdc->getId_desc_teleco();
-        $aDatos['num_teleco'] = $TelecoCdc->getNum_teleco();
-        $aDatos['observ'] = $TelecoCdc->getObserv();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $TelecoCdc->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

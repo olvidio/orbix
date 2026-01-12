@@ -4,8 +4,8 @@ namespace src\actividadcargos\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
-use src\shared\domain\traits\Hydratable;
 use src\actividadcargos\domain\value_objects\{CargoCode, OrdenCargo, TipoCargoCode};
+use src\shared\domain\traits\Hydratable;
 
 /**
  * Clase que implementa la entidad xd_orden_cargo
@@ -19,6 +19,7 @@ use src\actividadcargos\domain\value_objects\{CargoCode, OrdenCargo, TipoCargoCo
 class Cargo
 {
     use Hydratable;
+
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /**
@@ -38,13 +39,13 @@ class Cargo
      *
      * @var bool|null
      */
-    private bool|null $sf = null;
+    private?bool $sf = null;
     /**
      * Sv de Cargo
      *
      * @var bool|null
      */
-    private bool|null $sv = null;
+    private?bool $sv = null;
     /**
      * Tipo del Cargo (código)
      */
@@ -57,9 +58,11 @@ class Cargo
         return $this->cargo;
     }
 
-    public function setCargoVo(CargoCode $codigo): void
+    public function setCargoVo(CargoCode|string|null $codigo): void
     {
-        $this->cargo = $codigo;
+        $this->cargo = $codigo instanceof CargoCode
+            ? $codigo
+            : TipoCargoCode::fromNullableString($codigo);
     }
 
     public function getOrdenCargoVo(): ?OrdenCargo
@@ -71,7 +74,7 @@ class Cargo
     {
         $this->ordenCargo = $texto instanceof OrdenCargo
             ? $texto
-            : OrdenCargo::fromNullable($texto);
+            : OrdenCargo::fromNullableInt($texto);
     }
 
     public function getTipoCargoVo(): ?TipoCargoCode
@@ -126,7 +129,7 @@ class Cargo
      */
     public function setOrden_cargo(?int $orden_cargo = null): void
     {
-        $this->ordenCargo = OrdenCargo::fromNullable($orden_cargo);
+        $this->ordenCargo = OrdenCargo::fromNullableInt($orden_cargo);
     }
 
     public function isSf(): ?bool

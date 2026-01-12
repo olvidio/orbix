@@ -134,10 +134,7 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_template_menu);
 
-        $aDatos = [];
-        $aDatos['nombre'] = $TemplateMenu->getNombre();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $TemplateMenu->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

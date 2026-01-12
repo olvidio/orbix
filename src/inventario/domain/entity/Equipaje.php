@@ -56,13 +56,13 @@ class Equipaje
 
     public function setId_equipaje(int $id_equipaje): void
     {
-        $this->id_equipaje = EquipajeId::fromNullable($id_equipaje);
+        $this->id_equipaje = EquipajeId::fromNullableInt($id_equipaje);
     }
 
 
     public function getIds_activ(): ?string
     {
-        return $this->ids_activ->value() ?? '';
+        return $this->ids_activ?->value();
     }
 
 
@@ -74,7 +74,7 @@ class Equipaje
 
     public function getLugar(): ?string
     {
-        return $this->lugar->value() ?? '';
+        return $this->lugar?->value();
     }
 
 
@@ -168,35 +168,38 @@ class Equipaje
     // Value Object API (duplicada con legacy)
     public function getIdEquipajeVo(): EquipajeId
     {
-        return new EquipajeId($this->id_equipaje);
+        return $this->id_equipaje;
     }
 
-    public function setIdEquipajeVo(?EquipajeId $id = null): void
+    public function setIdEquipajeVo(EquipajeId|int|null $id = null): void
     {
-        if ($id === null) {
-            return;
-        }
-        $this->id_equipaje = $id->value();
+        $this->id_equipaje = $id instanceof EquipajeId
+            ? $id
+            : EquipajeId::fromNullableInt($id);
     }
 
     public function getIdsActivVo(): ?EquipajeIdsActiv
     {
-        return EquipajeIdsActiv::fromNullableString($this->ids_activ);
+        return $this->ids_activ;
     }
 
-    public function setIdsActivVo(?EquipajeIdsActiv $ids = null): void
+    public function setIdsActivVo(EquipajeIdsActiv|string|null $ids = null): void
     {
-        $this->ids_activ = $ids?->value();
+        $this->ids_activ = $ids instanceof EquipajeIdsActiv
+            ? $ids
+            : EquipajeIdsActiv::fromNullableString($ids);
     }
 
     public function getLugarVo(): ?EquipajeLugar
     {
-        return EquipajeLugar::fromNullableString($this->lugar);
+        return $this->lugar;
     }
 
-    public function setLugarVo(?EquipajeLugar $lugar = null): void
+    public function setLugarVo(EquipajeLugar|string|null $lugar = null): void
     {
-        $this->lugar = $lugar?->value();
+        $this->lugar = $lugar instanceof EquipajeLugar
+            ? $lugar
+            : EquipajeLugar::fromNullableString($lugar);
     }
 
     public function getIdUbiActivVo(): ?int

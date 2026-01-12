@@ -144,57 +144,9 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_ubi);
 
-        $aDatos = [];
-        $aDatos['tipo_ubi'] = $CentroDl->getTipo_ubi();
-        $aDatos['nombre_ubi'] = $CentroDl->getNombre_ubi();
-        $aDatos['dl'] = $CentroDl->getDl();
-        $aDatos['pais'] = $CentroDl->getPais();
-        $aDatos['region'] = $CentroDl->getRegion();
-        $aDatos['active'] = $CentroDl->isActive();
-        $aDatos['sv'] = $CentroDl->isSv();
-        $aDatos['sf'] = $CentroDl->isSf();
-        $aDatos['tipo_ctr'] = $CentroDl->getTipo_ctr();
-        $aDatos['tipo_labor'] = $CentroDl->getTipo_labor();
-        $aDatos['cdc'] = $CentroDl->isCdc();
-        $aDatos['id_ctr_padre'] = $CentroDl->getId_ctr_padre();
-        $aDatos['n_buzon'] = $CentroDl->getN_buzon();
-        $aDatos['num_pi'] = $CentroDl->getNum_pi();
-        $aDatos['num_cartas'] = $CentroDl->getNum_cartas();
-        $aDatos['observ'] = $CentroDl->getObserv();
-        $aDatos['num_habit_indiv'] = $CentroDl->getNum_habit_indiv();
-        $aDatos['plazas'] = $CentroDl->getPlazas();
-        $aDatos['id_zona'] = $CentroDl->getId_zona();
-        $aDatos['sede'] = $CentroDl->isSede();
-        $aDatos['num_cartas_mensuales'] = $CentroDl->getNum_cartas_mensuales();
-        // para las fechas
-        $aDatos['f_active'] = (new ConverterDate('date', $CentroDl->getF_active()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['active'])) {
-            $aDatos['active'] = 'true';
-        } else {
-            $aDatos['active'] = 'false';
-        }
-        if (is_true($aDatos['sv'])) {
-            $aDatos['sv'] = 'true';
-        } else {
-            $aDatos['sv'] = 'false';
-        }
-        if (is_true($aDatos['sf'])) {
-            $aDatos['sf'] = 'true';
-        } else {
-            $aDatos['sf'] = 'false';
-        }
-        if (is_true($aDatos['cdc'])) {
-            $aDatos['cdc'] = 'true';
-        } else {
-            $aDatos['cdc'] = 'false';
-        }
-        if (is_true($aDatos['sede'])) {
-            $aDatos['sede'] = 'true';
-        } else {
-            $aDatos['sede'] = 'false';
-        }
+        $aDatos = $CentroDl->toArrayForDatabase([
+            'f_active' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

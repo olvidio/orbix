@@ -36,7 +36,7 @@ final class RepeticionId
         return $this->value === null;
     }
 
-public static function fromNullable(?int $value): ?self
+public static function fromNullableInt(?int $value): ?self
     {
         if ($value === null) {
             return null;

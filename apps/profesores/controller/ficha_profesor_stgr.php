@@ -135,7 +135,7 @@ foreach ($a_tipos_dossier as $id_tipo_dossier => $nom_dossier) {
     $oTipoDossier = $TipoDossierRepository->findById($id_tipo_dossier);
     $permiso_lectura = $oTipoDossier->getPermiso_lectura();
     $permiso_escritura = $oTipoDossier->getPermiso_escritura();
-    $depende_modificar = $oTipoDossier->getDepende_modificar();
+    $depende_modificar = $oTipoDossier->isDepende_modificar();
     $pau = 'p';
 
     $oPermDossier = new PermDossier();
@@ -216,8 +216,8 @@ $ProfesorTipoRepository = $GLOBALS['container']->get(ProfesorTipoRepositoryInter
 foreach ($cProfesores as $oProfesor) {
     $id_departamento = $oProfesor->getId_departamento();
     $escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
-    $f_nombramiento = $oProfesor->getF_nombramiento()->getFromLocal();
-    $f_cese = $oProfesor->getF_cese()->getFromLocal();
+    $f_nombramiento = $oProfesor->getF_nombramiento()?->getFromLocal();
+    $f_cese = $oProfesor->getF_cese()?->getFromLocal();
     $escrito_cese = $oProfesor->getEscrito_cese();
     $id_tipo_profesor = $oProfesor->getId_tipo_profesor();
 
@@ -241,8 +241,8 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
     foreach ($cDirectores as $oProfesorDirector) {
         $id_departamento = $oProfesorDirector->getId_departamento();
         $escrito_nombramiento = $oProfesorDirector->getEscrito_nombramiento();
-        $f_nombramiento = $oProfesorDirector->getF_nombramiento()->getFromLocal();
-        $f_cese = $oProfesorDirector->getF_cese()->getFromLocal();
+        $f_nombramiento = $oProfesorDirector->getF_nombramiento()?->getFromLocal();
+        $f_cese = $oProfesorDirector->getF_cese()?->getFromLocal();
         $escrito_cese = $oProfesorDirector->getEscrito_cese();
 
         $departamento = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
@@ -257,7 +257,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
     $cJuramento = $JuramentoRepository->getProfesorJuramentos(['id_nom' => $id_nom]);
     if (!empty($cJuramento[0])) {
         $oJuramento = $cJuramento[0];
-        $f_juramento = $oJuramento->getF_juramento()->getFromLocal();
+        $f_juramento = $oJuramento->getF_juramento()?->getFromLocal();
     } else {
         $f_juramento = '';
     }
@@ -275,7 +275,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
         $titulo = $oProfesorPublicacion->getTitulo();
         $editorial = $oProfesorPublicacion->getEditorial();
         $coleccion = $oProfesorPublicacion->getColeccion();
-        $f_publicacion = $oProfesorPublicacion->getF_publicacion()->getFromLocal();
+        $f_publicacion = $oProfesorPublicacion->getF_publicacion()?->getFromLocal();
         $referencia = $oProfesorPublicacion->getReferencia();
         $lugar = $oProfesorPublicacion->getLugar();
         $observ = $oProfesorPublicacion->getObserv();
@@ -311,9 +311,9 @@ $ProfesorTipoRepository = $GLOBALS['container']->get(ProfesorTipoRepositoryInter
 foreach ($cProfesores as $oProfesor) {
     $id_departamento = $oProfesor->getId_departamento();
     $escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
-    $f_nombramiento = $oProfesor->getF_nombramiento()->getFromLocal();
+    $f_nombramiento = $oProfesor->getF_nombramiento()?->getFromLocal();
     $escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
-    $f_cese = $oProfesor->getF_cese()->getFromLocal();
+    $f_cese = $oProfesor->getF_cese()?->getFromLocal();
     $escrito_cese = $oProfesor->getEscrito_cese();
     $id_tipo_profesor = $oProfesor->getId_tipo_profesor();
 
@@ -335,9 +335,9 @@ $id_departamento = '';
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
     $id_asignatura = $oProfesorAmpliacion->getId_asignatura();
-    $f_nombramiento = $oProfesorAmpliacion->getF_nombramiento()->getFromLocal();
+    $f_nombramiento = $oProfesorAmpliacion->getF_nombramiento()?->getFromLocal();
     $escrito_nombramiento = $oProfesorAmpliacion->getEscrito_nombramiento();
-    $f_cese = $oProfesorAmpliacion->getF_cese()->getFromLocal();
+    $f_cese = $oProfesorAmpliacion->getF_cese()?->getFromLocal();
     $escrito_cese = $oProfesorAmpliacion->getEscrito_cese();
 
     $oAsignatura = $AsignaturaRepository->findById($id_asignatura);

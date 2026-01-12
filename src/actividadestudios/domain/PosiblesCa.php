@@ -37,9 +37,9 @@ class PosiblesCa extends ClasePropiedades
         $num_opcionales = 0;
         $todas_asig_p = [];
         foreach ($cPersonaNotas as $oPersonaNota) {
-            $id_situacion = $oPersonaNota->getId_situacion();
-            $id_asignatura = $oPersonaNota->getId_asignatura();
-            $id_nivel = $oPersonaNota->getId_nivel();
+            $id_situacion = $oPersonaNota->getIdSituacionVo()->value();
+            $id_asignatura = $oPersonaNota->getIdAsignaturaVo()->value();
+            $id_nivel = $oPersonaNota->getIdNivelVo()->value();
             if (array_key_exists($id_situacion, $aSuperadas)) {
                 $todas_asig_p[] = $id_asignatura;
                 // Apunto las opcionales a parte.

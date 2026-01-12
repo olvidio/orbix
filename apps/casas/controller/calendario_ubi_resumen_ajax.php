@@ -173,8 +173,8 @@ foreach ($cActividades as $oActividad) {
     $i++;
     $id_activ = $oActividad->getId_activ();
     $id_tipo_activ = $oActividad->getId_tipo_activ();
-    $f_ini_local = $oActividad->getF_ini()->getFromLocal();
-    $f_fin_local = $oActividad->getF_fin()->getFromLocal();
+    $f_ini_local = $oActividad->getF_ini()?->getFromLocal();
+    $f_fin_local = $oActividad->getF_fin()?->getFromLocal();
 
     $num_dias_act = $oActividad->getDuracionAumentada();
     $num_dias = $oActividad->getDuracionEnPeriodo($oInicio, $oFin);

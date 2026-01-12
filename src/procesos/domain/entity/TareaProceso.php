@@ -54,7 +54,7 @@ class TareaProceso
     {
         $this->id_tipo_proceso = $id_tipo_proceso instanceof ProcesoTipoId
             ? $id_tipo_proceso
-            : ProcesoTipoId::fromNullable($id_tipo_proceso);
+            : ProcesoTipoId::fromNullableInt($id_tipo_proceso);
     }
 
     /**
@@ -70,7 +70,7 @@ class TareaProceso
      */
     public function setId_tipo_proceso(int $id_tipo_proceso): void
     {
-        $this->id_tipo_proceso = ProcesoTipoId::fromNullable($id_tipo_proceso);
+        $this->id_tipo_proceso = ProcesoTipoId::fromNullableInt($id_tipo_proceso);
     }
 
 
@@ -84,7 +84,7 @@ class TareaProceso
     {
         $this->id_fase = $id_fase instanceof FaseId
             ? $id_fase
-            : FaseId::fromNullable($id_fase);
+            : FaseId::fromNullableInt($id_fase);
     }
 
     /**
@@ -100,7 +100,7 @@ class TareaProceso
      */
     public function setId_fase(int $id_fase): void
     {
-        $this->id_fase = FaseId::fromNullable($id_fase);
+        $this->id_fase = FaseId::fromNullableInt($id_fase);
     }
 
 
@@ -114,7 +114,7 @@ class TareaProceso
     {
         $this->id_tarea = $id_tarea instanceof TareaId
             ? $id_tarea
-            : TareaId::fromNullable($id_tarea);
+            : TareaId::fromNullableInt($id_tarea);
     }
 
     /**
@@ -130,7 +130,7 @@ class TareaProceso
      */
     public function setId_tarea(int $id_tarea): void
     {
-        $this->id_tarea = TareaId::fromNullable($id_tarea);
+        $this->id_tarea = TareaId::fromNullableInt($id_tarea);
     }
 
 
@@ -147,7 +147,7 @@ class TareaProceso
      */
     public function setStatus(int $istatus): void
     {
-        $this->status = StatusId::fromNullable($istatus);
+        $this->status = StatusId::fromNullableInt($istatus);
     }
     public function getStatusVo(): StatusId
     {
@@ -157,7 +157,7 @@ class TareaProceso
     {
         $this->status = $status instanceof StatusId
             ? $status
-            : StatusId::fromNullable($status);
+            : StatusId::fromNullableInt($status);
     }
 
 

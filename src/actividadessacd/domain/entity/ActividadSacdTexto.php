@@ -66,7 +66,7 @@ class ActividadSacdTexto
      */
     public function getClave(): string
     {
-        return $this->clave;
+        return $this->clave->value();
     }
 
     /**
@@ -82,7 +82,7 @@ class ActividadSacdTexto
      */
     public function getClaveVo(): SacdTextoClave
     {
-        return new SacdTextoClave($this->clave);
+        return $this->clave;
     }
 
 

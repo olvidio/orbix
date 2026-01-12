@@ -291,14 +291,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tipo_activ);
 
-        $aDatos = [];
-        $aDatos['nombre'] = $TipoDeActividad->getNombre();
-        $aDatos['id_tipo_proceso_sv'] = $TipoDeActividad->getId_tipo_proceso_sv();
-        $aDatos['id_tipo_proceso_ex_sv'] = $TipoDeActividad->getId_tipo_proceso_ex_sv();
-        $aDatos['id_tipo_proceso_sf'] = $TipoDeActividad->getId_tipo_proceso_sf();
-        $aDatos['id_tipo_proceso_ex_sf'] = $TipoDeActividad->getId_tipo_proceso_ex_sf();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $TipoDeActividad->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

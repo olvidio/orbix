@@ -32,7 +32,7 @@ class UbiInventario
 
     public function setId_ubi(int $id_ubi): void
     {
-        $this->id_ubi = UbiInventarioId::fromNullable($id_ubi);
+        $this->id_ubi = UbiInventarioId::fromNullableInt($id_ubi);
     }
 
 
@@ -56,7 +56,7 @@ class UbiInventario
 
     public function setId_ubi_activ(?int $id_ubi_activ = null): void
     {
-        $this->id_ubi_activ = UbiInventarioIdActiv::fromNullable($id_ubi_activ);
+        $this->id_ubi_activ = UbiInventarioIdActiv::fromNullableInt($id_ubi_activ);
     }
 
     // Value Object API (duplicada con legacy)
@@ -69,7 +69,7 @@ class UbiInventario
     {
         $this->id_ubi = $id instanceof UbiInventarioId
             ? $id
-            : UbiInventarioId::fromNullable($id);
+            : UbiInventarioId::fromNullableInt($id);
     }
 
     public function getNomUbiVo(): UbiInventarioName
@@ -93,7 +93,7 @@ class UbiInventario
     {
         $this->id_ubi_activ = $id instanceof UbiInventarioIdActiv
             ? $id
-            : UbiInventarioIdActiv::fromNullable($id);
+            : UbiInventarioIdActiv::fromNullableInt($id);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

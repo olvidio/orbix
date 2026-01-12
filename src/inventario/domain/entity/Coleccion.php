@@ -32,7 +32,7 @@ class Coleccion
 
     public function setId_coleccion(int $id_coleccion): void
     {
-        $this->id_coleccion = ColeccionId::fromNullable($id_coleccion);
+        $this->id_coleccion = ColeccionId::fromNullableInt($id_coleccion);
     }
 
     // Value Object API
@@ -45,7 +45,7 @@ class Coleccion
     {
         $this->id_coleccion = $id instanceof ColeccionId
             ? $id
-            : ColeccionId::fromNullable($id);
+            : ColeccionId::fromNullableInt($id);
     }
 
 

@@ -73,7 +73,7 @@ class Verify2fa
         $j = 0;
         $binary = '';
 
-        for ($i = 0; $i < strlen($secret); $i++) {
+        for ($i = 0, $iMax = strlen($secret); $i < $iMax; $i++) {
             $n = $n << 5;
             $n = $n + strpos($base32chars, $secret[$i]);
             $j = $j + 5;

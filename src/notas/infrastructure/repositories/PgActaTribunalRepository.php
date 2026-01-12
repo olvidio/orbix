@@ -163,12 +163,7 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['acta'] = $ActaTribunal->getActa();
-        $aDatos['examinador'] = $ActaTribunal->getExaminador();
-        $aDatos['orden'] = $ActaTribunal->getOrden();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $ActaTribunal->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

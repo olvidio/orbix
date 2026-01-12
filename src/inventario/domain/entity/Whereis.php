@@ -40,7 +40,7 @@ class Whereis
 
     public function setId_item_egm(?int $id_item_egm = null): void
     {
-        $this->id_item_egm = WhereisItemEgmId::fromNullable($id_item_egm);
+        $this->id_item_egm = WhereisItemEgmId::fromNullableInt($id_item_egm);
     }
 
 
@@ -52,7 +52,7 @@ class Whereis
 
     public function setId_doc(?int $id_doc = null): void
     {
-        $this->id_doc = WhereisDocId::fromNullable($id_doc);
+        $this->id_doc = WhereisDocId::fromNullableInt($id_doc);
     }
 
     public function getIdItemEgmVo(): ?WhereisItemEgmId
@@ -64,7 +64,7 @@ class Whereis
     {
         $this->id_item_egm = $id instanceof WhereisItemEgmId
             ? $id
-            : WhereisItemEgmId::fromNullable($id);
+            : WhereisItemEgmId::fromNullableInt($id);
     }
 
     public function getIdDocVo(): ?WhereisDocId
@@ -76,7 +76,7 @@ class Whereis
     {
         $this->id_doc = $id instanceof WhereisDocId
             ? $id
-            : WhereisDocId::fromNullable($id);
+            : WhereisDocId::fromNullableInt($id);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

@@ -120,10 +120,7 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($parametro);
 
-        $aDatos = [];
-        $aDatos['valor'] = $ConfigSchema->getValorVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $ConfigSchema->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

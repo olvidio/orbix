@@ -63,12 +63,12 @@ class UltimaAsistencia
         $this->id_tipo_activ = ActividadTipoId::fromInt($id_tipo_activ);
     }
 
-    public function getTipoActivVo(): ActividadTipoId
+    public function getIdTipoActivVo(): ActividadTipoId
     {
         return $this->id_tipo_activ;
     }
 
-    public function setTipoActivVo(ActividadTipoId|int|null $tipoActiv = null): void
+    public function setIdTipoActivVo(ActividadTipoId|int|null $tipoActiv = null): void
     {
         $this->id_tipo_activ = $tipoActiv instanceof ActividadTipoId
             ? $tipoActiv

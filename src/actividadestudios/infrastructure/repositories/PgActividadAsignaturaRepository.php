@@ -62,7 +62,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         $cActividadAsignaturas = $this->getActividadAsignaturas($aWhere, $aOperador);
         $aAsignaturasCa = [];
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
-            $id_asignatura = $oActividadAsignatura->getId_asignatura();
+            $id_asignatura = $oActividadAsignatura->getIdAsignaturaVo()->value();
             if (empty($aAsigDatos[$id_asignatura])) {
                 $aAsignaturasCa[$id_asignatura] = array('nombre_asignatura' => '??', 'creditos' => '??');
             } else {
@@ -147,7 +147,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
     public function Eliminar(ActividadAsignatura $ActividadAsignatura): bool
     {
         $id_activ = $ActividadAsignatura->getId_activ();
-        $id_asignatura = $ActividadAsignatura->getId_asignatura();
+        $id_asignatura = $ActividadAsignatura->getIdAsignaturaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura";
@@ -161,19 +161,26 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
     public function Guardar(ActividadAsignatura $ActividadAsignatura): bool
     {
         $id_activ = $ActividadAsignatura->getId_activ();
-        $id_asignatura = $ActividadAsignatura->getId_asignatura();
+        $id_asignatura = $ActividadAsignatura->getIdAsignaturaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_activ, $id_asignatura);
 
+        $aDatos = $ActividadAsignatura->toArrayForDatabase([
+            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_fin' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
+
+        /*
         $aDatos = [];
         $aDatos['id_profesor'] = $ActividadAsignatura->getId_profesor();
         $aDatos['avis_profesor'] = $ActividadAsignatura->getAvis_profesor();
-        $aDatos['tipo'] = $ActividadAsignatura->getTipo();
+        $aDatos['tipo'] = $ActividadAsignatura->getTipoActividadAsignaturaVo()->value();
         // para las fechas
         $aDatos['f_ini'] = (new ConverterDate('date', $ActividadAsignatura->getF_ini()))->toPg();
         $aDatos['f_fin'] = (new ConverterDate('date', $ActividadAsignatura->getF_fin()))->toPg();
         array_walk($aDatos, 'core\poner_null');
+        */
 
         if ($bInsert === false) {
             //UPDATE
@@ -188,7 +195,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         } else {
             // INSERT
             $aDatos['id_activ'] = $ActividadAsignatura->getId_activ();
-            $aDatos['id_asignatura'] = $ActividadAsignatura->getId_asignatura();
+            $aDatos['id_asignatura'] = $ActividadAsignatura->getIdAsignaturaVo()->value();
             $campos = "(id_activ,id_asignatura,id_profesor,avis_profesor,tipo,f_ini,f_fin)";
             $valores = "(:id_activ,:id_asignatura,:id_profesor,:avis_profesor,:tipo,:f_ini,:f_fin)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

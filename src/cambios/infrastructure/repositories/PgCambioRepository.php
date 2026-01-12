@@ -298,10 +298,17 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item_cambio);
 
+        $aDatos = $Cambio->toArrayForDatabase([
+            'timestamp_cambio' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
+            'json_fases_sv' => fn($v) => (new ConverterJson($v, false))->toPg(false),
+            'json_fases_sf' => fn($v) => (new ConverterJson($v, false))->toPg(false),
+        ]);
+
+        /*
         $aDatos = [];
-        $aDatos['id_tipo_cambio'] = $Cambio->getId_tipo_cambio();
+        $aDatos['id_tipo_cambio'] = $Cambio->getTipoCambioVo()->value();
         $aDatos['id_activ'] = $Cambio->getId_activ();
-        $aDatos['id_tipo_activ'] = $Cambio->getId_tipo_activ();
+        $aDatos['id_tipo_activ'] = $Cambio->getIdTipoActivVo()->value();
         $aDatos['id_status'] = $Cambio->getId_status();
         $aDatos['dl_org'] = $Cambio->getDl_org();
         $aDatos['objeto'] = $Cambio->getObjeto();
@@ -316,6 +323,7 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
         $aDatos['json_fases_sv'] = (new ConverterJson($Cambio->getJson_fases_sv(),false))->toPg(false);
         $aDatos['json_fases_sf'] = (new ConverterJson($Cambio->getJson_fases_sf(), false))->toPg(false);
         array_walk($aDatos, 'core\poner_null');
+        */
 
         if ($bInsert === false) {
             //UPDATE

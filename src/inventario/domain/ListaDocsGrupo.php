@@ -41,7 +41,7 @@ class ListaDocsGrupo
                 }
                 $identificador = $oDocumento->getIdentificador();
                 $num_ejemplares = $oDocumento->getNum_ejemplares();
-                $observ = $oDocumento->getObserv();
+                $observ = $oDocumento->getObservVo()->value();
                 $id_tipo_doc = $oDocumento->getId_tipo_doc();
                 $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);
                 if ($oTipoDoc === null) {

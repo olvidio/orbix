@@ -35,7 +35,7 @@ class ActividadTarea
     {
         $this->id_fase = $id_fase instanceof FaseId
             ? $id_fase
-            : FaseId::fromNullable($id_fase);
+            : FaseId::fromNullableInt($id_fase);
     }
 
     /**
@@ -51,7 +51,7 @@ class ActividadTarea
      */
     public function setId_fase(int $id_fase): void
     {
-        $this->id_fase = FaseId::fromNullable($id_fase);
+        $this->id_fase = FaseId::fromNullableInt($id_fase);
     }
 
 
@@ -65,7 +65,7 @@ class ActividadTarea
     {
         $this->id_tarea = $id_tarea instanceof TareaId
             ? $id_tarea
-            : TareaId::fromNullable($id_tarea);
+            : TareaId::fromNullableInt($id_tarea);
     }
 
     /**

@@ -129,36 +129,11 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom);
 
-        $aDatos = [];
-        $aDatos['id_tabla'] = $PersonaPub->getId_tabla();
-        $aDatos['dl'] = $PersonaPub->getDl();
-        $aDatos['sacd'] = $PersonaPub->isSacd();
-        $aDatos['trato'] = $PersonaPub->getTrato();
-        $aDatos['nom'] = $PersonaPub->getNom();
-        $aDatos['nx1'] = $PersonaPub->getNx1();
-        $aDatos['apellido1'] = $PersonaPub->getApellido1();
-        $aDatos['nx2'] = $PersonaPub->getNx2();
-        $aDatos['apellido2'] = $PersonaPub->getApellido2();
-        $aDatos['idioma_preferido'] = $PersonaPub->getIdioma_preferido();
-        $aDatos['situacion'] = $PersonaPub->getSituacion();
-        $aDatos['apel_fam'] = $PersonaPub->getApel_fam();
-        $aDatos['inc'] = $PersonaPub->getInc();
-        $aDatos['nivel_stgr'] = $PersonaPub->getNivel_stgr();
-        $aDatos['profesion'] = $PersonaPub->getProfesion();
-        $aDatos['eap'] = $PersonaPub->getEap();
-        $aDatos['observ'] = $PersonaPub->getObserv();
-        $aDatos['lugar_nacimiento'] = $PersonaPub->getLugar_nacimiento();
-        // para las fechas
-        $aDatos['f_nacimiento'] = (new ConverterDate('date', $PersonaPub->getF_nacimiento()))->toPg();
-        $aDatos['f_situacion'] = (new ConverterDate('date', $PersonaPub->getF_situacion()))->toPg();
-        $aDatos['f_inc'] = (new ConverterDate('date', $PersonaPub->getF_inc()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['sacd'])) {
-            $aDatos['sacd'] = 'true';
-        } else {
-            $aDatos['sacd'] = 'false';
-        }
+        $aDatos = $PersonaPub->toArrayForDatabase([
+            'f_nacimiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_situacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_inc' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

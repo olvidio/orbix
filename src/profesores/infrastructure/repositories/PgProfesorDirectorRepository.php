@@ -124,15 +124,10 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $ProfesorDirector->getId_nom();
-        $aDatos['id_departamento'] = $ProfesorDirector->getId_departamento();
-        $aDatos['escrito_nombramiento'] = $ProfesorDirector->getEscrito_nombramiento();
-        $aDatos['escrito_cese'] = $ProfesorDirector->getEscrito_cese();
-        // para las fechas
-        $aDatos['f_nombramiento'] = (new ConverterDate('date', $ProfesorDirector->getF_nombramiento()))->toPg();
-        $aDatos['f_cese'] = (new ConverterDate('date', $ProfesorDirector->getF_cese()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $ProfesorDirector->toArrayForDatabase([
+            'f_nommbramiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_cese' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

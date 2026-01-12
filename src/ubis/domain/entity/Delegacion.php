@@ -66,9 +66,11 @@ class Delegacion
         return $this->dl;
     }
 
-    public function setDlVo(DelegacionCode $dl): void
+    public function setDlVo(DelegacionCode|string|null $dl): void
     {
-        $this->dl = $dl;
+        $this->dl = $dl instanceof DelegacionCode
+            ? $dl
+            : DelegacionCode::fromNullableString($dl);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -88,9 +90,11 @@ class Delegacion
         return $this->region;
     }
 
-    public function setRegionVo(RegionCode $region): void
+    public function setRegionVo(RegionCode|string|null $region): void
     {
-        $this->region = $region;
+        $this->region = $region instanceof RegionCode
+            ? $region
+            : RegionCode::fromNullableString($region);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
@@ -129,15 +133,6 @@ class Delegacion
     }
 
     // VO API
-    public function getActiveVo(): bool
-    {
-        return $this->active;
-    }
-
-    public function setActiveVo(bool $active = true): void
-    {
-        $this->active = $active;
-    }
 
     public function getGrupoEstudiosVo(): ?DelegacionGrupoEstudios
     {

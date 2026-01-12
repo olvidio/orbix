@@ -411,7 +411,7 @@ class Cambio
     {
         $this->id_tipo_cambio = $valor instanceof TipoCambioId
             ? $valor
-            : TipoCambioId::fromNullable($valor);
+            : TipoCambioId::fromNullableInt($valor);
     }
 
     /**
@@ -427,7 +427,7 @@ class Cambio
      */
     public function setId_tipo_cambio(int $id_tipo_cambio): void
     {
-        $this->id_tipo_cambio = TipoCambioId::fromNullable($id_tipo_cambio);
+        $this->id_tipo_cambio = TipoCambioId::fromNullableInt($id_tipo_cambio);
     }
 
 
@@ -519,7 +519,7 @@ class Cambio
     {
         $this->id_status = $texto instanceof StatusId
             ? $texto
-            : StatusId::fromNullable($texto);
+            : StatusId::fromNullableInt($texto);
     }
 
 

@@ -43,8 +43,8 @@ foreach ($a_nomProfesor as $id_nom => $aClave) {
         $p++;
         $tipo = empty($a_tiposCong[$oProfesorCongreso->getTipo()]) ? '' : $a_tiposCong[$oProfesorCongreso->getTipo()];
         $lugar = $oProfesorCongreso->getLugar();
-        $inicio = $oProfesorCongreso->getF_ini()->getFromLocal();
-        $fin = $oProfesorCongreso->getF_fin()->getFromLocal();
+        $inicio = $oProfesorCongreso->getF_ini()?->getFromLocal();
+        $fin = $oProfesorCongreso->getF_fin()?->getFromLocal();
         $organiza = $oProfesorCongreso->getOrganiza();
 
         if (ConfigGlobal::mi_ambito() === 'rstgr') {

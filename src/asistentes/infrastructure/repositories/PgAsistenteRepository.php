@@ -4,6 +4,7 @@ namespace src\asistentes\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
+use core\ConverterDate;
 use core\Set;
 use PDO;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
@@ -139,41 +140,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         // Obtener datos actuales si es UPDATE
         $datosActuales = $bInsert ? [] : ($this->datosById($id_activ, $id_nom) ?: []);
 
-        $aDatos = [];
-        $aDatos['propio'] = $Asistente->isPropio();
-        $aDatos['est_ok'] = $Asistente->isEst_ok();
-        $aDatos['cfi'] = $Asistente->isCfi();
-        $aDatos['cfi_con'] = $Asistente->getCfi_con();
-        $aDatos['falta'] = $Asistente->isFalta();
-        $aDatos['encargo'] = $Asistente->getEncargo();
-        $aDatos['dl_responsable'] = $Asistente->getDl_responsable();
-        $aDatos['observ'] = $Asistente->getObserv();
-        $aDatos['id_tabla'] = $Asistente->getId_tabla();
-        $aDatos['plaza'] = $Asistente->getPlaza();
-        $aDatos['propietario'] = $Asistente->getPropietario();
-        $aDatos['observ_est'] = $Asistente->getObserv_est();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['propio'])) {
-            $aDatos['propio'] = 'true';
-        } else {
-            $aDatos['propio'] = 'false';
-        }
-        if (is_true($aDatos['est_ok'])) {
-            $aDatos['est_ok'] = 'true';
-        } else {
-            $aDatos['est_ok'] = 'false';
-        }
-        if (is_true($aDatos['cfi'])) {
-            $aDatos['cfi'] = 'true';
-        } else {
-            $aDatos['cfi'] = 'false';
-        }
-        if (is_true($aDatos['falta'])) {
-            $aDatos['falta'] = 'true';
-        } else {
-            $aDatos['falta'] = 'false';
-        }
+        $aDatos = $Asistente->toArrayForDatabase();
 
         if ($bInsert === false) {
             //UPDATE

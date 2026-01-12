@@ -4,6 +4,8 @@ namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
 use src\ubis\application\services\UbiContactsTrait;
+use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
 use src\ubis\domain\value_objects\{CentroId,
     DelegacionCode,
     PaisName,
@@ -11,8 +13,6 @@ use src\ubis\domain\value_objects\{CentroId,
     TipoCentroCode,
     TipoLaborId,
     UbiNombreText};
-use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
-use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -20,6 +20,7 @@ use function core\is_true;
 class CentroEx
 {
     use Hydratable;
+
     // Esto inyecta los métodos getDirecciones, emailPrincipalOPrimero y getTeleco aquí
     use UbiContactsTrait;
 
@@ -42,17 +43,17 @@ class CentroEx
 
     private bool $active;
 
-   private ?DateTimeLocal $f_active = null;
+    private ?DateTimeLocal $f_active = null;
 
-    private bool|null $sv = null;
+    private?bool $sv = null;
 
-    private bool|null $sf = null;
+    private?bool $sf = null;
 
     private ?TipoCentroCode $tipo_ctr = null;
 
     private ?TipoLaborId $tipo_labor = null;
 
-    private bool|null $cdc = null;
+    private?bool $cdc = null;
 
     private ?CentroId $id_ctr_padre = null;
 
@@ -98,7 +99,7 @@ class CentroEx
      */
     public function setId_ubi(int $id_ubi): void
     {
-        $this->id_ubi = new CentroId($id_ubi);
+        $this->id_ubi = CentroId::fromNullableInt($id_ubi);
     }
 
     // -------- API VO (nueva) ---------
@@ -107,9 +108,11 @@ class CentroEx
         return $this->id_ubi;
     }
 
-    public function setIdUbiVo(CentroId $id): void
+    public function setIdUbiVo(CentroId|int $id): void
     {
-        $this->id_ubi = $id;
+        $this->id_ubi = $id instanceof CentroId
+            ? $id
+            : CentroId::fromNullableInt($id);
     }
 
 
@@ -127,7 +130,7 @@ class CentroEx
      */
     public function setNombre_ubi(string $nombre_ubi): void
     {
-        $this->nombre_ubi = new UbiNombreText($nombre_ubi);
+        $this->nombre_ubi = UbiNombreText::fromNullableString($nombre_ubi);
     }
 
     public function getNombreUbiVo(): UbiNombreText
@@ -135,9 +138,11 @@ class CentroEx
         return $this->nombre_ubi;
     }
 
-    public function setNombreUbiVo(UbiNombreText $texto): void
+    public function setNombreUbiVo(UbiNombreText|string|null $texto): void
     {
-        $this->nombre_ubi = $texto;
+        $this->nombre_ubi = $texto instanceof UbiNombreText
+            ? $texto
+            : UbiNombreText::fromNullableString($texto);
     }
 
 
@@ -255,12 +260,10 @@ class CentroEx
     }
 
 
-
     public function isSv(): ?bool
     {
         return $this->sv;
     }
-
 
 
     public function setSv(?bool $sv = null): void
@@ -269,12 +272,10 @@ class CentroEx
     }
 
 
-
     public function isSf(): ?bool
     {
         return $this->sf;
     }
-
 
 
     public function setSf(?bool $sf = null): void
@@ -327,7 +328,7 @@ class CentroEx
      */
     public function setTipo_labor(?int $tipo_labor = null): void
     {
-        $this->tipo_labor = TipoLaborId::fromNullable($tipo_labor);
+        $this->tipo_labor = TipoLaborId::fromNullableInt($tipo_labor);
     }
 
     public function getTipoLaborVo(): ?TipoLaborId
@@ -339,7 +340,7 @@ class CentroEx
     {
         $this->tipo_labor = $valor instanceof TipoLaborId
             ? $valor
-            : TipoLaborId::fromNullable($valor);
+            : TipoLaborId::fromNullableInt($valor);
     }
 
 
@@ -381,7 +382,7 @@ class CentroEx
     {
         $this->id_ctr_padre = $valor instanceof CentroId
             ? $valor
-            : CentroId::fromNullable($valor);
+            : CentroId::fromNullableInt($valor);
     }
 
 

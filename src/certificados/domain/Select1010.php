@@ -116,8 +116,8 @@ class Select1010
             $id_item = $oCertificado->getId_item();
             $certificado = $oCertificado->getCertificado();
             $firmado = $oCertificado->isFirmado();
-            $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
-            $f_recibido = $oCertificado->getF_recibido()->getFromLocal();
+            $f_certificado = $oCertificado->getF_certificado()?->getFromLocal();
+            $f_recibido = $oCertificado->getF_recibido()?->getFromLocal();
             $pdf = $oCertificado->getDocumento();
 
             $a_valores[$i]['sel'] = $id_item;

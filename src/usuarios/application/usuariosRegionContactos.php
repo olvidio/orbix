@@ -17,7 +17,7 @@ class usuariosRegionContactos
      * @param string $region
      * @return array
      */
-    public static function usuariosRegionContactos(string $region = '')
+    public static function usuariosRegionContactos(string $region = ''): void
     {
         $error_txt = '';
         $esquema = $region."v";

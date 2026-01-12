@@ -124,20 +124,9 @@ class PgUltimaAsistenciaRepository extends ClaseRepository implements UltimaAsis
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $UltimaAsistencia->getId_nom();
-        $aDatos['id_tipo_activ'] = $UltimaAsistencia->getId_tipo_activ();
-        $aDatos['descripcion'] = $UltimaAsistencia->getDescripcion();
-        $aDatos['cdr'] = $UltimaAsistencia->isCdr();
-        // para las fechas
-        $aDatos['f_ini'] = (new ConverterDate('date', $UltimaAsistencia->getF_ini()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['cdr'])) {
-            $aDatos['cdr'] = 'true';
-        } else {
-            $aDatos['cdr'] = 'false';
-        }
+        $aDatos = $UltimaAsistencia->toArrayForDatabase([
+            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

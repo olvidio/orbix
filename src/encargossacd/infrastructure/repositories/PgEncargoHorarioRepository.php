@@ -128,23 +128,12 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item_h);
 
-        $aDatos = [];
-        $aDatos['id_enc'] = $EncargoHorario->getId_enc();
-        $aDatos['dia_ref'] = $EncargoHorario->getDia_ref();
-        $aDatos['dia_num'] = $EncargoHorario->getDia_num();
-        $aDatos['mas_menos'] = $EncargoHorario->getMas_menos();
-        $aDatos['dia_inc'] = $EncargoHorario->getDia_inc();
-        $aDatos['h_ini'] = $EncargoHorario->getH_ini();
-        $aDatos['h_fin'] = $EncargoHorario->getH_fin();
-        $aDatos['n_sacd'] = $EncargoHorario->getN_sacd();
-        $aDatos['mes'] = $EncargoHorario->getMes();
-        // para las horas
-        $aDatos['h_ini'] = (new ConverterDate('time', $EncargoHorario->getH_ini()))->toPg();
-        $aDatos['h_fin'] = (new ConverterDate('time', $EncargoHorario->getH_fin()))->toPg();
-        // para las fechas
-        $aDatos['f_ini'] = (new ConverterDate('date', $EncargoHorario->getF_ini()))->toPg();
-        $aDatos['f_fin'] = (new ConverterDate('date', $EncargoHorario->getF_fin()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
+        $aDatos = $EncargoHorario->toArrayForDatabase([
+            'h_ini' => fn($v) => (new ConverterDate('time', $v))->toPg(),
+            'h_fin' => fn($v) => (new ConverterDate('time', $v))->toPg(),
+            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_fin' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
 
         if ($bInsert === false) {
             //UPDATE

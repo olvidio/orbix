@@ -31,9 +31,11 @@ class TipoCasa
         return $this->tipo_casa;
     }
 
-    public function setTipoCasaVo(TipoCasaCode $tipoCasa): void
+    public function setTipoCasaVo(TipoCasaCode|string|null $tipoCasa): void
     {
-        $this->tipo_casa = $tipoCasa;
+        $this->tipo_casa = $tipoCasa instanceof TipoCasaCode
+        ? $tipoCasa
+        : TipoCasaCode::fromNullableString($tipoCasa);
     }
 
 

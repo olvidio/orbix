@@ -72,7 +72,7 @@ $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia === null) {
     $oPreferencia = new Preferencia();
     $oPreferencia->setId_usuario($id_usuario);
-    $oPreferencia->setTipoVo(new TipoPreferencia($tipo));
+    $oPreferencia->setTipoPreferenciaVo(new TipoPreferencia($tipo));
 }
 $oPreferencia->setPreferenciaVo(new ValorPreferencia($json_busqueda));
 if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
@@ -205,8 +205,8 @@ foreach ($cActividades as $oActividad) {
     $status = $oActividad->getStatus();
     $id_ubi = $oActividad->getId_ubi();
     $nom_activ = $oActividad->getNom_activ();
-    $f_ini = $oActividad->getF_ini()->getFromLocal();
-    $f_fin = $oActividad->getF_fin()->getFromLocal();
+    $f_ini = $oActividad->getF_ini()?->getFromLocal();
+    $f_fin = $oActividad->getF_fin()?->getFromLocal();
 
     $oUbi = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi);
 

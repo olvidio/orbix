@@ -34,7 +34,7 @@ class Sector
     {
         $this->id_sector = $id instanceof SectorId
             ? $id
-            : SectorId::fromNullable($id);
+            : SectorId::fromNullableInt($id);
     }
 
 
@@ -46,7 +46,7 @@ class Sector
 
     public function setId_sector(int $id_sector): void
     {
-        $this->id_sector = SectorId::fromNullable($id_sector);
+        $this->id_sector = SectorId::fromNullableInt($id_sector);
     }
 
     // VO API
@@ -59,7 +59,7 @@ class Sector
     {
         $this->id_departamento = $valor instanceof DepartamentoId
             ? $valor
-            : DepartamentoId::fromNullable($valor);
+            : DepartamentoId::fromNullableInt($valor);
     }
 
 

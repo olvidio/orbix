@@ -19,7 +19,7 @@ class MenuCopiar
         } else {
             // Clonar y poner en otro grupmenu
             $ok = $oMenuDb->isOk();
-            $orden = $oMenuDb->getOrden();
+            $orden = $oMenuDb->getOrdenVo()->value();
             $id_grupmenu = $oMenuDb->getId_grupmenu();
             $txt_menu = $oMenuDb->getMenu();
             $parametros = $oMenuDb->getParametros();

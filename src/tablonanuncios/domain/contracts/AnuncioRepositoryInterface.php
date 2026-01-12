@@ -48,14 +48,14 @@ interface AnuncioRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param AnuncioId $uuid_item
+     * @param AnuncioId $vo
      * @return array|bool
      */
-    public function datosById(AnuncioId $uuid_item): array|bool;
+    public function datosById(AnuncioId $vo): array|bool;
 
     /**
      * Busca la clase con uuid_item en el repositorio.
      */
-    public function findById(AnuncioId $uuid_item);
+    public function findById(AnuncioId $vo);
 
 }

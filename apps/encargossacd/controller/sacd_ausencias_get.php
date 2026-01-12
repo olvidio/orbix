@@ -81,8 +81,8 @@ foreach ($cEncargosSacd as $oEncargoSacd) {
     $desc_enc[$i] = $oEncargo->getDesc_enc();
     //tarea sacd
     $id_item[$i] = $oEncargoSacd->getId_item();
-    $inicio[$i] = $oEncargoSacd->getF_ini()->getFromLocal();
-    $fin[$i] = $oEncargoSacd->getF_fin()->getFromLocal();
+    $inicio[$i] = $oEncargoSacd->getF_ini()?->getFromLocal();
+    $fin[$i] = $oEncargoSacd->getF_fin()?->getFromLocal();
 
     // horario
     $aWhereH = [];

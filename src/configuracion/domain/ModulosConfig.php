@@ -36,7 +36,7 @@ class ModulosConfig
     {
         foreach ($this->cMods as $oMod) {
             $id_mod = $oMod->getId_mod();
-            $nom_mod = $oMod->getNom();
+            $nom_mod = $oMod->getNomVo()->value();
             $mods_req = $oMod->getMods_req();
             $apps_req = $oMod->getApps_req();
             $this->a_mods_todos[$id_mod] = array('nom' => $nom_mod, 'mods_req' => $mods_req, 'apps_req' => $apps_req);
@@ -61,7 +61,7 @@ class ModulosConfig
         $this->cModsInstalados = $ModuloInstaladoRepository->getModulosInstalados();
         foreach ($this->cModsInstalados as $oMod) {
             $id_mod = $oMod->getId_mod();
-            $nom_mod = $oMod->getNom();
+            $nom_mod = $oMod->getNomVo()->value();
             $this->a_mods_installed[$id_mod] = $nom_mod;
         }
         return $this->a_mods_installed;
@@ -108,9 +108,9 @@ class ModulosConfig
         foreach ($a_mods_installed as $id_mod => $nom_mod) {
             $ap1 = $this->getAppsMods($id_mod);
             $ap2 = $this->getApps($id_mod);
-            $app_installed = array_merge($app_installed, $ap1, $ap2);
-            $app_installed = array_unique($app_installed);
+            array_push($app_installed, ...$ap1, ...$ap2);
         }
+        $app_installed = array_unique($app_installed);
         return $app_installed;
     }
 

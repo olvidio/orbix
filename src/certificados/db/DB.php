@@ -3,7 +3,7 @@
 namespace src\certificados\db;
 
 use core\ConfigGlobal;
-use src\configuracion\domain\DBAbstract;
+use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * Crear las tablas necesaria a nivel de aplicación (global).

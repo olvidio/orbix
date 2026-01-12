@@ -119,11 +119,7 @@ class PgGrupMenuRoleRepository extends ClaseRepository implements GrupMenuRoleRe
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_grupmenu'] = $GrupMenuRole->getId_grupmenu();
-        $aDatos['id_role'] = $GrupMenuRole->getId_role();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $GrupMenuRole->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

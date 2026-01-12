@@ -126,7 +126,7 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
     public function Eliminar(Matricula $Matricula): bool
     {
         $id_activ = $Matricula->getId_activ();
-        $id_asignatura = $Matricula->getId_asignatura();
+        $id_asignatura = $Matricula->getIdAsignaturaVo()->value();
         $id_nom = $Matricula->getId_nom();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -141,28 +141,13 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
     public function Guardar(Matricula $Matricula): bool
     {
         $id_activ = $Matricula->getId_activ();
-        $id_asignatura = $Matricula->getId_asignatura();
+        $id_asignatura = $Matricula->getIdAsignaturaVo()->value();
         $id_nom = $Matricula->getId_nom();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_activ, $id_asignatura, $id_nom);
 
-        $aDatos = [];
-        $aDatos['id_situacion'] = $Matricula->getId_situacion();
-        $aDatos['preceptor'] = $Matricula->isPreceptor();
-        $aDatos['id_nivel'] = $Matricula->getId_nivel();
-        $aDatos['nota_num'] = $Matricula->getNota_num();
-        $aDatos['nota_max'] = $Matricula->getNota_max();
-        $aDatos['id_preceptor'] = $Matricula->getId_preceptor();
-        $aDatos['acta'] = $Matricula->getActa();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['preceptor'])) {
-            $aDatos['preceptor'] = 'true';
-        } else {
-            $aDatos['preceptor'] = 'false';
-        }
-
+        $aDatos = $Matricula->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

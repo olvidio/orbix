@@ -1,6 +1,6 @@
 <?php
 
-namespace actividadescentro\db;
+namespace src\actividadescentro\db;
 
 use core\DBRefresh;
 

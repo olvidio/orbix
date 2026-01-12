@@ -11,7 +11,7 @@ $error_txt = '';
 
 // buscar un nombre (lugar f_ini-f_fin).
 $oUbi = Ubi::NewUbi($Qid_cdc);
-$nombre_ubi = empty($oUbi->getNombre_ubi()) ? 'sin determinar' : $oUbi->getNombre_ubi();
+$nombre_ubi = empty($oUbi->getNombreUbiVo()->value()) ? 'sin determinar' : $oUbi->getNombreUbiVo()->value();
 
 $a = 0;
 $ids_activ = '';
@@ -22,9 +22,9 @@ foreach ($a_sel as $id_activ) {
     $a++;
     $oActividad = $ActividadAllRepository->findById($id_activ);
     $iso_ini = $oActividad->getF_ini()->getIso();
-    $aF_ini[$iso_ini] = $oActividad->getF_ini()->getFromLocal();
+    $aF_ini[$iso_ini] = $oActividad->getF_ini()?->getFromLocal();
     $iso_fin = $oActividad->getF_fin()->getIso();
-    $aF_fin[$iso_fin] = $oActividad->getF_fin()->getFromLocal();
+    $aF_fin[$iso_fin] = $oActividad->getF_fin()?->getFromLocal();
 }
 ksort($aF_ini);
 $ini = reset($aF_ini);

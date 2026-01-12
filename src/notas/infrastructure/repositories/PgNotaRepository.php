@@ -156,7 +156,7 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
 
     public function Eliminar(Nota $Nota): bool
     {
-        $id_situacion = $Nota->getId_situacion();
+        $id_situacion = $Nota->getIdSituacionVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_situacion = $id_situacion";
@@ -168,23 +168,12 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
      */
     public function Guardar(Nota $Nota): bool
     {
-        $id_situacion = $Nota->getId_situacion();
+        $id_situacion = $Nota->getIdSituacionVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_situacion);
 
-        $aDatos = [];
-        $aDatos['descripcion'] = $Nota->getDescripcion();
-        $aDatos['superada'] = $Nota->isSuperada();
-        $aDatos['breve'] = $Nota->getBreve();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['superada'])) {
-            $aDatos['superada'] = 'true';
-        } else {
-            $aDatos['superada'] = 'false';
-        }
-
+        $aDatos = $Nota->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -195,7 +184,7 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_situacion'] = $Nota->getId_situacion();
+            $aDatos['id_situacion'] = $Nota->getIdSituacionVo()->value();
             $campos = "(id_situacion,descripcion,superada,breve)";
             $valores = "(:id_situacion,:descripcion,:superada,:breve)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

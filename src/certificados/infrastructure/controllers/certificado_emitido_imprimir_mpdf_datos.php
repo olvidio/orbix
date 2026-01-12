@@ -20,11 +20,11 @@ $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRep
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($id_item);
 
 $id_nom = $oCertificadoEmitido->getId_nom();
-$nom = $oCertificadoEmitido->getNom();
-$idioma = $oCertificadoEmitido->getIdioma();
+$nom = $oCertificadoEmitido->getNomVo()->value();
+$idioma = $oCertificadoEmitido->getIdiomaVo()->value();
 $destino = $oCertificadoEmitido->getDestino();
 $certificado = $oCertificadoEmitido->getCertificado();
-$f_certificado = $oCertificadoEmitido->getF_certificado()->getFromLocal();
+$f_certificado = $oCertificadoEmitido->getF_certificado()?->getFromLocal();
 $firmado = $oCertificadoEmitido->isFirmado();
 if (is_true($firmado)) {
     $chk_firmado = 'checked';
@@ -39,9 +39,9 @@ if ($oPersona === null) {
 }
 $apellidos_nombre = $oPersona->getApellidosNombre();
 $nom = empty($nom) ? $apellidos_nombre : $nom;
-$lugar_nacimiento = $oPersona->getLugar_nacimiento();
+$lugar_nacimiento = $oPersona->getLugarNacimientoVo()->value();
 $f_nacimiento = $oPersona->getF_nacimiento()->getFechaLatin();
-$nivel_stgr = $oPersona->getNivel_stgr();
+$nivel_stgr = $oPersona->getNivelStgrVo()->value();
 
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $vstgr = $_SESSION['oConfig']->getNomVstgr();
@@ -139,8 +139,8 @@ if (empty($error_txt)) {
     $aAprobadas = [];
     $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     foreach ($cNotas as $oPersonaNota) {
-        $id_asignatura = $oPersonaNota->getId_asignatura();
-        $id_nivel = $oPersonaNota->getId_nivel();
+        $id_asignatura = $oPersonaNota->getIdAsignaturaVo()->value();
+        $id_nivel = $oPersonaNota->getIdNivelVo()->value();
 
         $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
         if ($oAsignatura === null) {
@@ -152,7 +152,7 @@ if (empty($error_txt)) {
             if (!$oAsignatura->isActive()) {
                 continue;
             }
-            $id_nivel_asig = $oAsignatura->getId_nivel();
+            $id_nivel_asig = $oAsignatura->getIdNivelVo()->value();
         }
         $creditos = $oAsignatura->getCreditos();
         $n = $id_nivel_asig;

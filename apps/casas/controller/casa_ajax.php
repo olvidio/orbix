@@ -508,9 +508,9 @@ switch ($Qque) {
                 $id_activ = $oActividad->getId_activ();
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $dl_org = $oActividad->getDl_org();
-                $f_ini = $oActividad->getF_ini()->getFromLocal();
+                $f_ini = $oActividad->getF_ini()?->getFromLocal();
                 $h_ini = $oActividad->getH_ini();
-                $f_fin = $oActividad->getF_fin()->getFromLocal();
+                $f_fin = $oActividad->getF_fin()?->getFromLocal();
                 $h_fin = $oActividad->getH_fin();
                 $id_tarifa = $oActividad->getTarifa();
                 $observ = $oActividad->getObserv();

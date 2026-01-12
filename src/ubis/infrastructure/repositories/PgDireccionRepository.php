@@ -168,14 +168,20 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_direccion);
 
+        $aDatos = $Direccion->toArrayForDatabase([
+            'plano_doc' => fn($v) => bin2hex($vo),
+            'f_direccion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
+
+        /*
         $aDatos = [];
         $aDatos['direccion'] = $Direccion->getDireccion();
         $aDatos['c_p'] = $Direccion->getC_p();
         $aDatos['poblacion'] = $Direccion->getPoblacion();
         $aDatos['provincia'] = $Direccion->getProvincia();
         $aDatos['a_p'] = $Direccion->getA_p();
-        $aDatos['pais'] = $Direccion->getPais();
-        $aDatos['observ'] = $Direccion->getObserv();
+        $aDatos['pais'] = $Direccion->getPaisVo()->value();
+        $aDatos['observ'] = $Direccion->getObservVo()->value();
         $aDatos['cp_dcha'] = $Direccion->isCp_dcha();
         $aDatos['latitud'] = $Direccion->getLatitud();
         $aDatos['longitud'] = $Direccion->getLongitud();
@@ -193,6 +199,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         } else {
             $aDatos['cp_dcha'] = 'false';
         }
+        */
 
         if ($bInsert === false) {
             //UPDATE

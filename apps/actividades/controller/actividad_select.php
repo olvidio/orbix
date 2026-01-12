@@ -395,12 +395,12 @@ foreach ($cActividades as $oActividad) {
     $id_ubi_actividad = $oActividad->getId_ubi();
     $dl_org = $oActividad->getDl_org();
     $oF_ini = $oActividad->getF_ini();
-    $f_ini = $oActividad->getF_ini()->getFromLocal();
-    $f_fin = $oActividad->getF_fin()->getFromLocal();
+    $f_ini = $oActividad->getF_ini()?->getFromLocal();
+    $f_fin = $oActividad->getF_fin()?->getFromLocal();
     $h_ini = $oActividad->getH_ini()?->format('H:i')?? '';
     $h_fin = $oActividad->getH_fin()?->format('H:i')?? '';
-    $tarifa = $oActividad->getTarifa();
-    $observ = $oActividad->getObserv();
+    $tarifa = $oActividad->getTarifaVo()?->value();
+    $observ = $oActividad->getObservVo()?->value();
     $idioma = $oActividad->getIdiomaVo()?->value();
     // Si es para importar, quito las que ya están importadas
     // y no miro permisos de procesos

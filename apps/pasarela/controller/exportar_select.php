@@ -152,9 +152,9 @@ foreach ($cActividades as $oActividad) {
     $id_activ = $oActividad->getId_activ();
     $id_ubi = $oActividad->getId_ubi();
     $oF_ini = $oActividad->getF_ini();
-    $f_ini = $oActividad->getF_ini()->getFromLocal();
+    $f_ini = $oActividad->getF_ini()?->getFromLocal();
     $h_ini = $oActividad->getH_ini();
-    $f_fin = $oActividad->getF_fin()->getFromLocal();
+    $f_fin = $oActividad->getF_fin()?->getFromLocal();
     $h_fin = $oActividad->getH_fin();
 
     if (!empty($h_ini)) {

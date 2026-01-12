@@ -44,7 +44,7 @@ foreach ($a_sel as $id_lugar) {
     foreach ($cDocumentos as $oDocumento) {
         $d++;
         $id_tipo_doc = $oDocumento->getId_tipo_doc();
-        $observ = $oDocumento->getObserv();
+        $observ = $oDocumento->getObservVo()->value();
         $num_ejemplares = $oDocumento->getNum_ejemplares();
         $identificador = $oDocumento->getIdentificador();
         // guardo en una colección los tipos de doc para consultas posteriores (de otros lugares).

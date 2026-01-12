@@ -4,6 +4,7 @@ namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
 use src\ubis\application\services\UbiContactsTrait;
+use src\ubis\domain\value_objects\CentroId;
 use src\ubis\domain\value_objects\DelegacionCode;
 use src\ubis\domain\value_objects\PaisName;
 use src\ubis\domain\value_objects\RegionNameText;
@@ -17,6 +18,7 @@ use function core\is_true;
 class CentroEllos
 {
     use Hydratable;
+
     // Esto inyecta los métodos getDirecciones, emailPrincipalOPrimero y getTeleco aquí
     use UbiContactsTrait;
 
@@ -25,34 +27,33 @@ class CentroEllos
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-
-    private int $id_ubi;
+    private CentroId $id_ubi;
 
     private ?string $tipo_ubi = null;
 
-    private string $nombre_ubi;
+    private UbiNombreText $nombre_ubi;
 
-    private ?string $dl = null;
+    private ?DelegacionCode $dl = null;
 
-    private ?string $pais = null;
+    private ?PaisName $pais = null;
 
-    private ?string $region = null;
+    private ?RegionNameText $region = null;
 
-    private bool $active;
+    private ?bool $active;
 
-   private ?DateTimeLocal $f_active = null;
+    private ?DateTimeLocal $f_active = null;
 
-    private bool|null $sv = null;
+    private ?bool $sv = null;
 
-    private bool|null $sf = null;
+    private ?bool $sf = null;
 
-    private ?string $tipo_ctr = null;
+    private ?TipoCentroCode $tipo_ctr = null;
 
-    private ?int $tipo_labor = null;
+    private ?TipoLaborId $tipo_labor = null;
 
-    private bool|null $cdc = null;
+    private ?bool $cdc = null;
 
-    private ?int $id_ctr_padre = null;
+    private ?CentroId $id_ctr_padre = null;
 
     private ?int $id_zona = null;
 
@@ -71,15 +72,32 @@ class CentroEllos
         $this->repoDireccion = [];
     }
 
+    /**
+     * @deprecated use getIdUbiVo()
+     */
     public function getId_ubi(): int
+    {
+        return $this->id_ubi->value();
+    }
+
+    public function getIdUbiVo(): CentroId
     {
         return $this->id_ubi;
     }
 
-
+    /**
+     * @deprecated use setIdUbiVo()
+     */
     public function setId_ubi(int $id_ubi): void
     {
-        $this->id_ubi = $id_ubi;
+        $this->id_ubi = CentroId::fromNullableInt($id_ubi);
+    }
+
+    public function setIdUbiVo(CentroId|int|null $valor = null): void
+    {
+        $this->id_ubi = $valor instanceof CentroId
+            ? $valor
+            : CentroId::fromNullableInt($valor);
     }
 
 
@@ -99,7 +117,7 @@ class CentroEllos
      */
     public function getNombre_ubi(): string
     {
-        return $this->nombre_ubi;
+        return $this->nombre_ubi->value();
     }
 
     /**
@@ -107,17 +125,19 @@ class CentroEllos
      */
     public function setNombre_ubi(string $nombre_ubi): void
     {
-        $this->nombre_ubi = $nombre_ubi;
+        $this->nombre_ubi = UbiNombreText::fromNullableString($nombre_ubi);
     }
 
     public function getNombreUbiVo(): UbiNombreText
     {
-        return new UbiNombreText($this->nombre_ubi);
+        return $this->nombre_ubi;
     }
 
-    public function setNombreUbiVo(UbiNombreText $vo): void
+    public function setNombreUbiVo(UbiNombreText|string $vo): void
     {
-        $this->nombre_ubi = $vo->value();
+        $this->nombre_ubi = $vo instanceof UbiNombreText
+            ? $vo
+            : UbiNombreText::fromNullableString($vo);
     }
 
     /**
@@ -125,7 +145,7 @@ class CentroEllos
      */
     public function getDl(): ?string
     {
-        return $this->dl;
+        return $this->dl->value();
     }
 
     /**
@@ -133,17 +153,19 @@ class CentroEllos
      */
     public function setDl(?string $dl = null): void
     {
-        $this->dl = $dl;
+        $this->dl = DelegacionCode::fromNullableString($dl);
     }
 
     public function getDlVo(): ?DelegacionCode
     {
-        return $this->dl !== null ? new DelegacionCode($this->dl) : null;
+        return $this->dl;
     }
 
-    public function setDlVo(?DelegacionCode $vo = null): void
+    public function setDlVo(DelegacionCode|string|null $vo = null): void
     {
-        $this->dl = $vo?->value();
+        $this->dl = $vo instanceof DelegacionCode
+            ? $vo
+            : DelegacionCode::fromNullableString($vo);
     }
 
     /**
@@ -151,7 +173,7 @@ class CentroEllos
      */
     public function getPais(): ?string
     {
-        return $this->pais;
+        return $this->pais->value();
     }
 
     /**
@@ -159,17 +181,19 @@ class CentroEllos
      */
     public function setPais(?string $pais = null): void
     {
-        $this->pais = $pais;
+        $this->pais = PaisName::fromNullableString($pais);
     }
 
     public function getPaisVo(): ?PaisName
     {
-        return $this->pais !== null ? new PaisName($this->pais) : null;
+        return $this->pais;
     }
 
-    public function setPaisVo(?PaisName $vo = null): void
+    public function setPaisVo(PaisName|string|null $vo = null): void
     {
-        $this->pais = $vo?->value();
+        $this->pais = $vo instanceof PaisName
+            ? $vo
+            : PaisName::fromNullableString($vo);
     }
 
     /**
@@ -177,7 +201,7 @@ class CentroEllos
      */
     public function getRegion(): ?string
     {
-        return $this->region;
+        return $this->region->value();
     }
 
     /**
@@ -185,17 +209,19 @@ class CentroEllos
      */
     public function setRegion(?string $region = null): void
     {
-        $this->region = $region;
+        $this->region = RegionNameText::fromNullableString($region);
     }
 
     public function getRegionVo(): ?RegionNameText
     {
-        return $this->region !== null ? new RegionNameText($this->region) : null;
+        return $this->region;
     }
 
-    public function setRegionVo(?RegionNameText $vo = null): void
+    public function setRegionVo(RegionNameText|string|null $vo = null): void
     {
-        $this->region = $vo?->value();
+        $this->region = $vo instanceof RegionNameText
+            ? $vo
+            : RegionNameText::fromNullableString($vo);
     }
 
 
@@ -251,7 +277,7 @@ class CentroEllos
      */
     public function getTipo_ctr(): ?string
     {
-        return $this->tipo_ctr;
+        return $this->tipo_ctr->value();
     }
 
     /**
@@ -259,17 +285,19 @@ class CentroEllos
      */
     public function setTipo_ctr(?string $tipo_ctr = null): void
     {
-        $this->tipo_ctr = $tipo_ctr;
+        $this->tipo_ctr = TipoCentroCode::fromString($tipo_ctr);
     }
 
     public function getTipoCtrVo(): ?TipoCentroCode
     {
-        return $this->tipo_ctr !== null ? new TipoCentroCode($this->tipo_ctr) : null;
+        return $this->tipo_ctr;
     }
 
-    public function setTipoCtrVo(?TipoCentroCode $vo = null): void
+    public function setTipoCtrVo(TipoCentroCode|string|null $vo = null): void
     {
-        $this->tipo_ctr = $vo?->value();
+        $this->tipo_ctr = $vo instanceof TipoCentroCode
+            ? $vo
+            : TipoCentroCode::fromString($vo);
     }
 
     /**
@@ -277,7 +305,7 @@ class CentroEllos
      */
     public function getTipo_labor(): ?int
     {
-        return $this->tipo_labor;
+        return $this->tipo_labor->value();
     }
 
     /**
@@ -285,17 +313,19 @@ class CentroEllos
      */
     public function setTipo_labor(?int $tipo_labor = null): void
     {
-        $this->tipo_labor = $tipo_labor;
+        $this->tipo_labor = TipoLaborId::fromNullableInt($tipo_labor);
     }
 
     public function getTipoLaborVo(): ?TipoLaborId
     {
-        return $this->tipo_labor !== null ? new TipoLaborId($this->tipo_labor) : null;
+        return $this->tipo_labor;
     }
 
-    public function setTipoLaborVo(?TipoLaborId $vo = null): void
+    public function setTipoLaborVo(TipoLaborId|int|null $vo = null): void
     {
-        $this->tipo_labor = $vo?->value();
+        $this->tipo_labor = $vo instanceof TipoLaborId
+            ? $vo
+            : TipoLaborId::fromNullableInt($vo);
     }
 
 
@@ -310,16 +340,32 @@ class CentroEllos
         $this->cdc = $cdc;
     }
 
-
+    /**
+     * @deprecated usar getIdCtrPadreVo()
+     */
     public function getId_ctr_padre(): ?int
+    {
+        return $this->id_ctr_padre->value();
+    }
+
+    public function getIdCtrPadreVo(): ?CentroId
     {
         return $this->id_ctr_padre;
     }
 
-
+    /**
+     * @deprecated usar setIdCtrPadreVo()
+     */
     public function setId_ctr_padre(?int $id_ctr_padre = null): void
     {
-        $this->id_ctr_padre = $id_ctr_padre;
+        $this->id_ctr_padre = CentroId::fromNullableInt($id_ctr_padre);
+    }
+
+    public function setIdCtrPadreVo(CentroId|int|null $valor = null): void
+    {
+        $this->id_ctr_padre = $valor instanceof CentroId
+            ? $valor
+            : CentroId::fromNullableInt($valor);
     }
 
 

@@ -33,7 +33,7 @@ class Lugar
 
     public function setId_lugar(int $id_lugar): void
     {
-        $this->id_lugar = LugarId::fromNullable( $id_lugar);
+        $this->id_lugar = LugarId::fromNullableInt( $id_lugar);
     }
 
 

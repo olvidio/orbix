@@ -3,9 +3,15 @@
 namespace notas\model;
 
 use NumberFormatter;
+use src\actividadestudios\domain\value_objects\NotaMax;
+use src\actividadestudios\domain\value_objects\NotaNum;
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\notas\domain\value_objects\ActaNumero;
+use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
+use src\notas\domain\value_objects\TipoActa;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -18,19 +24,18 @@ class PersonaNota
     private int $id_schema;
     private int $id_nom;
     private int $id_nivel;
-    private ?int $id_asignatura;
-    private ?int $id_situacion;
-    private ?string $acta;
+    private ?AsignaturaId $id_asignatura;
+    private ?NotaSituacion $id_situacion;
+    private ?ActaNumero $acta;
     private DateTimeLocal|NullDateTimeLocal $f_acta;
     private ?string $detalle;
     private bool $preceptor;
     private ?int $id_preceptor;
-    private ?int $epoca;
+    private ?NotaEpoca $epoca;
     private ?int $id_activ;
-    private ?float $nota_num;
-    private ?int $nota_max;
-    private ?int $tipo_acta;
-
+    private ?NotaNum $nota_num;
+    private ?NotaMax $nota_max;
+    private ?TipoActa $tipo_acta;
     private bool $aprobada;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
@@ -170,34 +175,82 @@ class PersonaNota
         $this->id_nivel = $id_nivel;
     }
 
+    /**
+     * @deprecated Usar `getIdAsignaturaVo(): ?AsignaturaId` en su lugar.
+     */
     public function getIdAsignatura(): ?int
+    {
+        return $this->id_asignatura?->value();
+    }
+    public function getIdAsignaturaVo(): ?AsignaturaId
     {
         return $this->id_asignatura;
     }
 
+    /**
+     * @deprecated Usar `setIdAsignaturaVo(?AsignaturaId $vo = null): void` en su lugar.
+     */
     public function setIdAsignatura(?int $id_asignatura): void
     {
-        $this->id_asignatura = $id_asignatura;
+        $this->id_asignatura = AsignaturaId::fromNullableInt($id_asignatura);
+    }
+    public function setIdAsignaturaVo(AsignaturaId|int|null $valor = null): void
+    {
+        $this->id_asignatura = $valor instanceof AsignaturaId
+            ? $valor
+            : AsignaturaId::fromNullableInt($valor);
     }
 
+    /**
+     * @deprecated Usar `getIdSituacionVo(): ?NotaSituacion` en su lugar.
+     */
     public function getIdSituacion(): ?int
+    {
+        return $this->id_situacion?->value();
+    }
+    public function getIdSituacionVo(): ?NotaSituacion
     {
         return $this->id_situacion;
     }
 
+    /**
+     * @deprecated Usar `setIdSituacionVo(?NotaSituacion $vo = null): void` en su lugar.
+     */
     public function setIdSituacion(?int $id_situacion): void
     {
-        $this->id_situacion = $id_situacion;
+        $this->id_situacion = NotaSituacion::fromNullableInt($id_situacion);
+    }
+    public function setIdSituacionVo(NotaSituacion|int|null $valor = null): void
+    {
+        $this->id_situacion = $valor instanceof NotaSituacion
+            ? $valor
+            : NotaSituacion::fromNullableInt($valor);
     }
 
+    /**
+     * @deprecated Usar `getActaVo(): ?ActaNumero` en su lugar.
+     */
     public function getActa(): ?string
+    {
+        return $this->acta?->value();
+    }
+    public function getActaVo(): ?ActaNumero
     {
         return $this->acta;
     }
 
+    /**
+     * @deprecated Usar `setActaVo(?ActaNumero $vo = null): void` en su lugar.
+     */
     public function setActa(?string $acta): void
     {
-        $this->acta = $acta;
+        $this->acta = ActaNumero::fromNullableString($acta);
+    }
+    public function setActaVo(ActaNumero|string|null $valor = null): void
+    {
+        $this->acta = $valor instanceof ActaNumero
+            ? $valor
+            : ActaNumero::fromNullableString($valor);
     }
 
     public function getFActa(): DateTimeLocal|NullDateTimeLocal
@@ -240,14 +293,30 @@ class PersonaNota
         $this->id_preceptor = $id_preceptor;
     }
 
+    /**
+     * @deprecated Usar `getEpocaVo(): ?NotaEpoca` en su lugar.
+     */
     public function getEpoca(): ?int
+    {
+        return $this->epoca?->value();
+    }
+    public function getEpocaVo(): ?NotaEpoca
     {
         return $this->epoca;
     }
 
+    /**
+     * @deprecated Usar `setEpocaVo(?NotaEpoca $vo = null): void` en su lugar.
+     */
     public function setEpoca(?int $epoca): void
     {
-        $this->epoca = $epoca;
+        $this->epoca = NotaEpoca::fromNullableInt($epoca);
+    }
+    public function setEpocaVo(NotaEpoca|int|null $valor = null): void
+    {
+        $this->epoca = $valor instanceof NotaEpoca
+            ? $valor
+            : NotaEpoca::fromNullableInt($valor);
     }
 
     public function getIdActiv(): ?int
@@ -260,34 +329,82 @@ class PersonaNota
         $this->id_activ = $id_activ;
     }
 
+    /**
+     * @deprecated Usar `getNotaNumVo(): ?NotaNum` en su lugar.
+     */
     public function getNotaNum(): ?float
+    {
+        return $this->nota_num?->value();
+    }
+    public function getNotaNumVo(): ?NotaNum
     {
         return $this->nota_num;
     }
 
+    /**
+     * @deprecated Usar `setNotaNumVo(?NotaNum $vo = null): void` en su lugar.
+     */
     public function setNotaNum(?float $nota_num): void
     {
-        $this->nota_num = $nota_num;
+        $this->nota_num = NotaNum::fromNullableFloat($nota_num);
+    }
+    public function setNotaNumVo(NotaNum|float|null $valor = null): void
+    {
+        $this->nota_num = $valor instanceof NotaNum
+            ? $valor
+            : NotaNum::fromNullableFloat($valor);
     }
 
+    /**
+     * @deprecated Usar `getNotaMaxVo(): ?NotaMax` en su lugar.
+     */
     public function getNotaMax(): ?int
+    {
+        return $this->nota_max?->value();
+    }
+    public function getNotaMaxVo(): ?NotaMax
     {
         return $this->nota_max;
     }
 
+    /**
+     * @deprecated Usar `setNotaMaxVo(?NotaMax $vo = null): void` en su lugar.
+     */
     public function setNotaMax(?int $nota_max): void
     {
-        $this->nota_max = $nota_max;
+        $this->nota_max = NotaMax::fromNullableInt($nota_max);
+    }
+    public function setNotaMaxVo(NotaMax|int|null $valor = null): void
+    {
+        $this->nota_max = $valor instanceof NotaMax
+            ? $valor
+            : NotaMax::fromNullableInt($valor);
     }
 
+    /**
+     * @deprecated Usar `getTipoActaVo(): ?TipoActa` en su lugar.
+     */
     public function getTipoActa(): ?int
+    {
+        return $this->tipo_acta?->value();
+    }
+    public function getTipoActaVo(): ?TipoActa
     {
         return $this->tipo_acta;
     }
 
+    /**
+     * @deprecated Usar `setTipoActaVo(?TipoActa $vo = null): void` en su lugar.
+     */
     public function setTipoActa(?int $tipo_acta): void
     {
-        $this->tipo_acta = $tipo_acta;
+        $this->tipo_acta = TipoActa::fromNullableInt($tipo_acta);
+    }
+    public function setTipoActaVo(TipoActa|int|null $valor = null): void
+    {
+        $this->tipo_acta = $valor instanceof TipoActa
+            ? $valor
+            : TipoActa::fromNullableInt($valor);
     }
 
 }

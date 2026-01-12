@@ -131,27 +131,7 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_nom'] = $Certificado->getId_nom();
-        $aDatos['nom'] = $Certificado->getNom();
-        $aDatos['idioma'] = $Certificado->getIdioma();
-        $aDatos['destino'] = $Certificado->getDestino();
-        $aDatos['certificado'] = $Certificado->getCertificado();
-        $aDatos['esquema_emisor'] = $Certificado->getEsquema_emisor();
-        $aDatos['firmado'] = $Certificado->isFirmado();
-        // para los bytea
-        $aDatos['documento'] = bin2hex($Certificado->getDocumento() ?? '');
-        // para las fechas
-        $aDatos['f_certificado'] = (new ConverterDate('date', $Certificado->getF_certificado()))->toPg();
-        $aDatos['f_recibido'] = (new ConverterDate('date', $Certificado->getF_recibido()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['firmado'])) {
-            $aDatos['firmado'] = 'true';
-        } else {
-            $aDatos['firmado'] = 'false';
-        }
-
+        $aDatos = $Certificado->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

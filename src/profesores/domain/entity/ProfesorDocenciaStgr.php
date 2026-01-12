@@ -50,7 +50,7 @@ class ProfesorDocenciaStgr
     {
         $this->id_asignatura = $valor instanceof AsignaturaId
             ? $valor
-            : AsignaturaId::fromNullable($valor);
+            : AsignaturaId::fromNullableInt($valor);
     }
 
     /**
@@ -66,7 +66,7 @@ class ProfesorDocenciaStgr
      */
     public function setId_asignatura(int $valor = null): void
     {
-        $this->id_asignatura = AsignaturaId::fromNullable($valor);
+        $this->id_asignatura = AsignaturaId::fromNullableInt($valor);
     }
 
     public function getIdActivVo(): ?ActividadId
@@ -78,7 +78,7 @@ class ProfesorDocenciaStgr
     {
         $this->id_activ = $valor instanceof ActividadId
             ? $valor
-            : ActividadId::fromNullable($valor);
+            : ActividadId::fromNullableInt($valor);
     }
 
     /**
@@ -94,15 +94,15 @@ class ProfesorDocenciaStgr
      */
     public function setId_activ(?int $valor = null): void
     {
-        $this->id_activ = ActividadId::fromNullable($valor);
+        $this->id_activ = ActividadId::fromNullableInt($valor);
     }
 
-    public function getTipoVo(): ?TipoActividadAsignatura
+    public function getTipoActividadAsignaturaVo(): ?TipoActividadAsignatura
     {
         return $this->tipo;
     }
 
-    public function setTipoVo(TipoActividadAsignatura|string|null $valor = null): void
+    public function setTipoActividadAsignaturaVo(TipoActividadAsignatura|string|null $valor = null): void
     {
         $this->tipo = $valor instanceof TipoActividadAsignatura
             ? $valor
@@ -110,17 +110,17 @@ class ProfesorDocenciaStgr
     }
 
     /**
-     * @deprecated use getTipoVo()
+     * @deprecated use getTipoActividadAsignaturaVo()
      */
-    public function getTipo(): ?string
+    public function getTipoActividadAsignatura(): ?string
     {
         return $this->tipo?->value();
     }
 
     /**
-     * @deprecated use setTipoVo()
+     * @deprecated use setTipoActividadAsignaturaVo()
      */
-    public function setTipo(?string $valor = null): void
+    public function setTipoActividadAsignatura(?string $valor = null): void
     {
         $this->tipo = TipoActividadAsignatura::fromNullableString($valor);
     }
@@ -130,7 +130,7 @@ class ProfesorDocenciaStgr
         return $this->acta;
     }
 
-    public function setActaVo(ActaNumero|int|null $valor = null): void
+    public function setActaVo(ActaNumero|string|null $valor = null): void
     {
         $this->acta = $valor instanceof ActaNumero
             ? $valor
@@ -148,7 +148,7 @@ class ProfesorDocenciaStgr
     /**
      * @deprecated use setActaVo()
      */
-    public function setActa(?int $valor = null): void
+    public function setActa(?string $valor = null): void
     {
         $this->acta = ActaNumero::fromNullableString($valor);
     }

@@ -132,7 +132,7 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
 
     public function Eliminar(ActividadTarea $ActividadTarea): bool
     {
-        $id_tarea = $ActividadTarea->getId_tarea();
+        $id_tarea = $ActividadTarea->getIdTareaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_tarea = $id_tarea";
@@ -145,16 +145,12 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
      */
     public function Guardar(ActividadTarea $ActividadTarea): bool
     {
-        $id_tarea = $ActividadTarea->getId_tarea();
+        $id_tarea = $ActividadTarea->getIdTareaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tarea);
 
-        $aDatos = [];
-        $aDatos['id_fase'] = $ActividadTarea->getId_fase();
-        $aDatos['desc_tarea'] = $ActividadTarea->getDesc_tarea();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $ActividadTarea->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
@@ -164,7 +160,7 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_tarea'] = $ActividadTarea->getId_tarea();
+            $aDatos['id_tarea'] = $ActividadTarea->getIdTareaVo()->value();
             $campos = "(id_fase,id_tarea,desc_tarea)";
             $valores = "(:id_fase,:id_tarea,:desc_tarea)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

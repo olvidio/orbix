@@ -7,6 +7,7 @@ use src\actividadtarifas\domain\value_objects\TarifaId;
 use src\actividadtarifas\domain\value_objects\TarifaModoId;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\SfsvId;
+use src\ubis\domain\value_objects\ObservCasaText;
 
 class TipoTarifa
 {
@@ -15,15 +16,15 @@ class TipoTarifa
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private int $id_tarifa;
+    private TarifaId $id_tarifa;
 
-    private int $modo;
+    private TarifaModoId $modo;
 
-    private ?string $letra = null;
+    private ?TarifaLetraCode $letra = null;
 
-    private ?int $sfsv = null;
+    private ?SfsvId $sfsv = null;
 
-    private ?string $observ = null;
+    private ?ObservCasaText $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -34,7 +35,7 @@ class TipoTarifa
      */
     public function getId_tarifa(): int
     {
-        return $this->id_tarifa;
+        return $this->id_tarifa->value();
     }
 
 
@@ -43,17 +44,19 @@ class TipoTarifa
      */
     public function setId_tarifa(int $id_tarifa): void
     {
-        $this->id_tarifa = $id_tarifa;
+        $this->id_tarifa = TarifaId::fromNullableInt($id_tarifa);
     }
 
     public function getIdTarifaVo(): TarifaId
     {
-        return new TarifaId($this->id_tarifa);
+        return $this->id_tarifa;
     }
 
-    public function setIdTarifaVo(TarifaId $id): void
+    public function setIdTarifaVo(TarifaId|int|null $id): void
     {
-        $this->id_tarifa = $id->value();
+        $this->id_tarifa = $id instanceof TarifaId
+            ? $id
+            : TarifaId::fromNullableInt($id);
     }
 
 
@@ -62,7 +65,7 @@ class TipoTarifa
      */
     public function getModo(): int
     {
-        return $this->modo;
+        return $this->modo->value();
     }
 
 
@@ -71,17 +74,19 @@ class TipoTarifa
      */
     public function setModo(int $modo): void
     {
-        $this->modo = $modo;
+        $this->modo = TarifaModoId::fromNullableInt($modo);
     }
 
     public function getModoVo(): TarifaModoId
     {
-        return new TarifaModoId($this->modo);
+        return $this->modo;
     }
 
-    public function setModoVo(TarifaModoId $id): void
+    public function setModoVo(TarifaModoId|int|null $id): void
     {
-        $this->modo = $id->value();
+        $this->modo = $id instanceof TarifaModoId
+            ? $id
+            : TarifaModoId::fromNullableInt($id);
     }
 
     public function getModoTxt():string
@@ -97,7 +102,7 @@ class TipoTarifa
      */
     public function getLetra(): ?string
     {
-        return $this->letra;
+        return $this->letra?->value();
     }
 
 
@@ -106,20 +111,19 @@ class TipoTarifa
      */
     public function setLetra(?string $letra = null): void
     {
-        $this->letra = $letra;
+        $this->letra = TarifaLetraCode::fromNullableString($letra);
     }
 
     public function getLetraVo(): ?TarifaLetraCode
     {
-        if ($this->letra === null || $this->letra === '') {
-            return null;
-        }
-        return new TarifaLetraCode($this->letra);
+        return $this->letra;
     }
 
-    public function setLetraVo(?TarifaLetraCode $letra = null): void
+    public function setLetraVo(TarifaLetraCode|string|null $letra = null): void
     {
-        $this->letra = $letra?->value();
+        $this->letra = $letra instanceof TarifaLetraCode
+            ? $letra
+            : TarifaLetraCode::fromNullableString($letra);
     }
 
 
@@ -128,7 +132,7 @@ class TipoTarifa
      */
     public function getSfsv(): ?int
     {
-        return $this->sfsv;
+        return $this->sfsv?->value();
     }
 
 
@@ -137,31 +141,47 @@ class TipoTarifa
      */
     public function setSfsv(?int $sfsv = null): void
     {
-        $this->sfsv = $sfsv;
+        $this->sfsv = SfsvId::fromNullableInt($sfsv);
     }
 
     public function getSfsvVo(): ?SfsvId
     {
-        if ($this->sfsv === null) {
-            return null;
-        }
-        return new SfsvId($this->sfsv);
+        return $this->sfsv;
     }
 
-    public function setSfsvVo(?SfsvId $id = null): void
+    public function setSfsvVo(SfsvId|int $id = null): void
     {
-        $this->sfsv = $id?->value();
+        $this->sfsv = $id instanceof SfsvId
+            ? $id
+            : SfsvId::fromNullableInt($id);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getObserv(): ?string
+    {
+        return $this->observ?->value();
     }
 
 
-    public function getObserv(): ?string
+    /**
+     * @deprecated
+     */
+    public function setObserv(?string $observ = null): void
+    {
+        $this->observ = ObservCasaText::fromNullableString($observ);
+    }
+
+    public function getObservVo(): ?ObservCasaText
     {
         return $this->observ;
     }
 
-
-    public function setObserv(?string $observ = null): void
+    public function setObservVo(ObservCasaText|string|null $observ = null): void
     {
-        $this->observ = $observ;
+        $this->observ = $observ instanceof ObservCasaText
+            ? $observ
+            : ObservCasaText::fromNullableString($observ);
     }
 }

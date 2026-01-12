@@ -37,7 +37,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT id_locale,nom_idioma FROM $nom_tabla WHERE activo = 't' ORDER BY nom_idioma";
+        $sQuery = "SELECT id_locale,nom_idioma FROM $nom_tabla WHERE active = 't' ORDER BY nom_idioma";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
         $aOpciones = [];
@@ -138,33 +138,21 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_locale);
 
-        $aDatos = [];
-        $aDatos['nom_locale'] = $Local->getNomLocaleVo();
-        $aDatos['idioma'] = $Local->getIdiomaVo();
-        $aDatos['nom_idioma'] = $Local->getNomIdiomaVo();
-        $aDatos['activo'] = $Local->isActivo();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['activo'])) {
-            $aDatos['activo'] = 'true';
-        } else {
-            $aDatos['activo'] = 'false';
-        }
-
+        $aDatos = $Local->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "
 					nom_locale               = :nom_locale,
 					idioma                   = :idioma,
 					nom_idioma               = :nom_idioma,
-					activo                   = :activo";
+					active                   = :active";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_locale = '$id_locale'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
             $aDatos['id_locale'] = $Local->getIdLocaleVo();
-            $campos = "(id_locale,nom_locale,idioma,nom_idioma,activo)";
-            $valores = "(:id_locale,:nom_locale,:idioma,:nom_idioma,:activo)";
+            $campos = "(id_locale,nom_locale,idioma,nom_idioma,active)";
+            $valores = "(:id_locale,:nom_locale,:idioma,:nom_idioma,:active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

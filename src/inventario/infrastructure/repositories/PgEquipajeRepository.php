@@ -160,10 +160,16 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_equipaje);
 
+        $aDatos = $Equipaje->toArrayForDatabase([
+            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'f_fin' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+        ]);
+
+        /*
         $aDatos = [];
         $aDatos['ids_activ'] = $Equipaje->getIdsActivVo()?->value();
         $aDatos['lugar'] = $Equipaje->getLugarVo()?->value();
-        $aDatos['id_ubi_activ'] = $Equipaje->getIdUbiActivVo()?->value();
+        $aDatos['id_ubi_activ'] = $Equipaje->getId_ubi_activ();
         $aDatos['nom_equipaje'] = $Equipaje->getNomEquipajeVo()?->value();
         $aDatos['cabecera'] = $Equipaje->getCabeceraVo()?->value();
         $aDatos['pie'] = $Equipaje->getPieVo()?->value();
@@ -172,6 +178,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $aDatos['f_ini'] = (new ConverterDate('date', $Equipaje->getF_ini()))->toPg();
         $aDatos['f_fin'] = (new ConverterDate('date', $Equipaje->getF_fin()))->toPg();
         array_walk($aDatos, 'core\poner_null');
+        */
 
         if ($bInsert === false) {
             //UPDATE

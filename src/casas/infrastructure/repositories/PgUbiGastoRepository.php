@@ -125,14 +125,7 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
-        $aDatos = [];
-        $aDatos['id_ubi'] = $UbiGasto->getId_ubi();
-        $aDatos['tipo'] = $UbiGasto->getTipoVo()?->value();
-        $aDatos['cantidad'] = $UbiGasto->getCantidadVo()?->value();
-        // para las fechas
-        $aDatos['f_gasto'] = (new ConverterDate('date', $UbiGasto->getF_gasto()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $UbiGasto->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

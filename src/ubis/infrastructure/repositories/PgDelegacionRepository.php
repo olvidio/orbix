@@ -325,21 +325,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_dl);
 
-        $aDatos = [];
-        $aDatos['dl'] = $Delegacion->getDlVo()?->value();
-        $aDatos['region'] = $Delegacion->getRegionVo()?->value();
-        $aDatos['nombre_dl'] = $Delegacion->getNombreDlVo()?->value();
-        $aDatos['active'] = $Delegacion->isActive();
-        $aDatos['grupo_estudios'] = $Delegacion->getGrupoEstudiosVo()?->value();
-        $aDatos['region_stgr'] = $Delegacion->getRegionStgrVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['active'])) {
-            $aDatos['active'] = 'true';
-        } else {
-            $aDatos['active'] = 'false';
-        }
-
+        $aDatos = $Delegacion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

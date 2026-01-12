@@ -41,7 +41,7 @@ class TipoDoc
 
     public function setId_tipo_doc(int $id_tipo_doc): void
     {
-        $this->id_tipo_doc =TipoDocId::fromNullable($id_tipo_doc);
+        $this->id_tipo_doc =TipoDocId::fromNullableInt($id_tipo_doc);
     }
 
     public function getNom_doc(): ?string
@@ -81,7 +81,7 @@ class TipoDoc
 
     public function setId_coleccion(?int $id_coleccion = null): void
     {
-        $this->id_coleccion = ColeccionId::fromNullable($id_coleccion);
+        $this->id_coleccion = ColeccionId::fromNullableInt($id_coleccion);
     }
 
 
@@ -125,7 +125,7 @@ class TipoDoc
     {
         $this->id_tipo_doc = $id instanceof TipoDocId
             ? $id
-            : TipoDocId::fromNullable($id);
+            : TipoDocId::fromNullableInt($id);
     }
 
     public function getNomDocVo(): ?TipoDocName
@@ -173,7 +173,7 @@ class TipoDoc
     {
         $this->id_coleccion = $id instanceof ColeccionId
             ? $id
-            : ColeccionId::fromNullable($id);
+            : ColeccionId::fromNullableInt($id);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

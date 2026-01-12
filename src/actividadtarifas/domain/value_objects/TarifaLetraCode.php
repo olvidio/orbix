@@ -18,10 +18,10 @@ final class TarifaLetraCode
         if ($value === '') {
             throw new \InvalidArgumentException('TarifaLetraCode no puede estar vacío');
         }
-        if (mb_strlen($value) !== 1) {
-            throw new \InvalidArgumentException('TarifaLetraCode debe ser un único carácter');
+        if (mb_strlen($value) > 6) {
+            throw new \InvalidArgumentException('TarifaLetraCode debe tener un máximo de 6 carácteres');
         }
-        if (!preg_match('/^[A-Z]$/', $value)) {
+        if (!preg_match('/^[A-Z]*$/', $value)) {
             throw new \InvalidArgumentException('TarifaLetraCode debe ser una letra A-Z');
         }
     }

@@ -122,14 +122,7 @@ class PgIngresoRepository extends ClaseRepository implements IngresoRepositoryIn
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_activ);
 
-        $aDatos = [];
-        $aDatos['ingresos'] = $Ingreso->getIngresosVo()?->value();
-        $aDatos['num_asistentes'] = $Ingreso->getNumAsistentesVo()?->value();
-        $aDatos['ingresos_previstos'] = $Ingreso->getIngresosPrevistosVo()?->value();
-        $aDatos['num_asistentes_previstos'] = $Ingreso->getNumAsistentesPrevistosVo()?->value();
-        $aDatos['observ'] = $Ingreso->getObservVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $Ingreso->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

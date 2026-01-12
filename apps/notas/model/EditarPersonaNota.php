@@ -12,7 +12,7 @@ use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\entity\Acta;
 use src\notas\domain\entity\Nota;
-use src\notas\domain\entity\PersonaNotaCertificadoDB;
+use src\notas\domain\entity\PersonaNotaCertificadoDBRepository;
 use src\notas\domain\entity\PersonaNotaDB;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -297,7 +297,7 @@ class EditarPersonaNota
             $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['nota_certificado'];
 
             // comprobar que no existe con una situación distinta a la 'falta certificado
-            if ($oPersonaNotaCertificadoDB instanceof PersonaNotaCertificadoDB) {
+            if ($oPersonaNotaCertificadoDB instanceof PersonaNotaCertificadoDBRepository) {
                 $oDbl = $oPersonaNotaCertificadoDB->getoDbl(); // asegurarme que estoy consultando en el mismo esquema
                 $gesPersonaNota = new GestorPersonaNotaDlDB();
                 $gesPersonaNota->setoDbl($oDbl);
@@ -427,7 +427,7 @@ class EditarPersonaNota
             } else {
                 // guardar en e_notas_otra_region_stgr
                 $rta['nota_real'] = $PersonaNotaOtraRegionStgrRepository;
-                $rta['nota_certificado'] = new PersonaNotaCertificadoDB($nombre_schema_persona);
+                $rta['nota_certificado'] = new PersonaNotaCertificadoDBRepository($nombre_schema_persona);
             }
         }
 

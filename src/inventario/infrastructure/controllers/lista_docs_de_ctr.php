@@ -40,7 +40,7 @@ foreach ($cDocumentos as $oDocumento) {
     $d++;
     $id_doc = $oDocumento->getId_doc();
     $id_tipo_doc = $oDocumento->getId_tipo_doc();
-    $observ = $oDocumento->getObserv();
+    $observ = $oDocumento->getObservVo()->value();
     $num_reg = $oDocumento->getNum_reg();
     $num_ejemplares = $oDocumento->getNum_ejemplares();
     // guardo en una colección los tipos de doc para consultas posteriores (de otros lugares).

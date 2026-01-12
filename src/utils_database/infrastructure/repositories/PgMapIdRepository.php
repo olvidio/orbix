@@ -123,10 +123,7 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($objeto, $id_resto);
 
-        $aDatos = [];
-        $aDatos['id_dl'] = $MapId->getIdDlVo()->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $MapId->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

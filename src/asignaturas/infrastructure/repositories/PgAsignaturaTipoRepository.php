@@ -135,13 +135,7 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tipo);
 
-        $aDatos = [];
-        $aDatos['tipo_asignatura'] = $AsignaturaTipo->getTipoAsignaturaVo()->value();
-        $aDatos['tipo_breve'] = $AsignaturaTipo->getTipoBreveVo()->value();
-        $aDatos['año'] = $AsignaturaTipo->getYearVo()?->value();
-        $aDatos['tipo_latin'] = $AsignaturaTipo->getTipoLatinVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-
+        $aDatos = $AsignaturaTipo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
             $update = "

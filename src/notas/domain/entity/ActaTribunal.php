@@ -90,7 +90,7 @@ class ActaTribunal
     {
         $this->orden = $valor instanceof Orden
             ? $valor
-            : Orden::fromNullable($valor);
+            : Orden::fromNullableInt($valor);
     }
 
     /**
@@ -106,7 +106,7 @@ class ActaTribunal
      */
     public function setOrden(?int $orden = null): void
     {
-        $this->orden = Orden::fromNullable($orden);
+        $this->orden = Orden::fromNullableInt($orden);
     }
 
 
