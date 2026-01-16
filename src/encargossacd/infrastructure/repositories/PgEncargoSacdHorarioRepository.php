@@ -34,7 +34,7 @@ class PgEncargoSacdHorarioRepository extends ClaseRepository implements EncargoS
         $this->setNomTabla('propuesta_encargo_sacd_horario');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo EncargoSacdHorario
@@ -137,6 +137,7 @@ class PgEncargoSacdHorarioRepository extends ClaseRepository implements EncargoS
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_enc                   = :id_enc,
 					id_nom                   = :id_nom,
@@ -153,12 +154,10 @@ class PgEncargoSacdHorarioRepository extends ClaseRepository implements EncargoS
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $EncargoSacdHorario->getId_item();
             $campos = "(id_item,id_enc,id_nom,f_ini,f_fin,dia_ref,dia_num,mas_menos,dia_inc,h_ini,h_fin,id_item_tarea_sacd)";
             $valores = "(:id_item,:id_enc,:id_nom,:f_ini,:f_fin,:dia_ref,:dia_num,:mas_menos,:dia_inc,:h_ini,:h_fin,:id_item_tarea_sacd)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

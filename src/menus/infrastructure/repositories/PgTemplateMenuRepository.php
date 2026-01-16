@@ -46,7 +46,7 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TemplateMenu
@@ -137,6 +137,7 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         $aDatos = $TemplateMenu->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_template_menu']);
             $update = "
 					nombre                   = :nombre";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_template_menu = $id_template_menu";
@@ -144,12 +145,10 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
 
         } else {
             //INSERT
-            $aDatos['id_template_menu'] = $TemplateMenu->getId_template_menu();
             $campos = "(id_template_menu,nombre)";
             $valores = "(:id_template_menu,:nombre)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

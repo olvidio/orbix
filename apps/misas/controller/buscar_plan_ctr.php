@@ -4,8 +4,11 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
@@ -23,7 +26,7 @@ require_once("apps/core/global_object.inc");
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
-$id_nom_jefe = '';
+$id_nom_jefe = null;
 $id_sacd = '';
 $id_ubi = '';
 
@@ -41,42 +44,34 @@ $aCentros = [];
 
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
-    $id_ubi=$oMiUsuario->getId_pauAsString();
+    $id_ubi = $oMiUsuario->getCsvIdPauAsString();
     $oCentro = Ubi::newUbi($id_ubi);
-    $nombre_ubi = $oCentro->getNombre_ubi();
+    $nombre_ubi = $oCentro->getNombreUbiVo()->value();
     $aCentros[$id_ubi] = $nombre_ubi;
-    $aOpciones[-1]='centros encargos';
+    $aOpciones[-1] = 'centros encargos';
     $oDesplZonas = new Desplegable();
     $oDesplZonas->setOpciones($aOpciones);
     $oDesplZonas->setBlanco(FALSE);
     $oDesplZonas->setNombre('id_zona');
     $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
     $oDesplZonas->setOpcion_sel($Qid_zona);
-}
-//echo ConfigGlobal::mi_id_usuario();
-//echo '-'.$id_sacd.'='.$id_ubi;
-
-else {
-
+}  else {
     if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-        if ($_SESSION['oConfig']->is_jefeCalendario()) {
-            $id_nom_jefe = '';
-        } else {
-            $id_nom_jefe = $oMiUsuario->getId_pauAsString();
+        if (!$_SESSION['oConfig']->is_jefeCalendario()) {
+            $id_nom_jefe = (int)$oMiUsuario->getCsvIdPauAsString();
             if (empty($id_nom_jefe)) {
                 exit(_("No tiene permiso para ver esta página"));
             }
         }
 
-
         $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
         $aOpciones = $ZonaRepository->getArrayZonas($id_nom_jefe);
-        if ($Qid_zona==0) {
+        if ($Qid_zona === 0) {
 //    $Qid_zona=array_key_first($aOpciones);
-            $Qid_zona=-1;
+            $Qid_zona = -1;
         }
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-            $aOpciones[-1]='centros encargos';
+            $aOpciones[-1] = 'centros encargos';
         }
 //foreach($aOpciones as $a1=>$a2)
 //    echo 'opcion: '.$a1.'-'.$a2.'<br>';
@@ -89,50 +84,50 @@ else {
         $oDesplZonas->setOpcion_sel($Qid_zona);
 
         if (isset($Qid_zona)) {
-            if($Qid_zona>0) {
+            if ($Qid_zona > 0) {
                 $aWhere = [];
                 $aWhere['status'] = 't';
                 $aWhere['id_zona'] = $Qid_zona;
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $GesCentrosEllos = new GestorCentroEllos();
-                $cCentrossv = $GesCentrosEllos->getCentros($aWhere);
-                $GesCentrosSf = new GestorCentroEllas();
-                $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
+                $CentroEllosRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
+                $cCentrossv = $CentroEllosRepository->getCentros($aWhere);
+                $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+                $cCentrosSf = $CentroEllasRepository->getCentros($aWhere);
                 $cCentros = array_merge($cCentrossv, $cCentrosSf);
                 foreach ($cCentros as $oCentro) {
                     $id_ubi = $oCentro->getId_ubi();
                     $nombre_ubi = $oCentro->getNombre_ubi();
                     $aCentros[$id_ubi] = $nombre_ubi;
                 }
-            }
-            else  {
-                $id_sacd=$oMiUsuario->getId_pauAsString();
-        /* busco los datos del encargo que se tengan */
-                $GesEncargosSacd = new GestorEncargoSacd();
-        // No los personales:
+            } else {
+                $id_sacd = $oMiUsuario->getCsvIdPauAsString();
+                /* busco los datos del encargo que se tengan */
+                $EncargosSacdRepository = $GLOBALS['container']->get(EncargoSacdRepositoryInterface::class);
+                // No los personales:
                 $aWhereES = [];
                 $aOperadorES = [];
                 $aWhereES['id_nom'] = $id_sacd;
                 $aWhereES['f_fin'] = 'x';
                 $aOperadorES['f_fin'] = 'IS NULL';
                 $aWhereES['_ordre'] = 'modo, f_ini DESC';
-                $cEncargosSacd1 = $GesEncargosSacd->getEncargosSacd($aWhereES, $aOperadorES);
+                $cEncargosSacd1 = $EncargosSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
 
                 $oF_hoy = new DateTimeLocal(date('Y-m-d')); //Hoy sólo fecha, no hora
                 $hoy = $oF_hoy->getIso();
 
                 $aWhereES['f_fin'] = "'$hoy'";
                 $aOperadorES['f_fin'] = '>';
-                $cEncargosSacd2 = $GesEncargosSacd->getEncargosSacd($aWhereES, $aOperadorES);
+                $cEncargosSacd2 = $EncargosSacdRepository->getEncargosSacd($aWhereES, $aOperadorES);
 
                 $cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2;
 
+                $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
                 foreach ($cEncargosSacd as $oEncargoSacd) {
                     $id_enc = $oEncargoSacd->getId_enc();
 
-                    $oEncargo = new Encargo(array('id_enc' => $id_enc));
+                    $oEncargo = $EncargoRepository->findById($id_enc);
                     $id_tipo_enc = $oEncargo->getId_tipo_enc();
-            // Si es un encargo personal (7 o 4) me lo salto
+                    // Si es un encargo personal (7 o 4) me lo salto
                     if (substr($id_tipo_enc, 0, 1) <= 3) {
                         $id_ubi = $oEncargo->getId_ubi();
                         $oCentro = Ubi::newUbi($id_ubi);
@@ -171,7 +166,7 @@ $oFormP->setDesplPeriodosOpcion_sel('esta_semana');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('d/m/Y');
+$shoy = $ohoy->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);

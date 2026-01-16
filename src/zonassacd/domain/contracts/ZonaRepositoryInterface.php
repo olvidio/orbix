@@ -24,7 +24,7 @@ interface ZonaRepositoryInterface
     public function getArrayZonas(?int $iid_nom_jefe = null): array;
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Zona

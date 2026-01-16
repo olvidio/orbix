@@ -17,7 +17,7 @@ use src\usuarios\domain\entity\Preferencia;
 interface PreferenciaRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Preferencia

@@ -22,7 +22,7 @@ interface EncargoTipoRepositoryInterface
 
    public function encargo_de_tipo($id_tipo_enc): array ;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo EncargoTipo

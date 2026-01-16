@@ -4,7 +4,7 @@ use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\entity\Ubi;
 
@@ -48,7 +48,7 @@ $matriculas = count($cMatriculas);
 if ($matriculas > 0) {
     // para ordenar
     $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
     $aAsignaturasMatriculadas = [];
     foreach ($cMatriculas as $oMatricula) {
         $id_asignatura = $oMatricula->getId_asignatura();

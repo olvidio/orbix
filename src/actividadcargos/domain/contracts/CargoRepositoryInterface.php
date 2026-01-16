@@ -21,7 +21,7 @@ interface CargoRepositoryInterface
 
     public function getArrayCargos(string $tipo_cargo = ''): array;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Cargo

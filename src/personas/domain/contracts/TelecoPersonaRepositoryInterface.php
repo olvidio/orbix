@@ -18,7 +18,7 @@ use src\personas\domain\entity\TelecoPersona;
 interface TelecoPersonaRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TelecoPersona

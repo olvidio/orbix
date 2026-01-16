@@ -18,7 +18,7 @@ use src\ubis\domain\entity\TarifaUbi;
 interface TarifaUbiRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TarifaUbi

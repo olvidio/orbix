@@ -31,7 +31,7 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         $this->setNomTabla('du_presentacion');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CartaPresentacion
@@ -125,6 +125,8 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         $aDatos = $CartaPresentacion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_ubi']);
+            unset($aDatos['id_direccion']);
             $update = "
 					pres_nom                 = :pres_nom,
 					pres_telf                = :pres_telf,
@@ -135,13 +137,10 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_ubi'] = $id_ubi;
-            $aDatos['id_direccion'] = $id_direccion;
             $campos = "(id_direccion,id_ubi,pres_nom,pres_telf,pres_mail,zona,observ)";
             $valores = "(:id_direccion,:id_ubi,:pres_nom,:pres_telf,:pres_mail,:zona,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

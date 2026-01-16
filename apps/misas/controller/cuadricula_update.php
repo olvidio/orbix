@@ -3,18 +3,19 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use Illuminate\Http\JsonResponse;
-use misas\domain\EncargoDiaId;
-use misas\domain\EncargoDiaTend;
-use misas\domain\EncargoDiaTstart;
-use misas\domain\entity\EncargoDia;
-use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\entity\EncargoDia;
+use src\misas\domain\value_objects\PlantillaConfig;
+use src\misas\application\services\InicialesSacdService;
+use src\misas\domain\value_objects\EncargoDiaId;
+use src\misas\domain\value_objects\EncargoDiaTend;
+use src\misas\domain\value_objects\EncargoDiaTstart;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\DateTimeLocal;
 use web\TiposActividades;
@@ -61,7 +62,7 @@ $id_sacd_anterior = $oEncargoDia->getId_nom();
 $estado = $oEncargoDia->getStatus();
 $zona = $Qid_zona;
 $color_misa = '';
-if (trim($QTipoPlantilla) === EncargoDia::PLAN_DE_MISAS) {
+if (trim($QTipoPlantilla) === PlantillaConfig::PLAN_DE_MISAS) {
     if ($estado === EncargoDia::STATUS_PROPUESTA) {
         $color_misa = 'rojoclaro';
     }
@@ -107,15 +108,15 @@ $aWhere['id_zona'] = $zona;
 $aOperador = [];
 $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
 $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
+$InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
 foreach ($cZonaSacd as $oZonaSacd) {
     $data_cols = [];
     $id_nom_aux = $oZonaSacd->getId_nom();
-    $InicialesSacd = new InicialesSacd();
-    $nombre_sacd = $InicialesSacd->nombre_sacd($id_nom_aux);
-    $iniciales = $InicialesSacd->iniciales($id_nom_aux);
+    $nombre_sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom_aux);
+    $iniciales = $InicialesSacdService->obtenerIniciales($id_nom_aux);
     $key = $id_nom_aux;
     $lista_sacd[$key] = $nombre_sacd;
-    $esta_en_zona[$key] = array('', $oZonaSacd->getDw1(), $oZonaSacd->getDw2(), $oZonaSacd->getDw3(), $oZonaSacd->getDw4(), $oZonaSacd->getDw5(), $oZonaSacd->getDw6(), $oZonaSacd->getDw7());
+    $esta_en_zona[$key] = array('', $oZonaSacd->isDw1(), $oZonaSacd->isDw2(), $oZonaSacd->isDw3(), $oZonaSacd->isDw4(), $oZonaSacd->isDw5(), $oZonaSacd->isDw6(), $oZonaSacd->isDw7());
 }
 
 $esta_sacd_anterior = 1;
@@ -136,7 +137,6 @@ if (!empty($id_sacd_anterior)) {
 
     $cAsistentes = $ActividadCargoRepository->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
 
-    $ActividadTipoRepository = $GLOBALS['container']->get(ActividadTipoRepositoryInterface::class);
     $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
     $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
     $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);

@@ -33,7 +33,7 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
         $this->setNomTabla('du_grupos_dl');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo GrupoCasa
@@ -125,6 +125,7 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
         $aDatos = $GrupoCasa->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_ubi_padre             = :id_ubi_padre,
 					id_ubi_hijo              = :id_ubi_hijo";
@@ -132,12 +133,10 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $id_item;
             $campos = "(id_item,id_ubi_padre,id_ubi_hijo)";
             $valores = "(:id_item,:id_ubi_padre,:id_ubi_hijo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

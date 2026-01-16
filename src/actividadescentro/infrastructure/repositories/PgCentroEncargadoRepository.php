@@ -124,7 +124,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
     }
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CentroEncargado
@@ -218,6 +218,8 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
         $aDatos = $CentroEncargado->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_activ']);
+            unset($aDatos['id_ubi']);
             $update = "
 					num_orden                = :num_orden,
 					encargo                  = :encargo";
@@ -225,13 +227,10 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_activ'] = $CentroEncargado->getId_activ();
-            $aDatos['id_ubi'] = $CentroEncargado->getId_ubi();
             $campos = "(id_activ,id_ubi,num_orden,encargo)";
             $valores = "(:id_activ,:id_ubi,:num_orden,:encargo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

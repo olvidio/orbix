@@ -9,7 +9,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
-use src\notas\infrastructure\repositories\PgPersonaNotaDBRepository;
+use src\notas\infrastructure\repositories\PgPersonaNotaRepository;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
@@ -114,7 +114,7 @@ class Select1011
         }
 
 
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaDBRepository::class);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaRepository::class);
         // Que si muestre el "fin bienio, fin cuadrienio".
         //$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
         $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $this->id_pau, '_ordre' => 'id_nivel'), array('id_asignatura' => '<'));

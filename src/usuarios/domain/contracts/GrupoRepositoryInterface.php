@@ -17,7 +17,7 @@ use src\usuarios\domain\entity\Grupo;
 interface GrupoRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Grupo

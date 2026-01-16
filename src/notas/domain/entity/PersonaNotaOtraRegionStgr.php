@@ -25,18 +25,20 @@ class PersonaNotaOtraRegionStgr
 
     public function __construct(?array $a_id = null)
     {
-        foreach ($a_id as $nom_id => $val_id) {
-            if (($nom_id === 'id_nom') && $val_id !== '') {
-                $this->id_nom = (int)$val_id;
-            }
-            if (($nom_id === 'id_asignatura') && $val_id !== '') {
-                $this->id_asignatura = (int)$val_id;
-            }
-            if (($nom_id === 'id_nivel') && $val_id !== '') {
-                $this->id_nivel = (int)$val_id;
-            }
-            if (($nom_id === 'tipo_acta') && $val_id !== '') {
-                $this->tipo_acta = (int)$val_id;
+        if ($a_id !== null) {
+            foreach ($a_id as $nom_id => $val_id) {
+                if (($nom_id === 'id_nom') && $val_id !== '') {
+                    $this->id_nom = (int)$val_id;
+                }
+                if (($nom_id === 'id_asignatura') && $val_id !== '') {
+                    $this->id_asignatura = AsignaturaId::fromNullableInt((int)$val_id);
+                }
+                if (($nom_id === 'id_nivel') && $val_id !== '') {
+                    $this->id_nivel = (int)$val_id;
+                }
+                if (($nom_id === 'tipo_acta') && $val_id !== '') {
+                    $this->tipo_acta = TipoActa::fromNullableInt((int)$val_id);
+                }
             }
         }
     }
@@ -76,28 +78,25 @@ class PersonaNotaOtraRegionStgr
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
 
-
-    protected bool $aprobada;
-
     public function isAprobada(): bool
     {
         $nota_corte = $_SESSION['oConfig']->getNotaCorte();
-        $this->aprobada = 'f';
+        $aprobada = 'f';
         if ($this->id_situacion === NotaSituacion::NUMERICA) {
             $nota_num = $this->getNota_num();
             $nota_max = $this->getNota_max();
             // deben ser números.
             if (is_numeric($nota_num) && is_numeric($nota_max)) {
                 if ($nota_num / $nota_max >= $nota_corte) {
-                    $this->aprobada = 't';
+                    $aprobada = 't';
                 }
             }
         } else {
             $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
             $aNotas = $NotaRepository->getArrayNotas();
-            $this->aprobada = $aNotas[$this->id_situacion->value()];
+            $aprobada = $aNotas[$this->id_situacion->value()];
         }
-        return $this->aprobada;
+        return $aprobada;
     }
 
     /**

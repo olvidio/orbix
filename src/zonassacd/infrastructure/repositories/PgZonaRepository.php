@@ -71,7 +71,7 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Zona
@@ -163,6 +163,7 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
         $aDatos = $Zona->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_zona']);
             $update = "
 					nombre_zona              = :nombre_zona,
 					orden                    = :orden,
@@ -172,12 +173,10 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_zona'] = $Zona->getId_zona();
             $campos = "(id_zona,nombre_zona,orden,id_grupo,id_nom)";
             $valores = "(:id_zona,:nombre_zona,:orden,:id_grupo,:id_nom)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

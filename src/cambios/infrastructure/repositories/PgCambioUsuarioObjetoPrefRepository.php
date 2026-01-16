@@ -34,7 +34,7 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
         $this->setNomTabla('av_cambios_usuario_objeto_pref');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CambioUsuarioObjetoPref
@@ -126,6 +126,7 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
         $aDatos = $CambioUsuarioObjetoPref->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item_usuario_objeto']);
             $update = "
 					id_usuario               = :id_usuario,
 					dl_org                   = :dl_org,
@@ -141,12 +142,10 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item_usuario_objeto'] = $CambioUsuarioObjetoPref->getId_item_usuario_objeto();
             $campos = "(id_item_usuario_objeto,id_usuario,dl_org,id_tipo_activ_txt,id_fase_ref,aviso_off,aviso_on,aviso_outdate,objeto,aviso_tipo,id_pau)";
             $valores = "(:id_item_usuario_objeto,:id_usuario,:dl_org,:id_tipo_activ_txt,:id_fase_ref,:aviso_off,:aviso_on,:aviso_outdate,:objeto,:aviso_tipo,:id_pau)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

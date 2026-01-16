@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -126,7 +126,7 @@ if (empty($a_id_schemas_rstgr)) {
 }
 
 if (empty($error_txt)) {
-    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
     $aWhere = [];
     $aOperador = [];
     $aWhere['id_schema'] = implode(',', $a_id_schemas_rstgr);

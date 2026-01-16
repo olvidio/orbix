@@ -27,7 +27,7 @@ use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -86,7 +86,7 @@ foreach ($cNotas as $id_situacion) {
 }
 
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
 
 if (!empty($Qid_asignatura_real)) { //caso de modificar
     $mod = "editar";

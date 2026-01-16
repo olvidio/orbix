@@ -18,7 +18,7 @@ use src\profesores\domain\entity\ProfesorDocenciaStgr;
 interface ProfesorDocenciaStgrRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo ProfesorDocenciaStgr

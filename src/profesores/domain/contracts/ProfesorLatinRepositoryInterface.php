@@ -19,7 +19,7 @@ use function core\is_true;
 interface ProfesorLatinRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo ProfesorLatin

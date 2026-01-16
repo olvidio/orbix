@@ -59,7 +59,7 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
         $error_txt = _("No hay email asociado a este usuario");
     } else {
         // Recuperar código de seguridad
-        $codigo = $MiUsuario->getSecret2faVo();
+        $codigo = $MiUsuario->getSecret2faVo()->value();
 
         // Enviar email con la nueva contraseña
         $subject = _("Recuperación de código de seguridad");

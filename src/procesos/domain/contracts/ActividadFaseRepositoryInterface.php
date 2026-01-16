@@ -27,7 +27,7 @@ interface ActividadFaseRepositoryInterface
 
     public function getArrayActividadFases(array $aProcesos = [], bool $bresp = false): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadFase

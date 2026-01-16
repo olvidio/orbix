@@ -62,7 +62,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Egm
@@ -153,6 +153,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         $aDatos = $Egm->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
                     id_equipaje              = :id_equipaje,
                     id_grupo                 = :id_grupo,
@@ -163,12 +164,10 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
 
         } else {
             //INSERT
-            $aDatos['id_item'] = $Egm->getId_item();
             $campos = "(id_item,id_equipaje,id_grupo,id_lugar,texto)";
             $valores = "(:id_item,:id_equipaje,:id_grupo,:id_lugar,:texto)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

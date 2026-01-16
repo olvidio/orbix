@@ -19,7 +19,7 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
 interface ProfesorStgrRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ProfesorStgr

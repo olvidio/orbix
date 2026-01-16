@@ -111,13 +111,13 @@ switch ($Qque) {
         $suma_sf = 0;
         $aWhere = [];
         $aOperador = [];
+        $UbiGastoRepository = $GLOBALS['container']->get(UbiGastoRepositoryInterface::class);
         foreach ($aGrupos as $key => $Titulo) {
             $aWhere['id_ubi'] = $key; // en este caso $key=$id_ubi
             $aWhere['f_gasto'] = "'$Qyear/1/1','$Qyear/12/31'";
             $aOperador['f_gasto'] = 'BETWEEN';
             $aWhere['_ordre'] = 'f_gasto';
-            $GesGastos = new GestorUbiGasto();
-            $cGastos = $GesGastos->getUbiGastos($aWhere, $aOperador);
+            $cGastos = $UbiGastoRepository->getUbiGastos($aWhere, $aOperador);
             $aGastos = [];
             foreach ($cGastos as $oUbiGasto) {
                 $oFecha = $oUbiGasto->getF_gasto();

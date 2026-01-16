@@ -31,7 +31,7 @@ class PgGrupMenuRoleRepository extends ClaseRepository implements GrupMenuRoleRe
         $this->setNomTabla('aux_grupmenu_rol');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo GrupMenuRole
@@ -122,6 +122,7 @@ class PgGrupMenuRoleRepository extends ClaseRepository implements GrupMenuRoleRe
         $aDatos = $GrupMenuRole->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_grupmenu              = :id_grupmenu,
 					id_role                  = :id_role";
@@ -130,12 +131,10 @@ class PgGrupMenuRoleRepository extends ClaseRepository implements GrupMenuRoleRe
 
         } else {
             //INSERT
-            $aDatos['id_item'] = $GrupMenuRole->getId_item();
             $campos = "(id_item,id_grupmenu,id_role)";
             $valores = "(:id_item,:id_grupmenu,:id_role)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

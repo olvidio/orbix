@@ -9,6 +9,7 @@ use core\Set;
 use PDO;
 use permisos\model\PermDl;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\entity\ActividadFase;
 use src\shared\traits\HandlesPdoErrors;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -285,8 +286,8 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
             // Ordenar según el primer proceso (si hay más de uno).
             reset($aProcesos);
             $id_tipo_proceso = current($aProcesos);
-            $oGestorProceso = new GestorTareaProceso();
-            $aFasesProceso = $oGestorProceso->getFasesProceso($id_tipo_proceso);
+            $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+            $aFasesProceso = $TareaProcesoRepository->getFasesProceso($id_tipo_proceso);
             $aFasesProcesoDesc = [];
             foreach ($aFasesProceso as $id_item => $id_fase) {
                 // compruebo que está en la lista de las fases comunes.
@@ -294,7 +295,7 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
                     $oFase = new ActividadFase($id_fase);
                     // compruebo si soy el responsable
                     if ($bresp) {
-                        $oTareaProceso = new TareaProceso($id_item);
+                        $oTareaProceso = $TareaProcesoRepository->findById($id_item);
                         $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
 
                         // Si no hay oficina responsable, pueden todos:
@@ -312,7 +313,7 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
         }
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadFase
@@ -404,6 +405,7 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
         $aDatos = $ActividadFase->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_fase']);
             $update = "
 					desc_fase                = :desc_fase,
 					sf                       = :sf,
@@ -412,12 +414,10 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_fase'] = $ActividadFase->getIdFaseVo()->value();
             $campos = "(id_fase,desc_fase,sf,sv)";
             $valores = "(:id_fase,:desc_fase,:sf,:sv)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

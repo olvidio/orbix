@@ -37,7 +37,7 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
         $this->setNomTabla('d_dossiers_abiertos');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Dossier
@@ -145,6 +145,9 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_tipo_dossier']);
+            unset($aDatos['id_pau']);
+            unset($aDatos['tabla']);
             $update = "
 					f_ini                    = :f_ini,
 					f_camb_dossier           = :f_camb_dossier,
@@ -154,14 +157,10 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_tipo_dossier'] = $id_tipo_dossier;
-            $aDatos['id_pau'] = $id_pau;
-            $aDatos['tabla'] = $tabla;
             $campos = "(id_tipo_dossier,id_pau,tabla,f_ini,f_camb_dossier,active,f_active)";
             $valores = "(:id_tipo_dossier,:id_pau,:tabla,:f_ini,:f_camb_dossier,:active,:f_active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

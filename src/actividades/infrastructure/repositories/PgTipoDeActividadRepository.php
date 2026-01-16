@@ -202,7 +202,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         }
         return $sfsv;
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TipoDeActividad
@@ -294,6 +294,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         $aDatos = $TipoDeActividad->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_tipo_activ']);
             $update = "
 					nombre                   = :nombre,
 					id_tipo_proceso_sv       = :id_tipo_proceso_sv,
@@ -304,12 +305,10 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_tipo_activ'] = $TipoDeActividad->getId_tipo_activ();
             $campos = "(id_tipo_activ,nombre,id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf)";
             $valores = "(:id_tipo_activ,:nombre,:id_tipo_proceso_sv,:id_tipo_proceso_ex_sv,:id_tipo_proceso_sf,:id_tipo_proceso_ex_sf)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

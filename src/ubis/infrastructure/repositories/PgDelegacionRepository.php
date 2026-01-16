@@ -328,6 +328,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $aDatos = $Delegacion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_dl']);
             $update = "
 					dl                       = :dl,
 					region                   = :region,
@@ -339,12 +340,10 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_dl'] = $Delegacion->getIdDlVo()->value();
             $campos = "(id_dl,dl,region,nombre_dl,active,grupo_estudios,region_stgr)";
             $valores = "(:id_dl,:dl,:region,:nombre_dl,:active,:grupo_estudios,:region_stgr)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

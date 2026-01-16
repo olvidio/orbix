@@ -21,7 +21,7 @@ final class PlanoExtensionText
         if (mb_strlen($value) > 10) {
             throw new \InvalidArgumentException('PlanoExtensionText must be at most 10 characters');
         }
-        if (!preg_match('/^[a-z0-9]+$/', $value)) {
+        if (!preg_match('/^[A-z0-9]+$/', $value)) {
             throw new \InvalidArgumentException('PlanoExtensionText has invalid characters');
         }
     }

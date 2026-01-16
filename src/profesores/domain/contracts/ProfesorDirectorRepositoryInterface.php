@@ -18,7 +18,7 @@ use src\profesores\domain\entity\ProfesorDirector;
 interface ProfesorDirectorRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ProfesorDirector

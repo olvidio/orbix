@@ -67,7 +67,7 @@ if ($miRole < 4) { // es administrador
         $nom_usuario = $oUsuario->getNomUsuarioAsString();
         $cambio_password = $oUsuario->isCambio_password();
         $chk_cambio_password = is_true($cambio_password) ? 'checked' : '';
-        $has_2fa = $oUsuario->has2fa();
+        $has_2fa = $oUsuario->isHas_2fa();
         $chk_has_2fa = is_true($has_2fa) ? 'checked' : '';
         $email = $oUsuario->getEmailAsString();
         $id_role = $oUsuario->getId_role();
@@ -76,7 +76,7 @@ if ($miRole < 4) { // es administrador
         $isSv = $oRole->isSv();
         $isSf = $oRole->isSf();
         if ($pau === PauType::PAU_CDC) { //casa
-            $id_pau = $oUsuario->getId_pauAsString();
+            $id_pau = $oUsuario->getCsvIdPauAsString();
             $cond = '';
             switch ($seccion) {
                 case 1:
@@ -98,7 +98,7 @@ if ($miRole < 4) { // es administrador
             $camposMas = 'casas!casas_mas!casas_num';
         }
         if ($pau === PauType::PAU_CTR && $isSv) { //centroSv
-            $id_pau = $oUsuario->getId_pauAsString();
+            $id_pau = $oUsuario->getCsvIdPauAsString();
             $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             $aOpciones = $CentroDlRepository->getArrayCentros();
 
@@ -110,7 +110,7 @@ if ($miRole < 4) { // es administrador
             $camposMas = 'id_ctr';
         }
         if ($pau === PauType::PAU_CTR && $isSf) { //centroSf
-            $id_pau = $oUsuario->getId_pauAsString();
+            $id_pau = $oUsuario->getCsvIdPauAsString();
             $oGesCentrosDl = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
             $aOpciones = $oGesCentrosDl->getArrayCentros();
 
@@ -122,7 +122,7 @@ if ($miRole < 4) { // es administrador
             $camposMas = 'id_ctr';
         }
         if ($pau === PauType::PAU_NOM || $pau === PauType::PAU_SACD) { //sacd //personas dl
-            $id_pau = $oUsuario->getId_pauAsString();
+            $id_pau = $oUsuario->getCsvIdPauAsString();
 
             $nom_role = $oRole->getRoleAsString();
             switch ($nom_role) {

@@ -54,7 +54,7 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
     }
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Matricula
@@ -150,6 +150,9 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
         $aDatos = $Matricula->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_activ']);
+            unset($aDatos['id_asignatura']);
+            unset($aDatos['id_nom']);
             $update = "
 					id_nivel                 = :id_nivel,
 					id_situacion             = :id_situacion,
@@ -163,14 +166,10 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_activ'] = $id_activ;
-            $aDatos['id_asignatura'] = $id_asignatura;
-            $aDatos['id_nom'] = $id_nom;
             $campos = "(id_activ,id_asignatura,id_nom,id_situacion,preceptor,id_nivel,nota_num,nota_max,id_preceptor,acta)";
             $valores = "(:id_activ,:id_asignatura,:id_nom,:id_situacion,:preceptor,:id_nivel,:nota_num,:nota_max,:id_preceptor,:acta)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

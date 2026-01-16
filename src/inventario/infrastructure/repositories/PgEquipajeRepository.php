@@ -69,7 +69,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Equipaje
@@ -182,6 +182,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_equipaje']);
             $update = "
                     ids_activ                = :ids_activ,
                     lugar                    = :lugar,
@@ -196,12 +197,10 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_equipaje'] = $Equipaje->getIdEquipajeVo()->value();
             $campos = "(id_equipaje,ids_activ,lugar,f_ini,f_fin,id_ubi_activ,nom_equipaje,cabecera,pie,cabecerab)";
             $valores = "(:id_equipaje,:ids_activ,:lugar,:f_ini,:f_fin,:id_ubi_activ,:nom_equipaje,:cabecera,:pie,:cabecerab)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

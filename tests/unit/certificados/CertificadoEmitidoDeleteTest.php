@@ -73,9 +73,9 @@ class CertificadoEmitidoDeleteTest extends myTest
 
             $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
             $certificadoEmitidoRepository->setoDbl($oDBdst);
-            $this->expectException(RuntimeException::class);
-            $certificadoEmitidoRepository->findById($id_item);
 
+            $busqueda = $certificadoEmitidoRepository->findById($id_item);
+            $this->assertNull($busqueda, "El certificado con ID $id_item debería haber sido eliminado.");
         }
     }
 

@@ -21,7 +21,7 @@ interface CentroEncargadoRepositoryInterface
     public function getProximasActividadesDeCentro(int $id_ubi, string $f_ini_act_iso): string;
     public function getActividadesDeCentros(int $iid_ubi, string $scondicion = ''):array;
     public function getCentrosEncargadosActividad(int $iid_activ):array;
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CentroEncargado

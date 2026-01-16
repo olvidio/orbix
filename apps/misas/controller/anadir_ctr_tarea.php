@@ -3,9 +3,8 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use Illuminate\Http\JsonResponse;
-use misas\domain\entity\Plantilla;
-use misas\domain\repositories\PlantillaRepository;
-use misas\domain\repositories\PlantillaRepositoryInterface;
+use src\misas\domain\contracts\PlantillaRepositoryInterface;
+use src\misas\domain\entity\Plantilla;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -21,12 +20,13 @@ $Qid_tarea = (integer)filter_input(INPUT_POST, 'id_tarea');
 
 $PlantillaRepository = $GLOBALS['container']->get(PlantillaRepositoryInterface::class);
 
+$error_txt = '';
 switch ($Qque) {
 //faltaría comprobar que no está.
 
     case 'anadir':
-        $Qsemana=-1;
-        $Qdia='MON';
+        $Qsemana = -1;
+        $Qdia = 'MON';
         $Qid_item = $PlantillaRepository->getNewId_item();
         $oPlantilla = new Plantilla();
         $oPlantilla->setId_item($Qid_item);
@@ -34,18 +34,16 @@ switch ($Qque) {
         $oPlantilla->setTarea($Qid_tarea);
         $oPlantilla->setId_ctr($Qid_ubi);
         $oPlantilla->setSemana($Qsemana);
- //       $oPlantilla->setT_start(null);
- //       $oPlantilla->setT_end(null);
- 
+        //       $oPlantilla->setT_start(null);
+        //       $oPlantilla->setT_end(null);
+
 
         if ($PlantillaRepository->Guardar($oPlantilla) === FALSE) {
             $error_txt .= $PlantillaRepository->getErrorTxt();
         }
         break;
     case 'quitar':
-
 //ERROR crec que no envio Qid_item!!!!!!!!!!!!!!!!!!!!!
-
         $oPlantilla = $PlantillaRepository->findById($Qid_item);
         if ($PlantillaRepository->Eliminar($oPlantilla) === FALSE) {
             $error_txt .= $PlantillaRepository->getErrorTxt();

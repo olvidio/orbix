@@ -18,7 +18,7 @@ use src\encargossacd\domain\entity\EncargoSacdObserv;
 interface EncargoSacdObservRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo EncargoSacdObserv

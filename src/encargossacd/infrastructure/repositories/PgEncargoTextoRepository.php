@@ -33,7 +33,7 @@ class PgEncargoTextoRepository extends ClaseRepository implements EncargoTextoRe
         $this->setNomTabla('encargo_textos');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo EncargoTexto
@@ -125,6 +125,7 @@ class PgEncargoTextoRepository extends ClaseRepository implements EncargoTextoRe
         $aDatos = $EncargoTexto->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					idioma                   = :idioma,
 					clave                    = :clave,
@@ -133,12 +134,10 @@ class PgEncargoTextoRepository extends ClaseRepository implements EncargoTextoRe
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $EncargoTexto->getId_item();
             $campos = "(id_item,idioma,clave,texto)";
             $valores = "(:id_item,:idioma,:clave,:texto)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

@@ -2,9 +2,9 @@
 
 
 use Illuminate\Http\JsonResponse;
-use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\application\services\InicialesSacdService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
@@ -28,9 +28,9 @@ $Qdia = (string)filter_input(INPUT_POST, 'dia');
 // $Qid_sacd=100111501;
 
 $desplegable_sacd = '<SELECT ID="id_sacd">';
-$InicialesSacd = new InicialesSacd();
-$sacd = $InicialesSacd->nombre_sacd($Qid_sacd);
-$iniciales = $InicialesSacd->iniciales($Qid_sacd);
+$InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
+$sacd = $InicialesSacdService->obtenerNombreConIniciales($Qid_sacd);
+$iniciales = $InicialesSacdService->obtenerIniciales($Qid_sacd);
 
 //$key = $Qid_sacd . '#' . $iniciales;
 $key = $iniciales . '#' . $Qid_sacd;
@@ -88,32 +88,31 @@ if ($Qseleccion & 1) {
             $oZonaSacd = $cZonaSacd[0];
             switch ($n_dia_semana) {
                 case 1:
-                    $libre = $oZonaSacd->getDw1();
+                    $libre = $oZonaSacd->isDw1();
                     break;
                 case 2:
-                    $libre = $oZonaSacd->getDw2();
+                    $libre = $oZonaSacd->isDw2();
                     break;
                 case 3:
-                    $libre = $oZonaSacd->getDw3();
+                    $libre = $oZonaSacd->isDw3();
                     break;
                 case 4:
-                    $libre = $oZonaSacd->getDw4();
+                    $libre = $oZonaSacd->isDw4();
                     break;
                 case 5:
-                    $libre = $oZonaSacd->getDw5();
+                    $libre = $oZonaSacd->isDw5();
                     break;
                 case 6:
-                    $libre = $oZonaSacd->getDw6();
+                    $libre = $oZonaSacd->isDw6();
                     break;
                 case 7:
-                    $libre = $oZonaSacd->getDw7();
+                    $libre = $oZonaSacd->isDw7();
                     break;
             }
         }
         if ($libre) {
-            $InicialesSacd = new InicialesSacd();
-            $sacd = $InicialesSacd->nombre_sacd($id_nom);
-            $iniciales = $InicialesSacd->iniciales($id_nom);
+            $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
+            $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
 
 //            $key = $id_nom . '#' . $iniciales;
             $key = $iniciales . '#' . $id_nom;
@@ -129,9 +128,8 @@ if ($Qseleccion & 2) {
     $a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($Qid_zona);
 
     foreach ($a_Id_nom as $id_nom) {
-        $InicialesSacd = new InicialesSacd();
-        $sacd = $InicialesSacd->nombre_sacd($id_nom);
-        $iniciales = $InicialesSacd->iniciales($id_nom);
+        $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
+        $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
 
 //        $key = $id_nom . '#' . $iniciales;
         $key = $iniciales . '#' . $id_nom;
@@ -154,9 +152,8 @@ if ($Qseleccion & 4) {
     $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
-        $InicialesSacd = new InicialesSacd();
-        $sacd = $InicialesSacd->nombre_sacd($id_nom);
-        $iniciales = $InicialesSacd->iniciales($id_nom);
+        $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
+        $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
 
 //        $key = $id_nom . '#' . $iniciales;
 
@@ -177,9 +174,8 @@ if ($Qseleccion & 8) {
     $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
-        $InicialesSacd = new InicialesSacd();
-        $sacd = $InicialesSacd->nombre_sacd($id_nom);
-        $iniciales = $InicialesSacd->iniciales($id_nom);
+        $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
+        $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
 
 //        $key = $id_nom . '#' . $iniciales;
         $key = $iniciales . '#' . $id_nom;

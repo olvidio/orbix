@@ -15,7 +15,7 @@ final class AsignaturaTipoYear
 
     private function validate(string $value): void
     {
-        // Máx 4 caracteres; pensado para dígitos o números romanos (I,V,X)
+        // Máx 3 caracteres; pensado para dígitos o números romanos (I,V,X)
         if (mb_strlen($value) > 4) {
             throw new \InvalidArgumentException('AsignaturaTipoYear must be at most 4 characters');
         }

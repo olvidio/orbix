@@ -24,4 +24,10 @@ final class AnuncioId extends Uuid
             throw new InvalidArgumentException(sprintf('<%s> does not allow the value <%s>.', static::class, $value));
         }
     }
+
+    public static function fromString(string $value): self
+    {
+        return new self(RamseyUuid::fromString($value));
+    }
+
 }

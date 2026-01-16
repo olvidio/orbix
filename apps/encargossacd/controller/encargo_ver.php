@@ -4,6 +4,7 @@ use core\ViewTwig;
 use encargossacd\model\DesplCentros;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
@@ -55,7 +56,7 @@ function filtro($id_ubi)
     $tipo_ctr = $oCentro->getTipo_ctr();
 
     if ($tipo_ubi === "ctrsf") {
-        $filtro_ctr = 2;
+        $filtro_ctr = EncargoGrupo::CENTRO_SF;
     } else {
         switch ($tipo_ctr) {
             case "aj":
@@ -66,18 +67,18 @@ function filtro($id_ubi)
             case "sj":
             case "sm":
             case "sjce":
-                $filtro_ctr = 1;
+                $filtro_ctr = EncargoGrupo::CENTRO_SV;
                 break;
             case "ss":
-                $filtro_ctr = 3;
+                $filtro_ctr = EncargoGrupo::CENTRO_SSSC;
                 break;
             case "igloc":
             case "igl":
-                $filtro_ctr = 4;
+                $filtro_ctr = EncargoGrupo::IGL;
                 break;
             case "cgioc":
             case "oc":
-                $filtro_ctr = 5;
+                $filtro_ctr = EncargoGrupo::CGI;
                 break;
             default:
                 $filtro_ctr = 0;

@@ -4,7 +4,7 @@ namespace notas\model;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -80,7 +80,7 @@ class TablaAlumnosAsignaturas
 
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $cPersonas = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
-        $PersonNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $PersonNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $p = 0;
         $a_valores = [];
         foreach ($cPersonas as $oPersona) {
@@ -208,7 +208,7 @@ class TablaAlumnosAsignaturas
 
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $cPersonas = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
-        $PersonNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $PersonNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $p = 0;
         $a_valores = [];
         foreach ($cPersonas as $oPersona) {

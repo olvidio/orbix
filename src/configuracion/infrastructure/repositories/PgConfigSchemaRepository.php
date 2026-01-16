@@ -32,7 +32,7 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         $this->setNomTabla('x_config_schema');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ConfigSchema
@@ -123,18 +123,17 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         $aDatos = $ConfigSchema->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['parametro']);
             $update = "
 					valor                    = :valor";
             $sql = "UPDATE $nom_tabla SET $update WHERE parametro = '$parametro'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['parametro'] = $ConfigSchema->getParametro();
             $campos = "(parametro,valor)";
             $valores = "(:parametro,:valor)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

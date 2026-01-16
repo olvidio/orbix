@@ -17,7 +17,7 @@ use src\menus\domain\entity\MenuDb;
 interface MenuDbRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo MenuDb

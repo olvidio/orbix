@@ -50,7 +50,7 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TipoCasa
@@ -142,18 +142,17 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         $aDatos = $TipoCasa->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['tipo_casa']);
             $update = "
 					nombre_tipo_casa         = :nombre_tipo_casa";
             $sql = "UPDATE $nom_tabla SET $update WHERE tipo_casa = '$tipo_casa'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['tipo_casa'] = $TipoCasa->getTipoCasaVo()->value();
             $campos = "(tipo_casa,nombre_tipo_casa)";
             $valores = "(:tipo_casa,:nombre_tipo_casa)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

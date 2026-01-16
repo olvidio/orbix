@@ -43,7 +43,7 @@ if (empty ($cZonaSacd)) {
     $oZonaSacd->setDw5($Qdw5);
     $oZonaSacd->setDw6($Qdw6);
     $oZonaSacd->setDw7($Qdw7);
-      if ($ZonaSacdRepository->Guardar($oZonaSacd) === FALSE) {
+    if ($ZonaSacdRepository->Guardar($oZonaSacd) === FALSE) {
         $error_txt .= $ZonaSacdRepository->getErrorTxt();
     }
 }

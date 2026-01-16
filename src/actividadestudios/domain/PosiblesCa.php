@@ -4,7 +4,7 @@ namespace src\actividadestudios\domain;
 
 use core\ClasePropiedades;
 use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 
 /**
  *
@@ -32,7 +32,7 @@ class PosiblesCa extends ClasePropiedades
         foreach ($aNotas as $id_situacion) {
             $aSuperadas[$id_situacion] = 't';
         }
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $id_nom));
         $num_opcionales = 0;
         $todas_asig_p = [];

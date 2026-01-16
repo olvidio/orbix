@@ -18,7 +18,7 @@ interface AsignaturaTipoRepositoryInterface
 {
 
     function getArrayAsignaturaTipos(): array;
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo AsignaturaTipo

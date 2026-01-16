@@ -1,7 +1,7 @@
 <?php
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use function core\is_true;
@@ -107,7 +107,7 @@ $aOperador['id_tabla'] = '~';
 $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 $cPersonas = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
 $p = 0;
-$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
 foreach ($cPersonas as $oPersona) {
     $p++;
     $id_nom = $oPersona->getId_nom();

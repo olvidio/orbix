@@ -3,11 +3,11 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ViewTwig;
-use misas\domain\repositories\EncargoCtrRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
@@ -24,7 +24,7 @@ $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $columns_cuadricula = [
 //   ["id" => "id_item", "name" => "Id Item", "field" => "id_item", "width" => 100, "cssClass" => "cell-title"],
 //    ["id" => "id_encargo", "name" => "Id Encargo", "field" => "id_encargo", "width" => 50, "cssClass" => "cell-title"],
-["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
+    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
 //    ["id" => "id_centro", "name" => "Id Centro", "field" => "id_centro", "width" => 100, "cssClass" => "cell-title"],
     ["id" => "centro", "name" => "Centro", "field" => "centro", "width" => 150, "cssClass" => "cell-title"],
 ];
@@ -63,7 +63,7 @@ if (isset($Qid_zona)) {
             $data_cols["centro"] = $nombre_ubi;
             $data_cuadricula[] = $data_cols;
         }
-    }    
+    }
 }
 
 $json_columns_cuadricula = json_encode($columns_cuadricula);
@@ -102,7 +102,7 @@ $cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 $a_tipo_enc = [];
 $posibles_encargo_tipo = [];
 foreach ($cEncargoTipos as $oEncargoTipo) {
-    if ($oEncargoTipo->getId_tipo_enc()>=8100) {
+    if ($oEncargoTipo->getId_tipo_enc() >= 8100) {
         $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
         $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
     }

@@ -1,6 +1,7 @@
 <?php
 
 use encargossacd\model\DesplCentros;
+use src\encargossacd\domain\value_objects\EncargoGrupo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -11,11 +12,11 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
-$Qfiltro_ctr = (string)filter_input(INPUT_POST, 'filtro_ctr');
+$Qfiltro_ctr = (integer)filter_input(INPUT_POST, 'filtro_ctr');
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
 if (!empty($Qid_zona)) {
-    $Qfiltro_ctr = 8;
+    $Qfiltro_ctr = EncargoGrupo::ZONAS_MISAS;
 }
 
 $oGrupoCtr = new DesplCentros();

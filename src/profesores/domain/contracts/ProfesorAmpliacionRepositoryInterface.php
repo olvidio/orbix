@@ -26,7 +26,7 @@ interface ProfesorAmpliacionRepositoryInterface
 
     public function getArrayProfesoresAsignaturaVo(AsignaturaId $id_asignatura): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ProfesorAmpliacion

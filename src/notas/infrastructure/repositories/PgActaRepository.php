@@ -119,7 +119,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         }
         return $oDblSt->fetchColumn();
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActaDl
@@ -242,6 +242,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['acta']);
             $update = "
 					id_asignatura            = :id_asignatura,
 					id_activ                 = :id_activ,
@@ -256,7 +257,6 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['acta'] = $Acta->getActaVo()->value();
             $campos = "(acta,id_asignatura,id_activ,f_acta,libro,pagina,linea,lugar,observ,pdf)";
             $valores = "(:acta,:id_asignatura,:id_activ,:f_acta,:libro,:pagina,:linea,:lugar,:observ,:pdf)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
@@ -291,17 +291,24 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         $sql = "SELECT * FROM $nom_tabla WHERE acta = '$acta'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-        // para los bytea, sobre escribo los valores:
-        $spdf = '';
-        $stmt->bindColumn('pdf', $spdf, PDO::PARAM_STR);
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($aDatos !== false) {
-            $aDatos['pdf'] = hex2bin($spdf ?? '');
+        if ($aDatos === false) {
+            return false;
         }
+
+        // para los bytea: (resources)
+        $handle = $aDatos['pdf'];
+        if (is_resource($handle)) {
+            $contents = stream_get_contents($handle);
+            fclose($handle);
+            $aDatos['pdf'] = $contents;
+        }
+
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
             $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
         }
+
         return $aDatos;
     }
 

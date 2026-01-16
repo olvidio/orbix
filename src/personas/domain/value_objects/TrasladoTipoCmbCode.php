@@ -18,8 +18,8 @@ final class TrasladoTipoCmbCode
         if ($value === '') {
             throw new \InvalidArgumentException('TrasladoTipoCmbCode cannot be empty');
         }
-        if (mb_strlen($value) > 2) {
-            throw new \InvalidArgumentException('TrasladoTipoCmbCode must be at most 2 characters');
+        if (mb_strlen($value) > 4) { // posibles: dl, cr, sede, ctr
+            throw new \InvalidArgumentException('TrasladoTipoCmbCode must be at most 4 characters');
         }
     }
 

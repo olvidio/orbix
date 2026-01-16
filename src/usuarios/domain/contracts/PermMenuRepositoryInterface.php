@@ -17,7 +17,7 @@ use src\usuarios\domain\entity\PermMenu;
 interface PermMenuRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo PermMenu

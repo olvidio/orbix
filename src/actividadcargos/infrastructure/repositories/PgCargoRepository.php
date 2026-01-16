@@ -80,7 +80,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Cargo
@@ -172,6 +172,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         $aDatos = $Cargo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_cargo']);
             $update = "
 					cargo                    = :cargo,
 					orden_cargo              = :orden_cargo,
@@ -182,12 +183,10 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_cargo'] = $Cargo->getId_cargo();
             $campos = "(id_cargo,cargo,orden_cargo,sf,sv,tipo_cargo)";
             $valores = "(:id_cargo,:cargo,:orden_cargo,:sf,:sv,:tipo_cargo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

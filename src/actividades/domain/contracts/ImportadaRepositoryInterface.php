@@ -18,7 +18,7 @@ use src\actividades\domain\entity\Importada;
 interface ImportadaRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Importada

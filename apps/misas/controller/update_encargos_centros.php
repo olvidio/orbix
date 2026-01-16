@@ -3,10 +3,10 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use Illuminate\Http\JsonResponse;
-use misas\domain\entity\EncargoCtr;
-use misas\domain\EncargoCtrId;
-use misas\domain\repositories\EncargoCtrRepository;
 use Ramsey\Uuid\Uuid as RamseyUuid;
+use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
+use src\misas\domain\entity\EncargoCtr;
+use src\misas\domain\value_objects\EncargoCtrId;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -34,7 +34,7 @@ if ($Qque === 'nuevo') {
     $EncargoCtr->setId_enc($Qid_enc);
     if ($EncargoCtrRepository->Guardar($EncargoCtr) === FALSE) {
         $error_txt .= $EncargoCtrRepository->getErrorTxt();
-    }  
+    }
 }
 
 if ($Qque === 'modificar') {
@@ -49,7 +49,7 @@ if ($Qque === 'modificar') {
 
     if ($EncargoCtrRepository->Guardar($EncargoCtr) === FALSE) {
         $error_txt .= $EncargoCtrRepository->getErrorTxt();
-    }  
+    }
 }
 
 if ($Qque === 'borrar') {
@@ -58,7 +58,7 @@ if ($Qque === 'borrar') {
     $EncargoCtr = $EncargoCtrRepository->findById($Uid_item);
     if ($EncargoCtrRepository->Eliminar($EncargoCtr) === FALSE) {
         $error_txt .= $EncargoCtrRepository->getErrorTxt();
-    }  
+    }
 }
 
 if (empty($error_txt)) {

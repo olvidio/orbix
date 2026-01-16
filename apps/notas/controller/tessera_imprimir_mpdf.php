@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 
 /**
@@ -232,7 +232,7 @@ $rowEmpty = [
         $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
         // Asignaturas cursadas:
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $aWhere = [];
         $aOperador = [];
         $aWhere['id_nom'] = $id_nom;

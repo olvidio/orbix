@@ -33,7 +33,7 @@ interface TipoDeActividadRepositoryInterface
     public function getSfsvPosibles($aText): array;
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TipoDeActividad

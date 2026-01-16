@@ -17,7 +17,7 @@ use src\usuarios\domain\entity\Local;
 interface LocalRepositoryInterface
 {
     public function getArrayLocales(): array;
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Local

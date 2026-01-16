@@ -3,7 +3,7 @@
 namespace Tests\factories\notas;
 
 use Faker\Factory;
-use notas\model\PersonaNota;
+use src\notas\domain\entity\PersonaNota;
 use web\DateTimeLocal;
 
 class NotasFactory
@@ -19,6 +19,14 @@ class NotasFactory
     {
         $this->dl = $dl;
         return $this->crear_PersonaNotas($id_nom);
+    }
+
+    public function getJson_certificados() {
+        $certificados = [
+            ["estado" => "guardado", "certificado" => "H 459/25"],
+            ["estado" => "guardado", "certificado" => "H 23/21"],
+        ];
+        return json_encode($certificados);
     }
 
     public function crear_PersonaNotas($id_nom): array
@@ -70,20 +78,20 @@ class NotasFactory
             $nota_max = 10;
 
             $oPersonaNota = new PersonaNota();
-            $oPersonaNota->setIdNom($id_nom);
-            $oPersonaNota->setIdNivel($id_nivel);
-            $oPersonaNota->setIdAsignatura($id_asignatura);
-            $oPersonaNota->setIdSituacion($id_situacion);
-            $oPersonaNota->setActa($acta);
-            $oPersonaNota->setFActa($oFActa);
-            $oPersonaNota->setTipoActa($tipo_acta);
+            $oPersonaNota->setId_nom($id_nom);
+            $oPersonaNota->setId_nivel($id_nivel);
+            $oPersonaNota->setIdAsignaturaVo($id_asignatura);
+            $oPersonaNota->setIdSituacionVo($id_situacion);
+            $oPersonaNota->setActaVo($acta);
+            $oPersonaNota->setF_acta($oFActa);
+            $oPersonaNota->setTipoActaVo($tipo_acta);
             $oPersonaNota->setPreceptor($preceptor);
-            $oPersonaNota->setIdPreceptor($id_preceptor);
-            $oPersonaNota->setDetalle($detalle);
-            $oPersonaNota->setEpoca($epoca);
-            $oPersonaNota->setIdActiv($id_activ);
-            $oPersonaNota->setNotaNum($nota_num);
-            $oPersonaNota->setNotaMax($nota_max);
+            $oPersonaNota->setId_preceptor($id_preceptor);
+            $oPersonaNota->setDetalleVo($detalle);
+            $oPersonaNota->setEpocaVo($epoca);
+            $oPersonaNota->setIdActivVo($id_activ);
+            $oPersonaNota->setNotaNumVo($nota_num);
+            $oPersonaNota->setNotaMaxVo($nota_max);
 
             $cPersonaNotas[] = $oPersonaNota;
         }

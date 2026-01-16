@@ -35,7 +35,7 @@ if (!empty($Quuid_item)) {
     $AnuncioRepository = $GLOBALS['container']->get(AnuncioRepositoryInterface::class);
     $oAnuncio = $AnuncioRepository->findById($uuid_item);
     if (!empty($oAnuncio)) {
-        $oAnuncio->setTeliminado(new DateTimeLocal());
+        $oAnuncio->setT_eliminado(new DateTimeLocal());
         if ($AnuncioRepository->Guardar($oAnuncio) === FALSE) {
             $error_txt .= _("error al borrar el anuncio");
         }

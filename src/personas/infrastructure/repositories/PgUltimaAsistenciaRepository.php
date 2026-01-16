@@ -33,7 +33,7 @@ class PgUltimaAsistenciaRepository extends ClaseRepository implements UltimaAsis
         $this->setNomTabla('d_ultima_asistencia');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo UltimaAsistencia
@@ -130,6 +130,7 @@ class PgUltimaAsistenciaRepository extends ClaseRepository implements UltimaAsis
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_nom                   = :id_nom,
 					id_tipo_activ            = :id_tipo_activ,
@@ -140,12 +141,10 @@ class PgUltimaAsistenciaRepository extends ClaseRepository implements UltimaAsis
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $UltimaAsistencia->getId_item();
             $campos = "(id_item,id_nom,id_tipo_activ,f_ini,descripcion,cdr)";
             $valores = "(:id_item,:id_nom,:id_tipo_activ,:f_ini,:descripcion,:cdr)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

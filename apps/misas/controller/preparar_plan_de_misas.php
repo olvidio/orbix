@@ -4,7 +4,7 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use misas\domain\entity\EncargoDia;
+use src\misas\domain\value_objects\PlantillaConfig;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -34,7 +34,7 @@ $oFormP->setDesplPeriodosOpcion_sel('proxima_semana');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('d/m/Y');
+$shoy = $ohoy->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
@@ -49,11 +49,8 @@ $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-
-    if ($_SESSION['oConfig']->is_jefeCalendario()) {
-        $id_nom_jefe = '';
-    } else {
-        $id_nom_jefe = $oMiUsuario->getId_pauAsString();
+    if (!$_SESSION['oConfig']->is_jefeCalendario()) {
+        $id_nom_jefe = (int)$oMiUsuario->getCsvIdPauAsString();
         if (empty($id_nom_jefe)) {
             exit(_("No tiene permiso para ver esta página"));
         }
@@ -75,12 +72,12 @@ $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 
 $a_TiposPlantilla = array(
-    EncargoDia::PLANTILLA_SEMANAL_UNO=>'semanal una opción',
-    EncargoDia::PLANTILLA_DOMINGOS_UNO=>'semanal y domingos una opción',
-    EncargoDia::PLANTILLA_MENSUAL_UNO=>'mensual una opción',
-    EncargoDia::PLANTILLA_SEMANAL_TRES=>'semanal tres opciones',
-    EncargoDia::PLANTILLA_DOMINGOS_TRES=>'semanal y domingos tres opciones',
-    EncargoDia::PLANTILLA_MENSUAL_TRES=>'mensual tres opciones',
+    PlantillaConfig::PLANTILLA_SEMANAL_UNO => 'semanal una opción',
+    PlantillaConfig::PLANTILLA_DOMINGOS_UNO => 'semanal y domingos una opción',
+    PlantillaConfig::PLANTILLA_MENSUAL_UNO => 'mensual una opción',
+    PlantillaConfig::PLANTILLA_SEMANAL_TRES => 'semanal tres opciones',
+    PlantillaConfig::PLANTILLA_DOMINGOS_TRES => 'semanal y domingos tres opciones',
+    PlantillaConfig::PLANTILLA_MENSUAL_TRES => 'mensual tres opciones',
 );
 
 $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
@@ -92,7 +89,7 @@ if (count($aPref) > 0) {
     $ultima_plantilla = $oPreferencia->getPreferencia();
 } else {
     // valores por defecto
-    $ultima_plantilla=EncargoDia::PLANTILLA_SEMANAL_TRES;
+    $ultima_plantilla = PlantillaConfig::PLANTILLA_SEMANAL_TRES;
 }
 
 
@@ -123,7 +120,7 @@ $url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaPeriodo = new Hash();
 $oHashZonaPeriodo->setUrl($url_ver_cuadricula_zona);
 $oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
-$h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
+$h_cuadricula_zona = $oHashZonaPeriodo->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
@@ -133,7 +130,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_crear_nuevo_periodo' => $url_crear_nuevo_periodo,
     'h_nuevo_periodo' => $h_nuevo_periodo,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
-    'h_zona_periodo' => $h_zona_periodo,
+    'h_cuadricula_zona' => $h_cuadricula_zona,
 ];
 
 $oView = new ViewTwig('misas/controller');

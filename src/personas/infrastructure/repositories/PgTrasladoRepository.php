@@ -32,7 +32,7 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
         $this->setNomTabla('d_traslados');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Traslado
@@ -129,6 +129,7 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_nom                   = :id_nom,
 					f_traslado               = :f_traslado,
@@ -142,12 +143,10 @@ class PgTrasladoRepository extends ClaseRepository implements TrasladoRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $Traslado->getId_item();
             $campos = "(id_item,id_nom,f_traslado,tipo_cmb,id_ctr_origen,ctr_origen,id_ctr_destino,ctr_destino,observ)";
             $valores = "(:id_item,:id_nom,:f_traslado,:tipo_cmb,:id_ctr_origen,:ctr_origen,:id_ctr_destino,:ctr_destino,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

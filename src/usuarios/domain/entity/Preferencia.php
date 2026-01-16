@@ -20,12 +20,12 @@ class Preferencia
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getTipoPreferenciaVo(): TipoPreferencia
+    public function getTipoVo(): TipoPreferencia
     {
         return $this->tipo;
     }
 
-    public function setTipoPreferenciaVo(TipoPreferencia|string $tipo): void
+    public function setTipoVo(TipoPreferencia|string $tipo): void
     {
         $this->tipo = $tipo instanceof TipoPreferencia
             ? $tipo

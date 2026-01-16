@@ -19,7 +19,7 @@ use src\tablonanuncios\domain\value_objects\AnuncioId;
 interface AnuncioRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Certificado

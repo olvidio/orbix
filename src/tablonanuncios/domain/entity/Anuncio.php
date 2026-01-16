@@ -25,8 +25,8 @@ class Anuncio
     private TextoAnuncio $texto_anuncio;
     private ?Idioma $idioma;
     private Tablon $tablon;
-    private DateTimeLocal|NullDateTimeLocal $timestamp_anotado;
-    private DateTimeLocal|NullDateTimeLocal $timestamp_eliminado;
+    private DateTimeLocal|NullDateTimeLocal|null $t_anotado;
+    private DateTimeLocal|NullDateTimeLocal|null $t_eliminado;
     private Categoria $categoria;
 
     public function getUuid_item(): AnuncioId
@@ -34,9 +34,11 @@ class Anuncio
         return $this->uuid_item;
     }
 
-    public function setUuid_item(AnuncioId $uuid_item): void
+    public function setUuid_item(AnuncioId|string $uuid_item): void
     {
-        $this->uuid_item = $uuid_item;
+        $this->uuid_item = $uuid_item instanceof AnuncioId
+            ? $uuid_item
+            : AnuncioId::fromString($uuid_item);
     }
 
     public function getUsuarioCreadorVo(): UsuarioCreador
@@ -111,24 +113,24 @@ class Anuncio
             : Tablon::fromNullableString($tablon);
     }
 
-    public function getAnotado(): DateTimeLocal|NullDateTimeLocal
+    public function getT_anotado(): DateTimeLocal|NullDateTimeLocal
     {
-        return $this->timestamp_anotado ?? new NullDateTimeLocal();
+        return $this->t_anotado ?? new NullDateTimeLocal();
     }
 
-    public function setAnotado(DateTimeLocal|NullDateTimeLocal $timestamp_anotado): void
+    public function setT_anotado(DateTimeLocal|NullDateTimeLocal|null $t_anotado= null): void
     {
-        $this->timestamp_anotado = $timestamp_anotado;
+        $this->t_anotado = $t_anotado;
     }
 
-    public function getEliminado(): DateTimeLocal|NullDateTimeLocal
+    public function getT_eliminado(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->timestamp_eliminado ?? new NullDateTimeLocal();
+        return $this->t_eliminado ?? new NullDateTimeLocal();
     }
 
-    public function setEliminado(DateTimeLocal|NullDateTimeLocal $timestamp_eliminado): void
+    public function setT_eliminado(DateTimeLocal|NullDateTimeLocal|null $t_eliminado = null): void
     {
-        $this->timestamp_eliminado = $timestamp_eliminado;
+        $this->t_eliminado = $t_eliminado;
     }
 
     public function getCategoriaVo(): Categoria

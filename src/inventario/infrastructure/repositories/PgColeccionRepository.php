@@ -48,7 +48,7 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Coleccion
@@ -140,6 +140,7 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
         $aDatos = $Coleccion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_coleccion']);
             $update = "
                     nom_coleccion            = :nom_coleccion,
                     agrupar                  = :agrupar";
@@ -147,12 +148,10 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_coleccion'] = $Coleccion->getIdColeccionVo()?->value() ?? $Coleccion->getId_coleccion();
             $campos = "(id_coleccion,nom_coleccion,agrupar)";
             $valores = "(:id_coleccion,:nom_coleccion,:agrupar)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

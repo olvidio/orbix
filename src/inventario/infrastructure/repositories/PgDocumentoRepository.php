@@ -33,7 +33,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         $this->setNomTabla('i_documentos_dl');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Documento
@@ -178,6 +178,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_doc']);
             $update = "
                     id_tipo_doc              = :id_tipo_doc,
                     id_ubi                   = :id_ubi,
@@ -201,12 +202,10 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_doc'] = $Documento->getIdDocVo()->value();
             $campos = "(id_doc,id_tipo_doc,id_ubi,id_lugar,f_recibido,f_asignado,observ,observ_ctr,f_ult_comprobacion,en_busqueda,perdido,f_perdido,eliminado,f_eliminado,num_reg,num_ini,num_fin,identificador,num_ejemplares)";
             $valores = "(:id_doc,:id_tipo_doc,:id_ubi,:id_lugar,:f_recibido,:f_asignado,:observ,:observ_ctr,:f_ult_comprobacion,:en_busqueda,:perdido,:f_perdido,:eliminado,:f_eliminado,:num_reg,:num_ini,:num_fin,:identificador,:num_ejemplares)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

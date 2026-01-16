@@ -19,7 +19,7 @@ interface GrupMenuRepositoryInterface
 
     public function getArrayGrupMenus(): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo GrupMenu

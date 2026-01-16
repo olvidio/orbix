@@ -192,6 +192,7 @@ trait Hydratable
         foreach ($properties as $property) {
             $name = $property->getName();
             if ($name === 'id_auto') { continue; }
+            if ($name === 'id_schema') { continue; }
             $value = null;
             $isBoolean = false; // Flag para saber si el campo es booleano
 

@@ -160,7 +160,7 @@ class RoleTest extends myTest
             'role' => 'viewer',
             'sf' => false,
             'sv' => false,
-            'pau' => '',
+            'pau' => PauType::PAU_NONE,
             'dmz' => null
         ];
         $role->setAllAttributes($attributes);

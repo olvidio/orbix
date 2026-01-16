@@ -18,7 +18,7 @@ use src\encargossacd\domain\entity\Encargo;
 interface EncargoRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Encargo

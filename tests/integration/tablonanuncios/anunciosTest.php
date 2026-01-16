@@ -41,15 +41,15 @@ class anunciosTest extends myTest
 
             $Anuncio2 = $AnuncioRepository->findById($uuid_item);
 
-            $this->assertEquals($Anuncio->getUsuarioCreador(),$Anuncio2->getUsuarioCreador());
-            $this->assertEquals($Anuncio->getEsquemaEmisor(), $Anuncio2->getEsquemaEmisor());
-            $this->assertEquals($Anuncio->getEsquemaDestino(),$Anuncio2->getEsquemaDestino());
-            $this->assertEquals($Anuncio->getTextoAnuncio(),  $Anuncio2->getTextoAnuncio());
-            $this->assertEquals($Anuncio->getIdioma(),        $Anuncio2->getIdioma());
-            $this->assertEquals($Anuncio->getTablon(),        $Anuncio2->getTablon());
-            $this->assertEquals($Anuncio->getTanotado(),      $Anuncio2->getTanotado());
-            //$this->assertEquals($Anuncio->getTeliminado(),    $Anuncio2->getTeliminado());
-            $this->assertEquals($Anuncio->getCategoria(),     $Anuncio2->getCategoria());
+            $this->assertEquals($Anuncio->getUsuarioCreadorVo(),$Anuncio2->getUsuarioCreadorVo());
+            $this->assertEquals($Anuncio->getEsquemaEmisorVo(), $Anuncio2->getEsquemaEmisorVo());
+            $this->assertEquals($Anuncio->getEsquemaDestinoVo(),$Anuncio2->getEsquemaDestinoVo());
+            $this->assertEquals($Anuncio->getTextoAnuncioVo(),  $Anuncio2->getTextoAnuncioVo());
+            $this->assertEquals($Anuncio->getIdiomaVo(),        $Anuncio2->getIdiomaVo());
+            $this->assertEquals($Anuncio->getTablonVo(),        $Anuncio2->getTablonVo());
+            $this->assertEquals($Anuncio->getT_anotado(),      $Anuncio2->getT_anotado());
+            //$this->assertEquals($Anuncio->getT_eliminado(),    $Anuncio2->getT_eliminado());
+            $this->assertEquals($Anuncio->getCategoriaVo(),     $Anuncio2->getCategoriaVo());
 
             $AnuncioRepository->Eliminar($Anuncio2);
         }

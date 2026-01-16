@@ -32,7 +32,7 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
         $this->setNomTabla('aux_cross_usuarios_grupos');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo UsuarioGrupo
@@ -121,10 +121,10 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
 
         $aDatos = [];
         $aDatos['id_grupo'] = $UsuarioGrupo->getId_grupo();
+        $aDatos['id_usuario'] = $UsuarioGrupo->getId_usuario();
         array_walk($aDatos, 'core\poner_null');
 
         //INSERT
-        $aDatos['id_usuario'] = $UsuarioGrupo->getId_usuario();
         $campos = "(id_usuario,id_grupo)";
         $valores = "(:id_usuario,:id_grupo)";
         $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

@@ -7,14 +7,13 @@ use core\Condicion;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\ConverterDate;
+use core\ConverterJson;
 use core\DBConnection;
 use core\Set;
 use notas\model\EditarPersonaNota;
-use notas\model\PersonaNota;
 use PDO;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
-use src\notas\domain\entity\Nota;
-use src\notas\domain\entity\PersonaNotaDB;
+use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\PersonaNotaPk;
@@ -66,7 +65,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             $oPersonaNotaOtraRegionStgr->DBGuardar();
 
             // miro de guardarlo en su dl.
-            $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaDBRepository::class);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaRepository::class);
             $aWhere = ['id_nom' => $id_nom,
                 'id_nivel' => $oPersonaNotaOtraRegionStgr->getIdNivelVo()->value(),
                 'id_asignatura' => $oPersonaNotaOtraRegionStgr->getIdAsignaturaVo()->value(),
@@ -126,7 +125,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     public function deleteCertificado(?string $certificado)
     {
         $cPersonaNotasOtraRegionStgr = $this->getPersonaNotasConCertificado($certificado);
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaDBRepository::class);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaRepository::class);
         foreach ($cPersonaNotasOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
             $a_json_certificados = (array)$oPersonaNotaOtraRegionStgr->getJson_certificados();
             foreach ($a_json_certificados as $key => $json_certificado) {
@@ -198,7 +197,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         return $oPersonaNotaOtraRegionStgrSet->getTot();
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActaTribunalDl
@@ -261,33 +260,37 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
+            // para los json
+            $aDatos['json_certificados'] = (new ConverterJson($aDatos['json_certificados'], false))->fromPg();
+
             $a_pkey = array('id_nom' => $aDatos['id_nom'],
                 'id_nivel' => $aDatos['id_nivel'],
                 'tipo_acta' => $aDatos['tipo_acta']);
             $PersonaNota = $this->chooseNewObject($a_pkey);
-            $PersonaNota->setAllAttributes($aDatos);
+            //$PersonaNota->setAllAttributes($aDatos);
+            $PersonaNota = $PersonaNota::fromArray($aDatos);
             $PersonaNotaSet->add($PersonaNota);
         }
         return $PersonaNotaSet->getTot();
     }
 
-    protected function chooseNewObject($a_pkey): PersonaNotaDB|PersonaNotaOtraRegionStgr
+    protected function chooseNewObject($a_pkey): PersonaNota|PersonaNotaOtraRegionStgr
     {
         if ($this->sNomTabla === "e_notas_otra_region_stgr") {
-            $oPersonaNota = new PersonaNotaOtraRegionStgr($this->esquema_region_stgr, $a_pkey);
+            $oPersonaNota = new PersonaNotaOtraRegionStgr($a_pkey);
         } else {
-            $oPersonaNota = new PersonaNotaDB($a_pkey);
+            $oPersonaNota = new PersonaNota($a_pkey);
         }
         return $oPersonaNota;
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(PersonaNotaOtraRegionStgr $PersonaNotaDB): bool
+    public function Eliminar(PersonaNotaOtraRegionStgr $personaNotaOtraRegionStgr): bool
     {
-        $id_nom = $PersonaNotaDB->getId_nom();
-        $id_nivel = $PersonaNotaDB->getId_nivel();
-        $tipo_acta = $PersonaNotaDB->getTipoActaVo()->value();
+        $id_nom = $personaNotaOtraRegionStgr->getId_nom();
+        $id_nivel = $personaNotaOtraRegionStgr->getId_nivel();
+        $tipo_acta = $personaNotaOtraRegionStgr->getTipoActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_nom=$id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
@@ -298,21 +301,23 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(PersonaNotaOtraRegionStgr $PersonaNotaDB): bool
+    public function Guardar(PersonaNotaOtraRegionStgr $personaNotaOtraRegionStgr): bool
     {
-        $id_nom = $PersonaNotaDB->getId_nom();
-        $id_nivel = $PersonaNotaDB->getId_nivel();
-        $tipo_acta = $PersonaNotaDB->getTipoActaVo()->value();
+        $id_nom = $personaNotaOtraRegionStgr->getId_nom();
+        $id_nivel = $personaNotaOtraRegionStgr->getId_nivel();
+        $tipo_acta = $personaNotaOtraRegionStgr->getTipoActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom, $id_nivel, $tipo_acta);
 
-        $aDatos = $PersonaNotaDB->toArrayForDatabase([
+        $aDatos = $personaNotaOtraRegionStgr->toArrayForDatabase([
             'f_acta' => fn($v) => (new ConverterDate('date', $v))->toPg(),
+            'json_certificados' => fn($v) => (new ConverterJson($v, false))->toPg(false),
         ]);
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_nom']);
             $update = "
            	        id_nivel	             = :id_nivel,
 					id_asignatura            = :id_asignatura,
@@ -332,12 +337,10 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_nom'] = $PersonaNotaDB->getId_nom();
             $campos = "(id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max,tipo_acta,json_certificados)";
             $valores = "(:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max,:tipo_acta,:json_certificados)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

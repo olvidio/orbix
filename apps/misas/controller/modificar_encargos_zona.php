@@ -4,10 +4,10 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use misas\model\EncargosZona;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\misas\domain\EncargosZona;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\DateTimeLocal;

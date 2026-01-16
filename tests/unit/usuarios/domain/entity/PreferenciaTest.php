@@ -15,21 +15,21 @@ class PreferenciaTest extends myTest
     {
         parent::setUp();
         $this->preferencia = new Preferencia();
-        $this->preferencia->setTipoPreferenciaVo(new TipoPreferencia('theme'));
+        $this->preferencia->setTipoVo(new TipoPreferencia('theme'));
         $this->preferencia->setId_usuario(1);
     }
 
     public function test_get_tipo()
     {
-        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoPreferenciaVo());
+        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoVo());
         $this->assertEquals('theme', $this->preferencia->getTipoPreferenciaAsString());
     }
 
     public function test_set_and_get_tipo()
     {
         $tipoPreferencia = new TipoPreferencia('language');
-        $this->preferencia->setTipoPreferenciaVo($tipoPreferencia);
-        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoPreferenciaVo());
+        $this->preferencia->setTipoVo($tipoPreferencia);
+        $this->assertInstanceOf(TipoPreferencia::class, $this->preferencia->getTipoVo());
         $this->assertEquals('language', $this->preferencia->getTipoPreferenciaAsString());
     }
 

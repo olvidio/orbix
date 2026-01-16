@@ -32,7 +32,7 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $this->setNomTabla('m0_apps');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo App
@@ -123,16 +123,15 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $aDatos = $App->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_app']);
             $update = " nom=:nom";
             $sql = "UPDATE $nom_tabla SET  $update WHERE id_app=$id_app";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            $aDatos['id_app'] = $id_app;
             $campos = '(id_app,nom)';
             $valores = '(:id_app,:nom)';
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

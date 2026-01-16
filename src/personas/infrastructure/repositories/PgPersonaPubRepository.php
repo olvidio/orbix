@@ -36,7 +36,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     }
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo PersonaDl
@@ -137,6 +137,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_nom']);
             $update = "
 					id_tabla                 = :id_tabla,
 					dl                       = :dl,
@@ -164,12 +165,10 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_nom'] = $PersonaPub->getId_nom();
             $campos = "(id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento)";
             $valores = "(:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

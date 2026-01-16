@@ -30,7 +30,7 @@ interface TareaProcesoRepositoryInterface
     public function getFaseIndependiente(int $id_tipo_proceso): array;
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TareaProceso

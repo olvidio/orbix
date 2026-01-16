@@ -17,13 +17,13 @@
                 </th>
                 <th class=titulo_inv colspan=4>{{ "Orden"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplOrden.desplegable|raw }}
-                </th> 
+                </th>
             </tr>
             <tr>
                 <td>
                     {{ "Periodo"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                 </td>
-                {{ oFormP.getTd()|raw }}   
+                {{ oFormP.getTd()|raw }}
             </tr>
             <tr>
                 <td>
@@ -51,13 +51,12 @@
         let id_zona = $('#id_zona').val();
         if (id_zona) {
             let url = '{{ url_ver_cuadricula_zona }}';
-	        var zona=$('#sacd_zona').prop('checked');
-    	    var periodo=$('#periodo').val();
-    	    var empiezamax=$('#empiezamax').val();
-    	    var empiezamin=$('#empiezamin').val();
+            var periodo = $('#periodo').val();
+            var empiezamax = $('#empiezamax').val();
+            var empiezamin = $('#empiezamin').val();
             let orden = $('#orden').val();
 
-            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden + '&tipo_plantilla=p' + '{{ h_zona_plantilla|raw }}';
+            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden + '&tipo_plantilla=p' + '{{ h_cuadricula_zona|raw }}';
 
             $.ajax({
                 url: url,
@@ -78,10 +77,10 @@
         if (id_zona) {
             let url = '{{ url_crear_nuevo_periodo }}';
 
-    	    var periodo=$('#periodo').val();
-    	    var empiezamax=$('#empiezamax').val();
-    	    var empiezamin=$('#empiezamin').val();
-            let parametros = 'id_zona=' + id_zona + ' & tipoplantilla=' + tipoplantilla + '& periodo=' + periodo + '& empiezamax='+ empiezamax + '& empiezamin='+ empiezamin +'{{ h_nuevo_periodo|raw }}';
+            var periodo = $('#periodo').val();
+            var empiezamax = $('#empiezamax').val();
+            var empiezamin = $('#empiezamin').val();
+            let parametros = 'id_zona=' + id_zona + ' & tipoplantilla=' + tipoplantilla + '& periodo=' + periodo + '& empiezamax=' + empiezamax + '& empiezamin=' + empiezamin + '{{ h_nuevo_periodo|raw }}';
             $.ajax({
                 url: url,
                 type: 'post',
@@ -93,8 +92,17 @@
                 });
         }
     }
-	$(document).ready($('#periodo').change(function(){funjs_activar_fecha();fnjs_ver_cuadricula_zona();}));
-	$(document).ready($('#empiezamin').change(function(){funjs_activar_fecha();fnjs_ver_cuadricula_zona();}));
-	$(document).ready($('#empiezamax').change(function(){funjs_activar_fecha();fnjs_ver_cuadricula_zona();}));
+    $(document).ready($('#periodo').change(function () {
+        funjs_activar_fecha();
+        fnjs_ver_cuadricula_zona();
+    }));
+    $(document).ready($('#empiezamin').change(function () {
+        funjs_activar_fecha();
+        fnjs_ver_cuadricula_zona();
+    }));
+    $(document).ready($('#empiezamax').change(function () {
+        funjs_activar_fecha();
+        fnjs_ver_cuadricula_zona();
+    }));
     fnjs_ver_cuadricula_zona();
 </script>

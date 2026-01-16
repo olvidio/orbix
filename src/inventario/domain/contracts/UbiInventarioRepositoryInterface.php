@@ -20,7 +20,7 @@ interface UbiInventarioRepositoryInterface
     public function getUbisInventarioLugar($bLugar): array|false;
     public function getArrayUbisInventario():array|false;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo UbiInventario

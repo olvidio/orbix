@@ -22,7 +22,7 @@ interface TipoTelecoRepositoryInterface
     public function getArrayTiposTelecoUbi(): array;
     public function getArrayTiposTeleco(): array;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo TipoTeleco

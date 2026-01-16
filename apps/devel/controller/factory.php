@@ -943,7 +943,7 @@ $txt_pgRepositorio .= '
 ';
 
 $txt_repository .= "\n";
-$txt_repository .= '/* -------------------- GESTOR BASE ---------------------------------------- */';
+$txt_repository .= '/* --------------------  BASiC SEARCH ---------------------------------------- */';
 $txt_repository .= "\n";
 $txt_repository .= '
 	/**
@@ -964,7 +964,7 @@ $txt_repository .= "\n\t" . '
 	';
 
 $txt_interface .= "\n";
-$txt_interface .= '/* -------------------- GESTOR BASE ---------------------------------------- */';
+$txt_interface .= '/* --------------------  BASiC SEARCH ---------------------------------------- */';
 $txt_interface .= "\n";
 $txt_interface .= '
 	/**
@@ -982,7 +982,7 @@ $txt_interface .= "\n\t" . '
 	';
 
 $txt_pgRepositorio .= "\n";
-$txt_pgRepositorio .= '/* -------------------- GESTOR BASE ---------------------------------------- */';
+$txt_pgRepositorio .= '/* --------------------  BASiC SEARCH ---------------------------------------- */';
 $txt_pgRepositorio .= "\n";
 
 $txt_pgRepositorio .= '

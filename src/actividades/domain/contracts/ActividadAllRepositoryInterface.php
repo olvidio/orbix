@@ -29,7 +29,7 @@ interface ActividadAllRepositoryInterface
 
     public function getArrayIdsWithKeyFini($aWhere = [], $aOperators = []): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadAll

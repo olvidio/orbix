@@ -22,7 +22,7 @@ interface PersonaNotaOtraRegionStgrRepositoryInterface
 
     public function deleteCertificado(?string $certificado);
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     public function getPersonaNotas(array $aWhere = [], array $aOperators = []): array;
 

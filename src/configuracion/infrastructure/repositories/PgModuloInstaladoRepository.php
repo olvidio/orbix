@@ -51,7 +51,7 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ModuloInstalado
@@ -142,18 +142,17 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
         $aDatos = $ModuloInstalado->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_mod']);
             $update = "
 					active                   = :active";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_mod = $id_mod";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_mod'] = $ModuloInstalado->getIdModVo()->value();
             $campos = "(id_mod,active)";
             $valores = "(:id_mod,:active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

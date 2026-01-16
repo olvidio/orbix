@@ -32,7 +32,7 @@ class PgProfesorLatinRepository extends ClaseRepository implements ProfesorLatin
         $this->setNomTabla('d_profesor_latin');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ProfesorLatin
@@ -124,18 +124,17 @@ class PgProfesorLatinRepository extends ClaseRepository implements ProfesorLatin
         $aDatos = $ProfesorLatin->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_nom']);
             $update = "
 					latin                    = :latin";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_nom = $id_nom";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_nom'] = $ProfesorLatin->getId_nom();
             $campos = "(id_nom,latin)";
             $valores = "(:id_nom,:latin)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

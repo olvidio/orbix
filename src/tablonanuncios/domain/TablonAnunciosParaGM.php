@@ -21,11 +21,11 @@ class TablonAnunciosParaGM
         $aWhere = [
             'tablon' => $this->tablon,
             'esquema_destino' => ConfigGlobal::mi_region_dl(),
-            'teliminado' => 'x',
+            't_eliminado' => 'x',
         ];
         $aOperador = [
             'tablon' => '~*',
-            'teliminado' => 'IS NULL'
+            't_eliminado' => 'IS NULL'
         ];
         $cAnuncios = $AnuncioRepository->getAnuncios($aWhere, $aOperador);
         $a_valores = [];
@@ -39,18 +39,18 @@ class TablonAnunciosParaGM
             $texto_anuncio = $Anuncio->getTextoAnuncio();
             $idioma = $Anuncio->getIdiomaVo()->value();
             $tablon = $Anuncio->getTablon();
-            $tanotado = $Anuncio->getTanotado();
-            $teliminado = $Anuncio->getTeliminado();
+            $t_anotado = $Anuncio->getT_anotado();
+            $t_eliminado = $Anuncio->getT_eliminado();
             $categoria = $Anuncio->getCategoria();
 
             // sólo puede ver que està ocupado
             $a_valores[$i]['sel'] = $uuid_item;
             $a_valores[$i][1] = $esquema_emisor;
-            $a_valores[$i][2] = $tanotado->getFromLocal();
+            $a_valores[$i][2] = $t_anotado->getFromLocal();
             $a_valores[$i][3] = $texto_anuncio;
 
             // para poder ordenar por fecha
-            $a_FechaIni[$i] = $tanotado->getIso();
+            $a_FechaIni[$i] = $t_anotado->getIso();
         }
         if (!empty($a_valores)) {
             array_multisort(

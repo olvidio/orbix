@@ -59,7 +59,7 @@ class PgCambioUsuarioRepository extends ClaseRepository implements CambioUsuario
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CambioUsuario
@@ -151,6 +151,7 @@ class PgCambioUsuarioRepository extends ClaseRepository implements CambioUsuario
         $aDatos = $CambioUsuario->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_schema_cambio         = :id_schema_cambio,
 					id_item_cambio           = :id_item_cambio,
@@ -162,12 +163,10 @@ class PgCambioUsuarioRepository extends ClaseRepository implements CambioUsuario
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $CambioUsuario->getId_item();
             $campos = "(id_item,id_schema_cambio,id_item_cambio,id_usuario,sfsv,aviso_tipo,avisado)";
             $valores = "(:id_item,:id_schema_cambio,:id_item_cambio,:id_usuario,:sfsv,:aviso_tipo,:avisado)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

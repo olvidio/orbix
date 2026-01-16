@@ -255,7 +255,7 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
         return $oTareaProceso;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TareaProceso
@@ -366,6 +366,7 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_tipo_proceso          = :id_tipo_proceso,
 					id_fase                  = :id_fase,
@@ -377,12 +378,10 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $TareaProceso->getId_item();
             $campos = "(id_item,id_tipo_proceso,id_fase,id_tarea,status,id_of_responsable,json_fases_previas)";
             $valores = "(:id_item,:id_tipo_proceso,:id_fase,:id_tarea,:status,:id_of_responsable,:json_fases_previas)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

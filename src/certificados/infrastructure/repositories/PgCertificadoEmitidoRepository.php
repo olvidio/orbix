@@ -33,7 +33,7 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         $this->setNomTabla('e_certificados_rstgr');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Certificado
@@ -163,6 +163,7 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_nom                   = :id_nom,
 					nom                      = :nom,
@@ -178,12 +179,10 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_item'] = $Certificado->getId_item();
             $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,esquema_emisor,firmado,documento,f_enviado)";
             $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:esquema_emisor,:firmado,:documento,:f_enviado)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -212,18 +211,25 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        // para los bytea, sobre escribo los valores:
-        $sdocumento = '';
-        $stmt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);
-        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($aDatos !== false) {
-            $aDatos['documento'] = hex2bin($sdocumento ?? '');
+
+       $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($aDatos === false) {
+            return false;
+        }
+
+        // para los bytea: (resources)
+        $handle = $aDatos['documento'];
+        if (is_resource($handle)) {
+            $contents = stream_get_contents($handle);
+            fclose($handle);
+            $aDatos['documento'] = $contents;
         }
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado']))->fromPg();
             $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado']))->fromPg();
         }
+
         return $aDatos;
     }
 

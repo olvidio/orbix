@@ -95,7 +95,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TipoTeleco
@@ -186,6 +186,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         $aDatos = $TipoTeleco->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id']);
             $update = "
 					tipo_teleco              = :tipo_teleco,
 					nombre_teleco            = :nombre_teleco,
@@ -195,12 +196,10 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id'] = $TipoTeleco->getId();
             $campos = "(tipo_teleco,nombre_teleco,ubi,persona,id)";
             $valores = "(:tipo_teleco,:nombre_teleco,:ubi,:persona,:id)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

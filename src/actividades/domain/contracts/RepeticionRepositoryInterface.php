@@ -20,7 +20,7 @@ interface RepeticionRepositoryInterface
 
     public function getArrayRepeticion(): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Repeticion

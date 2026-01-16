@@ -7,6 +7,8 @@ use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBView;
 use core\GestorErrores;
+use DI\ContainerBuilder;
+use PDOException;
 use permisos\model\PermDl;
 use permisos\model\PermisosActividades;
 use permisos\model\PermisosActividadesTrue;
@@ -17,13 +19,6 @@ use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 
 class myTest extends TestCase
 {
-
-
-//use
-//include('apps/core/ServerConf.php');
-//include('apps/core/ConfigGlobal.php');
-//include('apps/core/DBConnection.php');
-
     public function setUp(): void
     {
         # Turn on error reporting
@@ -48,7 +43,7 @@ class myTest extends TestCase
         $idioma = '';
         $ordenApellidos = '';
         $id_schema = '';
-//si existe, registro la sesión con los permisos
+        //si existe, registro la sesión con los permisos
         if (!isset($_SESSION['session_auth'])) {
             $session_auth = ['id_usuario' => $id_usuario,
                 'sfsv' => $sfsv,
@@ -114,7 +109,7 @@ class myTest extends TestCase
         $user_sfsv = $_SESSION['session_auth']['sfsv'];
 
         $esquemav = $_SESSION['session_auth']['esquema'];
-        $esquema = \substr($esquemav, 0, -1);
+        $esquema = substr($esquemav, 0, -1);
         $esquemaf = $esquema . 'f';
         //común
         $oConfigDB->setDataBase('comun');
@@ -151,13 +146,13 @@ class myTest extends TestCase
         if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
             // Para sincronizar con listas Madrid (SQLSERVER)
             // No en el caso de cr (H-Hv)
-            if ((ConfigGlobal::mi_region() != ConfigGlobal::mi_delef()) && !isset($GLOBALS['oDBListas'])) {
+            if ((ConfigGlobal::mi_region() !== ConfigGlobal::mi_delef()) && !isset($GLOBALS['oDBListas'])) {
                 try {
                     $oConfigDB = new ConfigDB('listas');
                     $config = $oConfigDB->getEsquema('public');
                     $oConexion = new DBConnection($config);
                     $oDBListas = $oConexion->getPDOListas();
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                     //Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
                     echo "/*";
                     echo _("No puedo conectar con la base de datos de listas") . ':<br>';
@@ -168,8 +163,36 @@ class myTest extends TestCase
             }
         }
 
+        // 2) Contenedor DI (si no existe ya) y exponerlo globalmente
+        if (!isset($GLOBALS['container'])) {
+            $builder = new ContainerBuilder();
+
+            // Cargar rutas por módulo: cada módulo define sus rutas en src/<modulo>/config/routes.php
+            $dependenciesFiles = glob(__DIR__ . '/../src/*/config/dependencies.php');
+            if (is_array($dependenciesFiles)) {
+                foreach ($dependenciesFiles as $dependenciesFile) {
+                    $builder->addDefinitions($dependenciesFile);
+                }
+            }
+
+            // Cache de compilación en producción
+            if (class_exists(ConfigGlobal::class) && !ConfigGlobal::is_debug_mode()) {
+                $cacheDir = __DIR__ . '/../../var/cache/php-di';
+                if (!is_dir($cacheDir)) {
+                    if (!mkdir($cacheDir, 0775, true) && !is_dir($cacheDir)) {
+                        throw new \RuntimeException(sprintf('Directory "%s" was not created', $cacheDir));
+                    }
+                }
+                $builder->enableCompilation($cacheDir);
+                $builder->writeProxiesToFile(true, $cacheDir . '/proxies');
+            }
+
+            $GLOBALS['container'] = $builder->build();
+        }
+        $container = $GLOBALS['container'];
+
         /********* En el caso cr-stgr, refrescar las vistas **********************/
-        if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION['Refresh'])) {
+        if (!isset($_SESSION['Refresh']) && (ConfigGlobal::mi_region() === ConfigGlobal::mi_delef())) {
             try {
                 // para el esquema sv
                 $views = [
@@ -189,9 +212,9 @@ class myTest extends TestCase
                     'u_centros_dl',
                 ];
 
-                if ($user_sfsv == 1) {
+                if ($user_sfsv === 1) {
                     $schema_vf = $esquemav;
-                } elseif ($user_sfsv == 2) {
+                } elseif ($user_sfsv === 2) {
                     $schema_vf = $esquemaf;
                 }
 
@@ -214,9 +237,9 @@ class myTest extends TestCase
                     'd_cargos_activ_dl',
                 ];
 
-                if ($user_sfsv == 1) {
+                if ($user_sfsv === 1) {
                     $schema_vf = $esquemav;
-                } elseif ($user_sfsv == 2) {
+                } elseif ($user_sfsv === 2) {
                     $schema_vf = $esquemaf;
                 }
 
@@ -251,7 +274,7 @@ class myTest extends TestCase
                 }
 
                 $_SESSION['Refresh'] = 'ok';
-            } catch (\PDOException $e) {
+            } catch (PDOException $e) {
                 //Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
                 echo "/*";
                 echo _("No puedo refrescar las vistas") . ':<br>';
@@ -273,7 +296,7 @@ class myTest extends TestCase
                     $cPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $id_grupo));
                     foreach ($cPermMenu as $oPermMenu) {
                         // Or (inclusive or) 	Bits that are set in either $a or $b are set.
-                        $iperm_menu = $iperm_menu | $oPermMenu->getMenu_perm();
+                        $iperm_menu |= $oPermMenu->getMenu_perm();
                     }
                 }
                 //echo "perms: $iperm_menu<br>";
@@ -283,14 +306,15 @@ class myTest extends TestCase
             }
         }
 
-// Datos de configuración propios de cada dl.
+        // Datos de configuración propios de cada dl.
         $oConfig = new Config();
         $_SESSION['oConfig'] = $oConfig;
 
-// func_tablas. Es necesaria para permisos\PermisosActividades->carregar()...
-        include_once('apps/core/func_tablas.php');
+        // func_tablas. Es necesaria para permisos\PermisosActividades->carregar()...
+        // Usamos una ruta absoluta para asegurar que se encuentre el archivo sin importar desde dónde se ejecute el test
+        include_once(__DIR__ . '/../apps/core/func_tablas.php');
 
-// para mantener los permisos por actividades en una variable
+        // para mantener los permisos por actividades en una variable
         if (empty($_SESSION['oPermActividades'])) {
             if (ConfigGlobal::is_app_installed('procesos')) {
                 //$_SESSION['oPermActividades'] = new permisos\PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());

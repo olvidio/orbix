@@ -183,13 +183,13 @@ class Usuario
     }
 
 
-    public function has2fa(): bool
+    public function isHas_2fa(): bool
     {
         return $this->has_2fa;
     }
 
 
-    public function setHas2fa(bool $has_2fa): void
+    public function setHas_2fa(bool $has_2fa): void
     {
         $this->has_2fa = $has_2fa;
     }

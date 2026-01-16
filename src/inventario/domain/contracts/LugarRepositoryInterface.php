@@ -19,7 +19,7 @@ interface LugarRepositoryInterface
 
     public function getArrayLugares(int $id_ubi): array|false;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Lugar

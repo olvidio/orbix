@@ -1,12 +1,17 @@
 <?php
 
 
-use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\EncargoCtrRepositoryInterface;
-use misas\domain\repositories\EncargoDiaRepositoryInterface;
+use core\ConfigGlobal;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
+use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\entity\EncargoDia;
+use src\misas\application\services\InicialesSacdService;
 use src\ubis\domain\entity\Ubi;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\DateTimeLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -17,26 +22,26 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 $id_usuario = ConfigGlobal::mi_id_usuario();
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
-$id_sacd = $oMiUsuario->getId_pauAsString();
+$id_sacd = $oMiUsuario->getCsvIdPauAsString();
 $id_role = $oMiUsuario->getId_role();
-$GesZonas = new GestorZona();
-$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+$ZonasRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$cZonas = $ZonasRepository->getZonas(array('id_nom' => $id_sacd));
 $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 
 
-$RoleRepository = new RoleRepository();
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 //echo $aRoles[$id_role];
-$role='';
+$role = '';
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-    $role='sacd';
+    $role = 'sacd';
 }
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
-    $role='ctr';
+    $role = 'ctr';
 }
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
@@ -161,6 +166,7 @@ $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface
 $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
 $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
 $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
 foreach ($cEncargosCtr as $oEncargoCtr) {
     $id_enc = $oEncargoCtr->getId_enc();
     $oEncargo = $EncargoRepository->findBYId($id_enc);
@@ -193,7 +199,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 
     foreach ($date_range as $date) {
         $iniciales = ' -- ';
-        $status=EncargoDia::STATUS_COMUNICADO_CTR;
+        $status = EncargoDia::STATUS_COMUNICADO_CTR;
 
         $id_dia = $date->format('Y-m-d');
 
@@ -230,8 +236,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             if ($hora_fin != '') {
                 $dia_y_hora .= '-' . $hora_fin;
             }
-            $InicialesSacd = new InicialesSacd();
-            $iniciales = $InicialesSacd->iniciales($id_nom);
+            $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
             $color = '';
 
             $meta_dia["$id_dia"] = [
@@ -251,10 +256,9 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
         }
         echo '<TD>' . $iniciales . '</TD>';
 
-        if (($jefe_zona) || (($role=='ctr') && ($status==EncargoDia::STATUS_COMUNICADO_CTR)) || (($role=='sacd') && (($status==EncargoDia::STATUS_COMUNICADO_SACD) || ($status==EncargoDia::STATUS_COMUNICADO_CTR)))) {
-            echo '<TD>'.$iniciales.'</TD>';
-        }
-        else {
+        if (($jefe_zona) || (($role == 'ctr') && ($status == EncargoDia::STATUS_COMUNICADO_CTR)) || (($role == 'sacd') && (($status == EncargoDia::STATUS_COMUNICADO_SACD) || ($status == EncargoDia::STATUS_COMUNICADO_CTR)))) {
+            echo '<TD>' . $iniciales . '</TD>';
+        } else {
             echo '<TD> -- </TD>';
         }
 

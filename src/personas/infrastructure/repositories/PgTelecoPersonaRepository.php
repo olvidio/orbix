@@ -31,7 +31,7 @@ class PgTelecoPersonaRepository extends ClaseRepository implements TelecoPersona
         $this->setNomTabla('d_teleco_personas');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TelecoPersona
@@ -123,6 +123,7 @@ class PgTelecoPersonaRepository extends ClaseRepository implements TelecoPersona
         $aDatos = $TelecoPersona->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_nom                   = :id_nom,
 					id_tipo_teleco           = :id_tipo_teleco,
@@ -133,12 +134,10 @@ class PgTelecoPersonaRepository extends ClaseRepository implements TelecoPersona
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $TelecoPersona->getId_item();
             $campos = "(id_item,id_nom,id_tipo_teleco,num_teleco,observ,id_desc_teleco)";
             $valores = "(:id_item,:id_nom,:id_tipo_teleco,:num_teleco,:observ,:id_desc_teleco)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

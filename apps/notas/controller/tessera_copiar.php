@@ -16,7 +16,7 @@
  * Funciones más comunes de la aplicación
  */
 // INICIO Cabecera global de URL de controlador *********************************
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -29,7 +29,7 @@ require_once("apps/core/global_object.inc");
 $id_nom_org = (integer)filter_input(INPUT_POST, 'id_nom_org');
 $id_nom_dst = (integer)filter_input(INPUT_POST, 'id_nom_dst');
 
-$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
 $cPersonaOrgNotas = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom_org]);
 
 $error = '';

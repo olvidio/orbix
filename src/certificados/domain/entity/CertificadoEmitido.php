@@ -26,7 +26,7 @@ class CertificadoEmitido
 
     private ?string $certificado = null;
 
-    private DateTimeLocal|NullDateTimeLocal $f_certificado;
+    private DateTimeLocal|NullDateTimeLocal|null $f_certificado;
 
     private ?string $esquema_emisor = null;
 
@@ -34,7 +34,7 @@ class CertificadoEmitido
 
     private ?string $documento = null;
 
-    private DateTimeLocal|NullDateTimeLocal $f_enviado;
+    private DateTimeLocal|NullDateTimeLocal|null $f_enviado;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -114,7 +114,7 @@ class CertificadoEmitido
         return $this->f_certificado ?? new NullDateTimeLocal;
     }
 
-    public function setF_certificado(DateTimeLocal|NullDateTimeLocal $f_certificado): void
+    public function setF_certificado(DateTimeLocal|NullDateTimeLocal|null $f_certificado): void
     {
         $this->f_certificado = $f_certificado;
     }
@@ -160,7 +160,7 @@ class CertificadoEmitido
         return $this->f_enviado ?? new NullDateTimeLocal;
     }
 
-    public function setF_enviado(DateTimeLocal|NullDateTimeLocal $f_enviado): void
+    public function setF_enviado(DateTimeLocal|NullDateTimeLocal|null $f_enviado): void
     {
         $this->f_enviado = $f_enviado;
     }

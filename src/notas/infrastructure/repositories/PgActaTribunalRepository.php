@@ -74,7 +74,7 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
     }
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActaTribunalDl
@@ -166,6 +166,7 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
         $aDatos = $ActaTribunal->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					acta                     = :acta,
 					examinador               = :examinador,
@@ -174,12 +175,10 @@ class PgActaTribunalRepository extends ClaseRepository implements ActaTribunalRe
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $ActaTribunal->getId_item();
             $campos = "(acta,examinador,orden,id_item)";
             $valores = "(:acta,:examinador,:orden,:id_item)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

@@ -51,7 +51,7 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TipoTarifa
@@ -143,6 +143,7 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
         $aDatos = $TipoTarifa->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_tarifa']);
             $update = "
 					modo                     = :modo,
 					letra                    = :letra,
@@ -152,12 +153,10 @@ class PgTipoTarifaRepository extends ClaseRepository implements TipoTarifaReposi
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_tarifa'] = $TipoTarifa->getIdTarifaVo()->value();
             $campos = "(id_tarifa,modo,letra,sfsv,observ)";
             $valores = "(:id_tarifa,:modo,:letra,:sfsv,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

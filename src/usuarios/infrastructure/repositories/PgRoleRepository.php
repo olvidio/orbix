@@ -85,7 +85,7 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Role
@@ -177,6 +177,7 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
         $aDatos = $Role->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_role']);
             $update = "
 					role                     = :role,
 					sf                       = :sf,
@@ -187,12 +188,10 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_role'] = $Role->getId_role();
             $campos = "(id_role,role,sf,sv,pau,dmz)";
             $valores = "(:id_role,:role,:sf,:sv,:pau,:dmz)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

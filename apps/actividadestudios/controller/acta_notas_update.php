@@ -1,15 +1,13 @@
 <?php
 
 use notas\model\EditarPersonaNota;
-use notas\model\PersonaNota;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
-use src\notas\domain\entity\Nota;
-use src\notas\domain\entity\PersonaNotaDB;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
@@ -55,7 +53,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
     $i = 0;
     $msg_err = '';
     $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
     $ActividadASignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
     foreach ($cMatriculados as $oMatricula) {
         $i++;

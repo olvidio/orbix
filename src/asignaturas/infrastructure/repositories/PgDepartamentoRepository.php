@@ -49,7 +49,7 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Departamento
@@ -140,18 +140,17 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         $aDatos = $Departamento->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_departamento']);
             $update = "
                     departamento             = :departamento";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_departamento = $id_departamento";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_departamento'] = $Departamento->getIdDepartamentoVo()?->value();
             $campos = "(id_departamento,departamento)";
             $valores = "(:id_departamento,:departamento)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

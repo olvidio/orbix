@@ -33,7 +33,7 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
         $this->setNomTabla('web_preferencias');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Preferencia
@@ -105,7 +105,7 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
     public function Eliminar(Preferencia $Preferencia): bool
     {
         $id_usuario = $Preferencia->getId_usuario();
-        $tipo = $Preferencia->getTipoPreferenciaVo();
+        $tipo = $Preferencia->getTipoVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_usuario = $id_usuario AND tipo = '$tipo'";
@@ -118,13 +118,15 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
     public function Guardar(Preferencia $Preferencia): bool
     {
         $id_usuario = $Preferencia->getId_usuario();
-        $tipo = $Preferencia->getTipoPreferenciaVo();
+        $tipo = $Preferencia->getTipoVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_usuario, $tipo);
 
         $aDatos = $Preferencia->toArrayForDatabase();
         if ($bInsert === false) {
+            unset($aDatos['id_usuario']);
+            unset($aDatos['tipo']);
             //UPDATE
             $update = "
 					preferencia              = :preferencia
@@ -133,8 +135,6 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_usuario'] = $id_usuario;
-            $aDatos['tipo'] = $Preferencia->getTipoPreferenciaVo();
             $campos = "(tipo,preferencia,id_usuario)";
             $valores = "(:tipo,:preferencia,:id_usuario)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

@@ -8,15 +8,17 @@ use core\DBConnection;
 use RuntimeException;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaCertificadoRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\Acta;
-use src\notas\domain\entity\Nota;
-use src\notas\domain\entity\PersonaNotaCertificadoDBRepository;
-use src\notas\domain\entity\PersonaNotaDB;
+use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\NotaSituacion;
+use src\notas\domain\value_objects\PersonaNotaPk;
 use src\notas\domain\value_objects\TipoActa;
+use src\notas\infrastructure\repositories\PgPersonaNotaCertificadoRepository;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
@@ -33,17 +35,17 @@ class EditarPersonaNota
     public function __construct(PersonaNota $oPersonaNota)
     {
         $this->personaNota = $oPersonaNota;
-        $this->id_nom = $oPersonaNota->getIdNom();
-        $this->id_nivel = $oPersonaNota->getIdNivel();
-        $this->id_asignatura = $oPersonaNota->getIdAsignatura();
-        $this->tipo_acta = $oPersonaNota->getTipoActa();
+        $this->id_nom = $oPersonaNota->getId_nom();
+        $this->id_nivel = $oPersonaNota->getId_nivel();
+        $this->id_asignatura = $oPersonaNota->getId_asignatura();
+        $this->tipo_acta = $oPersonaNota->getTipo_acta();
     }
 
     public function eliminar(): void
     {
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
         if (!empty($this->id_nom) && !empty($this->id_asignatura) && !empty($this->id_nivel) && !empty($this->tipo_acta)) {
-            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
             $oPersonaNotaDB = $PersonaNotaDBRepository->findById($this->id_nom, $this->id_nivel, $this->tipo_acta);
             if ($PersonaNotaDBRepository->Eliminar($oPersonaNotaDB) === false) {
                 $err = end($_SESSION['errores']);
@@ -54,60 +56,59 @@ class EditarPersonaNota
 
     public function nuevoSolamenteDl(): array
     {
-        $a_ObjetosPersonaNota = $this->getObjetosPersonaNota((array)$this->getDatosRegionStgr(), $this->getId_schema_persona());
-        unset($a_ObjetosPersonaNota['nota_real']);
+        $a_ReposPersonaNota = $this->getReposPersonaNota((array)$this->getDatosRegionStgr(), $this->getId_schema_persona());
+        unset($a_ReposPersonaNota['nota_real']);
 
-        return $this->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+        return $this->crear_nueva_personaNota_para_cada_objeto_del_array($a_ReposPersonaNota);
     }
 
     public function nuevo(): array
     {
-        $a_ObjetosPersonaNota = $this->getObjetosPersonaNota((array)$this->getDatosRegionStgr(), $this->getId_schema_persona());
+        $a_ReposPersonaNota = $this->getReposPersonaNota((array)$this->getDatosRegionStgr(), $this->getId_schema_persona());
 
-        return $this->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+        return $this->crear_nueva_personaNota_para_cada_objeto_del_array($a_ReposPersonaNota);
     }
 
     /**
      * Se separa de la función 'nuevo' para que los test puedan manipular los objetos
-     * @param array $a_ObjetosPersonaNota ['nota_real' => PersonaNotaDB, 'nota_certificado' => $oPersonaNotaCertificadoDB]
+     * @param array $a_ReposPersonaNota ['nota_real' => PersonaNotaDB, 'nota_certificado' => $oPersonaNotaCertificadoDB]
      * @param string $esquema_region_stgr únicamente para los traslados.
      * @return array
      */
-    public function crear_nueva_personaNota_para_cada_objeto_del_array(array $a_ObjetosPersonaNota, string $esquema_region_stgr = ''): array
+    public function crear_nueva_personaNota_para_cada_objeto_del_array(array $a_ReposPersonaNota, string $esquema_region_stgr = ''): array
     {
         $rta = [];
         $guardar = TRUE;
 
-        $id_nom = $this->personaNota->getIdNom();
-        $id_nivel = $this->personaNota->getIdNivel();
-        $id_asignatura = $this->personaNota->getIdAsignatura();
-        $id_situacion = $this->personaNota->getIdSituacion();
+        $id_nom = $this->personaNota->getId_nom();
+        $id_nivel = $this->personaNota->getId_nivel();
+        $id_asignatura = $this->personaNota->getIdAsignaturaVo()->value();
+        $id_situacion = $this->personaNota->getIdSituacionVo()->value();
         $acta = $this->personaNota->getActa();
-        $f_acta = $this->personaNota->getFActa();
-        $tipo_acta = $this->personaNota->getTipoActa();
+        $f_acta = $this->personaNota->getF_acta();
+        $tipo_acta = $this->personaNota->getTipoActaVo()?->value();
         $preceptor = $this->personaNota->isPreceptor();
-        $id_preceptor = $this->personaNota->getIdPreceptor();
+        $id_preceptor = $this->personaNota->getId_preceptor();
         $detalle = $this->personaNota->getDetalle();
         $epoca = $this->personaNota->getEpoca();
-        $id_activ = $this->personaNota->getIdActiv();
-        $nota_num = $this->personaNota->getNotaNum();
-        $nota_max = $this->personaNota->getNotaMax();
+        $id_activ = $this->personaNota->getId_activ();
+        $nota_num = $this->personaNota->getNotaNumVo()?->value();
+        $nota_max = $this->personaNota->getNotaMaxVo()?->value();
 
         // Pongo las notas en la dl de la persona, esperando al certificado
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
-        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->get(PersonaNotaOtraRegionStgrRepositoryInterface::class);
-        if (array_key_exists('nota_real', $a_ObjetosPersonaNota)) {
-            $oPersonaNotaDB = $a_ObjetosPersonaNota['nota_real'];
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        if (array_key_exists('repo_real', $a_ReposPersonaNota)) {
+            $PersonaNotaRepository = $a_ReposPersonaNota['repo_real'];
             // comprobar si existe, para lanzar un aviso y no hacer nada:
-            if ($oPersonaNotaDB instanceof PersonaNotaDB) {
+            if ($PersonaNotaRepository instanceof PersonaNotaDlRepositoryInterface) {
                 //$oDbl = $oPersonaNotaDB->getoDbl(); // asegurarme que estoy consultando en el mismo esquema
                 //$gesPersonaNota = new GestorPersonaNotaDlDB();
                 //$gesPersonaNota->setoDbl($oDbl);
-                $cPersonaNota = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_nivel' => $id_nivel]);
+                $cPersonaNota = $PersonaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_nivel' => $id_nivel]);
                 if (!empty($cPersonaNota)) {
                     $oPersonaNota2 = $cPersonaNota[0];
                     if (!is_null($oPersonaNota2)) {
-                        $err = _("Ya existe esta nota");
+                        $err = sprintf(_("Ya existe esta nota. id_nom: %s, id_asignatura: %s, acta: %s, tipo_acta: %s"), $oPersonaNota2->getId_nom(), $oPersonaNota2->getId_asignatura(), $oPersonaNota2->getActa(), $oPersonaNota2->getTipo_acta());
                         throw new RunTimeException($err);
                     }
                 }
@@ -116,11 +117,18 @@ class EditarPersonaNota
             // En el caso de traslados, si el tipo de acta es un certificado,
             if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
                 // puede ser que haga referencia a e_notas_dl o a e_notas_otra_region_stgr
-                if ($oPersonaNotaDB instanceof PersonaNotaOtraRegionStgr) {
+                if ($PersonaNotaRepository instanceof PersonaNotaOtraRegionStgrRepositoryInterface) {
                     // Si es certificado debería de ser de otra región, y por tanto no guardo nada
                     // en la tabla e_notas_otra_region_stgr de mi región stgr, ya lo tendrá la original
                     $guardar = FALSE;
                 }
+            }
+
+            if ($PersonaNotaRepository instanceof PersonaNotaDlRepositoryInterface) {
+                $oPersonaNotaDB = new PersonaNota();
+            }
+            if ($PersonaNotaRepository instanceof PersonaNotaOtraRegionStgrRepositoryInterface) {
+                $oPersonaNotaDB = new PersonaNotaOtraRegionStgr();
             }
 
             $oPersonaNotaDB->setId_nom($id_nom);
@@ -147,12 +155,12 @@ class EditarPersonaNota
             $oPersonaNotaDB->setNota_num($nota_num);
             $oPersonaNotaDB->setNota_max($nota_max);
             if ($guardar) {
-                //$PersonaNotaDBRepository->Guardar($oPersonaNotaDB) ;
-                $err = end($_SESSION['errores']);
-                throw new RunTimeException(sprintf(_("No se ha guardado la Nota: %s"), $err));
+                $PersonaNotaRepository->Guardar($oPersonaNotaDB);
             }
 
-            $rta['nota_real'] = $oPersonaNotaDB;
+            // lo recupero de la base de datos, porque falta el id_schema
+            $rta['nota_real'] = $PersonaNotaRepository->findByPk(PersonaNotaPk::fromArray(['id_nom' => $id_nom, 'id_nivel' => $id_nivel, 'tipo_acta' => $tipo_acta]));
+
             // si no está abierto, hay que abrir el dossier para esta persona
             // si es una persona de paso, No hace falta
             if ($id_nom > 0) {
@@ -164,7 +172,8 @@ class EditarPersonaNota
         }
 
         // Pongo las notas en la dl de la persona, esperando al certificado
-        if (array_key_exists('nota_certificado', $a_ObjetosPersonaNota)) {
+        if (array_key_exists('repo_certificado', $a_ReposPersonaNota)) {
+            $PersonaNotaRepository = $a_ReposPersonaNota['repo_certificado'];
             // en el caso de traslados, comprobar que no se tenga la nota real
             // buscarla en OtraRegionStgr (sobreescribo todos los valores por los originales)
             //???if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO && $oPersonaNotaDB instanceof PersonaNotaDB && !empty($esquema_region_stgr)) {
@@ -195,7 +204,16 @@ class EditarPersonaNota
                 $tipo_acta = TipoActa::FORMATO_CERTIFICADO;
             }
 
-            $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['nota_certificado'];
+            if ($PersonaNotaRepository instanceof PersonaNotaDlRepositoryInterface) {
+                $oPersonaNotaCertificadoDB = new PersonaNota();
+            }
+            if ($PersonaNotaRepository instanceof PersonaNotaCertificadoRepositoryInterface) {
+                $oPersonaNotaCertificadoDB = new PersonaNota();
+            }
+            if ($PersonaNotaRepository instanceof PersonaNotaOtraRegionStgrRepositoryInterface) {
+                $oPersonaNotaCertificadoDB = new PersonaNotaOtraRegionStgr();
+            }
+
             $oPersonaNotaCertificadoDB->setId_nom($id_nom);
             $oPersonaNotaCertificadoDB->setId_nivel($id_nivel);
             $oPersonaNotaCertificadoDB->setId_asignatura($id_asignatura);
@@ -211,15 +229,14 @@ class EditarPersonaNota
             $oPersonaNotaCertificadoDB->setNota_num($nota_num);
             $oPersonaNotaCertificadoDB->setNota_max($nota_max);
 
-            if ($oPersonaNotaCertificadoDB->DBGuardar() === false) {
-                throw new RunTimeException(_("hay un error, no se ha guardado. Nota Certificado"));
-            }
+            $PersonaNotaRepository->Guardar($oPersonaNotaCertificadoDB);
 
             // borrar la original (asegurarme que se ha guardado lo anterior)
             if (!empty($personaNotaOriginal)) {
-                $personaNotaOriginal->DBEliminar();
+                $PersonaNotaRepository->Eliminar($personaNotaOriginal);
             }
-            $rta['nota_certificado'] = $oPersonaNotaCertificadoDB;
+            // lo recupero de la base de datos, porque falta el id_schema
+            $rta['nota_certificado'] = $PersonaNotaRepository->findByPk(PersonaNotaPk::fromArray(['id_nom' => $id_nom, 'id_nivel' => $id_nivel, 'tipo_acta' => $tipo_acta]));
         }
 
         return $rta;
@@ -227,7 +244,7 @@ class EditarPersonaNota
 
     public function editar(int $id_asignatura_real): array
     {
-        $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
+        $a_ObjetosPersonaNota = $this->getReposPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
 
         return $this->editar_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $id_asignatura_real);
     }
@@ -236,77 +253,96 @@ class EditarPersonaNota
     {
         $rta = [];
 
-        $id_nom = $this->personaNota->getIdNom();
-        $id_nivel = $this->personaNota->getIdNivel();
-        $id_asignatura = $this->personaNota->getIdAsignatura();
-        $id_situacion = $this->personaNota->getIdSituacion();
+        $id_nom = $this->personaNota->getId_nom();
+        $id_nivel = $this->personaNota->getId_nivel();
+        $id_asignatura = $this->personaNota->getIdAsignaturaVo()->value();
+        $id_situacion = $this->personaNota->getIdSituacionVo()->value();
         $acta = $this->personaNota->getActa();
-        $f_acta = $this->personaNota->getFActa();
-        $tipo_acta = $this->personaNota->getTipoActa();
+        $f_acta = $this->personaNota->getF_acta();
+        $tipo_acta = $this->personaNota->getTipoActavo()?->value();
         $preceptor = $this->personaNota->isPreceptor();
-        $id_preceptor = $this->personaNota->getIdPreceptor();
+        $id_preceptor = $this->personaNota->getId_preceptor();
         $detalle = $this->personaNota->getDetalle();
         $epoca = $this->personaNota->getEpoca();
-        $id_activ = $this->personaNota->getIdActiv();
-        $nota_num = $this->personaNota->getNotaNum();
-        $nota_max = $this->personaNota->getNotaMax();
+        $id_activ = $this->personaNota->getIdActivVo()->value();
+        $nota_num = $this->personaNota->getNotaNumVo()?->value();
+        $nota_max = $this->personaNota->getNotaMaxVo()?->value();
 
-        $oPersonaNotaDB = $a_ObjetosPersonaNota['nota_real'];
-        $oPersonaNotaDB->setId_nom($id_nom);
-        $oPersonaNotaDB->setId_nivel($id_nivel);
-        if (!empty($id_asignatura_real)) {
-            $oPersonaNotaDB->setId_asignatura($id_asignatura_real);
-        }
-
-        $oPersonaNotaDB->setId_asignatura($id_asignatura);
-        $oPersonaNotaDB->setId_situacion($id_situacion);
-        $oPersonaNotaDB->setF_acta($f_acta);
-        $oPersonaNotaDB->setTipo_acta($tipo_acta);
-        // comprobar valor del acta
-        if (!empty($acta)) {
-            if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO) {
-                $oPersonaNotaDB->setActa($acta);
+        if (array_key_exists('repo_real', $a_ObjetosPersonaNota)) {
+            $PersonaNotaRepository = $a_ObjetosPersonaNota['repo_real'];
+            if ($PersonaNotaRepository instanceof PersonaNotaDlRepositoryInterface) {
+                $oPersonaNotaDB = new PersonaNota();
             }
-            if ($tipo_acta === TipoActa::FORMATO_ACTA) {
-                $valor = Acta::inventarActa($acta, $f_acta);
-                $oPersonaNotaDB->setActa($valor);
+            if ($PersonaNotaRepository instanceof PersonaNotaCertificadoRepositoryInterface) {
+                $oPersonaNotaDB = new PersonaNota();
             }
-        }
-        if (empty($preceptor)) {
-            $oPersonaNotaDB->setPreceptor('');
-            $oPersonaNotaDB->setId_preceptor('');
-        } else {
-            $oPersonaNotaDB->setPreceptor($preceptor);
-            $oPersonaNotaDB->setId_preceptor($id_preceptor);
-        }
-        $oPersonaNotaDB->setDetalle($detalle);
-        $oPersonaNotaDB->setEpoca($epoca);
-        $oPersonaNotaDB->setId_activ($id_activ);
-        $oPersonaNotaDB->setNota_num($nota_num);
-        $oPersonaNotaDB->setNota_max($nota_max);
+            if ($PersonaNotaRepository instanceof PersonaNotaOtraRegionStgrRepositoryInterface) {
+                $oPersonaNotaDB = new PersonaNotaOtraRegionStgr();
+            }
 
-        if ($oPersonaNotaDB->DBGuardar() === false) {
-            $err = end($_SESSION['errores']);
-            throw new RunTimeException(sprintf(_("No se ha modificado la Nota: %s"), $err));
+            $oPersonaNotaDB->setId_nom($id_nom);
+            $oPersonaNotaDB->setId_nivel($id_nivel);
+            if (!empty($id_asignatura_real)) {
+                $oPersonaNotaDB->setId_asignatura($id_asignatura_real);
+            }
+
+            $oPersonaNotaDB->setId_asignatura($id_asignatura);
+            $oPersonaNotaDB->setId_situacion($id_situacion);
+            $oPersonaNotaDB->setF_acta($f_acta);
+            $oPersonaNotaDB->setTipo_acta($tipo_acta);
+            // comprobar valor del acta
+            if (!empty($acta)) {
+                if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO) {
+                    $oPersonaNotaDB->setActa($acta);
+                }
+                if ($tipo_acta === TipoActa::FORMATO_ACTA) {
+                    $valor = Acta::inventarActa($acta, $f_acta);
+                    $oPersonaNotaDB->setActa($valor);
+                }
+            }
+            if (empty($preceptor)) {
+                $oPersonaNotaDB->setPreceptor(false);
+                $oPersonaNotaDB->setId_preceptor(null);
+            } else {
+                $oPersonaNotaDB->setPreceptor($preceptor);
+                $oPersonaNotaDB->setId_preceptor($id_preceptor);
+            }
+            $oPersonaNotaDB->setDetalle($detalle);
+            $oPersonaNotaDB->setEpoca($epoca);
+            $oPersonaNotaDB->setId_activ($id_activ);
+            $oPersonaNotaDB->setNota_num($nota_num);
+            $oPersonaNotaDB->setNota_max($nota_max);
+
+            $PersonaNotaRepository->Guardar($oPersonaNotaDB);
+
+            // lo recupero de la base de datos, porque falta el id_schema
+            $rta['nota_real'] = $PersonaNotaRepository->findByPk(PersonaNotaPk::fromArray(['id_nom' => $id_nom, 'id_nivel' => $id_nivel, 'tipo_acta' => $tipo_acta]));
         }
-        $rta['nota_real'] = $oPersonaNotaDB;
 
         // Pongo las notas en la dl de la persona, esperando al certificado
-        if (array_key_exists('nota_certificado', $a_ObjetosPersonaNota)) {
+        if (array_key_exists('repo_certificado', $a_ObjetosPersonaNota)) {
             $new_detalle = empty($detalle) ? "$acta" : "$acta ($detalle)";
-            $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['nota_certificado'];
+            $PersonaNotaCertificadoRepository = $a_ObjetosPersonaNota['repo_certificado'];
+
+           if ($PersonaNotaCertificadoRepository instanceof PersonaNotaDlRepositoryInterface) {
+                $oPersonaNotaCertificadoDB = new PersonaNota();
+            }
+            if ($PersonaNotaCertificadoRepository instanceof PersonaNotaCertificadoRepositoryInterface) {
+                $oPersonaNotaCertificadoDB = new PersonaNota();
+            }
+            if ($PersonaNotaCertificadoRepository instanceof PersonaNotaOtraRegionStgrRepositoryInterface) {
+                $oPersonaNotaCertificadoDB = new PersonaNotaOtraRegionStgr();
+            }
 
             // comprobar que no existe con una situación distinta a la 'falta certificado
-            if ($oPersonaNotaCertificadoDB instanceof PersonaNotaCertificadoDBRepository) {
-                $oDbl = $oPersonaNotaCertificadoDB->getoDbl(); // asegurarme que estoy consultando en el mismo esquema
-                $gesPersonaNota = new GestorPersonaNotaDlDB();
-                $gesPersonaNota->setoDbl($oDbl);
+            if ($PersonaNotaCertificadoRepository instanceof PgPersonaNotaCertificadoRepository) {
+                $oDbl = $PersonaNotaCertificadoRepository->getoDbl(); // asegurarme que estoy consultando en el mismo esquema
                 $aWhere = ['id_nom' => $id_nom,
                     'id_nivel' => $id_nivel,
                     'id_situacion' => NotaSituacion::FALTA_CERTIFICADO,
                 ];
                 $aOperador = ['id_situacion' => '!='];
-                $cPersonaNota = $gesPersonaNota->getPersonaNotas($aWhere, $aOperador);
+                $cPersonaNota = $PersonaNotaCertificadoRepository->getPersonaNotas($aWhere, $aOperador);
                 if (!empty($cPersonaNota)) {
                     $oPersonaNota2 = $cPersonaNota[0];
                     if (!is_null($oPersonaNota2)) {
@@ -325,7 +361,7 @@ class EditarPersonaNota
             $oPersonaNotaCertificadoDB->setId_nom($id_nom);
             $oPersonaNotaCertificadoDB->setId_nivel($id_nivel);
             if (!empty($id_asignatura_real)) {
-                $oPersonaNotaDB->setId_asignatura($id_asignatura_real);
+                $oPersonaNotaCertificadoDB->setId_asignatura($id_asignatura_real);
             }
             $oPersonaNotaCertificadoDB->setId_asignatura($id_asignatura);
             $oPersonaNotaCertificadoDB->setId_situacion(NotaSituacion::FALTA_CERTIFICADO);
@@ -340,10 +376,10 @@ class EditarPersonaNota
             $oPersonaNotaCertificadoDB->setId_activ($id_activ);
             $oPersonaNotaCertificadoDB->setNota_num($nota_num);
             $oPersonaNotaCertificadoDB->setNota_max($nota_max);
-            if ($oPersonaNotaCertificadoDB->DBGuardar() === false) {
-                throw new RunTimeException(_("hay un error, no se ha guardado. Nota Certificado"));
-            }
-            $rta['nota_certificado'] = $oPersonaNotaCertificadoDB;
+
+            $PersonaNotaCertificadoRepository->Guardar($oPersonaNotaCertificadoDB);
+            // lo recupero de la base de datos, porque falta el id_schema
+            $rta['nota_certificado'] = $PersonaNotaCertificadoRepository->findByPk(PersonaNotaPk::fromArray(['id_nom' => $id_nom, 'id_nivel' => $id_nivel, 'tipo_acta' => TipoActa::FORMATO_CERTIFICADO]));
         }
 
         return $rta;
@@ -366,9 +402,9 @@ class EditarPersonaNota
 
     /**
      * Se lo paso por constructor para poder hacer test con otra información
-     * @return PersonaNotaDB[]
+     * @return PersonaNota[]
      */
-    public function getObjetosPersonaNota(array $a_mi_region_stgr, int $id_schema_persona): array
+    public function getReposPersonaNota(array $a_mi_region_stgr, int $id_schema_persona): array
     {
         /* Hace falta saber en que esquema está la persona, para poner la nota en la tabla del
          * esquema correspondiente.
@@ -402,7 +438,7 @@ class EditarPersonaNota
         $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
         if ($nombre_schema_persona === 'restov' || $nombre_schema_persona === 'restof') {
             // guardar en e_notas_otra_region_stgr
-            $rta['nota_real'] = $PersonaNotaOtraRegionStgrRepository;
+            $rta['repo_real'] = $PersonaNotaOtraRegionStgrRepository;
         } else {
             $a_reg = explode('-', $nombre_schema_persona);
             $new_dele = substr($a_reg[1], 0, -1); // quito la v o la f.
@@ -411,7 +447,7 @@ class EditarPersonaNota
             // para los traslados incluir el caso de que las dos tengan el mismo esquema_region_stgr
             if ($id_schema_persona === $mi_id_schema || $esquema_region_stgr === $datos_reg_destino['esquema_region_stgr']) {
                 // normal
-                $oPersonasNotaDB = new PersonaNotaDlDB();
+                $PersonasNotaDlRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
                 if ($esquema_region_stgr === $datos_reg_destino['esquema_region_stgr']) {
                     // Conectar con la tabla de la dl
                     $db = (ConfigGlobal::mi_sfsv() === 1) ? 'sv' : 'sf';
@@ -421,13 +457,13 @@ class EditarPersonaNota
                     $oConexion = new DBConnection($config);
                     $oDbl = $oConexion->getPDO();
 
-                    $oPersonasNotaDB->setoDbl($oDbl);
+                    $PersonasNotaDlRepository->setoDbl($oDbl);
                 }
-                $rta['nota_real'] = $oPersonasNotaDB;
+                $rta['repo_real'] = $PersonasNotaDlRepository;
             } else {
                 // guardar en e_notas_otra_region_stgr
-                $rta['nota_real'] = $PersonaNotaOtraRegionStgrRepository;
-                $rta['nota_certificado'] = new PersonaNotaCertificadoDBRepository($nombre_schema_persona);
+                $rta['repo_real'] = $PersonaNotaOtraRegionStgrRepository;
+                $rta['repo_certificado'] =  $GLOBALS['container']->make(PersonaNotaCertificadoRepositoryInterface::class, ['nombre_schema' => $nombre_schema_persona]);
             }
         }
 

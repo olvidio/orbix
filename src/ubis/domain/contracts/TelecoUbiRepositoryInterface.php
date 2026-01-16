@@ -17,7 +17,7 @@ use src\ubis\domain\entity\TelecoUbi;
 interface TelecoUbiRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     public function getTelecos(array $aWhere = [], array $aOperators = []): array|false;
 

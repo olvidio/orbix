@@ -85,7 +85,7 @@ class GrupoJefeZona
         $cUsuarios = $UsuarioRepository->getUsuarios($aWhere, $aOperador);
         $a_usuarios_sacd = [];
         foreach ($cUsuarios as $oUsuario) {
-            $id_nom = $oUsuario->getId_pauAsString();
+            $id_nom = $oUsuario->getCsvIdPauAsString();
             $id_usuario = $oUsuario->getId_usuario();
             $a_usuarios_sacd[$id_nom] = $id_usuario;
         }

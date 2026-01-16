@@ -1,8 +1,8 @@
 <?php
 
 use notas\model\EditarPersonaNota;
-use notas\model\PersonaNota;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\entity\PersonaNota;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 

@@ -10,7 +10,7 @@ final class IncCode
     {
         $value = trim($value);
         $this->validate($value);
-        $this->value = strtoupper($value);
+        $this->value = strtolower($value);
     }
 
     private function validate(string $value): void

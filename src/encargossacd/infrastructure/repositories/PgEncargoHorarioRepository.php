@@ -34,7 +34,7 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
         $this->setNomTabla('encargo_horario');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo EncargoHorario
@@ -137,6 +137,8 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item_h']);
+            unset($aDatos['id_enc']);
             $update = "
 					id_enc                    = :id_enc,
 					f_ini                    = :f_ini,
@@ -153,8 +155,6 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item_h'] = $id_item_h;
-            $aDatos['id_enc'] = $EncargoHorario->getId_enc();
             $campos = "(id_enc,id_item_h,f_ini,f_fin,dia_ref,dia_num,mas_menos,dia_inc,h_ini,h_fin,n_sacd,mes)";
             $valores = "(:id_enc,:id_item_h,:f_ini,:f_fin,:dia_ref,:dia_num,:mas_menos,:dia_inc,:h_ini,:h_fin,:n_sacd,:mes)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

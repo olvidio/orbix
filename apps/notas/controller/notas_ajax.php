@@ -6,8 +6,8 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
-use src\notas\domain\entity\PersonaNotaDB;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\ubis\application\services\DelegacionDropdown;
@@ -173,7 +173,7 @@ switch ($Qque) {
         $aWhere['id_nom'] = $Qid_nom;
         $aWhere['id_asignatura'] = 3000;
         $aOperador['id_asignatura'] = '>';
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $cAsignaturasOpSuperadas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
         $aOpSuperadas = [];
         foreach ($cAsignaturasOpSuperadas as $oAsignatura) {

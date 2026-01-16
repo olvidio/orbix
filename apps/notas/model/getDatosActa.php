@@ -3,7 +3,7 @@
 namespace notas\model;
 
 use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\TipoActa;
 
 class getDatosActa
@@ -22,7 +22,7 @@ class getDatosActa
         $aWhere['acta'] = $acta;
         $aWhere['tipo_acta'] = TipoActa::FORMATO_ACTA;
 
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         return $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
     }
 

@@ -10,7 +10,7 @@ final class SituacionCode
     {
         $value = trim($value);
         $this->validate($value);
-        $this->value = $value;
+        $this->value = strtoupper($value);
     }
 
     private function validate(string $value): void

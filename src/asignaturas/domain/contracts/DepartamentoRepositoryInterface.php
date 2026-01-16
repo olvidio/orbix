@@ -19,7 +19,7 @@ interface DepartamentoRepositoryInterface
 
     public function getArrayDepartamentos(): array;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Departamento

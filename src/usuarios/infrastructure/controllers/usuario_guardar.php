@@ -49,7 +49,7 @@ $oUsuario->setid_role($Qid_role);
 $oUsuario->setEmailVo(!empty($Qemail) ? new Email($Qemail) : null);
 $oUsuario->setNomUsuarioVo(!empty($Qnom_usuario) ? new NombreUsuario($Qnom_usuario) : null);
 $oUsuario->setCambio_password($Qcambio_password);
-$oUsuario->setHas2fa($Qhas_2fa);
+$oUsuario->setHas_2fa($Qhas_2fa);
 if (!empty($Qpassword)) {
     $oCrypt = new MyCrypt();
     $my_passwd = $oCrypt->encode($Qpassword);

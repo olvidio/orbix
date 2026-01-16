@@ -16,7 +16,7 @@ use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterfac
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -136,7 +136,7 @@ foreach ($cAlumnos as $oPersonaDl) {
                 }
 
                 //busco las asignaturas que ya están aprobadas y las pongo en un array.
-                $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+                $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
                 $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotasSuperadas($id_nom);
                 $a_aprobadas = [];
                 foreach ($cPersonaNotas as $oPersonaNota) {

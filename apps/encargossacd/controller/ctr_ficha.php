@@ -2,7 +2,9 @@
 
 use core\ViewTwig;
 use encargossacd\model\DesplCentros;
+use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\Desplegable;
@@ -27,7 +29,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
-$Qfiltro_ctr = (string)filter_input(INPUT_POST, 'filtro_ctr');
+$Qfiltro_ctr = (integer)filter_input(INPUT_POST, 'filtro_ctr');
 
 
 if (!empty($Qid_ubi)) {
@@ -44,7 +46,7 @@ if (!empty($Qid_ubi)) {
     $tipo_ctr = $oCentro->getTipo_ctr();
 
     if ($tipo_ubi === 'ctrsf') {
-        $Qfiltro_ctr = 2;
+        $Qfiltro_ctr = EncargoGrupo::CENTRO_SF;
     } else {
         switch ($tipo_ctr) {
             case 'a':
@@ -56,25 +58,25 @@ if (!empty($Qid_ubi)) {
             case 'nm':
             case 'sj':
             case 'sm':
-                $Qfiltro_ctr = 1;
+                $Qfiltro_ctr = EncargoGrupo::CENTRO_SV;
                 break;
             case 'ss':
-                $Qfiltro_ctr = 3;
+                $Qfiltro_ctr = EncargoGrupo::CENTRO_SSSC;
                 break;
             case 'igloc':
-                $Qfiltro_ctr = 4;
+                $Qfiltro_ctr = EncargoGrupo::IGL;
                 break;
             case 'cgioc':
             case 'oc':
-                $Qfiltro_ctr = 5;
+                $Qfiltro_ctr = EncargoGrupo::CGI;
                 break;
         }
     }
 }
 
-$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+$EncargoAplicationService = $GLOBALS['container']->get(EncargoAplicacionService::class);
 
-$opciones = $EncargoTipoRepository->getArraySeccion();
+$opciones = $EncargoAplicationService->getArraySeccion();
 $oDesplGrupoCtrs = new Desplegable();
 $oDesplGrupoCtrs->setNombre('filtro_ctr');
 $oDesplGrupoCtrs->setOpciones($opciones);

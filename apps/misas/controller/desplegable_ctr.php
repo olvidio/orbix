@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Http\JsonResponse;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -36,7 +36,7 @@ $cCentrosSv = $GesCentrosSv->getCentros($aWhere);
 $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
 $cCentros = array_merge($cCentrosSv, $cCentrosSf);
-        
+
 foreach ($cCentros as $oCentro) {
     $id_ctr = $oCentro->getId_ubi();
     $nombre_ctr = $oCentro->getNombre_ubi();

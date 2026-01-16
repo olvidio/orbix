@@ -49,7 +49,7 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
         }
         return $aOpciones;
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo MetaMenu
@@ -140,6 +140,7 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
         $aDatos = $MetaMenu->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_metamenu']);
             $update = "
 					id_mod                   = :id_mod,
 					url                      = :url,
@@ -150,12 +151,10 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
 
         } else {
             //INSERT
-            $aDatos['id_metamenu'] = $MetaMenu->getId_metamenu();
             $campos = "(id_metamenu,id_mod,url,parametros,descripcion)";
             $valores = "(:id_metamenu,:id_mod,:url,:parametros,:descripcion)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

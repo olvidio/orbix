@@ -19,7 +19,7 @@ interface TipoCasaRepositoryInterface
 
     public function getArrayTiposCasa(): array;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo TipoCasa

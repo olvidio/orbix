@@ -17,7 +17,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$id_nom_jefe = '';
+$id_nom_jefe = null;
 
 $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
@@ -27,11 +27,8 @@ $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-
-    if ($_SESSION['oConfig']->is_jefeCalendario()) {
-        $id_nom_jefe = '';
-    } else {
-        $id_nom_jefe = $oMiUsuario->getId_pauAsString();
+    if (!$_SESSION['oConfig']->is_jefeCalendario()) {
+        $id_nom_jefe = (int)$oMiUsuario->getCsvIdPauAsString();
         if (empty($id_nom_jefe)) {
             exit(_("No tiene permiso para ver esta página"));
         }
@@ -42,7 +39,8 @@ $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
 $aOpciones = $ZonaRepository->getArrayZonas($id_nom_jefe);
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
-$oDesplZonas->setBlanco(FALSE);$oDesplZonas->setNombre('id_zona');
+$oDesplZonas->setBlanco(FALSE);
+$oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_encargos_centros()');
 
 $url_ver_encargos_centros = 'apps/misas/controller/ver_encargos_centros.php';

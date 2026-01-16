@@ -24,7 +24,7 @@ interface NivelStgrRepositoryInterface
 
     public function getArrayNivelesStgr(): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo NivelStgr

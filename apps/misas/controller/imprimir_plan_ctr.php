@@ -2,11 +2,11 @@
 
 
 use core\ViewTwig;
-use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\EncargoCtrRepositoryInterface;
-use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
+use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
+use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\application\services\InicialesSacdService;
 use src\ubis\domain\entity\Ubi;
 use web\DateTimeLocal;
 
@@ -138,6 +138,7 @@ $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface
 $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
 $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+$InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
 foreach ($cEncargosCtr as $oEncargoCtr) {
     $id_enc = $oEncargoCtr->getId_enc();
     $oEncargo = $EncargoRepository->findById($id_enc);
@@ -199,8 +200,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             if ($hora_fin != '') {
                 $dia_y_hora .= '-' . $hora_fin;
             }
-            $InicialesSacd = new InicialesSacd();
-            $iniciales = $InicialesSacd->iniciales($id_nom);
+            $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
             $color = '';
 
             $meta_dia["$id_dia"] = [

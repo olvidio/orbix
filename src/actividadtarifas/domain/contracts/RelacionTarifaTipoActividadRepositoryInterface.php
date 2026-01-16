@@ -18,7 +18,7 @@ use src\actividadtarifas\domain\entity\RelacionTarifaTipoActividad;
 interface RelacionTarifaTipoActividadRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo RelacionTarifaTipoActividad

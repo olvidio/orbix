@@ -4,7 +4,8 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use misas\domain\entity\InicialesSacd;
+use src\misas\application\services\InicialesSacdService;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
@@ -29,7 +30,7 @@ $aPeriodo = array(
     'proximo_mes' => _("próximo mes"),
     'separador' => '---------',
     'otro' => _("otro")
-); 
+);
 
 $oDesplPeriodo = new Desplegable();
 $oDesplPeriodo->setOpciones($aPeriodo);
@@ -53,7 +54,7 @@ $oFormP->setDesplPeriodosOpcion_sel('esta_semana');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('d/m/Y');
+$shoy = $ohoy->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
@@ -68,14 +69,15 @@ $id_role = $oMiUsuario->getId_role();
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 //echo 'id_usuario: '.$id_usuario.'<br>';
-$id_sacd = $oMiUsuario->getId_pauAsString();
+$id_sacd = $oMiUsuario->getCsvIdPauAsString();
 //echo 'id_sacd: '.$id_sacd.'<br>';
 
 $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
-$GesZonas = new GestorZona();
-$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$cZonas = $ZonaRepository->getZonas(['id_nom' => $id_sacd]);
+$InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
 //echo 'count zonas: '.count($cZonas).'<br>';
 if (is_array($cZonas) && count($cZonas) > 0) {
     $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
@@ -84,27 +86,24 @@ if (is_array($cZonas) && count($cZonas) > 0) {
         $a_id_nom = $ZonaSacdRepository->getIdSacdsDeZona($id_zona);
         foreach ($a_id_nom as $id_nom) {
 //            echo $id_nom.'<br>';
-            $InicialesSacd = new InicialesSacd();
-            $sacd = $InicialesSacd->nombre_sacd($id_nom);
-            $iniciales = $InicialesSacd->iniciales($id_nom);
+            $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
+            $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
             $key = $id_nom . '#' . $iniciales;
             $a_sacd[$key] = $sacd ?? '?';
         }
     }
 } else { // No soy jefe de zona
     if (!is_null($id_sacd)) {
-        $InicialesSacd = new InicialesSacd();
 //        echo is_null($id_sacd).'='.($id_sacd=='').'=='.$id_sacd.'<br>';
-        $sacd = $InicialesSacd->nombre_sacd($id_sacd);
+        $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_sacd);
 //        echo is_null($id_sacd).'-->'.$sacd.'<br>';
-        $iniciales = $InicialesSacd->iniciales($id_sacd);
+        $iniciales = $InicialesSacdService->obtenerIniciales($id_sacd);
         $key = $id_sacd . '#' . $iniciales;
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
 
-if (($aRoles[$id_role]==='Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendario()))
-{
+if (($aRoles[$id_role] === 'Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendario())) {
 //    echo 'OFICIAL DL<br>';
     $aWhere = [];
     $aOperador = [];
@@ -113,13 +112,12 @@ if (($aRoles[$id_role]==='Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendar
     $aWhere['id_tabla'] = "'n','a'";
     $aOperador['id_tabla'] = 'IN';
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-    $GesPersonas = new GestorPersonaSacd();
-    $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+    $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+    $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
-        $InicialesSacd = new InicialesSacd();
-        $sacd = $InicialesSacd->nombre_sacd($id_nom);
-        $iniciales = $InicialesSacd->iniciales($id_nom);
+        $sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
+        $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
         $key = $id_nom . '#' . $iniciales;
         $a_sacd[$key] = $sacd ?? '?';
     }

@@ -19,7 +19,7 @@ interface ActaRepositoryInterface
 {
     public function getUltimaActa($any, $sRegion = '?'): int;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActaDl

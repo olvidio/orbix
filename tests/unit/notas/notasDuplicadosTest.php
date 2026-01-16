@@ -3,6 +3,7 @@
 namespace Tests\unit\notas;
 
 use notas\model\EditarPersonaNota;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\ubis\application\services\DelegacionUtils;
 use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
@@ -64,29 +65,29 @@ class notasDuplicadosTest extends myTest
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
-        $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
+        $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
+        $repoPersonaNota = $a_ObjetosPersonaNota['repo_real'];
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         $oPersonaNotaDB = $rta['nota_real'];
-        $oPersonaNotaDB->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
-        $oPersonaNotaDB->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        // probar de volver a crea la nota
+        // probar de volver a crear la nota
         // cambio algo:
-        $personaNota->setIdSituacion(20);
+        $personaNota->setIdSituacionVo(NotaSituacion::DESCONOCIDO);
         $oEditarPersonaNota2 = new EditarPersonaNota($personaNota);
         $datosRegionStgr2 = $oEditarPersonaNota2->getDatosRegionStgr();
 
-        $a_ObjetosPersonaNota2 = $oEditarPersonaNota2->getObjetosPersonaNota($datosRegionStgr2, $id_schema_persona);
+        $a_ObjetosPersonaNota2 = $oEditarPersonaNota2->getReposPersonaNota($datosRegionStgr2, $id_schema_persona);
+        $repoPersonaNota2 = $a_ObjetosPersonaNota2['repo_real'];
 
         try {
             $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota2);
-            $oPersonaNotaDB->DBEliminar();
+            $repoPersonaNota2->Eliminar($oPersonaNotaDB);
         } catch (\RuntimeException $e) {
             // no hacer nada
             //$msg_err .= "\r\n";
             //$msg_err .= $e->getMessage();
-            $oPersonaNotaDB->DBEliminar();
+            $repoPersonaNota->Eliminar($oPersonaNotaDB);
             $this->assertTrue(TRUE);
         }
 

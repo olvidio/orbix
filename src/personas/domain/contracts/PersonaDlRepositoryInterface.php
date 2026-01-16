@@ -40,7 +40,7 @@ interface PersonaDlRepositoryInterface
     public function getArrayPersonas(string $id_tabla = ''): array;
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo PersonaDl

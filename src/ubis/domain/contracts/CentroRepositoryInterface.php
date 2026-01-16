@@ -21,7 +21,7 @@ interface CentroRepositoryInterface
 
     public function getArrayCentros(string $condicion = ''): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Centro

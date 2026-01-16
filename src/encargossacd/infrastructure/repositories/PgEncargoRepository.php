@@ -33,7 +33,7 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
         $this->setNomTabla('encargos');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Encargo
@@ -125,9 +125,10 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
         $aDatos = $Encargo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_enc']);
             $update = "
 					id_tipo_enc              = :id_tipo_enc,
-					sf_sv                    = :sf_sv,
+					grupo_encargo            = :grupo_encargo,
 					id_ubi                   = :id_ubi,
 					id_zona                  = :id_zona,
 					desc_enc                 = :desc_enc,
@@ -140,9 +141,8 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_enc'] = $Encargo->getId_enc();
-            $campos = "(id_enc,id_tipo_enc,sf_sv,id_ubi,id_zona,desc_enc,idioma_enc,desc_lugar,observ,orden,prioridad)";
-            $valores = "(:id_enc,:id_tipo_enc,:sf_sv,:id_ubi,:id_zona,:desc_enc,:idioma_enc,:desc_lugar,:observ,:orden,:prioridad)";
+            $campos = "(id_enc,id_tipo_enc,grupo_encargo,id_ubi,id_zona,desc_enc,idioma_enc,desc_lugar,observ,orden,prioridad)";
+            $valores = "(:id_enc,:id_tipo_enc,:grupo_encargo,:id_ubi,:id_zona,:desc_enc,:idioma_enc,:desc_lugar,:observ,:orden,:prioridad)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

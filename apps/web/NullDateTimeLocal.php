@@ -48,7 +48,7 @@ class NullDateTimeLocal extends \DateTime
         return '';
     }
 
-    static public function createFromFormat($format, $datetime, \DateTimeZone $timezone = NULL): \DateTime|false
+    static public function createFromFormat($format, $datetime, ?\DateTimeZone $timezone = NULL): \DateTime|false
     {
         return '';
     }

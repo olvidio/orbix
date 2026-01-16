@@ -16,7 +16,7 @@ final class Creditos
     private function validate(float $value): void
     {
          // Rango permitido: 0.00 a 5.00
-        if ($value < 0 || $value > 5) {
+        if ($value < 0 || $value >= 5) {
             throw new \InvalidArgumentException('Credits must be between 0 and 5');
         }
 

@@ -32,7 +32,7 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
         $this->setNomTabla('aux_grupo_permmenu');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo PermMenu
@@ -124,6 +124,7 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
         $aDatos = $PermMenu->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_usuario               = :id_usuario,
 					menu_perm                = :menu_perm";
@@ -131,12 +132,10 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_item'] = $PermMenu->getId_item();
             $campos = "(id_item,id_usuario,menu_perm)";
             $valores = "(:id_item,:id_usuario,:menu_perm)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

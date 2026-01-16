@@ -26,7 +26,7 @@ interface AsignaturaRepositoryInterface
     public function getArrayAsignaturas(): array;
 
     public function getAsignaturasAsJson($aWhere = [], $aOperators = array()): string;
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Asignatura

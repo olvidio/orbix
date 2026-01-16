@@ -43,7 +43,7 @@ interface PersonaSacdRepositoryInterface
     public function getArraySacdyCheckBox(int $Qseleccion_sacd): array;
     public function getSacdsBySelect(int $Qseleccion_sacd): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo PersonaDl

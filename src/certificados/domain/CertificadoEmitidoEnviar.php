@@ -92,7 +92,7 @@ class CertificadoEmitidoEnviar
                 $texto_anuncio = sprintf(_("se ha recibido el certificado %s para %s."), $certificado, $nombre_apellidos);
                 $Anuncio = new Anuncio();
                 $uuid_itemVo = AnuncioId::random();
-                $tanotado = new DateTimeLocal();
+                $t_anotado = new DateTimeLocal();
 
                 $Anuncio->setUuid_item($uuid_itemVo);
                 $Anuncio->setUsuarioCreadorVo(ConfigGlobal::mi_usuario());
@@ -101,7 +101,7 @@ class CertificadoEmitidoEnviar
                 $Anuncio->setTextoAnuncioVo($texto_anuncio);
                 $Anuncio->setIdiomaVo('');
                 $Anuncio->setTablonVo('vest|Estudios');
-                $Anuncio->setAnotado($tanotado);
+                $Anuncio->setT_anotado($t_anotado);
                 $Anuncio->setCategoriaVo(Categoria::CAT_AVISO);
 
                 $AnuncioRepository = $GLOBALS['container']->get(AnuncioRepositoryInterface::class);

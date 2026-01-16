@@ -18,7 +18,7 @@ use src\actividadplazas\domain\entity\PlazaPeticion;
 interface PlazaPeticionRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo PlazaPeticion

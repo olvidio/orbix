@@ -20,7 +20,7 @@ interface CambioAnotadoRepositoryInterface
 
     public function setTabla(string $ubicacion): void;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CambioAnotado

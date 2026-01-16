@@ -61,7 +61,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo DescTeleco
@@ -153,6 +153,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         $aDatos = $DescTeleco->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					orden                    = :orden,
 					id_tipo_teleco           = :id_tipo_teleco,
@@ -163,12 +164,10 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_item'] = $DescTeleco->getId_item();
             $campos = "(id_item,orden,id_tipo_teleco,desc_teleco,ubi,persona)";
             $valores = "(:id_item,:orden,:id_tipo_teleco,:desc_teleco,:ubi,:persona)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

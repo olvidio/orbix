@@ -49,7 +49,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Local
@@ -120,7 +120,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 
     public function Eliminar(Local $Local): bool
     {
-        $id_locale = $Local->getIdLocaleVo();
+        $id_locale = $Local->getIdLocaleVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_locale = '$id_locale'";
@@ -133,7 +133,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
      */
     public function Guardar(Local $Local): bool
     {
-        $id_locale = $Local->getIdLocaleVo();
+        $id_locale = $Local->getIdLocaleVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_locale);
@@ -141,6 +141,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
         $aDatos = $Local->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_locale']);
             $update = "
 					nom_locale               = :nom_locale,
 					idioma                   = :idioma,
@@ -150,12 +151,10 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_locale'] = $Local->getIdLocaleVo();
             $campos = "(id_locale,nom_locale,idioma,nom_idioma,active)";
             $valores = "(:id_locale,:nom_locale,:idioma,:nom_idioma,:active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

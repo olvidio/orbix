@@ -34,7 +34,7 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         $this->setNomTabla('da_plazas');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadPlazas
@@ -144,6 +144,7 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_activ']);
             $update = "
 					id_dl                    = :id_dl,
 					plazas                   = :plazas,
@@ -154,12 +155,10 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_activ'] = $ActividadPlazas->getId_activ();
             $campos = "(id_activ,id_dl,plazas,cl,dl_tabla,cedidas)";
             $valores = "(:id_activ,:id_dl,:plazas,:cl,:dl_tabla,:cedidas)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

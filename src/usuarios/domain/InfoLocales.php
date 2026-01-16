@@ -34,7 +34,7 @@ class InfoLocales extends DatosInfoRepo
             $aWhere = array('nom_idioma' => $this->k_buscar);
             $aOperador = array('nom_idioma' => 'sin_acentos');
         }
-        $aWhere['_ordre'] = 'activo DESC,nom_idioma ASC';
+        $aWhere['_ordre'] = 'active DESC,nom_idioma ASC';
         $oLista = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $oLista->getLocales($aWhere, $aOperador);
 

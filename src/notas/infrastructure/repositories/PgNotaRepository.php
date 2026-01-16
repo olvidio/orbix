@@ -85,7 +85,7 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
         return $aNotas;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Nota
@@ -176,6 +176,7 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
         $aDatos = $Nota->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_situacion']);
             $update = "
 					descripcion              = :descripcion,
 					superada                 = :superada,
@@ -184,12 +185,10 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_situacion'] = $Nota->getIdSituacionVo()->value();
             $campos = "(id_situacion,descripcion,superada,breve)";
             $valores = "(:id_situacion,:descripcion,:superada,:breve)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

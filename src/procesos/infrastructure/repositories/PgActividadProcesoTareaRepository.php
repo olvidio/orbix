@@ -549,7 +549,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         return TRUE;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadProcesoTarea
@@ -641,6 +641,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $aDatos = $ActividadProcesoTarea->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_tipo_proceso          = :id_tipo_proceso,
 					id_activ                 = :id_activ,
@@ -652,12 +653,10 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $ActividadProcesoTarea->getId_item();
             $campos = "(id_item,id_tipo_proceso,id_activ,id_fase,id_tarea,completado,observ)";
             $valores = "(:id_item,:id_tipo_proceso,:id_activ,:id_fase,:id_tarea,:completado,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

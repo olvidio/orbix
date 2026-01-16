@@ -31,7 +31,7 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
         $this->setNomTabla('dap_plazas_peticion_dl');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo PlazaPeticion
@@ -125,6 +125,8 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
         $aDatos = $PlazaPeticion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_nom']);
+            unset($aDatos['id_activ']);
             $update = "
 					orden                    = :orden,
 					tipo                     = :tipo";
@@ -132,13 +134,10 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_nom'] = $id_nom;
-            $aDatos['id_activ'] = $id_activ;
             $campos = "(id_nom,id_activ,orden,tipo)";
             $valores = "(:id_nom,:id_activ,:orden,:tipo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

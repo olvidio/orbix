@@ -72,7 +72,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         return $aAsignaturasCa;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadAsignatura
@@ -184,6 +184,8 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_activ']);
+            unset($aDatos['id_asignatura']);
             $update = "
 					id_profesor              = :id_profesor,
 					avis_profesor            = :avis_profesor,
@@ -194,13 +196,10 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_activ'] = $ActividadAsignatura->getId_activ();
-            $aDatos['id_asignatura'] = $ActividadAsignatura->getIdAsignaturaVo()->value();
             $campos = "(id_activ,id_asignatura,id_profesor,avis_profesor,tipo,f_ini,f_fin)";
             $valores = "(:id_activ,:id_asignatura,:id_profesor,:avis_profesor,:tipo,:f_ini,:f_fin)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

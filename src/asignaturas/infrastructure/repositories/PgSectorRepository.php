@@ -69,7 +69,7 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Sector
@@ -160,6 +160,7 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         $aDatos = $Sector->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_sector']);
             $update = "
 					id_departamento          = :id_departamento,
 					sector                   = :sector";
@@ -167,12 +168,10 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_sector'] = $Sector->getIdSectorVo()?->value();
             $campos = "(id_sector,id_departamento,sector)";
             $valores = "(:id_sector,:id_departamento,:sector)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

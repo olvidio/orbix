@@ -18,7 +18,7 @@ use src\actividadessacd\domain\entity\ActividadSacdTexto;
 interface ActividadSacdTextoRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadSacdTexto

@@ -4,7 +4,7 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use misas\domain\entity\EncargoDia;
+use src\misas\domain\entity\EncargoDia;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
@@ -33,12 +33,12 @@ $oFormP->setDesplPeriodosOpcion_sel('proxima_semana');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('d/m/Y');
+$shoy = $ohoy->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
 
-$id_nom_jefe = '';
+$id_nom_jefe = null;
 
 $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
@@ -48,11 +48,8 @@ $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-
-    if ($_SESSION['oConfig']->is_jefeCalendario()) {
-        $id_nom_jefe = '';
-    } else {
-        $id_nom_jefe = $oMiUsuario->getId_pauAsString();
+    if (!$_SESSION['oConfig']->is_jefeCalendario()) {
+        $id_nom_jefe = (int)$oMiUsuario->getCsvIdPauAsString();
         if (empty($id_nom_jefe)) {
             exit(_("No tiene permiso para ver esta página"));
         }
@@ -68,9 +65,9 @@ $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 
 $a_Estados = array(
-    EncargoDia::STATUS_PROPUESTA=>'propuesta',
-    EncargoDia::STATUS_COMUNICADO_SACD=>'comunicado sacerdotes',
-    EncargoDia::STATUS_COMUNICADO_CTR=>'comunicado centros',
+    EncargoDia::STATUS_PROPUESTA => 'propuesta',
+    EncargoDia::STATUS_COMUNICADO_SACD => 'comunicado sacerdotes',
+    EncargoDia::STATUS_COMUNICADO_CTR => 'comunicado centros',
 );
 
 $oDesplEstados = new Desplegable();

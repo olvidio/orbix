@@ -53,7 +53,7 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Situacion
@@ -144,18 +144,17 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         $aDatos = $Situacion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['situacion']);
             $update = "
 					nombre_situacion         = :nombre_situacion";
             $sql = "UPDATE $nom_tabla SET $update WHERE situacion = '$situacion'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['situacion'] = $Situacion->getSituacionVo()->value();
             $campos = "(situacion,nombre_situacion)";
             $valores = "(:situacion,:nombre_situacion)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

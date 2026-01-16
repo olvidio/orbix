@@ -14,6 +14,9 @@ final class DbSchemaId
 
     private function validate(int $value): void
     {
+        if ($value === -1001) { // para el esquema resto
+            return;
+        }
         if ($value <= 0) {
             throw new \InvalidArgumentException('DbSchemaId must be a positive integer');
         }

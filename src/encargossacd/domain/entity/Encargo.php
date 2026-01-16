@@ -3,6 +3,7 @@
 namespace src\encargossacd\domain\entity;
 
 use src\encargossacd\domain\value_objects\EncargoDescText;
+use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\encargossacd\domain\value_objects\EncargoOrden;
 use src\encargossacd\domain\value_objects\EncargoPrioridad;
 use src\encargossacd\domain\value_objects\EncargoTipoId;
@@ -24,7 +25,7 @@ class Encargo
 
     private EncargoTipoId $id_tipo_enc;
 
-    private SfsvId $sf_sv;
+    private EncargoGrupo $grupo_encargo;
 
     private ?int $id_ubi = null;
 
@@ -85,31 +86,31 @@ class Encargo
 
 
     /**
-     * @deprecated Usar `getSfSvVo(): SfsvId` en su lugar.
+     * @deprecated Usar `getEncargoGrupoVo(): EncargoGrupo` en su lugar.
      */
-    public function getSf_sv(): int
+    public function getGrupo_encargo(): int
     {
-        return $this->sf_sv->value();
+        return $this->grupo_encargo->value();
     }
 
     /**
-     * @deprecated Usar `setSfSvVo(SfsvId $vo): void` en su lugar.
+     * @deprecated Usar `setEncargoGrupoVo(EncargoGrupo $vo): void` en su lugar.
      */
-    public function setSf_sv(int $isf_sv): void
+    public function setGrupo_encargo(int $isf_sv): void
     {
-        $this->sf_sv = new SfsvId($isf_sv);
+        $this->grupo_encargo = new EncargoGrupo($isf_sv);
     }
 
-    public function getSfSvVo(): SfsvId
+    public function getGrupoEncargoVo(): EncargoGrupo
     {
-        return $this->sf_sv;
+        return $this->grupo_encargo;
     }
 
-    public function setSfSvVo(SfsvId|int $vo): void
+    public function setGrupoEncargoVo(EncargoGrupo|int $vo): void
     {
-        $this->sf_sv = $vo instanceof SfsvId
+        $this->grupo_encargo = $vo instanceof EncargoGrupo
             ? $vo
-            : SfsvId::fromNullableInt($vo);
+            : EncargoGrupo::fromNullableInt($vo);
     }
 
 

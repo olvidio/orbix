@@ -20,7 +20,7 @@ interface ZonaGrupoRepositoryInterface
 
     public function getArrayZonaGrupos(string $sCondicion = ''): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ZonaGrupo

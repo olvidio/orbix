@@ -21,7 +21,7 @@ interface DossierRepositoryInterface
 
     //public function DossiersNotEmpty($pau = '', $id = ''): array|false;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Dossier

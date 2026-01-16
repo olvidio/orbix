@@ -18,7 +18,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 
@@ -71,15 +71,6 @@ if ($oPersona === null) {
     exit($msg_err);
 }
 $nom = $oPersona->getNombreApellidos();
-/* Ahora no hace falta el latín
-$nom_vernacula = $oPersona->getNom();
-$apellidos = $oPersona->getApellidos();
-$trato = $oPersona->getTrato();
-$oGesNomLatin = new personas\GestorNombreLatin();
-$nom_lat = $oGesNomLatin->getVernaculaLatin($nom_vernacula);
-$nom=$trato.$nom_vernacula.$apellidos;
-*/
-
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 
 // conversion 
@@ -253,7 +244,7 @@ $h = $oHash->linkSinVal();
     $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
     // Asignaturas cursadas:
-    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
     $aWhere = [];
     $aOperador = [];
     $aWhere['id_nom'] = $id_nom;

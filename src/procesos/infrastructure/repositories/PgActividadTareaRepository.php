@@ -61,7 +61,7 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadTarea
@@ -153,6 +153,7 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
         $aDatos = $ActividadTarea->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_tarea']);
             $update = "
 					id_fase                  = :id_fase,
 					desc_tarea               = :desc_tarea";
@@ -160,12 +161,10 @@ class PgActividadTareaRepository extends ClaseRepository implements ActividadTar
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_tarea'] = $ActividadTarea->getIdTareaVo()->value();
             $campos = "(id_fase,id_tarea,desc_tarea)";
             $valores = "(:id_fase,:id_tarea,:desc_tarea)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

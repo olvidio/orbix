@@ -49,7 +49,7 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo GrupMenu
@@ -141,6 +141,7 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         $aDatos = $GrupMenu->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_grupmenu']);
             $update = "
 					grup_menu                = :grup_menu,
 					orden                    = :orden";
@@ -148,12 +149,10 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_grupmenu'] = $GrupMenu->getId_grupmenu();
             $campos = "(id_grupmenu,grup_menu,orden)";
             $valores = "(:id_grupmenu,:grup_menu,:orden)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
         return true;
     }

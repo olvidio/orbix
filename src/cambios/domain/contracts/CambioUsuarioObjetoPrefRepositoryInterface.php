@@ -18,7 +18,7 @@ use src\cambios\domain\entity\CambioUsuarioObjetoPref;
 interface CambioUsuarioObjetoPrefRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CambioUsuarioObjetoPref

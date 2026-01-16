@@ -103,7 +103,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         }
         return $aOpciones;
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo NivelStgr
@@ -194,6 +194,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         $aDatos = $NivelStgr->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['nivel_stgr']);
             $update = "
 					desc_nivel               = :desc_nivel,
 					desc_breve               = :desc_breve,
@@ -203,12 +204,10 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
 
         } else {
             //INSERT
-            $aDatos['nivel_stgr'] = $NivelStgr->getNivel_stgr();
             $campos = "(nivel_stgr,desc_nivel,desc_breve,orden)";
             $valores = "(:nivel_stgr,:desc_nivel,:desc_breve,:orden)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

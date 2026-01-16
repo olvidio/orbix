@@ -33,7 +33,7 @@ class PgEncargoSacdObservRepository extends ClaseRepository implements EncargoSa
         $this->setNomTabla('encargo_sacd_observ');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo EncargoSacdObserv
@@ -125,6 +125,7 @@ class PgEncargoSacdObservRepository extends ClaseRepository implements EncargoSa
         $aDatos = $EncargoSacdObserv->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_nom                   = :id_nom,
 					observ                   = :observ";
@@ -132,12 +133,10 @@ class PgEncargoSacdObservRepository extends ClaseRepository implements EncargoSa
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $EncargoSacdObserv->getId_item();
             $campos = "(id_item,id_nom,observ)";
             $valores = "(:id_item,:id_nom,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

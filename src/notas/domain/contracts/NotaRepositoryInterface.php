@@ -22,7 +22,7 @@ interface NotaRepositoryInterface
     public function getArrayNotasSuperadas(): array;
     public function getArrayNotas(): array;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 /* -------------------- ENTIDAD --------------------------------------------- */
 

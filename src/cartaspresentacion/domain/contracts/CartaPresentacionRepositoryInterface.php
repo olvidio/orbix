@@ -18,7 +18,7 @@ use src\cartaspresentacion\domain\entity\CartaPresentacion;
 interface CartaPresentacionRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CartaPresentacion

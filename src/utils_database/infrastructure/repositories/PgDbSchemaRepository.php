@@ -84,7 +84,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $this->Guardar($oDbSchema);
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo DbSchema
@@ -174,6 +174,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
 
         $aDatos = $DbSchema->toArrayForDatabase();
         if ($bInsert === false) {
+            unset($aDatos['schema']);
             //UPDATE
             $update = "
 					id                       = :id";
@@ -181,7 +182,6 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['schema'] = $DbSchema->getSchemaVo()->value();
             $campos = "(schema,id)";
             $valores = "(:schema,:id)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

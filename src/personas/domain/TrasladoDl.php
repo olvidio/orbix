@@ -8,7 +8,6 @@ use core\ConverterDate;
 use core\DBConnection;
 use core\DBPropiedades;
 use notas\model\EditarPersonaNota;
-use notas\model\PersonaNota;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -19,9 +18,21 @@ use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
+use src\notas\domain\entity\PersonaNota;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\Traslado;
+use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorJuramentoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
 use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\DateTimeLocal;
@@ -674,11 +685,10 @@ class TrasladoDl
         $oDBorg = $this->conexionOrg();
         $oDBdst = $this->conexionDst();
 
-        $gestor = "GestorPersonaNotaDlDB";
-        $ges = new $gestor();
-        $ges->setoDbl($oDBorg);
-        $colection = $ges->getPersonaNotas(array('id_nom' => $this->iid_nom));
-        if (!empty($colection)) {
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
+        $PersonaNotaDBRepository->setoDbl($oDBorg);
+        $collection = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $this->iid_nom));
+        if (!empty($collection)) {
             $new_dl = DelegacionUtils::getDlFromSchema($this->snew_esquema);
             // Obtener datos de región STGR de la nueva dl mediante el repositorio
             $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
@@ -692,30 +702,33 @@ class TrasladoDl
             }
             $aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
             $id_schema_persona = $aSchema['id'];
-            foreach ($colection as $oPersonaNotaDB) {
+            foreach ($collection as $oPersonaNotaDB) {
+                /*
                 $oPersonaNota = new PersonaNota();
-                $oPersonaNota->setIdNom($oPersonaNotaDB->getId_nom());
-                $oPersonaNota->setIdNivel($oPersonaNotaDB->getIdNivelVo()->value());
-                $oPersonaNota->setIdAsignatura($oPersonaNotaDB->getIdAsignaturaVo()->value());
-                $oPersonaNota->setIdSituacion($oPersonaNotaDB->getIdSituacionVo()->value());
+                $oPersonaNota->setId_nom($oPersonaNotaDB->getId_nom());
+                $oPersonaNota->setId_nivel($oPersonaNotaDB->getId_nivel());
+                $oPersonaNota->setIdAsignaturaVo($oPersonaNotaDB->getIdAsignaturaVo()->value());
+                $oPersonaNota->setIdSituacionVo($oPersonaNotaDB->getIdSituacionVo()->value());
                 $oPersonaNota->setActaVo($oPersonaNotaDB->getActaVo()->value());
-                $oPersonaNota->setFActa($oPersonaNotaDB->getF_acta());
-                $oPersonaNota->setTipoActa($oPersonaNotaDB->getTipoActaVo()->value());
+                $oPersonaNota->setF_acta($oPersonaNotaDB->getF_acta());
+                $oPersonaNota->setTipoActaVo($oPersonaNotaDB->getTipoActaVo()->value());
                 $oPersonaNota->setPreceptor($oPersonaNotaDB->isPreceptor());
-                $oPersonaNota->setIdPreceptor($oPersonaNotaDB->getId_preceptor());
+                $oPersonaNota->setId_preceptor($oPersonaNotaDB->getId_preceptor());
                 $oPersonaNota->setDetalleVo($oPersonaNotaDB->getDetalleVo()->value());
                 $oPersonaNota->setEpocaVo($oPersonaNotaDB->getEpocaVo()->value());
-                $oPersonaNota->setIdActiv($oPersonaNotaDB->getIdActividadVo()->value());
-                $oPersonaNota->setNotaNum($oPersonaNotaDB->getNotaNumVo()->value());
-                $oPersonaNota->setNotaMax($oPersonaNotaDB->getNotaMaxVo()->value());
+                $oPersonaNota->setIdActivVo($oPersonaNotaDB->getIdActivVo()->value());
+                $oPersonaNota->setNotaNumVo($oPersonaNotaDB->getNotaNumVo()->value());
+                $oPersonaNota->setNotaMaxVo($oPersonaNotaDB->getNotaMaxVo()->value());
+                */
 
-                $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+                $oEditarPersonaNota = new EditarPersonaNota($oPersonaNotaDB);
                 $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
-                $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
+                $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $id_schema_persona);
                 $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $esquema_region_stgr);
 
                 //borrar la origen:
-                $oPersonaNotaDB->DBEliminar();
+                $PersonaNotaDBRepository->setoDbl($oDBorg);
+                $PersonaNotaDBRepository->Eliminar($oPersonaNotaDB);
             }
 
         }
@@ -735,9 +748,9 @@ class TrasladoDl
         // Los Out pasan a Dl si la dl destino es la que organiza.
         $AsistenteOutRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
         $AsistenteOutRepository->setoDbl($oDBorgE);
-        $colection = $AsistenteOutRepository->getAsistentesOut(array('id_nom' => $this->iid_nom));
+        $collection = $AsistenteOutRepository->getAsistentesOut(array('id_nom' => $this->iid_nom));
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        foreach ($colection as $oAsistenteOut) {
+        foreach ($collection as $oAsistenteOut) {
             $err = 0;
             $id_activ = $oAsistenteOut->getId_activ();
             $oActividad = $ActividadAllRepository->findById($id_activ);
@@ -761,16 +774,16 @@ class TrasladoDl
                 }
             }
             // borrar el original
-            if ($err == 0) {
+            if ($err === 0) {
                 $oAsistenteOut->DBEliminar();
             }
         }
         // Los Dl pasan a Out
         $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
         $AsistenteDlRepository->setoDbl($oDBorgE);
-        $colection = $AsistenteDlRepository->getAsistentes(['id_nom' => $this->iid_nom]);
+        $collection = $AsistenteDlRepository->getAsistentes(['id_nom' => $this->iid_nom]);
         $AsistenteOutRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
-        foreach ($colection as $oAsistenteDl) {
+        foreach ($collection as $oAsistenteDl) {
             $err = 0;
             $AsistenteOutRepository->setoDbl($oDBdstE);
             $oAsistenteOut = $this->copiarAsistencia($oAsistenteDl, $oAsistenteOut1);
@@ -785,7 +798,7 @@ class TrasladoDl
                 }
             }
             // borrar el origen
-            if ($err == 0) {
+            if ($err === 0) {
                 $oAsistenteDl->DBEliminar();
             }
         }
@@ -807,7 +820,7 @@ class TrasladoDl
         $oDBdst = $this->conexionDst();
         $DossierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
         $DossierRepository->setoDbl($oDBorg);
-        // Comprobar que estan apuntados.
+        // Comprobar que están apuntados.
         $cDossiers = $DossierRepository->DossiersNotEmpty('p', $this->iid_nom);
 
         $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
@@ -819,82 +832,70 @@ class TrasladoDl
             if (empty($class)) {
                 continue;
             }
-            $colection = [];
+            $collection = [];
             switch ($class) {
                 case 'TelecoPersonaDl':
-                    $gestor = "$app\\model\\entity\\GestorTelecoPersonaDl";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getTelecosPersona(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(TelecoPersonaDlRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getTelecosPersona(['id_nom' => $this->iid_nom]);
                     break;
                 case 'Profesor':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesoresStgr(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getProfesoresStgr(['id_nom' => $this->iid_nom]);
                     break;
                 case 'ProfesorAmpliacion':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesorAmpliaciones(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(ProfesorAmpliacionRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getProfesorAmpliaciones(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorCongreso':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesorCongresos(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(ProfesorCongresoRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getProfesorCongresos(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorDirector':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesoresDirectores(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getProfesoresDirectores(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorDocenciaStgr':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesorDocenciasStgr(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getProfesorDocenciasStgr(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorJuramento':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesorJuramentos(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(ProfesorJuramentoRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getProfesorJuramentos(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorLatin':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesoresLatin(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(ProfesorLatinRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getProfesoresLatin(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorPublicacion':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesorPublicaciones(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(ProfesorPublicacionRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getProfesorPublicaciones(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorTituloEst':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesorTitulosEst(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(ProfesorTituloEstRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getProfesorTitulosEst(array('id_nom' => $this->iid_nom));
                     break;
                 case 'PersonaNotaDl':
                     // Lo hago a parte.
                     break;
                 case 'MatriculaDl':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getMatriculas(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getMatriculas(array('id_nom' => $this->iid_nom));
                     break;
                 case 'Traslado':
-                    $gestor = "$app\\model\\entity\\Gestor$class";
-                    $ges = new $gestor();
-                    $ges->setoDbl($oDBorg);
-                    $colection = $ges->getTraslados(array('id_nom' => $this->iid_nom));
+                    $repo = $GLOBALS['container']->get(TrasladoRepositoryInterface::class);
+                    $repo->setoDbl($oDBorg);
+                    $collection = $repo->getTraslados(array('id_nom' => $this->iid_nom));
                     break;
                 case 'AsistenteDl':
                     // Lo hago a parte porque está en la base de datos exterior.
@@ -904,8 +905,8 @@ class TrasladoDl
                     // Está en la base de datos exterior.
                     break;
             }
-            if (!empty($colection)) {
-                foreach ($colection as $Objeto) {
+            if (!empty($collection)) {
+                foreach ($collection as $Objeto) {
                     $Objeto->setoDbl($oDBorg);
                     $Objeto->DBCarregar();
                     $NuevoObj = clone $Objeto;
@@ -1079,11 +1080,8 @@ class TrasladoDl
     {
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $cActividades = $ActividadAllRepository->getActividades(['id_activ' => $id_activ]);
-        if (!empty($cActividades) && count($cActividades) == 1) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
+
+        return (!empty($cActividades) && count($cActividades) === 1);
     }
 
     /**
@@ -1116,8 +1114,8 @@ class TrasladoDl
     {
         $oCertificadoRecibido = new CertificadoRecibido();
         $oCertificadoRecibido->setId_nom($Certificado->getId_nom());
-        $oCertificadoRecibido->setNomVo($Certificado->getNomVo()->value());
-        $oCertificadoRecibido->setIdiomaVo($Certificado->getIdiomaVo()->value());
+        $oCertificadoRecibido->setNom($Certificado->getNom());
+        $oCertificadoRecibido->setIdioma($Certificado->getIdioma());
         $oCertificadoRecibido->setDestino($Certificado->getDestino());
         $oCertificadoRecibido->setCertificado($Certificado->getCertificado());
         $oCertificadoRecibido->setF_certificado($Certificado->getF_certificado());

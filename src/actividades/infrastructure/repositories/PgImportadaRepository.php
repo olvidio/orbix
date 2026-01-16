@@ -33,7 +33,7 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
         $this->setNomTabla('a_importadas');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Importada
@@ -125,16 +125,15 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
         $aDatos = $Importada->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_activ']);
             /* No hacer nada, ya está en la lista */
             return true;
         } else {
             // INSERT
-            $aDatos['id_activ'] = $Importada->getId_activ();
             $campos = "(id_activ)";
             $valores = "(:id_activ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

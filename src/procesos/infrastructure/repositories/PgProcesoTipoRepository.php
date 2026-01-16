@@ -55,7 +55,7 @@ class PgProcesoTipoRepository extends ClaseRepository implements ProcesoTipoRepo
     }
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ProcesoTipo
@@ -147,6 +147,7 @@ class PgProcesoTipoRepository extends ClaseRepository implements ProcesoTipoRepo
         $aDatos = $ProcesoTipo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_tipo_proceso']);
             $update = "
 					nom_proceso              = :nom_proceso,
 					sfsv                     = :sfsv";
@@ -154,12 +155,10 @@ class PgProcesoTipoRepository extends ClaseRepository implements ProcesoTipoRepo
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_tipo_proceso'] = $ProcesoTipo->getIdTipoProcesoVo()->value();
             $campos = "(id_tipo_proceso,nom_proceso,sfsv)";
             $valores = "(:id_tipo_proceso,:nom_proceso,:sfsv)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

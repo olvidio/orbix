@@ -1,9 +1,9 @@
 <?php
 
 use core\ViewTwig;
-use misas\domain\repositories\EncargoDiaRepositoryInterface;
-use misas\model\EncargosZona;
 use src\encargossacd\domain\EncargoConstants;
+use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\EncargosZona;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\DateTimeLocal;

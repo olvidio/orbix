@@ -20,7 +20,7 @@ final class TipoCasaCode
         }
         // By UI config, argument length is 6 (see DatosCampo->setArgument(8))
         if (mb_strlen($value) > 8) {
-            throw new \InvalidArgumentException('TipoCasaCode must be at most 6 characters');
+            throw new \InvalidArgumentException('TipoCasaCode must be at most 8 characters');
         }
         // Allow letters, numbers, underscore and hyphen
         if (!preg_match('/^[\p{L}0-9_.\- ]+$/u', $value)) {

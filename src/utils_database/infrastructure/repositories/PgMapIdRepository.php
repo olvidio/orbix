@@ -33,7 +33,7 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         $this->setNomTabla('map_id');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo MapId
@@ -125,6 +125,8 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
 
         $aDatos = $MapId->toArrayForDatabase();
         if ($bInsert === false) {
+            unset($aDatos['objeto']);
+            unset($aDatos['id_resto']);
             //UPDATE
             $update = "
 					id_dl                    = :id_dl";
@@ -132,8 +134,6 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['objeto'] = $MapId->getObjetoVo()->value();
-            $aDatos['id_resto'] = $MapId->getIdRestoVo()->value();
             $campos = "(objeto,id_resto,id_dl)";
             $valores = "(:objeto,:id_resto,:id_dl)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

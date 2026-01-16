@@ -33,7 +33,7 @@ class PgIngresoRepository extends ClaseRepository implements IngresoRepositoryIn
         $this->setNomTabla('da_ingresos_dl');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Ingreso
@@ -125,6 +125,7 @@ class PgIngresoRepository extends ClaseRepository implements IngresoRepositoryIn
         $aDatos = $Ingreso->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_activ']);
             $update = "
 					ingresos                 = :ingresos,
 					num_asistentes           = :num_asistentes,
@@ -135,12 +136,10 @@ class PgIngresoRepository extends ClaseRepository implements IngresoRepositoryIn
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_activ'] = $id_activ;
             $campos = "(id_activ,ingresos,num_asistentes,ingresos_previstos,num_asistentes_previstos,observ)";
             $valores = "(:id_activ,:ingresos,:num_asistentes,:ingresos_previstos,:num_asistentes_previstos,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

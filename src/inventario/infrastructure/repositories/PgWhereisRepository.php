@@ -47,7 +47,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Whereis
@@ -139,6 +139,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         $aDatos = $Whereis->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item_whereis']);
             $update = "
                     id_item_egm              = :id_item_egm,
                     id_doc                   = :id_doc";
@@ -146,12 +147,10 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_item_whereis'] = $Whereis->getId_item_whereis();
             $campos = "(id_item_whereis,id_item_egm,id_doc)";
             $valores = "(:id_item_whereis,:id_item_egm,:id_doc)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

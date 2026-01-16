@@ -21,7 +21,7 @@ interface EgmRepositoryInterface
 
     public function getUltimoGrupo(int $id_equipaje): int;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Egm

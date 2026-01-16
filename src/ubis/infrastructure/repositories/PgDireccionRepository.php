@@ -69,7 +69,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
 
         return $aOpciones;
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Direccion
@@ -169,7 +169,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $bInsert = $this->isNew($id_direccion);
 
         $aDatos = $Direccion->toArrayForDatabase([
-            'plano_doc' => fn($v) => bin2hex($vo),
+            'plano_doc' => fn($v) => bin2hex($v),
             'f_direccion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
 
@@ -203,6 +203,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_direccion']);
             $update = "
                     direccion                = :direccion,
                     c_p                      = :c_p,
@@ -223,12 +224,10 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_direccion'] = $Direccion->getId_direccion();
             $campos = "(id_direccion,direccion,c_p,poblacion,provincia,a_p,pais,f_direccion,observ,cp_dcha,latitud,longitud,plano_doc,plano_extension,plano_nom,nom_sede)";
             $valores = "(:id_direccion,:direccion,:c_p,:poblacion,:provincia,:a_p,:pais,:f_direccion,:observ,:cp_dcha,:latitud,:longitud,:plano_doc,:plano_extension,:plano_nom,:nom_sede)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -257,17 +256,22 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_direccion = $id_direccion";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        // para los bytea, sobre escribo los valores:
-        $splano_doc = '';
-        $stmt->bindColumn('plano_doc', $splano_doc, PDO::PARAM_STR);
+
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($aDatos !== false) {
-            $aDatos['plano_doc'] = hex2bin($splano_doc ?? '');
+        if ($aDatos === false) {
+            return false;
+        }
+
+        // para los bytea: (resources)
+        $handle = $aDatos['plano_doc'];
+        if (is_resource($handle)) {
+            $contents = stream_get_contents($handle);
+            fclose($handle);
+            $aDatos['plano_doc'] = $contents;
         }
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== false) {
             $aDatos['f_direccion'] = (new ConverterDate('date', $aDatos['f_direccion']))->fromPg();
-        }
+
         return $aDatos;
     }
 

@@ -17,7 +17,7 @@ final class AsignaturaTipoId
         // Debe ser un entero positivo de 1 dígitos (tabla xa_tipo_asig)
         $esRangoNormal = ($value >= 1 && $value <= 9);
         if (!$esRangoNormal) {
-            throw new \InvalidArgumentException('AsignaturaTipoId must be a non-negative integer');
+            throw new \InvalidArgumentException('AsignaturaTipoId must be 1 digit between 1 and 9');
         }
     }
 

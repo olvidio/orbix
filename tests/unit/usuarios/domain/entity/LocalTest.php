@@ -52,8 +52,8 @@ class LocalTest extends myTest
 
     public function test_set_and_get_activo()
     {
-        $this->local->setActivo(true);
-        $this->assertTrue($this->local->isActivo());
+        $this->local->setActive(true);
+        $this->assertTrue($this->local->isActive());
     }
 
     public function test_set_all_attributes()
@@ -64,7 +64,7 @@ class LocalTest extends myTest
             'nom_locale' => new NombreLocale('English (United States)'),
             'idioma' => new Idioma('en'),
             'nom_idioma' => new NombreIdioma('English'),
-            'activo' => true
+            'active' => true
         ];
         $local->setAllAttributes($attributes);
 
@@ -72,7 +72,7 @@ class LocalTest extends myTest
         $this->assertEquals('English (United States)', $local->getNomLocaleAsString());
         $this->assertEquals('en', $local->getIdiomaAsString());
         $this->assertEquals('English', $local->getNomIdiomaAsString());
-        $this->assertTrue($local->isActivo());
+        $this->assertTrue($local->isActive());
     }
 
     public function test_set_all_attributes_with_string_values()
@@ -83,7 +83,7 @@ class LocalTest extends myTest
             'nom_locale' => 'English (United States)',
             'idioma' => 'en',
             'nom_idioma' => 'English',
-            'activo' => true
+            'active' => true
         ];
         $local->setAllAttributes($attributes);
 
@@ -91,6 +91,6 @@ class LocalTest extends myTest
         $this->assertEquals('English (United States)', $local->getNomLocaleAsString());
         $this->assertEquals('en', $local->getIdiomaAsString());
         $this->assertEquals('English', $local->getNomIdiomaAsString());
-        $this->assertTrue($local->isActivo());
+        $this->assertTrue($local->isActive());
     }
 }

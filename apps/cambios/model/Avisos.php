@@ -240,7 +240,7 @@ class Avisos
 
         //casa
         if ($oRole->isRolePau(PauType::PAU_CDC)) {
-            $mis_id_ubis = $oMiUsuario->getId_pauAsString(); // puede ser una lista separada por comas.
+            $mis_id_ubis = $oMiUsuario->getCsvIdPauAsString(); // puede ser una lista separada por comas.
             if (!empty($mis_id_ubis)) { //casa o un listado de ubis en la preferencia del aviso.
                 $a_mis_id_ubis = explode(',', $mis_id_ubis);
 
@@ -271,7 +271,7 @@ class Avisos
         }
         // si soy un sacd.
         if ($oRole->isRolePau(PauType::PAU_SACD)) {
-            $id_nom_usuario = $oMiUsuario->getId_pauAsString();
+            $id_nom_usuario = $oMiUsuario->getCsvIdPauAsString();
             // soy jefe zona?
             // si soy jefe de zona me afectan todos los sacd de la zona.
             $rta = FALSE;

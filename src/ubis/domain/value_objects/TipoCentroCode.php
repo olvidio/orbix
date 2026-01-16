@@ -20,7 +20,7 @@ final class TipoCentroCode
         }
         // By UI config, argument length is 5 (see DatosCampo->setArgument(5))
         if (mb_strlen($value) > 5) {
-            throw new \InvalidArgumentException('TipoCentroCode must be at most 8 characters');
+            throw new \InvalidArgumentException('TipoCentroCode must be at most 5 characters');
         }
         // Allow letters, numbers, underscore and hyphen, and comma
         if (!preg_match('/^[A-Za-z0-9_-|,]+$/u', $value)) {

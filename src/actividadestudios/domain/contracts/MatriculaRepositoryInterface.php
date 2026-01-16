@@ -20,7 +20,7 @@ interface MatriculaRepositoryInterface
 
     public function getMatriculasPendientes(?int $id_nom = null): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Matricula

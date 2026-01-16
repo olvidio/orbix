@@ -33,7 +33,7 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
         $this->setNomTabla('xu_region');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Region
@@ -125,6 +125,7 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
         $aDatos = $Region->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_region']);
             $update = "
 					region                   = :region,
 					nombre_region            = :nombre_region,
@@ -133,12 +134,10 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_region'] = $Region->getIdRegionVo()?->value();
             $campos = "(id_region,region,nombre_region,active)";
             $valores = "(:id_region,:region,:nombre_region,:active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

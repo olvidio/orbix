@@ -19,7 +19,7 @@ interface MetaMenuRepositoryInterface
 
     public function getArrayMetaMenus(array $a_modulos = []): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo MetaMenu

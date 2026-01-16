@@ -50,7 +50,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         return $aRepeticion;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Repeticion
@@ -141,6 +141,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         $aDatos = $Repeticion->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_repeticion']);
             $update = "
 					repeticion               = :repeticion,
 					temporada                = :temporada,
@@ -150,12 +151,10 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
 
         } else {
             //INSERT
-            $aDatos['id_repeticion'] = $Repeticion->getId_repeticion();
             $campos = "(id_repeticion,repeticion,temporada,tipo)";
             $valores = "(:id_repeticion,:repeticion,:temporada,:tipo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

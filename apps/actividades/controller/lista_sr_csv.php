@@ -72,7 +72,7 @@ $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia === null) {
     $oPreferencia = new Preferencia();
     $oPreferencia->setId_usuario($id_usuario);
-    $oPreferencia->setTipoPreferenciaVo(new TipoPreferencia($tipo));
+    $oPreferencia->setTipoVo(new TipoPreferencia($tipo));
 }
 $oPreferencia->setPreferenciaVo(new ValorPreferencia($json_busqueda));
 if ($PreferenciaRepository->Guardar($oPreferencia) === false) {

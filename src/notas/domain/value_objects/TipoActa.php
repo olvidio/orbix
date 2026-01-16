@@ -16,7 +16,7 @@ final class TipoActa
 
     public function __construct(int $value)
     {
-        if (!array_key_exists($value, self::ARRAY_TIPO_ACTA)) {
+        if (!in_array($value, self::ARRAY_TIPO_ACTA)) {
             throw new \InvalidArgumentException(sprintf('<%s> no es un valor válido para TipoActa', $value));
         }
         $this->value = $value;

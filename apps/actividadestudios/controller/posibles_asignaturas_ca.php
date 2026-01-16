@@ -19,7 +19,7 @@ use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 
 require_once("apps/core/global_header.inc");
@@ -49,7 +49,7 @@ $aTipos_stgr = NivelStgrId::getArrayNivelStgrOn();
 $a_alumnos_fin_c = [];
 $a_alumnos = [];
 $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
-$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
 foreach ($AsistenteRepository->getAsistentes(array('id_activ' => $id_activ)) as $oAsistente) {
     $id_nom = $oAsistente->getId_nom();
     $oPersona = Persona::findPersonaEnGlobal($id_nom);

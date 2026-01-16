@@ -5,6 +5,7 @@
 use Illuminate\Http\JsonResponse;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
+use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\ubis\domain\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
@@ -19,12 +20,12 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 $error_txt = '';
 $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
-    $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
-    $Qid_tipo_enc = (string)filter_input(INPUT_POST, 'id_tipo_enc');
-    $Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
-    $Qorden = (string)filter_input(INPUT_POST, 'orden');
-    $Qprioridad = (string)filter_input(INPUT_POST, 'prioridad');
-    $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
+    $Qid_enc = (int)filter_input(INPUT_POST, 'id_enc');
+    $Qid_tipo_enc = (int)filter_input(INPUT_POST, 'id_tipo_enc');
+    $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
+    $Qorden = (int)filter_input(INPUT_POST, 'orden');
+    $Qprioridad = (int)filter_input(INPUT_POST, 'prioridad');
+    $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
     $Qdescripcion_lugar = (string)filter_input(INPUT_POST, 'descripcion_lugar');
     $Qencargo = (string)filter_input(INPUT_POST, 'encargo');
     $Qidioma_enc = (string)filter_input(INPUT_POST, 'idioma_enc');
@@ -39,7 +40,7 @@ if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
         $EncargoZona = $EncargoRepository->findById($Qid_enc);
     }
     $EncargoZona->setId_tipo_enc($Qid_tipo_enc);
-    $EncargoZona->setsf_sv(8);
+    $EncargoZona->setGrupoEncargoVo(EncargoGrupo::ZONAS_MISAS);
     $EncargoZona->setId_ubi($Qid_ubi);
     $EncargoZona->setOrden($Qorden);
     $EncargoZona->setPrioridad($Qprioridad);
@@ -53,7 +54,7 @@ if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
         $nombre_ubi = $oUbi->getNombre_ubi();
     } else {
         $nombre_ubi = '';
-    }    
+    }
 
     $jsondata['lugar'] = $nombre_ubi;
     $jsondata['que'] = $Qque;

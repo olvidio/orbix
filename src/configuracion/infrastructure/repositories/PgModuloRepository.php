@@ -49,7 +49,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Modulo
@@ -156,6 +156,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_mod']);
             $update = "
 					nom                      = :nom,
 					descripcion              = :descripcion,
@@ -165,12 +166,10 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_mod'] = $Modulo->getIdModVo()->value();
             $campos = "(id_mod,nom,descripcion,mods_req,apps_req)";
             $valores = "(:id_mod,:nom,:descripcion,:mods_req,:apps_req)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

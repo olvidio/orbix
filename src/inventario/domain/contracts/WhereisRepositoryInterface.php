@@ -20,7 +20,7 @@ interface WhereisRepositoryInterface
 
     public function getArrayIdFromIdEgms(array $aEgms):array|false;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Whereis

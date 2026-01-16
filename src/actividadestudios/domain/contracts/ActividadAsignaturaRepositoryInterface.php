@@ -19,7 +19,7 @@ interface ActividadAsignaturaRepositoryInterface
 {
     public function getAsignaturasCa(int $id_activ, string $tipo = ''): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadAsignatura

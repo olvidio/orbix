@@ -20,7 +20,7 @@ interface ZonaSacdRepositoryInterface
 
     public function getIdSacdsDeZona(int $iid_zona): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ZonaSacd

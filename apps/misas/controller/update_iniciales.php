@@ -3,8 +3,8 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use Illuminate\Http\JsonResponse;
-use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\InicialesSacdRepository;
+use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
+use src\misas\domain\entity\InicialesSacd;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -21,7 +21,7 @@ $error_txt = '';
 
 $InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
 $InicialesSacd = $InicialesSacdRepository->findById($Qid_sacd);
-if (is_null($InicialesSacd)) {
+if ($InicialesSacd === null) {
     $InicialesSacd = new InicialesSacd();
     $InicialesSacd->setId_nom($Qid_sacd);
 }

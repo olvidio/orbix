@@ -20,7 +20,7 @@ interface DescTelecoRepositoryInterface
 
     public function getArrayDescTelecoPersonas($sdepende): array;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo DescTeleco

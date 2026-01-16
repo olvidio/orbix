@@ -54,7 +54,7 @@ class PgCentroEllosRepository extends ClaseRepository implements CentroEllosRepo
         return $aCentros;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CentroEllos
@@ -150,6 +150,7 @@ class PgCentroEllosRepository extends ClaseRepository implements CentroEllosRepo
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_ubi']);
             $update = "
                     tipo_ubi                 = :tipo_ubi,
                     nombre_ubi               = :nombre_ubi,
@@ -169,12 +170,10 @@ class PgCentroEllosRepository extends ClaseRepository implements CentroEllosRepo
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_ubi'] = $CentroEllos->getId_ubi();
             $campos = "(id_ubi,tipo_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_zona)";
             $valores = "(:id_ubi,:tipo_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:id_zona)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

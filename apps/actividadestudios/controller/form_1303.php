@@ -7,7 +7,7 @@ use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\profesores\domain\services\ProfesorStgrService;
 use web\Desplegable;
 use web\Hash;
@@ -119,7 +119,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
-    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDBRepositoryInterface::class);
+    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
     $cAsignaturasSuperadas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
     $aSuperadas = [];
     foreach ($cAsignaturasSuperadas as $oAsignatura) {

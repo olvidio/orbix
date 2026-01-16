@@ -33,7 +33,7 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
         $this->setNomTabla('xa_tipo_activ_tarifa');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo RelacionTarifaTipoActividad
@@ -125,6 +125,7 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
         $aDatos = $RelacionTarifaTipoActividad->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_tarifa                = :id_tarifa,
 					id_tipo_activ            = :id_tipo_activ,
@@ -133,12 +134,10 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $RelacionTarifaTipoActividad->getId_item();
             $campos = "(id_item,id_tarifa,id_tipo_activ,id_serie)";
             $valores = "(:id_item,:id_tarifa,:id_tipo_activ,:id_serie)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

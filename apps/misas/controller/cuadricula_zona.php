@@ -1,9 +1,9 @@
 <?php
 
 use core\ViewTwig;
-use misas\domain\repositories\EncargoDiaRepositoryInterface;
-use misas\model\EncargosZona;
 use src\encargossacd\domain\EncargoConstants;
+use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\EncargosZona;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\DateTimeLocal;
@@ -63,7 +63,7 @@ foreach ($date_range as $date) {
     //$nom_dia = $date->format('D');
     $dia_week = $date->format('N');
     $dia_mes = $date->format('d');
-    $nom_dia = $dia_mes . '-'. $a_dias_semana[$dia_week];
+    $nom_dia = $dia_mes . '-' . $a_dias_semana[$dia_week];
 
     $columns_cuadricula[] =
         ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 60, "cssClass" => "cell-title"];
@@ -102,8 +102,8 @@ foreach ($cEncargosZona as $oEncargo) {
         ];
 
         // sobreescribir los que tengo datos:
-        $inicio_dia = $num_dia.' 00:00:00';
-        $fin_dia = $num_dia.' 24:00:00';
+        $inicio_dia = $num_dia . ' 00:00:00';
+        $fin_dia = $num_dia . ' 24:00:00';
         $aWhere = [
             'id_enc' => $id_enc,
             'tstart' => "'$inicio_dia', '$fin_dia'",
@@ -112,7 +112,7 @@ foreach ($cEncargosZona as $oEncargo) {
             'tstart' => 'BETWEEN',
         ];
         $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
-        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
         if (count($cEncargosDia) > 1) {
             exit(_("sólo debería haber uno"));
@@ -134,7 +134,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 "id_enc" => $id_enc,
             ];
             // añadir '*' si tiene observaciones
-            $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
+            $iniciales .= empty($oEncargoDia->getObserv()) ? '' : '*';
             $data_cols["$num_dia"] = $iniciales;
         }
     }

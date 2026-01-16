@@ -49,7 +49,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         }
         return $aOpciones;
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TipoCentro
@@ -140,18 +140,17 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         $aDatos = $TipoCentro->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['tipo_ctr']);
             $update = "
 					nombre_tipo_ctr          = :nombre_tipo_ctr";
             $sql = "UPDATE $nom_tabla SET $update WHERE tipo_ctr = '$tipo_ctr'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['tipo_ctr'] = $TipoCentro->getTipoCentroVo()->value();
             $campos = "(tipo_ctr,nombre_tipo_ctr)";
             $valores = "(:tipo_ctr,:nombre_tipo_ctr)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

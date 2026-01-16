@@ -5,9 +5,13 @@ use src\notas\domain\contracts\ActaExRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalExRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaDBRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaCertificadoRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
-use src\notas\infrastructure\repositories\PgPersonaNotaDBRepository;
+use src\notas\infrastructure\repositories\PgPersonaNotaCertificadoRepository;
+use src\notas\infrastructure\repositories\PgPersonaNotaDlRepository;
+use src\notas\infrastructure\repositories\PgPersonaNotaRepository;
 use src\notas\infrastructure\repositories\PgPersonaNotaOtraRegionStgrRepository;
 use src\notas\infrastructure\repositories\PgActaDlRepository;
 use src\notas\infrastructure\repositories\PgActaExRepository;
@@ -29,6 +33,8 @@ return [
     ActaTribunalRepositoryInterface::class => autowire(PgActaTribunalRepository::class),
     ActaTribunalDlRepositoryInterface::class => autowire(PgActaTribunalDlRepository::class),
     ActaTribunalExRepositoryInterface::class => autowire(PgActaTribunalExRepository::class),
-    PersonaNotaDBRepositoryInterface::class => autowire(PgPersonaNotaDBRepository::class),
+    PersonaNotaDlRepositoryInterface::class => autowire(PgPersonaNotaDlRepository::class),
+    PersonaNotaCertificadoRepositoryInterface::class => autowire(PgPersonaNotaCertificadoRepository::class),
+    PersonaNotaRepositoryInterface::class => autowire(PgPersonaNotaRepository::class),
     PersonaNotaOtraRegionStgrRepositoryInterface::class => autowire(PgPersonaNotaOtraRegionStgrRepository::class),
 ];

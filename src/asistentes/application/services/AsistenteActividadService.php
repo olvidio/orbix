@@ -64,6 +64,9 @@ class AsistenteActividadService
         // Todas las actividades de la persona
         $a_id_activ_f_ini = $this->actividadRepository->getArrayIdsWithKeyFini($aWhereActividad, $aOperadorActividad);
 
+        if (empty($a_id_activ_f_ini)) {
+            return [];
+        }
         // Importa el orden, se queda con la primera
         $a_Clases = [
             ['repo' => AsistenteDlRepositoryInterface::class, 'get' => 'getAsistentes'],

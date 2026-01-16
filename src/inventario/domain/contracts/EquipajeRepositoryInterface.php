@@ -21,7 +21,7 @@ interface EquipajeRepositoryInterface
 
     public function getArrayEquipajes(string $f_ini_iso = ''): array|false;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Equipaje

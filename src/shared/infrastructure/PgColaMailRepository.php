@@ -32,7 +32,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         $this->setNomTabla('cola_mails');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ColaMail
@@ -136,6 +136,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         ]);
 
         if ($bInsert === false) {
+            unset($aDatos['uuid_item']);
             //UPDATE
             $update = "
 					mail_to                  = :mail_to,
@@ -148,7 +149,6 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['uuid_item'] = $ColaMail->getUuid_item();
             $campos = "(uuid_item,mail_to,message,subject,headers,writed_by,sended)";
             $valores = "(:uuid_item,:mail_to,:message,:subject,:headers,:writed_by,:sended)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";

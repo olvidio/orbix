@@ -54,8 +54,8 @@ class DB extends DBAbstract
                     texto_anuncio text NOT NULL,
                     idioma varchar(12),
                     tablon text,
-                    tanotado timestamp NOT NULL,
-                    teliminado timestamp,
+                    t_anotado timestamp NOT NULL,
+                    t_eliminado timestamp,
                     categoria smallint
                     );";
 

@@ -21,7 +21,7 @@ interface DbSchemaRepositoryInterface
 
     public function llenarNuevo($schema, $database): void;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo DbSchema

@@ -19,7 +19,7 @@ interface SituacionRepositoryInterface
 
     public function getArraySituaciones($traslado = false);
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Situacion

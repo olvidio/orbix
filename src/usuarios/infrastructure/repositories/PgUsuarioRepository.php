@@ -4,7 +4,6 @@ namespace src\usuarios\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
-use core\ConverterDate;
 use core\Set;
 use PDO;
 use src\shared\traits\HandlesPdoErrors;
@@ -49,7 +48,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         }
         return $aOpciones;
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo usuario
@@ -146,21 +145,13 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $bInsert = $this->isNew($id_usuario);
 
         /*
-        $aDatos = $usuario->toArrayForDatabase([
-//            'idioma' => fn($v) => (new ConverterEnum('idioma', $v))->toPg(),
-            'h_ini' => fn($v) => (new ConverterDate('time', $v))->toPg(),
-            'h_fin' => fn($v) => (new ConverterDate('time', $v))->toPg(),
-            'f_ini' => fn($v) => (new ConverterDate('date', $v))->toPg(),
-            'f_fin' => fn($v) => (new ConverterDate('date', $v))->toPg(),
-        ]);
-        */
         $aDatos = [];
         $aDatos['usuario'] = $usuario->getUsuarioAsString();
         $aDatos['id_role'] = $usuario->getId_role();
         $aDatos['email'] = $usuario->getEmailAsString();
-        $aDatos['id_pau'] = $usuario->getCsvIdPauAsString();
+        $aDatos['csv_id_pau'] = $usuario->getCsvIdPauAsString();
         $aDatos['nom_usuario'] = $usuario->getNomUsuarioAsString();
-        $aDatos['has_2fa'] = $usuario->has2fa();
+        $aDatos['has_2fa'] = $usuario->isHas_2fa();
         $aDatos['secret_2fa'] = $usuario->getSecret2faAsString();
         $aDatos['cambio_password'] = $usuario->isCambio_password();
         // para los bytea, pero el passwd ya lo tengo en hex con MyCrypt
@@ -178,15 +169,18 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         } else {
             $aDatos['cambio_password'] = 'false';
         }
+        */
+        $aDatos = $usuario->toArrayForDatabase();
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_usuario']);
             $update = "
 					usuario                  = :usuario,
 					id_role                  = :id_role,
 					password                 = :password,
 					email                    = :email,
-					id_pau                   = :id_pau,
+					csv_id_pau               = :csv_id_pau,
 					nom_usuario              = :nom_usuario,
 					has_2fa                  = :has_2fa,
 					secret_2fa               = :secret_2fa,
@@ -195,12 +189,10 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_usuario'] = $usuario->getId_usuario();
-            $campos = "(id_usuario,usuario,id_role,password,email,id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password)";
-            $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:id_pau,:nom_usuario,:has_2fa,:secret_2fa,:cambio_password)";
+            $campos = "(id_usuario,usuario,id_role,password,email,csv_id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password)";
+            $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:csv_id_pau,:nom_usuario,:has_2fa,:secret_2fa,:cambio_password)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -227,20 +219,20 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario");
-        if ($oDblSt === false) {
-            $sClaveError = 'PgusuarioRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+        $sql = "SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($aDatos === false) {
             return false;
         }
 
-        // para los bytea, sobre escribo los valores:
-        $spassword = '';
-        $oDblSt->bindColumn('password', $spassword, PDO::PARAM_STR);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        if ($aDatos !== false) {
-            //$aDatos['password'] = hex2bin($spassword ?? '');
-            $aDatos['password'] = $spassword ?? '';
+        // para los bytea: (resources)
+        $handle = $aDatos['password'];
+        if (is_resource($handle)) {
+            $contents = stream_get_contents($handle);
+            fclose($handle);
+            $aDatos['password'] = $contents;
         }
 
         return $aDatos;

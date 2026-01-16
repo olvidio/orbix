@@ -17,7 +17,7 @@ use src\certificados\domain\entity\CertificadoEmitido;
 interface CertificadoEmitidoRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Certificado

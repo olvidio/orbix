@@ -29,7 +29,7 @@ interface ActividadCargoRepositoryInterface
     public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array|false;
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadCargo

@@ -56,7 +56,7 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
         }
         return $aLista;
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ZonaSacd
@@ -148,6 +148,7 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
         $aDatos = $ZonaSacd->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_nom                   = :id_nom,
 					id_zona                  = :id_zona,
@@ -163,12 +164,10 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $ZonaSacd->getId_item();
             $campos = "(id_item,id_nom,id_zona,propia,dw1,dw2,dw3,dw4,dw5,dw6,dw7)";
             $valores = "(:id_item,:id_nom,:id_zona,:propia,:dw1,:dw2,:dw3,:dw4,:dw5,:dw6,:dw7)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

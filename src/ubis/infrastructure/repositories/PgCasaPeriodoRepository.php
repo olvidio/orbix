@@ -110,7 +110,7 @@ class PgCasaPeriodoRepository extends ClaseRepository implements CasaPeriodoRepo
         return $num_dias;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CasaPeriodo
@@ -209,6 +209,7 @@ class PgCasaPeriodoRepository extends ClaseRepository implements CasaPeriodoRepo
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_ubi                   = :id_ubi,
 					f_ini                    = :f_ini,
@@ -218,12 +219,10 @@ class PgCasaPeriodoRepository extends ClaseRepository implements CasaPeriodoRepo
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $CasaPeriodo->getId_item();
             $campos = "(id_item,id_ubi,f_ini,f_fin,sfsv)";
             $valores = "(:id_item,:id_ubi,:f_ini,:f_fin,:sfsv)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

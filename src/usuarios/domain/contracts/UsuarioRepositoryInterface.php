@@ -18,7 +18,7 @@ interface UsuarioRepositoryInterface
 {
     public function getArrayUsuarios(): array;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo usuario

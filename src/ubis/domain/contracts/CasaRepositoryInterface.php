@@ -23,7 +23,7 @@ interface CasaRepositoryInterface
 
     public function getArrayCasas($sCondicion = ''): array;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Casa

@@ -74,8 +74,8 @@ class UsuarioTest extends myTest
 
     public function test_set_and_get_has_2fa()
     {
-        $this->usuario->setHas2fa(true);
-        $this->assertTrue($this->usuario->has2fa());
+        $this->usuario->setHas_2fa(true);
+        $this->assertTrue($this->usuario->isHas_2fa());
     }
 
     public function test_set_and_get_secret_2fa()
@@ -101,7 +101,7 @@ class UsuarioTest extends myTest
             'id_role' => 2,
             'password' => new Password('securepassword'),
             'email' => new Email('test@example.com'),
-            'id_pau' => new IdPau('12345'),
+            'csv_id_pau' => new IdPau('12345'),
             'nom_usuario' => new NombreUsuario('John Doe'),
             'has_2fa' => true,
             'secret_2fa' => new Secret2FA('ABCDEFGHIJKLMNOP'),
@@ -116,7 +116,7 @@ class UsuarioTest extends myTest
         $this->assertEquals('test@example.com', $usuario->getEmailAsString());
         $this->assertEquals('12345', $usuario->getCsvIdPauAsString());
         $this->assertEquals('John Doe', $usuario->getNomUsuarioAsString());
-        $this->assertTrue($usuario->has2fa());
+        $this->assertTrue($usuario->isHas_2fa());
         $this->assertEquals('ABCDEFGHIJKLMNOP', $usuario->getSecret2faAsString());
         $this->assertTrue($usuario->isCambio_password());
     }
@@ -130,7 +130,7 @@ class UsuarioTest extends myTest
             'id_role' => 2,
             'password' => 'securepassword',
             'email' => 'test@example.com',
-            'id_pau' => '12345',
+            'csv_id_pau' => '12345',
             'nom_usuario' => 'John Doe',
             'has_2fa' => true,
             'secret_2fa' => 'ABCDEFGHIJKLMNOP',
@@ -145,7 +145,7 @@ class UsuarioTest extends myTest
         $this->assertEquals('test@example.com', $usuario->getEmailAsString());
         $this->assertEquals('12345', $usuario->getCsvIdPauAsString());
         $this->assertEquals('John Doe', $usuario->getNomUsuarioAsString());
-        $this->assertTrue($usuario->has2fa());
+        $this->assertTrue($usuario->isHas_2fa());
         $this->assertEquals('ABCDEFGHIJKLMNOP', $usuario->getSecret2faAsString());
         $this->assertTrue($usuario->isCambio_password());
     }

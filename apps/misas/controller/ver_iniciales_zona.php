@@ -1,7 +1,7 @@
 <?php
 
 use core\ViewTwig;
-use misas\domain\repositories\InicialesSacdRepositoryInterface;
+use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\Hash;
@@ -30,33 +30,29 @@ $a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($Qid_zona);
 
 $a_datos_sacd = [];
 $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+$InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
 foreach ($a_Id_nom as $id_nom) {
-//    if ($id_nom>0) {
-        $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
-        $sacd = $PersonaSacd->getNombreApellidos();
-//    } else {
-//        $PersonaEx = new PersonaEx($id_nom);
-//        $sacd = $PersonaEx->getNombreApellidos();
-//    }
-
-    $InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
-    $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
-    if ($InicialesSacd === null) {
+    $data_cols = [];
+    $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
+    if ($PersonaSacd === null) {
+        $sacd = '?';
         $iniciales = '';
         $color = '';
     } else {
-        $iniciales = $InicialesSacd->getIniciales();
-        $color = $InicialesSacd->getColor();
+        $sacd = $PersonaSacd->getNombreApellidos();
+        $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
+        if ($InicialesSacd === null) {
+            $iniciales = '';
+            $color = '';
+        } else {
+            $iniciales = $InicialesSacd->getIniciales();
+            $color = $InicialesSacd->getColor();
+        }
     }
-
-
-
-    $data_cols = [];
     $data_cols["id_sacd"] = $id_nom;
     $data_cols["nombre_sacd"] = $sacd;
     $data_cols["iniciales"] = $iniciales;
     $data_cols["color"] = $color;
-
     $data_cuadricula[] = $data_cols;
 }
 

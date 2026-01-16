@@ -32,7 +32,7 @@ class PgProfesorCongresoRepository extends ClaseRepository implements ProfesorCo
         $this->setNomTabla('d_congresos');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ProfesorCongreso
@@ -131,6 +131,7 @@ class PgProfesorCongresoRepository extends ClaseRepository implements ProfesorCo
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_nom                   = :id_nom,
 					congreso                 = :congreso,
@@ -143,12 +144,10 @@ class PgProfesorCongresoRepository extends ClaseRepository implements ProfesorCo
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_item'] = $ProfesorCongreso->getId_item();
             $campos = "(id_item,id_nom,congreso,lugar,f_ini,f_fin,organiza,tipo)";
             $valores = "(:id_item,:id_nom,:congreso,:lugar,:f_ini,:f_fin,:organiza,:tipo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

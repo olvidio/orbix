@@ -36,12 +36,12 @@ $oFormP->setDesplPeriodosOpcion_sel('este_mes');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('d/m/Y');
+$shoy = $ohoy->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
 
-$id_nom_jefe = '';
+$id_nom_jefe = null;
 
 $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
@@ -52,10 +52,8 @@ $aRoles = $RoleRepository->getArrayRoles();
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 
-    if ($_SESSION['oConfig']->is_jefeCalendario()) {
-        $id_nom_jefe = '';
-    } else {
-        $id_nom_jefe = $oMiUsuario->getId_pauAsString();
+    if (!$_SESSION['oConfig']->is_jefeCalendario()) {
+        $id_nom_jefe = (int)$oMiUsuario->getCsvIdPauAsString();
         if (empty($id_nom_jefe)) {
             exit(_("No tiene permiso para ver esta página"));
         }
@@ -94,6 +92,6 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
     'h_zona_periodo' => $h_zona_periodo,
 ];
- 
+
 $oView = new ViewTwig('misas/controller');
 echo $oView->render('ver_plan_de_misas.html.twig', $a_campos);

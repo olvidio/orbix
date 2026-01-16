@@ -30,16 +30,16 @@ if (empty ($cZonaSacd)) {
 } else {
     $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
     $oPersona = $PersonaSacdRepository->findById($Qid_sacd);
-    $jsondata['nombre_sacd'] = empty($oPersona->getNombreApellidos())? '?' : $oPersona->getNombreApellidos();
+    $jsondata['nombre_sacd'] = empty($oPersona->getNombreApellidos()) ? '?' : $oPersona->getNombreApellidos();
 
     $oZonaSacd = $cZonaSacd[0];
-    $jsondata['dw1'] = $oZonaSacd->getDw1();
-    $jsondata['dw2'] = $oZonaSacd->getDw2();
-    $jsondata['dw3'] = $oZonaSacd->getDw3();
-    $jsondata['dw4'] = $oZonaSacd->getDw4();
-    $jsondata['dw5'] = $oZonaSacd->getDw5();
-    $jsondata['dw6'] = $oZonaSacd->getDw6();
-    $jsondata['dw7'] = $oZonaSacd->getDw7();
+    $jsondata['dw1'] = $oZonaSacd->isDw1();
+    $jsondata['dw2'] = $oZonaSacd->isDw2();
+    $jsondata['dw3'] = $oZonaSacd->isDw3();
+    $jsondata['dw4'] = $oZonaSacd->isDw4();
+    $jsondata['dw5'] = $oZonaSacd->isDw5();
+    $jsondata['dw6'] = $oZonaSacd->isDw6();
+    $jsondata['dw7'] = $oZonaSacd->isDw7();
 }
 
 if (empty($error_txt)) {

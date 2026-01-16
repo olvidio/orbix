@@ -34,7 +34,7 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         $this->setNomTabla('du_gastos_dl');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo UbiGasto
@@ -128,6 +128,7 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
         $aDatos = $UbiGasto->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_ubi                   = :id_ubi,
 					f_gasto                  = :f_gasto,
@@ -137,12 +138,10 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $id_item;
             $campos = "(id_item,id_ubi,f_gasto,tipo,cantidad)";
             $valores = "(:id_item,:id_ubi,:f_gasto,:tipo,:cantidad)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

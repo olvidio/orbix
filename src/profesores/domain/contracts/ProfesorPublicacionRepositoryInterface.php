@@ -22,7 +22,7 @@ use function core\is_true;
 interface ProfesorPublicacionRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo ProfesorPublicacion

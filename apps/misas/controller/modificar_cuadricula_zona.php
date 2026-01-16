@@ -3,10 +3,6 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use core\ViewTwig;
-use misas\domain\entity\EncargoDia;
-use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\EncargoDiaRepositoryInterface;
-use misas\model\EncargosZona;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
@@ -14,6 +10,11 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\EncargoConstants;
+use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\EncargosZona;
+use src\misas\domain\entity\EncargoDia;
+use src\misas\domain\value_objects\PlantillaConfig;
+use src\misas\application\services\InicialesSacdService;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
@@ -49,7 +50,7 @@ if ($QTipoPlantilla != 'p') {
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipoPreferenciaVo(new TipoPreferencia('ultima_plantilla'));
+        $oPreferencia->setTipoVo(new TipoPreferencia('ultima_plantilla'));
     }
 
     $oPreferencia->setPreferenciaVo(new ValorPreferencia($QTipoPlantilla));
@@ -66,10 +67,10 @@ $aOperador = [];
 $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
 $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
 $sacd_zona = [];
+$InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
 foreach ($cZonaSacd as $oZonaSacd) {
     $id_nom = $oZonaSacd->getId_nom();
-    $InicialesSacd = new InicialesSacd();
-    $nombre_sacd = $InicialesSacd->nombre_sacd($id_nom);
+    $nombre_sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
     $sacd_zona[$id_nom] = $nombre_sacd;
 //    echo $id_nom.'===='.$nombre_sacd.'<br>';
 }
@@ -160,20 +161,20 @@ $columns_cuadricula = "[
 $titulo_sacd = [];
 $dia_week_sacd = [];
 switch (trim($QTipoPlantilla)) {
-    case EncargoDia::PLANTILLA_SEMANAL_UNO:
-    case EncargoDia::PLANTILLA_SEMANAL_TRES:
-        $oInicio = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
-        $oFin = new DateTimeLocal(EncargoDia::FIN_SEMANAL_UNO);
+    case PlantillaConfig::PLANTILLA_SEMANAL_UNO:
+    case PlantillaConfig::PLANTILLA_SEMANAL_TRES:
+        $oInicio = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_UNO);
+        $oFin = new DateTimeLocal(PlantillaConfig::FIN_SEMANAL_UNO);
         $interval = new DateInterval('P1D');
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
-        if ($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) {
-            $oInicio2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_DOS);
-            $oFin2 = new DateTimeLocal(EncargoDia::FIN_SEMANAL_DOS);
+        if ($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) {
+            $oInicio2 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_DOS);
+            $oFin2 = new DateTimeLocal(PlantillaConfig::FIN_SEMANAL_DOS);
             $date_range2 = new DatePeriod($oInicio2, $interval, $oFin2);
-            $oInicio3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_TRES);
-            $oFin3 = new DateTimeLocal(EncargoDia::FIN_SEMANAL_TRES);
+            $oInicio3 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_TRES);
+            $oFin3 = new DateTimeLocal(PlantillaConfig::FIN_SEMANAL_TRES);
             $date_range3 = new DatePeriod($oInicio3, $interval, $oFin3);
-            $interval3 = new DateInterval(EncargoDia::INTERVAL_SEMANAL);
+            $interval3 = new DateInterval(PlantillaConfig::INTERVAL_SEMANAL);
         }
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
         foreach ($date_range as $date) {
@@ -187,20 +188,20 @@ switch (trim($QTipoPlantilla)) {
             {'id' : '" . $num_dia . "', 'name' : '" . $nom_dia . "', 'field' : '" . $num_dia . "', 'width' : 60, 'formatter': formato}";
         }
         break;
-    case EncargoDia::PLANTILLA_DOMINGOS_UNO:
-    case EncargoDia::PLANTILLA_DOMINGOS_TRES:
-        $oInicio = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_UNO);
-        $oFin = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_UNO);
+    case PlantillaConfig::PLANTILLA_DOMINGOS_UNO:
+    case PlantillaConfig::PLANTILLA_DOMINGOS_TRES:
+        $oInicio = new DateTimeLocal(PlantillaConfig::INICIO_DOMINGOS_UNO);
+        $oFin = new DateTimeLocal(PlantillaConfig::FIN_DOMINGOS_UNO);
         $interval = new DateInterval('P1D');
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
-        if ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) {
-            $oInicio2 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_DOS);
-            $oFin2 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_DOS);
+        if ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) {
+            $oInicio2 = new DateTimeLocal(PlantillaConfig::INICIO_DOMINGOS_DOS);
+            $oFin2 = new DateTimeLocal(PlantillaConfig::FIN_DOMINGOS_DOS);
             $date_range2 = new DatePeriod($oInicio2, $interval, $oFin2);
-            $oInicio3 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_TRES);
-            $oFin3 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_TRES);
+            $oInicio3 = new DateTimeLocal(PlantillaConfig::INICIO_DOMINGOS_TRES);
+            $oFin3 = new DateTimeLocal(PlantillaConfig::FIN_DOMINGOS_TRES);
             $date_range3 = new DatePeriod($oInicio3, $interval, $oFin3);
-            $interval3 = new DateInterval(EncargoDia::INTERVAL_DOMINGOS);
+            $interval3 = new DateInterval(PlantillaConfig::INTERVAL_DOMINGOS);
         }
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
         foreach ($date_range as $date) {
@@ -221,20 +222,20 @@ switch (trim($QTipoPlantilla)) {
             $titulo_sacd[$num_dia] = $nom_dia;
         }
         break;
-    case EncargoDia::PLANTILLA_MENSUAL_UNO:
-    case EncargoDia::PLANTILLA_MENSUAL_TRES:
-        $oInicio = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-        $oFin = new DateTimeLocal(EncargoDia::FIN_MENSUAL_UNO);
+    case PlantillaConfig::PLANTILLA_MENSUAL_UNO:
+    case PlantillaConfig::PLANTILLA_MENSUAL_TRES:
+        $oInicio = new DateTimeLocal(PlantillaConfig::INICIO_MENSUAL_UNO);
+        $oFin = new DateTimeLocal(PlantillaConfig::FIN_MENSUAL_UNO);
         $interval = new DateInterval('P1D');
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
-        if ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES) {
-            $oInicio2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
-            $oFin2 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_DOS);
+        if ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES) {
+            $oInicio2 = new DateTimeLocal(PlantillaConfig::INICIO_MENSUAL_DOS);
+            $oFin2 = new DateTimeLocal(PlantillaConfig::FIN_MENSUAL_DOS);
             $date_range2 = new DatePeriod($oInicio2, $interval, $oFin2);
-            $oInicio3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
-            $oFin3 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_TRES);
+            $oInicio3 = new DateTimeLocal(PlantillaConfig::INICIO_MENSUAL_TRES);
+            $oFin3 = new DateTimeLocal(PlantillaConfig::FIN_MENSUAL_TRES);
             $date_range3 = new DatePeriod($oInicio3, $interval, $oFin3);
-            $interval3 = new DateInterval(EncargoDia::INTERVAL_MENSUAL);
+            $interval3 = new DateInterval(PlantillaConfig::INTERVAL_MENSUAL);
         }
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
         foreach ($date_range as $date) {
@@ -250,7 +251,7 @@ switch (trim($QTipoPlantilla)) {
             $titulo_sacd[$num_dia] = $nom_dia;
         }
         break;
-    case EncargoDia::PLAN_DE_MISAS:
+    case PlantillaConfig::PLAN_DE_MISAS:
         $oInicio = new DateTimeLocal($Qempiezamin_rep);
         $oFin = new DateTimeLocal($Qempiezamax_rep);
         $interval = new DateInterval('P1D');
@@ -301,7 +302,7 @@ foreach ($cEncargosZona as $oEncargo) {
 //    echo $id_enc.$desc_enc.'<br>';
     $data_cols = [];
     $meta_dia = [];
-    if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
+    if (($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES)) {
         $data_cols2 = [];
         $meta_dia2 = [];
         $data_cols3 = [];
@@ -316,23 +317,23 @@ foreach ($cEncargosZona as $oEncargo) {
         $num_mes = $date->format('m');
 
         switch (trim($QTipoPlantilla)) {
-            case EncargoDia::PLANTILLA_SEMANAL_UNO:
-            case EncargoDia::PLANTILLA_SEMANAL_TRES:
+            case PlantillaConfig::PLANTILLA_SEMANAL_UNO:
+            case PlantillaConfig::PLANTILLA_SEMANAL_TRES:
                 $nom_dia = $a_dias_semana[$dia_week];
                 break;
-            case EncargoDia::PLANTILLA_DOMINGOS_UNO:
-            case EncargoDia::PLANTILLA_DOMINGOS_TRES:
+            case PlantillaConfig::PLANTILLA_DOMINGOS_UNO:
+            case PlantillaConfig::PLANTILLA_DOMINGOS_TRES:
                 if ($dia_mes < 7) {
                     $nom_dia = $a_dias_semana[$dia_week];
                 } else {
                     $nom_dia = 'domingo ' . strval($dia_mes - 6);
                 }
                 break;
-            case EncargoDia::PLANTILLA_MENSUAL_UNO:
-            case EncargoDia::PLANTILLA_MENSUAL_TRES:
+            case PlantillaConfig::PLANTILLA_MENSUAL_UNO:
+            case PlantillaConfig::PLANTILLA_MENSUAL_TRES:
                 $nom_dia = $a_dias_semana[$dia_week] . ' ' . intdiv(date_diff($date, $oInicio)->format('%a'), 7) + 1;
                 break;
-            case EncargoDia::PLAN_DE_MISAS:
+            case PlantillaConfig::PLAN_DE_MISAS:
                 $nom_dia = $a_dias_semana_breve[$dia_week] . ' ' . $dia_mes . '.' . $num_mes;
                 break;
         }
@@ -382,11 +383,10 @@ foreach ($cEncargosZona as $oEncargo) {
             $hora_ini = $oEncargoDia->getTstart()->format('H:i');
             if ($hora_ini == '00:00')
                 $hora_ini = '';
-            $InicialesSacd = new InicialesSacd();
-            $iniciales = $InicialesSacd->iniciales($id_nom);
+            $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
             $color = '';
             $texto = '';
-            if (trim($QTipoPlantilla) == EncargoDia::PLAN_DE_MISAS) {
+            if (trim($QTipoPlantilla) == PlantillaConfig::PLAN_DE_MISAS) {
                 if ($estado == EncargoDia::STATUS_PROPUESTA) {
                     $color = 'rojoclaro';
                 }
@@ -422,7 +422,7 @@ foreach ($cEncargosZona as $oEncargo) {
 //            $data_cols[$num_dia] = $iniciales;
         }
 
-        if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
+        if (($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES)) {
             $data_cols2["$num_dia"] = " -- ";
             $data_cols3["$num_dia"] = " -- ";
 
@@ -484,8 +484,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 $hora_ini = $oEncargoDia->getTstart()->format('H:i');
                 if ($hora_ini == '00:00')
                     $hora_ini = '';
-                $InicialesSacd = new InicialesSacd();
-                $iniciales = $InicialesSacd->iniciales($id_nom);
+                $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
 
                 $color = '';
                 $texto = '';
@@ -532,8 +531,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 $hora_ini = $oEncargoDia->getTstart()->format('H:i');
                 if ($hora_ini == '00:00')
                     $hora_ini = '';
-                $InicialesSacd = new InicialesSacd();
-                $iniciales = $InicialesSacd->iniciales($id_nom);
+                $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
 
                 $color = '';
                 $texto = '';
@@ -578,7 +576,7 @@ foreach ($cEncargosZona as $oEncargo) {
     // en la definición de columns
     $data_cuadricula[] = $data_cols;
 
-    if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
+    if (($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES)) {
         $data_cols2["encargo"] = '';
         $data_cols2["meta"] = $meta_dia2;
         $data_cuadricula[] = $data_cols2;
@@ -748,12 +746,11 @@ $cZonaSacd = $ZonaSacdRepository->getZonasSacds($aWhere, $aOperador);
 foreach ($cZonaSacd as $oZonaSacd) {
     $data_cols = [];
     $id_nom = $oZonaSacd->getId_nom();
-    $InicialesSacd = new InicialesSacd();
-    $nombre_sacd = $InicialesSacd->nombre_sacd($id_nom);
-    $iniciales = $InicialesSacd->iniciales($id_nom);
+    $nombre_sacd = $InicialesSacdService->obtenerNombreConIniciales($id_nom);
+    $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
     $key = $iniciales . '#' . $id_nom;
     $lista_sacd[$key] = $nombre_sacd;
-    $esta_en_zona[$key] = array('', $oZonaSacd->getDw1(), $oZonaSacd->getDw2(), $oZonaSacd->getDw3(), $oZonaSacd->getDw4(), $oZonaSacd->getDw5(), $oZonaSacd->getDw6(), $oZonaSacd->getDw7());
+    $esta_en_zona[$key] = array('', $oZonaSacd->isDw1(), $oZonaSacd->isDw2(), $oZonaSacd->isDw3(), $oZonaSacd->isDw4(), $oZonaSacd->isDw5(), $oZonaSacd->isDw6(), $oZonaSacd->isDw7());
 }
 
 ksort($lista_sacd);
@@ -786,10 +783,11 @@ foreach ($lista_sacd as $key => $nombre_sacd) {
         $misas_1a_hora = 0;
         $misas_dia_zona = 0;
         $misas_1a_hora_zona = 0;
+        $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
         foreach ($cEncargosDia as $oEncargoDia) {
             $id_enc = $oEncargoDia->getId_enc();
 //            echo 'id_enc: '.$id_enc.'<br>';
-            $oEncargo = new Encargo(array('id_enc' => $id_enc));
+            $oEncargo = $EncargoRepository->findById($id_enc);
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
             $id_zona_enc = $oEncargo->getId_zona();
 //            echo 'tipo: '.$id_tipo_enc.' zona: '.$id_zona_enc.'<br>';

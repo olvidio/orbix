@@ -3,7 +3,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use Illuminate\Http\JsonResponse;
-use misas\domain\repositories\PlantillaRepository;
+use src\misas\domain\contracts\PlantillaRepositoryInterface;
 use web\NullDateTimeLocal;
 
 require_once("apps/core/global_header.inc");

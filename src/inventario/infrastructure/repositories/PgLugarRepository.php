@@ -49,7 +49,7 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
         return $aOpciones;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Lugar
@@ -141,6 +141,7 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
         $aDatos = $Lugar->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_lugar']);
             $update = "
                     id_ubi                   = :id_ubi,
                     nom_lugar                = :nom_lugar";
@@ -148,12 +149,10 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_lugar'] = $Lugar->getId_lugar();
             $campos = "(id_lugar,id_ubi,nom_lugar)";
             $valores = "(:id_lugar,:id_ubi,:nom_lugar)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

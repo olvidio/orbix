@@ -11,7 +11,7 @@ $id_usuario = $oMiUsuario->getId_usuario();
 // Verificar si el usuario tiene 2FA habilitado
 $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($id_usuario);
-$has_2fa = $oUsuario->has2fa();
+$has_2fa = $oUsuario->isHas_2fa();
 
 // Si el usuario no tiene 2FA habilitado, redirigir a la página de configuración de 2FA
 if (!$has_2fa) {

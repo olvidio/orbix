@@ -22,7 +22,7 @@ use function core\is_true;
 interface UltimaAsistenciaRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo UltimaAsistencia

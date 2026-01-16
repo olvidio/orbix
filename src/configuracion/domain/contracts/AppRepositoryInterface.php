@@ -17,7 +17,7 @@ use src\configuracion\domain\entity\App;
 interface AppRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo App

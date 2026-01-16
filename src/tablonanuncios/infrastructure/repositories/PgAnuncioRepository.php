@@ -33,7 +33,7 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         $this->setNomTabla('tablon_anuncios');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Certificado
@@ -95,8 +95,8 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
-            $aDatos['tanotado'] = (new ConverterDate('timestamp', $aDatos['tanotado']))->fromPg();
-            $aDatos['teliminado'] = (new ConverterDate('timestamp', $aDatos['teliminado']))->fromPg();
+            $aDatos['t_anotado'] = (new ConverterDate('timestamp', $aDatos['t_anotado']))->fromPg();
+            $aDatos['t_eliminado'] = (new ConverterDate('timestamp', $aDatos['t_eliminado']))->fromPg();
             $Anuncio = Anuncio::fromArray($aDatos);
             $AnuncioSet->add($Anuncio);
         }
@@ -126,11 +126,12 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         $bInsert = $this->isNew($Anuncio->getUuid_item());
 
         $aDatos = $Anuncio->toArrayForDatabase([
-            'tanotado' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
-            'teliminado' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
+            't_anotado' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
+            't_eliminado' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
         ]);
 
         if ($bInsert === FALSE) {
+            unset($aDatos['uuid_item']);
             //UPDATE
             $update = " usuario_creador  = :usuario_creador,
                     esquema_emisor   = :esquema_emisor,
@@ -138,16 +139,15 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
                     texto_anuncio    = :texto_anuncio,
                     idioma           = :idioma,
                     tablon           = :tablon,
-                    tanotado        = :tanotado,
-                    teliminado      = :teliminado,
+                    t_anotado        = :t_anotado,
+                    t_eliminado      = :t_eliminado,
                     categoria        = :categoria";
             $sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['uuid_item'] = $uuid_item;
-            $campos = "(uuid_item,usuario_creador,esquema_emisor,esquema_destino,texto_anuncio,idioma,tablon,tanotado,teliminado,categoria)";
-            $valores = "(:uuid_item,:usuario_creador,:esquema_emisor,:esquema_destino,:texto_anuncio,:idioma,:tablon,:tanotado,:teliminado,:categoria)";
+            $campos = "(uuid_item,usuario_creador,esquema_emisor,esquema_destino,texto_anuncio,idioma,tablon,t_anotado,t_eliminado,categoria)";
+            $valores = "(:uuid_item,:usuario_creador,:esquema_emisor,:esquema_destino,:texto_anuncio,:idioma,:tablon,:t_anotado,:t_eliminado,:categoria)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -184,8 +184,8 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== FALSE) {
-            $aDatos['tanotado'] = (new ConverterDate('timestamp', $aDatos['tanotado']))->fromPg();
-            $aDatos['teliminado'] = (new ConverterDate('timestamp', $aDatos['teliminado']))->fromPg();
+            $aDatos['t_anotado'] = (new ConverterDate('timestamp', $aDatos['t_anotado']))->fromPg();
+            $aDatos['t_eliminado'] = (new ConverterDate('timestamp', $aDatos['t_eliminado']))->fromPg();
         }
         return $aDatos;
     }

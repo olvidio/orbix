@@ -1,0 +1,52 @@
+<?php
+
+namespace src\tablonanuncios\domain\value_objects;
+
+final class Idioma
+{
+    private string $value;
+
+    public function __construct(string $value)
+    {
+        $value = trim($value);
+        $this->validate($value);
+        $this->value = $value;
+    }
+
+    private function validate(string $value): void
+    {
+        if ($value === '') {
+            throw new \InvalidArgumentException('Idioma cannot be empty');
+        }
+        if (mb_strlen($value) > 12) {
+            throw new \InvalidArgumentException('Idioma must be at most 12 characters');
+        }
+    }
+
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
+
+    public function equals(Idioma $other): bool
+    {
+        return $this->value === $other->value();
+    }
+
+    public static function fromNullableString(?string $value): ?self
+    {
+        if ($value === null) {
+            return null;
+        }
+        $value = trim($value);
+        if ($value === '') {
+            return null;
+        }
+        return new self($value);
+    }
+}

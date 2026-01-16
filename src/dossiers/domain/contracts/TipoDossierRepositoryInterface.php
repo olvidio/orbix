@@ -31,7 +31,7 @@ interface TipoDossierRepositoryInterface
      */
     public function datosByIdVo(TipoDossierId $id): array|bool;
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TipoDossier

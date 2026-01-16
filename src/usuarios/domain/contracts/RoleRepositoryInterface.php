@@ -22,7 +22,7 @@ interface RoleRepositoryInterface
     public function getArrayRolesPau(): array;
 
     public function getArrayRolesCondicion(string $sWhere = ''): array;
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Role

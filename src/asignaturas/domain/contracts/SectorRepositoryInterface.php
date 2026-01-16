@@ -20,7 +20,7 @@ interface SectorRepositoryInterface
     public function getArraySectoresPorDepartamento(): array;
     public function getArraySectores(): array;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+/* --------------------  BASiC SEARCH ---------------------------------------- */
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Sector

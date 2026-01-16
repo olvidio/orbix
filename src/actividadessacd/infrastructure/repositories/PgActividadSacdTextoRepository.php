@@ -24,7 +24,7 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
         $this->setNomTabla('a_sacd_textos');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadSacdTexto
@@ -116,6 +116,7 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
         $aDatos = $ActividadSacdTexto->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					idioma                   = :idioma,
 					clave                    = :clave,
@@ -124,12 +125,10 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $ActividadSacdTexto->getId_item();
             $campos = "(id_item,idioma,clave,texto)";
             $valores = "(:id_item,:idioma,:clave,:texto)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

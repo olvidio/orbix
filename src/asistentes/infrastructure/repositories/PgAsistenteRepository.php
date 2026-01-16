@@ -35,7 +35,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         $this->setNomTabla('d_asistentes_dl');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Asistente
@@ -144,6 +144,8 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_activ']);
+            unset($aDatos['id_nom']);
             $update = "
 					propio                   = :propio,
 					est_ok                   = :est_ok,
@@ -161,13 +163,10 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_activ'] = $Asistente->getId_activ();
-            $aDatos['id_nom'] = $Asistente->getId_nom();
             $campos = "(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,dl_responsable,observ,id_tabla,plaza,propietario,observ_est)";
             $valores = "(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:dl_responsable,:observ,:id_tabla,:plaza,:propietario,:observ_est)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
 
         $success = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 

@@ -58,7 +58,7 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
     }
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ZonaGrupo
@@ -150,6 +150,7 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
         $aDatos = $ZonaGrupo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_grupo']);
             $update = "
 					nombre_grupo             = :nombre_grupo,
 					orden                    = :orden";
@@ -157,12 +158,10 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_grupo'] = $ZonaGrupo->getId_grupo();
             $campos = "(id_grupo,nombre_grupo,orden)";
             $valores = "(:id_grupo,:nombre_grupo,:orden)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

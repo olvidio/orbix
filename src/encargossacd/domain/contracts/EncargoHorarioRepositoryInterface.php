@@ -18,7 +18,7 @@ use src\encargossacd\domain\entity\EncargoHorario;
 interface EncargoHorarioRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo EncargoHorario

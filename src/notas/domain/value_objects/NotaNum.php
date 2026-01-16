@@ -3,7 +3,7 @@ namespace src\notas\domain\value_objects;
 
 final class NotaNum
 {
-    private int $value;
+    private float $value;
 
     public function __construct(float $value)
     {

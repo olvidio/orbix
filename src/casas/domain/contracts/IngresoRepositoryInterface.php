@@ -18,7 +18,7 @@ use src\casas\domain\entity\Ingreso;
 interface IngresoRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Ingreso

@@ -4,10 +4,10 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use misas\model\EncargosZona;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\misas\domain\EncargosZona;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\DateTimeLocal;
@@ -54,7 +54,7 @@ $a_ctr_enc_t = $EncargosZona->cuadriculaSemana();
 $i = 0;
 $a_valores = [];
 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-$EncargoReposotory = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 $EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
 $EncargoSacdHorarioRepository = $GLOBALS['container']->get(EncargoSacdHorarioRepositoryInterface::class);
 foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
@@ -62,7 +62,7 @@ foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
     foreach ($a_ctr_enc as $id_tipo_enc => $a_id_enc) {
         $i++;
         $id_enc = key($a_id_enc);
-        $oEncargo = $EncargoReposotory->findById($id_enc);
+        $oEncargo = $EncargoRepository->findById($id_enc);
         $desc_enc = $oEncargo->getDesc_enc();
 
         $a_cosas = ['id_zona' => $Qid_zona,

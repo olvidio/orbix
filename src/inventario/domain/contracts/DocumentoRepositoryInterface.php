@@ -17,7 +17,7 @@ use src\inventario\domain\entity\Documento;
 interface DocumentoRepositoryInterface
 {
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Documento

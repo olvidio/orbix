@@ -19,7 +19,7 @@ interface ActividadTareaRepositoryInterface
 {
 
     public function getArrayActividadTareas(int $iid_fase): array;
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadTarea

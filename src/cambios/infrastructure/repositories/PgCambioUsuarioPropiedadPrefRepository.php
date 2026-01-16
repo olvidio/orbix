@@ -34,7 +34,7 @@ class PgCambioUsuarioPropiedadPrefRepository extends ClaseRepository implements 
         $this->setNomTabla('av_cambios_usuario_propiedades_pref');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo CambioUsuarioPropiedadPref
@@ -126,6 +126,7 @@ class PgCambioUsuarioPropiedadPrefRepository extends ClaseRepository implements 
         $aDatos = $CambioUsuarioPropiedadPref->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_item_usuario_objeto   = :id_item_usuario_objeto,
 					propiedad                = :propiedad,
@@ -137,12 +138,10 @@ class PgCambioUsuarioPropiedadPrefRepository extends ClaseRepository implements 
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $CambioUsuarioPropiedadPref->getId_item();
             $campos = "(id_item,id_item_usuario_objeto,propiedad,operador,valor,valor_old,valor_new)";
             $valores = "(:id_item,:id_item_usuario_objeto,:propiedad,:operador,:valor,:valor_old,:valor_new)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

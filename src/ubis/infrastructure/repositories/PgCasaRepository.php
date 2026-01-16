@@ -49,7 +49,7 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         }
         return $a_casa;
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Casa
@@ -146,6 +146,7 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_ubi']);
             $update = "
                     tipo_ubi                 = :tipo_ubi,
                     nombre_ubi               = :nombre_ubi,
@@ -166,12 +167,10 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_ubi'] = $Casa->getId_ubi();
             $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_casa,plazas,plazas_min,num_sacd,biblioteca,observ)";
             $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_casa,:plazas,:plazas_min,:num_sacd,:biblioteca,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

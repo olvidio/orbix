@@ -2,8 +2,11 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use misas\domain\repositories\EncargoDiaRepositoryInterface;
+use core\ConfigGlobal;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use web\DateTimeLocal;
 
 require_once("apps/core/global_header.inc");
@@ -14,12 +17,12 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository =$GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
-$id_sacd = $oMiUsuario->getId_pauAsString();
+$id_sacd = $oMiUsuario->getCsvIdPauAsString();
 $id_role = $oMiUsuario->getId_role();
-$GesZonas = new GestorZona();
-$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+$ZonasRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$cZonas = $ZonasRepository->getZonas(array('id_nom' => $id_sacd));
 $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 
 $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
@@ -166,8 +169,7 @@ foreach ($cEncargosDia as $oEncargoDia) {
     $data_cols["encargo"] = $desc_enc;
 
     //echo 'jefe: '.$jefe_zona.' s: '.$status.'<br>';
-    if ($jefe_zona || ($status==EncargoDia::STATUS_COMUNICADO_SACD) || ($status==EncargoDia::STATUS_COMUNICADO_CTR))
-    {
+    if ($jefe_zona || ($status == EncargoDia::STATUS_COMUNICADO_SACD) || ($status == EncargoDia::STATUS_COMUNICADO_CTR)) {
         $data_cuadricula[] = $data_cols;
         echo '</TR>';
         echo '<TR><TD>' . $dia_y_hora . '</TD>';

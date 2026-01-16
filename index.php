@@ -111,7 +111,7 @@ if (isset($primera)) {
 
     // Verificar si el usuario tiene 2FA habilitado
     // Si no lo tiene, redirigir a la página de configuración de 2FA
-    $has_2fa = $oUsuario->has2fa();
+    $has_2fa = $oUsuario->isHas_2fa();
 
     /* OBLIGAR a los de la dmz a usar el doble factor.
     if (!$has_2fa && ServerConf::$dmz) { // no sirve la función "Configglobal::is_dmz()" porque para la sf (puerto 10936) no da true

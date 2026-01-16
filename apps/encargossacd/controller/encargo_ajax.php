@@ -3,6 +3,7 @@
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
+use src\encargossacd\domain\value_objects\EncargoGrupo;
 use web\Desplegable;
 
 /**
@@ -60,7 +61,7 @@ switch ($Qque) {
         echo $oDesplNoms->desplegable();
         break;
     case "nuevo": //nuevo
-        $Qsf_sv = empty($Qfiltro_ctr) ? 1 : $Qfiltro_ctr; // sv
+        $Qsf_sv = empty($Qfiltro_ctr) ?  EncargoGrupo::CENTRO_SV : $Qfiltro_ctr; // sv
 
         $Qid_ubi = (integer)filter_input(INPUT_POST, 'lst_ctrs');
         $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');

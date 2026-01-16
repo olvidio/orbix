@@ -68,7 +68,7 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
         return $aNotas;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
@@ -94,6 +94,7 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
         $aDatos = $Nota->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_situacion']);
             $update = "
 					descripcion              = :descripcion,
 					superada                 = :superada,
@@ -103,12 +104,10 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
 
         } else {
             //INSERT
-            $aDatos['id_situacion'] = $Nota->getIdSituacionVo()->value();
             $campos = "(id_situacion,descripcion,superada,breve)";
             $valores = "(:id_situacion,:descripcion,:superada,:breve)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

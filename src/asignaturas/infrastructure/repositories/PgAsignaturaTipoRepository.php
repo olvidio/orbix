@@ -47,7 +47,7 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
         }
         return $aOpciones;
     }
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo AsignaturaTipo
@@ -138,6 +138,7 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
         $aDatos = $AsignaturaTipo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_tipo']);
             $update = "
 					tipo_asignatura          = :tipo_asignatura,
 					tipo_breve               = :tipo_breve,
@@ -147,12 +148,10 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_tipo'] = $AsignaturaTipo->getId_tipo();
             $campos = "(id_tipo,tipo_asignatura,tipo_breve,año,tipo_latin)";
             $valores = "(:id_tipo,:tipo_asignatura,:tipo_breve,:año,:tipo_latin)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

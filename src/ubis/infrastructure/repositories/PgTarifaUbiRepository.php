@@ -33,7 +33,7 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
         $this->setNomTabla('du_tarifas');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo TarifaUbi
@@ -125,6 +125,7 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
         $aDatos = $TarifaUbi->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_ubi                   = :id_ubi,
 					id_tarifa                = :id_tarifa,
@@ -136,12 +137,10 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_item'] = $id_item;
             $campos = "(id_item,id_ubi,id_tarifa,year,cantidad,observ,id_serie)";
             $valores = "(:id_item,:id_ubi,:id_tarifa,:year,:cantidad,:observ,:id_serie)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

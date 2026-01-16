@@ -315,7 +315,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         return $aListaId;
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadAll
@@ -419,7 +419,8 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
 
         if ($bInsert === false) {
             //UPDATE
-            unset ($aDatos['id_activ']);
+            unset($aDatos['id_auto']);
+            unset($aDatos['id_activ']);
             $update = "
 					id_tipo_activ            = :id_tipo_activ,
 					dl_org                   = :dl_org,
@@ -448,13 +449,10 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $aDatos['id_auto'] = $ActividadAll->getId_auto();
-            $aDatos['id_activ'] = $ActividadAll->getId_activ();
             $campos = "(id_auto,id_activ,id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas,idioma)";
             $valores = "(:id_auto,:id_activ,:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:tarifa,:id_repeticion,:publicado,:id_tabla,:plazas,:idioma)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

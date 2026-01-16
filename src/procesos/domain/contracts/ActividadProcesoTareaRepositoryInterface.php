@@ -29,7 +29,7 @@ interface ActividadProcesoTareaRepositoryInterface
 
 
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ActividadProcesoTarea

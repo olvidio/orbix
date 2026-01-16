@@ -32,7 +32,7 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
         $this->setNomTabla('d_profesor_director');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo ProfesorDirector
@@ -131,6 +131,7 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
 
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_item']);
             $update = "
 					id_nom                   = :id_nom,
 					id_departamento          = :id_departamento,
@@ -142,12 +143,10 @@ class PgProfesorDirectorRepository extends ClaseRepository implements ProfesorDi
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_item'] = $ProfesorDirector->getId_item();
             $campos = "(id_item,id_nom,id_departamento,escrito_nombramiento,f_nombramiento,escrito_cese,f_cese)";
             $valores = "(:id_item,:id_nom,:id_departamento,:escrito_nombramiento,:f_nombramiento,:escrito_cese,:f_cese)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

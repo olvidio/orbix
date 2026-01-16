@@ -43,16 +43,16 @@ class AnunciosFactory
             $tablon = 'est';
 
             $f_anotado = $faker->dateTimeBetween()->format('Y-m-dTH:i:s'); // a date between -30 years ago, and now
-            $tanotado = new DateTimeLocal($f_anotado); // a date between -30 years ago, and now
+            $t_anotado = new DateTimeLocal($f_anotado); // a date between -30 years ago, and now
             $eliminado = $faker->boolean();
             if ($eliminado) {
                 $f_eliminado = $faker->dateTimeBetween()->format('Y-m-dTH:i:s'); // a date between -30 years ago, and now
-                $teliminado = new DateTimeLocal($f_eliminado); // a date between -30 years ago, and now
+                $t_eliminado = new DateTimeLocal($f_eliminado); // a date between -30 years ago, and now
             } else {
-                $teliminado = new NullDateTimeLocal();
+                $t_eliminado = new NullDateTimeLocal();
             }
             $texto_anuncio = $faker->sentence(3);
-            $categoria = $faker->numberBetween(1, 5);
+            $categoria = $faker->numberBetween(1, 2);
 
             $Anuncio = new Anuncio();
             $Anuncio->setUuid_item($uuid_itemVo);
@@ -62,8 +62,8 @@ class AnunciosFactory
             $Anuncio->setTextoAnuncioVo($texto_anuncio);
             $Anuncio->setIdiomaVo($idioma);
             $Anuncio->setTablonVo($tablon);
-            $Anuncio->setAnotado($tanotado);
-            $Anuncio->setEliminado($teliminado);
+            $Anuncio->setT_anotado($t_anotado);
+            $Anuncio->setT_eliminado($t_eliminado);
             $Anuncio->setCategoriaVo($categoria);
 
             $cAnuncios[] = $Anuncio;

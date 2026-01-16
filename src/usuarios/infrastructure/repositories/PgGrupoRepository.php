@@ -32,7 +32,7 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
         $this->setNomTabla('aux_grupos_y_usuarios');
     }
 
-    /* -------------------- GESTOR BASE ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
      * devuelve una colección (array) de objetos de tipo Grupo
@@ -124,6 +124,7 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
         $aDatos = $Grupo->toArrayForDatabase();
         if ($bInsert === false) {
             //UPDATE
+            unset($aDatos['id_usuario']);
             $update = "
 					usuario                  = :usuario,
 					id_role                  = :id_role";
@@ -131,12 +132,10 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $aDatos['id_usuario'] = $Grupo->getId_usuario();
             $campos = "(id_usuario,usuario,id_role)";
             $valores = "(:id_usuario,:usuario,:id_role)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
