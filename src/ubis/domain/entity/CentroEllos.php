@@ -3,6 +3,8 @@
 namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\application\services\UbiContactsTrait;
 use src\ubis\domain\value_objects\CentroId;
 use src\ubis\domain\value_objects\DelegacionCode;
@@ -11,8 +13,6 @@ use src\ubis\domain\value_objects\RegionNameText;
 use src\ubis\domain\value_objects\TipoCentroCode;
 use src\ubis\domain\value_objects\TipoLaborId;
 use src\ubis\domain\value_objects\UbiNombreText;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 use function core\is_true;
 
 class CentroEllos
@@ -285,7 +285,7 @@ class CentroEllos
      */
     public function setTipo_ctr(?string $tipo_ctr = null): void
     {
-        $this->tipo_ctr = TipoCentroCode::fromString($tipo_ctr);
+        $this->tipo_ctr = TipoCentroCode::fromNullableString($tipo_ctr);
     }
 
     public function getTipoCtrVo(): ?TipoCentroCode
@@ -297,7 +297,7 @@ class CentroEllos
     {
         $this->tipo_ctr = $vo instanceof TipoCentroCode
             ? $vo
-            : TipoCentroCode::fromString($vo);
+            : TipoCentroCode::fromNullableString($vo);
     }
 
     /**
@@ -403,11 +403,11 @@ class CentroEllos
                 $esPrincipal = is_true($row['principal']);
                 $esPropietario = is_true($row['propietario']);
 
-                $direccionDetallada = new DireccionDetalle(
-                    $direccion,
-                    $esPrincipal,
-                    $esPropietario
-                );
+                $direccionDetallada = new DireccionDetalle([
+                    'direccion' => $direccion,
+                    'principal' => $esPrincipal,
+                    'propietario' => $esPropietario
+                ]);
             }
         }
 
@@ -433,11 +433,11 @@ class CentroEllos
                 $esPrincipal = is_true($row['principal']);
                 $esPropietario = is_true($row['propietario']);
 
-                $direccionesDetalladas[] = new DireccionDetalle(
-                    $direccion,
-                    $esPrincipal,
-                    $esPropietario
-                );
+                $direccionesDetalladas[] = new DireccionDetalle([
+                    'direccion' => $direccion,
+                    'principal' => $esPrincipal,
+                    'propietario' => $esPropietario
+                ]);
             }
         }
 

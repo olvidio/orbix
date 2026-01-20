@@ -3,7 +3,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use src\certificados\domain\CertificadoRecibidoUpload;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");

@@ -1,6 +1,8 @@
 <?php
 namespace web;
 
+use src\shared\domain\value_objects\DateTimeLocal;
+
 /**
  * Classe que presenta un quadre per establir un periode de cerques.
  *

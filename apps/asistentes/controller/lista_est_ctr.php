@@ -40,7 +40,7 @@ $oPosicion->recordar();
 
 //generamos el periodo de la búsqueda de actividades
 //en función de las condiciones que tengamos:
-$oHoy = new web\DateTimeLocal();
+$oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
 
 $Qn_agd = (string)filter_input(INPUT_POST, 'n_agd');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');

@@ -118,7 +118,7 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
             $update = "
 					id_ubi                   = :id_ubi,
 					id_tipo_teleco           = :id_tipo_teleco,
-					id_desc_teleco              = :id_desc_teleco,
+					id_desc_teleco           = :id_desc_teleco,
 					num_teleco               = :num_teleco,
 					observ                   = :observ";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";

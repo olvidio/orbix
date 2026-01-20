@@ -2,9 +2,9 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use Illuminate\Http\JsonResponse;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
-use web\DateTimeLocal;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************

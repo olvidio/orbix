@@ -19,7 +19,6 @@ use src\certificados\domain\entity\CertificadoRecibido;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
-use src\notas\domain\entity\PersonaNota;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
@@ -33,10 +32,10 @@ use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 
 
 /**

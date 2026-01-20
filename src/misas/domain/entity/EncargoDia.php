@@ -5,8 +5,8 @@ namespace src\misas\domain\entity;
 use src\misas\domain\value_objects\EncargoDiaId;
 use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Clase que implementa la entidad misa_cuadricula_dl
@@ -24,25 +24,42 @@ class EncargoDia
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private EncargoDiaId $uuid_item;
-    private int $iid_enc;
+    private int $id_enc;
 
     private DateTimeLocal|NullDateTimeLocal|null $tstart;
     private DateTimeLocal|NullDateTimeLocal|null $tend;
 
-    private ?int $iid_nom = null;
-    private ?string $sobserv = null;
+    private ?int $id_nom = null;
+    private ?string $observ = null;
     private ?EncargoDiaStatus $status = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getUuid_item(): EncargoDiaId
+    /**
+     * @deprecated use getUuidItemVo()
+     */
+    public function getUuid_item(): string
+    {
+        return $this->uuid_item->value();
+    }
+
+    public function getUuidItemVo(): EncargoDiaId
     {
         return $this->uuid_item;
     }
 
-    public function setUuid_item(EncargoDiaId $uuid_item): void
+    /**
+     * @deprecated use setUuidItemVo()
+     */
+    public function setUuid_item(string $uuid_item): void
     {
-        $this->uuid_item = $uuid_item;
+        $this->uuid_item = new EncargoDiaId($uuid_item);
+    }
+    public function setUuidItemVo(EncargoDiaId|string $uuid_item): void
+    {
+        $this->uuid_item = $uuid_item instanceof EncargoDiaId
+            ? $uuid_item
+            : new EncargoDiaId($uuid_item);
     }
 
     /**
@@ -51,16 +68,16 @@ class EncargoDia
      */
     public function getId_enc(): ?int
     {
-        return $this->iid_enc;
+        return $this->id_enc;
     }
 
     /**
      *
-     * @param int|null $iid_enc
+     * @param int|null $id_enc
      */
-    public function setId_enc(?int $iid_enc = null): void
+    public function setId_enc(?int $id_enc = null): void
     {
-        $this->iid_enc = $iid_enc;
+        $this->id_enc = $id_enc;
     }
 
     public function getTstart(): DateTimeLocal|NullDateTimeLocal
@@ -89,16 +106,16 @@ class EncargoDia
      */
     public function getId_nom(): ?int
     {
-        return $this->iid_nom;
+        return $this->id_nom;
     }
 
     /**
      *
-     * @param int|null $iid_nom
+     * @param int|null $id_nom
      */
-    public function setId_nom(?int $iid_nom = null): void
+    public function setId_nom(?int $id_nom = null): void
     {
-        $this->iid_nom = $iid_nom;
+        $this->id_nom = $id_nom;
     }
 
     /**
@@ -107,16 +124,16 @@ class EncargoDia
      */
     public function getObserv(): ?string
     {
-        return $this->sobserv;
+        return $this->observ;
     }
 
     /**
      *
-     * @param string|null $sobserv
+     * @param string|null $observ
      */
-    public function setObserv(?string $sobserv = null): void
+    public function setObserv(?string $observ = null): void
     {
-        $this->sobserv = $sobserv;
+        $this->observ = $observ;
     }
 
     /*
@@ -135,9 +152,9 @@ class EncargoDia
     /*
      * @deprecated use setStatusVo()
      */
-    public function setStatus(?int $istatus): void
+    public function setStatus(?int $status): void
     {
-        $this->status = EncargoDiaStatus::fromNullableInt($istatus);
+        $this->status = EncargoDiaStatus::fromNullableInt($status);
     }
 
     public function setStatusVo(EncargoDiaStatus|int|null $status): void

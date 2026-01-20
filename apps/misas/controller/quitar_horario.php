@@ -4,7 +4,7 @@
 
 use Illuminate\Http\JsonResponse;
 use src\misas\domain\contracts\PlantillaRepositoryInterface;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************

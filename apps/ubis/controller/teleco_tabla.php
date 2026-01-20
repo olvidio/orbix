@@ -10,7 +10,7 @@ use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
-use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
+use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
@@ -53,7 +53,7 @@ if (isset($_POST['stack'])) {
 
 switch ($Qobj_pau) {
     case 'Casa': // tipo dl pero no de la mia
-        $repoTeleco = $GLOBALS['container']->get(TelecoCdcRepositoryInterface::class);
+        $repoTeleco = $GLOBALS['container']->get(TelecoUbiRepositoryInterface::class);
         $repoUbi = $GLOBALS['container']->get(CasaRepositoryInterface::class);
         break;
     case 'CasaDl':

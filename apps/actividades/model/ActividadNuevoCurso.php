@@ -11,7 +11,7 @@ use src\actividades\domain\value_objects\IdTablaCode;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Description of actividadlugar

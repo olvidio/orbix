@@ -1,16 +1,15 @@
 <?php
 
-namespace src\shared\infrastructure;
+namespace src\shared\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use shared\domain\repositories\ColaMailRepositoryInterface;
+use src\shared\domain\contracts\ColaMailRepositoryInterface;
 use src\shared\domain\entity\ColaMail;
 use src\shared\traits\HandlesPdoErrors;
-use web\NullDateTimeLocal;
 
 /**
  * Clase que adapta la tabla cola_mails a la interfaz del repositorio

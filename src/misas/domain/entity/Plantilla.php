@@ -3,8 +3,8 @@
 namespace src\misas\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Clase que implementa la entidad misa_plantillas_dl

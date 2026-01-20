@@ -11,8 +11,8 @@ use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\entity\EncargoHorario;
 use src\encargossacd\domain\entity\EncargoSacd;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\DateTimeLocal;
 
 class EncargoAplicacionService
 {

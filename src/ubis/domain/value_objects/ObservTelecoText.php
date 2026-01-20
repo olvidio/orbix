@@ -18,9 +18,8 @@ final class ObservTelecoText
         if ($value === '') {
             throw new \InvalidArgumentException('ObservTelecoText cannot be empty');
         }
-        // Por UI, longitud máxima 50 (DatosCampo->setArgument('50'))
-        if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('ObservTelecoText must be at most 50 characters');
+        if (mb_strlen($value) > 300) {
+            throw new \InvalidArgumentException('ObservTelecoText must be at most 300 characters');
         }
         // Permitir caracteres comunes de texto corto
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+#\/]*$/u", $value)) {

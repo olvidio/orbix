@@ -1,8 +1,8 @@
 <?php
 
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\entity\CasaPeriodo;
-use web\DateTimeLocal;
 use web\Hash;
 use web\Lista;
 

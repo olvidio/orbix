@@ -3,9 +3,9 @@
 namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
-use src\shared\domain\value_objects\SfsvId;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
+use src\shared\domain\value_objects\SfsvOtrosId;
 
 class CasaPeriodo
 {
@@ -22,7 +22,7 @@ class CasaPeriodo
 
     private DateTimeLocal $f_fin;
 
-    private ?int $sfsv = null;
+    private ?SfsvOtrosId $sfsv = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -78,7 +78,7 @@ class CasaPeriodo
      */
     public function getSfsv(): ?int
     {
-        return $this->sfsv;
+        return $this->sfsv->value();
     }
 
     /**
@@ -86,16 +86,18 @@ class CasaPeriodo
      */
     public function setSfsv(?int $sfsv = null): void
     {
-        $this->sfsv = $sfsv;
+        $this->sfsv = SfsvOtrosId::fromNullableInt($sfsv);
     }
 
-    public function getSfsvVo(): ?SfsvId
+    public function getSfsvVo(): ?SfsvOtrosId
     {
-        return $this->sfsv !== null ? new SfsvId($this->sfsv) : null;
+        return $this->sfsv;
     }
 
-    public function setSfsvVo(?SfsvId $vo = null): void
+    public function setSfsvVo(SfsvOtrosId|null|int $vo = null): void
     {
-        $this->sfsv = $vo?->value();
+        $this->sfsv = $vo instanceof SfsvOtrosId
+            ? $vo
+            : SfsvOtrosId::fromNullableInt($vo);
     }
 }

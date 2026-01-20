@@ -3,9 +3,6 @@
 namespace actividadessacd\model;
 
 use core\ConfigGlobal;
-use core\ValueObject\Uuid;
-use shared\domain\ColaMailId;
-use shared\domain\repositories\ColaMailRepositoryInterface;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -13,11 +10,14 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\services\TelecoPersonaService;
+use src\shared\domain\contracts\ColaMailRepositoryInterface;
 use src\shared\domain\entity\ColaMail;
+use src\shared\domain\value_objects\ColaMailId;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\Uuid;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\DateTimeLocal;
 use web\TiposActividades;
 use function core\is_true;
 

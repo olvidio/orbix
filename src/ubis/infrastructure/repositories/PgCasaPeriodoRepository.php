@@ -7,11 +7,11 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\entity\CasaPeriodo;
-use web\DateTimeLocal;
 
 
 /**

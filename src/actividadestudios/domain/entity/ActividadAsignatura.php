@@ -6,8 +6,8 @@ use src\actividadestudios\domain\value_objects\AvisProfesor;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class ActividadAsignatura
 {
@@ -21,8 +21,8 @@ class ActividadAsignatura
     private ?int $id_profesor = null;
     private ?AvisProfesor $avis_profesor = null;
     private ?TipoActividadAsignatura $tipo = null;
-    private ?DateTimeLocal $df_ini = null;
-    private ?DateTimeLocal $df_fin = null;
+    private ?DateTimeLocal $f_ini = null;
+    private ?DateTimeLocal $f_fin = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -122,7 +122,7 @@ class ActividadAsignatura
     /**
      * @deprecated usar getTipoActividadAsignaturaVo()
      */
-    public function getTipoActividadAsignatura(): ?string
+    public function getTipo(): ?string
     {
         return $this->tipo?->value();
     }
@@ -130,7 +130,7 @@ class ActividadAsignatura
     /**
      * @return TipoActividadAsignatura|null
      */
-    public function getTipoActividadAsignaturaVo(): ?TipoActividadAsignatura
+    public function getTipoVo(): ?TipoActividadAsignatura
     {
         return $this->tipo;
     }
@@ -138,13 +138,13 @@ class ActividadAsignatura
     /**
      * @deprecated usar setTipoActividadAsignaturaVo()
      */
-    public function setTipoActividadAsignatura(?string $tipo = null): void
+    public function setTipo(?string $tipo = null): void
     {
         $this->tipo = TipoActividadAsignatura::fromNullableString($tipo);
     }
 
 
-    public function setTipoActividadAsignaturaVo(TipoActividadAsignatura|string|null $texto = null): void
+    public function setTipoVo(TipoActividadAsignatura|string|null $texto = null): void
     {
         $this->tipo = $texto instanceof TipoActividadAsignatura
             ? $texto
@@ -153,22 +153,22 @@ class ActividadAsignatura
 
     public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_ini ?? new NullDateTimeLocal;
+        return $this->f_ini ?? new NullDateTimeLocal;
     }
 
-    public function setF_ini(DateTimeLocal|null $df_ini = null): void
+    public function setF_ini(DateTimeLocal|null $f_ini = null): void
     {
-        $this->df_ini = $df_ini;
+        $this->f_ini = $f_ini;
     }
 
     public function getF_fin(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->df_fin ?? new NullDateTimeLocal;
+        return $this->f_fin ?? new NullDateTimeLocal;
     }
 
-    public function setF_fin(DateTimeLocal|null $df_fin = null): void
+    public function setF_fin(DateTimeLocal|null $f_fin = null): void
     {
-        $this->df_fin = $df_fin;
+        $this->f_fin = $f_fin;
     }
 
 }

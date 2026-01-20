@@ -1,7 +1,7 @@
 <?php
 
 use actividadessacd\model\AsignarSacd;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************

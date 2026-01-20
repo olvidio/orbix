@@ -3,8 +3,8 @@
 namespace src\ubis\domain\contracts;
 
 use PDO;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\entity\CasaPeriodo;
-use web\DateTimeLocal;
 
 
 /**

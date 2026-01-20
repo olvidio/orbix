@@ -10,7 +10,7 @@ use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\EncargoConstants;
 use src\encargossacd\domain\entity\EncargoSacdObserv;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 

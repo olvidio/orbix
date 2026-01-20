@@ -6,7 +6,7 @@ use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\EncargoConstants;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\EncargosZona;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************

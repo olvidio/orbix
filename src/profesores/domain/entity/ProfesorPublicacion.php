@@ -12,7 +12,7 @@ use src\profesores\domain\value_objects\PublicacionTitulo;
 use src\profesores\domain\value_objects\ReferenciaText;
 use src\profesores\domain\value_objects\TipoPublicacionName;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 
 class ProfesorPublicacion

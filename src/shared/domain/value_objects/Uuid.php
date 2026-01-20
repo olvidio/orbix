@@ -1,6 +1,6 @@
 <?php
 
-namespace core\ValueObject;
+namespace src\shared\domain\value_objects;
 
 
 use Ramsey\Uuid\Exception\InvalidArgumentException;

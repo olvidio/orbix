@@ -2,7 +2,7 @@
 
 namespace core;
 
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use function base64_decode;
 use function mb_strtoupper;
 use function str_replace;

@@ -4,8 +4,8 @@ namespace Tests\factories\certificados;
 
 use Faker\Factory;
 use src\certificados\domain\entity\CertificadoEmitido;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class CertificadosFactory
 {

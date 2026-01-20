@@ -2,6 +2,7 @@
 
 namespace web;
 
+use src\shared\domain\value_objects\DateTimeLocal;
 use function core\curso_est;
 
 /**

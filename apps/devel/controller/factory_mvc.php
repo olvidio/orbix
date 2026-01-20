@@ -2,9 +2,7 @@
 
 namespace devel\controller;
 
-use core;
 use core\ConfigGlobal;
-use web;
 
 /**
  * programa per generar les classes a partir de la taula
@@ -291,7 +289,7 @@ foreach ($oDbl->query($sql) as $row) {
             $tip_val = '';
             break;
         case 'date':
-            $tipo_db = 'web\\DateTimeLocal';
+            $tipo_db = 'src\\shared\\domain\\value_objects\\DateTimeLocal';
             $tip = 'd';
             $tip_val = '';
             break;
@@ -326,7 +324,7 @@ foreach ($oDbl->query($sql) as $row) {
 			$this->DBCarregar();
 		}
 		if (empty($this->' . $tip . $nomcamp . ')) {
-			return new web\NullDateTimeLocal();
+			return new src\shared\domain\value_objects\NullDateTimeLocal();
 		}
         $oConverter = new core\Converter(\'date\', $this->' . $tip . $nomcamp . ');
 		return $oConverter->fromPg();
@@ -362,7 +360,7 @@ foreach ($oDbl->query($sql) as $row) {
             $gets .= '
 	/**
 	 * estableix el valor de l\'atribut ' . $tip . $nomcamp . ' de ' . $clase . '
-	 * Si ' . $tip . $nomcamp . ' es string, y convert=TRUE se convierte usando el formato web\DateTimeLocal->getForamat().
+	 * Si ' . $tip . $nomcamp . ' es string, y convert=TRUE se convierte usando el formato src\shared\domain\value_objects\DateTimeLocal->getForamat().
 	 * Si convert es FALSE, ' . $tip . $nomcamp . ' debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
 	 * 
 	 * @param ' . $tipo_db . '|string ' . $tip . $nomcamp . '=\'' . $tip_val . '\' optional.
@@ -439,7 +437,7 @@ foreach ($oDbl->query($sql) as $row) {
         $c++;
     }
 }
-$oHoy = new web\DateTimeLocal();
+$oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
 $hoy = $oHoy->getFromLocal();
 
 $txt = "<?php

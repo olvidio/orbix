@@ -10,12 +10,10 @@ use src\inventario\domain\value_objects\{EquipajeCabecera,
     EquipajeIdsActiv,
     EquipajeLugar,
     EquipajeNom,
-    EquipajePie,
-    UbiInventarioIdActiv};
-use src\procesos\domain\value_objects\ActividadId;
+    EquipajePie};
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 
 class Equipaje
@@ -105,64 +103,64 @@ class Equipaje
         $this->f_fin = $f_fin instanceof NullDateTimeLocal ? null : $f_fin;
     }
 
-
     public function getId_ubi_activ(): ?int
     {
         return $this->id_ubi_activ;
     }
 
-
-    public function setId_ubi_activ(?int $id_ubi_activ = null): void
+    public function setId_ubi_activ(?int $id = null): void
     {
-        $this->id_ubi_activ = $id_ubi_activ;
+        $this->id_ubi_activ = $id;
     }
+
+
 
 
     public function getNom_equipaje(): ?string
     {
-        return $this->nom_equipaje;
+        return $this->nom_equipaje->value();
     }
 
 
     public function setNom_equipaje(?string $nom_equipaje = null): void
     {
-        $this->nom_equipaje = $nom_equipaje;
+        $this->nom_equipaje = EquipajeNom::fromNullableString($nom_equipaje);
     }
 
 
     public function getCabecera(): ?string
     {
-        return $this->cabecera;
+        return $this->cabecera->value();
     }
 
 
     public function setCabecera(?string $cabecera = null): void
     {
-        $this->cabecera = $cabecera;
+        $this->cabecera = EquipajeCabecera::fromNullableString($cabecera);
     }
 
 
     public function getPie(): ?string
     {
-        return $this->pie;
+        return $this->pie->value();
     }
 
 
     public function setPie(?string $pie = null): void
     {
-        $this->pie = $pie;
+        $this->pie = EquipajePie::fromNullableString($pie);
     }
 
 
     public function getCabecerab(): ?string
     {
-        return $this->cabecerab;
+        return $this->cabecerab->value();
     }
 
 
     public function setCabecerab(?string $cabecerab = null): void
     {
-        $this->cabecerab = $cabecerab;
+        $this->cabecerab = EquipajeCabecerab::fromNullableString($cabecerab);
     }
 
     // Value Object API (duplicada con legacy)
@@ -202,16 +200,6 @@ class Equipaje
             : EquipajeLugar::fromNullableString($lugar);
     }
 
-    public function getIdUbiActivVo(): ?int
-    {
-        return $this->id_ubi_activ;
-    }
-
-    public function setIdUbiActivVo(int|null $id = null): void
-    {
-        $this->id_ubi_activ = $id;
-    }
-
     public function getNomEquipajeVo(): ?EquipajeNom
     {
         return $this->nom_equipaje;
@@ -232,7 +220,7 @@ class Equipaje
     public function setCabeceraVo(EquipajeCabecera|string|null $cabecera = null): void
     {
         $this->cabecera = $cabecera instanceof EquipajeCabecera
-            ? $cabecera->value()
+            ? $cabecera
             : EquipajeCabecera::fromNullableString($cabecera);
     }
 
@@ -244,7 +232,7 @@ class Equipaje
     public function setCabecerabVo(EquipajeCabecerab|string|null $cabecerab = null): void
     {
         $this->cabecerab = $cabecerab instanceof EquipajeCabecerab
-            ? $cabecerab->value()
+            ? $cabecerab
             : EquipajeCabecerab::fromNullableString($cabecerab);
     }
 
@@ -256,7 +244,7 @@ class Equipaje
     public function setPieVo(EquipajePie|string|null $pie = null): void
     {
         $this->pie = $pie instanceof EquipajePie
-            ? $pie->value()
+            ? $pie
             : EquipajePie::fromNullableString($pie);
     }
 

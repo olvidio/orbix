@@ -21,7 +21,7 @@ final class ProvinciaText
         if (mb_strlen($value) > 100) {
             throw new \InvalidArgumentException('ProvinciaText must be at most 100 characters');
         }
-        if (!preg_match("/^[\p{L} .,'´’:_\-()]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'´’;:_\-()#\+\/\\,·–]+$/u", $value)) {
             throw new \InvalidArgumentException('ProvinciaText has invalid characters');
         }
     }

@@ -21,7 +21,7 @@ final class SedeNameText
         if (mb_strlen($value) > 100) {
             throw new \InvalidArgumentException('SedeNameText must be at most 100 characters');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'´’:_\-()]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'´’:_\-()#\/\\,·]+$/u", $value)) {
             throw new \InvalidArgumentException('SedeNameText has invalid characters');
         }
     }

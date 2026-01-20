@@ -23,7 +23,7 @@ final class UbiNombreText
             throw new \InvalidArgumentException('UbiNombreText must be at most 100 characters');
         }
         // Caracteres comunes de nombres/títulos
-        if (!preg_match("/^[\p{L}0-9 .,'´’:_\-()\+]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'´’:_\-()\+\/\"]+$/u", $value)) {
             throw new \InvalidArgumentException('UbiNombreText has invalid characters');
         }
     }

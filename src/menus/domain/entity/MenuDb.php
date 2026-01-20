@@ -44,13 +44,13 @@ class MenuDb
     }
 
 
-    public function getOrden(): array|null
+    public function getOrden(): ?array
     {
         return $this->orden;
     }
 
 
-    public function setOrden(array $orden = null): void
+    public function setOrden(?array $orden = null): void
     {
         $this->orden = $orden;
     }

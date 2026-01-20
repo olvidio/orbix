@@ -21,11 +21,11 @@ class Region
 
     private ?RegionId $id_region = null;
 
-    private RegionCode $region;
+    private ?RegionCode $region = null;
 
     private ?RegionNameText $nombre_region = null;
 
-    private?bool $active = null;
+    private ?bool $active = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -84,7 +84,7 @@ class Region
         return $this->region;
     }
 
-    public function setRegionVo(?RegionCode $code = null): void
+    public function setRegionVo(RegionCode|string|null $code = null): void
     {
         $this->region = $code instanceof RegionCode
             ? $code
@@ -112,7 +112,7 @@ class Region
     {
         $this->nombre_region = RegionNameText::fromNullableString($nombre_region);
     }
-     public function setNombreRegionVo(?RegionNameText $nombre_region = null): void
+     public function setNombreRegionVo(RegionNameText|string|null $nombre_region = null): void
      {
          $this->nombre_region = $nombre_region instanceof RegionNameText
              ? $nombre_region

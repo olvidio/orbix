@@ -3,9 +3,8 @@
 namespace src\certificados\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use function core\is_true;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class CertificadoEmitido
 {

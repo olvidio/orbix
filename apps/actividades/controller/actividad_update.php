@@ -25,11 +25,11 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\Dinero;
+use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\value_objects\IdLocale;
-use web\DateTimeLocal;
-use web\TimeLocal;
 use function core\is_true;
 
 /**

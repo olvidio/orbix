@@ -2,10 +2,10 @@
 
 use core\ConfigDB;
 use core\DBConnection;
-use core\ValueObject\Uuid;
-use shared\domain\ColaMailId;
-use shared\domain\repositories\ColaMailRepositoryInterface;
+use src\shared\domain\contracts\ColaMailRepositoryInterface;
 use src\shared\domain\entity\ColaMail;
+use src\shared\domain\value_objects\ColaMailId;
+use src\shared\domain\value_objects\Uuid;
 use src\usuarios\domain\entity\Usuario;
 use web\ContestarJson;
 

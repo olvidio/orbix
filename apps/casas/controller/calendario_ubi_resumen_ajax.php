@@ -4,10 +4,10 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
-use web\DateTimeLocal;
 use web\Hash;
 use web\TiposActividades;
 

@@ -57,13 +57,13 @@ class Matricula
      */
     public function setId_asignatura(int $id_asignatura): void
     {
-        $this->id_asignatura = AsignaturaId::fromString($id_asignatura);
+        $this->id_asignatura = AsignaturaId::fromNullableInt($id_asignatura);
     }
     public function setIdAsignaturaVo(AsignaturaId|int $id_asignatura): void
     {
         $this->id_asignatura = $id_asignatura instanceof AsignaturaId
             ? $id_asignatura
-            : AsignaturaId::fromString($id_asignatura);
+            : AsignaturaId::fromNullableInt($id_asignatura);
     }
 
 

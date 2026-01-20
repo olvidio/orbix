@@ -2,11 +2,11 @@
 
 namespace src\casas\domain\entity;
 
-use src\casas\domain\value_objects\UbiGastoTipo;
 use src\casas\domain\value_objects\UbiGastoCantidad;
+use src\casas\domain\value_objects\UbiGastoTipo;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class UbiGasto
 {
@@ -60,13 +60,13 @@ class UbiGasto
     }
 
 
-    public function getTipoGastoVo(): ?UbiGastoTipo
+    public function getTipoVo(): ?UbiGastoTipo
     {
         return $this->tipo;
     }
 
 
-    public function setTipoGastoVo(UbiGastoTipo|int|null $texto = null): void
+    public function setTipoVo(UbiGastoTipo|int|null $texto = null): void
     {
         $this->tipo = $texto instanceof UbiGastoTipo
             ? $texto

@@ -4,7 +4,7 @@ namespace src\actividades\domain\contracts;
 
 use PDO;
 use src\actividades\domain\entity\ActividadAll;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 
 /**

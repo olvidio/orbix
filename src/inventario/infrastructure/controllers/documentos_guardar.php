@@ -1,9 +1,9 @@
 <?php
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 use web\ContestarJson;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 use function core\is_true;
 
 $Qdocumentos = (string)filter_input(INPUT_POST, 'documentos');

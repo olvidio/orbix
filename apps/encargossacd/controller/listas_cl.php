@@ -8,7 +8,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use src\encargossacd\application\traits\EncargoFunciones;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 require_once("global_header.inc");
 // Archivos requeridos por esta url **********************************************

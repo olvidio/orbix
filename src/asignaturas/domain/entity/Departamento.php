@@ -67,7 +67,7 @@ class Departamento
 
     public function setDepartamento(string $departamento): void
     {
-        $this->nombre_departamento = DepartamentoName::fromString($departamento);
+        $this->nombre_departamento = DepartamentoName::fromNullableString($departamento);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

@@ -147,6 +147,8 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
         $aDatos = $CentroDl->toArrayForDatabase([
             'f_active' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
+        // es posible que tenga los parametros de: repoCasaDireccion y repoDIreccion
+        unset($aDatos['repoCasaDireccion'], $aDatos['repoDireccion']);
 
         if ($bInsert === false) {
             //UPDATE
@@ -178,8 +180,8 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_auto,n_buzon,num_pi,num_cartas,observ,num_habit_indiv,plazas,id_zona,sede,num_cartas_mensuales)";
-            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:id_auto,:n_buzon,:num_pi,:num_cartas,:observ,:num_habit_indiv,:plazas,:id_zona,:sede,:num_cartas_mensuales)";
+            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,n_buzon,num_pi,num_cartas,observ,num_habit_indiv,plazas,id_zona,sede,num_cartas_mensuales)";
+            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:n_buzon,:num_pi,:num_cartas,:observ,:num_habit_indiv,:plazas,:id_zona,:sede,:num_cartas_mensuales)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);

@@ -8,11 +8,8 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\profesores\domain\value_objects\EscritoCese;
 use src\profesores\domain\value_objects\EscritoNombramiento;
-use src\profesores\domain\value_objects\FechaCese;
-use src\profesores\domain\value_objects\FechaNombramiento;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 
 class ProfesorAmpliacion
@@ -162,7 +159,7 @@ class ProfesorAmpliacion
         $this->f_cese = $valor;
     }
 
-/* ------------------- PARA el mod_tabla  -------------------------------*/
+    /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
         return 'id_item';

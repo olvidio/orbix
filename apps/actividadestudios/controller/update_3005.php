@@ -5,7 +5,7 @@ use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\entity\Dossier;
 use src\dossiers\domain\value_objects\DossierPk;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos

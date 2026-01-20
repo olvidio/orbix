@@ -6,7 +6,7 @@ use core\DatosInfo;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
-use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
+use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
@@ -56,7 +56,7 @@ class Info2001 extends DatosInfo
                 $this->obj = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
                 break;
             case 'Casa':
-                $this->obj = $GLOBALS['container']->get(TelecoCdcRepositoryInterface::class);
+                $this->obj = $GLOBALS['container']->get(TelecoUbiRepositoryInterface::class);
                 $this->obj = 'src\\ubis\\application\\repositories\\TelecoCdcRepository';
                 break;
             case 'CasaDl':

@@ -147,6 +147,8 @@ class PgCentroEllasRepository extends ClaseRepository implements CentroEllasRepo
         $aDatos = $CentroEllas->toArrayForDatabase([
             'f_active' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
+        // es posible que tenga los parametros de: repoCasaDireccion y repoDIreccion
+        unset($aDatos['repoCasaDireccion'], $aDatos['repoDireccion']);
 
         if ($bInsert === false) {
             //UPDATE

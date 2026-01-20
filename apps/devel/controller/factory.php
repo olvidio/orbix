@@ -5,7 +5,7 @@ namespace devel\controller;
 use core\ConfigGlobal;
 use core\ServerConf;
 use RuntimeException;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use function core\is_true;
 
 /**
@@ -269,13 +269,13 @@ foreach ($oDbl->query($sql) as $row) {
         case 'date':
         case 'timestamp':
         case 'timestamptz';
-            $a_use_txt['DateTimeLocal'] = "use web\DateTimeLocal";
-            $a_use_txt['NullDateTimeLocal'] = "use web\NullDateTimeLocal";
+            $a_use_txt['DateTimeLocal'] = "use src\shared\domain\value_objects\DateTimeLocal";
+            $a_use_txt['NullDateTimeLocal'] = "use src\shared\domain\value_objects\NullDateTimeLocal";
             $a_use_txt['ConverterDate'] = "use core\ConverterDate";
             break;
         case 'time':
-            $a_use_txt['TimeLocal'] = "use web\TimeLocal";
-            $a_use_txt['NullTimeLocal'] = "use web\NullTimeLocal";
+            $a_use_txt['TimeLocal'] = "use src\shared\domain\value_objects\TimeLocal";
+            $a_use_txt['NullTimeLocal'] = "use src\shared\domain\value_objects\NullTimeLocal";
             $a_use_txt['ConverterDate'] = "use core\ConverterDate";
             break;
         case 'bool':
@@ -708,16 +708,16 @@ if (!empty($a_use_txt['is_true'])) {
     $txt_entidad .= "\n\t" . 'use function core\is_true;';
 }
 if (!empty($a_use_txt['DateTimeLocal'])) {
-    $txt_entidad .= "\n\t" . 'use web\DateTimeLocal;';
+    $txt_entidad .= "\n\t" . 'use src\shared\domain\value_objects\DateTimeLocal;';
 }
 if (!empty($a_use_txt['NullDateTimeLocal'])) {
-    $txt_entidad .= "\n\t" . 'use web\NullDateTimeLocal;';
+    $txt_entidad .= "\n\t" . 'use src\shared\domain\value_objects\NullDateTimeLocal;';
 }
 if (!empty($a_use_txt['TimeLocal'])) {
-    $txt_entidad .= "\n\t" . 'use web\TimeLocal;';
+    $txt_entidad .= "\n\t" . 'use src\shared\domain\value_objects\TimeLocal;';
 }
 if (!empty($a_use_txt['NullTimeLocal'])) {
-    $txt_entidad .= "\n\t" . 'use web\NullTimeLocal;';
+    $txt_entidad .= "\n\t" . 'use src\shared\domain\value_objects\NullTimeLocal;';
 }
 if (!empty($a_use_txt['stdClass'])) {
     $txt_entidad .= "\n\t" . 'use stdClass;';

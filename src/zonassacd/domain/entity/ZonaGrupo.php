@@ -41,14 +41,9 @@ class ZonaGrupo
 
     public function setNombreGrupoVo(NombreGrupoZona|string|null $oNombreGrupoZona = null): void
     {
-        if ($oNombreGrupoZona === null) {
-            $this->nombre_grupo = null;
-            return;
-        }
-
         $this->nombre_grupo = $oNombreGrupoZona instanceof NombreGrupoZona
             ? $oNombreGrupoZona
-            : new NombreGrupoZona($oNombreGrupoZona);
+            : NombreGrupoZona::fromNullableString($oNombreGrupoZona);
     }
 
     /**
@@ -64,7 +59,7 @@ class ZonaGrupo
      */
     public function setNombre_grupo(?string $nombre_grupo = null): void
     {
-        $this->nombre_grupo = new NombreGrupoZona($nombre_grupo);
+        $this->nombre_grupo = NombreGrupoZona::fromNullableString($nombre_grupo);
     }
 
 

@@ -97,12 +97,12 @@ class ProfesorDocenciaStgr
         $this->id_activ = ActividadId::fromNullableInt($valor);
     }
 
-    public function getTipoActividadAsignaturaVo(): ?TipoActividadAsignatura
+    public function getTipoVo(): ?TipoActividadAsignatura
     {
         return $this->tipo;
     }
 
-    public function setTipoActividadAsignaturaVo(TipoActividadAsignatura|string|null $valor = null): void
+    public function setTipoVo(TipoActividadAsignatura|string|null $valor = null): void
     {
         $this->tipo = $valor instanceof TipoActividadAsignatura
             ? $valor
@@ -112,7 +112,7 @@ class ProfesorDocenciaStgr
     /**
      * @deprecated use getTipoActividadAsignaturaVo()
      */
-    public function getTipoActividadAsignatura(): ?string
+    public function getTipo(): ?string
     {
         return $this->tipo?->value();
     }
@@ -120,7 +120,7 @@ class ProfesorDocenciaStgr
     /**
      * @deprecated use setTipoActividadAsignaturaVo()
      */
-    public function setTipoActividadAsignatura(?string $valor = null): void
+    public function setTipo(?string $valor = null): void
     {
         $this->tipo = TipoActividadAsignatura::fromNullableString($valor);
     }

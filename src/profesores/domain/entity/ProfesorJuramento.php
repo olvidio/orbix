@@ -5,8 +5,7 @@ namespace src\profesores\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 class ProfesorJuramento
 {

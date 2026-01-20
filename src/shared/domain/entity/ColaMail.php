@@ -2,10 +2,10 @@
 
 namespace src\shared\domain\entity;
 
-use shared\domain\ColaMailId;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\ColaMailId;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 
 class ColaMail
@@ -26,7 +26,7 @@ class ColaMail
 
     private ?string $writed_by = null;
 
-   private ?DateTimeLocal $dsended = null;
+   private ?DateTimeLocal $sended = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -36,9 +36,11 @@ class ColaMail
     }
 
 
-    public function setUuid_item(ColaMailId $uuid_item): void
+    public function setUuid_item(ColaMailId|string $uuid_item): void
     {
-        $this->uuid_item = $uuid_item;
+        $this->uuid_item = $uuid_item instanceof ColaMailId
+            ? $uuid_item
+            : ColaMailId::fromString($uuid_item);
     }
 
 

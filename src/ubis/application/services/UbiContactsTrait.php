@@ -18,11 +18,10 @@ use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
-use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
+use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
-use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 
 trait UbiContactsTrait
 {
@@ -100,7 +99,7 @@ trait UbiContactsTrait
                 $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
                 break;
             case 'Casa':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcRepositoryInterface::class);
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoUbiRepositoryInterface::class);
                 break;
             case 'CasaDl':
                 $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);
@@ -150,7 +149,7 @@ trait UbiContactsTrait
                 $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
                 break;
             case 'Casa':
-                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcRepositoryInterface::class);
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoUbiRepositoryInterface::class);
                 break;
             case 'CasaDl':
                 $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);

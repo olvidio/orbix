@@ -6,9 +6,9 @@ use src\encargossacd\application\traits\EncargoFunciones;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use web\DateTimeLocal;
 
 /* Listado de ateción sacd. según cr 9/05, Anexo2,9.4 a) 
 *

@@ -21,9 +21,7 @@ final class DireccionText
         if (mb_strlen($value) > 200) {
             throw new \InvalidArgumentException('DireccionText must be at most 200 characters');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'´’:_\-()#\/\\,]+$/u", $value)) {
-            throw new \InvalidArgumentException('DireccionText has invalid characters');
-        }
+
     }
 
     public function value(): string

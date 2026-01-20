@@ -1,16 +1,15 @@
 <?php
 
-namespace src\misas\domain\value_objects;
+namespace src\shared\domain\value_objects;
 
 use Ramsey\Uuid\Exception\InvalidArgumentException;
 use Ramsey\Uuid\Uuid as RamseyUuid;
-use src\shared\domain\value_objects\Uuid;
 
-final class EncargoDiaId extends Uuid
+final class ColaMailId extends Uuid
 {
     public static function random(): self
     {
-        return new EncargoDiaId(parent::random());
+        return new ColaMailId(parent::random());
     }
 
     public function value(): string

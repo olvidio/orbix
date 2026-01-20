@@ -9,7 +9,7 @@ use src\profesores\domain\value_objects\CongresoTipo;
 use src\profesores\domain\value_objects\LugarName;
 use src\profesores\domain\value_objects\OrganizaName;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 
 class ProfesorCongreso
@@ -120,12 +120,12 @@ class ProfesorCongreso
         $this->organiza = OrganizaName::fromNullableString($valor);
     }
 
-    public function getTipoCongresoVo(): ?CongresoTipo
+    public function getTipoVo(): ?CongresoTipo
     {
         return $this->tipo;
     }
 
-    public function setTipoCongresoVo(CongresoTipo|string|null $valor = null): void
+    public function setTipoVo(CongresoTipo|int|null $valor = null): void
     {
         $this->tipo = $valor instanceof CongresoTipo
             ? $valor
@@ -135,7 +135,7 @@ class ProfesorCongreso
     /**
      * @deprecated use getTipoCongresoVo()
      */
-    public function getTipoCongreso(): ?string
+    public function getTipo(): ?string
     {
         return $this->tipo?->value();
     }
@@ -143,7 +143,7 @@ class ProfesorCongreso
     /**
      * @deprecated use setTipoCongresoVo()
      */
-    public function setTipoCongreso(?string $valor = null): void
+    public function setTipo(?int $valor = null): void
     {
         $this->tipo = CongresoTipo::fromNullableInt($valor);
     }

@@ -3,8 +3,7 @@
 namespace src\shared\domain;
 
 use src\profesores\domain\entity\ProfesorLatin;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use function core\is_true;
 
 class DatosUpdateRepo

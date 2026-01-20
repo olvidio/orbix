@@ -13,7 +13,7 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\entity\TelecoPersona;
 use src\personas\domain\TrasladoDl;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Description of SincroDB

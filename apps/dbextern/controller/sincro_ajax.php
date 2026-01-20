@@ -86,7 +86,7 @@ switch ($que) {
 
             }
 
-            $oHoy = new web\DateTimeLocal();
+            $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
             $obj = 'personas\\model\\entity\\' . $obj_pau;
             $oPersona = new $obj();
 
@@ -219,7 +219,7 @@ switch ($que) {
             }
         }
         $mi_esquema = ConfigGlobal::mi_region_dl();
-        $oHoy = new web\DateTimeLocal();
+        $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
 
         $oTrasladoDl->setDl_persona($dl);
         $oTrasladoDl->setReg_dl_org($esq_org);
@@ -241,7 +241,7 @@ switch ($que) {
 
         $mi_dele = ConfigGlobal::mi_delef();
         $mi_esquema = ConfigGlobal::mi_region_dl();
-        $oHoy = new web\DateTimeLocal();
+        $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
         $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
         // si cambia de región, debe hacerse manualmente para introducir
         // correctamente el campo 'situacion'
@@ -285,7 +285,7 @@ switch ($que) {
 
         $mi_dele = ConfigGlobal::mi_delef();
         $mi_esquema = ConfigGlobal::mi_region_dl();
-        $oHoy = new web\DateTimeLocal();
+        $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
         $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
         $esq_dst = "H-" . $dl . $sfsv_txt;
 
@@ -382,7 +382,7 @@ switch ($que) {
 
             }
 
-            $oHoy = new web\DateTimeLocal();
+            $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
             $obj = 'personas\\model\\entity\\' . $obj_pau;
             $oPersona = new $obj();
 

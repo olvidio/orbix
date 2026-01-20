@@ -26,10 +26,10 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use web\DateTimeLocal;
 use web\Periodo;
 
 require_once("apps/core/global_header.inc");

@@ -14,8 +14,11 @@ final class CasaId
 
     private function validate(int $value): void
     {
-        if ($value <= 0) {
-            throw new \InvalidArgumentException('CasaId must be a positive integer');
+        $valueStr = (string)$value;
+        $isValid = preg_match('/^[123]\d{4,}$/', $valueStr) || preg_match('/^-[123]\d{4,}$/', $valueStr);
+
+        if (!$isValid) {
+            throw new \InvalidArgumentException("El valor debe empezar por 1, 2, 3 o -1, -2, -3 y tener al menos 5 dígitos");
         }
     }
 

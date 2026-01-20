@@ -3,7 +3,7 @@
 namespace src\misas\domain\value_objects;
 
 use DateTimeZone;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 final class EncargoDiaTstart extends DateTimeLocal
 {

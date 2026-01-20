@@ -12,14 +12,14 @@ class ActividadesPorCasas
 
     /**
      * @param int $Qcdc_sel
-     * @param \web\DateTimeLocal $oIniPlanning
-     * @param \web\DateTimeLocal $oFinPlanning
+     * @param \src\shared\domain\value_objects\DateTimeLocal $oIniPlanning
+     * @param \src\shared\domain\value_objects\DateTimeLocal $oFinPlanning
      * @param mixed $sin_activ
      * @param string $fin_iso
      * @param string $inicio_iso
      * @return array
      */
-    public static function actividadesPorCasas(int $Qcdc_sel, \web\DateTimeLocal $oIniPlanning, \web\DateTimeLocal $oFinPlanning, mixed $sin_activ, string $fin_iso, string $inicio_iso): array
+    public static function actividadesPorCasas(int $Qcdc_sel, \src\shared\domain\value_objects\DateTimeLocal $oIniPlanning, \src\shared\domain\value_objects\DateTimeLocal $oFinPlanning, mixed $sin_activ, string $fin_iso, string $inicio_iso): array
     {
         $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         $sCdc = '';

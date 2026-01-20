@@ -24,8 +24,8 @@ use core\ConfigGlobal;
  *
  * @param integer $dd - 1 ó 3 divisiones por día. (en el caso 3 los periodos son: 0-10; 10-20; 20-24 )
  * @param string $cabecera - Es el título que se pone en la primera celda.
- * @param string $oInicio - fecha de inicio del planning. web\DateTimeLocal
- * @param string $oFin - fecha de final del planning. web\DateTimeLocal
+ * @param string $oInicio - fecha de inicio del planning. src\shared\domain\value_objects\DateTimeLocal
+ * @param string $oFin - fecha de final del planning. src\shared\domain\value_objects\DateTimeLocal
  *
  * @param integer $mod - 0 ó nº. Para controlar si puede modificar las actividades.
  *                    Está por cuestiones de velocidad (tamaño de la página).
@@ -315,12 +315,12 @@ function dibujar_calendario(int $dd, string $cabecera, string $oInicio, string $
                 }
 
                 //list($dini[$a],$mini[$a],$aini[$a]) = preg_split('/[\.\/-]/', $ini ); //los delimitadores pueden ser /, ., -
-                $oIniAct = web\DateTimeLocal::createFromLocal($ini);
+                $oIniAct = \src\shared\domain\value_objects\DateTimeLocal::createFromLocal($ini);
                 $dini[$a] = $oIniAct->format('d');
                 $mini[$a] = $oIniAct->format('m');
                 $aini[$a] = $oIniAct->format('Y');
                 //list($dfi[$a],$mfi[$a],$afi[$a]) = preg_split('/[\.\/-]/', $fi ); //los delimitadores pueden ser /, ., -
-                $oFinAct = web\DateTimeLocal::createFromLocal($fi);
+                $oFinAct = \src\shared\domain\value_objects\DateTimeLocal::createFromLocal($fi);
                 $dfi[$a] = $oFinAct->format('d');
                 $mfi[$a] = $oFinAct->format('m');
                 $afi[$a] = $oFinAct->format('Y');

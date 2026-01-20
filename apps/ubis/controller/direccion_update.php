@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -10,7 +11,6 @@ use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 use src\ubis\domain\entity\Direccion;
-use web\DateTimeLocal;
 use function core\is_true;
 
 /**

@@ -29,12 +29,10 @@ class Egm
         return $this->id_item;
     }
 
-
-    public function setId_item(int $id_item): void
+    public function setId_item(?int $id = null): void
     {
-        $this->id_item = $id_item;
+        $this->id_item = $id;
     }
-
 
     public function getId_equipaje(): ?string
     {
@@ -84,16 +82,6 @@ class Egm
     }
 
     // Value Object API (duplicada con legacy)
-    public function getIdItemVo(): int
-    {
-        return $this->id_item;
-    }
-
-    public function setIdItemVo(?int $id = null): void
-    {
-        $this->id_item = $id;
-    }
-
     public function getIdEquipajeVo(): ?EgmEquipajeId
     {
         return $this->id_equipaje;

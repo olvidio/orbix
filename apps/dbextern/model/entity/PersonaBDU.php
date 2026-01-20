@@ -7,8 +7,8 @@ use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
 use DateTime;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class PersonaBDU extends ClasePropiedades
 {

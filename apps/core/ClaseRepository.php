@@ -56,7 +56,7 @@ abstract class ClaseRepository
     }
 
     /**
-     * El faig public per quan s'ha de copiar dades d'un esquema a un altre.
+     * Lo hago público para cuando se necesita copiar datos entre esquemas.
      *
      * @param PDO $oDbl
      */

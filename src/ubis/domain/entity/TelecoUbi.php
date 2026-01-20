@@ -7,8 +7,7 @@ use core\Set;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
-use src\ubis\domain\value_objects\{DescTelecoText};
-use src\ubis\domain\value_objects\{NumTelecoText, ObservTelecoText, TelecoUbiId, TelecoUbiItemId, TipoTelecoId};
+use src\ubis\domain\value_objects\{NumTelecoText, ObservTelecoText, TelecoUbiId, TipoTelecoId};
 
 
 class TelecoUbi
@@ -22,7 +21,7 @@ class TelecoUbi
 
     private TipoTelecoId $id_tipo_teleco;
 
-    private ?DescTelecoText $desc_teleco = null;
+    private ?int $id_desc_teleco = null;
 
     private NumTelecoText $num_teleco;
 
@@ -43,7 +42,7 @@ class TelecoUbi
     public function setIdUbiVo(TelecoUbiId|int|null $id): void
     {
         $this->id_ubi = $id instanceof TelecoUbiId
-            ? $id->value()
+            ? $id
             : TelecoUbiId::fromNullableInt($id);
     }
 
@@ -63,12 +62,17 @@ class TelecoUbi
         $this->id_ubi = TelecoUbiId::fromNullableInt($id_ubi);
     }
 
+
     /**
      * @deprecated Usar `getIdTipoTelecoVo(): TipoTelecoId` en su lugar.
      */
     public function getId_tipo_teleco(): int
     {
         return $this->id_tipo_teleco->value();
+    }
+    public function getIdTipoTelecoVo(): TipoTelecoId
+    {
+        return $this->id_tipo_teleco;
     }
 
     /**
@@ -78,45 +82,22 @@ class TelecoUbi
     {
         $this->id_tipo_teleco = TipoTelecoId::fromNullableInt($id_tipo_teleco);
     }
-
-    public function getIdTipoTelecoVo(): TipoTelecoId
+    public function setIdTipoTelecoVo(TipoTelecoId|int|null $valor = null): void
     {
-        return $this->id_tipo_teleco;
+        $this->id_tipo_teleco = $valor instanceof TipoTelecoId
+            ? $valor
+            : TipoTelecoId::fromNullableInt($valor);
     }
 
-    public function setIdTipoTelecoVo(TipoTelecoId|int|null $id): void
+
+    public function getId_desc_teleco(): ?int
     {
-        $this->id_tipo_teleco = $id instanceof TipoTelecoId
-            ? $id->value()
-            : TipoTelecoId::fromNullableInt($id);
+        return $this->id_desc_teleco;
     }
 
-    /**
-     * @deprecated Usar `getDescTelecoVo(): ?DescTelecoText` en su lugar.
-     */
-    public function getId_desc_teleco(): ?string
+    public function setId_desc_teleco(?int $id = null): void
     {
-        return $this->desc_teleco?->value();
-    }
-
-    /**
-     * @deprecated Usar `setDescTelecoVo(?DescTelecoText $texto = null): void` en su lugar.
-     */
-    public function setId_desc_teleco(?string $desc_teleco = null): void
-    {
-        $this->desc_teleco = DescTelecoText::fromNullableString($desc_teleco);
-    }
-
-    public function getIdDescTelecoVo(): ?DescTelecoText
-    {
-        return $this->desc_teleco;
-    }
-
-    public function setIdDescTelecoVo(DescTelecoText|string|null $texto = null): void
-    {
-        $this->desc_teleco = $texto instanceof DescTelecoText
-            ? $texto
-            : DescTelecoText::fromNullableString($texto);
+        $this->id_desc_teleco = $id;
     }
 
     /**
@@ -143,7 +124,7 @@ class TelecoUbi
     public function setNumTelecoVo(NumTelecoText|string|null $texto): void
     {
         $this->num_teleco = $texto instanceof NumTelecoText
-            ? $texto->value()
+            ? $texto
             : NumTelecoText::fromNullableString($texto);
     }
 

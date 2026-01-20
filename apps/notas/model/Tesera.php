@@ -13,7 +13,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\Posicion;
 use function core\is_true;
 

@@ -62,6 +62,9 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $row) {
             $pais = $row[0];
+            if ($pais === null) {
+                continue;
+            }
             $pais1 = $row[1];
 
             $aOpciones[$pais] = $pais1;
@@ -169,7 +172,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $bInsert = $this->isNew($id_direccion);
 
         $aDatos = $Direccion->toArrayForDatabase([
-            'plano_doc' => fn($v) => bin2hex($v),
+            'plano_doc' => fn($v) => ($v ? bin2hex($v) : null),
             'f_direccion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
 

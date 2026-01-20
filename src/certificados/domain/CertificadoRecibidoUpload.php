@@ -6,8 +6,8 @@ use core\ConfigGlobal;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\personas\domain\entity\Persona;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class CertificadoRecibidoUpload
 {

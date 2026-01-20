@@ -81,13 +81,13 @@ class PlazaPeticion
     /**
      * @return PeticionTipo|null
      */
-    public function getTipoPlazaPeticionVo(): ?PeticionTipo
+    public function getTipoVo(): ?PeticionTipo
     {
         return $this->tipo;
     }
 
 
-    public function setTipoPlazaPeticionVo(PeticionTipo|string|null $texto = null): void
+    public function setTipoVo(PeticionTipo|string|null $texto = null): void
     {
         $this->tipo = $texto instanceof PeticionTipo
             ? $texto
@@ -97,7 +97,7 @@ class PlazaPeticion
     /**
      * @deprecated use getTipoPlazaPeticionVo()
      */
-    public function getTipoPlazaPeticion(): ?string
+    public function getTipo(): ?string
     {
         return $this->tipo?->value();
     }
@@ -105,7 +105,7 @@ class PlazaPeticion
     /**
      * @deprecated use setTipoPlazaPeticionVo()
      */
-    public function setTipoPlazaPeticion(?string $tipo = null): void
+    public function setTipo(?string $tipo = null): void
     {
         $this->tipo = PeticionTipo::fromNullableString($tipo);
     }

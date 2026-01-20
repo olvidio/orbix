@@ -4,7 +4,7 @@ namespace src\tablonanuncios\domain\value_objects;
 
 
 use DateTimeZone;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 final class AnuncioTAnotado extends DateTimeLocal
 {

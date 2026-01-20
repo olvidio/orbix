@@ -7,8 +7,8 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\Traslado;
 use src\personas\domain\TrasladoDl;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
-use web\DateTimeLocal;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos

@@ -7,7 +7,6 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\ubis\application\services\DelegacionDropdown;
@@ -98,7 +97,7 @@ switch ($Qque) {
             $oData2->sub(new DateInterval('P3M'));
             $f_ini_iso = $oData2->format('Y-m-d');
         } else { // desde hoy, 10 meses antes.
-            $oData = new web\DateTimeLocal();
+            $oData = new \src\shared\domain\value_objects\DateTimeLocal();
             $oData2 = clone $oData;
             $oData->add(new DateInterval('P1M'));
             $f_fin_iso = $oData->format('Y-m-d');

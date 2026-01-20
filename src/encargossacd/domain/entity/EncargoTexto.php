@@ -106,7 +106,7 @@ class EncargoTexto
      */
     public function setTexto(?string $texto = null): void
     {
-        $this->texto = $texto;
+        $this->texto = EncargoText::fromNullableString($texto);
     }
     public function setTextoVo(EncargoText|string|null $texto = null): void
     {

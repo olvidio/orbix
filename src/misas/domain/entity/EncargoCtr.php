@@ -23,8 +23,8 @@ class EncargoCtr
 
     private EncargoCtrId $uuid_item;
 
-    private int $iid_enc;
-    private int $iid_ubi;
+    private int $id_enc;
+    private int $id_ubi;
 
     /**
      *
@@ -46,12 +46,12 @@ class EncargoCtr
     /**
      * @deprecated use setUuidItemVo()
      */
-    public function setUuid_item(EncargoCtrId $uuid_item): void
+    public function setUuid_item(string $uuid_item): void
     {
         $this->uuid_item = new EncargoCtrId($uuid_item);
     }
 
-    public function setUuidItemVo(EncargoCtrId $uuid_item): void
+    public function setUuidItemVo(EncargoCtrId|string $uuid_item): void
     {
         $this->uuid_item = $uuid_item instanceof EncargoCtrId
             ? $uuid_item
@@ -61,25 +61,25 @@ class EncargoCtr
 
     public function getId_enc(): ?int
     {
-        return $this->iid_enc;
+        return $this->id_enc;
     }
 
 
-    public function setId_enc(?int $iid_enc = null): void
+    public function setId_enc(?int $id_enc = null): void
     {
-        $this->iid_enc = $iid_enc;
+        $this->id_enc = $id_enc;
     }
 
 
     public function getId_ubi(): ?int
     {
-        return $this->iid_ubi;
+        return $this->id_ubi;
     }
 
 
-    public function setId_ubi(?int $iid_ubi = null): void
+    public function setId_ubi(?int $id_ubi = null): void
     {
-        $this->iid_ubi = $iid_ubi;
+        $this->id_ubi = $id_ubi;
     }
 
 }

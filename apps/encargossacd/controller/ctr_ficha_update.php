@@ -5,9 +5,9 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use web\DateTimeLocal;
 
 /**
  * Esta página actualiza la base de datos de los encargos.

@@ -4,29 +4,54 @@ namespace src\ubis\domain\entity;
 
 class DireccionDetalle
 {
-    private Direccion $direccion;
-    private bool $principal;
-    private bool $propietario;
+    private ?Direccion $direccion = null;
+    private ?bool $principal = null;
+    private ?bool $propietario = null;
 
-    public function __construct(Direccion $direccion, bool $principal, bool $propietario)
+    public function __construct(?array $data = null)
     {
-        $this->direccion = $direccion;
-        $this->principal = $principal;
-        $this->propietario = $propietario;
+        if ($data !== null) {
+            if (isset($data['direccion'])) {
+                $this->direccion = $data['direccion'];
+            }
+            if (isset($data['principal'])) {
+                $this->principal = $data['principal'];
+            }
+            if (isset($data['propietario'])) {
+                $this->propietario = $data['propietario'];
+            }
+        }
     }
 
-    public function getDireccion(): Direccion
+    public function getDireccionVo(): ?Direccion
     {
         return $this->direccion;
     }
 
-    public function isPrincipal(): bool
+    public function setDireccionVo(Direccion|string|null $direccion): void
+    {
+        $this->direccion = $direccion instanceof Direccion
+            ? $direccion
+            : Direccion::fromNullableString($direccion);
+    }
+
+    public function isPrincipal(): ?bool
     {
         return $this->principal;
     }
 
-    public function isPropietario(): bool
+    public function setPrincipal(bool $principal): void
+    {
+        $this->principal = $principal;
+    }
+
+    public function isPropietario(): ?bool
     {
         return $this->propietario;
+    }
+
+    public function setPropietario(bool $propietario): void
+    {
+        $this->propietario = $propietario;
     }
 }

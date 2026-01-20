@@ -5,7 +5,7 @@ namespace src\misas\domain;
 use DateInterval;
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 class EncargosZona
 {

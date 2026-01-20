@@ -73,7 +73,7 @@ $oCentroDl = $CentroDlRepository->findById($id_ctr);
 $nombre_ctr = $oCentroDl->getNombre_ubi();
 $dl = $oPersona->getDl();
 
-$oHoy = new web\DateTimeLocal();
+$oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
 $hoy = $oHoy->getFromLocal();
 
 $oHash = new Hash();

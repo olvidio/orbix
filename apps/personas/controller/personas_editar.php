@@ -80,7 +80,7 @@ $observ = '';
 
 
 if (!empty($Qnuevo)) {
-    $oF_hoy = new web\DateTimeLocal();
+    $oF_hoy = new \src\shared\domain\value_objects\DateTimeLocal();
     $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
     // para los acentos
     $Qapellido1 = urldecode($Qapellido1);

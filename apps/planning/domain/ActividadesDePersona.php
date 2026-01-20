@@ -5,8 +5,8 @@ namespace planning\domain;
 use core\ConfigGlobal;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\DateTimeLocal;
 use web\TiposActividades;
 
 class ActividadesDePersona

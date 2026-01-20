@@ -6,7 +6,8 @@ use core\DatosCampo;
 use core\Set;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
-use src\ubis\domain\value_objects\{DescTelecoOrder, DescTelecoText, TipoTelecoCode};
+use src\ubis\domain\value_objects\DescTelecoOrder;
+use src\ubis\domain\value_objects\DescTelecoText;
 
 
 class DescTeleco
@@ -20,13 +21,13 @@ class DescTeleco
 
     private ?DescTelecoOrder $orden = null;
 
-    private TipoTelecoCode $id_tipo_teleco;
+    private int $id_tipo_teleco;
 
     private ?DescTelecoText $desc_teleco = null;
 
-    private?bool $ubi = null;
+    private ?bool $ubi = null;
 
-    private?bool $persona = null;
+    private ?bool $persona = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -44,16 +45,14 @@ class DescTeleco
             : DescTelecoOrder::fromNullableInt($valor);
     }
 
-    public function getIdTipoTelecoVo(): TipoTelecoCode
+    public function getId_tipo_teleco(): int
     {
         return $this->id_tipo_teleco;
     }
 
-    public function setIdTipoTelecoVo(TipoTelecoCode|string|null $codigo): void
+    public function setId_tipo_teleco(int $id): void
     {
-        $this->id_tipo_teleco = $codigo instanceof TipoTelecoCode
-            ? $codigo
-            : TipoTelecoCode::fromNullableString($codigo);
+        $this->id_tipo_teleco = $id;
     }
 
     public function getDescTelecoVo(): ?DescTelecoText
@@ -91,29 +90,6 @@ class DescTeleco
     {
         $this->orden = DescTelecoOrder::fromNullableInt($orden);
     }
-
-    public function getIdTipoteleco(): int
-    {
-        return $this->id_tipo_teleco?->value();
-    }
-
-    public function setIdTipoteleco(int $id_tipo_teleco): void
-    {
-        $this->id_tipo_teleco = new TipoTelecoCode($id_tipo_teleco);
-    }
-
-
-    public function getDesc_teleco(): ?string
-    {
-        return $this->desc_teleco?->value();
-    }
-
-
-    public function setDesc_teleco(?string $desc_teleco = null): void
-    {
-        $this->desc_teleco = DescTelecoText::fromNullableString($desc_teleco);
-    }
-
 
     public function isUbi(): ?bool
     {

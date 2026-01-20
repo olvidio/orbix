@@ -22,8 +22,8 @@
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\casas\domain\entity\UbiGasto;
 use src\casas\domain\value_objects\UbiGastoTipo;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
-use web\DateTimeLocal;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -60,7 +60,7 @@ switch ($Qque) {
             $oUbiGasto->setId_item($newId);
             $oUbiGasto->setF_gasto($oFecha);
             $oUbiGasto->setId_ubi($Qid_ubi);
-            $oUbiGasto->setTipoGastoVo(UbiGastoTipo::GASTO);
+            $oUbiGasto->setTipoVo(UbiGastoTipo::GASTO);
             $oUbiGasto->setCantidadVo($g);
             if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
                 echo _("Hay un error, no se ha guardado.");
@@ -71,7 +71,7 @@ switch ($Qque) {
             $oUbiGasto->setId_item($newId);
             $oUbiGasto->setF_gasto($oFecha);
             $oUbiGasto->setId_ubi($Qid_ubi);
-            $oUbiGasto->setTipoGastoVo(UbiGastoTipo::APORTACION_SV);
+            $oUbiGasto->setTipoVo(UbiGastoTipo::APORTACION_SV);
             $oUbiGasto->setCantidadVo($ap_sv);
             if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
                 echo _("Hay un error, no se ha guardado.");
@@ -82,7 +82,7 @@ switch ($Qque) {
             $oUbiGasto->setId_item($newId);
             $oUbiGasto->setF_gasto($oFecha);
             $oUbiGasto->setId_ubi($Qid_ubi);
-            $oUbiGasto->setTipoGastoVo(UbiGastoTipo::APORTACION_SF);
+            $oUbiGasto->setTipoVo(UbiGastoTipo::APORTACION_SF);
             $oUbiGasto->setCantidadVo($ap_sf);
             if ($UbiGastoRepository->Guardar($oUbiGasto) === false) {
                 echo _("Hay un error, no se ha guardado.");

@@ -5,7 +5,7 @@ namespace dbextern\model;
 use core\ConfigGlobal;
 use DateTimeInterface;
 use PDO;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 class CopiarBDU
 {

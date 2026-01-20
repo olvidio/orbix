@@ -6,10 +6,6 @@ use PDO;
 use src\profesores\domain\entity\ProfesorPublicacion;
 
 
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use core\ConverterDate;
-use function core\is_true;
 /**
  * Interfaz de la clase ProfesorPublicacion y su Repositorio
  *

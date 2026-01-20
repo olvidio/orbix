@@ -68,7 +68,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
     $Qna = strtok("#"); // id_tabla
     $Qgrupo_estudios = 'todos';
-    $oHoy = new web\DateTimeLocal();
+    $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
     $inicioIso = $oHoy->format("Y-m-d");
     $ini_m = $_SESSION['oConfig']->getMesIniStgr();
     $year = date("Y");

@@ -6,9 +6,9 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\DateTimeLocal;
 use web\Hash;
 use web\Periodo;
 

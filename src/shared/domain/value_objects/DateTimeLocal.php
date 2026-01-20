@@ -1,6 +1,6 @@
 <?php
 
-namespace web;
+namespace src\shared\domain\value_objects;
 
 use DateInterval;
 use DateTime;

@@ -120,7 +120,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
 
     public function Eliminar(TipoCentro $TipoCentro): bool
     {
-        $tipo_ctr = $TipoCentro->getTipoCentroVo()->value();
+        $tipo_ctr = $TipoCentro->getTipoCtrVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'";
@@ -132,7 +132,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
      */
     public function Guardar(TipoCentro $TipoCentro): bool
     {
-        $tipo_ctr = $TipoCentro->getTipoCentroVo()->value();
+        $tipo_ctr = $TipoCentro->getTipoCtrVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($tipo_ctr);

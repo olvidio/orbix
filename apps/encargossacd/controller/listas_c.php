@@ -6,11 +6,11 @@ use src\encargossacd\application\traits\EncargoFunciones;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
-use web\DateTimeLocal;
 use function core\strtoupper_dlb;
 
 /* Listado de ateción sacd. según cr 9/05, Anexo2,9.4 c) 

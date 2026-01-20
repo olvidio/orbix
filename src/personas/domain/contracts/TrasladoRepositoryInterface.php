@@ -6,9 +6,6 @@ use PDO;
 use src\personas\domain\entity\Traslado;
 
 
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use core\ConverterDate;
 /**
  * Interfaz de la clase Traslado y su Repositorio
  *

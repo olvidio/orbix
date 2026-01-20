@@ -5,10 +5,6 @@ namespace src\ubis\domain\contracts;
 use PDO;
 use src\ubis\domain\entity\CentroEx;
 
-use function core\is_true;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use core\ConverterDate;
 /**
  * Interfaz de la clase CentroEx y su Repositorio
  *

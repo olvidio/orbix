@@ -11,7 +11,7 @@ use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use function core\is_true;
 
 /**

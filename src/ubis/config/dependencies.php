@@ -31,7 +31,6 @@ use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
-use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
 use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
@@ -66,7 +65,6 @@ use src\ubis\infrastructure\repositories\PgTelecoCdcRepository;
 use src\ubis\infrastructure\repositories\PgTelecoCtrDlRepository;
 use src\ubis\infrastructure\repositories\PgTelecoCtrExRepository;
 use src\ubis\infrastructure\repositories\PgTelecoCtrRepository;
-use src\ubis\infrastructure\repositories\PgTelecoUbiRepository;
 use src\ubis\infrastructure\repositories\PgTipoCasaRepository;
 use src\ubis\infrastructure\repositories\PgTipoCentroRepository;
 use src\ubis\infrastructure\repositories\PgTipoTelecoRepository;
@@ -110,7 +108,6 @@ return [
     TelecoCtrDlRepositoryInterface::class => autowire(PgTelecoCtrDlRepository::class),
     TelecoCtrExRepositoryInterface::class => autowire(PgTelecoCtrExRepository::class),
     TelecoCtrRepositoryInterface::class => autowire(PgTelecoCtrRepository::class),
-    TelecoUbiRepositoryInterface::class => autowire(PgTelecoUbiRepository::class),
     TipoCasaRepositoryInterface::class => autowire(PgTipoCasaRepository::class),
     TipoCentroRepositoryInterface::class => autowire(PgTipoCentroRepository::class),
     TipoTelecoRepositoryInterface::class => autowire(PgTipoTelecoRepository::class),

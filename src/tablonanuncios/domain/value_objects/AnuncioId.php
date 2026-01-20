@@ -2,9 +2,9 @@
 
 namespace src\tablonanuncios\domain\value_objects;
 
-use core\ValueObject\Uuid;
 use Ramsey\Uuid\Exception\InvalidArgumentException;
 use Ramsey\Uuid\Uuid as RamseyUuid;
+use src\shared\domain\value_objects\Uuid;
 
 final class AnuncioId extends Uuid
 {

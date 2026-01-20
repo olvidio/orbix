@@ -2,8 +2,8 @@
 
 namespace planning\domain;
 
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
-use web\DateTimeLocal;
 
 /**
  * Esta página sólo tiene las funciones. Es para hacer incluir en la página que sea
@@ -28,8 +28,8 @@ use web\DateTimeLocal;
  *
  * @param integer $dd - 1 ó 3 divisiones por día. (en el caso 3 los periodos son: 0-10; 10-20; 20-24 )
  * @param string $cabecera - Es el título que se pone en la primera celda.
- * @param string $oInicio - fecha de inicio del planning. web\DateTimeLocal
- * @param string $oFin - fecha de final del planning. web\DateTimeLocal
+ * @param string $oInicio - fecha de inicio del planning. src\shared\domain\value_objects\DateTimeLocal
+ * @param string $oFin - fecha de final del planning. src\shared\domain\value_objects\DateTimeLocal
  *
  * @param integer $mod - 0 ó nº. Para controlar si puede modificar las actividades.
  *                    Está por cuestiones de velocidad (tamaño de la página).

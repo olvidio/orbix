@@ -15,47 +15,48 @@ class TipoCentro
     /**
      * Código del Tipo de Centro
      */
-    private TipoCentroCode $tipo_centro;
+    private TipoCentroCode $tipo_ctr;
     /**
      * Nombre del Tipo de Centro
      */
-    private ?TipoCentroName $nombre_tipo_centro = null;
+    private ?TipoCentroName $nombre_tipo_ctr = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     // VO API
-    public function getTipoCentroVo(): TipoCentroCode
+    public function getTipoCtrVo(): TipoCentroCode
     {
-        return $this->tipo_centro;
+        return $this->tipo_ctr;
     }
 
-    public function setTipoCentroVo(?TipoCentroCode $tipoCentro = null): void
+    public function setTipoCtrVo(TipoCentroCode|string|null $tipoCentro = null): void
     {
-        $this->tipo_centro = $tipoCentro;
+        $this->tipo_ctr = $tipoCentro instanceof TipoCentroCode
+            ? $tipoCentro
+            : TipoCentroCode::fromNullableString($tipoCentro);
     }
 
 
     public function getTipo_ctr(): string
     {
-        return $this->tipo_centro?->value();
+        return $this->tipo_ctr->value();
     }
 
 
     public function setTipo_ctr(string $tipo_ctr): void
     {
-        $tipo_ctr = trim($tipo_ctr);
-        $this->tipo_centro = $tipo_ctr !== '' ? new TipoCentroCode($tipo_ctr) : null;
+        $this->tipo_ctr = TipoCentroCode::fromNullableString($tipo_ctr);
     }
 
     // VO API
-    public function getNombreTipoCentroVo(): ?TipoCentroName
+    public function getNombreTipoCtrVo(): ?TipoCentroName
     {
-        return $this->nombre_tipo_centro;
+        return $this->nombre_tipo_ctr;
     }
 
-    public function setNombreTipoCentroVo(TipoCentroName|string|null $texto = null): void
+    public function setNombreTipoCtrVo(TipoCentroName|string|null $texto = null): void
     {
-        $this->nombre_tipo_centro = $texto instanceof TipoCentroName
+        $this->nombre_tipo_ctr = $texto instanceof TipoCentroName
             ? $texto
             : TipoCentroName::fromNullableString($texto);
     }
@@ -63,13 +64,13 @@ class TipoCentro
 
     public function getNombre_tipo_ctr(): ?string
     {
-        return $this->nombre_tipo_centro?->value();
+        return $this->nombre_tipo_ctr?->value();
     }
 
 
     public function setNombre_tipo_ctr(?string $nombre_tipo_ctr = null): void
     {
-        $this->nombre_tipo_centro = TipoCentroName::fromNullableString($nombre_tipo_ctr);
+        $this->nombre_tipo_ctr = TipoCentroName::fromNullableString($nombre_tipo_ctr);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

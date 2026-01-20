@@ -11,11 +11,10 @@ use PDO;
 use planning\domain\PlanningStyle;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
-use web\DateTimeLocal;
 use function core\curso_est;
-use function core\is_true;
 
 
 /**

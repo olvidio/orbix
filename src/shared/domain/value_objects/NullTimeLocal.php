@@ -1,10 +1,8 @@
 <?php
 
-namespace web;
+namespace src\shared\domain\value_objects;
 
 use DateTimeImmutable;
-use DateTimeZone;
-use InvalidArgumentException;
 
 class NullTimeLocal
 {

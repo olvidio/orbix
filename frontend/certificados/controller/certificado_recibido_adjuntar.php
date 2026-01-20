@@ -3,8 +3,8 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
-use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;

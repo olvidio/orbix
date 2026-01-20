@@ -7,7 +7,7 @@ use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\personas\domain\services\TelecoPersonaService;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\Hash;
 use web\Lista;
 use web\Periodo;

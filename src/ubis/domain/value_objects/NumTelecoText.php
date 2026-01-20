@@ -23,9 +23,11 @@ final class NumTelecoText
             throw new \InvalidArgumentException('NumTelecoText must be at most 50 characters');
         }
         // Permitir letras, números y signos comunes utilizados en números/siglas
-        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+#\/]*$/u", $value)) {
+        /*
+        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+#\/\@\?\&$/u", $value)) {
             throw new \InvalidArgumentException('NumTelecoText has invalid characters');
         }
+        */
     }
 
     public function value(): string

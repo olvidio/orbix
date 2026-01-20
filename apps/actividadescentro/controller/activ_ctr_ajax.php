@@ -5,10 +5,10 @@ use permisos\model\PermisosActividadesTrue;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\domain\entity\CentroEncargado;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use web\DateTimeLocal;
 use web\Periodo;
 
 // INICIO Cabecera global de URL de controlador *********************************

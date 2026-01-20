@@ -14,8 +14,11 @@ final class DireccionId
 
     private function validate(int $value): void
     {
-        if ($value <= 0) {
-            throw new \InvalidArgumentException('DireccionId must be a positive integer');
+        $valueStr = (string)$value;
+        $isValid = preg_match('/^[12]\d{4,}$/', $valueStr) || preg_match('/^\-[12]\d{4,}$/', $valueStr);
+
+        if (!$isValid) {
+            throw new \InvalidArgumentException("El valor debe empezar por 1, 2, -1 o -2 y tener al menos 5 dígitos");
         }
     }
 

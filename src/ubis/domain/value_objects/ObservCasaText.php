@@ -18,12 +18,14 @@ final class ObservCasaText
         if ($value === '') {
             throw new \InvalidArgumentException('ObservCasaText cannot be empty');
         }
-        if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('ObservCasaText must be at most 50 characters');
+        if (mb_strlen($value) > 300) {
+            throw new \InvalidArgumentException('ObservCasaText must be at most 300 characters');
         }
+        /*
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+#\/]*$/u", $value)) {
             throw new \InvalidArgumentException('ObservCasaText has invalid characters');
         }
+        */
     }
 
     public function value(): string

@@ -6,9 +6,9 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\ContestarJson;
-use web\DateTimeLocal;
 use function core\is_true;
 
 $id_item = (string)filter_input(INPUT_POST, 'id_item');

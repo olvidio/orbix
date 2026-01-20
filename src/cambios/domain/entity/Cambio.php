@@ -16,11 +16,11 @@ use src\cambios\domain\value_objects\TipoCambioId;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\entity\Ubi;
 use src\ubis\domain\value_objects\DelegacionCode;
 use stdClass;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 use function core\is_true;
 
 /**
@@ -460,14 +460,14 @@ class Cambio
      */
     public function setId_tipo_activ(int $id_tipo_activ): void
     {
-        $this->id_tipo_activ = ActividadTipoId::fromString($id_tipo_activ);
+        $this->id_tipo_activ = ActividadTipoId::fromInt($id_tipo_activ);
     }
 
-    public function setIdTipoActivVo(ActividadTipoId|string|int|null $texto): void
+    public function setIdTipoActivVo(ActividadTipoId|int|null $value): void
     {
-        $this->id_tipo_activ = $texto instanceof ActividadTipoId
-            ? $texto
-            : ActividadTipoId::fromString($texto);
+        $this->id_tipo_activ = $value instanceof ActividadTipoId
+            ? $value
+            : ActividadTipoId::fromInt($value);
     }
 
     public function getJson_fases_sv(): array|stdClass|null
@@ -497,7 +497,7 @@ class Cambio
     /**
      * @deprecated Usar `getIdStatusVo(): ?StatusId` en su lugar.
      */
-    public function getId_status(): ?string
+    public function getId_status(): ?int
     {
         return $this->id_status?->value();
     }
@@ -512,7 +512,7 @@ class Cambio
      */
     public function setId_status(?int $id_status = null): void
     {
-        $this->id_status = $id_status;
+        $this->id_status = StatusId::fromNullableInt($id_status);
     }
 
     public function setIdStatusVo(StatusId|int|null $texto): void

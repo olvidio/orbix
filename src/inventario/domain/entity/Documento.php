@@ -7,12 +7,20 @@ use core\Set;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
+use src\inventario\domain\value_objects\{DocumentoId,
+    DocumentoIdentificador,
+    DocumentoNumEjemplares,
+    DocumentoNumFin,
+    DocumentoNumIni,
+    DocumentoNumReg,
+    DocumentoObserv,
+    DocumentoObservCtr,
+    LugarId,
+    TipoDocId,
+    UbiInventarioId};
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use src\inventario\domain\value_objects\{DocumentoId, TipoDocId, UbiInventarioId, LugarId,
-    DocumentoObserv, DocumentoObservCtr, DocumentoIdentificador,
-    DocumentoNumReg, DocumentoNumIni, DocumentoNumFin, DocumentoNumEjemplares};
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class Documento
 {

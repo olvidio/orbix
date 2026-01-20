@@ -48,19 +48,22 @@ class Delegacion
             : new DelegacionId($id_dl);
     }
 
-    // Legacy scalar API (kept for mod_tabla/UI)
+    /**
+     * @deprecated usar getIdDlVo()
+     */
     public function getId_dl(): int
     {
         return $this->id_dl->value();
     }
 
+    /**
+     * @deprecated usar setIdDlVo()
+     */
     public function setId_dl(int $id_dl): void
     {
         $this->id_dl = new DelegacionId($id_dl);
     }
 
-
-    // VO API
     public function getDlVo(): DelegacionCode
     {
         return $this->dl;
@@ -73,18 +76,22 @@ class Delegacion
             : DelegacionCode::fromNullableString($dl);
     }
 
-    // Legacy scalar API (kept for mod_tabla/UI)
+    /**
+     * @deprecated usar getDlVo()
+     */
     public function getDl(): string
     {
         return $this->dl->value();
     }
 
+    /**
+     * @deprecated usar setDlVo()
+     */
     public function setDl(string $dl): void
     {
         $this->dl = new DelegacionCode($dl);
     }
 
-    // VO API
     public function getRegionVo(): RegionCode
     {
         return $this->region;
@@ -97,18 +104,22 @@ class Delegacion
             : RegionCode::fromNullableString($region);
     }
 
-    // Legacy scalar API (kept for mod_tabla/UI)
+    /**
+     * @deprecated usar getRegionVo()
+     */
     public function getRegion(): string
     {
         return $this->region->value();
     }
 
+    /**
+     * @deprecated usar setRegionVo()
+     */
     public function setRegion(string $region): void
     {
         $this->region = new RegionCode($region);
     }
 
-    // VO API
     public function getNombreDlVo(): ?DelegacionName
     {
         return $this->nombre_dl;
@@ -121,18 +132,21 @@ class Delegacion
             : DelegacionName::fromNullableString($texto);
     }
 
-    // Legacy scalar API (kept for mod_tabla/UI)
+    /**
+     * @deprecated  usar getNombreDlVo()
+     */
     public function getNombre_dl(): ?string
     {
         return $this->nombre_dl?->value();
     }
 
+    /**
+     * @deprecated usar setNombreDlVo()
+     */
     public function setNombre_dl(?string $nombre_dl = null): void
     {
         $this->nombre_dl = DelegacionName::fromNullableString($nombre_dl);
     }
-
-    // VO API
 
     public function getGrupoEstudiosVo(): ?DelegacionGrupoEstudios
     {
@@ -169,21 +183,33 @@ class Delegacion
         $this->active = $active;
     }
 
+    /**
+     * @deprecated usar getGrupoEstudiosVo()
+     */
     public function getGrupo_estudios(): ?string
     {
         return $this->grupo_estudios?->value();
     }
 
+    /**
+     * @deprecated usar setGrupoEstudiosVo()
+     */
     public function setGrupo_estudios(?string $grupo_estudios = null): void
     {
         $this->grupo_estudios = DelegacionGrupoEstudios::fromNullableString($grupo_estudios);
     }
 
+    /**
+     * @deprecated usar getRegionStgrVo()
+     */
     public function getRegion_stgr(): ?string
     {
         return $this->region_stgr?->value();
     }
 
+    /**
+     * @deprecated usar setRegionStgrVo()
+     */
     public function setRegion_stgr(?string $region_stgr = null): void
     {
         $this->region_stgr = DelegacionRegionStgr::fromNullableString($region_stgr);

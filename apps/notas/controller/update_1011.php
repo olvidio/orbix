@@ -3,8 +3,8 @@
 use notas\model\EditarPersonaNota;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos

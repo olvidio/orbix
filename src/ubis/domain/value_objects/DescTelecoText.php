@@ -38,7 +38,7 @@ final class DescTelecoText
         return $this->value;
     }
 
-    public function equals(DescTelecoText $other): bool
+    public function equals(int $other): bool
     {
         return $this->value === $other->value();
     }

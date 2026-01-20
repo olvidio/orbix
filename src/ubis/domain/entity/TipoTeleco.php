@@ -5,8 +5,8 @@ namespace src\ubis\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
-use src\ubis\domain\value_objects\{TipoTelecoCode, TipoTelecoName};
+use src\ubis\domain\value_objects\TipoTelecoCode;
+use src\ubis\domain\value_objects\TipoTelecoName;
 
 class TipoTeleco
 {
@@ -19,9 +19,9 @@ class TipoTeleco
 
     private ?TipoTelecoName $nombre_teleco = null;
 
-    private?bool $ubi = null;
+    private ?bool $ubi = null;
 
-    private?bool $persona = null;
+    private ?bool $persona = null;
 
     private int $id;
 
@@ -56,7 +56,7 @@ class TipoTeleco
     /**
      * @deprecated Usar `getTipoTelecoVo(): ?TipoTelecoCode` en su lugar.
      */
-    public function getTipo_teleco(): string
+    public function getTipo_teleco(): ?string
     {
         return $this->tipo_teleco?->value();
     }
@@ -65,10 +65,9 @@ class TipoTeleco
     /**
      * @deprecated Usar `setTipoTelecoVo(?TipoTelecoCode $codigo): void` en su lugar.
      */
-    public function setTipo_teleco(string $tipo_teleco): void
+    public function setTipo_teleco(?string $tipo_teleco): void
     {
-        $tipo_teleco = trim($tipo_teleco);
-        $this->tipo_teleco = $tipo_teleco !== '' ? new TipoTelecoCode($tipo_teleco) : null;
+        $this->tipo_teleco = TipoTelecoCode::fromNullableString($tipo_teleco);
     }
 
 

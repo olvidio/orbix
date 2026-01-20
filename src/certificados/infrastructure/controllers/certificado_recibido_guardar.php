@@ -5,8 +5,8 @@ use core\ServerConf;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\ContestarJson;
-use web\DateTimeLocal;
 use function core\is_true;
 
 $Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');

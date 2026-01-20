@@ -17,7 +17,7 @@ use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
-use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
+use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;

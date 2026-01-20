@@ -4,7 +4,7 @@ namespace Tests\factories\notas;
 
 use Faker\Factory;
 use src\notas\domain\entity\PersonaNota;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 class NotasFactory
 {

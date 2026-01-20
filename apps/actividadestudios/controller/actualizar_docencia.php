@@ -162,7 +162,7 @@ if (empty($continuar)) {
                 $oProfesorDocencia->setId_activ($id_activ);
                 $oProfesorDocencia->setId_asignatura($id_asignatura);
                 $oProfesorDocencia->setCurso_inicio($ini_a);
-                $oProfesorDocencia->setTipoActividadAsignatura($tipo);
+                $oProfesorDocencia->setTipo($tipo);
                 $oProfesorDocencia->setActa($acta);
             }
             $ProfesorDocenciaStgrRepository->Guardar($oProfesorDocencia);

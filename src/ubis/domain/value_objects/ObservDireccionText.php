@@ -18,8 +18,8 @@ final class ObservDireccionText
         if ($value === '') {
             throw new \InvalidArgumentException('ObservDireccionText cannot be empty');
         }
-        if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException('ObservDireccionText must be at most 255 characters');
+        if (mb_strlen($value) > 500) {
+            throw new \InvalidArgumentException('ObservDireccionText must be at most 500 characters');
         }
     }
 

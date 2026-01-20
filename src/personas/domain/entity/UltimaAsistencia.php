@@ -8,8 +8,8 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\value_objects\ActividadTipoId;
 use src\personas\domain\value_objects\AsistenciaDescripcionText;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 
 class UltimaAsistencia

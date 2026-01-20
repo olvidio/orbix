@@ -11,7 +11,7 @@ use src\profesores\domain\value_objects\EscritoCese;
 use src\profesores\domain\value_objects\EscritoNombramiento;
 use src\profesores\domain\value_objects\ProfesorTipoId;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 class ProfesorStgr
 {

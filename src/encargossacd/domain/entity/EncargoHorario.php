@@ -6,10 +6,10 @@ use src\encargossacd\domain\value_objects\DiaRefCode;
 use src\encargossacd\domain\value_objects\MasMenosCode;
 use src\encargossacd\domain\value_objects\MesNum;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use web\NullTimeLocal;
-use web\TimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
+use src\shared\domain\value_objects\NullTimeLocal;
+use src\shared\domain\value_objects\TimeLocal;
 
 
 class EncargoHorario

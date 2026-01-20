@@ -8,15 +8,14 @@ use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\value_objects\ActaNumero;
 use src\notas\domain\value_objects\Detalle;
 use src\notas\domain\value_objects\NotaEpoca;
-use src\notas\domain\value_objects\NotaNum;
 use src\notas\domain\value_objects\NotaMax;
+use src\notas\domain\value_objects\NotaNum;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
-use src\personas\domain\value_objects\SituacionCode;
 use src\procesos\domain\value_objects\ActividadId;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class PersonaNota
 {

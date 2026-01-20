@@ -3,6 +3,8 @@
 namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\value_objects\{APText,
     CodigoPostalText,
     DireccionId,
@@ -17,8 +19,6 @@ use src\ubis\domain\value_objects\{APText,
     PoblacionText,
     ProvinciaText,
     SedeNameText};
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 use function core\is_true;
 
 class Direccion
@@ -176,8 +176,8 @@ class Direccion
     public function setPoblacionVo(PoblacionText|string|null $poblacion): void
     {
         $this->poblacion = $poblacion instanceof PoblacionText
-            ? $poblacion->value()
-            : $poblacion;
+            ? $poblacion
+            : PoblacionText::fromNullableString($poblacion);
     }
 
 
@@ -432,7 +432,7 @@ class Direccion
 
     public function setPlanoDocVo(PlanoDocText|string|null $doc = null): void
     {
-        $this->plano_doc = $doca instanceof PlanoDocText
+        $this->plano_doc = $doc instanceof PlanoDocText
             ? $doc
             : PlanoDocText::fromNullableString($doc);
     }
@@ -452,7 +452,7 @@ class Direccion
      */
     public function setPlano_extension(?string $plano_extension = null): void
     {
-        $this->plano_extension = PlanoDocText::fromNullableString($plano_extension);
+        $this->plano_extension = PlanoExtensionText::fromNullableString($plano_extension);
     }
 
     public function getPlanoExtensionVo(): ?PlanoExtensionText

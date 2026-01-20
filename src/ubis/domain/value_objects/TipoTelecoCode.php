@@ -6,25 +6,16 @@ final class TipoTelecoCode
 {
     private string $value;
 
-    public function __construct(string $value)
+    public function __construct(?string $value)
     {
-        $value = trim($value);
         $this->validate($value);
         $this->value = $value;
     }
 
     private function validate(string $value): void
     {
-        if ($value === '') {
-            throw new \InvalidArgumentException('TipoTelecoCode cannot be empty');
-        }
-        // Por UI, longitud máxima 10 (DatosCampo->setArgument(10))
-        if (mb_strlen($value) > 10) {
-            throw new \InvalidArgumentException('TipoTelecoCode must be at most 10 characters');
-        }
-        // Permitimos letras, números, guion y guion bajo
-        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
-            throw new \InvalidArgumentException('TipoTelecoCode has invalid characters');
+        if (mb_strlen($value) > 20) {
+            throw new \InvalidArgumentException('TipoCentroName must be at most 20 characters');
         }
     }
 
@@ -35,7 +26,7 @@ final class TipoTelecoCode
 
     public function __toString(): string
     {
-        return $this->value;
+        return (string)$this->value;
     }
 
     public function equals(TipoTelecoCode $other): bool
@@ -43,16 +34,15 @@ final class TipoTelecoCode
         return $this->value === $other->value();
     }
 
-    public static function fromString(string $value): self
-    {
-        return new self($value);
-    }
-
     public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null) { return null; }
+        if ($value === null) {
+            return null;
+        }
         $value = trim($value);
-        if ($value === '') { return null; }
+        if ($value === '') {
+            return null;
+        }
         return new self($value);
     }
 }

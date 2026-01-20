@@ -10,6 +10,9 @@
  $private => pongo el mismo valor que ubicación. Se supone que el cron está en private.
  $DB_SERVER = 1 o 2; para indicar el servidor dede el que se ejecuta. (ver comentario en clase: CambioAnotado)
  */
+
+use src\shared\domain\consumirColaMail;
+
 if (!empty($argv[1])) {
     $_POST['username'] = $argv[1];
     $_POST['password'] = $argv[2];
@@ -25,7 +28,6 @@ $dir_web = $_SERVER['DIRWEB'];
 $path = "$document_root/$dir_web";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
-use src\shared\infrastructure\consumirColaMail;
 
 // INICIO Cabecera global de URL de controlador *********************************
 

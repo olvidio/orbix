@@ -3,9 +3,8 @@
 use core\ConfigGlobal;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\Hash;
 
 /**
@@ -172,7 +171,7 @@ if ($Qactualizar == "9999") {
         $f_acta = $oDBSt_sql_1->fetchColumn();
         if (empty($f_acta)) {
             //pongo la de hoy. creo que actualmente no se utiliza.
-            $oHoy = new web\DateTimeLocal();
+            $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
             $f_acta = $oHoy->getFromLocal();
         }
 

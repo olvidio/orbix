@@ -10,8 +10,8 @@ use core\ViewPhtml;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\DateTimeLocal;
 use web\Hash;
 use web\Periodo;
 

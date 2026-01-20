@@ -2,8 +2,8 @@
 
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoHorario;
-use web\DateTimeLocal;
-use web\TimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\TimeLocal;
 
 /**
  * Esta página actualiza la base de datos de los encargos.

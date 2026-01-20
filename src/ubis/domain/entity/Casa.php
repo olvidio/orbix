@@ -3,6 +3,7 @@
 namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\application\services\UbiContactsTrait;
 use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCasaDireccionRepositoryInterface;
@@ -17,8 +18,6 @@ use src\ubis\domain\value_objects\{BibliotecaText,
     RegionNameText,
     TipoCasaText,
     UbiNombreText};
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 use function core\is_true;
 
 class Casa
@@ -177,7 +176,7 @@ class Casa
      */
     public function setDl(?string $dl = null): void
     {
-        $this->dl = DelegacionCode::fromString($dl);
+        $this->dl = DelegacionCode::fromNullableString($dl);
     }
 
     public function getDlVo(): ?DelegacionCode
@@ -511,11 +510,11 @@ class Casa
                 $esPrincipal = is_true($row['principal']);
                 $esPropietario = is_true($row['propietario']);
 
-                $direccionDetallada = new DireccionDetalle(
-                    $direccion,
-                    $esPrincipal,
-                    $esPropietario
-                );
+                $direccionDetallada = new DireccionDetalle([
+                    'direccion' => $direccion,
+                    'principal' => $esPrincipal,
+                    'propietario' => $esPropietario
+                ]);
             }
         }
 
@@ -541,11 +540,11 @@ class Casa
                 $esPrincipal = is_true($row['principal']);
                 $esPropietario = is_true($row['propietario']);
 
-                $direccionesDetalladas[] = new DireccionDetalle(
-                    $direccion,
-                    $esPrincipal,
-                    $esPropietario
-                );
+                $direccionesDetalladas[] = new DireccionDetalle([
+                    'direccion' => $direccion,
+                    'principal' => $esPrincipal,
+                    'propietario' => $esPropietario
+                ]);
             }
         }
 

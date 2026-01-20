@@ -1,11 +1,10 @@
 <?php
 
-namespace shared\infrastructure;
+namespace src\shared\domain;
 
 use DateInterval;
-use shared\domain\repositories\ColaMailRepositoryInterface;
-use web\DateTimeLocal;
-use shared\domain\repositories\ColaMailRepository;
+use src\shared\domain\contracts\ColaMailRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 class consumirColaMail
 {

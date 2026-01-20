@@ -3,8 +3,8 @@
 namespace core;
 
 use Exception;
-use web\DateTimeLocal;
-use web\TimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\TimeLocal;
 
 /**
  * @author dani
@@ -114,8 +114,8 @@ class PgTimestamp
      */
     protected function checkData(mixed $data)
     {
-        // Modificamos la comprobación para aceptar también web\TimeLocal
-        if (!$data instanceof \DateTimeInterface && !$data instanceof \web\TimeLocal) {
+        // Modificamos la comprobación para aceptar también src\shared\domain\value_objects\TimeLocal
+        if (!$data instanceof \DateTimeInterface && !$data instanceof \src\shared\domain\value_objects\TimeLocal) {
             try {
                 // Si llega un string "HH:MM", añadimos los segundos antes de convertir
                 if (is_string($data) && preg_match('/^\d{1,2}:\d{2}$/', $data)) {

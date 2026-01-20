@@ -58,7 +58,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
 
     public function getArrayCentros(string $condicion = ''): array
     {
-        $oDbl = $this->getoDbl_Select();
+        $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $orden = 'nombre_ubi';
         if (empty($condicion)) $condicion = "WHERE active = 't'";
@@ -168,6 +168,8 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $aDatos = $Centro->toArrayForDatabase([
             'f_active' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
+        // es posible que tenga los parametros de: repoCasaDireccion y repoDIreccion
+        unset($aDatos['repoCasaDireccion'], $aDatos['repoDireccion']);
 
         if ($bInsert === false) {
             //UPDATE

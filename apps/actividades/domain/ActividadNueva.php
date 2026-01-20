@@ -13,10 +13,10 @@ use src\actividades\domain\value_objects\IdTablaCode;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use ubis;
-use web\DateTimeLocal;
-use web\TimeLocal;
 
 class ActividadNueva
 {

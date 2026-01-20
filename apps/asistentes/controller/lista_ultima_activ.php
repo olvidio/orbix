@@ -6,8 +6,8 @@ use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\DateTimeLocal;
 use web\Lista;
 use web\TiposActividades;
 

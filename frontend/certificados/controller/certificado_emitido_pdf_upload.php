@@ -3,7 +3,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use src\certificados\domain\CertificadoEmitidoUpload;
-use web\DateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use function core\is_true;
 
 // Crea los objetos de uso global **********************************************

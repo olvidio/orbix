@@ -18,10 +18,10 @@ final class CodigoPostalText
         if ($value === '') {
             throw new \InvalidArgumentException('CodigoPostalText cannot be empty');
         }
-        if (mb_strlen($value) > 12) {
-            throw new \InvalidArgumentException('CodigoPostalText must be at most 12 characters');
+        if (mb_strlen($value) > 25) {
+            throw new \InvalidArgumentException('CodigoPostalText must be at most 25 characters');
         }
-        if (!preg_match("/^[A-Za-z0-9\-\s]+$/", $value)) {
+        if (!preg_match("/^[A-Za-z0-9\-\s.]+$/", $value)) {
             throw new \InvalidArgumentException('CodigoPostalText has invalid characters');
         }
     }

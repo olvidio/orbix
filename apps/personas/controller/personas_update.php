@@ -7,8 +7,8 @@ use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\ContestarJson;
-use web\DateTimeLocal;
 use function core\is_true;
 
 /**

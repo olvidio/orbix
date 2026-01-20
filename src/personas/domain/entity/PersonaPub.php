@@ -21,11 +21,11 @@ use src\personas\domain\value_objects\{ApelFamText,
     ProfesionText,
     SituacionCode};
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\value_objects\DelegacionCode;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 use function core\strtoupper_dlb;
 
 
@@ -833,6 +833,7 @@ class PersonaPub
                     break;
                 case 'PersonaEx':
                 case 'PersonaIn':
+                case 'PersonaPub':
                     $ctr = $this->getDl();
                     break;
                 case 'PersonaGlobal':

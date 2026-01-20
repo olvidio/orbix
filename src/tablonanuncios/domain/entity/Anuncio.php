@@ -3,6 +3,8 @@
 namespace src\tablonanuncios\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
 use src\tablonanuncios\domain\value_objects\Categoria;
 use src\tablonanuncios\domain\value_objects\EsquemaDestino;
@@ -11,8 +13,6 @@ use src\tablonanuncios\domain\value_objects\Idioma;
 use src\tablonanuncios\domain\value_objects\Tablon;
 use src\tablonanuncios\domain\value_objects\TextoAnuncio;
 use src\tablonanuncios\domain\value_objects\UsuarioCreador;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 
 class Anuncio
 {

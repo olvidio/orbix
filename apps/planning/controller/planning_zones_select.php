@@ -155,8 +155,8 @@ if ($Qtrimestre === 5) {
     $fin_iso = $year . "/" . $fin_trim;
 }
 
-$oIniPlanning = web\DateTimeLocal::createFromFormat('Y/m/d', $inicio_iso);
-$oFinPlanning = web\DateTimeLocal::createFromFormat('Y/m/d', $fin_iso);
+$oIniPlanning = \src\shared\domain\value_objects\DateTimeLocal::createFromFormat('Y/m/d', $inicio_iso);
+$oFinPlanning = \src\shared\domain\value_objects\DateTimeLocal::createFromFormat('Y/m/d', $fin_iso);
 $inicio_local = $oIniPlanning->getFromLocal();
 
 $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);

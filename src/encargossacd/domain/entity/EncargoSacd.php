@@ -4,8 +4,8 @@ namespace src\encargossacd\domain\entity;
 
 use src\encargossacd\domain\value_objects\EncargoModoId;
 use src\shared\domain\traits\Hydratable;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 
 
 class EncargoSacd

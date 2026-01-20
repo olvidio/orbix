@@ -1,6 +1,6 @@
 <?php
 
-namespace web;
+namespace src\shared\domain\value_objects;
 
 /**
  * Classe per les dates. Afageix a la clase del php la vista amn num. romans.

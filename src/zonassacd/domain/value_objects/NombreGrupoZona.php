@@ -70,4 +70,16 @@ final class NombreGrupoZona
     {
         return $this->value;
     }
+
+    public static function fromNullableString(?string $value = null): ?NombreGrupoZona
+    {
+        if ($value === null) {
+            return null;
+        }
+        $value_trimmed = trim($value);
+        if ($value_trimmed === '') {
+            return null;
+        }
+        return new self($value_trimmed);
+    }
 }

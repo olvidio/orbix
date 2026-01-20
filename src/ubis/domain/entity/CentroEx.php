@@ -3,6 +3,8 @@
 namespace src\ubis\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\application\services\UbiContactsTrait;
 use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
@@ -13,8 +15,6 @@ use src\ubis\domain\value_objects\{CentroId,
     TipoCentroCode,
     TipoLaborId,
     UbiNombreText};
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 use function core\is_true;
 
 class CentroEx
@@ -160,7 +160,7 @@ class CentroEx
      */
     public function setDl(?string $dl = null): void
     {
-        $this->dl = DelegacionCode::fromString($dl);
+        $this->dl = DelegacionCode::fromNullableString($dl);
     }
 
     public function getDlVo(): ?DelegacionCode
@@ -420,11 +420,11 @@ class CentroEx
                 $esPrincipal = is_true($row['principal']);
                 $esPropietario = is_true($row['propietario']);
 
-                $direccionDetallada = new DireccionDetalle(
-                    $direccion,
-                    $esPrincipal,
-                    $esPropietario
-                );
+                $direccionDetallada = new DireccionDetalle([
+                    'direccion' => $direccion,
+                    'principal' => $esPrincipal,
+                    'propietario' => $esPropietario
+                ]);
             }
         }
 
@@ -450,11 +450,11 @@ class CentroEx
                 $esPrincipal = is_true($row['principal']);
                 $esPropietario = is_true($row['propietario']);
 
-                $direccionesDetalladas[] = new DireccionDetalle(
-                    $direccion,
-                    $esPrincipal,
-                    $esPropietario
-                );
+                $direccionesDetalladas[] = new DireccionDetalle([
+                    'direccion' => $direccion,
+                    'principal' => $esPrincipal,
+                    'propietario' => $esPropietario
+                ]);
             }
         }
 
