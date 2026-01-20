@@ -1,0 +1,65 @@
+<script>
+fnjs_ver_ficha=function(id_nom,historial){
+	var filtro_sacd='n';
+	if (!id_nom ) { var id_nom=$('#id_sacd').val(); }
+
+	if (id_nom ) {
+		var url='{{ url_get }}';
+		var key_split=id_nom.split('#');
+		id_sacd=key_split[1];
+		var parametros='filtro_sacd='+filtro_sacd+'&id_nom='+id_sacd+'&historial='+historial+'{{ h_get|raw }}';
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#ficha').html(rta_txt);
+		});
+	}
+}
+
+fnjs_lista_sacd=function(id_nom){
+	var filtro_sacd='';
+
+    var url='{{ url_ajax }}';
+	var parametros='que=get_select&filtro_sacd='+filtro_sacd+'&id_nom='+id_nom+'{{ h_lista|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#sacds').html(rta_txt);
+	});
+}
+
+fnjs_horario=function(id_enc){
+	var filtro_sacd='';
+	var id_nom=$('#lst_sacds').val();
+    var url='{{ url_horario }}';
+	var parametros='filtro_sacd='+filtro_sacd+'&id_enc='+id_enc+'&id_nom='+id_nom+'{{ h_horario|raw }}';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: parametros,
+        dataType: 'html'
+    })
+    .done(function (rta_txt) {
+        $('#ficha').html(rta_txt);
+    });
+}
+</script>
+
+<table>
+<thead>
+<tr><th colspan=4>{{ "Ausencias"|trans|raw }}</th></tr>
+<tr>
+<th colspan=3 id="sacds">{{ "sacd"|trans|raw }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplSacd.desplegable|raw }}
+</th></tr>
+</thead>
+</table>
+<div class=contenido id="ficha" ></div>

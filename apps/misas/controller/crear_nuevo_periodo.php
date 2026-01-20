@@ -621,7 +621,7 @@ foreach ($cEncargosZona as $oEncargo) {
                     if (($id_tipo>=8100) && ($id_tipo<8200)) {
                         //compruebo que no tenga otra misa por la mañana
                         //si es de otra zona ya avisa que no está previsto
-                        if (!!isset($contador_sacd[$id_nom]))
+                        if (isset($contador_sacd[$id_nom]))
                         {
                             if ($contador_1a_sacd[$id_nom][$num_dia]>0) {   
                                 $ok_encargo=false;
@@ -774,7 +774,7 @@ foreach ($cEncargosZona as $oEncargo) {
                     $error_txt .= $EncargoDiaRepository->getErrorTxt();
                 }  
 //si es de otra zona ya avisa que no está previsto
-                if (!!isset($contador_sacd[$id_nom]))
+                if (isset($contador_sacd[$id_nom]))
                 {
 
                     if (($id_tipo>=8100) && ($id_tipo<8200)) {
@@ -832,8 +832,17 @@ foreach ($cEncargosZona as $oEncargo) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
                 $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                if ($hora_ini=='00:00')
+                if ($hora_ini=='00:00') {
                     $hora_ini='';
+                }
+                $hora_fi = $oEncargoDia->getTend()->format('H:i');
+                if ($hora_fi=='00:00') {
+                    $hora_fi='';
+                }
+                if ($hora_fi!='') {
+                    $hora_ini.='-'.$hora_fin;
+                }
+                
                 $InicialesSacd = new InicialesSacd();
                 $iniciales=$InicialesSacd->iniciales($id_nom);
                 $color = '';

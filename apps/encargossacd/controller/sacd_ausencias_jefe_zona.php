@@ -1,63 +1,37 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
-
 use core\ConfigGlobal;
 use core\ViewTwig;
 use misas\domain\entity\InicialesSacd;
-//use personas\model\entity\GestorPersona;
 use personas\model\entity\GestorPersonaSacd;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
-use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
-use web\PeriodoQue;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
 
+/**
+ * Esta página muestra la ficha de las ausencias de un sacd.
+ *
+ * @package    delegacion
+ * @subpackage    des
+ * @author    Daniel Serrabou
+ * @since        27/03/07.
+ *
+ */
+
+// INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
+//
 
-$aPeriodo = array(
-    'esta_semana' => _("esta semana"),
-    'este_mes' => _("este mes"),
-    'proxima_semana' => _("próxima semana"),
-    'proximo_mes' => _("próximo mes"),
-    'separador' => '---------',
-    'otro' => _("otro")
-); 
-
-$oDesplPeriodo = new Desplegable();
-$oDesplPeriodo->setOpciones($aPeriodo);
-$oDesplPeriodo->setNombre('periodo');
-$oDesplPeriodo->setAction('fnjs_ver_plan_sacd()');
-
-$aOpciones = array(
-    'esta_semana' => _("esta semana"),
-    'este_mes' => _("este mes"),
-    'proxima_semana' => _("próxima semana de lunes a domingo"),
-    'proximo_mes' => _("próximo mes natural"),
-    'separador' => '---------',
-    'otro' => _("otro")
-);
-
-$oFormP = new PeriodoQue();
-$oFormP->setFormName('frm_nuevo_periodo');
-$oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
-$oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplPeriodosOpcion_sel('esta_semana');
-$oFormP->setisDesplAnysVisible(FALSE);
-
-$ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('d/m/Y');
-
-$oFormP->setEmpiezaMin($shoy);
-$oFormP->setEmpiezaMax($shoy);
+//$Qrefresh = (integer)  filter_input(INPUT_POST, 'refresh');
+//$oPosicion->recordar($Qrefresh);
+$oPosicion->recordar();
 
 $UsuarioRepository = new UsuarioRepository();
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
@@ -86,7 +60,7 @@ if (is_array($cZonas) && count($cZonas) > 0) {
             $InicialesSacd = new InicialesSacd();
             $sacd=$InicialesSacd->nombre_sacd($id_nom);
             $iniciales=$InicialesSacd->iniciales($id_nom);
-            $key =  $iniciales . '#' . $id_nom;
+            $key = $iniciales . '#' . $id_nom;
             $a_sacd[$key] = $sacd ?? '?';
         }
     }
@@ -124,27 +98,50 @@ if (($aRoles[$id_role]==='Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendar
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
+
 ksort($a_sacd);
+
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
 $oDesplSacd->setOpciones($a_sacd);
 //$oDesplSacd->setBlanco(TRUE);
 $oDesplSacd->setBlanco(FALSE);
-$oDesplSacd->setAction('fnjs_ver_plan_sacd()');
+$oDesplSacd->setAction('fnjs_ver_ficha()');
 
-$url_ver_plan_sacd = 'apps/misas/controller/ver_plan_sacd.php';
-$oHashPlanSacd = new Hash();
-$oHashPlanSacd->setUrl($url_ver_plan_sacd);
-$oHashPlanSacd->setCamposForm('id_sacd!periodo!empiezamin!empiezamax');
-$h_plan_sacd = $oHashPlanSacd->linkSinVal();
+$url_get = 'apps/encargossacd/controller/sacd_ausencias_get.php';
+$oHashGet = new Hash();
+$oHashGet->setUrl($url_get);
+$oHashGet->setCamposForm('filtro_sacd!id_nom!historial');
+$h_get = $oHashGet->linkSinVal();
+
+$url_ajax = 'apps/encargossacd/controller/sacd_ficha_ajax.php';
+$oHashFicha = new Hash();
+$oHashFicha->setUrl($url_ajax);
+$oHashFicha->setCamposForm('que!id_nom');
+$h_ficha = $oHashFicha->linkSinVal();
+
+$oHashLst = new Hash();
+$oHashLst->setUrl($url_ajax);
+$oHashLst->setCamposForm('que!id_nom!filtro_sacd');
+$h_lista = $oHashLst->linkSinVal();
+
+$url_horario = 'apps/encargossacd/controller/horario_sacd_ver.php';
+$oHashHorario = new Hash();
+$oHashHorario->setUrl($url_horario);
+$oHashHorario->setCamposForm('filtro_sacd!id_enc!id_nom');
+$h_horario = $oHashHorario->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
+    //'oHash' => $oHash,
     'oDesplSacd' => $oDesplSacd,
-//    'oDesplPeriodo' => $oDesplPeriodo,
-    'oFormP' => $oFormP,
-    'url_ver_plan_sacd' => $url_ver_plan_sacd,
-    'h_plan_sacd' => $h_plan_sacd,
+    'url_get' => $url_get,
+    'h_get' => $h_get,
+    'url_ajax' => $url_ajax,
+    'h_ficha' => $h_ficha,
+    'h_lista' => $h_lista,
+    'url_horario' => $url_horario,
+    'h_horario' => $h_horario,
 ];
- 
-$oView = new ViewTwig('misas/controller');
-echo $oView->render('buscar_plan_sacd.html.twig', $a_campos);
+
+$oView = new ViewTwig('encargossacd/controller');
+$oView->renderizar('sacd_ausencias_jefe_zona.html.twig', $a_campos);
