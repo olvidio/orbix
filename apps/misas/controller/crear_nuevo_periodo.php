@@ -621,7 +621,7 @@ foreach ($cEncargosZona as $oEncargo) {
                     if (($id_tipo>=8100) && ($id_tipo<8200)) {
                         //compruebo que no tenga otra misa por la mañana
                         //si es de otra zona ya avisa que no está previsto
-                        if (!!isset($contador_sacd[$id_nom]))
+                        if (isset($contador_sacd[$id_nom]))
                         {
                             if ($contador_1a_sacd[$id_nom][$num_dia]>0) {   
                                 $ok_encargo=false;
@@ -774,7 +774,7 @@ foreach ($cEncargosZona as $oEncargo) {
                     $error_txt .= $EncargoDiaRepository->getErrorTxt();
                 }  
 //si es de otra zona ya avisa que no está previsto
-                if (!!isset($contador_sacd[$id_nom]))
+                if (isset($contador_sacd[$id_nom]))
                 {
 
                     if (($id_tipo>=8100) && ($id_tipo<8200)) {
