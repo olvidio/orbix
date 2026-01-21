@@ -30,8 +30,8 @@ class GestorEncargoTipo extends ClaseGestor
     
     function __construct()
     {
-        $oDbl = $GLOBALS['oDBE'];
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('encargo_tipo');

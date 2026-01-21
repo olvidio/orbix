@@ -135,8 +135,8 @@ class EncargoTipo extends ClasePropiedades
      */
     function __construct($a_id = '')
     {
-        $oDbl = $GLOBALS['oDBE'];
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
