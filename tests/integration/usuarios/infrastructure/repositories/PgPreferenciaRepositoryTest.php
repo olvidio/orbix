@@ -47,8 +47,8 @@ class PgPreferenciaRepositoryTest extends myTest
     public function test_guardar_nueva_preferencia()
     {
         // Generar un id único para evitar conflictos
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $tipo = 'test_pref_' . rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $tipo = 'test_pref_' . random_int(1000, 9999);
 
         // Crear el usuario primero (foreign key)
         $this->crearUsuarioPrueba($id_usuario);
@@ -77,8 +77,8 @@ class PgPreferenciaRepositoryTest extends myTest
     public function test_actualizar_preferencia_existente()
     {
         // Crear y guardar una preferencia
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $tipo = 'test_pref_' . rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $tipo = 'test_pref_' . random_int(1000, 9999);
 
         // Crear el usuario primero (foreign key)
         $this->crearUsuarioPrueba($id_usuario);
@@ -108,8 +108,8 @@ class PgPreferenciaRepositoryTest extends myTest
     public function test_find_by_id_existente()
     {
         // Crear y guardar una preferencia
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $tipo = 'test_pref_' . rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $tipo = 'test_pref_' . random_int(1000, 9999);
 
         // Crear el usuario primero (foreign key)
         $this->crearUsuarioPrueba($id_usuario);
@@ -146,8 +146,8 @@ class PgPreferenciaRepositoryTest extends myTest
     public function test_datos_by_id_existente()
     {
         // Crear y guardar una preferencia
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $tipo = 'test_pref_' . rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $tipo = 'test_pref_' . random_int(1000, 9999);
 
         // Crear el usuario primero (foreign key)
         $this->crearUsuarioPrueba($id_usuario);
@@ -178,8 +178,8 @@ class PgPreferenciaRepositoryTest extends myTest
     public function test_eliminar_preferencia()
     {
         // Crear y guardar una preferencia
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $tipo = 'test_pref_' . rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $tipo = 'test_pref_' . random_int(1000, 9999);
 
         // Crear el usuario primero (foreign key)
         $this->crearUsuarioPrueba($id_usuario);
@@ -222,8 +222,8 @@ class PgPreferenciaRepositoryTest extends myTest
     public function test_get_preferencias_con_filtro_id_usuario()
     {
         // Crear y guardar una preferencia
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $tipo = 'test_pref_' . rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $tipo = 'test_pref_' . random_int(1000, 9999);
 
         // Crear el usuario primero (foreign key)
         $this->crearUsuarioPrueba($id_usuario);
@@ -258,8 +258,8 @@ class PgPreferenciaRepositoryTest extends myTest
     public function test_get_preferencias_con_filtro_tipo()
     {
         // Crear y guardar una preferencia
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $tipo = 'test_pref_' . rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $tipo = 'test_pref_' . random_int(1000, 9999);
 
         // Crear el usuario primero (foreign key)
         $this->crearUsuarioPrueba($id_usuario);

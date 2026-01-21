@@ -13,8 +13,8 @@ require_once("apps/core/global_object.inc");
 
 $Qtabla = (string)filter_input(INPUT_POST, 'tabla');
 
-// copiar definicion y datos de sv
-// las definiciones de tablas padre ya las tengo: todas las global y public de sv las pongo en vs-e.
+// copiar definición y datos de sv
+// las definiciones de tablas padre ya las tengo: todas las global y public de sv las pongo en sv-e.
 // Para todos los esquemas
 
 //Mirar que esquemas tienen la tabla (si pertenece a un módulo no instalado, pueden no tenerla).
@@ -51,10 +51,10 @@ if (!empty($msg)) {
     exit ($msg);
 }
 
-// Cambiar definicion de classes.
+// Cambiar definición de classes.
 // Buscar ficheros en que se usa la tabla:
-// Esto sólo será útil en desarrollo. El resto ya lo cogeran modificado del git.
-if (ConfigGlobal::SERVIDOR == 'orbix.local') {
+// Esto sólo será útil en desarrollo. El resto ya lo cogerán modificado del git.
+if (ConfigGlobal::SERVIDOR === 'orbix.local') {
     $a_rta = [];
     $command = "grep -r \"setNomTabla('$Qtabla');\" ";
     $command .= ConfigGlobal::DIR . "/*";
@@ -80,7 +80,7 @@ if (ConfigGlobal::SERVIDOR == 'orbix.local') {
 }
 
 // tema sync: bucardo.
-echo "<br>FALTA aclararse con la syncronización: bucardo<br>";
+echo "<br>FALTA aclararse con la sincronización: bucardo<br>";
 // Avisar que hay que cambiar la gestión al instalar el módulo.
 
 echo "<br>Hay que revisar los programas que generan la tabla: instalar módulo<br>";

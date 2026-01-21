@@ -36,7 +36,7 @@ class PgUsuarioRepositoryTest extends myTest
     public function test_guardar_nuevo_usuario()
     {
         // Generar un id único para evitar conflictos
-        $id_usuario = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
         $oUsuario = $this->usuariosFactory->createSimple($id_usuario, 'testuser_' . $id_usuario);
 
         // Guardar el usuario
@@ -57,7 +57,7 @@ class PgUsuarioRepositoryTest extends myTest
     public function test_actualizar_usuario_existente()
     {
         // Crear y guardar un usuario
-        $id_usuario = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
         $oUsuario = $this->usuariosFactory->createSimple($id_usuario, 'original_user');
         $this->repository->Guardar($oUsuario);
 
@@ -81,7 +81,7 @@ class PgUsuarioRepositoryTest extends myTest
     public function test_find_by_id_existente()
     {
         // Crear y guardar un usuario
-        $id_usuario = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
         $oUsuario = $this->usuariosFactory->createSimple($id_usuario, 'findme_user');
         $this->repository->Guardar($oUsuario);
 
@@ -108,7 +108,7 @@ class PgUsuarioRepositoryTest extends myTest
     public function test_datos_by_id_existente()
     {
         // Crear y guardar un usuario
-        $id_usuario = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
         $oUsuario = $this->usuariosFactory->createSimple($id_usuario, 'datos_user');
         $this->repository->Guardar($oUsuario);
 
@@ -137,7 +137,7 @@ class PgUsuarioRepositoryTest extends myTest
     public function test_eliminar_usuario()
     {
         // Crear y guardar un usuario
-        $id_usuario = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
         $oUsuario = $this->usuariosFactory->createSimple($id_usuario, 'delete_user');
         $this->repository->Guardar($oUsuario);
 
@@ -169,7 +169,7 @@ class PgUsuarioRepositoryTest extends myTest
     public function test_get_usuarios_con_filtro_id()
     {
         // Crear y guardar un usuario
-        $id_usuario = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
         $oUsuario = $this->usuariosFactory->createSimple($id_usuario, 'filter_user');
         $this->repository->Guardar($oUsuario);
 
@@ -187,7 +187,7 @@ class PgUsuarioRepositoryTest extends myTest
     public function test_get_usuarios_con_filtro_usuario()
     {
         // Crear y guardar un usuario
-        $id_usuario = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
         // OJO en total solo 20 caracteres para el username
         $username = 'uniq_filter_' . $id_usuario;
         $oUsuario = $this->usuariosFactory->createSimple($id_usuario, $username);
@@ -230,7 +230,7 @@ class PgUsuarioRepositoryTest extends myTest
 
     public function test_guardar_usuario_con_2fa()
     {
-        $id_usuario = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
         $oUsuario = $this->usuariosFactory->createSimple($id_usuario, 'user_2fa');
         $oUsuario->setHas_2fa(true);
         $oUsuario->setSecret2faVo('TESTSECRET2FA123');
@@ -247,7 +247,7 @@ class PgUsuarioRepositoryTest extends myTest
 
     public function test_guardar_usuario_con_cambio_password()
     {
-        $id_usuario = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
         $oUsuario = $this->usuariosFactory->createSimple($id_usuario, 'user_cambiopwd');
         $oUsuario->setCambio_password(true);
 

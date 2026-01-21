@@ -20,7 +20,7 @@ class PgGrupoRepositoryTest extends myTest
     public function test_guardar_nuevo_grupo()
     {
         // Generar un id único para evitar conflictos
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
         
         $oGrupo = new Grupo();
         $oGrupo->setId_usuario($id_grupo);
@@ -45,7 +45,7 @@ class PgGrupoRepositoryTest extends myTest
     public function test_actualizar_grupo_existente()
     {
         // Crear y guardar un grupo
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
         
         $oGrupo = new Grupo();
         $oGrupo->setId_usuario($id_grupo);
@@ -71,7 +71,7 @@ class PgGrupoRepositoryTest extends myTest
     public function test_find_by_id_existente()
     {
         // Crear y guardar un grupo
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
         
         $oGrupo = new Grupo();
         $oGrupo->setId_usuario($id_grupo);
@@ -102,7 +102,7 @@ class PgGrupoRepositoryTest extends myTest
     public function test_datos_by_id_existente()
     {
         // Crear y guardar un grupo
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
         
         $oGrupo = new Grupo();
         $oGrupo->setId_usuario($id_grupo);
@@ -127,7 +127,7 @@ class PgGrupoRepositoryTest extends myTest
     public function test_eliminar_grupo()
     {
         // Crear y guardar un grupo
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
         
         $oGrupo = new Grupo();
         $oGrupo->setId_usuario($id_grupo);
@@ -163,7 +163,7 @@ class PgGrupoRepositoryTest extends myTest
     public function test_get_grupos_con_filtro_id()
     {
         // Crear y guardar un grupo
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
         
         $oGrupo = new Grupo();
         $oGrupo->setId_usuario($id_grupo);

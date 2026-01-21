@@ -49,7 +49,7 @@ class PgRoleRepositoryTest extends myTest
     public function test_guardar_nuevo_role()
     {
         // Generar un id único para evitar conflictos
-        $id_role = 9900 + rand(100, 999);
+        $id_role = 9900 + random_int(100, 999);
 
         $oRole = new Role();
         $oRole->setId_role($id_role);
@@ -79,7 +79,7 @@ class PgRoleRepositoryTest extends myTest
     public function test_actualizar_role_existente()
     {
         // Crear y guardar un role
-        $id_role = 9900 + rand(100, 999);
+        $id_role = 9900 + random_int(100, 999);
 
         $oRole = new Role();
         $oRole->setId_role($id_role);
@@ -109,7 +109,7 @@ class PgRoleRepositoryTest extends myTest
     public function test_find_by_id_existente()
     {
         // Crear y guardar un role
-        $id_role = 9900 + rand(100, 999);
+        $id_role = 9900 + random_int(100, 999);
 
         $oRole = new Role();
         $oRole->setId_role($id_role);
@@ -142,7 +142,7 @@ class PgRoleRepositoryTest extends myTest
     public function test_datos_by_id_existente()
     {
         // Crear y guardar un role
-        $id_role = 9900 + rand(100, 999);
+        $id_role = 9900 + random_int(100, 999);
 
         $oRole = new Role();
         $oRole->setId_role($id_role);
@@ -169,7 +169,7 @@ class PgRoleRepositoryTest extends myTest
     public function test_eliminar_role()
     {
         // Crear y guardar un role
-        $id_role = 9900 + rand(100, 999);
+        $id_role = 9900 + random_int(100, 999);
 
         $oRole = new Role();
         $oRole->setId_role($id_role);
@@ -207,7 +207,7 @@ class PgRoleRepositoryTest extends myTest
     public function test_get_roles_con_filtro_id()
     {
         // Crear y guardar un role
-        $id_role = 9900 + rand(100, 999);
+        $id_role = 9900 + random_int(100, 999);
 
         $oRole = new Role();
         $oRole->setId_role($id_role);

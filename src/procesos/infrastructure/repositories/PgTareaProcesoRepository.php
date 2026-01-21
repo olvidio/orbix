@@ -236,10 +236,11 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
 
         $i = 0;
-        $oTareaProceso = [];
-        foreach ($stmt as $aDades) {
+        $aTareaProceso = [];
+        foreach ($stmt as $aDatos) {
             $i++;
-            $oTareaProceso = TareaProceso::fromArray($aDades);
+            $aDatos['json_fases_previas'] = (new ConverterJson($aDatos['json_fases_previas'], true))->fromPg();
+            $aTareaProceso[] = TareaProceso::fromArray($aDatos);
         }
         if ($i === 0) {
             $txt = _("No se puede encontrar una fase independiente (que no tenga fase previa) para el proceso: %s");
@@ -252,7 +253,7 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
             throw new \RuntimeException($msg);
         }
 
-        return $oTareaProceso;
+        return $aTareaProceso;
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */

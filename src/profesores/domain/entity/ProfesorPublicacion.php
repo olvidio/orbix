@@ -80,7 +80,7 @@ class ProfesorPublicacion
         return $this->titulo;
     }
 
-    public function setTituloVo(PublicacionTitulo|string $valor = null): void
+    public function setTituloVo(PublicacionTitulo|string|null $valor = null): void
     {
         $this->titulo = $valor instanceof PublicacionTitulo
             ? $valor
@@ -98,7 +98,7 @@ class ProfesorPublicacion
     /**
      * @deprecated use setTituloVo()
      */
-    public function setTitulo(string $valor = null): void
+    public function setTitulo(?string $valor = null): void
     {
         $this->titulo = PublicacionTitulo::fromNullableString($valor);
     }

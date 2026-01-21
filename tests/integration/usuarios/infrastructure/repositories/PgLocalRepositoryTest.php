@@ -37,7 +37,7 @@ class PgLocalRepositoryTest extends myTest
     public function test_guardar_nuevo_local()
     {
         // Generar un id único para evitar conflictos
-        $id_locale = 'test_' . rand(1000, 9999);
+        $id_locale = 'test_' . random_int(1000, 9999);
 
         $oLocal = new Local();
         $oLocal->setIdLocaleVo(new IdLocale($id_locale));
@@ -65,7 +65,7 @@ class PgLocalRepositoryTest extends myTest
     public function test_actualizar_local_existente()
     {
         // Crear y guardar un local
-        $id_locale = 'test_' . rand(1000, 9999);
+        $id_locale = 'test_' . random_int(1000, 9999);
 
         $oLocal = new Local();
         $oLocal->setIdLocaleVo(new IdLocale($id_locale));
@@ -95,7 +95,7 @@ class PgLocalRepositoryTest extends myTest
     public function test_find_by_id_existente()
     {
         // Crear y guardar un local
-        $id_locale = 'test_' . rand(1000, 9999);
+        $id_locale = 'test_' . random_int(1000, 9999);
 
         $oLocal = new Local();
         $oLocal->setIdLocaleVo(new IdLocale($id_locale));
@@ -119,7 +119,7 @@ class PgLocalRepositoryTest extends myTest
 
     public function test_find_by_id_no_existente()
     {
-        $id_inexistente = 'inexistente_' . rand(1000, 9999);
+        $id_inexistente = 'inexistente_' . random_int(1000, 9999);
         $oLocal = $this->repository->findById($id_inexistente);
 
         $this->assertNull($oLocal);
@@ -128,7 +128,7 @@ class PgLocalRepositoryTest extends myTest
     public function test_datos_by_id_existente()
     {
         // Crear y guardar un local
-        $id_locale = 'test_' . rand(1000, 9999);
+        $id_locale = 'test_' . random_int(1000, 9999);
 
         $oLocal = new Local();
         $oLocal->setIdLocaleVo(new IdLocale($id_locale));
@@ -155,7 +155,7 @@ class PgLocalRepositoryTest extends myTest
     public function test_eliminar_local()
     {
         // Crear y guardar un local
-        $id_locale = 'test_' . rand(1000, 9999);
+        $id_locale = 'test_' . random_int(1000, 9999);
 
         $oLocal = new Local();
         $oLocal->setIdLocaleVo(new IdLocale($id_locale));
@@ -205,7 +205,7 @@ class PgLocalRepositoryTest extends myTest
     public function test_get_locales_con_filtro_idioma()
     {
         // Crear y guardar un local con un idioma específico
-        $id_locale = 'test_' . rand(1000, 9999);
+        $id_locale = 'test_' . random_int(1000, 9999);
 
         $oLocal = new Local();
         $oLocal->setIdLocaleVo(new IdLocale($id_locale));

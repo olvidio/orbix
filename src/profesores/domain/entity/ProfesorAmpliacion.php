@@ -60,7 +60,7 @@ class ProfesorAmpliacion
         return $this->id_asignatura;
     }
 
-    public function setIdAsignaturaVo(AsignaturaId|int $valor = null): void
+    public function setIdAsignaturaVo(AsignaturaId|int|null $valor = null): void
     {
         $this->id_asignatura = $valor instanceof AsignaturaId
             ? $valor
@@ -78,7 +78,7 @@ class ProfesorAmpliacion
     /**
      * @deprecated use setIdAsignaturaVo()
      */
-    public function setId_asignatura(int $valor = null): void
+    public function setId_asignatura(?int $valor = null): void
     {
         $this->id_asignatura = AsignaturaId::fromNullableInt($valor);
     }

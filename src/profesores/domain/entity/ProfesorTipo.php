@@ -28,7 +28,7 @@ class ProfesorTipo
         return $this->id_tipo_profesor;
     }
 
-    public function setIdTipoProfesorVo(ProfesorTipoId|int $valor = null): void
+    public function setIdTipoProfesorVo(ProfesorTipoId|int|null $valor = null): void
     {
         $this->id_tipo_profesor = $valor instanceof ProfesorTipoId
             ? $valor
@@ -46,7 +46,7 @@ class ProfesorTipo
     /**
      * @deprecated use setIdTipoProfesorVo()
      */
-    public function setId_tipo_profesor(int $valor = null): void
+    public function setId_tipo_profesor(?int $valor = null): void
     {
         $this->id_tipo_profesor = ProfesorTipoId::fromNullableInt($valor);
     }

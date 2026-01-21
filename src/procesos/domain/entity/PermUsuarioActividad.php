@@ -2,10 +2,9 @@
 
 namespace src\procesos\domain\entity;
 
-use src\actividades\domain\value_objects\ActividadTipoId;
+use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\procesos\domain\value_objects\FaseId;
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
 
 
 class PermUsuarioActividad
@@ -21,7 +20,7 @@ class PermUsuarioActividad
 
     private bool $dl_propia;
 
-    private ?ActividadTipoId $id_tipo_activ_txt = null;
+    private ?ActividadTipoIdTxt $id_tipo_activ_txt = null;
 
     private ?FaseId $fase_ref = null;
 
@@ -73,20 +72,20 @@ class PermUsuarioActividad
     {
         return $this->id_tipo_activ_txt?->value();
     }
-    public function getIdTipoActivTxtVo(): ActividadTipoId
+    public function getIdTipoActivTxtVo(): ActividadTipoIdTxt
     {
         return $this->id_tipo_activ_txt;
     }
 
     public function setId_tipo_activ_txt(?string $id_tipo_activ_txt = null): void
     {
-        $this->id_tipo_activ_txt = $id_tipo_activ_txt;
+        $this->id_tipo_activ_txt = ActividadTipoIdTxt::fromString($id_tipo_activ_txt);
     }
-    public function setIdTipoActivTxtVo(ActividadTipoId|string|int|null $id_tipo_activ_txt): void
+    public function setIdTipoActivTxtVo(ActividadTipoIdTxt|string|int|null $id_tipo_activ_txt): void
     {
-        $this->id_tipo_activ_txt = $id_tipo_activ_txt instanceof ActividadTipoId
+        $this->id_tipo_activ_txt = $id_tipo_activ_txt instanceof ActividadTipoIdTxt
             ? $id_tipo_activ_txt
-            : ActividadTipoId::fromInt($id_tipo_activ_txt);
+            : ActividadTipoIdTxt::fromString($id_tipo_activ_txt);
     }
 
 

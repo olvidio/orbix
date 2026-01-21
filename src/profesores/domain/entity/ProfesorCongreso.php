@@ -41,7 +41,7 @@ class ProfesorCongreso
         return $this->congreso;
     }
 
-    public function setCongresoVo(CongresoName|string $valor = null): void
+    public function setCongresoVo(CongresoName|string|null $valor = null): void
     {
         $this->congreso = $valor instanceof CongresoName
             ? $valor
@@ -59,7 +59,7 @@ class ProfesorCongreso
     /**
      * @deprecated use setCongresoVo()
      */
-    public function setCongreso(string $valor = null): void
+    public function setCongreso(?string $valor = null): void
     {
         $this->congreso = CongresoName::fromNullableString($valor);
     }

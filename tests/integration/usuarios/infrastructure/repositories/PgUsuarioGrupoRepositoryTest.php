@@ -73,8 +73,8 @@ class PgUsuarioGrupoRepositoryTest extends myTest
     public function test_guardar_nuevo_usuario_grupo()
     {
         // Generar ids únicos para evitar conflictos
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
 
         // Crear usuario y grupo primero (foreign keys)
         $this->crearUsuarioPrueba($id_usuario);
@@ -106,8 +106,8 @@ class PgUsuarioGrupoRepositoryTest extends myTest
     public function test_find_by_id_existente()
     {
         // Crear y guardar un usuario-grupo
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
 
         // Crear usuario y grupo primero (foreign keys)
         $this->crearUsuarioPrueba($id_usuario);
@@ -142,8 +142,8 @@ class PgUsuarioGrupoRepositoryTest extends myTest
     public function test_datos_by_id_existente()
     {
         // Crear y guardar un usuario-grupo
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
 
         // Crear usuario y grupo primero (foreign keys)
         $this->crearUsuarioPrueba($id_usuario);
@@ -171,8 +171,8 @@ class PgUsuarioGrupoRepositoryTest extends myTest
     public function test_eliminar_usuario_grupo()
     {
         // Crear y guardar un usuario-grupo
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
 
         // Crear usuario y grupo primero (foreign keys)
         $this->crearUsuarioPrueba($id_usuario);
@@ -216,8 +216,8 @@ class PgUsuarioGrupoRepositoryTest extends myTest
     public function test_get_usuarios_grupos_con_filtro_id_usuario()
     {
         // Crear y guardar un usuario-grupo
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
 
         // Crear usuario y grupo primero (foreign keys)
         $this->crearUsuarioPrueba($id_usuario);
@@ -248,8 +248,8 @@ class PgUsuarioGrupoRepositoryTest extends myTest
     public function test_get_usuarios_grupos_con_filtro_id_grupo()
     {
         // Crear y guardar un usuario-grupo
-        $id_usuario = 9900000 + rand(1000, 9999);
-        $id_grupo = 9900000 + rand(1000, 9999);
+        $id_usuario = 9900000 + random_int(1000, 9999);
+        $id_grupo = 9900000 + random_int(1000, 9999);
 
         // Crear usuario y grupo primero (foreign keys)
         $this->crearUsuarioPrueba($id_usuario);

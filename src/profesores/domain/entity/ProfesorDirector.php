@@ -34,12 +34,12 @@ class ProfesorDirector
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function getIdDepartamentoVo(): DepartamentoId
+    public function getIdDepartamentoVo(): ?DepartamentoId
     {
         return $this->id_departamento;
     }
 
-    public function setIdDepartamentoVo(DepartamentoId|int $valor = null): void
+    public function setIdDepartamentoVo(DepartamentoId|int|null $valor = null): void
     {
         $this->id_departamento = $valor instanceof DepartamentoId
             ? $valor
@@ -57,7 +57,7 @@ class ProfesorDirector
     /**
      * @deprecated use setIdDepartamentoVo()
      */
-    public function setId_departamento(int $valor = null): void
+    public function setId_departamento(?int $valor = null): void
     {
         $this->id_departamento = DepartamentoId::fromNullableInt($valor);
     }
