@@ -242,7 +242,8 @@ class LegacyLayout implements LayoutInterface
         <!-- http://www.udm4.com/
                -->
         <link rel="stylesheet" type="text/css"
-              href="<?= ConfigGlobal::getWeb_scripts() ?>/udm4-php/udm-resources/udm-style.php?PHPSESSID=<?= session_id() ?>"
+              //href="<?= ConfigGlobal::getWeb_scripts() ?>/udm4-php/udm-resources/udm-style.php?PHPSESSID=<?= session_id() ?>"
+              href="<?= ConfigGlobal::getWeb_scripts() ?>/udm4-php/udm-resources/udm-style.php"
               media="screen, projection"/>
         <?php
         //include_once (ConfigGlobal::$dir_scripts.'/udm4-php/udm-resources/udm-style.php');
