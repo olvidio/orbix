@@ -5,7 +5,6 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;

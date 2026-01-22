@@ -12,6 +12,7 @@ use src\usuarios\domain\entity\Role;
 use ubis\model\entity\GestorCasaDl;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
+use ubis\model\entity\GestorCentroEllos;
 use web\DesplegableArray;
 use web\Hash;
 use function core\is_true;
@@ -115,7 +116,7 @@ if ($miRole < 4) { // es administrador
         }
         if ($pau === Role::PAU_CTR && $isSv) { //centroSv
             $id_pau = $oUsuario->getId_pauAsString();
-            $oGesCentrosDl = new GestorCentroDl();
+            $oGesCentrosDl = new GestorCentroEllos();
             $aOpciones = $oGesCentrosDl->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';
