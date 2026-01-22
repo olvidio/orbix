@@ -8,13 +8,13 @@ use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
+use ubis\model\entity\GestorCentroEllas;
+use ubis\model\entity\GestorCentroEllos;
+use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use web\PeriodoQue;
-use ubis\model\entity\GestorCentroEllos;
-use ubis\model\entity\GestorCentroEllas;
-use ubis\model\entity\Ubi;
 use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
@@ -27,8 +27,8 @@ require_once("apps/core/global_object.inc");
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
 $id_nom_jefe = '';
-$id_sacd='';
-$id_ubi='';
+$id_sacd = '';
+$id_ubi = '';
 
 
 $UsuarioRepository = new UsuarioRepository();
@@ -44,23 +44,18 @@ $aCentros = [];
 
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro sv' || $aRoles[$id_role] === 'Centro sf')) {
-    $id_ubi=$oMiUsuario->getId_pauAsString();
+    $id_ubi = $oMiUsuario->getId_pauAsString();
     $oCentro = Ubi::newUbi($id_ubi);
     $nombre_ubi = $oCentro->getNombre_ubi();
     $aCentros[$id_ubi] = $nombre_ubi;
-    $aOpciones[-1]='centros encargos';
+    $aOpciones[-1] = 'centros encargos';
     $oDesplZonas = new Desplegable();
     $oDesplZonas->setOpciones($aOpciones);
     $oDesplZonas->setBlanco(FALSE);
     $oDesplZonas->setNombre('id_zona');
     $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
     $oDesplZonas->setOpcion_sel($Qid_zona);
-}
-//echo ConfigGlobal::mi_id_usuario();
-//echo '-'.$id_sacd.'='.$id_ubi;
-
-else {
-
+} else {
     if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
         if ($_SESSION['oConfig']->is_jefeCalendario()) {
             $id_nom_jefe = '';
@@ -71,16 +66,14 @@ else {
             }
         }
 
-
-
         $oGestorZona = new GestorZona();
         $aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
-        if ($Qid_zona==0) {
-//    $Qid_zona=array_key_first($aOpciones);
-            $Qid_zona=-1;
+        if ($Qid_zona == 0) {
+            //    $Qid_zona=array_key_first($aOpciones);
+            $Qid_zona = -1;
         }
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-            $aOpciones[-1]='centros encargos';
+            $aOpciones[-1] = 'centros encargos';
         }
 //foreach($aOpciones as $a1=>$a2)
 //    echo 'opcion: '.$a1.'-'.$a2.'<br>';
@@ -93,7 +86,7 @@ else {
         $oDesplZonas->setOpcion_sel($Qid_zona);
 
         if (isset($Qid_zona)) {
-            if($Qid_zona>0) {
+            if ($Qid_zona > 0) {
                 $aWhere = [];
                 $aWhere['status'] = 't';
                 $aWhere['id_zona'] = $Qid_zona;
@@ -108,12 +101,11 @@ else {
                     $nombre_ubi = $oCentro->getNombre_ubi();
                     $aCentros[$id_ubi] = $nombre_ubi;
                 }
-            }
-            else  {
-                $id_sacd=$oMiUsuario->getId_pauAsString();
-        /* busco los datos del encargo que se tengan */
+            } else {
+                $id_sacd = $oMiUsuario->getId_pauAsString();
+                /* busco los datos del encargo que se tengan */
                 $GesEncargosSacd = new GestorEncargoSacd();
-        // No los personales:
+                // No los personales:
                 $aWhereES = [];
                 $aOperadorES = [];
                 $aWhereES['id_nom'] = $id_sacd;
@@ -133,10 +125,10 @@ else {
 
                 foreach ($cEncargosSacd as $oEncargoSacd) {
                     $id_enc = $oEncargoSacd->getId_enc();
-                    
+
                     $oEncargo = new Encargo(array('id_enc' => $id_enc));
                     $id_tipo_enc = $oEncargo->getId_tipo_enc();
-            // Si es un encargo personal (7 o 4) me lo salto
+                    // Si es un encargo personal (7 o 4) me lo salto
                     if (substr($id_tipo_enc, 0, 1) <= 3) {
                         $id_ubi = $oEncargo->getId_ubi();
                         $oCentro = Ubi::newUbi($id_ubi);
@@ -175,7 +167,7 @@ $oFormP->setDesplPeriodosOpcion_sel('esta_semana');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('d/m/Y');
+$shoy = $ohoy->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
@@ -201,9 +193,11 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ver_plan_ctr' => $url_ver_plan_ctr,
     'h_plan_ctr' => $h_plan_ctr,
 ];
- 
+
 $oView = new ViewTwig('misas/controller');
-if ($aRoles[$id_role] === 'p-sacd')
+if ($aRoles[$id_role] === 'p-sacd') {
     echo $oView->render('buscar_plan_ctr.html.twig', $a_campos);
-if ($aRoles[$id_role] === 'Centro')
+}
+if (strpos($aRoles[$id_role], 'Centro') !== false) {
     echo $oView->render('buscar_plan_un_ctr.html.twig', $a_campos);
+}
