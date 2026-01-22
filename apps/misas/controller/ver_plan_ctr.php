@@ -37,6 +37,7 @@ $RoleRepository = new RoleRepository();
 $aRoles = $RoleRepository->getArrayRoles();
 //echo $aRoles[$id_role];
 $role='';
+$jefe_zona=false;
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     $role='sacd';
@@ -45,7 +46,7 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 }
 
-if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro sv' || $aRoles[$id_role] === 'Centro sf')) {
     $role='ctr';
 }
 
@@ -258,7 +259,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             $data_cols["$id_dia"] = $iniciales;
         }
 
-        if (($jefe_zona) || (($role=='ctr') && ($status==EncargoDia::STATUS_COMUNICADO_CTR)) || (($role=='sacd') && (($status==EncargoDia::STATUS_COMUNICADO_SACD) || ($status==EncargoDia::STATUS_COMUNICADO_CTR)))) {
+        if (($jefe_zona) || (($role==='ctr') && ($status==EncargoDia::STATUS_COMUNICADO_CTR)) || (($role==='sacd') && (($status==EncargoDia::STATUS_COMUNICADO_SACD) || ($status==EncargoDia::STATUS_COMUNICADO_CTR)))) {
             echo '<TD>'.$iniciales.'</TD>';
         }
         else {
