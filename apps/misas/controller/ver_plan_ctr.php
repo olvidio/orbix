@@ -138,8 +138,8 @@ echo '<TR>';
 echo '<TH class="cell-title" style:"width:10%">Encargo</TH>';
 
 $dia_week_sacd = [];
-$oInicio = new DateTimeLocal($Qempiezamin_rep);
-$oFin = new DateTimeLocal($Qempiezamax_rep);
+$oInicio =  DateTimeLocal::createFromLocal($Qempiezamin_rep);
+$oFin =  DateTimeLocal::createFromLocal($Qempiezamax_rep);
 
 $interval = new DateInterval('P1D');
 $date_range = new DatePeriod($oInicio, $interval, $oFin);
