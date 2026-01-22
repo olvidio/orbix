@@ -43,7 +43,7 @@ $aRoles = $RoleRepository->getArrayRoles();
 $aCentros = [];
 
 
-if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro sv' || $aRoles[$id_role] === 'Centro sf')) {
     $id_ubi=$oMiUsuario->getId_pauAsString();
     $oCentro = Ubi::newUbi($id_ubi);
     $nombre_ubi = $oCentro->getNombre_ubi();
