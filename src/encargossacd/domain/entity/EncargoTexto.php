@@ -3,8 +3,8 @@
 namespace src\encargossacd\domain\entity;
 use src\encargossacd\domain\value_objects\EncargoText;
 use src\encargossacd\domain\value_objects\EncargoTextClave;
-use src\encargossacd\domain\value_objects\IdiomaCode;
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\LocaleCode;
 
 class EncargoTexto
 {
@@ -15,7 +15,7 @@ class EncargoTexto
 
     private int $id_item;
 
-    private IdiomaCode $idioma;
+    private LocaleCode $idioma;
 
     private EncargoTextClave $clave;
 
@@ -48,19 +48,19 @@ class EncargoTexto
      */
     public function setIdioma(string $idioma): void
     {
-        $this->idioma = IdiomaCode::fromNullableString($idioma);
+        $this->idioma = LocaleCode::fromNullableString($idioma);
     }
 
-    public function getIdiomaVo(): IdiomaCode
+    public function getIdiomaVo(): LocaleCode
     {
         return $this->idioma;
     }
 
-    public function setIdiomaVo(IdiomaCode|string|null $vo): void
+    public function setIdiomaVo(LocaleCode|string|null $vo): void
     {
-        $this->idioma = $vo instanceof IdiomaCode
+        $this->idioma = $vo instanceof LocaleCode
             ? $vo
-            : IdiomaCode::fromNullableString($vo);
+            : LocaleCode::fromNullableString($vo);
     }
 
     /**

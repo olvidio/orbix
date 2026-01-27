@@ -9,7 +9,6 @@ use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\domain\value_objects\{ApelFamText,
     EapText,
     IncCode,
-    LenguaCode,
     LugarNacimientoText,
     ObservText,
     PersonaApellido1Text,
@@ -23,6 +22,7 @@ use src\personas\domain\value_objects\{ApelFamText,
     SituacionCode};
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\LocaleCode;
 use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
@@ -61,7 +61,7 @@ class PersonaEx
 
     private ?DateTimeLocal $f_nacimiento = null;
 
-    private ?LenguaCode $idioma_preferido = null;
+    private ?LocaleCode $idioma_preferido = null;
 
     private SituacionCode $situacion;
 
@@ -381,19 +381,19 @@ class PersonaEx
      */
     public function setIdioma_preferido(?string $idioma_preferido = null): void
     {
-        $this->idioma_preferido = LenguaCode::fromNullableString($idioma_preferido);
+        $this->idioma_preferido = LocaleCode::fromNullableString($idioma_preferido);
     }
 
-    public function getIdiomaPreferidoVo(): ?LenguaCode
+    public function getIdiomaPreferidoVo(): ?LocaleCode
     {
         return $this->idioma_preferido;
     }
 
-    public function setIdiomaPreferidoVo(LenguaCode|string|null $lengua = null): void
+    public function setIdiomaPreferidoVo(LocaleCode|string|null $lengua = null): void
     {
-        $this->idioma_preferido = $lengua instanceof LenguaCode
+        $this->idioma_preferido = $lengua instanceof LocaleCode
             ? $lengua
-            : LenguaCode::fromNullableString($lengua);
+            : LocaleCode::fromNullableString($lengua);
     }
 
     /**

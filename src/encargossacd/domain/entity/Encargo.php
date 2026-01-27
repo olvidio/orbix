@@ -7,10 +7,10 @@ use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\encargossacd\domain\value_objects\EncargoOrden;
 use src\encargossacd\domain\value_objects\EncargoPrioridad;
 use src\encargossacd\domain\value_objects\EncargoTipoId;
-use src\encargossacd\domain\value_objects\IdiomaCode;
 use src\encargossacd\domain\value_objects\LugarDescText;
 use src\encargossacd\domain\value_objects\ObservText;
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\LocaleCode;
 use src\shared\domain\value_objects\SfsvId;
 
 
@@ -33,7 +33,7 @@ class Encargo
 
     private EncargoDescText|null $desc_enc = null;
 
-    private IdiomaCode|null $idioma_enc = null;
+    private LocaleCode|null $idioma_enc = null;
 
     private LugarDescText|null $desc_lugar = null;
 
@@ -167,7 +167,7 @@ class Encargo
 
 
     /**
-     * @deprecated Usar `getIdiomaEncVo(): ?IdiomaCode` en su lugar.
+     * @deprecated Usar `getIdiomaEncVo(): ?LocaleCode` en su lugar.
      */
     public function getIdioma_enc(): ?string
     {
@@ -175,23 +175,23 @@ class Encargo
     }
 
     /**
-     * @deprecated Usar `setIdiomaEncVo(?IdiomaCode $vo): void` en su lugar.
+     * @deprecated Usar `setIdiomaEncVo(?LocaleCode $vo): void` en su lugar.
      */
     public function setIdioma_enc(?string $idioma_enc = null): void
     {
-        $this->idioma_enc = IdiomaCode::fromNullableString($idioma_enc);
+        $this->idioma_enc = LocaleCode::fromNullableString($idioma_enc);
     }
 
-    public function getIdiomaEncVo(): ?IdiomaCode
+    public function getIdiomaEncVo(): ?LocaleCode
     {
         return $this->idioma_enc;
     }
 
-    public function setIdiomaEncVo(IdiomaCode|string|null $texto): void
+    public function setIdiomaEncVo(LocaleCode|string|null $texto): void
     {
-        $this->idioma_enc = $texto instanceof IdiomaCode
+        $this->idioma_enc = $texto instanceof LocaleCode
             ? $texto
-            : IdiomaCode::fromNullableString($texto);
+            : LocaleCode::fromNullableString($texto);
     }
 
 
