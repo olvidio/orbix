@@ -42,6 +42,8 @@ interface PersonaNotaOtraRegionStgrRepositoryInterface
 
     public function datosById(int $id_nom, int $id_nivel, int $tipo_acta): array|bool;
 
+    public function datosByPk(PersonaNotaPk $pk): array|bool;
+
     /**
      * Busca la clase con id_situacion en el repositorio.
      */

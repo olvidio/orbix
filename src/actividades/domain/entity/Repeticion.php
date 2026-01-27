@@ -70,12 +70,12 @@ class Repeticion
     }
 
     // Nuevos métodos con Value Objects
-    public function getId(): RepeticionId
+    public function getId_repeticionVo(): RepeticionId
     {
         return $this->id_repeticion;
     }
 
-    public function setId(RepeticionId $id): void
+    public function setId_repeticionVo(RepeticionId $id): void
     {
         $this->id_repeticion = $id;
     }

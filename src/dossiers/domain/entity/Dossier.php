@@ -2,6 +2,7 @@
 
 namespace src\dossiers\domain\entity;
 
+use src\dossiers\domain\value_objects\DossierPk;
 use src\dossiers\domain\value_objects\DossierTabla;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -20,15 +21,23 @@ class Dossier
 
     private int $id_tipo_dossier;
 
-   private ?DateTimeLocal $f_ini = null;
+    private ?DateTimeLocal $f_ini = null;
 
-   private ?DateTimeLocal $f_camb_dossier = null;
+    private ?DateTimeLocal $f_camb_dossier = null;
 
     private ?bool $active;
 
-   private ?DateTimeLocal $f_active = null;
+    private ?DateTimeLocal $f_active = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getDossierPk()
+    {
+        return DossierPk::fromArray(['id_tipo_dossier' => $this->id_tipo_dossier,
+            'id_pau' => $this->id_pau,
+            'tabla' => $this->tabla
+        ]);
+    }
 
     public function abrir(): void
     {
@@ -51,6 +60,7 @@ class Dossier
     {
         return $this->tabla->value();
     }
+
     public function getTablaVo(): DossierTabla
     {
         return $this->tabla;
@@ -63,6 +73,7 @@ class Dossier
     {
         $this->tabla = DossierTabla::fromNullableString($tabla);
     }
+
     public function setTablaVo(DossierTabla|string|null $vo): void
     {
         $this->tabla = $vo instanceof DossierTabla
@@ -141,4 +152,5 @@ class Dossier
     {
         $this->f_active = $f_active;
     }
+
 }

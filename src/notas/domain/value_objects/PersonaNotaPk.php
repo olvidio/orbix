@@ -11,7 +11,7 @@ final class PersonaNotaPk
     public function __construct(
         private int    $id_nom,
         private int    $id_nivel,
-        private int $tipo_acta
+        private int    $tipo_acta
     ) {
         if (!is_numeric($id_nom)) {
             throw new \InvalidArgumentException('id_nom debe ser > 0');
@@ -27,12 +27,27 @@ final class PersonaNotaPk
 
     public static function fromArray(array $pk): self
     {
-        return new self((int)$pk['id_nom'], (int)$pk['id_nivel'], (int)$pk['tipo_acta']);
+        $tipo_acta = $pk['tipo_acta'] instanceof TipoActa
+            ? $pk['tipo_acta']->value()
+            : $pk['tipo_acta'];
+
+        return new self((int)$pk['id_nom'], (int)$pk['id_nivel'], (int)$tipo_acta);
     }
 
-    public function idNom(): int { return $this->id_nom; }
-    public function idNivel(): int { return $this->id_nivel; }
-    public function tipoActa(): int { return $this->tipo_acta; }
+    public function idNom(): int {
+        return $this->id_nom;
+    }
+    public function idNivel(): int {
+        return $this->id_nivel;
+    }
+    public function tipoActa(): int {
+         $tipo_acta = $this->tipo_acta instanceof TipoActa
+            ? $this->tipo_acta->value()
+            : $this->tipo_acta;
+
+        return $tipo_acta;
+
+    }
 
     public function equals(self $other): bool
     {

@@ -117,7 +117,7 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $nom_tabla = $this->getNomTabla();
 
         $id_app = $App->getIdAppVo()->value();
-        $nom = $App->getNombreAppVo()->value();
+        $nom = $App->getNomVo()->value();
         $bInsert = $this->isNew($id_app);
 
         $aDatos = $App->toArrayForDatabase();

@@ -49,22 +49,14 @@ interface RepeticionRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_repeticion
      * @return array|bool
      */
-    public function datosById(int $id_repeticion): array|bool;
-
-    /**
-     * Nuevos métodos con Value Objects
-     */
-    public function datosByIdVo(RepeticionId $id): array|bool;
+    public function datosById(RepeticionId $id_repeticion): array|bool;
 
     /**
      * Busca la clase con id_repeticion en el repositorio.
      */
-    public function findById(int $id_repeticion): ?Repeticion;
-
-    public function findByIdVo(RepeticionId $id): ?Repeticion;
+    public function findById(RepeticionId $id_repeticion): ?Repeticion;
 
     public function getNewId();
 

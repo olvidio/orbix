@@ -253,7 +253,8 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $nom_tabla = $this->getNomTabla();
 
         $cond_nivel_stgr = "(nivel_stgr < 6 OR nivel_stgr=11)";
-        $any = $_SESSION['oConfig']->any_final_curs('est') - 2;
+        $any_final = $_SESSION['oConfig']?->any_final_curs('est')?? date('Y');
+        $any = $any_final - 2;
         $inicurs = curso_est("inicio", $any, "est")->format('Y-m-d');
         $scondicion = "AND f_ini > '$inicurs'";
         $sQuery = "SELECT id_activ, nom_activ
@@ -448,10 +449,11 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $campos = "(id_auto,id_activ,id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas,idioma)";
-            $valores = "(:id_auto,:id_activ,:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:tarifa,:id_repeticion,:publicado,:id_tabla,:plazas,:idioma)";
+            $campos = "(id_activ,id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas,idioma)";
+            $valores = "(:id_activ,:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:tarifa,:id_repeticion,:publicado,:id_tabla,:plazas,:idioma)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

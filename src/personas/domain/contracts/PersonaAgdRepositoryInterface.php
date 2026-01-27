@@ -3,6 +3,7 @@
 namespace src\personas\domain\contracts;
 
 use src\personas\domain\entity\PersonaAgd;
+use src\personas\domain\entity\PersonaDl;
 
 
 /**
@@ -14,9 +15,11 @@ use src\personas\domain\entity\PersonaAgd;
  * @version 2.0
  * @created 9/12/2025
  */
-interface PersonaAgdRepositoryInterface
+interface PersonaAgdRepositoryInterface extends PersonaDlRepositoryInterface
 {
+    public function Guardar(PersonaAgd $PersonaAgd): bool;
 
+    public function Eliminar(PersonaAgd $PersonaAgd): bool;
 
     /**
      * Busca la clase con id_nom en el repositorio.

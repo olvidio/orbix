@@ -3,8 +3,7 @@
 namespace src\personas\domain\contracts;
 
 use PDO;
-use src\personas\domain\entity\PersonaEx;
-use src\personas\domain\entity\PersonaPub;
+use src\personas\domain\entity\PersonaSacd;
 
 
 /**
@@ -18,6 +17,10 @@ use src\personas\domain\entity\PersonaPub;
  */
 interface PersonaSacdRepositoryInterface
 {
+
+    public function getArraySacdyCheckBox(int $Qseleccion_sacd): array;
+
+    public function getSacdsBySelect(int $Qseleccion_sacd): array;
 
     /**
      * Devuelve un array con los id de centros (id_ctr) de personas activas.
@@ -40,25 +43,9 @@ interface PersonaSacdRepositoryInterface
     public function getArrayPersonas(string $id_tabla = ''): array;
 
 
-    public function getArraySacdyCheckBox(int $Qseleccion_sacd): array;
-    public function getSacdsBySelect(int $Qseleccion_sacd): array;
-
-    /* --------------------  BASiC SEARCH ---------------------------------------- */
-
-    /**
-     * devuelve una colección (array) de objetos de tipo PersonaDl
-     *
-     * @param array $aWhere asociativo con los valores para cada campo de la BD.
-     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo PersonaDl
-     */
     public function getPersonas(array $aWhere = [], array $aOperators = []): array|false;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
-
-    public function Eliminar(PersonaEx $PersonaEx): bool;
-
-    public function Guardar(PersonaEx $PersonaEx): bool;
 
     public function getErrorTxt(): string;
 
@@ -68,17 +55,12 @@ interface PersonaSacdRepositoryInterface
 
     public function getNomTabla(): string;
 
-    /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_nom
-     * @return array|bool
-     */
+    public function Eliminar(PersonaSacd $PersonaSacd): bool;
+
+    public function Guardar(PersonaSacd $PersonaSacd): bool;
+
     public function datosById(int $id_nom): array|bool;
 
-    /**
-     * Busca la clase con id_nom en el repositorio.
-     */
-    public function findById(int $id_nom): ?PersonaEx;
+    public function findById(int $id_nom): ?PersonaSacd;
+
 }

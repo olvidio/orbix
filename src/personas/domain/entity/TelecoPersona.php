@@ -7,7 +7,7 @@ use core\Set;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
-use src\ubis\domain\value_objects\{NumTelecoText, ObservTelecoText, int};
+use src\ubis\domain\value_objects\{NumTelecoText, ObservTelecoText};
 
 class TelecoPersona
 {
@@ -53,34 +53,14 @@ class TelecoPersona
         $this->id_item = $id_item;
     }
 
-    /**
-     * @deprecated use getTipoTelecoVo()
-     */
     public function getId_tipo_teleco(): int
-    {
-        return $this->id_tipo_teleco->value();
-    }
-    /**
-     * @deprecated use setTipoTelecoVo()
-     */
-    public function setId_tipo_teleco(int $id_tipo_teleco): void
-    {
-        $this->id_tipo_teleco = int::fromNullableString($id_tipo_teleco);
-    }
-
-    /**
-     * API VO para id_tipo_teleco (código): TipoTelecoCode
-     */
-    public function getTipoTelecoVo(): int
     {
         return $this->id_tipo_teleco;
     }
 
-    public function setTipoTelecoVo(int|string|null $code): void
+    public function setId_tipo_teleco(int $id_tipo_teleco): void
     {
-        $this->id_tipo_teleco = $code instanceof int
-            ? $code
-            : int::fromNullableString($code);
+        $this->id_tipo_teleco = $id_tipo_teleco;
     }
 
     /**

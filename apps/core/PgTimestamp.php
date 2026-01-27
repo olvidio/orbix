@@ -39,6 +39,7 @@ class PgTimestamp
     {
         if ($this->data !== null) {
             switch ($type) {
+                case 'datetime':
                 case 'timestamp':
                 case 'date':
                     $oFecha = new DateTimeLocal($this->data);

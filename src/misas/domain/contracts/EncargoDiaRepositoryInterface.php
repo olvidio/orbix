@@ -47,14 +47,13 @@ interface EncargoDiaRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_item
      * @return array|bool
      */
-    public function datosById(EncargoDiaId $uuid_item): array|bool;
+    public function datosById(EncargoDiaId $vo): array|bool;
 
     /**
      * Busca la clase con id_item en el repositorio.
      */
-    public function findById(EncargoDiaId $uuid_item): ?EncargoDia;
+    public function findById(EncargoDiaId $vo): ?EncargoDia;
 
 }

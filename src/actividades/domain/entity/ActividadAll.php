@@ -109,7 +109,7 @@ class ActividadAll
     {
         $this->id_tipo_activ = $vo instanceof ActividadTipoId
             ? $vo
-            : ActividadTipoId::fromInt($vo);
+            : ActividadTipoId::fromNullableInt($vo);
     }
 
     /**

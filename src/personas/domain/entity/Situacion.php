@@ -17,7 +17,7 @@ class Situacion
 
     private SituacionCode $situacion;
 
-    private ?SituacionName $nombreSituacion = null;
+    private ?SituacionName $nombre_situacion = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -36,12 +36,12 @@ class Situacion
 
     public function getNombreSituacionVo(): ?SituacionName
     {
-        return $this->nombreSituacion;
+        return $this->nombre_situacion;
     }
 
     public function setNombreSituacionVo(SituacionName|string|null $texto = null): void
     {
-        $this->nombreSituacion = $texto instanceof SituacionName
+        $this->nombre_situacion = $texto instanceof SituacionName
             ? $texto
             : SituacionName::fromNullableString($texto);
     }
@@ -62,13 +62,13 @@ class Situacion
 
     public function getNombre_situacion(): ?string
     {
-        return $this->nombreSituacion?->value();
+        return $this->nombre_situacion?->value();
     }
 
 
     public function setNombre_situacion(?string $nombre_situacion = null): void
     {
-        $this->nombreSituacion = SituacionName::fromNullableString($nombre_situacion);
+        $this->nombre_situacion = SituacionName::fromNullableString($nombre_situacion);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

@@ -16,7 +16,7 @@ class App
 
     private AppId $id_app;
 
-    private AppName $nombre_app;
+    private AppName $nom;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -46,27 +46,27 @@ class App
     }
 
     // VO API
-    public function getNombreAppVo(): AppName
+    public function getNomVo(): AppName
     {
-        return $this->nombre_app;
+        return $this->nom;
     }
 
-    public function setNombreAppVo(AppName|string|null $nombre_app): void
+    public function setNomVo(AppName|string|null $nombre_app): void
     {
-        $this->nombre_app = $nombre_app instanceof AppName
+        $this->nom = $nombre_app instanceof AppName
             ? $nombre_app
             : AppName::fromNullableString($nombre_app);
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
-    public function getNombreApp(): string
+    public function getNom(): string
     {
-        return $this->nombre_app?->value();
+        return $this->nom?->value();
     }
 
-    public function setNombreApp(string $nombre_app): void
+    public function setNom(string $nom): void
     {
-        $this->nombre_app = AppName::fromString($nombre_app);
+        $this->nom = AppName::fromString($nom);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
@@ -97,8 +97,8 @@ class App
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nom');
-        $oDatosCampo->setMetodoGet('getNombreAppVo');
-        $oDatosCampo->setMetodoSet('setNombreApp'); // en tablaDB, no se pueden usar lo VO.
+        $oDatosCampo->setMetodoGet('getNomVo');
+        $oDatosCampo->setMetodoSet('setNom'); // en tablaDB, no se pueden usar lo VO.
         $oDatosCampo->setEtiqueta(_("nombre de la aplicación"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);

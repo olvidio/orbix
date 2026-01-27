@@ -153,10 +153,10 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
      */
     public function Guardar(EncargoCtr $EncargoCtr): bool
     {
-        $uuid_item = $EncargoCtr->getUuid_item();
+        $uuid_item = $EncargoCtr->getUuidItemVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($uuid_item);
+        $bInsert = $this->isNew($EncargoCtr->getUuidItemVo());
 
         $aDatos = $EncargoCtr->toArrayForDatabase();
         if ($bInsert === false) {
@@ -176,10 +176,11 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
         return $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
-    private function isNew(EncargoCtrId $uuid_item): bool
+    private function isNew(EncargoCtrId $vo): bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
+        $uuid_item = $vo->value();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if (!$stmt->rowCount()) {

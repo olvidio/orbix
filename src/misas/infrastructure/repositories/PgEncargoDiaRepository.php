@@ -122,10 +122,10 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
      */
     public function Guardar(EncargoDia $EncargoDia): bool
     {
-        $uuid_item = $EncargoDia->getUuid_item();
+        $uuid_item = $EncargoDia->getUuidItemVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($uuid_item);
+        $bInsert = $this->isNew($EncargoDia->getUuidItemVo());
 
         $aDatos = $EncargoDia->toArrayForDatabase([
             'tstart' => fn($v) => (new ConverterDate('timestamp', $v))->toPg(),
@@ -143,7 +143,7 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
 					observ                   = :observ,
                     status                   = :status";
             $sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
-            $stsmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
             $campos = "(uuid_item,id_enc,tstart,tend,id_nom,observ,status)";
@@ -154,10 +154,11 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
         return $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
-    private function isNew(EncargoDiaId $uuid_item): bool
+    private function isNew(EncargoDiaId $vo): bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
+        $uuid_item = $vo->value();
         $sql = " SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if (!$stmt->rowCount()) {
@@ -171,11 +172,11 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
      * Devuelve false si no existe la fila en la base de datos
      *
      */
-    public function datosById(EncargoDiaId $uuid_item): array|bool
+    public function datosById(EncargoDiaId $vo): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $uuid_item = $uuid_item->value();
+        $uuid_item = $vo->value();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -191,9 +192,9 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(EncargoDiaId $uuid_item): ?EncargoDia
+    public function findById(EncargoDiaId $vo): ?EncargoDia
     {
-        $aDatos = $this->datosById($uuid_item);
+        $aDatos = $this->datosById($vo);
         if (empty($aDatos)) {
             return null;
         }

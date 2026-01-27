@@ -460,14 +460,14 @@ class Cambio
      */
     public function setId_tipo_activ(int $id_tipo_activ): void
     {
-        $this->id_tipo_activ = ActividadTipoId::fromInt($id_tipo_activ);
+        $this->id_tipo_activ = ActividadTipoId::fromNullableInt($id_tipo_activ);
     }
 
     public function setIdTipoActivVo(ActividadTipoId|int|null $value): void
     {
         $this->id_tipo_activ = $value instanceof ActividadTipoId
             ? $value
-            : ActividadTipoId::fromInt($value);
+            : ActividadTipoId::fromNullableInt($value);
     }
 
     public function getJson_fases_sv(): array|stdClass|null

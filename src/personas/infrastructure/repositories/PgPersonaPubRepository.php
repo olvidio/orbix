@@ -11,7 +11,6 @@ use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\PersonaPub;
 use src\personas\infrastructure\repositories\traits\PersonaGlobalListsTrait;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
 
 
 /**
@@ -101,78 +100,17 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
-            $PersonaDl = PersonaPub::fromArray($aDatos);
-            $PersonaDlSet->add($PersonaDl);
+
+            // Cada repositorio hijo crea su tipo específico
+            $Persona = $this->createEntityFromArray($aDatos);
+            $PersonaDlSet->add($Persona);
         }
         return $PersonaDlSet->getTot();
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(PersonaPub $PersonaPub): bool
-    {
-        $id_nom = $PersonaPub->getId_nom();
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE id_nom = $id_nom";
-        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-    }
-
-
-    /**
-     * Si no existe el registro, hace un insert, si existe, se hace el update.
-     */
-    public function Guardar(PersonaPub $PersonaPub): bool
-    {
-        $id_nom = $PersonaPub->getId_nom();
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($id_nom);
-
-        $aDatos = $PersonaPub->toArrayForDatabase([
-            'f_nacimiento' => fn($v) => (new ConverterDate('date', $v))->toPg(),
-            'f_situacion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
-            'f_inc' => fn($v) => (new ConverterDate('date', $v))->toPg(),
-        ]);
-
-        if ($bInsert === false) {
-            //UPDATE
-            unset($aDatos['id_nom']);
-            $update = "
-					id_tabla                 = :id_tabla,
-					dl                       = :dl,
-					sacd                     = :sacd,
-					trato                    = :trato,
-					nom                      = :nom,
-					nx1                      = :nx1,
-					apellido1                = :apellido1,
-					nx2                      = :nx2,
-					apellido2                = :apellido2,
-					f_nacimiento             = :f_nacimiento,
-					idioma_preferido         = :idioma_preferido,
-					situacion                = :situacion,
-					f_situacion              = :f_situacion,
-					apel_fam                 = :apel_fam,
-					inc                      = :inc,
-					f_inc                    = :f_inc,
-					nivel_stgr               = :nivel_stgr,
-					profesion                = :profesion,
-					eap                      = :eap,
-					observ                   = :observ,
-					id_ctr                   = :id_ctr,
-					lugar_nacimiento         = :lugar_nacimiento";
-            $sql = "UPDATE $nom_tabla SET $update WHERE id_nom = $id_nom";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
-            // INSERT
-            $campos = "(id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento)";
-            $valores = "(:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento)";
-            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
-        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
-    }
-
-    private function isNew(int $id_nom): bool
+    protected function isNew(int $id_nom): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

@@ -177,10 +177,11 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
      * @param int $id_repeticion
      * @return array|bool
      */
-    public function datosById(int $id_repeticion): array|bool
+    public function datosById(RepeticionId $id_repeticion): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
+        $id_repeticion = $id_repeticion->value();
         $sql = "SELECT * FROM $nom_tabla WHERE id_repeticion = $id_repeticion";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
@@ -188,26 +189,16 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
 
     }
 
-    public function datosByIdVo(RepeticionId $id): array|bool
-    {
-        return $this->datosById($id->value());
-    }
-
     /**
      * Busca la clase con id_repeticion en la base de datos .
      */
-    public function findById(int $id_repeticion): ?Repeticion
+    public function findById(RepeticionId $id_repeticion): ?Repeticion
     {
         $aDatos = $this->datosById($id_repeticion);
         if (empty($aDatos)) {
             return null;
         }
         return Repeticion::fromArray($aDatos);
-    }
-
-    public function findByIdVo(RepeticionId $id): ?Repeticion
-    {
-        return $this->findById($id->value());
     }
 
     public function getNewId()

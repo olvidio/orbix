@@ -52,10 +52,6 @@ interface PersonaPubRepositoryInterface
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(PersonaPub $PersonaPub): bool;
-
-    public function Guardar(PersonaPub $PersonaPub): bool;
-
     public function getErrorTxt(): string;
 
     public function getoDbl(): PDO;

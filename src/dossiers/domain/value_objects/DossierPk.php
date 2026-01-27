@@ -9,10 +9,11 @@ namespace src\dossiers\domain\value_objects;
 final class DossierPk
 {
     public function __construct(
-        private int $idTipoDossier,
-        private int $idPau,
+        private int    $idTipoDossier,
+        private int    $idPau,
         private string $tabla
-    ) {
+    )
+    {
         if ($idTipoDossier <= 0) {
             throw new \InvalidArgumentException('id_tipo_dossier debe ser > 0');
         }
@@ -33,12 +34,31 @@ final class DossierPk
 
     public static function fromArray(array $pk): self
     {
-        return new self((int)$pk['id_tipo_dossier'], (int)$pk['id_pau'], (string)$pk['tabla']);
+        $tabla = $pk['tabla'] instanceof DossierTabla
+            ? $pk['tabla']->value()
+            : $pk['tabla'];
+
+        return new self((int)$pk['id_tipo_dossier'], (int)$pk['id_pau'], (string)$tabla);
     }
 
-    public function idTipoDossier(): int { return $this->idTipoDossier; }
-    public function idPau(): int { return $this->idPau; }
-    public function tabla(): string { return $this->tabla; }
+    public function idTipoDossier(): int
+    {
+        return $this->idTipoDossier;
+    }
+
+    public function idPau(): int
+    {
+        return $this->idPau;
+    }
+
+    public function tabla(): string
+    {
+        $tabla = $this->tabla instanceof DossierTabla
+            ? $this->tabla->value()
+            : $this->tabla;
+
+        return $tabla;
+    }
 
     public function equals(self $other): bool
     {

@@ -139,6 +139,7 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         $bInsert = $this->isNew($id_grupmenu);
 
         $aDatos = $GrupMenu->toArrayForDatabase();
+        unset($aDatos['aEquivalencias']);
         if ($bInsert === false) {
             //UPDATE
             unset($aDatos['id_grupmenu']);

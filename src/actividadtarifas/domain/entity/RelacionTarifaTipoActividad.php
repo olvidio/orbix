@@ -77,7 +77,7 @@ class RelacionTarifaTipoActividad
      */
     public function setId_tipo_activ(int $id_tipo_activ): void
     {
-        $this->id_tipo_activ = ActividadTipoId::fromInt($id_tipo_activ);
+        $this->id_tipo_activ = ActividadTipoId::fromNullableInt($id_tipo_activ);
     }
 
     public function getIdTipoActividadVo(): ActividadTipoId
@@ -89,7 +89,7 @@ class RelacionTarifaTipoActividad
     {
         $this->id_tipo_activ = $id instanceof ActividadTipoId
             ? $id
-            : ActividadTipoId::fromInt($id);
+            : ActividadTipoId::fromNullableInt($id);
     }
 
     /**

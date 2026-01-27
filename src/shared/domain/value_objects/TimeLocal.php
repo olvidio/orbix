@@ -6,9 +6,9 @@ use DateTimeImmutable;
 use DateTimeZone;
 use InvalidArgumentException;
 
-class TimeLocal
+class TimeLocal extends DateTimeLocal
 {
-    private DateTimeImmutable $time;
+    private ?DateTimeImmutable $time = null;
 
     /**
      * @param string $timeString Una cadena en formato HH:MM:SS (o similar).
@@ -33,6 +33,7 @@ class TimeLocal
 
     private function __construct(DateTimeImmutable $time)
     {
+        parent::__construct($time->format('Y-m-d H:i:s'), new DateTimeZone('UTC'));
         $this->time = $time;
     }
 
@@ -42,11 +43,13 @@ class TimeLocal
         return $this->time->format('H:i:s');
     }
 
+    /*
     // Método para mostrar la hora
     public function format(string $format): string
     {
         return $this->time->format($format);
     }
+    */
 
     // Métodos de negocio (ejemplo)
     public function isBefore(TimeLocal $other): bool

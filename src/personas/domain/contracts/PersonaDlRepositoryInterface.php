@@ -3,7 +3,9 @@
 namespace src\personas\domain\contracts;
 
 use PDO;
+use src\personas\domain\entity\PersonaAgd;
 use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaN;
 use web\Desplegable;
 
 
@@ -53,9 +55,6 @@ interface PersonaDlRepositoryInterface
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(PersonaDl $PersonaDl): bool;
-
-    public function Guardar(PersonaDl $PersonaDl): bool;
 
     public function getErrorTxt(): string;
 

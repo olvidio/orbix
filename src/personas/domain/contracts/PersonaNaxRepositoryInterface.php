@@ -17,6 +17,9 @@ use src\personas\domain\entity\PersonaNax;
 interface PersonaNaxRepositoryInterface extends PersonaDlRepositoryInterface
 {
 
+    public function Guardar(PersonaNax $PersonaNax): bool;
+
+    public function Eliminar(PersonaNax $PersonaNax): bool;
 
     /**
      * Busca la clase con id_nom en el repositorio.

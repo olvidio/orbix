@@ -56,7 +56,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         $num = $oDblSt->fetchColumn();
         if ($num != false) {
             // Quitar los {}.
-            $num = (integer)trim($num, '{}');
+            $num = (int)trim($num, '{}');
         } else {
             $num = 0;
         }
@@ -220,7 +220,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
 
         $aDatos = $Acta->toArrayForDatabase([
 //            'idioma' => fn($v) => (new ConverterEnum('idioma', $v))->toPg(),
-            'pdf' => fn($v) => bin2hex($v),
+            'pdf' => fn($v) => ($v ? bin2hex($v) : null),
             'f_acta' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
 

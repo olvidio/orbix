@@ -22,7 +22,7 @@ final class PersonaApellido1Text
             throw new \InvalidArgumentException('PersonaApellido1Text must be at most 25 characters');
         }
         if (!preg_match("/^[\p{L}0-9 .,'’´\-()]+$/u", $value)) {
-            throw new \InvalidArgumentException('PersonaApellido1Text has invalid characters');
+            //throw new \InvalidArgumentException('PersonaApellido1Text has invalid characters');
         }
     }
 

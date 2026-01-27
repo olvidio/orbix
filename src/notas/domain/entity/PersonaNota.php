@@ -11,6 +11,7 @@ use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaMax;
 use src\notas\domain\value_objects\NotaNum;
 use src\notas\domain\value_objects\NotaSituacion;
+use src\notas\domain\value_objects\PersonaNotaPk;
 use src\notas\domain\value_objects\TipoActa;
 use src\procesos\domain\value_objects\ActividadId;
 use src\shared\domain\traits\Hydratable;
@@ -73,6 +74,14 @@ class PersonaNota
     protected ?TipoActa $tipo_acta;
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
+
+    public function getPersonaNotaPk()
+    {
+         return PersonaNotaPk::fromArray(['id_nom' => $this->id_nom ,
+            'id_nivel' => $this->id_nivel,
+            'tipo_acta' => $this->tipo_acta,
+        ]);
+    }
 
     public function isAprobada(): bool
     {

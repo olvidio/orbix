@@ -115,6 +115,7 @@ class PersonaGlobal
     {
         return $this->id_tabla->value();
     }
+
     /**
      * @deprecated use setIdTablaVo()
      */
@@ -122,10 +123,12 @@ class PersonaGlobal
     {
         $this->id_tabla = PersonaTablaCode::fromNullableString($sid_tabla);
     }
+
     public function getIdTablaVo(): PersonaTablaCode
     {
         return $this->id_tabla;
     }
+
     public function setIdTablaVo(PersonaTablaCode|string|null $idTabla): void
     {
         $this->id_tabla = $idTabla instanceof PersonaTablaCode
@@ -140,6 +143,7 @@ class PersonaGlobal
     {
         return $this->dl?->value();
     }
+
     /**
      * @deprecated use setDlVo() instead
      */
@@ -147,10 +151,12 @@ class PersonaGlobal
     {
         $this->dl = DelegacionCode::fromNullableString($dl);
     }
+
     public function getDlVo(): ?DelegacionCode
     {
         return $this->dl;
     }
+
     public function setDlVo(DelegacionCode|string|null $dl = null): void
     {
         $this->dl = $dl instanceof DelegacionCode
@@ -163,6 +169,7 @@ class PersonaGlobal
     {
         return $this->sacd;
     }
+
     public function setSacd(?bool $sacd = null): void
     {
         $this->sacd = $sacd;
@@ -176,6 +183,7 @@ class PersonaGlobal
     {
         return $this->trato?->value();
     }
+
     /**
      * @deprecated use setTratoVo() instead
      */
@@ -183,10 +191,12 @@ class PersonaGlobal
     {
         $this->trato = PersonaTratoCode::fromNullableString($trato);
     }
+
     public function getTratoVo(): ?PersonaTratoCode
     {
         return $this->trato;
     }
+
     public function setTratoVo(PersonaTratoCode|string|null $trato = null): void
     {
         $this->trato = $trato instanceof PersonaTratoCode
@@ -201,6 +211,7 @@ class PersonaGlobal
     {
         return $this->nom?->value();
     }
+
     /**
      * @deprecated use setNomVo() instead
      */
@@ -208,10 +219,12 @@ class PersonaGlobal
     {
         $this->nom = PersonaNombreText::fromNullableString($nom);
     }
+
     public function getNomVo(): ?PersonaNombreText
     {
         return $this->nom;
     }
+
     public function setNomVo(PersonaNombreText|string|null $nom = null): void
     {
         $this->nom = $nom instanceof PersonaNombreText
@@ -226,6 +239,7 @@ class PersonaGlobal
     {
         return $this->nx1?->value();
     }
+
     /**
      * @deprecated use setNx1Vo() instead
      */
@@ -233,10 +247,12 @@ class PersonaGlobal
     {
         $this->nx1 = PersonaNx1Text::fromNullableString($nx1);
     }
+
     public function getNx1Vo(): ?PersonaNx1Text
     {
         return $this->nx1;
     }
+
     public function setNx1Vo(PersonaNx1Text|string|null $nx1 = null): void
     {
         $this->nx1 = $nx1 instanceof PersonaNx1Text
@@ -251,6 +267,7 @@ class PersonaGlobal
     {
         return $this->apellido1->value();
     }
+
     /**
      * @deprecated use setApellido1Vo() instead
      */
@@ -258,10 +275,12 @@ class PersonaGlobal
     {
         $this->apellido1 = PersonaApellido1Text::fromNullableString($apellido1);
     }
+
     public function getApellido1Vo(): PersonaApellido1Text
     {
         return $this->apellido1;
     }
+
     public function setApellido1Vo(PersonaApellido1Text|string|null $apellido1): void
     {
         $this->apellido1 = $apellido1 instanceof PersonaApellido1Text
@@ -276,6 +295,7 @@ class PersonaGlobal
     {
         return $this->nx2?->value();
     }
+
     /**
      * @deprecated use setNx2Vo() instead
      */
@@ -283,10 +303,12 @@ class PersonaGlobal
     {
         $this->nx2 = PersonaNx2Text::fromNullableString($nx2);
     }
+
     public function getNx2Vo(): ?PersonaNx2Text
     {
         return $this->nx2;
     }
+
     public function setNx2Vo(PersonaNx2Text|string|null $nx2 = null): void
     {
         $this->nx2 = $nx2 instanceof PersonaNx2Text
@@ -301,6 +323,7 @@ class PersonaGlobal
     {
         return $this->apellido2?->value();
     }
+
     /**
      * @deprecated use setApellido2Vo() instead
      */
@@ -308,10 +331,12 @@ class PersonaGlobal
     {
         $this->apellido2 = PersonaApellido2Text::fromNullableString($apellido2);
     }
+
     public function getApellido2Vo(): ?PersonaApellido2Text
     {
         return $this->apellido2;
     }
+
     public function setApellido2Vo(PersonaApellido2Text|string|null $apellido2 = null): void
     {
         $this->apellido2 = $apellido2 instanceof PersonaApellido2Text
@@ -323,6 +348,7 @@ class PersonaGlobal
     {
         return $this->f_nacimiento ?? new NullDateTimeLocal;
     }
+
     public function setF_nacimiento(DateTimeLocal|null $f_nacimiento = null): void
     {
         $this->f_nacimiento = $f_nacimiento;
@@ -335,6 +361,7 @@ class PersonaGlobal
     {
         return $this->idioma_preferido?->value();
     }
+
     /**
      * @deprecated use setIdiomaPreferidoVo() instead
      */
@@ -342,10 +369,12 @@ class PersonaGlobal
     {
         $this->idioma_preferido = LenguaCode::fromNullableString($idioma_preferido);
     }
+
     public function getIdiomaPreferidoVo(): ?LenguaCode
     {
         return $this->idioma_preferido;
     }
+
     public function setIdiomaPreferidoVo(LenguaCode|string|null $lengua = null): void
     {
         $this->idioma_preferido = $lengua instanceof LenguaCode
@@ -360,13 +389,15 @@ class PersonaGlobal
     {
         return $this->situacion->value();
     }
+
     /**
      * @deprecated use setSituacionVo() instead
      */
-    public function setSituacion(string $situacion): void
+    public function setSituacion(?string $situacion): void
     {
         $this->situacion = SituacionCode::fromNullableString($situacion);
     }
+
     public function getSituacionVo(): SituacionCode
     {
         return $this->situacion;
@@ -383,6 +414,7 @@ class PersonaGlobal
     {
         return $this->f_situacion ?? new NullDateTimeLocal;
     }
+
     public function setF_situacion(DateTimeLocal|null $f_situacion = null): void
     {
         $this->f_situacion = $f_situacion;
@@ -395,6 +427,7 @@ class PersonaGlobal
     {
         return $this->apel_fam?->value();
     }
+
     /**
      * @deprecated use setApelFamVo() instead
      */
@@ -402,10 +435,12 @@ class PersonaGlobal
     {
         $this->apel_fam = ApelFamText::fromNullableString($apel_fam);
     }
+
     public function getApelFamVo(): ?ApelFamText
     {
         return $this->apel_fam;
     }
+
     public function setApelFamVo(ApelFamText|string|null $apelFam = null): void
     {
         $this->apel_fam = $apelFam instanceof ApelFamText
@@ -421,6 +456,7 @@ class PersonaGlobal
     {
         return $this->inc?->value();
     }
+
     /**
      * @deprecated use setIncVo() instead
      */
@@ -428,10 +464,12 @@ class PersonaGlobal
     {
         $this->inc = IncCode::fromNullableString($inc);
     }
+
     public function getIncVo(): ?IncCode
     {
         return $this->inc;
     }
+
     public function setIncVo(IncCode|string|null $inc = null): void
     {
         $this->inc = $inc instanceof IncCode
@@ -443,6 +481,7 @@ class PersonaGlobal
     {
         return $this->f_inc ?? new NullDateTimeLocal;
     }
+
     public function setF_inc(DateTimeLocal|null $f_inc = null): void
     {
         $this->f_inc = $f_inc;
@@ -455,6 +494,7 @@ class PersonaGlobal
     {
         return $this->nivel_stgr?->value();
     }
+
     /**
      * @deprecated use setNivelStgrVo() instead
      */
@@ -462,10 +502,12 @@ class PersonaGlobal
     {
         $this->nivel_stgr = NivelStgrId::fromNullableInt($nivel_stgr);
     }
+
     public function getNivelStgrVo(): ?NivelStgrId
     {
         return $this->nivel_stgr;
     }
+
     public function setNivelStgrVo(NivelStgrId|int|null $nivel = null): void
     {
         $this->nivel_stgr = $nivel instanceof NivelStgrId
@@ -480,6 +522,7 @@ class PersonaGlobal
     {
         return $this->profesion?->value();
     }
+
     /**
      * @deprecated use setProfesionVo() instead
      */
@@ -487,10 +530,12 @@ class PersonaGlobal
     {
         $this->profesion = ProfesionText::fromNullableString($profesion);
     }
+
     public function getProfesionVo(): ?ProfesionText
     {
         return $this->profesion;
     }
+
     public function setProfesionVo(ProfesionText|string|null $profesion = null): void
     {
         $this->profesion = $profesion instanceof ProfesionText
@@ -505,6 +550,7 @@ class PersonaGlobal
     {
         return $this->eap?->value();
     }
+
     /**
      * @deprecated use setEapVo() instead
      */
@@ -512,10 +558,12 @@ class PersonaGlobal
     {
         $this->eap = EapText::fromNullableString($eap);
     }
+
     public function getEapVo(): ?EapText
     {
         return $this->eap;
     }
+
     public function setEapVo(EapText|string|null $eap = null): void
     {
         $this->eap = $eap instanceof EapText
@@ -530,6 +578,7 @@ class PersonaGlobal
     {
         return $this->observ?->value();
     }
+
     /**
      * @deprecated use setObservVo() instead
      */
@@ -537,10 +586,12 @@ class PersonaGlobal
     {
         $this->observ = ObservText::fromNullableString($observ);
     }
+
     public function getObservVo(): ?ObservText
     {
         return $this->observ;
     }
+
     public function setObservVo(ObservText|string|null $observ = null): void
     {
         $this->observ = $observ instanceof ObservText
@@ -552,6 +603,7 @@ class PersonaGlobal
     {
         return $this->id_ctr;
     }
+
     public function setId_ctr(?int $id_ctr = null): void
     {
         $this->id_ctr = $id_ctr;
@@ -564,6 +616,7 @@ class PersonaGlobal
     {
         return $this->lugar_nacimiento?->value();
     }
+
     /**
      * @deprecated use setLugarNacimientoVo() instead
      */
@@ -571,10 +624,12 @@ class PersonaGlobal
     {
         $this->lugar_nacimiento = LugarNacimientoText::fromNullableString($lugar_nacimiento);
     }
+
     public function getLugarNacimientoVo(): ?LugarNacimientoText
     {
         return $this->lugar_nacimiento;
     }
+
     public function setLugarNacimientoVo(LugarNacimientoText|string|null $lugar = null): void
     {
         $this->lugar_nacimiento = $lugar instanceof LugarNacimientoText
@@ -586,21 +641,14 @@ class PersonaGlobal
     {
         return $this->es_publico;
     }
+
     public function setEs_publico(?bool $es_publico = null): void
     {
         $this->es_publico = $es_publico;
     }
 
 
-    /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
-
-    private string $Apellidos;
-    private string $ApellidosNombre;
-    private string $ApellidosNombreCr1_05;
-    private string $NombreApellidos;
-    private string $NombreApellidosCrSin;
-    private string $TituloNombre;
-    private string $Centro_o_dl;
+    /* MÉTODOS GET y SET DE ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 
     public function getClassName(): string
     {
@@ -621,35 +669,29 @@ class PersonaGlobal
 
     public function getApellidos(): string
     {
-        if (!isset($this->Apellidos)) {
-            $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
-            $ap_nom .= $this->apellido1;
-            $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
-            $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
+        $ap_nom .= $this->apellido1;
+        $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
+        $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->Apellidos = $ap_nom;
-        }
-        return $this->Apellidos;
+        return $ap_nom;
     }
 
 
     public function getApellidosNombre(): string
     {
-        if (!isset($this->ApellidosNombre)) {
-            if (empty($this->apellido1)) {
-                $ap_nom = '';
-            } else {
-                $ap_nom = $this->apellido1;
-                $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
-                $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
-                $ap_nom .= ', ';
-                $ap_nom .= !empty($this->trato) ? $this->trato . ' ' : ' ';
-                $ap_nom .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
-                $ap_nom .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
-            }
-            $this->ApellidosNombre = trim($ap_nom);
+        if (empty($this->apellido1)) {
+            $ap_nom = '';
+        } else {
+            $ap_nom = $this->apellido1;
+            $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
+            $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+            $ap_nom .= ', ';
+            $ap_nom .= !empty($this->trato) ? $this->trato . ' ' : ' ';
+            $ap_nom .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
+            $ap_nom .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
         }
-        return $this->ApellidosNombre;
+        return trim($ap_nom);
     }
 
     public function getApellidosUpperNombre(): string
@@ -668,143 +710,115 @@ class PersonaGlobal
     }
 
 
-    public function setApellidosNombre($sApellidosNombre): void
-    {
-        $this->ApellidosNombre = $sApellidosNombre;
-    }
-
-
     public function getApellidosNombreCr1_05(): string
     {
-        if (!isset($this->ApellidosNombreCr1_05)) {
-            $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
-            $ap_nom .= $this->apellido1;
-            $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
-            $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
-            $ap_nom .= ', ';
-            $ap_nom .= $this->nom;
+        $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
+        $ap_nom .= $this->apellido1;
+        $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
+        $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $ap_nom .= ', ';
+        $ap_nom .= $this->nom;
 
-            $this->ApellidosNombreCr1_05 = $ap_nom;
-        }
-        return $this->ApellidosNombreCr1_05;
+        return $ap_nom;
     }
-
-
-    public function setApellidosNombreCr1_05($sApellidosNombreCr1_05): void
-    {
-        $this->ApellidosNombreCr1_05 = $sApellidosNombreCr1_05;
-    }
-
 
     public function getNombreApellidos(): string
     {
-        if (!isset($this->NombreApellidos)) {
-            $nom_ap = !empty($this->trato) ? $this->trato . ' ' : '';
-            $nom_ap .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
-            $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
-            $nom_ap .= ' ' . $this->apellido1;
-            $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
-            $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $nom_ap = !empty($this->trato) ? $this->trato . ' ' : '';
+        $nom_ap .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
+        $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
+        $nom_ap .= ' ' . $this->apellido1;
+        $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
+        $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->NombreApellidos = $nom_ap;
-        }
-        return $this->NombreApellidos;
+        return $nom_ap;
     }
 
 
     public function getNombreApellidosCrSin(): string
     {
-        if (!isset($this->NombreApellidosCrSin)) {
-            $nom_ap = $this->nom;
-            $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
-            $nom_ap .= ' ' . $this->apellido1;
-            $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
-            $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $nom_ap = $this->nom;
+        $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
+        $nom_ap .= ' ' . $this->apellido1;
+        $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
+        $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->NombreApellidosCrSin = $nom_ap;
-        }
-        return $this->NombreApellidosCrSin;
+        return $nom_ap;
     }
 
     public function getTituloNombre(): string
     {
-        if (!isset($this->TituloNombre)) {
-            $nom_ap = 'Dnus. Dr. ';
-            $nom_ap .= $this->nom;
-            $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
-            $nom_ap .= ' ' . $this->apellido1;
-            $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
-            $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $nom_ap = 'Dnus. Dr. ';
+        $nom_ap .= $this->nom;
+        $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
+        $nom_ap .= ' ' . $this->apellido1;
+        $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
+        $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->TituloNombre = $nom_ap;
-        }
-        return $this->TituloNombre;
+        return $nom_ap;
     }
 
 
     public function getCentro_o_dl(): string
     {
-        if (!isset($this->Centro_o_dl)) {
-            $classname = get_class($this);
-            $matches = [];
-            if (preg_match('@\\\\(\w+)$@', $classname, $matches)) {
-                $classname = $matches[1];
-            }
-            switch ($classname) {
-                case 'PersonaSacd':
-                    $ctr = $this->getDl();
-                    if ($ctr === ConfigGlobal::mi_dele()) {
-                        $oPersonasDl = new PersonaDl($this->getId_nom());
-                        $id_ctr = $oPersonasDl->getId_ctr();
-                        $oCentroDl = null;
-                        if ($id_ctr !== null) {
-                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                            $oCentroDl = $CentroDlRepository->findById($id_ctr);
-                        }
-                        $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
-                    }
-                    break;
-                case 'PersonaEx':
-                case 'PersonaIn':
-                    $ctr = $this->getDl();
-                    break;
-                case 'PersonaGlobal':
+        $classname = get_class($this);
+        $matches = [];
+        if (preg_match('@\\\\(\w+)$@', $classname, $matches)) {
+            $classname = $matches[1];
+        }
+        switch ($classname) {
+            case 'PersonaSacd':
+                $ctr = $this->getDl();
+                if ($ctr === ConfigGlobal::mi_dele()) {
+                    $oPersonasDl = new PersonaDl($this->getId_nom());
+                    $id_ctr = $oPersonasDl->getId_ctr();
                     $oCentroDl = null;
-                    if ($this->getId_ctr() !== null) {
-                        // OJO CON las regiones de stgr
-                        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                            $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                            $oCentroDl = $CentroRepository->findById($this->getId_ctr());
-                        } else {
-                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                            $oCentroDl = $CentroDlRepository->findById($this->getId_ctr());
-                        }
+                    if ($id_ctr !== null) {
+                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                        $oCentroDl = $CentroDlRepository->findById($id_ctr);
                     }
                     $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
-                    break;
-                case 'PersonaDl':
-                case 'PersonaAgd':
-                case 'PersonaN':
-                case 'PersonaNax':
-                case 'PersonaS':
-                case 'PersonaSSSC':
-                    $oCentro = null;
-                    if ($this->getId_ctr() !== null) {
-                        // OJO CON las regiones de stgr
-                        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                            $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                            $oCentro = $CentroRepository->findById($this->getId_ctr());
-                        } else {
-                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                            $oCentro = $CentroDlRepository->findById($this->getId_ctr());
-                        }
+                }
+                break;
+            case 'PersonaEx':
+            case 'PersonaIn':
+                $ctr = $this->getDl();
+                break;
+            case 'PersonaGlobal':
+                $oCentroDl = null;
+                if ($this->getId_ctr() !== null) {
+                    // OJO CON las regiones de stgr
+                    if (ConfigGlobal::mi_ambito() === 'rstgr') {
+                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                        $oCentroDl = $CentroRepository->findById($this->getId_ctr());
+                    } else {
+                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                        $oCentroDl = $CentroDlRepository->findById($this->getId_ctr());
                     }
-                    $ctr = $oCentro?->getNombre_ubi() ?? '?';
-                    break;
-            }
-            $this->Centro_o_dl = $ctr;
+                }
+                $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
+                break;
+            case 'PersonaDl':
+            case 'PersonaAgd':
+            case 'PersonaN':
+            case 'PersonaNax':
+            case 'PersonaS':
+            case 'PersonaSSSC':
+                $oCentro = null;
+                if ($this->getId_ctr() !== null) {
+                    // OJO CON las regiones de stgr
+                    if (ConfigGlobal::mi_ambito() === 'rstgr') {
+                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                        $oCentro = $CentroRepository->findById($this->getId_ctr());
+                    } else {
+                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                        $oCentro = $CentroDlRepository->findById($this->getId_ctr());
+                    }
+                }
+                $ctr = $oCentro?->getNombre_ubi() ?? '?';
+                break;
         }
-        return $this->Centro_o_dl;
+        return $ctr;
     }
 
 

@@ -16,7 +16,9 @@ use src\personas\domain\entity\PersonaSSSC;
  */
 interface PersonaSSSCRepositoryInterface extends PersonaDlRepositoryInterface
 {
+    public function Guardar(PersonaSSSC $PersonaSSSC): bool;
 
+    public function Eliminar(PersonaSSSC $PersonaSSSC): bool;
 
     /**
      * Busca la clase con id_nom en el repositorio.

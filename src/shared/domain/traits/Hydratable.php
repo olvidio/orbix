@@ -132,7 +132,18 @@ trait Hydratable
     public function toArray(): array
     {
         $reflection = new \ReflectionClass($this);
-        $properties = $reflection->getProperties(\ReflectionProperty::IS_PRIVATE | \ReflectionProperty::IS_PROTECTED);
+
+        // Obtener todas las propiedades de la clase y sus padres
+        $properties = [];
+        $currentClass = $reflection;
+        while ($currentClass) {
+            $properties = array_merge(
+                $properties,
+                $currentClass->getProperties(\ReflectionProperty::IS_PRIVATE | \ReflectionProperty::IS_PROTECTED)
+            );
+            $currentClass = $currentClass->getParentClass();
+        }
+
         $data = [];
 
         foreach ($properties as $property) {
@@ -186,7 +197,18 @@ trait Hydratable
     public function toArrayForDatabase(array $converters = []): array
     {
         $reflection = new \ReflectionClass($this);
-        $properties = $reflection->getProperties(\ReflectionProperty::IS_PRIVATE | \ReflectionProperty::IS_PROTECTED);
+
+        // Obtener todas las propiedades de la clase y sus padres
+        $properties = [];
+        $currentClass = $reflection;
+        while ($currentClass) {
+            $properties = array_merge(
+                $properties,
+                $currentClass->getProperties(\ReflectionProperty::IS_PRIVATE | \ReflectionProperty::IS_PROTECTED)
+            );
+            $currentClass = $currentClass->getParentClass();
+        }
+
         $data = [];
 
         foreach ($properties as $property) {

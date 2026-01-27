@@ -2,6 +2,7 @@
 
 namespace src\notas\infrastructure\repositories;
 
+use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 
 /**
  * Clase que adapta la tabla e_actas_tribunal_dl a la interfaz del repositorio
@@ -12,7 +13,7 @@ namespace src\notas\infrastructure\repositories;
  * @version 2.0
  * @created 27/12/2025
  */
-class PgActaTribunalDlRepository extends PgActaTribunalRepository
+class PgActaTribunalDlRepository extends PgActaTribunalRepository implements ActaTribunalDlRepositoryInterface
 {
     public function __construct()
     {

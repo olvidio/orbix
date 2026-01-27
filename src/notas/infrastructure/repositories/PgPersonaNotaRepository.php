@@ -11,6 +11,7 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\PersonaNotaPk;
+use src\notas\domain\value_objects\TipoActa;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -174,7 +175,8 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
             $campos = "(id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max,tipo_acta)";
             $valores = "(:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max,:tipo_acta)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -212,6 +214,10 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
         return $aDatos;
     }
 
+    public function datosByPk(PersonaNotaPk $pk): array|bool
+    {
+        return $this->datosById($pk->idNom(), $pk->idNivel(), $pk->tipoActa());
+    }
 
     /**
      * Busca la clase con id_item en la base de datos .

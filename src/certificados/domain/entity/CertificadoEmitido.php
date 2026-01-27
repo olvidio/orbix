@@ -125,7 +125,7 @@ class CertificadoEmitido
     }
 
 
-    public function setEsquema_emisor(string $esquema_emisor = null): void
+    public function setEsquema_emisor(?string $esquema_emisor = null): void
     {
         $this->esquema_emisor = $esquema_emisor;
     }

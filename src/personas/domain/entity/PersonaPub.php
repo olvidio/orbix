@@ -661,14 +661,6 @@ class PersonaPub
 
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 
-    private string $Apellidos;
-    private string $ApellidosNombre;
-    private string $ApellidosNombreCr1_05;
-    private string $NombreApellidos;
-    private string $NombreApellidosCrSin;
-    private string $TituloNombre;
-    private string $Centro_o_dl;
-
     public function getClassName(): string
     {
         return (new ReflectionClass($this))->getShortName();
@@ -688,35 +680,29 @@ class PersonaPub
 
     public function getApellidos(): string
     {
-        if (!isset($this->Apellidos)) {
-            $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
-            $ap_nom .= $this->apellido1;
-            $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
-            $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
+        $ap_nom .= $this->apellido1;
+        $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
+        $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->Apellidos = $ap_nom;
-        }
-        return $this->Apellidos;
+        return $ap_nom;
     }
 
 
     public function getApellidosNombre(): string
     {
-        if (!isset($this->ApellidosNombre)) {
-            if (empty($this->apellido1)) {
-                $ap_nom = '';
-            } else {
-                $ap_nom = $this->apellido1;
-                $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
-                $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
-                $ap_nom .= ', ';
-                $ap_nom .= !empty($this->trato) ? $this->trato . ' ' : ' ';
-                $ap_nom .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
-                $ap_nom .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
-            }
-            $this->ApellidosNombre = trim($ap_nom);
+        if (empty($this->apellido1)) {
+            $ap_nom = '';
+        } else {
+            $ap_nom = $this->apellido1;
+            $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
+            $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+            $ap_nom .= ', ';
+            $ap_nom .= !empty($this->trato) ? $this->trato . ' ' : ' ';
+            $ap_nom .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
+            $ap_nom .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
         }
-        return $this->ApellidosNombre;
+        return trim($ap_nom);
     }
 
     public function getApellidosUpperNombre(): string
@@ -735,144 +721,117 @@ class PersonaPub
     }
 
 
-    public function setApellidosNombre($sApellidosNombre): void
-    {
-        $this->ApellidosNombre = $sApellidosNombre;
-    }
-
-
     public function getApellidosNombreCr1_05(): string
     {
-        if (!isset($this->ApellidosNombreCr1_05)) {
-            $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
-            $ap_nom .= $this->apellido1;
-            $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
-            $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
-            $ap_nom .= ', ';
-            $ap_nom .= $this->nom;
+        $ap_nom = !empty($this->nx1) ? $this->nx1 . ' ' : '';
+        $ap_nom .= $this->apellido1;
+        $ap_nom .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
+        $ap_nom .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $ap_nom .= ', ';
+        $ap_nom .= $this->nom;
 
-            $this->ApellidosNombreCr1_05 = $ap_nom;
-        }
-        return $this->ApellidosNombreCr1_05;
-    }
-
-
-    public function setApellidosNombreCr1_05($sApellidosNombreCr1_05): void
-    {
-        $this->ApellidosNombreCr1_05 = $sApellidosNombreCr1_05;
+        return $ap_nom;
     }
 
 
     public function getNombreApellidos(): string
     {
-        if (!isset($this->NombreApellidos)) {
-            $nom_ap = !empty($this->trato) ? $this->trato . ' ' : '';
-            $nom_ap .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
-            $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
-            $nom_ap .= ' ' . $this->apellido1;
-            $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
-            $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $nom_ap = !empty($this->trato) ? $this->trato . ' ' : '';
+        $nom_ap .= !empty($this->apel_fam) ? $this->apel_fam : $this->nom;
+        $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
+        $nom_ap .= ' ' . $this->apellido1;
+        $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : '';
+        $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->NombreApellidos = $nom_ap;
-        }
-        return $this->NombreApellidos;
+        return $nom_ap;
     }
 
 
     public function getNombreApellidosCrSin(): string
     {
-        if (!isset($this->NombreApellidosCrSin)) {
-            $nom_ap = $this->nom;
-            $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
-            $nom_ap .= ' ' . $this->apellido1;
-            $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
-            $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $nom_ap = $this->nom;
+        $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
+        $nom_ap .= ' ' . $this->apellido1;
+        $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
+        $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->NombreApellidosCrSin = $nom_ap;
-        }
-        return $this->NombreApellidosCrSin;
+        return $nom_ap;
     }
 
     public function getTituloNombre(): string
     {
-        if (!isset($this->TituloNombre)) {
-            $nom_ap = 'Dnus. Dr. ';
-            $nom_ap .= $this->nom;
-            $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
-            $nom_ap .= ' ' . $this->apellido1;
-            $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
-            $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
+        $nom_ap = 'Dnus. Dr. ';
+        $nom_ap .= $this->nom;
+        $nom_ap .= !empty($this->nx1) ? ' ' . $this->nx1 : '';
+        $nom_ap .= ' ' . $this->apellido1;
+        $nom_ap .= !empty($this->nx2) ? ' ' . $this->nx2 : ' ';
+        $nom_ap .= !empty($this->apellido2) ? ' ' . $this->apellido2 : '';
 
-            $this->TituloNombre = $nom_ap;
-        }
-        return $this->TituloNombre;
+        return $nom_ap;
     }
 
 
     public function getCentro_o_dl(): string
     {
-        if (!isset($this->Centro_o_dl)) {
-            $classname = get_class($this);
-            $matches = [];
-            if (preg_match('@\\\\(\w+)$@', $classname, $matches)) {
-                $classname = $matches[1];
-            }
-            switch ($classname) {
-                case 'PersonaSacd':
-                    $ctr = $this->getDl();
-                    if ($ctr === ConfigGlobal::mi_dele()) {
-                        $oPersonasDl = new PersonaDl($this->getId_nom());
-                        $id_ctr = $oPersonasDl->getId_ctr();
-                        $oCentroDl = null;
-                        if ($id_ctr !== null) {
-                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                            $oCentroDl = $CentroDlRepository->findById($id_ctr);
-                        }
-                        $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
-                    }
-                    break;
-                case 'PersonaEx':
-                case 'PersonaIn':
-                case 'PersonaPub':
-                    $ctr = $this->getDl();
-                    break;
-                case 'PersonaGlobal':
+        $classname = get_class($this);
+        $matches = [];
+        if (preg_match('@\\\\(\w+)$@', $classname, $matches)) {
+            $classname = $matches[1];
+        }
+        switch ($classname) {
+            case 'PersonaSacd':
+                $ctr = $this->getDl();
+                if ($ctr === ConfigGlobal::mi_dele()) {
+                    $oPersonasDl = new PersonaDl($this->getId_nom());
+                    $id_ctr = $oPersonasDl->getId_ctr();
                     $oCentroDl = null;
-                    if ($this->getId_ctr() !== null) {
-                        // OJO CON las regiones de stgr
-                        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                            $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                            $oCentroDl = $CentroRepository->findById($this->getId_ctr());
-                        } else {
-                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                            $oCentroDl = $CentroDlRepository->findById($this->getId_ctr());
-                        }
+                    if ($id_ctr !== null) {
+                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                        $oCentroDl = $CentroDlRepository->findById($id_ctr);
                     }
                     $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
-                    break;
-                case 'PersonaDl':
-                case 'PersonaAgd':
-                case 'PersonaN':
-                case 'PersonaNax':
-                case 'PersonaS':
-                case 'PersonaSSSC':
-                    $oCentro = null;
-                    if ($this->getId_ctr() !== null) {
-                        // OJO CON las regiones de stgr
-                        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                            $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
-                            $oCentro = $CentroRepository->findById($this->getId_ctr());
-                        } else {
-                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                            $oCentro = $CentroDlRepository->findById($this->getId_ctr());
-                        }
+                }
+                break;
+            case 'PersonaEx':
+            case 'PersonaIn':
+            case 'PersonaPub':
+                $ctr = $this->getDl();
+                break;
+            case 'PersonaGlobal':
+                $oCentroDl = null;
+                if ($this->getId_ctr() !== null) {
+                    // OJO CON las regiones de stgr
+                    if (ConfigGlobal::mi_ambito() === 'rstgr') {
+                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                        $oCentroDl = $CentroRepository->findById($this->getId_ctr());
+                    } else {
+                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                        $oCentroDl = $CentroDlRepository->findById($this->getId_ctr());
                     }
-                    $ctr = $oCentro?->getNombre_ubi() ?? '?';
-                    break;
-            }
-            $this->Centro_o_dl = $ctr;
+                }
+                $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
+                break;
+            case 'PersonaDl':
+            case 'PersonaAgd':
+            case 'PersonaN':
+            case 'PersonaNax':
+            case 'PersonaS':
+            case 'PersonaSSSC':
+                $oCentro = null;
+                if ($this->getId_ctr() !== null) {
+                    // OJO CON las regiones de stgr
+                    if (ConfigGlobal::mi_ambito() === 'rstgr') {
+                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
+                        $oCentro = $CentroRepository->findById($this->getId_ctr());
+                    } else {
+                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                        $oCentro = $CentroDlRepository->findById($this->getId_ctr());
+                    }
+                }
+                $ctr = $oCentro?->getNombre_ubi() ?? '?';
+                break;
         }
-        return $this->Centro_o_dl;
+        return $ctr;
     }
 
 
