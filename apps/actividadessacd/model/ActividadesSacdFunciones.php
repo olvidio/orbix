@@ -3,10 +3,8 @@
 namespace actividadessacd\model;
 
 use actividadessacd\model\entity\GestorAtnActivSacdTexto;
-use ubis\model\entity\GestorCentroDl;
 use core\ConfigGlobal;
-use ubis\model\entity\GestorCentroEllas;
-use ubis\model\entity\GestorCentroEllos;
+use ubis\model\entity\GestorCentroDl;
 
 class ActividadesSacdFunciones
 {
@@ -61,11 +59,9 @@ class ActividadesSacdFunciones
     function getLugar_dl()
     {
         if (ConfigGlobal::is_dmz()) {
-            //return "xxxx";
-            $oGesCentrosDl = new GestorCentroEllos();
-        } else {
-            $oGesCentrosDl = new GestorCentroDl();
+            return "xxxx";
         }
+        $oGesCentrosDl = new GestorCentroDl();
         $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'dl']);
         $num_dl = count($cCentros);
         switch ($num_dl) {
