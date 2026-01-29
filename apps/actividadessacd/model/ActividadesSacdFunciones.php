@@ -5,6 +5,8 @@ namespace actividadessacd\model;
 use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 use ubis\model\entity\GestorCentroDl;
 use core\ConfigGlobal;
+use ubis\model\entity\GestorCentroEllas;
+use ubis\model\entity\GestorCentroEllos;
 
 class ActividadesSacdFunciones
 {
@@ -29,7 +31,7 @@ class ActividadesSacdFunciones
             }
         }
         if (empty($this->a_txt[$idioma])) {
-            $str = sprintf(_("No existe el idoma: %s. Debe corregirlo en la ficha del sacd"), $idioma);
+            $str = sprintf(_("No existe el idioma: %s. Debe corregirlo en la ficha del sacd"), $idioma);
             echo $str . "<br>";
             return FALSE;
         }
@@ -59,9 +61,11 @@ class ActividadesSacdFunciones
     function getLugar_dl()
     {
         if (ConfigGlobal::is_dmz()) {
-            return "xxxx";
+            //return "xxxx";
+            $oGesCentrosDl = new GestorCentroEllos();
+        } else {
+            $oGesCentrosDl = new GestorCentroDl();
         }
-        $oGesCentrosDl = new GestorCentroDl();
         $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'dl']);
         $num_dl = count($cCentros);
         switch ($num_dl) {
@@ -71,7 +75,7 @@ class ActividadesSacdFunciones
                 if (count($cCentros) > 0) {
                     $oCentro = $cCentros[0];
                 } else {
-                    // No existe el nombre de la delegacion ni región.
+                    // No existe el nombre de la delegación ni región.
                     return '?';
                 }
                 break;
@@ -83,7 +87,7 @@ class ActividadesSacdFunciones
                 exit (_("Más de un centro definido como dl"));
                 break;
         }
-        // Buscar la direccion
+        // Buscar la dirección
         $cDirecciones = $oCentro->getDirecciones();
 
         $poblacion = '';
