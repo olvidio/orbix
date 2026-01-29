@@ -154,7 +154,8 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
             $campos = "(id_locale,nom_locale,idioma,nom_idioma,active)";
             $valores = "(:id_locale,:nom_locale,:idioma,:nom_idioma,:active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

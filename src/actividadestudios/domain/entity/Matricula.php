@@ -3,6 +3,7 @@
 namespace src\actividadestudios\domain\entity;
 
 use src\actividades\domain\value_objects\NivelStgrId;
+use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\shared\domain\traits\Hydratable;
@@ -28,6 +29,16 @@ class Matricula
     private ?Acta $acta = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getActividadMatriculaPk()
+    {
+        return ActividadMatriculaPk::fromArray([
+            'id_activ' => $this->id_activ,
+            'id_nom' => $this->id_nom,
+            'id_asignatura' => $this->id_asignatura,
+        ]);
+    }
+
 
     public function getId_activ(): int
     {

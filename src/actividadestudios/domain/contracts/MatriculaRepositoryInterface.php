@@ -4,6 +4,7 @@ namespace src\actividadestudios\domain\contracts;
 
 use PDO;
 use src\actividadestudios\domain\entity\Matricula;
+use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
 
 
 /**
@@ -47,5 +48,9 @@ interface MatriculaRepositoryInterface
 
     public function datosById(int $id_activ, int $id_asignatura, int $id_nom): array|bool;
 
+    public function datosByPk(ActividadMatriculaPk $pk): array|bool;
+
     public function findById(int $id_activ, int $id_asignatura, int $id_nom): ?Matricula;
+
+    public function findByPk(ActividadMatriculaPk $pk): ?Matricula;
 }

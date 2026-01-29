@@ -8,6 +8,7 @@ use core\Set;
 use PDO;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
 use src\cartaspresentacion\domain\entity\CartaPresentacion;
+use src\cartaspresentacion\domain\value_objects\PresentacionPk;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -140,7 +141,8 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
             $campos = "(id_direccion,id_ubi,pres_nom,pres_telf,pres_mail,zona,observ)";
             $valores = "(:id_direccion,:id_ubi,:pres_nom,:pres_telf,:pres_mail,:zona,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -175,6 +177,11 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
         return $aDatos;
     }
 
+    public function datosByPk(PresentacionPk $pk): array|bool
+    {
+        return $this->datosById($pk->idUbi(), $pk->idDireccion());
+
+    }
 
     /**
      * Busca la clase con id_direccion en la base de datos .
@@ -186,5 +193,10 @@ class PgCartaPresentacionRepository extends ClaseRepository implements CartaPres
             return null;
         }
         return CartaPresentacion::fromArray($aDatos);
+    }
+
+    public function findByPk(PresentacionPk $pk): ?CartaPresentacion
+    {
+        return $this->findById($pk->idUbi(), $pk->idDireccion());
     }
 }

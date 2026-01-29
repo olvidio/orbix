@@ -22,11 +22,11 @@ interface TipoDeActividadRepositoryInterface
 
     public function getTiposDeProcesos($sid_tipo_activ = '......', $bdl_propia = true, $sfsv = ''): array;
 
-    public function getId_tipoPosibles($regexp, $expr_txt): array;
+    public function getId_tipoPosibles($regexp, $filtro_regexp_txt): array;
 
-    public function getNom_tipoPosibles($num_digitos, $expr_txt): array;
+    public function getNom_tipoPosibles($num_digitos, $filtro_regexp_txt): array;
 
-    public function getAsistentesPosibles($aText, $regexp): array;
+    public function getAsistentesPosibles($aText, $filtro_regex_txt): array;
 
     public function getActividadesPosibles(int $num_digitos, array $aText, string $expr_txt): array;
 

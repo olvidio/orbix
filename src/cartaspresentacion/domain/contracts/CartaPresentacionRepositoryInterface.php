@@ -4,6 +4,7 @@ namespace src\cartaspresentacion\domain\contracts;
 
 use PDO;
 use src\cartaspresentacion\domain\entity\CartaPresentacion;
+use src\cartaspresentacion\domain\value_objects\PresentacionPk;
 
 
 /**
@@ -53,8 +54,12 @@ interface CartaPresentacionRepositoryInterface
      */
     public function datosById(int $id_ubi, int $id_direccion): array|bool;
 
+    public function datosByPk(PresentacionPk $pk): array|bool;
+
     /**
      * Busca la clase con id_direccion en el repositorio.
      */
     public function findById(int $id_ubi, int $id_direccion): ?CartaPresentacion;
+
+    public function findByPk(PresentacionPk $pk): ?CartaPresentacion;
 }

@@ -115,12 +115,12 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         return $aTiposDeProcesos;
     }
 
-    public function getId_tipoPosibles($regexp, $expr_txt): array
+    public function getId_tipoPosibles($regexp, $filtro_regexp_txt): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $query = "SELECT substring(id_tipo_activ::text from '" . $regexp . "')
-		   	FROM $nom_tabla  where id_tipo_activ::text ~'" . $expr_txt . "' order by id_tipo_activ";
+		   	FROM $nom_tabla  where id_tipo_activ::text ~'" . $filtro_regexp_txt . "' order by id_tipo_activ";
         $stmt = $this->pdoQuery($oDbl,$query, __METHOD__, __FILE__, __LINE__);
 
         $a_id_tipos = [];
@@ -131,11 +131,11 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         return $a_id_tipos;
     }
 
-    public function getNom_tipoPosibles($num_digitos, $expr_txt): array
+    public function getNom_tipoPosibles($num_digitos, $filtro_regexp_txt): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $query = "SELECT * FROM $nom_tabla where id_tipo_activ::text ~'$expr_txt' order by id_tipo_activ";
+        $query = "SELECT * FROM $nom_tabla where id_tipo_activ::text ~'$filtro_regexp_txt' order by id_tipo_activ";
         $stmt = $this->pdoQuery($oDbl,$query, __METHOD__, __FILE__, __LINE__);
 
         $tipo_nom = [];
@@ -152,12 +152,12 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             'nom_tipo' => $nom_tipo];
     }
 
-    public function getAsistentesPosibles($aText, $regexp): array
+    public function getAsistentesPosibles($aText, $filtro_regex_txt): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $query_ta = "select substr(id_tipo_activ::text,2,1) as ta2
-			from $nom_tabla where id_tipo_activ::text ~'" . $regexp . "' group by ta2 order by ta2";
+			from $nom_tabla where id_tipo_activ::text ~'" . $filtro_regex_txt . "' group by ta2 order by ta2";
         $stmt = $this->pdoQuery($oDbl, $query_ta, __METHOD__, __FILE__, __LINE__);
 
         $asistentes = [];
@@ -308,7 +308,8 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             $campos = "(id_tipo_activ,nombre,id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf)";
             $valores = "(:id_tipo_activ,:nombre,:id_tipo_proceso_sv,:id_tipo_proceso_ex_sv,:id_tipo_proceso_sf,:id_tipo_proceso_ex_sf)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

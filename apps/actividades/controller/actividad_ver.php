@@ -77,7 +77,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
     $oActividad = $ActividadAllRepository->findById($Qid_activ);
-    $a_status = StatusId::getArrayStatus();
+    $a_status = StatusId::getArrayStatus(true);
 
     $id_tipo_activ = $oActividad->getId_tipo_activ();
     $dl_org = $oActividad->getDl_org();

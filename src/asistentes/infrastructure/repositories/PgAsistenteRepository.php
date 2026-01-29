@@ -9,6 +9,8 @@ use core\Set;
 use PDO;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
+use src\asistentes\domain\value_objects\AsistentePk;
+use src\shared\domain\contracts\EventBusInterface;
 use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
@@ -26,8 +28,11 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
 {
     use HandlesPdoErrors;
 
-    public function __construct()
+    protected EventBusInterface $eventBus;
+
+    public function __construct(EventBusInterface $eventBus)
     {
+        $this->eventBus = $eventBus;
         $oDbl = $GLOBALS['oDBE'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBE_Select'];
@@ -118,8 +123,11 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         $success = $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         if ($success && $datosActuales) {
-            // Marcar como eliminada (los eventos se despacharán por el UnitOfWork)
+            // Marcar como eliminada
             $Asistente->marcarComoEliminada($datosActuales);
+
+            // Despachar eventos
+            $this->dispatchDomainEvents($Asistente);
         }
 
         return $success;
@@ -141,6 +149,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         $datosActuales = $bInsert ? [] : ($this->datosById($id_activ, $id_nom) ?: []);
 
         $aDatos = $Asistente->toArrayForDatabase();
+        unset($aDatos['domainEvents']);
 
         if ($bInsert === false) {
             //UPDATE
@@ -171,12 +180,15 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         $success = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 
         if ($success) {
-            // Marcar evento de dominio (se despachará por el UnitOfWork)
+            // Marcar evento de dominio
             if ($bInsert) {
                 $Asistente->marcarComoNueva($datosActuales);
             } else {
                 $Asistente->marcarComoModificada($datosActuales);
             }
+
+            // Despachar eventos
+            $this->dispatchDomainEvents($Asistente);
         }
 
         return $success;
@@ -212,6 +224,11 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         return $aDatos;
     }
 
+    public function datosByPk(AsistentePk $pk): array|bool
+    {
+        return $this->datosById($pk->IdActiv(), $pk->IdNom());
+    }
+
 
     /**
      * Busca la clase con id_activ en la base de datos .
@@ -223,5 +240,20 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
             return null;
         }
         return Asistente::fromArray($aDatos);
+    }
+
+    public function findByPk(AsistentePk $pk): ?Asistente
+    {
+        return $this->findById($pk->IdActiv(), $pk->IdNom());
+    }
+
+    /**
+     * Despacha los eventos de dominio de una entidad
+     */
+    private function dispatchDomainEvents(Asistente $asistente): void
+    {
+        foreach ($asistente->pullDomainEvents() as $event) {
+            $this->eventBus->dispatch($event);
+        }
     }
 }

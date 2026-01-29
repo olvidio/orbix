@@ -4,7 +4,7 @@ namespace src\actividadessacd\domain\entity;
 
 use src\actividadessacd\domain\value_objects\SacdTextoClave;
 use src\actividadessacd\domain\value_objects\SacdTextoTexto;
-use src\encargossacd\domain\value_objects\IdiomaCode;
+use src\encargossacd\domain\value_objects\LocaleCode;
 use src\shared\domain\traits\Hydratable;
 
 class ActividadSacdTexto
@@ -14,7 +14,7 @@ class ActividadSacdTexto
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private int $id_item;
-    private IdiomaCode $idioma;
+    private LocaleCode $idioma;
     private SacdTextoClave $clave;
     private ?SacdTextoTexto $texto = null;
 
@@ -43,22 +43,22 @@ class ActividadSacdTexto
      */
     public function setIdioma(string $idioma): void
     {
-        $this->idioma = IdiomaCode::fromNullableString($idioma);
+        $this->idioma = LocaleCode::fromNullableString($idioma);
     }
 
     /**
-     * @return IdiomaCode
+     * @return LocaleCode
      */
-    public function getIdiomaVo(): IdiomaCode
+    public function getIdiomaVo(): LocaleCode
     {
         return $this->idioma;
     }
 
-    public function setIdiomaVo(IdiomaCode|string $texto): void
+    public function setIdiomaVo(LocaleCode|string $texto): void
     {
-        $this->idioma = $texto instanceof IdiomaCode
+        $this->idioma = $texto instanceof LocaleCode
             ? $texto
-            : IdiomaCode::fromNullableString($texto);
+            : LocaleCode::fromNullableString($texto);
     }
 
     /**

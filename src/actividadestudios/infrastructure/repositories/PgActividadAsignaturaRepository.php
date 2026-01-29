@@ -9,6 +9,7 @@ use core\Set;
 use PDO;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
+use src\actividadestudios\domain\value_objects\ActividadAsignaturaPk;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\shared\traits\HandlesPdoErrors;
 
@@ -199,7 +200,8 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
             $campos = "(id_activ,id_asignatura,id_profesor,avis_profesor,tipo,f_ini,f_fin)";
             $valores = "(:id_activ,:id_asignatura,:id_profesor,:avis_profesor,:tipo,:f_ini,:f_fin)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -222,7 +224,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
      * @param int $id_activ
      * @return array|bool
      */
-    public function datosById(int $id_activ, int $id_asignatura): array
+    public function datosById(int $id_activ, int $id_asignatura): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -238,6 +240,10 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         return $aDatos;
     }
 
+    public function datosByPk(ActividadAsignaturaPk $pk): array|false
+    {
+        return $this->datosById($pk->IdActiv(), $pk->IdAsignatura());
+    }
 
     /**
      * Busca la clase con id_activ en la base de datos .
@@ -249,5 +255,10 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
             return null;
         }
         return ActividadAsignatura::fromArray($aDatos);
+    }
+
+    public function findByPk(ActividadAsignaturaPk $pk): ?ActividadAsignatura
+    {
+        return $this->findById($pk->IdActiv(), $pk->IdAsignatura());
     }
 }

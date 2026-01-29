@@ -100,12 +100,12 @@ class ActividadAll
         $this->id_tipo_activ = new ActividadTipoId($id_tipo_activ);
     }
 
-    public function getIdTipoActividadVo(): ActividadTipoId
+    public function getIdTipoActivVo(): ActividadTipoId
     {
         return $this->id_tipo_activ;
     }
 
-    public function setIdTipoActividadVo(ActividadTipoId|int $vo): void
+    public function setIdTipoActivVo(ActividadTipoId|int $vo): void
     {
         $this->id_tipo_activ = $vo instanceof ActividadTipoId
             ? $vo

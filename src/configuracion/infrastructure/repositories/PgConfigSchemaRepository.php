@@ -133,7 +133,8 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
             $campos = "(parametro,valor)";
             $valores = "(:parametro,:valor)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

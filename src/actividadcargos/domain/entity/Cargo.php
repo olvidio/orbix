@@ -33,7 +33,7 @@ class Cargo
     /**
      * Orden del Cargo
      */
-    private ?OrdenCargo $ordenCargo = null;
+    private ?OrdenCargo $orden_cargo = null;
     /**
      * Sf de Cargo
      *
@@ -49,7 +49,7 @@ class Cargo
     /**
      * Tipo del Cargo (código)
      */
-    private ?TipoCargoCode $tipoCargo = null;
+    private ?TipoCargoCode $tipo_cargo = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -67,24 +67,24 @@ class Cargo
 
     public function getOrdenCargoVo(): ?OrdenCargo
     {
-        return $this->ordenCargo;
+        return $this->orden_cargo;
     }
 
     public function setOrdenCargoVo(OrdenCargo|int|null $texto = null): void
     {
-        $this->ordenCargo = $texto instanceof OrdenCargo
+        $this->orden_cargo = $texto instanceof OrdenCargo
             ? $texto
             : OrdenCargo::fromNullableInt($texto);
     }
 
     public function getTipoCargoVo(): ?TipoCargoCode
     {
-        return $this->tipoCargo;
+        return $this->tipo_cargo;
     }
 
     public function setTipoCargoVo(TipoCargoCode|string|null $texto = null): void
     {
-        $this->tipoCargo = $texto instanceof TipoCargoCode
+        $this->tipo_cargo = $texto instanceof TipoCargoCode
             ? $texto
             : TipoCargoCode::fromNullableString($texto);
     }
@@ -121,7 +121,7 @@ class Cargo
      */
     public function getOrden_cargo(): ?int
     {
-        return $this->ordenCargo?->value();
+        return $this->orden_cargo?->value();
     }
 
     /**
@@ -129,7 +129,7 @@ class Cargo
      */
     public function setOrden_cargo(?int $orden_cargo = null): void
     {
-        $this->ordenCargo = OrdenCargo::fromNullableInt($orden_cargo);
+        $this->orden_cargo = OrdenCargo::fromNullableInt($orden_cargo);
     }
 
     public function isSf(): ?bool
@@ -157,7 +157,7 @@ class Cargo
      */
     public function getTipo_cargo(): ?string
     {
-        return $this->tipoCargo?->value();
+        return $this->tipo_cargo?->value();
     }
 
     /**
@@ -165,7 +165,7 @@ class Cargo
      */
     public function setTipo_cargo(?string $stipo_cargo = null): void
     {
-        $this->tipoCargo = TipoCargoCode::fromNullableString($stipo_cargo);
+        $this->tipo_cargo = TipoCargoCode::fromNullableString($stipo_cargo);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

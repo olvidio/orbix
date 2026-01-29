@@ -4,6 +4,7 @@ namespace src\actividadescentro\domain\contracts;
 
 use PDO;
 use src\actividadescentro\domain\entity\CentroEncargado;
+use src\actividadescentro\domain\value_objects\CentroEncargadoPk;
 
 
 /**
@@ -19,8 +20,10 @@ interface CentroEncargadoRepositoryInterface
 {
 
     public function getProximasActividadesDeCentro(int $id_ubi, string $f_ini_act_iso): string;
-    public function getActividadesDeCentros(int $iid_ubi, string $scondicion = ''):array;
-    public function getCentrosEncargadosActividad(int $iid_activ):array;
+
+    public function getActividadesDeCentros(int $iid_ubi, string $scondicion = ''): array;
+
+    public function getCentrosEncargadosActividad(int $iid_activ): array;
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**
@@ -55,8 +58,12 @@ interface CentroEncargadoRepositoryInterface
      */
     public function datosById(int $id_activ, int $id_ubi): array|bool;
 
+    public function datosByPk(CentroEncargadoPk $pk): array|bool;
+
     /**
      * Busca la clase con id_activ en el repositorio.
      */
     public function findById(int $id_activ, int $id_ubi): ?CentroEncargado;
+
+    public function findByPk(CentroEncargadoPk $pk): ?CentroEncargado;
 }

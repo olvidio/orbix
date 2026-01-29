@@ -137,15 +137,16 @@ class PgCambioUsuarioObjetoPrefRepository extends ClaseRepository implements Cam
 					aviso_outdate            = :aviso_outdate,
 					objeto                   = :objeto,
 					aviso_tipo               = :aviso_tipo,
-					id_pau                   = :id_pau";
+					csv_id_pau               = :csv_id_pau";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item_usuario_objeto = $id_item_usuario_objeto";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $campos = "(id_item_usuario_objeto,id_usuario,dl_org,id_tipo_activ_txt,id_fase_ref,aviso_off,aviso_on,aviso_outdate,objeto,aviso_tipo,id_pau)";
-            $valores = "(:id_item_usuario_objeto,:id_usuario,:dl_org,:id_tipo_activ_txt,:id_fase_ref,:aviso_off,:aviso_on,:aviso_outdate,:objeto,:aviso_tipo,:id_pau)";
+            $campos = "(id_item_usuario_objeto,id_usuario,dl_org,id_tipo_activ_txt,id_fase_ref,aviso_off,aviso_on,aviso_outdate,objeto,aviso_tipo,csv_id_pau)";
+            $valores = "(:id_item_usuario_objeto,:id_usuario,:dl_org,:id_tipo_activ_txt,:id_fase_ref,:aviso_off,:aviso_on,:aviso_outdate,:objeto,:aviso_tipo,:csv_id_pau)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

@@ -143,6 +143,29 @@ class myTest extends TestCase
         $GLOBALS['oDBE'] = $oConexion->getPDO();
         $GLOBALS['oDBE_Select'] = $oConexion->getPDO();
 
+        $config = $oConfigDB->getEsquema('publicv');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBEP'] = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('restov');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBER'] = $oConexion->getPDO();
+
+        //sv exterior sólo lectura
+        $oConfigDB->setDataBase('sv-e_select');
+        $config = $oConfigDB->getEsquema($esquemav);
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBE_Select'] = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('publicv');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBEP_Select'] = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('restov');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBER_Select'] = $oConexion->getPDO();
+
+
         if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
             // Para sincronizar con listas Madrid (SQLSERVER)
             // No en el caso de cr (H-Hv)

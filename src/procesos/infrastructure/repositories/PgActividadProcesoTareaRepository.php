@@ -654,7 +654,8 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             $campos = "(id_item,id_tipo_proceso,id_activ,id_fase,id_tarea,completado,observ)";
             $valores = "(:id_item,:id_tipo_proceso,:id_activ,:id_fase,:id_tarea,:completado,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

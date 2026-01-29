@@ -142,7 +142,8 @@ class PgPermUsuarioActividadRepository extends ClaseRepository implements PermUs
             $campos = "(id_item,id_usuario,dl_propia,id_tipo_activ_txt,fase_ref,afecta_a,perm_on,perm_off)";
             $valores = "(:id_item,:id_usuario,:dl_propia,:id_tipo_activ_txt,:fase_ref,:afecta_a,:perm_on,:perm_off)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

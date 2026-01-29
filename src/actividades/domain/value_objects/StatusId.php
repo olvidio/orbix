@@ -11,7 +11,7 @@ final class StatusId
     public const ALL = 9;
 
 
-    public static function getArrayStatus(bool $includeAll = true): array
+    public static function getArrayStatus(bool $includeAll = false): array
     {
         $a_status = [
             self::PROYECTO => _("proyecto"),

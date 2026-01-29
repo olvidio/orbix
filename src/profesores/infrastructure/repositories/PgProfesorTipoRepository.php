@@ -150,7 +150,8 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
             $campos = "(id_tipo_profesor,tipo_profesor)";
             $valores = "(:id_tipo_profesor,:tipo_profesor)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

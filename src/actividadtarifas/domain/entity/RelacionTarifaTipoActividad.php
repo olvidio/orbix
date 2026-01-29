@@ -80,12 +80,12 @@ class RelacionTarifaTipoActividad
         $this->id_tipo_activ = ActividadTipoId::fromNullableInt($id_tipo_activ);
     }
 
-    public function getIdTipoActividadVo(): ActividadTipoId
+    public function getIdTipoActivVo(): ActividadTipoId
     {
         return $this->id_tipo_activ;
     }
 
-    public function setIdTipoActividadVo(ActividadTipoId|int $id): void
+    public function setIdTipoActivVo(ActividadTipoId|int $id): void
     {
         $this->id_tipo_activ = $id instanceof ActividadTipoId
             ? $id

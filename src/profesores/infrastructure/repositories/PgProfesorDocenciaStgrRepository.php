@@ -138,7 +138,8 @@ class PgProfesorDocenciaStgrRepository extends ClaseRepository implements Profes
             $campos = "(id_item,id_nom,id_asignatura,id_activ,tipo,curso_inicio,acta)";
             $valores = "(:id_item,:id_nom,:id_asignatura,:id_activ,:tipo,:curso_inicio,:acta)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

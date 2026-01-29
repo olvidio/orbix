@@ -135,7 +135,8 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
             $campos = "(id_item,id_usuario,menu_perm)";
             $valores = "(:id_item,:id_usuario,:menu_perm)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

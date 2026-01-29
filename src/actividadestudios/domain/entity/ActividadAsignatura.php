@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\domain\entity;
 
+use src\actividadestudios\domain\value_objects\ActividadAsignaturaPk;
 use src\actividadestudios\domain\value_objects\AvisProfesor;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\asignaturas\domain\value_objects\AsignaturaId;
@@ -25,6 +26,15 @@ class ActividadAsignatura
     private ?DateTimeLocal $f_fin = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getActividadAsignaturaPk()
+    {
+        return ActividadAsignaturaPk::fromArray([
+            'id_activ' => $this->id_activ,
+            'id_asignatura' => $this->id_asignatura,
+        ]);
+    }
+
 
     public function getId_schema(): int
     {

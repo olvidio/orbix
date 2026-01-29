@@ -3,6 +3,7 @@
 namespace src\actividadescentro\domain\entity;
 
 use src\actividadescentro\domain\value_objects\CentroEncargadoOrden;
+use src\actividadescentro\domain\value_objects\CentroEncargadoPk;
 use src\actividadescentro\domain\value_objects\CentroEncargadoTexto;
 use src\shared\domain\traits\Hydratable;
 
@@ -18,6 +19,14 @@ class CentroEncargado
     private ?CentroEncargadoTexto $encargo = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getCentroEncargadoPk()
+    {
+        return CentroEncargadoPk::fromArray([
+            'id_activ' => $this->id_activ,
+            'id_ubi' => $this->id_ubi,
+        ]);
+    }
 
     public function getId_activ(): int
     {

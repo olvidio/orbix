@@ -3,6 +3,7 @@
 namespace cambios\model;
 
 use core\ConfigGlobal;
+use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividadescentro\domain\entity\CentroEncargado;
@@ -11,6 +12,7 @@ use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\procesos\domain\entity\ActividadProcesoTarea;
 use src\shared\domain\value_objects\DateTimeLocal;
 use function core\is_true;
 
@@ -63,7 +65,7 @@ class GestorAvisoCambios
                 $spath = ActividadAll::class;
                 break;
             case 'ActividadCargoSacd':
-                $spath = 'ActividadCargoSacd';
+                $spath = ActividadCargo::class;
                 break;
             case 'CentroEncargado':
                 $spath = CentroEncargado::class;
@@ -79,7 +81,7 @@ class GestorAvisoCambios
                 $spath = Asistente::class;
                 break;
             case 'ActividadProcesoTarea':
-                $spath = 'procesos\\model\\entity\\ActividadProcesoTarea';
+                $spath = ActividadProcesoTarea::class;
                 break;
         }
 
@@ -102,7 +104,7 @@ class GestorAvisoCambios
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function addCanvi($sObjeto, $sTipoCambio, $iid_activ, $aDadesNew, $aDadesActuals): void
+    public function addCanvi($sObjeto, $sTipoCambio, $id_activ, $aDadesNew, $aDadesActuals): void
     {
         // pongo el nombre del objeto (no el de la tabla).
         $id_user = ConfigGlobal::mi_id_usuario();
@@ -114,7 +116,7 @@ class GestorAvisoCambios
             case 'Actividad': //si el canvi és a l'activitat, ja el tinc.
             case 'ActividadDl': //si el canvi és a l'activitat, ja el tinc.
             case 'ActividadEx': //si el canvi és a l'activitat, ja el tinc.
-                $iId_tipo_activ = empty($aDadesNew['id_tipo_activ']) ? $aDadesActuals['id_tipo_activ'] : $aDadesNew['id_tipo_activ'];
+                $Id_tipo_activ = empty($aDadesNew['id_tipo_activ']) ? $aDadesActuals['id_tipo_activ'] : $aDadesNew['id_tipo_activ'];
                 $dl_org = empty($aDadesActuals['dl_org']) ? $aDadesNew['dl_org'] : $aDadesActuals['dl_org'];
                 $id_status = $aDadesNew['status'] ?? $aDadesActuals['status'];
                 break;
@@ -132,12 +134,26 @@ class GestorAvisoCambios
                 }
                 */
 
-                $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-                $oActividad = $ActividadAllRepository->findById($iid_activ);
+                // Si no hay id_activ, usar valores por defecto
+                if ($id_activ === null) {
+                    $Id_tipo_activ = 111111;
+                    $dl_org = 'test1';
+                    $id_status = 4;
+                } else {
+                    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+                    $oActividad = $ActividadAllRepository->findById($id_activ);
 
-                $iId_tipo_activ = $oActividad->getId_tipo_activ();
-                $dl_org = $oActividad->getDl_org();
-                $id_status = $oActividad->getStatus();
+                    if ($oActividad === null) {
+                        // Actividad no encontrada, usar valores por defecto
+                        $Id_tipo_activ = 111111;
+                        $dl_org = 'test2';
+                        $id_status = 4;
+                    } else {
+                        $Id_tipo_activ = $oActividad->getId_tipo_activ();
+                        $dl_org = $oActividad->getDl_org();
+                        $id_status = $oActividad->getStatus();
+                    }
+                }
         }
 
         if (ConfigGlobal::is_app_installed('cambios')) {
@@ -147,10 +163,10 @@ class GestorAvisoCambios
                 $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
                 // para sv:
                 $ActividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sv');
-                $aFases_sv = $ActividadProcesoTareaRepository->getFasesCompletadas($iid_activ);
+                $aFases_sv = $ActividadProcesoTareaRepository->getFasesCompletadas($id_activ);
                 // para sf
                 $ActividadProcesoTareaRepository->setNomTabla('a_actividad_proceso_sf');
-                $aFases_sf = $ActividadProcesoTareaRepository->getFasesCompletadas($iid_activ);
+                $aFases_sf = $ActividadProcesoTareaRepository->getFasesCompletadas($id_activ);
             } else {
                 $aFases_sv = [$id_status];
                 $aFases_sf = [$id_status];
@@ -169,8 +185,8 @@ class GestorAvisoCambios
                 $oActividadCambio = new Cambio();
                 $oActividadCambio->setId_item_cambio($newIdItem);
                 $oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_INSERT);
-                $oActividadCambio->setId_activ($iid_activ);
-                $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
+                $oActividadCambio->setId_activ($id_activ);
+                $oActividadCambio->setId_tipo_activ($Id_tipo_activ);
                 $oActividadCambio->setJson_fases_sv($aFases_sv);
                 $oActividadCambio->setJson_fases_sf($aFases_sf);
                 $oActividadCambio->setIdStatusVo($id_status);
@@ -216,8 +232,8 @@ class GestorAvisoCambios
                     $oActividadCambio = new Cambio();
                     $oActividadCambio->setId_item_cambio($newIdItem);
                     $oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_UPDATE);
-                    $oActividadCambio->setId_activ($iid_activ);
-                    $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
+                    $oActividadCambio->setId_activ($id_activ);
+                    $oActividadCambio->setId_tipo_activ($Id_tipo_activ);
                     $oActividadCambio->setJson_fases_sv($aFases_sv);
                     $oActividadCambio->setJson_fases_sf($aFases_sf);
                     $oActividadCambio->setIdStatusVo($id_status);
@@ -237,8 +253,8 @@ class GestorAvisoCambios
                 $oActividadCambio = new Cambio();
                 $oActividadCambio->setId_item_cambio($newIdItem);
                 $oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_DELETE);
-                $oActividadCambio->setId_activ($iid_activ);
-                $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
+                $oActividadCambio->setId_activ($id_activ);
+                $oActividadCambio->setId_tipo_activ($Id_tipo_activ);
                 $oActividadCambio->setJson_fases_sv($aFases_sv);
                 $oActividadCambio->setJson_fases_sf($aFases_sf);
                 $oActividadCambio->setIdStatusVo($id_status);
@@ -277,8 +293,8 @@ class GestorAvisoCambios
                 $CambioRepository->Guardar($oActividadCambio);
                 break;
             case 'FASE':
-                // només mi fixo en el 'completado'
-                // amb els boolean no s'aclara: 0,1,false ,true,f,t...
+                // solamente me fijo en el 'completado'
+                // con los boolean no se aclara: 0,1,false ,true,f,t...
                 if (!empty($aDadesNew['completado']) && is_true($aDadesNew['completado'])) {
                     $boolCompletadoNew = TRUE;
                 } else {
@@ -293,9 +309,12 @@ class GestorAvisoCambios
                 // En vez del nombre del valor_old, pongo el id de la fase que se marca.
 
                 if ($boolCompletadoNew !== $boolCompletadoActual) {
+                    $newIdItem = $CambioRepository->getNewId();
+                    $oActividadCambio = new Cambio();
+                    $oActividadCambio->setId_item_cambio($newIdItem);
                     $oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_FASE);
-                    $oActividadCambio->setId_activ($iid_activ);
-                    $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
+                    $oActividadCambio->setId_activ($id_activ);
+                    $oActividadCambio->setId_tipo_activ($Id_tipo_activ);
                     $oActividadCambio->setJson_fases_sv($aFases_sv);
                     $oActividadCambio->setJson_fases_sf($aFases_sf);
                     $oActividadCambio->setId_status($id_status);

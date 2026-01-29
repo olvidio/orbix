@@ -16,6 +16,7 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\contracts\EventBusInterface;
 use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
@@ -29,12 +30,15 @@ use function core\is_true;
  * @version 2.0
  * @created 18/12/2025
  */
-class PgActividadCargoRepository extends ClaseRepository implements ActividadCargoRepositoryInterface
+class PgActividadCargoDlRepository extends ClaseRepository implements ActividadCargoRepositoryInterface
 {
     use HandlesPdoErrors;
 
-    public function __construct()
+    protected EventBusInterface $eventBus;
+
+    public function __construct(EventBusInterface $eventBus)
     {
+        $this->eventBus = $eventBus;
         $oDbl = $GLOBALS['oDBE'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBE_Select'];
@@ -354,6 +358,9 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         if ($success && $datosActuales) {
             // Marcar como eliminada (los eventos se despacharán por el UnitOfWork)
             $ActividadCargo->marcarComoEliminada($datosActuales);
+
+            // Despachar eventos
+            $this->dispatchDomainEvents($ActividadCargo);
         }
 
         return $success;
@@ -374,22 +381,7 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         $datosActuales = $bInsert ? [] : $this->datosById($id_item)?? [];
 
         $aDatos = $ActividadCargo->toArrayForDatabase();
-
-        /*
-        $aDatos = [];
-        $aDatos['id_activ'] = $ActividadCargo->getId_activ();
-        $aDatos['id_cargo'] = $ActividadCargo->getId_cargo();
-        $aDatos['id_nom'] = $ActividadCargo->getId_nom();
-        $aDatos['puede_agd'] = $ActividadCargo->isPuede_agd();
-        $aDatos['observ'] = $ActividadCargo->getObservVo()?->value();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['puede_agd'])) {
-            $aDatos['puede_agd'] = 'true';
-        } else {
-            $aDatos['puede_agd'] = 'false';
-        }
-        */
+        unset($aDatos['domainEvents']);
 
         if ($bInsert === false) {
             //UPDATE
@@ -407,7 +399,8 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
             $campos = "(id_activ,id_cargo,id_nom,puede_agd,observ,id_item)";
             $valores = "(:id_activ,:id_cargo,:id_nom,:puede_agd,:observ,:id_item)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         $success =  $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 
         if ($success) {
@@ -417,6 +410,9 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
             } else {
                 $ActividadCargo->marcarComoModificada($datosActuales);
             }
+
+            // Despachar eventos
+            $this->dispatchDomainEvents($ActividadCargo);
         }
 
         return $success;
@@ -470,6 +466,16 @@ class PgActividadCargoRepository extends ClaseRepository implements ActividadCar
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('d_cargos_activ_dl_id_item_seq'::regclass)";
         return $oDbl->query($sQuery)->fetchColumn();
+    }
+
+    /**
+     * Despacha los eventos de dominio de una entidad
+     */
+    private function dispatchDomainEvents(ActividadCargo $ActividadCargo): void
+    {
+        foreach ($ActividadCargo->pullDomainEvents() as $event) {
+            $this->eventBus->dispatch($event);
+        }
     }
 
 }

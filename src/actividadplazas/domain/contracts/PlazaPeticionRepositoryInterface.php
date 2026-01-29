@@ -4,6 +4,7 @@ namespace src\actividadplazas\domain\contracts;
 
 use PDO;
 use src\actividadplazas\domain\entity\PlazaPeticion;
+use src\actividadplazas\domain\value_objects\PlazaPeticionPk;
 
 
 /**
@@ -45,5 +46,9 @@ interface PlazaPeticionRepositoryInterface
 
     public function datosById(int $id_nom, int $id_activ): array|bool;
 
+    public function datosByPk(PlazaPeticionPk $pk): array|bool;
+
     public function findById(int $id_nom, int $id_activ): ?PlazaPeticion;
+
+    public function findByPk(PlazaPeticionPk $pk): ?PlazaPeticion;
 }

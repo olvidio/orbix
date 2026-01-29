@@ -2,6 +2,7 @@
 
 namespace src\cartaspresentacion\domain\entity;
 use src\cartaspresentacion\domain\value_objects\PresEmailText;
+use src\cartaspresentacion\domain\value_objects\PresentacionPk;
 use src\cartaspresentacion\domain\value_objects\PresNombreText;
 use src\cartaspresentacion\domain\value_objects\PresObservText;
 use src\cartaspresentacion\domain\value_objects\PresTelefonoText;
@@ -29,6 +30,13 @@ class CartaPresentacion
     private ?PresObservText $observ = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getPresentacionPk()
+    {
+        return PresentacionPk::fromArray(['id_ubi' => $this->id_ubi,
+            'id_direccion' => $this->id_direccion,
+        ]);
+    }
 
     public function getId_direccion(): int
     {

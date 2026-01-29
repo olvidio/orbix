@@ -343,7 +343,8 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             $campos = "(id_dl,dl,region,nombre_dl,active,grupo_estudios,region_stgr)";
             $valores = "(:id_dl,:dl,:region,:nombre_dl,:active,:grupo_estudios,:region_stgr)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

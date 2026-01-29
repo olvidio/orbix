@@ -150,7 +150,8 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
             $campos = "(id_departamento,departamento)";
             $valores = "(:id_departamento,:departamento)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

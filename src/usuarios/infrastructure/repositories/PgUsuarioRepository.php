@@ -192,7 +192,8 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
             $campos = "(id_usuario,usuario,id_role,password,email,csv_id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password)";
             $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:csv_id_pau,:nom_usuario,:has_2fa,:secret_2fa,:cambio_password)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

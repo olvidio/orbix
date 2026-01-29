@@ -137,7 +137,8 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
             $campos = "(id_item,id_tarifa,id_tipo_activ,id_serie)";
             $valores = "(:id_item,:id_tarifa,:id_tipo_activ,:id_serie)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

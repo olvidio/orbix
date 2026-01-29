@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * Configuración de valores de prueba para value objects
+ *
+ * Este archivo define los valores que se usarán en los tests generados.
+ * Puedes personalizarlo según las necesidades de cada value object.
+ *
+ * Formato:
+ * 'NombreDelValueObject' => valor_o_expresion
+ *
+ * Ejemplos:
+ * 'Email' => "'test@example.com'"
+ * 'UserId' => "1"
+ * 'Codigo' => "'ABC'"
+ */
+
+return [
+    // IDs
+    'AppId' => 1,
+    'ModuloId' => 1,
+
+    // Códigos
+    'ConfigParametroCode' => 'TST',
+
+    // Otros
+    'AppName' => 'Test value',
+    'AppsReq' => 'test',
+    'ConfigValor' => 'test',
+    'ModsReq' => 'test',
+    'ModuloDescription' => 'test',
+    'ModuloName' => 'Test Name',
+
+];

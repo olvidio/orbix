@@ -186,7 +186,8 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
             $campos = "(id_cargo,cargo,orden_cargo,sf,sv,tipo_cargo)";
             $valores = "(:id_cargo,:cargo,:orden_cargo,:sf,:sv,:tipo_cargo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

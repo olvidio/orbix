@@ -22,7 +22,7 @@ class ActividadCargo extends Entity
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    private int $id_schema;
+    private int $id_schema = 1;
     /**
      * Id_activ de ActividadCargo
      *

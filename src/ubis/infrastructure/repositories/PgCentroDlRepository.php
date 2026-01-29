@@ -183,7 +183,8 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
             $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,n_buzon,num_pi,num_cartas,observ,num_habit_indiv,plazas,id_zona,sede,num_cartas_mensuales)";
             $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:n_buzon,:num_pi,:num_cartas,:observ,:num_habit_indiv,:plazas,:id_zona,:sede,:num_cartas_mensuales)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

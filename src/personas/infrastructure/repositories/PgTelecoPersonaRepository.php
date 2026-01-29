@@ -137,7 +137,8 @@ class PgTelecoPersonaRepository extends ClaseRepository implements TelecoPersona
             $campos = "(id_item,id_nom,id_tipo_teleco,num_teleco,observ,id_desc_teleco)";
             $valores = "(:id_item,:id_nom,:id_tipo_teleco,:num_teleco,:observ,:id_desc_teleco)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

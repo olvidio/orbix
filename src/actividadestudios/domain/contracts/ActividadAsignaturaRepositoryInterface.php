@@ -4,6 +4,7 @@ namespace src\actividadestudios\domain\contracts;
 
 use PDO;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
+use src\actividadestudios\domain\value_objects\ActividadAsignaturaPk;
 
 
 /**
@@ -46,5 +47,9 @@ interface ActividadAsignaturaRepositoryInterface
 
     public function datosById(int $id_activ, int $id_asignatura): array|bool;
 
+    public function datosByPk(ActividadAsignaturaPk $pk): array|false;
+
     public function findById(int $id_activ, int $id_asignatura): ?ActividadAsignatura;
+
+    public function findByPk(ActividadAsignaturaPk $pk): ?ActividadAsignatura;
 }

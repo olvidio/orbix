@@ -8,6 +8,7 @@ use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\value_objects\AsistenteEncargo;
 use src\asistentes\domain\value_objects\AsistenteObserv;
 use src\asistentes\domain\value_objects\AsistenteObservEst;
+use src\asistentes\domain\value_objects\AsistentePk;
 use src\asistentes\domain\value_objects\AsistentePropietario;
 use src\personas\domain\value_objects\PersonaTablaCode;
 use src\shared\domain\contracts\AggregateRoot;
@@ -64,6 +65,15 @@ class Asistente extends Entity implements AggregateRoot
     private ?AsistenteObservEst $observ_est = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getAsistentePk()
+    {
+        return AsistentePk::fromArray([
+            'id_activ' => $this->id_activ,
+            'id_nom' => $this->id_nom,
+        ]);
+    }
+
 
     public function getId_activ(): int
     {

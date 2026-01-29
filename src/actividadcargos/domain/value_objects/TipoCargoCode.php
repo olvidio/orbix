@@ -10,14 +10,16 @@ final class TipoCargoCode
     public const SCL = 'scl';
     public const SACD = 'sacd';
     public const COORDINA = 'coordina';
+    public const D_EST = 'd.est.';
 
-    private const VALID_VALUES = [
+    public const VALID_VALUES = [
         self::EMPTY,
         self::D,
         self::SD,
         self::SCL,
         self::SACD,
         self::COORDINA,
+        self::D_EST,
     ];
 
     private const TRANSLATIONS = [
@@ -26,6 +28,7 @@ final class TipoCargoCode
         self::SCL => 'Secretario',
         self::SACD => 'Sacerdote',
         self::COORDINA => 'Coordinador',
+        self::D_EST => 'Director de estudios',
     ];
 
     private string $value;

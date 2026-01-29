@@ -141,7 +141,8 @@ class PgCambioUsuarioPropiedadPrefRepository extends ClaseRepository implements 
             $campos = "(id_item,id_item_usuario_objeto,propiedad,operador,valor,valor_old,valor_new)";
             $valores = "(:id_item,:id_item_usuario_objeto,:propiedad,:operador,:valor,:valor_old,:valor_new)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

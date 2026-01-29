@@ -172,8 +172,9 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
             $campos = "(uuid_item,id_enc,id_ubi)";
             $valores = "(:uuid_item,:id_enc,:id_ubi)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
-        return $this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(EncargoCtrId $vo): bool

@@ -4,6 +4,7 @@ namespace src\actividadplazas\domain\entity;
 
 use src\actividadplazas\domain\value_objects\PeticionOrden;
 use src\actividadplazas\domain\value_objects\PeticionTipo;
+use src\actividadplazas\domain\value_objects\PlazaPeticionPk;
 use src\shared\domain\traits\Hydratable;
 
 class PlazaPeticion
@@ -22,6 +23,15 @@ class PlazaPeticion
     private ?PeticionTipo $tipo = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getPlazaPeticionPk()
+    {
+        return PlazaPeticionPk::fromArray([
+            'id_activ' => $this->id_activ,
+            'id_nom' => $this->id_nom,
+        ]);
+    }
+
 
     public function getId_nom(): int
     {

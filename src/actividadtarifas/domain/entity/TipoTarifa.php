@@ -149,7 +149,7 @@ class TipoTarifa
         return $this->sfsv;
     }
 
-    public function setSfsvVo(SfsvId|int $id = null): void
+    public function setSfsvVo(SfsvId|int|null $id = null): void
     {
         $this->sfsv = $id instanceof SfsvId
             ? $id

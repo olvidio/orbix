@@ -8,6 +8,7 @@ use core\Set;
 use PDO;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\entity\PlazaPeticion;
+use src\actividadplazas\domain\value_objects\PlazaPeticionPk;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -137,7 +138,8 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
             $campos = "(id_nom,id_activ,orden,tipo)";
             $valores = "(:id_nom,:id_activ,:orden,:tipo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -171,6 +173,10 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
         return $aDatos;
     }
 
+    public function datosByPk(PlazaPeticionPk $pk): array|bool
+    {
+        return $this->datosById($pk->IdNom(), $pk->IdActiv());
+    }
 
     /**
      * Busca la clase con id_nom en la base de datos .
@@ -182,5 +188,10 @@ class PgPlazaPeticionRepository extends ClaseRepository implements PlazaPeticion
             return null;
         }
         return PlazaPeticion::fromArray($aDatos);
+    }
+
+    public function findByPk(PlazaPeticionPk $pk): ?PlazaPeticion
+    {
+        return $this->findById($pk->IdNom(), $pk->IdActiv());
     }
 }

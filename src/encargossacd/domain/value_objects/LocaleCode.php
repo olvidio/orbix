@@ -2,7 +2,7 @@
 
 namespace src\encargossacd\domain\value_objects;
 
-final class IdiomaCode
+final class LocaleCode
 {
     private string $value;
 
@@ -21,7 +21,7 @@ final class IdiomaCode
         return $this->value;
     }
 
-    public function equals(IdiomaCode $other): bool
+    public function equals(LocaleCode $other): bool
     {
         return $this->value === $other->value();
     }

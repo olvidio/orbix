@@ -8,6 +8,7 @@ use core\Set;
 use PDO;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
+use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
 use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
@@ -154,7 +155,6 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             unset($aDatos['id_asignatura']);
             unset($aDatos['id_nom']);
             $update = "
-					id_nivel                 = :id_nivel,
 					id_situacion             = :id_situacion,
 					preceptor                = :preceptor,
 					id_nivel                 = :id_nivel,
@@ -169,7 +169,8 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             $campos = "(id_activ,id_asignatura,id_nom,id_situacion,preceptor,id_nivel,nota_num,nota_max,id_preceptor,acta)";
             $valores = "(:id_activ,:id_asignatura,:id_nom,:id_situacion,:preceptor,:id_nivel,:nota_num,:nota_max,:id_preceptor,:acta)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -177,7 +178,7 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
+        $sql = "SELECT * FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if (!$stmt->rowCount()) {
             return TRUE;
@@ -196,11 +197,16 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sql = "DELETE FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
+        $sql = "SELECT * FROM $nom_tabla WHERE id_activ=$id_activ AND id_asignatura=$id_asignatura AND id_nom=$id_nom";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
+    }
+
+    public function datosByPk(ActividadMatriculaPk $pk): array|bool
+    {
+        return $this->datosById($pk->idActiv(), $pk->idAsignatura(), $pk->idNom());
     }
 
 
@@ -214,5 +220,10 @@ class PgMatriculaRepository extends ClaseRepository implements MatriculaReposito
             return null;
         }
         return Matricula::fromArray($aDatos);
+    }
+
+    public function findByPk(ActividadMatriculaPk $pk): ?Matricula
+    {
+        return $this->findById($pk->idActiv(), $pk->idAsignatura(), $pk->idNom());
     }
 }

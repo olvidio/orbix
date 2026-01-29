@@ -139,7 +139,8 @@ class PgIngresoRepository extends ClaseRepository implements IngresoRepositoryIn
             $campos = "(id_activ,ingresos,num_asistentes,ingresos_previstos,num_asistentes_previstos,observ)";
             $valores = "(:id_activ,:ingresos,:num_asistentes,:ingresos_previstos,:num_asistentes_previstos,:observ)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

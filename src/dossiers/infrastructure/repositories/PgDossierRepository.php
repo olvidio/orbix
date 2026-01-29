@@ -4,17 +4,14 @@ namespace src\dossiers\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
-use core\ConfigGlobal;
 use core\ConverterDate;
 use core\Set;
 use PDO;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
-use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\dossiers\domain\entity\Dossier;
 use src\dossiers\domain\entity\TipoDossier;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
 
 
 /**
@@ -160,7 +157,8 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
             $campos = "(id_tipo_dossier,id_pau,tabla,f_ini,f_camb_dossier,active,f_active)";
             $valores = "(:id_tipo_dossier,:id_pau,:tabla,:f_ini,:f_camb_dossier,:active,:f_active)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

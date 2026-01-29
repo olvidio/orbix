@@ -199,7 +199,8 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
             $campos = "(tipo_teleco,nombre_teleco,ubi,persona,id)";
             $valores = "(:tipo_teleco,:nombre_teleco,:ubi,:persona,:id)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

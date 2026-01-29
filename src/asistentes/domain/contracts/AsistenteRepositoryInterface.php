@@ -4,6 +4,7 @@ namespace src\asistentes\domain\contracts;
 
 use PDO;
 use src\asistentes\domain\entity\Asistente;
+use src\asistentes\domain\value_objects\AsistentePk;
 
 
 /**
@@ -53,8 +54,12 @@ interface AsistenteRepositoryInterface
      */
     public function datosById(int $id_activ, int $id_nom): array|bool;
 
+    public function datosByPk(AsistentePk $pk): array|bool;
+
     /**
      * Busca la clase con id_activ en el repositorio.
      */
     public function findById(int $id_activ, int $id_nom): ?Asistente;
+
+    public function findByPk(AsistentePk $pk): ?Asistente;
 }

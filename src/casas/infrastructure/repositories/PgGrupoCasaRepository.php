@@ -136,7 +136,8 @@ class PgGrupoCasaRepository extends ClaseRepository implements GrupoCasaReposito
             $campos = "(id_item,id_ubi_padre,id_ubi_hijo)";
             $valores = "(:id_item,:id_ubi_padre,:id_ubi_hijo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

@@ -10,6 +10,7 @@ use PDO;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\domain\entity\CentroEncargado;
+use src\actividadescentro\domain\value_objects\CentroEncargadoPk;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroEllas;
@@ -230,7 +231,8 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
             $campos = "(id_activ,id_ubi,num_orden,encargo)";
             $valores = "(:id_activ,:id_ubi,:num_orden,:encargo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -264,6 +266,10 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
         return $aDatos;
     }
 
+    public function datosByPk(CentroEncargadoPk $pk): array|bool
+    {
+        return $this->datosById($pk->IdActiv(), $pk->IdUbi());
+    }
 
     /**
      * Busca la clase con id_activ en la base de datos .
@@ -275,5 +281,10 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
             return null;
         }
         return CentroEncargado::fromArray($aDatos);
+    }
+
+    public function findByPk(CentroEncargadoPk $pk): ?CentroEncargado
+    {
+        return $this->findById($pk->IdActiv(), $pk->IdUbi());
     }
 }

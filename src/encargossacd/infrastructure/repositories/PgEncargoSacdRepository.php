@@ -160,7 +160,8 @@ class PgEncargoSacdRepository extends ClaseRepository implements EncargoSacdRepo
             $campos = "(id_item,id_enc,id_nom,modo,f_ini,f_fin)";
             $valores = "(:id_item,:id_enc,:id_nom,:modo,:f_ini,:f_fin)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

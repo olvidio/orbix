@@ -350,13 +350,14 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
             /* uso el id_schema 3000, que no debería corresponder a ningun esquema (en todo caso a 'public')
              * Es para el caso de las dl que no tienen instalado el módulo de 'cambios'. Para distinguir los cambios
              * debo usar la dl_org. No uso el id_schema correspondiente, porque si más tarde instalan el módulo
-             * 'cambios', puede haber conflico con el id_item_cambio.
+             * 'cambios', puede haber conflicto con el id_item_cambio.
              */
             $mi_esquema = 3000;
             $campos = "(id_schema,id_item_cambio,id_tipo_cambio,id_activ,id_tipo_activ,json_fases_sv,json_fases_sf,id_status,dl_org,objeto,propiedad,valor_old,valor_new,quien_cambia,sfsv_quien_cambia,timestamp_cambio)";
             $valores = "($mi_esquema,:id_item_cambio,:id_tipo_cambio,:id_activ,:id_tipo_activ,:json_fases_sv,:json_fases_sf,:id_status,:dl_org,:objeto,:propiedad,:valor_old,:valor_new,:quien_cambia,:sfsv_quien_cambia,:timestamp_cambio)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
@@ -417,7 +418,7 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
     public function getNewId()
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('av_cambios_dl_id_item_cambio_seq'::regclass)";
+        $sQuery = "select nextval('av_cambios_id_item_cambio_seq'::regclass)";
         return $oDbl->query($sQuery)->fetchColumn();
     }
 }
