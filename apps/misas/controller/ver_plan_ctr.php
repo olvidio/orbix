@@ -7,7 +7,7 @@ use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
-use src\misas\domain\entity\EncargoDia;
+use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -35,19 +35,12 @@ $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 //echo $aRoles[$id_role];
 $role = '';
-$jefe_zona = false;
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-    $role = 'sacd';
-    $GesZonas = new GestorZona();
-    $cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
-    $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
     $role = 'sacd';
 }
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro sv' || $aRoles[$id_role] === 'Centro sf')) {
-    $role = 'ctr';
-if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
     $role = 'ctr';
 }
 
@@ -208,7 +201,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 
     foreach ($date_range as $date) {
         $iniciales = ' -- ';
-        $status = EncargoDia::STATUS_COMUNICADO_CTR;
+        $status = EncargoDiaStatus::STATUS_COMUNICADO_CTR;
 
         $id_dia = $date->format('Y-m-d');
 
@@ -264,17 +257,16 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             $data_cols["$id_dia"] = $iniciales;
         }
 
-        if (($jefe_zona) || (($role == 'ctr') && ($status == EncargoDia::STATUS_COMUNICADO_CTR)) || (($role == 'sacd') && (($status == EncargoDia::STATUS_COMUNICADO_SACD) || ($status == EncargoDia::STATUS_COMUNICADO_CTR)))) {
+        if (($jefe_zona) || (($role == 'ctr') && ($status == EncargoDiaStatus::STATUS_COMUNICADO_CTR)) || (($role == 'sacd') && (($status == EncargoDiaStatus::STATUS_COMUNICADO_SACD) || ($status == EncargoDiaStatus::STATUS_COMUNICADO_CTR)))) {
             echo '<TD>' . $iniciales . '</TD>';
         } else {
-        if (($jefe_zona) || (($role === 'ctr')
-                && ($status === EncargoDia::STATUS_COMUNICADO_CTR)) || (($role === 'sacd')
-                && (($status === EncargoDia::STATUS_COMUNICADO_SACD) || ($status === EncargoDia::STATUS_COMUNICADO_CTR))))
-        {
-            echo '<TD>' . $iniciales . '</TD>';
-        } else {
-            echo '<TD> -- </TD>';
-        }
+            if (($jefe_zona) || (($role === 'ctr')
+                    && ($status === EncargoDiaStatus::STATUS_COMUNICADO_CTR)) || (($role === 'sacd')
+                    && (($status === EncargoDiaStatus::STATUS_COMUNICADO_SACD) || ($status === EncargoDiaStatus::STATUS_COMUNICADO_CTR)))) {
+                echo '<TD>' . $iniciales . '</TD>';
+            } else {
+                echo '<TD> -- </TD>';
+            }
 
 //        $data_cols["dia"] = $dia_y_hora;
 //        $data_cols["observaciones"] = $observ;
@@ -285,22 +277,23 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 //        $data_cols["encargo"] = $desc_enc;
 
 
+        }
+        $data_cuadricula[] = $data_cols;
     }
-    $data_cuadricula[] = $data_cols;
+
+    echo '</TR>';
+    echo '</TABLE>';
+
+
+    $json_columns_cuadricula = json_encode($columns_cuadricula);
+    $json_data_cuadricula = json_encode($data_cuadricula);
+
+
+    $a_campos = ['oPosicion' => $oPosicion,
+        'json_columns_cuadricula' => $json_columns_cuadricula,
+        'json_data_cuadricula' => $json_data_cuadricula,
+    ];
 }
-
-echo '</TR>';
-echo '</TABLE>';
-
-
-$json_columns_cuadricula = json_encode($columns_cuadricula);
-$json_data_cuadricula = json_encode($data_cuadricula);
-
-
-$a_campos = ['oPosicion' => $oPosicion,
-    'json_columns_cuadricula' => $json_columns_cuadricula,
-    'json_data_cuadricula' => $json_data_cuadricula,
-];
 
 //$oView = new ViewTwig('misas/controller');
 //echo $oView->render('ver_plan_ctr.html.twig', $a_campos);
