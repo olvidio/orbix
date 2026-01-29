@@ -77,7 +77,7 @@ $RoleRepository = new RoleRepository();
 $aRoles = $RoleRepository->getArrayRoles();
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-    $Qid_nom = $oMiUsuario->getId_pau();
+    $Qid_nom = $oMiUsuario->getId_pau()->value();
     $Qque = 'un_sacd';
 }
 
