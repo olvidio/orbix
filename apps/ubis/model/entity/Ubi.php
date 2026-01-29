@@ -15,19 +15,8 @@ use core\ConfigGlobal;
  */
 class Ubi
 {
-    /* ATRIBUTOS ----------------------------------------------------------------- */
-    /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
-    /* CONSTRUCTOR -------------------------------------------------------------- */
-
-    /**
-     * Constructor de la classe vuit.
-     */
-    function __construct()
-    {
-    }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-
 
     public static function NewUbi($id_ubi)
     {
@@ -41,6 +30,8 @@ class Ubi
             $cCentros = $gesCentro->getCentros(array('id_ubi' => $id_ubi));
             if (!empty($cCentros)) {
                 $oUbi = $cCentros[0];
+            } else {
+                $oUbi = new Casa($id_ubi);
             }
         } else {
             // para la sf (comienza por 2).
