@@ -25,7 +25,11 @@ $ZonasRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
 $cZonas = $ZonasRepository->getZonas(array('id_nom' => $id_sacd));
 $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 
-$Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
+$Qid_sacd_key = (string)filter_input(INPUT_POST, 'id_sacd');
+$exp_id_sacd=explode('#', $Qid_sacd_key);
+$Qid_sacd=$exp_id_sacd[1];
+//echo 'id_sacd: '.$Qid_sacd;
+
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qorden = (string)filter_input(INPUT_POST, 'orden');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
@@ -126,15 +130,26 @@ $data_cuadricula = [];
 $inicio_dia = $Qempiezamin_rep . ' 00:00:00';
 $fin_dia = $Qempiezamax_rep . ' 23:59:59';
 
-$aWhere = [
-    'id_nom' => $Qid_sacd,
-    'tstart' => "'$inicio_dia', '$fin_dia'",
-];
-$aWhere['_ordre'] = 'tstart';
-$aOperador = [
-    'tstart' => 'BETWEEN',
-];
-$EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+foreach ($date_range as $date) {
+    $num_dia = $date->format('j');
+    $num_mes = $date->format('n');
+    $dia_week = $date->format('N');
+    $dia=$a_dias_semana_breve[$dia_week].' '.$num_dia.'.'.$num_mes;
+
+    $id_dia = $date->format('Y-m-d');
+
+    $inicio_dia = $id_dia.' 00:00:00';
+    $fin_dia = $id_dia.' 23:59:59';
+
+    $aWhere = [
+        'id_nom' => $Qid_sacd,
+        'tstart' => "'$inicio_dia', '$fin_dia'",
+        ];
+    $aWhere['_ordre'] = 'tstart';
+    $aOperador = [
+        'tstart' => 'BETWEEN',
+    ];
+    $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 foreach ($cEncargosDia as $oEncargoDia) {
@@ -142,11 +157,7 @@ foreach ($cEncargosDia as $oEncargoDia) {
     $date = $oEncargoDia->getTstart();
     $status = $oEncargoDia->getStatus();
 //    $dia = $date->format('d-m-Y');
-    $num_dia = $date->format('j');
-    $num_mes = $date->format('n');
-    $dia_week = $date->format('N');
-    $dia = $a_dias_semana_breve[$dia_week] . ' ' . $num_dia . '.' . $num_mes;
-    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+        $hora_ini = $oEncargoDia->getTstart()->format('H:i');
     $hora_fin = $oEncargoDia->getTend()->format('H:i');
     if ($hora_ini === '00:00')
         $hora_ini = '';
@@ -155,13 +166,12 @@ foreach ($cEncargosDia as $oEncargoDia) {
     $observ = $oEncargoDia->getObserv();
     $dia_y_hora = $dia;
     if ($hora_ini !== '') {
-        $dia_y_hora .= ' ' . $hora_ini;
+        $dia_y_hora .= ' ' . $hora_ini;}
         if ($hora_fin !== '') {
             $dia_y_hora .= '-' . $hora_fin;
         }
-    }
 
-    $data_cols["dia"] = $dia_y_hora;
+        $data_cols["dia"] = $dia_y_hora;
     $data_cols["observaciones"] = $observ;
 
     $oEncargo = $EncargoRepository->findById($id_enc);
@@ -174,10 +184,15 @@ foreach ($cEncargosDia as $oEncargoDia) {
         echo '</TR>';
         echo '<TR><TD>' . $dia_y_hora . '</TD>';
         echo '<TD>' . $desc_enc . '</TD>';
-        echo '<TD>' . $observ . '</TD>';
+        echo '<TD>' . $observ . '</TD>';}
     }
-}
+    if (count($cEncargosDia)==0) {
+        echo '</TR>';
+        echo '<TR><TD>'.$dia.'</TD>';
+        echo '<TD></TD><TD></TD>';
+    }
 
+}
 echo '</TR>';
 echo '</TABLE>';
 

@@ -299,7 +299,6 @@ foreach ($cEncargosZona as $oEncargo) {
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();
     $tipo_enc = $oEncargo->getId_tipo_enc();
-//    echo $id_enc.$desc_enc.'<br>';
     $data_cols = [];
     $meta_dia = [];
     if (($QTipoPlantilla == PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == PlantillaConfig::PLANTILLA_MENSUAL_TRES)) {
@@ -340,7 +339,7 @@ foreach ($cEncargosZona as $oEncargo) {
 
 
         $nom_dia = $date->format('D');
-//echo $num_dia.'<br>';
+
         $data_cols["$num_dia"] = " -- ";
 
         $meta_dia["$num_dia"] = [
@@ -371,9 +370,9 @@ foreach ($cEncargosZona as $oEncargo) {
         if (count($cEncargosDia) > 1) {
             $oEncargoDia = $cEncargosDia[0];
             $id_nom = $oEncargoDia->getId_nom();
-            $oEncargoDia = $cEncargosDia[1];
-            $id_nom = $oEncargoDia->getId_nom();
-            exit(_("sólo debería haber uno") . '-' . $inicio_dia . '-' . $fin_dia . '-' . $id_enc);
+            $oEncargoDia2 = $cEncargosDia[1];
+            $id_nom2 = $oEncargoDia2->getId_nom();
+            exit(_("sólo debería haber uno") . '-' . $inicio_dia . '-' . $fin_dia . '=>' . $id_enc.'-'.$id_nom.'-'.$id_nom2);
         }
 
         if (count($cEncargosDia) === 1) {
@@ -474,9 +473,13 @@ foreach ($cEncargosZona as $oEncargo) {
             $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
-            if (count($cEncargosDia) > 1) {
-                exit(_("sólo debería haber uno"));
-            }
+                if (count($cEncargosDia) > 1) {
+                    $oEncargoDia = $cEncargosDia[0];
+                    $id_nom = $oEncargoDia->getId_nom();
+                    $oEncargoDia2 = $cEncargosDia[1];
+                    $id_nom2 = $oEncargoDia2->getId_nom();
+                    exit(_("sólo debería haber uno").'-'.$inicio_dia.'-'.$fin_dia.'=>'.$id_enc.'-'.$id_nom.'-'.$id_nom2);
+                }
 
             if (count($cEncargosDia) === 1) {
                 $oEncargoDia = $cEncargosDia[0];
@@ -522,8 +525,12 @@ foreach ($cEncargosZona as $oEncargo) {
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
             if (count($cEncargosDia) > 1) {
-                exit(_("sólo debería haber uno"));
-            }
+                $oEncargoDia = $cEncargosDia[0];
+                $id_nom = $oEncargoDia->getId_nom();
+                $oEncargoDia2 = $cEncargosDia[1];
+                $id_nom2 = $oEncargoDia2->getId_nom();
+                exit(_("sólo debería haber uno").'-'.$inicio_dia.'-'.$fin_dia.'=>'.$id_enc.'-'.$id_nom.'-'.$id_nom2);
+        }
 
             if (count($cEncargosDia) === 1) {
                 $oEncargoDia = $cEncargosDia[0];

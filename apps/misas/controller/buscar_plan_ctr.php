@@ -43,8 +43,8 @@ $aRoles = $RoleRepository->getArrayRoles();
 $aCentros = [];
 
 
-if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
-    $id_ubi = $oMiUsuario->getCsvIdPauAsString();
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro sv' || $aRoles[$id_role] === 'Centro sf')) {
+    $id_ubi = $oMiUsuario->getId_pauAsString();
     $oCentro = Ubi::newUbi($id_ubi);
     $nombre_ubi = $oCentro->getNombreUbiVo()->value();
     $aCentros[$id_ubi] = $nombre_ubi;
@@ -71,7 +71,7 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
             $Qid_zona = -1;
         }
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-            $aOpciones[-1] = 'centros encargos';
+            $aOpciones[-1]='centros encargos';
         }
 //foreach($aOpciones as $a1=>$a2)
 //    echo 'opcion: '.$a1.'-'.$a2.'<br>';
@@ -84,7 +84,7 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
         $oDesplZonas->setOpcion_sel($Qid_zona);
 
         if (isset($Qid_zona)) {
-            if ($Qid_zona > 0) {
+            if($Qid_zona>0) {
                 $aWhere = [];
                 $aWhere['status'] = 't';
                 $aWhere['id_zona'] = $Qid_zona;
@@ -127,7 +127,7 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
 
                     $oEncargo = $EncargoRepository->findById($id_enc);
                     $id_tipo_enc = $oEncargo->getId_tipo_enc();
-                    // Si es un encargo personal (7 o 4) me lo salto
+            // Si es un encargo personal (7 o 4) me lo salto
                     if (substr($id_tipo_enc, 0, 1) <= 3) {
                         $id_ubi = $oEncargo->getId_ubi();
                         $oCentro = Ubi::newUbi($id_ubi);
@@ -194,7 +194,9 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new ViewTwig('misas/controller');
-if ($aRoles[$id_role] === 'p-sacd')
+if ($aRoles[$id_role] === 'p-sacd') {
     echo $oView->render('buscar_plan_ctr.html.twig', $a_campos);
-if ($aRoles[$id_role] === 'Centro')
+}
+if (strpos($aRoles[$id_role], 'Centro') !== false) {
     echo $oView->render('buscar_plan_un_ctr.html.twig', $a_campos);
+}

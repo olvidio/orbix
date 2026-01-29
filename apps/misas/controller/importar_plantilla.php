@@ -92,8 +92,8 @@ if (($QTipoPlantillaDestino == PlantillaConfig::PLANTILLA_MENSUAL_UNO) || ($QTip
 }
 
 if ($QTipoPlantillaDestino == PlantillaConfig::PLANTILLA_MENSUAL_TRES) {
-    $oDiaDestino2 = new DateTimeLocal(PlantillaConfig::INICIO_MENSUAL_UNO);
-    $oDiaDestino3 = new DateTimeLocal(PlantillaConfig::INICIO_MENSUAL_UNO);
+    $oDiaDestino2 = new DateTimeLocal(PlantillaConfig::INICIO_MENSUAL_DOS);
+    $oDiaDestino3 = new DateTimeLocal(PlantillaConfig::INICIO_MENSUAL_TRES);
     $oFinDestino = new DateTimeLocal(PlantillaConfig::FIN_MENSUAL_TRES);
 }
 
@@ -117,6 +117,7 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
 $sInicio_iso = $oDiaDestino->getIso();
 $sFin_iso = $oFinDestino->getIso();
 $orden = 'prioridad';
+//echo $sInicio_iso.'-'.$sFin_iso.'<br>';
 
 $EncargosZona = new EncargosZona($Qid_zona, $oDiaDestino, $oFinDestino, $orden);
 $EncargosZona->setATipoEnc($a_tipo_enc);
@@ -150,13 +151,33 @@ for ($i = 0; $i < $ndias; $i++) {
     if (($QTipoPlantillaOrigen == PlantillaConfig::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantillaOrigen == PlantillaConfig::PLANTILLA_SEMANAL_TRES)) {
         $oDiaOrigen = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_UNO);
         $iOrigen = $i;
+
+
+
+//echo 'ndias: '.$ndias.'<br>';
+for ($i=0;$i<$ndias;$i++) {
+    echo 'I: '.$i.'<br>';
+    $num_dia=$oDiaDestino->format('d-m-Y');
+    echo 'destino: '.$oDiaDestino->format('d-m-Y').'<---<br>';
+    if (($QTipoPlantillaDestino== PlantillaConfig::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)  || ($QTipoPlantillaDestino == EncargoDia::PLANTILLA_MENSUAL_TRES)){
+        $num_dia2=$oDiaDestino2->format('d-m-Y');
+        $num_dia3=$oDiaDestino3->format('d-m-Y');
+//        echo 'destino2: '.$oDiaDestino2->format('d-m-Y').'<---';
+//        echo 'destino3: '.$oDiaDestino3->format('d-m-Y').'<---';
+    }
+    if(($QTipoPlantillaOrigen == PlantillaConfig::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantillaOrigen== EncargoDia::PLANTILLA_SEMANAL_TRES)) {
+        $oDiaOrigen = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_UNO);
+        $oDiaOrigen2 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_UNO);
+        $oDiaOrigen3 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_UNO);
+            $iOrigen=$i;
         //como se empieza el lunes, lunes+6 es domingo
         if ((($i > 6) && ($i < 11)) && (($QTipoPlantillaDestino == PlantillaConfig::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino == PlantillaConfig::PLANTILLA_DOMINGOS_TRES))) {
             $iOrigen = 6;
         }
         if (($i > 6) && (($QTipoPlantillaDestino == PlantillaConfig::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino == PlantillaConfig::PLANTILLA_MENSUAL_TRES))) {
             $iOrigen = $i % 7;
-        }
+        }$iOrigen2=$iOrigen;
+        $iOrigen3=$iOrigen;
     }
     if ($QTipoPlantillaOrigen == PlantillaConfig::PLANTILLA_SEMANAL_TRES) {
         $oDiaOrigen2 = new DateTimeLocal(PlantillaConfig::INICIO_SEMANAL_DOS);
@@ -171,6 +192,10 @@ for ($i = 0; $i < $ndias; $i++) {
             $iOrigen = $i % 7;
             if ($iOrigen == 6) {
                 $iOrigen += intdiv($i, 7);
+        if (($i>6) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES))) {
+            $iOrigen=$i%7;
+            if ($iOrigen==6) {
+                $iOrigen+=intdiv($i,7);
             }
         }
     }
@@ -201,11 +226,12 @@ for ($i = 0; $i < $ndias; $i++) {
         echo 'origen3: ' . $oDiaOrigen3->format('d-m-Y') . '<br>';
     }
 
-    $inicio_dia_plantilla = $oDiaOrigen->format('Y-m-d') . ' 00:00:00';
+
+    foreach ($cEncargosZona as $oEncargo) {    $inicio_dia_plantilla = $oDiaOrigen->format('Y-m-d') . ' 00:00:00';
     $fin_dia_plantilla = $oDiaOrigen->format('Y-m-d') . ' 23:59:59';
 
-    foreach ($cEncargosZona as $oEncargo) {
-        $id_enc = $oEncargo->getId_enc();
+    //    echo 'inicio dia platilla: '.$inicio_dia_plantilla.'<br>';
+            $id_enc = $oEncargo->getId_enc();
         $desc_enc = $oEncargo->getDesc_enc();
 
         $aWhere = [
@@ -218,6 +244,7 @@ for ($i = 0; $i < $ndias; $i++) {
         $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
         if (count($cEncargosDia) > 1) {
+//            echo 'III'.$inicio_dia_plantilla.'<br>';
             exit(_("sólo debería haber uno"));
         }
         if (count($cEncargosDia) === 1) {
@@ -226,10 +253,10 @@ for ($i = 0; $i < $ndias; $i++) {
             $hora_ini = $oEncargoDia->getTstart()->format('H:i');
             $hora_fin = $oEncargoDia->getTend()->format('H:i');
             $observ = $oEncargoDia->getObserv();
-            echo 'id_enc: ' . $id_enc;
-            echo ' desc_enc: ' . $desc_enc;
-            echo ' count:' . count($cEncargosDia);
-            echo ' id_nom: ' . $id_nom . '<br>';
+//            echo 'id_enc: '.$id_enc;
+//            echo ' desc_enc: '.$desc_enc;
+//            echo ' count:'.count($cEncargosDia);
+            echo ' id_nom: '.$id_nom.'<br>';
             $oEncargoDia = new EncargoDia();
             $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
             $oEncargoDia->setUuid_item($Uuid);
@@ -246,8 +273,106 @@ for ($i = 0; $i < $ndias; $i++) {
             $oEncargoDia->setId_enc($id_enc);
             if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
                 $error_txt .= $EncargoDiaRepository->getErrorTxt();
+            }  
+        }
+        if (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)  || ($QTipoPlantillaDestino == EncargoDia::PLANTILLA_MENSUAL_TRES)){
+            $inicio_dia_plantilla = $oDiaOrigen2->format('Y-m-d').' 00:00:00';
+            $fin_dia_plantilla = $oDiaOrigen2->format('Y-m-d').' 23:59:59';
+
+//            echo 'Origen2: inicio dia platilla: '.$inicio_dia_plantilla.'<br>';
+
+
+            $aWhere = [
+                'id_enc' => $id_enc,
+                'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
+            ];
+            $aOperador = [
+                'tstart' => 'BETWEEN',
+            ];
+            $EncargoDiaRepository = new EncargoDiaRepository();
+            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+            echo '#enc2: '.count($cEncargosDia).'<br>';
+            if (count($cEncargosDia) > 1) {
+//                echo 'III1'.$inicio_dia_plantilla.'<br>';
+                exit(_("sólo debería haber uno"));
+            }
+            if (count($cEncargosDia) === 1) {
+                $oEncargoDia = $cEncargosDia[0];
+                $id_nom = $oEncargoDia->getId_nom();
+                $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                $hora_fin = $oEncargoDia->getTend()->format('H:i');
+                $observ = $oEncargoDia->getObserv();
+//                echo 'id_enc: '.$id_enc;
+//                echo ' desc_enc: '.$desc_enc;
+//                echo ' count:'.count($cEncargosDia);
+                echo ' id_nom2: '.$id_nom.'<br>';
+                $oEncargoDia = new EncargoDia();
+                $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
+                $oEncargoDia->setUuid_item($Uuid);
+                $oEncargoDia->setId_nom($id_nom);
+                $tstart = new EncargoDiaTstart($num_dia2, $hora_ini);
+                $oEncargoDia->setTstart($tstart);
+
+                $tend = new EncargoDiaTend($num_dia2, $hora_fin);
+                $oEncargoDia->setTend($tend);
+
+                if (isset($observ)) {
+                    $oEncargoDia->setObserv($observ);
+                }
+                $oEncargoDia->setId_enc($id_enc);
+                if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
+                    $error_txt .= $EncargoDiaRepository->getErrorTxt();
+                }
             }
 
+            $inicio_dia_plantilla = $oDiaOrigen3->format('Y-m-d').' 00:00:00';
+            $fin_dia_plantilla = $oDiaOrigen3->format('Y-m-d').' 23:59:59';
+
+//            echo 'Origen3: inicio dia platilla: '.$inicio_dia_plantilla.'<br>';
+
+
+            $aWhere = [
+                'id_enc' => $id_enc,
+                'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
+            ];
+            $aOperador = [
+                'tstart' => 'BETWEEN',
+            ];
+            $EncargoDiaRepository = new EncargoDiaRepository();
+            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+            echo '#enc3: '.count($cEncargosDia).'<br>';
+            if (count($cEncargosDia) > 1) {
+//                echo 'III1'.$inicio_dia_plantilla.'<br>';
+                exit(_("sólo debería haber uno"));
+            }
+            if (count($cEncargosDia) === 1) {
+                $oEncargoDia = $cEncargosDia[0];
+                $id_nom = $oEncargoDia->getId_nom();
+                $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                $hora_fin = $oEncargoDia->getTend()->format('H:i');
+                $observ = $oEncargoDia->getObserv();
+//                echo 'id_enc: '.$id_enc;
+//                echo ' desc_enc: '.$desc_enc;
+//                echo ' count:'.count($cEncargosDia);
+                echo ' id_nom3: '.$id_nom.'<br>';
+                $oEncargoDia = new EncargoDia();
+                $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
+                $oEncargoDia->setUuid_item($Uuid);
+                $oEncargoDia->setId_nom($id_nom);
+                $tstart = new EncargoDiaTstart($num_dia3, $hora_ini);
+                $oEncargoDia->setTstart($tstart);
+
+                $tend = new EncargoDiaTend($num_dia3, $hora_fin);
+                $oEncargoDia->setTend($tend);
+
+                if (isset($observ)) {
+                    $oEncargoDia->setObserv($observ);
+                }
+                $oEncargoDia->setId_enc($id_enc);
+                if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
+                    $error_txt .= $EncargoDiaRepository->getErrorTxt();
+                }
+            }
         }
 
     }

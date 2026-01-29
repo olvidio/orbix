@@ -7,7 +7,7 @@ use web\Hash;
 
 /**
  * Esta página sirve para asignar centros a una zona de Misas.
- * En la parte superior se permite escojer la zona de misas.
+ * En la parte superior se permite escoger la zona de misas.
  * En la parte inferior se permite pasar los centros seleccionados a una nueva zona.
  *
  *

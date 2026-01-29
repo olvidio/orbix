@@ -99,7 +99,7 @@ if ($miRole < 4) { // es administrador
         }
         if ($pau === PauType::PAU_CTR && $isSv) { //centroSv
             $id_pau = $oUsuario->getCsvIdPauAsString();
-            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+            $CentroDlRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
             $aOpciones = $CentroDlRepository->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';
@@ -109,9 +109,9 @@ if ($miRole < 4) { // es administrador
             $aDataDespl['opcion_sel'] = $id_pau;
             $camposMas = 'id_ctr';
         }
-        if ($pau === PauType::PAU_CTR && $isSf) { //centroSf
-            $id_pau = $oUsuario->getCsvIdPauAsString();
-            $oGesCentrosDl = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+        if ($pau === Role::PAU_CTR && $isSf) { //centroSf
+            $id_pau = $oUsuario->getId_pauAsString();
+            $oGesCentrosDl = new GestorCentroEllas();
             $aOpciones = $oGesCentrosDl->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';

@@ -167,7 +167,7 @@ class ComunicarActividadesSacd
                 // lugar
                 if (empty($lugar_esp)) {
                     $oCasa = Ubi::NewUbi($id_ubi);
-                    $nombre_ubi = $oCasa->getNombre_ubi();
+                    $nombre_ubi = $oCasa?->getNombre_ubi()?? '?';
                 } else {
                     $nombre_ubi = $lugar_esp;
                 }

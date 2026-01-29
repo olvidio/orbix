@@ -35,11 +35,18 @@ $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 //echo $aRoles[$id_role];
 $role = '';
+$jefe_zona = false;
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     $role = 'sacd';
+    $GesZonas = new GestorZona();
+    $cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+    $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
+    $role = 'sacd';
 }
 
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro sv' || $aRoles[$id_role] === 'Centro sf')) {
+    $role = 'ctr';
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
     $role = 'ctr';
 }
@@ -87,7 +94,7 @@ switch ($Qperiodo) {
         $anyo = (int)date('Y');
         $empiezamin = new DateTimeLocal(date($anyo . '-' . $este_mes . '-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
-        $siguiente_mes = $este_mes + 1;
+        $siguiente_mes = (int)$este_mes + 1;
         if ($siguiente_mes == 13) {
             $siguiente_mes = 1;
             $anyo++;
@@ -107,7 +114,7 @@ switch ($Qperiodo) {
         $empiezamin = new DateTimeLocal(date($anyo . '-' . $proximo_mes . '-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         $siguiente_mes = $proximo_mes + 1;
-        if ($siguiente_mes == 13) {
+        if ($siguiente_mes === 13) {
             $siguiente_mes = 1;
             $anyo++;
         }
@@ -115,8 +122,10 @@ switch ($Qperiodo) {
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
     default:
-        $Qempiezamin_rep = str_replace('/', '-', $Qempiezamin);
-        $Qempiezamax_rep = str_replace('/', '-', $Qempiezamax);
+        $oInicio = DateTimeLocal::createFromLocal($Qempiezamin);
+        $oFin = DateTimeLocal::createFromLocal($Qempiezamax);
+        $Qempiezamin_rep = $oInicio->format('Y-m-d');
+        $Qempiezamax_rep = $oFin->format('Y-m-d');
 }
 
 $a_dias_semana_breve = [1 => 'L', 2 => 'M', 3 => 'X', 4 => 'J', 5 => 'V', 6 => 'S', 7 => 'D'];
@@ -136,7 +145,7 @@ $oInicio = new DateTimeLocal($Qempiezamin_rep);
 $oFin = new DateTimeLocal($Qempiezamax_rep);
 
 $interval = new DateInterval('P1D');
-$date_range = new DatePeriod($oInicio, $interval, $oFin);
+$date_range = new DatePeriod($oInicio, $interval, $oFin, 0);
 
 $inicio_dia = $Qempiezamin_rep . ' 00:00:00';
 $fin_dia = $Qempiezamax_rep . ' 23:59:59';
@@ -230,10 +239,10 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
                 $hora_fin = '';
             $observ = $oEncargoDia->getObserv();
             $dia_y_hora = $dia;
-            if ($hora_ini != '') {
+            if ($hora_ini !== '') {
                 $dia_y_hora .= ' ' . $hora_ini;
             }
-            if ($hora_fin != '') {
+            if ($hora_fin !== '') {
                 $dia_y_hora .= '-' . $hora_fin;
             }
             $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
@@ -254,9 +263,14 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             $iniciales .= empty($oEncargoDia->getObserv()) ? '' : '*';
             $data_cols["$id_dia"] = $iniciales;
         }
-        echo '<TD>' . $iniciales . '</TD>';
 
         if (($jefe_zona) || (($role == 'ctr') && ($status == EncargoDia::STATUS_COMUNICADO_CTR)) || (($role == 'sacd') && (($status == EncargoDia::STATUS_COMUNICADO_SACD) || ($status == EncargoDia::STATUS_COMUNICADO_CTR)))) {
+            echo '<TD>' . $iniciales . '</TD>';
+        } else {
+        if (($jefe_zona) || (($role === 'ctr')
+                && ($status === EncargoDia::STATUS_COMUNICADO_CTR)) || (($role === 'sacd')
+                && (($status === EncargoDia::STATUS_COMUNICADO_SACD) || ($status === EncargoDia::STATUS_COMUNICADO_CTR))))
+        {
             echo '<TD>' . $iniciales . '</TD>';
         } else {
             echo '<TD> -- </TD>';

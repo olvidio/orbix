@@ -25,7 +25,7 @@ class ActividadesSacdFunciones
             }
         }
         if (empty($this->a_txt[$idioma])) {
-            $str = sprintf(_("No existe el idoma: %s. Debe corregirlo en la ficha del sacd"), $idioma);
+            $str = sprintf(_("No existe el idioma: %s. Debe corregirlo en la ficha del sacd"), $idioma);
             echo $str . "<br>";
             return FALSE;
         }
@@ -76,7 +76,7 @@ class ActividadesSacdFunciones
                 // más de una dl?
                 exit (_("Más de un centro definido como dl"));
         }
-        // Buscar la direccion
+        // Buscar la dirección
         $cDirecciones = $oCentro->getDirecciones();
 
         $poblacion = '';
