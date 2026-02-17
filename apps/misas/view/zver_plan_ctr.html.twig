@@ -69,8 +69,10 @@
 </head>
 <div style="position:relative">
     <div style="width:100%;">
-        <div id="myGrid" class="slick-container" style="width:100%;height:300px;"></div>
+        <div id="myGridd" class="slick-container" style="width:100%;height:300px;"></div>
     </div>
+</div>
+<div id='lista_sacd'>Hola
 </div>
 
 <script src="node_modules/slickgrid/dist/browser/slick.core.js"></script>
@@ -108,6 +110,10 @@
         asyncEditorLoading: false,
         autoEdit: false
     };
+//    let observ = meta.observ;
+    $('#lista_sacd').val(lista_sacd);
+    alert('hola');
+    alert(lista_sacd);
 
     $(function () {
         grid = new Slick.Grid("#myGrid", data, columns, options);

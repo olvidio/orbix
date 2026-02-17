@@ -9,6 +9,7 @@ use misas\domain\entity\EncargoDia;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\repositories\EncargoCtrRepository;
 use misas\domain\repositories\EncargoDiaRepository;
+use personas\model\entity\PersonaSacd;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
 use ubis\model\entity\Ubi;
@@ -167,6 +168,8 @@ foreach ($date_range as $date) {
     echo '<TH class=cell-title style:"width:60px">' . $nom_dia2 . '</TH>';
 }
 $data_cuadricula = [];
+$lista_sacd=[];
+$nombre_sacd=[];
 
 $EncargoCtrRepository = new EncargoCtrRepository();
 $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
@@ -241,6 +244,10 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             }
             $InicialesSacd = new InicialesSacd();
             $iniciales = $InicialesSacd->iniciales($id_nom);
+            $lista_sacd[$id_nom]=$iniciales;
+            $PersonaSacd = new PersonaSacd($id_nom);
+            $sacd = $PersonaSacd->getNombreApellidos();
+            $nombre_sacd[$id_nom]=$sacd;
             $color = '';
 
             $meta_dia["$id_dia"] = [
@@ -268,6 +275,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             echo '<TD> -- </TD>';
         }
 
+
 //        $data_cols["dia"] = $dia_y_hora;
 //        $data_cols["observaciones"] = $observ;
 
@@ -284,15 +292,26 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 echo '</TR>';
 echo '</TABLE>';
 
+echo '<TABLE>';
+echo '<TR>';
+echo '<TD>';
+asort($lista_sacd);
+foreach($lista_sacd as $id=>$iniciales) {
+    echo $iniciales.': '.$nombre_sacd[$id].'  ';
+}
+echo '</TD>';
+echo '</TR>';
+echo '</TABLE>';
 
-$json_columns_cuadricula = json_encode($columns_cuadricula);
-$json_data_cuadricula = json_encode($data_cuadricula);
+
+//$json_columns_cuadricula = json_encode($columns_cuadricula);
+//$json_data_cuadricula = json_encode($data_cuadricula);
 
 
-$a_campos = ['oPosicion' => $oPosicion,
-    'json_columns_cuadricula' => $json_columns_cuadricula,
-    'json_data_cuadricula' => $json_data_cuadricula,
-];
+//$a_campos = ['oPosicion' => $oPosicion,
+//    'json_columns_cuadricula' => $json_columns_cuadricula,
+//    'json_data_cuadricula' => $json_data_cuadricula,
+//];
 
 //$oView = new ViewTwig('misas/controller');
 //echo $oView->render('ver_plan_ctr.html.twig', $a_campos);
