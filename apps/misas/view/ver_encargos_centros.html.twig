@@ -88,19 +88,19 @@
         <input type="hidden" id="que" value=""/>
 
         <div style="margin-left: 10px; margin-top: 10px;">
-            <label for="id_enc">{{ "Encargo: "|trans|raw }}</label>
-            {{ oDesplEncargos.desplegable()|raw }}
-        </div>
-
-        <div style="margin-left: 10px; margin-top: 10px;">
-            <label for="id_zona_ctr">{{ "Zona del centro: "|trans|raw }}</label>
+            <label for="id_zona_enc">{{ "Zona del encargo: "|trans|raw }}</label>
             {{ oDesplZonasCtr.desplegable()|raw }}
         </div>
 
         <div style="margin-left: 10px; margin-top: 10px;">
-            <label for="id_ctr">{{ "Centro: "|trans|raw }}</label>
+            <label for="id_enc">{{ "Encargo: "|trans|raw }}</label>
             <div id="desplegable">
             </div>
+        </div>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <label for="id_ctr">{{ "Centro: "|trans|raw }}</label>
+            {{ oDesplCentros.desplegable()|raw }}
         </div>
 
         <hr/>
@@ -158,14 +158,12 @@
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
 
-        let key = $('#id_ctr').val();
-        const myArray = key.split("#");
-       let id_ctr = myArray[0];
-//        let nombre_ctr = myArray[1];
+        let key = $('#id_enc').val();
+       let id_enc_selected = key;
 
         let id_item = $('#id_item').val();
-        let id_enc_selected = $('#id_enc_selected').val();
- //       let id_ctr = $('#id_ctr').val();
+        let id_ctr = $('#id_ubi').val();
+//        alert(id_ctr);
         let id_enc = $('#id_enc').val();
         let id_zona = $('#id_zona').val();
         let que=$('#que').val();
@@ -242,14 +240,13 @@
         modal.show();
     }
 
-    function fnjs_prepara_select_ctr() {
-    	var ctr_otras_zonas=$('#ctr_otras_zonas').prop('checked');
- 	    var ctr_selected=$('#id_ctr_selected').val();
-        let url_desplegable_ctr = '{{ url_desplegable_ctr }}';
-        let id_zona = $('#id_zona_ctr').val();
-	    var parametros= 'id_zona=' + id_zona + '&id_ctr=' + ctr_selected + '&ctr_otras_zonas=' + ctr_otras_zonas + '&{{ h_desplegable_ctr|raw }} ';
+    function fnjs_prepara_select_encargo() {
+ 	    var enc_selected=$('#id_enc_selected').val();
+        let url_desplegable_encargos = '{{ url_desplegable_encargos }}';
+        let id_zona = $('#id_zona_enc').val();
+	    var parametros= 'id_zona=' + id_zona + '&id_enc=' + enc_selected + '&{{ h_desplegable_encargos|raw }} ';
           let request = $.ajax({
-		    url: url_desplegable_ctr,
+		    url: url_desplegable_encargos,
 		    data: parametros,
 		    type: 'post',
             dataType: 'json'
@@ -268,7 +265,7 @@
         reset_campos_modal();
         $('#titulo_modal').html('nuevo encargo visible para un centro');
 
-        fnjs_prepara_select_ctr();
+        fnjs_prepara_select_encargo();
 
         modal.show();
     }
@@ -304,9 +301,10 @@
         $('#id_item').val(id_item);
         $('#encargo').val(encargo);
         $('#id_enc').val(id_encargo);
+        $('#id_enc_selected').val(id_encargo);
+        $('#id_ubi').val(id_centro);
         $('#id_ctr_selected').val(id_centro);
-        $('#id_ctr').val(id_centro);
-        fnjs_prepara_select_ctr();
+        fnjs_prepara_select_encargo();
 
         modal.show();
     }
