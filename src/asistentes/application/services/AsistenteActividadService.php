@@ -200,7 +200,7 @@ class AsistenteActividadService
         $numAsis = 0;
         foreach ($cAsistentes as $oAsistente) {
             $id_nom = $oAsistente->getId_nom();
-            $propietario = $oAsistente->getPropietarioVo()->value() ?? '';
+            $propietario = $oAsistente->getPropietarioVo()?->value() ?? '';
             $padre = strtok($propietario, '>');
             $child = strtok('>');
 

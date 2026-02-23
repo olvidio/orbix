@@ -79,7 +79,7 @@ class TablaAlumnosAsignaturas
 
 
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $cPersonas = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
+        $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
         $PersonNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $p = 0;
         $a_valores = [];
@@ -207,7 +207,7 @@ class TablaAlumnosAsignaturas
         $aOperador['nivel_stgr'] = '~';
 
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $cPersonas = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
+        $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
         $PersonNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $p = 0;
         $a_valores = [];

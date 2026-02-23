@@ -33,7 +33,7 @@ foreach ($cCentros as $oCentro) {
     $i++;
     $id_ubi = $oCentro->getId_ubi();
     $nombre_ubi = $oCentro->getNombre_ubi();
-    $cPersonasCtr = $PersonaSRepository->getPersonasDl(array('id_ctr' => $id_ubi, 'situacion' => 'A'));
+    $cPersonasCtr = $PersonaSRepository->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A'));
     if ($cPersonasCtr === false) exit(_('error'));
     $num_s = count($cPersonasCtr);
     $num_total_s += $num_s;

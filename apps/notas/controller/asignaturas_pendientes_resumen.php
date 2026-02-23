@@ -105,7 +105,7 @@ $aOperador['id_tabla'] = '~';
 
 
 $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-$cPersonas = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
+$cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
 $p = 0;
 $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
 foreach ($cPersonas as $oPersona) {

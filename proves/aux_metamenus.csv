@@ -1,0 +1,125 @@
+﻿id_metamenu;id_mod;url;descripcion
+160;1;apps/core/mod_tabla_sql.php;modificar los datos de una tabla
+121;1;apps/dossiers/controller/perm_dossiers.php;permisos dossiers
+40;1;apps/menus/controller/menus_importar.php;importar menus old
+38;1;apps/permisos/controller/config_select.php;config modulos
+76;1;apps/personas/controller/personas_que.php;búsqueda de personas
+97;1;apps/personas/controller/personas_select.php;personas Select
+152;1;apps/ubis/controller/lista_ctrs.php;lista ctr sg
+162;1;fnjs_exportar('odfc');exportar a odf calc
+163;1;fnjs_exportar('odft');exportar a odft txt
+167;1;fnjs_windowopen('http://10.0.0.16/redmine');abrir pag redmine
+90;1;frontend/configuracion/controller/parametros.php;Configuracion esquema
+47;1;frontend/menus/controller/grupmenu_lista.php;lista grupmenus
+50;1;frontend/menus/controller/menus_importar_form.php;importar menus
+148;1;frontend/menus/controller/menus_que.php;gestor de menus
+159;1;frontend/shared/controller/tablaDB_lista_ver.php;modificar los datos de una tabla con Repository
+122;1;frontend/usuarios/controller/grupo_lista.php;lista grupos
+164;1;frontend/usuarios/controller/preferencias.php;preferencias usuario
+161;1;frontend/usuarios/controller/role_lista.php;lista roles
+131;1;frontend/usuarios/controller/usuario_lista.php;lista usuarios
+150;1;frontend/usuarios/controller/usuario_lista.php;lista usuarios 2
+165;1;public/ayuda/index.php;Ayuda
+142;1;src/menus/infrastructure/controllers/menus_generar_txt.php;pasa los menus a texto
+102;2;apps/devel/controller/apptables.php;Manage tablas de Apps
+192;2;apps/devel/controller/db_cambiar_nombre_que.php;cambiar nombre dl
+54;2;apps/devel/controller/db_mover_que.php;DB mover tabla
+17;2;apps/devel/controller/db_que.php;nuevo esquema
+19;2;apps/devel/controller/factory_form.php;generador de clases
+166;2;apps/menus/controller/pasar_a_demo.php;pasar a demo
+27;2;frontend/configuracion/controller/modulos_select.php;modulos select
+92;2;frontend/menus/controller/menus_exportar_form.php;exportar menus
+177;2;frontend/menus/view/como.html;ayuda menus
+145;2;frontend/usuarios/controller/borrar_todos_pwd.php;borrar passwords de todos los usuarios
+64;2;src/menus/frontend/controller/menus_ficheros.php;menu a/de ficheros
+146;3;apps/ubis/controller/centros_que.php;Centros seleccionar
+48;3;apps/ubis/controller/list_ctr.php;listas de ubis
+133;3;apps/ubis/controller/ubis_buscar.php;buscar ubis
+178;4;apps/notas/controller/acta_listado_anual.php;listado anual actas
+60;4;apps/notas/controller/acta_select.php;actas
+175;4;apps/notas/controller/asig_faltan_que.php;Asignaturas pendientes
+88;4;apps/notas/controller/asignaturas_pendientes.php;cuadro alumnos-asignaturas
+174;4;apps/notas/controller/asignaturas_pendientes_resumen.php;Resumen asig. pendientes
+57;4;apps/notas/controller/resumen_anual.php;resumen anual
+173;4;apps/profesores/controller/lista_por_departamentos.php;listado claustro
+171;4;apps/profesores/controller/profesor_asignatura_que.php;profesores para asignatura
+37;4;frontend/certificados/controller/certificado_emitido_lista.php;Certificado lista
+12;5;apps/actividades/controller/actividades_centro_que.php;Centro que activ
+157;5;apps/actividades/controller/actividad_nuevo_curso.php;Nuevo Curso
+119;5;apps/actividades/controller/actividad_que.php;seleccionar actividad
+71;5;apps/actividades/controller/actividad_select.php;Listado de Actividades
+136;5;apps/actividades/controller/actividad_ver.php;actividad nueva
+21;5;apps/actividades/controller/calendario_listas.php;calendario listas
+141;5;apps/actividades/controller/calendario_que.php;Calendario que
+132;5;apps/actividades/controller/lista_actividades_sg.php;lista activ sg
+68;5;apps/actividades/controller/tipo_activ.php;gestionar tipos actividades
+128;5;apps/actividadtarifas/controller/tarifa_actividad.php;Tarifa actividades
+100;5;apps/actividadtarifas/controller/tarifa.php;Tarifa definir
+108;5;apps/actividadtarifas/controller/tarifa_tipo_actividad.php;Tipo tarifa
+73;5;apps/actividadtarifas/controller/tarifa_ubi.php;actividad Tarifa Ubi
+140;5;apps/asistentes/controller/activ_pendientes_select.php;actividades pendientes
+147;5;apps/asistentes/controller/que_ctr_lista.php;Buscar por centro
+7;5;apps/ubis/controller/calendario_periodos.php;Calendario Periodos
+143;6;apps/actividades/controller/lista_activ_que.php;Lista Activ que
+58;6;apps/actividades/controller/lista_sr_csv_que.php;Activ Sr Que (csv)
+79;6;apps/asistentes/controller/lista_ultim_que_ctr.php;Ultima asistencia
+194;6;apps/planning/controller/planning_casa_que.php;Planing Casa
+61;6;apps/planning/controller/planning_ctr_que.php;planning ctr
+138;6;apps/planning/controller/planning_persona_que.php;Planning persona
+52;7;apps/actividadestudios/controller/actualizar_docencia.php;guardar docencia ca en dossier
+155;7;apps/actividadestudios/controller/ca_posibles_que.php;Posibles ca
+104;7;apps/actividadestudios/controller/matricular.php;matricular
+105;7;apps/actividadestudios/controller/matriculas_lista_otras_r.php;lista alumnos otras r para certificados stgr
+66;7;apps/actividadestudios/controller/matriculas_lista.php;listas de matriculas
+168;7;apps/actividadestudios/controller/matriculas_pendientes.php;matriculas pendientes
+196;7;apps/profesores/controller/congresos.php;congresos
+15;7;apps/profesores/controller/docencia.php;Docencia
+169;8;apps/actividadplazas/controller/gestion_plazas.php;Gestión de plazas
+172;8;apps/actividadplazas/controller/incorporar_peticion.php;Incorporar peticiones de plazas
+170;8;apps/actividadplazas/controller/plazas_balance_que.php;Balance de Plazas
+176;9;apps/dbextern/controller/sincro_index.php;Sincronizar con los datos de Listas
+130;11;apps/procesos/controller/fases_activ_cambio.php;Fases activ cambio
+32;11;apps/procesos/controller/procesos_select.php;procesos select
+44;11;apps/procesos/controller/tipo_activ_proceso.php;Tipos de actividad
+43;20;apps/actividadescentro/controller/activ_ctr.php;actividades centro
+39;20;apps/actividadessacd/controller/activ_sacd.php;Atención sacd
+18;20;apps/actividadessacd/controller/asignar_sacd_auto.php;Auto asignar sacd a actividades
+28;20;apps/actividadessacd/controller/com_sacd_activ_periodo.php;Comunicación activ sacd
+62;21;apps/encargossacd/controller/ctr_ficha.php;Ficha encargos ctr
+156;21;apps/encargossacd/controller/encargo_select.php;Encargos lista
+124;21;apps/encargossacd/controller/listas_index.php;Encargos Listas
+87;21;apps/encargossacd/controller/propuestas_menu.php;propuestas encargos sacd
+23;21;apps/encargossacd/controller/que_tipo_de_encargo.php;Tipo de encargo
+127;21;apps/encargossacd/controller/sacd_ausencias.php;Ausencias sacd
+14;21;apps/encargossacd/controller/sacd_ficha.php;Encargo sacd ficha
+139;24;apps/planning/controller/planning_zones_que.php;Planning por zonas
+85;24;apps/zonassacd/controller/zona_ctr.php;Zona-ctr
+34;24;apps/zonassacd/controller/zona_sacd_ajax.php;Zona sacd ajax
+42;24;apps/zonassacd/controller/zona_sacd.php;Zona sacd
+3;25;apps/cartaspresentacion/controller/cartas_presentacion_buscar.php;Buscar Cartas presentacion
+98;25;apps/cartaspresentacion/controller/cartas_presentacion_lista.php;Listado cartas presentación
+114;25;apps/cartaspresentacion/controller/cartas_presentacion_que.php;Cartas Presentacion
+2;26;apps/cambios/controller/avisos_generar_mails.php;avisos mails
+154;26;apps/cambios/controller/avisos_generar.php;avisos generar
+137;26;apps/cambios/controller/avisos_generar.php;lista avisos
+46;26;apps/cambios/controller/avisos_generar_tabla.php;avisos generar tabla
+63;27;apps/casas/controller/calendario_ubi_resumen.php;Ubi resumen ec
+51;27;apps/casas/controller/casa_ec_que.php;Casa ec que
+45;27;apps/casas/controller/casa_que.php;Casa que
+89;27;apps/casas/controller/casas_resumen.php;Casa resumen
+91;27;apps/casas/controller/grupo_lista.php;Grupo Casas
+5;27;apps/casas/controller/prevision_asistentes.php;prevision asistentes
+53;28;frontend/inventario/controller/buscar_docs_por_ctr.php;buscar docs por centro
+144;28;frontend/inventario/controller/cabecera_pie_txt.php;textos inventario
+16;28;frontend/inventario/controller/docs_asignar_que.php;asignar documentos
+84;28;frontend/inventario/controller/docs_con_observaciones.php;Lista doscumentos con observaciones
+198;28;frontend/inventario/controller/docs_en_busqueda.php;Lista documentos en búsqueda
+135;28;frontend/inventario/controller/docs_perdidos.php;Lista documentos perdidos
+4;28;frontend/inventario/controller/equipajes_movimientos_que.php;Equipajes movimientos
+82;28;frontend/inventario/controller/equipajes_nuevo.php;Nuevo Documento
+33;28;frontend/inventario/controller/equipajes_ver.php;Ver equipajes
+109;28;frontend/inventario/controller/inventario_que.php;inventario buscar
+199;28;frontend/inventario/controller/traslado_doc_que.php;Traslado Documentos
+129;29;apps/pasarela/controller/exportar_que.php;exportar actividades
+153;29;apps/pasarela/controller/parametros_menu.php;pasarela parametros
+201;31;apps/misas/controller/misas_index.php;llista de modul misas

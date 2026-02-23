@@ -220,7 +220,7 @@ class SincroDB
         $aWhere['nom'] = trim($nombre);
 
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $cPersonasDl = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
+        $cPersonasDl = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
         if ($cPersonasDl !== false && count($cPersonasDl) == 1) {
             $oPersonaDl = $cPersonasDl[0];
             $id_nom = $oPersonaDl->getId_nom();
@@ -376,7 +376,7 @@ class SincroDB
             $oDB = $this->conexion($esquema);
             $PersonaDlRepository->setoDbl($oDB);
         }
-        $cPersonasDl = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
+        $cPersonasDl = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
         $i = 0;
         $a_lista_orbix = [];
         foreach ($cPersonasDl as $oPersonaDl) {

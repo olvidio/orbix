@@ -28,7 +28,7 @@ interface RelacionTarifaTipoActividadRepositoryInterface
 	 * @return array|false Una colección de objetos de tipo RelacionTarifaTipoActividad
 	
 	 */
-	public function getRelacionTarifasTipoActivides(array $aWhere=[], array $aOperators=[]): array|false;
+	public function getTipoActivTarifas(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

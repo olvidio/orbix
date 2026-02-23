@@ -266,7 +266,8 @@ class PermisosActividades
         $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
         foreach ($aTiposDeProcesos as $id_tipo_proceso) {
             // Buscar la primera fase (no depende de fases previas)
-            $oTareaProceso = $TareaProcesoRepository->getFaseIndependiente($id_tipo_proceso);
+            $aTareaProceso = $TareaProcesoRepository->getFaseIndependiente($id_tipo_proceso);
+            $oTareaProceso = $aTareaProceso[0];
             $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
             $status = $oTareaProceso->getStatus();
 

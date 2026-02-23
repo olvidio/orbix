@@ -14,8 +14,8 @@ final class ActividadId
 
     private function validate(int $value): void
     {
-        if ($value < 0) {
-            throw new \InvalidArgumentException('ActividadId must be a non-negative integer');
+        if (!is_numeric($value)) {
+            throw new \InvalidArgumentException('ActividadId must be integer');
         }
     }
 

@@ -65,7 +65,7 @@ class RelacionTarifaTipoActividad
     }
 
     /**
-     * @deprecated Usar getIdTipoActividadVo(): TipoActividadId
+     * @deprecated Usar getIdTipoActivVo(): TipoActividadId
      */
     public function getId_tipo_activ(): int
     {
@@ -73,7 +73,7 @@ class RelacionTarifaTipoActividad
     }
 
     /**
-     * @deprecated Usar setIdTipoActividadVo(TipoActividadId $id): void
+     * @deprecated Usar setIdTipoActivVo(TipoActividadId $id): void
      */
     public function setId_tipo_activ(int $id_tipo_activ): void
     {

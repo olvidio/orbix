@@ -16,7 +16,8 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use src\shared\domain\contracts\EventBusInterface;
+use src\shared\domain\contracts\UnitOfWorkInterface;
+use src\shared\traits\DispatchesDomainEvents;
 use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
@@ -33,12 +34,13 @@ use function core\is_true;
 class PgActividadCargoDlRepository extends ClaseRepository implements ActividadCargoRepositoryInterface
 {
     use HandlesPdoErrors;
+    use DispatchesDomainEvents;
 
-    protected EventBusInterface $eventBus;
+    protected UnitOfWorkInterface $unitOfWork;
 
-    public function __construct(EventBusInterface $eventBus)
+    public function __construct(UnitOfWorkInterface $unitOfWork)
     {
-        $this->eventBus = $eventBus;
+        $this->unitOfWork = $unitOfWork;
         $oDbl = $GLOBALS['oDBE'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBE_Select'];
@@ -356,11 +358,8 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         $success = $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         if ($success && $datosActuales) {
-            // Marcar como eliminada (los eventos se despacharán por el UnitOfWork)
-            $ActividadCargo->marcarComoEliminada($datosActuales);
-
-            // Despachar eventos
-            $this->dispatchDomainEvents($ActividadCargo);
+            // Marcar como eliminada y despachar eventos
+            $this->markAsDeleted($ActividadCargo, $datosActuales);
         }
 
         return $success;
@@ -406,13 +405,10 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         if ($success) {
             // Marcar evento de dominio (se despachará por el UnitOfWork)
             if ($bInsert) {
-                $ActividadCargo->marcarComoNueva($datosActuales);
+                $this->markAsNew($ActividadCargo, $datosActuales);
             } else {
-                $ActividadCargo->marcarComoModificada($datosActuales);
+                $this->markAsModified($ActividadCargo, $datosActuales);
             }
-
-            // Despachar eventos
-            $this->dispatchDomainEvents($ActividadCargo);
         }
 
         return $success;
@@ -466,16 +462,6 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('d_cargos_activ_dl_id_item_seq'::regclass)";
         return $oDbl->query($sQuery)->fetchColumn();
-    }
-
-    /**
-     * Despacha los eventos de dominio de una entidad
-     */
-    private function dispatchDomainEvents(ActividadCargo $ActividadCargo): void
-    {
-        foreach ($ActividadCargo->pullDomainEvents() as $event) {
-            $this->eventBus->dispatch($event);
-        }
     }
 
 }

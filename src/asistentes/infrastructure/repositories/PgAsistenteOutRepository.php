@@ -4,7 +4,7 @@ namespace src\asistentes\infrastructure\repositories;
 
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
-use src\shared\domain\contracts\EventBusInterface;
+use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -21,9 +21,9 @@ class PgAsistenteOutRepository extends PgAsistenteRepository implements Asistent
 {
     use HandlesPdoErrors;
 
-    public function __construct(EventBusInterface $eventBus)
+    public function __construct(UnitOfWorkInterface $unitOfWork)
     {
-        parent::__construct($eventBus);
+        parent::__construct($unitOfWork);
         $oDbl = $GLOBALS['oDBE'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBE_Select'];

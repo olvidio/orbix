@@ -164,9 +164,9 @@ foreach ($cCentros as $oCentro) {
     $nombre_ubi = $oCentro->getNombre_ubi();
     //consulta para buscar personas de cada ctr
     if ($tabla === "p_sssc") {
-        $cPersonas = $PersonaSSSCRepository->getPersonasDl(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1'));
+        $cPersonas = $PersonaSSSCRepository->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1'));
     } else {
-        $cPersonas = $PersonaDlRepository->getPersonasDl(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom'));
+        $cPersonas = $PersonaDlRepository->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom'));
     }
 
     $aCentros[$id_ubi]['nombre_ubi'] = $nombre_ubi;

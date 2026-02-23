@@ -331,10 +331,10 @@ class Asistente extends Entity implements AggregateRoot
         //}
 
         //hacer comprobaciones de plazas disponibles...
-        $plaza_actual = $this->getPlaza();
+        $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
+        $this->plaza = PlazaId::fromNullableInt($plaza);
 
         if ($plaza_actual < PlazaId::DENEGADA && $plaza > PlazaId::DENEGADA) {
-            $this->plaza = $plaza;
             $gesActividadPlazasR = new ResumenPlazas();
             $gesActividadPlazasR->setId_activ($this->id_activ);
             if ($gesActividadPlazasR->getLibres() > 0) {
@@ -352,11 +352,7 @@ class Asistente extends Entity implements AggregateRoot
                     $err_txt = $rta['mensaje'];
                     exit ($err_txt);
                 }
-            } else {
-                $this->plaza = PlazaId::PEDIDA;
             }
-        } else {
-            $this->plaza = $plaza;
         }
     }
 
@@ -371,10 +367,10 @@ class Asistente extends Entity implements AggregateRoot
             : $oPlazaId;
 
         //hacer comprobaciones de plazas disponibles...
-        $plaza_actual = $this->getPlaza();
+        $plaza_actual = $this->getPlazaVo()?->value() ?? PlazaId::PEDIDA;
+        $this->plaza = PlazaId::fromNullableInt($iplaza);
 
         if ($plaza_actual < PlazaId::DENEGADA && $iplaza > PlazaId::DENEGADA) {
-            $this->plaza = PlazaId::fromNullableInt($iplaza);
             $gesActividadPlazasR = new ResumenPlazas();
             $gesActividadPlazasR->setId_activ($this->id_activ);
             if ($gesActividadPlazasR->getLibres() > 0) {
@@ -392,11 +388,7 @@ class Asistente extends Entity implements AggregateRoot
                     $err_txt = $rta['mensaje'];
                     exit ($err_txt);
                 }
-            } else {
-                $this->plaza = PlazaId::fromNullableInt(PlazaId::PEDIDA);
             }
-        } else {
-            $this->plaza = $iplaza;
         }
     }
 

@@ -176,42 +176,43 @@ class Asistente extends Entity {
 }
 ```
 
-### 2. **Repositorio que emite eventos**
+### 2. **Repositorio que registra eventos**
 
 ```php
 namespace src\asistentes\infrastructure\repositories;
 
 use src\asistentes\domain\entity\Asistente;
-use src\shared\domain\contracts\EventBusInterface;
+use src\shared\domain\contracts\UnitOfWorkInterface;
+use src\shared\traits\DispatchesDomainEvents;
 
 class PgAsistenteRepository {
-    private EventBusInterface $eventBus;
+    use DispatchesDomainEvents;  // ← Trait helper
 
-    public function save(Asistente $asistente): bool {
+    protected UnitOfWorkInterface $unitOfWork;
+
+    public function Guardar(Asistente $asistente): bool {
+        $bInsert = $this->isNew($id_activ, $id_nom);
+        $datosActuales = $bInsert ? [] : $this->datosById($id_activ, $id_nom);
+
         // 1. Guardar en BD
         $stmt = $this->oDB->prepare("INSERT INTO d_asistentes_dl ...");
         $stmt->execute([...]);
 
-        // 2. Marcar como nueva (emite evento)
-        if ($id_nom_old == 0) {
-            $asistente->marcarComoNueva();
+        // 2. Marcar Y registrar evento (UnitOfWork decide cuándo despachar)
+        if ($bInsert) {
+            $this->markAsNew($asistente, $datosActuales);
         } else {
-            $asistente->marcarComoModificada($datosActuales);
+            $this->markAsModified($asistente, $datosActuales);
         }
-
-        // 3. Despachar eventos
-        $this->dispatchDomainEvents($asistente);
 
         return true;
     }
-
-    private function dispatchDomainEvents(Asistente $asistente): void {
-        foreach ($asistente->pullDomainEvents() as $event) {
-            $this->eventBus->dispatch($event);
-        }
-    }
 }
 ```
+
+**Nota**: El UnitOfWork despachará los eventos:
+- **Inmediatamente** si NO hay transacción activa
+- **En el commit** si hay transacción activa
 
 ### 3. **Registro en `av_cambios`**
 
@@ -266,53 +267,76 @@ class MiEntidad extends Entity {
 
 ### Paso 2: Modificar el Repositorio
 
-En el método `save()` o equivalente:
+**Opción A: Con Trait (Recomendado)**
 
 ```php
-public function save(MiEntidad $entidad): bool {
-    // 1. Leer datos actuales (para UPDATE)
-    $datosActuales = [];
-    if ($entidad->getId() > 0) {
-        $existing = $this->findById($entidad->getId());
-        $datosActuales = $existing?->toArray() ?? [];
-    }
+use src\shared\traits\DispatchesDomainEvents;
 
-    // 2. Guardar en BD
-    $this->pdoPrepare(...);
-    $stmt->execute([...]);
+class PgMiEntidadRepository {
+    use DispatchesDomainEvents;
 
-    // 3. Emitir evento
-    if ($entidad->getId() == 0) {
-        $entidad->marcarComoNueva();
-    } else {
-        $entidad->marcarComoModificada($datosActuales);
-    }
+    protected UnitOfWorkInterface $unitOfWork;
 
-    // 4. Despachar eventos
-    $this->dispatchDomainEvents($entidad);
+    public function Guardar(MiEntidad $entidad): bool {
+        $bInsert = $this->isNew($entidad->getId());
+        $datosActuales = $bInsert ? [] : $this->datosById($entidad->getId());
 
-    return true;
-}
+        // 1. Guardar en BD
+        $this->pdoPrepare(...);
+        $stmt->execute([...]);
 
-private function dispatchDomainEvents(MiEntidad $entidad): void {
-    foreach ($entidad->pullDomainEvents() as $event) {
-        $this->eventBus->dispatch($event);
+        // 2. Marcar y registrar (una línea)
+        if ($bInsert) {
+            $this->markAsNew($entidad, $datosActuales);
+        } else {
+            $this->markAsModified($entidad, $datosActuales);
+        }
+
+        return true;
     }
 }
 ```
 
-### Paso 3: Inyectar EventBus
+**Opción B: Manual**
 
 ```php
 class PgMiEntidadRepository {
-    private EventBusInterface $eventBus;
+    protected UnitOfWorkInterface $unitOfWork;
 
-    public function __construct(
-        PDO $oDB,
-        EventBusInterface $eventBus
-    ) {
-        $this->oDB = $oDB;
-        $this->eventBus = $eventBus;
+    public function Guardar(MiEntidad $entidad): bool {
+        $bInsert = $this->isNew($entidad->getId());
+        $datosActuales = $bInsert ? [] : $this->datosById($entidad->getId());
+
+        // 1. Guardar en BD
+        $stmt->execute([...]);
+
+        // 2. Marcar evento
+        if ($bInsert) {
+            $entidad->marcarComoNueva($datosActuales);
+        } else {
+            $entidad->marcarComoModificada($datosActuales);
+        }
+
+        // 3. Registrar en UnitOfWork (despacha automáticamente)
+        $this->unitOfWork->registerEntity($entidad);
+
+        return true;
+    }
+}
+```
+
+### Paso 3: Inyectar UnitOfWork
+
+```php
+use src\shared\domain\contracts\UnitOfWorkInterface;
+
+class PgMiEntidadRepository {
+    protected UnitOfWorkInterface $unitOfWork;
+
+    public function __construct(UnitOfWorkInterface $unitOfWork) {
+        $this->unitOfWork = $unitOfWork;
+        $oDbl = $GLOBALS['oDBE'];
+        $this->setoDbl($oDbl);
     }
 }
 ```
@@ -320,15 +344,12 @@ class PgMiEntidadRepository {
 En `dependencies.php`:
 
 ```php
-use src\shared\domain\contracts\EventBusInterface;
+use src\shared\domain\contracts\UnitOfWorkInterface;
 use function DI\get;
 
 return [
     PgMiEntidadRepository::class => autowire()
-        ->constructor(
-            get('oDB'),
-            get(EventBusInterface::class)
-        ),
+        ->constructor(get(UnitOfWorkInterface::class)),
 ];
 ```
 
@@ -449,15 +470,66 @@ class MiEntidad extends Entity { }
 
 ---
 
+## Patrón Unit of Work (Actualización 2026-01-30)
+
+**IMPORTANTE**: A partir de enero 2026, los repositorios ya NO despachan eventos directamente. Ahora usan el patrón **Unit of Work**.
+
+### ✅ Nuevo patrón (correcto):
+
+```php
+class PgAsistenteRepository {
+    use DispatchesDomainEvents;  // ← Trait helper
+
+    protected UnitOfWorkInterface $unitOfWork;
+
+    public function Guardar(Asistente $asistente): bool {
+        // ... guardar en BD ...
+
+        // Marca Y registra (UnitOfWork decide cuándo despachar)
+        $this->markAsNew($asistente, $datosActuales);
+    }
+}
+```
+
+### ❌ Patrón antiguo (deprecado):
+
+```php
+class PgAsistenteRepository {
+    protected EventBusInterface $eventBus;  // ❌ Ya no se usa
+
+    public function Guardar(Asistente $asistente): bool {
+        // ... guardar en BD ...
+
+        // ❌ Despacho directo - deprecado
+        foreach ($asistente->pullDomainEvents() as $event) {
+            $this->eventBus->dispatch($event);
+        }
+    }
+}
+```
+
+**Ventajas del nuevo patrón**:
+- ✅ Despacho inteligente (inmediato vs diferido)
+- ✅ Soporte para transacciones
+- ✅ Más simple con el trait `DispatchesDomainEvents`
+- ✅ Mejor separación de responsabilidades
+
+Ver `src/shared/domain/UNIT_OF_WORK_GUIDE.md` para más detalles.
+
+---
+
 ## Recursos Adicionales
 
 - **Código fuente**: `src/shared/domain/entity/Entity.php`
 - **Evento**: `src/shared/domain/events/EntidadModificada.php`
 - **Listener**: `src/shared/application/listeners/RegistrarCambioListener.php`
 - **EventBus**: `src/shared/infrastructure/InMemoryEventBus.php`
+- **UnitOfWork**: `src/shared/infrastructure/PdoUnitOfWork.php`
+- **Trait helper**: `src/shared/traits/DispatchesDomainEvents.php`
 - **Ejemplo completo**: `src/asistentes/infrastructure/repositories/PgAsistenteRepository.php`
+- **Guía UnitOfWork**: `src/shared/domain/UNIT_OF_WORK_GUIDE.md`
 
 ---
 
-**Última actualización**: 2026-01-02
-**Versión**: 2.0
+**Última actualización**: 2026-01-30
+**Versión**: 2.1

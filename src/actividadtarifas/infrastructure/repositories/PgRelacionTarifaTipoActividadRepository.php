@@ -42,7 +42,7 @@ class PgRelacionTarifaTipoActividadRepository extends ClaseRepository implements
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|false Una colección de objetos de tipo RelacionTarifaTipoActividad
      */
-    public function getRelacionTarifasTipoActivides(array $aWhere = [], array $aOperators = []): array|false
+    public function getTipoActivTarifas(array $aWhere = [], array $aOperators = []): array|false
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

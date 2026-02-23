@@ -215,7 +215,7 @@ $titulo = $titulo_actividad . ' ' . $titulo_fecha;
 
 $aWhereP['situacion'] = 'A';
 $PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-$cPersonas = $PersonaSRepository->getPersonasDl($aWhereP, $aOperadorP);
+$cPersonas = $PersonaSRepository->getPersonas($aWhereP, $aOperadorP);
 $i = 0;
 $falta = 0;
 $a_valores = [];

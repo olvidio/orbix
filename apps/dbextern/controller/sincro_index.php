@@ -109,7 +109,7 @@ foreach ($cPersonasBDU as $oPersonaBDU) {
     if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
         //comprobar situación = 'A'
         $id_orbix = $cIdMatch[0]->getId_orbix();
-        $cPersonas = $GesPersonas->getPersonasDl(array('id_nom' => $id_orbix));
+        $cPersonas = $GesPersonas->getPersonas(array('id_nom' => $id_orbix));
         if (!empty($cPersonas) && count($cPersonas) > 0) {
             $situacion = $cPersonas[0]->getSituacion();
             if ($situacion === 'A') {
@@ -145,7 +145,7 @@ $ids_traslados = json_encode($a_ids_traslados);
 $ids_desaparecidos_de_orbix = json_encode($a_ids_desaparecidos_de_orbix);
 
 // todos los de orbix
-$cPersonasOrbix = $GesPersonas->getPersonasDl(array('situacion' => 'A'));
+$cPersonasOrbix = $GesPersonas->getPersonas(array('situacion' => 'A'));
 $p7_orbix_unidas_otra_dl = 0;
 $p8_orbix_unidas_desaparecidas = 0;
 $p910_orbix_no_unidas = 0;

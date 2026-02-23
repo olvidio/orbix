@@ -84,7 +84,7 @@ if (empty($id)) {
     $id = 1;
     $obj = 'personas\\model\\entity\\' . $obj_pau;
     $GesPersonas = new $obj();
-    $cPersonasOrbix = $GesPersonas->getPersonasDl(array('situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom'));
+    $cPersonasOrbix = $GesPersonas->getPersonas(array('situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom'));
     $i = 0;
     $a_lista = [];
     foreach ($cPersonasOrbix as $oPersonaOrbix) {

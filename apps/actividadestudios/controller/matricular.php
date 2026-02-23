@@ -73,7 +73,7 @@ if (!empty($Qid_nom)) {
         $cAlumnos = $PersonaExRepository->getPersonas($aWhere, $aOperador);
     } else {
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $cAlumnos = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
+        $cAlumnos = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
     }
     if (empty($cAlumnos)) {
         $msg = _("está de repaso");
@@ -85,7 +85,7 @@ if (!empty($Qid_nom)) {
     $aWhere['stgr'] = 'r';
     $aOperador['stgr'] = '!=';
     $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-    $cAlumnos = $PersonaDlRepository->getPersonasDl($aWhere, $aOperador);
+    $cAlumnos = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
     $modo_aviso = '';
 }
 

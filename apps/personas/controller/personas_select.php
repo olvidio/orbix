@@ -216,7 +216,7 @@ switch ($tabla) {
     case "p_sssc":
         $obj_pau = 'PersonaSSSC';
         $PersonaSSSCRepository = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        $cPersonas = $PersonaSSSCRepository->getPersonasDl($aWhere, $aOperador);
+        $cPersonas = $PersonaSSSCRepository->getPersonas($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('des')) {
             $permiso = 3;
         }
@@ -224,7 +224,7 @@ switch ($tabla) {
     case "p_supernumerarios":
         $obj_pau = 'PersonaS';
         $PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        $cPersonas = $PersonaSRepository->getPersonasDl($aWhere, $aOperador);
+        $cPersonas = $PersonaSRepository->getPersonas($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
             $permiso = 3;
         }
@@ -232,7 +232,7 @@ switch ($tabla) {
     case "p_numerarios":
         $obj_pau = 'PersonaN';
         $PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        $cPersonas = $PersonaNRepository->getPersonasDl($aWhere, $aOperador);
+        $cPersonas = $PersonaNRepository->getPersonas($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
             $permiso = 3;
         }
@@ -240,7 +240,7 @@ switch ($tabla) {
     case "p_nax":
         $obj_pau = 'PersonaNax';
         $PersonaNaxRepository = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        if (($cPersonas = $PersonaNaxRepository->getPersonasDl($aWhere, $aOperador)) === false) {
+        if (($cPersonas = $PersonaNaxRepository->getPersonas($aWhere, $aOperador)) === false) {
             $cPersonas = [];
         }
         if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
@@ -250,7 +250,7 @@ switch ($tabla) {
     case "p_agregados":
         $obj_pau = 'PersonaAgd';
         $PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        $cPersonas = $PersonaAgdRepository->getPersonasDl($aWhere, $aOperador);
+        $cPersonas = $PersonaAgdRepository->getPersonas($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
             $permiso = 3;
         }

@@ -286,7 +286,7 @@ class Select3103
 
     public function setQueSel($queSel)
     {
-        $this->queSel = $queSel;
+        $this->queSel = (int)$queSel;
     }
 
 

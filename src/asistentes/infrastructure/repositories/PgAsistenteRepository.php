@@ -10,7 +10,8 @@ use PDO;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\asistentes\domain\value_objects\AsistentePk;
-use src\shared\domain\contracts\EventBusInterface;
+use src\shared\domain\contracts\UnitOfWorkInterface;
+use src\shared\traits\DispatchesDomainEvents;
 use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
@@ -27,12 +28,13 @@ use function core\is_true;
 class PgAsistenteRepository extends ClaseRepository implements AsistenteRepositoryInterface
 {
     use HandlesPdoErrors;
+    use DispatchesDomainEvents;
 
-    protected EventBusInterface $eventBus;
+    protected UnitOfWorkInterface $unitOfWork;
 
-    public function __construct(EventBusInterface $eventBus)
+    public function __construct(UnitOfWorkInterface $unitOfWork)
     {
-        $this->eventBus = $eventBus;
+        $this->unitOfWork = $unitOfWork;
         $oDbl = $GLOBALS['oDBE'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBE_Select'];
@@ -124,10 +126,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
 
         if ($success && $datosActuales) {
             // Marcar como eliminada
-            $Asistente->marcarComoEliminada($datosActuales);
-
-            // Despachar eventos
-            $this->dispatchDomainEvents($Asistente);
+            $this->markAsDeleted($Asistente, $datosActuales);
         }
 
         return $success;
@@ -182,13 +181,10 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         if ($success) {
             // Marcar evento de dominio
             if ($bInsert) {
-                $Asistente->marcarComoNueva($datosActuales);
+                $this->markAsNew($Asistente,$datosActuales);
             } else {
-                $Asistente->marcarComoModificada($datosActuales);
+                $this->markAsModified($Asistente,$datosActuales);
             }
-
-            // Despachar eventos
-            $this->dispatchDomainEvents($Asistente);
         }
 
         return $success;
@@ -245,15 +241,5 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
     public function findByPk(AsistentePk $pk): ?Asistente
     {
         return $this->findById($pk->IdActiv(), $pk->IdNom());
-    }
-
-    /**
-     * Despacha los eventos de dominio de una entidad
-     */
-    private function dispatchDomainEvents(Asistente $asistente): void
-    {
-        foreach ($asistente->pullDomainEvents() as $event) {
-            $this->eventBus->dispatch($event);
-        }
     }
 }

@@ -126,7 +126,7 @@ if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
         $aWhere['id_ctr'] = $id_ubi;
         if (!isset($aOperador)) $aOperador = [];
         $GesPersonas = new GestorPersonaDl();
-        $cPersonas2 = $GesPersonas->getPersonasDl($aWhere, $aOperador);
+        $cPersonas2 = $GesPersonas->getPersonas($aWhere, $aOperador);
         if (is_array($cPersonas2) && count($cPersonas2) >= 1) {
             if (is_array($cPersonas)) {
                 $cPersonas = $cPersonas + $cPersonas2;

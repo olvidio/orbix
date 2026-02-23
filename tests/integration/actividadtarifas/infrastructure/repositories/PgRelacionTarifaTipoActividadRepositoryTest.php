@@ -133,7 +133,7 @@ class PgRelacionTarifaTipoActividadRepositoryTest extends myTest
 
     public function test_get_relacion_tarifas_tipo_activides_sin_filtros()
     {
-        $result = $this->repository->getRelacionTarifasTipoActivides();
+        $result = $this->repository->getTipoActivTarifas();
         
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada

@@ -41,7 +41,7 @@ abstract class PgPersonaDlRepositoryBase extends ClaseRepository
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array Una colección de objetos de tipo PersonaDl o subtipos
      */
-    public function getPersonasDl(array $aWhere = [], array $aOperators = []): array
+    public function getPersonas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

@@ -47,14 +47,27 @@ class PdoUnitOfWork implements UnitOfWorkInterface
     /**
      * Registra una entidad para despachar sus eventos
      *
+     * Si NO estamos en una transacción, despacha los eventos inmediatamente.
+     * Si estamos en una transacción, los eventos se despacharán en el commit.
+     *
      * @param object $entity
      * @return void
      */
     public function registerEntity(object $entity): void
     {
         // Solo registrar si la entidad tiene el método pullDomainEvents
-        if (method_exists($entity, 'pullDomainEvents')) {
+        if (!method_exists($entity, 'pullDomainEvents')) {
+            return;
+        }
+
+        if ($this->inTransaction) {
+            // Dentro de transacción: registrar para despachar en commit
             $this->entities[] = $entity;
+        } else {
+            // Fuera de transacción: despachar inmediatamente
+            foreach ($entity->pullDomainEvents() as $event) {
+                $this->eventBus->dispatch($event);
+            }
         }
     }
 

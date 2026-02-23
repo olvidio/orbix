@@ -49,7 +49,7 @@ class PersonaFinderService
         $aWhere = ['id_nom' => $id_nom, 'situacion' => 'A'];
 
         // Buscar primero en PersonaDl
-        $cPersonas = $this->personaDlRepository->getPersonasDl($aWhere);
+        $cPersonas = $this->personaDlRepository->getPersonas($aWhere);
         if (count($cPersonas) > 0 && $cPersonas[0] !== null) {
             return $cPersonas[0];
         }
@@ -89,7 +89,7 @@ class PersonaFinderService
                     $resultado = $this->personaExRepository->getPersonas($aWhere);
                 } else {
                     $this->personaDlRepository->setoDbl($oDB);
-                    $resultado = $this->personaDlRepository->getPersonasDl($aWhere);
+                    $resultado = $this->personaDlRepository->getPersonas($aWhere);
                 }
 
                 if (!empty($resultado)) {

@@ -165,7 +165,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         */
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($iid_activ);
-        $iid_tipo_activ = $oActividad->getIdTipoActividadVo()->value();
+        $iid_tipo_activ = $oActividad->getIdTipoActivVo()->value();
         $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
         $oTipoDeActividad = $TipoDeActividadRepository->findById($iid_tipo_activ);
 

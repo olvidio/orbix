@@ -9,7 +9,7 @@ use PDO;
 use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
-use src\shared\domain\contracts\EventBusInterface;
+use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\HandlesPdoErrors;
 use web\Desplegable;
 use function core\is_true;
@@ -28,9 +28,9 @@ class PgAsistenteExRepository extends PgAsistenteRepository implements Asistente
 {
     use HandlesPdoErrors;
 
-    public function __construct(EventBusInterface $eventBus)
+    public function __construct(UnitOfWorkInterface $unitOfWork)
     {
-        parent::__construct($eventBus);
+        parent::__construct($unitOfWork);
         $oDbl = $GLOBALS['oDBER'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBER_Select'];
