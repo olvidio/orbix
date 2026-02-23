@@ -82,7 +82,7 @@ if (!empty($Qapellido1)) {
 
         $i++;
         $a_valores[$i]['sel'] = "$id_nom";
-        $a_valores[$i][4] = $id_nom;
+        $a_valores[$i][5] = $id_nom;
         $a_valores[$i][1] = $apellidos_nombre;
         $a_valores[$i][2] = $dl;
         $a_valores[$i][3] = "";

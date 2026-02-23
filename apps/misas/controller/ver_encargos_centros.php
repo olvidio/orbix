@@ -3,14 +3,15 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ViewTwig;
-use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
-use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
-use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
-use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
-use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
-use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use encargossacd\model\entity\Encargo;
+use encargossacd\model\entity\GestorEncargo;
+use encargossacd\model\entity\GestorEncargoTipo;
+use misas\domain\repositories\EncargoCtrRepository;
 use web\Desplegable;
 use web\Hash;
+use ubis\model\entity\GestorCentroEllos;
+use ubis\model\entity\GestorCentroEllas;
+use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -24,9 +25,9 @@ $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $columns_cuadricula = [
 //   ["id" => "id_item", "name" => "Id Item", "field" => "id_item", "width" => 100, "cssClass" => "cell-title"],
 //    ["id" => "id_encargo", "name" => "Id Encargo", "field" => "id_encargo", "width" => 50, "cssClass" => "cell-title"],
-    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
 //    ["id" => "id_centro", "name" => "Id Centro", "field" => "id_centro", "width" => 100, "cssClass" => "cell-title"],
     ["id" => "centro", "name" => "Centro", "field" => "centro", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
 ];
 
 $data_cuadricula = [];
@@ -34,21 +35,20 @@ $data_cuadricula = [];
 $aCentros = [];
 if (isset($Qid_zona)) {
     $aWhere = [];
-    $aWhere['active'] = 't';
+    $aWhere['status'] = 't';
     $aWhere['id_zona'] = $Qid_zona;
     $aWhere['_ordre'] = 'nombre_ubi';
-    $GesCentrosSv = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
-    $cCentrosSv = $GesCentrosSv->getCentros($aWhere);
-    $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+    $GesCentrossv = new GestorCentroEllos();
+    $cCentrossv = $GesCentrossv->getCentros($aWhere);
+    $GesCentrosSf = new GestorCentroEllas();
     $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-    $cCentros = array_merge($cCentrosSv, $cCentrosSf);
-
-    $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
+    $cCentros = array_merge($cCentrossv, $cCentrosSf);
+    
     foreach ($cCentros as $oCentro) {
         $id_ubi = $oCentro->getId_ubi();
         $nombre_ubi = $oCentro->getNombre_ubi();
 
-        $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
+        $EncargoCtrRepository = new EncargoCtrRepository();
         $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($id_ubi);
         foreach ($cEncargosCtr as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();
@@ -56,14 +56,14 @@ if (isset($Qid_zona)) {
             $data_cols = [];
             $data_cols["id_item"] = $id_item;
             $data_cols["id_encargo"] = $id_enc;
-            $oEncargo = $EncargoRepository->findById($id_enc);
+            $oEncargo = new Encargo($id_enc);
             $desc_enc = $oEncargo->getDesc_enc();
             $data_cols["encargo"] = $desc_enc;
             $data_cols["id_centro"] = $id_ubi;
             $data_cols["centro"] = $nombre_ubi;
             $data_cuadricula[] = $data_cols;
         }
-    }
+    }    
 }
 
 $json_columns_cuadricula = json_encode($columns_cuadricula);
@@ -96,13 +96,13 @@ $aWhere = [];
 $aOperador = [];
 $aWhere['id_tipo_enc'] = '^' . $grupo;
 $aOperador['id_tipo_enc'] = '~';
-$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
-$cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
+$oGesEncargoTipo = new GestorEncargoTipo();
+$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
 
 $a_tipo_enc = [];
 $posibles_encargo_tipo = [];
 foreach ($cEncargoTipos as $oEncargoTipo) {
-    if ($oEncargoTipo->getId_tipo_enc() >= 8100) {
+    if ($oEncargoTipo->getId_tipo_enc()>=8100) {
         $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
         $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
     }
@@ -116,7 +116,8 @@ $aWhere['id_tipo_enc'] = $cond_tipo_enc;
 $aOperador['id_tipo_enc'] = 'ANY';
 $aWhere['id_zona'] = $Qid_zona;
 
-$cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
+$GesEncargos = new GestorEncargo();
+$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
 foreach ($cEncargos as $oEncargo) {
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();
@@ -127,24 +128,24 @@ $oDesplEncargos = new Desplegable();
 $oDesplEncargos->setNombre('id_enc');
 $oDesplEncargos->setOpciones($aEncargos);
 
-$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-$aOpciones = $ZonaRepository->getArrayZonas();
+$oGestorZonaCtr = new GestorZona();
+$aOpciones = $oGestorZonaCtr->getArrayZonas();
 $oDesplZonasCtr = new Desplegable();
 $oDesplZonasCtr->setOpciones($aOpciones);
 $oDesplZonasCtr->setBlanco(FALSE);
-$oDesplZonasCtr->setNombre('id_zona_ctr');
+$oDesplZonasCtr->setNombre('id_zona_enc');
 $oDesplZonasCtr->setOpcion_sel($Qid_zona);
-$oDesplZonasCtr->setAction('fnjs_prepara_select_ctr()');
+$oDesplZonasCtr->setAction('fnjs_prepara_select_encargo()');
 
 $aWhere = [];
-$aWhere['active'] = 't';
+$aWhere['status'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosSv = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
-$cCentrosSv = $GesCentrosSv->getCentros($aWhere);
-$GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+$GesCentrossv = new GestorCentroEllos();
+$cCentrossv = $GesCentrossv->getCentros($aWhere);
+$GesCentrosSf = new GestorCentroEllas();
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-$cCentros = array_merge($cCentrosSv, $cCentrosSf);
+$cCentros = array_merge($cCentrossv, $cCentrosSf);
 
 $aCentros = [];
 foreach ($cCentros as $oCentro) {
@@ -158,11 +159,11 @@ $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setOpciones($aCentros);
 
-$url_desplegable_ctr = 'apps/misas/controller/desplegable_ctr.php';
-$oHash_desplegable_ctr = new Hash();
-$oHash_desplegable_ctr->setUrl($url_desplegable_ctr);
-$oHash_desplegable_ctr->setCamposForm('id_zona!id_ctr!ctr_otras_zonas');
-$h_desplegable_ctr = $oHash_desplegable_ctr->linkSinVal();
+$url_desplegable_encargos = 'apps/misas/controller/desplegable_encargos.php';
+$oHash_desplegable_encargos = new Hash();
+$oHash_desplegable_encargos->setUrl($url_desplegable_encargos);
+$oHash_desplegable_encargos->setCamposForm('id_zona!id_enc');
+$h_desplegable_encargos = $oHash_desplegable_encargos->linkSinVal();
 
 $url_update_encargos_zona = 'apps/misas/controller/update_encargos_centros.php';
 $oHashEncargosZona = new Hash();
@@ -178,8 +179,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ver_encargos_centros' => $url_ver_encargos_centros,
     'h_borrar_encargos_centros' => $h_borrar_encargos_centros,
     'url_update_encargos_centros' => $url_update_encargos_centros,
-    'url_desplegable_ctr' => $url_desplegable_ctr,
-    'h_desplegable_ctr' => $h_desplegable_ctr,
+    'url_desplegable_encargos' => $url_desplegable_encargos,
+    'h_desplegable_encargos' => $h_desplegable_encargos,
     'oDesplZonasCtr' => $oDesplZonasCtr,
     'oDesplCentros' => $oDesplCentros,
     'oDesplEncargos' => $oDesplEncargos,

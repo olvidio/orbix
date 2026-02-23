@@ -1,20 +1,24 @@
 <?php
 
 
-use core\ConfigGlobal;
-use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
-use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
-use src\misas\application\services\InicialesSacdService;
-use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
-use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
-use src\misas\domain\value_objects\EncargoDiaStatus;
-use src\shared\domain\value_objects\DateTimeLocal;
-use src\ubis\domain\entity\Ubi;
-use src\usuarios\domain\contracts\RoleRepositoryInterface;
-use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
-
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use encargossacd\model\entity\Encargo;
+use encargossacd\model\entity\EncargoTipo;
+use misas\domain\entity\EncargoDia;
+use misas\domain\entity\InicialesSacd;
+use misas\domain\repositories\EncargoCtrRepository;
+use misas\domain\repositories\EncargoDiaRepository;
+use personas\model\entity\PersonaSacd;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
+use ubis\model\entity\Ubi;
+use web\DateTimeLocal;
+use zonassacd\model\entity\GestorZona;
+
+//use personas\model\entity\GestorPersona;
+//use web\Desplegable;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -22,22 +26,23 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 $id_usuario = ConfigGlobal::mi_id_usuario();
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$UsuarioRepository = new UsuarioRepository();
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
-$id_sacd = $oMiUsuario->getCsvIdPauAsString();
+$id_sacd = $oMiUsuario->getId_pauAsString();
 $id_role = $oMiUsuario->getId_role();
-$ZonasRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-$cZonas = $ZonasRepository->getZonas(array('id_nom' => $id_sacd));
-$jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 
 
-$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
+$RoleRepository = new RoleRepository();
 $aRoles = $RoleRepository->getArrayRoles();
 //echo $aRoles[$id_role];
 $role = '';
+$jefe_zona = false;
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     $role = 'sacd';
+    $GesZonas = new GestorZona();
+    $cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+    $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 }
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro sv' || $aRoles[$id_role] === 'Centro sf')) {
@@ -51,10 +56,10 @@ $Qorden = (string)filter_input(INPUT_POST, 'orden');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-//echo 'id_ubi: ' . $Qid_ubi . '<br>';
+//echo 'id_ubi: '.$Qid_ubi.'<br>';
 switch ($Qperiodo) {
     case "esta_semana":
-        $dia_week = (int)date('N');
+        $dia_week = date('N');
         $dia_week--;
         if ($dia_week === -1) {
             $dia_week = 6;
@@ -83,8 +88,8 @@ switch ($Qperiodo) {
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
     case "este_mes":
-        $este_mes = (int)date('m');
-        $anyo = (int)date('Y');
+        $este_mes = date('m');
+        $anyo = date('Y');
         $empiezamin = new DateTimeLocal(date($anyo . '-' . $este_mes . '-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         $siguiente_mes = (int)$este_mes + 1;
@@ -99,7 +104,7 @@ switch ($Qperiodo) {
 
     case "proximo_mes":
         $proximo_mes = (int)date('m') + 1;
-        $anyo = (int)date('Y');
+        $anyo = date('Y');
         if ($proximo_mes == 13) {
             $proximo_mes = 1;
             $anyo++;
@@ -163,15 +168,14 @@ foreach ($date_range as $date) {
     echo '<TH class=cell-title style:"width:60px">' . $nom_dia2 . '</TH>';
 }
 $data_cuadricula = [];
+$lista_sacd=[];
+$nombre_sacd=[];
 
-$EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
+$EncargoCtrRepository = new EncargoCtrRepository();
 $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
-$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
-$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
-$InicialesSacdService = $GLOBALS['container']->get(InicialesSacdService::class);
 foreach ($cEncargosCtr as $oEncargoCtr) {
     $id_enc = $oEncargoCtr->getId_enc();
-    $oEncargo = $EncargoRepository->findBYId($id_enc);
+    $oEncargo = new Encargo($id_enc);
     $desc_enc = $oEncargo->getDesc_enc();
     $id_ubi = $oEncargo->getId_ubi();
     $id_tipo_enc = $oEncargo->getId_tipo_enc();
@@ -193,7 +197,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
     }
 
     if (!empty($id_tipo_enc)) {
-        $oEncargoTipo = $EncargoTipoRepository->findById($id_tipo_enc);
+        $oEncargoTipo = new EncargoTipo($id_tipo_enc);
         $tipo_enc = $oEncargoTipo->getTipo_enc();
     } else {
         $tipo_enc = '';
@@ -201,7 +205,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 
     foreach ($date_range as $date) {
         $iniciales = ' -- ';
-        $status = EncargoDiaStatus::STATUS_COMUNICADO_CTR;
+        $status = EncargoDia::STATUS_COMUNICADO_CTR;
 
         $id_dia = $date->format('Y-m-d');
 
@@ -216,7 +220,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
         $aOperador = [
             'tstart' => 'BETWEEN',
         ];
-        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+        $EncargoDiaRepository = new EncargoDiaRepository();
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
         foreach ($cEncargosDia as $oEncargoDia) {
@@ -238,7 +242,12 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             if ($hora_fin !== '') {
                 $dia_y_hora .= '-' . $hora_fin;
             }
-            $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
+            $InicialesSacd = new InicialesSacd();
+            $iniciales = $InicialesSacd->iniciales($id_nom);
+            $lista_sacd[$id_nom]=$iniciales;
+            $PersonaSacd = new PersonaSacd($id_nom);
+            $sacd = $PersonaSacd->getNombreApellidos();
+            $nombre_sacd[$id_nom]=$sacd;
             $color = '';
 
             $meta_dia["$id_dia"] = [
@@ -257,16 +266,15 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             $data_cols["$id_dia"] = $iniciales;
         }
 
-        if (($jefe_zona) || (($role == 'ctr') && ($status == EncargoDiaStatus::STATUS_COMUNICADO_CTR)) || (($role == 'sacd') && (($status == EncargoDiaStatus::STATUS_COMUNICADO_SACD) || ($status == EncargoDiaStatus::STATUS_COMUNICADO_CTR)))) {
+        if (($jefe_zona) || (($role === 'ctr')
+                && ($status === EncargoDia::STATUS_COMUNICADO_CTR)) || (($role === 'sacd')
+                && (($status === EncargoDia::STATUS_COMUNICADO_SACD) || ($status === EncargoDia::STATUS_COMUNICADO_CTR))))
+        {
             echo '<TD>' . $iniciales . '</TD>';
         } else {
-            if (($jefe_zona) || (($role === 'ctr')
-                    && ($status === EncargoDiaStatus::STATUS_COMUNICADO_CTR)) || (($role === 'sacd')
-                    && (($status === EncargoDiaStatus::STATUS_COMUNICADO_SACD) || ($status === EncargoDiaStatus::STATUS_COMUNICADO_CTR)))) {
-                echo '<TD>' . $iniciales . '</TD>';
-            } else {
-                echo '<TD> -- </TD>';
-            }
+            echo '<TD> -- </TD>';
+        }
+
 
 //        $data_cols["dia"] = $dia_y_hora;
 //        $data_cols["observaciones"] = $observ;
@@ -277,23 +285,33 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 //        $data_cols["encargo"] = $desc_enc;
 
 
-        }
-        $data_cuadricula[] = $data_cols;
     }
-
-    echo '</TR>';
-    echo '</TABLE>';
-
-
-    $json_columns_cuadricula = json_encode($columns_cuadricula);
-    $json_data_cuadricula = json_encode($data_cuadricula);
-
-
-    $a_campos = ['oPosicion' => $oPosicion,
-        'json_columns_cuadricula' => $json_columns_cuadricula,
-        'json_data_cuadricula' => $json_data_cuadricula,
-    ];
+    $data_cuadricula[] = $data_cols;
 }
+
+echo '</TR>';
+echo '</TABLE>';
+
+echo '<TABLE>';
+echo '<TR>';
+echo '<TD>';
+asort($lista_sacd);
+foreach($lista_sacd as $id=>$iniciales) {
+    echo $iniciales.': '.$nombre_sacd[$id].'  ';
+}
+echo '</TD>';
+echo '</TR>';
+echo '</TABLE>';
+
+
+//$json_columns_cuadricula = json_encode($columns_cuadricula);
+//$json_data_cuadricula = json_encode($data_cuadricula);
+
+
+//$a_campos = ['oPosicion' => $oPosicion,
+//    'json_columns_cuadricula' => $json_columns_cuadricula,
+//    'json_data_cuadricula' => $json_data_cuadricula,
+//];
 
 //$oView = new ViewTwig('misas/controller');
 //echo $oView->render('ver_plan_ctr.html.twig', $a_campos);
