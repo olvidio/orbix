@@ -25,9 +25,9 @@ $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $columns_cuadricula = [
 //   ["id" => "id_item", "name" => "Id Item", "field" => "id_item", "width" => 100, "cssClass" => "cell-title"],
 //    ["id" => "id_encargo", "name" => "Id Encargo", "field" => "id_encargo", "width" => 50, "cssClass" => "cell-title"],
-["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
 //    ["id" => "id_centro", "name" => "Id Centro", "field" => "id_centro", "width" => 100, "cssClass" => "cell-title"],
     ["id" => "centro", "name" => "Centro", "field" => "centro", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
 ];
 
 $data_cuadricula = [];
@@ -133,9 +133,9 @@ $aOpciones = $oGestorZonaCtr->getArrayZonas();
 $oDesplZonasCtr = new Desplegable();
 $oDesplZonasCtr->setOpciones($aOpciones);
 $oDesplZonasCtr->setBlanco(FALSE);
-$oDesplZonasCtr->setNombre('id_zona_ctr');
+$oDesplZonasCtr->setNombre('id_zona_enc');
 $oDesplZonasCtr->setOpcion_sel($Qid_zona);
-$oDesplZonasCtr->setAction('fnjs_prepara_select_ctr()');
+$oDesplZonasCtr->setAction('fnjs_prepara_select_encargo()');
 
 $aWhere = [];
 $aWhere['status'] = 't';
@@ -159,11 +159,11 @@ $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setOpciones($aCentros);
 
-$url_desplegable_ctr = 'apps/misas/controller/desplegable_ctr.php';
-$oHash_desplegable_ctr = new Hash();
-$oHash_desplegable_ctr->setUrl($url_desplegable_ctr);
-$oHash_desplegable_ctr->setCamposForm('id_zona!id_ctr!ctr_otras_zonas');
-$h_desplegable_ctr = $oHash_desplegable_ctr->linkSinVal();
+$url_desplegable_encargos = 'apps/misas/controller/desplegable_encargos.php';
+$oHash_desplegable_encargos = new Hash();
+$oHash_desplegable_encargos->setUrl($url_desplegable_encargos);
+$oHash_desplegable_encargos->setCamposForm('id_zona!id_enc');
+$h_desplegable_encargos = $oHash_desplegable_encargos->linkSinVal();
 
 $url_update_encargos_zona = 'apps/misas/controller/update_encargos_centros.php';
 $oHashEncargosZona = new Hash();
@@ -179,8 +179,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ver_encargos_centros' => $url_ver_encargos_centros,
     'h_borrar_encargos_centros' => $h_borrar_encargos_centros,
     'url_update_encargos_centros' => $url_update_encargos_centros,
-    'url_desplegable_ctr' => $url_desplegable_ctr,
-    'h_desplegable_ctr' => $h_desplegable_ctr,
+    'url_desplegable_encargos' => $url_desplegable_encargos,
+    'h_desplegable_encargos' => $h_desplegable_encargos,
     'oDesplZonasCtr' => $oDesplZonasCtr,
     'oDesplCentros' => $oDesplCentros,
     'oDesplEncargos' => $oDesplEncargos,

@@ -21,11 +21,11 @@ $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
 $Qid_ctr = (integer)filter_input(INPUT_POST, 'id_ctr');
 
 //echo 'id_item: '.$Qid_item.'<br>';
+//echo $Qid_enc.'-->'.$Qid_ctr.'<br>';
 
 $error_txt = '';
 
 if ($Qque === 'nuevo') {
-//    echo $Qid_enc.'-->'.$Qid_ctr.'<br>';
     $Uuid = new EncargoCtrId(RamseyUuid::uuid4()->toString());
     $EncargoCtrRepository = new EncargoCtrRepository();
     $EncargoCtr = new EncargoCtr();
