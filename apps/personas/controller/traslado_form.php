@@ -35,16 +35,10 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $id_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 }
 
-if (empty($Qobj_pau)) {
-    $oPersona = Persona::findPersonaEnGlobal($id_pau);
-} else {
-    $obj = 'personas\\model\\entity\\' . $Qobj_pau;
-    $oPersona = new $obj($id_pau);
-}
-
+$oPersona = Persona::findPersonaEnGlobal($id_pau);
 if (!is_object($oPersona)) {
-    $msg_err = "<br>No encuentro a nadie con id_nom: $id_pau en " . __FILE__ . ": line " . __LINE__;
-    exit($msg_err);
+    $msg_err = "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ": line " . __LINE__;
+    exit ($msg_err);
 }
 
 if (get_class($oPersona) === PersonaPub::class) {
@@ -57,6 +51,7 @@ $aOpciones = $gesCentroDl->getArrayCentros($sCondicion);
 $oDesplCentroDl = new Desplegable();
 $oDesplCentroDl->setNombre('new_ctr');
 $oDesplCentroDl->setOpciones($aOpciones);
+$oDesplCentroDl->setBlanco(true);
 
 $oDesplDlyR = DelegacionDropdown::listaRegDele(FALSE, 'new_dl'); // False para no incluir mi propia dl en la lista
 
@@ -79,6 +74,7 @@ $hoy = $oHoy->getFromLocal();
 $oHash = new Hash();
 $oHash->setCamposForm('new_ctr!f_ctr!new_dl!f_dl!situacion');
 $a_camposHidden = array(
+    'obj_pau' => $Qobj_pau,
     'id_pau' => $id_pau,
     'id_ctr_o' => $id_ctr,
     'ctr_o' => $nombre_ctr,

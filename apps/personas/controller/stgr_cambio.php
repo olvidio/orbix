@@ -12,6 +12,13 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ViewPhtml;
+use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -35,53 +42,48 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 switch ($id_tabla) {
-    case "n":
-        $obj_pau = "PersonaN";
+    case 'n':
+        $repo = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
         break;
     case "x":
-        $obj_pau = "PersonaNax";
+        $repo = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
         break;
     case "a":
-        $obj_pau = "PersonaAgd";
+        $repo = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
         break;
     case "s":
-        $obj_pau = "PersonaS";
+        $repo = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
         break;
     case "cp_sss":
-        $obj_pau = "PersonaSSSC";
+        $repo = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
         break;
     case "pn":
     case "pa":
-        $obj_pau = "PersonaEx";
+        $repo = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
         break;
 }
 
-
 // según sean numerarios...
-$obj = 'personas\\model\\entity\\' . $obj_pau;
-$oPersona = new $obj($id_nom);
+$repository = new $repo;
+$oPersona = $repository->findById($id_nom);
 
 $nom = $oPersona->getNombreApellidos();
 $stgr = $oPersona->getNivel_stgr();
 
 //posibles valores de stgr
-$tipos = array("n" => _("no cursa est."),
-    "b" => _("bienio"),
-    "c1" => _("cuadrienio año I"),
-    "c2" => _("cuadrienio año II-IV"),
-    "r" => _("repaso"),
-);
+$NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
+$aNivelStgr = $NivelStgrRepository->getArrayNivelesStgr();
 
 $oDespl = new Desplegable();
-$oDespl->setNombre('stgr');
-$oDespl->setOpciones($tipos);
+$oDespl->setNombre('nivel_stgr');
+$oDespl->setOpciones($aNivelStgr);
 $oDespl->setOpcion_sel($stgr);
 $oDespl->setBlanco(true);
 
 $oHash = new Hash();
-$oHash->setCamposForm('stgr');
+$oHash->setCamposForm('nivel_stgr');
 $a_camposHidden = array(
-    'obj_pau' => $obj_pau,
+    'id_tabla' => $id_tabla,
     'id_nom' => $id_nom
 );
 $oHash->setArraycamposHidden($a_camposHidden);

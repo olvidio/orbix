@@ -93,7 +93,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $sQuery = "SELECT nivel_stgr,desc_breve || '(' || desc_nivel || ')' FROM $nom_tabla ORDER BY orden";
+        $sQuery = "SELECT nivel_stgr,desc_breve || ' (' || desc_nivel || ')' FROM $nom_tabla ORDER BY orden";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         $aOpciones = [];
         foreach ($stmt as $aClave) {

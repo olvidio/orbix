@@ -48,6 +48,9 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
             $oPersonaDl = $PersonaDlRepository->findById($id_nom);
+            if ($oPersonaDl === null) {
+                continue;
+            }
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
             $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
             $aAp1[] = $oPersonaDl->getApellido1();

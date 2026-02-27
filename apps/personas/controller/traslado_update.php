@@ -2,8 +2,14 @@
 
 use core\ConfigGlobal;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\entity\Dossier;
 use src\dossiers\domain\value_objects\DossierPk;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\Traslado;
 use src\personas\domain\TrasladoDl;
@@ -24,13 +30,40 @@ require_once("apps/core/global_object.inc");
 $error = '';
 
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-$oPersonaDl = $PersonaDlRepository->findById($Qid_pau);
+
+switch ($Qobj_pau) {
+    case 'PersonaN':
+        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        break;
+    case 'PersonaNax':
+        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+        break;
+    case 'PersonaAgd':
+        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+        break;
+    case 'PersonaS':
+        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+        break;
+    case 'PersonaSSSC':
+        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+        break;
+    case 'PersonaEx':
+        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+        break;
+    default:
+        echo "No existe la clase de la persona";
+        die();
+}
+
+
+$oPersona = $repoPersona->findById($Qid_pau);
 
 //centro
 $Qnew_ctr = (string)filter_input(INPUT_POST, 'new_ctr');
 $Qf_ctr = (string)filter_input(INPUT_POST, 'f_ctr');
+$oF_ctr = DateTimeLocal::createFromLocal($Qf_ctr);
 
 if (!empty($Qnew_ctr) && !empty($Qf_ctr)) {
     $Qid_ctr_o = (string)filter_input(INPUT_POST, 'id_ctr_o');
@@ -41,19 +74,18 @@ if (!empty($Qnew_ctr) && !empty($Qf_ctr)) {
     $oCentro = $CentroRepository->findById($id_new_ctr);
     $nom_new_ctr = $oCentro->getNombre_ubi();
 
-    $oPersonaDl->setId_ctr($id_new_ctr);
+    $oPersona->setId_ctr($id_new_ctr);
     // ?? $oPersonaDl->setF_ctr($Qf_ctr);
-    if ($PersonaDlRepository->Guardar($oPersonaDl) === false) {
+    if ($repoPersona->Guardar($oPersona) === false) {
         $error .= '<br>' . _("hay un error, no se ha guardado");
     }
 
     //para el dossier de traslados
     $TrasladoRepository = $GLOBALS['container']->get(TrasladoRepositoryInterface::class);
-    $newIdItem = $PersonaDlRepository->newId();
+    $newIdItem = $TrasladoRepository->getNewId();
     $oTraslado = new Traslado();
     $oTraslado->setId_item($newIdItem);
     $oTraslado->setId_nom($Qid_pau);
-    $oF_ctr = new DateTimeLocal($Qf_ctr);
     $oTraslado->setF_traslado($oF_ctr);
     $oTraslado->setTipo_cmb('sede');
     $oTraslado->setId_ctr_origen($Qid_ctr_o);
@@ -66,7 +98,7 @@ if (!empty($Qnew_ctr) && !empty($Qf_ctr)) {
 }
 
 //cambio de dl
-$old_dl = $oPersonaDl->getDl();
+$old_dl = $oPersona->getDl();
 $Qnew_dl = (string)filter_input(INPUT_POST, 'new_dl');
 $Qf_dl = (string)filter_input(INPUT_POST, 'f_dl');
 $Qsituacion = (string)filter_input(INPUT_POST, 'situacion');
@@ -93,6 +125,12 @@ if (!empty($Qnew_dl) && !empty($Qf_dl)) {
 // hay que abrir el dossier para esta persona/actividad/ubi, si no tiene.
 $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_pau, 'id_tipo_dossier' => 1004]));
+if ($oDossier === null) {
+    $oDossier = new Dossier();
+    $oDossier->setTabla('p');
+    $oDossier->setId_pau($Qid_pau);
+    $oDossier->setId_tipo_dossier(1004);
+}
 $oDossier->abrir();
 $DosierRepository->Guardar($oDossier);
 

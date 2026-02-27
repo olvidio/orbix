@@ -39,8 +39,7 @@ class Select3005
     private $bloque;
 
     // ---------- Variables requeridas
-    /* @var $queSel integer */
-    private $queSel;
+    private string $queSel;
     /* @var $id_dossier integer */
     private $id_dossier;
     /* @var $pau string */

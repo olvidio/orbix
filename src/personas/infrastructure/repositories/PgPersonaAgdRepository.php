@@ -104,7 +104,7 @@ class PgPersonaAgdRepository extends PgPersonaDlRepositoryBase implements Person
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-        /**
+    /**
      * Busca la clase con id_nom en la base de datos .
      */
     public function findById(int $id_nom): ?PersonaAgd

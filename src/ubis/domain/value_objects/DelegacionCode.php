@@ -4,19 +4,22 @@ namespace src\ubis\domain\value_objects;
 
 final class DelegacionCode
 {
-    private string $value;
+    private ?string $value;
 
-    public function __construct(string $value)
+    public function __construct(?string $value)
     {
-        $value = trim($value);
+        $value = $value !== null ? trim($value) : null;
+        if ($value === '') {
+            $value = null;
+        }
         $this->validate($value);
         $this->value = $value;
     }
 
-    private function validate(string $value): void
+    private function validate(?string $value): void
     {
-        if ($value === '') {
-            throw new \InvalidArgumentException('DelegacionCode cannot be empty');
+        if ($value === null) {
+            return;
         }
         // By UI convention for codes, cap length to 6 unless otherwise specified
         if (mb_strlen($value) > 8) {
@@ -28,14 +31,14 @@ final class DelegacionCode
         }
     }
 
-    public function value(): string
+    public function value(): ?string
     {
         return $this->value;
     }
 
     public function __toString(): string
     {
-        return $this->value;
+        return (string) $this->value;
     }
 
     public function equals(DelegacionCode $other): bool
@@ -50,6 +53,15 @@ final class DelegacionCode
 
     public static function fromNullableString(?string $value): ?self
     {
-        return $value !== null ? new self($value) : null;
+        if ($value === null) {
+            return null;
+        }
+
+        $value = trim($value);
+        if ($value === '') {
+            return null;
+        }
+
+        return new self($value);
     }
 }

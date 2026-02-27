@@ -185,13 +185,13 @@ class Asignatura
     }
 
 
-    public function getNombre_signatura(): string
+    public function getNombre_asignatura(): string
     {
         return $this->nombre_signatura->value();
     }
 
 
-    public function setNombre_signatura(string $nombre_asignatura): void
+    public function setNombre_asignatura(string $nombre_asignatura): void
     {
         $this->nombre_signatura = AsignaturaName::fromNullableString($nombre_asignatura);
     }

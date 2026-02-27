@@ -87,7 +87,7 @@ class PersonaNota
     {
         $nota_corte = $_SESSION['oConfig']->getNotaCorte();
         $aprobada = 'f';
-        if ($this->id_situacion === NotaSituacion::NUMERICA) {
+        if ($this->id_situacion->value() === NotaSituacion::NUMERICA) {
             $nota_num = $this->getNota_num();
             $nota_max = $this->getNota_max();
             // deben ser números.
@@ -98,8 +98,8 @@ class PersonaNota
             }
         } else {
             $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-            $aNotas = $NotaRepository->getArrayNotas();
-            $aprobada = $aNotas[$this->id_situacion->value()];
+            $aNotas = $NotaRepository->getArrayNotasSuperadas();
+            $aprobada = array_key_exists($this->id_situacion->value(), $aNotas) ? 't' : 'f';
         }
         return $aprobada;
     }

@@ -2,6 +2,8 @@
 
 namespace src\personas\domain\entity;
 
+use core\DatosCampo;
+use core\Set;
 use src\personas\domain\value_objects\NombreCentroText;
 use src\personas\domain\value_objects\ObservText;
 use src\personas\domain\value_objects\TrasladoTipoCmbCode;
@@ -21,7 +23,7 @@ class Traslado
 
     private int $id_nom;
 
-   private ?DateTimeLocal $f_traslado = null;
+    private ?DateTimeLocal $f_traslado = null;
 
     private TrasladoTipoCmbCode $tipo_cmb;
 
@@ -184,5 +186,105 @@ class Traslado
         $this->observ = $vo instanceof ObservText
             ? $vo
             : ObservText::fromNullableString($vo);
+    }
+
+    /* ------------------- PARA el mod_tabla  -------------------------------*/
+    public function getPrimary_key()
+    {
+        return 'id_item';
+    }
+
+    public function getDatosCampos(): array
+    {
+        $oSet = new Set();
+        //$oSet->add($this->getDatosId_nom());
+        $oSet->add($this->getDatosF_traslado());
+        $oSet->add($this->getDatosTipoCambio());
+        $oSet->add($this->getDatosCentroOrigen());
+        $oSet->add($this->getDatosIdCentroOrigen());
+        $oSet->add($this->getDatosCentroDestino());
+        $oSet->add($this->getDatosIdCentroDestino());
+        $oSet->add($this->getDatosObserv());
+
+        return $oSet->getTot();
+    }
+
+    private function getDatosF_traslado(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('f_traslado');
+        $oDatosCampo->setMetodoGet('getF_traslado');
+        $oDatosCampo->setMetodoSet('setF_traslado');
+        $oDatosCampo->setEtiqueta(_("fecha traslado"));
+        $oDatosCampo->setTipo('fecha');
+        return $oDatosCampo;
+    }
+
+    private function getDatosTipoCambio(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('tipo_cmb');
+        $oDatosCampo->setMetodoGet('getTipo_cmb');
+        $oDatosCampo->setMetodoSet('setTipo_cmb');
+        $oDatosCampo->setEtiqueta(_("tipo de cambio"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(6);
+        return $oDatosCampo;
+    }
+
+    private function getDatosCentroOrigen(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('ctr_origen');
+        $oDatosCampo->setMetodoGet('getCtr_origen');
+        $oDatosCampo->setMetodoSet('setCtr_origen');
+        $oDatosCampo->setEtiqueta(_("centro origen"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(35);
+        return $oDatosCampo;
+    }
+    private function getDatosIdCentroOrigen(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_ctr_origen');
+        $oDatosCampo->setMetodoGet('getId_ctr_origen');
+        $oDatosCampo->setMetodoSet('setId_ctr_origen');
+        $oDatosCampo->setEtiqueta(_("id centro origen"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(10);
+        return $oDatosCampo;
+    }
+    private function getDatosCentroDestino(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('ctr_destino');
+        $oDatosCampo->setMetodoGet('getCtr_destino');
+        $oDatosCampo->setMetodoSet('setCtr_destino');
+        $oDatosCampo->setEtiqueta(_("centro destino"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(35);
+        return $oDatosCampo;
+    }
+    private function getDatosIdCentroDestino(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_ctr_destino');
+        $oDatosCampo->setMetodoGet('getId_ctr_destino');
+        $oDatosCampo->setMetodoSet('setId_ctr_destino');
+        $oDatosCampo->setEtiqueta(_("id centro destino"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(10);
+        return $oDatosCampo;
+    }
+    private function getDatosObserv(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('observ');
+        $oDatosCampo->setMetodoGet('getObserv');
+        $oDatosCampo->setMetodoSet('setObserv');
+        $oDatosCampo->setEtiqueta(_("observaciones"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(70);
+        return $oDatosCampo;
     }
 }

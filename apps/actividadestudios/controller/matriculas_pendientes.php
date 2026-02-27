@@ -3,6 +3,7 @@
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
@@ -66,6 +67,7 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
 $msg_err = '';
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$PersonaFinderService = $GLOBALS['container']->get(PersonaFinderService::class);
 foreach ($cMatriculasPendientes as $oMatricula) {
     $i++;
     $id_nom = $oMatricula->getId_nom();
@@ -79,7 +81,7 @@ foreach ($cMatriculasPendientes as $oMatricula) {
         continue;
     }
     $nom_activ = $oActividad->getNom_activ();
-    $oPersona = Persona::findPersonaEnGlobal($id_nom);
+    $oPersona = $PersonaFinderService->findPersonaEnGlobal($id_nom);
     if ($oPersona === null) {
         $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         continue;

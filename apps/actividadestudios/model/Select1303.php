@@ -43,8 +43,7 @@ class Select1303
     private string $bloque;
 
     // ---------- Variables requeridas
-    /* @var $queSel integer */
-    private int $queSel;
+    private string $queSel;
     /* @var $id_dossier integer */
     private int $id_dossier;
     /* @var $pau string */
@@ -249,7 +248,10 @@ class Select1303
         $aviso = '';
         // Compruebo si está de repaso...
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $oPersona = $PersonaDlRepository->finById($this->id_pau);
+        $oPersona = $PersonaDlRepository->findById($this->id_pau);
+        if ($oPersona === null) {
+            throw new \Exception(sprintf(_("No se ha encontrado alumno con id_nom: %s"), $this->id_pau));
+        }
         $stgr = $oPersona->getNivel_stgr();
         if ($stgr === 'r') $aviso .= _("está de repaso") . "<br>";
 

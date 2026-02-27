@@ -44,7 +44,6 @@ class Select1010
     private string $bloque;
 
     // ---------- Variables requeridas
-    /* @var $queSel integer */
     private string $queSel;
     /* @var $id_dossier integer */
     private int $id_dossier;

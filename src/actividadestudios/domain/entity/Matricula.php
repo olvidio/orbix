@@ -2,9 +2,9 @@
 
 namespace src\actividadestudios\domain\entity;
 
-use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
 use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\shared\domain\traits\Hydratable;
 use src\actividadestudios\domain\value_objects\Acta;
@@ -22,7 +22,7 @@ class Matricula
     private int $id_nom;
     private ?NotaSituacion $id_situacion = null;
     private ?bool $preceptor = null;
-    private ?NivelStgrId $id_nivel = null;
+    private ?NivelId $id_nivel = null;
     private ?NotaNum $nota_num = null;
     private ?NotaMax $nota_max = null;
     private ?int $id_preceptor = null;
@@ -135,7 +135,7 @@ class Matricula
         return $this->id_nivel?->value();
     }
 
-    public function getIdNivelVo(): ?NivelStgrId
+    public function getIdNivelVo(): ?NivelId
     {
         return $this->id_nivel;
     }
@@ -145,14 +145,14 @@ class Matricula
      */
     public function setId_nivel(?int $id_nivel = null): void
     {
-        $this->id_nivel = NivelStgrId::fromNullableInt($id_nivel);
+        $this->id_nivel = NivelId::fromNullableInt($id_nivel);
     }
 
-    public function setIdNivelVo(NivelStgrId|int|null $valor = null): void
+    public function setIdNivelVo(NivelId|int|null $valor = null): void
     {
-        $this->id_nivel = $valor instanceof NivelStgrId
+        $this->id_nivel = $valor instanceof NivelId
             ? $valor
-            : NivelStgrId::fromNullableInt($valor);
+            : NivelId::fromNullableInt($valor);
     }
 
     /**

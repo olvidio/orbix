@@ -7,7 +7,9 @@ use PDO;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
+use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaGlobal;
+use src\personas\domain\entity\PersonaPub;
 
 /**
  * Servicio de aplicación para búsqueda de personas en múltiples esquemas y repositorios.
@@ -43,8 +45,10 @@ class PersonaFinderService
      *
      * @param int $id_nom ID de la persona a buscar
      * @return PersonaGlobal|null La persona encontrada o null
+     * @phpstan-return PersonaDl|PersonaPub|null
+     * @psalm-return PersonaDl|PersonaPub|null
      */
-    public function findPersonaEnGlobal(int $id_nom): ?PersonaGlobal
+    public function findPersonaEnGlobal(int $id_nom): PersonaDl|PersonaPub|null
     {
         $aWhere = ['id_nom' => $id_nom, 'situacion' => 'A'];
 

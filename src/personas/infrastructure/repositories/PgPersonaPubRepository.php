@@ -34,6 +34,13 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         $this->setNomTabla('v_personas_pub');
     }
 
+    /**
+     * Crea una entidad PersonaPub desde un array de datos
+     */
+    protected function createEntityFromArray(array $aDatos): PersonaPub
+    {
+        return PersonaPub::fromArray($aDatos);
+    }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 

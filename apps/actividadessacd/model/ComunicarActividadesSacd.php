@@ -89,7 +89,7 @@ class ComunicarActividadesSacd
             $s++;
             $id_nom = $oPersona->getId_nom();
             $nom_ap = $oPersona->getPrefApellidosNombre();
-            $idioma = $oPersona->getIdiomaPreferido();
+            $idioma = $oPersona->getIdiomaPreferidoVo()?->value();
 
             $array_actividades[$id_nom]['txt']['com_sacd'] = $oActividadesSacdFunciones->getTraduccion('com_sacd', $idioma);
             $array_actividades[$id_nom]['txt']['t_propio'] = $oActividadesSacdFunciones->getTraduccion('t_propio', $idioma);

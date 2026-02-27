@@ -22,7 +22,7 @@ class InfoTelecoPersona extends DatosInfoRepo
         $this->setTxtBuscar();
         $this->setTxtExplicacion();
 
-        $this->setClase('src\\personas\\domain\\entity\\TelecoPersona');
+        $this->setClase('src\\personas\\domain\\entity\\TelecoPersonaDl');
         $this->setMetodoGestor('getTelecosPersona');
         $this->setPau('p');
 

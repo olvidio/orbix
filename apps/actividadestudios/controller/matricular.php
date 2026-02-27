@@ -11,6 +11,7 @@
  */
 
 use core\ConfigGlobal;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
@@ -58,8 +59,8 @@ $fincurs_ca = core\curso_est("fin", $any)->format('Y-m-d');
 // si no hay id_nom, es para todos los alumnos
 if (!empty($Qid_nom)) {
     $aWhere['id_nom'] = $Qid_nom;
-    $aWhere['stgr'] = 'r';
-    $aOperador['stgr'] = '!=';
+    $aWhere['nivel_stgr'] = NivelStgrId::R;
+    $aOperador['nivel_stgr'] = '!=';
     // miro si es de paso
 
     $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
@@ -82,8 +83,8 @@ if (!empty($Qid_nom)) {
 } else {
     // solo para los de la dl
     $aWhere['situacion'] = 'A';
-    $aWhere['stgr'] = 'r';
-    $aOperador['stgr'] = '!=';
+    $aWhere['nivel_stgr'] = NivelStgrId::R;
+    $aOperador['nivel_stgr'] = '!=';
     $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
     $cAlumnos = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
     $modo_aviso = '';

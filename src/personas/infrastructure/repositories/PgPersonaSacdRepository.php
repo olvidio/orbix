@@ -38,7 +38,7 @@ class PgPersonaSacdRepository extends ClaseRepository implements PersonaSacdRepo
     }
 
     /**
-     * Crea una entidad PersonaAgd desde un array de datos
+     * Crea una entidad PersonaPub desde un array de datos
      */
     protected function createEntityFromArray(array $aDatos): PersonaPub
     {

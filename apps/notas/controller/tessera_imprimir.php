@@ -15,6 +15,7 @@
 /**
  * Funciones más comunes de la aplicación
  */
+
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -29,12 +30,12 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-echo "<script>fnjs_left_side_hide()</script>";
-include_once(ConfigGlobal::$dir_estilos . '/tessera.css.php');
-
 // En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
+
+echo "<script>fnjs_left_side_hide()</script>";
+include_once(ConfigGlobal::$dir_estilos . '/tessera.css.php');
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -76,7 +77,7 @@ $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 // conversion 
 $replace = src\configuracion\domain\entity\Config::$replace;
 
-function titulo($id_asignatura)
+function titulo($id_asignatura, $cara = "")
 {
     $html = '';
     $cabecera = '<tr><td class="space"></td></tr>
@@ -118,7 +119,9 @@ function titulo($id_asignatura)
 				";
             break;
         case 2108:
-            $html = "
+            $html = "";
+            if ($cara === "A") {
+                $html = "
 			</table>
 			</div>
 			<div class=\"A4\">
@@ -131,6 +134,10 @@ function titulo($id_asignatura)
 				<col style=\"width: 1%\">
 				<col style=\"width: 10%\">
 				<col style=\"width: 1%\">
+				";
+
+            }
+            $html .= "
 				$cabecera
 				<tr><td class=\"space\"></td></tr>
 			";
@@ -173,22 +180,26 @@ function data($data)
 
 // -----------------------------
 $rowEmpty = [
-    'id_nivel_asig' => '',
-    'id_nivel' => '',
-    'id_asignatura' => '',
-    'nombre_asignatura' => '',
-    'acta' => '',
-    'fecha' => '',
-    'nota' => '',
+        'id_nivel_asig' => '',
+        'id_nivel' => '',
+        'id_asignatura' => '',
+        'nombre_asignatura' => '',
+        'acta' => '',
+        'fecha' => '',
+        'nota' => '',
 ];
 // -----------------------------  cabecera ---------------------------------
 $caraA = Hash::link('apps/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 $caraB = Hash::link('apps/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 
+$url_pdf = ConfigGlobal::getWeb() . '/apps/notas/controller/tessera_2_mpdf.php';
 $oHash = new Hash();
-$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/notas/controller/tessera_2_mpdf.php');
-$oHash->setCamposForm('id_nom!id_tabla');
-$h = $oHash->linkSinVal();
+$oHash->setUrl($url_pdf);
+$aCamposHidden = ['id_nom' => $id_nom,
+        'id_tabla' => $id_tabla,
+];
+$oHash->setArrayCamposHidden($aCamposHidden);
+$go_pdf = $url_pdf . '?' . $oHash->linkConVal();
 
 ?>
 <table class="no_print">
@@ -203,7 +214,7 @@ $h = $oHash->linkSinVal();
                                  onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span>
         </td>
         <td align="center"><span class=link
-                                 onclick='window.open("<?= ConfigGlobal::getWeb() ?>/apps/notas/controller/tessera_2_mpdf.php?id_nom=<?= $id_nom ?>&id_tabla=<?= $id_tabla ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
+                                 onclick='window.open("<?= $go_pdf ?>", "sele");'>
 <?= _("PDF"); ?></span></td>
     </tr>
 </table>
@@ -335,7 +346,7 @@ $h = $oHash->linkSinVal();
             $clase = "impar";
             $i % 2 ? 0 : $clase = "par";
             $i++;
-            echo titulo($oAsignatura->getId_nivel());
+            echo titulo($oAsignatura->getId_nivel(), $Qcara);
             $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
             ?>
             <tr class="<?= $clase; ?>" valign="bottom">
@@ -359,7 +370,7 @@ $h = $oHash->linkSinVal();
             $clase = "impar";
             $i % 2 ? 0 : $clase = "par";
             $i++;
-            echo titulo($oAsignatura->getId_nivel());
+            echo titulo($oAsignatura->getId_nivel(), $Qcara);
             // para las opcionales
             if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
 
@@ -398,7 +409,7 @@ $h = $oHash->linkSinVal();
                 $clase = "impar";
                 $i % 2 ? 0 : $clase = "par";
                 $i++;
-                echo titulo($oAsignatura->getId_asignatura());
+                echo titulo($oAsignatura->getId_asignatura(),$Qcara);
                 $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
                 ?>
                 <tr class="<?= $clase; ?>">

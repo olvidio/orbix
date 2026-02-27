@@ -211,7 +211,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             $oMin = new stdClass();
             $oMin->id_asignatura = $oAsignatura->getIdAsignaturaVo()->value();
             $oMin->id_nivel = $oAsignatura->getIdNivelVo()->value();
-            $oMin->nombre_asignatura = $oAsignatura->getNombre_signatura();
+            $oMin->nombre_asignatura = $oAsignatura->getNombre_asignatura();
             $oMin->creditos = $oAsignatura->getCreditos();
             $jsonAsignaturas[] = json_encode($oMin);
         }

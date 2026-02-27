@@ -21,7 +21,8 @@ final class IncCode
         if (mb_strlen($value) > 2) {
             throw new \InvalidArgumentException('IncCode must be at most 2 characters');
         }
-        if (!preg_match('/^[A-Za-z0-9]{1,2}$/', $value)) {
+        // aceptar interrogante '?'
+        if ($value !== '?' && !preg_match('/^[A-Za-z0-9]{1,2}$/', $value)) {
             throw new \InvalidArgumentException('IncCode has invalid characters');
         }
     }

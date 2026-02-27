@@ -30,4 +30,14 @@ class PgPersonaDlRepository extends PgPersonaDlRepositoryBase implements Persona
     {
         return PersonaDl::fromArray($aDatos);
     }
+
+    public function findById(int $id_nom): ?PersonaDl
+    {
+        $aDatos = $this->datosById($id_nom);
+        if (empty($aDatos)) {
+            return null;
+        }
+        return PersonaDl::fromArray($aDatos);
+    }
+
 }

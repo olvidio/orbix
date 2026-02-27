@@ -40,8 +40,8 @@ class AsignaturaTest extends myTest
 
     public function test_set_and_get_nombre_signatura()
     {
-        $this->Asignatura->setNombre_signatura('test');
-        $this->assertEquals('test', $this->Asignatura->getNombre_signatura());
+        $this->Asignatura->setNombre_asignatura('test');
+        $this->assertEquals('test', $this->Asignatura->getNombre_asignatura());
     }
 
     public function test_set_and_get_nombre_corto()
@@ -108,7 +108,7 @@ class AsignaturaTest extends myTest
 
         $this->assertEquals(1001, $asignatura->getIdAsignaturaVo()->value());
         $this->assertEquals(1001, $asignatura->getIdNivelVo()->value());
-        $this->assertEquals('test', $asignatura->getNombre_signatura());
+        $this->assertEquals('test', $asignatura->getNombre_asignatura());
         $this->assertEquals('Test value', $asignatura->getNombreCortoVo()->value());
         $this->assertEquals(1, $asignatura->getCreditosVo()->value());
         $this->assertEquals('2', $asignatura->getYearVo()->value());
@@ -135,7 +135,7 @@ class AsignaturaTest extends myTest
 
         $this->assertEquals(1001, $asignatura->getIdAsignaturaVo()->value());
         $this->assertEquals(1001, $asignatura->getIdNivelVo()->value());
-        $this->assertEquals('test', $asignatura->getNombre_signatura());
+        $this->assertEquals('test', $asignatura->getNombre_asignatura());
         $this->assertEquals('Test value', $asignatura->getNombreCortoVo()->value());
         $this->assertEquals(1, $asignatura->getCreditosVo()->value());
         $this->assertEquals('2', $asignatura->getYearVo()->value());

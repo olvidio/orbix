@@ -2,8 +2,26 @@
 
 namespace src\personas\domain\value_objects;
 
+use InvalidArgumentException;
+
 final class TrasladoTipoCmbCode
 {
+
+    const dl = 'dl';
+    const cr = 'cr';
+    const sede = 'sede';
+    const ctr = 'ctr';
+
+    public static function getArrayTipoCambio(): array
+    {
+        return [
+            self::dl => _("delegación"),
+            self::cr => _("region"),
+            self::sede => _("sede"),
+            self::ctr => _("centro"),
+        ];
+    }
+
     private string $value;
 
     public function __construct(string $value)
@@ -18,8 +36,8 @@ final class TrasladoTipoCmbCode
         if ($value === '') {
             throw new \InvalidArgumentException('TrasladoTipoCmbCode cannot be empty');
         }
-        if (mb_strlen($value) > 4) { // posibles: dl, cr, sede, ctr
-            throw new \InvalidArgumentException('TrasladoTipoCmbCode must be at most 4 characters');
+        if (!array_key_exists($value, self::getArrayTipoCambio())) {
+            throw new InvalidArgumentException(sprintf('<%s> no es un valor válido para TrasladoTipoCmbCode', $value));
         }
     }
 
@@ -31,7 +49,7 @@ final class TrasladoTipoCmbCode
         return new self($value);
     }
 
-public static function fromNullableString(?string $value): ?self
+    public static function fromNullableString(?string $value): ?self
     {
         if ($value === null) {
             return null;
