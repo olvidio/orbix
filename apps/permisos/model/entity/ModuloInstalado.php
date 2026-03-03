@@ -138,7 +138,7 @@ class ModuloInstalado extends ClasePropiedades
         $aPrevDades = $this->aDades;
         $aDades = [];
         $aDades['status'] = $this->bstatus;
-        $aDades['param'] = $this->sparam;
+        //$aDades['param'] = $this->sparam;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDades['status'])) {
@@ -150,8 +150,7 @@ class ModuloInstalado extends ClasePropiedades
         if ($bInsert === false) {
             //UPDATE
             $update = "
-					status                   = :status,
-					param                    = :param";
+					status                   = :status";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_mod='$this->iid_mod'")) === false) {
                 $sClauError = 'ModuloInstalado.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -177,8 +176,8 @@ class ModuloInstalado extends ClasePropiedades
         } else {
             // INSERT
             array_unshift($aDades, $this->iid_mod);
-            $campos = "(id_mod,status,param)";
-            $valores = "(:id_mod,:status,:param)";
+            $campos = "(id_mod,status)";
+            $valores = "(:id_mod,:status)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClauError = 'ModuloInstalado.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -282,7 +281,7 @@ class ModuloInstalado extends ClasePropiedades
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
         if (array_key_exists('id_mod', $aDades)) $this->setId_mod($aDades['id_mod']);
         if (array_key_exists('status', $aDades)) $this->setStatus($aDades['status']);
-        if (array_key_exists('param', $aDades)) $this->setParam($aDades['param']);
+        //if (array_key_exists('param', $aDades)) $this->setParam($aDades['param']);
     }
 
     /**
@@ -295,7 +294,7 @@ class ModuloInstalado extends ClasePropiedades
         $this->setId_schema('');
         $this->setId_mod('');
         $this->setStatus('');
-        $this->setParam('');
+        //$this->setParam('');
         $this->setPrimary_key($aPK);
     }
 
