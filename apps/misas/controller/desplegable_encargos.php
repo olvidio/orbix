@@ -3,12 +3,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use Illuminate\Http\JsonResponse;
-use web\DateTimeLocal;
-use web\Desplegable;
-use web\Hash;
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoTipo;
+use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
+use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -25,8 +21,8 @@ $aWhere = [];
 $aOperador = [];
 $aWhere['id_tipo_enc'] = '^' . $grupo;
 $aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+$EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+$cEncargoTipos = $EncargoTipoRepository->getEncargoTipos($aWhere, $aOperador);
 
 $a_tipo_enc = [];
 $posibles_encargo_tipo = [];
@@ -36,9 +32,10 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
         $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
     }
 }
+$EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 
 $desplegable_encargos='<SELECT ID="id_enc">';
-$oEncargo_seleccionado = new Encargo($Qid_encargo);
+$oEncargo_seleccionado = $EncargoRepository->findById($Qid_encargo);
 $oEncargo_seleccionado->DBCarregar();
 $desc_enc = $oEncargo_seleccionado->getDesc_enc();
 $desplegable_encargos.='<OPTION VALUE="'.$Qid_encargo.'">'.$desc_enc.'</OPTION>';
@@ -51,8 +48,7 @@ $aWhere['id_tipo_enc'] = $cond_tipo_enc;
 $aOperador['id_tipo_enc'] = 'ANY';
 $aWhere['id_zona'] = $Qid_zona;
 
-$GesEncargos = new GestorEncargo();
-$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+$cEncargos = $EncargoRepository->getEncargos($aWhere, $aOperador);
 foreach ($cEncargos as $oEncargo) {
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();

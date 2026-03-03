@@ -75,6 +75,7 @@ $aCentrosN = [];
 $aCentrosOrden = [];
 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 foreach ($aListaCtr as $id_ubi) {
+    if ($id_ubi === null) continue;
     $oCentroDl = $CentroDlRepository->findById($id_ubi);
     $nombre_ubi = $oCentroDl->getNombre_ubi();
     $aCentrosOrden[$nombre_ubi] = array($id_ubi => $nombre_ubi);

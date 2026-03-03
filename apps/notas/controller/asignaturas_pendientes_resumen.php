@@ -1,10 +1,10 @@
 <?php
 
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\notas\domain\entity\Nota;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use function core\is_true;
 
 /**
  * Esta página sirve para generar un cuadro con el numero de alumnos que tienen
@@ -52,7 +52,6 @@ $aOperador['id_nivel'] = 'BETWEEN';
 $aWhere['_ordre'] = 'id_nivel';
 $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
-
 foreach ($cAsignaturas as $oAsignatura) {
     $id_nivel = $oAsignatura->getId_nivel();
     $id_asignatura = $oAsignatura->getId_asignatura();
@@ -74,22 +73,11 @@ foreach ($cAsignaturas as $oAsignatura) {
     );
 }
 
-
-$a_cabeceras = [];
-$a_cabeceras[0] = _("n/a");
-$a_cabeceras[1] = _("stgr");
-$a_cabeceras[2] = _("centro");
-$a_cabeceras[3] = _("apellidos, nombre");
-$a = 3;
-foreach ($cAsignaturas as $oAsignatura) {
-    $a++;
-    $a_cabeceras[$a] = $oAsignatura->getNombre_corto();
-}
 //todas
 $cAsignaturasTodas = $AsignaturaRepository->getAsignaturas(array('_ordre' => 'id_asignatura'));
 foreach ($cAsignaturasTodas as $oAsignatura) {
     $id_asignatura = $oAsignatura->getId_asignatura();
-    $a_Asig_status[$id_asignatura] = $oAsignatura->isActive();
+    $a_Asig_isActive[$id_asignatura] = $oAsignatura->isActive();
     $a_Asig_nivel[$id_asignatura] = $oAsignatura->getId_nivel();
 }
 //print_r($a_Asig_nivel);
@@ -97,51 +85,45 @@ foreach ($cAsignaturasTodas as $oAsignatura) {
 $aWhere = [];
 $aOperador = [];
 $aWhere['situacion'] = 'A';
-$aWhere['stgr'] = 'b|c1|c2';
-$aOperador['stgr'] = '~';
+$aWhere['nivel_stgr'] = NivelStgrId::B . "," . NivelStgrId::C1 . "," . NivelStgrId::C2;
+$aOperador['nivel_stgr'] = 'IN';
 // Sólo n y agd
 $aWhere['id_tabla'] = '^[na]';
 $aOperador['id_tabla'] = '~';
-
-
 $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
+
 $p = 0;
 $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+$NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
+$arrayNotasSuperadas = $NotaRepository->getArrayNotasSuperadas();
+$a_NivelesStgr = [NivelStgrId::B => 'b', NivelStgrId::C1 => 'c1', NivelStgrId::C2 => 'c2'];
 foreach ($cPersonas as $oPersona) {
     $p++;
     $id_nom = $oPersona->getId_nom();
     $id_tabla = $oPersona->getId_tabla();
-    //$ap_nom = $oPersona->getPrefApellidosNombre();
-    $stgr = $oPersona->getNivel_stgr();
+    $nivel_stgr = $oPersona->getNivel_stgr();
 
-    $tipo = $id_tabla . $stgr;
+    $tipo = $id_tabla . $a_NivelesStgr[$nivel_stgr];
 
-    // Asignaturas cursadas:
-    /*
-    $aWhere=[];
-    $aOperador=[];
-    $aWhere['id_nom'] = $id_nom;
-    $aWhere['id_nivel'] = '1100,2500';
-    $aOperador['id_nivel']='BETWEEN';
-    */
-    $cNotas = $PersonaNotaDBRepository->getPersonaNotasSuperadas($id_nom, 't');
+    $cNotas = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom]);
     $aAprobadas = [];
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
         $id_nivel = $oPersonaNota->getId_nivel();
         $id_situacion = $oPersonaNota->getId_situacion();
 
-        if ($a_Asig_status[$id_asignatura] != 't') continue;
+        if ($a_Asig_isActive[$id_asignatura] !== 't') continue;
 
         if ($id_asignatura > 3000) {
             $id_nivel_asig = $id_nivel;
         } else {
             $id_nivel_asig = $a_Asig_nivel[$id_asignatura];
         }
-        $n = $id_nivel_asig;
-        $oNota = new Nota($id_situacion);
-        $aAprobadas[$n]['nota'] = is_true($oNota->isSuperada()) ? '' : 2;
+        // en situación e aprobada
+        if (in_array($id_situacion, $arrayNotasSuperadas)) {
+            $aAprobadas[$id_nivel_asig] = 1;
+        }
     }
 
 

@@ -37,6 +37,7 @@ $Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
 $Qb_c = (string)filter_input(INPUT_POST, 'b_c');
 $Qc1 = (string)filter_input(INPUT_POST, 'c1');
 $Qc2 = (string)filter_input(INPUT_POST, 'c2');
+$Qlista = (string)filter_input(INPUT_POST, 'lista');
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -113,6 +114,7 @@ $aGoBack = array(
         'b_c' => $Qb_c,
         'c1' => $Qc1,
         'c2' => $Qc2,
+        'lista' => $Qlista,
         'id_asignatura' => $Qid_asignatura,
         'personas_n' => $Qpersonas_n,
         'personas_agd' => $Qpersonas_agd);

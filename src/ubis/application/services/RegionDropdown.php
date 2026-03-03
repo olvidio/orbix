@@ -24,7 +24,7 @@ final class RegionDropdown
     public static function activasOrdenNombre(string $nombreCampo = 'region', bool $conBlanco = true): Desplegable
     {
         $repo = $GLOBALS['container']->get(RegionRepositoryInterface::class);
-        $regiones = $repo->getRegiones(['status' => true, '_ordre' => 'nombre_region']);
+        $regiones = $repo->getRegiones(['active' => true, '_ordre' => 'nombre_region']);
 
         $opciones = [];
         foreach ($regiones as $region) {

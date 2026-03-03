@@ -13,6 +13,7 @@ use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\EncargosZona;
 use src\misas\domain\entity\EncargoDia;
+use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\misas\domain\value_objects\PlantillaConfig;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
@@ -442,13 +443,13 @@ foreach ($cEncargosZona as $oEncargo) {
                 $hora_ini = '';
             $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
             if (trim($QTipoPlantilla) == PlantillaConfig::PLAN_DE_MISAS) {
-                if ($estado == EncargoDia::STATUS_PROPUESTA) {
+                if ($estado == EncargoDiaStatus::STATUS_PROPUESTA) {
                     $color = 'rojoclaro';
                 }
-                if ($estado == EncargoDia::STATUS_COMUNICADO_SACD) {
+                if ($estado == EncargoDiaStatus::STATUS_COMUNICADO_SACD) {
                     $color = 'amarilloclaro';
                 }
-                if ($estado == EncargoDia::STATUS_COMUNICADO_CTR) {
+                if ($estado == EncargoDiaStatus::STATUS_COMUNICADO_CTR) {
                     $color = 'verdeclaro';
                 }
             }

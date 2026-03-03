@@ -784,21 +784,18 @@ class TrasladoDl
         $AsistenteOutRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
         foreach ($collection as $oAsistenteDl) {
             $err = 0;
+            // copiar Asistencia a Out
             $AsistenteOutRepository->setoDbl($oDBdstE);
-            $oAsistenteOut = $this->copiarAsistencia($oAsistenteDl, $oAsistenteOut1);
-            if ($oAsistenteOut === NULL) {
+            // cambio para que la dl responsable sea la actual:
+            $oAsistenteDl->setDlResponsableVo(ConfigGlobal::mi_delef());
+            $id_activ = $oAsistenteDl->getId_activ();
+            if ($this->testActividad($id_activ) && $AsistenteOutRepository->DBGuardar($oAsistenteDl) === false) {
                 $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"), $id_activ);
                 $err = 1;
-            } else {
-                $oAsistenteOut->setTraslado('t');
-                if ($oAsistenteOut->DBGuardar() === false) {
-                    $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"), $id_activ);
-                    $err = 1;
-                }
             }
             // borrar el origen
             if ($err === 0) {
-                $oAsistenteDl->DBEliminar();
+                $AsistenteDlRepository->Eliminar($oAsistenteDl);
             }
         }
         // Los Ex no deberían existir, son gente de otras dl, no afecta al traslado

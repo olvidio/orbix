@@ -4,7 +4,7 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\misas\domain\entity\EncargoDia;
+use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -65,9 +65,9 @@ $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 
 $a_Estados = array(
-    EncargoDia::STATUS_PROPUESTA => 'propuesta',
-    EncargoDia::STATUS_COMUNICADO_SACD => 'comunicado sacerdotes',
-    EncargoDia::STATUS_COMUNICADO_CTR => 'comunicado centros',
+    EncargoDiaStatus::STATUS_PROPUESTA => 'propuesta',
+    EncargoDiaStatus::STATUS_COMUNICADO_SACD => 'comunicado sacerdotes',
+    EncargoDiaStatus::STATUS_COMUNICADO_CTR => 'comunicado centros',
 );
 
 $oDesplEstados = new Desplegable();

@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
 use src\profesores\domain\services\ProfesorStgrService;
+use src\profesores\domain\value_objects\CongresoTipo;
 use web\Lista;
 
 /**
@@ -32,7 +33,7 @@ $a_nomProfesor = $ProfesorStgrService->getArrayProfesoresConDl();
 
 $p = 0;
 $ProfesorCongresoRepository = $GLOBALS['container']->get(ProfesorCongresoRepositoryInterface::class);
-$a_tiposCong = $ProfesorCongresoRepository->getArrayTiposCongreso();
+$a_tiposCong = CongresoTipo::getArrayTiposCongreso();
 $a_valores = [];
 foreach ($a_nomProfesor as $id_nom => $aClave) {
     $ap_nom = $aClave['ap_nom'];
@@ -64,5 +65,6 @@ $oTabla = new Lista();
 $oTabla->setId_tabla('tabla_congreso');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
+$oTabla->setBotones([]);
 
 echo $oTabla->mostrar_tabla();

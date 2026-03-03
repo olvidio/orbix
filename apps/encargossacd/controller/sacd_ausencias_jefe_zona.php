@@ -2,14 +2,14 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use misas\domain\entity\InicialesSacd;
-use personas\model\entity\GestorPersonaSacd;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
-use zonassacd\model\entity\GestorZona;
-use zonassacd\model\entity\GestorZonaSacd;
 
 /**
  * Esta página muestra la ficha de las ausencias de un sacd.
@@ -33,7 +33,7 @@ require_once("apps/core/global_object.inc");
 //$oPosicion->recordar($Qrefresh);
 $oPosicion->recordar();
 
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_role = $oMiUsuario->getId_role();
 //echo 'id_role: '.$id_role.'<br>';
@@ -44,19 +44,29 @@ $id_usuario = ConfigGlobal::mi_id_usuario();
 $id_sacd = $oMiUsuario->getId_pauAsString();
 //echo 'id_sacd: '.$id_sacd.'<br>';
 
-$RoleRepository = new RoleRepository();
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
-$GesZonas = new GestorZona();
-$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
+$cZonas = $ZonaRepository->getZonas(array('id_nom' => $id_sacd));
 //echo 'count zonas: '.count($cZonas).'<br>';
+$InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
+$a_sacd = [];
 if (is_array($cZonas) && count($cZonas) > 0) {
-    $GesZonaSacd = new GestorZonaSacd();
+    $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
     foreach ($cZonas as $oZona) {
         $id_zona = $oZona->getId_zona();
-        $cSacds = $GesZonaSacd->getSacdsZona($id_zona);
+        $cSacds = $ZonaSacdRepository->getSacdsZona($id_zona);
         foreach ($cSacds as $id_nom) {
 //            echo $id_nom.'<br>';
+            $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
+            if ($InicialesSacd === null) {
+                $iniciales = '';
+                $color = '';
+            } else {
+                $iniciales = $InicialesSacd->getIniciales();
+                $color = $InicialesSacd->getColor();
+            }
             $InicialesSacd = new InicialesSacd();
             $sacd=$InicialesSacd->nombre_sacd($id_nom);
             $iniciales=$InicialesSacd->iniciales($id_nom);
@@ -80,6 +90,7 @@ if (is_array($cZonas) && count($cZonas) > 0) {
 if (($aRoles[$id_role]==='Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendario()))
 {
 //    echo 'OFICIAL DL<br>';
+    $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
     $aWhere = [];
     $aOperador = [];
     $aWhere['sacd'] = 't';
@@ -87,8 +98,7 @@ if (($aRoles[$id_role]==='Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendar
     $aWhere['id_tabla'] = "'n','a'";
     $aOperador['id_tabla'] = 'IN';
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-    $GesPersonas = new GestorPersonaSacd();
-    $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+    $cPersonas = $PersonaSacdRepository->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
         $InicialesSacd = new InicialesSacd();

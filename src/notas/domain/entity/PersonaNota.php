@@ -55,7 +55,7 @@ class PersonaNota
 
     protected ?ActaNumero $acta;
 
-    protected DateTimeLocal $f_acta;
+    protected ?DateTimeLocal $f_acta;
 
     protected ?Detalle $detalle;
 

@@ -179,7 +179,7 @@ foreach ($cEncargosDia as $oEncargoDia) {
     $data_cols["encargo"] = $desc_enc;
 
     //echo 'jefe: '.$jefe_zona.' s: '.$status.'<br>';
-    if ($jefe_zona || ($status == EncargoDia::STATUS_COMUNICADO_SACD) || ($status == EncargoDia::STATUS_COMUNICADO_CTR)) {
+    if ($jefe_zona || ($status == EncargoDiaStatus::STATUS_COMUNICADO_SACD) || ($status == EncargoDiaStatus::STATUS_COMUNICADO_CTR)) {
         $data_cuadricula[] = $data_cols;
         echo '</TR>';
         echo '<TR><TD>' . $dia_y_hora . '</TD>';

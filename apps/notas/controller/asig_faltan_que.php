@@ -72,7 +72,7 @@ $oHash->setcamposChk('personas_n!personas_agd!c1!c2!lista');
 $oHash->setCamposForm('numero!b_c');
 
 $oHash1 = new Hash();
-$oHash1->setcamposChk('personas_n!personas_agd!c1!c2');
+$oHash1->setcamposChk('personas_n!personas_agd!c1!c2!lista');
 $oHash1->setCamposForm('id_asignatura!b_c');
 
 

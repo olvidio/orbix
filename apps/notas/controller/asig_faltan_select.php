@@ -2,6 +2,13 @@
 
 use core\ConfigGlobal;
 use notas\model\AsignaturasPendientes;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
@@ -41,7 +48,7 @@ $Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
 $Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
 
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
-$Qlista = empty($Qlista) ? FALSE : TRUE;
+$Qlista = is_true($Qlista)? TRUE : FALSE;
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -60,7 +67,7 @@ if (empty($Qpersonas_n) && empty($Qpersonas_agd)) {
     exit (_("Debe marcar un grupo de personas (n o agd)"));
 }
 //miro las condiciones.
-if ($Qb_c == 'b') {
+if ($Qb_c === 'b') {
     $curso = "bienio";
     $curso_txt = "bienio";
 } else {
@@ -130,10 +137,34 @@ $titulo = sprintf(_("lista de %s a los que faltan %d o menos asignaturas para fi
 
 $i = 0;
 $a_valores = [];
-$obj = 'personas\\model\\entity\\' . $obj_pau;
+switch ($obj_pau) {
+    case 'PersonaDl':
+        $repoPersona = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        break;
+    case 'PersonaN':
+        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        break;
+    case 'PersonaNax':
+        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+        break;
+    case 'PersonaAgd':
+        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+        break;
+    case 'PersonaS':
+        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+        break;
+    case 'PersonaSSSC':
+        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+        break;
+    case 'PersonaEx':
+        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+        break;
+    default:
+        echo "No existe la clase de la persona";
+}
 foreach ($aId_nom as $id_nom => $aAsignaturas) {
     $i++;
-    $oPersona = new $obj($id_nom);
+    $oPersona = $repoPersona->findById($id_nom);
     $id_tabla = $oPersona->getId_tabla();
     $stgr = $oPersona->getNivel_stgr();
     $nom = $oPersona->getPrefApellidosNombre();

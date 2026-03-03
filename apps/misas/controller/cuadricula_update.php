@@ -13,6 +13,7 @@ use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\entity\EncargoDia;
 use src\misas\domain\value_objects\EncargoDiaId;
+use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\misas\domain\value_objects\EncargoDiaTend;
 use src\misas\domain\value_objects\EncargoDiaTstart;
 use src\misas\domain\value_objects\PlantillaConfig;
@@ -63,13 +64,13 @@ $estado = $oEncargoDia->getStatus();
 $zona = $Qid_zona;
 $color_misa = '';
 if (trim($QTipoPlantilla) === PlantillaConfig::PLAN_DE_MISAS) {
-    if ($estado === EncargoDia::STATUS_PROPUESTA) {
+    if ($estado === EncargoDiaStatus::STATUS_PROPUESTA) {
         $color_misa = 'rojoclaro';
     }
-    if ($estado === EncargoDia::STATUS_COMUNICADO_SACD) {
+    if ($estado === EncargoDiaStatus::STATUS_COMUNICADO_SACD) {
         $color_misa = 'amarilloclaro';
     }
-    if ($estado === EncargoDia::STATUS_COMUNICADO_CTR) {
+    if ($estado === EncargoDiaStatus::STATUS_COMUNICADO_CTR) {
         $color_misa = 'verdeclaro';
     }
 }

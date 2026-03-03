@@ -106,7 +106,7 @@ switch ($Qque) {
         // listado de tarifas por casa y año
         $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
         if (!empty($Qid_ubi) && !empty($Qyear)) {
-            $cTarifas = $TarifaUbiRepository->getTarifas(array('id_ubi' => $Qid_ubi, 'year' => $Qyear, '_ordre' => 'year,id_tarifa'));
+            $cTarifas = $TarifaUbiRepository->getTarifaUbis(array('id_ubi' => $Qid_ubi, 'year' => $Qyear, '_ordre' => 'year,id_tarifa'));
         } else {
             $cTarifas = [];
         }
@@ -268,8 +268,8 @@ switch ($Qque) {
         //$oMiUsuario = new Usuario(\ConfigGlobal::mi_id_usuario());
         $a_seccion = array(1 => _("sv"), 2 => _("sf"));
         $a_opciones = array(0 => _("por dia"), 1 => _("total"));
-        $TarifaUbiRepository = $GLOBALS['container']->get(TarifaUbiRepositoryInterface::class);
-        $oTipoTarifas = $TarifaUbiRepository->getTipoTarifas(array('_ordre' => 'sfsv,letra'));
+        $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
+        $oTipoTarifas = $TipoTarifaRepository->getTipoTarifas(array('_ordre' => 'sfsv,letra'));
         $t = 0;
         $txt = '';
         $error_txt = '';

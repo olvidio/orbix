@@ -14,6 +14,14 @@ use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaDlDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaExDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionUbiDireccionRepositoryInterface;
+use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -186,23 +194,23 @@ if (empty($sWhere)) {
                     $titulo = ucfirst(_("tabla de casas de la delegación"));
                     $repoUbi = CasaDlRepositoryInterface::class;
                     $metodo = 'getCasas';
-                    $repoUbi = DireccionCasaDlRepositoryInterface::class;
+                    $repoDir = DireccionCasaDlRepositoryInterface::class;
                     // Añado una condición para el caso de no poner, que salgan todos.
-                    // Si no se pone, dice que hay que poner algun criterio de busqueda
+                    // Si no se pone, dice que hay que poner algún criterio de búsqueda
                     $aWhere['active'] = 't';
                     break;
                 case "ex":
                     $titulo = ucfirst(_("tabla de casas de fuera de la delegación"));
                     $repoUbi = CasaExRepositoryInterface::class;
                     $metodo = 'getCasas';
-                    $repoUbi = DireccionCasaExRepositoryInterface::class;
+                    $repoDir = DireccionCasaExRepositoryInterface::class;
                     break;
                 case "sf":
                     if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
                         $titulo = ucfirst(_("tabla de casas de la sf"));
                         $repoUbi = CasaDlRepositoryInterface::class;
                         $metodo = 'getCasas';
-                        $repoUbi = DireccionCasaDlRepositoryInterface::class;
+                        $repoDir = DireccionCasaDlRepositoryInterface::class;
                         $aWhere['sf'] = 't';
                     }
                     break;
@@ -210,7 +218,7 @@ if (empty($sWhere)) {
                     $titulo = ucfirst(_("tabla de toda las casas y centros"));
                     $repoUbi = CasaRepositoryInterface::class;
                     $metodo = 'getCasas';
-                    $repoUbi = DireccionCasaRepositoryInterface::class;
+                    $repoDir = DireccionCasaRepositoryInterface::class;
                     break;
             }
             break;
@@ -275,9 +283,9 @@ if (empty($sWhere)) {
                     */
                     break;
                 case "tot":
-                    $Gestor = "src\\ubis\\application\\repositories\\UbiRepository";
-                    $metodo = 'getUbis';
-                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionRepository";
+                    $repoUbi = CentroRepositoryInterface::class;
+                    $metodo = 'getCentros';
+                    $repoDir =  DireccionCentroRepositoryInterface::class;
                     $titulo = ucfirst(_("tabla de toda las casas y centros"));
                     break;
             }
@@ -318,11 +326,34 @@ if (!empty($aWhere)) {
     $cUbis = [];
 }
 if (!empty($aWhereD)) {
-    $DireccioneRepository = $GLOBALS['container']->get($repoDir);
-    $cDirecciones = $DireccioneRepository->getDirecciones($aWhereD, $aOperadorD);
     $cUbisD = [];
-    foreach ($cDirecciones as $oDireccion) {
-        array_push($cUbisD, ...$oDireccion->getUbis());
+    if (!empty($repoDir)) {
+        $DireccioneRepository = $GLOBALS['container']->get($repoDir);
+        $cDirecciones = $DireccioneRepository->getDirecciones($aWhereD, $aOperadorD) ?: [];
+        $repoRelacionMap = [
+            DireccionCentroDlRepositoryInterface::class => RelacionCentroDlDireccionRepositoryInterface::class,
+            DireccionCentroExRepositoryInterface::class => RelacionCentroExDireccionRepositoryInterface::class,
+            DireccionCentroRepositoryInterface::class => RelacionCentroDireccionRepositoryInterface::class,
+            DireccionCasaDlRepositoryInterface::class => RelacionCasaDlDireccionRepositoryInterface::class,
+            DireccionCasaExRepositoryInterface::class => RelacionCasaExDireccionRepositoryInterface::class,
+            DireccionCasaRepositoryInterface::class => RelacionCasaDireccionRepositoryInterface::class,
+        ];
+        $repoRelacion = $repoRelacionMap[$repoDir] ?? RelacionUbiDireccionRepositoryInterface::class;
+        $RelacionRepository = $GLOBALS['container']->get($repoRelacion);
+        foreach ($cDirecciones as $oDireccion) {
+            $id_direccion = $oDireccion->getId_direccion();
+            $cIdUbis = $RelacionRepository->getUbisPorDireccion($id_direccion);
+            foreach ($cIdUbis as $aUbi) {
+                $oUbi = Ubi::NewUbi($aUbi['id_ubi']);
+                if ($oUbi === null) {
+                    continue;
+                }
+                if (empty($Qcmb) && method_exists($oUbi, 'isActive') && !$oUbi->isActive()) {
+                    continue;
+                }
+                $cUbisD[] = $oUbi;
+            }
+        }
     }
 }
 
@@ -373,10 +404,10 @@ foreach ($cUbis as $key => $oUbi) {
 
 $sWhere = urlsafe_b64encode(json_encode($aWhere), JSON_THROW_ON_ERROR);
 $sOperador = urlsafe_b64encode(json_encode($aOperador), JSON_THROW_ON_ERROR);
-$sGestor = urlsafe_b64encode(json_encode($Gestor), JSON_THROW_ON_ERROR);
+$sGestor = urlsafe_b64encode(json_encode($repoUbi), JSON_THROW_ON_ERROR);
 $sWhereD = urlsafe_b64encode(json_encode($aWhereD), JSON_THROW_ON_ERROR);
 $sOperadorD = urlsafe_b64encode(json_encode($aOperadorD), JSON_THROW_ON_ERROR);
-$sGestorDir = urlsafe_b64encode(json_encode($GestorDir), JSON_THROW_ON_ERROR);
+$sGestorDir = urlsafe_b64encode(json_encode($repoDir), JSON_THROW_ON_ERROR);
 
 //si no existe la ficha, hacer una nueva	
 $nueva_ficha = '';

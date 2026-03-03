@@ -14,6 +14,7 @@ use src\misas\application\services\InicialesSacdService;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\EncargosZona;
 use src\misas\domain\entity\EncargoDia;
+use src\misas\domain\value_objects\EncargoDiaStatus;
 use src\misas\domain\value_objects\PlantillaConfig;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
@@ -380,19 +381,19 @@ foreach ($cEncargosZona as $oEncargo) {
             $id_nom = $oEncargoDia->getId_nom();
             $estado = $oEncargoDia->getStatus();
             $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-            if ($hora_ini == '00:00')
+            if ($hora_ini === '00:00')
                 $hora_ini = '';
             $iniciales = $InicialesSacdService->obtenerIniciales($id_nom);
             $color = '';
             $texto = '';
-            if (trim($QTipoPlantilla) == PlantillaConfig::PLAN_DE_MISAS) {
-                if ($estado == EncargoDia::STATUS_PROPUESTA) {
+            if (trim($QTipoPlantilla) === PlantillaConfig::PLAN_DE_MISAS) {
+                if ($estado === EncargoDiaStatus::STATUS_PROPUESTA) {
                     $color = 'rojoclaro';
                 }
-                if ($estado == EncargoDia::STATUS_COMUNICADO_SACD) {
+                if ($estado === EncargoDiaStatus::STATUS_COMUNICADO_SACD) {
                     $color = 'amarilloclaro';
                 }
-                if ($estado == EncargoDia::STATUS_COMUNICADO_CTR) {
+                if ($estado === EncargoDiaStatus::STATUS_COMUNICADO_CTR) {
                     $color = 'verdeclaro';
                 }
             }
