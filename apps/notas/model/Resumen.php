@@ -87,8 +87,6 @@ class Resumen extends ClasePropiedades
      */
     function __construct($nom = '')
     {
-        $oDbl = $GLOBALS['oDB'];
-
         $tabla = "tmp_est_" . $nom;
         $notas = "tmp_notas_" . $nom;
         $asignaturas = "tmp_asignaturas";
@@ -112,7 +110,7 @@ class Resumen extends ClasePropiedades
         $this->setNomNotas($notas);
         $this->setNomAsignaturas($asignaturas);
         $this->setNomPersonas($personas);
-        $this->tempTablesService = new ResumenTempTablesService($oDbl);
+        $this->tempTablesService = new ResumenTempTablesService();
 
         // En el caso cr-stgr, se consulta la tabla de notas
         if (ConfigGlobal::mi_ambito() === 'rstgr') {

@@ -81,17 +81,20 @@ class ConfigDB
         }
     }
 
-    public function renombrarListaEsquema($database, $esquema_old, $esquema_new)
+    public function renombrarListaEsquema($database, $esquema_old, $esquema_new): void
     {
         // Las bases de datos de pruebas y producción están en el mismo cluster, y 
         // por tanto los usuarios son los mismos. Hay que ponerlo en los dos ficheros:
         // Pero OJO: la parte de definición de host y dbname son diferentes!!
 
         $this->renombrarListaEsquemaProduccion($database, $esquema_old, $esquema_new);
-        $this->renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new);
+        // En docker no tengo db de pruebas
+        if (!preg_match('/(.*?)\.docker/',ServerConf::SERVIDOR )) {
+            $this->renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new);
+        }
     }
 
-    public function renombrarListaEsquemaProduccion($database, $esquema_old, $esquema_new)
+    private function renombrarListaEsquemaProduccion($database, $esquema_old, $esquema_new): void
     {
         $this->data = include ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
 
@@ -103,7 +106,7 @@ class ConfigDB
         file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
     }
 
-    public function renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new)
+    private function renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new): void
     {
         $database = 'pruebas-' . $database;
         $this->data = include ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';

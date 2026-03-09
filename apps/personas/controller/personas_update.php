@@ -32,21 +32,27 @@ $miSfsv = ConfigGlobal::mi_sfsv();
 switch ($Qobj_pau) {
     case 'PersonaN':
         $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
+        $id_tabla = 'n';
         break;
     case 'PersonaNax':
         $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
+        $id_tabla = 'x';
         break;
     case 'PersonaAgd':
         $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
+        $id_tabla = 'a';
         break;
     case 'PersonaS':
         $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
+        $id_tabla = 's';
         break;
     case 'PersonaSSSC':
         $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+        $id_tabla = 'sssc';
         break;
     case 'PersonaEx':
         $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+        $id_tabla = 'pn';
         break;
     default:
         echo "No existe la clase de la persona";
@@ -54,7 +60,20 @@ switch ($Qobj_pau) {
 }
 
 
+if (empty($Qid_nom)) {
+    $error_txt = _("No se ha pasado el id_nom");
+    ContestarJson::enviar($error_txt, 'ok');
+    die();
+}
+
 $oPersona = $repoPersona->findById($Qid_nom);
+if ($oPersona === null) { //Para el caso de nuevo registro
+    $obj = 'src\\personas\\domain\\entity\\' . $Qobj_pau;
+    $oPersona = new $obj();
+    $oPersona->setId_nom($Qid_nom);
+    $oPersona->setId_tabla($id_tabla);
+}
+
 if ($Qque === 'eliminar') {
     $error_txt = '';
     $dl = $oPersona->getDl();
@@ -71,7 +90,6 @@ if ($Qque === 'eliminar') {
     ContestarJson::enviar($error_txt, 'ok');
     die();
 }
-
 
 $dl = (string)filter_input(INPUT_POST, 'dl');
 $id_ctr = (int)filter_input(INPUT_POST, 'id_ctr');

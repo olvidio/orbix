@@ -1,6 +1,5 @@
 <?php
 
-
 // INICIO Cabecera global de URL de controlador *********************************
 use devel\model\DBAlterSchema;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
@@ -40,7 +39,7 @@ $oConfigDB = new core\ConfigDB('importar');
 
 $oDBRol = new core\DBRol();
 
-// comun
+//************** comun ****************************************
 $configComunP = $oConfigDB->getEsquema('public');
 $oConexion = new core\DBConnection($configComunP);
 $oConComun = $oConexion->getPDO();
@@ -76,7 +75,7 @@ $oDBRol->renombrarSchema($esquema_old); // Cambia el nombre del esquema
 $oDBRol->renombrarUsuario($esquema_old); // reescribe el password que ya tenia.
 $oConfigDBComun->renombrarListaEsquema('comun_select', $esquema_old, $esquema);
 
-// sv
+// *********************  sv  *********************************
 $configSvP = $oConfigDB->getEsquema('publicv');
 $oConexion = new core\DBConnection($configSvP);
 $oConSv = $oConexion->getPDO();
@@ -96,7 +95,7 @@ $oConfigDBSv->renombrarListaEsquema('sv', $esquema_oldv, $esquemav);
 $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
 $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv');
 
-//sv-e
+// *********************  sv-e  ********************************
 $configSveP = $oConfigDB->getEsquema('publicv-e');
 $oConexion = new core\DBConnection($configSveP);
 $oConSve = $oConexion->getPDO();

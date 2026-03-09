@@ -232,7 +232,7 @@ if (!$nuevo) {
         <tr>
             <td>
                 <span class="etiqueta"> <?= _("inc") ?></span>
-                <input class="contenido" size=5 id="inc" name="inc" value="<?= $inc ?>">
+                <?= $oDesplInc->desplegable() ?>
             </td>
             <td>
                 <span class="etiqueta"> <?= _("Fecha inc") ?></span>

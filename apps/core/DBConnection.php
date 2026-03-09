@@ -58,12 +58,12 @@ class DBConnection
         $dsn = 'pgsql:host=' . $host . ';port=' . $port . ';dbname=\'' . $dbname . '\';user=\'' . $user . '\';password=\'' . $password . '\';' . $str_conexio;
 
         $esquema = $this->config['schema'];
-        $oDB = new PDO($dsn);
-        $oDB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $oDB->exec("SET search_path TO \"$esquema\"");
+        $pdoDB = new PDO($dsn);
+        $pdoDB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $pdoDB->exec("SET search_path TO \"$esquema\"");
         /* le paso la gestión a la clase web\datetimelocal */
         //$oDB->exec("SET DATESTYLE TO '$datestyle'");
-        return $oDB;
+        return $pdoDB;
     }
 
     public function getURI()

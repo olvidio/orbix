@@ -8,9 +8,9 @@ class ResumenTempTablesService
 {
     private PDO $pdo;
 
-    public function __construct(PDO $pdo)
+    public function __construct()
     {
-        $this->pdo = $pdo;
+        $this->pdo =  $GLOBALS['oDB'];
     }
 
     public function rebuildMainTable(

@@ -2,33 +2,37 @@
 
 namespace src\personas\domain\value_objects;
 
+use InvalidArgumentException;
+
 final class IncCode
 {
+
+    public static function getArrayIncCode(): array
+    {
+        return [
+            'ap' => _("ap"),
+            'pa' => _("pa"),
+            'ad' => _("ad"),
+            'o' => _("o"),
+            'fl' => _("fl"),
+        ];
+    }
+
+
     private string $value;
 
     public function __construct(string $value)
     {
-        $value = trim($value);
-        $this->validate($value);
-        $this->value = strtolower($value);
+        if (!array_key_exists($value, self::getArrayIncCode())) {
+            throw new InvalidArgumentException(sprintf('<%s> no es un valor válido para la incorporación', $value));
+        }
+        $this->value = $value;
     }
 
-    private function validate(string $value): void
+    public function value(): string
     {
-        if ($value === '') {
-            throw new \InvalidArgumentException('IncCode cannot be empty');
-        }
-        if (mb_strlen($value) > 2) {
-            throw new \InvalidArgumentException('IncCode must be at most 2 characters');
-        }
-        // aceptar interrogante '?'
-        if ($value !== '?' && !preg_match('/^[A-Za-z0-9]{1,2}$/', $value)) {
-            throw new \InvalidArgumentException('IncCode has invalid characters');
-        }
+        return $this->value;
     }
-
-    public function value(): string { return $this->value; }
-    public function __toString(): string { return $this->value; }
 
     public static function fromNullableString(?string $value): ?self
     {

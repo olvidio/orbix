@@ -4,7 +4,7 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
 
 /*
-* Devuelvo un desplegable con los valores posibles segun el valor de entrada.
+* Devuelvo un desplegable con los valores posibles según el valor de entrada.
 *
 */
 

@@ -11,6 +11,8 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
+use src\personas\domain\value_objects\IncCode;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -78,32 +80,30 @@ $ce_ini = '';
 $ce_fin = '';
 $observ = '';
 
+$titulo = '';
 
 if (!empty($Qnuevo)) {
-    $oF_hoy = new \src\shared\domain\value_objects\DateTimeLocal();
     $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
     // para los acentos
-    $Qapellido1 = urldecode($Qapellido1);
-    $oPersona = new $obj;
-    $cDatosCampo = $oPersona->getDatosCampos();
-    $oDbl = $oPersona->getoDbl();
-    foreach ($cDatosCampo as $oDatosCampo) {
-        $camp = $oDatosCampo->getNom_camp();
-        $valor_predeterminado = $oDatosCampo->datos_campo($oDbl, 'valor');
-        $a_campos[$camp] = $valor_predeterminado;
-    }
-    $oPersona->setApellido1($Qapellido1);
-    $oPersona->setF_situacion($oF_hoy);
+    $apellido1 = urldecode($Qapellido1);
+    $oHoy = new DateTimeLocal();
+    $f_situacion = $oHoy->getFromLocal();
     $id_tabla = (string)filter_input(INPUT_POST, 'tabla');
-    $nivel_stgr = '';
+
+    $situacion = 'A';
+    $idioma_preferido = ConfigGlobal::mi_idioma();
     $dl = ConfigGlobal::mi_delef();
+
+    $newIdAuto = $repoPersona->getNewId();
+    $Qid_nom = $repoPersona->getNewIdNom($newIdAuto);
+
+    $nivel_stgr = '';
     $nom_ctr = '';
     $id_ctr = '';
-    $Qid_nom = '';
     $gohome = '';
     $godossiers = '';
     $ir_a_traslado = '';
-    $titulo = '';
+    $titulo = $apellido1;
 } else {
     $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (!empty($a_sel)) { //vengo de un checkbox
@@ -124,7 +124,7 @@ if (!empty($Qnuevo)) {
         $stack = '';
     }
     //Si vengo por medio de Posicion, borro la última
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -170,18 +170,6 @@ if (!empty($Qnuevo)) {
     $ce_fin = $oPersona->getCe_fin();
     $observ = $oPersona->getObserv();
 
-
-//	// para los de paso
-//	if (method_exists($oPersona, "getEdad")) {
-//		$edad = $oPersona->getEdad();
-//	} else {
-//		$edad = '';
-//	}
-//	if (method_exists($oPersona, "getProfesor_stgr")) {
-//		$profesor_stgr = $oPersona->getProfesor_stgr();
-//	} else {
-//		$profesor_stgr = '';
-//	}
     // para el ctr hay que buscar el nombre
     if (!empty($id_ctr)) {
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
@@ -195,6 +183,7 @@ if (!empty($Qnuevo)) {
     } else {
         $nom_ctr = '';
     }
+    $titulo = $oPersona->getNombreApellidos();
 }
 
 // para la dl
@@ -229,10 +218,11 @@ $oDesplDl->setBlanco(TRUE);
 if (empty($nom_ctr)) {
     $GesCentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $aOpciones = $GesCentroDl->getArrayCentros();
-    $oDesplCentroDl= new Desplegable();
+    $oDesplCentroDl = new Desplegable();
     $oDesplCentroDl->setOpciones($aOpciones);
     $oDesplCentroDl->setAction("fnjs_act_ctr('ctr')");
     $oDesplCentroDl->setNombre("id_ctr");
+    $oDesplCentroDl->setBlanco(TRUE);
 }
 
 $ok = 0;
@@ -324,14 +314,14 @@ $botones = 0;
 2: eliminar
 3: formato texto
 */
-if ($ok == 1) {
+if ($ok === 1) {
     $botones = '1';
     // de momento se lo permito a los de paso i cp
     if ($Qobj_pau === 'PersonaEx') {
         $botones .= ',2';
     }
 }
-if ($ok_txt == 1) {
+if ($ok_txt === 1) {
     //$botones .= ',3'; // de momento no lo pongo
 }
 
@@ -359,6 +349,14 @@ $oDesplStgr->setNombre('nivel_stgr');
 $oDesplStgr->setOpciones($aTipos_stgr);
 $oDesplStgr->setOpcion_sel($nivel_stgr);
 $oDesplStgr->setBlanco(true);
+
+//posibles valores de incorporación
+$aIncCode = IncCode::getArrayIncCode();
+$oDesplInc = new Desplegable();
+$oDesplInc->setNombre('inc');
+$oDesplInc->setOpciones($aIncCode);
+$oDesplInc->setOpcion_sel($inc);
+$oDesplInc->setBlanco(true);
 
 $oHash = new Hash();
 $campos_chk = 'sacd';
@@ -388,7 +386,6 @@ $gohome = Hash::link('apps/personas/controller/home_persona.php?' . http_build_q
 $a_parametros = array('pau' => 'p', 'id_pau' => $Qid_nom, 'obj_pau' => $Qobj_pau);
 $godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros));
 
-$titulo = $oPersona->getNombreApellidos();
 
 
 $a_campos = ['obj_txt' => $obj,
@@ -412,6 +409,7 @@ $a_campos = ['obj_txt' => $obj,
     'oDesplSituacion' => $oDesplSituacion,
     'oDesplLengua' => $oDesplLengua,
     'oDesplStgr' => $oDesplStgr,
+    'oDesplInc' => $oDesplInc,
     'trato' => $trato,
     'nom' => $nom,
     'apel_fam' => $apel_fam,
@@ -425,7 +423,6 @@ $a_campos = ['obj_txt' => $obj,
     'profesion' => $profesion,
     'sacd' => $sacd,
     'eap' => $eap,
-    'inc' => $inc,
     'f_inc' => $f_inc,
     'ce' => $ce,
     'ce_lugar' => $ce_lugar,

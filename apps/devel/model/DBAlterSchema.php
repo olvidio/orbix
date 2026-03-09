@@ -13,7 +13,7 @@ class DBAlterSchema
      *
      * @var object
      */
-    protected $oDbl;
+    protected $pdoDB;
     /**
      *
      * @var string
@@ -29,7 +29,7 @@ class DBAlterSchema
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
     /**
-     * Constructor de la classe.
+     * Constructor de la clase.
      */
     function __construct()
     {
@@ -38,9 +38,9 @@ class DBAlterSchema
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
-    public function setDbConexion($oDbl)
+    public function setDbConexion($pdoDB)
     {
-        $this->setoDbl($oDbl);
+        $this->pdoDB = $pdoDB;
     }
 
     /**
@@ -48,19 +48,9 @@ class DBAlterSchema
      *
      * @return object oDbl
      */
-    protected function setoDbl($oDbl)
+    protected function getPdoDB()
     {
-        $this->oDbl = $oDbl;
-    }
-
-    /**
-     * Recupera el atributo oDbl de DBAlterSchema
-     *
-     * @return object oDbl
-     */
-    protected function getoDbl()
-    {
-        return $this->oDbl;
+        return $this->pdoDB;
     }
 
     public function setSchema($schema)
@@ -96,7 +86,7 @@ class DBAlterSchema
 
     private function executeInsert($tabla, $campos)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         $full_name = "\"$this->schema\".$tabla";
         $full_name_del = "\"$this->schema_del\".$tabla";
 
@@ -192,7 +182,7 @@ class DBAlterSchema
     public function existeTabla($full_name)
     {
 
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         $sql = "SELECT to_regclass('$full_name'); ";
 
         foreach ($oDbl->query($sql) as $row) {
@@ -225,7 +215,7 @@ class DBAlterSchema
 
     public function setColumnDefault($nom_tabla, $nom_column, $default)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         $sql = "ALTER TABLE $nom_tabla ALTER COLUMN $nom_column SET DEFAULT $default";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
@@ -249,7 +239,7 @@ class DBAlterSchema
      */
     public function setNullDatos(array $aDatos)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         foreach ($aDatos as $cambio) {
             $tabla = $cambio['tabla'];
             $campo = $cambio['campo'];
@@ -297,7 +287,7 @@ class DBAlterSchema
 
     public function updateColumn($full_name, $campo, $old, $new)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         $sql = "UPDATE $full_name SET $campo = '$new' WHERE $campo = '$old' ";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
@@ -336,7 +326,7 @@ class DBAlterSchema
 
     public function updateColumnRegexp($full_name, $campo, $pattern, $replacement)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         $sql = "UPDATE $full_name SET $campo = regexp_replace($campo, '$pattern', '$replacement' ,'g') ";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
@@ -355,7 +345,7 @@ class DBAlterSchema
 
     public function updateCedidasAll($old, $new)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         $sql = "UPDATE publicv.da_plazas set cedidas =  regexp_replace(cedidas::text, '\m$old\M', '$new', 'g')::jsonb where cedidas is not null;";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
@@ -444,7 +434,7 @@ class DBAlterSchema
         $oConexion = new DBConnection($config);
         $oDbComun = $oConexion->getPDO();
         // Conexión actual (a sv-e).
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         // buscar actividades de asistencias out que tengan dl_org = dl_new
         $full_asistentes_out = "\"$this->schema_del\".d_asistentes_out";
         $full_asistentes_dl = "\"$this->schema_del\".d_asistentes_dl";
@@ -508,7 +498,7 @@ class DBAlterSchema
         $oConexion = new DBConnection($config);
         $oDbComun = $oConexion->getPDO();
         // Conexión actual (a sv-e).
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         // buscar actividades de asistencias out que esten en a_actividades_dl
         $full_asistentes_out = "\"$this->schema\".d_asistentes_out";
         $full_asistentes_dl = "\"$this->schema\".d_asistentes_dl";
@@ -594,7 +584,7 @@ class DBAlterSchema
      */
     public function insertarCargos()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoDB();
         $tabla = 'd_cargos_activ_dl';
         $campos = 'id_activ, id_cargo, id_nom, puede_agd, observ';
 
