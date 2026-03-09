@@ -33,4 +33,9 @@ class PgDireccionCasaRepository extends PgDireccionRepository implements Direcci
     {
         return $this->planoDownload($id_direccion);
     }
+
+    protected function getPdoConnection(): \PDO
+    {
+        return $this->getoDbl();
+    }
 }

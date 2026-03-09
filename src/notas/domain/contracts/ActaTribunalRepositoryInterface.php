@@ -2,7 +2,6 @@
 
 namespace src\notas\domain\contracts;
 
-use PDO;
 use src\notas\domain\entity\ActaTribunal;
 
 
@@ -37,9 +36,7 @@ interface ActaTribunalRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

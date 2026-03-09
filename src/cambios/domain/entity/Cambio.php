@@ -185,14 +185,13 @@ class Cambio
         /*
         $ObjetoFullPath = GestorAvisoCambios::getFullPathObj($sObjeto);
         $oObject = new $ObjetoFullPath();
-        $oDbl = $oObject->getoDbl();
         $cDatosCampos = $oObject->getDatosCampos();
         // para ajustar el nombre del campo y el valor a algo más legible:
         foreach ($cDatosCampos as $oDatosCampo) {
             if ($oDatosCampo->getNom_camp() == $sPropiedad) {
                 $etiqueta = $oDatosCampo->getEtiqueta();
                 // si es boolean, traduzco a true-false:
-                $tipo = $oDatosCampo->datos_campo($oDbl, 'tipo');
+                $tipo = $oDatosCampo->datos_campo(null, 'tipo');
                 if ($tipo === 'bool') {
                     // OJO. Excepción en el caso de completar una fase, el campo es completado (bool), pero en el
                     // valor_old lo que pongo es el id_fase.

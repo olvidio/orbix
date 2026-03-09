@@ -29,7 +29,7 @@ $cApps = $AppRepository->getApps();
 $a_apps = [];
 foreach ($cApps as $oApp) {
     $id_app = $oApp->getIdAppVo()->value();
-    $nom_app = $oApp->getNombreAppVo()->value();
+    $nom_app = $oApp->getNomVo()->value();
     $a_apps[$id_app] = $nom_app;
 }
 

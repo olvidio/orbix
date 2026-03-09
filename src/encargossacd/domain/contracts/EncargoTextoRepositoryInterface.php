@@ -2,7 +2,6 @@
 
 namespace src\encargossacd\domain\contracts;
 
-use PDO;
 use src\encargossacd\domain\entity\EncargoTexto;
 
 
@@ -38,9 +37,7 @@ interface EncargoTextoRepositoryInterface
 
 	public function getErrorTxt(): string;
 
-	public function getoDbl(): PDO;
 
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

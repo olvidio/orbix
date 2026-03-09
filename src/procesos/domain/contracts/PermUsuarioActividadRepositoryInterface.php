@@ -2,7 +2,6 @@
 
 namespace src\procesos\domain\contracts;
 
-use PDO;
 use src\procesos\domain\entity\PermUsuarioActividad;
 
 
@@ -39,9 +38,7 @@ interface PermUsuarioActividadRepositoryInterface
 
 	public function getErrorTxt(): string;
 
-	public function getoDbl(): PDO;
 
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

@@ -1,6 +1,7 @@
 <?php
 
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
@@ -8,6 +9,7 @@ use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaExRepositoryInterface;
 use src\personas\infrastructure\repositories\PgPersonaExRepository;
+use src\personas\infrastructure\repositories\PersonaDlRepositoryFactory;
 use src\personas\infrastructure\repositories\PgPersonaNaxRepository;
 use src\personas\infrastructure\repositories\PgPersonaPubRepository;
 use src\personas\infrastructure\repositories\PgPersonaSacdRepository;
@@ -39,6 +41,7 @@ return [
     // Mapeo simple: Interfaz => Clase
     SituacionRepositoryInterface::class => autowire(PgSituacionRepository::class),
     PersonaDlRepositoryInterface::class => autowire(PgPersonaDlRepository::class),
+    PersonaDlRepositoryFactoryInterface::class => autowire(PersonaDlRepositoryFactory::class),
     PersonaAgdRepositoryInterface::class => autowire(PgPersonaAgdRepository::class),
     PersonaNRepositoryInterface::class => autowire(PgPersonaNRepository::class),
     PersonaNaxRepositoryInterface::class => autowire(PgPersonaNaxRepository::class),
@@ -59,10 +62,8 @@ return [
     // Application Services
     PersonaFinderService::class => autowire(PersonaFinderService::class)
         ->constructor(
-            get(PersonaDlRepositoryInterface::class),
+            get(PersonaDlRepositoryFactoryInterface::class),
             get(PersonaPubRepositoryInterface::class),
-            get(PersonaExRepositoryInterface::class),
-            get('oDB'),
-            get('oDBR')
+            get(PersonaExRepositoryInterface::class)
         ),
 ];

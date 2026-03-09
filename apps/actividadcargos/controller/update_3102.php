@@ -40,34 +40,24 @@ $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 $Qpuede_agd = (string)filter_input(INPUT_POST, 'puede_agd');
 $Qasis = (string)filter_input(INPUT_POST, 'asis');
-$Qelim_asis = (string)filter_input(INPUT_POST, 'elim_asis');
 $Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
+/* creo que no le llega (solamente por a_sel)
+  $Qelim_asis = (string)filter_input(INPUT_POST, 'elim_asis');
+*/
+$Qelim_asis = 0;
 
 
 //En el caso de eliminar desde la lista de cargos
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    if ($Qpau === "p") {
-        $Qid_item = (integer)strtok($a_sel[0], "#");
-        $Qelim_asis = strtok("#");
-        $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
-    }
+    $Qid_nom = (integer)strtok($a_sel[0], "#");
+    $Qid_item = (integer)strtok("#"); // si no hay devuelve false
+    $Qid_item = empty($Qid_item) ? '' : $Qid_item; // cambiar el false a ''.
+    $Qelim_asis = strtok("#");
     if ($Qpau === "a") {
-        $Qid_item = (integer)strtok($a_sel[0], "#");
-        $Qelim_asis = strtok("#");
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
     }
-    // sobre escribo...
-    if ($Qid_dossier === 3101) {  // vengo del listado de asistencias
-        $Qid_nom = (integer)strtok($a_sel[0], "#");
-        $Qid_item = (integer)strtok("#"); // si no hay devuelve false
-        $Qid_item = empty($Qid_item) ? '' : $Qid_item; // cambiar el false a ''.
-        $Qelim_asis = strtok("#");
 
-    } else {
-        $Qid_item = (integer)strtok($a_sel[0], "#");
-        $Qelim_asis = strtok("#");
-    }
 } else { // desde el formulario
     $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
@@ -106,7 +96,7 @@ switch ($Qmod) {
         $sactividad = $oTipoActiv->getActividadText();
         $snom_tipo = $oTipoActiv->getNom_tipoText();
 
-        if ($Qelim_asis == 2 && ($sasistentes === 's' || $sasistentes === 'sg')) {
+        if ($Qelim_asis === 2) {
             $service = $GLOBALS['container']->get(AsistenteActividadService::class);
             $AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ);
             $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
@@ -207,7 +197,13 @@ switch ($Qmod) {
     case "editar":
         //------------ EDITAR --------
         $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
-        $oActividadCargo = $ActividadCargoRepository->findById($Qid_item);
+        if (empty($Qid_item)) {
+            $newIdItem = $ActividadCargoRepository->getNewId();
+            $oActividadCargo = new ActividadCargo();
+            $oActividadCargo->setId_item($newIdItem);
+        } else {
+            $oActividadCargo = $ActividadCargoRepository->findById($Qid_item);
+        }
 
         $oActividadCargo->setId_activ($Qid_activ);
         $oActividadCargo->setId_cargo($Qid_cargo);
@@ -231,7 +227,7 @@ switch ($Qmod) {
         $oAsistente = $AsistenteRepository->findById($Qid_activ, $Qid_nom);
         if ($oAsistente === null) { //no existe
             if (!empty($Qasis)) { // lo añado
-                $oAsistente = new AsistenteDl();
+                $oAsistente = new Asistente();
                 $oAsistente->setId_activ($Qid_activ);
                 $oAsistente->setId_nom($Qid_nom);
                 $oAsistente->setPropio('t'); // por defecto lo pongo como propio

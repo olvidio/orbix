@@ -2,7 +2,6 @@
 
 namespace src\configuracion\domain\contracts;
 
-use PDO;
 use src\configuracion\domain\entity\Modulo;
 
 /**
@@ -38,9 +37,7 @@ interface ModuloRepositoryInterface
 
 	public function getErrorTxt(): string;
 
-	public function getoDbl(): PDO;
 
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

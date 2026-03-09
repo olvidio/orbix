@@ -2,7 +2,6 @@
 
 namespace src\notas\domain\contracts;
 
-use PDO;
 use src\notas\domain\entity\Nota;
 
 use function core\is_true;
@@ -32,9 +31,7 @@ interface NotaRepositoryInterface
 
 	public function getErrorTxt(): string;
 
-	public function getoDbl(): PDO;
 
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

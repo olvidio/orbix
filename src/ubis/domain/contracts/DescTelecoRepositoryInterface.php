@@ -2,7 +2,6 @@
 
 namespace src\ubis\domain\contracts;
 
-use PDO;
 use src\ubis\domain\entity\DescTeleco;
 
 use function core\is_true;
@@ -42,9 +41,7 @@ interface DescTelecoRepositoryInterface
 
 	public function getErrorTxt(): string;
 
-	public function getoDbl(): PDO;
 
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

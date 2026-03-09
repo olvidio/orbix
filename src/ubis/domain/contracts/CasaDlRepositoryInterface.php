@@ -2,7 +2,6 @@
 
 namespace src\ubis\domain\contracts;
 
-use PDO;
 use src\ubis\domain\entity\Casa;
 
 /**
@@ -38,9 +37,7 @@ interface CasaDlRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

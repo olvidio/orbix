@@ -134,10 +134,4 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/usuarios/usuario_preferencias', function () {
         require __DIR__ . '/../infrastructure/controllers/usuario_preferencias.php';
     });
-    $r->addRoute(['GET','POST'], '/usuarios/zzusuario_grupo_from', function () {
-        require __DIR__ . '/../infrastructure/controllers/zzusuario_grupo_from.php';
-    });
-    $r->addRoute(['GET','POST'], '/usuarios/zzusuario_perm_form', function () {
-        require __DIR__ . '/../infrastructure/controllers/zzusuario_perm_form.php';
-    });
 };

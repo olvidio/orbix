@@ -2,7 +2,6 @@
 
 namespace src\tablonanuncios\domain\contracts;
 
-use PDO;
 use src\tablonanuncios\domain\entity\Anuncio;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
 
@@ -38,9 +37,7 @@ interface AnuncioRepositoryInterface
 
     public function getErrorTxt();
 
-    public function getoDbl();
 
-    public function setoDbl(PDO $oDbl);
 
     public function getNomTabla();
 

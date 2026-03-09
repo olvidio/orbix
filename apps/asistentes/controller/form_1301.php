@@ -32,7 +32,7 @@ use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
-use src\actividadplazas\domain\ResumenPlazas;
+use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
@@ -157,7 +157,7 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
 
         }
     }
-    $gesActividadPlazas = new ResumenPlazas();
+    $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
     if (!empty($id_activ)) {
         $gesActividadPlazas->setId_activ($id_activ);
         $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);

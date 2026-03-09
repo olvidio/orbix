@@ -16,7 +16,7 @@ $id_role = ConfigGlobal::mi_id_role();
 // ----------- Layout -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'layout');
 if ($oPreferencia !== null) {
-    $layout = $oPreferencia->getPreferencia()->value();
+    $layout = $oPreferencia->getPreferenciaVo()->value();
 } else {
     $layout = '';
 }
@@ -24,7 +24,7 @@ if ($oPreferencia !== null) {
 // ----------- Página de inicio -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'inicio');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferencia();
+    $preferencia = $oPreferencia->getPreferenciaVo()->value();
     [$inicio, $oficina] = explode('#', $preferencia);
 } else {
     $inicio = '';
@@ -56,7 +56,7 @@ foreach ($cGMR as $oGMR) {
 // ----------- Página de estilo -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'estilo');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferencia();
+    $preferencia = $oPreferencia->getPreferenciaVo()->value();
     [$estilo_color, $tipo_menu] = explode('#', $preferencia);
 } else {
     $estilo_color = '';
@@ -75,7 +75,7 @@ $tipo_menu_v = ($tipo_menu === "vertical") ? "selected" : '';
 // ----------- Tipo de tablas -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'tabla_presentacion');
 if ($oPreferencia !== null) {
-    $tipo_tabla = $oPreferencia->getPreferencia();
+    $tipo_tabla = $oPreferencia->getPreferenciaVo()->value();
 } else {
     $tipo_tabla = '';
 }
@@ -85,7 +85,7 @@ $tipo_tabla_h = ($tipo_tabla === "html") ? "selected" : '';
 // ----------- Orden Apellidos en listas -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'ordenApellidos');
 if ($oPreferencia !== null) {
-    $tipo_apellidos = $oPreferencia->getPreferencia()->value();
+    $tipo_apellidos = $oPreferencia->getPreferenciaVo()->value();
 } else {
     $tipo_apellidos = '';
 }
@@ -96,7 +96,7 @@ $tipo_apellidos_ap_nom = ($tipo_apellidos === "ap_nom") ? "selected" : '';
 //Tengo la variable $idioma en ConfigGlobal, pero vuelvo a consultarla
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'idioma');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferencia();
+    $preferencia = $oPreferencia->getPreferenciaVo()->value();
     [$idioma] = explode('#', $preferencia);
 } else {
     $idioma = '';
@@ -105,7 +105,7 @@ if ($oPreferencia !== null) {
 // ----------- Zona Horaria -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'zona_horaria');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferencia()->value();
+    $preferencia = $oPreferencia->getPreferenciaVo()->value();
     [$zona_horaria] = explode('#', $preferencia);
 } else {
     $zona_horaria = '';

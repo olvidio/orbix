@@ -2,7 +2,6 @@
 
 namespace src\cartaspresentacion\domain\contracts;
 
-use PDO;
 use src\cartaspresentacion\domain\entity\CartaPresentacion;
 use src\cartaspresentacion\domain\value_objects\PresentacionPk;
 
@@ -38,9 +37,7 @@ interface CartaPresentacionRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

@@ -2,7 +2,6 @@
 
 namespace src\asignaturas\domain\contracts;
 
-use PDO;
 use src\asignaturas\domain\entity\Asignatura;
 
 use function core\is_true;
@@ -46,9 +45,7 @@ interface AsignaturaRepositoryInterface
 
 	public function getErrorTxt(): string;
 
-	public function getoDbl(): PDO;
 
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

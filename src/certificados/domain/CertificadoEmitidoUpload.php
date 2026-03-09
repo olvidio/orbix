@@ -6,6 +6,7 @@ use core\ConfigGlobal;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
 
@@ -27,11 +28,7 @@ class CertificadoEmitidoUpload
 
     public function uploadTxtFirmado(int $id_item, string $contenido_doc): string|CertificadoEmitido
     {
-        $error_txt = '';
-        $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
-        if (isset($this->oDbl)) { // para los tests
-            $certificadoEmitidoRepository->setoDbl($this->oDbl);
-        }
+        $certificadoEmitidoRepository = $this->certificadoEmitidoRepository();
         $oCertificadoEmitido = $certificadoEmitidoRepository->findById($id_item);
 
         $oCertificadoEmitido->setDocumento($contenido_doc);
@@ -60,8 +57,7 @@ class CertificadoEmitidoUpload
             $destino = $oPersona->getDlVo()->value();
         }
 
-        $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
-        $certificadoEmitidoRepository->setoDbl($this->oDbl);
+        $certificadoEmitidoRepository = $this->certificadoEmitidoRepository();
         $id_item = $certificadoEmitidoRepository->getNewId_item();
         $oCertificadoEmitido = new CertificadoEmitido();
         $oCertificadoEmitido->setId_item($id_item);
@@ -80,5 +76,15 @@ class CertificadoEmitidoUpload
             return $certificadoEmitidoRepository->getErrorTxt();
         }
         return $oCertificadoEmitido;
+    }
+
+    private function certificadoEmitidoRepository(): CertificadoEmitidoRepositoryInterface
+    {
+        if (!isset($this->oDbl)) {
+            return $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
+        }
+
+        $factory = $GLOBALS['container']->get(ConnectionRepositoryFactoryInterface::class);
+        return $factory->createWithConnection(CertificadoEmitidoRepositoryInterface::class, $this->oDbl);
     }
 }

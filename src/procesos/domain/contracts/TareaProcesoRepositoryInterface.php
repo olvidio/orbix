@@ -3,7 +3,6 @@
 namespace src\procesos\domain\contracts;
 
 use JsonException;
-use PDO;
 use src\procesos\domain\entity\TareaProceso;
 
 
@@ -50,9 +49,7 @@ interface TareaProcesoRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

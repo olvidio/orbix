@@ -2,7 +2,6 @@
 
 namespace src\shared\domain\contracts;
 
-use PDO;
 use src\shared\domain\entity\ColaMail;
 
 
@@ -39,9 +38,7 @@ interface ColaMailRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

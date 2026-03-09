@@ -9,6 +9,7 @@ use dbextern\model\entity\GestorPersonaBDU;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\entity\PersonaBDU;
 use PDO;
+use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\entity\TelecoPersona;
@@ -371,10 +372,11 @@ class SincroDB
         $aOperador['apellido1'] = 'sin_acentos';
         $aWhere['_ordre'] = 'apellido1, apellido2, nom';
 
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $PersonaDlRepositoryFactory = $GLOBALS['container']->get(PersonaDlRepositoryFactoryInterface::class);
+        $PersonaDlRepository = $PersonaDlRepositoryFactory->create();
         if (!empty($esquema)) {
             $oDB = $this->conexion($esquema);
-            $PersonaDlRepository->setoDbl($oDB);
+            $PersonaDlRepository = $PersonaDlRepositoryFactory->createWithConnection($oDB);
         }
         $cPersonasDl = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
         $i = 0;

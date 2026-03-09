@@ -2,7 +2,6 @@
 
 namespace src\dossiers\domain\contracts;
 
-use PDO;
 use src\dossiers\domain\entity\Dossier;
 use src\dossiers\domain\value_objects\DossierPk as DossierPkAlias;
 
@@ -40,9 +39,7 @@ interface DossierRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

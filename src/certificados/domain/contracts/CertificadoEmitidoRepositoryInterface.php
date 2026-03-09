@@ -2,7 +2,6 @@
 
 namespace src\certificados\domain\contracts;
 
-use PDO;
 use src\certificados\domain\entity\CertificadoEmitido;
 
 /**
@@ -36,10 +35,6 @@ interface CertificadoEmitidoRepositoryInterface
 	public function Guardar(CertificadoEmitido $Certificado);
 
 	public function getErrorTxt();
-
-	public function getoDbl();
-
-	public function setoDbl(PDO $oDbl);
 
 	public function getNomTabla();
 	

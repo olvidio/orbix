@@ -2,7 +2,6 @@
 
 namespace src\actividadcargos\domain\contracts;
 
-use PDO;
 use src\actividadcargos\domain\entity\ActividadCargo;
 
 
@@ -48,9 +47,7 @@ interface ActividadCargoRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

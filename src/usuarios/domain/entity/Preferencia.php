@@ -57,7 +57,9 @@ class Preferencia
             : new ValorPreferencia($preferencia);
     }
 
-
+    /**
+     * @deprecated Use getPreferenciaVo() instead
+     */
     public function getPreferencia(): ?string
     {
         return $this->getPreferenciaAsString();

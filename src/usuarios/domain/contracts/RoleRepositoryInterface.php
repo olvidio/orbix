@@ -2,7 +2,6 @@
 
 namespace src\usuarios\domain\contracts;
 
-use PDO;
 use src\usuarios\domain\entity\Role;
 
 /**
@@ -41,9 +40,7 @@ interface RoleRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

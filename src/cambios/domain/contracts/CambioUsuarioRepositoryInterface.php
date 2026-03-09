@@ -2,7 +2,6 @@
 
 namespace src\cambios\domain\contracts;
 
-use PDO;
 use src\cambios\domain\entity\CambioUsuario;
 
 
@@ -38,10 +37,6 @@ interface CambioUsuarioRepositoryInterface
 	public function Guardar(CambioUsuario $CambioUsuario): bool;
 
 	public function getErrorTxt(): string;
-
-	public function getoDbl(): PDO;
-
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

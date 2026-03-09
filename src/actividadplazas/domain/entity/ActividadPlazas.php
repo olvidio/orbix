@@ -7,7 +7,6 @@ use src\actividadplazas\domain\value_objects\PlazaClCode;
 use src\actividadplazas\domain\value_objects\PlazasNumero;
 use src\shared\domain\traits\Hydratable;
 use src\shared\traits\HandlesPdoErrors;
-use stdClass;
 
 class ActividadPlazas
 {
@@ -26,7 +25,7 @@ class ActividadPlazas
 
     private DelegacionTablaCode $dl_tabla;
 
-    private array|stdClass|null $cedidas = null;
+    private ?array $cedidas = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -159,18 +158,18 @@ class ActividadPlazas
 
     /**
      *
-     * @return array|stdClass|null $cedidas
+     * @return array|null $cedidas
      */
-    public function getCedidas(): array|stdClass|null
+    public function getArrayCedidas(): ?array
     {
         return $this->cedidas;
     }
 
     /**
      *
-     * @param stdClass|array|null $cedidas
+     * @param array|null $cedidas
      */
-    public function setCedidas(stdClass|array|null $cedidas = null): void
+    public function setCedidas(?array $cedidas = null): void
     {
         $this->cedidas = $cedidas;
     }

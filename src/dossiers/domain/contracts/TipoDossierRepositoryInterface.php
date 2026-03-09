@@ -2,7 +2,6 @@
 
 namespace src\dossiers\domain\contracts;
 
-use PDO;
 use src\dossiers\domain\entity\TipoDossier;
 use src\dossiers\domain\value_objects\TipoDossierId;
 
@@ -50,9 +49,7 @@ interface TipoDossierRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

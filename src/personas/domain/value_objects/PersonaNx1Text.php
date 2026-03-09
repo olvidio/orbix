@@ -21,7 +21,8 @@ final class PersonaNx1Text
         if (mb_strlen($value) > 7) {
             throw new \InvalidArgumentException('PersonaNx1Text must be at most 7 characters');
         }
-        if (!preg_match('/^[A-Za-z0-9]+$/u', $value)) {
+        // admitir texto y espacios
+        if (!preg_match('/^[A-Za-z0-9 ]+$/u', $value)) {
             throw new \InvalidArgumentException('PersonaNx1Text has invalid characters');
         }
     }

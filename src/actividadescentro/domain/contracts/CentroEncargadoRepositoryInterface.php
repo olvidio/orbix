@@ -2,7 +2,6 @@
 
 namespace src\actividadescentro\domain\contracts;
 
-use PDO;
 use src\actividadescentro\domain\entity\CentroEncargado;
 use src\actividadescentro\domain\value_objects\CentroEncargadoPk;
 
@@ -43,9 +42,7 @@ interface CentroEncargadoRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

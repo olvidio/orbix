@@ -2,7 +2,6 @@
 
 namespace src\actividadestudios\domain\contracts;
 
-use PDO;
 use src\actividadestudios\domain\entity\Matricula;
 use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
 
@@ -40,9 +39,7 @@ interface MatriculaRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

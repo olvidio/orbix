@@ -2,7 +2,6 @@
 
 namespace src\actividadestudios\domain\contracts;
 
-use PDO;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
 use src\actividadestudios\domain\value_objects\ActividadAsignaturaPk;
 
@@ -39,9 +38,7 @@ interface ActividadAsignaturaRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

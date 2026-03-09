@@ -6,6 +6,7 @@ use core\ConfigGlobal;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
 
@@ -42,7 +43,7 @@ class CertificadoRecibidoUpload
             $destino = $oPersona->getDlVo()->value();
         }
 
-        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
+        $certificadoRecibidoRepository = $this->certificadoRecibidoRepository();
         if (empty($Qid_item)) {
             $id_item = $certificadoRecibidoRepository->getNewId_item();
             $oCertificadoRecibido = new CertificadoRecibido();
@@ -65,5 +66,15 @@ class CertificadoRecibidoUpload
             return $certificadoRecibidoRepository->getErrorTxt();
         }
         return $oCertificadoRecibido;
+    }
+
+    private function certificadoRecibidoRepository(): CertificadoRecibidoRepositoryInterface
+    {
+        if (!isset($this->oDbl)) {
+            return $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
+        }
+
+        $factory = $GLOBALS['container']->get(ConnectionRepositoryFactoryInterface::class);
+        return $factory->createWithConnection(CertificadoRecibidoRepositoryInterface::class, $this->oDbl);
     }
 }

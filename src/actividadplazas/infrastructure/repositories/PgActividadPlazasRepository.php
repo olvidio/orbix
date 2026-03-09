@@ -128,7 +128,7 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         $bInsert = $this->isNew($id_activ);
 
         $aDatos = $ActividadPlazas->toArrayForDatabase([
-            'cedidas' => fn($v) => (new ConverterJson($ActividadPlazas->getCedidas(), false))->toPg(false),
+            'cedidas' => fn($v) => (new ConverterJson($ActividadPlazas->getArrayCedidas(), false))->toPg(false),
         ]);
 
         /*
@@ -138,7 +138,7 @@ class PgActividadPlazasRepository extends ClaseRepository implements ActividadPl
         $aDatos['cl'] = $ActividadPlazas->getClVo()->value();
         $aDatos['dl_tabla'] = $ActividadPlazas->getDlTablaVo()->value();
         // para los json
-        $aDatos['cedidas'] = (new ConverterJson($ActividadPlazas->getCedidas(), false))->toPg(false);
+        $aDatos['cedidas'] = (new ConverterJson($ActividadPlazas->getArrayCedidas(), false))->toPg(false);
         array_walk($aDatos, 'core\poner_null');
         */
 

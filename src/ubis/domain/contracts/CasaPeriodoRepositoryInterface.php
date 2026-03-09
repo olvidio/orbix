@@ -2,7 +2,6 @@
 
 namespace src\ubis\domain\contracts;
 
-use PDO;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\entity\CasaPeriodo;
 
@@ -40,9 +39,7 @@ interface CasaPeriodoRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

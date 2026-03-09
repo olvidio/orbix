@@ -2,11 +2,7 @@
 
 namespace src\personas\domain\contracts;
 
-use PDO;
-use src\personas\domain\entity\PersonaAgd;
 use src\personas\domain\entity\PersonaDl;
-use src\personas\domain\entity\PersonaN;
-use web\Desplegable;
 
 
 /**
@@ -52,26 +48,6 @@ interface PersonaDlRepositoryInterface
      * @return array|false Una colección de objetos de tipo PersonaDl
      */
     public function getPersonas(array $aWhere = [], array $aOperators = []): array|false;
-
-    /* -------------------- ENTIDAD --------------------------------------------- */
-
-
-    public function getErrorTxt(): string;
-
-    public function getoDbl(): PDO;
-
-    public function setoDbl(PDO $oDbl): void;
-
-    public function getNomTabla(): string;
-
-    /**
-     * Devuelve los campos de la base de datos en un array asociativo.
-     * Devuelve false si no existe la fila en la base de datos
-     *
-     * @param int $id_nom
-     * @return array|bool
-     */
-    public function datosById(int $id_nom): array|bool;
 
     /**
      * Busca la clase con id_nom en el repositorio.

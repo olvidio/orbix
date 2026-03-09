@@ -42,7 +42,7 @@ switch ($que) {
         $cActividadPlazasDl = $ActvidadPlazasDlRepository->getActividadPlazas(['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele]);
         $oActividadPlazasDl = $cActividadPlazasDl[0];
 
-        $aCedidas = $oActividadPlazasDl->getCedidas() ?? '';
+        $aCedidas = $oActividadPlazasDl->getArrayCedidas() ?? [];
         if (empty($aCedidas)) {
             $aCedidas = [];
         }
@@ -53,8 +53,7 @@ switch ($que) {
         } else {
             $aCedidas[$dl] = $num_plazas;
         }
-        $json_cedidas = json_encode($aCedidas);
-        $oActividadPlazasDl->setCedidas($json_cedidas);
+        $oActividadPlazasDl->setCedidas($aCedidas);
 
         //print_r($oActividadPlazasDl);
         if ($ActvidadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {

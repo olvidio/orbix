@@ -2,7 +2,6 @@
 
 namespace src\actividadtarifas\domain\contracts;
 
-use PDO;
 use src\actividadtarifas\domain\entity\TipoTarifa;
 
 
@@ -39,9 +38,7 @@ interface TipoTarifaRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

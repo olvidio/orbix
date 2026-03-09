@@ -2,7 +2,6 @@
 
 namespace src\cambios\domain\contracts;
 
-use PDO;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
 
 
@@ -36,10 +35,6 @@ interface CambioUsuarioObjetoPrefRepositoryInterface
     public function Guardar(CambioUsuarioObjetoPref $CambioUsuarioObjetoPref): bool;
 
     public function getErrorTxt(): string;
-
-    public function getoDbl(): PDO;
-
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

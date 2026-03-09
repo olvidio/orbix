@@ -4,7 +4,7 @@ namespace src\personas\application\services;
 
 use core\ConfigGlobal;
 use PDO;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\PersonaDl;
@@ -20,18 +20,18 @@ use src\personas\domain\entity\PersonaPub;
  */
 class PersonaFinderService
 {
-    private PersonaDlRepositoryInterface $personaDlRepository;
+    private PersonaDlRepositoryFactoryInterface $personaDlRepositoryFactory;
     private PersonaPubRepositoryInterface $personaPubRepository;
     private PersonaExRepositoryInterface $personaExRepository;
     private PDO $oDB;
     private PDO $oDBR;
 
     public function __construct(
-        PersonaDlRepositoryInterface $personaDlRepository,
+        PersonaDlRepositoryFactoryInterface $personaDlRepositoryFactory,
         PersonaPubRepositoryInterface $personaPubRepository,
         PersonaExRepositoryInterface $personaExRepository,
     ) {
-        $this->personaDlRepository = $personaDlRepository;
+        $this->personaDlRepositoryFactory = $personaDlRepositoryFactory;
         $this->personaPubRepository = $personaPubRepository;
         $this->personaExRepository = $personaExRepository;
         $this->oDB = $GLOBALS['oDB'];
@@ -51,9 +51,10 @@ class PersonaFinderService
     public function findPersonaEnGlobal(int $id_nom): PersonaDl|PersonaPub|null
     {
         $aWhere = ['id_nom' => $id_nom, 'situacion' => 'A'];
+        $personaDlRepository = $this->personaDlRepositoryFactory->create();
 
         // Buscar primero en PersonaDl
-        $cPersonas = $this->personaDlRepository->getPersonas($aWhere);
+        $cPersonas = $personaDlRepository->getPersonas($aWhere);
         if (count($cPersonas) > 0 && $cPersonas[0] !== null) {
             return $cPersonas[0];
         }
@@ -92,8 +93,8 @@ class PersonaFinderService
                 if ($esquema === 'restov') {
                     $resultado = $this->personaExRepository->getPersonas($aWhere);
                 } else {
-                    $this->personaDlRepository->setoDbl($oDB);
-                    $resultado = $this->personaDlRepository->getPersonas($aWhere);
+                    $personaDlRepository = $this->personaDlRepositoryFactory->createWithConnection($oDB);
+                    $resultado = $personaDlRepository->getPersonas($aWhere);
                 }
 
                 if (!empty($resultado)) {

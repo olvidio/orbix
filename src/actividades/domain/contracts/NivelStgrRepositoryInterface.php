@@ -2,7 +2,6 @@
 
 namespace src\actividades\domain\contracts;
 
-use PDO;
 use src\actividades\domain\entity\NivelStgr;
 use src\actividades\domain\value_objects\NivelStgrId;
 
@@ -43,9 +42,7 @@ interface NivelStgrRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

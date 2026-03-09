@@ -14,7 +14,7 @@ trait PlanoOperationsTrait
      */
     public function planoDownload(int $id_direccion): array
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoConnection();
         $nom_tabla = $this->getNomTabla();
 
         $sql = "SELECT plano_nom, plano_extension, plano_doc FROM $nom_tabla WHERE id_direccion = ?";
@@ -44,7 +44,7 @@ trait PlanoOperationsTrait
      */
     public function planoUpload(int $id_direccion, ?string $nom, ?string $extension, $fichero): void
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoConnection();
         $nom_tabla = $this->getNomTabla();
 
         $nom = $nom ?? '';
@@ -71,7 +71,7 @@ trait PlanoOperationsTrait
      */
     public function planoBorrar(int $id_direccion): void
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getPdoConnection();
         $nom_tabla = $this->getNomTabla();
 
         $nom = null;
@@ -92,6 +92,6 @@ trait PlanoOperationsTrait
     /**
      * Método abstracto que debe ser implementado por los repositorios
      */
-    abstract public function getoDbl(): \PDO;
+    abstract protected function getPdoConnection(): \PDO;
     abstract public function getNomTabla(): string;
 }

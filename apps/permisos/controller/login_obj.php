@@ -225,7 +225,7 @@ if (!isset($_SESSION['session_auth'])) {
         }
 
         if (($oDBSt->execute($aWhere)) === false) {
-            $sClauError = 'loguin_obj.execute';
+            $sClauError = 'login_obj.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDB_Select, $sClauError, __LINE__, __FILE__);
             return false;
         }

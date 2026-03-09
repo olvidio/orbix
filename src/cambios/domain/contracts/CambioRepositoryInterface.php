@@ -3,7 +3,6 @@
 namespace src\cambios\domain\contracts;
 
 use JsonException;
-use PDO;
 use src\cambios\domain\entity\Cambio;
 
 
@@ -44,10 +43,6 @@ interface CambioRepositoryInterface
     public function Guardar(Cambio $Cambio): bool;
 
     public function getErrorTxt(): string;
-
-    public function getoDbl(): PDO;
-
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

@@ -7,7 +7,7 @@ use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
-use src\actividadplazas\domain\ResumenPlazas;
+use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
@@ -117,7 +117,7 @@ class ListaPlazas
         $aGrupos = [];
         $a_activ = [];
         $msg_err = '';
-        $gesActividadPlazas = new ResumenPlazas();
+        $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
         $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
         $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
         $CasaDlRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);

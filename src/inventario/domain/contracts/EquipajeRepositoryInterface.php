@@ -2,7 +2,6 @@
 
 namespace src\inventario\domain\contracts;
 
-use PDO;
 use src\inventario\domain\entity\Equipaje;
 
 /**
@@ -40,9 +39,7 @@ interface EquipajeRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

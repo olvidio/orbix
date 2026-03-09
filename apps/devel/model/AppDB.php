@@ -18,7 +18,7 @@ class AppDB
         $this->id_mod = $id_mod;
         $ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
         $oModulo = $ModuloRepository->findById($id_mod);
-        $this->nom_mod = $oModulo->getNombreModVo()->value();
+        $this->nom_mod = $oModulo->getNomVo()->value();
 
         $this->oModuloConfig = new ModulosConfig();
     }

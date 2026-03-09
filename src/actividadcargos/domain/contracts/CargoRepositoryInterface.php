@@ -2,7 +2,6 @@
 
 namespace src\actividadcargos\domain\contracts;
 
-use PDO;
 use src\actividadcargos\domain\entity\Cargo;
 
 use function core\is_true;
@@ -41,9 +40,7 @@ interface CargoRepositoryInterface
 
 	public function getErrorTxt(): string;
 
-	public function getoDbl(): PDO;
 
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

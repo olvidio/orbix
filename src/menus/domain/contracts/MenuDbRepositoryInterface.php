@@ -2,7 +2,6 @@
 
 namespace src\menus\domain\contracts;
 
-use PDO;
 use src\menus\domain\entity\MenuDb;
 
 /**
@@ -36,9 +35,7 @@ interface MenuDbRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

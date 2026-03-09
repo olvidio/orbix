@@ -46,6 +46,11 @@ class PgDireccionCasaExRepository extends PgDireccionRepository implements Direc
         $this->planoBorrar($id_direccion);
     }
 
+    protected function getPdoConnection(): \PDO
+    {
+        return $this->getoDbl();
+    }
+
     public function getNewId(): int
     {
         $oDbl = $this->getoDbl();

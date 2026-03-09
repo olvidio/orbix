@@ -1,6 +1,7 @@
 <?php
 
 use core\ViewPhtml;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
@@ -100,7 +101,15 @@ $celebra = '';
 $situacion = $oPersona->getSituacion();
 $f_situacion = $oPersona->getF_situacion()?->getFromLocal();
 $profesion = $oPersona->getProfesion();
-$stgr = $oPersona->getNivel_stgr();
+$id_nivel_stgr = $oPersona->getNivel_stgr();
+$a_niveles_stgr = NivelStgrId::getArrayNivelStgr();
+$stgr = $a_niveles_stgr[$id_nivel_stgr] ?? '';
+$ce = $oPersona->getCe();
+$ce_lugar = $oPersona->getCe_lugar();
+$ce_ini = $oPersona->getCe_ini();
+$ce_fin = $oPersona->getCe_fin();
+$observ = $oPersona->getObserv();
+$id_ctr = '';
 if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {
     $id_ctr = $oPersona->getId_ctr();
     $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);

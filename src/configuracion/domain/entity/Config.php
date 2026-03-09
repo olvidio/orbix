@@ -29,7 +29,7 @@ class Config
         'oE' => '&#0339;'
     );
 
-   /* ATRIBUTOS ----------------------------------------------------------------- */
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private array $aCursoStgr;
     private array $aCursoCrt;
@@ -52,13 +52,13 @@ class Config
     }
 
     /**
-     * Devuelve TRUR O false si es o no jefe del calendario.
+     * Devuelve TRUE O FALSE si es o no jefe del calendario.
      * Si no se le pasa ningun valor, compara con el usuario actual
      *
      * @param string $username
      * @return boolean
      */
-    public function is_jefeCalendario(string $username = '')
+    public function is_jefeCalendario(string $username = ''): bool
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'jefe_calendario';
@@ -247,6 +247,25 @@ class Config
         }
     }
 
+    public function any_final_curs($que = 'est'): int
+    {
+        switch ($que) {
+            case 'est':
+                $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+                break;
+            case 'crt':
+                $fin_m = $_SESSION['oConfig']->getMesFinCrt();
+                break;
+            default:
+                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                exit ($err_switch);
+        }
+        if (date('m') > $fin_m) {
+            return (int)date("Y") + 1;
+        }
+        return (int)date("Y");
+    }
+
     public function setCursoStgr(): void
     {
         $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
@@ -291,7 +310,7 @@ class Config
         return $this->aCursoCrt;
     }
 
-    public function getDiaIniStgr():int
+    public function getDiaIniStgr(): int
     {
         $aCursoStgr = $this->getCursoStgr();
         if (empty($aCursoStgr['ini_dia'])) {
@@ -304,7 +323,7 @@ class Config
         }
     }
 
-    public function getMesIniStgr():int
+    public function getMesIniStgr(): int
     {
         $aCursoStgr = $this->getCursoStgr();
         if (empty($aCursoStgr['ini_mes'])) {
@@ -317,7 +336,7 @@ class Config
         }
     }
 
-    public function getDiaFinStgr():int
+    public function getDiaFinStgr(): int
     {
         $aCursoStgr = $this->getCursoStgr();
         if (empty($aCursoStgr['fin_dia'])) {
@@ -330,7 +349,7 @@ class Config
         }
     }
 
-    public function getMesFinStgr():int
+    public function getMesFinStgr(): int
     {
         $aCursoStgr = $this->getCursoStgr();
         if (empty($aCursoStgr['fin_mes'])) {
@@ -343,7 +362,7 @@ class Config
         }
     }
 
-    public function getDiaIniCrt():int
+    public function getDiaIniCrt(): int
     {
         $aCursoCrt = $this->getCursoCrt();
         if (empty($aCursoCrt['ini_dia'])) {
@@ -356,7 +375,7 @@ class Config
         return (int)$aCursoCrt['ini_dia'];
     }
 
-    public function getMesIniCrt():int
+    public function getMesIniCrt(): int
     {
         $aCursoCrt = $this->getCursoCrt();
         if (empty($aCursoCrt['ini_mes'])) {
@@ -370,7 +389,7 @@ class Config
 
     }
 
-    public function getDiaFinCrt():int
+    public function getDiaFinCrt(): int
     {
         $aCursoCrt = $this->getCursoCrt();
         if (empty($aCursoCrt['fin_dia'])) {
@@ -384,7 +403,7 @@ class Config
 
     }
 
-    public function getMesFinCrt():int
+    public function getMesFinCrt(): int
     {
         $aCursoCrt = $this->getCursoCrt();
         if (empty($aCursoCrt['fin_mes'])) {

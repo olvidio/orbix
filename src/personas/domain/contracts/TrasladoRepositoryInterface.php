@@ -2,7 +2,6 @@
 
 namespace src\personas\domain\contracts;
 
-use PDO;
 use src\personas\domain\entity\Traslado;
 
 
@@ -37,10 +36,6 @@ interface TrasladoRepositoryInterface
 	public function Guardar(Traslado $Traslado): bool;
 
 	public function getErrorTxt(): string;
-
-	public function getoDbl(): PDO;
-
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

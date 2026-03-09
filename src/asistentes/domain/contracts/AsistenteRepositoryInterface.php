@@ -2,7 +2,6 @@
 
 namespace src\asistentes\domain\contracts;
 
-use PDO;
 use src\asistentes\domain\entity\Asistente;
 use src\asistentes\domain\value_objects\AsistentePk;
 
@@ -38,10 +37,6 @@ interface AsistenteRepositoryInterface
     public function Guardar(Asistente $Asistente): bool;
 
     public function getErrorTxt(): string;
-
-    public function getoDbl(): PDO;
-
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

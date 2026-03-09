@@ -175,8 +175,8 @@ class Modulo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nom');
-        $oDatosCampo->setMetodoGet('getNombreModVo');
-        $oDatosCampo->setMetodoSet('setNombreMod'); // en tablaDB, no se pueden usar lo VO.
+        $oDatosCampo->setMetodoGet('getNomVo');
+        $oDatosCampo->setMetodoSet('setNom'); // en tablaDB, no se pueden usar lo VO.
         $oDatosCampo->setEtiqueta(_("nombre del módulo"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);

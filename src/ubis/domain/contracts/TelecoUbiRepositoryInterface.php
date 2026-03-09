@@ -2,7 +2,6 @@
 
 namespace src\ubis\domain\contracts;
 
-use PDO;
 use src\ubis\domain\entity\TelecoUbi;
 
 /**
@@ -29,9 +28,7 @@ interface TelecoUbiRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

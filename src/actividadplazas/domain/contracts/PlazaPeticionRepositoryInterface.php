@@ -2,7 +2,6 @@
 
 namespace src\actividadplazas\domain\contracts;
 
-use PDO;
 use src\actividadplazas\domain\entity\PlazaPeticion;
 use src\actividadplazas\domain\value_objects\PlazaPeticionPk;
 
@@ -38,9 +37,7 @@ interface PlazaPeticionRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

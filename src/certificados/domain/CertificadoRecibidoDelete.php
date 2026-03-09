@@ -4,6 +4,7 @@ namespace src\certificados\domain;
 
 use PDO;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
+use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 
 class CertificadoRecibidoDelete
 {
@@ -28,10 +29,7 @@ class CertificadoRecibidoDelete
     {
         $error_txt = '';
         if (!empty($Qid_item)) {
-            $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
-            if (isset($this->oDbl)) {
-                $certificadoRecibidoRepository->setoDbl($this->oDbl);
-            }
+            $certificadoRecibidoRepository = $this->certificadoRecibidoRepository();
             $oCertificadoRecibido = $certificadoRecibidoRepository->findById($Qid_item);
             if ($certificadoRecibidoRepository->Eliminar($oCertificadoRecibido) === false) {
                 $error_txt .= $certificadoRecibidoRepository->getErrorTxt();
@@ -40,5 +38,15 @@ class CertificadoRecibidoDelete
             $error_txt = _("No se encuentra el certificado");
         }
         return $error_txt;
+    }
+
+    private function certificadoRecibidoRepository(): CertificadoRecibidoRepositoryInterface
+    {
+        if (!isset($this->oDbl)) {
+            return $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
+        }
+
+        $factory = $GLOBALS['container']->get(ConnectionRepositoryFactoryInterface::class);
+        return $factory->createWithConnection(CertificadoRecibidoRepositoryInterface::class, $this->oDbl);
     }
 }

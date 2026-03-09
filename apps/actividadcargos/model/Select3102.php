@@ -11,6 +11,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
+use web\TiposActividades;
 use function core\is_true;
 
 /**
@@ -159,16 +160,22 @@ class Select3102
 
             // Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
             $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");
+            $eliminar = 1;
             if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
-                $this->txt_eliminar .= "\\n";
-                $this->txt_eliminar .= _("esto también borrará a esta persona de la lista de asistentes");
-                $eliminar = 2;
-            } else {
-                $eliminar = 1;
+                $oTipoActiv = new TiposActividades($id_tipo_activ);
+                $sasistentes = $oTipoActiv->getAsistentesText();
+                // Borrar también la asistencia, también en el caso de actividades de s y sg
+                if ($sasistentes === 's' || $sasistentes === 'sg') {
+                    $this->txt_eliminar .= "\\n";
+                    $this->txt_eliminar .= _("esto también borrará a esta persona de la lista de asistentes");
+                    $eliminar = 2;
+                }
             }
 
             if ($permiso == 3) {
-                $a_valores[$c]['sel'] = "$id_item#$eliminar#$id_schema";
+                // El formato debe ser compatible con el de las lista de asistentes (Select3101)
+                //$a_valores[$c]['sel'] = "$id_item#$eliminar#$id_schema";
+                $a_valores[$c]['sel'] = "$id_nom#$id_item#$eliminar#$id_schema";
             } else {
                 $a_valores[$c]['sel'] = "";
             }

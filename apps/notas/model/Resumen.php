@@ -9,6 +9,7 @@ use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
+use src\notas\application\services\ResumenTempTablesService;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
@@ -61,12 +62,6 @@ class Resumen extends ClasePropiedades
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /**
-     * oDbl de Acta
-     *
-     * @var object
-     */
-    protected $oDbl;
-    /**
      * NomTabla de Acta
      *
      * @var string
@@ -77,6 +72,7 @@ class Resumen extends ClasePropiedades
     protected $sNomAsignaturas;
     // para las cr, se mira directamente en la table de 'e_notas', no 'e_notas_dl'.
     protected $tablaNotas;
+    protected ResumenTempTablesService $tempTablesService;
 
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
@@ -112,11 +108,11 @@ class Resumen extends ClasePropiedades
                 exit ($err_switch);
         }
 
-        $this->setoDbl($oDbl);
         $this->setNomTabla($tabla);
         $this->setNomNotas($notas);
         $this->setNomAsignaturas($asignaturas);
         $this->setNomPersonas($personas);
+        $this->tempTablesService = new ResumenTempTablesService($oDbl);
 
         // En el caso cr-stgr, se consulta la tabla de notas
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
@@ -248,7 +244,6 @@ class Resumen extends ClasePropiedades
 
     public function nuevaTabla()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
@@ -258,100 +253,14 @@ class Resumen extends ClasePropiedades
         $fincurs = $this->getFinCurso();
 
         $any = (int)$this->getAnyIniCurs() + 1; //para los incorporados a partir del 1-jun.
-
-        $sqlDelete = "TRUNCATE TABLE $tabla";
-        $sqlCreate = "CREATE TABLE IF NOT EXISTS $tabla(
-										id_nom int4 NOT NULL PRIMARY KEY,
-										id_tabla char(6),
-										nom varchar(40),
-										apellido1  varchar(25),
-										apellido2  varchar(25),
-										nivel_stgr int,
-										situacion char(1),
-										f_situacion date,
-										f_o date,
-										f_fl date,
-										f_orden date,
-										ce_lugar varchar(40),
-										ce_ini int2,
-										ce_fin int2,
-										sacd bool,
-										ctr text )";
-
-        // En el caso cr-stgr, Hay que permitir duplicados (PRIMARY KEY)
-        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $sqlCreate = "CREATE TABLE IF NOT EXISTS $tabla(
-										id_nom int4 NOT NULL,
-										id_tabla char(6),
-										nom varchar(40),
-										apellido1  varchar(25),
-										apellido2  varchar(25),
-										nivel_stgr int,
-										situacion char(1),
-										f_situacion date,
-										f_o date,
-										f_fl date,
-										f_orden date,
-										ce_lugar varchar(40),
-										ce_ini int2,
-										ce_fin int2,
-										sacd bool,
-										ctr text )";
-        }
-
-        $oDbl->query($sqlCreate);
-        $oDbl->query("CREATE INDEX IF NOT EXISTS $tabla" . "_apellidos" . " ON $tabla (apellido1,apellido2,nom)");
-        $oDbl->query("CREATE INDEX IF NOT EXISTS $tabla" . "_stgr" . " ON $tabla (nivel_stgr)");
-        $oDbl->query($sqlDelete);
-
-        /*
-         * OOJO De momento estos campos no existen:
-         f_o date,
-         f_fl date,
-         f_orden date,
-         situacion char(1),
-         
-         $sqlLlenar="INSERT INTO $tabla
-         SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.nivel_stgr,
-         p.situacion,p.f_situacion,p.f_o,p.f_fl,p.f_orden,p.ce_lugar,p.ce_ini,p.ce_fin,p.situacion,p.sacd
-         FROM $personas p
-         WHERE ((p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL)) OR (p.situacion='D' AND (p.f_situacion $curs)) OR (p.situacion='L' AND (p.f_orden $curs)))
-         ";
-         */
-        $sqlLlenar = "INSERT INTO $tabla
-				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.nivel_stgr,
-				p.situacion,p.f_situacion,
-				NULL,NULL,NULL,
-				p.ce_lugar,p.ce_ini,p.ce_fin,
-				p.sacd,u.nombre_ubi
-				FROM $personas p LEFT JOIN u_centros_dl u ON (p.id_ctr = u.id_ubi)
-				WHERE (p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL))
-					 OR (p.situacion='D' AND p.f_situacion $curs)
-					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs')
-				";
-        // En el caso cr-stgr, añado la dl al nombre ubi.
-        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            // Si tengo dl filtro por dl.
-            $where_dl = '';
-            if (!empty($this->getArrayDl())) {
-                $dl_csv = implode("','", $this->getArrayDl());
-                $where_dl = "u.dl IN ('$dl_csv') AND";
-            }
-            $sqlLlenar = "INSERT INTO $tabla
-				SELECT p.id_nom,p.id_tabla,p.nom,p.apellido1,p.apellido2,p.nivel_stgr,
-				p.situacion,p.f_situacion,
-				NULL,NULL,NULL,
-				p.ce_lugar,p.ce_ini,p.ce_fin,
-				p.sacd,u.nombre_ubi || ' (' || u.dl || ')'
-				FROM $personas p LEFT JOIN u_centros_dl u ON (p.id_ctr = u.id_ubi)
-				WHERE $where_dl ( (p.situacion='A' AND (p.f_situacion < '$fincurs' OR p.f_situacion IS NULL))
-					 OR (p.situacion='D' AND p.f_situacion $curs)
-					 OR (p.situacion!='A' AND p.f_situacion > '$fincurs') )
-				";
-
-        }
-        //echo "sql: $sqlLlenar<br>";
-        $oDbl->query($sqlLlenar);
+        $this->tempTablesService->rebuildMainTable(
+            $tabla,
+            $personas,
+            $fincurs,
+            $curs,
+            ConfigGlobal::mi_ambito() === 'rstgr',
+            $this->getArrayDl() ?? []
+        );
 
         // Busco los que han ido a un ci
 
@@ -362,7 +271,7 @@ class Resumen extends ClasePropiedades
 			WHERE p.situacion='A' AND p.f_situacion > '$any-6-1'
 				AND (p.nivel_stgr IN (" . NivelStgrId::B . ", " . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")) ";
         //echo "qry: $ssql<br>";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $nf = $statement->rowCount();
         if ($this->blista && $nf != 0) {
             echo "<p>Existen $nf Alumnos que se han incorporado \"recientemente\" (desde el 1-junio) a la dl<br>
@@ -376,7 +285,7 @@ class Resumen extends ClasePropiedades
 			FROM $tabla p
 			WHERE p.nivel_stgr IN (" . NivelStgrId::B . ", " . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")
 				AND (p.situacion='A' AND p.f_situacion > '$fincurs')";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $nf = $statement->rowCount();
 
         if ($this->blista && $nf != 0) {
@@ -386,42 +295,16 @@ class Resumen extends ClasePropiedades
             echo $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
         }
 
-        //Pongo 'b' en nivel_stgr a los que han terminado el bienio este curso
-        $ssql = "UPDATE $tabla SET nivel_stgr=".NivelStgrId::B."
-				FROM $this->tablaNotas n
-				WHERE $tabla.id_nom=n.id_nom AND n.id_asignatura=9999 AND n.f_acta $curs
-				 ";
-        $statement = $oDbl->query($ssql);
-        $nf = $statement->rowCount();
-
-        //Pongo 'c2' en nivel_stgr a los que han terminado el cuadrienio este curso
-        $ssql = "UPDATE $tabla SET nivel_stgr=" . NivelStgrId::C2 . "
-				FROM $this->tablaNotas n
-				WHERE $tabla.id_nom=n.id_nom AND n.id_asignatura=9998 AND n.f_acta $curs
-				 ";
-        $statement = $oDbl->query($ssql);
-        $nf = $statement->rowCount();
-
-        //Ahora las notas
-        $sqlDelete = "TRUNCATE TABLE $notas";
-        $sqlCreate = "CREATE TABLE IF NOT EXISTS $notas(
-										id_nom int4 NOT NULL,
-										id_asignatura int4 NOT NULL,
-										id_nivel int4 NOT NULL,
-										epoca int2,
-										f_acta  date NOT NULL,
-										acta  varchar(50),
-										preceptor bool,
-										PRIMARY KEY (id_nom,id_asignatura)
-										 )";
-
-        $oDbl->query($sqlCreate);
-        $oDbl->query("CREATE INDEX IF NOT EXISTS $notas" . "_nivel" . " ON $notas (id_nivel)");
-        $oDbl->query($sqlDelete);
+        $this->tempTablesService->applyNivelUpdates(
+            $tabla,
+            $this->tablaNotas,
+            $curs,
+            NivelStgrId::B,
+            NivelStgrId::C2
+        );
 
         $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $a_superadas = $NotaRepository->getArrayNotasSuperadas();
-        $Where_superada = "AND id_situacion IN (" . implode(',', $a_superadas) . ")";
         // Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
         if (ConfigGlobal::mi_sfsv() == 1) {
             $notas_vf = 'publicv.e_notas';
@@ -429,59 +312,15 @@ class Resumen extends ClasePropiedades
         if (ConfigGlobal::mi_sfsv() == 2) {
             $notas_vf = 'publicf.e_notas';
         }
-        $sqlLlenar = "INSERT INTO $notas
-					SELECT DISTINCT n.id_nom,n.id_asignatura,n.id_nivel,
-						   n.epoca,n.f_acta,n.acta,n.preceptor
-					FROM $tabla p, $notas_vf n
-					WHERE p.id_nom=n.id_nom AND n.f_acta $curs AND tipo_acta = 1
-                        $Where_superada
-					";
-        //echo "sql: $sqlLlenar<br>";
-        $oDbl->query($sqlLlenar);
-
-        //Ahora las asignaturas
-        //Como ahora las asignaturas están en otra base de datos(comun) hago una copia para poder hacer unions...
-        $sqlDelete = "DROP TABLE IF EXISTS $asignaturas CASCADE";
-        $sqlCreate = "CREATE TABLE $asignaturas(
-						id_asignatura integer,
-						id_nivel integer,
-						nombre_asignatura character varying(100) NOT NULL,
-						nombre_corto character varying(23),
-						creditos numeric(4,2),
-						year character varying(3),
-						id_sector smallint,
-						active boolean DEFAULT true NOT NULL,
-						id_tipo integer
-					 )";
-
-        $oDbl->query($sqlDelete);
-        $oDbl->query($sqlCreate);
-        $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_nivel" . " ON $asignaturas (id_nivel)");
-        $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_id_asignatura" . " ON $asignaturas (id_asignatura)");
+        $this->tempTablesService->rebuildNotasTable($notas, $tabla, $curs, $notas_vf, $a_superadas);
 
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('active' => 'true'));
-
-        $prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :active, :id_tipo)");
-        foreach ($cAsignaturas as $oAsignatura) {
-            $aDades = [];
-            $aDades['id_asignatura'] = $oAsignatura->getId_asignatura();
-            $aDades['id_nivel'] = $oAsignatura->getId_nivel();
-            $aDades['nombre_asignatura'] = $oAsignatura->getNombre_asignatura();
-            $aDades['nombre_corto'] = $oAsignatura->getNombre_corto();
-            $aDades['creditos'] = $oAsignatura->getCreditos();
-            $aDades['year'] = $oAsignatura->getYear();
-            $aDades['id_sector'] = $oAsignatura->getId_sector();
-            $aDades['active'] = $oAsignatura->isActive();
-            $aDades['id_tipo'] = $oAsignatura->getId_tipo();
-
-            $prep->execute($aDades);
-        }
+        $this->tempTablesService->rebuildAsignaturasTable($asignaturas, $cAsignaturas);
     }
 
     public function ListaAsig($a_Asql, $statement)
     {
-        $oDbl = $this->getoDbl();
         // Para sacar una lista
         $html = "<table>";
         $id_nom = 0;
@@ -536,7 +375,6 @@ class Resumen extends ClasePropiedades
 
     public function Lista($sql, $campos, $cabecera)
     {
-        $oDbl = $this->getoDbl();
         // $campos es un string con los campos que se quiere listar, separados por comas
         $camp = explode(',', $campos);
         $html = "<table>";
@@ -548,7 +386,7 @@ class Resumen extends ClasePropiedades
             $html .= "</tr>";
             $p = reset($camp);
         }
-        foreach ($oDbl->query($sql) as $fila => $valor) {
+        foreach ($this->tempTablesService->query($sql) as $fila => $valor) {
             $html .= "<tr><td width=20></td>";
             foreach ($camp as $key => $val) {
                 $html .= "<td>$valor[$val]</td>";
@@ -564,7 +402,6 @@ class Resumen extends ClasePropiedades
 
     public function enBienio()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $ssql = "SELECT p.id_nom,p.nom,p.apellido1,p.apellido2,ctr
@@ -572,7 +409,7 @@ class Resumen extends ClasePropiedades
 		WHERE p.nivel_stgr=" . NivelStgrId::B . "
 		ORDER BY p.apellido1,p.apellido2,p.nom
 		";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -584,7 +421,6 @@ class Resumen extends ClasePropiedades
 
     public function enCuadrienio($c = 'all')
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $where = '';
         switch ($c) {
@@ -603,7 +439,7 @@ class Resumen extends ClasePropiedades
 				$where
 				ORDER BY p.apellido1,p.apellido2,p.nom
 				";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -615,7 +451,6 @@ class Resumen extends ClasePropiedades
 
     public function enRepaso()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $ssql = "SELECT p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr
@@ -623,7 +458,7 @@ class Resumen extends ClasePropiedades
 		WHERE p.nivel_stgr=" . NivelStgrId::R . "
 		ORDER BY p.apellido1,p.apellido2,p.nom
 		";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -635,7 +470,6 @@ class Resumen extends ClasePropiedades
 
     public function enTotal()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $ssql = "SELECT p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr,p.nivel_stgr
@@ -643,7 +477,7 @@ class Resumen extends ClasePropiedades
 		WHERE p.nivel_stgr IN (" . NivelStgrId::B . ", " . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")
 		ORDER BY p.apellido1,p.apellido2,p.nom
 		";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nivel_stgr", 1);
@@ -656,7 +490,6 @@ class Resumen extends ClasePropiedades
     public function enStgrSinO()
     {
         $iniverano = $this->diniverano;
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         /*
@@ -667,7 +500,7 @@ class Resumen extends ClasePropiedades
          ORDER BY p.apellido1,p.apellido2,p.nom
          ";
          
-         $statement = $oDbl->query($ssql);
+         $statement = $this->tempTablesService->query($ssql);
          $rta['num'] = $statement->rowCount();
          if (is_true($this->blista) && $rta['num'] > 0) {
          $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
@@ -688,7 +521,6 @@ class Resumen extends ClasePropiedades
      */
     public function enCe()
     {
-        $oDbl = $this->getoDbl();
         //$tabla = $this->getNomTabla();
         $tabla = 'p_numerarios';
         //$ce_lugar = $this->getCe_lugar();
@@ -719,7 +551,7 @@ class Resumen extends ClasePropiedades
                AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any')
                AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
             ORDER BY p.apellido1,p.apellido2,p.nom  ";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $nf = $statement->rowCount();
         if ($nf >= 1) {
             $rta['error'] = true;
@@ -737,7 +569,6 @@ class Resumen extends ClasePropiedades
 
     public function sinCe()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         //$ce_lugar = $this->getCe_lugar();
         //$any = $this->getAnyFiCurs();
@@ -750,7 +581,7 @@ class Resumen extends ClasePropiedades
             ";
 
         //echo "sql: $ssql<br>";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -762,7 +593,6 @@ class Resumen extends ClasePropiedades
 
     public function aprobadasCe()
     {
-        $oDbl = $this->getoDbl();
         //$tabla = $this->getNomTabla();
         $tabla = 'p_numerarios';
         //$notas = $this->getNomNotas();
@@ -805,7 +635,7 @@ class Resumen extends ClasePropiedades
                 AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
                 $Where_superada
 				";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->fetchColumn();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = '';
@@ -817,7 +647,6 @@ class Resumen extends ClasePropiedades
 
     public function aprobadasSinCe()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         //$ce_lugar = $this->getCe_lugar();
@@ -831,7 +660,7 @@ class Resumen extends ClasePropiedades
 			 	AND (p.nivel_stgr=" . NivelStgrId::B . ")
 			";
 
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->fetchColumn();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = '';
@@ -848,7 +677,6 @@ class Resumen extends ClasePropiedades
      */
     public function bienioSinAcabar()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $rta = [];
@@ -862,7 +690,7 @@ class Resumen extends ClasePropiedades
                 ORDER BY 3
                 ";
 
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -881,7 +709,6 @@ class Resumen extends ClasePropiedades
     {
         //$ce_lugar = $this->getCe_lugar();
         $any = $this->getAnyFiCurs();
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $rta = [];
@@ -889,7 +716,7 @@ class Resumen extends ClasePropiedades
             FROM $tabla p
             WHERE  p.ce_fin < '$any' AND p.ce_lugar IS NOT NULL AND p.nivel_stgr = " . NivelStgrId::B . "
             ORDER BY p.apellido1,p.apellido2,p.nom  ";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $nf = $statement->rowCount();
         if ($nf >= 1) {
             $rta['error'] = true;
@@ -907,7 +734,6 @@ class Resumen extends ClasePropiedades
 
     public function aprobadasBienio()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
@@ -919,7 +745,7 @@ class Resumen extends ClasePropiedades
 					AND p.nivel_stgr IN (" . NivelStgrId::B . ", " . NivelStgrId::BC . ")
 				ORDER BY p.apellido1, p.apellido2, p.nom
 				";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = sprintf(_("total de asignaturas superadas en bienio %s"), $rta['num']);
@@ -932,7 +758,6 @@ class Resumen extends ClasePropiedades
 
     public function aprobadasCuadrienio()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
@@ -948,7 +773,7 @@ class Resumen extends ClasePropiedades
          GROUP BY p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
          ORDER BY p.apellido1, p.apellido2, p.nom
          ";
-         $statement=$oDbl->query($ssql);
+         $statement=$this->tempTablesService->query($ssql);
          $nf=$statement->rowCount();
          if ($nf >= 1){
          $rta['error'] = true;
@@ -965,7 +790,7 @@ class Resumen extends ClasePropiedades
         //				FROM $notas n
         //				WHERE n.id_nivel BETWEEN 2100 AND 2500
         //				 ";
-        //		$statement=$oDbl->query($ssql);
+        //		$statement=$this->tempTablesService->query($ssql);
         //		$rta['num'] = $statement->fetchColumn();
         $ssql = "SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr, a.nombre_corto, n.acta, n.preceptor
 				FROM $tabla p,$notas n, $asignaturas a
@@ -974,7 +799,7 @@ class Resumen extends ClasePropiedades
 					AND p.nivel_stgr IN (" . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")
 				ORDER BY p.apellido1, p.apellido2, p.nom
 				";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = sprintf(_("total de asignaturas superadas en cuadrienio %s"), $rta['num']);
@@ -988,7 +813,6 @@ class Resumen extends ClasePropiedades
     // cuadrienio
     public function masAsignaturasQue($numAsig = 10)
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
@@ -1002,7 +826,7 @@ class Resumen extends ClasePropiedades
 		ORDER BY p.apellido1,p.apellido2,p.nom  ";
 
         //echo "qry: $ssql<br>";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1014,7 +838,6 @@ class Resumen extends ClasePropiedades
 
     public function masCreditosQue($creditos = '28.5')
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
@@ -1028,7 +851,7 @@ class Resumen extends ClasePropiedades
 		ORDER BY p.apellido1,p.apellido2,p.nom  ";
 
         //echo "qry: $ssql<br>";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1040,7 +863,6 @@ class Resumen extends ClasePropiedades
 
     public function menosAsignaturasQue($numASig = 5)
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
@@ -1054,7 +876,7 @@ class Resumen extends ClasePropiedades
 		HAVING count(*) <= $numASig
 		ORDER BY p.apellido1,p.apellido2,p.nom  ";
 
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1066,7 +888,6 @@ class Resumen extends ClasePropiedades
 
     public function menosCreditosQue($creditos = '14')
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
@@ -1080,7 +901,7 @@ class Resumen extends ClasePropiedades
 		HAVING SUM( CASE WHEN n.id_nivel < 2430 THEN a.creditos else 1 END) <= $creditos
 		ORDER BY p.apellido1,p.apellido2,p.nom  ";
 
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1092,7 +913,6 @@ class Resumen extends ClasePropiedades
 
     public function ningunaSuperada()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
 
@@ -1103,7 +923,7 @@ class Resumen extends ClasePropiedades
 		ORDER BY p.apellido1,p.apellido2,p.nom
 		";
 
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1115,7 +935,6 @@ class Resumen extends ClasePropiedades
 
     public function conPreceptorBienio()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
 
@@ -1126,7 +945,7 @@ class Resumen extends ClasePropiedades
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		ORDER BY p.apellido1,p.apellido2,p.nom ";
 
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1138,7 +957,6 @@ class Resumen extends ClasePropiedades
 
     public function conPreceptorCuadrienio()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
 
@@ -1149,7 +967,7 @@ class Resumen extends ClasePropiedades
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		ORDER BY p.apellido1,p.apellido2,p.nom ";
 
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1161,7 +979,6 @@ class Resumen extends ClasePropiedades
 
     public function terminadoCuadrienio()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $curs = $this->getCurso();
@@ -1173,7 +990,7 @@ class Resumen extends ClasePropiedades
 		GROUP BY n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		ORDER BY p.apellido1, p.apellido2,p.nom";
 
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1191,7 +1008,6 @@ class Resumen extends ClasePropiedades
      */
     public function laicosConCuadrienio()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $curs = $this->getCurso();
@@ -1213,7 +1029,7 @@ class Resumen extends ClasePropiedades
          $ssql = "( $sql1 ) EXCEPT ( $sql2 ) ORDER BY 3,4,2";
          */
 
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1232,28 +1048,18 @@ class Resumen extends ClasePropiedades
      */
     public function nuevaTablaProfe()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $personas = $this->getNomPersonas();
 
-        // Finalmente no distingo porque los cojo todos de la tabla padre (personas_dl)
-        $sqlDelete = "DROP TABLE IF EXISTS $tabla";
-        $oDbl->query($sqlDelete);
-        $sqlCreate = "CREATE TABLE $tabla AS
-						SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2,u.nombre_ubi as ctr
-		   				FROM $personas p JOIN d_profesor_stgr d USING(id_nom), u_centros_dl u
-						WHERE situacion='A' AND (p.id_ctr = u.id_ubi)
-						ORDER BY id_nom";
-        $oDbl->query($sqlCreate);
-        //echo "$sqlCreate<br>";
+        $this->tempTablesService->rebuildProfesorTable($tabla, $personas);
 
         /*
          try {
-         $oDbl->query($sqlCreate);
-         $oDbl->query("CREATE INDEX IF NOT EXISTS $tabla"."_id_nom"." ON $tabla (id_nom)");
+         $this->tempTablesService->query($sqlCreate);
+         $this->tempTablesService->query("CREATE INDEX IF NOT EXISTS $tabla"."_id_nom"." ON $tabla (id_nom)");
          } catch (\PDOException $e) {
          echo $e->getMessage();
-         $stmt = $oDbl->prepare($sqlDelete);
+         $stmt = $this->tempTablesService->prepare($sqlDelete);
          $stmt->execute();
          echo 'The number of row(s) deleted: ' . $deletedRows . '<br>';
          }
@@ -1263,7 +1069,6 @@ class Resumen extends ClasePropiedades
 
     public function profesorDeTipo($id_tipo = 0)
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $where_tipo = '';
@@ -1273,7 +1078,7 @@ class Resumen extends ClasePropiedades
         $ssql = "SELECT DISTINCT p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr
 				FROM d_profesor_stgr JOIN $tabla p USING (id_nom)
 				WHERE $where_tipo f_cese is null";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1285,13 +1090,12 @@ class Resumen extends ClasePropiedades
 
     public function profesorDeLatin()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $ssql = "SELECT DISTINCT p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr
 				FROM d_profesor_latin JOIN $tabla p USING (id_nom)
 				WHERE latin='t'";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1303,13 +1107,12 @@ class Resumen extends ClasePropiedades
 
     public function arrayProfesorDepartamento()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $ssql = "SELECT DISTINCT p.id_nom,d.id_departamento
 				FROM $tabla p JOIN d_profesor_stgr d USING(id_nom)
 				WHERE d.f_cese is null";
-        $statement = $oDbl->prepare($ssql);
+        $statement = $this->tempTablesService->prepare($ssql);
         $statement->execute();
         $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -1319,7 +1122,6 @@ class Resumen extends ClasePropiedades
     /*44. Número de profesores que dieron clase de su especialidad*/
     public function profesorEspecialidad($otras = FALSE)
     {
-        $oDbl = $this->getoDbl();
         $any = $this->getAnyFiCurs();
         $curso_inicio = $any - 1;
         $SectorRepository = $GLOBALS['container']->get(SectorRepositoryInterface::class);
@@ -1339,7 +1141,7 @@ class Resumen extends ClasePropiedades
                 . " FROM d_docencia_stgr d JOIN $asignaturas a USING (id_asignatura)"
                 . " WHERE d.id_nom=$id_nom AND curso_inicio=$curso_inicio AND d.tipo != 'p'";
             //echo "sql: $ssql<br>";
-            foreach ($oDbl->query($ssql) as $row2) {
+            foreach ($this->tempTablesService->query($ssql) as $row2) {
                 $id_nom = $row2['id_nom'];
                 $id_activ = $row2['id_activ'];
                 $id_sector = $row2['id_sector'];
@@ -1415,7 +1217,6 @@ class Resumen extends ClasePropiedades
     /*42. Número de profesores asistentes a congresos...*/
     public function ProfesorCongreso()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $curs = $this->getCurso();
@@ -1423,7 +1224,7 @@ class Resumen extends ClasePropiedades
         $ssql = "SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2, p.ctr
 				FROM d_congresos JOIN $tabla p USING (id_nom) WHERE f_ini $curs ";
         //echo "$ssql<br>";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1436,7 +1237,6 @@ class Resumen extends ClasePropiedades
     // Profesores de Bienio.
     public function ProfesoresEnBienio()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $ssql = "SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr
@@ -1444,7 +1244,7 @@ class Resumen extends ClasePropiedades
 				WHERE f_cese is null AND id_departamento=1
 				ORDER BY p.apellido1,p.apellido2,p.nom
 				";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1457,7 +1257,6 @@ class Resumen extends ClasePropiedades
     // Profesores de Cuadrienio.
     public function ProfesoresEnCuadrienio()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $ssql = "SELECT DISTINCT  p.id_nom,p.nom,p.apellido1,p.apellido2,p.ctr
@@ -1465,7 +1264,7 @@ class Resumen extends ClasePropiedades
 				WHERE f_cese is null AND id_departamento!=1
 				ORDER BY p.apellido1,p.apellido2,p.nom
 				";
-        $statement = $oDbl->query($ssql);
+        $statement = $this->tempTablesService->query($ssql);
         $rta['num'] = $statement->rowCount();
         if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
@@ -1478,7 +1277,6 @@ class Resumen extends ClasePropiedades
     // Numero de departamentos con director
     public function Departamentos()
     {
-        $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
         $ProfesorDirectorRepository = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);

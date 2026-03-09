@@ -2,7 +2,6 @@
 
 namespace src\profesores\domain\contracts;
 
-use PDO;
 use src\profesores\domain\entity\ProfesorPublicacion;
 
 
@@ -38,9 +37,7 @@ interface ProfesorPublicacionRepositoryInterface
 
 	public function getErrorTxt(): string;
 
-	public function getoDbl(): PDO;
 
-	public function setoDbl(PDO $oDbl): void;
 
 	public function getNomTabla(): string;
 	

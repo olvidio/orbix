@@ -60,7 +60,7 @@ if ($Qmod !== 'nuevo') {
     $ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
     $oModulo = $ModuloRepository->findById($Qid_mod);
     if (!empty($oModulo)) {
-        $nom = $oModulo->getNombreModVo()->value();
+        $nom = $oModulo->getNomVo()->value();
         $descripcion = $oModulo->getDescripcionVo()?->value()?? '';
         $a_mods_req = $oModulo->getModsReqVo()?->toArray()?? [];
         $a_apps_req = $oModulo->getAppsReqVo()?->toArray()?? [];

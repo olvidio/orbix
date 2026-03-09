@@ -29,9 +29,11 @@ use frontend\shared\web\Desplegable;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 use function core\is_true;
@@ -54,17 +56,11 @@ $Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    if ($Qid_dossier === 3101) {  // vengo del listado de asistencias
-        $Qid_nom = (integer)strtok($a_sel[0], "#");
-        $Qid_item = (integer)strtok("#"); // si no hay devuelve false
-        $Qid_item = empty($Qid_item) ? '' : $Qid_item; // cambiar el false a ''.
-        $eliminar = (integer)strtok("#");
-        $Qid_schema = (integer)strtok("#");
-    } else {
-        $Qid_item = (integer)strtok($a_sel[0], "#");
-        $eliminar = (integer)strtok("#");
-        $Qid_schema = (integer)strtok("#");
-    }
+    $Qid_nom = (integer)strtok($a_sel[0], "#");
+    $Qid_item = (integer)strtok("#"); // si no hay devuelve false
+    $Qid_item = empty($Qid_item) ? '' : $Qid_item; // cambiar el false a ''.
+    $eliminar = (integer)strtok("#");
+    $Qid_schema = (integer)strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
     $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
@@ -144,6 +140,10 @@ if (!empty($Qid_item)) { //caso de modificar
                 $oDesplegablePersonas->setOpciones($oOpciones);
                 break;
             case 'PersonaSSSC':
+                $PersonaSRepository = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+                $oOpciones = $PersonaSRepository->getArrayPersonas();
+                $oDesplegablePersonas->setOpciones($oOpciones);
+                break;
             case 'PersonaEx':
                 $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
                 $oOpciones = $PersonaExRepository->getArrayPersonas($na_val);
@@ -159,7 +159,7 @@ $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
 $aOpciones = $CargoRepository->getArrayCargos();
 $oDesplegableCargos = new Desplegable();
 $oDesplegableCargos->setNombre('id_cargo');
-$oDesplegableCargos->setBlanco(false);
+$oDesplegableCargos->setBlanco(true);
 $oDesplegableCargos->setOpciones($aOpciones);
 $oDesplegableCargos->setOpcion_sel($Qid_cargo);
 $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';

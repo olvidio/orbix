@@ -7,7 +7,7 @@
 use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
-use src\actividadplazas\domain\ResumenPlazas;
+use src\actividadplazas\application\services\ResumenPlazasService;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -92,7 +92,7 @@ switch ($que) {
         }
         // valor por defecto
         $propietario = ConfigGlobal::mi_delef() . ">" . $dl_de_paso;
-        $gesActividadPlazas = new ResumenPlazas();
+        $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
         $gesActividadPlazas->setId_activ($id_activ);
         $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
         $oDesplPosiblesPropietarios->setNombre('propietario');

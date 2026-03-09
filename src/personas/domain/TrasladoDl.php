@@ -19,7 +19,13 @@ use src\certificados\domain\entity\CertificadoRecibido;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
+use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\Traslado;
@@ -32,6 +38,8 @@ use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
+use src\shared\domain\contracts\ConnectionObjectBinderInterface;
+use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\application\services\DelegacionUtils;
@@ -477,8 +485,7 @@ class TrasladoDl
         $error = '';
         $oDBorg = $this->conexionOrg();
 
-        $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-        $MatriculaDlRepository->setoDbl($oDBorg);
+        $MatriculaDlRepository = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBorg);
         $cMatriculasPendientes = $MatriculaDlRepository->getMatriculasPendientes($this->iid_nom);
         $msg = '';
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
@@ -515,7 +522,8 @@ class TrasladoDl
         $error = '';
         $oDBorg = $this->conexionOrg();
         // dar permisos al usuario orbixv para acceder a personas_dl (?) o buscar tipo de persona
-        $PersonaDlRepossitory = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        $PersonaDlRepositoryFactory = $GLOBALS['container']->get(PersonaDlRepositoryFactoryInterface::class);
+        $PersonaDlRepossitory = $PersonaDlRepositoryFactory->createWithConnection($oDBorg);
         $oPersonaDl = $PersonaDlRepossitory->findById($this->iid_nom);
         $oPersonaDl->setSituacionVo($this->ssituacion);
         $oPersonaDl->setF_situacion($this->df_dl, FALSE);
@@ -613,55 +621,55 @@ class TrasladoDl
     public function copiarPersona()
     {
         $error = '';
-        $oDBorg = $this->conexionOrg();
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $PersonaDlRepository->setoDbl($oDBorg);
+        $oDBorg = $this->getOrgConnectionForCopyPersona();
+        $PersonaDlRepository = $this->repositoryWithConnection(PersonaDlRepositoryInterface::class, $oDBorg);
         $oPersonaDl = $PersonaDlRepository->findById($this->iid_nom);
-        // Trasladar persona
-        $oDBdst = $this->conexionDst();
-
-        // Copiar los datos a la dl destino si existe en orbix.
-        if (($qRs = $oDBorg->query("SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '$this->snew_esquema') AS existe")) === false) {
-            $sClauError = 'Controller.Traslados';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($qRs, $sClauError, __LINE__, __FILE__);
+        if ($oPersonaDl === null) {
+            $error = sprintf(_("No se ha encontrado la persona con id: %s"), $this->iid_nom);
+            $this->serror = $error;
             return false;
         }
-        $aDades = $qRs->fetch(\PDO::FETCH_ASSOC);
+
+        // Trasladar persona
+        $this->snew_esquema = $this->sreg_dl_dst;
+        $oDBdst = $this->getDstConnectionForCopyPersona();
+
+        // Copiar los datos a la dl destino si existe en orbix.
+        $schemaExists = $this->schemaExistsInDatabase($oDBorg, $this->snew_esquema);
+        if ($schemaExists === null) {
+            return false;
+        }
         // si existe el esquema (dl)
-        if (empty($aDades['existe'])) {
+        if ($schemaExists === false) {
             $error = sprintf(_("no existe el esquema destino %s en la base de datos"), $this->snew_esquema);
         }
-        if (!empty($aDades['existe']) && $aDades['existe'] === true) {
-            $id_tabla = $oPersonaDl->getIdTablaVo()->value();
-            switch ($id_tabla) {
-                case 'n':
-                    $obj = 'personas\model\entity\PersonaN';
-                    break;
-                case 'a':
-                    $obj = 'personas\model\entity\PersonaAgd';
-                    break;
-                case 's':
-                    $obj = 'personas\model\entity\PersonaS';
-                    break;
-                case 'sssc':
-                    $obj = 'personas\model\entity\PersonaSSSC';
-                    break;
-                case 'x':
-                    $obj = 'personas\legacy\PersonaNax';
-                    break;
-            }
-            $oPersona = new $obj();
-            $oPersona->setoDbl($oDBorg);
-            $oPersona->setId_nom($this->iid_nom);
-            $oPersona->DBCarregar();
-            $oPersonaNew = clone $oPersona;
-            $oPersonaNew->setoDbl($oDBdst);
-            $oPersonaNew->setDlVo($this->sdl_dst);
-            $oPersonaNew->setSituacionVo('A');
-            $oPersonaNew->setF_situacion($this->df_dl, FALSE);
-            //$oPersonaNew->setId_ctr(''); // Por si también se traslada el ctr (Torreciudad de dlz a dlb)
-            if ($oPersonaNew->DBGuardar() === false) {
-                $error .= '<br>' . _("hay un error, no se ha guardado");
+        if ($schemaExists === true) {
+            $idTabla = $oPersonaDl->getIdTablaVo()->value();
+            $repositoryId = $this->getPersonaRepositoryByTable($idTabla);
+            if ($repositoryId === null) {
+                $error = sprintf(_("No se reconoce el tipo de persona: %s"), $idTabla);
+            } else {
+                $personaOrgRepository = $this->repositoryWithConnection($repositoryId, $oDBorg);
+                $personaDstRepository = $this->repositoryWithConnection($repositoryId, $oDBdst);
+
+                $oPersona = $personaOrgRepository->findById($this->iid_nom);
+                if ($oPersona === null) {
+                    $error = sprintf(_("No se ha encontrado la persona origen con id: %s"), $this->iid_nom);
+                } else {
+                    $oPersonaNew = clone $oPersona;
+                    $oPersonaNew->setDlVo($this->sdl_dst);
+                    $oPersonaNew->setSituacionVo('A');
+
+                    $fSituacion = $this->getF_dl();
+                    if ($fSituacion instanceof NullDateTimeLocal) {
+                        $fSituacion = null;
+                    }
+                    $oPersonaNew->setF_situacion($fSituacion);
+
+                    if ($personaDstRepository->Guardar($oPersonaNew) === false) {
+                        $error .= '<br>' . _("hay un error, no se ha guardado");
+                    }
+                }
             }
         }
         //$this->restaurarConexionOrg($oDBorg);
@@ -671,6 +679,44 @@ class TrasladoDl
             return false;
         }
         return true;
+    }
+
+    protected function getOrgConnectionForCopyPersona(): \PDO
+    {
+        return $this->conexionOrg();
+    }
+
+    protected function getDstConnectionForCopyPersona(): \PDO
+    {
+        return $this->conexionDst();
+    }
+
+    protected function schemaExistsInDatabase(\PDO $oDBorg, string $schema): ?bool
+    {
+        $stmt = $oDBorg->prepare("SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = :schema) AS existe");
+        if ($stmt === false || $stmt->execute(['schema' => $schema]) === false) {
+            if (isset($_SESSION['oGestorErrores'])) {
+                $sClauError = 'Controller.Traslados';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($stmt, $sClauError, __LINE__, __FILE__);
+            }
+            return null;
+        }
+        $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $rawExists = $aDades['existe'] ?? false;
+
+        return in_array($rawExists, [true, 1, '1', 't', 'true'], true);
+    }
+
+    private function getPersonaRepositoryByTable(string $idTabla): ?string
+    {
+        return match ($idTabla) {
+            'n' => PersonaNRepositoryInterface::class,
+            'a' => PersonaAgdRepositoryInterface::class,
+            's' => PersonaSRepositoryInterface::class,
+            'sssc' => PersonaSSSCRepositoryInterface::class,
+            'x', 'nax' => PersonaNaxRepositoryInterface::class,
+            default => null,
+        };
     }
 
     public function copiarNotas()
@@ -684,8 +730,7 @@ class TrasladoDl
         $oDBorg = $this->conexionOrg();
         $oDBdst = $this->conexionDst();
 
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
-        $PersonaNotaDBRepository->setoDbl($oDBorg);
+        $PersonaNotaDBRepository = $this->repositoryWithConnection(PersonaNotaDlRepositoryInterface::class, $oDBorg);
         $collection = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $this->iid_nom));
         if (!empty($collection)) {
             $new_dl = DelegacionUtils::getDlFromSchema($this->snew_esquema);
@@ -726,7 +771,6 @@ class TrasladoDl
                 $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $esquema_region_stgr);
 
                 //borrar la origen:
-                $PersonaNotaDBRepository->setoDbl($oDBorg);
                 $PersonaNotaDBRepository->Eliminar($oPersonaNotaDB);
             }
 
@@ -745,9 +789,9 @@ class TrasladoDl
         $oDBorgE = $this->conexionOrg(TRUE);
         $oDBdstE = $this->conexionDst(TRUE);
         // Los Out pasan a Dl si la dl destino es la que organiza.
-        $AsistenteOutRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
-        $AsistenteOutRepository->setoDbl($oDBorgE);
-        $collection = $AsistenteOutRepository->getAsistentesOut(array('id_nom' => $this->iid_nom));
+        $AsistenteOutOrgRepository = $this->repositoryWithConnection(AsistenteOutRepositoryInterface::class, $oDBorgE);
+        $AsistenteDlDstRepository = $this->repositoryWithConnection(AsistenteDlRepositoryInterface::class, $oDBdstE);
+        $collection = $AsistenteOutOrgRepository->getAsistentesOut(array('id_nom' => $this->iid_nom));
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($collection as $oAsistenteOut) {
             $err = 0;
@@ -756,15 +800,13 @@ class TrasladoDl
             // si es de la sf quito la 'f'
             $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
             if ($dl_org === $this->sdl_dst) {
-                $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
-                $AsistenteDlRepository->setoDbl($oDBdstE);
-                if ($AsistenteDlRepository->Guardar($oAsistenteOut) === false) { // param quiet=1 para que no anote cambios
+                if ($AsistenteDlDstRepository->Guardar($oAsistenteOut) === false) { // param quiet=1 para que no anote cambios
                     $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(dl) a id_activ: %s"), $id_activ);
                     $err = 1;
                 }
             } else {
                 $NuevoObj = clone $oAsistenteOut;
-                $NuevoObj->setoDbl($oDBdstE);
+                $NuevoObj = $this->objectWithConnection($NuevoObj, $oDBdstE);
                 if (method_exists($NuevoObj, 'setId_item') === true) $NuevoObj->setId_item(null);
                 $NuevoObj->setTraslado('t');
                 if ($NuevoObj->DBGuardar(1) === false) { // param quiet=1 para que no anote cambios
@@ -778,24 +820,21 @@ class TrasladoDl
             }
         }
         // Los Dl pasan a Out
-        $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
-        $AsistenteDlRepository->setoDbl($oDBorgE);
-        $collection = $AsistenteDlRepository->getAsistentes(['id_nom' => $this->iid_nom]);
-        $AsistenteOutRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
+        $AsistenteDlOrgRepository = $this->repositoryWithConnection(AsistenteDlRepositoryInterface::class, $oDBorgE);
+        $collection = $AsistenteDlOrgRepository->getAsistentes(['id_nom' => $this->iid_nom]);
+        $AsistenteOutDstRepository = $this->repositoryWithConnection(AsistenteOutRepositoryInterface::class, $oDBdstE);
         foreach ($collection as $oAsistenteDl) {
             $err = 0;
-            // copiar Asistencia a Out
-            $AsistenteOutRepository->setoDbl($oDBdstE);
             // cambio para que la dl responsable sea la actual:
             $oAsistenteDl->setDlResponsableVo(ConfigGlobal::mi_delef());
             $id_activ = $oAsistenteDl->getId_activ();
-            if ($this->testActividad($id_activ) && $AsistenteOutRepository->DBGuardar($oAsistenteDl) === false) {
+            if ($this->testActividad($id_activ) && $AsistenteOutDstRepository->DBGuardar($oAsistenteDl) === false) {
                 $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"), $id_activ);
                 $err = 1;
             }
             // borrar el origen
             if ($err === 0) {
-                $AsistenteDlRepository->Eliminar($oAsistenteDl);
+                $AsistenteDlOrgRepository->Eliminar($oAsistenteDl);
             }
         }
         // Los Ex no deberían existir, son gente de otras dl, no afecta al traslado
@@ -814,8 +853,7 @@ class TrasladoDl
         $error = '';
         $oDBorg = $this->conexionOrg();
         $oDBdst = $this->conexionDst();
-        $DossierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
-        $DossierRepository->setoDbl($oDBorg);
+        $DossierRepository = $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBorg);
         // Comprobar que están apuntados.
         $cDossiers = $DossierRepository->DossiersNotEmpty('p', $this->iid_nom);
 
@@ -831,66 +869,54 @@ class TrasladoDl
             $collection = [];
             switch ($class) {
                 case 'TelecoPersonaDl':
-                    $repo = $GLOBALS['container']->get(TelecoPersonaDlRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(TelecoPersonaDlRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getTelecosPersona(['id_nom' => $this->iid_nom]);
                     break;
                 case 'Profesor':
-                    $repo = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(ProfesorStgrRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getProfesoresStgr(['id_nom' => $this->iid_nom]);
                     break;
                 case 'ProfesorAmpliacion':
-                    $repo = $GLOBALS['container']->get(ProfesorAmpliacionRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(ProfesorAmpliacionRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getProfesorAmpliaciones(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorCongreso':
-                    $repo = $GLOBALS['container']->get(ProfesorCongresoRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(ProfesorCongresoRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getProfesorCongresos(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorDirector':
-                    $repo = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(ProfesorDirectorRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getProfesoresDirectores(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorDocenciaStgr':
-                    $repo = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(ProfesorDocenciaStgrRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getProfesorDocenciasStgr(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorJuramento':
-                    $repo = $GLOBALS['container']->get(ProfesorJuramentoRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(ProfesorJuramentoRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getProfesorJuramentos(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorLatin':
-                    $repo = $GLOBALS['container']->get(ProfesorLatinRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(ProfesorLatinRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getProfesoresLatin(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorPublicacion':
-                    $repo = $GLOBALS['container']->get(ProfesorPublicacionRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(ProfesorPublicacionRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getProfesorPublicaciones(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorTituloEst':
-                    $repo = $GLOBALS['container']->get(ProfesorTituloEstRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(ProfesorTituloEstRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getProfesorTitulosEst(array('id_nom' => $this->iid_nom));
                     break;
                 case 'PersonaNotaDl':
                     // Lo hago a parte.
                     break;
                 case 'MatriculaDl':
-                    $repo = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getMatriculas(array('id_nom' => $this->iid_nom));
                     break;
                 case 'Traslado':
-                    $repo = $GLOBALS['container']->get(TrasladoRepositoryInterface::class);
-                    $repo->setoDbl($oDBorg);
+                    $repo = $this->repositoryWithConnection(TrasladoRepositoryInterface::class, $oDBorg);
                     $collection = $repo->getTraslados(array('id_nom' => $this->iid_nom));
                     break;
                 case 'AsistenteDl':
@@ -903,10 +929,10 @@ class TrasladoDl
             }
             if (!empty($collection)) {
                 foreach ($collection as $Objeto) {
-                    $Objeto->setoDbl($oDBorg);
+                    $Objeto = $this->objectWithConnection($Objeto, $oDBorg);
                     $Objeto->DBCarregar();
                     $NuevoObj = clone $Objeto;
-                    $NuevoObj->setoDbl($oDBdst);
+                    $NuevoObj = $this->objectWithConnection($NuevoObj, $oDBdst);
                     if (method_exists($NuevoObj, 'setId_item') === true) {
                         $NuevoObj->setId_item(null);
                     }
@@ -921,7 +947,7 @@ class TrasladoDl
             }
             // también copia el estado del dossier
             $NuevoObj = clone $oDossier;
-            $NuevoObj->setoDbl($oDBdst);
+            $NuevoObj = $this->objectWithConnection($NuevoObj, $oDBdst);
             $NuevoObj->DBGuardar();
         }
         // Volver oDBdst a su estado original:
@@ -940,8 +966,7 @@ class TrasladoDl
         $oDBorg = $this->conexionOrg();
         // si es una dl, hay que buscarlos en la region del stgr
 
-        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
-        $certificadoRecibidoRepository->setoDbl($oDBorg);
+        $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBorg);
         $cCertificados = $certificadoRecibidoRepository->getCertificados(['id_nom' => $this->iid_nom]);
         foreach ($cCertificados as $Certificado) {
             if (!$this->trasladar_certificados($Certificado)) {
@@ -965,8 +990,7 @@ class TrasladoDl
         $id_item = $CertificadoRecibido->getId_item();
         // para que ponga el suyo según la DB
 
-        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
-        $certificadoRecibidoRepository->setoDbl($oDBdst);
+        $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBdst);
         $newId_item = $certificadoRecibidoRepository->getNewId_item();
         $CertificadoRecibido->setId_item($newId_item);
         if ($certificadoRecibidoRepository->Guardar($CertificadoRecibido) === FALSE) {
@@ -974,7 +998,7 @@ class TrasladoDl
         }
 
         // eliminar el original
-        $certificadoRecibidoRepository2 = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
+        $certificadoRecibidoRepository2 = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBorg);
         $oCertificadoRecibido = $certificadoRecibidoRepository2->findById($id_item);
         if (!empty($oCertificadoRecibido)) {
             $certificado = $oCertificadoRecibido->getCertificado();
@@ -1000,8 +1024,7 @@ class TrasladoDl
         // para que ponga el suyo según la DB
         $CertificadoRecibido = $this->copyCertificado2Dl($Certificado);
 
-        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
-        $certificadoRecibidoRepository->setoDbl($oDBdst);
+        $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBdst);
         $newId_item = $certificadoRecibidoRepository->getNewId_item();
         $CertificadoRecibido->setId_item($newId_item);
         if ($certificadoRecibidoRepository->Guardar($CertificadoRecibido) === FALSE) {
@@ -1027,8 +1050,7 @@ class TrasladoDl
         $error = '';
         // apunto el traslado.
         $oDBorg = $this->conexionOrg();
-        $TrasladoRepository = $GLOBALS['container']->get(TrasladoRepositoryInterface::class);
-        $TrasladoRepository->setoDbl($oDBorg);
+        $TrasladoRepository = $this->repositoryWithConnection(TrasladoRepositoryInterface::class, $oDBorg);
         $newId_item = $TrasladoRepository->getNewId_item();
         $oTraslado = new Traslado();
         $oTraslado->setId_item($newId_item);
@@ -1049,6 +1071,20 @@ class TrasladoDl
         }
 
         return true;
+    }
+
+    protected function repositoryWithConnection(string $repositoryId, \PDO $oDbl, ?\PDO $oDblSelect = null): object
+    {
+        $factory = $GLOBALS['container']->get(ConnectionRepositoryFactoryInterface::class);
+
+        return $factory->createWithConnection($repositoryId, $oDbl, $oDblSelect);
+    }
+
+    protected function objectWithConnection(object $object, \PDO $oDbl): object
+    {
+        $binder = $GLOBALS['container']->get(ConnectionObjectBinderInterface::class);
+
+        return $binder->bindConnection($object, $oDbl);
     }
 
     private function copiarAsistencia($oOrigen, $oDestino)

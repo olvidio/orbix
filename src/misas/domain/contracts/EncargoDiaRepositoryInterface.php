@@ -2,7 +2,6 @@
 
 namespace src\misas\domain\contracts;
 
-use PDO;
 use src\misas\domain\entity\EncargoDia;
 use src\misas\domain\value_objects\EncargoDiaId;
 
@@ -37,9 +36,7 @@ interface EncargoDiaRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

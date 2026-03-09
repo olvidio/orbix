@@ -59,7 +59,7 @@ class ActividadPlazasFactory
         $oActividadPlazas->setPlazasVo(new PlazasNumero($faker->numberBetween(1, 10)));
         $oActividadPlazas->setClVo(new PlazaClCode($faker->word));
         $oActividadPlazas->setDlTablaVo(new DelegacionTablaCode(substr($faker->word, 0, 8)));
-        $oActividadPlazas->setCedidas(json_encode(['dlb' => 33, 'dlz' => 45]));
+        $oActividadPlazas->setCedidas(['dlb' => 33, 'dlz' => 45]);
 
         return $oActividadPlazas;
     }

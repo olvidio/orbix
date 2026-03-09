@@ -2,7 +2,6 @@
 
 namespace src\actividades\domain\contracts;
 
-use PDO;
 use src\actividades\domain\entity\TipoDeActividad;
 
 
@@ -52,9 +51,7 @@ interface TipoDeActividadRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

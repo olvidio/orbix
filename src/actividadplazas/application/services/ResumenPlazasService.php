@@ -105,7 +105,7 @@ class ResumenPlazasService
             $dl_otra = $this->getDlText($id_dl_otra);
             $dl_tabla = $oActividadPlazas->getDlTablaVo()->value();
 
-            $aCedidas = $oActividadPlazas->getCedidas();
+            $aCedidas = $oActividadPlazas->getArrayCedidas();
             if (!empty($aCedidas)) {
                 foreach ($aCedidas as $dl_2 => $num_plazas) {
                     if ($mi_dl == $dl_2) {
@@ -171,10 +171,9 @@ class ResumenPlazasService
         // plazas de calendario de cada dl
         $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(array('id_activ' => $id_activ, 'id_dl' => $id_mi_dl, 'dl_tabla' => $mi_dl));
         foreach ($cActividadPlazas as $oActividadPlazas) {
-            $json_cedidas = $oActividadPlazas->getCedidas();
+            $aCedidas = $oActividadPlazas->getArrayCedidas();
             $plazas_cedidas = 0;
-            if (!empty($json_cedidas)) {
-                $aCedidas = json_decode($json_cedidas, TRUE);
+            if (!empty($aCedidas)) {
                 foreach ($aCedidas as $dl_otra => $plazas) {
                     $plazas_cedidas += $plazas;
                 }
@@ -200,9 +199,8 @@ class ResumenPlazasService
             $dl_otra = $this->getDlText($id_dl_otra);
             $dl_tabla = $oActividadPlazas->getDlTablaVo()->value();
 
-            $json_cedidas = $oActividadPlazas->getCedidas();
-            if (!empty($json_cedidas)) {
-                $aCedidas = json_decode($json_cedidas, TRUE);
+            $aCedidas = $oActividadPlazas->getArrayCedidas();
+            if (!empty($aCedidas)) {
                 foreach ($aCedidas as $dl_2 => $num_plazas) {
                     if ($mi_dl == $dl_2) {
                         $plazas_conseguidas += $num_plazas;
@@ -238,7 +236,7 @@ class ResumenPlazasService
         if ($oActividad === null) {
             return '?';
         }
-        $plazas_totales = $oActividad->getPlazasVo()->value();
+        $plazas_totales = $oActividad->getPlazasVo()?->value();
         if (empty($plazas_totales)) {
             $id_ubi = $oActividad->getId_ubi();
             $plazas_totales = '';
@@ -310,18 +308,14 @@ class ResumenPlazasService
                 $a_plazas[$dl]['calendario'] = $oActividadPlazas->getPlazasVo()->value();
                 // las cedidas se guardan en la tabla que pertenece a la dl
                 if ($dl === $dl_org) {
-                    $json_cedidas = $oActividadPlazas->getCedidas();
-                    if (!empty($json_cedidas)) {
-                        // ya esta convertido a un array. $aCedidas = json_decode($json_cedidas, TRUE);
-                        $aCedidas = $json_cedidas;
+                    $aCedidas = $oActividadPlazas->getArrayCedidas();
+                    if (!empty($aCedidas)) {
                         $a_plazas[$dl]['cedidas'] = $aCedidas;
                     }
                 }
             } else { //para plazas cedidas de una dl que no es la que organiza.
-                $json_cedidas = $oActividadPlazas->getCedidas();
-                if (!empty($json_cedidas)) {
-                    // ya esta convertido a un array. $aCedidas = json_decode($json_cedidas, TRUE);
-                    $aCedidas = $json_cedidas;
+                $aCedidas = $oActividadPlazas->getArrayCedidas();
+                if (!empty($aCedidas)) {
                     $a_plazas[$dl]['cedidas'] = $aCedidas;
                 }
             }
@@ -470,9 +464,8 @@ class ResumenPlazasService
                 $id_dl_otra = $oActividadPlazas->getId_dl();
                 $dl_otra = $this->getDlText($id_dl_otra);
 
-                $json_cedidas = $oActividadPlazas->getCedidas();
-                if (!empty($json_cedidas)) {
-                    $aCedidas = json_decode($json_cedidas, TRUE);
+                $aCedidas = $oActividadPlazas->getArrayCedidas();
+                if (!empty($aCedidas)) {
                     foreach ($aCedidas as $dl_2 => $num_plazas) {
                         if ($mi_dl == $dl_2) {
                             $ocu = $this->AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $dl_otra);

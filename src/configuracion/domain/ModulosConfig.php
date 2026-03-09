@@ -48,7 +48,7 @@ class ModulosConfig
     {
         foreach ($this->cApps as $oApp) {
             $id_app = $oApp->getIdAppVo()->value();
-            $nom_app = $oApp->getNombreAppVo()->value();
+            $nom_app = $oApp->getNomVo()->value();
             $this->a_apps_todas[$id_app] = $nom_app;
         }
         return $this->a_apps_todas;

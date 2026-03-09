@@ -8,7 +8,7 @@ use dossiers\model\PermDossier;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividadplazas\domain\ResumenPlazas;
+use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -16,6 +16,7 @@ use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Lista;
+use web\TiposActividades;
 use function core\is_true;
 
 /**
@@ -217,7 +218,7 @@ class Select3101
         $a_plazas_resumen = [];
         $a_plazas_conseguidas = [];
 
-        $gesActividadPlazasR = new ResumenPlazas();
+        $gesActividadPlazasR = $GLOBALS['container']->get(ResumenPlazasService::class);
         $gesActividadPlazasR->setId_activ($this->id_pau);
 
         $this->a_plazas_conseguidas = [];
@@ -254,6 +255,7 @@ class Select3101
         foreach ($cCargosEnActividad as $oActividadCargo) {
             $c++;
             $num++; // número total de asistentes.
+            $id_schema = $oActividadCargo->getId_schema();
             $id_item_cargo = $oActividadCargo->getId_item();
             $id_nom = $oActividadCargo->getId_nom();
             $this->aListaCargos[] = $id_nom;
@@ -367,24 +369,25 @@ class Select3101
                     }
                 }
 
-                if (is_true($propio)) {
-                    $chk_propio = _("sí");
-                    // Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
-                    if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
-                        $eliminar = 2;
-                    } else {
-                        $eliminar = 1;
-                    }
-                } else {
-                    $chk_propio = _("no");
-                    $eliminar = 2;  //si no es propio, al eliminar el cargo, elimino la asistencia
-                }
-                is_true($falta) ? $chk_falta = _("sí") : $chk_falta = _("no");
-                is_true($est_ok) ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
+                $chk_propio = is_true($propio) ? _("sí") : _("no");
+                $chk_falta = is_true($falta) ? _("sí") : _("no");
+                $chk_est_ok = is_true($est_ok) ? _("sí") : _("no");
                 $asis = "t";
 
+                // Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
+                // en el caso de actividades de s y sg
+                $oTipoActiv = new TiposActividades($this->id_tipo_activ);
+                $sasistentes = $oTipoActiv->getAsistentesText();
+                if ((($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd')))
+                    && ($sasistentes === 's' || $sasistentes === 'sg')) {
+                    $eliminar = 2;
+                } else {
+                    $eliminar = 1;
+                }
+
                 if ($this->permiso == 3) {
-                    $a_valores[$c]['sel'] = "$id_nom#$id_item_cargo#$eliminar";
+                    // El formato debe ser compatible con el de las lista de cargos (Select3102)
+                    $a_valores[$c]['sel'] = "$id_nom#$id_item_cargo#$eliminar#$id_schema";
                 } else {
                     $a_valores[$c]['sel'] = "";
                 }

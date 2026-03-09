@@ -3,7 +3,6 @@
 namespace src\actividadplazas\domain\contracts;
 
 use JsonException;
-use PDO;
 use src\actividadplazas\domain\entity\ActividadPlazas;
 
 
@@ -39,9 +38,7 @@ interface ActividadPlazasRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

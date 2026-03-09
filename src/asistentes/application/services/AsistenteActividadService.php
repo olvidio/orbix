@@ -12,6 +12,7 @@ use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 
 /**
  * Servicio de aplicación para operaciones de asistentes que requieren
@@ -32,15 +33,18 @@ class AsistenteActividadService
     public function __construct(
         ActividadRepositoryInterface $actividadRepository,
         ActividadAllRepositoryInterface $actividadAllRepository,
-        AsistenteRepositoryInterface $asistenteRepository
+        AsistenteRepositoryInterface $asistenteRepository,
+        ConnectionRepositoryFactoryInterface $connectionRepositoryFactory
     ) {
         $this->actividadRepository = $actividadRepository;
         $this->actividadAllRepository = $actividadAllRepository;
-        $this->asistenteRepository = $asistenteRepository;
-        $oDbl = $GLOBALS['oDBE'];
-        $this->asistenteRepository->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
-        $this->asistenteRepository->setoDbl_select($oDbl_Select);
+        /** @var AsistenteRepositoryInterface $configuredRepository */
+        $configuredRepository = $connectionRepositoryFactory->createWithConnection(
+            AsistenteRepositoryInterface::class,
+            $GLOBALS['oDBE'],
+            $GLOBALS['oDBE_Select']
+        );
+        $this->asistenteRepository = $configuredRepository;
     }
 
     /**
@@ -128,7 +132,8 @@ class AsistenteActividadService
                 continue;
             }
 
-            if ($key = array_search($id_activ, $a_id_activ_f_ini)) {
+            $key = array_search($id_activ, $a_id_activ_f_ini);
+            if ($key !== false) {
                 $cActividadesOk[$key] = $oAsistente;
             }
             $id_actividad_old = $id_activ;

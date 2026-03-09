@@ -836,7 +836,6 @@ $txt_repository = "<?php
 
 namespace src\\$grupo\\application\\repositories;
 
-use PDO;
 use src\\$grupo\\domain\\entity\\$Q_clase;
 use src\\$grupo\\domain\\contracts\\$clase_interface;
 use src\\$grupo\\infrastructure\\repositories\\$pg_clase;
@@ -871,7 +870,6 @@ $txt_interface = "<?php
 
 namespace src\\$grupo\\domain\\contracts;
 
-use PDO;
 use src\\$grupo\\domain\\entity\\$Q_clase;
 ";
 $txt_interface .= "\n" . $use_txt;
@@ -1110,20 +1108,6 @@ $txt_repository .= 'public function getErrorTxt(): string
 
 $txt_repository .= "\n";
 $txt_repository .= "\n\t";
-$txt_repository .= 'public function getoDbl(): PDO
-    {
-        return $this->repository->getoDbl();
-    }';
-
-$txt_repository .= "\n";
-$txt_repository .= "\n\t";
-$txt_repository .= 'public function setoDbl(PDO $oDbl): void
-    {
-        $this->repository->setoDbl($oDbl);
-    }';
-
-$txt_repository .= "\n";
-$txt_repository .= "\n\t";
 $txt_repository .= 'public function getNomTabla(): string
     {
         return $this->repository->getNomTabla();
@@ -1136,14 +1120,6 @@ $txt_interface .= 'public function Guardar(' . $Q_clase . ' $' . $Q_clase . '): 
 $txt_interface .= "\n";
 $txt_interface .= "\n\t";
 $txt_interface .= 'public function getErrorTxt(): string;';
-
-$txt_interface .= "\n";
-$txt_interface .= "\n\t";
-$txt_interface .= 'public function getoDbl(): PDO;';
-
-$txt_interface .= "\n";
-$txt_interface .= "\n\t";
-$txt_interface .= 'public function setoDbl(PDO $oDbl): void;';
 
 $txt_interface .= "\n";
 $txt_interface .= "\n\t";

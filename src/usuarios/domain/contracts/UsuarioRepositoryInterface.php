@@ -37,9 +37,7 @@ interface UsuarioRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getoDbl_select(): PDO;
 

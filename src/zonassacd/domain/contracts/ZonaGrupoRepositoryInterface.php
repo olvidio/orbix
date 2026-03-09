@@ -2,7 +2,6 @@
 
 namespace src\zonassacd\domain\contracts;
 
-use PDO;
 use src\zonassacd\domain\entity\ZonaGrupo;
 
 
@@ -39,9 +38,7 @@ interface ZonaGrupoRepositoryInterface
 
     public function getErrorTxt(): string;
 
-    public function getoDbl(): PDO;
 
-    public function setoDbl(PDO $oDbl): void;
 
     public function getNomTabla(): string;
 

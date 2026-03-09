@@ -6,7 +6,6 @@ use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
-use web\Desplegable;
 
 /* No vale el underscore en el nombre */
 
@@ -95,8 +94,12 @@ class InfoDocsxCtr extends DatosInfoRepo
         //caso de actualizar el campo depende
         $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
         $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
-        $oDesplegable = new Desplegable('', $aOpciones, $opcion_sel, true);
-        $opciones_txt = $oDesplegable->options();
+
+        $opciones_txt = '<option></option>';
+        foreach ($aOpciones as $key => $val) {
+            $sel = ((string)$key === (string)$opcion_sel) ? 'selected' : '';
+            $opciones_txt .= "<option value=\"$key\" $sel>$val</option>";
+        }
 
         return $opciones_txt;
     }
