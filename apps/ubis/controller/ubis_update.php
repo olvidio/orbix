@@ -1,8 +1,10 @@
 <?php
 
 use core\ConfigGlobal;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\Centro;
+use src\ubis\domain\entity\CentroDl;
 use web\ContestarJson;
 use function core\is_true;
 
@@ -19,6 +21,21 @@ require_once("apps/core/global_object.inc");
 
 $oMiUsuario = ConfigGlobal::MiUsuario();
 
+// Clase auxiliar para usar el trait en contexto procedural
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function get(string $entityType): object {
+        return $this->getRepository($entityType);
+    }
+};
+
+function getRepository(string $obj_pau): object
+{
+    global $repositoryProvider;
+    return $repositoryProvider->get($obj_pau);
+}
+
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
@@ -32,8 +49,7 @@ $Qsv = (string)filter_input(INPUT_POST, 'sv'); // checkbox, puede ser tipo 'on' 
 $Qsf = (string)filter_input(INPUT_POST, 'sf'); // checkbox, puede ser tipo 'on' o 'off'
 
 
-$repo = 'src\\ubis\\application\\repositories\\' . $Qobj_pau. 'Repository';
-$Repository = new $repo();
+$Repository = getRepository($Qobj_pau);
 $oUbi = $Repository->findById($Qid_ubi);
 
 
@@ -58,10 +74,9 @@ if ($Qobj_pau === 'CasaDl' || $Qobj_pau === 'CasaEx') {
     $oUbi->setDl($Qdl);
     // pais
     $oUbi->setRegion($Qregion);
-    $oUbi->setActive($Qactive);
-    //$oUbi->setF_active($Qf_active);
-    $oUbi->setSv($Qsv);
-    $oUbi->setSf($Qsf);
+    $oUbi->setActive(is_true($Qactive));
+    $oUbi->setSv(is_true($Qsv));
+    $oUbi->setSf(is_true($Qsf));
     $oUbi->setTipo_casa($Qtipo_casa);
     $oUbi->setPlazas($Qplazas);
     $oUbi->setPlazas_min($Qplazas_min);
@@ -82,38 +97,40 @@ if ($Qobj_pau === 'CentroDl' || $Qobj_pau === 'CentroEx') {
     $Qobserv = (string)filter_input(INPUT_POST, 'observ');
     $Qnum_habit_indiv = (int)filter_input(INPUT_POST, 'num_habit_indiv');
     $Qplazas = (integer)filter_input(INPUT_POST, 'plazas');
-    //$Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
-    //$Qsede = (string)filter_input(INPUT_POST, 'sede');
     $Qnum_cartas_mensuales = (int)filter_input(INPUT_POST, 'num_cartas_mensuales');
 
 
     if (empty($oUbi)) {
-        $oUbi = new Centro();
+        if ($Qobj_pau === 'CentroDl') {
+            $oUbi = new CentroDl();
+        } else {
+            $oUbi = new Centro();
+        }
         $id = $Repository->getNewId();
         $id_ubi = $Repository->getNewIdUbi($id);
-        $oUbi->setIdAuto($id);
+        $oUbi->setId_auto($id);
         $oUbi->setId_ubi($id_ubi);
+        $Qactive = true;
+        $Qsv = (ConfigGlobal::mi_sfsv() === 1);
+        $Qsf = (ConfigGlobal::mi_sfsv() === 2);
     }
     $oUbi->setTipo_ubi($Qtipo_ubi);
     $oUbi->setNombre_ubi($Qnombre_ubi);
     $oUbi->setDl($Qdl);
     // pais
     $oUbi->setRegion($Qregion);
-    $oUbi->setActive($Qactive);
-    //$oUbi->setF_active($Qf_active);
-    $oUbi->setSv($Qsv);
-    $oUbi->setSf($Qsf);
+    $oUbi->setActive(is_true($Qactive));
     $oUbi->setTipo_ctr($Qtipo_ctr);
     $oUbi->setCdc($Qcdc);
     $oUbi->setId_ctr_padre($Qid_ctr_padre);
-    $oUbi->setN_buzon($Qn_buzon);
-    $oUbi->setNum_pi($Qnum_pi);
-    $oUbi->setNum_cartas($Qnum_cartas);
-    $oUbi->setObserv($Qobserv);
-    $oUbi->setNum_habit_indiv($Qnum_habit_indiv);
-    $oUbi->setPlazas($Qplazas);
-    //$oUbi->setId_zona($Qid_zona);
-    //$oUbi->setSede($Qsede);
+    if ($Qobj_pau === 'CentroDl') {
+        $oUbi->setN_buzon($Qn_buzon);
+        $oUbi->setNum_pi($Qnum_pi);
+        $oUbi->setNum_cartas($Qnum_cartas);
+        $oUbi->setObserv($Qobserv);
+        $oUbi->setNum_habit_indiv($Qnum_habit_indiv);
+        $oUbi->setPlazas($Qplazas);
+    }
     $oUbi->setNum_cartas_mensuales($Qnum_cartas_mensuales);
     if (!empty($aTipo_labor) && (count($aTipo_labor) > 0)) {
         $byte = 0;
@@ -124,17 +141,6 @@ if ($Qobj_pau === 'CentroDl' || $Qobj_pau === 'CentroEx') {
         $oUbi->setTipo_labor($valor);
     }
 }
-
-
-/*
-if ($camp === "tipo_labor") {
-    $byte = 0;
-    foreach ($_POST[$camp] as $bit) {
-        $byte = $byte + $bit;
-    }
-    $valor = $byte;
-}
-*/
 
 $error_txt = '';
 if ($Repository->Guardar($oUbi) === false) {

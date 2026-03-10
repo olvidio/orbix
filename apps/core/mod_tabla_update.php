@@ -8,7 +8,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
 $Qs_pkey = (string)filter_input(INPUT_POST, 's_pkey');
 $Qid_pau = (string)filter_input(INPUT_POST, 'id_pau');
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
@@ -28,7 +28,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $a_pkey = json_decode(core\urlsafe_b64decode($Qs_pkey));
 
 // Tiene que ser en dos pasos.
-$obj = $Qclase_info;
+$obj = urldecode($Qclase_info_encoded);
 $oInfoClase = new $obj();
 $oInfoClase->setMod($Qmod);
 $oInfoClase->setA_pkey($a_pkey); //Para eliminar y editar

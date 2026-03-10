@@ -14,8 +14,9 @@ final class TipoDossierDb
 
     private function validate(int $value): void
     {
-        if ($value < 1 || $value > 3) {
-            throw new \InvalidArgumentException('TipoDossierDb must be between 1 and 3');
+        $posibles = [1, 2, 3, 5];
+        if (!in_array($value, $posibles)) {
+            throw new \InvalidArgumentException('TipoDossierDb must be 1,2,3 or 5');
         }
     }
 

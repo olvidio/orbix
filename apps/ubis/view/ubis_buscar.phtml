@@ -6,7 +6,7 @@
         // borro los posibles resultados anteriores
         $('#resultados').html("");
         $(formulario + " opcion").val(opcion);
-        <?php if ($tipo == "mail") { ?>
+        <?php if ($tipo === "mail") { ?>
         $(formulario).attr('action', 'scdl/tabla_mails.php');
         <?php } else { ?>
         $(formulario).attr('action', 'apps/ubis/controller/ubis_tabla.php');
@@ -27,12 +27,12 @@
     }
     fnjs_left_side_hide();
     <?php
-    if ($simple == 1) {
+    if ($simple === 1) {
     ?>
     fnjs_ver_solo('#frm_buscar_1');
     <?php
     }
-    if ($simple == 2) {
+    if ($simple === 2) {
     ?>
     fnjs_ver_solo('#frm_buscar_2');
     <?php
@@ -77,7 +77,7 @@
             </tr>
 
             <?php
-            if ($tipo == "mail") { ?>
+            if ($tipo === "mail") { ?>
                 <table align="justify">
                     <tr></tr>
                     <tr>
@@ -167,6 +167,7 @@
             </thead>
             <tfoot>
             <tr>
+                <td class=etiqueta align="RIGHT"><input type="checkbox" name="cmb"><?= _("buscar ubis fuera de uso") ?>
                 <td colspan=5 style="text-align:right;"><input id="b_buscar_2" name="b_buscar" TYPE="button"
                                                                VALUE="<?= _("buscar"); ?>"
                                                                onclick="fnjs_buscar('#frm_buscar_2')" class="btn_ok">
@@ -181,24 +182,25 @@
                 <td>
                     <select id="tipo" name="tipo" onchange="fnjs_actualizar('#frm_buscar_2')" class=contenido>
                         <?php
-                        if ($tipo == "ctr") {
+                        if ($tipo === "ctr") {
                             $ctr_selected = "selected";
                         } else {
                             $ctr_selected = "";
                         }
-                        if ($tipo == "cdc") {
+                        if ($tipo === "cdc") {
                             $cdc_selected = "selected";
                         } else {
                             $cdc_selected = "";
                         }
-                        if ($tipo == "tot") {
+                        if ($tipo === "tot") {
                             $tot_selected = "selected";
                         } else {
                             $tot_selected = "";
                         }
                         echo "<option value='ctr' $ctr_selected>" . ucfirst(_("centro"));
                         echo "<option value='cdc' $cdc_selected>" . ucfirst(_("casa"));
-                        echo "<option value='tot' $tot_selected>" . ucfirst(_("todos")); ?>
+                        echo "<option value='tot' $tot_selected>" . ucfirst(_("todos"));
+                        ?>
                     </select>
                 </td>
                 <td>
@@ -207,17 +209,17 @@
                 <td>
                     <select id="loc" name="loc" onchange="fnjs_actualizar('#frm_buscar_2')" class=contenido>
                         <?php
-                        if ($loc == "dl") {
+                        if ($loc === "dl") {
                             $dl_selected = "selected";
                         } else {
                             $dl_selected = "";
                         }
-                        if ($loc == "ex") {
+                        if ($loc === "ex") {
                             $ex_selected = "selected";
                         } else {
                             $ex_selected = "";
                         }
-                        if ($loc == "tot") {
+                        if ($loc === "tot") {
                             $to_selected = "selected";
                         } else {
                             $to_selected = "";
@@ -238,7 +240,7 @@
                 <td colspan="4"><input class=contenido id=ciudad name=ciudad size="60"></td>
             </tr>
 
-            <?php if ($loc == "ex") { ?>
+            <?php if ($loc === "ex") { ?>
                 <tr>
                     <td class=etiqueta><?= _("dl"); ?></td>
                     <td><input class=contenido id=dl name=dl size=1 style="HEIGHT: 22px; WIDTH: 62px"></td>
@@ -252,7 +254,7 @@
                 </tr>
                 <?php
 
-                if ($tipo == "ctr") {
+                if ($tipo === "ctr") {
                     ?>
                     <tr>
                         <td class=etiqueta><?= _("tipo de centro"); ?></td>
@@ -261,7 +263,7 @@
                     </tr>
                     <?php
                 }
-                if ($tipo == "cdc") {
+                if ($tipo === "cdc") {
                     ?>
                     <tr>
                         <td class=etiqueta><?= _("tipo de casa"); ?></td>
@@ -272,7 +274,7 @@
                 }
             }
 
-            if ($tipo == "mail") { ?>
+            if ($tipo === "mail") { ?>
                 <table align="justify">
                     <tr></tr>
                     <tr></tr>

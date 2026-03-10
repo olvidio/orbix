@@ -46,20 +46,20 @@ if (isset($_POST['stack'])) {
     $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
 }
 
-$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
 $Qdatos_buscar = (string)filter_input(INPUT_POST, 'datos_buscar');
 $QaSerieBuscar = (string)filter_input(INPUT_POST, 'aSerieBuscar');
 $Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');
 $Qpermiso = (integer)filter_input(INPUT_POST, 'permiso');
 if (empty($Qpermiso)) $Qpermiso = 3;
 
-$Qclase_info = urldecode($Qclase_info);
+$clase_info = urldecode($Qclase_info_encoded);
 $Qdatos_buscar = urldecode($Qdatos_buscar);
 $QaSerieBuscar = urldecode($QaSerieBuscar);
 $Qk_buscar = urldecode($Qk_buscar);
 
 // Tiene que ser en dos pasos.
-$obj = $Qclase_info;
+$obj = $clase_info;
 $oInfoClase = new $obj();
 
 // si paso parámetros, definir la colección
@@ -83,7 +83,7 @@ $oDatosTabla->setScroll_id($Qscroll_id);
 $oHashBuscar = new Hash();
 $oHashBuscar->setCamposForm('k_buscar');
 $a_camposHiddenBuscar = array(
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
     'datos_buscar' => $Qdatos_buscar,
     'aSerieBuscar' => $QaSerieBuscar,
     'id_pau' => $Qid_pau,
@@ -94,7 +94,7 @@ $oHashSelect = new Hash();
 $oHashSelect->setCamposForm('sel');
 $oHashSelect->setCamposNo('mod!sel!scroll_id!refresh');
 $a_camposHiddenSelect = array(
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
     'datos_buscar' => $Qdatos_buscar,
     'aSerieBuscar' => $QaSerieBuscar,
     'k_buscar' => $Qk_buscar,
@@ -132,7 +132,7 @@ $html .= "<input type='hidden' id='mod' name='mod' value=''>";
 $oTabla = new Lista();
 // para el id_tabla, convierto los posibles '/' y '\' en '_' y también quito '.php'
 //$oTabla->setId_tabla('datos_sql'.  $this->id_dossier);
-$id_tabla = str_replace('/', '_', $Qclase_info);
+$id_tabla = str_replace('/', '_', $Qclase_info_encoded);
 $id_tabla = str_replace('\\', '_', $id_tabla);
 $id_tabla = str_replace('.php', '', $id_tabla);
 $id_tabla = 'mod_tabla_sql_' . $id_tabla;

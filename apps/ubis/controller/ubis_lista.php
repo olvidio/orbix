@@ -103,7 +103,7 @@ foreach ($a_ubis as $oUbi) {
 	$cDirecciones = $oUbi->getDirecciones();
 	if (!empty($cDirecciones)) {
 		$oDireccion = $cDirecciones[0];
-		$direccion = $oDireccion->getDireccion();
+		$direccion = $oDireccion->getDireccionVo()?->value() ?? '';
 		$c_p = $oDireccion->getC_p();
 		$poblacion = $oDireccion->getPoblacion();
 	} else {

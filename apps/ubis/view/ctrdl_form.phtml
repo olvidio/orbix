@@ -1,28 +1,24 @@
 <script>
     fnjs_guardar = function (formulario) {
-        //var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
-        //alert ("EEE "+rr);
-        if (rr === 'ok') {
-            $('#que').val('ubi');
-            $(formulario).attr('action', "apps/ubis/controller/ubis_update.php");
-            $(formulario).one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
-                })
-                    .done(function (json) {
-                        if (json.success !== true) {
-                            alert('<?= _("respuesta") ?>: ' + json.mensaje);
-                        } else {
-                            <?= $oPosicion->js_atras(1); ?>
-                        }
-                    });
-                return false;
-            });
-            $(formulario).trigger("submit");
-            $(formulario).off();
-        }
+        $('#que').val('ubi');
+        $(formulario).attr('action', "apps/ubis/controller/ubis_update.php");
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (json) {
+                    if (json.success !== true) {
+                        alert('<?= _("respuesta") ?>: ' + json.mensaje);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
     }
     fnjs_eliminar = function (formulario) {
         if (confirm("<?= _("¿Está seguro que desea borrar este centro?");?>")) {
@@ -59,7 +55,7 @@
                 <input type="hidden" class="contenido" id="tipo_ubi" name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
                 <?= ucfirst(_("región o delegación")) ?>
                 <?= $oDesplDelegaciones->desplegable() ?>
-                <?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="status" <?= $chk ?>>
+                <?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="active" <?= $chk ?>>
                 <?= ucfirst(_("región")) ?>
                 <?= $oDesplRegiones->desplegable() ?>
             </td>

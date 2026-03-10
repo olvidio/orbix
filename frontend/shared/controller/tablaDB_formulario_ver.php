@@ -11,7 +11,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 $oPosicion->recordar();
 
-$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
 $Qdatos_buscar = (string)filter_input(INPUT_POST, 'datos_buscar');
 $QaSerieBuscar = (string)filter_input(INPUT_POST, 'aSerieBuscar');
 $Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');
@@ -21,7 +21,7 @@ $Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
 $Qid_pau = (string)filter_input(INPUT_POST, 'id_pau'); // necesario para nuevo.
 
 $aQuery = array(
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
     'datos_buscar' => $Qdatos_buscar,
     'aSerieBuscar' => $QaSerieBuscar,
     "k_buscar" => $Qk_buscar,
@@ -72,7 +72,7 @@ if (!empty($Qobj_pau)) {
 
 $url_backend = '/src/shared/infrastructure/controllers/tablaDB_formulario_datos.php';
 $a_campos_backend = [
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
     'a_pkey' => $a_pkey,
     'obj_pau' => $Qobj_pau,
     'mod' => $Qmod,
@@ -89,7 +89,7 @@ $oHashSelect = new Hash();
 $oHashSelect->setCamposForm($camposForm);
 $oHashSelect->setCamposNo('sel!' . $camposNo);
 $a_camposHidden = array(
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
     'datos_buscar' => $Qdatos_buscar,
     'aSerieBuscar' => $QaSerieBuscar,
     "k_buscar" => $Qk_buscar,
@@ -110,7 +110,7 @@ $a_campos = [
     'explicacion_txt' => $explicacion_txt,
     'web_depende' => $web_depende,
     'h_depende' => $h_depende,
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
 ];
 
 $oView = new ViewNewPhtml('frontend\shared\controller');

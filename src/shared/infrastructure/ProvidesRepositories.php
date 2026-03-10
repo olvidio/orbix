@@ -15,8 +15,15 @@ use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
 use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
@@ -30,16 +37,9 @@ use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
  */
 trait ProvidesRepositories
 {
-    /**
-     * Obtiene un repositorio del contenedor de dependencias según el tipo de entidad
-     *
-     * @param string $entityType Tipo de entidad (PersonaN, PersonaEx, Centro, Casa, etc.)
-     * @return object El repositorio correspondiente
-     * @throws \InvalidArgumentException Si el tipo de entidad no es reconocido
-     */
-    protected function getRepository(string $entityType): object
+    protected function getRepositoryMap(): array
     {
-        $repositoryMap = [
+        return [
             'PersonaN' => PersonaNRepositoryInterface::class,
             'PersonaNax' => PersonaNaxRepositoryInterface::class,
             'PersonaAgd' => PersonaAgdRepositoryInterface::class,
@@ -54,11 +54,109 @@ trait ProvidesRepositories
             'CasaEx' => CasaExRepositoryInterface::class,
             'ActividadAll' => ActividadAllRepositoryInterface::class,
         ];
+    }
 
+    protected function getMetodoMap(): array
+    {
+        return [
+            'Centro' => 'getCentros',
+            'CentroDl' => 'getCentros',
+            'CentroEx' => 'getCentros',
+            'Casa' => 'getCasas',
+            'CasaDl' => 'getCasas',
+            'CasaEx' => 'getCasas',
+        ];
+    }
+
+    protected function getDireccionRepositoryMap(): array
+    {
+        return [
+            // Compatibilidad: fuera de ubis se ha usado este helper como alias de repositorio general.
+            'PersonaN' => PersonaNRepositoryInterface::class,
+            'PersonaNax' => PersonaNaxRepositoryInterface::class,
+            'PersonaAgd' => PersonaAgdRepositoryInterface::class,
+            'PersonaS' => PersonaSRepositoryInterface::class,
+            'PersonaSSSC' => PersonaSSSCRepositoryInterface::class,
+            'PersonaEx' => PersonaExRepositoryInterface::class,
+            'ActividadAll' => ActividadAllRepositoryInterface::class,
+            'Centro' => DireccionCentroRepositoryInterface::class,
+            'CentroDl' => DireccionCentroDlRepositoryInterface::class,
+            'CentroEx' => DireccionCentroExRepositoryInterface::class,
+            'Casa' => DireccionCasaRepositoryInterface::class,
+            'CasaDl' => DireccionCasaDlRepositoryInterface::class,
+            'CasaEx' => DireccionCasaExRepositoryInterface::class,
+        ];
+    }
+
+    protected function getTelecoRepositoryMap(): array
+    {
+        return [
+            'Centro' => TelecoCtrRepositoryInterface::class,
+            'CentroDl' => TelecoCtrDlRepositoryInterface::class,
+            'CentroEx' => TelecoCtrExRepositoryInterface::class,
+            'Casa' => TelecoCdcRepositoryInterface::class,
+            'CasaDl' => TelecoCdcDlRepositoryInterface::class,
+            'CasaEx' => TelecoCdcExRepositoryInterface::class,
+        ];
+    }
+
+    protected function getRepositoryClass(string $entityType): string
+    {
+        $repositoryMap = $this->getRepositoryMap();
         if (!isset($repositoryMap[$entityType])) {
             throw new \InvalidArgumentException("Repository for entity type '$entityType' not found");
         }
+        return $repositoryMap[$entityType];
+    }
 
-        return $GLOBALS['container']->get($repositoryMap[$entityType]);
+    protected function getRepository(string $entityType): object
+    {
+        return $GLOBALS['container']->get($this->getRepositoryClass($entityType));
+    }
+
+    protected function getMetodo(string $entityType): string
+    {
+        $metodoMap = $this->getMetodoMap();
+        if (!isset($metodoMap[$entityType])) {
+            throw new \InvalidArgumentException("Method for entity type '$entityType' not found");
+        }
+        return $metodoMap[$entityType];
+    }
+
+    protected function getDireccionRepositoryClass(string $entityType): string
+    {
+        $repositoryMap = $this->getDireccionRepositoryMap();
+        if (!isset($repositoryMap[$entityType])) {
+            throw new \InvalidArgumentException("Address repository for entity type '$entityType' not found");
+        }
+        return $repositoryMap[$entityType];
+    }
+
+    protected function getDireccionRepository(string $entityType): object
+    {
+        return $GLOBALS['container']->get($this->getDireccionRepositoryClass($entityType));
+    }
+
+    protected function getTelecoRepositoryClass(string $entityType): string
+    {
+        $repositoryMap = $this->getTelecoRepositoryMap();
+        if (!isset($repositoryMap[$entityType])) {
+            throw new \InvalidArgumentException("Teleco repository for entity type '$entityType' not found");
+        }
+        return $repositoryMap[$entityType];
+    }
+
+    protected function getTelecoRepository(string $entityType): object
+    {
+        return $GLOBALS['container']->get($this->getTelecoRepositoryClass($entityType));
+    }
+
+    protected function getEntityTypeByRepositoryClass(string $repositoryClass): string
+    {
+        $entityType = array_search($repositoryClass, $this->getRepositoryMap(), true);
+        if ($entityType === false) {
+            throw new \InvalidArgumentException("Entity type for repository class '$repositoryClass' not found");
+        }
+        return $entityType;
     }
 }

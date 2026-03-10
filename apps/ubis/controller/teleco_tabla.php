@@ -149,7 +149,7 @@ foreach ($Coleccion as $oFila) {
                 break;
             case 'depende':
             case 'opciones':
-                $RepoRelacionado = new $var_1();
+                $RepoRelacionado = $GLOBALS['container']->get($var_1);
                 $oRelacionado = $RepoRelacionado->findById($valor_camp);
                 if ($oRelacionado !== null) {
                     $var = $oRelacionado->$var_2();

@@ -46,9 +46,9 @@ if (isset($_POST['stack'])) {
 }
 
 // en los menus esta sin codificar, pero a partir de aquí si:
-$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
-if (urldecode($Qclase_info) === $Qclase_info) {
-    $Qclase_info = urlencode($Qclase_info);
+$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
+if (urldecode($Qclase_info_encoded) === $Qclase_info_encoded) {
+    $Qclase_info_encoded = urlencode($Qclase_info_encoded);
 }
 
 $QaSerieBuscar = (string)filter_input(INPUT_POST, 'aSerieBuscar');
@@ -75,7 +75,7 @@ if (empty($Qk_buscar)) {
     // pedir a Info los datos necesarios para mostrar el formulario de búsqueda
     $url_backend = '/src/shared/infrastructure/controllers/tablaDB_buscar_datos.php';
     $a_campos_backend = [
-        'clase_info' => $Qclase_info,
+        'clase_info' => $Qclase_info_encoded,
         'k_buscar' => $Qk_buscar,
         'pau' => $Qpau,
         'id_pau' => $Qid_pau,
@@ -92,7 +92,7 @@ if (empty($Qk_buscar)) {
     $oHashBuscar = new Hash();
     $oHashBuscar->setCamposForm($camposFormBuscar);
     $a_camposHiddenBuscar = array(
-        'clase_info' => $Qclase_info,
+        'clase_info' => $Qclase_info_encoded,
         'aSerieBuscar' => $QaSerieBuscar,
         'id_pau' => $Qid_pau,
     );
@@ -117,7 +117,7 @@ if (empty($Qk_buscar)) {
 // pedir a Info los datos necesarios para mostrar la tabla
 $url_backend = '/src/shared/infrastructure/controllers/tablaDB_lista_datos.php';
 $a_campos_backend = [
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
     'k_buscar' => $Qk_buscar,
     'pau' => $Qpau,
     'id_pau' => $Qid_pau,
@@ -136,7 +136,7 @@ $oHashSelect = new Hash();
 $oHashSelect->setCamposForm('sel');
 $oHashSelect->setCamposNo('mod!sel!scroll_id!refresh');
 $a_camposHiddenSelect = array(
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
     'aSerieBuscar' => $QaSerieBuscar,
     'k_buscar' => $Qk_buscar,
     'obj_pau' => $Qobj_pau,

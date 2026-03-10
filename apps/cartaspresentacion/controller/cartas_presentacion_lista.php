@@ -4,6 +4,7 @@
 use core\ConfigGlobal;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
+use src\ubis\application\services\UbiTelecoService;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
@@ -185,14 +186,15 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
 
     $DireccionRepository = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
     $oDireccion = $DireccionRepository->findById($id_direccion);
-    $direccion = $oDireccion->getDireccion();
+    $direccion = $oDireccion->getDireccionVo()?->value() ?? '';
     $poblacion = $oDireccion->getPoblacion();
     $c_p = $oDireccion->getC_p();
     $pais = $oDireccion->getPais();
     $nom_sede = $oDireccion->getNom_sede();
 
-    $telf = $oCentro->getTeleco("telf", "*", " / ");
-    $fax = $oCentro->getTeleco("fax", "*", " / ");
+    $obj_pau_centro = obj_pau_from_centro($oCentro);
+    $telf = UbiTelecoService::texto($obj_pau_centro, (int)$id_ubi, 'telf', '*', ' / ');
+    $fax = UbiTelecoService::texto($obj_pau_centro, (int)$id_ubi, 'fax', '*', ' / ');
     if (!empty($fax)) {
         $fax = format_telf($fax);
         $telf .= ' fax:' . $fax;
@@ -200,7 +202,7 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
     // si es una dl o r fuera de España, pongo el e-mail del centro.
     if ($region !== 'H' && (strpos($tipo_ctr, 'cr') !== false || strpos($tipo_ctr, 'dl') !== false)) {
         // 15 es el id para otros asuntos ( 20 es para asuntos de gobierno).
-        $mail = $oCentro->getTeleco("e-mail", "15", " / ");
+        $mail = UbiTelecoService::texto($obj_pau_centro, (int)$id_ubi, 'e-mail', '15', ' / ');
         if (!empty($mail)) {
             $pres_mail .= 'mail casa: ' . $mail;
         }
@@ -214,9 +216,10 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
             $cDirecciones1 = $oCentro1->getDirecciones();
             if (!empty($cDirecciones1)) {
                 $oDireccion1 = $cDirecciones1[0];
-                $telf1 = $oCentro1->getTeleco("telf", "*", " / ");
+                $obj_pau_ctr_padre = obj_pau_from_centro($oCentro1);
+                $telf1 = UbiTelecoService::texto($obj_pau_ctr_padre, (int)$id_ctr_padre, 'telf', '*', ' / ');
                 //$telf1 .= 'fax:'.teleco($id_ctr_padre,"fax","*"," / ") ;
-                $a_direccion[] = array('direccion' => $oDireccion1->getDireccion(),
+                $a_direccion[] = array('direccion' => $oDireccion1->getDireccionVo()?->value() ?? '',
                     'a_p' => $oDireccion1->getA_p(),
                     'c_p' => $oDireccion1->getC_p(),
                     'poblacion' => $oDireccion1->getPoblacion(),
@@ -236,7 +239,7 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
             if ($id_dir != $id_direccion) {
                 $oDireccion2 = $DireccionRepository->findById($id_dir);
                 //$telf1 .= 'fax:'.teleco($id_ctr_padre,"fax","*"," / ") ;
-                $a_direccion[] = array('direccion' => $oDireccion2->getDireccion(),
+                $a_direccion[] = array('direccion' => $oDireccion2->getDireccionVo()?->value() ?? '',
                     'a_p' => $oDireccion2->getA_p(),
                     'c_p' => $oDireccion2->getC_p(),
                     'poblacion' => $oDireccion2->getPoblacion(),
@@ -303,6 +306,22 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
     }
 
     return $a_mega;
+}
+
+function obj_pau_from_centro($oCentro): string
+{
+    if ($oCentro === null) {
+        return 'Centro';
+    }
+    $tipo_ubi = method_exists($oCentro, 'getTipo_ubi') ? (string)$oCentro->getTipo_ubi() : '';
+    $dl = method_exists($oCentro, 'getDl') ? (string)$oCentro->getDl() : '';
+    if ($tipo_ubi === 'ctrex') {
+        return 'CentroEx';
+    }
+    if ($tipo_ubi === 'ctrdl' || $tipo_ubi === 'ctrsf') {
+        return ($dl === ConfigGlobal::mi_delef()) ? 'CentroDl' : 'Centro';
+    }
+    return 'Centro';
 }
 
 function datos_a_celdas($a_texto)

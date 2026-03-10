@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\ubis\application\services\UbiTelecoService;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Posicion;
@@ -58,7 +59,7 @@ $oUbi = Ubi::NewUbi($id_ubi);
 $nombre_ubi = $oUbi->getNombre_ubi();
 $dl = $oUbi->getDl();
 /* TODO no sé
-// para el caso de sf, podria ser que en el campo dl, se ponga 'dlbf' y no 'dlb'
+// para el caso de sf, podría ser que en el campo dl, se ponga 'dlbf' y no 'dlb'
 if (substr($dl, -1) == 'f') {
     $dl = substr($dl,0,-1); // quito la f.
 }
@@ -80,7 +81,7 @@ foreach ($cDirecciones as $oDireccion) {
         $c_p .= '<br>';
         $id_direccion .= ',';
     }
-    $direccion .= $oDireccion->getDireccion();
+    $direccion .= $oDireccion->getDireccionVo()?->value() ?? '';
     $poblacion .= $oDireccion->getPoblacion();
     $c_p .= $oDireccion->getC_p();
     $id_direccion .= $oDireccion->getId_direccion();
@@ -141,9 +142,9 @@ $dos = _("dossiers");
 $txt = ucfirst(_("formato texto"));
 $titulo = $nombre_ubi;
 
-$telfs = $oUbi->getTeleco("telf", "*", " / ");
-$fax = $oUbi->getTeleco("fax", "*", " / ");
-$mails = $oUbi->getTeleco("e-mail", "*", " / ");
+$telfs = UbiTelecoService::texto($obj_pau, $id_ubi, 'telf', '*', ' / ');
+$fax = UbiTelecoService::texto($obj_pau, $id_ubi, 'fax', '*', ' / ');
+$mails = UbiTelecoService::texto($obj_pau, $id_ubi, 'e-mail', '*', ' / ');
 
 $a_campos = ['oPosicion' => $oPosicion,
     'godossiers' => $godossiers,

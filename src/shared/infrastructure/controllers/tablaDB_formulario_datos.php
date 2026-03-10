@@ -3,13 +3,13 @@
 use src\shared\domain\DatosFormRepo;
 use web\ContestarJson;
 
-$Qclase_info = filter_input(INPUT_POST, 'clase_info');
+$Qclase_info_encoded = filter_input(INPUT_POST, 'clase_info');
 $a_pkey = filter_input(INPUT_POST, 'a_pkey');
 $Qobj_pau = filter_input(INPUT_POST, 'obj_pau');
 $Qmod = filter_input(INPUT_POST, 'mod');
 
 // Tiene que ser en dos pasos.
-$obj = urldecode($Qclase_info);
+$obj = urldecode($Qclase_info_encoded);
 $oInfoClase = new $obj();
 if (method_exists($oInfoClase, 'setObj_pau')) {
     $oInfoClase->setObj_pau($Qobj_pau);

@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
+use src\ubis\application\services\UbiTelecoService;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
@@ -301,7 +302,7 @@ foreach ($cUbis as $oCentro) {
             }
             $poblacion .= $oDireccion->getPoblacion();
             $pais .= $oDireccion->getPais();
-            $direccion .= $oDireccion->getDireccion();
+            $direccion .= $oDireccion->getDireccionVo()?->value() ?? '';
             $c_p .= $oDireccion->getC_p();
         }
     }
@@ -324,11 +325,7 @@ foreach ($cUbis as $oCentro) {
             $a_valores[$i][6] = "$poblacion ($pais)";
         }
     }
-    $tipo_teleco = "telf";
-    /*ninguna restricción para teléfonos. De momento interesan todos*/
-    $desc_teleco = "";
-    $separador = " ";
-    $tels = $oCentro->getTeleco($tipo_teleco, $desc_teleco, $separador);
+    $tels = UbiTelecoService::texto($obj, (int)$id_ubi, 'telf', '', ' ');
 
     $a_valores[$i][7] = $tels;
 }

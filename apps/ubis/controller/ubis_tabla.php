@@ -2,12 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use src\ubis\domain\contracts\CasaDlRepositoryInterface;
-use src\ubis\domain\contracts\CasaExRepositoryInterface;
-use src\ubis\domain\contracts\CasaRepositoryInterface;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\contracts\CentroExRepositoryInterface;
-use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
@@ -25,6 +20,7 @@ use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
+use function core\is_true;
 use function core\urlsafe_b64encode;
 
 /**
@@ -46,6 +42,54 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+// Clase auxiliar para usar el trait en contexto procedural
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function getRepo(string $entityType): object
+    {
+        return $this->getRepository($entityType);
+    }
+
+    public function getRepoClass(string $entityType): string
+    {
+        return $this->getRepositoryClass($entityType);
+    }
+
+    public function getMet(string $entityType): string
+    {
+        return $this->getMetodo($entityType);
+    }
+
+    public function getDirRepoClass(string $entityType): string
+    {
+        return $this->getDireccionRepositoryClass($entityType);
+    }
+};
+
+function getRepository(string $obj_pau): object
+{
+    global $repositoryProvider;
+    return $repositoryProvider->getRepo($obj_pau);
+}
+
+function getRepositoryClass(string $obj_pau): string
+{
+    global $repositoryProvider;
+    return $repositoryProvider->getRepoClass($obj_pau);
+}
+
+function getMetodo(string $obj_pau): string
+{
+    global $repositoryProvider;
+    return $repositoryProvider->getMet($obj_pau);
+}
+
+function getDireccionRepositoryClass(string $obj_pau): string
+{
+    global $repositoryProvider;
+    return $repositoryProvider->getDirRepoClass($obj_pau);
+}
 
 $oPosicion->recordar();
 
@@ -75,13 +119,12 @@ if ($Qsimple == 1) {
 }
 $sWhere = (string)filter_input(INPUT_POST, 'sWhere');
 $sOperador = (string)filter_input(INPUT_POST, 'sOperador');
-$sGestor = (string)filter_input(INPUT_POST, 'sGestor');
 $sWhereD = (string)filter_input(INPUT_POST, 'sWhereD');
 $sOperadorD = (string)filter_input(INPUT_POST, 'sOperadorD');
-$sGestorDir = (string)filter_input(INPUT_POST, 'sGestorDir');
 $metodo = (string)filter_input(INPUT_POST, 'metodo');
 $titulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qcmb = (string)filter_input(INPUT_POST, 'cmb');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 $tipo_ubi = $Qtipo . $Qloc;
 // si es sf, el tipi_ubi = ctrsf
@@ -92,12 +135,13 @@ if ($tipo_ubi === 'ctrdl' && ConfigGlobal::mi_sfsv() == 2) {
 $Qnombre_ubi = '';
 $Qdl = '';
 $Qregion = '';
+$repoDir = '';
+$aWhere = [];
+$aOperador = [];
+$aWhereD = [];
+$aOperadorD = [];
 /*miro las condiciones. las variables son: nombre_ubi,ciudad,region,pais */
 if (empty($sWhere)) {
-    $aWhere = [];
-    $aOperador = [];
-    $aWhereD = [];
-    $aOperadorD = [];
     $Qnombre_ubi = (string)filter_input(INPUT_POST, 'nombre_ubi');
     if (!empty($Qnombre_ubi)) {
         $nom_ubi = str_replace("+", "\+", $Qnombre_ubi); // para los centros de la sss+
@@ -144,45 +188,33 @@ if (empty($sWhere)) {
         $aWhereD['_ordre'] = 'pais';
     }
 
+    $permisoSf = ($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'));
     switch ($Qtipo) {
         case "ctr":
             switch ($Qloc) {
                 case "dl":
                     $titulo = ucfirst(_("tabla de centros de la delegación"));
-                    $repoUbi = CentroDlRepositoryInterface::class;
-                    $metodo = 'getCentros';
-                    $repoDir = DireccionCentroDlRepositoryInterface::class;
-                    // Añado una condición para el caso de no poner, que salgan todos.
-                    // Si no se pone, dice que hay que poner algún criterio de búsqueda
-                    $aWhere['active'] = 't';
+                    $Qobj_pau = 'CentroDl';
                     break;
                 case "ex":
                     $titulo = ucfirst(_("tabla de centros de fuera de la delegación"));
-                    $repoUbi = CentroExRepositoryInterface::class;
-                    $metodo = 'getCentros';
-                    $repoDir = DireccionCentroExRepositoryInterface::class;
+                    $Qobj_pau = 'CentroEx';
                     break;
                 case "sf":
-                    if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+                    if ($permisoSf) {
                         $titulo = ucfirst(_("tabla de centros de la delegación femenina"));
-                        $repoUbi = CentroDlRepositoryInterface::class;
-                        $metodo = 'getCentros';
-                        $repoUbi->setoDbl($GLOBALS['oDBE']);
-                        $repoDir = DireccionCentroDlRepositoryInterface::class;
+                        $Qobj_pau = 'CentroDl';
                     }
                     break;
                 case "tot":
                     $titulo = ucfirst(_("tabla de toda las casas y centros"));
-                    $repoUbi = CentroRepositoryInterface::class;
-                    $metodo = 'getCentros';
+                    $Qobj_pau = 'Centro';
                     switch ($miSfsv) {
                         case 1: // sv
                             $aWhere['sv'] = 't';
-                            $repoDir = DireccionCentroRepositoryInterface::class;
                             break;
                         case 2: //sf
                             $aWhere['sf'] = 't';
-                            $repoDir = DireccionCentroSfRepositoryInterface::class;
                             break;
                     }
                     break;
@@ -192,33 +224,25 @@ if (empty($sWhere)) {
             switch ($Qloc) {
                 case "dl":
                     $titulo = ucfirst(_("tabla de casas de la delegación"));
-                    $repoUbi = CasaDlRepositoryInterface::class;
-                    $metodo = 'getCasas';
-                    $repoDir = DireccionCasaDlRepositoryInterface::class;
+                    $Qobj_pau = 'CasaDl';
                     // Añado una condición para el caso de no poner, que salgan todos.
                     // Si no se pone, dice que hay que poner algún criterio de búsqueda
                     $aWhere['active'] = 't';
                     break;
                 case "ex":
                     $titulo = ucfirst(_("tabla de casas de fuera de la delegación"));
-                    $repoUbi = CasaExRepositoryInterface::class;
-                    $metodo = 'getCasas';
-                    $repoDir = DireccionCasaExRepositoryInterface::class;
+                    $Qobj_pau = 'CasaEx';
                     break;
                 case "sf":
-                    if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
+                    if ($permisoSf) {
                         $titulo = ucfirst(_("tabla de casas de la sf"));
-                        $repoUbi = CasaDlRepositoryInterface::class;
-                        $metodo = 'getCasas';
-                        $repoDir = DireccionCasaDlRepositoryInterface::class;
+                        $Qobj_pau = 'CasaDl';
                         $aWhere['sf'] = 't';
                     }
                     break;
                 case "tot":
                     $titulo = ucfirst(_("tabla de toda las casas y centros"));
-                    $repoUbi = CasaRepositoryInterface::class;
-                    $metodo = 'getCasas';
-                    $repoDir = DireccionCasaRepositoryInterface::class;
+                    $Qobj_pau = 'Casa';
                     break;
             }
             break;
@@ -226,15 +250,11 @@ if (empty($sWhere)) {
             switch ($Qloc) {
                 case "dl":
                     $titulo = ucfirst(_("tabla de casas y centros de la delegación"));
-                    $Gestor = "src\\ubis\\application\\repositories\\UbiRepository";
-                    $metodo = 'getUbis';
-                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionRepository";
+                    $Qobj_pau = 'Centro';
                     break;
                 case "ex":
-                    $Gestor = "src\\ubis\\application\\repositories\\UbiRepository";
-                    $metodo = 'getUbis';
                     $titulo = ucfirst(_("tabla de casas y centros de fuera de la delegación"));
-                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionRepository";
+                    $Qobj_pau = 'Centro';
                     /*
                     switch ($miSfsv) {
                         case 1: // sv
@@ -262,43 +282,34 @@ if (empty($sWhere)) {
                     */
                     break;
                 case "sf":
-                    /*
-                    $Gestor= "ubis\\model\\entity\\GestorUbi";
-                    $metodo = 'getUbis';
-                    $titulo=ucfirst(_("tabla de toda las casas y centros"));
-                    switch ($miSfsv) {
-                        case 1: // sv
-                            if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
-                                $aWhere['tipo_ubi']='ctrsf|cdcdl|cdcex';
-                                $aOperador['tipo_ubi']='~';
-                                $aWhere['sf']='t';
-                            }
-                            break;
-                        case 2:
-                            $aWhere['dl']=ConfigGlobal::$dele;
-                            $aOperador['dl']='!=';
-                            $aWhere['sf']='t';
-                            break;
+                    if ($permisoSf) {
+                        $titulo = ucfirst(_("tabla de toda las casas y centros"));
+                        $Qobj_pau = 'Centro';
+                        $aWhere['sf'] = 't';
                     }
-                    */
                     break;
                 case "tot":
-                    $repoUbi = CentroRepositoryInterface::class;
-                    $metodo = 'getCentros';
-                    $repoDir =  DireccionCentroRepositoryInterface::class;
+                    $Qobj_pau = 'Centro';
                     $titulo = ucfirst(_("tabla de toda las casas y centros"));
                     break;
             }
             break;
     }
 
+    if (!empty($Qobj_pau)) {
+        $metodo = getMetodo($Qobj_pau);
+        $repoDir = getDireccionRepositoryClass($Qobj_pau);
+    }
+
 } else {
-    $aWhere = json_decode(core\urlsafe_b64decode($sWhere));
-    $aOperador = json_decode(core\urlsafe_b64decode($sOperador));
-    $Gestor = json_decode(core\urlsafe_b64decode($sGestor));
-    $aWhereD = json_decode(core\urlsafe_b64decode($sWhereD));
-    $aOperadorD = json_decode(core\urlsafe_b64decode($sOperadorD));
-    $GestorDir = json_decode(core\urlsafe_b64decode($sGestorDir));
+    $aWhere = json_decode(core\urlsafe_b64decode($sWhere), true) ?: [];
+    $aOperador = json_decode(core\urlsafe_b64decode($sOperador), true) ?: [];
+    $aWhereD = json_decode(core\urlsafe_b64decode($sWhereD), true) ?: [];
+    $aOperadorD = json_decode(core\urlsafe_b64decode($sOperadorD), true) ?: [];
+    if (!empty($Qobj_pau)) {
+        $metodo = getMetodo($Qobj_pau);
+        $repoDir = getDireccionRepositoryClass($Qobj_pau);
+    }
 }
 
 if (empty($aWhere) && empty($aWhereD)) {
@@ -306,8 +317,9 @@ if (empty($aWhere) && empty($aWhereD)) {
     die();
 }
 
+// Buscar por nombre Centro/Casa
 if (!empty($aWhere)) {
-    if (empty($Qcmb)) {
+    if (!is_true($Qcmb)) {
         $aWhere['active'] = 't';
     }
     // En el caso de las casas, hay que distinguir. Lo pongo aquí
@@ -320,16 +332,23 @@ if (!empty($aWhere)) {
             $aWhere['sf'] = 't';
             break;
     }
-    $UbiRepository = $GLOBALS['container']->get($repoUbi);
-    $cUbis = $UbiRepository->$metodo($aWhere, $aOperador);
+    if (!empty($Qobj_pau)) {
+        $metodo = getMetodo($Qobj_pau);
+        $UbiRepository = getRepository($Qobj_pau);
+        $cUbis = $UbiRepository->$metodo($aWhere, $aOperador);
+    } else {
+        $cUbis = [];
+    }
 } else {
     $cUbis = [];
 }
+
+// Buscar por dirección
+$cUbisD = [];
 if (!empty($aWhereD)) {
-    $cUbisD = [];
     if (!empty($repoDir)) {
-        $DireccioneRepository = $GLOBALS['container']->get($repoDir);
-        $cDirecciones = $DireccioneRepository->getDirecciones($aWhereD, $aOperadorD) ?: [];
+        $DireccionesRepository = $GLOBALS['container']->get($repoDir);
+        $cDirecciones = $DireccionesRepository->getDirecciones($aWhereD, $aOperadorD) ?: [];
         $repoRelacionMap = [
             DireccionCentroDlRepositoryInterface::class => RelacionCentroDlDireccionRepositoryInterface::class,
             DireccionCentroExRepositoryInterface::class => RelacionCentroExDireccionRepositoryInterface::class,
@@ -348,7 +367,7 @@ if (!empty($aWhereD)) {
                 if ($oUbi === null) {
                     continue;
                 }
-                if (empty($Qcmb) && method_exists($oUbi, 'isActive') && !$oUbi->isActive()) {
+                if (!is_true($Qcmb) && method_exists($oUbi, 'isActive') && !$oUbi->isActive()) {
                     continue;
                 }
                 $cUbisD[] = $oUbi;
@@ -359,44 +378,30 @@ if (!empty($aWhereD)) {
 
 // Si hay las dos colecciones, hay que buscar la intersección.
 $aUbisIntersec = [];
-if (isset($cUbis) && is_array($cUbis) && count($cUbis) && isset($cUbisD) && is_array($cUbisD) && count($cUbisD)) {
-    $aUbis = [];
-    foreach ($cUbis as $key => $oUbi) {
-        $id_ubi = $oUbi->getId_ubi();
-        $aUbis[] = $id_ubi;
-    }
-    $aUbisD = [];
-    foreach ($cUbisD as $key => $oUbi) {
-        $id_ubi = $oUbi->getId_ubi();
-        $aUbisD[] = $id_ubi;
-    }
-    foreach ($aUbis as $id_ubi) {
-        if (in_array($id_ubi, $aUbisD)) {
-            //me lo quedo
-            $aUbisIntersec[] = $id_ubi;
-        }
-    }
-} else {
-    if (isset($cUbisD) && is_array($cUbisD) && count($cUbisD)) {
-        $cUbis = $cUbisD;
-    }
+if (!empty($cUbis) && !empty($cUbisD)) {
+    $aUbis = array_map(static fn($oUbi) => $oUbi->getId_ubi(), $cUbis);
+    $aUbisD = array_map(static fn($oUbi) => $oUbi->getId_ubi(), $cUbisD);
+    $aUbisIntersec = array_values(array_intersect($aUbis, $aUbisD));
+} elseif (!empty($cUbisD)) {
+    $cUbis = $cUbisD;
 }
 
 
 // para descartar duplicados y ordenar
 $aUbis = [];
+$aUbisIntersecLookup = !empty($aUbisIntersec) ? array_flip($aUbisIntersec) : [];
 $cUbisTot = [];
 $a_region = [];
 $a_nom = [];
 foreach ($cUbis as $key => $oUbi) {
     $id_ubi = $oUbi->getId_ubi();
-    if (!empty($aUbisIntersec) && !in_array($id_ubi, $aUbisIntersec)) {
+    if (!empty($aUbisIntersecLookup) && !isset($aUbisIntersecLookup[$id_ubi])) {
         continue;
     }
-    if (in_array($id_ubi, $aUbis)) {
+    if (isset($aUbis[$id_ubi])) {
         continue;
     }
-    $aUbis[] = $id_ubi;
+    $aUbis[$id_ubi] = true;
     $cUbisTot[$key] = $oUbi;
     $a_region[$key] = strtolower($oUbi->getRegion() ?? '');
     $a_nom[$key] = strtolower($oUbi->getNombre_ubi() ?? '');
@@ -404,10 +409,8 @@ foreach ($cUbis as $key => $oUbi) {
 
 $sWhere = urlsafe_b64encode(json_encode($aWhere), JSON_THROW_ON_ERROR);
 $sOperador = urlsafe_b64encode(json_encode($aOperador), JSON_THROW_ON_ERROR);
-$sGestor = urlsafe_b64encode(json_encode($repoUbi), JSON_THROW_ON_ERROR);
 $sWhereD = urlsafe_b64encode(json_encode($aWhereD), JSON_THROW_ON_ERROR);
 $sOperadorD = urlsafe_b64encode(json_encode($aOperadorD), JSON_THROW_ON_ERROR);
-$sGestorDir = urlsafe_b64encode(json_encode($repoDir), JSON_THROW_ON_ERROR);
 
 //si no existe la ficha, hacer una nueva	
 $nueva_ficha = '';
@@ -420,7 +423,7 @@ if ($Qtipo === "tot" || $Qloc === "tot") {
 } else {
     $nueva_ficha = 'nueva';
     $nombre_ubi = $Qnombre_ubi;
-    $a_link = array('sGestor' => $sGestor,
+    $a_link = array('obj_pau' => $Qobj_pau,
         'tipo_ubi' => $tipo_ubi,
         'nombre_ubi' => $Qnombre_ubi,
         'nuevo' => 1,
@@ -437,7 +440,7 @@ array_multisort($a_region, SORT_LOCALE_STRING, SORT_ASC, $a_nom, SORT_LOCALE_STR
 /*
 if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 	$nombre_ubi=$Qnombre_ubi;
-	$a_link = array('sGestor' => $sGestor,
+	$a_link = array('obj_pau' => $Qobj_pau,
 					'tipo_ubi' => $tipo_ubi,
 					'nombre_ubi' => $Qnombre_ubi,
 					'nuevo' => 1,
@@ -483,10 +486,9 @@ $aGoBack = array(
     'loc' => $Qloc,
     'sWhere' => $sWhere,
     'sOperador' => $sOperador,
-    'sGestor' => $sGestor,
+    'obj_pau' => $Qobj_pau,
     'sWhereD' => $sWhereD,
     'sOperadorD' => $sOperadorD,
-    'sGestorDir' => $sGestorDir,
     'metodo' => $metodo,
     'titulo' => $titulo
 );
@@ -526,12 +528,12 @@ foreach ($cUbisTot as $oUbi) {
     $region = $oUbi->getRegion();
 
     $cDirecciones = $oUbi->getDirecciones();
-    if (is_array($cDirecciones) & !empty($cDirecciones)) {
+    if (is_array($cDirecciones) && !empty($cDirecciones)) {
         foreach ($cDirecciones as $oDireccion) {
-            $poblacion = $oDireccion->getPoblacion();
-            $pais = $oDireccion->getPais();
-            $direccion = $oDireccion->getDireccion();
-            $c_p = $oDireccion->getC_p();
+            $poblacion = $oDireccion->getPoblacionVo()->value();
+            $pais = $oDireccion->getPaisVo()?->value() ?? '';
+            $direccion = $oDireccion->getDireccionVo()?->value() ?? '';
+            $c_p = $oDireccion->getCodigoPostalVo()?->value() ?? '';
         }
     } else {
         $poblacion = '';
@@ -566,7 +568,7 @@ $a_camposHidden = array(
     'loc' => $Qloc,
     'sWhere' => $sWhere,
     'sOperador' => $sOperador,
-    'sGestor' => $sGestor,
+    'obj_pau' => $Qobj_pau,
     'metodo' => $metodo,
     'titulo' => $titulo
 );

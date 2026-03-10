@@ -469,7 +469,7 @@ class CentroEx
     public function getDirecciones(): array
     {
         $detalles = $this->getDireccionesDetalladas();
-        return array_map(fn(DireccionDetalle $d) => $d->getDireccion(), $detalles);
+        return array_map(fn(DireccionDetalle $d) => $d->getDireccionVo(), $detalles);
     }
 
     /**

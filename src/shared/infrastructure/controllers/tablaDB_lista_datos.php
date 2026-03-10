@@ -5,14 +5,14 @@ namespace src\shared;
 use src\shared\domain\DatosTablaRepo;
 use web\ContestarJson;
 
-$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
 $Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');
 $Qpau = (string)filter_input(INPUT_POST, 'pau');
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (integer)filter_input(INPUT_POST, 'obj_pau');
 
 // Tiene que ser en dos pasos.
-$obj = urldecode($Qclase_info);
+$obj = urldecode($Qclase_info_encoded);
 $oInfoClase = new $obj();
 if (method_exists($oInfoClase, 'setObj_pau')) {
     $oInfoClase->setObj_pau($Qobj_pau);

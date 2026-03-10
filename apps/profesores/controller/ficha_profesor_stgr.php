@@ -191,13 +191,15 @@ $latin = $GLOBALS['container']->get(ProfesorLatinRepositoryInterface::class)->fi
 
 $go_cosas['print'] = Hash::link(ConfigGlobal::getWeb() . '/apps/profesores/controller/ficha_profesor_stgr.php?' . http_build_query(array('id_nom' => $id_nom, 'id_tabla' => $Qid_tabla, 'print' => '1')));
 
-$a_cosas = array('clase_info' => InfoProfesorLatin::class,
+$a_cosas = [
+    'clase_info' => urlencode(InfoProfesorLatin::class),
     'pau' => 'p',
     'id_pau' => $id_nom,
     'obj_pau' => $Qobj_pau,
     'permiso' => $Qpermiso,
     'depende' => $Qdepende,
-    'go_to' => $go_to);
+    'go_to' => $go_to,
+];
 $go_cosas['latin'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 
 if (is_true($sacd)) {

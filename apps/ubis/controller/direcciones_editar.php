@@ -118,12 +118,12 @@ if ($Qmod === 'nuevo') {
 
     if (!empty($id_direccion_actual)) {
         $oDireccionDetallada = $oUbi->getUnaDireccionDetallada($id_direccion_actual);
-        $oDireccion = $oDireccionDetallada->getDireccion();
+        $oDireccion = $oDireccionDetallada->getDireccionVo();
         $propietario = $oDireccionDetallada->isPropietario();
         $principal = $oDireccionDetallada->isPrincipal();
 
         $nom_sede = $oDireccion->getNom_sede();
-        $direccion = $oDireccion->getDireccion();
+        $direccion = $oDireccion->getDireccionVo()?->value() ?? '';
         $a_p = $oDireccion->getA_p();
         $c_p = $oDireccion->getC_p();
         $cp_dcha = $oDireccion->isCp_dcha();

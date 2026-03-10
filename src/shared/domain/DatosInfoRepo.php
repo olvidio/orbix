@@ -203,8 +203,12 @@ abstract class DatosInfoRepo
     public function getFicha()
     {
         $obj = $this->obj;
-        $repo = str_replace('domain\entity', 'domain\contracts', $obj);
-        $RepositoryInterface = $repo . 'RepositoryInterface';
+
+        $RepositoryInterface = $this->getRepositoryInterface();
+        if (empty($RepositoryInterface)) {
+            $repo = str_replace('domain\entity', 'domain\contracts', $obj);
+            $RepositoryInterface = $repo . 'RepositoryInterface';
+        }
 
         $oFicha = null;
         $oRepository = $GLOBALS['container']->get($RepositoryInterface);

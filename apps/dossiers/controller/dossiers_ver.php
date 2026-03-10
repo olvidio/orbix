@@ -64,10 +64,10 @@ $QqueSel = (string)filter_input(INPUT_POST, 'queSel');
 
 // si vengo de modificar el dossier, 
 //			$clase_info = "$app\\model\\entity\\datos$id_dossier";
-$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
-if (empty($Qid_dossier) && !empty($Qclase_info)) {
+$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
+if (empty($Qid_dossier) && !empty($Qclase_info_encoded)) {
     // Tiene que ser en dos pasos.
-    $obj = urldecode($Qclase_info);
+    $obj = urldecode($Qclase_info_encoded);
     $oInfoClase = new $obj();
     if (method_exists($oInfoClase, 'setObj_pau')) {
         $oInfoClase->setObj_pau($Qobj_pau);
@@ -214,7 +214,7 @@ function getRepository($obj_pau)
             echo "<div id=\"$nom_bloque\">";
             $oTipoDossier = $TipoDossierRepository->findById($id_dossier);
             $app = $oTipoDossier->getApp();
-            $db = $oTipoDossier->getDb();
+            $db = $oTipoDossier->getDbVo()?->value();
             $nameClaseSelect = '';
             if ($db === 5) { // nuevas clases en /src
                 $nameFile = "../../../src/$app/domain/Select" . $id_dossier . ".php";
@@ -274,6 +274,7 @@ function getRepository($obj_pau)
                 // No sé porque no acepa aquí el '_' en el nombre de la clase.
                 //$clase_info = "$app\\model\\Info$id_dossier";
                 $clase_info = "src\\$app\\domain\\Info$clase";
+                $Qclase_info_encoded = urlencode($clase_info);
                 // Tiene que ser en dos pasos.
                 $obj = $clase_info;
                 $oInfoClase = new $obj();
@@ -291,7 +292,7 @@ function getRepository($obj_pau)
                 $oDatosTabla->setScroll_id($Qscroll_id);
 
                 $aQuery = array(
-                        'clase_info' => $Qclase_info,
+                        'clase_info' => $Qclase_info_encoded,
                         'id_pau' => $id_pau,
                         'bloque' => $bloque,
                         'permiso' => $Qpermiso,
@@ -305,7 +306,7 @@ function getRepository($obj_pau)
                 $oHashSelect->setCamposForm('mod');
                 $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
                 $a_camposHidden = array(
-                        'clase_info' => $clase_info,
+                        'clase_info' => $Qclase_info_encoded,
                         'pau' => $pau,
                         'id_pau' => $id_pau, // Hace falta para el botón nuevo
                         'obj_pau' => $Qobj_pau,

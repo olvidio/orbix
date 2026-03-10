@@ -59,7 +59,10 @@ class Ubi
                 $tipo_ubi = $oCentro->getTipo_ubi();
                 switch ($tipo_ubi) {
                     case 'ctrdl':
-                        $oCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ubi);
+                        // Si es de mi dl, la clase será CentroDl.
+                        if ($oCentro->getDl() === ConfigGlobal::mi_delef()) {
+                            $oCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ubi);
+                        }
                         break;
                     case 'ctrex':
                         $oCentro = $GLOBALS['container']->get(CentroExRepositoryInterface::class)->findById($id_ubi);

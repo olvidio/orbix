@@ -42,6 +42,7 @@ $aOpciones = $GesPais->getArrayPaises();
 $oDesplPais = new Desplegable();
 $oDesplPais->setOpciones($aOpciones);
 $oDesplPais->setNombre('pais');
+$oDesplPais->setBlanco(true);
 
 $Qsimple = (integer)filter_input(INPUT_POST, 'simple');
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
@@ -105,19 +106,19 @@ $oHash = new Hash();
 $s_camposForm = 'simple!nombre_ubi!opcion!ciudad';
 $oHash->setcamposNo('cmb!simple!tipo_ctr!tipo_casa');
 
-if ($simple == 1) {
+if ($simple === 1) {
     $s_camposForm .= '!region!pais';
 }
-if ($simple == 2) {
+if ($simple === 2) {
     $s_camposForm .= '!tipo!loc';
-    if ($loc == "ex") {
+    if ($loc === "ex") {
         $s_camposForm .= '!dl!region!pais';
     }
 }
 $oHash->setCamposForm($s_camposForm);
 
 
-if ($simple == 1) {
+if ($simple === 1) {
     $pagina = Hash::link('apps/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '2')));
 } else {
     $pagina = Hash::link('apps/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '1')));

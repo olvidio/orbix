@@ -13,7 +13,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+$Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
 $Qdatos_buscar = (string)filter_input(INPUT_POST, 'datos_buscar');
 $QaSerieBuscar = (string)filter_input(INPUT_POST, 'aSerieBuscar');
 $Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');
@@ -23,7 +23,7 @@ $Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
 $Qid_pau = (string)filter_input(INPUT_POST, 'id_pau'); // necesario para nuevo.
 
 $aQuery = array(
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
     'datos_buscar' => $Qdatos_buscar,
     'aSerieBuscar' => $QaSerieBuscar,
     "k_buscar" => $Qk_buscar,
@@ -68,7 +68,7 @@ if (!empty($Qobj_pau)) {
 }
 
 // Tiene que ser en dos pasos.
-$obj = $Qclase_info;
+$obj = urldecode($Qclase_info_encoded);
 $oInfoClase = new $obj();
 
 $oInfoClase->setMod($Qmod);
@@ -93,7 +93,7 @@ $oHashSelect = new Hash();
 $oHashSelect->setCamposForm($camposForm);
 $oHashSelect->setCamposNo('sel!' . $camposNo);
 $a_camposHidden = array(
-    'clase_info' => $Qclase_info,
+    'clase_info' => $Qclase_info_encoded,
     'datos_buscar' => $Qdatos_buscar,
     'aSerieBuscar' => $QaSerieBuscar,
     "k_buscar" => $Qk_buscar,
@@ -106,7 +106,6 @@ $a_camposHidden = array(
 $oHashSelect->setArraycamposHidden($a_camposHidden);
 
 
-$clase_info = urlencode($Qclase_info);
 $oHash1 = new Hash();
 $oHash1->setUrl($web_depende);
 $oHash1->setCamposForm('clase_info!accion!valor_depende');
@@ -143,7 +142,7 @@ echo $oPosicion->mostrar_left_slide(1);
 
     fnjs_actualizar_depende = function (camp, accion) {
         var valor_depende = $('#' + camp).val();
-        var parametros = 'clase_info=<?= $clase_info?>&accion=' + accion + '&valor_depende=' + valor_depende + '<?= $h ?>';
+        var parametros = 'clase_info=<?= $Qclase_info_encoded?>&accion=' + accion + '&valor_depende=' + valor_depende + '<?= $h ?>';
         var url = '<?= $web_depende ?>';
         $.ajax({
             url: url,

@@ -74,7 +74,7 @@ foreach ($cDirecciones as $oDireccion) {
     $pagina = "fnjs_asignar_dir($Qid_ubi,\"$Qobj_dir\", $id_direccion)";
     $a_valores[$i][1] = $id_direccion;
     $a_valores[$i][2] = array('script' => $pagina, 'valor' => 'ok');
-    $a_valores[$i][3] = $oDireccion->getDireccion();
+    $a_valores[$i][3] = $oDireccion->getDireccionVo()?->value() ?? '';
     $a_valores[$i][4] = $oDireccion->getC_p();
     $a_valores[$i][5] = $oDireccion->getPoblacion();
     $a_valores[$i][6] = $oDireccion->getProvincia();

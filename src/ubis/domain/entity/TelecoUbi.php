@@ -177,11 +177,24 @@ class TelecoUbi
     {
         $oTelecoUbiSet = new Set();
 
+        $oTelecoUbiSet->add($this->getDatosId_ubi());
         $oTelecoUbiSet->add($this->getDatosTipo_teleco());
         $oTelecoUbiSet->add($this->getDatosDesc_teleco());
         $oTelecoUbiSet->add($this->getDatosNum_teleco());
         $oTelecoUbiSet->add($this->getDatosObserv());
         return $oTelecoUbiSet->getTot();
+    }
+
+    private function getDatosId_ubi(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_ubi');
+        $oDatosCampo->setMetodoGet('getId_ubi');
+        $oDatosCampo->setMetodoSet('setId_ubi');
+        $oDatosCampo->setEtiqueta(_("id_ubi"));
+        $oDatosCampo->setTipo('hidden');
+
+        return $oDatosCampo;
     }
 
     private function getDatosTipo_teleco(): DatosCampo
@@ -219,7 +232,7 @@ class TelecoUbi
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('num_teleco');
         $oDatosCampo->setMetodoGet('getNum_teleco');
-        $oDatosCampo->setMetodoSet('setNunm_teleco');
+        $oDatosCampo->setMetodoSet('setNum_teleco');
         $oDatosCampo->setEtiqueta(_("número o siglas"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');

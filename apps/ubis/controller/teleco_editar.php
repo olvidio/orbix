@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use web\Desplegable;
@@ -27,6 +28,41 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+// Clase auxiliar para usar el trait en contexto procedural
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function getUbi(string $entityType): object {
+        return $this->getRepository($entityType);
+    }
+
+    public function getTeleco(string $entityType): object {
+        return $this->getTelecoRepository($entityType);
+    }
+
+    public function getTelecoClass(string $entityType): string {
+        return $this->getTelecoRepositoryClass($entityType);
+    }
+};
+
+function getUbiRepository(string $obj_pau): object
+{
+    global $repositoryProvider;
+    return $repositoryProvider->getUbi($obj_pau);
+}
+
+function getTelecoRepository(string $obj_pau): object
+{
+    global $repositoryProvider;
+    return $repositoryProvider->getTeleco($obj_pau);
+}
+
+function getTelecoRepositoryClass(string $obj_pau): string
+{
+    global $repositoryProvider;
+    return $repositoryProvider->getTelecoClass($obj_pau);
+}
+
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
@@ -45,25 +81,11 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $s_pkey = '';
 }
 
-switch ($Qobj_pau) {
-    case 'Centro': // tipo dl pero no de la mia
-        $repoName = 'src\\ubis\\application\\repositories\\TelecoCtrRepository';
-        break;
-    case 'CentroDl':
-        $repoName = 'src\\ubis\\application\\repositories\\TelecoCtrDlRepository';
-        break;
-    case 'CentroEx':
-        $repoName = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
-        break;
-    case 'Casa': // tipo dl pero no de la mia
-        $repoName = 'src\\ubis\\application\\repositories\\TelecoCdcRepository';
-        break;
-    case 'CasaDl':
-        $repoName = 'src\\ubis\\application\\repositories\\TelecoCdcDlRepository';
-        break;
-    case 'CasaEx':
-        $repoName = 'src\\ubis\\application\\repositories\\TelecoCdcExRepository';
-        break;
+try {
+    $repoName = getTelecoRepositoryClass($Qobj_pau);
+    $TelecoRepository = getTelecoRepository($Qobj_pau);
+} catch (\InvalidArgumentException) {
+    exit(_("falta definir obj_pau"));
 }
 
 if ($Qmod === 'nuevo') {
@@ -72,8 +94,7 @@ if ($Qmod === 'nuevo') {
     $num_teleco = '';
     $observ = '';
 } else {
-    $repo = new $repoName();
-    $TelecoUbi = $repo->findById($a_pkey);
+    $TelecoUbi = $TelecoRepository->findById($a_pkey);
 
     $desc_teleco = $TelecoUbi->getId_desc_teleco();
     $id_tipo_teleco = $TelecoUbi->getId_tipo_teleco();
@@ -94,8 +115,7 @@ $botones = 0;
 switch ($Qobj_pau) {
     case 'CentroDl':
     case 'CasaDl':
-        $objfull = 'src\\ubis\\application\\repositories\\' . $Qobj_pau .'Repository';
-        $oUbi = (new $objfull())->findById($Qid_ubi);
+        $oUbi = getUbiRepository($Qobj_pau)->findById($Qid_ubi);
         $dl = $oUbi->getDl();
         if ($dl == ConfigGlobal::mi_delef()) {
             // ----- sv sólo a scl -----------------

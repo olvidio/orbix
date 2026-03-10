@@ -48,7 +48,7 @@ $repositoryProvider = new class {
     }
 };
 
-function getRepository($obj_pau)
+function getRepository(string $obj_pau): object
 {
     global $repositoryProvider;
     return $repositoryProvider->get($obj_pau);
@@ -58,22 +58,32 @@ function getRepository($obj_pau)
 $es_de_dl = FALSE;
 if (!empty($Qnuevo)) {
     $tipo_ubi = (string)filter_input(INPUT_POST, 'tipo_ubi');
-    $QsGestor = (string)filter_input(INPUT_POST, 'sGestor');
-    $Gestor = json_decode(core\urlsafe_b64decode($QsGestor));
-    $obj = str_replace('Gestor', '', $Gestor);
-    $oUbi = new $obj();
-    $Qobj_pau = str_replace('ubis\\model\\entity\\', '', $obj);
-
-    $cDatosCampo = $oUbi->getDatosCampos();
-    $oDbl = $oUbi->getoDbl();
-    foreach ($cDatosCampo as $oDatosCampo) {
-        $camp = $oDatosCampo->getNom_camp();
-        $valor_predeterminado = $oDatosCampo->datos_campo($oDbl, 'valor');
-        $a_campos[$camp] = $valor_predeterminado;
+    if (empty($Qobj_pau)) {
+        switch ($tipo_ubi) {
+            case 'ctrdl':
+            case 'ctrsf':
+                $Qobj_pau = 'CentroDl';
+                break;
+            case 'ctrex':
+                $Qobj_pau = 'CentroEx';
+                break;
+            case 'cdcdl':
+                $Qobj_pau = 'CasaDl';
+                break;
+            case 'cdcex':
+                $Qobj_pau = 'CasaEx';
+                break;
+        }
     }
+    if (empty($Qobj_pau)) {
+        exit(_("falta definir obj_pau"));
+    }
+    $UbiRepository = getRepository($Qobj_pau);
+
     $dl = (string)filter_input(INPUT_POST, 'dl');
     $region = (string)filter_input(INPUT_POST, 'region');
     $nombre_ubi = (string)filter_input(INPUT_POST, 'nombre_ubi');
+    $nombre_ubi = urldecode($nombre_ubi);
 
     if (empty($dl) && strstr($Qobj_pau, 'Dl')) {
         if (strstr($tipo_ubi, 'ctr')) {
@@ -88,7 +98,12 @@ if (!empty($Qnuevo)) {
         $region = ConfigGlobal::mi_region();
     }
 
-    $nombre_ubi = urldecode($nombre_ubi);
+    $newIdAuto = $UbiRepository->getNewId();
+    $Qid_ubi = $UbiRepository->getNewIdUbi($newIdAuto);
+
+    // para evitar poner el use y que el ide no detecte que se usa:
+    $obj_pau_full = 'src\ubis\domain\entity\\' . $Qobj_pau;
+    $oUbi = new $obj_pau_full();
     $oUbi->setNombre_ubi($nombre_ubi);
     $oUbi->setDl($dl);
     $oUbi->setRegion($region);
@@ -106,17 +121,18 @@ if (!empty($Qnuevo)) {
 
     $Qid_ubi = '';
     $id_direccion = '';
-    $status = true;
 } else {
-    $repo = getRepository($Qobj_pau);
-    $oUbi = (new $repo())->findById($Qid_ubi);
+    if (empty($Qobj_pau)) {
+        exit(_("falta definir obj_pau"));
+    }
+    $UbiRepository = getRepository($Qobj_pau);
+    $oUbi = $UbiRepository->findById($Qid_ubi);
 
     $tipo_ubi = $oUbi->getTipo_ubi();
     $dl = $oUbi->getDl();
     $id_ubi = $oUbi->getId_ubi();
     $region = $oUbi->getRegion();
     $nombre_ubi = $oUbi->getNombre_ubi();
-    $status = $oUbi->isActive();
     $id_direccion = '';
 
     // para saber si es de la dl o no, diferente para ctr o cdc.
@@ -195,10 +211,10 @@ if (strstr($Qobj_pau, 'Dl')) {
 
 $oPermActiv = new ubis\model\CuadrosLabor();
 
-$chk = is_true($status) ? 'checked' : '';
-$campos_chk = 'status!sv!sf';
+$chk = $oUbi->isActive()? 'checked' : '';
+$campos_chk = 'active!sv!sf';
 
-$camposForm = 'que!dl!tipo_ubi!status!region!nombre_ubi';
+$camposForm = 'que!dl!tipo_ubi!active!region!nombre_ubi';
 if ($tipo_ubi === "ctrdl" || $tipo_ubi === "ctrsf") {
     $camposForm .= '!num_pi!num_cartas!num_cartas_mensuales!plazas!num_habit_indiv!n_buzon!observ';
 }
@@ -256,6 +272,7 @@ switch ($tipo_ubi) {
         $oDesplCentros->setNombre($nnom);
         $oDesplCentros->setOpciones($aOpciones);
         $oDesplCentros->setOpcion_sel($id_ctr_padre);
+        $oDesplCentros->setBlanco(true);
 
         $oDesplegableTiposCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
         $oDesplegableTiposCentro->setOpcion_sel($tipo_ctr);
@@ -310,6 +327,7 @@ switch ($tipo_ubi) {
         $oDesplCentros->setNombre($nnom);
         $oDesplCentros->setOpciones($aOpciones);
         $oDesplCentros->setOpcion_sel($id_ctr_padre);
+        $oDesplCentros->setBlanco(true);
 
         $oDesplegableTiposCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
         $oDesplegableTiposCentro->setOpcion_sel($tipo_ctr);

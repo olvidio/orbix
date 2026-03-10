@@ -15,10 +15,10 @@ final class DireccionId
     private function validate(int $value): void
     {
         $valueStr = (string)$value;
-        $isValid = preg_match('/^[12]\d{4,}$/', $valueStr) || preg_match('/^\-[12]\d{4,}$/', $valueStr);
+        $isValid = preg_match('/^[123]\d{4,}$/', $valueStr) || preg_match('/^\-[12]\d{4,}$/', $valueStr);
 
         if (!$isValid) {
-            throw new \InvalidArgumentException("El valor debe empezar por 1, 2, -1 o -2 y tener al menos 5 dígitos");
+            throw new \InvalidArgumentException("El valor debe empezar por 1, 2, 3, -1 o -2 y tener al menos 5 dígitos");
         }
     }
 

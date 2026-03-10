@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\entity\TelecoUbi;
 use function core\urlsafe_b64decode;
 
@@ -15,6 +16,21 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+// Clase auxiliar para usar el trait en contexto procedural
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function getTeleco(string $entityType): object {
+        return $this->getTelecoRepository($entityType);
+    }
+};
+
+function getTelecoRepository(string $obj_pau): object
+{
+    global $repositoryProvider;
+    return $repositoryProvider->getTeleco($obj_pau);
+}
+
 $oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
@@ -23,19 +39,10 @@ $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
-switch ($Qobj_pau) {
-    case 'CentroDl':
-        $repo = 'src\\ubis\\application\\repositories\\TelecoCtrDlRepository';
-        break;
-    case 'CentroEx':
-        $repo = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
-        break;
-    case 'CasaDl':
-        $repo = 'src\\ubis\\application\\repositories\\TelecoCdcDlRepository';
-        break;
-    case 'CasaEx':
-        $repo = 'src\\ubis\\application\\repositories\\TelecoCdcExRepository';
-        break;
+try {
+    $Repository = getTelecoRepository($Qobj_pau);
+} catch (\InvalidArgumentException) {
+    exit(_("falta definir obj_pau"));
 }
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -52,7 +59,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 switch ($Qmod) {
     case 'eliminar_teleco':
-        $Repository = new $repo();
         $TelecoUbi = $Repository->findById($a_pkey);
         $Repository->Eliminar($TelecoUbi);
         die();
@@ -63,7 +69,6 @@ switch ($Qmod) {
         $Qnum_teleco = (string)filter_input(INPUT_POST, 'num_teleco');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
-        $Repository = new $repo();
         if (empty($a_pkey)) {
             // es nuevo
             $newId = $Repository->getNewId();
