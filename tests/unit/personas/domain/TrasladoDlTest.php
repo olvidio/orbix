@@ -3,9 +3,10 @@
 namespace Tests\unit\personas\domain;
 
 use PHPUnit\Framework\TestCase;
-use src\personas\domain\TrasladoDl;
+use src\personas\domain\Trasladar;
 use src\personas\domain\entity\PersonaDl;
 use src\personas\domain\entity\PersonaN;
+use src\personas\domain\value_objects\SituacionCode;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -32,7 +33,7 @@ class TrasladoDlTest extends TestCase
     public function test_set_reg_dl_extrae_dl_sin_sufijo_vf(): void
     {
         $this->replaceContainerWithDelegaciones(['dlb', 'crGalBel']);
-        $traslado = new TrasladoDlSpy();
+        $traslado = new TrasladarSpy();
 
         $traslado->setDl_persona('crGalBel');
         $traslado->setReg_dl_org('H-dlbv');
@@ -47,13 +48,13 @@ class TrasladoDlTest extends TestCase
     public function test_trasladar_ejecuta_flujo_completo_si_comprobar_es_ok(): void
     {
         $this->replaceContainerWithDelegaciones(['dlOrigen', 'dlDestino']);
-        $traslado = new TrasladoDlSpy();
+        $traslado = new TrasladarSpy();
 
         $traslado->setId_nom(123);
         $traslado->setDl_persona('dlOrigen');
         $traslado->setReg_dl_org('H-dlOrigenv');
         $traslado->setReg_dl_dst('H-dlDestinov');
-        $traslado->setSituacion('L');
+        $traslado->setSituacionVo(SituacionCode::fromNullableString('L'));
 
         $result = $traslado->trasladar();
 
@@ -76,13 +77,13 @@ class TrasladoDlTest extends TestCase
     public function test_trasladar_si_no_existe_dl_destino_solo_toca_ficha_y_falla(): void
     {
         $this->replaceContainerWithDelegaciones(['dlOrigen']);
-        $traslado = new TrasladoDlSpy();
+        $traslado = new TrasladarSpy();
 
         $traslado->setId_nom(123);
         $traslado->setDl_persona('dlOrigen');
         $traslado->setReg_dl_org('H-dlOrigenv');
         $traslado->setReg_dl_dst('H-dlDestinov');
-        $traslado->setSituacion('L');
+        $traslado->setSituacionVo(SituacionCode::fromNullableString('L'));
 
         $result = $traslado->trasladar();
 
@@ -94,13 +95,13 @@ class TrasladoDlTest extends TestCase
     public function test_trasladar_si_ya_esta_trasladado_no_hace_mas_operaciones(): void
     {
         $this->replaceContainerWithDelegaciones(['dlOrigen', 'dlDestino']);
-        $traslado = new TrasladoDlSpy();
+        $traslado = new TrasladarSpy();
 
         $traslado->setId_nom(123);
         $traslado->setDl_persona('dlDestino');
         $traslado->setReg_dl_org('H-dlOrigenv');
         $traslado->setReg_dl_dst('H-dlDestinov');
-        $traslado->setSituacion('L');
+        $traslado->setSituacionVo(SituacionCode::fromNullableString('L'));
 
         $result = $traslado->trasladar();
 
@@ -134,7 +135,7 @@ class TrasladoDlTest extends TestCase
         $orgConn = $this->createMock(\PDO::class);
         $dstConn = $this->createMock(\PDO::class);
 
-        $traslado = new TrasladoDlCopyPersonaSpy(
+        $traslado = new TrasladarCopyPersonaSpy(
             $personaDlRepo,
             $personaNOrgRepo,
             $personaNDstRepo,
@@ -144,7 +145,7 @@ class TrasladoDlTest extends TestCase
         $traslado->setId_nom($idNom);
         $traslado->setReg_dl_org('H-dlOrigenv');
         $traslado->setReg_dl_dst('GalBel-crGalBelf');
-        $traslado->setF_dl(new DateTimeLocal('2026-03-09'));
+        $traslado->setF_traslado(new DateTimeLocal('2026-03-09'));
 
         $result = $traslado->copiarPersona();
 
@@ -162,7 +163,7 @@ class TrasladoDlTest extends TestCase
     }
 }
 
-class TrasladoDlSpy extends TrasladoDl
+class TrasladarSpy extends Trasladar
 {
     public array $calls = [];
 
@@ -215,7 +216,7 @@ class TrasladoDlSpy extends TrasladoDl
     }
 }
 
-class TrasladoDlCopyPersonaSpy extends TrasladoDl
+class TrasladarCopyPersonaSpy extends Trasladar
 {
     public function __construct(
         private object $personaDlRepo,

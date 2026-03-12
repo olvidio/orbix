@@ -4,15 +4,11 @@ use core\ConfigGlobal;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\entity\Dossier;
 use src\dossiers\domain\value_objects\DossierPk;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\Traslado;
-use src\personas\domain\TrasladoDl;
+use src\personas\domain\Trasladar;
+use src\personas\domain\value_objects\SituacionCode;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 
@@ -32,29 +28,26 @@ $error = '';
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
+$repositoryProvider = new class {
+    use ProvidesRepositories;
 
-switch ($Qobj_pau) {
-    case 'PersonaN':
-        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        break;
-    case 'PersonaNax':
-        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        break;
-    case 'PersonaAgd':
-        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        break;
-    case 'PersonaS':
-        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        break;
-    case 'PersonaSSSC':
-        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        break;
-    case 'PersonaEx':
-        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-        break;
-    default:
-        echo "No existe la clase de la persona";
-        die();
+    public function get(string $entityType): object
+    {
+        return $this->getRepository($entityType);
+    }
+};
+
+function getPersonaRepository(string $obj_pau): object
+{
+    global $repositoryProvider;
+    return $repositoryProvider->get($obj_pau);
+}
+
+try {
+    $repoPersona = getPersonaRepository($Qobj_pau);
+} catch (\InvalidArgumentException) {
+    echo "No existe la clase de la persona";
+    die();
 }
 
 
@@ -106,16 +99,19 @@ $Qdl = (string)filter_input(INPUT_POST, 'dl');
 $reg_dl_org = empty($Qdl) ? '' : ConfigGlobal::mi_region() . '-' . $Qdl;
 $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
 
+$oF_dl = empty($Qf_dl)? null : DateTimeLocal::createFromLocal($Qf_dl);
+$situacion = SituacionCode::fromNullableString($Qsituacion);
+
 if (!empty($Qnew_dl) && !empty($Qf_dl)) {
     $reg_dl_org .= $sfsv_txt;
     $Qnew_dl .= $sfsv_txt;
-    $oTrasladoDl = new TrasladoDl();
+    $oTrasladoDl = new Trasladar();
     $oTrasladoDl->setId_nom($Qid_pau);
     $oTrasladoDl->setDl_persona($old_dl);
     $oTrasladoDl->setReg_dl_org($reg_dl_org);
     $oTrasladoDl->setReg_dl_dst($Qnew_dl);
-    $oTrasladoDl->setF_dl($Qf_dl);
-    $oTrasladoDl->setSituacion($Qsituacion);
+    $oTrasladoDl->setF_traslado($oF_dl);
+    $oTrasladoDl->setSituacionVo($situacion);
 
     $oTrasladoDl->trasladar();
     $error = $oTrasladoDl->getError();

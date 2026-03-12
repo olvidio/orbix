@@ -7,7 +7,7 @@ use core\DBPropiedades;
 use Exception;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use src\personas\domain\TrasladoDl;
+use src\personas\domain\Trasladar;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 use src\tablonanuncios\domain\entity\Anuncio;
@@ -83,7 +83,7 @@ class CertificadoEmitidoEnviar
             if ($is_dl_in_orbix) {
                 $oHoy = new DateTimeLocal();
                 $oCertificadoEmitido->setF_enviado($oHoy);
-                $oTrasladoDl = new TrasladoDl();
+                $oTrasladoDl = new Trasladar();
                 $oTrasladoDl->setReg_dl_dst($esquema_dl_dst);
 
                 $oTrasladoDl->copiar_certificados_a_dl($oCertificadoEmitido);

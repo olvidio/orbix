@@ -41,9 +41,9 @@ interface ActividadAllRepositoryInterface
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(ActividadAll $ActividadAll): bool;
+    public function Eliminar(ActividadAll $ActividadAll, bool $registrarCambios = true): bool;
 
-    public function Guardar(ActividadAll $ActividadAll): bool;
+    public function Guardar(ActividadAll $ActividadAll, bool $registrarCambios = true): bool;
 
     public function getErrorTxt(): string;
 

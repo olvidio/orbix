@@ -111,20 +111,20 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(Asistente $Asistente): bool
+    public function Eliminar(Asistente $Asistente, bool $registrarCambios = true): bool
     {
         $id_activ = $Asistente->getId_activ();
         $id_nom = $Asistente->getId_nom();
 
-        // Obtener datos actuales antes de eliminar
-        $datosActuales = $this->datosById($id_activ, $id_nom);
+        // Obtener datos actuales antes de eliminar (solo si hay que registrar cambios)
+        $datosActuales = $registrarCambios ? $this->datosById($id_activ, $id_nom) : false;
 
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_activ = $id_activ AND id_nom = $id_nom";
         $success = $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-        if ($success && $datosActuales) {
+        if ($registrarCambios && $success && $datosActuales) {
             // Marcar como eliminada
             $this->markAsDeleted($Asistente, $datosActuales);
         }
@@ -136,7 +136,7 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(Asistente $Asistente): bool
+    public function Guardar(Asistente $Asistente, bool $registrarCambios = true): bool
     {
         $id_activ = $Asistente->getId_activ();
         $id_nom = $Asistente->getId_nom();
@@ -144,8 +144,8 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_activ, $id_nom);
 
-        // Obtener datos actuales si es UPDATE
-        $datosActuales = $bInsert ? [] : ($this->datosById($id_activ, $id_nom) ?: []);
+        // Obtener datos actuales si es UPDATE (solo si hay que registrar cambios)
+        $datosActuales = ($registrarCambios && !$bInsert) ? ($this->datosById($id_activ, $id_nom) ?: []) : [];
 
         $aDatos = $Asistente->toArrayForDatabase();
         unset($aDatos['domainEvents']);
@@ -178,12 +178,12 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
 
         $success = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 
-        if ($success) {
+        if ($registrarCambios && $success) {
             // Marcar evento de dominio
             if ($bInsert) {
-                $this->markAsNew($Asistente,$datosActuales);
+                $this->markAsNew($Asistente, $datosActuales);
             } else {
-                $this->markAsModified($Asistente,$datosActuales);
+                $this->markAsModified($Asistente, $datosActuales);
             }
         }
 

@@ -37,7 +37,7 @@ if ($Qok == 1) {
     $Qyear_ref = (integer)filter_input(INPUT_POST, 'year_ref');
     $Qyear = (integer)filter_input(INPUT_POST, 'year');
     $oNuevoCurso = new ActividadNuevoCurso();
-    $oNuevoCurso->setQuiet(TRUE); // para que no anote los cambios.
+    $oNuevoCurso->setRegistrarCambios(FALSE); // para que no anote los cambios.
     if (!empty($Qver_lista)) {
         $ver_lista = TRUE;
     } else {

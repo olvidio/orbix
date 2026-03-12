@@ -2,13 +2,8 @@
 
 use core\ViewPhtml;
 use src\actividades\domain\value_objects\NivelStgrId;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\services\TelecoPersonaService;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 
@@ -51,27 +46,20 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-switch ($Qobj_pau) {
-    case 'PersonaN':
-        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        break;
-    case 'PersonaNax':
-        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        break;
-    case 'PersonaAgd':
-        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        break;
-    case 'PersonaS':
-        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        break;
-    case 'PersonaSSSC':
-        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        break;
-    case 'PersonaEx':
-        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-        break;
-    default:
-        echo "No existe la clase de la persona";
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function get(string $entityType): object
+    {
+        return $this->getRepository($entityType);
+    }
+};
+
+try {
+    $repoPersona = $repositoryProvider->get($Qobj_pau);
+} catch (\InvalidArgumentException) {
+    echo "No existe la clase de la persona";
+    die();
 }
 
 // Si vengo de planning_select u otros, puede que la tabla sea más genérica (p_de_casa) y no sepa como resolver algunas cosas.
@@ -109,14 +97,12 @@ $ce_lugar = $oPersona->getCe_lugar();
 $ce_ini = $oPersona->getCe_ini();
 $ce_fin = $oPersona->getCe_fin();
 $observ = $oPersona->getObserv();
-$id_ctr = '';
+$ctr = '';
 if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {
     $id_ctr = $oPersona->getId_ctr();
     $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $oCentroDl = $CentroDlRepository->findById($id_ctr);
-    $ctr = $oCentroDl->getNombre_ubi();
-} else {
-    $ctr = '';
+    $ctr = $oCentroDl?->getNombre_ubi();
 }
 
 $a_parametros = array('pau' => $pau, 'id_nom' => $id_nom, 'obj_pau' => $Qobj_pau);

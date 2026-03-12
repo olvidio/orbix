@@ -32,9 +32,9 @@ interface AsistenteRepositoryInterface
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(Asistente $Asistente): bool;
+    public function Eliminar(Asistente $Asistente, bool $registrarCambios = true): bool;
 
-    public function Guardar(Asistente $Asistente): bool;
+    public function Guardar(Asistente $Asistente, bool $registrarCambios = true): bool;
 
     public function getErrorTxt(): string;
 

@@ -390,7 +390,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(ActividadAll $ActividadAll): bool
+    public function Eliminar(ActividadAll $ActividadAll, bool $registrarCambios = true): bool
     {
         $id_activ = $ActividadAll->getId_activ();
         $oDbl = $this->getoDbl();
@@ -403,7 +403,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(ActividadAll $ActividadAll): bool
+    public function Guardar(ActividadAll $ActividadAll, bool $registrarCambios = true): bool
     {
         $id_activ = $ActividadAll->getId_activ();
         $oDbl = $this->getoDbl();

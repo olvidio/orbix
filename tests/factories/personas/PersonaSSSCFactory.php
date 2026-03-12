@@ -87,7 +87,7 @@ class PersonaSSSCFactory
         $oPersonaSSSC->setSituacionVo(new SituacionCode(strtoupper($faker->randomLetter())));
         $oPersonaSSSC->setF_situacion(new DateTimeLocal($faker->date()));
         $oPersonaSSSC->setApelFamVo(new ApelFamText($faker->word));
-        $oPersonaSSSC->setIncVo(new IncCode(substr($faker->word, 0, 2)));
+        $oPersonaSSSC->setIncVo(new IncCode($faker->randomElement(array_keys(IncCode::getArrayIncCode()))));
         $oPersonaSSSC->setF_inc(new DateTimeLocal($faker->date()));
         $oPersonaSSSC->setNivelStgrVo(new NivelStgrId($faker->randomElement(array_keys(NivelStgrId::getArrayNivelStgr()))));
         $oPersonaSSSC->setProfesionVo(new ProfesionText($faker->realText(255)));

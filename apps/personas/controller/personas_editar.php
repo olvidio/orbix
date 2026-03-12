@@ -4,15 +4,10 @@ use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\value_objects\IncCode;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -35,25 +30,20 @@ require_once("apps/core/global_object.inc");
 $Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo'); // 0 -> existe, 1->nuevo
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-switch ($Qobj_pau) {
-    case 'PersonaN':
-        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        break;
-    case 'PersonaNax':
-        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        break;
-    case 'PersonaAgd':
-        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        break;
-    case 'PersonaS':
-        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        break;
-    case 'PersonaSSSC':
-        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        break;
-    case 'PersonaEx':
-        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-        break;
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function get(string $entityType): object
+    {
+        return $this->getRepository($entityType);
+    }
+};
+
+try {
+    $repoPersona = $repositoryProvider->get($Qobj_pau);
+} catch (\InvalidArgumentException) {
+    echo "No existe la clase de la persona";
+    die();
 }
 $obj = 'src\\personas\\model\\entity\\' . $Qobj_pau;
 
@@ -178,7 +168,7 @@ if (!empty($Qnuevo)) {
             $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         }
         $oCentroDl = $CentroDlRepository->findById($id_ctr);
-        $nom_ctr = $oCentroDl->getNombre_ubi();
+        $nom_ctr = $oCentroDl?->getNombre_ubi()?? '';
         $oDesplCentroDl = [];
     } else {
         $nom_ctr = '';

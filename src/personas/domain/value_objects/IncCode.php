@@ -15,6 +15,8 @@ final class IncCode
             'ad' => _("ad"),
             'o' => _("o"),
             'fl' => _("fl"),
+            'in' => _("in"),
+            'el' => _("el"),
         ];
     }
 

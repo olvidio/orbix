@@ -15,16 +15,19 @@ class ConnectionRepositoryFactory implements ConnectionRepositoryFactoryInterfac
         if (!is_object($repository)) {
             throw new RuntimeException(sprintf('El repositorio %s no es un objeto válido', $repositoryId));
         }
+        // PHP-DI devuelve servicios shared por defecto. Clonamos para evitar
+        // pisar la conexión cuando se usan repos de origen y destino a la vez.
+        $repository = clone $repository;
         if (!method_exists($repository, 'setoDbl')) {
             throw new RuntimeException(sprintf('El repositorio %s no soporta setoDbl()', $repositoryId));
         }
 
         $repository->setoDbl($oDbl);
-        if ($oDblSelect !== null && method_exists($repository, 'setoDbl_select')) {
+        if (method_exists($repository, 'setoDbl_select')) {
+            $oDblSelect = $oDblSelect ?? $oDbl;
             $repository->setoDbl_select($oDblSelect);
         }
 
         return $repository;
     }
 }
-

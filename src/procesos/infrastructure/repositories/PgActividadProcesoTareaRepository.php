@@ -417,8 +417,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 // El status solo se puede guardar si la actividad es de la propia dl (o des desde sv).
                 if ($dl_org_no_f === ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
                     $oActividad->setStatusVo($statusNew);
-                    $quiet = 1; // Para que no anote el cambio.
-                    $oActividad->DBGuardar($quiet);
+                    $ActividadAllRepository->Guardar($oActividad, false); // registrarCambios=false, para que no anote el cambio.
                 }
             } else {
                 // conservo el status

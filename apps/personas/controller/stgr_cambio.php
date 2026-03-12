@@ -13,12 +13,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ViewPhtml;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\shared\infrastructure\ProvidesRepositories;
 use web\Desplegable;
 use web\Hash;
 
@@ -41,30 +36,43 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-switch ($id_tabla) {
-    case 'n':
-        $repo = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        break;
-    case "x":
-        $repo = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        break;
-    case "a":
-        $repo = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        break;
-    case "s":
-        $repo = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        break;
-    case "cp_sss":
-        $repo = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        break;
-    case "pn":
-    case "pa":
-        $repo = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-        break;
+if (empty($id_tabla)) {
+    echo "No existe la clase de la persona";
+    die();
 }
 
-// según sean numerarios...
-$repository = new $repo;
+$entityTypeByIdTabla = [
+    'n' => 'PersonaN',
+    'x' => 'PersonaNax',
+    'a' => 'PersonaAgd',
+    's' => 'PersonaS',
+    'sssc' => 'PersonaSSSC',
+    'cp_sss' => 'PersonaSSSC',
+    'pn' => 'PersonaEx',
+    'pa' => 'PersonaEx',
+];
+
+if (!isset($entityTypeByIdTabla[$id_tabla])) {
+    echo "No existe la clase de la persona";
+    die();
+}
+
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function get(string $entityType): object
+    {
+        return $this->getRepository($entityType);
+    }
+};
+
+try {
+    $repository = $repositoryProvider->get($entityTypeByIdTabla[$id_tabla]);
+} catch (\InvalidArgumentException) {
+    echo "No existe la clase de la persona";
+    die();
+}
+
 $oPersona = $repository->findById($id_nom);
 
 $nom = $oPersona->getNombreApellidos();

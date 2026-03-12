@@ -23,11 +23,11 @@ class ActividadNuevoCurso
 
     /**
      *
-     * bQuiet: Para indicar a la clase Actividad que no apunte los cambios al guardar
+     * registrarCambios: Para indicar a la clase Actividad que no apunte los cambios al guardar
      *
      * @var bool
      */
-    private $bQuiet = FALSE;
+    private bool $registrarCambios = TRUE;
     /**
      *
      * @var bool
@@ -245,9 +245,7 @@ class ActividadNuevoCurso
         $oActividad->setTarifa($oActividadOrigen->getTarifa());
         $oActividad->setH_ini($oActividadOrigen->getH_ini());
         $oActividad->setH_fin($oActividadOrigen->getH_fin());
-        // TODO: se le pasa el valor Quiet, para que no apunte los cambios.
-        //if ($ActividadDlRepository->Guardar($oActividad, $this->getQuiet()) === false) {
-        if ($ActividadDlRepository->Guardar($oActividad) === false) {
+        if ($ActividadDlRepository->Guardar($oActividad, $this->registrarCambios) === false) {
             echo "ERROR: no se ha guardado la actividad<br>";
             exit;
         }
@@ -262,7 +260,7 @@ class ActividadNuevoCurso
             foreach ($cEncargados as $oCentroEncargado) {
                 $newEncargado = clone $oCentroEncargado;
                 $newEncargado->setId_activ($id_actividad_new);
-                if ($CentroEncargadoRepository->Guardar($newEncargado) === false) {
+                if ($CentroEncargadoRepository->Guardar($newEncargado, $this->registrarCambios) === false) {
                     echo _("hay un error, no se ha guardado");
                     echo "\n" . $newEncargado->getErrorTxt();
                 }
@@ -283,22 +281,16 @@ class ActividadNuevoCurso
 
 
     /**
-     * bQuiet Para indicar a la clase Actividad que no apunte los cambios al guardar
-     * @return bool
+     * Para indicar a la clase Actividad que apunte los cambios al guardar
      */
-    public function getQuiet()
+    public function isRegistrarCambios(): bool
     {
-        return $this->bQuiet;
+        return $this->registrarCambios;
     }
 
-    /**
-     * bQuiet
-     * @param bool $bQuiet
-     * @return ActividadNuevoCurso
-     */
-    public function setQuiet(bool $bQuiet)
+    public function setRegistrarCambios(bool $registrarCambios = TRUE): self
     {
-        $this->bQuiet = $bQuiet;
+        $this->registrarCambios = $registrarCambios;
         return $this;
     }
 

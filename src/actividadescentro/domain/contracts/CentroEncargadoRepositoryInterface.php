@@ -36,9 +36,9 @@ interface CentroEncargadoRepositoryInterface
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(CentroEncargado $CentroEncargado): bool;
+    public function Eliminar(CentroEncargado $CentroEncargado, bool $registrarCambios = true): bool;
 
-    public function Guardar(CentroEncargado $CentroEncargado): bool;
+    public function Guardar(CentroEncargado $CentroEncargado, bool $registrarCambios = true): bool;
 
     public function getErrorTxt(): string;
 

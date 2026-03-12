@@ -90,7 +90,7 @@ class PersonaSFactory
         $oPersonaS->setSituacionVo(new SituacionCode(strtoupper($faker->randomLetter())));
         $oPersonaS->setF_situacion(new DateTimeLocal($faker->date()));
         $oPersonaS->setApelFamVo(new ApelFamText($faker->word));
-        $oPersonaS->setIncVo(new IncCode(substr($faker->word, 0, 2)));
+        $oPersonaS->setIncVo(new IncCode($faker->randomElement(array_keys(IncCode::getArrayIncCode()))));
         $oPersonaS->setF_inc(new DateTimeLocal($faker->date()));
         $oPersonaS->setNivelStgrVo(new NivelStgrId($faker->randomElement(array_keys(NivelStgrId::getArrayNivelStgr()))));
         $oPersonaS->setProfesionVo(new ProfesionText($faker->realText(255)));

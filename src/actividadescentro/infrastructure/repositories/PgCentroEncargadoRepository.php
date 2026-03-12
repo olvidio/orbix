@@ -194,7 +194,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(CentroEncargado $CentroEncargado): bool
+    public function Eliminar(CentroEncargado $CentroEncargado, bool $registrarCambios = true): bool
     {
         $id_activ = $CentroEncargado->getId_activ();
         $id_ubi = $CentroEncargado->getId_ubi();
@@ -208,7 +208,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(CentroEncargado $CentroEncargado): bool
+    public function Guardar(CentroEncargado $CentroEncargado, bool $registrarCambios = true): bool
     {
         $id_activ = $CentroEncargado->getId_activ();
         $id_ubi = $CentroEncargado->getId_ubi();

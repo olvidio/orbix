@@ -370,7 +370,7 @@ class PersonaNota
         return $this->id_activ?->value();
     }
 
-    public function getIdActivVo(): ActividadId
+    public function getIdActivVo(): ?ActividadId
     {
         return $this->id_activ;
     }

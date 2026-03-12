@@ -37,7 +37,14 @@
           "": "apps/"
         }
    },
-   "autoload-dev": {
+  "autoload-dev": {
        "psr-4": { "Tests\\": "tests/" }
-   }
+   },
+  "scripts": {
+    "test": "php libs/vendor/bin/phpunit --configuration phpunit.xml",
+    "test:integration": "php libs/vendor/bin/phpunit --configuration phpunit.xml tests/integration",
+    "test:docker": "scripts/phpunit-docker",
+    "test:docker:integration": "scripts/phpunit-docker tests/integration",
+    "test:docker:personas": "scripts/phpunit-docker tests/integration/personas"
+  }
 }

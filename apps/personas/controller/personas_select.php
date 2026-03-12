@@ -447,7 +447,7 @@ foreach ($cPersonas as $oPersona) {
                 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             }
             $oCentroDl = $CentroDlRepository->findById($id_ctr);
-            $nombre_ubi = $oCentroDl->getNombre_ubi();
+            $nombre_ubi = $oCentroDl?->getNombre_ubi()?? '';
         }
     } else {
         $nombre_ubi = $oPersona->getDl();

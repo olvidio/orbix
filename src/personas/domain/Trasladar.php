@@ -4,7 +4,6 @@ namespace src\personas\domain;
 
 use core\ConfigDB;
 use core\ConfigGlobal;
-use core\ConverterDate;
 use core\DBConnection;
 use core\DBPropiedades;
 use notas\model\EditarPersonaNota;
@@ -20,7 +19,6 @@ use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
@@ -29,6 +27,7 @@ use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\Traslado;
+use src\personas\domain\value_objects\SituacionCode;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
@@ -38,7 +37,6 @@ use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
-use src\shared\domain\contracts\ConnectionObjectBinderInterface;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
@@ -46,127 +44,68 @@ use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 
-/**
- * Fitxer amb la Classe que accedeix a la taula d_traslados
- *
- * @package delegación
- * @subpackage model
- * @author Daniel Serrabou
- * @version 1.0
- * @created 12/05/2014
- */
-
-/**
- * Clase que implementa la entidad d_traslados
- *
- * @package delegación
- * @subpackage model
- * @author Daniel Serrabou
- * @version 1.0
- * @created 12/05/2014
- */
-class TrasladoDl
+class Trasladar
 {
+    private string $serror = '';
 
-    private $serror;
-
-    private $iid_nom;
-    private $sdl_persona;
-    private $sdl_org;
-    private $sreg_dl_org;
-    private $sdl_dst;
-    private $sreg_dl_dst;
-    private $ssituacion;
-    private $df_dl;
+    private int $iid_nom;
+    private string $sdl_persona;
+    private string $sdl_org;
+    private string $sreg_dl_org;
+    private string $sdl_dst;
+    private string $sreg_dl_dst;
+    private SituacionCode $ssituacion;
+    private ?DateTimeLocal $df_traslado;
 
     /* para guardar el search path de la conexión a la base de datos */
-    private $path_ini_org;
-    private $path_ini_dst;
-    private $snew_esquema;
-    private bool $bLoaded = FALSE;
+    private string $path_ini_org;
+    private string $path_ini_dst;
+    private string $snew_esquema;
+    private string $sresolved_esquema = '';
+    private string $sdatabase = '';
+    private string $sconfig_user = '';
 
-    public function getError()
+    public function getError(): string
     {
         return $this->serror;
     }
 
-
-    /**
-     * Recupera el atributo iid_nom de Traslado
-     *
-     * @return integer iid_nom
-     */
-    function getId_nom()
+    public function getId_nom(): int
     {
         return $this->iid_nom;
     }
 
-    /**
-     * Establece el valor del atributo iid_nom de Traslado
-     *
-     * @param integer iid_nom
-     */
-    function setId_nom($iid_nom)
+    public function setId_nom(int $iid_nom): void
     {
         $this->iid_nom = $iid_nom;
     }
 
-    /**
-     * Recupera el atributo sdl_persona de Traslado
-     *
-     * @return string sdl_persona
-     */
-    function getDl_persona()
+    public function getDl_persona(): string
     {
         return $this->sdl_persona;
     }
 
-    /**
-     * Establece el valor del atributo sdl_persona de Traslado
-     *
-     * @param string sdl_persona
-     */
-    function setDl_persona($sdl_persona)
+    public function setDl_persona(string $sdl_persona): void
     {
         $this->sdl_persona = $sdl_persona;
     }
 
-    /**
-     * Recupera el atributo sdl_org de Traslado
-     *
-     * @return string sdl_org
-     */
-    function getDl_org()
+    public function getDl_org(): string
     {
         return $this->sdl_org;
     }
 
-    /**
-     * Establece el valor del atributo sdl_org de Traslado
-     *
-     * @param string sdl_org
-     */
-    function setDl_org($sdl_org)
+    public function setDl_org(string $sdl_org): void
     {
         $this->sdl_org = $sdl_org;
     }
 
-    /**
-     * Recupera el atributo sreg_dl_org de Traslado
-     *
-     * @return string sreg_dl_org
-     */
-    function getReg_dl_org()
+    public function getReg_dl_org(): string
     {
         return $this->sreg_dl_org;
     }
 
-    /**
-     * Establece el valor del atributo sreg_dl_org de Traslado
-     *
-     * @param string sreg_dl_org
-     */
-    function setReg_dl_org($sreg_dl_org)
+    public function setReg_dl_org(string $sreg_dl_org): void
     {
         $this->sreg_dl_org = $sreg_dl_org;
 
@@ -175,22 +114,12 @@ class TrasladoDl
         $this->sdl_org = substr($a_reg[1], 0, -1); // quito la v o la f.
     }
 
-    /**
-     * Recupera el atributo sreg_dl_dst de Traslado
-     *
-     * @return string sreg_dl_dst
-     */
-    function getReg_dl_dst()
+    public function getReg_dl_dst(): string
     {
         return $this->sreg_dl_dst;
     }
 
-    /**
-     * Establece el valor del atributo sreg_dl_dst de Traslado
-     *
-     * @param string sreg_dl_dst
-     */
-    function setReg_dl_dst($sreg_dl_dst)
+    public function setReg_dl_dst(string $sreg_dl_dst): void
     {
         $this->sreg_dl_dst = $sreg_dl_dst;
 
@@ -199,60 +128,29 @@ class TrasladoDl
         $this->sdl_dst = substr($a_reg[1], 0, -1); // quito la v o la f.
     }
 
-    /**
-     * Recupera el atributo ssituacion de Traslado
-     *
-     * @return string ssituacion
-     */
-    function getSituacion()
+    public function getSituacionVo(): string
     {
         return $this->ssituacion;
     }
 
-    /**
-     * Establece el valor del atributo ssituacion de Traslado
-     *
-     * @param string ssituacion
-     */
-    function setSituacion($ssituacion)
+    public function setSituacionVo(SituacionCode $ssituacion): void
     {
         $this->ssituacion = $ssituacion;
     }
 
-    /**
-     * Recupera el atributo df_traslado de TrasladoDl
-     *
-     * @returnDateTimeLocal df_dl
-     */
-    function getF_dl()
+    public function getF_traslado(): ?DateTimeLocal
     {
-        if (empty($this->df_dl)) {
-            return new NullDateTimeLocal();
-        }
-        $oConverter = new ConverterDate('date', $this->df_dl);
-        return $oConverter->fromPg();
+        return $this->df_traslado;
     }
 
-    /**
-     * Establece el valor del atributo df_dl de TrasladoDl
-     * Si df_dl es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
-     * Si convert es false, df_dl debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
-     *
-     * @param DateTimeLocal|string df_dl='' optional.
-     * @param boolean convert=true optional. Si es false, df_dl debe ser un string en formato ISO (Y-m-d).
-     */
-    function setF_dl($df_dl = '', $convert = true)
+    public function setF_traslado(?DateTimeLocal $df_traslado): void
     {
-        if ($convert === true && !empty($df_dl)) {
-            $oConverter = new ConverterDate('date', $df_dl);
-            $this->df_dl = $oConverter->toPg();
-        } else {
-            $this->df_dl = $df_dl;
-        }
+        $this->df_traslado = $df_traslado;
     }
 
-    private function setConexion($esquema, $exterior = FALSE)
+    private function getConexionEsquema($esquema, $exterior = FALSE)
     {
+        $this->sresolved_esquema = $esquema;
 
         if (ConfigGlobal::mi_sfsv() == 2) {
             $database = 'sf';
@@ -276,8 +174,14 @@ class TrasladoDl
             }
         }
 
+        $this->sdatabase = $database;
+        $this->sresolved_esquema = $esquema;
+
         $oConfigDB = new ConfigDB($database);
         $config = $oConfigDB->getEsquema($esquema);
+        $this->sconfig_user = (string)($config['user'] ?? '');
+        // Fuerzo el schema efectivo para evitar sobrescrituras accidentales desde ficheros .inc.
+        $config['schema'] = $esquema;
         $oConexion = new DBConnection($config);
 
         $oDB = $oConexion->getPDO();
@@ -286,36 +190,10 @@ class TrasladoDl
         return $oDB;
     }
 
-    private function conexionOrg($exterior = FALSE)
+    private function getConexionOrg($exterior = FALSE)
     {
-
         $this->snew_esquema = $this->sreg_dl_org;
-
-        return $this->setConexion($this->snew_esquema, $exterior);
-
-        /*
-        $this->snew_esquema = $this->sreg_dl_org;
-        if (ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
-            //Utilizo la conexión oDB para cambiar momentáneamente el search_path.
-            if ($exterior) {
-                $oDB = $GLOBALS['oDBE'];
-            } else {
-                $oDB = $GLOBALS['oDB'];
-            }
-        } else {
-            // Sólo funciona con la conexión oDBR porque el usuario es orbixv que
-            // tiene permiso de lectura para todos los esquemas
-            if ($exterior) {
-                $oDB = $GLOBALS['oDBER'];
-            } else {
-                $oDB = $GLOBALS['oDBR'];
-            }
-        }
-        $qRs = $oDB->query('SHOW search_path');
-        $aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
-        $this->path_ini_org = $aPath['search_path'];
-        $oDB->exec('SET search_path TO public,"'.$this->snew_esquema.'"');
-        */
+        return $this->getConexionEsquema($this->snew_esquema, $exterior);
     }
 
     private function restaurarConexionOrg($oDB)
@@ -325,35 +203,10 @@ class TrasladoDl
         //$GLOBALS['oDBR'] = $oDBR;
     }
 
-    private function conexionDst($exterior = FALSE)
+    private function getConexionDst($exterior = FALSE)
     {
         $this->snew_esquema = $this->sreg_dl_dst;
-        return $this->setConexion($this->snew_esquema, $exterior);
-        /*
-        //Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
-        if (ConfigGlobal::mi_region_dl() == $this->snew_esquema) {
-            //Utilizo la conexión oDB para cambiar momentáneamente el search_path.
-            if ($exterior) {
-                $oDB = $GLOBALS['oDBE'];
-            } else {
-                $oDB = $GLOBALS['oDB'];
-            }
-        } else {
-            // Sólo funciona con la conexión oDBR porque el usuario es orbixv que
-            // tiene permiso de lectura para todos los esquemas
-            if ($exterior) {
-                $oDB = $GLOBALS['oDBER'];
-            } else {
-                $oDB = $GLOBALS['oDBR'];
-            }
-        }
-        $qRs = $oDB->query('SHOW search_path');
-        $aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
-        //$this->path_ini_dst = addslashes($aPath['search_path']);
-        $this->path_ini_dst = $aPath['search_path'];
-        $oDB->exec('SET search_path TO public,"'.$this->snew_esquema.'"');
-        return $oDB;
-        */
+        return $this->getConexionEsquema($this->snew_esquema, $exterior);
     }
 
     private function restaurarConexionDst($oDB)
@@ -483,7 +336,7 @@ class TrasladoDl
     {
         // Aviso si le faltan notas
         $error = '';
-        $oDBorg = $this->conexionOrg();
+        $oDBorg = $this->getConexionOrg();
 
         $MatriculaDlRepository = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBorg);
         $cMatriculasPendientes = $MatriculaDlRepository->getMatriculasPendientes($this->iid_nom);
@@ -517,19 +370,43 @@ class TrasladoDl
     public function cambiarFichaPersona()
     {
         // Cambio la situación de la persona. Debo hacerlo lo primero, pues no puedo tener la misma persona en dos dl en la misma situación
-//		if ($this->ssituacion == 'A') exit (_("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."));
+        if ($this->ssituacion->value() === 'A') exit (_("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio."));
 
         $error = '';
-        $oDBorg = $this->conexionOrg();
-        // dar permisos al usuario orbixv para acceder a personas_dl (?) o buscar tipo de persona
-        $PersonaDlRepositoryFactory = $GLOBALS['container']->get(PersonaDlRepositoryFactoryInterface::class);
-        $PersonaDlRepossitory = $PersonaDlRepositoryFactory->createWithConnection($oDBorg);
-        $oPersonaDl = $PersonaDlRepossitory->findById($this->iid_nom);
-        $oPersonaDl->setSituacionVo($this->ssituacion);
-        $oPersonaDl->setF_situacion($this->df_dl, FALSE);
-        $oPersonaDl->setDlVo($this->sdl_dst);
-        if ($PersonaDlRepossitory->Guardar($oPersonaDl) === false) {
-            $error .= '<br>' . _("hay un error, no se ha guardado");
+        $oDBorg = $this->getConexionOrg();
+        $PersonaDlRepository = $this->repositoryWithConnection(PersonaDlRepositoryInterface::class, $oDBorg);
+        $oPersonaDl = $PersonaDlRepository->findById($this->iid_nom);
+        if ($oPersonaDl === null) {
+            $error = $this->appendDebugContext(
+                sprintf(_("No se ha encontrado la persona con id: %s"), $this->iid_nom),
+                $oDBorg,
+                null,
+                $PersonaDlRepository
+            );
+        } else {
+            $idTabla = $oPersonaDl->getIdTablaVo()->value();
+            $repositoryId = $this->getPersonaRepositoryByTable($idTabla);
+            if ($repositoryId === null) {
+                $error = sprintf(_("No se reconoce el tipo de persona: %s"), $idTabla);
+            } else {
+                $personaOrgRepository = $this->repositoryWithConnection($repositoryId, $oDBorg);
+                $oPersona = $personaOrgRepository->findById($this->iid_nom);
+                if ($oPersona === null) {
+                    $error = $this->appendDebugContext(
+                        sprintf(_("No se ha encontrado la persona origen con id: %s"), $this->iid_nom),
+                        $oDBorg,
+                        $idTabla,
+                        $personaOrgRepository
+                    );
+                } else {
+                    $oPersona->setSituacionVo($this->ssituacion);
+                    $oPersona->setF_situacion($this->df_traslado);
+                    $oPersona->setDlVo($this->sdl_dst);
+                    if ($personaOrgRepository->Guardar($oPersona) === false) {
+                        $error .= '<br>' . _("hay un error, no se ha guardado");
+                    }
+                }
+            }
         }
         //$this->restaurarConexionOrg($oDBorg);
         if (!empty($error)) {
@@ -625,8 +502,30 @@ class TrasladoDl
         $PersonaDlRepository = $this->repositoryWithConnection(PersonaDlRepositoryInterface::class, $oDBorg);
         $oPersonaDl = $PersonaDlRepository->findById($this->iid_nom);
         if ($oPersonaDl === null) {
-            $error = sprintf(_("No se ha encontrado la persona con id: %s"), $this->iid_nom);
+            $error = $this->appendDebugContext(
+                sprintf(_("No se ha encontrado la persona con id: %s"), $this->iid_nom),
+                $oDBorg,
+                null,
+                $PersonaDlRepository
+            );
             $this->serror = $error;
+            return false;
+        }
+        $idTabla = $oPersonaDl->getIdTablaVo()->value();
+        $repositoryId = $this->getPersonaRepositoryByTable($idTabla);
+        if ($repositoryId === null) {
+            $this->serror = sprintf(_("No se reconoce el tipo de persona: %s"), $idTabla);
+            return false;
+        }
+        $personaOrgRepository = $this->repositoryWithConnection($repositoryId, $oDBorg);
+        $oPersona = $personaOrgRepository->findById($this->iid_nom);
+        if ($oPersona === null) {
+            $this->serror = $this->appendDebugContext(
+                sprintf(_("No se ha encontrado la persona en origen con id: %s"), $this->iid_nom),
+                $oDBorg,
+                $idTabla,
+                $personaOrgRepository
+            );
             return false;
         }
 
@@ -644,32 +543,19 @@ class TrasladoDl
             $error = sprintf(_("no existe el esquema destino %s en la base de datos"), $this->snew_esquema);
         }
         if ($schemaExists === true) {
-            $idTabla = $oPersonaDl->getIdTablaVo()->value();
-            $repositoryId = $this->getPersonaRepositoryByTable($idTabla);
-            if ($repositoryId === null) {
-                $error = sprintf(_("No se reconoce el tipo de persona: %s"), $idTabla);
-            } else {
-                $personaOrgRepository = $this->repositoryWithConnection($repositoryId, $oDBorg);
-                $personaDstRepository = $this->repositoryWithConnection($repositoryId, $oDBdst);
+            $personaDstRepository = $this->repositoryWithConnection($repositoryId, $oDBdst);
+            $oPersonaNew = clone $oPersona;
+            $oPersonaNew->setDlVo($this->sdl_dst);
+            $oPersonaNew->setSituacionVo(SituacionCode::fromNullableString('A'));
 
-                $oPersona = $personaOrgRepository->findById($this->iid_nom);
-                if ($oPersona === null) {
-                    $error = sprintf(_("No se ha encontrado la persona origen con id: %s"), $this->iid_nom);
-                } else {
-                    $oPersonaNew = clone $oPersona;
-                    $oPersonaNew->setDlVo($this->sdl_dst);
-                    $oPersonaNew->setSituacionVo('A');
+            $fSituacion = $this->getF_traslado();
+            if ($fSituacion instanceof NullDateTimeLocal) {
+                $fSituacion = null;
+            }
+            $oPersonaNew->setF_situacion($fSituacion);
 
-                    $fSituacion = $this->getF_dl();
-                    if ($fSituacion instanceof NullDateTimeLocal) {
-                        $fSituacion = null;
-                    }
-                    $oPersonaNew->setF_situacion($fSituacion);
-
-                    if ($personaDstRepository->Guardar($oPersonaNew) === false) {
-                        $error .= '<br>' . _("hay un error, no se ha guardado");
-                    }
-                }
+            if ($personaDstRepository->Guardar($oPersonaNew) === false) {
+                $error .= '<br>' . _("hay un error, no se ha guardado");
             }
         }
         //$this->restaurarConexionOrg($oDBorg);
@@ -683,12 +569,12 @@ class TrasladoDl
 
     protected function getOrgConnectionForCopyPersona(): \PDO
     {
-        return $this->conexionOrg();
+        return $this->getConexionOrg();
     }
 
     protected function getDstConnectionForCopyPersona(): \PDO
     {
-        return $this->conexionDst();
+        return $this->getConexionDst();
     }
 
     protected function schemaExistsInDatabase(\PDO $oDBorg, string $schema): ?bool
@@ -719,6 +605,145 @@ class TrasladoDl
         };
     }
 
+    private function getPersonaTableByType(string $idTabla): ?string
+    {
+        return match ($idTabla) {
+            'n' => 'p_numerarios',
+            'a' => 'p_agregados',
+            's' => 'p_supernumerarios',
+            'sssc' => 'p_sssc',
+            'x', 'nax' => 'p_nax',
+            default => null,
+        };
+    }
+
+    private function appendDebugContext(string $error, \PDO $oDB, ?string $idTabla = null, ?object $repository = null): string
+    {
+        if (!$this->isTrasladoDebugEnabled()) {
+            return $error;
+        }
+
+        $debug = $this->buildDebugContext($oDB, $idTabla, $repository);
+        if (empty($debug)) {
+            return $error;
+        }
+
+        return $error . "\n" . $debug;
+    }
+
+    private function isTrasladoDebugEnabled(): bool
+    {
+        return ConfigGlobal::is_debug_mode() || getenv('ORBIX_DEBUG_TRASLADO') === '1';
+    }
+
+    private function buildDebugContext(\PDO $oDB, ?string $idTabla = null, ?object $repository = null): string
+    {
+        $parts = [];
+        $parts[] = sprintf('[debug traslado] schema_solicitado=%s', $this->snew_esquema ?? '');
+        if (!empty($this->sresolved_esquema) || !empty($this->sdatabase)) {
+            $parts[] = sprintf('database=%s schema_resuelto=%s', $this->sdatabase, $this->sresolved_esquema);
+        }
+        if (!empty($this->sconfig_user)) {
+            $parts[] = sprintf('config_user=%s', $this->sconfig_user);
+        }
+        if ($repository !== null) {
+            $parts[] = sprintf('repo=%s', get_class($repository));
+        }
+
+        try {
+            $row = $oDB->query("SELECT current_database() AS db, current_user AS usr, current_schema() AS sch, current_setting('search_path') AS sp")
+                ?->fetch(\PDO::FETCH_ASSOC);
+            if (!empty($row)) {
+                $parts[] = sprintf(
+                    'db=%s user=%s current_schema=%s search_path=%s',
+                    $row['db'] ?? '',
+                    $row['usr'] ?? '',
+                    $row['sch'] ?? '',
+                    $row['sp'] ?? ''
+                );
+            }
+        } catch (\Throwable) {
+            // noop: seguimos con el resto del contexto
+        }
+
+        $repoDb = null;
+        if ($repository !== null && method_exists($repository, 'getoDbl')) {
+            try {
+                /** @var \PDO $repoDb */
+                $repoDb = $repository->getoDbl();
+                $sameConnection = spl_object_id($repoDb) === spl_object_id($oDB) ? 'SI' : 'NO';
+                $parts[] = sprintf('repo_misma_conexion=%s', $sameConnection);
+
+                $repoRow = $repoDb->query("SELECT current_database() AS db, current_user AS usr, current_schema() AS sch, current_setting('search_path') AS sp")
+                    ?->fetch(\PDO::FETCH_ASSOC);
+                if (!empty($repoRow)) {
+                    $parts[] = sprintf(
+                        'repo_db=%s repo_user=%s repo_current_schema=%s repo_search_path=%s',
+                        $repoRow['db'] ?? '',
+                        $repoRow['usr'] ?? '',
+                        $repoRow['sch'] ?? '',
+                        $repoRow['sp'] ?? ''
+                    );
+                }
+            } catch (\Throwable) {
+                // noop
+            }
+        }
+
+        try {
+            $stmt = $oDB->prepare('SELECT id_tabla, dl, situacion FROM personas_dl WHERE id_nom = :id_nom');
+            if ($stmt !== false) {
+                $stmt->execute(['id_nom' => $this->iid_nom]);
+                $personaDl = $stmt->fetch(\PDO::FETCH_ASSOC);
+                if ($personaDl === false) {
+                    $parts[] = 'personas_dl=NO';
+                } else {
+                    $parts[] = sprintf(
+                        'personas_dl=SI(id_tabla=%s,dl=%s,situacion=%s)',
+                        $personaDl['id_tabla'] ?? '',
+                        $personaDl['dl'] ?? '',
+                        $personaDl['situacion'] ?? ''
+                    );
+                }
+            }
+        } catch (\Throwable) {
+            // noop
+        }
+
+        if (!empty($idTabla)) {
+            $tabla = $this->getPersonaTableByType($idTabla);
+            if (!empty($tabla)) {
+                try {
+                    $stmt = $oDB->prepare("SELECT 1 FROM $tabla WHERE id_nom = :id_nom");
+                    if ($stmt !== false) {
+                        $stmt->execute(['id_nom' => $this->iid_nom]);
+                        $exists = $stmt->fetchColumn() !== false ? 'SI' : 'NO';
+                        $parts[] = sprintf('%s=%s', $tabla, $exists);
+                    }
+                } catch (\Throwable) {
+                    // noop
+                }
+
+                if ($repoDb instanceof \PDO) {
+                    try {
+                        $stmtRepo = $repoDb->prepare("SELECT 1 FROM $tabla WHERE id_nom = :id_nom");
+                        if ($stmtRepo !== false) {
+                            $stmtRepo->execute(['id_nom' => $this->iid_nom]);
+                            $existsRepo = $stmtRepo->fetchColumn() !== false ? 'SI' : 'NO';
+                            $parts[] = sprintf('repo_%s=%s', $tabla, $existsRepo);
+                        }
+                    } catch (\Throwable) {
+                        // noop
+                    }
+                }
+            } else {
+                $parts[] = sprintf('tabla_por_tipo=NO_MAPEADA(%s)', $idTabla);
+            }
+        }
+
+        return implode(' | ', $parts);
+    }
+
     public function copiarNotas()
     {
         // Las Notas si o si (Aunque no se tenga el dossier abierto)
@@ -727,8 +752,8 @@ class TrasladoDl
         // borraran de la tabla porque no existe la persona, también
         // se perderían para todos...
         $error = '';
-        $oDBorg = $this->conexionOrg();
-        $oDBdst = $this->conexionDst();
+        $oDBorg = $this->getConexionOrg();
+        $oDBdst = $this->getConexionDst();
 
         $PersonaNotaDBRepository = $this->repositoryWithConnection(PersonaNotaDlRepositoryInterface::class, $oDBorg);
         $collection = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $this->iid_nom));
@@ -786,37 +811,37 @@ class TrasladoDl
     {
         $error = '';
         // Está en la DB externa.
-        $oDBorgE = $this->conexionOrg(TRUE);
-        $oDBdstE = $this->conexionDst(TRUE);
+        $oDBorgE = $this->getConexionOrg(TRUE);
+        $oDBdstE = $this->getConexionDst(TRUE);
+
         // Los Out pasan a Dl si la dl destino es la que organiza.
         $AsistenteOutOrgRepository = $this->repositoryWithConnection(AsistenteOutRepositoryInterface::class, $oDBorgE);
         $AsistenteDlDstRepository = $this->repositoryWithConnection(AsistenteDlRepositoryInterface::class, $oDBdstE);
-        $collection = $AsistenteOutOrgRepository->getAsistentesOut(array('id_nom' => $this->iid_nom));
+        $collection = $AsistenteOutOrgRepository->getAsistentes(array('id_nom' => $this->iid_nom));
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($collection as $oAsistenteOut) {
             $err = 0;
             $id_activ = $oAsistenteOut->getId_activ();
             $oActividad = $ActividadAllRepository->findById($id_activ);
+            if ($oActividad === null) {
+                continue; // no existe la actividad, no se puede copiar. Se pierde la asistencia, total no se sabe donde
+            }
             // si es de la sf quito la 'f'
             $dl_org = preg_replace('/f$/', '', $oActividad->getDl_org());
             if ($dl_org === $this->sdl_dst) {
-                if ($AsistenteDlDstRepository->Guardar($oAsistenteOut) === false) { // param quiet=1 para que no anote cambios
+                if ($AsistenteDlDstRepository->Guardar($oAsistenteOut, false) === false) {
                     $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(dl) a id_activ: %s"), $id_activ);
                     $err = 1;
                 }
             } else {
-                $NuevoObj = clone $oAsistenteOut;
-                $NuevoObj = $this->objectWithConnection($NuevoObj, $oDBdstE);
-                if (method_exists($NuevoObj, 'setId_item') === true) $NuevoObj->setId_item(null);
-                $NuevoObj->setTraslado('t');
-                if ($NuevoObj->DBGuardar(1) === false) { // param quiet=1 para que no anote cambios
+                if ($AsistenteDlDstRepository->Guardar($oAsistenteOut, false) === false) {
                     $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"), $id_activ);
                     $err = 1;
                 }
             }
             // borrar el original
             if ($err === 0) {
-                $oAsistenteOut->DBEliminar();
+                $AsistenteOutOrgRepository->Eliminar($oAsistenteOut, false);
             }
         }
         // Los Dl pasan a Out
@@ -828,13 +853,13 @@ class TrasladoDl
             // cambio para que la dl responsable sea la actual:
             $oAsistenteDl->setDlResponsableVo(ConfigGlobal::mi_delef());
             $id_activ = $oAsistenteDl->getId_activ();
-            if ($this->testActividad($id_activ) && $AsistenteOutDstRepository->DBGuardar($oAsistenteDl) === false) {
+            if ($this->testActividad($id_activ) && $AsistenteOutDstRepository->Guardar($oAsistenteDl, false) === false) {
                 $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"), $id_activ);
                 $err = 1;
             }
             // borrar el origen
             if ($err === 0) {
-                $AsistenteDlOrgRepository->Eliminar($oAsistenteDl);
+                $AsistenteDlOrgRepository->Eliminar($oAsistenteDl, false);
             }
         }
         // Los Ex no deberían existir, son gente de otras dl, no afecta al traslado
@@ -851,11 +876,12 @@ class TrasladoDl
     public function trasladarDossiers()
     {
         $error = '';
-        $oDBorg = $this->conexionOrg();
-        $oDBdst = $this->conexionDst();
+        $oDBorg = $this->getConexionOrg();
+        $oDBdst = $this->getConexionDst();
         $DossierRepository = $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBorg);
+        $DossierRepositoryDst = $this->repositoryWithConnection(DossierRepositoryInterface::class, $oDBdst);
         // Comprobar que están apuntados.
-        $cDossiers = $DossierRepository->DossiersNotEmpty('p', $this->iid_nom);
+        $cDossiers = $DossierRepository->getDossieres(['tabla' => 'p', 'id_pau' => $this->iid_nom]);
 
         $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
         foreach ($cDossiers as $oDossier) {
@@ -870,42 +896,52 @@ class TrasladoDl
             switch ($class) {
                 case 'TelecoPersonaDl':
                     $repo = $this->repositoryWithConnection(TelecoPersonaDlRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(TelecoPersonaDlRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getTelecosPersona(['id_nom' => $this->iid_nom]);
                     break;
                 case 'Profesor':
                     $repo = $this->repositoryWithConnection(ProfesorStgrRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(ProfesorStgrRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getProfesoresStgr(['id_nom' => $this->iid_nom]);
                     break;
                 case 'ProfesorAmpliacion':
                     $repo = $this->repositoryWithConnection(ProfesorAmpliacionRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(ProfesorAmpliacionRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getProfesorAmpliaciones(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorCongreso':
                     $repo = $this->repositoryWithConnection(ProfesorCongresoRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(ProfesorCongresoRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getProfesorCongresos(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorDirector':
                     $repo = $this->repositoryWithConnection(ProfesorDirectorRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(ProfesorDirectorRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getProfesoresDirectores(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorDocenciaStgr':
                     $repo = $this->repositoryWithConnection(ProfesorDocenciaStgrRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(ProfesorDocenciaStgrRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getProfesorDocenciasStgr(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorJuramento':
                     $repo = $this->repositoryWithConnection(ProfesorJuramentoRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(ProfesorJuramentoRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getProfesorJuramentos(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorLatin':
                     $repo = $this->repositoryWithConnection(ProfesorLatinRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(ProfesorLatinRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getProfesoresLatin(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorPublicacion':
                     $repo = $this->repositoryWithConnection(ProfesorPublicacionRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(ProfesorPublicacionRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getProfesorPublicaciones(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorTituloEst':
                     $repo = $this->repositoryWithConnection(ProfesorTituloEstRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(ProfesorTituloEstRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getProfesorTitulosEst(array('id_nom' => $this->iid_nom));
                     break;
                 case 'PersonaNotaDl':
@@ -913,10 +949,12 @@ class TrasladoDl
                     break;
                 case 'MatriculaDl':
                     $repo = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(MatriculaDlRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getMatriculas(array('id_nom' => $this->iid_nom));
                     break;
                 case 'Traslado':
                     $repo = $this->repositoryWithConnection(TrasladoRepositoryInterface::class, $oDBorg);
+                    $repo_dst = $this->repositoryWithConnection(TrasladoRepositoryInterface::class, $oDBdst);
                     $collection = $repo->getTraslados(array('id_nom' => $this->iid_nom));
                     break;
                 case 'AsistenteDl':
@@ -929,26 +967,21 @@ class TrasladoDl
             }
             if (!empty($collection)) {
                 foreach ($collection as $Objeto) {
-                    $Objeto = $this->objectWithConnection($Objeto, $oDBorg);
-                    $Objeto->DBCarregar();
-                    $NuevoObj = clone $Objeto;
-                    $NuevoObj = $this->objectWithConnection($NuevoObj, $oDBdst);
-                    if (method_exists($NuevoObj, 'setId_item') === true) {
-                        $NuevoObj->setId_item(null);
+                    if (method_exists($Objeto, 'setId_item') === true) {
+                        $newId = $repo_dst->getNewId();
+                        $Objeto->setId_item($newId);
                     }
-                    if ($NuevoObj->DBGuardar() === false) {
+                    if ($repo_dst->Guardar($Objeto) === false) {
                         $error .= '<br>' . sprintf(_("No se ha guardado el dossier: %s"), $class);
-                    } else { // Borrar excepto traslado
+                    } else { // Borrar del origen (excepto traslado)
                         if ($class !== 'Traslado') {
-                            $Objeto->DBEliminar();
+                            $repo->Eliminar($Objeto);
                         }
                     }
                 }
             }
             // también copia el estado del dossier
-            $NuevoObj = clone $oDossier;
-            $NuevoObj = $this->objectWithConnection($NuevoObj, $oDBdst);
-            $NuevoObj->DBGuardar();
+            $DossierRepositoryDst->Guardar($oDossier);
         }
         // Volver oDBdst a su estado original:
         //$this->restaurarConexionDst($oDBdst);
@@ -963,7 +996,7 @@ class TrasladoDl
     public function trasladarDossierCertificados()
     {
         $error = '';
-        $oDBorg = $this->conexionOrg();
+        $oDBorg = $this->getConexionOrg();
         // si es una dl, hay que buscarlos en la region del stgr
 
         $certificadoRecibidoRepository = $this->repositoryWithConnection(CertificadoRecibidoRepositoryInterface::class, $oDBorg);
@@ -984,8 +1017,8 @@ class TrasladoDl
     public function trasladar_certificados($CertificadoRecibido)
     {
         $error = '';
-        $oDBorg = $this->conexionOrg();
-        $oDBdst = $this->conexionDst();
+        $oDBorg = $this->getConexionOrg();
+        $oDBdst = $this->getConexionDst();
 
         $id_item = $CertificadoRecibido->getId_item();
         // para que ponga el suyo según la DB
@@ -1018,7 +1051,7 @@ class TrasladoDl
     public function copiar_certificados_a_dl($Certificado)
     {
         $error = '';
-        $oDBdst = $this->conexionDst();
+        $oDBdst = $this->getConexionDst();
 
         $id_item = $Certificado->getId_item();
         // para que ponga el suyo según la DB
@@ -1049,17 +1082,17 @@ class TrasladoDl
     {
         $error = '';
         // apunto el traslado.
-        $oDBorg = $this->conexionOrg();
+        $oDBorg = $this->getConexionOrg();
         $TrasladoRepository = $this->repositoryWithConnection(TrasladoRepositoryInterface::class, $oDBorg);
-        $newId_item = $TrasladoRepository->getNewId_item();
+        $newId_item = $TrasladoRepository->getNewId();
         $oTraslado = new Traslado();
         $oTraslado->setId_item($newId_item);
         $oTraslado->setId_nom($this->iid_nom);
-        $oTraslado->setF_traslado($this->df_dl, FALSE);
+        $oTraslado->setF_traslado($this->df_traslado);
         $oTraslado->setTipoCmbVo('dl');
-        $oTraslado->setId_ctr_origen('');
+        $oTraslado->setId_ctr_origen(null);
         $oTraslado->setCtrOrigenVo($this->sdl_org);
-        $oTraslado->setId_ctr_destino('');
+        $oTraslado->setId_ctr_destino(null);
         $oTraslado->setCtrDestinoVo($this->sdl_dst);
         if ($TrasladoRepository->Guardar($oTraslado) === false) {
             $error .= '<br>' . _("hay un error, no se ha guardado");
@@ -1078,13 +1111,6 @@ class TrasladoDl
         $factory = $GLOBALS['container']->get(ConnectionRepositoryFactoryInterface::class);
 
         return $factory->createWithConnection($repositoryId, $oDbl, $oDblSelect);
-    }
-
-    protected function objectWithConnection(object $object, \PDO $oDbl): object
-    {
-        $binder = $GLOBALS['container']->get(ConnectionObjectBinderInterface::class);
-
-        return $binder->bindConnection($object, $oDbl);
     }
 
     private function copiarAsistencia($oOrigen, $oDestino)

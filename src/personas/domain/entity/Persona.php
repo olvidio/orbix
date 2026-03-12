@@ -20,68 +20,13 @@ class Persona
      * Este método es un wrapper temporal para mantener compatibilidad.
      *
      * @param int $id_nom ID de la persona a buscar
-     * @return PersonaGlobal|null
+     * @return PersonaDl|PersonaPub|null
      */
-    public static function findPersonaEnGlobal($id_nom): ?PersonaGlobal
+    public static function findPersonaEnGlobal($id_nom): PersonaDl|PersonaPub|null
     {
         $service = $GLOBALS['container']->get(PersonaFinderService::class);
         return $service->findPersonaEnGlobal($id_nom);
     }
-
-    /*
-    public static function NewPersona($id_nom)
-    {
-
-        // para poder buscar sacd desde la sf
-        if (ConfigGlobal::mi_sfsv() == 2) {
-            if (substr($id_nom, 0, 1) == 1) {
-                $gesPersonaDl = new GestorPersonaSacd();
-            }
-        } else {
-            $gesPersonaDl = new GestorPersonaDl();
-        }
-        $cPersonasDl = $gesPersonaDl->getPersonas(array('id_nom' => $id_nom, 'situacion' => 'A'));
-        if (count($cPersonasDl) > 0) {
-            $oPersona = $cPersonasDl[0];
-        } else {
-            $gesPersonaEx = new GestorPersonaEx();
-            $cPersonasEx = $gesPersonaEx->getPersonasEx(array('id_nom' => $id_nom, 'situacion' => 'A'));
-            if (count($cPersonasEx) > 0) {
-                $oPersona = $cPersonasEx[0];
-            } else {
-                $gesPersonaIn = new GestorPersonaIn();
-                $cPersonasIn = $gesPersonaIn->getPersonasIn(array('id_nom' => $id_nom, 'situacion' => 'A'));
-                if (count($cPersonasIn) > 0) {
-                    $oPersona = $cPersonasIn[0];
-                } else {
-                    //Puede ser que este buscando una personaDl con situacion != 'A'
-                    $cPersonasDl = $gesPersonaDl->getPersonas(array('id_nom' => $id_nom));
-                    if (count($cPersonasDl) > 0) {
-                        $oPersona = $cPersonasDl[0];
-                    } else {
-                        // o de otra dl.
-                        if ($id_nom > 0) {
-                            $gesPersonaAll = new GestorPersonaAll();
-                            $oPersona = $gesPersonaAll->getPersonaByIdNom($id_nom);
-                            if (is_object($oPersona)) {
-                                return $oPersona;
-                            }
-                        }
-
-                        $gesPersonaIn = new GestorPersonaIn();
-                        $cPersonasIn = $gesPersonaIn->getPersonasIn(array('id_nom' => $id_nom));
-                        if (count($cPersonasIn) > 0) {
-                            $oPersona = $cPersonasIn[0];
-                        } else {
-                            return sprintf(_("no encuentro a nadie con id: %s"), $id_nom);
-                        }
-                    }
-                }
-            }
-        }
-        return $oPersona;
-    }
-*/
 
     /**
      * @deprecated Use PersonaFinderService::buscarEnTodasRegiones() en su lugar

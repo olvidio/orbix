@@ -90,7 +90,7 @@ class PersonaNaxFactory
         $oPersonaNax->setSituacionVo(new SituacionCode(strtoupper($faker->randomLetter())));
         $oPersonaNax->setF_situacion(new DateTimeLocal($faker->date()));
         $oPersonaNax->setApelFamVo(new ApelFamText($faker->word));
-        $oPersonaNax->setIncVo(new IncCode(substr($faker->word, 0, 2)));
+        $oPersonaNax->setIncVo(new IncCode($faker->randomElement(array_keys(IncCode::getArrayIncCode()))));
         $oPersonaNax->setF_inc(new DateTimeLocal($faker->date()));
         $oPersonaNax->setNivelStgrVo(new NivelStgrId($faker->randomElement(array_keys(NivelStgrId::getArrayNivelStgr()))));
         $oPersonaNax->setProfesionVo(new ProfesionText($faker->realText(255)));

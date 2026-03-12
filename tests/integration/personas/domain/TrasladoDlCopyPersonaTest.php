@@ -8,7 +8,7 @@ use core\DBConnection;
 use core\DBPropiedades;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\entity\PersonaN;
-use src\personas\domain\TrasladoDl;
+use src\personas\domain\Trasladar;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use Tests\factories\personas\PersonaNFactory;
@@ -51,11 +51,11 @@ class TrasladoDlCopyPersonaTest extends myTest
         $originRepo->Guardar($persona);
         $this->insertPersonaDl($oDBorg, $this->idNom, 'n', 'dlb', 'Apellido', 'A');
 
-        $traslado = new TrasladoDl();
+        $traslado = new Trasladar();
         $traslado->setId_nom($this->idNom);
         $traslado->setReg_dl_org($this->schemaOrg);
         $traslado->setReg_dl_dst($this->schemaDst);
-        $traslado->setF_dl(new DateTimeLocal());
+        $traslado->setF_traslado(new DateTimeLocal());
 
         $result = $traslado->copiarPersona();
         $this->assertTrue($result, $traslado->getError() ?? 'copyPersona devolvió false');

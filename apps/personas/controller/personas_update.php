@@ -1,13 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\ProvidesRepositories;
 use web\ContestarJson;
 use function core\is_true;
 
@@ -29,34 +24,35 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 $oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
-switch ($Qobj_pau) {
-    case 'PersonaN':
-        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        $id_tabla = 'n';
-        break;
-    case 'PersonaNax':
-        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        $id_tabla = 'x';
-        break;
-    case 'PersonaAgd':
-        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        $id_tabla = 'a';
-        break;
-    case 'PersonaS':
-        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        $id_tabla = 's';
-        break;
-    case 'PersonaSSSC':
-        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        $id_tabla = 'sssc';
-        break;
-    case 'PersonaEx':
-        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-        $id_tabla = 'pn';
-        break;
-    default:
-        echo "No existe la clase de la persona";
-        die();
+$idTablaMap = [
+    'PersonaN' => 'n',
+    'PersonaNax' => 'x',
+    'PersonaAgd' => 'a',
+    'PersonaS' => 's',
+    'PersonaSSSC' => 'sssc',
+    'PersonaEx' => 'pn',
+];
+
+if (!isset($idTablaMap[$Qobj_pau])) {
+    echo "No existe la clase de la persona";
+    die();
+}
+$id_tabla = $idTablaMap[$Qobj_pau];
+
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function get(string $entityType): object
+    {
+        return $this->getRepository($entityType);
+    }
+};
+
+try {
+    $repoPersona = $repositoryProvider->get($Qobj_pau);
+} catch (\InvalidArgumentException) {
+    echo "No existe la clase de la persona";
+    die();
 }
 
 

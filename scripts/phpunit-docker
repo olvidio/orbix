@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Ejecuta PHPUnit dentro del contenedor PHP para evitar diferencias host vs Docker.
+#
+# Uso:
+#   scripts/phpunit-docker
+#   scripts/phpunit-docker tests/integration
+#   scripts/phpunit-docker --filter FooTest tests/integration/personas
+#
+# Configuración opcional por entorno:
+#   ORBIX_DOCKER_CONTAINER   Nombre/id del contenedor para usar docker exec
+#   ORBIX_DOCKER_SERVICE     Servicio de docker compose para usar docker compose exec
+#   ORBIX_DOCKER_WORKDIR     Ruta del proyecto dentro del contenedor (default: /var/www/orbix)
+#   ORBIX_PHPUNIT_BIN        Binario phpunit dentro del contenedor
+#   ORBIX_PHPUNIT_CONFIG     phpunit.xml dentro del contenedor
+
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$PROJECT_ROOT"
+
+WORKDIR="${ORBIX_DOCKER_WORKDIR:-/var/www/orbix}"
+PHPUNIT_BIN="${ORBIX_PHPUNIT_BIN:-$WORKDIR/libs/vendor/bin/phpunit}"
+PHPUNIT_CONFIG="${ORBIX_PHPUNIT_CONFIG:-$WORKDIR/phpunit.xml}"
+
+if [[ $# -eq 0 ]]; then
+  # Por defecto, suite completa del proyecto.
+  set -- tests
+fi
+
+if [[ -n "${ORBIX_DOCKER_CONTAINER:-}" ]]; then
+  exec docker exec -i "$ORBIX_DOCKER_CONTAINER" \
+    php "$PHPUNIT_BIN" --configuration "$PHPUNIT_CONFIG" "$@"
+fi
+
+service="${ORBIX_DOCKER_SERVICE:-}"
+if [[ -z "$service" ]]; then
+  # Autodetección simple de servicio PHP común.
+  if docker compose ps --services >/dev/null 2>&1; then
+    service="$(docker compose ps --services | grep -E -m1 '^(php|app|web|fpm|workspace)$' || true)"
+  fi
+fi
+
+if [[ -n "$service" ]]; then
+  exec docker compose exec -T "$service" \
+    php "$PHPUNIT_BIN" --configuration "$PHPUNIT_CONFIG" "$@"
+fi
+
+cat <<'EOF' 1>&2
+No se pudo determinar el contenedor/servicio PHP.
+
+Opciones:
+1) Exporta ORBIX_DOCKER_CONTAINER (docker exec), por ejemplo:
+   export ORBIX_DOCKER_CONTAINER=orbix-php
+2) Exporta ORBIX_DOCKER_SERVICE (docker compose exec), por ejemplo:
+   export ORBIX_DOCKER_SERVICE=php
+
+Después ejecuta de nuevo este script.
+EOF
+exit 1

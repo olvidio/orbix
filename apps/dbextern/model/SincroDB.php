@@ -13,7 +13,7 @@ use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\entity\TelecoPersona;
-use src\personas\domain\TrasladoDl;
+use src\personas\domain\Trasladar;
 use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
@@ -565,7 +565,7 @@ class SincroDB
 
     public function buscarEnOrbix($id_orbix)
     {
-        $oTrasladoDl = new TrasladoDl();
+        $oTrasladoDl = new Trasladar();
         $a_esquemas = $oTrasladoDl->getEsquemas($id_orbix, $this->tipo_persona);
         $esquema = '';
         foreach ($a_esquemas as $info_eschema) {

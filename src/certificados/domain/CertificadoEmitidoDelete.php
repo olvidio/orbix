@@ -4,7 +4,6 @@ namespace src\certificados\domain;
 
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
-use src\shared\domain\contracts\ConnectionObjectBinderInterface;
 use src\shared\domain\contracts\ConnectionRepositoryFactoryInterface;
 
 class CertificadoEmitidoDelete
@@ -46,6 +45,7 @@ class CertificadoEmitidoDelete
             $esquema_region_stgr = $_SESSION['session_auth']['esquema'];
             $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
             $PersonaNotaOtraRegionStgrRepository = $this->bindConnection($PersonaNotaOtraRegionStgrRepository);
+
             $PersonaNotaOtraRegionStgrRepository->deleteCertificado($certificado);
         } else {
             $error_txt = _("No se encuentra el certificado");

@@ -39,7 +39,7 @@ class TrasladoFactory
         $oTraslado->setId_item($id);
 
         $oTraslado->setId_nom(10011);
-        $oTraslado->setTipoCmbVo(new TrasladoTipoCmbCode('test'));
+        $oTraslado->setTipoCmbVo(new TrasladoTipoCmbCode('dl'));
         $oTraslado->setCtrDestinoVo(new NombreCentroText('test centro dst'));
 
         return $oTraslado;
@@ -60,7 +60,7 @@ class TrasladoFactory
 
         $oTraslado->setId_nom($faker->numberBetween(1, 1000));
         $oTraslado->setF_traslado(new DateTimeLocal($faker->date()));
-        $oTraslado->setTipoCmbVo(new TrasladoTipoCmbCode(substr($faker->word, 0, 4)));
+        $oTraslado->setTipoCmbVo($faker->randomElement(TrasladoTipoCmbCode::getArrayTipoCambio()));
         $oTraslado->setId_ctr_origen($faker->numberBetween(10011, 50000));
         $oTraslado->setCtrOrigenVo(new NombreCentroText($faker->word));
         $oTraslado->setId_ctr_destino($faker->numberBetween(10011, 50000));

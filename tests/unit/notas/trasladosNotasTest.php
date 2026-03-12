@@ -12,7 +12,7 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
-use src\personas\domain\TrasladoDl;
+use src\personas\domain\Trasladar;
 use src\ubis\application\services\DelegacionUtils;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use Tests\factories\notas\NotasFactory;
@@ -370,7 +370,7 @@ class trasladosNotasTest extends myTest
         }
 
         // 2.- trasladar
-        $oTrasladoDl = new TrasladoDl();
+        $oTrasladoDl = new Trasladar();
         $oTrasladoDl->setId_nom($this->id_nom);
         $oTrasladoDl->setDl_persona($dlA);
         $oTrasladoDl->setReg_dl_org($reg_dl_org);
@@ -472,7 +472,7 @@ class trasladosNotasTest extends myTest
         }
 
         // 2.- trasladar
-        $oTrasladoDl = new TrasladoDl();
+        $oTrasladoDl = new Trasladar();
         $oTrasladoDl->setId_nom($this->id_nom);
         $oTrasladoDl->setDl_persona($dlA);
         $oTrasladoDl->setReg_dl_org($reg_dl_org);
@@ -566,7 +566,7 @@ class trasladosNotasTest extends myTest
         }
 
         // 2.- trasladar
-        $oTrasladoDl = new TrasladoDl();
+        $oTrasladoDl = new Trasladar();
         $oTrasladoDl->setId_nom($this->id_nom);
         $oTrasladoDl->setDl_persona($dlA);
         $oTrasladoDl->setReg_dl_org($reg_dl_org);
@@ -652,7 +652,7 @@ class trasladosNotasTest extends myTest
         $this->id_schema_persona = $id_esquemaA;
 
         // 2.- trasladar
-        $oTrasladoDl = new TrasladoDl();
+        $oTrasladoDl = new Trasladar();
         $oTrasladoDl->setId_nom($this->id_nom);
         $oTrasladoDl->setDl_persona($dlA);
         $oTrasladoDl->setReg_dl_org($reg_dl_org);

@@ -255,8 +255,7 @@ class DBTrasvase extends DBAbstract
                     $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
                     foreach ($cActividades as $oActividad) {
                         //TODO: $oActividadDl->setNoGenerarProceso(TRUE);
-
-                        if ($ActividadDlRepository->Guardar($oActividad) === false) { // Pongo el param quiet=1 para que no anote cambios.
+                        if ($ActividadDlRepository->Guardar($oActividad, false) === false) { // Pongo el param registrarCambios=false para que no anote cambios.
                             $error .= '<br>' . _("no se ha guardado la actividad");
                             exit($error);
                         }
@@ -281,7 +280,7 @@ class DBTrasvase extends DBAbstract
                     foreach ($cActividades as $oActividad) {
                         // TODO: $oActividadEx->setNoGenerarProceso(TRUE);
 
-                        if ($ActividadExRepository->Guadar($oActividad) === false) { // Pongo el param quiet=1 para que no anote cambios.
+                        if ($ActividadExRepository->Guadar($oActividad, false) === false) { // Pongo el param registrarCambios=false para que no anote cambios.
                             $error .= '<br>' . _("no se ha guardado la actividad");
                             exit($error);;
                         }

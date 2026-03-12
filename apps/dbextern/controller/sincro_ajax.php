@@ -6,6 +6,7 @@ use dbextern\model\entity\GestorPersonaBDU;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\SincroDB;
 use Illuminate\Http\JsonResponse;
+use src\personas\domain\value_objects\SituacionCode;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -80,8 +81,8 @@ switch ($que) {
             $cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas' => $id_nom_listas));
             if (!empty($cIdMatch[0]) && !empty($cIdMatch)) { // (a) unida
                 $id_orbix = $cIdMatch[0]->getId_orbix();
-                $oTrasladoDl = new \src\personas\domain\trasladoDl();
-                $oTrasladoDl->getEsquemas($id_orbix, $tipo_persona);
+                $oTrasladar = new \src\personas\domain\Trasladar();
+                $oTrasladar->getEsquemas($id_orbix, $tipo_persona);
             } else { //(b) mala suerte!
 
             }
@@ -208,10 +209,10 @@ switch ($que) {
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
         $id_nom_orbix = (string)filter_input(INPUT_POST, 'id_nom_orbix');
 
-        $oTrasladoDl = new \src\personas\domain\TrasladoDl();
-        $oTrasladoDl->setId_nom($id_nom_orbix);
+        $oTrasladar = new \src\personas\domain\Trasladar();
+        $oTrasladar->setId_nom($id_nom_orbix);
 
-        $aEsquemas = $oTrasladoDl->getEsquemas($id_nom_orbix, $tipo_persona);
+        $aEsquemas = $oTrasladar->getEsquemas($id_nom_orbix, $tipo_persona);
         //keys:  schema,id_schema,situacion,f_situacion
         foreach ($aEsquemas as $esquema) {
             if ($esquema['situacion'] === 'A') {
@@ -221,13 +222,13 @@ switch ($que) {
         $mi_esquema = ConfigGlobal::mi_region_dl();
         $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
 
-        $oTrasladoDl->setDl_persona($dl);
-        $oTrasladoDl->setReg_dl_org($esq_org);
-        $oTrasladoDl->setReg_dl_dst($mi_esquema);
-        $oTrasladoDl->setF_dl($oHoy);
-        $oTrasladoDl->setSituacion('L');
+        $oTrasladar->setDl_persona($dl);
+        $oTrasladar->setReg_dl_org($esq_org);
+        $oTrasladar->setReg_dl_dst($mi_esquema);
+        $oTrasladar->setF_traslado($oHoy);
+        $oTrasladar->setSituacionVo(SituacionCode::fromNullableString('L'));
 
-        $jsondata = $oTrasladoDl->trasladar();
+        $jsondata = $oTrasladar->trasladar();
         (new JsonResponse($jsondata))->send();
 
         break;
@@ -236,8 +237,8 @@ switch ($que) {
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
         $id_nom_orbix = (string)filter_input(INPUT_POST, 'id_nom_orbix');
 
-        $oTrasladoDl = new \src\personas\domain\TrasladoDl();
-        $oTrasladoDl->setId_nom($id_nom_orbix);
+        $oTrasladar = new \src\personas\domain\Trasladar();
+        $oTrasladar->setId_nom($id_nom_orbix);
 
         $mi_dele = ConfigGlobal::mi_delef();
         $mi_esquema = ConfigGlobal::mi_region_dl();
@@ -265,13 +266,13 @@ switch ($que) {
         $esq_dst = $region_dst . '-' . $dl_dst . $sfsv_txt;
         $situacion = 'L';
 
-        $oTrasladoDl->setDl_persona($mi_dele);
-        $oTrasladoDl->setReg_dl_org($mi_esquema);
-        $oTrasladoDl->setReg_dl_dst($esq_dst);
-        $oTrasladoDl->setF_dl($oHoy);
-        $oTrasladoDl->setSituacion($situacion);
+        $oTrasladar->setDl_persona($mi_dele);
+        $oTrasladar->setReg_dl_org($mi_esquema);
+        $oTrasladar->setReg_dl_dst($esq_dst);
+        $oTrasladar->setF_traslado($oHoy);
+        $oTrasladar->setSituacionVo(SituacionCode::fromNullableString($situacion));
 
-        $jsondata = $oTrasladoDl->trasladar();
+        $jsondata = $oTrasladar->trasladar();
         (new JsonResponse($jsondata))->send();
 
         break;
@@ -280,8 +281,8 @@ switch ($que) {
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
         $id_nom_orbix = (string)filter_input(INPUT_POST, 'id_nom_orbix');
 
-        $oTrasladoDl = new \src\personas\domain\TrasladoDl();
-        $oTrasladoDl->setId_nom($id_nom_orbix);
+        $oTrasladar = new \src\personas\domain\Trasladar();
+        $oTrasladar->setId_nom($id_nom_orbix);
 
         $mi_dele = ConfigGlobal::mi_delef();
         $mi_esquema = ConfigGlobal::mi_region_dl();
@@ -289,14 +290,14 @@ switch ($que) {
         $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
         $esq_dst = "H-" . $dl . $sfsv_txt;
 
-        $oTrasladoDl->setDl_persona($mi_dele);
-        $oTrasladoDl->setReg_dl_org($mi_esquema);
-        $oTrasladoDl->setReg_dl_dst($esq_dst);
-        $oTrasladoDl->setF_dl($oHoy);
-        $oTrasladoDl->setSituacion('B');
+        $oTrasladar->setDl_persona($mi_dele);
+        $oTrasladar->setReg_dl_org($mi_esquema);
+        $oTrasladar->setReg_dl_dst($esq_dst);
+        $oTrasladar->setF_traslado($oHoy);
+        $oTrasladar->setSituacionVo(SituacionCode::fromNullableString('B'));
 
         $error_txt = '';
-        if ($oTrasladoDl->cambiarFichaPersona() === false) {
+        if ($oTrasladar->cambiarFichaPersona() === false) {
             $error_txt = _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.");
         }
 
@@ -376,8 +377,8 @@ switch ($que) {
             $cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas' => $id_nom_listas));
             if (!empty($cIdMatch[0]) && !empty($cIdMatch)) { // (a) unida
                 $id_orbix = $cIdMatch[0]->getId_orbix();
-                $oTrasladoDl = new \src\personas\domain\trasladoDl();
-                $oTrasladoDl->getEsquemas($id_orbix, $tipo_persona);
+                $oTrasladar = new \src\personas\domain\Trasladar();
+                $oTrasladar->getEsquemas($id_orbix, $tipo_persona);
             } else { //(b) mala suerte!
 
             }

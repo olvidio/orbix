@@ -7,13 +7,8 @@ use planning\domain\PlanningStyle;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Periodo;
@@ -97,30 +92,23 @@ $aOperador = [];
 $cabecera_title = ucfirst(_("persona seleccionada"));
 $aWhere['id_nom'] = implode(',', $aid_nom);
 $aOperador['id_nom'] = 'OR';
-switch ($Qobj_pau) {
-    case 'PersonaN':
-        $PersonaRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        break;
-    case 'PersonaAgd':
-        $PersonaRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        break;
-    case 'PersonaNax':
-        $PersonaRepository = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        break;
-    case 'PersonaS':
-        $PersonaRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        break;
-    case 'PersonaSSSC':
-        $PersonaRepository = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        break;
-    case 'PersonaDl':
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function get(string $entityType): object
+    {
+        return $this->getRepository($entityType);
+    }
+};
+
+try {
+    if (empty($Qobj_pau) || $Qobj_pau === 'PersonaDl') {
         $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        break;
-    case 'PersonaEx':
-        $PersonaRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-        break;
-    default:
-        $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+    } else {
+        $PersonaRepository = $repositoryProvider->get($Qobj_pau);
+    }
+} catch (\InvalidArgumentException) {
+    $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
 }
 $cPersonas = $PersonaRepository->getPersonas($aWhere, $aOperador);
 

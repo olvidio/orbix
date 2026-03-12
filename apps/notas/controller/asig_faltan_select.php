@@ -2,14 +2,9 @@
 
 use core\ConfigGlobal;
 use notas\model\AsignaturasPendientes;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\services\TelecoPersonaService;
+use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
@@ -137,30 +132,24 @@ $titulo = sprintf(_("lista de %s a los que faltan %d o menos asignaturas para fi
 
 $i = 0;
 $a_valores = [];
-switch ($obj_pau) {
-    case 'PersonaDl':
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function get(string $entityType): object
+    {
+        return $this->getRepository($entityType);
+    }
+};
+
+try {
+    if ($obj_pau === 'PersonaDl') {
         $repoPersona = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        break;
-    case 'PersonaN':
-        $repoPersona = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        break;
-    case 'PersonaNax':
-        $repoPersona = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        break;
-    case 'PersonaAgd':
-        $repoPersona = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        break;
-    case 'PersonaS':
-        $repoPersona = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        break;
-    case 'PersonaSSSC':
-        $repoPersona = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        break;
-    case 'PersonaEx':
-        $repoPersona = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-        break;
-    default:
-        echo "No existe la clase de la persona";
+    } else {
+        $repoPersona = $repositoryProvider->get($obj_pau);
+    }
+} catch (\InvalidArgumentException) {
+    echo "No existe la clase de la persona";
+    die();
 }
 foreach ($aId_nom as $id_nom => $aAsignaturas) {
     $i++;

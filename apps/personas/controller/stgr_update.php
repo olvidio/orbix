@@ -1,11 +1,6 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaExRepositoryInterface;
-use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\shared\infrastructure\ProvidesRepositories;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -19,29 +14,38 @@ $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 $Qid_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 $Qnivel_stgr = (string)filter_input(INPUT_POST, 'nivel_stgr');
 
-// según sean numerarios...
-switch ($Qid_tabla) {
-    case 'n':
-        $repo = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-        break;
-    case "x":
-        $repo = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        break;
-    case "a":
-        $repo = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-        break;
-    case "s":
-        $repo = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-        break;
-    case "cp_sss":
-        $repo = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
-        break;
-    case "pn":
-    case "pa":
-        $repo = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
-        break;
+$entityTypeByIdTabla = [
+    'n' => 'PersonaN',
+    'x' => 'PersonaNax',
+    'a' => 'PersonaAgd',
+    's' => 'PersonaS',
+    'sssc' => 'PersonaSSSC',
+    'cp_sss' => 'PersonaSSSC',
+    'pn' => 'PersonaEx',
+    'pa' => 'PersonaEx',
+];
+
+if (!isset($entityTypeByIdTabla[$Qid_tabla])) {
+    echo "No existe la clase de la persona";
+    die();
 }
-$repository = new $repo;
+
+$repositoryProvider = new class {
+    use ProvidesRepositories;
+
+    public function get(string $entityType): object
+    {
+        return $this->getRepository($entityType);
+    }
+};
+
+try {
+    $repository = $repositoryProvider->get($entityTypeByIdTabla[$Qid_tabla]);
+} catch (\InvalidArgumentException) {
+    echo "No existe la clase de la persona";
+    die();
+}
+
 $oPersona = $repository->findById($Qid_nom);
 
 $oPersona->setNivel_stgr($Qnivel_stgr);
