@@ -422,7 +422,7 @@ class ModuloInstalado extends ClasePropiedades
 
         $oModuloInstaladoSet->add($this->getDatosId_mod());
         $oModuloInstaladoSet->add($this->getDatosStatus());
-        $oModuloInstaladoSet->add($this->getDatosParam());
+        //$oModuloInstaladoSet->add($this->getDatosParam());
         return $oModuloInstaladoSet->getTot();
     }
 
@@ -459,6 +459,7 @@ class ModuloInstalado extends ClasePropiedades
      *
      * @return DatosCampo
      */
+    /*
     function getDatosParam()
     {
         $nom_tabla = $this->getNomTabla();
@@ -468,4 +469,5 @@ class ModuloInstalado extends ClasePropiedades
         $oDatosCampo->setArgument('50');
         return $oDatosCampo;
     }
+    */
 }
