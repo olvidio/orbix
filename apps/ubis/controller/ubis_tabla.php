@@ -255,31 +255,6 @@ if (empty($sWhere)) {
                 case "ex":
                     $titulo = ucfirst(_("tabla de casas y centros de fuera de la delegación"));
                     $Qobj_pau = 'Centro';
-                    /*
-                    switch ($miSfsv) {
-                        case 1: // sv
-                            if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
-                                ///// FALTA ARREGLAR ESTO /////
-                                //$cond="(u.dl!='".ConfigGlobal::$dele."' OR dl is null)";
-                                $aWhere['dl']=ConfigGlobal::$dele;
-                                $aWhere['sv']='t';
-                                $aWhere['tipo_ubi']='ctrsf';
-                                $aOperador['tipo_ubi']='!=';
-                            } else {
-                                $aWhere['dl']=ConfigGlobal::$dele;
-                                $aOperador['dl']='!=';
-                                $aWhere['sv']='t';
-                                $aWhere['tipo_ubi']='ctrsf';
-                                $aOperador['tipo_ubi']='!=';
-                            }
-                            break;
-                        case 2:
-                            $aWhere['dl']=ConfigGlobal::$dele;
-                            $aOperador['dl']='!=';
-                            $aWhere['sf']='t';
-                            break;
-                    }
-                    */
                     break;
                 case "sf":
                     if ($permisoSf) {
@@ -289,7 +264,7 @@ if (empty($sWhere)) {
                     }
                     break;
                 case "tot":
-                    $Qobj_pau = 'Centro';
+                    $Qobj_pau = ['Centro', 'Casa'];
                     $titulo = ucfirst(_("tabla de toda las casas y centros"));
                     break;
             }
@@ -297,10 +272,11 @@ if (empty($sWhere)) {
     }
 
     if (!empty($Qobj_pau)) {
-        $metodo = getMetodo($Qobj_pau);
-        $repoDir = getDireccionRepositoryClass($Qobj_pau);
+        $repoDir = [];
+        foreach ((array)$Qobj_pau as $Qobj_pau_i) {
+            $repoDir[] = getDireccionRepositoryClass($Qobj_pau_i);
+        }
     }
-
 } else {
     $aWhere = json_decode(core\urlsafe_b64decode($sWhere), true) ?: [];
     $aOperador = json_decode(core\urlsafe_b64decode($sOperador), true) ?: [];
@@ -318,6 +294,7 @@ if (empty($aWhere) && empty($aWhereD)) {
 }
 
 // Buscar por nombre Centro/Casa
+$cUbis = [];
 if (!empty($aWhere)) {
     if (!is_true($Qcmb)) {
         $aWhere['active'] = 't';
@@ -333,44 +310,47 @@ if (!empty($aWhere)) {
             break;
     }
     if (!empty($Qobj_pau)) {
-        $metodo = getMetodo($Qobj_pau);
-        $UbiRepository = getRepository($Qobj_pau);
-        $cUbis = $UbiRepository->$metodo($aWhere, $aOperador);
-    } else {
-        $cUbis = [];
+        foreach ((array)$Qobj_pau as $Qobj_pau_i) {
+            $metodo = getMetodo($Qobj_pau_i);
+            $UbiRepository = getRepository($Qobj_pau_i);
+            $cUbis_i = $UbiRepository->$metodo($aWhere, $aOperador);
+            foreach ($cUbis_i as $ubi) {
+                $cUbis[] = $ubi;
+            }
+        }
     }
-} else {
-    $cUbis = [];
 }
 
 // Buscar por dirección
 $cUbisD = [];
 if (!empty($aWhereD)) {
     if (!empty($repoDir)) {
-        $DireccionesRepository = $GLOBALS['container']->get($repoDir);
-        $cDirecciones = $DireccionesRepository->getDirecciones($aWhereD, $aOperadorD) ?: [];
-        $repoRelacionMap = [
-            DireccionCentroDlRepositoryInterface::class => RelacionCentroDlDireccionRepositoryInterface::class,
-            DireccionCentroExRepositoryInterface::class => RelacionCentroExDireccionRepositoryInterface::class,
-            DireccionCentroRepositoryInterface::class => RelacionCentroDireccionRepositoryInterface::class,
-            DireccionCasaDlRepositoryInterface::class => RelacionCasaDlDireccionRepositoryInterface::class,
-            DireccionCasaExRepositoryInterface::class => RelacionCasaExDireccionRepositoryInterface::class,
-            DireccionCasaRepositoryInterface::class => RelacionCasaDireccionRepositoryInterface::class,
-        ];
-        $repoRelacion = $repoRelacionMap[$repoDir] ?? RelacionUbiDireccionRepositoryInterface::class;
-        $RelacionRepository = $GLOBALS['container']->get($repoRelacion);
-        foreach ($cDirecciones as $oDireccion) {
-            $id_direccion = $oDireccion->getId_direccion();
-            $cIdUbis = $RelacionRepository->getUbisPorDireccion($id_direccion);
-            foreach ($cIdUbis as $aUbi) {
-                $oUbi = Ubi::NewUbi($aUbi['id_ubi']);
-                if ($oUbi === null) {
-                    continue;
+        foreach ((array)$repoDir as $repoDir_i) {
+            $DireccionesRepository = $GLOBALS['container']->get($repoDir_i);
+            $cDirecciones = $DireccionesRepository->getDirecciones($aWhereD, $aOperadorD) ?: [];
+            $repoRelacionMap = [
+                DireccionCentroDlRepositoryInterface::class => RelacionCentroDlDireccionRepositoryInterface::class,
+                DireccionCentroExRepositoryInterface::class => RelacionCentroExDireccionRepositoryInterface::class,
+                DireccionCentroRepositoryInterface::class => RelacionCentroDireccionRepositoryInterface::class,
+                DireccionCasaDlRepositoryInterface::class => RelacionCasaDlDireccionRepositoryInterface::class,
+                DireccionCasaExRepositoryInterface::class => RelacionCasaExDireccionRepositoryInterface::class,
+                DireccionCasaRepositoryInterface::class => RelacionCasaDireccionRepositoryInterface::class,
+            ];
+            $repoRelacion = $repoRelacionMap[$repoDir_i] ?? RelacionUbiDireccionRepositoryInterface::class;
+            $RelacionRepository = $GLOBALS['container']->get($repoRelacion);
+            foreach ($cDirecciones as $oDireccion) {
+                $id_direccion = $oDireccion->getId_direccion();
+                $cIdUbis = $RelacionRepository->getUbisPorDireccion($id_direccion);
+                foreach ($cIdUbis as $aUbi) {
+                    $oUbi = Ubi::NewUbi($aUbi['id_ubi']);
+                    if ($oUbi === null) {
+                        continue;
+                    }
+                    if (!is_true($Qcmb) && method_exists($oUbi, 'isActive') && !$oUbi->isActive()) {
+                        continue;
+                    }
+                    $cUbisD[] = $oUbi;
                 }
-                if (!is_true($Qcmb) && method_exists($oUbi, 'isActive') && !$oUbi->isActive()) {
-                    continue;
-                }
-                $cUbisD[] = $oUbi;
             }
         }
     }

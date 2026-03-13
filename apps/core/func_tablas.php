@@ -101,6 +101,11 @@ function is_true($val)
     return $boolval;
 }
 
+function is_true_txt($val)
+{
+    return is_true($val) ? _("si") : _("no");
+}
+
 /**
  * Para poner null en los valores vacíos de un array
  *

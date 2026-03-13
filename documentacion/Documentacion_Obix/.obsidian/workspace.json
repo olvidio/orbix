@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Checklist QA.md",
+                "file": "personas/mapa_personas_select.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Checklist QA"
+              "title": "mapa_personas_select"
             }
           }
         ]
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 266.5
+    "width": 200
   },
   "right": {
     "id": "11886686fe08036f",
@@ -196,10 +196,13 @@
   },
   "active": "d922d4e00995c42c",
   "lastOpenFiles": [
+    "lu1733812a3s0z.tmp",
+    "2. Gestión de Numerarios (n).md",
+    "configuracion/mapa_modulos_select.md~",
+    "Checklist QA.md",
     "lu8330717vdf3.tmp",
     "Bienvenido.md",
     "20. Calendario.md",
-    "Checklist QA.md",
     "shared/mapa_tablaDB_lista_ver.md",
     "16. NAX (búsquedas y actividades).md",
     "Checklist_QA.ods.md",
@@ -213,7 +216,6 @@
     "9. Exterior.md",
     "8. dre (personas, actividades y encargos).md",
     "4. Secretaría.md",
-    "2. Gestión de Numerarios (n).md",
     "actividades/mapa_actividad_select.md",
     "13. Sistema.md",
     "19. Global.md",
@@ -229,8 +231,6 @@
     "zonassacd/mapa_zona_ctr.md",
     "inventario",
     "certificados",
-    "usuarios",
-    "shared",
-    "configuracion"
+    "usuarios"
   ]
 }

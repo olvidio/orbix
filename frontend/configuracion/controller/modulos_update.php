@@ -61,7 +61,7 @@ switch ($Qmod) {
     default :
         $oModulo = $ModuloRepository->findById($Qid_mod);
         if (!empty($oModulo)) {
-            $oModulo->setNombreModVo(ModuloName::fromString($Qnom));
+            $oModulo->setNomVo(ModuloName::fromString($Qnom));
             $oModulo->setDescripcionVo(ModuloDescription::fromNullableString($Qdescripcion));
             $oModulo->setModsReqVo(ModsReq::fromNullableArray($Qsel_mods));
             $oModulo->setAppsReqVo(AppsReq::fromNullableArray($Qsel_apps));

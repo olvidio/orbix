@@ -1,0 +1,66 @@
+<script>
+    fnjs_guardar = function (formulario) {
+        $(formulario).attr('action', 'src/ubiscamas/infrastructure/controllers/cama_update.php');
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
+
+    fnjs_cancelar = function() {
+        <?= $oPosicion->js_atras(1) ?>
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<!-- ============================== Ficha ============================= -->
+<form id='frm2'>
+    <?= $oHash->getCamposHtml(); ?>
+
+    <h3><?= $id_cama ? _("Editar cama") : _("Nueva cama") ?></h3>
+
+    <table class="datos">
+        <tr>
+            <td class="datos_label"><?= _("Descripción") ?>:</td>
+            <td class="datos_valores">
+                <input type="text" name="descripcion" value="<?= $descripcion ?>" size="50" required>
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Larga") ?>:</td>
+            <td class="datos_valores">
+                <input type="checkbox" name="larga" value="1" <?= $larga ? 'checked' : '' ?>>
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("VIP") ?>:</td>
+            <td class="datos_valores">
+                <input type="checkbox" name="vip" value="1" <?= $vip ? 'checked' : '' ?>>
+            </td>
+        </tr>
+    </table>
+
+    <br><br>
+    <table class="botones">
+        <tr class="botones">
+            <td class="botones">
+                <input type="button" value="<?= _("Guardar") ?>" onclick="fnjs_guardar(this.form)">
+            </td>
+            <td class="botones">
+                <input type="button" value="<?= _("Cancelar") ?>" onclick="fnjs_cancelar()">
+            </td>
+        </tr>
+    </table>
+</form>

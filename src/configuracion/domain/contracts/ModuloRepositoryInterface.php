@@ -18,29 +18,28 @@ interface ModuloRepositoryInterface
 
     public function getArrayModulos(): array;
 
-/* --------------------  BASiC SEARCH ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
+    /**
      * devuelve una colección (array) de objetos de tipo Modulo
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|false Una colección de objetos de tipo Modulo
      */
-	public function getModulos(array $aWhere = [], array $aOperators = []): array|false;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
+    public function getModulos(array $aWhere = [], array $aOperators = []): array|false;
 
-	public function Eliminar(Modulo $Modulo): bool;
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Guardar(Modulo $Modulo): bool;
+    public function Eliminar(Modulo $Modulo): bool;
 
-	public function getErrorTxt(): string;
+    public function Guardar(Modulo $Modulo): bool;
+
+    public function getErrorTxt(): string;
 
 
+    public function getNomTabla(): string;
 
-	public function getNomTabla(): string;
-	
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
@@ -49,11 +48,11 @@ interface ModuloRepositoryInterface
      * @return array|bool
      */
     public function datosById(int $id_mod): array|bool;
-	
+
     /**
      * Busca la clase con id_mod en el repositorio.
      */
     public function findById(int $id_mod): ?Modulo;
-	
+
     public function getNewId();
 }

@@ -2,6 +2,7 @@
 
 namespace src\shared\domain;
 
+use src\configuracion\domain\entity\ModuloInstalado;
 use src\profesores\domain\entity\ProfesorLatin;
 use src\shared\domain\value_objects\DateTimeLocal;
 use function core\is_true;
@@ -76,6 +77,10 @@ class DatosUpdateRepo
         $NoNewId = false;
         if ($oFicha instanceof ProfesorLatin) {
             $new_id = $this->Campos['id_pau'];
+            $NoNewId = true;
+        }
+        if ($oFicha instanceof ModuloInstalado) {
+            $new_id = $this->Campos['id_mod'];
             $NoNewId = true;
         }
 

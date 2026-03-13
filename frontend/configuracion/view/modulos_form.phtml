@@ -1,24 +1,4 @@
 <script>
-    fnjs_sql = function (formulario) {
-        $(formulario).attr('action', 'frontend/configuracion/controller/modulos_sql.php');
-        $(formulario).one("submit", function () {
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-            })
-                .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\\n') {
-                        alert('<?= _("respuesta") ?>: ' + rta_txt);
-                    } else {
-                        <?= $oPosicion->js_atras(1); ?>
-                    }
-                });
-            return false;
-        });
-        $(formulario).trigger("submit");
-        $(formulario).off();
-    }
     fnjs_guardar = function (formulario) {
         $(formulario).attr('action', 'frontend/configuracion/controller/modulos_update.php');
         $(formulario).one("submit", function () {
@@ -140,5 +120,4 @@
     </fieldset>
     <br>
     <input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios")); ?>" onclick="fnjs_guardar(this.form)">
-    <input id="g2" TYPE="button" VALUE="<?= ucfirst(_("generar tablas")); ?>" onclick="fnjs_sql(this.form)">
 </form>

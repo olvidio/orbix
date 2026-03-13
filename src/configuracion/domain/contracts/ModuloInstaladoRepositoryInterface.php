@@ -4,7 +4,6 @@ namespace src\configuracion\domain\contracts;
 
 use src\configuracion\domain\entity\ModuloInstalado;
 
-use function core\is_true;
 /**
  * Interfaz de la clase ModuloInstalado y su Repositorio
  *
@@ -19,43 +18,39 @@ interface ModuloInstaladoRepositoryInterface
 
     public function getArrayModulosInstalados(): array;
 
-/* --------------------  BASiC SEARCH ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo ModuloInstalado
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo ModuloInstalado
-	
-	 */
-	public function getModuloInstalados(array $aWhere=[], array $aOperators=[]): array|false;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /**
+     * devuelve una colección (array) de objetos de tipo ModuloInstalado
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo ModuloInstalado
+     */
+    public function getModuloInstalados(array $aWhere = [], array $aOperators = []): array|false;
 
-	public function Eliminar(ModuloInstalado $ModuloInstalado): bool;
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Guardar(ModuloInstalado $ModuloInstalado): bool;
+    public function Eliminar(ModuloInstalado $ModuloInstalado): bool;
 
-	public function getErrorTxt(): string;
+    public function Guardar(ModuloInstalado $ModuloInstalado): bool;
 
+    public function getErrorTxt(): string;
 
 
-	public function getNomTabla(): string;
-	
+    public function getNomTabla(): string;
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
+     *
      * @param int $id_mod
      * @return array|bool
-	
      */
     public function datosById(int $id_mod): array|bool;
-	
+
     /**
      * Busca la clase con id_mod en el repositorio.
-	
      */
     public function findById(int $id_mod): ?ModuloInstalado;
 }

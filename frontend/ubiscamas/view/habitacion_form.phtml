@@ -1,0 +1,200 @@
+<script>
+    fnjs_guardar = function (formulario) {
+        let datos = $(formulario).serialize();
+        let request = $.ajax({
+            data: datos,
+            url: 'src/ubiscamas/infrastructure/controllers/habitacion_update.php',
+            type: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+           if (json.success !== true) {
+               alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+           } else {
+               <?= $oPosicion->js_atras(1); ?>
+           }
+        });
+    }
+
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', 'frontend/ubiscamas/controller/habitacion_form.php');
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+
+    fnjs_nueva_cama = function () {
+        var id_habitacion = $('#frm2 [name="id_habitacion"]').val();
+        var id_ubi = $('#frm2 [name="id_ubi"]').val();
+        if (!id_habitacion) {
+            alert('<?= _("Debe guardar primero la habitación antes de añadir camas") ?>');
+            return;
+        }
+        fnjs_update_div('#main', 'frontend/ubiscamas/controller/cama_form.php', {
+            mod: 'nuevo',
+            id_habitacion: id_habitacion,
+            id_ubi: id_ubi
+        });
+    }
+
+    fnjs_editar_cama = function (id_cama) {
+        var id_ubi = $('#frm2 [name="id_ubi"]').val();
+        fnjs_update_div('#main', 'frontend/ubiscamas/controller/cama_form.php', {
+            id_cama: id_cama,
+            id_ubi: id_ubi
+        });
+    }
+
+    fnjs_eliminar_cama = function (id_cama) {
+        if (confirm("<?= _("¿Seguro que desea borrar esta cama?") ?>")) {
+            $.ajax({
+                url: 'src/ubiscamas/infrastructure/controllers/cama_delete.php',
+                type: 'post',
+                data: {id_cama: id_cama}
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        fnjs_actualizar('#frm_actualizar');
+                    }
+                });
+        }
+    }
+    fnjs_cancelar = function() {
+        <?= $oPosicion->js_atras(1) ?>
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<form id='frm_actualizar'>
+    <?= $oHashActualizar->getCamposHtml(); ?>
+</form>
+<!-- ============================== Ficha ============================= -->
+<form id='frm2'>
+    <?= $oHash->getCamposHtml(); ?>
+
+    <h3><?= $id_habitacion ? _("Editar habitación") : _("Nueva habitación") ?></h3>
+
+    <table class="datos">
+        <tr>
+            <td class="datos_label"><?= _("Orden") ?>:</td>
+            <td class="datos_valores">
+                <input type="number" name="orden" value="<?= $orden ?>" required>
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Nombre") ?>:</td>
+            <td class="datos_valores">
+                <input type="text" name="nombre" value="<?= $nombre ?>" size="50">
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Número de camas") ?>:</td>
+            <td class="datos_valores">
+                <input type="number" name="numero_camas" value="<?= $numero_camas ?>" min="0">
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Número de camas VIP") ?>:</td>
+            <td class="datos_valores">
+                <input type="number" name="numero_camas_vip" value="<?= $numero_camas_vip ?>" min="0">
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Planta") ?>:</td>
+            <td class="datos_valores">
+                <input type="text" name="planta" value="<?= $planta ?>" size="20">
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Tipo de tipoLavabo") ?>:</td>
+            <td class="datos_valores">
+                <select name="tipoLavabo">
+                    <option value="">-- <?= _("Sin especificar") ?> --</option>
+                    <?php foreach ($a_tipos_tipoLavabo as $id => $descripcion): ?>
+                        <option value="<?= $id ?>" <?= ($tipoLavabo === $id) ? 'selected' : '' ?>>
+                            <?= $descripcion ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Sillón") ?>:</td>
+            <td class="datos_valores">
+                <input type="checkbox" name="sillon" value="1" <?= $sillon ? 'checked' : '' ?>>
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Adaptada") ?>:</td>
+            <td class="datos_valores">
+                <input type="checkbox" name="adaptada" value="1" <?= $adaptada ? 'checked' : '' ?>>
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Fumador") ?>:</td>
+            <td class="datos_valores">
+                <input type="checkbox" name="fumador" value="1" <?= $fumador ? 'checked' : '' ?>>
+            </td>
+        </tr>
+        <tr>
+            <td class="datos_label"><?= _("Despacho") ?>:</td>
+            <td class="datos_valores">
+                <input type="checkbox" name="despacho" value="1" <?= $despacho ? 'checked' : '' ?>>
+            </td>
+        </tr>
+    </table>
+
+    <?php if ($id_habitacion): ?>
+        <br>
+        <h4><?= _("Camas de esta habitación") ?></h4>
+        <?php if (!empty($a_camas)): ?>
+            <table class="lista">
+                <thead>
+                <tr>
+                    <th><?= _("Descripción") ?></th>
+                    <th><?= _("Larga") ?></th>
+                    <th><?= _("VIP") ?></th>
+                    <th><?= _("Acciones") ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($a_camas as $oCama): ?>
+                    <tr>
+                        <td><?= $oCama->getDescripcion() ?></td>
+                        <td><?= $oCama->isLarga() ? _("Sí") : _("No") ?></td>
+                        <td><?= $oCama->isVip() ? _("Sí") : _("No") ?></td>
+                        <td>
+                            <button type="button" onclick="fnjs_editar_cama('<?= $oCama->getIdCama() ?>')">
+                                <?= _("Editar") ?>
+                            </button>
+                            <button type="button" onclick="fnjs_eliminar_cama('<?= $oCama->getIdCama() ?>')">
+                                <?= _("Eliminar") ?>
+                            </button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p><?= _("No hay camas registradas para esta habitación") ?></p>
+        <?php endif; ?>
+        <br>
+        <button type="button" onclick="fnjs_nueva_cama()">
+            <?= _("Añadir nueva cama") ?>
+        </button>
+    <?php endif; ?>
+
+    <br><br>
+    <table class="botones">
+        <tr class="botones">
+            <td class="botones">
+                <input type="button" value="<?= _("Guardar") ?>" onclick="fnjs_guardar(this.form)">
+            </td>
+            <td class="botones">
+                <input type="button" value="<?= _("Cancelar") ?>"
+                       onclick="fnjs_cancelar()" >
+            </td>
+        </tr>
+    </table>
+</form>
