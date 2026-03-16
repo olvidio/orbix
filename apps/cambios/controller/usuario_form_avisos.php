@@ -40,7 +40,7 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     $CambiosUsuariosObjetoRepository = $GLOBALS['container']->get(CambioUsuarioObjetoPrefRepositoryInterface::class);
     $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'objeto, dl_org, id_tipo_activ_txt'];
     $aOperador = [];
-    $cListaTablas = $CambiosUsuariosObjetoRepository->getCambioUsuarioObjetosPrefs($aWhere, $aOperador);
+    $cListaTablas = $CambiosUsuariosObjetoRepository->getCambioUsuarioObjetoPrefs($aWhere, $aOperador);
 
     // Tipos de avisos
     $aTipos_aviso = AvisoTipoId::getArrayAvisoTipo();

@@ -25,7 +25,7 @@ if (empty($Qid_usuario)) {
         if ($i > 1) {
             $txt .= ", ";
         }
-        $txt .= $oGrupo->getUsuario();
+        $txt .= $oGrupo->getUsuarioVo()->value();
     }
 
     // datos personales usuario

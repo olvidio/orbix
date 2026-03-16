@@ -9,6 +9,7 @@ use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
@@ -109,10 +110,10 @@ if ($miRole < 4) { // es administrador
             $aDataDespl['opcion_sel'] = $id_pau;
             $camposMas = 'id_ctr';
         }
-        if ($pau === Role::PAU_CTR && $isSf) { //centroSf
+        if ($pau === PauType::PAU_CTR && $isSf) { //centroSf
             $id_pau = $oUsuario->getId_pauAsString();
-            $oGesCentrosDl = new GestorCentroEllas();
-            $aOpciones = $oGesCentrosDl->getArrayCentros();
+            $CentroDlRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+            $aOpciones = $CentroDlRepository->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';
             $aDataDespl['nom'] = 'id_ctr';
