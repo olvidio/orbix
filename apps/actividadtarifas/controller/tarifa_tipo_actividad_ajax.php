@@ -92,7 +92,7 @@ switch ($Qque) {
 
         if ($Qid_item === 'nuevo') {
             $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
-            $newId = $RelacionTarifaTipoActividadRepository->nextId();
+            $newId = $RelacionTarifaTipoActividadRepository->getNewId();
             $oRelacionTarifaTipoActividad = new RelacionTarifaTipoActividad();
             $oRelacionTarifaTipoActividad->setId_item($newId);
         } else {

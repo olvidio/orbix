@@ -361,7 +361,7 @@ switch ($Qque) {
 
         $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);
         if ($Qid_tarifa === 'nuevo') {
-            $newId = $TipoTarifaRepository->nextId();
+            $newId = $TipoTarifaRepository->getNewId();
             $oTipoTarifa = new TipoTarifa();
             $oTipoTarifa->setId_tarifa($newId);
             // miro si soy sf/sv.

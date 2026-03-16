@@ -283,7 +283,7 @@ switch ($Qque) {
         if (!empty($Qid_item)) {
             $oCasaPeriodo = $CasaPeriodoRepository->findById($Qid_item);
         } else {
-            $newIdItem = $CasaPeriodoRepository->nextId();
+            $newIdItem = $CasaPeriodoRepository->getNewId();
             $oCasaPeriodo = new CasaPeriodo();
             $oCasaPeriodo->setId_item($newIdItem);
         }

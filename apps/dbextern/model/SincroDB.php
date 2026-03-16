@@ -525,7 +525,7 @@ class SincroDB
                 $oTeleco->setNum_teleco($Tfno_Movil);
                 $oTeleco->setObserv('de listas');
             } else {
-                $newIdItem = $TelecoPersonaDlRepository->nextId();
+                $newIdItem = $TelecoPersonaDlRepository->getNewId();
                 $oTeleco = new TelecoPersona();
                 $oTeleco->setId_item($newIdItem);
                 $oTeleco->setId_nom($id_orbix);
@@ -546,7 +546,7 @@ class SincroDB
                 $oTeleco->setNum_teleco($Email);
                 $oTeleco->setObserv('de listas');
             } else {
-                $newIdItem = $TelecoPersonaDlRepository->nextId();
+                $newIdItem = $TelecoPersonaDlRepository->getNewId();
                 $oTeleco = new TelecoPersona();
                 $oTeleco->setId_item($newIdItem);
                 $oTeleco->setId_nom($id_orbix);
