@@ -41,16 +41,33 @@ $container = $GLOBALS['container'];
 */
 
 
-// 3) Fallback legacy para /src (si Nginx reescribe /<base>/src/... a ?r=/src/...)
-//    Lo ponemos ANTES del router para que sea inmediato.
+// 3) Fallback legacy para /src.
+// Compatibilidad con:
+// - /index.php?r=/src/...
+// - peticiones directas a /src/... (con o sin base path delante).
+// Lo ponemos ANTES del router para que sea inmediato.
 $projectRoot = dirname(__DIR__) . ''; // /home/.../orbix
-$legacyR = $_GET['r'] ?? null;            // p.ej. /src/usuarios/.../controller.php
+$legacyR = null;
+
+if (isset($_GET['r']) && is_string($_GET['r']) && str_starts_with($_GET['r'], '/src/')) {
+    $legacyR = $_GET['r'];
+}
+
+if ($legacyR === null) {
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    $requestPath = is_string($requestUri) ? parse_url($requestUri, PHP_URL_PATH) : '';
+    if (is_string($requestPath)) {
+        $srcPos = strpos($requestPath, '/src/');
+        if ($srcPos !== false) {
+            $legacyR = substr($requestPath, $srcPos);
+        }
+    }
+}
+
 if (is_string($legacyR) && str_starts_with($legacyR, '/src/')) {
     // Construir ruta absoluta y validar que está dentro del proyecto
     $candidate = realpath($projectRoot . '/' . ltrim($legacyR, '/'));
     if ($candidate && is_file($candidate) && str_starts_with($candidate, $projectRoot . DIRECTORY_SEPARATOR)) {
-        // Algunos controladores legacy esperan $container en ámbito global/locale
-        //$container = $GLOBALS['container'];
         require $candidate;
         return; // Evita seguir al router
     }
