@@ -51,7 +51,7 @@ if (isset($_POST['stack'])) {
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 //////////////////////// Usuario o Grupo ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/infrastructure/controllers/usuario_form.php';
+$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_form.php';
 $a_campos_backend = [
         'id_usuario' => $Qid_usuario,
         'quien' => $Qquien
@@ -113,11 +113,11 @@ $a_campos['oPosicion'] = $oPosicion;
 $a_campos['txt_guardar'] = $txt_guardar;
 $a_campos['txt_eliminar'] = $txt_eliminar;
 $a_campos['url_usuario_guardar'] = Hash::link(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_guardar.php'
+    . '/src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php'
 );
 
 //$a_campos['url_usuario_ajax'] = '';
-//$url_usuario_ajax = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_ajax.php';
+//$url_usuario_ajax = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/ui/http/controllers/usuario_ajax.php';
 
 
 $url = ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_grupo_lst.php';
@@ -136,7 +136,7 @@ $oHash2->setCamposNo('scroll_id');
 $h_del_lst = $oHash2->linkSinVal();
 $a_campos['h_del_lst'] = $h_del_lst;
 
-$url_usuario_update = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_check_pwd.php';
+$url_usuario_update = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/ui/http/controllers/usuario_check_pwd.php';
 $oHash3 = new Hash();
 $oHash3->setUrl($url_usuario_update);
 $oHash3->setCamposForm('id_usuario!usuario!password');
@@ -160,7 +160,7 @@ $oView->renderizar('usuario_form.phtml', $a_campos);
 // los nuevos no tienen lo que sigue.
 if (!empty($Qid_usuario)) {
     //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
-    $url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
+    $url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_info.php';
     $a_campos_backend = [ 'id_usuario' => $Qid_usuario ];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
     $a_campos['grupos_txt'] = $data['grupos_txt'];

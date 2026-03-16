@@ -311,6 +311,9 @@ if (!empty($Qmodo) && $Qmodo !== 'buscar') {
                 $a_botones[] = array('txt' => _("posibles asignaturas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"posibles_asignaturas\")");
             }
         }
+        if (ConfigGlobal::is_app_installed('ubiscamas')) {
+            $a_botones[] = array('txt' => _("habitaciones"), 'click' => "jsForm.mandar(\"#seleccionados\",\"camas\")");
+        }
     }
 }
 

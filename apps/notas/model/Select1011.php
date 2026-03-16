@@ -9,7 +9,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
-use src\notas\infrastructure\repositories\PgPersonaNotaRepository;
+use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaRepository;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;

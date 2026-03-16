@@ -27,7 +27,7 @@ $a_cosas = ['url_index' => $Qurl_index, 'username' => $Qusername, 'ubicacion' =>
 $linkEnviarMail2fa = 'recuperar_2fa.php?' . http_build_query($a_cosas);
 
 $url = str_replace('index.php', '', $Qurl_index);
-$url_backend = $url . 'src/usuarios/infrastructure/controllers/usuario_ayuda_info.php';
+$url_backend = $url . 'src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php';
 $a_campos_backend = [
     'username' => $Qusername,
     'esquema' => $Qesquema,

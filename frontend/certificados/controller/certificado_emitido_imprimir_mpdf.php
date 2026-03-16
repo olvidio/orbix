@@ -28,7 +28,7 @@ require_once("frontend/shared/global_header_front.inc");
 $Qid_item = empty($_GET['id_item']) ? '' : $_GET['id_item'];
 
 /////////// Consulta al backend ///////////////////
-$url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_imprimir_mpdf_datos.php';
+$url_backend = '/src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php';
 $a_campos_backend = ['id_item' => $Qid_item ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

@@ -11,7 +11,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
 
-$url_backend = '/src/inventario/infrastructure/controllers/lista_equipajes_posibles_maletas.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_equipajes_posibles_maletas.php';
 $a_campos_backend = [ 'id_equipaje' => $Qid_equipaje];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

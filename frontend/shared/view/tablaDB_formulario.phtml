@@ -5,7 +5,7 @@ use core\ConfigGlobal;
 ?>
 <script>
     fnjs_grabar = function (formulario) {
-        var url = '<?= ConfigGlobal::getWeb() ?>/src/shared/infrastructure/controllers/tablaDB_update.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/src/shared/infrastructure/ui/http/controllers/tablaDB_update.php';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,

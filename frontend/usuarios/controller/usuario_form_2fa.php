@@ -19,14 +19,14 @@ $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
+$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_info.php';
 $a_campos_backend = [ 'id_usuario' => $id_usuario ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
 $usuario = $data['usuario'];
 
 // Verificar si el usuario tiene 2FA habilitado
-$url_backend = '/src/usuarios/infrastructure/controllers/usuario_2fa_info.php';
+$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_info.php';
 $a_campos_backend = [ 'id_usuario' => $id_usuario ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
@@ -55,7 +55,7 @@ $qr_url = get_qr_code_data($usuario, $secret_2fa, $appName);
 
 // Configurar el formulario
 $oHashUpdate = new Hash();
-$url_2fa_update = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_2fa_update.php';
+$url_2fa_update = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php';
 $oHashUpdate->setUrl($url_2fa_update);
 $oHashUpdate->setCamposForm('enable_2fa!verification_code');
 $oHashUpdate->setCamposNo('enable_2fa');
@@ -66,7 +66,7 @@ $a_camposHidden = array(
 $oHashUpdate->setArraycamposHidden($a_camposHidden);
 
 $oHashVerify = new Hash();
-$url_2fa_verify = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_2fa_verify.php';
+$url_2fa_verify = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_verify.php';
 $oHashVerify->setUrl($url_2fa_verify);
 $oHashVerify->setCamposForm('secret_2fa!verification_code');
 $h_2fa_verify = $oHashVerify->linkSinVal();

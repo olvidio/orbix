@@ -30,7 +30,7 @@ if ($id_usuario !== $Qid_usuario) {
 }
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/infrastructure/controllers/usuario_guardar.php';
+$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php';
 $a_campos_backend = [
     'id_usuario' => $id_usuario,
         'has_2fa' => 'false',

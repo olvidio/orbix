@@ -1,11 +1,11 @@
 <?php
 
 use src\casas\domain\contracts\IngresoRepositoryInterface;
-use src\casas\infrastructure\repositories\PgIngresoRepository;
+use src\casas\infrastructure\persistence\postgresql\PgIngresoRepository;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
-use src\casas\infrastructure\repositories\PgUbiGastoRepository;
+use src\casas\infrastructure\persistence\postgresql\PgUbiGastoRepository;
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
-use src\casas\infrastructure\repositories\PgGrupoCasaRepository;
+use src\casas\infrastructure\persistence\postgresql\PgGrupoCasaRepository;
 use function DI\autowire;
 
 return [

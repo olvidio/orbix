@@ -3,8 +3,8 @@
 namespace src\ubiscamas\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
-use src\ubiscamas\domain\value_objects\{CamaId,
-    CamaDescripcion};
+use src\ubiscamas\domain\value_objects\{CamaId, CamaDescripcion, HabitacionId};
+use src\shared\domain\value_objects\Uuid;
 
 class Cama
 {
@@ -16,7 +16,7 @@ class Cama
 
     private CamaId $id_cama;
 
-    private int $id_habitacion;
+    private HabitacionId $id_habitacion;
 
     private CamaDescripcion $descripcion;
 
@@ -67,25 +67,25 @@ class Cama
     /**
      * @deprecated Usar `getIdHabitacionVo(): int` en su lugar.
      */
-    public function getIdHabitacion(): int
+    public function getId_habitacion(): string
     {
-        return $this->id_habitacion;
+        return $this->id_habitacion->value();
     }
 
     /**
      * @deprecated Usar `setIdHabitacionVo(int $id): void` en su lugar.
      */
-    public function setIdHabitacion(int $id_habitacion): void
+    public function setId_habitacion(string $id_habitacion): void
     {
-        $this->id_habitacion = $id_habitacion;
+        $this->id_habitacion = HabitacionId::fromNullableString($id_habitacion);
     }
 
-    public function getIdHabitacionVo(): int
+    public function getIdHabitacionVo(): HabitacionId
     {
         return $this->id_habitacion;
     }
 
-    public function setIdHabitacionVo(int $id): void
+    public function setIdHabitacionVo(HabitacionId $id): void
     {
         $this->id_habitacion = $id;
     }

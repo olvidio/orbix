@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\zonassacd\infrastructure\repositories;
+namespace Tests\integration\zonassacd\infrastructure\persistence\postgresql;
 
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\zonassacd\domain\entity\ZonaSacd;

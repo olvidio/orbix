@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\dossiers\infrastructure\repositories;
+namespace Tests\integration\dossiers\infrastructure\persistence\postgresql;
 
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\entity\Dossier;

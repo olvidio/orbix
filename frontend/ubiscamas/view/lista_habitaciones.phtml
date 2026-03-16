@@ -1,0 +1,228 @@
+<?php
+use core\ConfigGlobal;
+
+/**
+ * @var array $habitaciones_con_camas
+ * @var array $camas_con_asistentes
+ * @var array $asistentes_sin_cama
+ * @var int $id_activ
+ * @var int $id_ubi
+ * @var string $url_update_cama
+ * @var web\Hash $oHashUpdateCama
+ */
+
+?>
+<style>
+    .asignacion-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .columna-camas, .columna-asistentes {
+        width: 45%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        min-height: 400px;
+    }
+    .columna-flechas {
+        width: 10%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .habitacion-title {
+        font-weight: bold;
+        background-color: #f0f0f0;
+        padding: 5px;
+        margin-top: 10px;
+    }
+    .cama-row, .asistente-row {
+        padding: 5px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+    }
+    .cama-row:hover, .asistente-row:hover {
+        background-color: #e9ecef;
+    }
+    .cama-row.selected, .asistente-row.selected {
+        background-color: #007bff;
+        color: white;
+    }
+    .asistente-asignado {
+        color: #28a745;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+    .btn-flecha {
+        margin: 10px 0;
+        padding: 10px 20px;
+        font-size: 1.2em;
+        cursor: pointer;
+    }
+</style>
+
+<div class="asignacion-container">
+    <div class="columna-camas">
+        <h3>Habitaciones y Camas</h3>
+        <div id="lista-camas">
+            <?php foreach ($habitaciones_con_camas as $id_hab => $data): ?>
+                <div class="habitacion-title">
+                    <?= htmlspecialchars($data['habitacion']->getNombreVo()?->value() ?? 'Hab. sin nombre') ?>
+                </div>
+                <?php foreach ($data['camas'] as $oCama): ?>
+                    <?php 
+                        $camaId = $oCama->getIdCamaVo()->value();
+                        $asistenteName = '';
+                        $asistenteId = '';
+                        if (isset($camas_con_asistentes[$camaId])) {
+                            $oAsistente = $camas_con_asistentes[$camaId];
+                            $asistenteId = $oAsistente->getId_nom();
+                            $oPersona = \src\personas\domain\entity\Persona::findPersonaEnGlobal($asistenteId);
+                            if ($oPersona) {
+                                $asistenteName = $oPersona->getPrefApellidosNombre();
+                            }
+                        }
+                    ?>
+                    <div class="cama-row" data-id-cama="<?= $camaId ?>" data-id-nom="<?= $asistenteId ?>">
+                        <span class="cama-desc"><?= htmlspecialchars($oCama->getDescripcionVo()->value()) ?></span>
+                        <span class="asistente-asignado"><?= htmlspecialchars($asistenteName) ?></span>
+                    </div>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <div class="columna-flechas">
+        <button class="btn btn-primary btn-flecha" id="btn-asignar" title="Asignar a cama">&lt;--</button>
+        <button class="btn btn-warning btn-flecha" id="btn-desasignar" title="Quitar de cama">--&gt;</button>
+    </div>
+
+    <div class="columna-asistentes">
+        <h3>Asistentes sin asignar</h3>
+        <div id="lista-asistentes">
+            <?php foreach ($asistentes_sin_cama as $apellidos => $oAsistente): ?>
+                <?php $id_nom = $oAsistente->getId_nom(); ?>
+                <div class="asistente-row" data-id-nom="<?= $id_nom ?>">
+                    <?= htmlspecialchars($apellidos) ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    let camaSeleccionada = null;
+    let asistenteSeleccionado = null;
+
+    $('.cama-row').on('click', function() {
+        $('.cama-row').removeClass('selected');
+        $(this).addClass('selected');
+        camaSeleccionada = $(this);
+    });
+
+    $('.asistente-row').on('click', function() {
+        $('.asistente-row').removeClass('selected');
+        $(this).addClass('selected');
+        asistenteSeleccionado = $(this);
+    });
+
+    $('#btn-asignar').on('click', function() {
+        if (!camaSeleccionada) {
+            alert("Seleccione una cama primero.");
+            return;
+        }
+        if (!asistenteSeleccionado) {
+            alert("Seleccione un asistente sin cama.");
+            return;
+        }
+        
+        let id_cama = camaSeleccionada.data('id-cama');
+        let id_nom = asistenteSeleccionado.data('id-nom');
+        let nombreAsistente = asistenteSeleccionado.text().trim();
+        
+        if (camaSeleccionada.data('id-nom')) {
+            alert("Esta cama ya tiene un asistente asignado. Desasigne primero.");
+            return;
+        }
+
+        asignarCamaBD(id_cama, id_nom, function(success) {
+            if (success) {
+                camaSeleccionada.data('id-nom', id_nom);
+                camaSeleccionada.find('.asistente-asignado').text(nombreAsistente);
+                asistenteSeleccionado.remove();
+                asistenteSeleccionado = null;
+                camaSeleccionada.removeClass('selected');
+                camaSeleccionada = null;
+            }
+        });
+    });
+
+    $('#btn-desasignar').on('click', function() {
+        if (!camaSeleccionada) {
+            alert("Seleccione una cama con asistente asignado.");
+            return;
+        }
+        
+        let id_nom = camaSeleccionada.data('id-nom');
+        if (!id_nom) {
+            alert("Esta cama no tiene asistente.");
+            return;
+        }
+        
+        let nombreAsistente = camaSeleccionada.find('.asistente-asignado').text().trim();
+
+        asignarCamaBD('', id_nom, function(success) {
+            if (success) {
+                camaSeleccionada.data('id-nom', '');
+                camaSeleccionada.find('.asistente-asignado').text('');
+                
+                // Add back to unassigned list
+                let newRow = $('<div class="asistente-row"></div>')
+                    .attr('data-id-nom', id_nom)
+                    .text(nombreAsistente)
+                    .on('click', function() {
+                        $('.asistente-row').removeClass('selected');
+                        $(this).addClass('selected');
+                        asistenteSeleccionado = $(this);
+                    });
+                
+                $('#lista-asistentes').append(newRow);
+                
+                camaSeleccionada.removeClass('selected');
+                camaSeleccionada = null;
+            }
+        });
+    });
+
+    function asignarCamaBD(id_cama, id_nom, callback) {
+        let url = '<?= ConfigGlobal::getWeb() ?>/<?= $url_update_cama ?>';
+        let parameters = {
+            id_activ: <?= $id_activ ?>,
+            id_nom: id_nom,
+            id_cama: id_cama,
+            <?= $oHashUpdateCama->getParamAjaxEnArray() ?>
+        };
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parameters,
+            dataType: 'json'
+        })
+        .done(function (respuesta) {
+            if (respuesta.success) {
+                callback(true);
+            } else {
+                alert(respuesta.mensaje || 'Error desconocido');
+                callback(false);
+            }
+        })
+        .fail(function (xhr, status, error) {
+            alert('Error en la conexión con el servidor: ' + error);
+            callback(false);
+        });
+    }
+});
+</script>

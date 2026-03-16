@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\asistentes\infrastructure\repositories;
+namespace Tests\integration\asistentes\infrastructure\persistence\postgresql;
 
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;

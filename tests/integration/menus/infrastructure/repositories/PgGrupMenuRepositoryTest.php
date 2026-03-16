@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\menus\infrastructure\repositories;
+namespace Tests\integration\menus\infrastructure\persistence\postgresql;
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\entity\GrupMenu;

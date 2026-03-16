@@ -4,10 +4,10 @@ use src\ubiscamas\domain\contracts\HabitacionRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\CamaRepositoryInterface;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
-use src\ubiscamas\infrastructure\repositories\PgHabitacionRepository;
-use src\ubiscamas\infrastructure\repositories\PgHabitacionDlRepository;
-use src\ubiscamas\infrastructure\repositories\PgCamaRepository;
-use src\ubiscamas\infrastructure\repositories\PgCamaDlRepository;
+use src\ubiscamas\infrastructure\persistence\postgresql\PgHabitacionRepository;
+use src\ubiscamas\infrastructure\persistence\postgresql\PgHabitacionDlRepository;
+use src\ubiscamas\infrastructure\persistence\postgresql\PgCamaRepository;
+use src\ubiscamas\infrastructure\persistence\postgresql\PgCamaDlRepository;
 use function DI\autowire;
 
 return [

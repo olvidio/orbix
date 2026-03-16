@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\tablonanuncios\infrastructure\repositories;
+namespace Tests\integration\tablonanuncios\infrastructure\persistence\postgresql;
 
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 use src\tablonanuncios\domain\entity\Anuncio;

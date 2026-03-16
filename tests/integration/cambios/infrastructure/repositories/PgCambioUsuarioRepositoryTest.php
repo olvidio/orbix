@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\cambios\infrastructure\repositories;
+namespace Tests\integration\cambios\infrastructure\persistence\postgresql;
 
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuario;

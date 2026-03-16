@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\cartaspresentacion\infrastructure\repositories;
+namespace Tests\integration\cartaspresentacion\infrastructure\persistence\postgresql;
 
 use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterface;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;

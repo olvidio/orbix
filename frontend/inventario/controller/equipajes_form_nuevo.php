@@ -15,7 +15,7 @@ $Qid_cdc = (int)filter_input(INPUT_POST, 'id_cdc');
 $Qnom_equip = (string)filter_input(INPUT_POST, 'nom_equip');
 
 // posibles tipos de documento
-$url_backend = '/src/inventario/infrastructure/controllers/equipajes_lista_activ_sel.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_sel.php';
 $a_campos_backend = [
     'id_cdc' => $Qid_cdc,
     'sel' => $a_sel

@@ -229,7 +229,7 @@ class DatosTablaRepo
     public function getAction_update()
     {
         if (!isset($this->action_update)) {
-            $this->action_update = "src/shared/infrastructure/controllers/tablaDB_update.php";
+            $this->action_update = "src/shared/infrastructure/ui/http/controllers/tablaDB_update.php";
         }
         return $this->action_update;
     }

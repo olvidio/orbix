@@ -3,75 +3,86 @@
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
-            url: 'src/ubiscamas/infrastructure/controllers/habitacion_update.php',
+            url: 'src/ubiscamas/infrastructure/ui/http/controllers/habitacion_update.php',
             type: 'POST',
             dataType: 'json'
         });
         request.done(function (json) {
-           if (json.success !== true) {
-               alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
-           } else {
-               <?= $oPosicion->js_atras(1); ?>
-           }
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(1) ?>
+            }
         });
     }
 
     fnjs_actualizar = function (formulario) {
-        var campo = '<input type="hidden" name="refresh" value=1>';
+        let campo = '<input type="hidden" name="refresh" value=1>';
         $(formulario).attr('action', 'frontend/ubiscamas/controller/habitacion_form.php');
         $(formulario).append(campo);
         fnjs_enviar_formulario(formulario, '#main');
     }
 
     fnjs_nueva_cama = function () {
-        var id_habitacion = $('#frm2 [name="id_habitacion"]').val();
-        var id_ubi = $('#frm2 [name="id_ubi"]').val();
+        let id_habitacion = $('#frm2 [name="id_habitacion"]').val();
         if (!id_habitacion) {
             alert('<?= _("Debe guardar primero la habitación antes de añadir camas") ?>');
             return;
         }
-        fnjs_update_div('#main', 'frontend/ubiscamas/controller/cama_form.php', {
-            mod: 'nuevo',
-            id_habitacion: id_habitacion,
-            id_ubi: id_ubi
-        });
+        let url = '<?= $url_cama_form ?>';
+        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + '<?= $oHashCamaForm->linkSinVal() ?>';
+        fnjs_update_div('#ficha2006', url + '?' + parametros);
+    }
+
+    fnjs_anadir_cama_dinamica = function () {
+        let rowIdx = $('#tabla_nuevas_camas tbody tr').length;
+        let html = `<tr>
+            <td><input type="text" name="new_camas_desc[${rowIdx}]" required></td>
+            <td><input type="checkbox" name="new_camas_larga[${rowIdx}]" value="1"></td>
+            <td><input type="checkbox" name="new_camas_vip[${rowIdx}]" value="1"></td>
+            <td><button type="button" onclick="$(this).closest('tr').remove()"><?= _('Quitar') ?></button></td>
+        </tr>`;
+        $('#tabla_nuevas_camas tbody').append(html);
+        $('#contenedor_nuevas_camas').show();
     }
 
     fnjs_editar_cama = function (id_cama) {
-        var id_ubi = $('#frm2 [name="id_ubi"]').val();
-        fnjs_update_div('#main', 'frontend/ubiscamas/controller/cama_form.php', {
-            id_cama: id_cama,
-            id_ubi: id_ubi
-        });
+        let id_habitacion = $('#frm2 [name="id_habitacion"]').val();
+        let url = '<?= $url_cama_form ?>';
+        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaForm->linkSinVal() ?>';
+        fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
 
     fnjs_eliminar_cama = function (id_cama) {
         if (confirm("<?= _("¿Seguro que desea borrar esta cama?") ?>")) {
-            $.ajax({
-                url: 'src/ubiscamas/infrastructure/controllers/cama_delete.php',
-                type: 'post',
-                data: {id_cama: id_cama}
-            })
-                .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\\n') {
-                        alert('<?= _("respuesta") ?>: ' + rta_txt);
-                    } else {
-                        fnjs_actualizar('#frm_actualizar');
-                    }
-                });
+            let url = '<?= $url_cama_delete ?>';
+            let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaDelete->linkSinVal() ?>';
+            let request = $.ajax({
+                data: parametros,
+                url: 'src/ubiscamas/infrastructure/ui/http/controllers/cama_delete.php',
+                type: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    fnjs_actualizar('#frm_actualizar');
+                }
+            });
         }
     }
-    fnjs_cancelar = function() {
+    fnjs_cancelar = function () {
         <?= $oPosicion->js_atras(1) ?>
     }
 </script>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrar_left_slide(1) ?>
 <form id='frm_actualizar'>
-    <?= $oHashActualizar->getCamposHtml(); ?>
+    <?= $oHashActualizar->getCamposHtml() ?>
 </form>
 <!-- ============================== Ficha ============================= -->
 <form id='frm2'>
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $oHash->getCamposHtml() ?>
 
     <h3><?= $id_habitacion ? _("Editar habitación") : _("Nueva habitación") ?></h3>
 
@@ -145,9 +156,8 @@
         </tr>
     </table>
 
+    <h4><?= _("Camas") ?></h4>
     <?php if ($id_habitacion): ?>
-        <br>
-        <h4><?= _("Camas de esta habitación") ?></h4>
         <?php if (!empty($a_camas)): ?>
             <table class="lista">
                 <thead>
@@ -181,20 +191,43 @@
         <?php endif; ?>
         <br>
         <button type="button" onclick="fnjs_nueva_cama()">
-            <?= _("Añadir nueva cama") ?>
+            <?= _("Añadir cama") ?>
+        </button>
+        <br><br>
+    <?php else: ?>
+        <button type="button" onclick="fnjs_anadir_cama_dinamica()">
+            <?= _("Añadir cama") ?>
         </button>
     <?php endif; ?>
 
-    <br><br>
+    <div id="contenedor_nuevas_camas" style="display: none;">
+        <table class="lista" id="tabla_nuevas_camas">
+            <thead>
+            <tr>
+                <th><?= _("Descripción") ?></th>
+                <th><?= _("Larga") ?></th>
+                <th><?= _("VIP") ?></th>
+                <th><?= _("Acciones") ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <br>
     <table class="botones">
         <tr class="botones">
             <td class="botones">
-                <input type="button" value="<?= _("Guardar") ?>" onclick="fnjs_guardar(this.form)">
+                <input type="button" value="<?= _("Guardar") ?> *" onclick="fnjs_guardar(this.form)">
             </td>
             <td class="botones">
                 <input type="button" value="<?= _("Cancelar") ?>"
-                       onclick="fnjs_cancelar()" >
+                       onclick="fnjs_cancelar()">
             </td>
         </tr>
     </table>
+    <p>
+        <small>* <?= _("Añade automáticamente el 'Número de camas' que se han puesto mas arriba.") ?></small>
+    </p>
 </form>

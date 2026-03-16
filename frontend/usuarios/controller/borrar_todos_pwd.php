@@ -10,7 +10,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 // Preparar hash para el formulario (necesario para POST al backend)
 $oHash = new Hash();
-$oHash->setUrl(Hash::link(ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/borrar_pwd.php'));
+$oHash->setUrl(Hash::link(ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php'));
 
 $a_campos = [
     'oHash' => $oHash,

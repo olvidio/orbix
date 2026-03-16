@@ -5,11 +5,11 @@ use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\menus\domain\contracts\TemplateMenuRepositoryInterface;
-use src\menus\infrastructure\repositories\PgGrupMenuRepository;
-use src\menus\infrastructure\repositories\PgGrupMenuRoleRepository;
-use src\menus\infrastructure\repositories\PgMenuDbRepository;
-use src\menus\infrastructure\repositories\PgMetaMenuRepository;
-use src\menus\infrastructure\repositories\PgTemplateMenuRepository;
+use src\menus\infrastructure\persistence\postgresql\PgGrupMenuRepository;
+use src\menus\infrastructure\persistence\postgresql\PgGrupMenuRoleRepository;
+use src\menus\infrastructure\persistence\postgresql\PgMenuDbRepository;
+use src\menus\infrastructure\persistence\postgresql\PgMetaMenuRepository;
+use src\menus\infrastructure\persistence\postgresql\PgTemplateMenuRepository;
 use function DI\autowire;
 
 return [

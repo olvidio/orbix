@@ -20,7 +20,7 @@
 131;1;frontend/usuarios/controller/usuario_lista.php;lista usuarios
 150;1;frontend/usuarios/controller/usuario_lista.php;lista usuarios 2
 165;1;public/ayuda/index.php;Ayuda
-142;1;src/menus/infrastructure/controllers/menus_generar_txt.php;pasa los menus a texto
+142;1;src/menus/infrastructure/ui/http/controllers/menus_generar_txt.php;pasa los menus a texto
 102;2;apps/devel/controller/apptables.php;Manage tablas de Apps
 192;2;apps/devel/controller/db_cambiar_nombre_que.php;cambiar nombre dl
 54;2;apps/devel/controller/db_mover_que.php;DB mover tabla

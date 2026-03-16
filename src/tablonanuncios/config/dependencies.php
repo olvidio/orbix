@@ -1,7 +1,7 @@
 <?php
 
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
-use src\tablonanuncios\infrastructure\repositories\PgAnuncioRepository;
+use src\tablonanuncios\infrastructure\persistence\postgresql\PgAnuncioRepository;
 use function DI\autowire;
 
 return [

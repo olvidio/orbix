@@ -11,7 +11,7 @@ require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$url_backend = '/src/configuracion/infrastructure/controllers/parametros_lista.php';
+$url_backend = '/src/configuracion/infrastructure/ui/http/controllers/parametros_lista.php';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 if (!empty($data['error'])) {
@@ -21,7 +21,7 @@ if (!empty($data['error'])) {
 $a_campos = $data;
 
 // añadir url update
-$url = 'src/configuracion/infrastructure/controllers/parametros_update.php';
+$url = 'src/configuracion/infrastructure/ui/http/controllers/parametros_update.php';
 $a_campos['url'] = $url;
 
 // añado los hash de cada campo

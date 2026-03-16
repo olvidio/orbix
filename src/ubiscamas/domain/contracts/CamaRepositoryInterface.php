@@ -3,6 +3,7 @@
 namespace src\ubiscamas\domain\contracts;
 
 use src\ubiscamas\domain\entity\Cama;
+use src\ubiscamas\domain\value_objects\HabitacionId;
 
 /**
  * Interfaz de la clase Cama y su Repositorio
@@ -32,10 +33,8 @@ interface CamaRepositoryInterface
     /**
      * devuelve una colección (array) de objetos de tipo Cama para una habitación específica
      *
-     * @param int $id_habitacion
-     * @return array|false Una colección de objetos de tipo Cama
      */
-    public function getCamasByHabitacion(int $id_habitacion): array|false;
+    public function getCamasByHabitacion(HabitacionId $id_habitacion): array|false;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

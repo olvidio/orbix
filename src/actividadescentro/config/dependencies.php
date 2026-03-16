@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
-use src\actividadescentro\infrastructure\repositories\PgCentroEncargadoRepository;
+use src\actividadescentro\infrastructure\persistence\postgresql\PgCentroEncargadoRepository;
 use function DI\autowire;
 
 return [

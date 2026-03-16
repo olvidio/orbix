@@ -19,7 +19,7 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
 $Qfin = (string)filter_input(INPUT_POST, 'fin');
 
-$url_backend = '/src/inventario/infrastructure/controllers/equipajes_lista_activ_periodo.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php';
 $a_campos_backend = [
     'periodo' => $Qperiodo,
     'year' => $Qyear,

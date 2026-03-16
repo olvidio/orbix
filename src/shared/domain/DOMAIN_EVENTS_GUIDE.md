@@ -179,7 +179,7 @@ class Asistente extends Entity {
 ### 2. **Repositorio que registra eventos**
 
 ```php
-namespace src\asistentes\infrastructure\repositories;
+namespace src\asistentes\infrastructure\persistence\postgresql;
 
 use src\asistentes\domain\entity\Asistente;
 use src\shared\domain\contracts\UnitOfWorkInterface;
@@ -526,7 +526,7 @@ Ver `src/shared/domain/UNIT_OF_WORK_GUIDE.md` para más detalles.
 - **EventBus**: `src/shared/infrastructure/InMemoryEventBus.php`
 - **UnitOfWork**: `src/shared/infrastructure/PdoUnitOfWork.php`
 - **Trait helper**: `src/shared/traits/DispatchesDomainEvents.php`
-- **Ejemplo completo**: `src/asistentes/infrastructure/repositories/PgAsistenteRepository.php`
+- **Ejemplo completo**: `src/asistentes/infrastructure/persistence/postgresql/PgAsistenteRepository.php`
 - **Guía UnitOfWork**: `src/shared/domain/UNIT_OF_WORK_GUIDE.md`
 
 ---

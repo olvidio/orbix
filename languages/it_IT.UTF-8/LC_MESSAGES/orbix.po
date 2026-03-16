@@ -30,13 +30,13 @@ msgstr ""
 #: apps/procesos/controller/procesos_ajax.php:348 apps/ubis/controller/calendario_periodos_ajax.php:300
 #: apps/ubis/controller/direcciones_quitar.php:53 apps/ubis/controller/teleco_update.php:56 apps/ubis/controller/ubis_update.php:35
 #: apps/zonassacd/controller/zona_sacd_ajax.php:205 apps/zonassacd/controller/zona_sacd_ajax.php:250
-#: src/inventario/infrastructure/controllers/equipajes_del_doc.php:27
-#: src/inventario/infrastructure/controllers/equipajes_eliminar.php:25
-#: src/inventario/infrastructure/controllers/equipajes_eliminar_grupo.php:29 src/menus/application/MenuEliminar.php:19
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_del_doc.php:27
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_eliminar.php:25
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_eliminar_grupo.php:29 src/menus/application/MenuEliminar.php:19
 #: src/usuarios/application/usuarioEliminar.php:20 src/usuarios/domain/GrupoJefeZona.php:66
-#: src/usuarios/infrastructure/controllers/grupo_eliminar.php:26 src/usuarios/infrastructure/controllers/perm_activ_eliminar.php:28
-#: src/usuarios/infrastructure/controllers/perm_menu_eliminar.php:27 src/usuarios/infrastructure/controllers/role_eliminar.php:26
-#: src/usuarios/infrastructure/controllers/role_grupmenu_del.php:26 src/usuarios/infrastructure/controllers/usuario_grupo_del.php:27
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_eliminar.php:26 src/usuarios/infrastructure/ui/http/controllers/perm_activ_eliminar.php:28
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_eliminar.php:27 src/usuarios/infrastructure/ui/http/controllers/role_eliminar.php:26
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:26 src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del.php:27
 msgid "hay un error, no se ha eliminado"
 msgstr "c'è un errore, non è stato rimosso"
 
@@ -89,34 +89,34 @@ msgstr "questa tassa esiste già per questa attività"
 #: apps/ubis/controller/ubis_update.php:159 apps/ubis/model/entity/GestorTarifaUbi.php:64
 #: apps/zonassacd/controller/zona_sacd_ajax.php:218 apps/zonassacd/controller/zona_sacd_ajax.php:227
 #: apps/zonassacd/controller/zona_sacd_ajax.php:240 apps/zonassacd/controller/zona_sacd_ajax.php:264
-#: src/inventario/infrastructure/controllers/doc_asignar_ctr_guardar.php:63
-#: src/inventario/infrastructure/controllers/doc_asignar_dlb_guardar.php:64
-#: src/inventario/infrastructure/controllers/documentos_guardar.php:84
-#: src/inventario/infrastructure/controllers/equipajes_add_doc.php:30
-#: src/inventario/infrastructure/controllers/equipajes_nuevo_guardar.php:49
-#: src/inventario/infrastructure/controllers/equipajes_texto_listado_guardar.php:28
-#: src/inventario/infrastructure/controllers/equipajes_texto_listado_guardar.php:36
-#: src/inventario/infrastructure/controllers/equipajes_texto_listado_guardar.php:44
-#: src/inventario/infrastructure/controllers/equipajes_texto_listado_guardar.php:59
-#: src/inventario/infrastructure/controllers/equipajes_update_grupo.php:41
-#: src/inventario/infrastructure/controllers/equipajes_update_grupo.php:57
-#: src/inventario/infrastructure/controllers/traslado_doc_guardar.php:30
-#: src/inventario/infrastructure/controllers/traslado_doc_guardar.php:39 src/menus/application/MenuCopiar.php:41
+#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_ctr_guardar.php:63
+#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_dlb_guardar.php:64
+#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:84
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_add_doc.php:30
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_nuevo_guardar.php:49
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:28
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:36
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:44
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_texto_listado_guardar.php:59
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_update_grupo.php:41
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_update_grupo.php:57
+#: src/inventario/infrastructure/ui/http/controllers/traslado_doc_guardar.php:30
+#: src/inventario/infrastructure/ui/http/controllers/traslado_doc_guardar.php:39 src/menus/application/MenuCopiar.php:41
 #: src/menus/application/MenuGuardar.php:63 src/menus/application/MenuMover.php:21 src/usuarios/domain/GrupoJefeZona.php:51
-#: src/usuarios/infrastructure/controllers/borrar_pwd.php:52 src/usuarios/infrastructure/controllers/grupo_guardar.php:37
-#: src/usuarios/infrastructure/controllers/perm_activ_guardar.php:88 src/usuarios/infrastructure/controllers/perm_menu_guardar.php:41
-#: src/usuarios/infrastructure/controllers/preferencias_guardar.php:50
-#: src/usuarios/infrastructure/controllers/preferencias_guardar.php:64
-#: src/usuarios/infrastructure/controllers/preferencias_guardar.php:84
-#: src/usuarios/infrastructure/controllers/preferencias_guardar.php:100
-#: src/usuarios/infrastructure/controllers/preferencias_guardar.php:114
-#: src/usuarios/infrastructure/controllers/preferencias_guardar.php:128
-#: src/usuarios/infrastructure/controllers/preferencias_guardar.php:143
-#: src/usuarios/infrastructure/controllers/preferencias_guardar.php:160
-#: src/usuarios/infrastructure/controllers/role_grupmenu_add.php:39 src/usuarios/infrastructure/controllers/role_guardar.php:47
-#: src/usuarios/infrastructure/controllers/usuario_grupo_add.php:27 src/usuarios/infrastructure/controllers/usuario_guardar.php:92
-#: src/usuarios/infrastructure/controllers/usuario_guardar_mail.php:28
-#: src/usuarios/infrastructure/controllers/usuario_guardar_pwd.php:41
+#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:52 src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:37
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:88 src/usuarios/infrastructure/ui/http/controllers/perm_menu_guardar.php:41
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:50
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:64
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:84
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:100
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:114
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:128
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:143
+#: src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php:160
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:39 src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:47
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_add.php:27 src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:92
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_mail.php:28
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php:41
 msgid "hay un error, no se ha guardado"
 msgstr "c'è un errore, non è stato salvato"
 
@@ -583,7 +583,7 @@ msgstr "dl org"
 #: apps/ubis/controller/home_ubis.php:102 apps/ubis/controller/home_ubis.php:108 apps/ubis/controller/list_ctr.php:257
 #: apps/ubis/controller/lista_ctrs.php:47 apps/zonassacd/controller/zona_ctr_ajax.php:82
 #: frontend/inventario/controller/doc_asignar_ctr.php:46 frontend/inventario/controller/doc_asignar_dlb.php:46
-#: frontend/inventario/controller/doc_de_ctr.php:47 src/inventario/infrastructure/controllers/lista_docs_no_asignados_por_tipo.php:48
+#: frontend/inventario/controller/doc_de_ctr.php:47 src/inventario/infrastructure/ui/http/controllers/lista_docs_no_asignados_por_tipo.php:48
 #: apps/actividadestudios/view/ca_posibles_que.phtml:67 apps/actividadestudios/view/ca_posibles_que.phtml:84
 #: apps/personas/view/personas_que.phtml:44 apps/personas/view/traslado_form.phtml:81 apps/planning/view/planning_ctr_que.phtml:39
 #: apps/planning/view/planning_persona_que.phtml:52 apps/ubis/view/ubis_buscar.phtml:199 frontend/usuarios/view/usuario_form.phtml:40
@@ -597,7 +597,7 @@ msgid "son %s actividades a mostrar. ¿Seguro que quiere continuar?."
 msgstr "sono %s attività da mostrare. Sei sicuro di voler continuare?"
 
 #: apps/actividades/controller/actividad_select.php:359 apps/actividades/controller/lista_actividades_sg.php:215
-#: src/menus/infrastructure/controllers/menus_importar_de_ficheros_a_ref.php:42
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:42
 msgid "continuar"
 msgstr "continuare"
 
@@ -950,9 +950,9 @@ msgstr "id_tipo_activ"
 #: apps/procesos/controller/procesos_ajax.php:278 apps/ubis/controller/list_ctr.php:251 apps/ubis/controller/teleco_tabla.php:95
 #: apps/ubis/controller/ubis_tabla.php:455 apps/zonassacd/controller/zona_sacd_ajax.php:123
 #: frontend/cambios/controller/usuario_form_avisos.php:46 frontend/menus/controller/grupmenu_lista.php:25
-#: src/certificados/domain/CertificadoEmitidoSelect.php:65 src/inventario/infrastructure/controllers/documentos_form.php:27
+#: src/certificados/domain/CertificadoEmitidoSelect.php:65 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:27
 #: src/shared/domain/DatosTablaRepo.php:113 src/usuarios/application/rolesLista.php:51
-#: src/usuarios/infrastructure/controllers/perm_activ_lista.php:64 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:49
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:64 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:49
 #: frontend/menus/view/traducir_menu.phtml:82
 msgid "modificar"
 msgstr "cambiamento"
@@ -965,7 +965,7 @@ msgstr "cambiamento"
 #: apps/notas/controller/notas_ajax.php:146 apps/procesos/controller/actividad_proceso_ajax.php:90
 #: apps/ubis/controller/calendario_periodos_ajax.php:79 apps/ubis/controller/calendario_periodos_ajax.php:125
 #: apps/ubis/controller/centros_ajax.php:35 apps/ubis/controller/centros_ajax.php:67 apps/ubis/controller/centros_ajax.php:97
-#: apps/ubis/controller/centros_ajax.php:131 src/inventario/infrastructure/controllers/documentos_form.php:48
+#: apps/ubis/controller/centros_ajax.php:131 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:48
 #: apps/actividadestudios/view/form_1303.phtml:126 apps/actividadestudios/view/form_3005.phtml:132
 #: apps/actividadplazas/view/resumen_plazas.phtml:140 apps/asistentes/view/form_1301.phtml:109 apps/asistentes/view/form_mover.phtml:23
 #: apps/notas/view/form_1011.phtml:346 apps/personas/view/stgr_cambio.phtml:14 frontend/inventario/view/cabecera_pie_txt.phtml:58
@@ -983,7 +983,7 @@ msgstr "salvare"
 #: apps/casas/controller/casa_ajax.php:108 apps/casas/controller/casa_ec_ajax.php:157 apps/notas/controller/notas_ajax.php:147
 #: apps/ubis/controller/calendario_periodos_ajax.php:80 apps/ubis/controller/calendario_periodos_ajax.php:127
 #: apps/ubis/controller/centros_ajax.php:36 apps/ubis/controller/centros_ajax.php:68 apps/ubis/controller/centros_ajax.php:98
-#: apps/ubis/controller/centros_ajax.php:132 src/inventario/infrastructure/controllers/documentos_form.php:49
+#: apps/ubis/controller/centros_ajax.php:132 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:49
 #: frontend/inventario/view/equipajes_form_add.phtml:9 frontend/inventario/view/equipajes_form_nuevo.phtml:8
 #: frontend/inventario/view/equipajes_form_texto_listado.phtml:8
 msgid "cancel"
@@ -999,7 +999,7 @@ msgstr "annullare"
 #: apps/ubis/controller/teleco_tabla.php:96 apps/ubis/controller/ubis_tabla.php:458
 #: frontend/cambios/controller/usuario_form_avisos.php:47 src/certificados/domain/CertificadoEmitidoSelect.php:64
 #: src/certificados/domain/Select1010.php:72 src/shared/domain/DatosTablaRepo.php:114
-#: src/usuarios/infrastructure/controllers/perm_activ_lista.php:65 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:50
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:65 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:50
 #: apps/dossiers/view/perm_dossier_pres.phtml:93 apps/personas/view/persona_de_paso.phtml:166 apps/personas/view/persona_form.phtml:190
 #: apps/personas/view/persona_sss_form.phtml:183 apps/ubis/view/cdc_form.phtml:114 apps/ubis/view/ctrdl_form.phtml:139
 #: apps/ubis/view/ctrex_form.phtml:107 frontend/menus/view/menus_get.phtml:67
@@ -2021,7 +2021,7 @@ msgid "€"
 msgstr "€"
 
 #: apps/actividadtarifas/controller/tarifa_ajax.php:114 apps/actividadtarifas/controller/tarifa_ajax.php:272
-#: apps/encargossacd/controller/encargo_select.php:61 src/usuarios/infrastructure/controllers/usuario_grupo_lst.php:45
+#: apps/encargossacd/controller/encargo_select.php:61 src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:45
 msgid "sección"
 msgstr "sezione"
 
@@ -2273,7 +2273,7 @@ msgstr "sì"
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:347
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:435 apps/core/DatosTabla.php:183 apps/notas/model/Select1011.php:182
 #: apps/ubis/controller/centros_ajax.php:263 apps/ubis/controller/teleco_tabla.php:133 apps/zonassacd/controller/zona_sacd_ajax.php:171
-#: src/inventario/infrastructure/controllers/documentos_form.php:33 src/shared/domain/DatosTablaRepo.php:197
+#: src/inventario/infrastructure/ui/http/controllers/documentos_form.php:33 src/shared/domain/DatosTablaRepo.php:197
 #: apps/actividadestudios/view/selectUnCa.phtml:18 apps/actividadestudios/view/selectUnCa.phtml:55
 #: apps/personas/view/personas_que.phtml:15 apps/planning/view/planning_casa_que.phtml:56 apps/planning/view/planning_ctr_que.phtml:54
 #: apps/profesores/view/ficha_profesor_stgr.phtml:132 apps/profesores/view/ficha_profesor_stgr.phtml:320
@@ -2754,7 +2754,7 @@ msgstr "avvisare se il valore"
 #: apps/encargossacd/model/GestorPropuestas.php:547 apps/encargossacd/model/GestorPropuestas.php:577
 #: apps/encargossacd/model/GestorPropuestas.php:604 apps/encargossacd/model/GestorPropuestas.php:634
 #: apps/ubis/controller/calendario_periodos_ajax.php:207
-#: src/inventario/infrastructure/controllers/lista_equipajes_posibles_maletas.php:46 apps/ubis/view/teleco_tabla.phtml:64
+#: src/inventario/infrastructure/ui/http/controllers/lista_equipajes_posibles_maletas.php:46 apps/ubis/view/teleco_tabla.phtml:64
 #: frontend/menus/view/grupmenu_lista.phtml:67 frontend/menus/view/menus_get.phtml:71 frontend/menus/view/menus_get_lista.phtml:65
 #: frontend/shared/view/tablaDB_lista_ver.phtml:19
 msgid "nuevo"
@@ -2805,12 +2805,12 @@ msgstr "Devi prima scegliere un oggetto su cui guardare le modifiche"
 
 #: apps/cambios/controller/usuario_avisos_pref_ajax.php:440 apps/cambios/controller/usuario_avisos_pref_ajax.php:482
 #: apps/cambios/model/Avisos.php:150 apps/cambios/model/Avisos.php:188 apps/casas/controller/prevision_asistentes_ajax.php:31
-#: src/usuarios/infrastructure/controllers/usuario_2fa_update.php:55
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:55
 msgid "Hay un error, no se ha guardado"
 msgstr "C'è un errore, non è stato salvato"
 
 #: apps/cambios/controller/usuario_form_avisos.php:69 apps/ubis/controller/list_ctr.php:341
-#: src/usuarios/infrastructure/controllers/perm_activ_lista.php:94 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:70
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:94 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:70
 msgid "otras"
 msgstr "altro"
 
@@ -2969,7 +2969,7 @@ msgid "id_status"
 msgstr "id_status"
 
 #: apps/cambios/model/entity/Cambio.php:1271 apps/cambios/model/entity/CambioUsuarioObjetoPref.php:790
-#: frontend/cambios/controller/usuario_form_avisos.php:34 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:37
+#: frontend/cambios/controller/usuario_form_avisos.php:34 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:37
 msgid "objeto"
 msgstr "oggetto"
 
@@ -3075,7 +3075,7 @@ msgstr "operatore"
 
 #: apps/cambios/model/entity/CambioUsuarioPropiedadPref.php:632 apps/config/model/entity/ConfigSchema.php:367
 #: apps/pasarela/model/entity/PasarelaConfig.php:397 frontend/cambios/controller/usuario_form_avisos.php:43
-#: src/inventario/infrastructure/controllers/documentos_form.php:27 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:46
+#: src/inventario/infrastructure/ui/http/controllers/documentos_form.php:27 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:46
 msgid "valor"
 msgstr "Di valore"
 
@@ -3111,14 +3111,14 @@ msgstr "ANNULLATO"
 
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:350
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:438 apps/ubis/controller/centros_ajax.php:263
-#: apps/zonassacd/controller/zona_sacd_ajax.php:171 src/inventario/infrastructure/controllers/documentos_form.php:33
+#: apps/zonassacd/controller/zona_sacd_ajax.php:171 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:33
 msgid "si"
 msgstr "Sì"
 
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:362
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:450 frontend/inventario/controller/equipajes_movimientos.php:51
-#: src/usuarios/infrastructure/controllers/perm_menu_lista.php:24 src/usuarios/infrastructure/controllers/role_info.php:69
-#: src/usuarios/infrastructure/controllers/usuario_grupo_del_lst.php:58
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_lista.php:24 src/usuarios/infrastructure/ui/http/controllers/role_info.php:69
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del_lst.php:58
 msgid "quitar"
 msgstr "rimuovere"
 
@@ -3353,7 +3353,7 @@ msgstr "Periodo"
 #: apps/casas/controller/casa_ajax.php:45 apps/ubis/controller/calendario_periodos_ajax.php:73
 #: apps/ubis/controller/calendario_periodos_ajax.php:120 apps/ubis/controller/calendario_periodos_ajax.php:265
 #: apps/ubis/controller/centros_ajax.php:30 src/inventario/domain/ListaDocsGrupo.php:57
-#: src/inventario/infrastructure/controllers/equipajes_movimientos.php:106
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_movimientos.php:106
 msgid "de"
 msgstr "da"
 
@@ -3422,8 +3422,8 @@ msgid "totales"
 msgstr "totale"
 
 #: apps/casas/controller/casa_ajax.php:368 apps/personas/model/entity/UltimaAsistencia.php:549
-#: frontend/cambios/controller/usuario_form_avisos.php:36 src/usuarios/infrastructure/controllers/perm_activ_lista.php:56
-#: src/usuarios/infrastructure/controllers/usuario_avisos_form.php:39
+#: frontend/cambios/controller/usuario_form_avisos.php:36 src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:56
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:39
 msgid "tipo de actividad"
 msgstr "tipo di attività"
 
@@ -3636,7 +3636,7 @@ msgid "período del listado del año próximo"
 msgstr "periodo di quotazione del prossimo anno"
 
 #: apps/casas/controller/prevision_asistentes.php:167 frontend/usuarios/controller/preferencias.php:45
-#: src/usuarios/infrastructure/controllers/usuario_preferencias.php:45
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php:45
 msgid "oficina"
 msgstr "ufficio"
 
@@ -3940,7 +3940,7 @@ msgstr "il campo \\ \" %1$s \" non può essere vuoto"
 msgid "cancelar"
 msgstr "annullare"
 
-#: apps/core/mod_tabla_update.php:45 src/shared/infrastructure/controllers/tablaDB_update.php:53
+#: apps/core/mod_tabla_update.php:45 src/shared/infrastructure/ui/http/controllers/tablaDB_update.php:53
 msgid "no se ha ejecutado la acción"
 msgstr "l'azione non è stata eseguita"
 
@@ -7952,7 +7952,7 @@ msgid "nombre zona"
 msgstr "nome della zona"
 
 #: apps/zonassacd/model/entity/Zona.php:508 src/usuarios/application/GruposLista.php:28
-#: src/usuarios/infrastructure/controllers/usuario_grupo_lst.php:44 frontend/menus/view/menus_que.phtml:19
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:44 frontend/menus/view/menus_que.phtml:19
 #: frontend/usuarios/view/grupo_form.phtml:23
 msgid "grupo"
 msgstr "gruppo"
@@ -7965,32 +7965,32 @@ msgstr "capo di zona"
 msgid "nombre del grupo"
 msgstr "nome del gruppo"
 
-#: frontend/cambios/controller/usuario_form_avisos.php:35 src/usuarios/infrastructure/controllers/perm_activ_lista.php:55
-#: src/usuarios/infrastructure/controllers/usuario_avisos_form.php:38
+#: frontend/cambios/controller/usuario_form_avisos.php:35 src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:55
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:38
 msgid "dl propia"
 msgstr "dl proprio"
 
-#: frontend/cambios/controller/usuario_form_avisos.php:37 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:40
+#: frontend/cambios/controller/usuario_form_avisos.php:37 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:40
 msgid "fase ref."
 msgstr "fase di riferimento"
 
-#: frontend/cambios/controller/usuario_form_avisos.php:38 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:41
+#: frontend/cambios/controller/usuario_form_avisos.php:38 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:41
 msgid "off"
 msgstr "spento"
 
-#: frontend/cambios/controller/usuario_form_avisos.php:39 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:42
+#: frontend/cambios/controller/usuario_form_avisos.php:39 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:42
 msgid "on"
 msgstr "SU"
 
-#: frontend/cambios/controller/usuario_form_avisos.php:40 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:43
+#: frontend/cambios/controller/usuario_form_avisos.php:40 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:43
 msgid "outdate"
 msgstr "obsoleto"
 
-#: frontend/cambios/controller/usuario_form_avisos.php:41 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:44
+#: frontend/cambios/controller/usuario_form_avisos.php:41 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:44
 msgid "tipo de aviso"
 msgstr "tipo di avviso"
 
-#: frontend/cambios/controller/usuario_form_avisos.php:42 src/usuarios/infrastructure/controllers/usuario_avisos_form.php:45
+#: frontend/cambios/controller/usuario_form_avisos.php:42 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:45
 msgid "propiedades"
 msgstr "proprietà"
 
@@ -8044,14 +8044,14 @@ msgstr "segna tutto"
 msgid "desmarcar todos"
 msgstr "deseleziona tutto"
 
-#: frontend/inventario/controller/doc_de_dlb.php:45 src/inventario/infrastructure/controllers/lista_de_ctr_con_docs.php:26
-#: src/inventario/infrastructure/controllers/lista_docs_de_dlb.php:26
+#: frontend/inventario/controller/doc_de_dlb.php:45 src/inventario/infrastructure/ui/http/controllers/lista_de_ctr_con_docs.php:26
+#: src/inventario/infrastructure/ui/http/controllers/lista_docs_de_dlb.php:26
 msgid "Para imprimir inventario"
 msgstr "Per stampare l'inventario"
 
 #: frontend/inventario/controller/doc_de_dlb.php:49 frontend/inventario/controller/docs_con_observaciones.php:27
 #: frontend/inventario/controller/docs_en_busqueda.php:27 frontend/inventario/controller/docs_perdidos.php:27
-#: src/inventario/infrastructure/controllers/lista_docs_asignados_por_tipo.php:49
+#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignados_por_tipo.php:49
 msgid "centro - lugar"
 msgstr "centro - luogo"
 
@@ -8087,7 +8087,7 @@ msgid "Conforme (firma)"
 msgstr "Accordato (firma)"
 
 #: frontend/inventario/controller/docs_con_observaciones.php:29 frontend/inventario/controller/docs_perdidos.php:29
-#: src/inventario/infrastructure/controllers/lista_docs_asignados_por_tipo.php:49 apps/ubis/view/teleco_form.phtml:60
+#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignados_por_tipo.php:49 apps/ubis/view/teleco_form.phtml:60
 msgid "número"
 msgstr "numero"
 
@@ -8166,8 +8166,8 @@ msgstr "documenti dentro"
 msgid "B) Documentación que envía la Delegación."
 msgstr "B) Documentazione inviata dalla Delegazione."
 
-#: frontend/inventario/controller/equipajes_movimientos.php:47 src/usuarios/infrastructure/controllers/role_grupmenu_info.php:52
-#: src/usuarios/infrastructure/controllers/usuario_grupo_lst.php:76 frontend/inventario/view/equipajes_form_add.phtml:8
+#: frontend/inventario/controller/equipajes_movimientos.php:47 src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php:52
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:76 frontend/inventario/view/equipajes_form_add.phtml:8
 msgid "añadir"
 msgstr "aggiungere"
 
@@ -8214,11 +8214,11 @@ msgstr "È necessario inserire un nome utente"
 msgid "guardar datos grupo"
 msgstr "salva i dati di gruppo"
 
-#: frontend/usuarios/controller/preferencias.php:44 src/usuarios/infrastructure/controllers/usuario_preferencias.php:44
+#: frontend/usuarios/controller/preferencias.php:44 src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php:44
 msgid "home"
 msgstr "casa"
 
-#: frontend/usuarios/controller/preferencias.php:50 src/usuarios/infrastructure/controllers/usuario_preferencias.php:50
+#: frontend/usuarios/controller/preferencias.php:50 src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php:50
 msgid "avisos cambios actividades"
 msgstr "avvisi modifiche attività"
 
@@ -8266,7 +8266,7 @@ msgstr ""
 "nuovamente."
 
 #: src/certificados/domain/CertificadoEmitidoDelete.php:50 src/certificados/domain/CertificadoRecibidoDelete.php:40
-#: src/certificados/infrastructure/repositories/PgCertificadoRecibidoRepository.php:276
+#: src/certificados/infrastructure/persistence/postgresql/PgCertificadoRecibidoRepository.php:276
 msgid "No se encuentra el certificado"
 msgstr "Certificato non trovato"
 
@@ -8333,25 +8333,25 @@ msgstr "ricevuto"
 msgid "No tiene permisos para eliminar"
 msgstr "Non hai le autorizzazioni per eliminare"
 
-#: src/certificados/infrastructure/controllers/certificado_emitido_imprimir_mpdf_datos.php:73
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php:73
 #, php-format
 msgid "No existe un fichero con las traducciones para %s"
 msgstr "Non esiste alcun file con traduzioni per %s"
 
-#: src/certificados/infrastructure/controllers/certificado_emitido_imprimir_mpdf_datos.php:134
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_mpdf_datos.php:134
 msgid "Debe definir la región del stgr a la que pertenece"
 msgstr "È necessario definire la regione stgr a cui appartiene"
 
-#: src/certificados/infrastructure/controllers/certificado_emitido_lista_datos.php:32
+#: src/certificados/infrastructure/ui/http/controllers/certificado_emitido_lista_datos.php:32
 msgid "No se encuentra la tabla. ¿Seguro que es una región del stgr?"
 msgstr "Non riesco a trovare la tabella: sei sicuro che si tratti di una regione stgr?"
 
-#: src/certificados/infrastructure/repositories/PgCertificadoEmitidoRepository.php:280
+#: src/certificados/infrastructure/persistence/postgresql/PgCertificadoEmitidoRepository.php:280
 #, php-format
 msgid "No se ha encontrado el item %s en la base de datos"
 msgstr "Elemento %s non trovato nel database"
 
-#: src/certificados/infrastructure/repositories/PgCertificadoRecibidoRepository.php:275
+#: src/certificados/infrastructure/persistence/postgresql/PgCertificadoRecibidoRepository.php:275
 #, php-format
 msgid "Error en la linea %s de %s"
 msgstr "Errore sulla riga %s di %s"
@@ -8401,9 +8401,9 @@ msgstr "cerca in 'dettaglio'"
 msgid "ubis"
 msgstr "UBIS"
 
-#: src/inventario/domain/ListaDocsGrupo.php:62 src/inventario/infrastructure/controllers/equipajes_doc_casa.php:77
-#: src/inventario/infrastructure/controllers/equipajes_movimientos.php:69
-#: src/inventario/infrastructure/controllers/equipajes_movimientos.php:102
+#: src/inventario/domain/ListaDocsGrupo.php:62 src/inventario/infrastructure/ui/http/controllers/equipajes_doc_casa.php:77
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_movimientos.php:69
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_movimientos.php:102
 msgid "ejemplares de"
 msgstr "copie di"
 
@@ -8423,11 +8423,11 @@ msgstr "tipo documento"
 msgid "centro/casa"
 msgstr "centro/casa"
 
-#: src/inventario/domain/entity/Documento.php:634 src/inventario/infrastructure/controllers/documentos_form.php:29
+#: src/inventario/domain/entity/Documento.php:634 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:29
 msgid "fecha recibido"
 msgstr "data ricevuta"
 
-#: src/inventario/domain/entity/Documento.php:645 src/inventario/infrastructure/controllers/documentos_form.php:31
+#: src/inventario/domain/entity/Documento.php:645 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:31
 msgid "fecha asignado"
 msgstr "data assegnata"
 
@@ -8447,11 +8447,11 @@ msgstr "nella ricerca"
 msgid "perdido"
 msgstr "perso"
 
-#: src/inventario/domain/entity/Documento.php:724 src/inventario/infrastructure/controllers/documentos_form.php:33
+#: src/inventario/domain/entity/Documento.php:724 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:33
 msgid "eliminado"
 msgstr "RIMOSSO"
 
-#: src/inventario/domain/entity/Documento.php:735 src/inventario/infrastructure/controllers/documentos_form.php:35
+#: src/inventario/domain/entity/Documento.php:735 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:35
 msgid "fecha eliminado"
 msgstr "data rimossa"
 
@@ -8503,45 +8503,45 @@ msgstr "numerato"
 msgid "nombre del centro/casa"
 msgstr "nome del centro/casa"
 
-#: src/inventario/infrastructure/controllers/doc_asignar_dlb_guardar.php:43
+#: src/inventario/infrastructure/ui/http/controllers/doc_asignar_dlb_guardar.php:43
 msgid "No se encuentra el documento"
 msgstr "Documento non trovato"
 
-#: src/inventario/infrastructure/controllers/documentos_form.php:27
+#: src/inventario/infrastructure/ui/http/controllers/documentos_form.php:27
 msgid "campo"
 msgstr "campo"
 
-#: src/inventario/infrastructure/controllers/documentos_form.php:37
+#: src/inventario/infrastructure/ui/http/controllers/documentos_form.php:37
 msgid "número inicial"
 msgstr "numero iniziale"
 
-#: src/inventario/infrastructure/controllers/documentos_form.php:39
+#: src/inventario/infrastructure/ui/http/controllers/documentos_form.php:39
 msgid "número final"
 msgstr "numero finale"
 
-#: src/inventario/infrastructure/controllers/documentos_form.php:43
+#: src/inventario/infrastructure/ui/http/controllers/documentos_form.php:43
 msgid "campos a modificar en los documentos seleccionados"
 msgstr "campi da modificare nei documenti selezionati"
 
-#: src/inventario/infrastructure/controllers/documentos_guardar.php:89
+#: src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php:89
 msgid "No ha seleccionado ningún documento"
 msgstr "Non hai selezionato alcun documento"
 
-#: src/inventario/infrastructure/controllers/equipajes_lista_activ_equipaje.php:33
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_equipaje.php:33
 #, php-format
 msgid "OJO! No se encuentra la actividad con id: %s"
 msgstr "OCCHIO!Attività con ID: %s non trovata"
 
-#: src/inventario/infrastructure/controllers/equipajes_lista_activ_periodo.php:30
+#: src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_periodo.php:30
 msgid "debe seleccionar un lugar"
 msgstr "devi selezionare un luogo"
 
-#: src/inventario/infrastructure/controllers/inventario_ctr.php:86 src/inventario/infrastructure/controllers/inventario_dlb.php:85
-#: src/inventario/infrastructure/controllers/lista_docs_de_ctr.php:87
+#: src/inventario/infrastructure/ui/http/controllers/inventario_ctr.php:86 src/inventario/infrastructure/ui/http/controllers/inventario_dlb.php:85
+#: src/inventario/infrastructure/ui/http/controllers/lista_docs_de_ctr.php:87
 msgid "Actual"
 msgstr "Attuale"
 
-#: src/inventario/infrastructure/controllers/lista_docs_asignar_ctr.php:50
+#: src/inventario/infrastructure/ui/http/controllers/lista_docs_asignar_ctr.php:50
 msgid "Ya es el número: último + 1"
 msgstr "Già il numero: ultimo + 1"
 
@@ -8594,37 +8594,37 @@ msgstr "Menù Grub"
 msgid "nombre plantilla menú"
 msgstr "nome del modello di menu"
 
-#: src/menus/infrastructure/controllers/menu_copiar.php:20 src/menus/infrastructure/controllers/menu_mover.php:20
+#: src/menus/infrastructure/ui/http/controllers/menu_copiar.php:20 src/menus/infrastructure/ui/http/controllers/menu_mover.php:20
 msgid "hay un error. Debe indicar el destino"
 msgstr "c'è un errore.È necessario indicare la destinazione"
 
-#: src/menus/infrastructure/controllers/menus_exportar_ref_a_ficheros.php:94
+#: src/menus/infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php:94
 #, php-format
 msgid "PSQL ERROR IN COMMAND: %s<br> mirar en: %s<br>"
 msgstr "ERRORE PSQL NEL COMANDO: %s<br> guarda: %s<br>"
 
-#: src/menus/infrastructure/controllers/menus_importar_de_ficheros_a_ref.php:27
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:27
 msgid "casi seguro que no quieres hacerlo"
 msgstr "quasi certamente non vuoi farlo"
 
-#: src/menus/infrastructure/controllers/menus_importar_de_ficheros_a_ref.php:34
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:34
 msgid "Poner todas las dl igual"
 msgstr "Metti tutti i dl uguali"
 
-#: src/menus/infrastructure/controllers/menus_importar_de_ficheros_a_ref.php:44
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:44
 msgid "Para sf: también se copian los grupMenu de los Roles (de sv). Hay que volver a poner lo que había."
 msgstr "Per sf: vengono copiati anche i grupMenu dei Ruoli (da sv).Dobbiamo rimettere a posto quello che c'era."
 
-#: src/menus/infrastructure/controllers/menus_importar_de_ficheros_a_ref.php:46
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:46
 msgid "De momento se ha anulado la restauración. Se queda como está"
 msgstr "Al momento il restauro è stato annullato.Resta così com'è"
 
-#: src/menus/infrastructure/controllers/menus_importar_de_ficheros_a_ref.php:47
+#: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:47
 msgid "Hay que corregir a mano"
 msgstr "Devi correggerlo a mano"
 
-#: src/usuarios/application/usuariosLista.php:30 src/usuarios/infrastructure/controllers/grupo_lista.php:28
-#: src/usuarios/infrastructure/controllers/usuario_form.php:43
+#: src/usuarios/application/usuariosLista.php:30 src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php:28
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_form.php:43
 msgid "no tiene permisos para ver esto"
 msgstr "non hai il permesso di vederlo"
 
@@ -8644,54 +8644,54 @@ msgstr "lingue possibili per l'applicazione"
 msgid "idioma a buscar"
 msgstr "lingua da cercare"
 
-#: src/usuarios/infrastructure/controllers/borrar_pwd.php:25
+#: src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php:25
 msgid "Sólo se puede borrar en la base de datos de pruebas"
 msgstr "Può essere cancellato solo nel database dei test"
 
-#: src/usuarios/infrastructure/controllers/check_first_login_2fa.php:33
+#: src/usuarios/infrastructure/ui/http/controllers/check_first_login_2fa.php:33
 msgid "Por razones de seguridad, se recomienda configurar la autenticación de dos factores (2FA)."
 msgstr "Per motivi di sicurezza, si consiglia di impostare l'autenticazione a due fattori (2FA)."
 
-#: src/usuarios/infrastructure/controllers/grupo_guardar.php:22 src/usuarios/infrastructure/controllers/role_guardar.php:51
-#: src/usuarios/infrastructure/controllers/usuario_guardar.php:28
+#: src/usuarios/infrastructure/ui/http/controllers/grupo_guardar.php:22 src/usuarios/infrastructure/ui/http/controllers/role_guardar.php:51
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_guardar.php:28
 msgid "debe poner un nombre"
 msgstr "devi mettere un nome"
 
-#: src/usuarios/infrastructure/controllers/perm_activ_guardar.php:100
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_guardar.php:100
 msgid "hay un error."
 msgstr "c'è un errore."
 
-#: src/usuarios/infrastructure/controllers/perm_activ_lista.php:57
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:57
 msgid "afecta a"
 msgstr "colpisce"
 
-#: src/usuarios/infrastructure/controllers/perm_activ_lista.php:58
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:58
 msgid "fase de referencia"
 msgstr "fase di riferimento"
 
-#: src/usuarios/infrastructure/controllers/perm_activ_lista.php:59
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:59
 msgid "permiso off"
 msgstr "permesso disattivato"
 
-#: src/usuarios/infrastructure/controllers/perm_activ_lista.php:60
+#: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:60
 msgid "permiso on"
 msgstr "permesso su"
 
-#: src/usuarios/infrastructure/controllers/perm_menu_lista.php:23 frontend/usuarios/view/perm_menu_form.phtml:32
+#: src/usuarios/infrastructure/ui/http/controllers/perm_menu_lista.php:23 frontend/usuarios/view/perm_menu_form.phtml:32
 msgid "oficina o grupo"
 msgstr "ufficio o gruppo"
 
-#: src/usuarios/infrastructure/controllers/recuperar_2fa_mail.php:70
-#: src/usuarios/infrastructure/controllers/recuperar_password_mail.php:68
-#: src/usuarios/infrastructure/controllers/usuario_ayuda_info.php:66
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:70
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:68
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:66
 msgid "No hay email asociado a este usuario"
 msgstr "Nessuna email associata a questo utente"
 
-#: src/usuarios/infrastructure/controllers/recuperar_2fa_mail.php:76
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:76
 msgid "Recuperación de código de seguridad"
 msgstr "Recupero del codice di sicurezza"
 
-#: src/usuarios/infrastructure/controllers/recuperar_2fa_mail.php:77
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:77
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -8708,30 +8708,30 @@ msgstr ""
 "Saluti,\n"
 "Il team di amministrazione"
 
-#: src/usuarios/infrastructure/controllers/recuperar_2fa_mail.php:99
-#: src/usuarios/infrastructure/controllers/recuperar_password_mail.php:115
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:99
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:115
 msgid "Error al enviar el correo electrónico"
 msgstr "Errore nell'invio dell'e-mail"
 
-#: src/usuarios/infrastructure/controllers/recuperar_2fa_mail.php:103
-#: src/usuarios/infrastructure/controllers/recuperar_password_mail.php:122
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php:103
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:122
 msgid "No se encontró ningún usuario con ese nombre"
 msgstr "Nessun utente con quel nome è stato trovato"
 
-#: src/usuarios/infrastructure/controllers/recuperar_password_mail.php:51
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:51
 msgid "Error al preparar la consulta"
 msgstr "Errore durante la preparazione della query"
 
-#: src/usuarios/infrastructure/controllers/recuperar_password_mail.php:57
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:57
 msgid "Error al ejecutar la consulta"
 msgstr "Errore durante l'esecuzione della query"
 
-#: src/usuarios/infrastructure/controllers/recuperar_password_mail.php:85 frontend/usuarios/view/recuperar_password.phtml:4
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:85 frontend/usuarios/view/recuperar_password.phtml:4
 #: frontend/usuarios/view/recuperar_password.phtml:51
 msgid "Recuperación de contraseña"
 msgstr "Recupero password"
 
-#: src/usuarios/infrastructure/controllers/recuperar_password_mail.php:86
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:86
 #, php-format
 msgid ""
 "Hola %s,\n"
@@ -8752,76 +8752,76 @@ msgstr ""
 "Distinti saluti,\n"
 "Il team di amministrazione"
 
-#: src/usuarios/infrastructure/controllers/recuperar_password_mail.php:118
+#: src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php:118
 msgid "Error al actualizar la contraseña"
 msgstr "Errore durante l'aggiornamento della password"
 
-#: src/usuarios/infrastructure/controllers/role_grupmenu_add.php:44 src/usuarios/infrastructure/controllers/role_grupmenu_del.php:31
+#: src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_add.php:44 src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_del.php:31
 msgid "debe seleccionar uno"
 msgstr "devi selezionarne uno"
 
-#: src/usuarios/infrastructure/controllers/role_info.php:67
+#: src/usuarios/infrastructure/ui/http/controllers/role_info.php:67
 msgid "grupo de menus"
 msgstr "gruppo di menu"
 
-#: src/usuarios/infrastructure/controllers/usuario_2fa_info.php:21 src/usuarios/infrastructure/controllers/usuario_info.php:23
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_info.php:21 src/usuarios/infrastructure/ui/http/controllers/usuario_info.php:23
 msgid "Id de usuario no válido"
 msgstr "ID utente non valido"
 
-#: src/usuarios/infrastructure/controllers/usuario_2fa_update.php:32
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:32
 msgid "Se requiere un código de verificación para activar 2FA"
 msgstr "Per attivare la 2FA è necessario un codice di verifica."
 
-#: src/usuarios/infrastructure/controllers/usuario_2fa_update.php:39 src/usuarios/infrastructure/controllers/usuario_2fa_verify.php:30
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_update.php:39 src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_verify.php:30
 msgid "Código de verificación inválido"
 msgstr "Codice di verifica non valido"
 
-#: src/usuarios/infrastructure/controllers/usuario_2fa_verify.php:24
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_2fa_verify.php:24
 msgid "Código de verificación o clave secreta no válidos"
 msgstr "Codice di verifica o chiave segreta non validi"
 
-#: src/usuarios/infrastructure/controllers/usuario_ayuda_info.php:61
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:61
 msgid "Debe ingresar un nombre de usuario válido"
 msgstr "È necessario inserire un nome utente valido"
 
-#: src/usuarios/infrastructure/controllers/usuario_ayuda_info.php:81
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php:81
 msgid "El administrador de esta circunscripción no tiene email asociado"
 msgstr "L'amministratore di questa circoscrizione non ha un indirizzo e-mail associato."
 
-#: src/usuarios/infrastructure/controllers/usuario_grupo_from.php:40
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_from.php:40
 msgid "Falta el identificador de usuario"
 msgstr "Manca l'ID utente"
 
-#: src/usuarios/infrastructure/controllers/usuario_grupo_lst.php:46
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php:46
 msgid "acción"
 msgstr "azione"
 
-#: src/usuarios/infrastructure/controllers/usuario_perm_form.php:33 frontend/menus/view/traducir_menu.phtml:122
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_perm_form.php:33 frontend/menus/view/traducir_menu.phtml:122
 #: frontend/usuarios/view/usuario_grupo.phtml:67
 msgid "grupos"
 msgstr "gruppi"
 
-#: src/usuarios/infrastructure/controllers/usuario_perm_form.php:38 frontend/usuarios/view/usuario_grupo.phtml:72
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_perm_form.php:38 frontend/usuarios/view/usuario_grupo.phtml:72
 msgid "OJO: los permisos en los grupos no tienen una preferencia definida."
 msgstr "NOTA: le autorizzazioni nei gruppi non hanno una preferenza definita."
 
-#: src/usuarios/infrastructure/controllers/usuario_perm_form.php:39 frontend/usuarios/view/usuario_grupo.phtml:73
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_perm_form.php:39 frontend/usuarios/view/usuario_grupo.phtml:73
 msgid "Si hay más de uno, deberían ser independientes, sino no se sabe cual sobreescribirá a cual."
 msgstr "Se ce n'è più di uno, dovrebbero essere indipendenti, altrimenti non si sa quale sovrascriverà quale."
 
-#: src/usuarios/infrastructure/controllers/usuario_perm_form.php:45 frontend/usuarios/view/usuario_grupo.phtml:79
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_perm_form.php:45 frontend/usuarios/view/usuario_grupo.phtml:79
 msgid "añadir un grupo de permisos"
 msgstr "aggiungi un gruppo di permessi"
 
-#: src/usuarios/infrastructure/controllers/usuario_perm_form.php:46 frontend/usuarios/view/usuario_grupo.phtml:80
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_perm_form.php:46 frontend/usuarios/view/usuario_grupo.phtml:80
 msgid "quitar de un grupo de permisos"
 msgstr "Rimuovi da un gruppo di permessi"
 
-#: src/usuarios/infrastructure/controllers/usuario_preferencias.php:46
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php:46
 msgid "personal"
 msgstr "personale"
 
-#: src/usuarios/infrastructure/controllers/usuario_preferencias.php:47
+#: src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php:47
 msgid "aniversarios"
 msgstr "anniversari"
 

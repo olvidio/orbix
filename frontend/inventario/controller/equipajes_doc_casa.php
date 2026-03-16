@@ -19,7 +19,7 @@ if (empty($Qid_equipaje)) {
 }
 
 //-------- docs en la casa -----------------------------------
-$url_backend = '/src/inventario/infrastructure/controllers/equipajes_doc_casa.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/equipajes_doc_casa.php';
 $a_campos_backend = [
     'id_equipaje' => $Qid_equipaje,
 ];
@@ -41,7 +41,7 @@ $oListaDocsCasa->setBotones($a_botones);
 
 
 //-------- equipajes para la actividad -----------------------------------
-$url_backend = '/src/inventario/infrastructure/controllers/equipajes_egm.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/equipajes_egm.php';
 $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];

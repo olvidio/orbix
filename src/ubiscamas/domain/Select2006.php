@@ -75,7 +75,7 @@ class Select2006
     {
         $a_botones = array(
             array('txt' => _("modificar habitación"), 'click' => "fnjs_mod_habitacion(this.form)"),
-            array('txt' => _("borrar habitación"), 'click' => "fnjs_borrar_habitacion(this.form)")
+            array('txt' => _("borrar habitación"), 'click' => "fnjs_eliminar_habitacion(this.form)")
         );
         return $a_botones;
     }

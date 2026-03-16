@@ -105,7 +105,7 @@ Los nuevos módulos deben separar claramente la presentación (frontend) de la l
   - No contienen lógica de negocio
 
 **Backend (lógica de negocio):**
-- `src/<modulo>/infrastructure/controllers/` - Controladores de lógica
+- `src/<modulo>/infrastructure/ui/http/controllers/` - Controladores de lógica
   - `*_update.php` - Procesar guardado/actualización de datos
   - `*_delete.php` - Procesar eliminación de datos
   - Usan casos de uso y repositorios
@@ -149,8 +149,8 @@ src/ubiscamas/
 
 ### Reglas de rutas en vistas
 - Formularios (form): `frontend/<modulo>/controller/<entidad>_form.php`
-- Guardado/Update: `src/<modulo>/infrastructure/controllers/<entidad>_update.php`
-- Eliminación: `src/<modulo>/infrastructure/controllers/<entidad>_delete.php`
+- Guardado/Update: `src/<modulo>/infrastructure/ui/http/controllers/<entidad>_update.php`
+- Eliminación: `src/<modulo>/infrastructure/ui/http/controllers/<entidad>_delete.php`
 
 ### Generación de IDs
 Para entidades con UUID:

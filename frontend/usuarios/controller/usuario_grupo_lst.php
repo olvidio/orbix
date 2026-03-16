@@ -11,7 +11,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
-$url_backend = '/src/usuarios/infrastructure/controllers/usuario_grupo_lst.php';
+$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php';
 $a_campos_backend = ['id_usuario' => $Qid_usuario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

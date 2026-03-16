@@ -2,10 +2,10 @@
 
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
-use src\actividadplazas\infrastructure\repositories\PgActividadPlazasDlRepository;
-use src\actividadplazas\infrastructure\repositories\PgActividadPlazasRepository;
+use src\actividadplazas\infrastructure\persistence\postgresql\PgActividadPlazasDlRepository;
+use src\actividadplazas\infrastructure\persistence\postgresql\PgActividadPlazasRepository;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
-use src\actividadplazas\infrastructure\repositories\PgPlazaPeticionRepository;
+use src\actividadplazas\infrastructure\persistence\postgresql\PgPlazaPeticionRepository;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;

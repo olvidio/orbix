@@ -23,7 +23,7 @@ $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
 
-$url_backend = '/src/menus/infrastructure/controllers/lista_meta_menus.php';
+$url_backend = '/src/menus/infrastructure/ui/http/controllers/lista_meta_menus.php';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $aOpciones = $data['a_opciones'];
@@ -32,7 +32,7 @@ $oDesplMeta = new Desplegable('', $aOpciones, '', true);
 $oDesplMeta->setNombre('id_metamenu');
 
 
-$url_backend = '/src/menus/infrastructure/controllers/grupmenu_lista.php';
+$url_backend = '/src/menus/infrastructure/ui/http/controllers/grupmenu_lista.php';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $aOpciones = $data['a_lista'];

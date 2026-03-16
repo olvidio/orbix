@@ -8,14 +8,14 @@ use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
-use src\inventario\infrastructure\repositories\PgColeccionRepository;
-use src\inventario\infrastructure\repositories\PgDocumentoRepository;
-use src\inventario\infrastructure\repositories\PgEgmRepository;
-use src\inventario\infrastructure\repositories\PgEquipajeRepository;
-use src\inventario\infrastructure\repositories\PgLugarRepository;
-use src\inventario\infrastructure\repositories\PgTipoDocRepository;
-use src\inventario\infrastructure\repositories\PgUbiInventarioRepository;
-use src\inventario\infrastructure\repositories\PgWhereisRepository;
+use src\inventario\infrastructure\persistence\postgresql\PgColeccionRepository;
+use src\inventario\infrastructure\persistence\postgresql\PgDocumentoRepository;
+use src\inventario\infrastructure\persistence\postgresql\PgEgmRepository;
+use src\inventario\infrastructure\persistence\postgresql\PgEquipajeRepository;
+use src\inventario\infrastructure\persistence\postgresql\PgLugarRepository;
+use src\inventario\infrastructure\persistence\postgresql\PgTipoDocRepository;
+use src\inventario\infrastructure\persistence\postgresql\PgUbiInventarioRepository;
+use src\inventario\infrastructure\persistence\postgresql\PgWhereisRepository;
 use function DI\autowire;
 
 return [

@@ -18,7 +18,7 @@ if (empty($Qid_equipaje)) {
 }
 
 //-------- Textos cabecera y pie -----------------------------------
-$url_backend = '/src/inventario/infrastructure/controllers/cabecera_pie_txt.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/cabecera_pie_txt.php';
 $a_campos_backend = [
     'id_equipaje' => $Qid_equipaje,
 ];
@@ -31,7 +31,7 @@ $pie = $data['pie'];
 $pencil = ConfigGlobal::getWeb_icons() . '/pencil.png';
 
 //-------- nombres de las actividades que deben comprobar el equipaje -----------------------------------
-$url_backend = '/src/inventario/infrastructure/controllers/equipajes_lista_activ_equipaje.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/equipajes_lista_activ_equipaje.php';
 $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
@@ -52,7 +52,7 @@ foreach ($a_actividades as $nom_activ) {
 
 
 //-------- docs en la casa -----------------------------------
-$url_backend = '/src/inventario/infrastructure/controllers/equipajes_doc_casa.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/equipajes_doc_casa.php';
 $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
@@ -64,7 +64,7 @@ $id_ubi = $data['id_ubi'];
 $html_docs_ubi = (new ListaAgrupar)->listaAgrupar($a_valores);
 
 //-------- equipajes para la actividad -----------------------------------
-$url_backend = '/src/inventario/infrastructure/controllers/equipajes_egm.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/equipajes_egm.php';
 $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];

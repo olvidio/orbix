@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\unit\usuarios\infrastructure\repositories;
+namespace Tests\unit\usuarios\infrastructure\persistence\postgresql;
 
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;

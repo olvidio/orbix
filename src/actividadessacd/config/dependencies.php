@@ -1,9 +1,9 @@
 <?php
 
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
-use src\actividadessacd\infrastructure\repositories\PgActividadSacdTextoRepository;
+use src\actividadessacd\infrastructure\persistence\postgresql\PgActividadSacdTextoRepository;
 use src\actividadessacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
-use src\actividadessacd\infrastructure\repositories\PgEncargoSacdHorarioRepository;
+use src\actividadessacd\infrastructure\persistence\postgresql\PgEncargoSacdHorarioRepository;
 use function DI\autowire;
 
 return [

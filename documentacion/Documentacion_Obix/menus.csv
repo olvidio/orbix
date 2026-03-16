@@ -355,7 +355,7 @@
 13,config esquema (Configuracion esquema),frontend/configuracion/controller/parametros.php,,1
 13,gestión Tipos actividades (gestionar tipos actividades),apps/actividades/controller/tipo_activ.php,,5
 13,traducciones (Raiz base),,,1
-13,menus a texto (pasa los menus a texto),src/menus/infrastructure/controllers/menus_generar_txt.php,,1
+13,menus a texto (pasa los menus a texto),src/menus/infrastructure/ui/http/controllers/menus_generar_txt.php,,1
 13,posibles idiomas (modificar los datos de una tabla),apps/core/mod_tabla_sql.php,clase_info=usuarios\model\InfoLocales,1
 15,n r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
 15,n de paso  (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1

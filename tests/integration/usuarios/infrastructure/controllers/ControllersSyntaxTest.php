@@ -9,7 +9,7 @@ final class ControllersSyntaxTest extends TestCase
 {
     public static function controllersProvider(): array
     {
-        $baseDir = __DIR__ . '/../../../../../src/usuarios/infrastructure/controllers';
+        $baseDir = __DIR__ . '/../../../../../src/usuarios/infrastructure/ui/http/controllers';
         $files = glob($baseDir . '/*.php') ?: [];
         $cases = [];
         foreach ($files as $file) {

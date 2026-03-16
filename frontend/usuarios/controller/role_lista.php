@@ -27,7 +27,7 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$url_backend = '/src/usuarios/infrastructure/controllers/role_lista.php';
+$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/role_lista.php';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $a_cabeceras = $data['a_cabeceras'];

@@ -1,9 +1,9 @@
 <?php
 
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
-use src\actividadtarifas\infrastructure\repositories\PgTipoTarifaRepository;
+use src\actividadtarifas\infrastructure\persistence\postgresql\PgTipoTarifaRepository;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
-use src\actividadtarifas\infrastructure\repositories\PgRelacionTarifaTipoActividadRepository;
+use src\actividadtarifas\infrastructure\persistence\postgresql\PgRelacionTarifaTipoActividadRepository;
 use function DI\autowire;
 
 return [

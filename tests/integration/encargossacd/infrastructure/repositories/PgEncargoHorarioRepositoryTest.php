@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\encargossacd\infrastructure\repositories;
+namespace Tests\integration\encargossacd\infrastructure\persistence\postgresql;
 
 use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
 use src\encargossacd\domain\entity\EncargoHorario;

@@ -32,7 +32,7 @@ $a_cosas = ['url_index' => $url_index, 'username' => $Qusername, 'ubicacion' => 
 $linkAyuda2FA = 'frontend/usuarios/controller/ayuda_2fa_reset.php?' . http_build_query($a_cosas);
 
 $url = str_replace('index.php', '', $url_index);
-$url_backend = $url.'src/usuarios/infrastructure/controllers/usuario_ayuda_info.php';
+$url_backend = $url.'src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php';
 $a_campos_backend = [
     'username' => $Qusername,
     'esquema' => $Qesquema,

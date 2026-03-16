@@ -73,7 +73,7 @@ if (empty($Qk_buscar)) {
      **********************************************************************/
 
     // pedir a Info los datos necesarios para mostrar el formulario de búsqueda
-    $url_backend = '/src/shared/infrastructure/controllers/tablaDB_buscar_datos.php';
+    $url_backend = '/src/shared/infrastructure/ui/http/controllers/tablaDB_buscar_datos.php';
     $a_campos_backend = [
         'clase_info' => $Qclase_info_encoded,
         'k_buscar' => $Qk_buscar,
@@ -115,7 +115,7 @@ if (empty($Qk_buscar)) {
  **********************************************************************/
 
 // pedir a Info los datos necesarios para mostrar la tabla
-$url_backend = '/src/shared/infrastructure/controllers/tablaDB_lista_datos.php';
+$url_backend = '/src/shared/infrastructure/ui/http/controllers/tablaDB_lista_datos.php';
 $a_campos_backend = [
     'clase_info' => $Qclase_info_encoded,
     'k_buscar' => $Qk_buscar,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\misas\infrastructure\repositories;
+namespace Tests\integration\misas\infrastructure\persistence\postgresql;
 
 use src\misas\domain\contracts\PlantillaRepositoryInterface;
 use src\misas\domain\entity\Plantilla;

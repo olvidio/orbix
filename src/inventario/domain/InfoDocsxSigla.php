@@ -47,7 +47,7 @@ class InfoDocsxSigla extends DatosInfoRepo
         $aOpciones = $Repository->getArrayTipoDoc();
         $a_campos['aOpcionesTiposDoc'] = $aOpciones;
 
-        $url_bloque = ConfigGlobal::getWeb().'/src/inventario/infrastructure/controllers/documentos_form.php';
+        $url_bloque = ConfigGlobal::getWeb().'/src/inventario/infrastructure/ui/http/controllers/documentos_form.php';
         $oHash = new Hash();
         $sCamposForm = 'id_tipo_doc!documentos';
         $oHash->setUrl($url_bloque);

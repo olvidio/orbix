@@ -1,0 +1,34 @@
+<?php
+
+namespace src\asistentes\infrastructure\persistence\postgresql;
+
+use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
+use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
+use src\shared\domain\contracts\UnitOfWorkInterface;
+use src\shared\traits\HandlesPdoErrors;
+
+
+/**
+ * Clase que adapta la tabla d_asistentes_dl a la interfaz del repositorio
+ *
+ * @package orbix
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 2.0
+ * @created 16/12/2025
+ */
+class PgAsistenteOutRepository extends PgAsistenteRepository implements AsistenteOutRepositoryInterface
+{
+    use HandlesPdoErrors;
+
+    public function __construct(UnitOfWorkInterface $unitOfWork)
+    {
+        parent::__construct($unitOfWork);
+        $oDbl = $GLOBALS['oDBE'];
+        $this->setoDbl($oDbl);
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $this->setoDbl_select($oDbl_Select);
+        $this->setNomTabla('d_asistentes_out');
+    }
+
+}

@@ -3,6 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
+use src\ubiscamas\domain\value_objects\HabitacionId;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
 use web\Hash;
 
@@ -49,7 +50,7 @@ if (empty($Qnuevo)) {
     }
 
     //Si vengo por medio de Posicion, borro la última
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -60,13 +61,14 @@ if (empty($Qnuevo)) {
     }
 
     $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
-    $oHabitacion = $HabitacionRepository->findById($Qid_habitacion);
+    $uuid_habitacion = HabitacionId::fromNullableString($Qid_habitacion);
+    $oHabitacion = $HabitacionRepository->findById($uuid_habitacion);
     if (!empty($oHabitacion)) {
         $Qid_ubi = $oHabitacion->getIdUbiVo();
         $orden = $oHabitacion->getOrdenVo()?->value() ?? 0;
         $nombre = $oHabitacion->getNombreVo()?->value() ?? '';
-        $numero_camas = $oHabitacion->getNumeroCamasVo()?->value() ?? null;
-        $numero_camas_vip = $oHabitacion->getNumeroCamasVipVo()?->value() ?? null;
+        $numero_camas = $oHabitacion->getNumeroCamasVo()?->value();
+        $numero_camas_vip = $oHabitacion->getNumeroCamasVipVo()?->value();
         $planta = $oHabitacion->getPlantaVo()?->value() ?? '';
         $sillon = $oHabitacion->isSillon() ?? false;
         $adaptada = $oHabitacion->isAdaptada() ?? false;
@@ -76,7 +78,7 @@ if (empty($Qnuevo)) {
 
         // Obtener las camas de esta habitación
         $CamaRepository = $GLOBALS['container']->get(CamaDlRepositoryInterface::class);
-        $a_camas = $CamaRepository->getCamasByHabitacion($Qid_habitacion);
+        $a_camas = $CamaRepository->getCamasByHabitacion($uuid_habitacion);
     }
 }
 
@@ -86,9 +88,11 @@ $a_tipos_tipoLavabo = TipoLavabo::getArrayTipoLavabo();
 $oHash = new Hash();
 $camposForm = 'orden!nombre!numero_camas!numero_camas_vip!planta!sillon!adaptada!fumador!despacho!tipoLavabo';
 $camposChk = 'sillon!adaptada!fumador!despacho';
+$camposNo = 'new_camas_desc!new_camas_larga!new_camas_vip';
 
 $oHash->setCamposForm($camposForm);
 $oHash->setCamposChk($camposChk);
+$oHash->setCamposNo($camposNo);
 $a_camposHidden = array(
     'id_habitacion' => $Qid_habitacion,
     'id_ubi' => $Qid_ubi,
@@ -103,6 +107,16 @@ $a_camposHiddenActualizar = array(
     'id_ubi' => $Qid_ubi,
 );
 $oHashActualizar->setArraycamposHidden($a_camposHiddenActualizar);
+
+$url_cama_form = 'frontend/ubiscamas/controller/cama_form.php';
+$oHashCamaForm = new Hash();
+$oHashCamaForm->setUrl($url_cama_form);
+$oHashCamaForm->setCamposForm('id_ubi!id_cama!id_habitacion');
+
+$url_cama_delete = 'src/ubiscamas/infrastructure/ui/http/controllers/cama_delete.php';
+$oHashCamaDelete = new Hash();
+$oHashCamaDelete->setUrl($url_cama_delete);
+$oHashCamaDelete->setCamposForm('id_ubi!id_cama!id_habitacion');
 
 $a_campos = [
     'oPosicion' => $oPosicion,
@@ -122,6 +136,10 @@ $a_campos = [
     'tipoLavabo' => $tipoLavabo,
     'a_tipos_tipoLavabo' => $a_tipos_tipoLavabo,
     'a_camas' => $a_camas,
+    'url_cama_form' => $url_cama_form,
+    'oHashCamaForm' => $oHashCamaForm,
+    'url_cama_delete' => $url_cama_delete,
+    'oHashCamaDelete' => $oHashCamaDelete,
 ];
 
 $oView = new ViewNewPhtml('frontend\\ubiscamas\\controller');

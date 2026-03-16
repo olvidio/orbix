@@ -7,11 +7,11 @@ use src\asistentes\domain\contracts\AsistenteExRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
-use src\asistentes\infrastructure\repositories\PgAsistenteDlRepository;
-use src\asistentes\infrastructure\repositories\PgAsistenteExRepository;
-use src\asistentes\infrastructure\repositories\PgAsistenteOutRepository;
-use src\asistentes\infrastructure\repositories\PgAsistentePubRepository;
-use src\asistentes\infrastructure\repositories\PgAsistenteRepository;
+use src\asistentes\infrastructure\persistence\postgresql\PgAsistenteDlRepository;
+use src\asistentes\infrastructure\persistence\postgresql\PgAsistenteExRepository;
+use src\asistentes\infrastructure\persistence\postgresql\PgAsistenteOutRepository;
+use src\asistentes\infrastructure\persistence\postgresql\PgAsistentePubRepository;
+use src\asistentes\infrastructure\persistence\postgresql\PgAsistenteRepository;
 use function DI\autowire;
 
 return [

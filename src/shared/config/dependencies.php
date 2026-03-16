@@ -9,7 +9,7 @@ use src\shared\domain\events\EntidadModificada;
 use src\shared\infrastructure\ConnectionRepositoryFactory;
 use src\shared\infrastructure\InMemoryEventBus;
 use src\shared\infrastructure\PdoUnitOfWork;
-use src\shared\infrastructure\repositories\PgColaMailRepository;
+use src\shared\infrastructure\persistence\postgresql\PgColaMailRepository;
 use function DI\autowire;
 use function DI\factory;
 use function DI\get;

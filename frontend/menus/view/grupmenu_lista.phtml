@@ -16,7 +16,7 @@ use frontend\shared\web\Hash;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             if (confirm("<?= _("¿Está seguro que desea borrar este grupmenu?") ?>")) {
-                let url = '<?= ConfigGlobal::getWeb() ?>/src/menus/infrastructure/controllers/grupmenu_eliminar.php';
+                let url = '<?= ConfigGlobal::getWeb() ?>/src/menus/infrastructure/ui/http/controllers/grupmenu_eliminar.php';
                 let datos = $(formulario).serialize();
                 let request = $.ajax({
                     data: datos,

@@ -78,7 +78,7 @@ class AsistenteActividadService
             ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
         ];
 
-        $namespace = 'src\asistentes\infrastructure\repositories';
+        $namespace = 'src\asistentes\infrastructure\persistence\postgresql';
         $cAsistencias = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhereNom, $aOperadorNom);
 
         return $this->ordenarAsistenciasPorFecha($cAsistencias, $a_id_activ_f_ini, $reverse);
@@ -104,7 +104,7 @@ class AsistenteActividadService
             ['repo' => AsistenteExRepositoryInterface::class, 'get' => 'getAsistentes'],
         ];
 
-        $namespace = 'src\asistentes\infrastructure\repositories';
+        $namespace = 'src\asistentes\infrastructure\persistence\postgresql';
         $cAsistencias = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhereNom, $aOperadorNom);
 
         return $this->ordenarAsistenciasPorFecha($cAsistencias, $a_id_activ_f_ini, $reverse);
@@ -167,7 +167,7 @@ class AsistenteActividadService
 
         $aWhere['id_activ'] = $iid_activ;
         $aOperators = [];
-        $namespace = 'src\asistentes\infrastructure\repositories';
+        $namespace = 'src\asistentes\infrastructure\persistence\postgresql';
         $msg_err = '';
 
         if ($sdl == $mi_dele) {
@@ -285,7 +285,7 @@ class AsistenteActividadService
             }
         }
 
-        $namespace = 'src\asistentes\infrastructure\repositories';
+        $namespace = 'src\asistentes\infrastructure\persistence\postgresql';
         $cAsistentes = $this->asistenteRepository->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
 
         $cAsistentesOk = [];

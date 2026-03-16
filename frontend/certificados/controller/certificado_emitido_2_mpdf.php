@@ -70,7 +70,7 @@ if (!empty($Qguardar)) {
     $pdf_base64 = base64_encode($pdf);
     $certificado_base64 = base64_encode($certificado);
 
-    $url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_guardar_pdf.php';
+    $url_backend = '/src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar_pdf.php';
     $a_campos_backend = [
         'id_item' => $Qid_item,
         'id_nom' => $id_nom,

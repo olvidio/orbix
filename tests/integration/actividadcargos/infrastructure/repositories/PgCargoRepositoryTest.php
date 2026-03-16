@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\actividadcargos\infrastructure\repositories;
+namespace Tests\integration\actividadcargos\infrastructure\persistence\postgresql;
 
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\Cargo;

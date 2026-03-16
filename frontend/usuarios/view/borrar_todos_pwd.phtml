@@ -7,7 +7,7 @@ use frontend\shared\web\Hash;
 <script>
     fnjs_borrar_todos_pwd = function (formulario) {
         if (confirm("<?= _("¿Está seguro que desea poner el login como contraseña para todos los usuarios (excepto superusuario)?") ?>")) {
-            let url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/borrar_pwd.php';
+            let url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/ui/http/controllers/borrar_pwd.php';
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,

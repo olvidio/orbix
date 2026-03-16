@@ -113,7 +113,7 @@ class DB extends DBAbstract
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                 id_schema integer NOT NULL,
                 id_cama uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-                id_habitacion integer NOT NULL,
+                id_habitacion uuid NOT NULL,
                 descripcion text NOT NULL,
                 larga boolean,
                 vip boolean

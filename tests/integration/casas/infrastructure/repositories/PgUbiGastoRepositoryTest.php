@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\casas\infrastructure\repositories;
+namespace Tests\integration\casas\infrastructure\persistence\postgresql;
 
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\casas\domain\entity\UbiGasto;

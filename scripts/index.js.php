@@ -129,7 +129,7 @@ use core\ConfigGlobal;if (!isset($h)) {
             "heightGrid": heightGrid
         };
         sPrefs = JSON.stringify(oPrefs);
-        url = "<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/preferencias_guardar.php";
+        url = "<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php";
         parametros = 'que=slickGrid&tabla=' + tabla + '&sPrefs=' + sPrefs + '<?= $h ?>';
         $.ajax({
             url: url,
@@ -693,7 +693,7 @@ use core\ConfigGlobal;if (!isset($h)) {
     "heightGrid": heightGrid
 };
     sPrefs = JSON.stringify(oPrefs);
-    url = "<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/preferencias_guardar.php";
+    url = "<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php";
     parametros = 'que=slickGrid&tabla=' + tabla + '&sPrefs=' + sPrefs + '<?= $h ?>';
     $.ajax({
     url: url,

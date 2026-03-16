@@ -5,10 +5,10 @@ use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
 use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\misas\domain\contracts\PlantillaRepositoryInterface;
-use src\misas\infrastructure\repositories\PgEncargoCtrRepository;
-use src\misas\infrastructure\repositories\PgEncargoDiaRepository;
-use src\misas\infrastructure\repositories\PgInicialesSacdRepository;
-use src\misas\infrastructure\repositories\PgPlantillaRepository;
+use src\misas\infrastructure\persistence\postgresql\PgEncargoCtrRepository;
+use src\misas\infrastructure\persistence\postgresql\PgEncargoDiaRepository;
+use src\misas\infrastructure\persistence\postgresql\PgInicialesSacdRepository;
+use src\misas\infrastructure\persistence\postgresql\PgPlantillaRepository;
 use function DI\autowire;
 
 return [

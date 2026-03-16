@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\configuracion\infrastructure\repositories;
+namespace Tests\integration\configuracion\infrastructure\persistence\postgresql;
 
 use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
 use src\configuracion\domain\entity\ModuloInstalado;

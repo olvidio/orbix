@@ -1,9 +1,9 @@
 <?php
 
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
-use src\dossiers\infrastructure\repositories\PgTipoDossierRepository;
+use src\dossiers\infrastructure\persistence\postgresql\PgTipoDossierRepository;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
-use src\dossiers\infrastructure\repositories\PgDossierRepository;
+use src\dossiers\infrastructure\persistence\postgresql\PgDossierRepository;
 use function DI\autowire;
 
 return [

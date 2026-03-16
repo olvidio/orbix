@@ -2,8 +2,8 @@
 
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
-use src\certificados\infrastructure\repositories\PgCertificadoEmitidoRepository;
-use src\certificados\infrastructure\repositories\PgCertificadoRecibidoRepository;
+use src\certificados\infrastructure\persistence\postgresql\PgCertificadoEmitidoRepository;
+use src\certificados\infrastructure\persistence\postgresql\PgCertificadoRecibidoRepository;
 use function DI\autowire;
 
 return [

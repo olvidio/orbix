@@ -19,7 +19,7 @@ $str_selected_id = rawurlencode(json_encode($a_sel));
 $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
-$url_backend = '/src/inventario/infrastructure/controllers/lista_docs_asignar_ctr.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_docs_asignar_ctr.php';
 $a_campos_backend = [
     'id_tipo_doc' => $Qid_tipo_doc,
     'sel' => $a_sel,
@@ -44,7 +44,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
 //9
-$url_guardar = ConfigGlobal::getWeb() . '/src/inventario/infrastructure/controllers/doc_asignar_ctr_guardar.php?';
+$url_guardar = ConfigGlobal::getWeb() . '/src/inventario/infrastructure/ui/http/controllers/doc_asignar_ctr_guardar.php?';
 
 $oHash = new Hash();
 $sCamposForm .= "!f_recibido!f_asignado";

@@ -16,7 +16,7 @@ $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
 // posibles tipos de documento
-$url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_egm.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_docs_de_egm.php';
 $a_campos_backend = [ 'id_item_egm' => $Qid_item_egm];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

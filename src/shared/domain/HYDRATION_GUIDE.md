@@ -142,7 +142,7 @@ $actividad = ActividadAll::fromArray($data);
 ### **Patrón Recomendado**
 
 ```php
-namespace src\actividades\infrastructure\repositories;
+namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\actividades\domain\entity\ActividadAll;
 
@@ -471,7 +471,7 @@ $actividad = Actividad::fromArray(['id_activ' => 123, 'nom_activ' => $vo]);
 ### **Ejemplo 3: Repositorio Real**
 
 ```php
-namespace src\actividades\infrastructure\repositories;
+namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
@@ -658,7 +658,7 @@ Para migrar una entidad a `Hydratable`:
 - **Código fuente**: `src/shared/domain/traits/Hydratable.php`
 - **Ejemplo Entity**: `src/shared/domain/entity/Entity.php` (usa Hydratable)
 - **Ejemplo real**: `src/actividades/domain/entity/ActividadAll.php`
-- **Repositorio ejemplo**: `src/actividades/infrastructure/repositories/PgActividadAllRepository.php`
+- **Repositorio ejemplo**: `src/actividades/infrastructure/persistence/postgresql/PgActividadAllRepository.php`
 
 ---
 

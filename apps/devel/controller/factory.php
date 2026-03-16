@@ -1386,7 +1386,7 @@ $txt_pgRepositorio .= "\n}";
 
 /* ESCRIURE LA CLASSSE  PG REPOSITORY  --------------------------------- */
 // crear el directorio infrastructure si no existe
-$dir_infra = ServerConf::DIR . '/src/' . $grupo . '/infrastructure/repositories';
+$dir_infra = ServerConf::DIR . '/src/' . $grupo . '/infrastructure/persistence/postgresql';
 if ( !is_dir($dir_infra) && !mkdir($dir_infra, 0777, true) && !is_dir($dir_infra)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }
@@ -1404,7 +1404,7 @@ echo "<br>Success, wrote (somecontent) to file ($filename)";
 fclose($handle);
 /* ESCRIURE EL DIRECTORI CONTROLLERS  --------------------------------- */
 // crear el directorio infrastructure si no existe
-$dir_infra = ServerConf::DIR . '/src/' . $grupo . '/infrastructure/controllers';
+$dir_infra = ServerConf::DIR . '/src/' . $grupo . '/infrastructure/ui/http/controllers';
 if ( !is_dir($dir_infra) && !mkdir($dir_infra, 0777, true) && !is_dir($dir_infra)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }

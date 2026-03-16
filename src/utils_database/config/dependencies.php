@@ -1,11 +1,11 @@
 <?php
 
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
-use src\tablonanuncios\infrastructure\repositories\PgAnuncioRepository;
+use src\tablonanuncios\infrastructure\persistence\postgresql\PgAnuncioRepository;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use src\utils_database\domain\contracts\MapIdRepositoryInterface;
-use src\utils_database\infrastructure\repositories\PgDbSchemaRepository;
-use src\utils_database\infrastructure\repositories\PgMapIdRepository;
+use src\utils_database\infrastructure\persistence\postgresql\PgDbSchemaRepository;
+use src\utils_database\infrastructure\persistence\postgresql\PgMapIdRepository;
 use function DI\autowire;
 
 return [

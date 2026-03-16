@@ -32,7 +32,7 @@ $Qusername = (string)filter_input(INPUT_POST, 'username');
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
 
-$url_backend = '/src/usuarios/infrastructure/controllers/grupo_lista.php';
+$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/grupo_lista.php';
 $a_campos_backend = ['username' => $Qusername];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

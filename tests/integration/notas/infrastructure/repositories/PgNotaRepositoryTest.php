@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\notas\infrastructure\repositories;
+namespace Tests\integration\notas\infrastructure\persistence\postgresql;
 
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;

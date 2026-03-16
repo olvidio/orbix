@@ -14,7 +14,10 @@ use src\personas\domain\value_objects\PersonaTablaCode;
 use src\shared\domain\contracts\AggregateRoot;
 use src\shared\domain\entity\Entity;
 use src\shared\domain\traits\Hydratable;
+use src\shared\domain\value_objects\Uuid;
 use src\ubis\domain\value_objects\DelegacionCode;
+use src\ubiscamas\domain\entity\Cama;
+use src\ubiscamas\domain\value_objects\CamaId;
 
 
 class Asistente extends Entity implements AggregateRoot
@@ -63,6 +66,8 @@ class Asistente extends Entity implements AggregateRoot
     private ?AsistentePropietario $propietario = null;
 
     private ?AsistenteObservEst $observ_est = null;
+
+    private ?CamaId $cama = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -458,5 +463,33 @@ class Asistente extends Entity implements AggregateRoot
         $this->observ_est = $texto instanceof AsistenteObservEst
             ? $texto
             : AsistenteObservEst::fromNullableString($texto);
+    }
+
+    /*
+     * deprecated usar getCamaVo()
+     */
+    public function getCama(): ?string
+    {
+        return $this->cama?->value();
+    }
+
+    /*
+     * deprecated usar setCamaVo()
+     */
+    public function setCama(?string $cama = null): void
+    {
+        $this->cama = CamaId::fromNullableString($cama);
+    }
+
+    public function getCamaVo(): ?CamaId
+    {
+        return $this->cama;
+    }
+
+    public function setCamaVo(?CamaId $cama = null): void
+    {
+        $this->cama = $cama instanceof CamaId
+            ? $cama
+            : CamaId::fromNullableString($cama);
     }
 }

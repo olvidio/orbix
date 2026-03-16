@@ -8,7 +8,7 @@
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
-                url: 'src/menus/infrastructure/controllers/grupmenu_guardar.php',
+                url: 'src/menus/infrastructure/ui/http/controllers/grupmenu_guardar.php',
                 method: 'POST',
                 dataType: 'json'
             });

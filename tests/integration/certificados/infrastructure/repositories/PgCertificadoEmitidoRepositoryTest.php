@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\certificados\infrastructure\repositories;
+namespace Tests\integration\certificados\infrastructure\persistence\postgresql;
 
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;

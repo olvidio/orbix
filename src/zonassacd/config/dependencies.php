@@ -2,10 +2,10 @@
 
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use src\zonassacd\infrastructure\repositories\PgZonaRepository;
+use src\zonassacd\infrastructure\persistence\postgresql\PgZonaRepository;
 use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
-use src\zonassacd\infrastructure\repositories\PgZonaGrupoRepository;
-use src\zonassacd\infrastructure\repositories\PgZonaSacdRepository;
+use src\zonassacd\infrastructure\persistence\postgresql\PgZonaGrupoRepository;
+use src\zonassacd\infrastructure\persistence\postgresql\PgZonaSacdRepository;
 use function DI\autowire;
 
 return [

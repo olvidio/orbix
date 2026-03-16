@@ -18,7 +18,7 @@ use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\PersonaNotaPk;
 use src\notas\domain\value_objects\TipoActa;
-use src\notas\infrastructure\repositories\PgPersonaNotaCertificadoRepository;
+use src\notas\infrastructure\persistence\postgresql\PgPersonaNotaCertificadoRepository;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;

@@ -1,7 +1,7 @@
 <script>
     fnjs_left_side_hide();
     fnjs_guardar_preferencias = function (formulario) {
-        let url = "src/usuarios/infrastructure/controllers/preferencias_guardar.php";
+        let url = "src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php";
         var request = $.ajax({
             data: $(formulario).serialize(),
             url: url,

@@ -7,13 +7,13 @@ use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use src\usuarios\infrastructure\repositories\PgGrupoRepository;
-use src\usuarios\infrastructure\repositories\PgLocalRepository;
-use src\usuarios\infrastructure\repositories\PgPermMenuRepository;
-use src\usuarios\infrastructure\repositories\PgPreferenciaRepository;
-use src\usuarios\infrastructure\repositories\PgRoleRepository;
-use src\usuarios\infrastructure\repositories\PgUsuarioGrupoRepository;
-use src\usuarios\infrastructure\repositories\PgUsuarioRepository;
+use src\usuarios\infrastructure\persistence\postgresql\PgGrupoRepository;
+use src\usuarios\infrastructure\persistence\postgresql\PgLocalRepository;
+use src\usuarios\infrastructure\persistence\postgresql\PgPermMenuRepository;
+use src\usuarios\infrastructure\persistence\postgresql\PgPreferenciaRepository;
+use src\usuarios\infrastructure\persistence\postgresql\PgRoleRepository;
+use src\usuarios\infrastructure\persistence\postgresql\PgUsuarioGrupoRepository;
+use src\usuarios\infrastructure\persistence\postgresql\PgUsuarioRepository;
 use function DI\autowire;
 
 return [

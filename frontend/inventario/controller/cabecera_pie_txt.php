@@ -9,7 +9,7 @@ use web\Hash;
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$url_backend = '/src/inventario/infrastructure/controllers/cabecera_pie_txt.php';
+$url_backend = '/src/inventario/infrastructure/ui/http/controllers/cabecera_pie_txt.php';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $cabecera = $data['cabecera'];

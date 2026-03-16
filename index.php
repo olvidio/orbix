@@ -116,7 +116,7 @@ if (isset($primera)) {
     /* OBLIGAR a los de la dmz a usar el doble factor.
     if (!$has_2fa && ServerConf::$dmz) { // no sirve la función "Configglobal::is_dmz()" porque para la sf (puerto 10936) no da true
         // Redirigir a la página de verificación de 2FA para usuarios nuevos
-        $url_check_2fa = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/check_first_login_2fa.php';
+        $url_check_2fa = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/ui/http/controllers/check_first_login_2fa.php';
         header("Location: $url_check_2fa");
         exit();
     }
@@ -249,7 +249,7 @@ $layoutParams = [
 $htmlComponents = $oLayout->generateMenuHtml($layoutParams);
 
 $oHash = new Hash();
-$oHash->setUrl(ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/preferencias_guardar.php');
+$oHash->setUrl(ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php');
 $oHash->setCamposForm('que!tabla!sPrefs');
 $h = $oHash->linkSinVal();
 

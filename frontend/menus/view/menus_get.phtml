@@ -18,7 +18,7 @@
         });
     }
 </script>
-<form id="frm_menus" name="frm_menus" action="src/menus/infrastructure/controllers/menu_guardar.php">
+<form id="frm_menus" name="frm_menus" action="src/menus/infrastructure/ui/http/controllers/menu_guardar.php">
     <?= $oHash->getCamposHtml(); ?>
     <table>
         <tr>
@@ -60,7 +60,7 @@
     <input type="button" onclick="fnjs_enviar_formulario('#frm_menus_4','#ficha');" value="<?= _("cancelar") ?>">
 </form>
 <?php if (empty($Qnuevo)) { ?>
-    <form id="frm_menus_2" action="src/menus/infrastructure/controllers/menu_eliminar.php">
+    <form id="frm_menus_2" action="src/menus/infrastructure/ui/http/controllers/menu_eliminar.php">
         <?= $oHash2->getCamposHtml() ?>
         <input type="button"
                onclick="if (confirm('<?= addslashes(_("¿Está seguro?")) ?>')) { fnjs_guardar('#frm_menus_2'); }"
@@ -70,14 +70,14 @@
         <?= $oHash3->getCamposHtml(); ?>
         <input type="button" onclick="fnjs_enviar_formulario('#frm_menus_3','#ficha');" value="<?= _("nuevo") ?>">
     </form>
-    <form id="frm_menus_5" action="src/menus/infrastructure/controllers/menu_mover.php">
+    <form id="frm_menus_5" action="src/menus/infrastructure/ui/http/controllers/menu_mover.php">
         <?= $oHash5->getCamposHtml(); ?>
         <input type="button"
                onclick="if (confirm('<?= addslashes(_("no se guardan los cambios, sólo se cambia el grupo.")) ?>')) { fnjs_guardar('#frm_menus_5'); }"
                value="<?= _("mover a") ?>">
         <?= $oDesplGM->desplegable(); ?>
     </form>
-    <form id="frm_menus_6" action="src/menus/infrastructure/controllers/menu_copiar.php">
+    <form id="frm_menus_6" action="src/menus/infrastructure/ui/http/controllers/menu_copiar.php">
         <?= $oHash6->getCamposHtml(); ?>
         <input type="button"
                onclick="if (confirm('<?= addslashes(_("no se guardan los cambios, sólo se cambia el grupo.")) ?>')) { fnjs_guardar('#frm_menus_6'); }"

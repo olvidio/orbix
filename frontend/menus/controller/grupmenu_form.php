@@ -49,7 +49,7 @@ $oPosicion->setParametros(array('id_grupmenu' => $Qid_grupmenu), 1);
 
 if (!empty($Qid_grupmenu)) {
     //////////// Nombre de grupo ////////////////////////////////////////////////////////
-    $url = '/src/menus/infrastructure/controllers/grupmenu_info.php';
+    $url = '/src/menus/infrastructure/ui/http/controllers/grupmenu_info.php';
     $parametros = ['id_grupmenu' => $Qid_grupmenu];
     $data = PostRequest::getDataFromUrl($url, $parametros);
 

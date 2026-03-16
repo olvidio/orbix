@@ -4,7 +4,7 @@ declare(strict_types=1);
 /**
  * Script: auto_import_uses.php
  *
- * Busca controladores PHP (por defecto: rutas tipo "src/<modulo>/infrastructure/controllers/*.php"),
+ * Busca controladores PHP (por defecto: rutas tipo "src/<modulo>/infrastructure/ui/http/controllers/*.php"),
  * detecta referencias a clases usadas sin "use" y añade las sentencias necesarias.
  *
  * Requiere Composer autoload (vendor/composer/*). Utiliza el classmap y PSR-4
@@ -12,7 +12,7 @@ declare(strict_types=1);
  * De lo contrario, reporta la ambigüedad y no modifica el archivo.
  *
  * Opciones:
- *   --module <mod>    Limitar a "src/<mod>/infrastructure/controllers"
+ *   --module <mod>    Limitar a "src/<mod>/infrastructure/ui/http/controllers"
  *   --path <ruta>     Archivo o directorio a procesar (sobrescribe --module)
  *   --apply           Aplica los cambios (por defecto: dry-run)
  *   --backup          Crea copia .bak.<timestamp> antes de modificar
@@ -178,7 +178,7 @@ function findTargets(string $root, ?string $module, ?string $pathOpt): array {
     }
 
     if ($module) {
-        $dir = $root . "/src/$module/infrastructure/controllers";
+        $dir = $root . "/src/$module/infrastructure/ui/http/controllers";
         if (is_dir($dir)) {
             foreach (glob($dir . '/*.php') ?: [] as $f) { $targets[] = $f; }
         }
@@ -186,7 +186,7 @@ function findTargets(string $root, ?string $module, ?string $pathOpt): array {
     }
 
     // por defecto, todos los módulos
-    foreach (glob($root . '/src/*/infrastructure/controllers') ?: [] as $dir) {
+    foreach (glob($root . '/src/*/infrastructure/ui/http/controllers') ?: [] as $dir) {
         foreach (glob($dir . '/*.php') ?: [] as $f) { $targets[] = $f; }
     }
     return $targets;

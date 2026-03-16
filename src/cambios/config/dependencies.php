@@ -2,16 +2,16 @@
 
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
-use src\cambios\infrastructure\repositories\PgCambioDlRepository;
+use src\cambios\infrastructure\persistence\postgresql\PgCambioDlRepository;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
-use src\cambios\infrastructure\repositories\PgCambioAnotadoRepository;
+use src\cambios\infrastructure\persistence\postgresql\PgCambioAnotadoRepository;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
-use src\cambios\infrastructure\repositories\PgCambioRepository;
-use src\cambios\infrastructure\repositories\PgCambioUsuarioRepository;
+use src\cambios\infrastructure\persistence\postgresql\PgCambioRepository;
+use src\cambios\infrastructure\persistence\postgresql\PgCambioUsuarioRepository;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
-use src\cambios\infrastructure\repositories\PgCambioUsuarioObjetoPrefRepository;
+use src\cambios\infrastructure\persistence\postgresql\PgCambioUsuarioObjetoPrefRepository;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
-use src\cambios\infrastructure\repositories\PgCambioUsuarioPropiedadPrefRepository;
+use src\cambios\infrastructure\persistence\postgresql\PgCambioUsuarioPropiedadPrefRepository;
 use function DI\autowire;
 
 return [

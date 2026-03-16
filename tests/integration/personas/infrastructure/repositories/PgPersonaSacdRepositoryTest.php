@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\personas\infrastructure\repositories;
+namespace Tests\integration\personas\infrastructure\persistence\postgresql;
 
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\PersonaSacd;

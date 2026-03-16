@@ -49,7 +49,7 @@
         let datos = $('#frm_upload').serialize();
         let request = $.ajax({
             data: datos,
-            url: 'src/certificados/infrastructure/controllers/certificado_emitido_guardar.php',
+            url: 'src/certificados/infrastructure/ui/http/controllers/certificado_emitido_guardar.php',
             method: 'POST',
             dataType: 'json'
         });

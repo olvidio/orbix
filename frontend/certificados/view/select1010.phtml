@@ -6,7 +6,7 @@
                 $('#mod').val("eliminar");
                 let request = $.ajax({
                     data: $(formulario).serialize(),
-                    url: 'src/certificados/infrastructure/controllers/certificado_recibido_delete.php',
+                    url: 'src/certificados/infrastructure/ui/http/controllers/certificado_recibido_delete.php',
                     method: 'POST',
                     dataType: 'json'
                 });

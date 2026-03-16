@@ -24,7 +24,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 /////////// Consulta al backend ///////////////////
-$url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_ver_datos.php';
+$url_backend = '/src/certificados/infrastructure/ui/http/controllers/certificado_emitido_ver_datos.php';
 $a_campos_backend = [ 'id_item' => $Qid_item ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
@@ -50,7 +50,7 @@ $nom = $data['nom'];
 
 //Idiomas (blanco para latín)
 /////////// Consulta al backend ///////////////////
-$url_backend = '/src/shared/infrastructure/controllers/locales_posibles.php';
+$url_backend = '/src/shared/infrastructure/ui/http/controllers/locales_posibles.php';
 $a_campos_backend = [ 'id_nom' => $id_nom ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

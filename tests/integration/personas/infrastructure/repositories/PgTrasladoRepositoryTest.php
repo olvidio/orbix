@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\personas\infrastructure\repositories;
+namespace Tests\integration\personas\infrastructure\persistence\postgresql;
 
 use src\personas\domain\contracts\TrasladoRepositoryInterface;
 use src\personas\domain\entity\Traslado;

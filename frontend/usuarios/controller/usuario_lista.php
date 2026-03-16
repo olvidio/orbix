@@ -32,7 +32,7 @@ $Qusername = (string)filter_input(INPUT_POST, 'username');
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
 
-$url_backend = '/src/usuarios/infrastructure/controllers/usuario_lista.php';
+$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_lista.php';
 $a_campos_backend = ['username' => $Qusername];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (!empty($data['error'])) {
@@ -76,7 +76,7 @@ $url_lista = Hash::link(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/usuario_lista.php'
 );
 $url_eliminar = Hash::link(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_eliminar.php'
+    . '/src/usuarios/infrastructure/ui/http/controllers/usuario_eliminar.php'
 );
 
 $a_campos = [

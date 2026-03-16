@@ -40,7 +40,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 /////////// Consulta al backend ///////////////////
-$url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_imprimir_datos.php';
+$url_backend = '/src/certificados/infrastructure/ui/http/controllers/certificado_emitido_imprimir_datos.php';
 $a_campos_backend = [ 'id_nom' => $id_nom ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
@@ -59,7 +59,7 @@ $contador = $data['contador'];
 
 //Idiomas
 /////////// Consulta al backend ///////////////////
-$url_backend = '/src/shared/infrastructure/controllers/locales_posibles.php';
+$url_backend = '/src/shared/infrastructure/ui/http/controllers/locales_posibles.php';
 $a_campos_backend = [ 'id_nom' => $id_nom ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
@@ -89,7 +89,7 @@ $oHash->setUrl($pag_certificado_2_pdf);
 $oHash->setCamposForm('id_item!guardar');
 $h = $oHash->linkSinVal();
 
-$pag_certificado_eliminar = ConfigGlobal::getWeb() . '/src/certificados/infrastructure/controllers/certificado_emitido_delete.php';
+$pag_certificado_eliminar = ConfigGlobal::getWeb() . '/src/certificados/infrastructure/ui/http/controllers/certificado_emitido_delete.php';
 $oHash_e = new Hash();
 $oHash_e->setUrl($pag_certificado_eliminar);
 $oHash_e->setCamposForm('id_item');

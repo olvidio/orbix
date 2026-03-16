@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\actividadtarifas\infrastructure\repositories;
+namespace Tests\integration\actividadtarifas\infrastructure\persistence\postgresql;
 
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\entity\RelacionTarifaTipoActividad;

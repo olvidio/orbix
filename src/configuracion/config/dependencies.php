@@ -4,10 +4,10 @@ use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
-use src\configuracion\infrastructure\repositories\PgAppRepository;
-use src\configuracion\infrastructure\repositories\PgConfigSchemaRepository;
-use src\configuracion\infrastructure\repositories\PgModuloInstaladoRepository;
-use src\configuracion\infrastructure\repositories\PgModuloRepository;
+use src\configuracion\infrastructure\persistence\postgresql\PgAppRepository;
+use src\configuracion\infrastructure\persistence\postgresql\PgConfigSchemaRepository;
+use src\configuracion\infrastructure\persistence\postgresql\PgModuloInstaladoRepository;
+use src\configuracion\infrastructure\persistence\postgresql\PgModuloRepository;
 use function DI\autowire;
 
 return [

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\profesores\infrastructure\repositories;
+namespace Tests\integration\profesores\infrastructure\persistence\postgresql;
 
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorStgr;

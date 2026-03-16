@@ -15,7 +15,7 @@ if ($Qregion === '') {
 }
 
 $url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/mails_contactos_region.php'
+    . '/src/usuarios/infrastructure/ui/http/controllers/mails_contactos_region.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

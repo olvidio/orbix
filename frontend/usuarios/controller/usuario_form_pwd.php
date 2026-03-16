@@ -18,7 +18,7 @@ $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
+$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_info.php';
 $a_campos_backend = ['id_usuario' => $id_usuario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
@@ -32,8 +32,8 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_usuario_guardar = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_guardar_pwd.php';
-$url_usuario_chk = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_check_pwd.php';
+$url_usuario_guardar = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/ui/http/controllers/usuario_guardar_pwd.php';
+$url_usuario_chk = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/ui/http/controllers/usuario_check_pwd.php';
 $oHash2 = new Hash();
 $oHash2->setUrl($url_usuario_chk);
 $oHash2->setCamposForm('id_usuario!password');

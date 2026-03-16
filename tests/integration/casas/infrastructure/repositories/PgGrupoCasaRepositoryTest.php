@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\casas\infrastructure\repositories;
+namespace Tests\integration\casas\infrastructure\persistence\postgresql;
 
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\casas\domain\entity\GrupoCasa;

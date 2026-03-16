@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\actividadescentro\infrastructure\repositories;
+namespace Tests\integration\actividadescentro\infrastructure\persistence\postgresql;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadescentro\domain\entity\CentroEncargado;

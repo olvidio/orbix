@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\integration\ubis\infrastructure\repositories;
+namespace Tests\integration\ubis\infrastructure\persistence\postgresql;
 
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\CentroEllas;
