@@ -54,7 +54,7 @@
         // Still return the Promise from $.ajax
         return $.ajax({
             data: parametros,
-            url: 'src/inventario/infrastructure/ui/http/controllers/lista_lugares_de_ubi.php',
+            url: 'src/inventario/lista_lugares_de_ubi',
             type: 'post',
             dataType: 'json'
         });
@@ -129,7 +129,7 @@
         var parametros = $(formulario).serialize();
         let request = $.ajax({
             data: parametros,
-            url: 'src/inventario/infrastructure/ui/http/controllers/traslado_doc_guardar.php',
+            url: 'src/inventario/traslado_doc_guardar',
             type: 'post',
             dataType: 'json'
         });

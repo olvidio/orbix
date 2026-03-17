@@ -3,7 +3,7 @@
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
-            url: 'src/ubiscamas/infrastructure/ui/http/controllers/habitacion_update.php',
+            url: 'src/ubiscamas/habitacion_update',
             type: 'POST',
             dataType: 'json'
         });
@@ -59,7 +59,7 @@
             let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaDelete->linkSinVal() ?>';
             let request = $.ajax({
                 data: parametros,
-                url: 'src/ubiscamas/infrastructure/ui/http/controllers/cama_delete.php',
+                url: 'src/ubiscamas/cama_delete',
                 type: 'POST',
                 dataType: 'json'
             });

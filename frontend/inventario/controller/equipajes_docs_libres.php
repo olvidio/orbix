@@ -13,7 +13,7 @@ $Qid_tipo_doc = (string)filter_input(INPUT_POST, 'id_tipo_doc');
 
 
 // posibles tipos de documento
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_docs_libres.php';
+$url_backend = '/src/inventario/lista_docs_libres';
 $a_campos_backend = [
     'id_equipaje' => $Qid_equipaje,
     'id_tipo_doc' => $Qid_tipo_doc

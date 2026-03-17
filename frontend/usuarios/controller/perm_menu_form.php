@@ -24,7 +24,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/perm_menu_info.php';
+$url_backend = '/src/usuarios/perm_menu_info';
 $a_campos_backend = ['id_usuario' => $Qid_usuario, 'id_item' => $Qid_item];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

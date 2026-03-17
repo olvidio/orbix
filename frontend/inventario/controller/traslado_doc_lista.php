@@ -16,7 +16,7 @@ $oPosicion->recordar();
 
 
 // muestra los ctr que tienen el documento.
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_docs_de_ctr.php';
+$url_backend = '/src/inventario/lista_docs_de_ctr';
 $a_campos_backend = [
     'id_ubi' => $Qid_ubi,
     'id_lugar' => $Qid_lugar

@@ -17,7 +17,7 @@ $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_info.php';
+$url_backend = '/src/usuarios/usuario_info';
 $a_campos_backend = [ 'id_usuario' => $id_usuario ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

@@ -139,7 +139,7 @@ class ListaAgrupar
     {
         if (empty($this->aOpciones)) {
             //-------- listado de colecciones -----------------------------------
-            $url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_colecciones.php';
+            $url_backend = '/src/inventario/lista_colecciones';
             $data = PostRequest::getDataFromUrl($url_backend);
 
             $this->aOpciones = $data['a_opciones'];

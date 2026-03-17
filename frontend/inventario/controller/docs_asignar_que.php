@@ -16,7 +16,7 @@ $Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');
 $oPosicion->recordar();
 
 // muestra los ctr que NO tienen el documento.
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_tipo_doc.php';
+$url_backend = '/src/inventario/lista_tipo_doc';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $aOpciones = $data['a_opciones'];

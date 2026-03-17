@@ -72,9 +72,9 @@ if (is_string($legacyR) && str_starts_with($legacyR, '/src/')) {
         return; // Evita seguir al router
     }
     // Si no existe el archivo, devolvemos 404 para no enmascarar errores
-    http_response_code(404);
-    echo '404 Not Found (legacy src)';
-    return;
+    //http_response_code(404);
+    //echo '404 Not Found (legacy src)';
+    //return;
 }
 
 // 4) Dispatcher de rutas (FastRoute)
@@ -99,6 +99,9 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
 // 5) Resolver método y URI de la petición
 $httpMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $uri = $_SERVER['REQUEST_URI'] ?? '/';
+
+// Eliminar el prefix del directori (pruebas o orbix) per al matching
+$uri = preg_replace('/^\/(pruebas|orbix)/', '', $uri);
 
 // Eliminar query string para el matching
 if (false !== $pos = strpos($uri, '?')) {

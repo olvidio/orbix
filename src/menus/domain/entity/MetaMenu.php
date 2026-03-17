@@ -60,7 +60,7 @@ class MetaMenu
         return $this->url?->value();
     }
 
-    public function getUrlVo(): MetaMenuUrl
+    public function getUrlVo(): ?MetaMenuUrl
     {
         return $this->url;
     }
@@ -88,7 +88,7 @@ class MetaMenu
         return $this->parametros?->value();
     }
 
-    public function getParametrosVo(): MetaMenuParametros
+    public function getParametrosVo(): ?MetaMenuParametros
     {
         return $this->parametros;
     }

@@ -8,52 +8,53 @@ return static function ($r) {
     // se mapea a la ruta /menus/<nombre_archivo_sin_php>
     // Permitimos GET y POST para máxima compatibilidad durante la migración.
 
-    $r->addRoute(['GET','POST'], '/menus/grupmenu_coleccion', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/grupmenu_coleccion', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/grupmenu_coleccion.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/grupmenu_eliminar', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/grupmenu_eliminar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/grupmenu_eliminar.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/grupmenu_guardar', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/grupmenu_guardar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/grupmenu_guardar.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/grupmenu_info', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/grupmenu_info', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/grupmenu_info.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/grupmenu_lista', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/grupmenu_lista', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/grupmenu_lista.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/lista_meta_menus', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/lista_meta_menus', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/lista_meta_menus.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/lista_templates', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/lista_templates', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/lista_templates.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/menu_copiar', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/menu_copiar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menu_copiar.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/menu_eliminar', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/menu_eliminar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menu_eliminar.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/menu_guardar', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/menu_guardar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menu_guardar.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/menu_mover', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/menu_mover', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menu_mover.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/menus_exportar', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/menus_exportar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_exportar.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/menus_exportar_ref_a_ficheros', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/menus_exportar_ref_a_ficheros', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_exportar_ref_a_ficheros.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/menus_generar_txt', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/menus_generar_txt', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_generar_txt.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/menus_importar_de_ficheros_a_ref', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/menus_importar_de_ficheros_a_ref', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php';
     });
-    $r->addRoute(['GET','POST'], '/menus/menus_importar', function () {
+    $r->addRoute(['GET','POST'], '/src/menus/menus_importar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_importar.php';
     });
+
 };

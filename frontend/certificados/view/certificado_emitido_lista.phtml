@@ -4,7 +4,7 @@
         if (rta === 1) {
             let request = $.ajax({
                 data: $(formulario).serialize(),
-                url: 'src/certificados/infrastructure/ui/http/controllers/certificado_emitido_enviar.php',
+                url: 'src/certificados/certificado_emitido_enviar',
                 method: 'POST',
                 dataType: 'json'
             });
@@ -63,7 +63,7 @@
                 $('#mod').val("eliminar");
                 let request = $.ajax({
                     data: $(formulario).serialize(),
-                    url: 'src/certificados/infrastructure/ui/http/controllers/certificado_emitido_delete.php',
+                    url: 'src/certificados/certificado_emitido_delete',
                     method: 'POST',
                     dataType: 'json'
                 });

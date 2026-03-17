@@ -16,7 +16,7 @@ $Qnom_grupo = (string)filter_input(INPUT_POST, 'nom_grupo');
 $Qid_lugar = (int)filter_input(INPUT_POST, $Qnom_grupo);
 
 
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_docs_de_lugar.php';
+$url_backend = '/src/inventario/lista_docs_de_lugar';
 $a_campos_backend = [ 'id_lugar' => $Qid_lugar];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

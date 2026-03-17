@@ -13,7 +13,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 $oPosicion->recordar();
 
-$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/usuario_preferencias.php';
+$url_backend = '/src/usuarios/usuario_preferencias';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $layout = $data['layout'];
@@ -64,7 +64,7 @@ $oDesplOficinas->setBlanco(true);
 
 // ----------- Idioma -------------------
 /////////// Consulta al backend ///////////////////
-$url_backend = '/src/shared/infrastructure/ui/http/controllers/locales_posibles.php';
+$url_backend = '/src/shared/locales_posibles';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $a_locales = $data['a_locales'];

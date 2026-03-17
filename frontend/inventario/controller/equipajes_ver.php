@@ -36,7 +36,7 @@ if (!empty($Qfiltro)) {
     }
 }
 
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_equipajes_desde_fecha.php';
+$url_backend = '/src/inventario/lista_equipajes_desde_fecha';
 $a_campos_backend = [ 'f_ini_iso' => $f_ini_iso];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

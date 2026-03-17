@@ -15,7 +15,7 @@ $oPosicion->recordar();
 $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 
 
-$url_backend = '/src/menus/infrastructure/ui/http/controllers/grupmenu_lista.php';
+$url_backend = '/src/menus/grupmenu_lista';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $aOpciones = $data['a_lista'];

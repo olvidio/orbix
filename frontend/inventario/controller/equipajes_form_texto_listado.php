@@ -32,7 +32,7 @@ switch ($Qloc) {
         preg_match('/docs_grupo_(.*)/', $Qloc, $matches);
         $id_grupo = $matches[1];
 
-        $url_backend = '/src/inventario/infrastructure/ui/http/controllers/texto_de_egm.php';
+        $url_backend = '/src/inventario/texto_de_egm';
         $a_campos_backend = [
             'id_equipaje' => $Qid_equipaje,
             'id_grupo' => $id_grupo];

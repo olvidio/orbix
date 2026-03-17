@@ -28,7 +28,7 @@ if (empty($Qusername)) {
 
 $url_index = $_SERVER['HTTP_REFERER'];
 $url = str_replace('index.php', '', $url_index);
-$url_backend = $url . 'src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php';
+$url_backend = $url . 'src/usuarios/recuperar_password_mail';
 $a_campos_backend = [
     'username' => $Qusername,
     'esquema' => $Qesquema,

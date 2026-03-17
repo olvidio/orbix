@@ -14,7 +14,7 @@ $oPosicion->recordar();
 
 
 // muestra los ctr que tienen el documento.
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_de_ctr.php';
+$url_backend = '/src/inventario/lista_de_ctr';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $a_opciones = $data['a_opciones'];
@@ -29,7 +29,7 @@ $oHash->setCamposForm('id_ubi!id_ubi_new!sel');
 $oHash->setCamposNo('sel!id_lugar!id_lugar_new');
 
 $oHashLugar = new Hash();
-$oHashLugar->setUrl(ConfigGlobal::getWeb(). '/src/inventario/infrastructure/ui/http/controllers/lista_lugares_de_ubi.php');
+$oHashLugar->setUrl(ConfigGlobal::getWeb(). '/src/inventario/lista_lugares_de_ubi');
 $oHashLugar->setCamposForm('id_ubi');
 $h_lugar = $oHashLugar->linkSinVal();
 

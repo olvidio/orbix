@@ -18,7 +18,7 @@ if (empty($Qolvidar)) {
     $oPosicion->recordar();
 }
 
-$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php';
+$url_backend = '/src/usuarios/perm_activ_lista';
 $a_campos_backend = ['id_usuario' => $Qid_usuario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

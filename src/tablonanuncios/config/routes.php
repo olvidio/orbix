@@ -8,7 +8,7 @@ return static function ($r) {
     // se mapea a la ruta /tablonanuncios/<nombre_archivo_sin_php>
     // Permitimos GET y POST para máxima compatibilidad durante la migración.
 
-    $r->addRoute(['GET','POST'], '/tablonanuncios/anuncio_delete', function () {
+    $r->addRoute(['GET','POST'], '/src/tablonanuncios/anuncio_delete', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/anuncio_delete.php';
     });
 };

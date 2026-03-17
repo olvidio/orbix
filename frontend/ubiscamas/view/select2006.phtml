@@ -12,7 +12,7 @@
             if (confirm("<?= _("¿seguro que desea borrar la habitación?") ?>")) {
                 let request = $.ajax({
                     data: $(formulario).serialize(),
-                    url: 'src/ubiscamas/infrastructure/ui/http/controllers/habitacion_delete.php',
+                    url: 'src/ubiscamas/habitacion_delete',
                     type: 'POST',
                     dataType: 'json'
                 });

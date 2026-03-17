@@ -16,10 +16,10 @@ $Qid_lugar = (int)filter_input(INPUT_POST, 'id_lugar');
 $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
 if (!empty($Qid_lugar)) {
-    $url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_docs_de_lugar.php';
+    $url_backend = '/src/inventario/lista_docs_de_lugar';
 }
 if (!empty($Qid_item_egm)) {
-    $url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_docs_de_egm.php';
+    $url_backend = '/src/inventario/lista_docs_de_egm';
 }
 $a_campos_backend = [
     'id_lugar' => $Qid_lugar,

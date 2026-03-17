@@ -1,6 +1,6 @@
 <script>
     fnjs_guardar = function (formulario) {
-        $(formulario).attr('action', 'src/ubiscamas/infrastructure/ui/http/controllers/cama_update.php');
+        $(formulario).attr('action', 'src/ubiscamas/cama_update');
         $(formulario).one("submit", function () {
             $.ajax({
                 url: $(this).attr('action'),

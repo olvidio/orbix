@@ -8,7 +8,7 @@ use frontend\shared\web\Hash;
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$url = ConfigGlobal::getWeb() . '/src/menus/infrastructure/ui/http/controllers/menus_exportar.php';
+$url = ConfigGlobal::getWeb() . '/src/menus/menus_exportar';
 $oHash = new Hash();
 $oHash->setUrl($url);
 $oHash->setArrayCamposHidden(['sobreescribir' => 'false']);

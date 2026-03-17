@@ -49,7 +49,7 @@ $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 if (!empty($Qid_usuario)) {
     //////////// Nombre de grupo ////////////////////////////////////////////////////////
-    $url_backend = '/src/usuarios/infrastructure/ui/http/controllers/grupo_info.php';
+    $url_backend = '/src/usuarios/grupo_info';
     $a_campos_backend = [ 'id_usuario' => $Qid_usuario];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
     $usuario = $data['nombre'];
@@ -74,7 +74,7 @@ if (!empty($Qid_usuario)) {
     $oView->renderizar('grupo_form.phtml', $a_camposG);
 
     //////////// Permisos de grupos //////////////////////////////////////////////////
-    $url_backend = '/src/usuarios/infrastructure/ui/http/controllers/perm_menu_lista.php';
+    $url_backend = '/src/usuarios/perm_menu_lista';
     $a_campos = [ 'id_usuario' => $Qid_usuario];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
     $a_cabeceras = $data['a_cabeceras'];

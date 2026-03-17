@@ -14,7 +14,7 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/inventario_ctr.php';
+$url_backend = '/src/inventario/inventario_ctr';
 $a_campos_backend = [
     'sel' => $sel_json,
 ];

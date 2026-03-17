@@ -77,7 +77,7 @@ if (!(ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r'
 }
 
 /////////// Consulta al backend ///////////////////
-$url_backend = '/src/certificados/infrastructure/ui/http/controllers/certificado_emitido_lista_datos.php';
+$url_backend = '/src/certificados/certificado_emitido_lista_datos';
 $a_campos_backend = [
     'certificado' => $Qcertificado,
     'inicurs_ca_iso' => $inicurs_ca_iso,

@@ -11,7 +11,7 @@ require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // muestra los documentos en búsqueda.
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_docs_en_busqueda.php';
+$url_backend = '/src/inventario/lista_docs_en_busqueda';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $a_valores = $data['a_valores'];

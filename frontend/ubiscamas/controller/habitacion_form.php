@@ -113,7 +113,7 @@ $oHashCamaForm = new Hash();
 $oHashCamaForm->setUrl($url_cama_form);
 $oHashCamaForm->setCamposForm('id_ubi!id_cama!id_habitacion');
 
-$url_cama_delete = 'src/ubiscamas/infrastructure/ui/http/controllers/cama_delete.php';
+$url_cama_delete = 'src/ubiscamas/cama_delete';
 $oHashCamaDelete = new Hash();
 $oHashCamaDelete->setUrl($url_cama_delete);
 $oHashCamaDelete->setCamposForm('id_ubi!id_cama!id_habitacion');

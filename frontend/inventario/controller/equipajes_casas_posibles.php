@@ -17,7 +17,7 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
 $Qfin = (string)filter_input(INPUT_POST, 'fin');
 
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/lista_casas_posibles_periodo.php';
+$url_backend = '/src/inventario/lista_casas_posibles_periodo';
 $a_campos_backend = [
     'periodo' => $Qperiodo,
     'year' => $Qyear,

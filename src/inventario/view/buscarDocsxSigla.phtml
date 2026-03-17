@@ -106,7 +106,7 @@
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
-                url: 'src/inventario/infrastructure/ui/http/controllers/documentos_guardar.php',
+                url: 'src/inventario/documentos_guardar',
                 method: 'POST',
                 dataType: 'json'
             });

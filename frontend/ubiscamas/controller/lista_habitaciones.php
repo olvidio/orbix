@@ -30,7 +30,7 @@ if (!empty($a_sel)) {
 }
 
 
-$url_backend = '/src/ubiscamas/infrastructure/application/HabitacionesCamaLista.php';
+$url_backend = '/src/ubiscamas/HabitacionesCamaLista.php';
 $a_campos_backend = ['id_activ' => $Qid_activ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
@@ -59,7 +59,7 @@ $oHashActualizar->setArraycamposHidden($a_camposHiddenActualizar);
 $a_campos['oHashActualizar'] = $oHashActualizar;
 
 // Url para grabar la asignación de cama
-$url_update_cama = 'src/ubiscamas/infrastructure/ui/http/controllers/update_cama_asistente.php';
+$url_update_cama = 'src/ubiscamas/update_cama_asistente';
 $oHashUpdateCama = new Hash();
 $oHashUpdateCama->setUrl($url_update_cama);
 $oHashUpdateCama->setCamposForm('id_activ!id_nom!id_cama');

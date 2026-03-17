@@ -24,7 +24,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 /////////// Consulta al backend ///////////////////
-$url_backend = '/src/usuarios/infrastructure/ui/http/controllers/role_grupmenu_info.php';
+$url_backend = '/src/usuarios/role_grupmenu_info';
 $a_campos_backend = ['id_role' => $Qid_role];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 

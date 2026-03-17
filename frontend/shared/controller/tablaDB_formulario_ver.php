@@ -52,7 +52,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $a_pkey = '';
 }
 
-$web_depende = ConfigGlobal::getWeb() . "/src/shared/infrastructure/ui/http/controllers/tablaDB_depende_datos.php";
+$web_depende = ConfigGlobal::getWeb() . "/src/shared/tablaDB_depende_datos";
 $oHashDepende = new Hash();
 $oHashDepende->setUrl($web_depende);
 $oHashDepende->setCamposForm('clase_info!accion!valor_depende');
@@ -67,10 +67,10 @@ if (!empty($Qobj_pau)) {
     $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
 } else {
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/src/shared/infrastructure/ui/http/controllers/tablaDB_lista_datos.php?$sQuery");
+    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/src/shared/tablaDB_lista_datos?$sQuery");
 }
 
-$url_backend = '/src/shared/infrastructure/ui/http/controllers/tablaDB_formulario_datos.php';
+$url_backend = '/src/shared/tablaDB_formulario_datos';
 $a_campos_backend = [
     'clase_info' => $Qclase_info_encoded,
     'a_pkey' => $a_pkey,

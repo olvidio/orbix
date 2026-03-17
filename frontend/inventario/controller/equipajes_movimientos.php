@@ -10,7 +10,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$url_backend = '/src/inventario/infrastructure/ui/http/controllers/equipajes_movimientos.php';
+$url_backend = '/src/inventario/equipajes_movimientos';
 $a_campos_backend = [ 'sel' => $a_sel];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
