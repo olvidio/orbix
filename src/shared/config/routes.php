@@ -1,4 +1,4 @@
-N<?php
+<?php
 // Rutas del módulo Shared
 // Convención: este archivo retorna un callable que recibe (RouteCollector $r)
 // para registrar las rutas del módulo. Así evitamos depender del ámbito.
