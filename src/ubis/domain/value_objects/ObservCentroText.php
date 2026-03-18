@@ -21,7 +21,7 @@ final class ObservCentroText
         if (mb_strlen($value) > 50) {
             throw new \InvalidArgumentException('ObservCentroText must be at most 50 characters');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+#\/]*$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'’;:_\-()\+#\/]*$/u", $value)) {
             throw new \InvalidArgumentException('ObservCentroText has invalid characters');
         }
     }
