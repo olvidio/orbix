@@ -320,7 +320,7 @@ class BurgerLayout implements LayoutInterface
         $indexedNodes = [];
         foreach ($cMenusUtilidades as $key => $itemObject) {
             $menu = $itemObject->getMenu();
-            $orden = $itemObject->getOrdenVo()->value();
+            $orden = $itemObject->getOrden();
             $id_grupmenu = $itemObject->getId_grupmenu();
             $pathKey = $id_grupmenu . '_' . implode('_', $orden);
             if (empty($orden)) {
