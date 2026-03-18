@@ -20,11 +20,14 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/ubiscamas/habitacion_update', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/habitacion_update.php';
     });
-    $r->addRoute(['GET', 'POST'], '/src/ubiscamas/ListaHabitacionesAjax', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/ListaHabitacionesAjax.php';
-    });
     $r->addRoute(['GET', 'POST'], '/src/ubiscamas/update_cama_asistente', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/update_cama_asistente.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/ubiscamas/actividad_habitaciones_lista', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_habitaciones_lista.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubiscamas/update_solo_vip', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/update_solo_vip.php';
+    });
 };

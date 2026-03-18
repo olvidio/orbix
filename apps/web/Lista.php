@@ -569,20 +569,39 @@ class Lista
                         }
                         if (!empty($valor['span'])) {
                             $span = $valor['span'];
-                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val ?? '');
-                            $icol++;
-                            for ($s = 1; $s < $span; $s++) {
-                                $aFilas[$num_fila][$aFields[$icol]] = '';
+                            if (isset($aFields[$icol])) {
+                                $aFilas[$num_fila][$aFields[$icol]] = addslashes($val ?? '');
                                 $icol++;
+                                for ($s = 1; $s < $span; $s++) {
+                                    if (isset($aFields[$icol])) {
+                                        $aFilas[$num_fila][$aFields[$icol]] = '';
+                                    }
+                                    $icol++;
+                                }
+                                $icol--;
                             }
-                            $icol--;
                         } else {
-                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val ?? '');
+                            if (isset($aFields[$icol])) {
+                                $aFilas[$num_fila][$aFields[$icol]] = addslashes($val ?? '');
+                                $icol++;
+                            } else {
+                                if (!is_numeric($col)) {
+                                    $aFilas[$num_fila][$col] = addslashes($val ?? '');
+                                }
+                            }
                         }
                     } else {
-                        $aFilas[$num_fila][$aFields[$icol]] = empty($valor) ? '' : addslashes($valor ?? '');
+                        if (isset($aFields[$icol])) {
+                            $aFilas[$num_fila][$aFields[$icol]] = empty($valor) ? '' : addslashes($valor ?? '');
+                        } else {
+                             if (!is_numeric($col)) {
+                                 $aFilas[$num_fila][$col] = empty($valor) ? '' : addslashes($valor ?? '');
+                             }
+                        }
+                        if (is_numeric($col)) {
+                            $icol++;
+                        }
                     }
-                    $icol++;
                 }
             }
         }

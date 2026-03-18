@@ -18,12 +18,21 @@ use core\ConfigGlobal;
         justify-content: space-between;
         margin-top: 20px;
     }
-    .columna-camas, .columna-asistentes {
-        width: 45%;
+
+    .columna-camas {
+        width: 65%;
         border: 1px solid #ccc;
         padding: 10px;
         min-height: 400px;
     }
+
+    .columna-asistentes {
+        width: 30%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        min-height: 400px;
+    }
+
     .columna-flechas {
         width: 10%;
         display: flex;
@@ -31,29 +40,38 @@ use core\ConfigGlobal;
         justify-content: center;
         align-items: center;
     }
+
     .habitacion-title {
         font-weight: bold;
         background-color: #f0f0f0;
         padding: 5px;
         margin-top: 10px;
     }
-    .cama-row, .asistente-row {
+
+    .cama-row,
+    .asistente-row {
         padding: 5px;
         border-bottom: 1px solid #eee;
         cursor: pointer;
     }
-    .cama-row:hover, .asistente-row:hover {
+
+    .cama-row:hover,
+    .asistente-row:hover {
         background-color: #e9ecef;
     }
-    .cama-row.selected, .asistente-row.selected {
+
+    .cama-row.selected,
+    .asistente-row.selected {
         background-color: #007bff;
         color: white;
     }
+
     .asistente-asignado {
         color: #28a745;
         font-weight: bold;
         margin-left: 10px;
     }
+
     .btn-flecha {
         margin: 10px 0;
         padding: 10px 20px;
@@ -64,32 +82,15 @@ use core\ConfigGlobal;
 
 <div class="asignacion-container">
     <div class="columna-camas">
-        <h3>Habitaciones y Camas</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Habitaciones</h3>
+            <label>
+                <input type="checkbox" id="chk_solo_vip" <?= $solo_vip ? 'checked' : '' ?>>
+                <?= _("solo VIP") ?>
+            </label>
+        </div>
         <div id="lista-camas">
-            <?php foreach ($habitaciones_con_camas as $id_hab => $data): ?>
-                <div class="habitacion-title">
-                    <?= htmlspecialchars($data['habitacion']->getNombreVo()?->value() ?? 'Hab. sin nombre') ?>
-                </div>
-                <?php foreach ($data['camas'] as $oCama): ?>
-                    <?php 
-                        $camaId = $oCama->getIdCamaVo()->value();
-                        $asistenteName = '';
-                        $asistenteId = '';
-                        if (isset($camas_con_asistentes[$camaId])) {
-                            $oAsistente = $camas_con_asistentes[$camaId];
-                            $asistenteId = $oAsistente->getId_nom();
-                            $oPersona = \src\personas\domain\entity\Persona::findPersonaEnGlobal($asistenteId);
-                            if ($oPersona) {
-                                $asistenteName = $oPersona->getPrefApellidosNombre();
-                            }
-                        }
-                    ?>
-                    <div class="cama-row" data-id-cama="<?= $camaId ?>" data-id-nom="<?= $asistenteId ?>">
-                        <span class="cama-desc"><?= htmlspecialchars($oCama->getDescripcionVo()->value()) ?></span>
-                        <span class="asistente-asignado"><?= htmlspecialchars($asistenteName) ?></span>
-                    </div>
-                <?php endforeach; ?>
-            <?php endforeach; ?>
+            <?= $oTabla->mostrar_tabla()?>
         </div>
     </div>
 
@@ -101,107 +102,129 @@ use core\ConfigGlobal;
     <div class="columna-asistentes">
         <h3>Asistentes sin asignar</h3>
         <div id="lista-asistentes">
-            <?php foreach ($asistentes_sin_cama as $apellidos => $oAsistente): ?>
-                <?php $id_nom = $oAsistente->getId_nom(); ?>
-                <div class="asistente-row" data-id-nom="<?= $id_nom ?>">
-                    <?= htmlspecialchars($apellidos) ?>
-                </div>
-            <?php endforeach; ?>
+            <?php foreach ($asistentes_sin_cama as $aAsistente): ?>
+            <div class="asistente-row" data-id-nom="<?= $aAsistente['id_nom']?>">
+                <?= htmlspecialchars($aAsistente['apellidos'])?>
+            </div>
+            <?php
+endforeach; ?>
         </div>
     </div>
 </div>
 
+<?= $oPosicion->mostrar_left_slide(1)?>
+
 <script>
-$(document).ready(function() {
-    let camaSeleccionada = null;
-    let asistenteSeleccionado = null;
+    $(document).ready(function () {
+        let camaSeleccionada = null; // This will now store the grid item
+        let asistenteSeleccionado = null;
 
-    $('.cama-row').on('click', function() {
-        $('.cama-row').removeClass('selected');
-        $(this).addClass('selected');
-        camaSeleccionada = $(this);
-    });
-
-    $('.asistente-row').on('click', function() {
-        $('.asistente-row').removeClass('selected');
-        $(this).addClass('selected');
-        asistenteSeleccionado = $(this);
-    });
-
-    $('#btn-asignar').on('click', function() {
-        if (!camaSeleccionada) {
-            alert("Seleccione una cama primero.");
-            return;
-        }
-        if (!asistenteSeleccionado) {
-            alert("Seleccione un asistente sin cama.");
-            return;
-        }
-        
-        let id_cama = camaSeleccionada.data('id-cama');
-        let id_nom = asistenteSeleccionado.data('id-nom');
-        let nombreAsistente = asistenteSeleccionado.text().trim();
-        
-        if (camaSeleccionada.data('id-nom')) {
-            alert("Esta cama ya tiene un asistente asignado. Desasigne primero.");
-            return;
-        }
-
-        asignarCamaBD(id_cama, id_nom, function(success) {
-            if (success) {
-                camaSeleccionada.data('id-nom', id_nom);
-                camaSeleccionada.find('.asistente-asignado').text(nombreAsistente);
-                asistenteSeleccionado.remove();
-                asistenteSeleccionado = null;
-                camaSeleccionada.removeClass('selected');
-                camaSeleccionada = null;
-            }
+        $('#chk_solo_vip').on('change', function () {
+            let solo_vip = $(this).is(':checked');
+            updateSoloVip(solo_vip);
         });
-    });
 
-    $('#btn-desasignar').on('click', function() {
-        if (!camaSeleccionada) {
-            alert("Seleccione una cama con asistente asignado.");
-            return;
-        }
-        
-        let id_nom = camaSeleccionada.data('id-nom');
-        if (!id_nom) {
-            alert("Esta cama no tiene asistente.");
-            return;
-        }
-        
-        let nombreAsistente = camaSeleccionada.find('.asistente-asignado').text().trim();
+        function updateSoloVip(solo_vip) {
+            let url = '<?= ConfigGlobal::getWeb() ?><?= $url_update_solo_vip ?>';
+            let parameters = {
+                id_activ: <?= $id_activ ?>,
+                solo_vip: solo_vip ? 'true' : 'false',
+                <?= $oHashSoloVip->getParamAjaxEnArray() ?>
+            };
 
-        asignarCamaBD('', id_nom, function(success) {
-            if (success) {
-                camaSeleccionada.data('id-nom', '');
-                camaSeleccionada.find('.asistente-asignado').text('');
-                
-                // Add back to unassigned list
-                let newRow = $('<div class="asistente-row"></div>')
-                    .attr('data-id-nom', id_nom)
-                    .text(nombreAsistente)
-                    .on('click', function() {
-                        $('.asistente-row').removeClass('selected');
-                        $(this).addClass('selected');
-                        asistenteSeleccionado = $(this);
-                    });
-                
-                $('#lista-asistentes').append(newRow);
-                
-                camaSeleccionada.removeClass('selected');
-                camaSeleccionada = null;
-            }
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parameters,
+                dataType: 'json'
+            })
+            .done(function (respuesta) {
+                if (respuesta.success) {
+                    fnjs_actualizar();
+                } else {
+                    alert(respuesta.mensaje || 'Error desconocido');
+                }
+            })
+            .fail(function (xhr, status, error) {
+                alert('Error en la conexión con el servidor: ' + error);
+            });
+        }
+
+        // Listener para la selección en la tabla de camas (SlickGrid)
+        if (typeof grid_grupo_lista !== 'undefined') {
+            grid_grupo_lista.onSelectedRowsChanged.subscribe(function (e, args) {
+                let selectedRows = grid_grupo_lista.getSelectedRows();
+                if (selectedRows.length > 0) {
+                    camaSeleccionada = grid_grupo_lista.getDataItem(selectedRows[0]);
+                } else {
+                    camaSeleccionada = null;
+                }
+            });
+        }
+
+        $('.asistente-row').on('click', function () {
+            $('.asistente-row').removeClass('selected');
+            $(this).addClass('selected');
+            asistenteSeleccionado = $(this);
         });
-    });
 
-    function asignarCamaBD(id_cama, id_nom, callback) {
-        let url = '<?= ConfigGlobal::getWeb() ?>/<?= $url_update_cama ?>';
-        let parameters = {
-            id_activ: <?= $id_activ ?>,
-            id_nom: id_nom,
-            id_cama: id_cama,
+        $('#btn-asignar').on('click', function () {
+            if (!camaSeleccionada) {
+                alert("Seleccione una cama primero.");
+                return;
+            }
+            if (!asistenteSeleccionado) {
+                alert("Seleccione un asistente sin cama.");
+                return;
+            }
+
+            let id_cama = camaSeleccionada.id_cama;
+            let id_nom = asistenteSeleccionado.data('id-nom');
+            let nombreAsistente = asistenteSeleccionado.text().trim();
+
+            if (camaSeleccionada.id_nom) {
+                alert("Esta cama ya tiene un asistente asignado. Desasigne primero.");
+                return;
+            }
+
+            asignarCamaBD(id_cama, id_nom, function (success) {
+                if (success) {
+                    // Recargar la página para ver los cambios reflejados en ambos lados
+                    // Es lo más seguro dado que la tabla se genera en el backend
+                    fnjs_actualizar();
+                }
+            });
+        });
+
+        $('#btn-desasignar').on('click', function () {
+            if (!camaSeleccionada) {
+                alert("Seleccione una cama con asistente asignado.");
+                return;
+            }
+
+            let id_nom = camaSeleccionada.id_nom;
+            if (!id_nom) {
+                alert("Esta cama no tiene asistente.");
+                return;
+            }
+
+            asignarCamaBD('', id_nom, function (success) {
+                if (success) {
+                    fnjs_actualizar();
+                }
+            });
+        });
+
+        function fnjs_actualizar() {
+            fnjs_update_div('#main', '<?= ConfigGlobal::getWeb()?>/<?= $oHashActualizar->getUrl()?>?<?= $oHashActualizar->linkConVal()?>');
+        }
+
+        function asignarCamaBD(id_cama, id_nom, callback) {
+            let url = '<?= ConfigGlobal::getWeb()?>/<?= $url_update_cama?>';
+            let parameters = {
+                id_activ: <?= $id_activ ?>,
+                id_nom: id_nom,
+                id_cama: id_cama,
             <?= $oHashUpdateCama->getParamAjaxEnArray() ?>
         };
 
@@ -211,18 +234,18 @@ $(document).ready(function() {
             data: parameters,
             dataType: 'json'
         })
-        .done(function (respuesta) {
-            if (respuesta.success) {
-                callback(true);
-            } else {
-                alert(respuesta.mensaje || 'Error desconocido');
+            .done(function (respuesta) {
+                if (respuesta.success) {
+                    callback(true);
+                } else {
+                    alert(respuesta.mensaje || 'Error desconocido');
+                    callback(false);
+                }
+            })
+            .fail(function (xhr, status, error) {
+                alert('Error en la conexión con el servidor: ' + error);
                 callback(false);
-            }
-        })
-        .fail(function (xhr, status, error) {
-            alert('Error en la conexión con el servidor: ' + error);
-            callback(false);
-        });
+            });
     }
 });
 </script>
