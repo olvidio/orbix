@@ -11,7 +11,7 @@
     dcterms:title "Dublin Core Metadata Element Set, Version 1.1"@en .
 
 <http://purl.org/dc/elements/1.1/contributor>
-    dcterms:description "Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity."@en ;
+    dcterms:description "Examples of a Contributor include a person, an organization, or a AsistenteActividadService. Typically, the name of a Contributor should be used to indicate the entity."@en ;
     dcterms:hasVersion <http://dublincore.org/usage/terms/history/#contributor-006> ;
     dcterms:issued "1999-07-02"^^<http://www.w3.org/2001/XMLSchema#date> ;
     dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
@@ -33,7 +33,7 @@
     skos:note "A second property with the same name as this property has been declared in the dcterms: namespace (http://purl.org/dc/terms/).  See the Introduction to the document \"DCMI Metadata Terms\" (http://dublincore.org/documents/dcmi-terms/) for an explanation."@en .
 
 <http://purl.org/dc/elements/1.1/creator>
-    dcterms:description "Examples of a Creator include a person, an organization, or a service. Typically, the name of a Creator should be used to indicate the entity."@en ;
+    dcterms:description "Examples of a Creator include a person, an organization, or a AsistenteActividadService. Typically, the name of a Creator should be used to indicate the entity."@en ;
     dcterms:hasVersion <http://dublincore.org/usage/terms/history/#creator-006> ;
     dcterms:issued "1999-07-02"^^<http://www.w3.org/2001/XMLSchema#date> ;
     dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
@@ -100,7 +100,7 @@
     skos:note "A second property with the same name as this property has been declared in the dcterms: namespace (http://purl.org/dc/terms/).  See the Introduction to the document \"DCMI Metadata Terms\" (http://dublincore.org/documents/dcmi-terms/) for an explanation."@en .
 
 <http://purl.org/dc/elements/1.1/publisher>
-    dcterms:description "Examples of a Publisher include a person, an organization, or a service. Typically, the name of a Publisher should be used to indicate the entity."@en ;
+    dcterms:description "Examples of a Publisher include a person, an organization, or a AsistenteActividadService. Typically, the name of a Publisher should be used to indicate the entity."@en ;
     dcterms:hasVersion <http://dublincore.org/usage/terms/history/#publisher-006> ;
     dcterms:issued "1999-07-02"^^<http://www.w3.org/2001/XMLSchema#date> ;
     dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;

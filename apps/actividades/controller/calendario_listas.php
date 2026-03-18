@@ -6,6 +6,7 @@ use permisos\model\PermisosActividadesTrue;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
@@ -221,6 +222,7 @@ foreach (array_keys($aGrupos) as $key) {
 
     if (is_array($cActividades) && count($cActividades) > 0) {
         $a = 0;
+        $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
         foreach ($cActividades as $oActividad) {
             $a++;
             $id_activ = $oActividad->getId_activ();
@@ -261,8 +263,7 @@ foreach (array_keys($aGrupos) as $key) {
             if (ConfigGlobal::$dmz) {
                 $num_asistentes = '?';
             } else {
-                $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
-                $cAsistentes = $AsistenteRepository->getAsistentesDeActividad($id_activ);
+                $cAsistentes = $AsistenteActividadService->getAsistentesDeActividad($id_activ);
                 $num_asistentes = count($cAsistentes);
             }
 

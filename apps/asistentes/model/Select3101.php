@@ -11,7 +11,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
-use src\personas\domain\entity\Persona;
+use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
@@ -107,7 +107,7 @@ class Select3101
     private $Qscroll_id;
     private mixed $status;
 
-    private function incrementa(&$var)
+    private function incrementa(&$var): void
     {
         if (empty($var)) {
             $var = 1;
@@ -116,8 +116,9 @@ class Select3101
         }
     }
 
-    private function getBotones()
+    private function getBotones(): array
     {
+        $a_botones = [];
         if (ConfigGlobal::is_app_installed('asistentes') && ConfigGlobal::mi_ambito() !== 'rstgr') {
             $a_botones[] = array('txt' => _("modificar asistencia"),
                 'click' => "fnjs_modificar(this.form)"
@@ -155,7 +156,7 @@ class Select3101
         return $a_botones;
     }
 
-    private function getCabeceras()
+    private function getCabeceras(): array
     {
         $a_cabeceras = array(array('name' => _("num"), 'width' => 40),
             array('name' => _("nombre y apellidos"), 'width' => 300),
@@ -186,7 +187,7 @@ class Select3101
         $this->publicado = $oActividad->isPublicado();
     }
 
-    private function getTituloPlazas()
+    private function getTituloPlazas(): void
     {
         if (empty($this->plazas_totales)) {
             $oCasa = Ubi::NewUbi($this->id_ubi);
@@ -213,7 +214,7 @@ class Select3101
      * $this->a_plazas_conseguidas
      * $this->a_pazas_resumen
      */
-    private function contarPlazas()
+    private function contarPlazas(): void
     {
         $a_plazas_resumen = [];
         $a_plazas_conseguidas = [];
@@ -252,6 +253,7 @@ class Select3101
         $cCargosEnActividad = $ActividadCargoRepository->getActividadCargos(array('id_activ' => $this->id_pau));
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
+        $PersonaFinderService = $GLOBALS['container']->get(PersonaFinderService::class);
         foreach ($cCargosEnActividad as $oActividadCargo) {
             $c++;
             $num++; // número total de asistentes.
@@ -268,7 +270,16 @@ class Select3101
                 continue;
             }
 
-            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            // Si no soy la dl organizadora, solamente veo los de mi dl
+            if ($this->dl_org !== $this->mi_dele) {
+                $oPersona = $PersonaFinderService->findPersonaEnDl($id_nom);
+                if ($oPersona === null) {
+                    continue;
+                }
+            } else {
+                $oPersona = $PersonaFinderService->findPersonaEnGlobal($id_nom);
+            }
+
             if ($oPersona === null) {
                 $this->msg_err .= "<br>";
                 $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, __FILE__, __LINE__);
@@ -436,6 +447,7 @@ class Select3101
         $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
         $this->a_asistentes = [];
         $cAsistentes = $AsistenteRepository->getAsistentes(array('id_activ' => $this->id_pau));
+        $PersonaFinderService = $GLOBALS['container']->get(PersonaFinderService::class);
         foreach ($cAsistentes as $oAsistente) {
             $this->num++;
             $id_nom = $oAsistente->getId_nom();
@@ -445,7 +457,16 @@ class Select3101
                 continue;
             }
 
-            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            // Si no soy la dl organizadora, solamente veo los de mi dl
+            if ($this->dl_org !== $this->mi_dele) {
+                $oPersona = $PersonaFinderService->findPersonaEnDl($id_nom);
+                if ($oPersona === null) {
+                    continue;
+                }
+            } else {
+                $oPersona = $PersonaFinderService->findPersonaEnGlobal($id_nom);
+            }
+
             if ($oPersona === null) {
                 $this->msg_err .= "<br>";
                 $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, __FILE__, __LINE__);
@@ -910,12 +931,12 @@ class Select3101
 
     }
 
-    public function setLinksInsert()
+    public function setLinksInsert(): void
     {
         $this->aLinks_dl = [];
         $ref_perm = $this->a_ref_perm;
         if (empty($ref_perm) || $this->permiso < 2 || ConfigGlobal::mi_ambito() === 'rstgr') { // si es nulo, no tengo permisos de ningún tipo
-            return '';
+            return;
         }
         $mi_dele = ConfigGlobal::mi_delef();
         reset($ref_perm);

@@ -94,7 +94,7 @@ class ResumenPlazasService
         $id_mi_dl = $this->getDlId($mi_dl);
         $dl_org = $this->getDl_org();
 
-        $service = $this->AsistenteActividadService;
+        $asistenteActividadService = $this->AsistenteActividadService;
         //Conseguidas
         // plazas de calendario de cada dl
         $a_dl = [];
@@ -108,14 +108,14 @@ class ResumenPlazasService
             $aCedidas = $oActividadPlazas->getArrayCedidas();
             if (!empty($aCedidas)) {
                 foreach ($aCedidas as $dl_2 => $num_plazas) {
-                    if ($mi_dl == $dl_2) {
-                        $ocu = $service->getPlazasOcupadasPorDl($id_activ, $mi_dl, $dl_otra);
+                    if ($mi_dl === $dl_2) {
+                        $ocu = $asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $dl_otra);
                         $a_dl["$dl_otra>$dl_2"] = "$dl_otra ($ocu de $num_plazas)";
                     }
                     //Si son plazas cedidas a una dl de paso. Solo cuento las que he cedido yo
                     if ($dl_de_paso !== FALSE) {
                         if ($dl_de_paso == $dl_2 && $id_dl_otra == $id_mi_dl) {
-                            $ocu = $service->getPlazasOcupadasPorDl($id_activ, $dl_2, $mi_dl);
+                            $ocu = $asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $dl_2, $mi_dl);
                             $a_dl["$mi_dl>$dl_de_paso"] = "$dl_de_paso ($ocu de $num_plazas)";
                         }
                     }
@@ -125,7 +125,7 @@ class ResumenPlazasService
         // las que me corresponden por calendario - las cedidas
         $pl_propias = $this->getPlazasPropias();
         if ($pl_propias > 0) {
-            $ocu = $service->getPlazasOcupadasPorDl($id_activ, $mi_dl, $mi_dl);
+            $ocu = $asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $mi_dl);
             $a_dl["$mi_dl>$mi_dl"] = "$mi_dl ($ocu de $pl_propias)";
         }
         // Debe haber al menos un valor para que se pase el campo y no dé error de 'llega distinto número de campos...'
@@ -265,14 +265,14 @@ class ResumenPlazasService
     {
         $a_plazas = [];
         $id_activ = $this->getId_activ();
-        $service = $this->AsistenteActividadService;
+        $AsistenteActividadService = $this->AsistenteActividadService;
         $oActividad = $this->ActividadAllRepository->findById($id_activ);
         $dl_org = $oActividad->getDl_org();
         $plazas_totales = $this->getPlazasTotales();
         /*
         // si la actividad no está publicada, no hay plazas de otras dl. Todas para la dl org.
         if ($oActividad->isPublicado() === false) {
-//			$ocupadas = $service->getPlazasOcupadasPorDl($id_activ,$dl_org);
+//			$ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ,$dl_org);
 //			if ($ocupadas < 0) { // No se sabe
 //				$a_plazas[$dl_org]['ocupadas'] = '?';
 //				$a_plazas['total']['ocupadas'] = $ocupadas;
@@ -388,7 +388,7 @@ class ResumenPlazasService
         // Ocupadas (de las disponibles)
         foreach ($a_plazas as $dl => $aa) {
             foreach ($aa['disponibles'] as $dl_otra => $num) {
-                $ocupadas = $service->getPlazasOcupadasPorDl($id_activ, $dl, $dl_otra);
+                $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $dl, $dl_otra);
                 $a_plazas[$dl]['ocupadas'][$dl_otra] = $ocupadas;
             }
             $a_plazas[$dl]['total_ocupadas'] = \array_sum($a_plazas[$dl]['ocupadas']);

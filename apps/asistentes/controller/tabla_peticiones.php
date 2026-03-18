@@ -73,8 +73,8 @@ $a_cabeceras = [_("nombre"),
 
 $a_botones = [];
 
-$service = $GLOBALS['container']->get(AsistenteActividadService::class);
-$cAsistentes = $service->getAsistentesDeActividad($id_activ_old);
+$AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+$cAsistentes = $AsistenteActividadService->getAsistentesDeActividad($id_activ_old);
 
 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 $oActividad = $ActividadAllRepository->findById($id_activ_old);
@@ -121,7 +121,7 @@ foreach ($cAsistentes as $oAsistente) {
                         $concedidas = $oActividadPlazas->getPlazas();
                     }
                 }
-                $ocupadas = $service->getPlazasOcupadasPorDl($id_activ, $mi_dele);
+                $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
                 if ($ocupadas < 0) { // No se sabe
                     $libres = '-';
                 } else {

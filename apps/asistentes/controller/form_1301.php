@@ -74,8 +74,8 @@ if (!empty($id_activ)) { //caso de modificar
     $oActividad = $ActividadAllRepository->findById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
 
-    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
-    $AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $id_activ);
+    $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+    $AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $id_activ);
     $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
     $oAsistente = $AsistenteRepository->findById($id_activ, $Qid_nom);
     $obj = get_class($oAsistente);

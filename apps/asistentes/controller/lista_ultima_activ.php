@@ -4,6 +4,7 @@
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -220,7 +221,7 @@ $i = 0;
 $falta = 0;
 $a_valores = [];
 $gesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-$AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
+$AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 foreach ($cPersonas as $oPersona) {
     $i++;
@@ -237,7 +238,7 @@ foreach ($cPersonas as $oPersona) {
         }
     }
 
-    $cAsistentes = $AsistenteRepository->getAsistenciasPersonaDeActividades($id_nom, $a_id_activ_f_ini, true);
+    $cAsistentes = $AsistenteActividadService->getAsistenciasPersonaDeActividades($id_nom, $a_id_activ_f_ini, true);
     if (!empty($cAsistentes)) {
         reset($cAsistentes);
         $oAsistente = current($cAsistentes);

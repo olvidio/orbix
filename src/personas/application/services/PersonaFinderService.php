@@ -39,12 +39,36 @@ class PersonaFinderService
     }
 
     /**
+     * Busca una persona por id_nom en el esquema dl (local).
+     *
+     * Busca primero en PersonaDl
+     *
+     * @param int $id_nom ID de la persona a buscar
+     * @return PersonaDl|null La persona encontrada o null
+     * @phpstan-return PersonaDl|PersonaPub|null
+     * @psalm-return PersonaDl|PersonaPub|null
+     */
+    public function findPersonaEnDl(int $id_nom): PersonaDl|PersonaPub|null
+    {
+        $aWhere = ['id_nom' => $id_nom, 'situacion' => 'A'];
+        $personaDlRepository = $this->personaDlRepositoryFactory->create();
+
+        // Buscar primero en PersonaDl
+        $cPersonas = $personaDlRepository->getPersonas($aWhere);
+        if (count($cPersonas) > 0 && $cPersonas[0] !== null) {
+            return $cPersonas[0];
+        }
+
+        return null;
+    }
+
+    /**
      * Busca una persona por id_nom en el esquema global (local).
      *
      * Busca primero en PersonaDl, luego en PersonaPub.
      *
      * @param int $id_nom ID de la persona a buscar
-     * @return PersonaGlobal|null La persona encontrada o null
+     * @return PersonaDl|PersonaPub|null La persona encontrada o null
      * @phpstan-return PersonaDl|PersonaPub|null
      * @psalm-return PersonaDl|PersonaPub|null
      */

@@ -48,8 +48,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_preceptor = (integer)filter_input(INPUT_POST, 'id_preceptor');
 }
 
-$service = $GLOBALS['container']->get(AsistenteActividadService::class);
-$AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ);
+$AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+$AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ);
 $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
 $oAsistente = $AsistenteRepository->findById($Qid_activ, $Qid_nom);
 switch ($Qmod) {

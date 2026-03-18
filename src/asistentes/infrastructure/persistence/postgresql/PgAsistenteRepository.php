@@ -35,11 +35,11 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
     public function __construct(UnitOfWorkInterface $unitOfWork)
     {
         $this->unitOfWork = $unitOfWork;
-        $oDbl = $GLOBALS['oDBE'];
+        $oDbl = $GLOBALS['oDBEP'];
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl_Select = $GLOBALS['oDBEP_Select'];
         $this->setoDbl_select($oDbl_Select);
-        $this->setNomTabla('d_asistentes_dl');
+        $this->setNomTabla('d_asistentes_all');
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */

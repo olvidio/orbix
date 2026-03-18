@@ -82,7 +82,7 @@ function PlazasAB_por_actividad($dlA, $dlB, $clase)
     global $ActividadRepository;
     global $ActividadPlazasRepository;
 
-    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+    $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
 
     $cDelegaciones = $DelegacionRepository->getDelegaciones(array('dl' => $dlA));
     $oDelegacionA = $cDelegaciones[0];
@@ -127,7 +127,7 @@ function PlazasAB_por_actividad($dlA, $dlB, $clase)
             }
         }
         // ocupadas A
-        $ocupadasA = $service->getPlazasOcupadasPorDl($id_activ, $dlA);
+        $ocupadasA = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $dlA);
         if ($ocupadasA < 0) { // No se sabe
             $libresA = '-';
         } else {
@@ -147,7 +147,7 @@ function PlazasAB_por_actividad($dlA, $dlB, $clase)
             }
         }
         // ocupadas B
-        $ocupadasB = $service->getPlazasOcupadasPorDl($id_activ, $dlB);
+        $ocupadasB = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $dlB);
         if ($ocupadasB < 0) { // No se sabe
             $libresB = '-';
         } else {

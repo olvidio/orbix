@@ -38,8 +38,8 @@ $Qid_activ_old = (integer)filter_input(INPUT_POST, 'id_activ');
 $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
 
 // Asistencia para saber si puedo modificar:
-$service = $GLOBALS['container']->get(AsistenteActividadService::class);
-$AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ_old);
+$AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+$AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
 $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
 $oAsistente = $AsistenteRepository->findById($Qid_activ_old, $Qid_nom);
 if ($oAsistente->perm_modificar() === FALSE) {
@@ -53,7 +53,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
     $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
-    $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+    $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
     $mi_dele = ConfigGlobal::mi_delef();
     $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
     $oDelegacion = $cDelegaciones[0];
@@ -171,7 +171,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
                         $concedidas = $oActividadPlazas->getPlazas();
                     }
                 }
-                $ocupadas = $service->getPlazasOcupadasPorDl($id_activ, $mi_dele);
+                $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
                 if ($ocupadas < 0) { // No se sabe
                     $libres = '-';
                 } else {

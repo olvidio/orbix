@@ -97,8 +97,8 @@ switch ($Qmod) {
         $snom_tipo = $oTipoActiv->getNom_tipoText();
 
         if ($Qelim_asis === 2) {
-            $service = $GLOBALS['container']->get(AsistenteActividadService::class);
-            $AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ);
+            $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+            $AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ);
             $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
             $oAsistente = $AsistenteRepository->findById($Qid_activ, $Qid_nom);
             // Si es depende de otra dl ya no lo intento:
@@ -160,8 +160,8 @@ switch ($Qmod) {
                 $msg_err = "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
                 exit ($msg_err);
             }
-            $service = $GLOBALS['container']->get(AsistenteActividadService::class);
-            $AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ);
+            $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+            $AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ);
             $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
             $oAsistente = $AsistenteRepository->findById($Qid_activ, $Qid_nom);
             if ($oAsistente === null) {
@@ -221,8 +221,8 @@ switch ($Qmod) {
             }
         }
         // Modifico la asistencia:
-        $service = $GLOBALS['container']->get(AsistenteActividadService::class);
-        $AsistenteRepositoryInterface = $service->getRepoAsistente($Qid_nom, $Qid_activ);
+        $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+        $AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ);
         $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
         $oAsistente = $AsistenteRepository->findById($Qid_activ, $Qid_nom);
         if ($oAsistente === null) { //no existe

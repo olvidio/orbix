@@ -7,6 +7,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use function core\is_true;
@@ -107,8 +108,8 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 }
 
 //buco los asistentes:
-$AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
-$cAsistentes = $AsistenteRepository->getAsistentesDeActividad($id_activ);
+$AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
+$cAsistentes = $AsistenteActividadService->getAsistentesDeActividad($id_activ);
 $a = 0;
 $a_old = 0;
 $aAlumnos = [];
