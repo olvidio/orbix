@@ -241,7 +241,7 @@ class BurgerLayout implements LayoutInterface
      */
     public function includeJs(array $params): string
     {
-        $defaultGrupMenu = $this->listaGrupMenu[$params['id_grupmenu']];
+        $defaultGrupMenu = (empty($params['id_grupmenu'])) ? '' : $this->listaGrupMenu[$params['id_grupmenu']];
         ob_start();
         ?>
         <!-- Configuración de menús por grupo -->
