@@ -112,6 +112,15 @@ endforeach; ?>
     </div>
 </div>
 
+<div style="margin-top: 20px; text-align: center;">
+    <button type="button" class="btn btn-secondary" onclick="fnjs_lista_distribucion()">
+        <?= _("lista por habitaciones") ?>
+    </button>
+    <button type="button" class="btn btn-secondary" onclick="fnjs_lista_nombres()">
+        <?= _("lista por nombre") ?>
+    </button>
+</div>
+
 <?= $oPosicion->mostrar_left_slide(1)?>
 
 <script>
@@ -214,6 +223,18 @@ endforeach; ?>
                 }
             });
         });
+
+        window.fnjs_lista_distribucion = function () {
+            let url = '<?= ConfigGlobal::getWeb() ?>/<?= $url_distribucion ?>';
+            let parameters = '<?= $oHashDistribucion->linkConVal() ?>';
+            window.open(url + '?' + parameters, 'reporte');
+        }
+
+        window.fnjs_lista_nombres = function () {
+            let url = '<?= ConfigGlobal::getWeb() ?>/<?= $url_nombres ?>';
+            let parameters = '<?= $oHashNombres->linkConVal() ?>';
+            window.open(url + '?' + parameters, 'reporte_nombres');
+        }
 
         function fnjs_actualizar() {
             fnjs_update_div('#main', '<?= ConfigGlobal::getWeb()?>/<?= $oHashActualizar->getUrl()?>?<?= $oHashActualizar->linkConVal()?>');

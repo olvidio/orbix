@@ -82,6 +82,22 @@ if (empty($Qnuevo)) {
     }
 }
 
+if (empty($Qid_habitacion)) {
+    // Nueva habitación: valores por defecto
+    $numero_camas = 1;
+    $numero_camas_vip = 1;
+
+    $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
+    // buscar el ultimo de esta habitacion (recinto) y sumarle 10
+    $aLastHabitacion = $HabitacionRepository->getHabitaciones(['id_ubi' => $Qid_ubi, '_ordre' => 'orden DESC', '_limit' => 1]);
+    if (!empty($aLastHabitacion)) {
+        $oLastHabitacion = current($aLastHabitacion);
+        $orden = (int)$oLastHabitacion->getOrdenVo()->value() + 10;
+    } else {
+        $orden = 10;
+    }
+}
+
 // Array de tipos de tipoLavabo
 $a_tipos_tipoLavabo = TipoLavabo::getArrayTipoLavabo();
 

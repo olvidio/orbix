@@ -417,9 +417,10 @@ if (empty($_SESSION['oPermActividades'])) {
 
 
 session_write_close();
-// Para validar los parámetros enviados via POST
+// Para validar los parámetros enviados via POST o GET (si hay hash)
 $oValidator = new Hash();
-echo $oValidator->validatePost($_POST);
+$a_data = (!empty($_POST)) ? $_POST : ((isset($_GET['h'])) ? $_GET : []);
+echo $oValidator->validatePost($a_data);
 
 $oPosicion = new Posicion($_SERVER['PHP_SELF'], $_POST);
 

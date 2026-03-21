@@ -1,0 +1,90 @@
+<?php
+/**
+ * @var array $habitaciones_con_camas
+ * @var array $camas_con_asistentes
+ */
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title><?= _("Distribución de habitaciones") ?></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        h2 {
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .planta { width: 10%; }
+        .habitacion { width: 30%; }
+        .nombre { width: 60%; }
+        
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2><?= _("Distribución de habitaciones") ?></h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th class="planta"><?= _("Planta") ?></th>
+                <th class="habitacion"><?= _("Habitación") ?></th>
+                <th class="nombre"><?= _("Nombre") ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            foreach ($habitaciones_con_camas as $roomData) {
+                $aHabitacion = $roomData['habitacion'];
+                $planta = $aHabitacion['planta'];
+                $nombre_hab = $aHabitacion['nombre'];
+                
+                foreach ($roomData['camas'] as $aCama) {
+                    $id_cama = $aCama['id_cama'];
+                    $nombre_persona = '';
+                    if (isset($camas_con_asistentes[$id_cama])) {
+                        $nombre_persona = $camas_con_asistentes[$id_cama]['apellidos'];
+                    }
+                    
+                    // Only show rows with an assigned person, or maybe all beds?
+                    // The user's image shows "Hab. sacerdote" without a name (wait, no, it has one).
+                    // Usually these lists only show occupied beds or all beds.
+                    // Let's show all beds but if they are empty, we leave the name blank.
+                    ?>
+                    <tr>
+                        <td class="planta"><?= htmlspecialchars($planta?? '') ?></td>
+                        <td class="habitacion"><?= htmlspecialchars($nombre_hab?? '') ?></td>
+                        <td class="nombre"><?= htmlspecialchars($nombre_persona?? '') ?></td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <div class="no-print" style="margin-top: 30px;">
+        <button onclick="window.print()"><?= _("Imprimir") ?></button>
+    </div>
+</body>
+</html>

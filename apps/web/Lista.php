@@ -592,10 +592,10 @@ class Lista
                         }
                     } else {
                         if (isset($aFields[$icol])) {
-                            $aFilas[$num_fila][$aFields[$icol]] = empty($valor) ? '' : addslashes($valor ?? '');
+                            $aFilas[$num_fila][$aFields[$icol]] = ($valor === '' || $valor === null) ? '' : addslashes($valor ?? '');
                         } else {
                              if (!is_numeric($col)) {
-                                 $aFilas[$num_fila][$col] = empty($valor) ? '' : addslashes($valor ?? '');
+                                 $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes($valor ?? '');
                              }
                         }
                         if (is_numeric($col)) {

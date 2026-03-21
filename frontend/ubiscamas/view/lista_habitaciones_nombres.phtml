@@ -1,0 +1,69 @@
+<?php
+/**
+ * @var array $a_lista
+ */
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title><?= _("Distribución de habitaciones (por nombre)") ?></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        h2 {
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .nombre { width: 40%; }
+        .planta { width: 10%; }
+        .habitacion { width: 50%; }
+        
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2><?= _("Distribución de habitaciones") ?></h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th class="nombre"><?= _("Nombre") ?></th>
+                <th class="planta"><?= _("Planta") ?></th>
+                <th class="habitacion"><?= _("Habitación") ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($a_lista as $item): ?>
+            <tr>
+                <td class="nombre"><?= htmlspecialchars($item['nombre']) ?></td>
+                <td class="planta"><?= htmlspecialchars($item['planta'] ?? '') ?></td>
+                <td class="habitacion"><?= htmlspecialchars($item['habitacion'] ?? '') ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <div class="no-print" style="margin-top: 30px;">
+        <button onclick="window.print()"><?= _("Imprimir") ?></button>
+    </div>
+</body>
+</html>

@@ -38,7 +38,7 @@ class HabitacionesCamaLista
         }
 
         // 2. Fetch Rooms and Beds
-        $cHabitaciones = $this->habitacionRepository->getHabitaciones(['id_ubi' => $id_ubi, '_ordre' => 'orden']);
+        $cHabitaciones = $this->habitacionRepository->getHabitaciones(['id_ubi' => $id_ubi, '_ordre' => 'orden, planta']);
         
         $aIdsHabitacion = array_map(fn($h) => "'" . $h->getIdHabitacionVo()->value() . "'", $cHabitaciones);
         if (empty($aIdsHabitacion)) {
@@ -148,12 +148,21 @@ class HabitacionesCamaLista
             }
         }
 
+        // 6. Final preparation (convert objects to arrays for frontend)
+        $habitacionesConCamasParaJson = [];
+        foreach ($camasPorHabitacion as $id_hab => $roomData) {
+            $habitacionesConCamasParaJson[$id_hab] = [
+                'habitacion' => $roomData['habitacion']->toArrayForDatabase(),
+                'camas' => array_map(fn($oCama) => $oCama->toArrayForDatabase(), $roomData['camas']),
+            ];
+        }
+
         return [
             'success' => true,
             'id_activ' => $id_activ,
             'id_ubi' => $id_ubi,
             'solo_vip' => $solo_vip,
-            'habitaciones_con_camas' => $camasPorHabitacion,
+            'habitaciones_con_camas' => $habitacionesConCamasParaJson,
             'camas_con_asistentes' => $camasConAsistentes,
             'asistentes_sin_cama' => $asistentesSinCama,
             'a_cabeceras' => $a_cabeceras,

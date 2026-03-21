@@ -74,8 +74,8 @@ class Select2006
     private function getBotones()
     {
         $a_botones = array(
-            array('txt' => _("modificar habitación"), 'click' => "fnjs_mod_habitacion(this.form)"),
-            array('txt' => _("borrar habitación"), 'click' => "fnjs_eliminar_habitacion(this.form)")
+                array('txt' => _("modificar habitación"), 'click' => "fnjs_mod_habitacion(this.form)"),
+                array('txt' => _("borrar habitación"), 'click' => "fnjs_eliminar_habitacion(this.form)")
         );
         return $a_botones;
     }
@@ -108,7 +108,7 @@ class Select2006
 
         $c = 0;
         $a_valores = [];
-        $cHabitaciones = $HabitacionRepository->getHabitaciones(['id_ubi' => $this->id_pau]);
+        $cHabitaciones = $HabitacionRepository->getHabitaciones(['id_ubi' => $this->id_pau, '_ordre' => 'orden, planta']);
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         foreach ($cHabitaciones as $oHabitacion) {

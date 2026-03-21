@@ -116,7 +116,7 @@ function is_true_txt($val)
  */
 function poner_null(&$valor)
 {
-    if (!$valor && $valor !== 0) { //admito que sea 0.
+    if (!$valor && $valor !== 0 && $valor !== '0') { //admito que sea 0 o '0'.
         $valor = NULL;
     }
 }

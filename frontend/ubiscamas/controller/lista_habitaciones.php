@@ -89,5 +89,21 @@ $oHashSoloVip->setCamposChk('solo_vip');
 $a_campos['url_update_solo_vip'] = $url_update_solo_vip;
 $a_campos['oHashSoloVip'] = $oHashSoloVip;
 
+// Hash para el reporte de distribución
+$url_distribucion = 'frontend/ubiscamas/controller/lista_habitaciones_distribucion.php';
+$oHashDistribucion = new Hash();
+$oHashDistribucion->setUrl($url_distribucion);
+$oHashDistribucion->setArraycamposHidden(['id_activ' => $Qid_activ]);
+$a_campos['url_distribucion'] = $url_distribucion;
+$a_campos['oHashDistribucion'] = $oHashDistribucion;
+
+// Hash para el reporte de distribución por nombres
+$url_nombres = 'frontend/ubiscamas/controller/lista_habitaciones_nombres.php';
+$oHashNombres = new Hash();
+$oHashNombres->setUrl($url_nombres);
+$oHashNombres->setArraycamposHidden(['id_activ' => $Qid_activ]);
+$a_campos['url_nombres'] = $url_nombres;
+$a_campos['oHashNombres'] = $oHashNombres;
+
 $oView = new ViewNewPhtml('frontend\\ubiscamas\\controller');
 $oView->renderizar('lista_habitaciones.phtml', $a_campos);
