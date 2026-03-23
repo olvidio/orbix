@@ -238,3 +238,21 @@ final class BañoTipo {
     }
 }
 ```
+
+## Manejo de Navegación y Estado ($oPosicion)
+
+### Conceptos Clave
+- **$oPosicion**: Es el objeto principal para gestionar el historial de navegación y la persistencia de parámetros entre controladores backend. Se define en `web\Posicion`.
+- **js_atras(n)**: Método fundamental para retornar `n` pasos en el historial. Genera el código JS necesario para la navegación.
+- **addParametro($key, $valor, $fila)**: Permite persistir datos. Si `$fila = 1`, el parámetro se guarda para la posición actual, facilitando su recuperación al volver atrás.
+
+### Estrategia de Persistencia Híbrida
+Para una experiencia de usuario fluida, combinamos el estado del backend con el estado del frontend:
+
+1.  **Estado Backend ($oPosicion)**: Gestiona la jerarquía de páginas, IDs principales (como `id_activ`) y la lógica de "volver".
+2.  **Estado Frontend (SessionStorage)**: Gestiona el estado volátil de la UI (scroll, selección). **Ver detalles en [frontend/agents.md](file:///home/dani/orbix_local/orbix/frontend/agents.md)**.
+
+### Seguridad (Hash.php)
+Cuando se añaden campos de estado en el frontend (ej: `<input type="hidden" name="scroll_id_...">`), estos campos deben excluirse de la validación del hash para evitar errores de "Hash mismatch".
+- Modificar `web\Hash::isValid()` para ignorar prefijos específicos (como `scroll_id_`).
+
