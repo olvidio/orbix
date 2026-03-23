@@ -41,9 +41,9 @@ $hash_params = $oHash->getArrayCampos();
 
 $data = PostRequest::getData($url_lista_backend, $hash_params);
 
-$error_txt = $data['errores'];
-$email = $data['email'];
-$success = $data['success'];
+$error_txt = $data['errores']?? '';
+$email = $data['email']?? '';
+$success = $data['success']?? false;
 
 // Preparar los datos para la vista
 $a_campos = [
