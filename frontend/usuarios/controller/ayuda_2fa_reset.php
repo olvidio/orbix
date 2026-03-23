@@ -4,9 +4,6 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
 
-// vengo por $GET
-$_POST = empty($_POST) ? $_GET : $_POST;
-
 /**
  * Página de ayuda para restablecer la autenticación de dos factores (2FA).
  * Esta página proporciona instrucciones detalladas para usuarios que han perdido
@@ -18,10 +15,13 @@ $_POST = empty($_POST) ? $_GET : $_POST;
 
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
-$Qusername = (string)$_POST['username'];
-$Qubicacion = (string)$_POST['ubicacion'];
-$Qesquema = (string)$_POST['esquema'];
-$Qurl_index = (string)$_POST['url_index'];
+// vengo por $GET
+$input = array_merge($_GET, $_POST);
+
+$Qusername = filter_var($input['username'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+$Qubicacion  = filter_var($input['ubicacion'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+$Qesquema = filter_var($input['esquema'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+$Qurl_index = filter_var($input['url_index'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
 $a_cosas = ['url_index' => $Qurl_index, 'username' => $Qusername, 'ubicacion' => $Qubicacion, 'esquema' => $Qesquema];
 $linkEnviarMail2fa = 'recuperar_2fa.php?' . http_build_query($a_cosas);

@@ -107,4 +107,4 @@ $data['error_txt'] = $error_txt;
 $data['success'] = $success;
 $data['email'] = $email;
 
-ContestarJson::enviar('', $data);
+ContestarJson::enviar($error_txt, $data);
