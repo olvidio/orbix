@@ -1,23 +1,22 @@
 <script>
     fnjs_guardar = function (formulario) {
-        $(formulario).attr('action', 'src/ubiscamas/cama_update');
-        $(formulario).one("submit", function () {
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-            })
-                .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\\n') {
-                        alert('<?= _("respuesta") ?>: ' + rta_txt);
-                    } else {
-                        <?= $oPosicion->js_atras(1); ?>
-                    }
-                });
-            return false;
+        let url = '<?= core\ConfigGlobal::getWeb() ?>/src/ubiscamas/cama_update';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: $(formulario).serialize(),
+            dataType: 'json'
+        })
+        .done(function (respuesta) {
+            if (respuesta.success) {
+                <?= $oPosicion->js_atras(1); ?>
+            } else {
+                alert(respuesta.mensaje || 'Error desconocido');
+            }
+        })
+        .fail(function (xhr, status, error) {
+            alert('Error en la conexión con el servidor: ' + error);
         });
-        $(formulario).trigger("submit");
-        $(formulario).off();
     }
 
     fnjs_cancelar = function() {
