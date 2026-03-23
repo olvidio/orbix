@@ -989,7 +989,6 @@ class Lista
 			// initialize the model after all the events have been hooked up
             var base = $('#main').attr('refe');
             var savedState = fnjs_recuperar_estado(base, '$id_tabla');
-            console.log('Restoring state for ' + base + '. Found: ', savedState);
             var backendHasSel = false;
             if (savedState) {
                 var scroll_id_input = $('#scroll_id_$id_tabla').val();
@@ -1038,23 +1037,20 @@ class Lista
                     var rowsToSelect = [];
                     if (savedState && savedState.sel && !backendHasSel) {
                         var totalItems = dataView_{$id_tabla}.getLength();
-                        console.log('Searching for ' + savedState.sel.length + ' IDs in ' + totalItems + ' grid rows.');
                         for (var i=0; i<totalItems; i++) {
                             var item = dataView_{$id_tabla}.getItem(i);
                             if (item && item.sel) {
                                 var parts = item.sel.split('#');
                                 var id = parts.slice(1).join('#');
                                 if (savedState.sel.indexOf(id) !== -1) {
-                                    console.log('Found matching row for ID ' + id + ' at view index ' + i);
                                     rowsToSelect.push(i);
                                 }
                             }
                         }
                         if (rowsToSelect.length > 0) {
-                            console.log('Final rows to select in SlickGrid:', rowsToSelect);
                             grid_{$id_tabla}.setSelectedRows(rowsToSelect);
                         } else {
-                            console.log('No matching rows found in dataView for restoration.');
+                            // nothing found
                         }
                     }
 
@@ -1338,18 +1334,13 @@ class Lista
                 var savedState = fnjs_recuperar_estado(base, '$id_tabla');
                 if (savedState && savedState.sel) {
                     var backendHasSel = $('input:checked').length > 0;
-                    console.log('Restoring HTML table selection. Backend has selection:', backendHasSel);
                     if (!backendHasSel) {
-                        console.log('Searching for ' + savedState.sel.length + ' IDs in DOM.');
                         savedState.sel.forEach(function(id) {
                             // id may have special characters, using id=... selector
                             var escapedId = id.replace(/([ #;?%&,.+*~\':\"!^$[\]()=>|\/@])/g, '\\\\$1');
                             var checkbox = $('#a' + escapedId);
                             if (checkbox.length) {
-                                console.log('Found and checking checkbox for ID:', id);
                                 checkbox.prop('checked', true);
-                            } else {
-                                console.log('Checkbox NOT found for ID:', id, ' (Looking for #a' + escapedId + ')');
                             }
                         });
                     }
