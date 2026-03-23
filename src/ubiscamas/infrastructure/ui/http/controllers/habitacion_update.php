@@ -115,11 +115,17 @@ try {
                 $oCama = new Cama();
                 $oCama->setIdCamaVo($newCamaId);
                 $oCama->setIdHabitacionVo($uuid_habitacion);
-                
-                $desc_generada = "Cama " . ($num_camas_actuales + $i);
+
+                // si el número de camas es = 1, no hace falta poner 'cama'
+                $desc_generada = '';
                 if (!empty($Qnombre)) {
-                    $desc_generada = $Qnombre . " - Cama " . ($num_camas_actuales + $i);
+                    $desc_generada .= $Qnombre;
                 }
+                if ($camas_a_crear > 1) {
+                    $desc_generada .= empty($desc_generada)? '' : " - ";
+                    $desc_generada .= "Cama " . ($num_camas_actuales + $i);
+                }
+
                 $oCama->setDescripcionVo(CamaDescripcion::fromNullableString($desc_generada));
                 $oCama->setLarga(false);
                 $vip = ($num_camas_vip_actuales < $Qnumero_camas_vip);
