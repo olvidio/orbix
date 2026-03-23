@@ -781,21 +781,28 @@ class PersonaPub
         switch ($classname) {
             case 'PersonaSacd':
                 $ctr = $this->getDl();
-                if ($ctr === ConfigGlobal::mi_dele()) {
-                    $oPersonasDl = new PersonaDl($this->getId_nom());
-                    $id_ctr = $oPersonasDl->getId_ctr();
-                    $oCentroDl = null;
-                    if ($id_ctr !== null) {
-                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-                        $oCentroDl = $CentroDlRepository->findById($id_ctr);
+                if ($ctr !== null) {
+                    if ($ctr === ConfigGlobal::mi_dele()) {
+                        $oPersonasDl = new PersonaDl($this->getId_nom());
+                        $id_ctr = $oPersonasDl->getId_ctr();
+                        $oCentroDl = null;
+                        if ($id_ctr !== null) {
+                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                            $oCentroDl = $CentroDlRepository->findById($id_ctr);
+                        }
+                        $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
                     }
-                    $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
+                } else {
+                    $ctr = '?';
                 }
                 break;
             case 'PersonaEx':
             case 'PersonaIn':
             case 'PersonaPub':
                 $ctr = $this->getDl();
+                if ($ctr === null) {
+                    $ctr = '?';
+                }
                 break;
             case 'PersonaGlobal':
                 $oCentroDl = null;

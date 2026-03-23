@@ -159,7 +159,6 @@ endforeach; ?>
             });
         }
 
-        // Listener para la selección en la tabla de camas (SlickGrid)
         if (typeof grid_grupo_lista !== 'undefined') {
             grid_grupo_lista.onSelectedRowsChanged.subscribe(function (e, args) {
                 let selectedRows = grid_grupo_lista.getSelectedRows();
@@ -170,6 +169,11 @@ endforeach; ?>
                 }
             });
         }
+        
+        // Listener para la selección en la tabla de camas (Modo HTML)
+        $('#lista-camas').on('rowSelected', 'table', function(e, rowData) {
+            camaSeleccionada = rowData;
+        });
 
         $('.asistente-row').on('click', function () {
             $('.asistente-row').removeClass('selected');

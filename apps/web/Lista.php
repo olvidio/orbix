@@ -637,7 +637,7 @@ class Lista
         }
 
 
-        $tt = "<input id=\"scroll_id\" name=\"scroll_id\" value=\"$scroll_id\" type=\"hidden\">";
+        $tt = "<input class=\"scroll_id\" id=\"scroll_id_$id_tabla\" name=\"scroll_id_$id_tabla\" data-tabla=\"$id_tabla\" value=\"$scroll_id\" type=\"hidden\">";
         $tt .= "
 			<script>
 			
@@ -694,7 +694,7 @@ class Lista
 			}
 			
 			function add_scroll_id(row) {
-				$(\"#scroll_id\").val(row);
+				$(\"#scroll_id_$id_tabla\").val(row);
 				//console.log(row);
 			}
             
@@ -987,6 +987,38 @@ class Lista
 
         $tt .= "
 			// initialize the model after all the events have been hooked up
+            var base = $('#main').attr('refe');
+            var savedState = fnjs_recuperar_estado(base, '$id_tabla');
+            console.log('Restoring state for ' + base + '. Found: ', savedState);
+            var backendHasSel = false;
+            if (savedState) {
+                var scroll_id_input = $('#scroll_id_$id_tabla').val();
+                if ((scroll_id_input == 0 || scroll_id_input == '') && savedState.scroll_id) {
+                    $('#scroll_id_$id_tabla').val(savedState.scroll_id);
+                }
+                if (savedState.sel && savedState.sel.length > 0) {
+                    // Check if we already have selection from backend
+                    for (var i=0; i<data_{$id_tabla}.length; i++) {
+                        if (data_{$id_tabla}[i].sel && data_{$id_tabla}[i].sel.indexOf('checked') !== -1) {
+                            backendHasSel = true;
+                            break;
+                        }
+                    }
+                    if (!backendHasSel) {
+                        for (var i=0; i<data_{$id_tabla}.length; i++) {
+                            var rowSel = data_{$id_tabla}[i].sel;
+                            if (rowSel) {
+                                var parts = rowSel.split('#');
+                                var id = parts.slice(1).join('#'); // FULL ID matching checkbox value
+                                if (savedState.sel.indexOf(id) !== -1) {
+                                    data_{$id_tabla}[i].sel = 'checked#' + id;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
 			dataView_$id_tabla.beginUpdate();
 			dataView_$id_tabla.setItems(data_$id_tabla);
 			dataView_$id_tabla.setFilterArgs({
@@ -998,7 +1030,42 @@ class Lista
 		";
 
         if (isset($scroll_id)) {
-            $tt .= " grid_$id_tabla.scrollRowToTop($scroll_id);";
+            $tt .= " 
+                setTimeout(function() {
+                    var scroll_id_final = $('#scroll_id_$id_tabla').val();
+                    
+                    // Aplicar selección visual si venía del frontend
+                    var rowsToSelect = [];
+                    if (savedState && savedState.sel && !backendHasSel) {
+                        var totalItems = dataView_{$id_tabla}.getLength();
+                        console.log('Searching for ' + savedState.sel.length + ' IDs in ' + totalItems + ' grid rows.');
+                        for (var i=0; i<totalItems; i++) {
+                            var item = dataView_{$id_tabla}.getItem(i);
+                            if (item && item.sel) {
+                                var parts = item.sel.split('#');
+                                var id = parts.slice(1).join('#');
+                                if (savedState.sel.indexOf(id) !== -1) {
+                                    console.log('Found matching row for ID ' + id + ' at view index ' + i);
+                                    rowsToSelect.push(i);
+                                }
+                            }
+                        }
+                        if (rowsToSelect.length > 0) {
+                            console.log('Final rows to select in SlickGrid:', rowsToSelect);
+                            grid_{$id_tabla}.setSelectedRows(rowsToSelect);
+                        } else {
+                            console.log('No matching rows found in dataView for restoration.');
+                        }
+                    }
+
+                    // Prioridad scroll: 1. selección, 2. scroll_id guardado
+                    if (rowsToSelect.length > 0) {
+                        grid_{$id_tabla}.scrollRowIntoView(rowsToSelect[0]);
+                    } else if (scroll_id_final > 0 && scroll_id_final < data_{$id_tabla}.length) {
+                        grid_{$id_tabla}.scrollRowToTop(scroll_id_final);
+                    }
+                }, 200);
+            ";
         }
         if ($bPanelVis) {
             $tt .= "toggleFilterRow_$id_tabla();";
@@ -1083,9 +1150,12 @@ class Lista
         }
 
         $cab = 1;
+        $aColsVisible = [];
+        $num_col = 0;
         foreach ($a_cabeceras as $Cabecera) {
             $class = '';
             $width = '';
+            $visible = TRUE;
             if (is_array($Cabecera)) {
                 $name = $Cabecera['name']; // esta tiene que existir siempre
                 if (!empty($Cabecera['class'])) {
@@ -1094,21 +1164,34 @@ class Lista
                 if (!empty($Cabecera['width'])) {
                     $width = "width=\"{$Cabecera['width']}\"";
                 }
-
+                if (!empty($Cabecera['visible']) && strtolower($Cabecera['visible']) === 'no') {
+                    $visible = FALSE;
+                }
             } else {
                 $name = $Cabecera;
             }
-            if (!empty($name)) {
-                $cabecera .= "<th class=cabecera $width $class >" . trim($name) . "</th>\n";
-            } else {
-                $cabecera .= "<th class=cabecera tipo='notext' $width $class ></th>\n";
+            
+            $aColsVisible[$num_col] = $visible;
+            $num_col++;
+            
+            if ($visible) {
+                if (!empty($name)) {
+                    $cabecera .= "<th class=cabecera $width $class >" . trim($name) . "</th>\n";
+                } else {
+                    $cabecera .= "<th class=cabecera tipo='notext' $width $class ></th>\n";
+                }
+                $cab++;
             }
+        }
+        if (!empty($b) && $b !== 'x') {
+            $cabecera = "<th class=cabecera tipo='notext' width='20' ></th>\n" . $cabecera;
             $cab++;
         }
         $cabecera .= "</tr>\n";
         // Para generar un id único
         $ahora = date("Hms");
         $f = 1;
+        $tt .= "<!-- DEBUG HTML TABLE: id=$id_tabla, num_headers=" . count($a_cabeceras) . ", b=" . (isset($b)?$b:'undef') . " -->\n";
 
         if (isset($a_valores['select'])) {
             $a_valores_chk = $a_valores['select'];
@@ -1123,88 +1206,114 @@ class Lista
             $f % 2 ? 0 : $clase = "par";
             $f++;
             $id_fila = $f . $ahora;
-            uksort($fila, [$this, 'text_first']);
             if (!empty($fila['clase'])) {
                 $clase .= " " . $fila['clase'];
             }
-            $tbody .= "<tr id='$id_fila' class='$clase'>";
-            foreach ($fila as $col => $valor) {
-                if ($col === "clase") {
-                    continue;
-                }
-                if ($col === "order") {
-                    continue;
-                }
-                if ($col === "select") {
-                    continue;
-                }
-                if ($col === "sel") {
-                    if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
-                    $col = "";
+            $tbody .= "<tr id='$id_fila' class='$clase' onclick='fnjs_clic_fila(this, event)' data-json='" . htmlspecialchars(json_encode($fila), ENT_QUOTES, 'UTF-8') . "'>";
+            
+            // checkbox en cada línea.
+            if (!empty($b) && $b !== 'x') {
+                if (isset($fila['sel'])) {
+                    $valor = $fila['sel'];
                     if (is_array($valor)) {
-                        if (!empty($valor['select'])) {
-                            $chk = $valor['select'];
-                        } else {
-                            $chk = "";
-                        }
+                        $chk = !empty($valor['select']) ? $valor['select'] : "";
                         $id = $valor['id'];
                     } else {
                         $id = $valor;
+                        $chk = "";
                     }
                     if (!empty($id)) {
                         if (!empty($a_valores_chk)) {
-                            if (in_array($id, $a_valores_chk)) {
-                                $chk = 'checked';
-                            } else {
-                                $chk = '';
-                            }
+                            $chk = in_array($id, $a_valores_chk) ? 'checked' : '';
                         }
                         $tbody .= "<td tipo='sel' title='" . _("clic para seleccionar") . "'>";
                         $tbody .= "<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";
                         $tbody .= "</td>";
-                    } else { // no hay que dibujar el checkbox, pero si la columna
+                    } else {
                         $tbody .= "<td></td>";
                     }
-                } elseif (is_array($valor)) {
-                    $val = $valor['valor'];
-                    if (!empty($valor['ira'])) {
-                        $ira = $valor['ira'];
-                        $tbody .= "<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
-                    } else {
-                        $tbody .= "<td>$val</td>";
-                    }
-                    if (!empty($valor['ira2'])) {
-                        $ira = $valor['ira2'];
-                        $tbody .= "<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
-                    }
-                    if (!empty($valor['ira3'])) {
-                        $ira = $valor['ira3'];
-                        $tbody .= "<td><span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span></td>";
-                    }
-                    if (!empty($valor['script'])) {
-                        $ira = $valor['script'];
-                        $tbody .= "<td><span class=\"link\" onclick='$ira' >$val</span></td>";
-                    }
-                    if (!empty($valor['script2'])) {
-                        $ira = $valor['script2'];
-                        $tbody .= "<td><span class=\"link\" onclick='$ira' >$val</span></td>";
-                    }
-                    if (!empty($valor['script3'])) {
-                        $ira = $valor['script3'];
-                        $tbody .= "<td><span class=\"link\" onclick='$ira' >$val</span></td>";
-                    }
-                    if (!empty($valor['span'])) {
-                        $tbody .= "<td colspan='" . $valor['span'] . "'>$val</td>";
-                    }
                 } else {
-                    $valor = $valor ?? '';
-                    // si es una fecha, pongo la clase fecha, para exportar a excel...
-                    if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
-                        list($d, $m, $y) = preg_split('/[:\/\.-]/', $valor);
-                        $fecha_iso = date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
-                        $tbody .= "<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
+                    $tbody .= "<td></td>";
+                }
+            }
+            
+            // 2. Data columns (only those with headers)
+            // Heuristic: identify the starting index for numeric columns.
+            // Usually it's either 0 or 1 (if 0 is the internal ID).
+            $start_icol = 0;
+            if (!isset($fila[0]) && isset($fila[1])) {
+                $start_icol = 1;
+            } elseif (isset($fila[0])) {
+                $is_id = false;
+                if (isset($fila['sel'])) {
+                    $sel_id = is_array($fila['sel']) ? $fila['sel']['id'] : (string)$fila['sel'];
+                    // Use a looser check for ID as it might be a part of a compound key or slightly formatted
+                    if (strpos($sel_id, (string)$fila[0]) !== false || preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', (string)$fila[0])) {
+                        $is_id = true;
+                    }
+                } elseif (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', (string)$fila[0])) {
+                    $is_id = true;
+                }
+                
+                if ($is_id) { $start_icol = 1; }
+            }
+            
+            $icol_offset = 0;
+            foreach ($a_cabeceras as $num_col => $Cabecera) {
+                if ($aColsVisible[$num_col]) {
+                    $field = (is_array($Cabecera) && !empty($Cabecera['field'])) ? $Cabecera['field'] : null;
+                    $id = (is_array($Cabecera) && !empty($Cabecera['id'])) ? $Cabecera['id'] : null;
+                    
+                    $valor = '';
+                    if ($field && isset($fila[$field])) {
+                        $valor = $fila[$field];
+                    } elseif ($id && isset($fila[$id])) {
+                        $valor = $fila[$id];
                     } else {
-                        $tbody .= "<td>$valor</td>";
+                        // Use sequential numeric index
+                        $target_idx = $start_icol + $icol_offset;
+                        $valor = isset($fila[$target_idx]) ? $fila[$target_idx] : '';
+                        $icol_offset++;
+                    }
+                    if (is_array($valor)) {
+                        $val = $valor['valor'];
+                        $tbody .= "<td>";
+                        if (!empty($valor['ira'])) {
+                            $ira = $valor['ira'];
+                            $tbody .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span>";
+                        } elseif (!empty($valor['script'])) {
+                            $ira = $valor['script'];
+                            $tbody .= "<span class=\"link\" onclick='$ira' >$val</span>";
+                        } else {
+                            $tbody .= $val;
+                        }
+                        
+                        // Handle multiple IRAs/Scripts
+                        for ($idx = 2; $idx <= 3; $idx++) {
+                            if (!empty($valor["ira$idx"])) {
+                                $ira = $valor["ira$idx"];
+                                $tbody .= " <span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span>";
+                            }
+                            if (!empty($valor["script$idx"])) {
+                                $ira = $valor["script$idx"];
+                                $tbody .= " <span class=\"link\" onclick='$ira' >$val</span>";
+                            }
+                        }
+                        
+                        // Handle span (rare in data context but supported in legacy)
+                        // Note: span is usually handled in header or special rows, but kept for parity.
+                        $tbody .= "</td>";
+                        
+                    } else {
+                        $valor = $valor ?? '';
+                        // Date formatting for Excel export compatibility
+                        if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
+                            list($d, $m, $y) = preg_split('/[:\/\.-]/', $valor);
+                            $fecha_iso = date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
+                            $tbody .= "<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
+                        } else {
+                            $tbody .= "<td>$valor</td>";
+                        }
                     }
                 }
             }
@@ -1215,15 +1324,37 @@ class Lista
             $botones = "<tr class=botones><td colspan='$cab'>" . $botones;
         }
         // No puedo poner los botones como thead y tbody porque el sorteable.js se hace un lio.
-        $tt = "<table>$botones</table>\n";
+        $scroll_id = !empty($a_valores['scroll_id']) ? $a_valores['scroll_id'] : 0;
+        $tt = "<input class=\"scroll_id\" id=\"scroll_id_$id_tabla\" name=\"scroll_id_$id_tabla\" data-tabla=\"$id_tabla\" value=\"$scroll_id\" type=\"hidden\">";
+        $tt .= "<table>$botones</table>\n";
         $tt .= "<table border=1  class='sortable' id='$id_tabla'>\n";
         $tt .= "<thead><tr>";
-        if (!empty($b)) $tt .= "<th class='unsortable' tipo='notext'></th>";
         $tt .= "$cabecera</thead><tbody>";
         $tt .= $tbody;
         $tt .= "</tbody></table>\n";
         $tt .= "<script>
 			$(document).ready(function() {
+                var base = $('#main').attr('refe');
+                var savedState = fnjs_recuperar_estado(base, '$id_tabla');
+                if (savedState && savedState.sel) {
+                    var backendHasSel = $('input:checked').length > 0;
+                    console.log('Restoring HTML table selection. Backend has selection:', backendHasSel);
+                    if (!backendHasSel) {
+                        console.log('Searching for ' + savedState.sel.length + ' IDs in DOM.');
+                        savedState.sel.forEach(function(id) {
+                            // id may have special characters, using id=... selector
+                            var escapedId = id.replace(/([ #;?%&,.+*~\':\"!^$[\]()=>|\/@])/g, '\\\\$1');
+                            var checkbox = $('#a' + escapedId);
+                            if (checkbox.length) {
+                                console.log('Found and checking checkbox for ID:', id);
+                                checkbox.prop('checked', true);
+                            } else {
+                                console.log('Checkbox NOT found for ID:', id, ' (Looking for #a' + escapedId + ')');
+                            }
+                        });
+                    }
+                }
+
 				var h = $('input:checked');
 				if (h.length) {
 					var h = (h.offset().top) - 300;
