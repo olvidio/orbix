@@ -9,9 +9,10 @@ use web\Lista;
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
 $oPosicion->recordar();
+
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$sel_json = json_encode($a_sel);
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/inventario_dlb';

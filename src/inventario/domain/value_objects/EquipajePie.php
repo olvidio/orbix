@@ -15,8 +15,8 @@ final class EquipajePie
 
     private function validate(string $value): void
     {
-        if (mb_strlen($value) > 255) {
-            throw new \InvalidArgumentException('EquipajePie must be at most 255 characters');
+        if (mb_strlen($value) > 1000) {
+            throw new \InvalidArgumentException('EquipajePie must be at most 1000 characters');
         }
     }
 

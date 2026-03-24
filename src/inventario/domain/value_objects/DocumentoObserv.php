@@ -15,9 +15,9 @@ final class DocumentoObserv
 
     private function validate(string $value): void
     {
-        // UI sets argument 50
-        if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('DocumentoObserv must be at most 50 characters');
+        // UI sets argument 80
+        if (mb_strlen($value) > 150) {
+            throw new \InvalidArgumentException('DocumentoObserv must be at most 150 characters');
         }
     }
 

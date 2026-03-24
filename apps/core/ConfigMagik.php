@@ -90,6 +90,9 @@ class ConfigMagik
         if ($section) $this->PROCESS_SECTIONS = true;
         else           $this->PROCESS_SECTIONS = false;
         // get requested value
+        if (empty($this->VARS)) {
+            return null;
+        }
         if ($this->PROCESS_SECTIONS) {
             $value = $this->VARS[$section][$key];
         } else {

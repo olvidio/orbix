@@ -18,8 +18,8 @@ final class LugarName
         if ($value === '') {
             throw new \InvalidArgumentException('LugarName cannot be empty');
         }
-        if (mb_strlen($value) > 30) {
-            throw new \InvalidArgumentException('LugarName must be at most 30 characters');
+        if (mb_strlen($value) > 60) {
+            throw new \InvalidArgumentException('LugarName must be at most 60 characters');
         }
         if (!preg_match("/^[\p{L}0-9 .,'’\-()]+$/u", $value)) {
             throw new \InvalidArgumentException('LugarName has invalid characters');

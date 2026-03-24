@@ -18,10 +18,10 @@ final class TipoDocName
         if ($value === '') {
             throw new \InvalidArgumentException('TipoDocName cannot be empty');
         }
-        if (mb_strlen($value) > 30) {
-            throw new \InvalidArgumentException('TipoDocName must be at most 30 characters');
+        if (mb_strlen($value) > 60) {
+            throw new \InvalidArgumentException('TipoDocName must be at most 60 characters');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’\-()]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'’\-()\/]+$/u", $value)) {
             throw new \InvalidArgumentException('TipoDocName has invalid characters');
         }
     }

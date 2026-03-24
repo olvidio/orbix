@@ -21,7 +21,7 @@ final class UbiInventarioName
         if (mb_strlen($value) > 30) {
             throw new \InvalidArgumentException('UbiInventarioName must be at most 30 characters');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’\-()]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'’\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('UbiInventarioName has invalid characters');
         }
     }

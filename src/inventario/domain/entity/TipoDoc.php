@@ -46,7 +46,7 @@ class TipoDoc
 
     public function getNom_doc(): ?string
     {
-        return $this->nom_doc->value() ?? '';
+        return $this->nom_doc?->value() ?? '';
     }
 
     public function setNom_doc(?string $nom_doc = null): void
@@ -66,7 +66,7 @@ class TipoDoc
 
     public function getObserv(): ?string
     {
-        return $this->observ->value() ?? '';
+        return $this->observ?->value() ?? '';
     }
 
     public function setObserv(?string $observ = null): void

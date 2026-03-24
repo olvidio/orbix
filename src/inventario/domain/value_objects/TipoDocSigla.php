@@ -18,10 +18,10 @@ final class TipoDocSigla
         if ($value === '') {
             throw new \InvalidArgumentException('TipoDocSigla cannot be empty');
         }
-        if (mb_strlen($value) > 30) {
-            throw new \InvalidArgumentException('TipoDocSigla must be at most 30 characters');
+        if (mb_strlen($value) > 80) {
+            throw new \InvalidArgumentException('TipoDocSigla must be at most 80 characters');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’\-()]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'\"’\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('TipoDocSigla has invalid characters');
         }
     }
