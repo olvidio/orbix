@@ -78,7 +78,7 @@ class PostRequest
         }
         $hash_params = $oHash->getArrayCampos();
 
-        $data =  self::getData($url_hased, $hash_params);
+        $data = self::getData($url_hased, $hash_params);
         if (!empty($data['error'])) {
             exit ($data['error']);
         }
@@ -103,8 +103,26 @@ class PostRequest
 
         $parts = parse_url($url);
         // 1. Canviem el host original (ex: orbix.docker) per l'intern de Docker
-        $host_original = $parts['host'];
+        $host_original = $parts['host'] ?? '';
         $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
+
+        // 2. Path: Limpiamos la solamente la 3a posición si tiene guión
+        $path_final = $parts['path'] ?? '';
+
+        if (!empty($path_final)) {
+            // Convertim el path en array. Exemple: "/orbix/H-dlbv/src/..."
+            // es converteix en ['', 'orbix', 'H-dlbv', 'src', ...]
+            $segments = explode('/', $path_final);
+
+            // Verifiquem si existeix la posició 2 (la tercera peça després de la primera /)
+            // i si realment conté un guionet '-'
+            if (isset($segments[2]) && strpos($segments[2], '-') !== false) {
+                // Eliminem el segment amb guionet de l'array
+                unset($segments[2]);
+                // Tornem a muntar la ruta i reindexem
+                $path_final = implode('/', $segments);
+            }
+        }
 
         // 2. Reconstruïm incloent el protocol (scheme)
         $url_limpia = "";
@@ -115,9 +133,8 @@ class PostRequest
         if (isset($parts['port'])) {
             $url_limpia .= ':' . $parts['port'];
         }
-        if (isset($parts['path'])) {
-            $url_limpia .= $parts['path'];
-        }
+        $url_limpia .= $path_final;
+
         if (isset($parts['query'])) {
             $url_limpia .= '?' . $parts['query'];
         }
