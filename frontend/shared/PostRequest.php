@@ -103,7 +103,8 @@ class PostRequest
 
         $parts = parse_url($url);
         // 1. Canviem el host original (ex: orbix.docker) per l'intern de Docker
-        $host_nuevo = 'host.docker.internal';
+        $host_original = $parts['host'];
+        $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
         // 2. Reconstruïm la URL
         // Nota: No incloem el 'scheme' (http/https) ni el 'host' antic
         // per complir amb el teu requisit de que la part inicial "desaparegui"
