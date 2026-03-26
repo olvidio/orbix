@@ -2,12 +2,12 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
 
 /**
- * Página para recuperar la contraseña de un usuario.
- * Genera una contraseña aleatoria, marca en la tabla del usuario que debe cambiarla
- * y envía la nueva contraseña por correo electrónico.
+ * Página para recuperar el QR para la app 2fa.
+ *
+ * Genera un token aleatorio, lo guarda en la DB
+ * y envia un mail con un link.
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -18,7 +18,7 @@ $Qusername = (string)filter_input(INPUT_GET, 'username');
 $Qubicacion = (string)filter_input(INPUT_GET, 'ubicacion');
 $Qesquema = (string)filter_input(INPUT_GET, 'esquema');
 $Qesquema_web = (string)filter_input(INPUT_GET, 'esquema_web');
-$Qurl_index = (string)filter_input(INPUT_GET, 'url_index');
+$Qurl_base = (string)filter_input(INPUT_GET, 'url_base');
 
 // Si no hay username, redirigir a la página de ayuda
 if (empty($Qusername)) {
@@ -26,24 +26,20 @@ if (empty($Qusername)) {
     exit;
 }
 
-$url_index = $_SERVER['HTTP_REFERER'];
-$url = str_replace('index.php', '', $url_index);
-$url_lista_backend = Hash::cmdSinParametros($url . 'src/usuarios/infrastructure/controllers/recuperar_2fa_mail.php');
 
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
+$mi_ruta = 'src/usuarios/infrastructure/controllers/recuperar_2fa_mail.php';
+$url_backend = $Qurl_base . $mi_ruta;
+
+$a_campos_backend = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'ubicacion' => $Qubicacion,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
-
-$error_txt = $data['errores']?? '';
-$email = $data['email']?? '';
-$success = $data['success']?? false;
+    'url_base' => $Qurl_base,
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$error_txt = $data['errores'];
+$email = $data['email'];
+$success = $data['success'];
 
 // Preparar los datos para la vista
 $a_campos = [
@@ -52,7 +48,7 @@ $a_campos = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'email' => $email,
-    'url_index' => $Qurl_index,
+    'url_base' => $Qurl_base,
 ];
 
 // Renderizar la vista

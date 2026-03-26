@@ -3,7 +3,6 @@
 use core\ConfigDB;
 use core\DBConnection;
 use frontend\shared\OfuscarEmail;
-use src\usuarios\domain\entity\Usuario;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -26,6 +25,9 @@ $data = [];
 
 $aWhere = array('usuario' => $Qusername);
 $esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;
+if (empty($esquema)) {
+    exit (_("Esquema no válido"));
+}
 if (substr($esquema, -1) === 'v') {
     $sfsv = 1;
     $oConfigDB = new ConfigDB('sv-e_select');

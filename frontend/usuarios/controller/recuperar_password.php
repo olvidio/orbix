@@ -7,7 +7,6 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -18,7 +17,7 @@ $Qusername = (string)filter_input(INPUT_GET, 'username');
 $Qubicacion = (string)filter_input(INPUT_GET, 'ubicacion');
 $Qesquema = (string)filter_input(INPUT_GET, 'esquema');
 $Qesquema_web = (string)filter_input(INPUT_GET, 'esquema_web');
-$Qurl_index = (string)filter_input(INPUT_GET, 'url_index');
+$Qurl_base = (string)filter_input(INPUT_GET, 'url_base');
 
 // Si no hay username, redirigir a la página de ayuda
 if (empty($Qusername)) {
@@ -26,22 +25,14 @@ if (empty($Qusername)) {
     exit;
 }
 
-$url_index = $_SERVER['HTTP_REFERER'];
-$url = str_replace('index.php', '', $url_index);
-$url_lista_backend = Hash::cmdSinParametros($url . 'src/usuarios/infrastructure/controllers/recuperar_password_mail.php');
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
+$url_backend = $Qurl_base . 'src/usuarios/infrastructure/controllers/recuperar_password_mail.php';
+$a_campos_backend = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'ubicacion' => $Qubicacion,
     'esquema_web' => $Qesquema_web,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
-
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $error_txt = $data['error_txt'];
 $email = $data['email'];
 $success = $data['success'];
@@ -53,7 +44,7 @@ $a_campos = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'email' => $email,
-    'url_index' => $Qurl_index,
+    'url_base' => $Qurl_base,
 ];
 
 // Renderizar la vista

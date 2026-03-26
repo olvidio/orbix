@@ -9,14 +9,14 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\web\UrlBaseProject;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oMiUsuario = ConfigGlobal::MiUsuario();
-$id_usuario = $oMiUsuario->getId_usuario();
+$id_usuario = ConfigGlobal::mi_id_usuario();
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
 $url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
@@ -99,11 +99,13 @@ if (isset($_SESSION['msg_2fa'])) {
     $msg_2fa = $_SESSION['msg_2fa'];
     // Limpiar el mensaje de la sesión para que no se muestre de nuevo
     unset($_SESSION['msg_2fa']);
-    $go_to = ConfigGlobal::getWeb() . "/index.php";
+    //unset($_REQUEST['PHPSESSID']);
+    //$go_to = ConfigGlobal::getWeb() . "/index.php";
+    $go_to = "fnjs_logout();";
 }
 
-$url_index = $_SERVER['HTTP_REFERER'];
-$a_cosas = ['url_index' => $url_index,
+$url_base = UrlBaseProject::getUrlBase();
+$a_cosas = ['url_base' => $url_base,
     'username' => $usuario,
     'ubicacion' => '',
     'esquema' => ConfigGlobal::mi_region_dl(),
@@ -129,6 +131,7 @@ $a_campos = [
     'url_2fa_update' => $url_2fa_update,
     'go_to' => $go_to,
     'link_ayuda' => $link_ayuda,
+    'url_base' => $url_base,
 ];
 
 $oView = new ViewNewPhtml('frontend\usuarios\controller');

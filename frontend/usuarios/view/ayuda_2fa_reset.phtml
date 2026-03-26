@@ -1,44 +1,47 @@
-<h1><?= _("Ayuda: Restablecer la autenticación de dos factores (2FA)") ?></h1>
+<h1><?= _("Configuración de la autenticación de dos factores (2FA)") ?></h1>
 
 <div class="container">
     <div class="section">
-        <h2><?= _("¿Qué hacer si he perdido acceso a mi aplicación de autenticación?") ?></h2>
-        
-        <p><?= _("Si ha borrado la aplicación Google Authenticator (u otra aplicación de autenticación) de su dispositivo o ha cambiado de dispositivo y ya no puede generar códigos de verificación, siga estos pasos:") ?></p>
-        
+        <h2><?= _("Tu cuenta requiere autenticación en dos pasos (2FA)") ?></h2>
+
+        <p><?= _("Para poder acceder, necesitas configurar una aplicación de autenticación en tu dispositivo móvil. Sigue estos pasos:") ?></p>
+
         <ol>
-            <li><?= _("Le puedo enviar un mail.") ?></li>
+            <li><?= _("Instala una aplicación de autenticación en tu móvil, por ejemplo:") ?>
+                <ul>
+                    <li><strong>Google Authenticator</strong> (Android / iOS)</li>
+                    <li><strong>Microsoft Authenticator</strong> (Android / iOS)</li>
+                    <li><strong>Authy</strong> (Android / iOS)</li>
+                </ul>
+            </li>
+            <li><?= _("Solicita el correo de configuración usando el botón de abajo.") ?></li>
+            <li><?= _("Abre el correo y sigue las instrucciones para escanear el código QR con la aplicación.") ?></li>
+            <li><?= _("Una vez configurada, vuelve a iniciar sesión e introduce el código de 6 dígitos que genera la aplicación.") ?></li>
         </ol>
+
         <?php if (empty($emailOfuscado)) {
             echo $error_txt;
         } else {
         ?>
             <a href="<?= $linkEnviarMail2fa ?>"
                  class="btn">
-                <?= _("Recibir correo de recuperación") ?> en <?= $emailOfuscado ?>
+                <?= _("Recibir correo de configuración") ?> en <?= $emailOfuscado ?>
             </a>
         <?php } ?>
     </div>
-    
+
     <div class="section">
-        <h2><?= _("Recomendaciones de seguridad") ?></h2>
-        
+        <h2><?= _("¿Ya tenías la app y has perdido el acceso?") ?></h2>
+
         <ul>
-            <li><?= _("Siempre guarde su clave secreta de 2FA en un lugar seguro, como un gestor de contraseñas.") ?></li>
-            <li><?= _("Considere la posibilidad de hacer una captura de pantalla del código QR y guardarla en un lugar seguro.") ?></li>
-            <li><?= _("Si utiliza Google Authenticator, considere la posibilidad de utilizar la función de copia de seguridad de la aplicación para evitar perder el acceso a sus códigos si cambia de dispositivo.") ?></li>
-            <li><?= _("Después de restablecer su configuración de 2FA, active nuevamente esta función lo antes posible para mantener la seguridad de su cuenta.") ?></li>
+            <li><?= _("Siempre guarda tu clave secreta de 2FA en un lugar seguro, como un gestor de contraseñas.") ?></li>
+            <li><?= _("Considera hacer una captura de pantalla del código QR y guardarla en un lugar seguro.") ?></li>
+            <li><?= _("Si no puedes recuperar el acceso por tu cuenta, contacta con el administrador del sistema.") ?></li>
         </ul>
     </div>
-    
-    <div class="section">
-        <h2><?= _("¿No puede acceder a su cuenta?") ?></h2>
-        
-        <p><?= _("Si no puede iniciar sesión en su cuenta porque ha perdido acceso a su aplicación de autenticación y no puede generar códigos de verificación, póngase en contacto con el administrador del sistema para que le ayude a restablecer su configuración de 2FA.") ?></p>
-    </div>
-    
+
     <div class="footer">
-        <p><a href="<?= $url_index ?>"><?= _("Volver al inicio") ?></a></p>
+        <p><a href="<?= $url_base ?>"><?= _("Volver al inicio de sesión") ?></a></p>
     </div>
 </div>
 

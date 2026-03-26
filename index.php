@@ -351,7 +351,7 @@ $portada_html = ob_get_clean();
     ?>
 </head>
 
-<body class="otro">
+<body class="otro" id="body">
 <?php
 // Render the final HTML structure
 $renderParams = [
