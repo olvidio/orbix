@@ -23,8 +23,7 @@ if (empty($Qusername)) {
     exit (_("Debe ingresar un nombre de usuario"));
 }
 
-//$mi_ruta = 'src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php';
-$mi_ruta = 'src/usuarios/usuario_ayuda_info';
+$mi_ruta = 'src/usuarios/infrastructure/controllers/usuario_ayuda_info.php';
 $url_base = UrlBaseProject::getUrlBase();
 $url_backend = $url_base . $mi_ruta;
 
