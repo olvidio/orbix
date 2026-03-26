@@ -5,6 +5,7 @@ $_POST = (empty($_POST)) ? $_GET : $_POST;
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\web\UrlBaseProject;
 use web\Hash;
 
 /**
@@ -43,7 +44,7 @@ $txt_guardar = _("guardar datos");
 $txt_ok = _("se ha cambiado el password");
 
 $url_jquery = ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js';
-$url_index = ConfigGlobal::getWeb() . '/index.php';
+$url_base = UrlBaseProject::getUrlBase();
 
 $a_campos = [
     'oPosicion' => $oPosicion,
@@ -57,7 +58,7 @@ $a_campos = [
     'url_jquery' => $url_jquery,
     'url_usuario_chk' => $url_usuario_chk,
     'url_usuario_guardar' => $url_usuario_guardar,
-    'url_index' => $url_index,
+    'url_base' => $url_base,
 ];
 
 $oView = new ViewNewPhtml('frontend\usuarios\controller');

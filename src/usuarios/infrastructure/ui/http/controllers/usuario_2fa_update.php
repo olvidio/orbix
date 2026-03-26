@@ -32,11 +32,11 @@ if ($Qenable_2fa) {
     }
     
     // Actualizar la configuración 2FA
-    $oUsuario->setHas2fa(true);
-    $oUsuario->setSecret2fa(new Secret2FA($Qsecret_2fa));
+    $oUsuario->setHas_2fa(true);
+    $oUsuario->setSecret2faVo(new Secret2FA($Qsecret_2fa));
 } else {
     // Desactivar 2FA
-    $oUsuario->setHas2fa(false);
+    $oUsuario->setHas_2fa(false);
     // Mantener la clave secreta para una posible reactivación
 }
 

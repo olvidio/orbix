@@ -1,13 +1,83 @@
 <?php
 // Front Controller con FastRoute + fallback legacy para /src
 
-// 1) Autoload y bootstrap global (solo se ejecutan una vez por petición)
-require_once __DIR__ . '/../apps/core/global_header.inc';
-require_once __DIR__ . '/../apps/core/global_object.inc';
-
 use DI\ContainerBuilder;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
+
+/**
+ * Bootstrap mínimo para rutas públicas de recuperación (sin sesión autenticada).
+ */
+function bootstrapAnonymousSrcRequest(): void
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        if (!empty($_COOKIE['PHPSESSID'])) {
+            session_id($_COOKIE['PHPSESSID']);
+        }
+        session_start();
+    }
+
+    if (!isset($_SESSION['oGestorErrores'])) {
+        $_SESSION['oGestorErrores'] = new \core\GestorErrores();
+    }
+
+    if (!isset($GLOBALS['container'])) {
+        $builder = new ContainerBuilder();
+        $dependenciesFiles = glob(__DIR__ . '/../src/*/config/dependencies.php');
+        if (is_array($dependenciesFiles)) {
+            foreach ($dependenciesFiles as $dependenciesFile) {
+                $builder->addDefinitions($dependenciesFile);
+            }
+        }
+
+        if (class_exists(\core\ConfigGlobal::class) && !\core\ConfigGlobal::is_debug_mode()) {
+            $cacheDir = __DIR__ . '/../var/cache/php-di';
+            if (!is_dir($cacheDir)) {
+                if (!mkdir($cacheDir, 0775, true) && !is_dir($cacheDir)) {
+                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $cacheDir));
+                }
+            }
+            $builder->enableCompilation($cacheDir);
+            $builder->writeProxiesToFile(true, $cacheDir . '/proxies');
+        }
+
+        $GLOBALS['container'] = $builder->build();
+    }
+}
+
+// 1) Detectar si la petición es una ruta pública de recuperación.
+$anonymousSrcRoutes = [
+    '/src/usuarios/usuario_ayuda_info',
+    '/src/usuarios/recuperar_password_mail',
+    '/src/usuarios/recuperar_2fa_mail',
+    '/src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php',
+    '/src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php',
+    '/src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php',
+];
+$requestRoute = '';
+if (isset($_GET['r']) && is_string($_GET['r']) && str_starts_with($_GET['r'], '/src/')) {
+    $requestRoute = $_GET['r'];
+} else {
+    $requestUriForBootstrap = $_SERVER['REQUEST_URI'] ?? '/';
+    $requestPathForBootstrap = is_string($requestUriForBootstrap)
+        ? parse_url($requestUriForBootstrap, PHP_URL_PATH)
+        : '';
+    if (is_string($requestPathForBootstrap)) {
+        $requestRoute = preg_replace('/^\/(pruebas|orbix)/', '', $requestPathForBootstrap);
+    }
+}
+$requestRoute = rtrim((string)$requestRoute, '/');
+$requestRoute = $requestRoute === '' ? '/' : $requestRoute;
+$isAnonymousSrcRoute = in_array($requestRoute, $anonymousSrcRoutes, true);
+
+// 2) Autoload y bootstrap global.
+require_once __DIR__ . '/../apps/core/global_header.inc';
+if ($isAnonymousSrcRoute) {
+    bootstrapAnonymousSrcRequest();
+} else {
+    require_once __DIR__ . '/../apps/core/global_object.inc';
+}
+$container = $GLOBALS['container'] ?? null;
 
 /* Lo pongo en global_object.inc para que esté accesible desde apps. 
 Cuando vuelva aquí OJO con el '*' de glob:

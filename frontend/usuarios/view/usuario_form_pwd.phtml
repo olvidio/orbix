@@ -85,7 +85,7 @@
 
     function fnjs_logout() {
         var parametros = 'logout=si&PHPSESSID=<?= session_id() ?>';
-        top.location.href = '<?= $url_index ?>?' + parametros;
+        top.location.href = '<?= $url_base ?>' + 'index.php?' + parametros;
     }
 
 </script>

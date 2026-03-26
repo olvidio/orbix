@@ -249,20 +249,33 @@ if (!isset($_SESSION['session_auth'])) {
 
                 // Verificar el código 2FA si está habilitado para el usuario
                 $has_2fa = $row['has_2fa'] ?? false;
+                $user_secret = $row['secret_2fa'] ?? '';
 
-                if ($has_2fa) {
-                    // Si el usuario tiene 2FA habilitado, verificar el código
+                if ($has_2fa && empty($user_secret)) {
+                    // 2FA activado pero el usuario nunca completó el setup (no hay secreto en BD):
+                    // bloquear el acceso y redirigir a la página de ayuda para que configure la app
+                    $url_base = ConfigGlobal::getWeb() . '/';
+                    $a_params = [
+                        'username'  => $_POST['username'],
+                        'ubicacion' => $ubicacion,
+                        'esquema'   => $esquema,
+                        'url_base'  => $url_base,
+                    ];
+                    $url_ayuda = $url_base . 'frontend/usuarios/controller/ayuda_2fa_reset.php?' . http_build_query($a_params);
+                    header("Location: $url_ayuda");
+                    die();
+                }
+
+                if ($has_2fa && !empty($user_secret)) {
+                    // 2FA activado y configurado: exigir el código de verificación
                     if (empty($_POST['verification_code'])) {
                         $error = 3; // Código de error para 2FA requerido
                         logout($_POST['username'], $ubicacion, $idioma, $esquema, $error, $esquema_web);
                         die();
                     }
 
-                    // Verificar el código 2FA
-                    $verification_code = $_POST['verification_code'];
-                    $user_secret = $row['secret_2fa']; // Clave secreta almacenada para el usuario
-
                     // Verificar el código TOTP
+                    $verification_code = $_POST['verification_code'];
                     if (!Verify2fa::verify_2fa_code($verification_code, $user_secret)) {
                         $error = 4; // Código de error para código 2FA inválido
                         logout($_POST['username'], $ubicacion, $idioma, $esquema, $error, $esquema_web);

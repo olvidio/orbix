@@ -65,7 +65,11 @@ class PostRequest
 
     public static function getDataFromUrl(string $url, array $campos = []): mixed
     {
-        $url_hased = Hash::cmdSinParametros(ConfigGlobal::getWeb() . $url);
+        // Compatibilidad: aceptar URL absoluta o relativa.
+        if (!preg_match('#^https?://#i', $url)) {
+            $url = rtrim(ConfigGlobal::getWeb(), '/') . '/' . ltrim($url, '/');
+        }
+        $url_hased = Hash::cmdSinParametros($url);
 
         $oHash = new Hash();
         $oHash->setUrl($url_hased);
@@ -89,8 +93,6 @@ class PostRequest
      */
     private static function getData(array|string $url, array $hash_params): mixed
     {
-        $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $url);
-
         // Store the cookies from the response in the cookie jar
         $cookieJar = new CookieJar();
         $cookies = $_COOKIE;
@@ -99,13 +101,38 @@ class PostRequest
             $cookieJar->setCookie($setCookie);
         }
 
+        $parts = parse_url($url);
+        // 1. Canviem el host original (ex: orbix.docker) per l'intern de Docker
+        $host_original = $parts['host'];
+        $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
+
+        // 2. Reconstruïm incloent el protocol (scheme)
+        $url_limpia = "";
+        if (isset($parts['scheme'])) {
+            $url_limpia .= $parts['scheme'] . "://"; // Aquí afegim el http:// o https://
+        }
+        $url_limpia .= $host_nuevo;
+        if (isset($parts['port'])) {
+            $url_limpia .= ':' . $parts['port'];
+        }
+        if (isset($parts['path'])) {
+            $url_limpia .= $parts['path'];
+        }
+        if (isset($parts['query'])) {
+            $url_limpia .= '?' . $parts['query'];
+        }
+        if (isset($parts['fragment'])) {
+            $url_limpia .= '#' . $parts['fragment'];
+        }
+
         //$domain = 'docker.internal';
-        $domain = strtolower(parse_url($url, PHP_URL_HOST));
+        $domain_org = parse_url($url_limpia, PHP_URL_HOST);
+        $domain = strtolower($domain_org);
         $jar = CookieJar::fromArray($cookies, $domain);
 
         // Use a specific cookie jar
         $client = new Client();
-        $response2 = $client->request('POST', $url, [
+        $response2 = $client->request('POST', $url_limpia, [
             'cookies' => $jar,
             'form_params' => $hash_params
         ]);

@@ -13,7 +13,7 @@ $Qusername = (string)filter_input(INPUT_POST, 'username');
 $Qubicacion = (string)filter_input(INPUT_POST, 'ubicacion');
 $Qesquema = (string)filter_input(INPUT_POST, 'esquema');
 $Qesquema_web = (string)filter_input(INPUT_POST, 'esquema_web');
-$Qurl_index = (string)filter_input(INPUT_POST, 'url_index');
+$Qurl_base = (string)filter_input(INPUT_POST, 'url_base');
 
 $aWhere = array('usuario' => $Qusername);
 $esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;
@@ -51,6 +51,14 @@ $error_txt = '';
 $success = false;
 
 if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
+    // para los bytea: (resources)
+    $handle = $row['password'];
+    if ($handle !== null) {
+        $contents = stream_get_contents($handle);
+        fclose($handle);
+        $password = $contents;
+        $row['password'] = $password;
+    }
     $MiUsuario = Usuario::fromArray($row);
     $id_usuario = $MiUsuario->getId_usuario();
     $email = $MiUsuario->getEmailAsString();
@@ -59,12 +67,66 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
         $error_txt = _("No hay email asociado a este usuario");
     } else {
         // Recuperar código de seguridad
-        $codigo = $MiUsuario->getSecret2faVo()->value();
+        $codigo = $MiUsuario->getSecret2faVo()?->value();
+        if ($codigo === null) {
 
+            // 1. Generar un token aleatorio seguro
+            $token_bruto = bin2hex(random_bytes(32));
+            // 2. Hashearlo para guardarlo en la DB (nunca guardes el token plano)
+            $token_hash = hash('sha256', $token_bruto);
+            // 3. Definir expiración (ej: 15 minutos)
+            $expiracion = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+
+            // 4. Update en la DB
+            // UPDATE "H-dlbv".aux_usuarios SET token_recuperacion_2fa = '$token_hash', token_expiracion_2fa = '$expiracion' WHERE id_usuario = ...
+
+            try {
+                // 1. Definimos la consulta (Ojo: usa el esquema "H-dlbv" si es necesario)
+                $sql = "UPDATE aux_usuarios SET token_recuperacion_2fa = :token_hash, token_expiracion_2fa = :expiracion 
+                            WHERE id_usuario = :id_usuario";
+
+                // 2. Preparamos la sentencia
+                if (($oDBSt1 = $oDB->prepare($sql)) === false) {
+                    throw new Exception("Error preparing SQL statement");
+                }
+
+                // 3. Generamos los datos
+                $token_bruto = bin2hex(random_bytes(32));
+                $token_hash = hash('sha256', $token_bruto);
+
+                // PostgreSQL acepta bien el formato Y-m-d H:i:s
+                $expiracion = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+
+                // 4. Vinculamos parámetros
+                $oDBSt1->bindParam(':token_hash', $token_hash, PDO::PARAM_STR);
+                $oDBSt1->bindParam(':expiracion', $expiracion, PDO::PARAM_STR);
+
+                // Asumo que $Qid_usuario es el ID numérico del usuario
+                $oDBSt1->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+
+                if ($oDBSt1->execute() === false) {
+                    $sClauError = 'DBRol.delGrupo.execute';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDBSt1, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+                // 5. Construimos el enlace para el email
+                $url = $Qurl_base . 'frontend/usuarios/controller/recovery.php';
+                $link_recuperacion = $url . '?token=' . $token_bruto.'&esquema='.$esquema.'&id_usuario='.$id_usuario;
+
+                $message = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu sistema autentificación de 2 factores. Haz clik en el link: %s\n\nSaludos,\nEl equipo de administración"), $Qusername, $link_recuperacion);
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+                // Manejar el error para el usuario
+            }
+        } else {
+            $message = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu sistema autentificación de 2 factores. Tu código de seguridad para la aplicación es: %s\n\nSaludos,\nEl equipo de administración"), $Qusername, $codigo);
+
+        }
         // Enviar email con la nueva contraseña
         $subject = _("Recuperación de código de seguridad");
-        $message = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu sistema autentificación de 2 factores. Tu código de seguridad para la aplicación es: %s\n\nSaludos,\nEl equipo de administración"), $Qusername, $codigo);
 
+        echo "$message";
+        die();
         // Crear un nuevo email en la cola
         $ColaMailId = new ColaMailId(Uuid::random());
         $oColaMail = new ColaMail();

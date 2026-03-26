@@ -107,7 +107,8 @@ $msg_2fa = $msg_2fa ?? '';
                     <?= $oPosicion->js_atras(1) ?>
                 <?php else: ?>
                     // Redirigir a la página de inicio
-                    window.location.href = '<?= $go_to ?>';
+                    //window.location.href = '<?= $go_to ?>';
+                    <?= $go_to ?>
                 <?php endif; ?>
             }
         });
@@ -120,6 +121,12 @@ $msg_2fa = $msg_2fa ?? '';
             $('#config_2fa_section').hide();
         }
     }
+
+    function fnjs_logout() {
+        var parametros = 'logout=si&PHPSESSID=<?= session_id() ?>';
+        top.location.href = '<?= $url_base ?>' + 'index.php?' + parametros;
+    }
+
     // Mostrar/ocultar la sección de configuración según el estado del checkbox
     //window.onload(function() {
     document.addEventListener("DOMContentLoaded", function (event) {

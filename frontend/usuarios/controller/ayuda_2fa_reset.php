@@ -21,13 +21,12 @@ require __DIR__ . '/../../../libs/vendor/autoload.php';
 $Qusername = (string)$_POST['username'];
 $Qubicacion = (string)$_POST['ubicacion'];
 $Qesquema = (string)$_POST['esquema'];
-$Qurl_index = (string)$_POST['url_index'];
+$Qurl_base = (string)$_POST['url_base'];
 
-$a_cosas = ['url_index' => $Qurl_index, 'username' => $Qusername, 'ubicacion' => $Qubicacion, 'esquema' => $Qesquema];
+$a_cosas = ['url_base' => $Qurl_base, 'username' => $Qusername, 'ubicacion' => $Qubicacion, 'esquema' => $Qesquema];
 $linkEnviarMail2fa = 'recuperar_2fa.php?' . http_build_query($a_cosas);
 
-$url = str_replace('index.php', '', $Qurl_index);
-$url_backend = $url . 'src/usuarios/usuario_ayuda_info';
+$url_backend = $Qurl_base . 'src/usuarios/usuario_ayuda_info';
 $a_campos_backend = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
@@ -41,7 +40,7 @@ $a_campos = [
     'error_txt' => $errores,
     'linkEnviarMail2fa' => $linkEnviarMail2fa,
     'emailOfuscado' => $emailOfuscado,
-    'url_index' => $Qurl_index,
+    'url_base' => $Qurl_base,
 ];
 
 $oView = new ViewNewPhtml('frontend\usuarios\view');

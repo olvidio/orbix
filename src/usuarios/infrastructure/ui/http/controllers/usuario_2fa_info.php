@@ -16,7 +16,7 @@ if (empty($Qid_usuario)) {
     
     // Verificar si el usuario tiene 2FA habilitado
     $has_2fa = $oUsuario->isHas_2fa();
-    $secret_2fa = $oUsuario->getSecret2fa();
+    $secret_2fa = $oUsuario->getSecret2faVo()?->value();
     
     $data['has_2fa'] = $has_2fa;
     $data['secret_2fa'] = $secret_2fa;

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "personas/mapa_personas_select.md",
+                "file": "permisos/mapa_config_select.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "mapa_personas_select"
+              "title": "mapa_config_select"
             }
           }
         ]
@@ -196,6 +196,7 @@
   },
   "active": "d922d4e00995c42c",
   "lastOpenFiles": [
+    "personas/mapa_personas_select.md",
     "lu1733812a3s0z.tmp",
     "2. Gestión de Numerarios (n).md",
     "configuracion/mapa_modulos_select.md~",
@@ -222,7 +223,6 @@
     "3. Gestión de Agregados (a).md",
     "15. SR (actividades y planning).md",
     "personas/mapa_personas_que.md",
-    "personas/mapa_personas_select.md",
     "usuarios/mapa_preferencias.md",
     "mapasObix.zip",
     "configuracion/mapa_parametros.md",
@@ -230,7 +230,6 @@
     "menus.csv",
     "zonassacd/mapa_zona_ctr.md",
     "inventario",
-    "certificados",
-    "usuarios"
+    "certificados"
   ]
 }
