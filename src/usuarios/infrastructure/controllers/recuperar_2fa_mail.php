@@ -1,6 +1,5 @@
 <?php
 
-
 use core\ConfigDB;
 use core\DBConnection;
 use core\ValueObject\Uuid;
@@ -10,14 +9,7 @@ use shared\domain\repositories\ColaMailRepository;
 use src\usuarios\domain\entity\Usuario;
 use web\ContestarJson;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
+require __DIR__ . '/../../../../libs/vendor/autoload.php';
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');
 $Qubicacion = (string)filter_input(INPUT_POST, 'ubicacion');
@@ -61,6 +53,14 @@ $error_txt = '';
 $success = false;
 
 if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
+    // para los bytea: (resources)
+    $handle = $row['password'];
+    if ($handle !== null) {
+        $contents = stream_get_contents($handle);
+        fclose($handle);
+        $password = $contents;
+        $row['password'] = $password;
+    }
     $MiUsuario = (new Usuario())->setAllAttributes($row);
     $id_usuario = $MiUsuario->getId_usuario();
     $email = $MiUsuario->getEmailAsString();
@@ -158,4 +158,4 @@ $data['error_txt'] = $error_txt;
 $data['success'] = $success;
 $data['email'] = $email;
 
-ContestarJson::enviar($error_txt, $data);
+ContestarJson::enviar('', $data);
