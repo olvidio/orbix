@@ -126,7 +126,7 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     public function Eliminar(PersonaNota $PersonaNota): bool
     {
         $id_nom = $PersonaNota->getId_nom();
-        $id_nivel = $PersonaNota->getId_nivel();
+        $id_nivel = $PersonaNota->getIdNivelVo()->value();
         $tipo_acta = $PersonaNota->getTipoActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -141,7 +141,7 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     public function Guardar(PersonaNota $PersonaNota): bool
     {
         $id_nom = $PersonaNota->getId_nom();
-        $id_nivel = $PersonaNota->getId_nivel();
+        $id_nivel = $PersonaNota->getIdNivelVo()->value();
         $tipo_acta = $PersonaNota->getTipoActaVo()?->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

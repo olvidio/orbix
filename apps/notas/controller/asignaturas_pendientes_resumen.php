@@ -110,7 +110,7 @@ foreach ($cPersonas as $oPersona) {
     $aAprobadas = [];
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
-        $id_nivel = $oPersonaNota->getId_nivel();
+        $id_nivel = $oPersonaNota->getIdNivelVo()->value();
         $id_situacion = $oPersonaNota->getId_situacion();
 
         if ($a_Asig_isActive[$id_asignatura] !== 't') continue;

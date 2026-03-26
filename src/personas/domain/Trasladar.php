@@ -775,7 +775,7 @@ class Trasladar
                 /*
                 $oPersonaNota = new PersonaNota();
                 $oPersonaNota->setId_nom($oPersonaNotaDB->getId_nom());
-                $oPersonaNota->setId_nivel($oPersonaNotaDB->getId_nivel());
+                $oPersonaNota->setId_nivel($oPersonaNotaDB->getIdNivelVo()->value());
                 $oPersonaNota->setIdAsignaturaVo($oPersonaNotaDB->getIdAsignaturaVo()->value());
                 $oPersonaNota->setIdSituacionVo($oPersonaNotaDB->getIdSituacionVo()->value());
                 $oPersonaNota->setActaVo($oPersonaNotaDB->getActaVo()->value());

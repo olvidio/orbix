@@ -39,13 +39,13 @@ class Cargo
      *
      * @var bool|null
      */
-    private?bool $sf = null;
+    private ?bool $sf = null;
     /**
      * Sv de Cargo
      *
      * @var bool|null
      */
-    private?bool $sv = null;
+    private ?bool $sv = null;
     /**
      * Tipo del Cargo (código)
      */

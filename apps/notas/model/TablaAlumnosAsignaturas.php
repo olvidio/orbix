@@ -117,7 +117,7 @@ class TablaAlumnosAsignaturas
             $aAprobadas = [];
             foreach ($cPersonaNotas as $oPersonaNota) {
                 $id_asignatura = $oPersonaNota->getId_asignatura();
-                $id_nivel = $oPersonaNota->getId_nivel();
+                $id_nivel = $oPersonaNota->getIdNivelVo()->value();
                 $id_situacion = $oPersonaNota->getId_situacion();
 
                 if ($id_asignatura > 3000) {
@@ -244,7 +244,7 @@ class TablaAlumnosAsignaturas
             $aAprobadas = [];
             foreach ($cPersonaNotas as $oPersonaNota) {
                 $id_asignatura = $oPersonaNota->getId_asignatura();
-                $id_nivel = $oPersonaNota->getId_nivel();
+                $id_nivel = $oPersonaNota->getIdNivelVo()->value();
                 $id_situacion = $oPersonaNota->getId_situacion();
 
                 if ($id_asignatura > 3000) {

@@ -92,7 +92,7 @@ if (empty($Qid_habitacion)) {
     $aLastHabitacion = $HabitacionRepository->getHabitaciones(['id_ubi' => $Qid_ubi, '_ordre' => 'orden DESC', '_limit' => 1]);
     if (!empty($aLastHabitacion)) {
         $oLastHabitacion = current($aLastHabitacion);
-        $orden = (int)$oLastHabitacion->getOrdenVo()->value() + 10;
+        $orden = (int)($oLastHabitacion->getOrdenVo()?->value()?? 0) + 10;
     } else {
         $orden = 10;
     }

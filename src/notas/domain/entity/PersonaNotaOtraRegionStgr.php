@@ -5,6 +5,7 @@ namespace src\notas\domain\entity;
 use core\ConverterJson;
 use NumberFormatter;
 use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\value_objects\ActaNumero;
 use src\notas\domain\value_objects\Detalle;
@@ -49,7 +50,7 @@ class PersonaNotaOtraRegionStgr
 
     protected int $id_nom;
 
-    protected int $id_nivel;
+    protected NivelId $id_nivel;
 
     protected AsignaturaId $id_asignatura;
 
@@ -182,14 +183,32 @@ class PersonaNotaOtraRegionStgr
         $this->id_nom = $id_nom;
     }
 
+    /**
+     * @deprecated use getIdNivelVo()
+     */
     public function getId_nivel(): int
+    {
+        return $this->id_nivel->value();
+    }
+
+    public function getIdNivelVo(): NivelId
     {
         return $this->id_nivel;
     }
 
+    /**
+     * @deprecated use setIdNivelVo()
+     */
     public function setId_nivel(int $id_nivel): void
     {
-        $this->id_nivel = $id_nivel;
+        $this->id_nivel = NivelId::fromNullableInt($id_nivel);
+    }
+
+    public function setIdNivelVo(NivelId|int|null $oIdNivel): void
+    {
+        $this->id_nivel = $oIdNivel instanceof NivelId
+            ? $oIdNivel
+            : AsignaturaId::fromNullableInt($oIdNivel);
     }
 
     /**

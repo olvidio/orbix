@@ -266,7 +266,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
     $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
-        $id_nivel = $oPersonaNota->getId_nivel();
+        $id_nivel = $oPersonaNota->getIdNivel()->value();
         $acta = $oPersonaNota->getActa();
         $f_acta = $oPersonaNota->getF_acta()?->getFromLocal();
 

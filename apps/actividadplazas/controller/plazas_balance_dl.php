@@ -68,7 +68,7 @@ $aWhere = array('region' => $a_reg[0], 'dl' => $mi_dl);
 $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cDelegaciones = $DelegacionRepository->getDelegaciones($aWhere);
 $oMiDelegacion = $cDelegaciones[0];
-$grupo_estudios = $oMiDelegacion->getGrupoEstudiosVo()->value();
+$grupo_estudios = $oMiDelegacion->getGrupoEstudiosVo()?->value();
 
 $cDelegaciones = $DelegacionRepository->getDelegaciones(['grupo_estudios' => $grupo_estudios, '_ordre' => 'region,dl']);
 $ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);

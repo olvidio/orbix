@@ -159,7 +159,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             $id_nivel = 0;
             foreach ($cPersonaNotas as $oPersonaNota1) {
                 $j++;
-                $id_op = $oPersonaNota1->getId_nivel();
+                $id_op = $oPersonaNota1->getIdNivelVo()->value();
                 $id_asignatura = $oPersonaNota1->getId_asignatura();
                 if ($id_asignatura === $Qid_asignatura) { // ya está la que intento meter => actualizar
                     $id_nivel = $id_op;

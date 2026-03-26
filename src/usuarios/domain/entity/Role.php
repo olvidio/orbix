@@ -107,7 +107,7 @@ class Role
     }
 
 
-    public function getPauVo(): PauType
+    public function getPauVo(): ?PauType
     {
         // Normalize: never return null; default to PAU_NONE
         if ($this->pau === null) {
@@ -131,7 +131,7 @@ class Role
 
     public function getPauAsString(): string
     {
-        return $this->getPauVo()->value();
+        return $this->getPauVo()?->value()?? '';
     }
 
 

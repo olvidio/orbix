@@ -125,7 +125,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     }
     $nombre_corto = $oAsignatura->getNombre_corto();
     if ($oPersonaNota->getId_asignatura() > 3000) {
-        $id_nivel = $oPersonaNota->getId_nivel();
+        $id_nivel = $oPersonaNota->getIdNivelVo()->value();
     } else {
         $id_nivel = $oAsignatura->getId_nivel();
     }

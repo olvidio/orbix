@@ -103,10 +103,10 @@ if (empty($cDelegaciones)) {
     exit ($msg);
 }
 $oMiDelegacion = $cDelegaciones[0];
-$grupo_estudios = $oMiDelegacion->getGrupoEstudiosVo()->value();
+$grupo_estudios = $oMiDelegacion->getGrupoEstudiosVo()?->value();
 
 $cDelegaciones = [];
-if (empty($grupo_estudios)) {
+if ($grupo_estudios === null) {
     $cDelegaciones[] = $oMiDelegacion;
 } else {
     $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);

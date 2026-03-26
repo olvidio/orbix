@@ -80,7 +80,7 @@ $oAsignaturaTipo = $GLOBALS['container']->get(AsignaturaTipoRepositoryInterface:
 if ($oAsignatura === null) {
     throw new \Exception(sprintf(_("No se ha encontrado el tipo de asignatura con id: %s"), $id_tipo));
 }
-$curso = strtr($oAsignaturaTipo->getTipoLatinVo()->value() ?? '', $replace);
+$curso = strtr($oAsignaturaTipo->getTipoLatinVo()?->value() ?? '', $replace);
 
 switch ($any) {
     case 1:

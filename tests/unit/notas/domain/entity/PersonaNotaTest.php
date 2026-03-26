@@ -42,7 +42,7 @@ class PersonaNotaTest extends myTest
     public function test_set_and_get_id_nivel()
     {
         $this->PersonaNota->setId_nivel(1);
-        $this->assertEquals(1, $this->PersonaNota->getId_nivel());
+        $this->assertEquals(1, $this->PersonaNota->getIdNivelVo()->value());
     }
 
     public function test_set_and_get_id_asignatura()

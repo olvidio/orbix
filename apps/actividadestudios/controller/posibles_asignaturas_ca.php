@@ -80,7 +80,7 @@ foreach ($AsistenteRepository->getAsistentes(array('id_activ' => $id_activ)) as 
     $aAprobadas = [];
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
-        $id_nivel = $oPersonaNota->getId_nivel();
+        $id_nivel = $oPersonaNota->getIdNivelVo()->value();
         $oF_acta = $oPersonaNota->getF_acta();
         $id_situacion = $oPersonaNota->getId_situacion();
 

@@ -123,7 +123,7 @@ class Select1011
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cPersonaNotas as $oPersonaNota) {
             $i++;
-            $id_nivel = $oPersonaNota->getId_nivel();
+            $id_nivel = $oPersonaNota->getIdNivelVo()->value();
             $id_asignatura = $oPersonaNota->getId_asignatura();
 
             $id_situacion = $oPersonaNota->getId_situacion();

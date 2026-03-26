@@ -36,7 +36,7 @@ class EditarPersonaNota
     {
         $this->personaNota = $oPersonaNota;
         $this->id_nom = $oPersonaNota->getId_nom();
-        $this->id_nivel = $oPersonaNota->getId_nivel();
+        $this->id_nivel = $oPersonaNota->getIdNivelVo()->value();
         $this->id_asignatura = $oPersonaNota->getId_asignatura();
         $this->tipo_acta = $oPersonaNota->getTipo_acta();
     }
@@ -81,7 +81,7 @@ class EditarPersonaNota
         $guardar = TRUE;
 
         $id_nom = $this->personaNota->getId_nom();
-        $id_nivel = $this->personaNota->getId_nivel();
+        $id_nivel = $this->personaNota->getIdNivelVo()->value();
         $id_asignatura = $this->personaNota->getIdAsignaturaVo()->value();
         $id_situacion = $this->personaNota->getIdSituacionVo()->value();
         $acta = $this->personaNota->getActa();
@@ -182,7 +182,7 @@ class EditarPersonaNota
                 $cPersonaNotasOtraRegion = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
                 if (!empty($cPersonaNotasOtraRegion)) {
                     $personaNotaOriginal = $cPersonaNotasOtraRegion[0];
-                    $id_nivel = $personaNotaOriginal->getId_nivel();
+                    $id_nivel = $personaNotaOriginal->getIdNivelVo()->value();
                     $id_asignatura = $personaNotaOriginal->getId_asignatura();
                     $id_situacion = $personaNotaOriginal->getId_situacion();
                     $acta = $personaNotaOriginal->getActa();
@@ -254,7 +254,7 @@ class EditarPersonaNota
         $rta = [];
 
         $id_nom = $this->personaNota->getId_nom();
-        $id_nivel = $this->personaNota->getId_nivel();
+        $id_nivel = $this->personaNota->getIdNivelVo()->value();
         $id_asignatura = $this->personaNota->getIdAsignaturaVo()->value();
         $id_situacion = $this->personaNota->getIdSituacionVo()->value();
         $acta = $this->personaNota->getActa();
@@ -264,7 +264,7 @@ class EditarPersonaNota
         $id_preceptor = $this->personaNota->getId_preceptor();
         $detalle = $this->personaNota->getDetalle();
         $epoca = $this->personaNota->getEpoca();
-        $id_activ = $this->personaNota->getIdActivVo()->value();
+        $id_activ = $this->personaNota->getIdActivVo()?->value();
         $nota_num = $this->personaNota->getNotaNumVo()?->value();
         $nota_max = $this->personaNota->getNotaMaxVo()?->value();
 

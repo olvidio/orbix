@@ -124,7 +124,7 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
         $aListaCargos[] = $id_nom;
         $id_cargo = $oActividadCargo->getId_cargo();
         $oCargo = $CargoRepository->findById($id_cargo);
-        $tipo_cargo = $oCargo->getTipoCargoVo()->value();
+        $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
         $cargo = $oCargo->getCargoVo()->value();
         // para los sacd en sf
         if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {

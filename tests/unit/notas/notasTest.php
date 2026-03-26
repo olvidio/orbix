@@ -514,7 +514,7 @@ class notasTest extends myTest
         $oPersonaNotaNew->setId_situacion($personaNota->getIdSituacionVo()->value());
         $oPersonaNotaNew->setActa($personaNota->getActaVo()->value());
         $oPersonaNotaNew->setF_acta($personaNota->getF_acta());
-        $oPersonaNotaNew->setTipo_acta($personaNota->getTipoActaVo()->value());
+        $oPersonaNotaNew->setTipo_acta($personaNota->getTipoActaVo()?->value());
         $oPersonaNotaNew->setPreceptor($personaNota->isPreceptor());
         $oPersonaNotaNew->setId_preceptor($personaNota->getId_preceptor());
         $oPersonaNotaNew->setDetalle($personaNota->getDetalleVo()?->value());

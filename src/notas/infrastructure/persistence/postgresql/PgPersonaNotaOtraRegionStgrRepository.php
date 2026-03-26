@@ -289,7 +289,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     public function Eliminar(PersonaNotaOtraRegionStgr $personaNotaOtraRegionStgr): bool
     {
         $id_nom = $personaNotaOtraRegionStgr->getId_nom();
-        $id_nivel = $personaNotaOtraRegionStgr->getId_nivel();
+        $id_nivel = $personaNotaOtraRegionStgr->getIdNivelVo()->value();
         $tipo_acta = $personaNotaOtraRegionStgr->getTipoActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -304,7 +304,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     public function Guardar(PersonaNotaOtraRegionStgr $personaNotaOtraRegionStgr): bool
     {
         $id_nom = $personaNotaOtraRegionStgr->getId_nom();
-        $id_nivel = $personaNotaOtraRegionStgr->getId_nivel();
+        $id_nivel = $personaNotaOtraRegionStgr->getIdNivelVo()->value();
         $tipo_acta = $personaNotaOtraRegionStgr->getTipoActaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

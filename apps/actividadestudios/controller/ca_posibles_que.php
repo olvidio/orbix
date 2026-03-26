@@ -57,12 +57,14 @@ $mi_dele = ConfigGlobal::mi_delef();
 $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cMiDl = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
 if (is_array($cMiDl) && !empty($cMiDl)) {
-    $grupo_estudios = $cMiDl[0]->getGrupoEstudiosVo()->value();
-    $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $grupo_estudios]);
-    $mi_grupo = '';
-    foreach ($cDelegaciones as $oDelegacion) {
-        $mi_grupo .= empty($mi_grupo) ? '' : ',';
-        $mi_grupo .= $oDelegacion->getDlVo()->value();
+    $grupo_estudios = $cMiDl[0]->getGrupoEstudiosVo()?->value();
+    if ($grupo_estudios !== null) {
+        $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $grupo_estudios]);
+        $mi_grupo = '';
+        foreach ($cDelegaciones as $oDelegacion) {
+            $mi_grupo .= empty($mi_grupo) ? '' : ',';
+            $mi_grupo .= $oDelegacion->getDlVo()->value();
+        }
     }
 } else {
     $mi_grupo = _("no encuentro el grupo de estudios al que pertenece la dl");

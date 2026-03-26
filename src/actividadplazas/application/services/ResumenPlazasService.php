@@ -152,7 +152,7 @@ class ResumenPlazasService
         $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(array('id_activ' => $id_activ, 'id_dl' => $id_mi_dl, 'dl_tabla' => $dl_org));
         $plazas_calendario = 0;
         foreach ($cActividadPlazas as $oActividadPlazas) {
-            $plazas_calendario += $oActividadPlazas->getPlazasVo()->value();
+            $plazas_calendario += $oActividadPlazas->getPlazasVo()?->value()?? 0;
         }
         return $plazas_calendario;
     }
@@ -244,7 +244,7 @@ class ResumenPlazasService
                 $oCasa = Ubi::NewUbi($id_ubi);
                 // Si la casa es un ctr de otra dl, no sé las plazas
                 if ($oCasa !== null && method_exists($oCasa, 'getPlazas')) {
-                    $plazas_totales = $oCasa->getPlazasVo()->value();
+                    $plazas_totales = $oCasa->getPlazasVo()?->value();
                 }
             }
             if (empty($plazas_totales)) {
