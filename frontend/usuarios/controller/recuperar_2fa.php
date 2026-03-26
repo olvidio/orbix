@@ -37,9 +37,9 @@ $a_campos_backend = [
     'url_base' => $Qurl_base,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$error_txt = $data['errores'];
-$email = $data['email'];
-$success = $data['success'];
+$error_txt = $data['errores']?? '';
+$email = $data['email']?? '';
+$success = $data['success']?? false;
 
 // Preparar los datos para la vista
 $a_campos = [
