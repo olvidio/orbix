@@ -20,6 +20,8 @@ class InfoLugar extends DatosInfoRepo
         $this->setClase('src\\inventario\\domain\\entity\\Lugar');
         $this->setMetodoGestor('getLugares');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(LugarRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -34,7 +36,7 @@ class InfoLugar extends DatosInfoRepo
             $aOperador['nom_lugar'] = 'sin_acentos';
         }
 
-        $ColeccionRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $ColeccionRepository->getLugares($aWhere, $aOperador);
 
         return $Coleccion;

@@ -42,7 +42,7 @@ class Documento
 
     private ?DocumentoObserv $observ = null;
 
-    private ?DocumentoObservCtr $observCtr = null;
+    private ?DocumentoObservCtr $observ_ctr = null;
 
     private DateTimeLocal|NullDateTimeLocal|null $f_ult_comprobacion = null;
 
@@ -150,15 +150,15 @@ class Documento
     }
 
 
-    public function getObservCtr(): ?string
+    public function getObserv_ctr(): ?string
     {
-        return $this->observCtr?->value();
+        return $this->observ_ctr?->value();
     }
 
 
-    public function setObservCtr(?string $observCtr = null): void
+    public function setObserv_ctr(?string $observ_ctr = null): void
     {
-        $this->observCtr = DocumentoObservCtr::fromNullableString($observCtr);
+        $this->observ_ctr = DocumentoObservCtr::fromNullableString($observ_ctr);
     }
 
 
@@ -371,12 +371,12 @@ class Documento
 
     public function getObservCtrVo(): ?DocumentoObservCtr
     {
-        return $this->observCtr;
+        return $this->observ_ctr;
     }
 
     public function setObservCtrVo(DocumentoObservCtr|string|null $texto = null): void
     {
-        $this->observCtr = $texto instanceof DocumentoObservCtr
+        $this->observ_ctr = $texto instanceof DocumentoObservCtr
             ? $texto
             : DocumentoObservCtr::fromNullableString($texto);
     }
@@ -584,8 +584,8 @@ class Documento
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('observ_ctr');
-        $oDatosCampo->setMetodoGet('getObservCtr');
-        $oDatosCampo->setMetodoSet('setObservCtr');
+        $oDatosCampo->setMetodoGet('getObserv_ctr');
+        $oDatosCampo->setMetodoSet('setObserv_ctr');
         $oDatosCampo->setEtiqueta(_("observaciones para el centro"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);

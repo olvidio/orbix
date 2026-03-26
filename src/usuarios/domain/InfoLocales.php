@@ -17,7 +17,7 @@ class InfoLocales extends DatosInfoRepo
         $this->setTxtBuscar(_("idioma a buscar"));
         $this->setTxtExplicacion();
 
-        $this->setClase('src\\usuarios\\model\\entity\\Local');
+        $this->setClase('src\\usuarios\\domain\\entity\\Local');
         $this->setMetodoGestor('getLocales');
 
         $this->setRepositoryInterface(LocalRepositoryInterface::class);

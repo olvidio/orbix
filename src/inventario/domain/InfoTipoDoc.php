@@ -20,6 +20,8 @@ class InfoTipoDoc extends DatosInfoRepo
         $this->setClase('src\\inventario\\domain\\entity\\TipoDoc');
         $this->setMetodoGestor('getTipoDocs');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(TipoDocRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -34,7 +36,7 @@ class InfoTipoDoc extends DatosInfoRepo
             $aOperador['nom_doc'] = 'sin_acentos';
         }
 
-        $ColeccionRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
+        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $ColeccionRepository->getTipoDocs($aWhere, $aOperador);
 
         return $Coleccion;

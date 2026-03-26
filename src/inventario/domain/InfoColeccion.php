@@ -20,6 +20,8 @@ class InfoColeccion extends DatosInfoRepo
         $this->setClase('src\\inventario\\domain\\entity\\Coleccion');
         $this->setMetodoGestor('getColecciones');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(ColeccionRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -34,7 +36,7 @@ class InfoColeccion extends DatosInfoRepo
             $aOperador['nom_coleccion'] = 'sin_acentos';
         }
 
-        $ColeccionRepository = $GLOBALS['container']->get(ColeccionRepositoryInterface::class);
+        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $ColeccionRepository->getColecciones($aWhere, $aOperador);
 
         return $Coleccion;

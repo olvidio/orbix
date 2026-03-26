@@ -20,6 +20,8 @@ class InfoUbiInventario extends DatosInfoRepo
         $this->setClase('src\\inventario\\domain\\entity\\UbiInventario');
         $this->setMetodoGestor('getUbisInventario');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(UbiInventarioRepositoryInterface::class);
     }
 
     public function getColeccion()
@@ -34,7 +36,7 @@ class InfoUbiInventario extends DatosInfoRepo
             $aOperador['nom_ubi'] = 'sin_acentos';
         }
 
-        $ColeccionRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
+        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $ColeccionRepository->getUbisInventario($aWhere, $aOperador);
 
         return $Coleccion;

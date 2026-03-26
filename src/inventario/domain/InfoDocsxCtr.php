@@ -22,6 +22,8 @@ class InfoDocsxCtr extends DatosInfoRepo
         $this->setClase('src\\inventario\\domain\\entity\\Documento');
         $this->setMetodoGestor('getId_doc');
         $this->setPau('p');
+
+        $this->setRepositoryInterface(DocumentoRepositoryInterface::class);
     }
 
     public function getBuscar_view()
@@ -82,7 +84,7 @@ class InfoDocsxCtr extends DatosInfoRepo
             }
         }
 
-        $ColeccionRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
         $Coleccion = $ColeccionRepository->getDocumentos($aWhere, $aOperador);
 
         return $Coleccion;

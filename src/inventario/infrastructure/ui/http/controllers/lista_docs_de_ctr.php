@@ -40,7 +40,7 @@ foreach ($cDocumentos as $oDocumento) {
     $d++;
     $id_doc = $oDocumento->getId_doc();
     $id_tipo_doc = $oDocumento->getId_tipo_doc();
-    $observ = $oDocumento->getObservVo()->value();
+    $observ = $oDocumento->getObservVo()?->value();
     $num_reg = $oDocumento->getNum_reg();
     $num_ejemplares = $oDocumento->getNum_ejemplares();
     // guardo en una colección los tipos de doc para consultas posteriores (de otros lugares).
@@ -79,8 +79,8 @@ foreach ($cDocumentos as $oDocumento) {
         $nom_compost .= !empty($num_fin) ? " $num_fin" : _("Actual");
     }
     $a_valores[$d]['sel'] = $id_doc;
-    $a_valores[$d][2] = array('clase' => 'doc', 'valor' => $nom_compost);
-    $a_valores[$d][3] = $observ;
+    $a_valores[$d][1] = array('clase' => 'doc', 'valor' => $nom_compost);
+    $a_valores[$d][2] = $observ;
     //para poder ordenar
     $a_llave[$d] = $oTipoDoc->isBajo_llave();
     $a_tipo[$d] = $oTipoDoc->getSigla() . " " . $oTipoDoc->getNom_doc();
