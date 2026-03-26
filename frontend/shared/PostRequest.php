@@ -105,10 +105,13 @@ class PostRequest
         // 1. Canviem el host original (ex: orbix.docker) per l'intern de Docker
         $host_original = $parts['host'];
         $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
-        // 2. Reconstruïm la URL
-        // Nota: No incloem el 'scheme' (http/https) ni el 'host' antic
-        // per complir amb el teu requisit de que la part inicial "desaparegui"
-        $url_limpia = $host_nuevo;
+
+        // 2. Reconstruïm incloent el protocol (scheme)
+        $url_limpia = "";
+        if (isset($parts['scheme'])) {
+            $url_limpia .= $parts['scheme'] . "://"; // Aquí afegim el http:// o https://
+        }
+        $url_limpia .= $host_nuevo;
         if (isset($parts['port'])) {
             $url_limpia .= ':' . $parts['port'];
         }
