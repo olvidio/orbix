@@ -37,7 +37,7 @@ if (substr($esquema, -1) === 'f') {
 }
 
 // Buscar el usuario en la base de datos
-$query = "SELECT * FROM aux_usuarios WHERE id_usuario = $Qid_usuario AND token_recuperacion_2fa = '$hash_recibido' AND token_expiracion_2fa > NOW()";
+$query = "SELECT * FROM aux_usuarios WHERE id_usuario = $Qid_usuario AND token_recuperacion_2fa = '$hash_recibido' AND token_expiracion_2fa > (now() AT TIME ZONE 'utc')";
 $oDBSt = $oDB->Query($query);
 
 $usuario_encontrado = $oDBSt->fetch();
