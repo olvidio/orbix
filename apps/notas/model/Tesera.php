@@ -111,9 +111,10 @@ class Tesera
 
     }
 
-    public function getAsignaturasPosibles()
+    private function getAsignaturasPosibles(int $plan = 26)
     {
         $this->getCurso();
+
         // Asignaturas posibles:
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $aWhere = [];
@@ -124,6 +125,28 @@ class Tesera
         $aWhere['_ordre'] = 'id_nivel';
         $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
+        if ($plan === 97) {
+            // desaparece el id_nivel 2112 y aparecen id_nivel 2113, 2114
+            // tampoco debería haber ninguna opcional de las nuevas, pero se supone que se hacongelado
+            // antes de crear las opcionales.
+            $aWhere = [];
+            $aOperador = [];
+            $aWhere['id_nivel'] = '2113,2114';
+            $aOperador['id_nivel'] = 'IN';
+            $aWhere['_ordre'] = 'id_nivel';
+            $cAsignaturas97 = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
+            // quitar la 2112
+            $cAsignaturasNew = [];
+            foreach ($cAsignaturas as $k => $oAsignatura) {
+                if ($oAsignatura->getId_nivel() === 2112) {
+                    // añado las viejas, para que esten en orden
+                    $cAsignaturasNew = array_merge($cAsignaturasNew, $cAsignaturas97);
+                    continue;
+                }
+                $cAsignaturasNew[] = $oAsignatura;
+            }
+            $cAsignaturas = $cAsignaturasNew;
+        }
         return $cAsignaturas;
     }
 
@@ -179,7 +202,8 @@ class Tesera
         $ap_nom = $oPersona->getPrefApellidosNombre();
         $centro = $oPersona->getCentro_o_dl();
 
-        $cAsignaturas = $this->getAsignaturasPosibles();
+        $plan = $this->getPlan($id_nom);
+        $cAsignaturas = $this->getAsignaturasPosibles($plan);
         // Para saber el número total de asignaturas
         $aAprobadas = $this->getAsignaturasAprobadas($id_nom);
         $num_asig_total = count($cAsignaturas);
@@ -305,5 +329,25 @@ class Tesera
 
         $oView = new ViewPhtml(__NAMESPACE__);
         $oView->renderizar('tesera_ver.phtml', $a_campos);
+    }
+
+    private function getPlan($id_nom)
+    {
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $aWhere = [];
+        $aOperador = [];
+        $aWhere['id_nom'] = $id_nom;
+        $aWhere['id_asignatura'] = 9998; //cuadrienio terminado
+        $cNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
+        if (count($cNotas) === 0) {
+            return 26;
+        }
+        $oF_acta = $cNotas[0]->getF_acta();
+        $oFechaLimite = new DateTimeLocal('2026-03-30');
+
+        if ($oF_acta < $oFechaLimite) {
+            return 97;
+        }
+        return 26;
     }
 }

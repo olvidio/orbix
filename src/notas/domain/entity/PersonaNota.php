@@ -34,7 +34,7 @@ class PersonaNota
                     $this->id_asignatura = AsignaturaId::fromNullableInt((int)$val_id);
                 }
                 if (($nom_id === 'id_nivel') && $val_id !== '') {
-                    $this->id_nivel = (int)$val_id;
+                    $this->id_nivel = NivelId::fromNullableInt((int)$val_id);
                 }
                 if (($nom_id === 'tipo_acta') && $val_id !== '') {
                     $this->tipo_acta = TipoActa::fromNullableInt((int)$val_id);
@@ -265,12 +265,12 @@ class PersonaNota
     /**
      * @deprecated use getActaVo()
      */
-    public function getActa(): string
+    public function getActa(): ?string
     {
-        return $this->acta->value();
+        return $this->acta?->value();
     }
 
-    public function getActaVo(): ActaNumero
+    public function getActaVo(): ?ActaNumero
     {
         return $this->acta;
 
@@ -279,7 +279,7 @@ class PersonaNota
     /**
      * @deprecated use setActaVo()
      */
-    public function setActa(string $acta): void
+    public function setActa(?string $acta): void
     {
         $this->acta = ActaNumero::fromNullableString($acta);
     }
@@ -482,7 +482,7 @@ class PersonaNota
     /**
      * @deprecated use getTipoActaVo()
      */
-    public function getTipo_acta(): ?string
+    public function getTipo_acta(): ?int
     {
         return $this->tipo_acta?->value();
     }

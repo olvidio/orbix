@@ -306,7 +306,7 @@ $condicion_js = substr($condicion, 0, -4);
 
 
 $oHash = new Hash();
-$campos_chk = '!preceptor';
+$campos_chk = '!preceptor!epoca!tipo_acta';
 $camposForm = 'preceptor!nota_num!nota_max!id_situacion!acta!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
 $camposNo = 'refresh!id_preceptor!id_activ' . $campos_chk;
 $a_camposHidden = array(

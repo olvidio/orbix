@@ -74,24 +74,21 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             ];
             $cPersonNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere);
             if (empty($cPersonNotas)) {
-                $id_asignatura = $oPersonaNotaOtraRegionStgr->getIdAsignaturaVo()->value();
-                $msg = sprintf(_("Nota no encontrada. id_asignatura: %s, id_nom: %s"), $id_asignatura, $id_nom);
-                //throw new \Exception($msg);
                 $oPersonaNota = new PersonaNota();
-                $oPersonaNota->setIdNivel($oPersonaNotaOtraRegionStgr->getIdNivelVo()->value());
-                $oPersonaNota->setIdAsignatura($id_asignatura);
-                $oPersonaNota->setIdNom($id_nom);
-                $oPersonaNota->setTipoActa(TipoActa::FORMATO_CERTIFICADO);
-                $oPersonaNota->setIdSituacion($oPersonaNotaOtraRegionStgr->getIdSituacionVo()->value());
-                $oPersonaNota->setActaVo($oPersonaNotaOtraRegionStgr->getActaVo()->value());
-                $oPersonaNota->setDetalle($oPersonaNotaOtraRegionStgr->getDetalleVo()->value());
-                $oPersonaNota->setFacta($oF_certificado);
+                $oPersonaNota->setIdNivelVo($oPersonaNotaOtraRegionStgr->getIdNivelVo());
+                $oPersonaNota->setIdAsignaturaVo($oPersonaNotaOtraRegionStgr->getIdAsignaturaVo());
+                $oPersonaNota->setId_nom($id_nom);
+                $oPersonaNota->setTipoActaVo(TipoActa::FORMATO_CERTIFICADO);
+                $oPersonaNota->setIdSituacionVo($oPersonaNotaOtraRegionStgr->getIdSituacionVo());
+                $oPersonaNota->setActaVo($oPersonaNotaOtraRegionStgr->getActaVo());
+                $oPersonaNota->setDetalleVo($oPersonaNotaOtraRegionStgr->getDetalleVo());
+                $oPersonaNota->setF_acta($oF_certificado);
                 $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
-                $oPersonaNota->setIdpreceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
-                $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo()->value());
-                $oPersonaNota->setIdactiv($oPersonaNotaOtraRegionStgr->getIdActividadVo()->value());
-                $oPersonaNota->setNotanum($oPersonaNotaOtraRegionStgr->getNotaNumVo()->value());
-                $oPersonaNota->setNotamax($oPersonaNotaOtraRegionStgr->getNotaMaxVo()->value());
+                $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
+                $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo());
+                $oPersonaNota->setIdActivVo($oPersonaNotaOtraRegionStgr->getIdActividadVo()->value());
+                $oPersonaNota->setNotaNumVo($oPersonaNotaOtraRegionStgr->getNotaNumVo());
+                $oPersonaNota->setNotaMaxVo($oPersonaNotaOtraRegionStgr->getNotaMaxVo());
 
                 $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
                 $rta = $oEditarPersonaNota->nuevoSolamenteDl();

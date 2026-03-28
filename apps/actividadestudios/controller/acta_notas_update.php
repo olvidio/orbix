@@ -240,20 +240,20 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
 
 
             $oPersonaNota = new PersonaNota();
-            $oPersonaNota->setIdNivel($id_nivel);
-            $oPersonaNota->setIdAsignatura($Qid_asignatura);
-            $oPersonaNota->setIdNom($id_nom);
-            $oPersonaNota->setIdSituacion($id_situacion);
-            $oPersonaNota->setActa($acta);
-            $oPersonaNota->setFActa($oF_acta);
-            $oPersonaNota->setDetalle('');
-            $oPersonaNota->setTipoActa(TipoActa::FORMATO_ACTA);
+            $oPersonaNota->setIdNivelVo($id_nivel);
+            $oPersonaNota->setIdAsignaturaVo($Qid_asignatura);
+            $oPersonaNota->setId_nom($id_nom);
+            $oPersonaNota->setIdSituacionVo($id_situacion);
+            $oPersonaNota->setActaVo($acta);
+            $oPersonaNota->setF_acta($oF_acta);
+            $oPersonaNota->setDetalleVo('');
+            $oPersonaNota->setTipoActaVo(TipoActa::FORMATO_ACTA);
             $oPersonaNota->setPreceptor($preceptor);
-            $oPersonaNota->setIdPreceptor($id_preceptor);
-            $oPersonaNota->setEpoca($iepoca);
-            $oPersonaNota->setIdActiv($Qid_activ);
-            $oPersonaNota->setNotaNum($nota_num);
-            $oPersonaNota->setNotaMax($nota_max);
+            $oPersonaNota->setId_preceptor($id_preceptor);
+            $oPersonaNota->setEpocaVo($iepoca);
+            $oPersonaNota->setId_activ($Qid_activ);
+            $oPersonaNota->setNotaNumVo($nota_num);
+            $oPersonaNota->setNotaMaxVo($nota_max);
 
             $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
 

@@ -125,8 +125,6 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
         // Enviar email con la nueva contraseña
         $subject = _("Recuperación de código de seguridad");
 
-        echo "$message";
-        die();
         // Crear un nuevo email en la cola
         $ColaMailId = new ColaMailId(Uuid::random());
         $oColaMail = new ColaMail();

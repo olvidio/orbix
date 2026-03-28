@@ -7,7 +7,9 @@ use core\ConfigGlobal;
 use core\DBConnection;
 use RuntimeException;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
+use src\dossiers\domain\entity\Dossier;
 use src\dossiers\domain\value_objects\DossierPk;
+use src\dossiers\domain\value_objects\DossierTabla;
 use src\notas\domain\contracts\PersonaNotaCertificadoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
@@ -146,6 +148,8 @@ class EditarPersonaNota
                     $valor = Acta::inventarActa($acta, $f_acta);
                     $oPersonaNotaDB->setActa($valor);
                 }
+            } else {
+                $oPersonaNotaDB->setActa(null);
             }
             $oPersonaNotaDB->setPreceptor($preceptor);
             $oPersonaNotaDB->setId_preceptor($id_preceptor);
@@ -166,6 +170,12 @@ class EditarPersonaNota
             if ($id_nom > 0) {
                 $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
                 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303]));
+                if ($oDossier === null) {
+                    $oDossier = new Dossier();
+                    $oDossier->setId_pau($id_nom);
+                    $oDossier->setId_tipo_dossier(1303);
+                    $oDossier->setTablaVo(DossierTabla::fromNullableString('p'));
+                }
                 $oDossier->abrir();
                 $DosierRepository->Guardar($oDossier);
             }
@@ -299,7 +309,10 @@ class EditarPersonaNota
                     $valor = Acta::inventarActa($acta, $f_acta);
                     $oPersonaNotaDB->setActa($valor);
                 }
+            } else {
+                $oPersonaNotaDB->setActa(null);
             }
+
             if (empty($preceptor)) {
                 $oPersonaNotaDB->setPreceptor(false);
                 $oPersonaNotaDB->setId_preceptor(null);

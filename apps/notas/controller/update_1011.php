@@ -2,7 +2,10 @@
 
 use notas\model\EditarPersonaNota;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\entity\PersonaNota;
+use src\notas\domain\value_objects\NotaEpoca;
+use src\notas\domain\value_objects\TipoActa;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
 
@@ -65,22 +68,31 @@ if ($id_asignatura === 1) {
     $id_asignatura = $oAsignatura->getId_asignatura();
 }
 
+// En el caso de finBienio y finCuadrienio, no existe tipo_acta y lo pasa a 0, que no se acepta.
+if ($tipo_acta === 0) {
+    $tipo_acta = TipoActa::FORMATO_ACTA;
+}
+// idem epoca: si es 0
+if ($epoca === 0) {
+    $epoca = NotaEpoca::EPOCA_OTRO;
+}
+
 $oPersonaNota = new PersonaNota();
-$oPersonaNota->setIdNivel($id_nivel);
-$oPersonaNota->setIdAsignatura($id_asignatura);
-$oPersonaNota->setIdNom($Qid_pau);
-$oPersonaNota->setTipoActa($tipo_acta);
+$oPersonaNota->setIdNivelVo(NivelId::fromNullableInt($id_nivel));
+$oPersonaNota->setIdAsignaturaVo($id_asignatura);
+$oPersonaNota->setId_nom($Qid_pau);
+$oPersonaNota->setTipoActaVo($tipo_acta);
 if ($Qmod !== 'eliminar') {
-    $oPersonaNota->setIdSituacion($id_situacion);
-    $oPersonaNota->setActa($acta);
-    $oPersonaNota->setDetalle($detalle);
-    $oPersonaNota->setFActa($oF_acta);
+    $oPersonaNota->setIdSituacionVo($id_situacion);
+    $oPersonaNota->setActaVo($acta);
+    $oPersonaNota->setDetalleVo($detalle);
+    $oPersonaNota->setF_acta($oF_acta);
     $oPersonaNota->setPreceptor($preceptor);
-    $oPersonaNota->setIdPreceptor($id_preceptor);
-    $oPersonaNota->setEpoca($epoca);
-    $oPersonaNota->setIdActiv($id_activ);
-    $oPersonaNota->setNotaNum($nota_num);
-    $oPersonaNota->setNotaMax($nota_max);
+    $oPersonaNota->setId_preceptor($id_preceptor);
+    $oPersonaNota->setEpocaVo($epoca);
+    $oPersonaNota->setIdActivVo($id_activ);
+    $oPersonaNota->setNotaNumVo($nota_num);
+    $oPersonaNota->setNotaMaxVo($nota_max);
 }
 
 $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);

@@ -1,7 +1,7 @@
 <?php
 
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
-use src\usuarios\domain\entity\PermMenu;
+use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use web\ContestarJson;
 
 $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
@@ -11,11 +11,11 @@ $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
 $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
 $nombre = $oUsuario->getUsuarioAsString();
 
+$PermMenuRepository = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
 if (!empty($Qid_item)) {
-    $oPermiso = new PermMenu(array('id_item' => $Qid_item));
+    $oPermiso = $PermMenuRepository->findById(['id_item' => $Qid_item]);
     $menu_perm = $oPermiso->getMenu_perm();
 } else { // es nuevo
-    $oPermiso = new PermMenu(array('id_usuario' => $Qid_usuario));
     $menu_perm = 0;
 }
 
