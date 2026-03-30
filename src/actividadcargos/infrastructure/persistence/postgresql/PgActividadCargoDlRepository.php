@@ -198,7 +198,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         foreach ($cAsistentes as $f_ini_iso => $oAsistente) {
             $id_activ = $oAsistente->getId_activ();
             $propio = $oAsistente->isPropio();
-            $plaza = $oAsistente->getPlazaVo()->value();
+            $plaza = $oAsistente->getPlazaVo()?->value();
             $aAsis[$id_activ] = ['id_activ' => $id_activ,
                 'id_nom' => $id_nom,
                 'propio' => $propio,
