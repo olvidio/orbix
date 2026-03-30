@@ -246,7 +246,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             $color = '';
 
             $meta_dia["$id_dia"] = [
-                "uuid_item" => $oEncargoDia->getUuid_item()->value(),
+                "uuid_item" => $oEncargoDia->getUuidItemVo()->value(),
                 "color" => $color,
                 "key" => "$id_nom#$iniciales",
                 "tstart" => $oEncargoDia->getTstart()->getHora(),

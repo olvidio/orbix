@@ -26,9 +26,9 @@ class PgEncargoRepository extends ClaseRepository implements EncargoRepositoryIn
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBE'];
+        $oDbl = $GLOBALS['oDBC'];
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBE_Select'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('encargos');
     }

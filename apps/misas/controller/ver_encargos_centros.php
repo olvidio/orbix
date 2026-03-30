@@ -37,7 +37,7 @@ $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterfa
 $aCentros = [];
 if (isset($Qid_zona)) {
     $aWhere = [];
-    $aWhere['status'] = 't';
+    $aWhere['active'] = 't';
     $aWhere['id_zona'] = $Qid_zona;
     $aWhere['_ordre'] = 'nombre_ubi';
     $cCentrossv = $CentroEllosRepository->getCentros($aWhere);
@@ -45,15 +45,17 @@ if (isset($Qid_zona)) {
     $cCentros = array_merge($cCentrossv, $cCentrosSf);
 
     $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
+    $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
     foreach ($cCentros as $oCentro) {
         $id_ubi = $oCentro->getId_ubi();
         $nombre_ubi = $oCentro->getNombre_ubi();
 
         $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($id_ubi);
-        foreach ($cEncargosCtr as $oEncargo) {
-            $id_enc = $oEncargo->getId_enc();
-            $id_item = $oEncargo->getUuid_item()->value();
-            $desc_enc = $oEncargo->getDesc_enc();
+        foreach ($cEncargosCtr as $oEncargoCtr) {
+            $id_enc = $oEncargoCtr->getId_enc();
+            $oEncargo = $EncargoRepository->findById($id_enc);
+            $id_item = $oEncargo->getUuidItemVo()->value();
+            $desc_enc = $oEncargo->getDescEncVo()->value();
             $data_cols = [];
             $data_cols["id_item"] = $id_item;
             $data_cols["id_encargo"] = $id_enc;
@@ -137,7 +139,7 @@ $oDesplZonasCtr->setOpcion_sel($Qid_zona);
 $oDesplZonasCtr->setAction('fnjs_prepara_select_encargo()');
 
 $aWhere = [];
-$aWhere['status'] = 't';
+$aWhere['active'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
 $cCentrossv = $CentroEllosRepository->getCentros($aWhere);

@@ -139,7 +139,7 @@ foreach ($cEncargosZona as $oEncargo) {
     $cEncargosaCambiar = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
     foreach ($cEncargosaCambiar as $oEncargoaCambiar) {
         $oEncargoaCambiar->setStatus($Qestado);
-        echo $Qestado . '----' . $oEncargoaCambiar->getUuid_item() . '<br>';
+        echo $Qestado . '----' . $oEncargoaCambiar->getUuidItemVo() . '<br>';
         if ($EncargoDiaRepository->Guardar($oEncargoaCambiar) === FALSE) {
             $error_txt .= $EncargoDiaRepository->getErrorTxt();
         }
