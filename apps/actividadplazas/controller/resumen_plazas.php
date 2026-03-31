@@ -24,11 +24,8 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_activ = (integer)strtok($a_sel[0], "#");
     $nom_activ = strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else { // vengo de actualizar
+}
+else { // vengo de actualizar
     $id_activ = (integer)filter_input(INPUT_POST, 'id_activ');
     $nom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
     // borro la última

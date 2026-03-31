@@ -35,11 +35,8 @@ $msg = '';
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
     $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 }
@@ -48,7 +45,8 @@ $mes = date('m');
 $fin_m = $_SESSION['oConfig']->getMesFinStgr();
 if ($mes > $fin_m) {
     $any = (int)date('Y') + 1;
-} else {
+}
+else {
     $any = (int)date('Y');
 }
 $inicurs_ca = core\curso_est("inicio", $any)->format('Y-m-d');
@@ -72,7 +70,8 @@ if (!empty($Qid_nom)) {
     if ($classname === 'PersonaEx') {
         $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
         $cAlumnos = $PersonaExRepository->getPersonas($aWhere, $aOperador);
-    } else {
+    }
+    else {
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $cAlumnos = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
     }
@@ -80,7 +79,8 @@ if (!empty($Qid_nom)) {
         $msg = _("está de repaso");
     }
     $modo_aviso = 'alert';
-} else {
+}
+else {
     // solo para los de la dl
     $aWhere['situacion'] = 'A';
     $aWhere['nivel_stgr'] = NivelStgrId::R;
@@ -109,7 +109,8 @@ foreach ($cAlumnos as $oPersonaDl) {
         $aWhereNom = array('id_nom' => $id_nom, 'propio' => 't');
         $aOperadorNom = [];
         $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperadores);
-    } else { // puede ser que ya le pase la actividad
+    }
+    else { // puede ser que ya le pase la actividad
         $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
         $oAsistenteDl = $AsistenteDlRepository->findById($Qid_activ, $id_nom);
         $cAsistencias[0] = $oAsistenteDl;
@@ -154,7 +155,8 @@ foreach ($cAlumnos as $oPersonaDl) {
                     $id_asignatura = $oActividadAsignatura->getId_asignatura();
                     $preceptor = ($oActividadAsignatura->getTipo() === 'p') ? 't' : 'f';
                     // compruebo que no la tenga ya aprobada:
-                    if (in_array($id_asignatura, $a_aprobadas)) continue;
+                    if (in_array($id_asignatura, $a_aprobadas))
+                        continue;
                     // Si es una opcional, compruebo que puede hacerla
                     if ($id_asignatura > 3000) {
                         switch (substr($id_asignatura, 1, 1)) {
@@ -198,7 +200,8 @@ foreach ($cAlumnos as $oPersonaDl) {
                                 }
                                 break;
                         }
-                    } else {
+                    }
+                    else {
                         $oMatricula = $MatriculaDlRepository->findById($id_activ_1, $id_asignatura, $id_nom);
                         $oMatricula->setPreceptor($preceptor);
                         if ($MatriculaDlRepository->Guardar($oMatricula) === false) {
@@ -209,7 +212,8 @@ foreach ($cAlumnos as $oPersonaDl) {
                 }
                 $msg .= addslashes(sprintf(_("%s se ha matriculado de %s asignaturas"), $oPersonaDl->getPrefApellidosNombre(), $m));
                 $msg .= "\n";
-            } else {
+            }
+            else {
                 $msg .= addslashes(sprintf(_("no se ha hecho nada com %s. ya tiene el plan de estudios confirmado"), $oPersonaDl->getPrefApellidosNombre()));
                 $msg .= "\n";
             }

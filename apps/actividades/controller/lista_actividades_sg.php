@@ -80,8 +80,6 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
     $Qdl_org = $oPosicion->getParametro('dl_org');
     $Qempiezamin = $oPosicion->getParametro('empiezamin');
     $Qempiezamax = $oPosicion->getParametro('empiezamax');
-    $Qid_sel = $oPosicion->getParametro('id_sel');
-    $Qscroll_id = $oPosicion->getParametro('scroll_id');
     $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
 } else { //si vengo de vuelta y tengo los parametros en el $_POST
     $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

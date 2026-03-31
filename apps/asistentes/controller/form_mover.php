@@ -26,11 +26,8 @@ require_once("apps/core/global_object.inc");
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 }
 
@@ -49,7 +46,8 @@ if ($oAsistente->perm_modificar() === FALSE) {
         'oPosicion' => $oPosicion,
         'aviso_txt' => $aviso_txt,
     ];
-} else {
+}
+else {
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
     $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
@@ -174,7 +172,8 @@ if ($oAsistente->perm_modificar() === FALSE) {
                 $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
                 if ($ocupadas < 0) { // No se sabe
                     $libres = '-';
-                } else {
+                }
+                else {
                     $libres = $concedidas - $ocupadas;
                 }
                 if (!empty($concedidas)) {

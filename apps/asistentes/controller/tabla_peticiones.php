@@ -32,11 +32,8 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_activ_old = (integer)strtok($a_sel[0], "#");
     $nom_activ = strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $id_activ_old = (integer)filter_input(INPUT_POST, 'id_activ_old');
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
     $oActividad = $ActividadAllRepository->findById($id_activ_old);
@@ -99,7 +96,7 @@ foreach ($cAsistentes as $oAsistente) {
     $id_nom = $oAsistente->getId_nom();
     // buscar otras opciones de ca
     $aWhere = ['id_nom' => $id_nom, 'tipo' => $sactividad, '_ordre' => 'orden'];
-    $aOperador ['tipo'] = '~';
+    $aOperador['tipo'] = '~';
     $cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion($aWhere, $aOperador);
     $posibles_activ = '';
     foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
@@ -124,7 +121,8 @@ foreach ($cAsistentes as $oAsistente) {
                 $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
                 if ($ocupadas < 0) { // No se sabe
                     $libres = '-';
-                } else {
+                }
+                else {
                     $libres = $concedidas - $ocupadas;
                 }
                 if (!empty($concedidas)) {

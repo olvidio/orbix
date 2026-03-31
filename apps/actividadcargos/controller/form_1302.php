@@ -58,11 +58,8 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_item = (integer)strtok($a_sel[0], "#");
     $eliminar = (integer)strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $Qque_dl = (string)filter_input(INPUT_POST, 'que_dl');
     $Qid_tipo = (integer)filter_input(INPUT_POST, 'id_tipo');
 }
@@ -92,16 +89,19 @@ if (!empty($Qid_item)) { //caso de modificar
     $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
     $id_tabla_dl = $oActividad->getId_tabla();
     $id_activ_real = $id_activ;
-} else { //caso de nuevo cargo
+}
+else { //caso de nuevo cargo
     if (empty($Qid_tipo)) {
         $mi_sfsv = ConfigGlobal::mi_sfsv();
-        $id_tipo = '^' . $mi_sfsv;  //caso genérico para todas las actividades
-    } else {
+        $id_tipo = '^' . $mi_sfsv; //caso genérico para todas las actividades
+    }
+    else {
         $id_tipo = empty($Qid_tipo) ? "" : '^' . $Qid_tipo;
     }
     if (!empty($Qque_dl)) {
         $aWhere['dl_org'] = $Qque_dl;
-    } else {
+    }
+    else {
         $aWhere['dl_org'] = ConfigGlobal::mi_delef();
         $aOperadores['dl_org'] = '!=';
     }
@@ -137,7 +137,8 @@ $a_camposHidden = array(
 );
 if (!empty($id_activ_real)) {
     $a_camposHidden['id_activ'] = $id_activ_real;
-} else {
+}
+else {
     if ($Qmod === "nuevo") {
         $camposNo .= '!asis';
     }

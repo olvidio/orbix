@@ -681,7 +681,7 @@ class Select3101
                             $this->a_plazas_resumen[$padre]['cedidas'][$dl2] = array('ocupadas' => $ocupadas_dl);
                             // pongo los de otras dl, que todavia no estan asignados como genéricos:
                             if ($this->mi_dele != $dl2 && $dl2 != $this->dl_org) {
-                                $pl = empty($aCed[$dl2]) ? 0 : $aCed[$dl2];
+                                $pl = empty($numCedidas) ? 0 : $numCedidas; // ponia $aCed[$dl2]. he cambiado a $numCedidas. 31-3-2026
                                 if (!array_key_exists($dl2, $this->a_plazas_resumen)) {
                                     for ($i = $ocupadas_dl + 1; $i <= $pl; $i++) {
                                         $nom = "$dl2----$i";

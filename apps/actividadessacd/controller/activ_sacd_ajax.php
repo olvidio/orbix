@@ -299,8 +299,8 @@ switch ($Qque) {
             $oAsisActiv = new Asistente();
             $oAsisActiv->setId_activ($Qid_activ);
             $oAsisActiv->setId_nom($Qid_nom);
-            $oAsisActiv->setPropio('f');
-            $oAsisActiv->setFalta('f');
+            $oAsisActiv->setPropio(false);
+            $oAsisActiv->setFalta(false);
             $oAsisActiv->setDl_responsable(ConfigGlobal::mi_delef());
             if ($AsistenteDlRepository->Guardaar($oAsisActiv) === false) {
                 echo _("hay un error, no se ha guardado la asistencia");
@@ -498,28 +498,30 @@ switch ($Qque) {
         }
         ?>
 
-        <h3><?= $titulo ?></h3>
-        <span class="comentario">
-		<?= _("NOTA: en sv, al asignar un sacd, se añade la asistencia a la actividad."); ?>
-        <?php if ($Qtipo === 'falta_sacd') {
+<h3>
+    <?= $titulo ?>
+</h3>
+<span class="comentario">
+    <?= _("NOTA: en sv, al asignar un sacd, se añade la asistencia a la actividad."); ?>
+    <?php if ($Qtipo === 'falta_sacd') {
             echo "<br>";
             echo sprintf(_("Actividades aprobadas y no aprobadas sin sacds (independiente de la fase \"%s\")"), $txt_fase_ok_sacd);
             echo "<br>";
             echo sprintf(_("+ Actividades con sacds sin la fase \"%s\""), $txt_fase_ok_sacd);
         } ?>
-		</span>
-        <br>
-        <table>
-            <tr>
-                <?php
+</span>
+<br>
+<table>
+    <tr>
+        <?php
                 foreach ($a_cabeceras as $cabecera) {
                     echo "<td>$cabecera</td>";
                 }
                 ?>
-                <td id="lst_sacd">
-                <td>
-            </tr>
-            <?php
+        <td id="lst_sacd">
+        <td>
+    </tr>
+    <?php
             foreach ($a_valores as $valores) {
                 //print_r($valores[10]);
                 $oPermSacd = $valores[10];
@@ -550,23 +552,29 @@ switch ($Qque) {
                 echo "<tr class=$clase id=$id_activ ><td>$valores[1]</td><td id=$txt_id>$txt_sacd</td><td>$nuevo_txt</td></tr>";
             }
             ?>
-        </table>
-        <hr>
-        <table>
-            <tr>
-                <th>Leyenda</th>
-            </tr>
-            <tr class='wrong-soft'>
-                <td><?= _("Actividad en proyecto") ?></td>
-            </tr>
-            <tr class='plaza4'>
-                <td><?= sprintf(_("Actividad con fase %s"), $txt_fase_ok_sacd) ?></td>
-            </tr>
-            <tr class=''>
-                <td><?= _("Actividad aprobada") ?></td>
-            </tr>
-        </table>
-        <?php
+</table>
+<hr>
+<table>
+    <tr>
+        <th>Leyenda</th>
+    </tr>
+    <tr class='wrong-soft'>
+        <td>
+            <?= _("Actividad en proyecto") ?>
+        </td>
+    </tr>
+    <tr class='plaza4'>
+        <td>
+            <?= sprintf(_("Actividad con fase %s"), $txt_fase_ok_sacd) ?>
+        </td>
+    </tr>
+    <tr class=''>
+        <td>
+            <?= _("Actividad aprobada") ?>
+        </td>
+    </tr>
+</table>
+<?php
         break;
     case 'solape':
         $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
@@ -667,14 +675,16 @@ switch ($Qque) {
             $a_valores[$i][2] = $a_nom_activ;
         }
         ?>
-        <h3><?= $titulo ?></h3>
-        <span class="comentario">
-        <!-- <?= _("NOTA: Si termina y empieza el mismo día en el mismo lugar no se pone.") ?> -->
-        </span>
-        <br>
-        <table>
-            <tr>
-                <?php
+<h3>
+    <?= $titulo ?>
+</h3>
+<span class="comentario">
+    <!-- <?= _("NOTA: Si termina y empieza el mismo día en el mismo lugar no se pone.") ?> -->
+</span>
+<br>
+<table>
+    <tr>
+        <?php
                 foreach ($a_cabeceras as $cabecera) {
                     echo "<td>$cabecera</td>";
                 }
@@ -696,25 +706,33 @@ switch ($Qque) {
                     }
                 }
                 ?>
-        </table>
-        <hr>
-        <table>
-            <tr>
-                <th>Leyenda</th>
-            </tr>
-            <tr class='wrong-soft'>
-                <td><?= _("Actividad en proyecto") ?></td>
-            </tr>
-            <tr class='plaza4'>
-                <td><?= sprintf(_("Actividad con fase %s"), $txt_fase_ok_sacd) ?></td>
-            </tr>
-            <tr class=''>
-                <td><?= _("Actividad aprobada") ?></td>
-            </tr>
-            <tr class='tachado'>
-                <td><?= _("En el mismo lugar") ?></td>
-            </tr>
-        </table>
-        <?php
+</table>
+<hr>
+<table>
+    <tr>
+        <th>Leyenda</th>
+    </tr>
+    <tr class='wrong-soft'>
+        <td>
+            <?= _("Actividad en proyecto") ?>
+        </td>
+    </tr>
+    <tr class='plaza4'>
+        <td>
+            <?= sprintf(_("Actividad con fase %s"), $txt_fase_ok_sacd) ?>
+        </td>
+    </tr>
+    <tr class=''>
+        <td>
+            <?= _("Actividad aprobada") ?>
+        </td>
+    </tr>
+    <tr class='tachado'>
+        <td>
+            <?= _("En el mismo lugar") ?>
+        </td>
+    </tr>
+</table>
+<?php
         break;
 }

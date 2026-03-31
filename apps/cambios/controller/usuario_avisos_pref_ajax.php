@@ -377,10 +377,6 @@ switch ($Qsalida) {
         if (!empty($a_sel)) { //vengo de un checkbox
             $Qid_usuario = (integer)strtok($a_sel[0], "#");
             $Qid_item_usuario_objeto = (string)strtok("#");
-            // el scroll id es de la página anterior, hay que guardarlo allí
-            $oPosicion->addParametro('id_sel', $a_sel, 1);
-            $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-            $oPosicion->addParametro('scroll_id', $scroll_id, 1);
         } else {
             $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
             $Qid_item_usuario_objeto = (integer)filter_input(INPUT_POST, 'id_item_usuario_objeto');

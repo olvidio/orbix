@@ -72,9 +72,8 @@ if ($miRolePau === PauType::PAU_CDC) { //casa
 $oForm->setPosiblesCasas($donde);
 $oForm->setAction('');
 // para seleccionar más de una casa
-$aOpcionesCasas = $oForm->getArrayCasas();
-$oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
-$oSelects->setBlanco('t');
+$oSelects = $oForm->getDesplCasas();
+$oSelects->setAction('');
 $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
 
 if ($Qperiodo === 'no') {

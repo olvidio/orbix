@@ -59,11 +59,8 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_activ = (integer)strtok($a_sel[0], "#");
     $id_asignatura = (integer)strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $id_activ = '';
 }
 
@@ -93,25 +90,28 @@ if (!empty($id_activ)) { //caso de modificar
             $padre = strtok($propietario, '>');
             $child = strtok('>');
             if ($obj_pau !== 'PersonaEx' && $child !== ConfigGlobal::mi_delef()) {
-                exit (sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"), $child));
+                exit(sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"), $child));
             }
         }
     }
-} else { //caso de nuevo asistente
+}
+else { //caso de nuevo asistente
     $mod = "nuevo";
     $id_activ_real = '';
     $nom_activ = '';
     if (empty($id_tipo)) {
         $mi_sfsv = ConfigGlobal::mi_sfsv();
-        $id_tipo = '^' . $mi_sfsv;  //caso genérico para todas las actividades
-    } else {
+        $id_tipo = '^' . $mi_sfsv; //caso genérico para todas las actividades
+    }
+    else {
         $id_tipo = '^' . $id_tipo;
     }
 
     $condicion = "AND status = " . StatusId::ACTUAL;
     if (!empty($que_dl)) {
         $condicion .= " AND dl_org = '$que_dl'";
-    } else {
+    }
+    else {
         $condicion .= " AND dl_org != '" . ConfigGlobal::mi_delef() . "'";
     }
 
@@ -153,7 +153,8 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
             $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
             $oPersona = $PersonaExRepository->findById($Qid_nom);
             $dl_de_paso = $oPersona->getDl();
-        } else {
+        }
+        else {
 
         }
     }
@@ -163,7 +164,8 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
         $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
         $oDesplPosiblesPropietarios->setNombre('propietario');
         $oDesplPosiblesPropietarios->setOpcion_sel($propietario);
-    } else {
+    }
+    else {
         $oDesplPosiblesPropietarios = new Desplegable('propietario', [], '');
     }
 
@@ -189,7 +191,8 @@ $a_camposHidden = array(
 );
 if (!empty($id_activ_real)) {
     $a_camposHidden['id_activ'] = $id_activ_real;
-} else {
+}
+else {
     $camposForm .= '!id_activ';
 }
 $oHash->setCamposForm($camposForm);

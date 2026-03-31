@@ -61,11 +61,8 @@ $Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 }
 
@@ -137,12 +134,13 @@ if (!empty($Qid_nom)) { //caso de modificar
             $padre = strtok($propietario, '>');
             $child = strtok('>');
             if ($obj_pau !== 'PersonaEx' && $child !== ConfigGlobal::mi_delef()) {
-                exit (sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"), $child));
+                exit(sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"), $child));
             }
         }
     }
     $oDesplegablePersonas = [];
-} else { //caso de nuevo asistente
+}
+else { //caso de nuevo asistente
     $mod = "nuevo";
     $id_nom_real = '';
     $ape_nom = '';
@@ -222,7 +220,8 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
     $oHash1->setUrl($url_ajax);
     $oHash1->setCamposForm('que!id_activ!id_nom');
     $h1 = $oHash1->linkSinVal();
-} else {
+}
+else {
     $h1 = '';
     $url_ajax = '';
     $oDesplegablePlaza = '';
@@ -242,7 +241,8 @@ $a_camposHidden = array(
 );
 if (!empty($id_nom_real)) {
     $a_camposHidden['id_nom'] = $id_nom_real;
-} else {
+}
+else {
     $camposForm .= '!id_nom';
 }
 $oHash->setCamposForm($camposForm);

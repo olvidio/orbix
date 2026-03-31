@@ -26,10 +26,6 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_activ = (integer)strtok($a_sel[0], "#");
     $id_asignatura = (integer)strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
 $msg_err = '';
@@ -47,18 +43,21 @@ $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryI
 $cActividadCargos = $ActividadCargoRepository->getActividadCargos(array('id_activ' => $id_activ, 'id_cargo' => $id_cargo));
 if (is_array($cActividadCargos) && count($cActividadCargos) > 0) {
     $id_nom_dtor_est = $cActividadCargos[0]->getId_nom(); // Imagino que sólo hay uno.
-} else {
+}
+else {
     $id_nom_dtor_est = '';
 }
 
 if (empty($id_nom_dtor_est)) {
     $nom_director_est = _("para nombrarlo, ir al dossier de cargos de la actividad");
-} else {
+}
+else {
     $oPersona = Persona::findPersonaEnGlobal($id_nom_dtor_est);
     if (!is_object($oPersona)) {
         $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom_dtor_est en  " . __FILE__ . ": line " . __LINE__;
         $nom_director_est = '';
-    } else {
+    }
+    else {
         $nom_director_est = $oPersona->getPrefApellidosNombre();
     }
 }
@@ -92,7 +91,8 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             continue;
         }
         $nom_profesor = $oPersona->getPrefApellidosNombre();
-    } else {
+    }
+    else {
         $nom_profesor = '?';
     }
 
@@ -100,7 +100,8 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
         $aPreceptores[$a]['nombre_corto'] = $nombre_corto;
         $aPreceptores[$a]['creditos'] = $creditos;
         $aPreceptores[$a]['nom_profesor'] = $nom_profesor;
-    } else {
+    }
+    else {
         $aProfesores[$a]['nombre_corto'] = $nombre_corto;
         $aProfesores[$a]['creditos'] = $creditos;
         $aProfesores[$a]['nom_profesor'] = $nom_profesor;
@@ -147,7 +148,8 @@ foreach ($cAsistentes as $oAsistente) {
         $aAlumnos[$a]['ctr'] = $ctr;
         $aAlumnos[$a]['observ_est'] = $observ_est;
         $aAlumnos[$a]['aAsignaturas'] = $est;
-    } else {
+    }
+    else {
         $aAsignaturas = [];
         $i = 0;
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);

@@ -39,13 +39,10 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
     $Qna = strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     $Qsactividad = (string)filter_input(INPUT_POST, 'que');
     $Qtodos = empty($Qtodos) ? 1 : $Qtodos;
-} else { // vengo de actualizar
+}
+else { // vengo de actualizar
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
     $Qna = (string)filter_input(INPUT_POST, 'na');
     $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
@@ -65,7 +62,8 @@ if (!empty($Qtodos) && $Qtodos !== 1) {
     $grupo_estudios = $Qtodos;
     $GesGrupoEst = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios' => $grupo_estudios));
-    if (count($cDelegaciones) > 1) $aOperador['dl_org'] = 'OR';
+    if (count($cDelegaciones) > 1)
+        $aOperador['dl_org'] = 'OR';
     $mi_grupo = '';
     foreach ($cDelegaciones as $oDelegacion) {
         $mi_grupo .= empty($mi_grupo) ? '' : ',';
@@ -101,7 +99,8 @@ switch ($Qna) {
     case "a":
         //caso de agd
         $id_ctr = (integer)filter_input(INPUT_POST, 'id_ctr_agd');
-        if ($id_ctr == 1) $id_ctr = ''; //es todos los ctr.
+        if ($id_ctr == 1)
+            $id_ctr = ''; //es todos los ctr.
         $id_tabla_persona = 'a'; //el id_tabla entra en conflicto con el de actividad
         $tabla_pau = 'p_agregados';
 
@@ -131,7 +130,8 @@ switch ($Qna) {
     case "n":
         // caso de n
         $id_ctr = (integer)filter_input(INPUT_POST, 'id_ctr_n');
-        if ($id_ctr == 1) $id_ctr = ''; //es todos los ctr.
+        if ($id_ctr == 1)
+            $id_ctr = ''; //es todos los ctr.
         $id_tabla_persona = 'n';
         $tabla_pau = 'p_numerarios';
 
@@ -168,7 +168,8 @@ foreach ($cActividades as $oActividad) {
         $nom_activ = $oActividad->getNom_activ();
         $aOpciones[$id_activ] = $nom_activ;
         $a_IdActividades[] = $id_activ;
-    } else {
+    }
+    else {
         $aOpciones[1] = '--------';
     }
 }
@@ -183,7 +184,8 @@ foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
     if (!in_array($id_activ, $a_IdActividades)) {
         unset($cPlazasPeticion[$key]);
         $oPlazaPeticion->DBEliminar();
-    } else {
+    }
+    else {
         $sid_activ .= empty($sid_activ) ? $id_activ : ',' . $id_activ;
     }
 }

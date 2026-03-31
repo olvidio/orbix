@@ -203,7 +203,6 @@ switch ($Qque) {
         $aWhereP['ce_fin'] = 'x';
         $aOperadorP['ce_fin'] = 'IS NULL';
         break;
-        break;
     default:
         exit (_("No sé en que tipo de actividad hay que mirar las asistencias"));
 }

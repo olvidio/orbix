@@ -50,11 +50,8 @@ if (isset($_POST['stack'])) {
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_activ = (integer)strtok($a_sel[0], "#");
     $id_asignatura = (integer)strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $id_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
     $id_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 }
@@ -62,7 +59,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 // los permisos depende de cada asignatura
 $mi_dele = ConfigGlobal::mi_delef();
 $permiso = (integer)filter_input(INPUT_POST, 'permiso');
-$ActividadAsignaturaRepository =$GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
+$ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
 $cActivAsignaturas = $ActividadAsignaturaRepository->getActividadAsignaturas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
 $oActividadAsignatura = $cActivAsignaturas[0];
 $id_schema = $oActividadAsignatura->getId_schema();
@@ -72,7 +69,8 @@ $a_reg = explode('-', $cDbSchemas[0]->getSchema());
 $dl_matricula = substr($a_reg[1], 0, -1); // quito la v o la f.
 if ($mi_dele === $dl_matricula) {
     $permiso = 3;
-} else {
+}
+else {
     $permiso = 1;
 }
 
@@ -104,7 +102,8 @@ if ($matriculados > 0) {
         $aPersonasMatriculadas[$nom] = $oMatricula;
     }
     uksort($aPersonasMatriculadas, "core\strsinacentocmp"); // compara sin contar los acentos i insensitive.
-} else {
+}
+else {
     echo _("no hay ninguna persona matriculada de esta asignatura");
 }
 
@@ -131,8 +130,9 @@ if (is_array($cActas) && !empty($cActas)) {
     if (count($cActas) === 1) {
         $acta_principal = $nom_acta;
     }
-} else {
-    $notas = "nuevo";// para indicar a la página de actas que está dentro de ésta.
+}
+else {
+    $notas = "nuevo"; // para indicar a la página de actas que está dentro de ésta.
     $oDesplActas = new Desplegable();
     $oDesplActas->setOpciones(array('primero guardar acta'));
 }

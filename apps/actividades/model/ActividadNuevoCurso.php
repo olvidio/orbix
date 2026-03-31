@@ -82,7 +82,8 @@ class ActividadNuevoCurso
         $num_act = count($cActividades);
         for ($i = 0; $i < ($num_act - 1); $i++) {
             $id_ubi1 = $cActividades[$i]->getId_ubi();
-            if (empty($id_ubi1) || $id_ubi1 == 1) continue; //lugares sin determinar
+            if (empty($id_ubi1) || $id_ubi1 == 1)
+                continue; //lugares sin determinar
             $id_ubi2 = $cActividades[$i + 1]->getId_ubi();
             if ($id_ubi1 != $id_ubi2) {
                 // cambio de ubi
@@ -90,13 +91,15 @@ class ActividadNuevoCurso
             }
             $oF_fin = $cActividades[$i]->getF_fin();
             $h_fin = $cActividades[$i]->getH_fin();
-            if (empty($h_fin)) $h_fin = '10:00:00';
+            if (empty($h_fin))
+                $h_fin = '10:00:00';
             list($h, $m, $s) = explode(':', $h_fin);
             $oF_fin->setTime($h, $m, $s);
 
             $oF_ini = $cActividades[$i + 1]->getF_ini();
             $h_ini = $cActividades[$i + 1]->getH_ini();
-            if (empty($h_ini)) $h_ini = '20:00:00';
+            if (empty($h_ini))
+                $h_ini = '20:00:00';
             list($h, $m, $s) = explode(':', $h_ini);
             $oF_ini->setTime($h, $m, $s);
 
@@ -149,7 +152,7 @@ class ActividadNuevoCurso
         }
 
         // comprobar que no quedan actividades en otro estado
-        $cActividades = $ActividadDlRepository->getArrayActividadesEnPeriodoNoEnProyecto($f_ini,$f_fin);
+        $cActividades = $ActividadDlRepository->getArrayActividadesEnPeriodoNoEnProyecto($f_ini, $f_fin);
         $rta_txt = '';
         foreach ($cActividades as $oActividad) {
             $rta_txt .= $oActividad->getNom_activ() . "<br>";
@@ -213,7 +216,7 @@ class ActividadNuevoCurso
         $sustitucion = '$1(' . $fechas_new . ')$3';
         $nom_activ_new = preg_replace($patron, $sustitucion, $nom_activ);
 
-        if ($this->Ver_lista) {
+        if ($this->getVer_lista()) {
             echo "$tipo=> $fechas_new :: $nom_activ_new<br>";
         }
         //cambio el status a proyecto:

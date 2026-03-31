@@ -35,10 +35,6 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_activ = (integer)strtok($a_sel[0], "#");
     $id_asignatura_real = (integer)strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
@@ -51,7 +47,7 @@ $oDesplProfesores = [];
 $MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
 if (!empty($id_asignatura_real)) { //caso de modificar
     $mod = "editar";
-    $oMatricula = $MatriculaRepository->findById($Qid_activ,  $id_asignatura_real, $Qid_nom);
+    $oMatricula = $MatriculaRepository->findById($Qid_activ, $id_asignatura_real, $Qid_nom);
     $id_situacion = $oMatricula->getId_situacion();
     $preceptor = $oMatricula->isPreceptor();
     $id_preceptor = $oMatricula->getId_preceptor();
@@ -76,7 +72,8 @@ if (!empty($id_asignatura_real)) { //caso de modificar
         $oDesplProfesores->setNombre('id_preceptor');
         $oDesplProfesores->setOpcion_sel($id_preceptor);
     }
-} else { //caso de nueva asignatura
+}
+else { //caso de nueva asignatura
     $mod = "nuevo";
     $nombre_corto = '';
     $preceptor = '';
@@ -107,7 +104,8 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $cond = '';
     $c = 0;
     foreach ($aSuperadas as $id_situacion) {
-        if ($c > 0) $cond .= '|';
+        if ($c > 0)
+            $cond .= '|';
         $c++;
         $cond .= $id_situacion;
     }
@@ -142,8 +140,10 @@ if (!empty($id_asignatura_real)) { //caso de modificar
         $id_nivel = $oAsignatura->getId_nivel();
         $id_asignatura = $oAsignatura->getId_asignatura();
         $nombre_corto = $oAsignatura->getNombre_corto();
-        if (array_key_exists($id_nivel, $aSuperadas)) continue;
-        if (array_key_exists($id_nivel, $aMatriculadas)) continue;
+        if (array_key_exists($id_nivel, $aSuperadas))
+            continue;
+        if (array_key_exists($id_nivel, $aMatriculadas))
+            continue;
         $aFaltan[$id_nivel] = $nombre_corto;
     }
 
@@ -185,7 +185,8 @@ $a_camposHidden = array(
 if (!empty($id_asignatura_real)) {
     $a_camposHidden['id_asignatura'] = $id_asignatura;
     $a_camposHidden['id_nivel'] = $id_nivel;
-} else {
+}
+else {
     $camposForm .= 'id_asignatura!id_nivel';
 }
 $oHash->setCamposForm($camposForm);

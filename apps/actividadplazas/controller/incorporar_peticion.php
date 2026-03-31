@@ -73,7 +73,8 @@ if ($Qsasistentes === 'n') {
     $oTipoActiv->setAsistentesText('agd');
     $Qid_tipo_activ_sup = $oTipoActiv->getId_tipo_activ();
     $Qid_tipo_activ_sup = '^' . $Qid_tipo_activ_sup;
-} else {
+}
+else {
     $Qid_tipo_activ_sup = '';
 }
 
@@ -132,7 +133,8 @@ switch ($Qsasistentes) {
             // las de la dl + las importadas
             $cActividades_sup = $ActividadRepository->getActividades($aWhereA, $aOperadorA);
             $cActividades = array_merge($cActividades1, $cActividades_sup);
-        } else {
+        }
+        else {
             $cActividades = $cActividades1;
         }
 
@@ -172,14 +174,15 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
     $dl = preg_replace('/f$/', '', $dl_org);
     if ($dl === $mi_dele) {
         $AsistenteRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
-    } else {
+    }
+    else {
         $AsistenteRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
     }
     //asignar uno nuevo.
     $oAsistenteNew = new Asistente();
     $oAsistenteNew->setId_activ($id_activ_new);
     $oAsistenteNew->setId_nom($id_nom);
-    $oAsistenteNew->setPropio('t');
+    $oAsistenteNew->setPropio(true);
     //1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
     $oAsistenteNew->setPlazaComprobando(PlazaId::ASIGNADA);
     // IMPORTANT: Propietario del a plaza
@@ -196,7 +199,7 @@ if (!empty($msg_err)) {
     echo $msg_err;
 }
 ?>
-    <script>
-        fnjs_left_side_hide();
-    </script>
+<script>
+    fnjs_left_side_hide();
+</script>
 <?= $txt; ?>

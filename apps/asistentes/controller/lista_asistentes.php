@@ -31,10 +31,6 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_pau = (integer)strtok($a_sel[0], "#");
     $nom_activ = strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     $id_pau = (integer)filter_input(INPUT_POST, 'id_pau');
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);

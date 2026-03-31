@@ -139,7 +139,7 @@ $aOpciones = array(
     'trimestre_2' => _("segundo trimestre"),
     'trimestre_3' => _("tercer trimestre"),
     'trimestre_4' => _("cuarto trimestre"),
-    'separador' => '---------',
+    'separador1' => '---------',
     'otro' => _("otro")
 );
 $oFormP = new web\PeriodoQue();

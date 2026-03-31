@@ -14,10 +14,8 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 use web\CasasQue;
-use web\DesplegableArray;
 use web\Hash;
 use function core\strtoupper_dlb;
 
@@ -66,9 +64,8 @@ if ($miRolePau === PauType::PAU_CDC) { //casa
 $oForm->setPosiblesCasas($donde);
 $oForm->setAction('');
 // para seleccionar más de una casa
-$aOpcionesCasas = $oForm->getArrayCasas();
-$oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
-$oSelects->setBlanco('t');
+$oSelects = $oForm->getDesplCasas();
+$oSelects->setAction('');
 $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
 
 $oForm->setTitulo(strtoupper_dlb(_("resumen económico")));
@@ -95,7 +92,6 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ajax' => $url_ajax,
     'url_resumen' => $url_resumen,
     'h_edit' => $h_edit,
-    'url_resumen' => $url_resumen,
     'param' => $param,
     'oForm' => $oForm,
     'oSelects' => $oSelects,

@@ -11,7 +11,7 @@ class ActividadesSacdFunciones
 
     private array $a_txt = [];
 
-    public function getArrayTraducciones($idioma): array|false
+    public function getArrayTraducciones($idioma): array |bool
     {
         $idioma = empty($idioma) ? 'es' : $idioma;
         if (empty($this->a_txt[$idioma])) {
@@ -37,12 +37,14 @@ class ActividadesSacdFunciones
         $a_traduccion = $this->getArrayTraducciones($idioma);
         if (!empty($a_traduccion[$clave])) {
             $txt_traduccion = $a_traduccion[$clave];
-        } else {
+        }
+        else {
             // El idioma por defecto (es) debería existir siempre
             $a_traduccion = $this->getArrayTraducciones('es');
             if (!empty($a_traduccion[$clave])) {
                 $txt_traduccion = $a_traduccion[$clave];
-            } else {
+            }
+            else {
                 $txt_traduccion = sprintf(_("falta definir el texto %s en este idioma: %s"), $clave, $idioma);
             }
         }
@@ -64,7 +66,8 @@ class ActividadesSacdFunciones
                 $cCentros = $CentroDlRepository->getCentros(['tipo_ctr' => 'cr']);
                 if (count($cCentros) > 0) {
                     $oCentro = $cCentros[0];
-                } else {
+                }
+                else {
                     // No existe el nombre de la delegación ni región.
                     return '?';
                 }
@@ -74,7 +77,7 @@ class ActividadesSacdFunciones
                 break;
             default:
                 // más de una dl?
-                exit (_("Más de un centro definido como dl"));
+                exit(_("Más de un centro definido como dl"));
         }
         // Buscar la dirección
         $cDirecciones = $oCentro->getDirecciones();
@@ -89,8 +92,9 @@ class ActividadesSacdFunciones
                 }
                 $poblacion .= $oDireccion->getPoblacion();
             }
-        } else {
-            exit (_("falta poner la dirección a la dl"));
+        }
+        else {
+            exit(_("falta poner la dirección a la dl"));
         }
         return $poblacion;
     }

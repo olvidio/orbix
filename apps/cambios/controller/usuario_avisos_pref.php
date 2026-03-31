@@ -34,11 +34,8 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_usuario = (integer)strtok($a_sel[0], "#");
     $Qid_item_usuario_objeto = (string)strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
     $Qid_item_usuario_objeto = (integer)filter_input(INPUT_POST, 'id_item_usuario_objeto');
 }
@@ -51,7 +48,8 @@ if (substr((string)$Qid_usuario, 0, 1) === '4') {
     $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
     $grupo = FALSE;
-} else {
+}
+else {
     $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
     $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
     $grupo = TRUE;
@@ -99,7 +97,8 @@ if ($Qsalida === 'modificar' && !empty($Qid_item_usuario_objeto)) {
 
     $oDesplObjetos->setOpcion_sel($objeto);
     $oDesplTiposAviso->setOpcion_sel($aviso_tipo);
-} elseif ($Qsalida === 'nuevo') { // es nuevo
+}
+elseif ($Qsalida === 'nuevo') { // es nuevo
     $Qid_item_usuario_objeto = '';
     $dl_propia = true;
     $id_pau = '';
@@ -119,7 +118,8 @@ if (ConfigGlobal::is_app_installed('procesos')) {
     $oDesplFases->setBlanco('true');
     $oDesplFases->setOpciones($aOpciones);
     $oDesplFases->setOpcion_sel($id_fase_ref);
-} else {
+}
+else {
     $a_status = StatusId::getArrayStatus();
     // Quitar el status 'cualquiera'
     unset($a_status[StatusId::ALL]);
@@ -158,9 +158,12 @@ $oDesplArrayCasas->setAccionConjunto('fnjs_mas_casas(event)');
 
 if (!empty($id_tipo_activ)) {
     $oTipoActiv = new TiposActividades($id_tipo_activ);
-} else {
-    if ($mi_sfsv === 1) $ssfsv = 'sv';
-    if ($mi_sfsv === 2) $ssfsv = 'sf';
+}
+else {
+    if ($mi_sfsv === 1)
+        $ssfsv = 'sv';
+    if ($mi_sfsv === 2)
+        $ssfsv = 'sf';
     // las casas, sf y sv
     if ($grupo === FALSE && $oRole->isRolePau(PauType::PAU_CDC)) {
         $ssfsv = '';
@@ -178,7 +181,8 @@ $oActividadTipo = new actividades\model\ActividadTipo();
 $oActividadTipo->setSfsvAll(FALSE);
 if (!empty($id_tipo_activ)) {
     $oActividadTipo->setId_tipo_activ($id_tipo_activ);
-} else {
+}
+else {
     $oActividadTipo->setSfsv($sfsv);
     $oActividadTipo->setAsistentes($asistentes);
     $oActividadTipo->setActividad($actividad);
@@ -191,10 +195,10 @@ $oActividadTipo->setQue('buscar');
 // y los sacd
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv === 1)
-    || ($grupo === FALSE && $oRole->isRolePau(PauType::PAU_CDC))
-    || ($grupo === FALSE && $oRole->isRolePau(PauType::PAU_SACD))
-    || ($_SESSION['oPerm']->have_perm_oficina('calendario'))
+|| (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv === 1)
+|| ($grupo === FALSE && $oRole->isRolePau(PauType::PAU_CDC))
+|| ($grupo === FALSE && $oRole->isRolePau(PauType::PAU_SACD))
+|| ($_SESSION['oPerm']->have_perm_oficina('calendario'))
 ) {
     $perm_jefe = TRUE;
 }
@@ -231,7 +235,8 @@ $h_mod = $oHash3->linkSinVal();
 if (is_true($dl_propia)) {
     $chk_propia = 'checked';
     $chk_otra = '';
-} else {
+}
+else {
     $chk_propia = '';
     $chk_otra = 'checked';
 }
