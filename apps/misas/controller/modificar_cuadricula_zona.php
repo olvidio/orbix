@@ -404,7 +404,7 @@ foreach ($cEncargosZona as $oEncargo) {
             }
 
             $meta_dia["$num_dia"] = [
-                "uuid_item" => $oEncargoDia->getUuid_item()->value(),
+                "uuid_item" => $oEncargoDia->getUuidItemVo()->value(),
                 "color" => $color,
                 "key" => "$id_nom#$iniciales",
                 "tstart" => $oEncargoDia->getTstart()->getHora(),
@@ -498,7 +498,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 }
 
                 $meta_dia2["$num_dia"] = [
-                    "uuid_item" => $oEncargoDia->getUuid_item()->value(),
+                    "uuid_item" => $oEncargoDia->getUuidItemVo()->value(),
                     "color" => $color,
                     "key" => "$id_nom#$iniciales",
                     "tstart" => $oEncargoDia->getTstart()->getHora(),
@@ -549,7 +549,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 }
 
                 $meta_dia3["$num_dia"] = [
-                    "uuid_item" => $oEncargoDia->getUuid_item()->value(),
+                    "uuid_item" => $oEncargoDia->getUuidItemVo()->value(),
                     "color" => $color,
                     "key" => "$id_nom#$iniciales",
                     "tstart" => $oEncargoDia->getTstart()->getHora(),
@@ -796,6 +796,10 @@ foreach ($lista_sacd as $key => $nombre_sacd) {
             $id_enc = $oEncargoDia->getId_enc();
 //            echo 'id_enc: '.$id_enc.'<br>';
             $oEncargo = $EncargoRepository->findById($id_enc);
+            if ($oEncargo===null) {
+                echo 'oEncargo es null';
+                continue;
+            }
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
             $id_zona_enc = $oEncargo->getId_zona();
 //            echo 'tipo: '.$id_tipo_enc.' zona: '.$id_zona_enc.'<br>';

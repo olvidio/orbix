@@ -4,12 +4,12 @@ namespace src\misas\application\services;
 
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
-use src\personas\domain\entity\PersonaGlobal;
+use src\personas\domain\entity\PersonaSacd;
 use src\personas\domain\entity\PersonaPub;
 
 class InicialesSacdService
 {
-    private PersonaGlobal|PersonaPub|null $persona;
+    private PersonaSacd|PersonaPub|null $persona;
 
     public function __construct(
         private InicialesSacdRepositoryInterface $inicialesRepo,

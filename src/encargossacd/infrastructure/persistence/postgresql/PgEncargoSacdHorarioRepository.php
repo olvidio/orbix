@@ -31,7 +31,7 @@ class PgEncargoSacdHorarioRepository extends ClaseRepository implements EncargoS
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl_select($oDbl_Select);
-        $this->setNomTabla('propuesta_encargo_sacd_horario');
+        $this->setNomTabla('encargo_sacd_horario');
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
