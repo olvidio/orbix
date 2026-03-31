@@ -61,9 +61,6 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_nom = (integer)strtok($a_sel[0], "#");
     $Qid_tabla = (string)strtok("#");
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');

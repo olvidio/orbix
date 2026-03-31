@@ -17,10 +17,11 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Clase auxiliar para usar el trait en contexto procedural
-$repositoryProvider = new class {
+$repositoryProvider = new class{
     use ProvidesRepositories;
 
-    public function getTeleco(string $entityType): object {
+    public function getTeleco(string $entityType): object
+    {
         return $this->getTelecoRepository($entityType);
     }
 };
@@ -41,7 +42,8 @@ $Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
 try {
     $Repository = getTelecoRepository($Qobj_pau);
-} catch (\InvalidArgumentException) {
+}
+catch (\InvalidArgumentException) {
     exit(_("falta definir obj_pau"));
 }
 
@@ -51,7 +53,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $s_pkey = str_replace("'", '"', $s_pkey[0]);
     $a_pkey = json_decode(urlsafe_b64decode($s_pkey));
-} else {
+}
+else {
     $s_pkey = (string)filter_input(INPUT_POST, 's_pkey');
     $a_pkey = json_decode(urlsafe_b64decode($s_pkey));
 
@@ -61,7 +64,6 @@ switch ($Qmod) {
     case 'eliminar_teleco':
         $TelecoUbi = $Repository->findById($a_pkey);
         $Repository->Eliminar($TelecoUbi);
-        die();
         break;
     case 'teleco':
         $Qid_tipo_teleco = (integer)filter_input(INPUT_POST, 'id_tipo_teleco');
@@ -75,7 +77,8 @@ switch ($Qmod) {
             $TelecoUbi = new TelecoUbi();
             $TelecoUbi->setId_item($newId);
             $TelecoUbi->setId_ubi($Qid_ubi);
-        } else {
+        }
+        else {
             $TelecoUbi = $Repository->findById($a_pkey);
         }
         $TelecoUbi->setId_tipo_teleco($Qid_tipo_teleco);

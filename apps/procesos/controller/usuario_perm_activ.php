@@ -32,10 +32,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_item = (string)strtok("#");
     $Qid_tipo_activ_txt = (string)strtok("#");
     $Qdl_propia = (string)strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
     $Qid_tipo_activ_txt = (integer)filter_input(INPUT_POST, 'id_tipo_activ_txt');
@@ -55,7 +51,7 @@ $oAcciones = new PermAccion();
 $aOpcionesAction = $oAcciones->lista_array();
 
 
-if (empty($Qid_tipo_activ_txt)) {// nuevo
+if (empty($Qid_tipo_activ_txt)) { // nuevo
     $Qdl_propia = 't';
 }
 

@@ -139,7 +139,6 @@ switch ($Qact) {
         flush();
         echo fpassthru($plano_doc);
         die();
-        break;
     case 'adjuntar':
         $url = ConfigGlobal::getWeb() . '/apps/ubis/controller/plano_bytea.php';
         $oHashComprobar = new Hash();

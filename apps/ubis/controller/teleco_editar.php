@@ -29,18 +29,21 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Clase auxiliar para usar el trait en contexto procedural
-$repositoryProvider = new class {
+$repositoryProvider = new class{
     use ProvidesRepositories;
 
-    public function getUbi(string $entityType): object {
+    public function getUbi(string $entityType): object
+    {
         return $this->getRepository($entityType);
     }
 
-    public function getTeleco(string $entityType): object {
+    public function getTeleco(string $entityType): object
+    {
         return $this->getTelecoRepository($entityType);
     }
 
-    public function getTelecoClass(string $entityType): string {
+    public function getTelecoClass(string $entityType): string
+    {
         return $this->getTelecoRepositoryClass($entityType);
     }
 };
@@ -73,18 +76,16 @@ if (!empty($a_sel)) { //vengo de un checkbox
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $s_pkey = str_replace("'", '"', $s_pkey[0]);
     $a_pkey = json_decode(core\urlsafe_b64decode($s_pkey));
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else { // si es nuevo
+}
+else { // si es nuevo
     $s_pkey = '';
 }
 
 try {
     $repoName = getTelecoRepositoryClass($Qobj_pau);
     $TelecoRepository = getTelecoRepository($Qobj_pau);
-} catch (\InvalidArgumentException) {
+}
+catch (\InvalidArgumentException) {
     exit(_("falta definir obj_pau"));
 }
 
@@ -93,7 +94,8 @@ if ($Qmod === 'nuevo') {
     $id_tipo_teleco = '';
     $num_teleco = '';
     $observ = '';
-} else {
+}
+else {
     $TelecoUbi = $TelecoRepository->findById($a_pkey);
 
     $desc_teleco = $TelecoUbi->getId_desc_teleco();
@@ -107,11 +109,11 @@ $miSfsv = ConfigGlobal::mi_sfsv();
 
 $botones = 0;
 /*
-1: guardar cambios
-2: eliminar
-3: eliminar
-4: quitar direccion
-*/
+ 1: guardar cambios
+ 2: eliminar
+ 3: eliminar
+ 4: quitar direccion
+ */
 switch ($Qobj_pau) {
     case 'CentroDl':
     case 'CasaDl':

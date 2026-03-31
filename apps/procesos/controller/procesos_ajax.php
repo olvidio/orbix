@@ -109,7 +109,7 @@ switch ($Qque) {
             $id_of_responsable = $oTareaProceso->getId_of_responsable();
             $json_fases_previas = $oTareaProceso->getJson_fases_previas();
 
-            $oTareaProceso->setId_tipo_proceso($Qid_tipo_proceso,);
+            $oTareaProceso->setId_tipo_proceso($Qid_tipo_proceso);
             $newId_item = $TareaProcesoRepository->getNewId();
             $oTareaProceso->setId_item($newId_item);
             $TareaProcesoRepository->Guardar($oTareaProceso);
@@ -189,7 +189,7 @@ switch ($Qque) {
                 $oFase_previa = $ActividadFaseRepository->findById($id_fase_previa);
                 $fase_previa .= empty($fase_previa) ? '' : ' ' . _("y") . ' ';
                 $fase_previa .= $oFase_previa->getDesc_fase();
-                $tarea_previa_txt = empty($tarea_previa) ? '' : "($tarea_previa)";
+                //$tarea_previa_txt = empty($tarea_previa) ? '' : "($tarea_previa)";
             }
 
             $id_fase_previa = empty($id_fase_previa) ? 0 : $id_fase_previa;
@@ -202,7 +202,7 @@ switch ($Qque) {
         break;
     case 'get_listado':
         $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
-        $a_status =  StatusId::getArrayStatus();
+        $a_status = StatusId::getArrayStatus();
 
         $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
@@ -273,7 +273,7 @@ switch ($Qque) {
                 $oFase_previa = $ActividadFaseRepository->findById($id_fase_previa);
                 $fase_previa .= empty($fase_previa) ? '' : ' ' . _("y") . ' ';
                 $fase_previa .= $oFase_previa->getDesc_fase();
-                $tarea_previa_txt = empty($tarea_previa) ? '' : "($tarea_previa)";
+                //$tarea_previa_txt = empty($tarea_previa) ? '' : "($tarea_previa)";
             }
 
             $mod = "<span class=link onclick=fnjs_modificar($id_item) title='" . _("modificar") . "' >" . _("modificar") . "</span>";
