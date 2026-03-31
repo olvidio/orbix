@@ -239,7 +239,6 @@ switch ($Qque_mod) {
         break;
     case "get_dl":
         $oPosicion->setBloque('#ficha2');
-        //$oPosicion->addParametro('bloque', 'ficha2');
         $oPosicion->recordar();
 
         $Qpoblacion_sel = (string)filter_input(INPUT_POST, 'poblacion_sel');

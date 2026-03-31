@@ -39,11 +39,6 @@ if (isset($_POST['stack'])) {
             $oPosicion2->olvidar($stack);
         }
     }
-} elseif (!empty($a_sel)) { //vengo de un checkbox
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
 }
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');

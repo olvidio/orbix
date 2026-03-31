@@ -250,9 +250,6 @@ $oHash->setArraycamposHidden($a_camposHidden);
 // EN el caso de guradar y añadir uno nuevo, se pone id_nom=0.
 $oHash->setCamposNo('actualizar!id_nom!propio!falta!est_ok');
 
-
-//$oPosicion->addParametro('mod',$mod,0);
-
 $a_campos = ['obj' => $obj,
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,

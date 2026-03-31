@@ -38,10 +38,6 @@ if (isset($_POST['stack'])) {
     $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque !== 'grupmenu_del') { //En el caso de venir de borrar un grupmenu, no hago nada
         $Qid_role = (integer)strtok($a_sel[0], "#");
-        // el scroll id es de la página anterior, hay que guardarlo allí
-        $oPosicion->addParametro('id_sel', $a_sel, 1);
-        $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-        $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
     }
 }
 $oPosicion->setParametros(array('id_role' => $Qid_role), 1);

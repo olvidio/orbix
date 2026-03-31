@@ -5,8 +5,12 @@ use core\ConfigGlobal;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;
+use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
+use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\misas\domain\value_objects\EncargoDiaStatus;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
@@ -168,6 +172,9 @@ $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface
 $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
 $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
 $EncargoTipoRepository = $GLOBALS['container']->get(EncargoTipoRepositoryInterface::class);
+$EncargoDiaRepository =  $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
+$InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
+$PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
 foreach ($cEncargosCtr as $oEncargoCtr) {
     $id_enc = $oEncargoCtr->getId_enc();
     $oEncargo = $EncargoRepository->findById($id_enc);
@@ -215,9 +222,8 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
         $aOperador = [
             'tstart' => 'BETWEEN',
         ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
-        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
 
+        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere, $aOperador);
         foreach ($cEncargosDia as $oEncargoDia) {
             $id_enc = $oEncargoDia->getId_enc();
             $id_nom = $oEncargoDia->getId_nom();
@@ -237,10 +243,10 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             if ($hora_fin !== '') {
                 $dia_y_hora .= '-' . $hora_fin;
             }
-            $InicialesSacd = new InicialesSacd();
-            $iniciales = $InicialesSacd->iniciales($id_nom);
+            $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
+            $iniciales = $InicialesSacd->getIniciales();
             $lista_sacd[$id_nom] = $iniciales;
-            $PersonaSacd = new PersonaSacd($id_nom);
+            $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
             $sacd = $PersonaSacd->getNombreApellidos();
             $nombre_sacd[$id_nom] = $sacd;
             $color = '';

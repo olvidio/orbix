@@ -34,15 +34,9 @@ if (isset($_POST['stack'])) {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar($stack);
         }
     }
-} elseif (!empty($a_sel)) { //vengo de un checkbox
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
 }
 
 // en los menus esta sin codificar, pero a partir de aquí si:

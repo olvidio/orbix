@@ -99,10 +99,6 @@ if (!empty($Qnuevo)) {
     if (!empty($a_sel)) { //vengo de un checkbox
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $id_tabla = (string)strtok("#");
-        // el scroll id es de la página anterior, hay que guardarlo allí
-        $oPosicion->addParametro('id_sel', $a_sel, 1);
-        $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-        $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     } else {
         $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
         $id_tabla = (string)filter_input(INPUT_POST, 'tabla');
