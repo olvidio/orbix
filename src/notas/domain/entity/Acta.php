@@ -303,13 +303,6 @@ class Acta
         $this->pdf = Pdf::fromNullableString($pdf);
     }
 
-    public function hasEmptyPdf(): bool
-    {
-        $this->DBCarregarConPdf();
-        return empty($this->pdf);
-    }
-
-
     /**
      * inventa el valor del acta, si no es correcto
      *

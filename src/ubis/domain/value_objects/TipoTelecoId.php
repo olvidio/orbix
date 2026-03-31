@@ -6,20 +6,20 @@ final class TipoTelecoId
 {
     private int $value;
 
-    public function __construct(?string $value)
+    public function __construct(?int $value)
     {
         $this->validate($value);
         $this->value = $value;
     }
 
-    private function validate(string $value): void
+    private function validate(int $value): void
     {
         if ($value < 0) {
-            throw new \InvalidArgumentException('TipoLaborId must be a non-negative integer');
+            throw new \InvalidArgumentException('TipoTelecoId must be a non-negative integer');
         }
     }
 
-    public function value(): string
+    public function value(): int
     {
         return $this->value;
     }

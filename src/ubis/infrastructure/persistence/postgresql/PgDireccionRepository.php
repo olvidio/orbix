@@ -39,7 +39,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT DISTINCT initcap(poblacion) AS poblacion, initcap(poblacion) AS poblacion1 FROM $nom_tabla $sCondicion ORDER BY initcap(poblacion)";
-        $stmt = $this->pdoQuery($oDbl, $sQuery,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $row) {
@@ -79,9 +79,9 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Direccion
+     * @return array Una colección de objetos de tipo Direccion
      */
-    public function getDirecciones(array $aWhere = [], array $aOperators = []): array|false
+    public function getDirecciones(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -177,32 +177,32 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         ]);
 
         /*
-        $aDatos = [];
-        $aDatos['direccion'] = $Direccion->getDireccion();
-        $aDatos['c_p'] = $Direccion->getC_p();
-        $aDatos['poblacion'] = $Direccion->getPoblacion();
-        $aDatos['provincia'] = $Direccion->getProvincia();
-        $aDatos['a_p'] = $Direccion->getA_p();
-        $aDatos['pais'] = $Direccion->getPaisVo()->value();
-        $aDatos['observ'] = $Direccion->getObservVo()->value();
-        $aDatos['cp_dcha'] = $Direccion->isCp_dcha();
-        $aDatos['latitud'] = $Direccion->getLatitud();
-        $aDatos['longitud'] = $Direccion->getLongitud();
-        $aDatos['plano_extension'] = $Direccion->getPlano_extension();
-        $aDatos['plano_nom'] = $Direccion->getPlano_nom();
-        $aDatos['nom_sede'] = $Direccion->getNom_sede();
-        // para los bytea
-        $aDatos['plano_doc'] = bin2hex($Direccion->getPlano_doc());
-        // para las fechas
-        $aDatos['f_direccion'] = (new ConverterDate('date', $Direccion->getF_direccion()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['cp_dcha'])) {
-            $aDatos['cp_dcha'] = 'true';
-        } else {
-            $aDatos['cp_dcha'] = 'false';
-        }
-        */
+         $aDatos = [];
+         $aDatos['direccion'] = $Direccion->getDireccion();
+         $aDatos['c_p'] = $Direccion->getC_p();
+         $aDatos['poblacion'] = $Direccion->getPoblacion();
+         $aDatos['provincia'] = $Direccion->getProvincia();
+         $aDatos['a_p'] = $Direccion->getA_p();
+         $aDatos['pais'] = $Direccion->getPaisVo()->value();
+         $aDatos['observ'] = $Direccion->getObservVo()->value();
+         $aDatos['cp_dcha'] = $Direccion->isCp_dcha();
+         $aDatos['latitud'] = $Direccion->getLatitud();
+         $aDatos['longitud'] = $Direccion->getLongitud();
+         $aDatos['plano_extension'] = $Direccion->getPlano_extension();
+         $aDatos['plano_nom'] = $Direccion->getPlano_nom();
+         $aDatos['nom_sede'] = $Direccion->getNom_sede();
+         // para los bytea
+         $aDatos['plano_doc'] = bin2hex($Direccion->getPlano_doc());
+         // para las fechas
+         $aDatos['f_direccion'] = (new ConverterDate('date', $Direccion->getF_direccion()))->toPg();
+         array_walk($aDatos, 'core\poner_null');
+         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+         if (is_true($aDatos['cp_dcha'])) {
+         $aDatos['cp_dcha'] = 'true';
+         } else {
+         $aDatos['cp_dcha'] = 'false';
+         }
+         */
 
         if ($bInsert === false) {
             //UPDATE
@@ -225,7 +225,8 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
                     nom_sede                 = :nom_sede";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_direccion = $id_direccion";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_direccion,direccion,c_p,poblacion,provincia,a_p,pais,f_direccion,observ,cp_dcha,latitud,longitud,plano_doc,plano_extension,plano_nom,nom_sede)";
             $valores = "(:id_direccion,:direccion,:c_p,:poblacion,:provincia,:a_p,:pais,:f_direccion,:observ,:cp_dcha,:latitud,:longitud,:plano_doc,:plano_extension,:plano_nom,:nom_sede)";
@@ -254,7 +255,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
      * @param int $id_direccion
      * @return array|bool
      */
-    public function datosById(int $id_direccion): array|bool
+    public function datosById(int $id_direccion): array |bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -274,7 +275,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
             $aDatos['plano_doc'] = $contents;
         }
         // para las fechas del postgres (texto iso)
-            $aDatos['f_direccion'] = (new ConverterDate('date', $aDatos['f_direccion']))->fromPg();
+        $aDatos['f_direccion'] = (new ConverterDate('date', $aDatos['f_direccion']))->fromPg();
 
         return $aDatos;
     }

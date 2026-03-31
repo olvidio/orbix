@@ -36,17 +36,17 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
     public function getArrayNiveleStgrCa(): array
     {
         /* de facto lo que hay: (habría que añadir un campo para indicar si cursa o no
-            1	Bienio	b
-            2	Cuadrienio Año I	c1
-            3	Cuadrienio Año II-IV	c2
-            4	Repaso	r
-            5	centro estudios	ce
-            6	Baja temporal	t
-            7	ap, pa, o ad
-            9	sin estudios	n
-            10	est. Ecles.
-            11	bienio-cuadrienio	bc
-        */
+         1	Bienio	b
+         2	Cuadrienio Año I	c1
+         3	Cuadrienio Año II-IV	c2
+         4	Repaso	r
+         5	centro estudios	ce
+         6	Baja temporal	t
+         7	ap, pa, o ad
+         9	sin estudios	n
+         10	est. Ecles.
+         11	bienio-cuadrienio	bc
+         */
         $aOpciones = $this->getArrayNivelesStgrBreve();
         $claves_a_mantener = [1, 2, 3];
 
@@ -58,17 +58,17 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
     public function getArrayIdNiveleStgrActivo(): array
     {
         /* de facto lo que hay: (habría que añadir un campo para indicar si cursa o no
-            1	Bienio	b
-            2	Cuadrienio Año I	c1
-            3	Cuadrienio Año II-IV	c2
-            4	Repaso	r
-            5	centro estudios	ce
-            6	Baja temporal	t
-            7	ap, pa, o ad
-            9	sin estudios	n
-            10	est. Ecles.
-            11	bienio-cuadrienio	bc
-        */
+         1	Bienio	b
+         2	Cuadrienio Año I	c1
+         3	Cuadrienio Año II-IV	c2
+         4	Repaso	r
+         5	centro estudios	ce
+         6	Baja temporal	t
+         7	ap, pa, o ad
+         9	sin estudios	n
+         10	est. Ecles.
+         11	bienio-cuadrienio	bc
+         */
         return [1, 2, 3, 4, 5, 11];
     }
 
@@ -110,9 +110,9 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo NivelStgr
+     * @return array Una colección de objetos de tipo NivelStgr
      */
-    public function getNivelesStgr(array $aWhere = [], array $aOperators = []): array|false
+    public function getNivelesStgr(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -202,7 +202,8 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
             $sql = "UPDATE $nom_tabla SET $update WHERE nivel_stgr = $nivel_stgr";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(nivel_stgr,desc_nivel,desc_breve,orden)";
             $valores = "(:nivel_stgr,:desc_nivel,:desc_breve,:orden)";
@@ -231,7 +232,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
      * @param int $nivel_stgr
      * @return array|bool
      */
-    public function datosById(int $nivel_stgr): array|bool
+    public function datosById(int $nivel_stgr): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -242,7 +243,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
 
     }
 
-    public function datosByIdVo(NivelStgrId $id): array|bool
+    public function datosByIdVo(NivelStgrId $id): array |bool
     {
         return $this->datosById($id->value());
     }

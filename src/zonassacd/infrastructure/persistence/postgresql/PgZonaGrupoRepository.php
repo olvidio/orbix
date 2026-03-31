@@ -65,9 +65,9 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ZonaGrupo
+     * @return array Una colección de objetos de tipo ZonaGrupo
      */
-    public function getZonasGrupo(array $aWhere = [], array $aOperators = []): array|false
+    public function getZonasGrupo(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -156,7 +156,8 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
 					orden                    = :orden";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_grupo = $id_grupo";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(id_grupo,nombre_grupo,orden)";
             $valores = "(:id_grupo,:nombre_grupo,:orden)";
@@ -185,7 +186,7 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
      * @param int $id_grupo
      * @return array|bool
      */
-    public function datosById(int $id_grupo): array|bool
+    public function datosById(int $id_grupo): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

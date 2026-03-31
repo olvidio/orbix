@@ -40,9 +40,9 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo TarifaUbi
+     * @return array Una colección de objetos de tipo TarifaUbi
      */
-    public function getTarifaUbis(array $aWhere = [], array $aOperators = []): array|false
+    public function getTarifaUbis(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -135,7 +135,8 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
 					id_serie                 = :id_serie";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(id_item,id_ubi,id_tarifa,year,cantidad,observ,id_serie)";
             $valores = "(:id_item,:id_ubi,:id_tarifa,:year,:cantidad,:observ,:id_serie)";
@@ -164,7 +165,7 @@ class PgTarifaUbiRepository extends ClaseRepository implements TarifaUbiReposito
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

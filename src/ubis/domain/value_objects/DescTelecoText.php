@@ -38,16 +38,20 @@ final class DescTelecoText
         return $this->value;
     }
 
-    public function equals(int $other): bool
+    public function equals(string $other): bool
     {
-        return $this->value === $other->value();
+        return $this->value === $other;
     }
 
     public static function fromNullableString(?string $value): ?self
     {
-        if ($value === null) { return null; }
+        if ($value === null) {
+            return null;
+        }
         $value = trim($value);
-        if ($value === '') { return null; }
+        if ($value === '') {
+            return null;
+        }
         return new self($value);
     }
 }

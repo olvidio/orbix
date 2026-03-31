@@ -30,7 +30,8 @@ if (isset($_POST['stack'])) {
             $a_sel = $oPosicion2->getParametro('id_sel');
             if (!empty($a_sel)) {
                 $Qid_usuario = (integer)strtok($a_sel[0], "#");
-            } else {
+            }
+            else {
                 $Qid_usuario = $oPosicion2->getParametro('id_usuario');
                 $Qquien = $oPosicion2->getParametro('quien');
             }
@@ -38,14 +39,11 @@ if (isset($_POST['stack'])) {
             $oPosicion2->olvidar($stack);
         }
     }
-} elseif (!empty($a_sel)) { //vengo de un checkbox
+}
+elseif (!empty($a_sel)) { //vengo de un checkbox
     $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque !== 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
         $Qid_usuario = (integer)strtok($a_sel[0], "#");
-        // el scroll id es de la página anterior, hay que guardarlo allí
-        $oPosicion->addParametro('id_sel', $a_sel, 1);
-        $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-        $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
     }
 }
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
@@ -53,9 +51,9 @@ $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 //////////////////////// Usuario o Grupo ///////////////////////////////////////////////////
 $url_backend = '/src/usuarios/usuario_form';
 $a_campos_backend = [
-        'id_usuario' => $Qid_usuario,
-        'quien' => $Qquien
-    ];
+    'id_usuario' => $Qid_usuario,
+    'quien' => $Qquien
+];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_campos_src = $data['a_campos'];
 
@@ -77,7 +75,8 @@ if (!empty($a_campos_src['aDataDespl'])) {
         $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
         $oDesplArrayCtrCasas->setOpcion_sel($a_campos_src['aDataDespl']['opcion_sel']);
         $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
-    } else {
+    }
+    else {
         $oDesplArrayCtrCasas = new DesplegableArray();
         $oDesplArrayCtrCasas->setAccionConjunto($a_campos_src['aDataDespl']['accionConjunto']);
         $oDesplArrayCtrCasas->setNomConjunto($a_campos_src['aDataDespl']['nom']);
@@ -85,7 +84,8 @@ if (!empty($a_campos_src['aDataDespl'])) {
         $oDesplArrayCtrCasas->setSeleccionados($a_campos_src['aDataDespl']['opcion_sel']);
         $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
     }
-} else {
+}
+else {
     $oDesplArrayCtrCasas = new DesplegableArray();
 }
 $a_campos['oDesplArrayCtrCasas'] = $oDesplArrayCtrCasas;
@@ -99,7 +99,7 @@ $a_camposHidden = array(
 );
 if (!empty($camposMas)) {
     $camposForm .= '!' . $camposMas;
-    //$a_camposHidden []= $camposMas;
+//$a_camposHidden []= $camposMas;
 }
 //$camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
 $oHash->setCamposForm($camposForm);
@@ -161,7 +161,7 @@ $oView->renderizar('usuario_form.phtml', $a_campos);
 if (!empty($Qid_usuario)) {
     //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
     $url_backend = '/src/usuarios/usuario_info';
-    $a_campos_backend = [ 'id_usuario' => $Qid_usuario ];
+    $a_campos_backend = ['id_usuario' => $Qid_usuario];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
     $a_campos['grupos_txt'] = $data['grupos_txt'];
 

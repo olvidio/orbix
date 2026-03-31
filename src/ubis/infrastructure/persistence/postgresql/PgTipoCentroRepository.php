@@ -56,9 +56,9 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo TipoCentro
+     * @return array Una colección de objetos de tipo TipoCentro
      */
-    public function getTiposCentro(array $aWhere = [], array $aOperators = []): array|false
+    public function getTiposCentro(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -145,7 +145,8 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
 					nombre_tipo_ctr          = :nombre_tipo_ctr";
             $sql = "UPDATE $nom_tabla SET $update WHERE tipo_ctr = '$tipo_ctr'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(tipo_ctr,nombre_tipo_ctr)";
             $valores = "(:tipo_ctr,:nombre_tipo_ctr)";
@@ -174,7 +175,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
      * @param string $tipo_ctr
      * @return array|bool
      */
-    public function datosById(string $tipo_ctr): array|bool
+    public function datosById(string $tipo_ctr): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

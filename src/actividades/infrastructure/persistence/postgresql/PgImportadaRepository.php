@@ -40,9 +40,9 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Importada
+     * @return array Una colección de objetos de tipo Importada
      */
-    public function getImportadas(array $aWhere = [], array $aOperators = []): array|false
+    public function getImportadas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -128,7 +128,8 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
             unset($aDatos['id_activ']);
             /* No hacer nada, ya está en la lista */
             return true;
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(id_activ)";
             $valores = "(:id_activ)";
@@ -157,7 +158,7 @@ class PgImportadaRepository extends ClaseRepository implements ImportadaReposito
      * @param int $id_activ
      * @return array|bool
      */
-    public function datosById(int $id_activ): array|bool
+    public function datosById(int $id_activ): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

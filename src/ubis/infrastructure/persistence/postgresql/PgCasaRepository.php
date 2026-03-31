@@ -56,9 +56,9 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Casa
+     * @return array Una colección de objetos de tipo Casa
      */
-    public function getCasas(array $aWhere = [], array $aOperators = []): array|false
+    public function getCasas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -167,7 +167,8 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
                     observ                   = :observ";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_casa,plazas,plazas_min,num_sacd,biblioteca,observ)";
             $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_casa,:plazas,:plazas_min,:num_sacd,:biblioteca,:observ)";
@@ -196,7 +197,7 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
      * @param int $id_ubi
      * @return array|bool
      */
-    public function datosById(int $id_ubi): array|bool
+    public function datosById(int $id_ubi): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

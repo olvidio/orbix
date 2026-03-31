@@ -91,9 +91,9 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo DbSchema
+     * @return array Una colección de objetos de tipo DbSchema
      */
-    public function getDbSchemas(array $aWhere = [], array $aOperators = []): array|false
+    public function getDbSchemas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -180,7 +180,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
 					id                       = :id";
             $sql = "UPDATE $nom_tabla SET $update WHERE schema = '$schema'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(schema,id)";
             $valores = "(:schema,:id)";
@@ -209,7 +210,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      * @param string $schema
      * @return array|bool
      */
-    public function datosById(string $schema): array|bool
+    public function datosById(string $schema): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -282,7 +283,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $cSchema = $this->getDbSchemas(['schema' => $schema]);
         if (empty($cSchema)) {
             $netxId = $this->getLast() + 1;
-        } else {
+        }
+        else {
             $oDbSchema = $cSchema[0];
             $netxId = $oDbSchema->getIdVo()->value();
         }

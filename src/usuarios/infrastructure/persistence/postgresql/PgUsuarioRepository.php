@@ -55,9 +55,9 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo usuario
+     * @return array Una colección de objetos de tipo usuario
      */
-    public function getUsuarios(array $aWhere = [], array $aOperators = []): array|false
+    public function getUsuarios(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -145,31 +145,31 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $bInsert = $this->isNew($id_usuario);
 
         /*
-        $aDatos = [];
-        $aDatos['usuario'] = $usuario->getUsuarioAsString();
-        $aDatos['id_role'] = $usuario->getId_role();
-        $aDatos['email'] = $usuario->getEmailAsString();
-        $aDatos['csv_id_pau'] = $usuario->getCsvIdPauAsString();
-        $aDatos['nom_usuario'] = $usuario->getNomUsuarioAsString();
-        $aDatos['has_2fa'] = $usuario->isHas_2fa();
-        $aDatos['secret_2fa'] = $usuario->getSecret2faAsString();
-        $aDatos['cambio_password'] = $usuario->isCambio_password();
-        // para los bytea, pero el passwd ya lo tengo en hex con MyCrypt
-        // $aDatos['password'] = bin2hex($usuario->getPassword());
-        $aDatos['password'] = $usuario->getPasswordAsString();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['has_2fa'])) {
-            $aDatos['has_2fa'] = 'true';
-        } else {
-            $aDatos['has_2fa'] = 'false';
-        }
-        if (is_true($aDatos['cambio_password'])) {
-            $aDatos['cambio_password'] = 'true';
-        } else {
-            $aDatos['cambio_password'] = 'false';
-        }
-        */
+         $aDatos = [];
+         $aDatos['usuario'] = $usuario->getUsuarioAsString();
+         $aDatos['id_role'] = $usuario->getId_role();
+         $aDatos['email'] = $usuario->getEmailAsString();
+         $aDatos['csv_id_pau'] = $usuario->getCsvIdPauAsString();
+         $aDatos['nom_usuario'] = $usuario->getNomUsuarioAsString();
+         $aDatos['has_2fa'] = $usuario->isHas_2fa();
+         $aDatos['secret_2fa'] = $usuario->getSecret2faAsString();
+         $aDatos['cambio_password'] = $usuario->isCambio_password();
+         // para los bytea, pero el passwd ya lo tengo en hex con MyCrypt
+         // $aDatos['password'] = bin2hex($usuario->getPassword());
+         $aDatos['password'] = $usuario->getPasswordAsString();
+         array_walk($aDatos, 'core\poner_null');
+         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+         if (is_true($aDatos['has_2fa'])) {
+         $aDatos['has_2fa'] = 'true';
+         } else {
+         $aDatos['has_2fa'] = 'false';
+         }
+         if (is_true($aDatos['cambio_password'])) {
+         $aDatos['cambio_password'] = 'true';
+         } else {
+         $aDatos['cambio_password'] = 'false';
+         }
+         */
         $aDatos = $usuario->toArrayForDatabase();
 
         if ($bInsert === false) {
@@ -187,7 +187,8 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
                     cambio_password          = :cambio_password";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_usuario = $id_usuario";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_usuario,usuario,id_role,password,email,csv_id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password)";
             $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:csv_id_pau,:nom_usuario,:has_2fa,:secret_2fa,:cambio_password)";
@@ -216,7 +217,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
      * @param int $id_usuario
      * @return array|bool
      */
-    public function datosById(int $id_usuario): array|bool
+    public function datosById(int $id_usuario): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

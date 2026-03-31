@@ -73,13 +73,14 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
      * @param string condicion a añadir (sin where): f_ini BETWEEN '1/1/2010' AND '1/8/2010'.
      * @return array|false
      */
-    public function getActividadesDeCentros(int $iid_ubi, string $scondicion = ''):array
+    public function getActividadesDeCentros(int $iid_ubi, string $scondicion = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadSet = new Set();
 
-        if (!empty($scondicion)) $scondicion = ' AND ' . $scondicion;
+        if (!empty($scondicion))
+            $scondicion = ' AND ' . $scondicion;
         $sQuery = "SELECT d.id_activ 
                         FROM $nom_tabla d JOIN a_actividades_dl a USING (id_activ) 
                         WHERE d.id_ubi=$iid_ubi $scondicion 
@@ -101,7 +102,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
      * @param integer id_actividad.
      * @return array|false
      */
-    public function getCentrosEncargadosActividad(int $iid_activ):array
+    public function getCentrosEncargadosActividad(int $iid_activ): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -116,7 +117,8 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
             if (ConfigGlobal::mi_sfsv() === $sfsv) {
                 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $oUbi = $CentroDlRepository->findById($id_ubi);
-            } else {
+            }
+            else {
                 $oUbi = CentroEllas::fromArray($aDatos);
             }
             $oUbiSet->add($oUbi);
@@ -132,9 +134,9 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo CentroEncargado
+     * @return array Una colección de objetos de tipo CentroEncargado
      */
-    public function getCentrosEncargados(array $aWhere = [], array $aOperators = []): array|false
+    public function getCentrosEncargados(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -226,7 +228,8 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
 					encargo                  = :encargo";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_activ = $id_activ AND id_ubi = $id_ubi";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(id_activ,id_ubi,num_orden,encargo)";
             $valores = "(:id_activ,:id_ubi,:num_orden,:encargo)";
@@ -255,7 +258,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
      * @param int $id_activ
      * @return array|bool
      */
-    public function datosById(int $id_activ, int $id_ubi): array|bool
+    public function datosById(int $id_activ, int $id_ubi): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -266,7 +269,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
         return $aDatos;
     }
 
-    public function datosByPk(CentroEncargadoPk $pk): array|bool
+    public function datosByPk(CentroEncargadoPk $pk): array |bool
     {
         return $this->datosById($pk->IdActiv(), $pk->IdUbi());
     }

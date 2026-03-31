@@ -38,7 +38,8 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (empty($sCondicion)) $sCondicion = "";
+        if (empty($sCondicion))
+            $sCondicion = "";
         $sQuery = "SELECT id_cama, descripcion FROM $nom_tabla $sCondicion ORDER BY descripcion";
         $stmt = $this->prepareAndExecute($oDbl, $sQuery, [], __METHOD__, __FILE__, __LINE__);
         $aCamas = [];
@@ -59,9 +60,9 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Cama
+     * @return array Una colección de objetos de tipo Cama
      */
-    public function getCamas(array $aWhere = [], array $aOperators = []): array|false
+    public function getCamas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -123,7 +124,7 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
      * devuelve una colección (array) de objetos de tipo Cama para una habitación específica
      *
      */
-    public function getCamasByHabitacion(HabitacionId $id_habitacion): array|false
+    public function getCamasByHabitacion(HabitacionId $id_habitacion): array
     {
         $id_habitacion_val = $id_habitacion->value();
         return $this->getCamas(['id_habitacion' => $id_habitacion_val, '_ordre' => 'descripcion']);
@@ -165,7 +166,8 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
             $sql = "UPDATE $nom_tabla SET $update WHERE id_cama = :id_cama_where ";
             $aDatos['id_cama_where'] = $id_cama;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_cama,id_habitacion,descripcion,larga,vip)";
             $valores = "(:id_cama,:id_habitacion,:descripcion,:larga,:vip)";
@@ -195,7 +197,7 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
      * @param string $id_cama
      * @return array|bool
      */
-    public function datosById(string $id_cama): array|bool
+    public function datosById(string $id_cama): array |bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

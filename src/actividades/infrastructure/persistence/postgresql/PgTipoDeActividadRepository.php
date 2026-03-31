@@ -53,7 +53,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             $a_id_tipos[$id_tipo_activ] = $nom_tipo;
         }
 
-        return  $a_id_tipos;
+        return $a_id_tipos;
     }
 
     /**
@@ -90,7 +90,8 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             if ($isfsv == 1) {
                 $nom_tipo_proceso = "id_tipo_proceso_sv";
                 $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sv";
-            } else {
+            }
+            else {
                 $nom_tipo_proceso = "id_tipo_proceso_sf";
                 $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sf";
             }
@@ -99,7 +100,8 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
                             FROM $nom_tabla 
                             WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
                             GROUP BY $nom_tipo_proceso";
-            } else {
+            }
+            else {
                 $sQry = "SELECT $nom_tipo_proceso_ex as id_tipo_proceso 
                         FROM $nom_tabla 
                         WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
@@ -121,7 +123,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         $nom_tabla = $this->getNomTabla();
         $query = "SELECT substring(id_tipo_activ::text from '" . $regexp . "')
 		   	FROM $nom_tabla  where id_tipo_activ::text ~'" . $filtro_regexp_txt . "' order by id_tipo_activ";
-        $stmt = $this->pdoQuery($oDbl,$query, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $query, __METHOD__, __FILE__, __LINE__);
 
         $a_id_tipos = [];
         foreach ($stmt->fetchAll() as $row) {
@@ -136,7 +138,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $query = "SELECT * FROM $nom_tabla where id_tipo_activ::text ~'$filtro_regexp_txt' order by id_tipo_activ";
-        $stmt = $this->pdoQuery($oDbl,$query, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $query, __METHOD__, __FILE__, __LINE__);
 
         $tipo_nom = [];
         $nom_tipo = [];
@@ -209,9 +211,9 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo TipoDeActividad
+     * @return array Una colección de objetos de tipo TipoDeActividad
      */
-    public function getTiposDeActividades(array $aWhere = [], array $aOperators = []): array|false
+    public function getTiposDeActividades(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -263,7 +265,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoDeActividad =  TipoDeActividad::fromArray($aDatos);
+            $TipoDeActividad = TipoDeActividad::fromArray($aDatos);
             $TipoDeActividadSet->add($TipoDeActividad);
         }
         return $TipoDeActividadSet->getTot();
@@ -303,7 +305,8 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
 					id_tipo_proceso_ex_sf    = :id_tipo_proceso_ex_sf";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_tipo_activ = $id_tipo_activ";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(id_tipo_activ,nombre,id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf)";
             $valores = "(:id_tipo_activ,:nombre,:id_tipo_proceso_sv,:id_tipo_proceso_ex_sv,:id_tipo_proceso_sf,:id_tipo_proceso_ex_sf)";
@@ -332,7 +335,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
      * @param int $id_tipo_activ
      * @return array|bool
      */
-    public function datosById(int $id_tipo_activ): array|bool
+    public function datosById(int $id_tipo_activ): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

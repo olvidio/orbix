@@ -57,9 +57,9 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Repeticion
+     * @return array Una colección de objetos de tipo Repeticion
      */
-    public function getRepeticiones(array $aWhere = [], array $aOperators = []): array|false
+    public function getRepeticiones(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -111,7 +111,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $Repeticion =  Repeticion::fromArray($aDatos);
+            $Repeticion = Repeticion::fromArray($aDatos);
             $RepeticionSet->add($Repeticion);
         }
         return $RepeticionSet->getTot();
@@ -149,7 +149,8 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
             $sql = "UPDATE $nom_tabla SET $update WHERE id_repeticion = $id_repeticion";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_repeticion,repeticion,temporada,tipo)";
             $valores = "(:id_repeticion,:repeticion,:temporada,:tipo)";
@@ -175,10 +176,10 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_repeticion
+     * @param RepeticionId $id_repeticion
      * @return array|bool
      */
-    public function datosById(RepeticionId $id_repeticion): array|bool
+    public function datosById(RepeticionId $id_repeticion): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

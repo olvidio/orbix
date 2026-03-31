@@ -37,7 +37,8 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $orden = 'orden';
-        if (empty($sCondicion)) $sCondicion = "";
+        if (empty($sCondicion))
+            $sCondicion = "";
         $sQuery = "SELECT id_habitacion, nombre FROM $nom_tabla $sCondicion ORDER BY $orden";
         $stmt = $this->prepareAndExecute($oDbl, $sQuery, [], __METHOD__, __FILE__, __LINE__);
         $aHabitaciones = [];
@@ -58,9 +59,9 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Habitacion
+     * @return array Una colección de objetos de tipo Habitacion
      */
-    public function getHabitaciones(array $aWhere = [], array $aOperators = []): array|false
+    public function getHabitaciones(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -124,7 +125,7 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
      * @param int $id_ubi
      * @return array|false Una colección de objetos de tipo Habitacion
      */
-    public function getHabitacionesByUbi(int $id_ubi): array|false
+    public function getHabitacionesByUbi(int $id_ubi): array
     {
         return $this->getHabitaciones(['id_ubi' => $id_ubi], ['_ordre' => 'orden']);
     }
@@ -172,7 +173,8 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
             $sql = "UPDATE $nom_tabla SET $update WHERE id_habitacion = :id_habitacion_where";
             $aDatos['id_habitacion_where'] = $id_habitacion;
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_ubi,id_habitacion,orden,nombre,numero_camas,numero_camas_vip,planta,sillon,adaptada,fumador,tipoLavabo,despacho)";
             $valores = "(:id_ubi,:id_habitacion,:orden,:nombre,:numero_camas,:numero_camas_vip,:planta,:sillon,:adaptada,:fumador,:tipoLavabo,:despacho)";
@@ -202,7 +204,7 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
      * @param string $id_habitacion
      * @return array|bool
      */
-    public function datosById(string $id_habitacion): array|bool
+    public function datosById(string $id_habitacion): array |bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

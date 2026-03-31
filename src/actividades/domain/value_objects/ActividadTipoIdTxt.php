@@ -4,7 +4,7 @@ namespace src\actividades\domain\value_objects;
 
 final class ActividadTipoIdTxt
 {
-    private string $value;
+    private int $value;
 
     /**
      * @param int|string $value Debe representar exactamente 6 dígitos.
@@ -15,7 +15,7 @@ final class ActividadTipoIdTxt
         $str = (string)$value;
         $str = trim($str);
         $this->validate($str);
-        $this->value = $str;
+        $this->value = (int)$str;
     }
 
     private function validate(string $str): void

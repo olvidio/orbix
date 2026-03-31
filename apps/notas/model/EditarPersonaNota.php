@@ -87,7 +87,7 @@ class EditarPersonaNota
         $id_asignatura = $this->personaNota->getIdAsignaturaVo()->value();
         $id_situacion = $this->personaNota->getIdSituacionVo()->value();
         $acta = $this->personaNota->getActa();
-        $f_acta = $this->personaNota->getF_acta();
+        $oF_acta = $this->personaNota->getF_acta();
         $tipo_acta = $this->personaNota->getTipoActaVo()?->value();
         $preceptor = $this->personaNota->isPreceptor();
         $id_preceptor = $this->personaNota->getId_preceptor();
@@ -137,7 +137,7 @@ class EditarPersonaNota
             $oPersonaNotaDB->setId_nivel($id_nivel);
             $oPersonaNotaDB->setId_asignatura($id_asignatura);
             $oPersonaNotaDB->setId_situacion($id_situacion);
-            $oPersonaNotaDB->setF_acta($f_acta);
+            $oPersonaNotaDB->setF_acta($oF_acta);
             $oPersonaNotaDB->setTipo_acta($tipo_acta);
             // comprobar valor del acta
             if (!empty($acta)) {
@@ -145,7 +145,7 @@ class EditarPersonaNota
                     $oPersonaNotaDB->setActa($acta);
                 }
                 if ($tipo_acta === TipoActa::FORMATO_ACTA) {
-                    $valor = Acta::inventarActa($acta, $f_acta);
+                    $valor = Acta::inventarActa($acta, $oF_acta);
                     $oPersonaNotaDB->setActa($valor);
                 }
             } else {
@@ -196,7 +196,7 @@ class EditarPersonaNota
                     $id_asignatura = $personaNotaOriginal->getId_asignatura();
                     $id_situacion = $personaNotaOriginal->getId_situacion();
                     $acta = $personaNotaOriginal->getActa();
-                    $f_acta = $personaNotaOriginal->getF_acta();
+                    $oF_acta = $personaNotaOriginal->getF_acta();
                     $tipo_acta = $personaNotaOriginal->getTipo_acta();
                     $preceptor = $personaNotaOriginal->isPreceptor();
                     $id_preceptor = $personaNotaOriginal->getId_preceptor();
@@ -231,7 +231,7 @@ class EditarPersonaNota
             $oPersonaNotaCertificadoDB->setActa($acta);
             $oPersonaNotaCertificadoDB->setDetalle($detalle);
             $oPersonaNotaCertificadoDB->setTipo_acta($tipo_acta);
-            $oPersonaNotaCertificadoDB->setF_acta($f_acta);
+            $oPersonaNotaCertificadoDB->setF_acta($oF_acta);
             $oPersonaNotaCertificadoDB->setPreceptor($preceptor);
             $oPersonaNotaCertificadoDB->setId_preceptor($id_preceptor);
             $oPersonaNotaCertificadoDB->setEpoca($epoca);
@@ -268,7 +268,7 @@ class EditarPersonaNota
         $id_asignatura = $this->personaNota->getIdAsignaturaVo()->value();
         $id_situacion = $this->personaNota->getIdSituacionVo()->value();
         $acta = $this->personaNota->getActa();
-        $f_acta = $this->personaNota->getF_acta();
+        $oF_acta = $this->personaNota->getF_acta();
         $tipo_acta = $this->personaNota->getTipoActavo()?->value();
         $preceptor = $this->personaNota->isPreceptor();
         $id_preceptor = $this->personaNota->getId_preceptor();
@@ -298,7 +298,7 @@ class EditarPersonaNota
 
             $oPersonaNotaDB->setId_asignatura($id_asignatura);
             $oPersonaNotaDB->setId_situacion($id_situacion);
-            $oPersonaNotaDB->setF_acta($f_acta);
+            $oPersonaNotaDB->setF_acta($oF_acta);
             $oPersonaNotaDB->setTipo_acta($tipo_acta);
             // comprobar valor del acta
             if (!empty($acta)) {
@@ -306,7 +306,7 @@ class EditarPersonaNota
                     $oPersonaNotaDB->setActa($acta);
                 }
                 if ($tipo_acta === TipoActa::FORMATO_ACTA) {
-                    $valor = Acta::inventarActa($acta, $f_acta);
+                    $valor = Acta::inventarActa($acta, $oF_acta);
                     $oPersonaNotaDB->setActa($valor);
                 }
             } else {
@@ -382,7 +382,7 @@ class EditarPersonaNota
             $oPersonaNotaCertificadoDB->setDetalle($new_detalle);
             $oPersonaNotaCertificadoDB->setTipo_acta(TipoActa::FORMATO_CERTIFICADO);
 
-            $oPersonaNotaCertificadoDB->setF_acta($f_acta);
+            $oPersonaNotaCertificadoDB->setF_acta($oF_acta);
             $oPersonaNotaCertificadoDB->setPreceptor($preceptor);
             $oPersonaNotaCertificadoDB->setId_preceptor($id_preceptor);
             $oPersonaNotaCertificadoDB->setEpoca($epoca);

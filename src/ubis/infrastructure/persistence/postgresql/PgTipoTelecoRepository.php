@@ -102,9 +102,9 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo TipoTeleco
+     * @return array Una colección de objetos de tipo TipoTeleco
      */
-    public function getTiposTeleco(array $aWhere = [], array $aOperators = []): array|false
+    public function getTiposTeleco(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -194,7 +194,8 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
 					persona                  = :persona";
             $sql = "UPDATE $nom_tabla SET $update WHERE id = $id";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(tipo_teleco,nombre_teleco,ubi,persona,id)";
             $valores = "(:tipo_teleco,:nombre_teleco,:ubi,:persona,:id)";
@@ -223,7 +224,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
      * @param int $id
      * @return array|bool
      */
-    public function datosById(int $id): array|bool
+    public function datosById(int $id): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

@@ -68,9 +68,9 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo DescTeleco
+     * @return array Una colección de objetos de tipo DescTeleco
      */
-    public function getDescsTeleco(array $aWhere = [], array $aOperators = []): array|false
+    public function getDescsTeleco(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -162,7 +162,8 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
 					persona                  = :persona";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_item,orden,id_tipo_teleco,desc_teleco,ubi,persona)";
             $valores = "(:id_item,:orden,:id_tipo_teleco,:desc_teleco,:ubi,:persona)";
@@ -191,7 +192,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

@@ -39,9 +39,9 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo PermMenu
+     * @return array Una colección de objetos de tipo PermMenu
      */
-    public function getPermMenus(array $aWhere = [], array $aOperators = []): array|false
+    public function getPermMenus(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -89,7 +89,7 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -130,7 +130,8 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
 					menu_perm                = :menu_perm";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_item,id_usuario,menu_perm)";
             $valores = "(:id_item,:id_usuario,:menu_perm)";
@@ -159,7 +160,7 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

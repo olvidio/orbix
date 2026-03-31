@@ -61,7 +61,8 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $orden = 'nombre_ubi';
-        if (empty($condicion)) $condicion = "WHERE active = 't'";
+        if (empty($condicion))
+            $condicion = "WHERE active = 't'";
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $condicion ORDER BY $orden";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
@@ -82,9 +83,9 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Centro
+     * @return array Una colección de objetos de tipo Centro
      */
-    public function getCentros(array $aWhere = [], array $aOperators = []): array|false
+    public function getCentros(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -190,7 +191,8 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
 					id_ctr_padre             = :id_ctr_padre";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre)";
             $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre)";
@@ -219,7 +221,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
      * @param int $id_ubi
      * @return array|bool
      */
-    public function datosById(int $id_ubi): array|bool
+    public function datosById(int $id_ubi): array |bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

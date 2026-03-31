@@ -50,7 +50,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
      * Se requiere del array $_SESSION['oPermActividades'] para saber si se tiene permisos para ver...
      *
      */
-    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, $cdc_sel = 0): array|false
+    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, $cdc_sel = 0): array|bool
     {
         $oIniPlanning = $oFini;
         $a = 0;
@@ -91,7 +91,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $nom_activ = $oActividad->getNom_activ();
             $css = PlanningStyle::clase($id_tipo_activ, '', '', $oActividad->getStatus());
 
-            $oTipoActividad = $this->tipoTelecoRepository->findById($id_tipo_activ);
+            $oTipoActividad = $this->tipoActividadRepository->findById($id_tipo_activ);
             $ssfsv = $oTipoActividad->getSfsvText();
 
             //para el caso de que la actividad comience antes
@@ -322,9 +322,9 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ActividadAll
+     * @return array Una colección de objetos de tipo ActividadAll
      */
-    public function getActividades(array $aWhere = [], array $aOperators = []): array|false
+    public function getActividades(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

@@ -41,7 +41,8 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $orden = 'nombre_ubi';
-        if (empty($sCondicion)) $sCondicion = "WHERE active = 't'";
+        if (empty($sCondicion))
+            $sCondicion = "WHERE active = 't'";
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sCondicion ORDER BY $orden";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
@@ -62,9 +63,9 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo CentroEx
+     * @return array Una colección de objetos de tipo CentroEx
      */
-    public function getCentros(array $aWhere = [], array $aOperators = []): array|false
+    public function getCentros(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -112,7 +113,7 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         foreach ($stmt as $aDatos) {
             // para las fechas del postgres (texto iso)
@@ -170,7 +171,8 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
 					id_ctr_padre             = :id_ctr_padre";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre)";
             $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre)";
@@ -199,7 +201,7 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
      * @param int $id_ubi
      * @return array|bool
      */
-    public function datosById(int $id_ubi): array|bool
+    public function datosById(int $id_ubi): array |bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

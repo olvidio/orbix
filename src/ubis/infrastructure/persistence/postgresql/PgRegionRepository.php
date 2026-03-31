@@ -40,9 +40,9 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Region
+     * @return array Una colección de objetos de tipo Region
      */
-    public function getRegiones(array $aWhere = [], array $aOperators = []): array|false
+    public function getRegiones(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

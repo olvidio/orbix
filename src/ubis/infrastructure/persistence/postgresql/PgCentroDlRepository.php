@@ -41,7 +41,8 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $orden = 'nombre_ubi';
-        if (empty($sCondicion)) $sCondicion = "WHERE active = 't'";
+        if (empty($sCondicion))
+            $sCondicion = "WHERE active = 't'";
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sCondicion ORDER BY $orden";
         $stmt = $this->prepareAndExecute($oDbl, $sQuery, [], __METHOD__, __FILE__, __LINE__);
         $aCentros = [];
@@ -61,9 +62,9 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo CentroDl
+     * @return array Una colección de objetos de tipo CentroDl
      */
-    public function getCentros(array $aWhere = [], array $aOperators = []): array|false
+    public function getCentros(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -178,7 +179,8 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
                     num_cartas_mensuales     = :num_cartas_mensuales";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,n_buzon,num_pi,num_cartas,observ,num_habit_indiv,plazas,id_zona,sede,num_cartas_mensuales)";
             $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:active,:f_active,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:n_buzon,:num_pi,:num_cartas,:observ,:num_habit_indiv,:plazas,:id_zona,:sede,:num_cartas_mensuales)";
@@ -207,7 +209,7 @@ class PgCentroDlRepository extends ClaseRepository implements CentroDlRepository
      * @param int $id_ubi
      * @return array|bool
      */
-    public function datosById(int $id_ubi): array|bool
+    public function datosById(int $id_ubi): array |bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

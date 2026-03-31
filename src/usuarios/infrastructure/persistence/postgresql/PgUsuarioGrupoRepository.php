@@ -39,9 +39,9 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo UsuarioGrupo
+     * @return array Una colección de objetos de tipo UsuarioGrupo
      */
-    public function getUsuariosGrupos(array $aWhere = [], array $aOperators = []): array|false
+    public function getUsuariosGrupos(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -139,7 +139,7 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
      * @param int $id_usuario
      * @return array|bool
      */
-    public function datosById(int $id_usuario): array|bool
+    public function datosById(int $id_usuario): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

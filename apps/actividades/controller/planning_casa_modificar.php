@@ -29,7 +29,8 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
     $permiso_des = TRUE;
 }
 
-$oActividad = new ActividadAll($Qid_activ);
+$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+$oActividad = $ActividadAllRepository->findById($Qid_activ);
 $a_status = StatusId::getArrayStatus();
 
 $id_tipo_activ = $oActividad->getId_tipo_activ();

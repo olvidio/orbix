@@ -42,8 +42,8 @@ $Qpuede_agd = (string)filter_input(INPUT_POST, 'puede_agd');
 $Qasis = (string)filter_input(INPUT_POST, 'asis');
 $Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
 /* creo que no le llega (solamente por a_sel)
-  $Qelim_asis = (string)filter_input(INPUT_POST, 'elim_asis');
-*/
+ $Qelim_asis = (string)filter_input(INPUT_POST, 'elim_asis');
+ */
 $Qelim_asis = 0;
 
 
@@ -58,7 +58,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
     }
 
-} else { // desde el formulario
+}
+else { // desde el formulario
     $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
     $Qid_cargo = (integer)filter_input(INPUT_POST, 'id_cargo');
@@ -74,7 +75,7 @@ switch ($Qmod) {
 
         if (($ActividadCargoRepository->Eliminar($oActividadCargo)) === false) {
             $msg_err = _("hay un error, no se ha eliminado");
-            exit ($msg_err);
+            exit($msg_err);
         }
 
         // hay que cerrar el dossier para esta persona, si no tiene más actividades:
@@ -131,10 +132,11 @@ switch ($Qmod) {
             $error = end($_SESSION['errores']);
             if (strpos($error, 'duplicate key') !== false) {
                 $msg_err = _("ya existe este cargo para esta actividad");
-            } else {
+            }
+            else {
                 $msg_err = $error;
             }
-            exit ($msg_err);
+            exit($msg_err);
         }
 
         // si no está abierto, hay que abrir el dossier para esta persona
@@ -158,7 +160,7 @@ switch ($Qmod) {
             $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
             if (!is_object($oPersona)) {
                 $msg_err = "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
-                exit ($msg_err);
+                exit($msg_err);
             }
             $AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
             $AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ);
@@ -201,7 +203,8 @@ switch ($Qmod) {
             $newIdItem = $ActividadCargoRepository->getNewId();
             $oActividadCargo = new ActividadCargo();
             $oActividadCargo->setId_item($newIdItem);
-        } else {
+        }
+        else {
             $oActividadCargo = $ActividadCargoRepository->findById($Qid_item);
         }
 
@@ -216,7 +219,8 @@ switch ($Qmod) {
             $error = end($_SESSION['errores']);
             if (strpos($error, 'duplicate key') !== false) {
                 $msg_err = _("ya existe este cargo para esta actividad");
-            } else {
+            }
+            else {
                 $msg_err = _("hay un error, no se ha guardado");
             }
         }
@@ -230,8 +234,8 @@ switch ($Qmod) {
                 $oAsistente = new Asistente();
                 $oAsistente->setId_activ($Qid_activ);
                 $oAsistente->setId_nom($Qid_nom);
-                $oAsistente->setPropio('t'); // por defecto lo pongo como propio
-                $oAsistente->setFalta('f');
+                $oAsistente->setPropio(true); // por defecto lo pongo como propio
+                $oAsistente->setFalta(false);
                 $oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
                 if ($AsistenteRepository->Guardar($oAsistente) === false) {
                     $msg_err = _("hay un error, no se ha guardado");
@@ -246,7 +250,8 @@ switch ($Qmod) {
                 $oDossier->abrir();
                 $DosierRepository->Guardar($oDossier);
             }
-        } else {
+        }
+        else {
             if (isset($_POST['asis']) && empty($Qasis)) { // lo borro. OJO hay que mirar el $_POST para isset
                 if ($AsistenteRepository->Eliminar($oAsistente) === false) {
                     $msg_err = _("hay un error, no se ha eliminado");

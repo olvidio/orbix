@@ -39,9 +39,9 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Grupo
+     * @return array Una colección de objetos de tipo Grupo
      */
-    public function getGrupos(array $aWhere = [], array $aOperators = []): array|false
+    public function getGrupos(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -130,7 +130,8 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
 					id_role                  = :id_role";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_usuario = $id_usuario";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_usuario,usuario,id_role)";
             $valores = "(:id_usuario,:usuario,:id_role)";
@@ -159,7 +160,7 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
      * @param int $id_usuario
      * @return array|bool
      */
-    public function datosById(int $id_usuario): array|bool
+    public function datosById(int $id_usuario): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

@@ -61,11 +61,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_item = empty($Qid_item) ? '' : $Qid_item; // cambiar el false a ''.
     $eliminar = (integer)strtok("#");
     $Qid_schema = (integer)strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
     $Qid_schema = '';
 }
@@ -93,24 +90,26 @@ if (!empty($Qid_item)) { //caso de modificar
     $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
     if (!is_object($oPersona)) {
         $msg_err = "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
-        exit ($msg_err);
+        exit($msg_err);
     }
     $ape_nom = $oPersona->getPrefApellidosNombre();
     $id_tabla = $oPersona->getId_tabla();
     $id_nom_real = $Qid_nom;
-} else { //caso de nuevo cargo
+}
+else { //caso de nuevo cargo
     $observ = "";
     // Si vengo de la lista de asistentes, ya sé el id_nom y el id_activ (es como modificar)
-    if ($Qid_dossier == 3101) {  // vengo del listado de asistencias
+    if ($Qid_dossier == 3101) { // vengo del listado de asistencias
         $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
         if (!is_object($oPersona)) {
             $msg_err = "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
-            exit ($msg_err);
+            exit($msg_err);
         }
         $ape_nom = $oPersona->getPrefApellidosNombre();
         $id_tabla = $oPersona->getId_tabla();
         $id_nom_real = $Qid_nom;
-    } elseif (!empty($Qobj_pau)) {
+    }
+    elseif (!empty($Qobj_pau)) {
         $obj_pau = strtok(urldecode($Qobj_pau), '&');
         $na = strtok('&');
         $na_txt = strtok($na, '=');
@@ -151,7 +150,8 @@ if (!empty($Qid_item)) { //caso de modificar
                 $obj_pau = 'PersonaEx';
                 break;
         }
-    } else {
+    }
+    else {
         echo $oPosicion->go_atras(1);
     }
 }
@@ -177,7 +177,8 @@ $a_camposHidden = array(
 );
 if (!empty($id_nom_real)) {
     $a_camposHidden['id_nom'] = $id_nom_real;
-} else {
+}
+else {
     if ($Qmod === "nuevo") {
         $camposNo .= '!asis';
     }

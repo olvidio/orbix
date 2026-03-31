@@ -40,7 +40,7 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
      * @param integer iid_zona.
      * @return array|false
      */
-    public function getIdSacdsDeZona(int $iid_zona):array
+    public function getIdSacdsDeZona(int $iid_zona): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -63,9 +63,9 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ZonaSacd
+     * @return array Una colección de objetos de tipo ZonaSacd
      */
-    public function getZonasSacds(array $aWhere = [], array $aOperators = []): array|false
+    public function getZonasSacds(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -162,7 +162,8 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
 					dw7                      = :dw7";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(id_item,id_nom,id_zona,propia,dw1,dw2,dw3,dw4,dw5,dw6,dw7)";
             $valores = "(:id_item,:id_nom,:id_zona,:propia,:dw1,:dw2,:dw3,:dw4,:dw5,:dw6,:dw7)";
@@ -191,7 +192,7 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

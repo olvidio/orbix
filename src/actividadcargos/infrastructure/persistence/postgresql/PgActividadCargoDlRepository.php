@@ -110,7 +110,8 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
                         continue;
                     }
                     $oPersonaSet->add($oPersona);
-                } else {
+                }
+                else {
                     // Si es de otra dl, ya es lo que toca: No tengo acceso a la tablas de cp_sacd.
                     // Desde dentro accedo a PersonaIn, pero desde fuera NO.
                     // nom actividad:
@@ -123,7 +124,8 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
                     $msg .= '<br>';
                     echo $msg;
                 }
-            } else {
+            }
+            else {
                 $oPersonaSet->add($oPersona);
             }
         }
@@ -170,7 +172,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * @param array $aOperadorAct para la Actividad
      * @return array|false
      */
-    public function getAsistenteCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array|false
+    public function getAsistenteCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array |bool
     {
 
         if (empty($aWhere['id_nom'])) {
@@ -212,7 +214,8 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
             if (array_key_exists($id_activ, $aAsis)) {
                 // Añado al primero el id_cargo del segundo.
                 $aAsis[$id_activ]['id_cargo'] = $id_cargo;
-            } else {
+            }
+            else {
                 // añado la actividad
                 $aAsis[$id_activ] = ['id_activ' => $id_activ,
                     'id_nom' => $id_nom,
@@ -235,7 +238,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * @param array $aOperadorAct para la Actividad
      * @return array|false
      */
-    public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array|false
+    public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array |bool
     {
 
         if (empty($aWhere['id_nom'])) {
@@ -263,7 +266,8 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
             if (array_key_exists($id_activ, $aAsis)) {
                 // Añado al primero el id_cargo del segundo.
                 $aAsis[$id_activ]['id_cargo'] = $id_cargo;
-            } else {
+            }
+            else {
                 // añado la actividad
                 $aAsis[$id_activ] = ['id_activ' => $id_activ,
                     'id_nom' => $id_nom,
@@ -285,7 +289,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|false Una colección de objetos de tipo ActividadCargo
      */
-    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array|false
+    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -377,7 +381,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
         $bInsert = $this->isNew($id_item);
 
         // Obtener datos actuales si es UPDATE
-        $datosActuales = $bInsert ? [] : $this->datosById($id_item)?? [];
+        $datosActuales = $bInsert ? [] : $this->datosById($id_item) ?? [];
 
         $aDatos = $ActividadCargo->toArrayForDatabase();
         unset($aDatos['domainEvents']);
@@ -393,20 +397,22 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
 					observ                   = :observ";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(id_activ,id_cargo,id_nom,puede_agd,observ,id_item)";
             $valores = "(:id_activ,:id_cargo,:id_nom,:puede_agd,:observ,:id_item)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        $success =  $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+        $success = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 
         if ($success) {
             // Marcar evento de dominio (se despachará por el UnitOfWork)
             if ($bInsert) {
                 $this->markAsNew($ActividadCargo, $datosActuales);
-            } else {
+            }
+            else {
                 $this->markAsModified($ActividadCargo, $datosActuales);
             }
         }
@@ -433,7 +439,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

@@ -243,9 +243,9 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Delegacion
+     * @return array Una colección de objetos de tipo Delegacion
      */
-    public function getDelegaciones(array $aWhere = [], array $aOperators = []): array|false
+    public function getDelegaciones(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

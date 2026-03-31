@@ -48,7 +48,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
         $aIdCargo = [];
-        foreach ($oDbl->query($sQuery) as $aDades) {
+        foreach ($stmt as $aDades) {
             $id_cargo = $aDades['id_cargo'];
             $aIdCargo[] = $id_cargo;
         }
@@ -65,13 +65,10 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
                 FROM $nom_tabla
                 $where
                 ORDER BY orden_cargo";
-        if (($oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorCargo.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aIdCargo = [];
-        foreach ($oDbl->query($sQuery) as $aDades) {
+        foreach ($stmt as $aDades) {
             $id_cargo = $aDades['id_cargo'];
             $cargo = $aDades['cargo'];
             $aIdCargo[$id_cargo] = $cargo;
@@ -87,9 +84,9 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Cargo
+     * @return array Una colección de objetos de tipo Cargo
      */
-    public function getCargos(array $aWhere = [], array $aOperators = []): array|false
+    public function getCargos(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -137,7 +134,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -181,7 +178,8 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 					tipo_cargo               = :tipo_cargo";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_cargo = $id_cargo";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_cargo,cargo,orden_cargo,sf,sv,tipo_cargo)";
             $valores = "(:id_cargo,:cargo,:orden_cargo,:sf,:sv,:tipo_cargo)";
@@ -210,7 +208,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
      * @param int $id_cargo
      * @return array|bool
      */
-    public function datosById(int $id_cargo): array|bool
+    public function datosById(int $id_cargo): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

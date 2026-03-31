@@ -92,9 +92,9 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Role
+     * @return array Una colección de objetos de tipo Role
      */
-    public function getRoles(array $aWhere = [], array $aOperators = []): array|false
+    public function getRoles(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -186,7 +186,8 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
 					dmz                      = :dmz";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_role = $id_role";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(id_role,role,sf,sv,pau,dmz)";
             $valores = "(:id_role,:role,:sf,:sv,:pau,:dmz)";
@@ -215,7 +216,7 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
      * @param int $id_role
      * @return array|bool
      */
-    public function datosById(int $id_role): array|bool
+    public function datosById(int $id_role): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

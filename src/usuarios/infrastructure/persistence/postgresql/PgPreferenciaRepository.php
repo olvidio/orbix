@@ -40,9 +40,9 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Preferencia
+     * @return array Una colección de objetos de tipo Preferencia
      */
-    public function getPreferencias(array $aWhere = [], array $aOperators = []): array|false
+    public function getPreferencias(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -133,7 +133,8 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
 					";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_usuario = $id_usuario AND tipo = '$tipo'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(tipo,preferencia,id_usuario)";
             $valores = "(:tipo,:preferencia,:id_usuario)";
@@ -162,7 +163,7 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
      * @param string $tipo
      * @return array|bool
      */
-    public function datosById(int $id_usuario, string $tipo): array|bool
+    public function datosById(int $id_usuario, string $tipo): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

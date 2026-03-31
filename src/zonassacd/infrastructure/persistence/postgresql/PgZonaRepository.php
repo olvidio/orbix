@@ -33,7 +33,7 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
         $this->setNomTabla('zonas');
     }
 
-     public function isJefeZona(int $id_nom): bool
+    public function isJefeZona(int $id_nom): bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -78,9 +78,9 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Zona
+     * @return array Una colección de objetos de tipo Zona
      */
-    public function getZonas(array $aWhere = [], array $aOperators = []): array|false
+    public function getZonas(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -171,7 +171,8 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
 					id_nom                   = :id_nom";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_zona = $id_zona";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(id_zona,nombre_zona,orden,id_grupo,id_nom)";
             $valores = "(:id_zona,:nombre_zona,:orden,:id_grupo,:id_nom)";
@@ -200,7 +201,7 @@ class PgZonaRepository extends ClaseRepository implements ZonaRepositoryInterfac
      * @param int $id_zona
      * @return array|bool
      */
-    public function datosById(int $id_zona): array|bool
+    public function datosById(int $id_zona): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

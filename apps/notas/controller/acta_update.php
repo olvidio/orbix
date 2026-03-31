@@ -5,6 +5,7 @@ use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\entity\Acta;
 use src\notas\domain\entity\ActaTribunal;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -61,6 +62,10 @@ $Qlinea = (integer)filter_input(INPUT_POST, 'linea');
 $Qlugar = (string)filter_input(INPUT_POST, 'lugar');
 $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
+$oF_acta = null;
+if (!empty($Qf_acta)) {
+    $oF_acta = DateTimeLocal::createFromLocal($Qf_acta);
+}
 $oActa = new Acta();
 $ActaDlRepository = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
 switch ($Qmod) {
@@ -72,10 +77,10 @@ switch ($Qmod) {
         $oActa->setId_asignatura($Qid_asignatura);
         $oActa->setId_activ($Qid_activ);
         // la fecha debe ir antes que el acta por si hay que inventar el acta, tener la referencia de la fecha
-        $oActa->setF_acta($Qf_acta);
+        $oActa->setF_acta($oF_acta);
         // comprobar valor del acta
         if (isset($Qacta)) {
-            $valor = Acta::inventarActa($Qacta, $Qf_acta);
+            $valor = Acta::inventarActa($Qacta, $oF_acta);
             $oActa->setActa($valor);
         }
         $oActa->setLibro($Qlibro);
@@ -98,20 +103,11 @@ switch ($Qmod) {
         break;
     case 'modificar':
     default :
-        $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
-        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
-        $Qf_acta = (string)filter_input(INPUT_POST, 'f_acta');
-        $Qlibro = (integer)filter_input(INPUT_POST, 'libro');
-        $Qpagina = (integer)filter_input(INPUT_POST, 'pagina');
-        $Qlinea = (integer)filter_input(INPUT_POST, 'linea');
-        $Qlugar = (string)filter_input(INPUT_POST, 'lugar');
-        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
-
         $oActa = $ActaDlRepository->findById($Qacta);
 
         $oActa->setId_asignatura($Qid_asignatura);
-        //	$oActa->setId_activ($Qid_activ);
-        $oActa->setF_acta($Qf_acta);
+        $oActa->setId_activ($Qid_activ);
+        $oActa->setF_acta($oF_acta);
         $oActa->setLibro($Qlibro);
         $oActa->setPagina($Qpagina);
         $oActa->setLinea($Qlinea);

@@ -28,11 +28,11 @@ class DireccionDetalle
         return $this->direccion;
     }
 
-    public function setDireccionVo(Direccion|string|null $direccion): void
+    public function setDireccionVo(Direccion|null $direccion): void
     {
         $this->direccion = $direccion instanceof Direccion
             ? $direccion
-            : Direccion::fromNullableString($direccion);
+            : throw new \InvalidArgumentException('Direccion must be an instance of Direccion');
     }
 
     public function isPrincipal(): ?bool

@@ -40,9 +40,9 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Certificado
+     * @return array Una colección de objetos de tipo Certificado
      */
-    public function getAnuncios(array $aWhere = [], array $aOperators = []): array|false
+    public function getAnuncios(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -144,7 +144,8 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
                     categoria        = :categoria";
             $sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(uuid_item,usuario_creador,esquema_emisor,esquema_destino,texto_anuncio,idioma,tablon,t_anotado,t_eliminado,categoria)";
             $valores = "(:uuid_item,:usuario_creador,:esquema_emisor,:esquema_destino,:texto_anuncio,:idioma,:tablon,:t_anotado,:t_eliminado,:categoria)";
@@ -174,7 +175,7 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
      * @param AnuncioId $vo
      * @return array|bool
      */
-    public function datosById(AnuncioId $vo): array|bool
+    public function datosById(AnuncioId $vo): array |bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

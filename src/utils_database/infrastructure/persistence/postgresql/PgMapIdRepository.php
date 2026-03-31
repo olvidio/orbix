@@ -40,9 +40,9 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo MapId
+     * @return array Una colección de objetos de tipo MapId
      */
-    public function getMapIdes(array $aWhere = [], array $aOperators = []): array|false
+    public function getMapIdes(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -132,7 +132,8 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
 					id_dl                    = :id_dl";
             $sql = "UPDATE $nom_tabla SET $update WHERE objeto = '$objeto' AND id_resto = $id_resto ";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             //INSERT
             $campos = "(objeto,id_resto,id_dl)";
             $valores = "(:objeto,:id_resto,:id_dl)";
@@ -161,7 +162,7 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
      * @param string $objeto
      * @return array|bool
      */
-    public function datosById(string $objeto, int $id_resto): array|bool
+    public function datosById(string $objeto, int $id_resto): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

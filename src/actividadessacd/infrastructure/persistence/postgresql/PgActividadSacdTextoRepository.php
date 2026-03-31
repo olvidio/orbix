@@ -33,7 +33,7 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|false Una colección de objetos de tipo ActividadSacdTexto
      */
-    public function getActividadSacdTextos(array $aWhere = [], array $aOperators = []): array|false
+    public function getActividadSacdTextos(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -123,7 +123,8 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
 					texto                    = :texto";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(id_item,idioma,clave,texto)";
             $valores = "(:id_item,:idioma,:clave,:texto)";
@@ -152,7 +153,7 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item): array |bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
