@@ -98,7 +98,7 @@ switch ($Qque) {
         $oEncargo = new Encargo();
         $oEncargo->setId_enc($newId);
         $oEncargo->setId_tipo_enc($id_tipo_enc);
-        $oEncargo->setSf_sv($Qsf_sv);
+        $oEncargo->setGrupoEncargoVo(EncargoGrupo::fromNullableInt($Qsf_sv));
         $oEncargo->setId_ubi($Qid_ubi);
         $oEncargo->setId_zona($Qid_zona);
         $oEncargo->setDesc_enc($Qdesc_enc);

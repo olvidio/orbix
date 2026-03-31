@@ -54,10 +54,6 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_nom = (integer)strtok($a_sel[0], "#");
     $id_tabla = (string)strtok("#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
     $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
@@ -207,15 +203,17 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
         <td class="atras">
             <?= $oPosicion->mostrar_back_arrow(1); ?>
         </td>
-        <td align="center"><span class=link
-                                 onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span>
+        <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')">
+                <?= _("Cara A (delante)"); ?>
+            </span>
         </td>
-        <td align="center"><span class=link
-                                 onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span>
+        <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')">
+                <?= _("Cara B (detrás)"); ?>
+            </span>
         </td>
-        <td align="center"><span class=link
-                                 onclick='window.open("<?= $go_pdf ?>", "sele");'>
-<?= _("PDF"); ?></span></td>
+        <td align="center"><span class=link onclick='window.open("<?= $go_pdf ?>", "sele");'>
+                <?= _("PDF"); ?>
+            </span></td>
     </tr>
 </table>
 <table class="A4">
@@ -230,18 +228,22 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
     <?php
     if ($Qcara === "A") {
         ?>
-        <tr>
-            <td class="space"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS: <?= $region_latin ?></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI: <?= $nom ?></td>
-        </tr>
-        <?php
+    <tr>
+        <td class="space"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS:
+            <?= $region_latin ?>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI:
+            <?= $nom ?>
+        </td>
+    </tr>
+    <?php
     }
 
     // Asignaturas posibles:
@@ -349,17 +351,19 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
             echo titulo($oAsignatura->getId_nivel(), $Qcara);
             $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
             ?>
-            <tr class="<?= $clase; ?>" valign="bottom">
-                <td></td>
-                <td><?= $nombre_asignatura; ?>&nbsp;</td>
-                <td class="dato">&nbsp;</td>
-                <td>&nbsp;</td>
-                <td class="dato">&nbsp;</td>
-                <td>&nbsp;</td>
-                <td class="dato">&nbsp;</td>
-                <td></td>
-            </tr>
-            <?php
+    <tr class="<?= $clase; ?>" valign="bottom">
+        <td></td>
+        <td>
+            <?= $nombre_asignatura; ?>&nbsp;
+        </td>
+        <td class="dato">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="dato">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="dato">&nbsp;</td>
+        <td></td>
+    </tr>
+    <?php
             $oAsignatura = $cAsignaturas[$a++];
             if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
                 continue 2;
@@ -377,31 +381,47 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                 $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
                 $algo = $oAsignatura->getNombre_asignatura() . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
                 ?>
-                <tr class="<?= $clase; ?>" valign="bottom">
-                    <td></td>
-                    <td><?= $algo; ?>&nbsp;</td>
-                    <td class="dato"><?= $row["nota"]; ?>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="dato"><?= $row["fecha"]; ?>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="dato"><?= $row["acta"]; ?>&nbsp;</td>
-                    <td></td>
-                </tr>
-                <?php
+    <tr class="<?= $clase; ?>" valign="bottom">
+        <td></td>
+        <td>
+            <?= $algo; ?>&nbsp;
+        </td>
+        <td class="dato">
+            <?= $row["nota"]; ?>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+        <td class="dato">
+            <?= $row["fecha"]; ?>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+        <td class="dato">
+            <?= $row["acta"]; ?>&nbsp;
+        </td>
+        <td></td>
+    </tr>
+    <?php
             } else {
                 $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
                 ?>
-                <tr class="<?= $clase; ?>">
-                    <td></td>
-                    <td><?= $nombre_asignatura; ?>&nbsp;</td>
-                    <td class="dato"><?= $row["nota"]; ?>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="dato"><?= $row["fecha"]; ?>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="dato"><?= $row["acta"]; ?>&nbsp;</td>
-                    <td></td>
-                </tr>
-                <?php
+    <tr class="<?= $clase; ?>">
+        <td></td>
+        <td>
+            <?= $nombre_asignatura; ?>&nbsp;
+        </td>
+        <td class="dato">
+            <?= $row["nota"]; ?>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+        <td class="dato">
+            <?= $row["fecha"]; ?>&nbsp;
+        </td>
+        <td>&nbsp;</td>
+        <td class="dato">
+            <?= $row["acta"]; ?>&nbsp;
+        </td>
+        <td></td>
+    </tr>
+    <?php
             }
             $num_asig++;
         } else {
@@ -412,17 +432,19 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                 echo titulo($oAsignatura->getId_asignatura(),$Qcara);
                 $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
                 ?>
-                <tr class="<?= $clase; ?>">
-                    <td></td>
-                    <td><?= $nombre_asignatura; ?>&nbsp;</td>
-                    <td class="dato">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="dato">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="dato">&nbsp;</td>
-                    <td></td>
-                </tr>
-                <?php
+    <tr class="<?= $clase; ?>">
+        <td></td>
+        <td>
+            <?= $nombre_asignatura; ?>&nbsp;
+        </td>
+        <td class="dato">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="dato">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td class="dato">&nbsp;</td>
+        <td></td>
+    </tr>
+    <?php
             }
         }
     }

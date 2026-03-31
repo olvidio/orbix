@@ -57,18 +57,16 @@ $Qmod = (string)filter_input(INPUT_POST, 'mod');
 
 $sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($sel)) { //vengo de un checkbox
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     if ($Qpau === "p") {
         $id_nivel_real = strtok($sel[0], "#");
         $Qid_asignatura_real = strtok("#");
     }
-} else {
+}
+else {
     if (!empty($Qmod) && $Qmod !== 'nuevo') {
         $Qid_asignatura_real = (string)filter_input(INPUT_POST, 'id_asignatura_real');
-    } else {
+    }
+    else {
         $Qid_asignatura_real = '';
     }
 }
@@ -126,7 +124,8 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $nombre_corto = $oAsignatura->getNombre_corto();
     if ($oPersonaNota->getId_asignatura() > 3000) {
         $id_nivel = $oPersonaNota->getIdNivelVo()->value();
-    } else {
+    }
+    else {
         $id_nivel = $oAsignatura->getId_nivel();
     }
 
@@ -155,7 +154,8 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $cOpcionales = [];
     $aFaltan = [];
     $oDesplNiveles = [];
-} else { //caso de nueva asignatura
+}
+else { //caso de nueva asignatura
     $mod = "nuevo";
     $id_situacion = '';
     $nota_num = '';
@@ -210,7 +210,8 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
         $id_nivel = $oAsignatura->getId_nivel();
         $id_asignatura = $oAsignatura->getId_asignatura();
         $nombre_corto = $oAsignatura->getNombre_corto();
-        if (array_key_exists($id_nivel, $aSuperadas)) continue;
+        if (array_key_exists($id_nivel, $aSuperadas))
+            continue;
         $aFaltan[$id_nivel] = $nombre_corto;
     }
     // Añado Fin Bienio y Fin Cuadrienio
@@ -228,11 +229,12 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 // Valores por defecto
 $nota_max_default = $_SESSION['oConfig']->getNotaMax();
 $nota_max = empty($nota_max) ? $nota_max_default : $nota_max;
-$id_situacion = empty($id_situacion) ? NotaSituacion::NUMERICA : $id_situacion;
+$id_situacion = empty($id_situacion) ?NotaSituacion::NUMERICA : $id_situacion;
 
 if (!empty($preceptor)) {
     $chk_preceptor = "checked";
-} else {
+}
+else {
     $chk_preceptor = "";
 }
 $oDesplNotas->setOpcion_sel($id_situacion);
@@ -240,15 +242,18 @@ $oDesplNotas->setOpcion_sel($id_situacion);
 if (!empty($tipo_acta)) {
     if ($tipo_acta === TipoActa::FORMATO_ACTA) {
         $chk_acta = "checked";
-    } else {
+    }
+    else {
         $chk_acta = "";
     }
     if ($tipo_acta === TipoActa::FORMATO_CERTIFICADO) {
         $chk_certificado = "checked";
-    } else {
+    }
+    else {
         $chk_certificado = "";
     }
-} else {
+}
+else {
     $chk_acta = "checked";
     $chk_certificado = "";
 }
@@ -256,20 +261,24 @@ if (!empty($tipo_acta)) {
 if (!empty($epoca)) {
     if ($epoca === NotaEpoca::EPOCA_CA) {
         $chk_epoca_ca = "checked";
-    } else {
+    }
+    else {
         $chk_epoca_ca = "";
     }
     if ($epoca === NotaEpoca::EPOCA_INVIERNO) {
         $chk_epoca_inv = "checked";
-    } else {
+    }
+    else {
         $chk_epoca_inv = "";
     }
     if ($epoca === NotaEpoca::EPOCA_OTRO) {
         $chk_epoca_otro = "checked";
-    } else {
+    }
+    else {
         $chk_epoca_otro = "";
     }
-} else {
+}
+else {
     $chk_epoca_ca = "checked";
     $chk_epoca_inv = "";
     $chk_epoca_otro = "";
@@ -279,7 +288,8 @@ if (!empty($id_activ)) {
     $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
     $oActividad = $ActividadAllRepository->findById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
-} else {
+}
+else {
     $nom_activ = '';
 }
 
@@ -323,7 +333,8 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $a_camposHidden['id_asignatura_real'] = $Qid_asignatura_real;
     $a_camposHidden['id_asignatura'] = $Qid_asignatura_real;
     $a_camposHidden['id_nivel'] = $id_nivel;
-} else {
+}
+else {
     $camposForm .= '!id_nivel!id_asignatura';
     $camposNo .= '!id_nivel!id_asignatura';
 }

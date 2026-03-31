@@ -38,7 +38,7 @@ class AppDB
 
     }
 
-    private function createTablesApp($nom_app)
+    private function createTablesApp(string $nom_app)
     {
         $clase_esquema = "$nom_app\\db\\DBEsquema";
         if (class_exists($clase_esquema)) {
@@ -63,7 +63,7 @@ class AppDB
 
     }
 
-    private function dropTablesApp($nom_app)
+    private function dropTablesApp(string $nom_app)
     {
         $clase_esquema = "$nom_app\\db\\DBEsquema";
         if (class_exists($clase_esquema)) {

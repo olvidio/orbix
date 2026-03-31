@@ -110,7 +110,7 @@ $Centre = "res";
         $f_ult_nombramiento = $cargos["f_ult_nombramiento"];
         $renovaciones = $cargos["renovaciones"];
 
-        $sql_nom = "SELECT p.id_nom, " . ap_nom_cr_1_05() . " as nom, p.id_tabla, s.socio 
+        $sql_nom = "SELECT p.id_nom, apellido1 || ' ' || apellido2 || ', ' || nom  as nom, p.id_tabla, s.socio 
 			FROM personas p LEFT JOIN p_sssc s USING (id_nom)
 			WHERE p.id_nom='$id_nom' ";
         $oDBSt_pdbgent = $oDB->query($sql_nom);
@@ -135,7 +135,7 @@ $Centre = "res";
         $fi = date("U", mktime(0, 0, 0, 10, 31, $any));        // nº de segundos desde 'epoch' hasta el 31/10/AÑO-ACTUAL
         list($d, $m, $a) = preg_split('/[\.\/-]/', $f_ult_nombramiento);    //separo la fecha en dia, mes, año
         $nombr = date("U", mktime(0, 0, 0, $m, $d, $a));    // nº de segundos desde 'epoch' hasta el nombramiento
-        if ($nombrado_por == "d" and ($nombr > $ini and $nombr < $fi)) { //antes excluia las renovaciones:  AND $renovaciones==""
+        if ($nombrado_por === "d" and ($nombr > $ini and $nombr < $fi)) { //antes excluia las renovaciones:  AND $renovaciones==""
             $flag_s = 1;
         } else {
             $flag_s = 0;

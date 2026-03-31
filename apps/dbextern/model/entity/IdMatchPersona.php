@@ -97,9 +97,11 @@ class IdMatchPersona extends ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id === 'id_listas') && $val_id !== '') $this->iid_listas = (int)$val_id;
+                if (($nom_id === 'id_listas') && $val_id !== '')
+                    $this->iid_listas = (int)$val_id;
             }
-        } else {
+        }
+        else {
             if (isset($a_id) && $a_id !== '') {
                 $this->iid_listas = (integer)$a_id;
                 $this->aPrimary_key = array('id_listas' => $this->iid_listas);
@@ -122,7 +124,8 @@ class IdMatchPersona extends ClasePropiedades
         $nom_tabla = $this->getNomTabla();
         if ($this->DBCarregar('guardar') === false) {
             $bInsert = true;
-        } else {
+        }
+        else {
             $bInsert = false;
         }
         $aDades = [];
@@ -139,10 +142,12 @@ class IdMatchPersona extends ClasePropiedades
                 $sClauError = 'IdMatchPersona.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
-            } else {
+            }
+            else {
                 try {
                     $oDblSt->execute($aDades);
-                } catch (\PDOException $e) {
+                }
+                catch (\PDOException $e) {
                     $err_txt = $e->errorInfo[2];
                     $this->setErrorTxt($err_txt);
                     $sClauError = 'IdMatchPersona.update.execute';
@@ -150,7 +155,8 @@ class IdMatchPersona extends ClasePropiedades
                     return false;
                 }
             }
-        } else {
+        }
+        else {
             // INSERT
             array_unshift($aDades, $this->iid_listas);
             $campos = "(id_listas,id_orbix,id_tabla)";
@@ -159,10 +165,12 @@ class IdMatchPersona extends ClasePropiedades
                 $sClauError = 'IdMatchPersona.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
-            } else {
+            }
+            else {
                 try {
                     $oDblSt->execute($aDades);
-                } catch (\PDOException $e) {
+                }
+                catch (\PDOException $e) {
                     $err_txt = $e->errorInfo[2];
                     $this->setErrorTxt($err_txt);
                     $sClauError = 'IdMatchPersona.insertar.execute';
@@ -197,18 +205,21 @@ class IdMatchPersona extends ClasePropiedades
                     $this->aDades = $aDades;
                     break;
                 case 'guardar':
-                    if (!$oDblSt->rowCount()) return false;
+                    if (!$oDblSt->rowCount())
+                        return false;
                     break;
                 default:
                     // En el caso de no existir esta fila, $aDades = FALSE:
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
-                    } else {
+                    }
+                    else {
                         $this->setAllAttributes($aDades);
                     }
             }
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -239,11 +250,16 @@ class IdMatchPersona extends ClasePropiedades
      */
     function setAllAttributes(array $aDades)
     {
-        if (!is_array($aDades)) return;
-        if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
-        if (array_key_exists('id_listas', $aDades)) $this->setId_listas($aDades['id_listas']);
-        if (array_key_exists('id_orbix', $aDades)) $this->setId_orbix($aDades['id_orbix']);
-        if (array_key_exists('id_tabla', $aDades)) $this->setId_tabla($aDades['id_tabla']);
+        if (!is_array($aDades))
+            return;
+        if (array_key_exists('id_schema', $aDades))
+            $this->setId_schema($aDades['id_schema']);
+        if (array_key_exists('id_listas', $aDades))
+            $this->setId_listas($aDades['id_listas']);
+        if (array_key_exists('id_orbix', $aDades))
+            $this->setId_orbix($aDades['id_orbix']);
+        if (array_key_exists('id_tabla', $aDades))
+            $this->setId_tabla($aDades['id_tabla']);
     }
 
     /**
@@ -292,14 +308,14 @@ class IdMatchPersona extends ClasePropiedades
     /**
      * Establece la clave primaria de IdMatchPersona en un array
      *
-     * @return array aPrimary_key
      */
-    public function setPrimary_key($a_id = '')
+    public function setPrimary_key($a_id = ''): void
     {
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id === 'id_listas') && $val_id !== '') $this->iid_listas = (int)$val_id;
+                if (($nom_id === 'id_listas') && $val_id !== '')
+                    $this->iid_listas = (int)$val_id;
             }
         }
     }

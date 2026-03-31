@@ -26,11 +26,8 @@ $oPosicion->recordar($Qrefresh);
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_enc = (integer)strtok($a_sel[0], "#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-} else {
+}
+else {
     $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
 }
 
@@ -48,7 +45,8 @@ function filtro($id_ubi)
     if ((int)$id_ubi_str[0] === 2) {
         $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $oCentro = $CentroEllasRepository->findById($id_ubi);
-    } else {
+    }
+    else {
         $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $oCentro = $CentroDlRepository->findById($id_ubi);
     }
@@ -57,7 +55,8 @@ function filtro($id_ubi)
 
     if ($tipo_ubi === "ctrsf") {
         $filtro_ctr = EncargoGrupo::CENTRO_SF;
-    } else {
+    }
+    else {
         switch ($tipo_ctr) {
             case "aj":
             case "am":
@@ -131,8 +130,9 @@ if (empty($Qque) || $Qque === 'editar') { //significa que no es nuevo
 if (!empty($Qid_tipo_enc)) {
     $tipo = $EncargoTipoRepository->encargo_de_tipo($Qid_tipo_enc);
     $Qgrupo = $tipo['grupo'];
-    //$nom_tipo=$tipo['nom_tipo'];
-} else {
+//$nom_tipo=$tipo['nom_tipo'];
+}
+else {
     $Qid_tipo_enc = $EncargoTipoRepository->id_tipo_encargo($Qgrupo, '...');
 }
 
@@ -140,7 +140,8 @@ $ee = $EncargoTipoRepository->encargo_de_tipo($Qid_tipo_enc);
 // desplegable de grupos
 if (substr($Qid_tipo_enc, 0, 1) === '.') {
     $grupo_posibles = $ee['grupo'];
-} else {
+}
+else {
     $Qgrupo = substr($Qid_tipo_enc, 0, 1);
     $aux = '....'; //Que siempre salgan todas las opciones
     $ee_grupo = $EncargoTipoRepository->encargo_de_tipo($aux);
@@ -171,7 +172,8 @@ if (!empty($Qgrupo)) {
     $oDesplNoms->setOpcion_sel($Qid_tipo_enc);
     $oDesplNoms->setBlanco('t');
 
-} else {
+}
+else {
     $oDesplNoms = new Desplegable();
     $oDesplNoms->setOpciones([]);
 }
@@ -188,7 +190,8 @@ $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
 $aOpciones = $ZonaRepository->getArrayZonas();
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
-$oDesplZonas->setBlanco(FALSE);$oDesplZonas->setNombre('id_zona_sel');
+$oDesplZonas->setBlanco(FALSE);
+$oDesplZonas->setNombre('id_zona_sel');
 $oDesplZonas->setAction('fnjs_lista_ctrs_por_zona()');
 if (!empty($Qid_zona)) {
     $oDesplZonas->setOpcion_sel($Qid_zona);
@@ -217,7 +220,8 @@ $aCamposHidden = [
 $oHashAct->setUrl($url_actualizar);
 if ($Qque === 'nuevo') {
     $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!id_zona!idioma_enc';
-} else {
+}
+else {
     $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!id_zona!idioma_enc';
 }
 $oHashAct->setCamposForm($campos_form);
@@ -246,7 +250,8 @@ $h_lst = $oHashLst->linkSinVal();
 
 if ($Qque === 'nuevo') {
     $txt_btn = _("crear encargo");
-} else {
+}
+else {
     $txt_btn = _("guardar encargo");
 }
 

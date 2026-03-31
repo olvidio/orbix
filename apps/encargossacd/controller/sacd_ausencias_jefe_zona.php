@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
+use src\misas\domain\entity\InicialesSacd;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
@@ -51,6 +52,7 @@ $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
 $cZonas = $ZonaRepository->getZonas(array('id_nom' => $id_sacd));
 //echo 'count zonas: '.count($cZonas).'<br>';
 $InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
+$PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
 $a_sacd = [];
 if (is_array($cZonas) && count($cZonas) > 0) {
     $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
@@ -58,6 +60,8 @@ if (is_array($cZonas) && count($cZonas) > 0) {
         $id_zona = $oZona->getId_zona();
         $cSacds = $ZonaSacdRepository->getSacdsZona($id_zona);
         foreach ($cSacds as $id_nom) {
+            $PersonaSacd = $PersonaSacdRepository->findById($id_nom);
+            $sacd=$PersonaSacd->getNombreApellidos();
 //            echo $id_nom.'<br>';
             $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
             if ($InicialesSacd === null) {
@@ -67,21 +71,16 @@ if (is_array($cZonas) && count($cZonas) > 0) {
                 $iniciales = $InicialesSacd->getIniciales();
                 $color = $InicialesSacd->getColor();
             }
-            $InicialesSacd = new InicialesSacd();
-            $sacd=$InicialesSacd->nombre_sacd($id_nom);
-            $iniciales=$InicialesSacd->iniciales($id_nom);
             $key = $iniciales . '#' . $id_nom;
             $a_sacd[$key] = $sacd ?? '?';
         }
     }
 } else { // No soy jefe de zona
-    if (!is_null($id_sacd))
-    {
-        $InicialesSacd = new InicialesSacd();
-//        echo is_null($id_sacd).'='.($id_sacd=='').'=='.$id_sacd.'<br>';
-        $sacd=$InicialesSacd->nombre_sacd($id_sacd);
-//        echo is_null($id_sacd).'-->'.$sacd.'<br>';
-        $iniciales=$InicialesSacd->iniciales($id_sacd);
+    if (!is_null($id_sacd)) {
+        $PersonaSacd = $PersonaSacdRepository->findById($id_sacd);
+        $sacd=$PersonaSacd->getNombreApellidos();
+        $InicialesSacd = $InicialesSacdRepository->findById($id_sacd);
+        $iniciales=$InicialesSacd->getIniciales();
         $key = $iniciales . '#' . $id_sacd;
         $a_sacd[$key] = $sacd ?? '?';
     }

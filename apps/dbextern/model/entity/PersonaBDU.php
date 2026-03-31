@@ -15,26 +15,26 @@ class PersonaBDU extends ClasePropiedades
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /*
-    identif bigint NOTNULL
-    apenom varchar (56)
-    dl vachar (5)
-    ctr varchar (40)
-    lugar_naci varchar (45)
-    fecha_naci date
-    email varchar (50)
-    tfno_movil varchar(17)
-    ce varchar (40)
-    edad int (10)
-    prof_carg varchar(350)
-    titu_estu varchar(110)
-    encargos varchar (150)
-    incorp varchar (14)
-    pertenece_r varchar(5)
-    ---
-    camb_fic varchar(1)
-    fecha_c_fic date
-    ---
-    compartida_con_r
+     identif bigint NOTNULL
+     apenom varchar (56)
+     dl vachar (5)
+     ctr varchar (40)
+     lugar_naci varchar (45)
+     fecha_naci date
+     email varchar (50)
+     tfno_movil varchar(17)
+     ce varchar (40)
+     edad int (10)
+     prof_carg varchar(350)
+     titu_estu varchar(110)
+     encargos varchar (150)
+     incorp varchar (14)
+     pertenece_r varchar(5)
+     ---
+     camb_fic varchar(1)
+     fecha_c_fic date
+     ---
+     compartida_con_r
      */
 
     /**
@@ -246,9 +246,11 @@ class PersonaBDU extends ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id === 'identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
+                if (($nom_id === 'identif') && $val_id !== '')
+                    $this->iIdentif = (int)$val_id;
             }
-        } else {
+        }
+        else {
             if (isset($a_id) && $a_id !== '') {
                 $this->iIdentif = (integer)$a_id;
                 $this->aPrimary_key = array('iIdentif' => $this->iIdentif);
@@ -272,7 +274,8 @@ class PersonaBDU extends ClasePropiedades
         $nom_tabla = $this->getNomTabla();
         if ($this->DBCarregar('guardar') === false) {
             $bInsert = true;
-        } else {
+        }
+        else {
             $bInsert = false;
         }
         $aDades = [];
@@ -317,10 +320,12 @@ class PersonaBDU extends ClasePropiedades
                 $sClauError = 'Listas.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
-            } else {
+            }
+            else {
                 try {
                     $oDblSt->execute($aDades);
-                } catch (\PDOException $e) {
+                }
+                catch (\PDOException $e) {
                     $err_txt = $e->errorInfo[2];
                     $this->setErrorTxt($err_txt);
                     $sClauError = 'Listas.update.execute';
@@ -328,7 +333,8 @@ class PersonaBDU extends ClasePropiedades
                     return false;
                 }
             }
-        } else {
+        }
+        else {
             // INSERT
             $campos = "(apenom,dl,ctr,lugar_naci,fecha_naci,email,tfno_movil,ce,prof_carg,titu_estu,encargos,incorp,pertenece_r,camb_fic,fecha_c_fic,compartida_con_r)";
             $valores = "(:apenom,:dl,:ctr,:lugar_naci,:fecha_naci,:email,:tfno_movil,:ce,:prof_carg,:titu_estu,:encargos,:incorp:pertenece_r,:camb_fic,:fecha_c_fic,:compartida_con_r)";
@@ -336,10 +342,12 @@ class PersonaBDU extends ClasePropiedades
                 $sClauError = 'Listas.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
-            } else {
+            }
+            else {
                 try {
                     $oDblSt->execute($aDades);
-                } catch (\PDOException $e) {
+                }
+                catch (\PDOException $e) {
                     $err_txt = $e->errorInfo[2];
                     $this->setErrorTxt($err_txt);
                     $sClauError = 'Listas.insertar.execute';
@@ -375,18 +383,21 @@ class PersonaBDU extends ClasePropiedades
                     $this->aDades = $aDades;
                     break;
                 case 'guardar':
-                    if (!$oDblSt->rowCount()) return false;
+                    if (!$oDblSt->rowCount())
+                        return false;
                     break;
                 default:
                     // En el caso de no existir esta fila, $aDades = FALSE:
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
-                    } else {
+                    }
+                    else {
                         $this->setAllAttributes($aDades);
                     }
             }
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -420,7 +431,8 @@ class PersonaBDU extends ClasePropiedades
             $any = $matches[4];
             // iso
             $this->df_inc = "$any-$mes-$dia";
-        } else {
+        }
+        else {
             $this->ice_num = '';
             $this->sce_lugar = '';
             $this->ice_ini = '';
@@ -445,7 +457,8 @@ class PersonaBDU extends ClasePropiedades
                 $this->sce_lugar = $matches[2];
                 $this->ice_ini = $matches[3];
                 $this->ice_fin = $matches[4];
-            } else if (preg_match($pattern2, $subject, $matches)) {
+            }
+            else if (preg_match($pattern2, $subject, $matches)) {
                 $this->ice_num = '';
                 $this->sce_lugar = '';
                 $this->ice_ini = $matches[1];
@@ -506,7 +519,8 @@ class PersonaBDU extends ClasePropiedades
             $_token = strtolower($token ?? '');
             if (in_array($_token, $special_tokens)) {
                 $prev .= "$token ";
-            } else {
+            }
+            else {
                 $prep = empty($prev) ? 'n' : 's';
                 $names[] = array('txt' => $prev . $token, 'prep' => $prep, 'nx' => $prev);
                 $prev = "";
@@ -536,7 +550,8 @@ class PersonaBDU extends ClasePropiedades
                     $nx1 = $names[0]['nx'];
                     $apellido2 = $names[1]['txt'] . ' ' . $names[2]['txt'];
                     $nx2 = $names[1]['nx'];
-                } else {
+                }
+                else {
                     $apellido1 = $names[0]['txt'] . ' ' . $names[1]['txt'];
                     $nx1 = $names[0]['nx'];
                     $apellido2 = $names[2]['txt'];
@@ -572,25 +587,44 @@ class PersonaBDU extends ClasePropiedades
      */
     function setAllAttributes(array $aDades)
     {
-        if (!is_array($aDades)) return;
-        if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
-        if (array_key_exists('identif', $aDades)) $this->setIdentif($aDades['identif']);
-        if (array_key_exists('apenom', $aDades)) $this->setApenom($aDades['apenom']);
-        if (array_key_exists('dl', $aDades)) $this->setDl($aDades['dl']);
-        if (array_key_exists('ctr', $aDades)) $this->setCtr($aDades['ctr']);
-        if (array_key_exists('lugar_naci', $aDades)) $this->setLugar_Naci($aDades['lugar_naci']);
-        if (array_key_exists('fecha_naci', $aDades)) $this->setFecha_Naci($aDades['fecha_naci']);
-        if (array_key_exists('email', $aDades)) $this->setEmail($aDades['email']??'');
-        if (array_key_exists('tfno_movil', $aDades)) $this->setTfno_Movil($aDades['tfno_movil']??'');
-        if (array_key_exists('ce', $aDades)) $this->setCe($aDades['ce']??'');
-        if (array_key_exists('prof_carg', $aDades)) $this->setProfesion_cargo($aDades['prof_carg']??'');
-        if (array_key_exists('titu_estu', $aDades)) $this->setTitulo_Estudios($aDades['titu_estu']??'');
-        if (array_key_exists('encargos', $aDades)) $this->setEncargos($aDades['encargos']??'');
-        if (array_key_exists('incorp', $aDades)) $this->setIncorporacion($aDades['incorp']);
-        if (array_key_exists('pertenece_r', $aDades)) $this->setPertenece_r($aDades['pertenece_r']);
-        if (array_key_exists('camb_fic', $aDades)) $this->setCamb_fic($aDades['camb_fic']??'');
-        if (array_key_exists('fecha_c_fic', $aDades)) $this->setFecha_c_fic($aDades['fecha_c_fic']);
-        if (array_key_exists('compartida_con_r', $aDades)) $this->setCompartida_con_r($aDades['compartida_con_r']??'');
+        if (!is_array($aDades))
+            return;
+        if (array_key_exists('id_schema', $aDades))
+            $this->setId_schema($aDades['id_schema']);
+        if (array_key_exists('identif', $aDades))
+            $this->setIdentif($aDades['identif']);
+        if (array_key_exists('apenom', $aDades))
+            $this->setApenom($aDades['apenom']);
+        if (array_key_exists('dl', $aDades))
+            $this->setDl($aDades['dl']);
+        if (array_key_exists('ctr', $aDades))
+            $this->setCtr($aDades['ctr']);
+        if (array_key_exists('lugar_naci', $aDades))
+            $this->setLugar_Naci($aDades['lugar_naci']);
+        if (array_key_exists('fecha_naci', $aDades))
+            $this->setFecha_Naci($aDades['fecha_naci']);
+        if (array_key_exists('email', $aDades))
+            $this->setEmail($aDades['email'] ?? '');
+        if (array_key_exists('tfno_movil', $aDades))
+            $this->setTfno_Movil($aDades['tfno_movil'] ?? '');
+        if (array_key_exists('ce', $aDades))
+            $this->setCe($aDades['ce'] ?? '');
+        if (array_key_exists('prof_carg', $aDades))
+            $this->setProfesion_cargo($aDades['prof_carg'] ?? '');
+        if (array_key_exists('titu_estu', $aDades))
+            $this->setTitulo_Estudios($aDades['titu_estu'] ?? '');
+        if (array_key_exists('encargos', $aDades))
+            $this->setEncargos($aDades['encargos'] ?? '');
+        if (array_key_exists('incorp', $aDades))
+            $this->setIncorporacion($aDades['incorp']);
+        if (array_key_exists('pertenece_r', $aDades))
+            $this->setPertenece_r($aDades['pertenece_r']);
+        if (array_key_exists('camb_fic', $aDades))
+            $this->setCamb_fic($aDades['camb_fic'] ?? '');
+        if (array_key_exists('fecha_c_fic', $aDades))
+            $this->setFecha_c_fic($aDades['fecha_c_fic']);
+        if (array_key_exists('compartida_con_r', $aDades))
+            $this->setCompartida_con_r($aDades['compartida_con_r'] ?? '');
     }
 
     /**
@@ -652,14 +686,14 @@ class PersonaBDU extends ClasePropiedades
     /**
      * Establece la clave primaria de Listas en un array
      *
-     * @return array aPrimary_key
      */
-    public function setPrimary_key($a_id = '')
+    public function setPrimary_key($a_id = ''): void
     {
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id === 'identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
+                if (($nom_id === 'identif') && $val_id !== '')
+                    $this->iIdentif = (int)$val_id;
             }
         }
     }
@@ -986,7 +1020,8 @@ class PersonaBDU extends ClasePropiedades
     {
         if (empty($dfecha_c_fic)) {
             $this->dfecha_c_fic = new NullDateTimeLocal();
-        } else {
+        }
+        else {
             $oFecha = new DateTime($dfecha_c_fic);
             $new_fecha = date_format($oFecha, 'j/m/Y');
             $this->dfecha_c_fic = $new_fecha;
@@ -1070,7 +1105,8 @@ class PersonaBDU extends ClasePropiedades
         if (!empty($this->ice_ini)) {
             if ($this->ice_ini > 30) {
                 $this->ice_ini = $this->ice_ini + 1900;
-            } else {
+            }
+            else {
                 $this->ice_ini = $this->ice_ini + 2000;
             }
         }
@@ -1085,7 +1121,8 @@ class PersonaBDU extends ClasePropiedades
         if (!empty($this->ice_fin)) {
             if ($this->ice_fin > 60) {
                 $this->ice_fin = $this->ice_fin + 1900;
-            } else {
+            }
+            else {
                 $this->ice_fin = $this->ice_fin + 2000;
             }
         }
@@ -1345,4 +1382,3 @@ class PersonaBDU extends ClasePropiedades
         return $oDatosCampo;
     }
 }
-

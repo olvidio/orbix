@@ -660,7 +660,7 @@ class DBAlterSchema
      * @param string $esquema
      * @return boolean
      */
-    public function quitarHerencias(\PDO $conexionDB, string $esquema)
+    public function quitarHerencias(\PDO $conexionDB, string $esquema): bool
     {
 
         $sql = "SELECT c.relname AS child, p.relname AS parent, n1.nspname as schema_parent, n.nspname as schema_child 
@@ -685,6 +685,7 @@ class DBAlterSchema
             $sQuery = "ALTER TABLE $full_child NO INHERIT $full_parent ";
             $conexionDB->query($sQuery);
         }
+        return true;
     }
 
 

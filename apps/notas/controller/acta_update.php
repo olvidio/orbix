@@ -19,13 +19,6 @@ $mi_dele = ConfigGlobal::mi_delef();
 $mi_region = ConfigGlobal::mi_region();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-}
-
 $Qacta = (string)filter_input(INPUT_POST, 'acta');
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 
@@ -102,7 +95,7 @@ switch ($Qmod) {
         }
         break;
     case 'modificar':
-    default :
+    default:
         $oActa = $ActaDlRepository->findById($Qacta);
 
         $oActa->setId_asignatura($Qid_asignatura);

@@ -67,9 +67,9 @@ class GestorDlListas extends ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array|void
+     * @return array|bool
      */
-    function getDlListas($aWhere = [], $aOperators = array())
+    function getDlListas($aWhere = [], $aOperators = array()): array |bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -77,25 +77,36 @@ class GestorDlListas extends ClaseGestor
         $oCondicion = new Condicion();
         $aCondi = [];
         foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') continue;
+            if ($camp === '_ordre')
+                continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val))
+                $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador === 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR')
+                unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN')
+                unset($aWhere[$camp]);
+            if ($sOperador === 'TXT')
+                unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
-        if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
+        if ($sCondi != '')
+            $sCondi = " WHERE " . $sCondi;
         if (isset($GLOBALS['oGestorSessioDelegación'])) {
             $sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador('a_actividades', $sCondi, $aWhere);
-        } else {
+        }
+        else {
             $sLimit = '';
         }
-        if ($sLimit === false) return;
+        if ($sLimit === false) {
+            return [];
+        }
         $sOrdre = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
-        if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '')
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        if (isset($aWhere['_ordre']))
+            unset($aWhere['_ordre']);
         $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
         //echo "qry: $sQry<br>";
         if (($oDblSt = $oDbl->prepare($sQry)) === false) {
@@ -116,9 +127,9 @@ class GestorDlListas extends ClaseGestor
         return $oDlListasSet->getTot();
     }
 
-    /* MÉTODOS PROTECTED --------------------------------------------------------*/
+/* MÉTODOS PROTECTED --------------------------------------------------------*/
 
-    /* MÉTODOS GET y SET --------------------------------------------------------*/
+/* MÉTODOS GET y SET --------------------------------------------------------*/
 
 
 }

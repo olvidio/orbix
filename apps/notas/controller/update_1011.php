@@ -8,6 +8,7 @@ use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\TipoActa;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
+use function core\is_true;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
@@ -87,7 +88,7 @@ if ($Qmod !== 'eliminar') {
     $oPersonaNota->setActaVo($acta);
     $oPersonaNota->setDetalleVo($detalle);
     $oPersonaNota->setF_acta($oF_acta);
-    $oPersonaNota->setPreceptor($preceptor);
+    $oPersonaNota->setPreceptor(is_true($preceptor));
     $oPersonaNota->setId_preceptor($id_preceptor);
     $oPersonaNota->setEpocaVo($epoca);
     $oPersonaNota->setIdActivVo($id_activ);

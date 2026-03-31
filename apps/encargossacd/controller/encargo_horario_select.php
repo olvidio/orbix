@@ -20,10 +20,6 @@ $oPosicion->recordar();
 $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($Qid_sel)) { //vengo de un checkbox
     $Qid_enc = (integer)strtok($Qid_sel[0], "#");
-    // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel', $Qid_sel, 1);
-    $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
 } else {
     $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
 }

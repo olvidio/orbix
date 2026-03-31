@@ -5,6 +5,7 @@ use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoTipoRepositoryInterface;
 use src\encargossacd\domain\entity\Encargo;
+use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
@@ -78,7 +79,7 @@ switch ($Qmod) {
             }
         }
         /* crear encargo: atención ctr. El tipo de encargo es distinto según el ctr.
-           si el id ubi empieza por 1 es sv, si empieza por 2 es sf. */
+         si el id ubi empieza por 1 es sv, si empieza por 2 es sf. */
         $Qid_ubi_txt = (string)$Qid_ubi;
         if ($Qid_ubi_txt[0] == 2) { // sf
             $sf_sv = 2;
@@ -94,7 +95,8 @@ switch ($Qmod) {
                 default:
                     $id_tipo_enc = 1200;
             }
-        } elseif ($Qid_ubi_txt[0] == 1) { //sv
+        }
+        elseif ($Qid_ubi_txt[0] == 1) { //sv
             $sf_sv = 1;
             $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             $oCentroDl = $CentroDlRepository->findById($Qid_ubi);
@@ -124,7 +126,7 @@ switch ($Qmod) {
         $oEncargo = new Encargo();
         $oEncargo->setId_enc($newId);
         $oEncargo->setId_tipo_enc($id_tipo_enc);
-        $oEncargo->setSf_sv($sf_sv);
+        $oEncargo->setGrupoEncargoVo(EncargoGrupo::fromNullableInt($sf_sv));
         $oEncargo->setId_ubi($Qid_ubi);
         //$oEncargo->setId_zona($id_zona);
         $oEncargo->setDesc_enc($desc_enc);
@@ -155,10 +157,12 @@ switch ($Qmod) {
         for ($i = 0; $i < $Qsacd_num; $i++) {
             if ($i > 0) {
                 $modo = 5; // colaborador
-            } else {
+            }
+            else {
                 if ($Qcl) {
                     $modo = 2;
-                } else {
+                }
+                else {
                     $modo = 3;
                 } // titular de cl - no cl.
                 $QAid_sacd[0] = $Qid_sacd_titular;
@@ -193,7 +197,8 @@ switch ($Qmod) {
                     $oEncargo = $EncargoRepository->findById($Qid_enc);
                     $EncargoRepository->Eliminar($oEncargo);
                     exit;
-                } else {
+                }
+                else {
                     echo _("Debe nombrar un sacerdote titular") . "\n";
                     exit;
                 }
@@ -245,7 +250,8 @@ switch ($Qmod) {
                 if (!empty($QAid_sacd[$i])) {
                     $oEncargoFunciones->insert_sacd($Qid_enc, $QAid_sacd[$i], 5);
                 }
-            } else { // sacd titular
+            }
+            else { // sacd titular
                 $aWhere = [];
                 $aOperador = [];
                 $aWhere['id_enc'] = $Qid_enc;
@@ -262,7 +268,8 @@ switch ($Qmod) {
                 }
                 if ($Qcl) {
                     $modo = 2;
-                } else {
+                }
+                else {
                     $modo = 3;
                 }
                 if ($actual_id_sacd_titular != $Qid_sacd_titular) {
@@ -271,7 +278,8 @@ switch ($Qmod) {
                     if (!empty($actual_id_sacd_titular)) {
                         $oEncargoFunciones->finalizar_sacd($Qid_enc, $actual_id_sacd_titular, $actual_modo, $oF_fin);
                     }
-                } elseif ($actual_modo != $modo) {
+                }
+                elseif ($actual_modo != $modo) {
                     // puede ser que ya exista...
                     $aWhere = [
                         'id_enc' => $Qid_enc,
@@ -306,7 +314,8 @@ switch ($Qmod) {
                 $aOperador['modo'] = '~';
                 $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
                 $id_item_t_sacd = 0;
-                if (count($cEncargosSacd) > 1) echo _("Error con las tareas");
+                if (count($cEncargosSacd) > 1)
+                    echo _("Error con las tareas");
                 foreach ($cEncargosSacd as $oEncargoSacd) { // se supone que sólo hay uno.
                     $id_item_t_sacd = $oEncargoSacd->getId_item();
                 }
@@ -327,7 +336,8 @@ switch ($Qmod) {
             $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd($aWhere, $aOperador);
             if (is_array($cEncargosSacd) && count($cEncargosSacd) === 0) {
                 $oEncargoFunciones->insert_sacd($Qid_enc, $Qid_sacd_suplente, 4);
-            } else {
+            }
+            else {
                 foreach ($cEncargosSacd as $oEncargoSacd) { // se supone que sólo hay uno.
                     $actual_id_sacd_suplente = $oEncargoSacd->getId_nom();
                     if ($actual_id_sacd_suplente !== $Qid_sacd_suplente) {
@@ -340,7 +350,8 @@ switch ($Qmod) {
                     }
                 }
             }
-        } else { // eliminar suplente
+        }
+        else { // eliminar suplente
             $cEncargosSacd = $EncargoSacdRepository->getEncargosSacd(['id_enc' => $Qid_enc, 'modo' => 4]);
             foreach ($cEncargosSacd as $oEncargoSacd) { // aunque sólo debería haber una.
                 $oEncargoSacd->setF_fin($oF_fin);
@@ -352,7 +363,7 @@ switch ($Qmod) {
         }
         // para grabar los datos del número de alumnos (si es un cgi).
         if (str_contains($Qtipo_centro, "cgi")) {
-            //$oEncargoFunciones->grabar_alumnos($Qid_ubi,$Qnum_alum);
+        //$oEncargoFunciones->grabar_alumnos($Qid_ubi,$Qnum_alum);
         }
         break;
 }

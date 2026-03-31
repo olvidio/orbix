@@ -50,9 +50,6 @@ if (isset($_POST['stack'])) {
 } elseif (!empty($a_sel)) { //vengo de un checkbox
     // el scroll id es de la página anterior, hay que guardarlo allí
     $Qid_sel = $a_sel;
-    $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
 }
 
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
@@ -187,16 +184,19 @@ function getRepository($obj_pau)
 
     echo $oPosicion->mostrar_left_slide(1);
     ?>
-    <div id="top">
-        <table>
-            <tr>
-                <td><span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')"><img
-                                src="<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif" width=40 height=40
-                                alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
-                <td class="titulo"><?= $titulo ?></td>
-        </table>
-    </div>
-    <?php
+<div id="top">
+    <table>
+        <tr>
+            <td><span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')"><img
+                        src="<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif" width=40 height=40 alt='<?= $alt ?>'>(
+                    <?= $dos ?>)
+                </span></td>
+            <td class="titulo">
+                <?= $titulo ?>
+            </td>
+    </table>
+</div>
+<?php
 
 // ------------------------- cuerpo -----------------------------
     if (empty($Qid_dossier)) { // enseña la lista de dossiers.
@@ -317,8 +317,8 @@ function getRepository($obj_pau)
 
                 $html = '';
                 $html .= '<script>';
-                $html .= $oDatosTabla->getScript();
-                $html .= '</script>';
+                    $html.= $oDatosTabla -> getScript();
+                    $html.= '</script>';
                 $html .= "<h3 class=subtitulo>" . $oInfoClase->getTxtTitulo() . "</h3>
 				<form id='seleccionados' name='seleccionados' action='' method='post'>";
                 $html .= $oHashSelect->getCamposHtml();

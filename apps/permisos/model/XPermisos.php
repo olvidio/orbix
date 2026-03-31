@@ -38,11 +38,6 @@ abstract class XPermisos
         $this->permissions = $permissions;
     }
 
-    function getTodos()
-    {
-        return $this->todos;
-    }
-
     function perm_invalid($does_have, $must_have)
     {
         include("perm_invalid.php");

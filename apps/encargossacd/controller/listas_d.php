@@ -12,13 +12,13 @@ use src\zonassacd\domain\contracts\ZonaGrupoRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 /* Listado de ateción sacd. según cr 9/20, 10 
-*
-*@package	delegacion
-*@subpackage	des
-*@author	Dani Serrabou
-*@since		7/02/07.
-*		
-*/
+ *
+ *@package	delegacion
+ *@subpackage	des
+ *@author	Dani Serrabou
+ *@since		7/02/07.
+ *		
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -48,18 +48,18 @@ $hoy_local = $oDateLocal->getFromLocal('.');
 $lugar_fecha = "$poblacion, $hoy_local";
 
 /* DESACTIVADO CARGOS
-function oficial_dl($id_nom) {
-	// Añadir los sacd que trabajan en la dl y en que departamento.
-	$GesCargoCl = new GestorCargoCl();
-	$cCargosCl = $GesCargoCl->getCargosCl(array('id_nom'=>$id_nom,'elencum'=>'8/6','f_cese'=>'null','_ordre'=>'cargo'),array('f_cese'=>'IS NULL'));
-	$oficial = '';
-	foreach($cCargosCl as $oCargoCl) {
-		$cargo = $oCargoCl->getCargo();
-		$oficial .= $cargo;
-	}
-	return $oficial;
-}
-*/
+ function oficial_dl($id_nom) {
+ // Añadir los sacd que trabajan en la dl y en que departamento.
+ $GesCargoCl = new GestorCargoCl();
+ $cCargosCl = $GesCargoCl->getCargosCl(array('id_nom'=>$id_nom,'elencum'=>'8/6','f_cese'=>'null','_ordre'=>'cargo'),array('f_cese'=>'IS NULL'));
+ $oficial = '';
+ foreach($cCargosCl as $oCargoCl) {
+ $cargo = $oCargoCl->getCargo();
+ $oficial .= $cargo;
+ }
+ return $oficial;
+ }
+ */
 
 $permiso_sf = '';
 if ($Qsf === 1 && (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des')))) {
@@ -109,7 +109,8 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                 $a_dedicacion = [];
                 if (!empty($id_grupo)) {
                     $poblacion = $array_grupos[$id_grupo];
-                } else {
+                }
+                else {
                     $poblacion = _("otros");
                 }
                 /* busco los datos del encargo que se tengan */
@@ -126,12 +127,14 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                     $id_ubi_enc = $oEncargo->getId_ubi();
                     if (empty($id_ubi_enc)) {
                         $nombre_ubi = ''; // no tine encargo en ctr: descanso, estudio...
-                    } else {
+                    }
+                    else {
                         $iid = (string)$id_ubi_enc;
                         if ($iid[0] == 2) {
                             $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                             $oCentroEnc = $CentroEllasRepository->findById($id_ubi);
-                        } else {
+                        }
+                        else {
                             $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                             $oCentroEnc = $CentroDlRepository->findById($id_ubi_enc);
                         }
@@ -154,7 +157,6 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                             // Si es suplente no hay que poner horario.
                             $dedicacion_txt = '';
                             continue 2;
-                            break;
                         case 5:
                             $modo_txt = "colaborador de";
                             break;
@@ -196,13 +198,15 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                                 $a_dedicacion[6][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
                                 break;
                         }
-                    } else {
+                    }
+                    else {
                         switch ($id_tipo_enc) {
                             case 1200:
                                 if ($permiso_sf === "si") {
                                     $sf_txt .= trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
                                     $a_dedicacion[4][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
-                                } else {
+                                }
+                                else {
                                     switch ($modo) {
                                         case 3:
                                             //$sf_ctr[3]++;
@@ -218,7 +222,8 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                                 if ($permiso_sf === "si") {
                                     $sf_txt .= trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
                                     $a_dedicacion[7][$id_enc] = ['labor' => $nombre_ubi, 'horas' => $dedicacion_txt];
-                                } else {
+                                }
+                                else {
                                     switch ($modo) {
                                         case 3:
                                             //$sf_cgi[3]++;
@@ -234,39 +239,38 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                     }
                 }
                 /* DESACTIVADO CARGOS
-				// oficiales de dl.
-				if ($of=oficial_dl($id_nom)) $sv_txt.="<br>".ConfigGlobal::$dele.": $of";
-                */
+                 // oficiales de dl.
+                 if ($of=oficial_dl($id_nom)) $sv_txt.="<br>".ConfigGlobal::$dele.": $of";
+                 */
 
                 /*
-                // sf
-                if ($permiso_sf=="si") {
-                    $sf_txt=substr($sf_txt,2);
-                } else {
-                    if ($sf_ctr[3]==1) {
-                        $sf_txt.=", ".sprintf(_("%s centro sf"),$sf_ctr[3]);
-                    } elseif ($sf_ctr[3]>1) {
-                        $sf_txt.=", ".sprintf(_("%s centros sf"),$sf_ctr[3]);
-                    }
-                    if ($sf_ctr[4]==1) {
-                        $sf_txt.=", ".sprintf(_("suplente de %s centro sf"),$sf_ctr[4]);
-                    } elseif ($sf_ctr[4]>1) {
-                        $sf_txt.=", ".sprintf(_("suplente de %s centros sf"),$sf_ctr[4]);
-                    }
-                    if ($sf_cgi[3]==1) {
-                        $sf_txt.=", ".sprintf(_("atiende %s colegio sf"),$sf_cgi[3]);
-                    } elseif ($sf_cgi[3]>1) {
-                        $sf_txt.=", ".sprintf(_("atiende %s colegios sf"),$sf_cgi[3]);
-                    }
-                    if ($sf_cgi[4]==1) {
-                        $sf_txt.=", ".sprintf(_("colabora con %s colegio sf"),$sf_cgi[4]);
-                    } elseif ($sf_cgi[4]>1) {
-                        $sf_txt.=", ".sprintf(_("colabora con %s colegios sf"),$sf_cgi[4]);
-                    }
-
-                    $sf_txt=substr($sf_txt,2);
-                }
-                */
+                 // sf
+                 if ($permiso_sf=="si") {
+                 $sf_txt=substr($sf_txt,2);
+                 } else {
+                 if ($sf_ctr[3]==1) {
+                 $sf_txt.=", ".sprintf(_("%s centro sf"),$sf_ctr[3]);
+                 } elseif ($sf_ctr[3]>1) {
+                 $sf_txt.=", ".sprintf(_("%s centros sf"),$sf_ctr[3]);
+                 }
+                 if ($sf_ctr[4]==1) {
+                 $sf_txt.=", ".sprintf(_("suplente de %s centro sf"),$sf_ctr[4]);
+                 } elseif ($sf_ctr[4]>1) {
+                 $sf_txt.=", ".sprintf(_("suplente de %s centros sf"),$sf_ctr[4]);
+                 }
+                 if ($sf_cgi[3]==1) {
+                 $sf_txt.=", ".sprintf(_("atiende %s colegio sf"),$sf_cgi[3]);
+                 } elseif ($sf_cgi[3]>1) {
+                 $sf_txt.=", ".sprintf(_("atiende %s colegios sf"),$sf_cgi[3]);
+                 }
+                 if ($sf_cgi[4]==1) {
+                 $sf_txt.=", ".sprintf(_("colabora con %s colegio sf"),$sf_cgi[4]);
+                 } elseif ($sf_cgi[4]>1) {
+                 $sf_txt.=", ".sprintf(_("colabora con %s colegios sf"),$sf_cgi[4]);
+                 }
+                 $sf_txt=substr($sf_txt,2);
+                 }
+                 */
 
                 ksort($a_dedicacion);
                 // para ordenar por apellidos, pero en toda la zona (no sólo el ctr), lo pongo en un array.
@@ -275,7 +279,8 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                     if (!empty($a_dedicacion)) {
                         $a_sacd[$nom_orden] = ['nom' => $nom_ap, 'poblacion' => $poblacion, 'dedicacion' => $a_dedicacion];
                     }
-                } else {
+                }
+                else {
                     $a_sacd[$nom_orden] = ['nom' => $nom_ap, 'poblacion' => $poblacion, 'dedicacion' => $a_dedicacion];
                 }
 
@@ -291,7 +296,9 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
 ?>
 <table>
     <tr>
-        <td class=izquierda><?= $cabecera_left ?></td>
+        <td class=izquierda>
+            <?= $cabecera_left?>
+        </td>
     </tr>
 </table>
 <?php

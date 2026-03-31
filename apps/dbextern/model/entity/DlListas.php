@@ -17,11 +17,11 @@ class DlListas extends ClasePropiedades
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /*
-    Dl vachar(5)
-    nombre_dl varchar(30)
-    numero_dl tinyinteger
-    abr_r varchar(10)
-    numero_r tinyinteger
+     Dl vachar(5)
+     nombre_dl varchar(30)
+     numero_dl tinyinteger
+     abr_r varchar(10)
+     numero_r tinyinteger
      */
 
     /**
@@ -98,9 +98,11 @@ class DlListas extends ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id === 'dl') && $val_id !== '') $this->sDl = (string)$val_id;
+                if (($nom_id === 'dl') && $val_id !== '')
+                    $this->sDl = (string)$val_id;
             }
-        } else {
+        }
+        else {
             if (isset($a_id) && $a_id !== '') {
                 $this->sDl = $a_id;
                 $this->aPrimary_key = array('dl' => $this->sDl);
@@ -147,18 +149,21 @@ class DlListas extends ClasePropiedades
                     $this->aDades = $aDades;
                     break;
                 case 'guardar':
-                    if (!$oDblSt->rowCount()) return false;
+                    if (!$oDblSt->rowCount())
+                        return false;
                     break;
                 default:
                     // En el caso de no existir esta fila, $aDades = FALSE:
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
-                    } else {
+                    }
+                    else {
                         $this->setAllAttributes($aDades);
                     }
             }
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -185,12 +190,18 @@ class DlListas extends ClasePropiedades
      */
     function setAllAttributes(array $aDades)
     {
-        if (!is_array($aDades)) return;
-        if (array_key_exists('dl', $aDades)) $this->setDl($aDades['dl']);
-        if (array_key_exists('nombre_dl', $aDades)) $this->setNombre_dl($aDades['nombre_dl']);
-        if (array_key_exists('numero_dl', $aDades)) $this->setNumero_dl($aDades['numero_dl']);
-        if (array_key_exists('abr_r', $aDades)) $this->setAbr_r($aDades['abr_r']);
-        if (array_key_exists('numero_r', $aDades)) $this->setNumero_r($aDades['numero_r']);
+        if (!is_array($aDades))
+            return;
+        if (array_key_exists('dl', $aDades))
+            $this->setDl($aDades['dl']);
+        if (array_key_exists('nombre_dl', $aDades))
+            $this->setNombre_dl($aDades['nombre_dl']);
+        if (array_key_exists('numero_dl', $aDades))
+            $this->setNumero_dl($aDades['numero_dl']);
+        if (array_key_exists('abr_r', $aDades))
+            $this->setAbr_r($aDades['abr_r']);
+        if (array_key_exists('numero_r', $aDades))
+            $this->setNumero_r($aDades['numero_r']);
     }
 
     /**
@@ -239,14 +250,14 @@ class DlListas extends ClasePropiedades
     /**
      * Establece la clave primaria de Listas en un array
      *
-     * @return array aPrimary_key
      */
-    public function setPrimary_key($a_id = '')
+    public function setPrimary_key($a_id = ''): void
     {
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id === 'dl') && $val_id !== '') $this->sDl = (string)$val_id;
+                if (($nom_id === 'dl') && $val_id !== '')
+                    $this->sDl = (string)$val_id;
             }
         }
     }
