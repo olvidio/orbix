@@ -13,6 +13,7 @@ use src\actividadescentro\domain\entity\CentroEncargado;
 use src\actividadescentro\domain\value_objects\CentroEncargadoPk;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\CentroEllas;
 
 
@@ -119,7 +120,8 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
                 $oUbi = $CentroDlRepository->findById($id_ubi);
             }
             else {
-                $oUbi = CentroEllas::fromArray($aDatos);
+                $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+                $oUbi = $CentroEllasRepository->findById($id_ubi);
             }
             $oUbiSet->add($oUbi);
         }

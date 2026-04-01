@@ -182,6 +182,10 @@ class TiposActividades
             $this->separarId($id);
         }
         $this->TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $this->getFlipAsistentes();
+        $this->getFlipActividad1Digito();
+        $this->getFlipActividad2Digitos();
+        $this->getFlipSfsv();
     }
 
     /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
@@ -453,7 +457,7 @@ class TiposActividades
      *
      * @return false si falla
      */
-    public function setAsistentesText($sAsistentes)
+    public function setAsistentesText(string $sAsistentes)
     {
         if (is_string($sAsistentes)) {
             if (empty($sAsistentes)) {
@@ -464,12 +468,12 @@ class TiposActividades
             if (count($a_asistentes_multiple) > 1) {
                 $asistentes_txt = "[";
                 foreach ($a_asistentes_multiple as $asis) {
-                    $asistentes_txt .= $this->aAsistentes[$asis];
+                    $asistentes_txt .= $this->afAsistentes[$asis];
                 }
                 $asistentes_txt .= "]";
             } else {
                 $asis = $a_asistentes_multiple[0];
-                $asistentes_txt = $this->aAsistentes[$asis];
+                $asistentes_txt = $this->afAsistentes[$asis];
             }
 
             $this->sasistentes = $asistentes_txt;
@@ -551,7 +555,7 @@ class TiposActividades
     public function setActividadText($sActividad)
     {
         if (is_string($sActividad)) {
-            if (empty($sActividad)) {
+            if (empty($sActividad) || $sActividad === '.') {
                 $sActividad = 'all';
             }
             $this->sactividad = $this->aActividad1Digito[$sActividad];

@@ -22,8 +22,8 @@ final class TarifaLetraCode
             throw new \InvalidArgumentException('TarifaLetraCode debe tener un máximo de 6 carácteres');
         }
         // Quizá tambien puede tener espacios y coma
-        if (!preg_match('/^[A-Z ,]*$/', $value)) {
-            throw new \InvalidArgumentException('TarifaLetraCode deben ser letras: A-Z (máx. 6)');
+        if (!preg_match('/^[A-Z ,-]*$/', $value)) {
+            throw new \InvalidArgumentException('TarifaLetraCode deben ser letras: A-Z (máx. 6) y guión');
         }
     }
 

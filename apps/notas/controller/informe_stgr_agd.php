@@ -55,18 +55,18 @@ $Qlista = (string)filter_input(INPUT_POST, 'lista');
 $lista = empty($Qlista) ? false : true;
 
 $Resumen = new Resumen('agregados');
+$a_dl = [];
 if (!empty($Qdl)) {
     $region_stgr = ConfigGlobal::mi_dele();
     $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
-    $a_dl = [];
     foreach ($Qdl as $id_dl) {
         if (isset($a_delegacionesStgr[$id_dl])) {
             $a_dl[] = $a_delegacionesStgr[$id_dl];
         }
     }
-    $Resumen->setArrayDl($a_dl);
 }
+$Resumen->setArrayDl($a_dl);
 $Resumen->setAnyIniCurs($any_ini_curs);
 $Resumen->setLista($lista);
 $Resumen->nuevaTabla();

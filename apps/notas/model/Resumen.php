@@ -15,25 +15,6 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use function core\is_true;
 
-/**
- * Fitxer amb la Classe que accedeix a la taula e_notas_situacion
- *
- * @package delegación
- * @subpackage model
- * @author Daniel Serrabou
- * @version 1.0
- * @created 07/04/2014
- */
-
-/**
- * Clase que implementa la entidad e_notas_situacion
- *
- * @package delegación
- * @subpackage model
- * @author Daniel Serrabou
- * @version 1.0
- * @created 07/04/2014
- */
 class Resumen extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
@@ -66,7 +47,6 @@ class Resumen extends ClasePropiedades
      *
      * @var string
      */
-    protected $sNomTabla;
     protected $sNomNotas;
     protected $sNomPersonas;
     protected $sNomAsignaturas;
@@ -77,15 +57,7 @@ class Resumen extends ClasePropiedades
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
-    /**
-     * Constructor de la classe.
-     * Si només necessita un valor, se li pot passar un integer.
-     * En general se li passa un array amb les claus primàries.
-     *
-     * @param integer|array iid_nom,iid_nivel
-     *                        $a_id. Un array con los nombres=>valores de las claves primarias.
-     */
-    function __construct($nom = '')
+    function __construct(string $nom = '')
     {
         $tabla = "tmp_est_" . $nom;
         $notas = "tmp_notas_" . $nom;
@@ -680,7 +652,7 @@ class Resumen extends ClasePropiedades
         $rta = [];
         $ssql = " SELECT p.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
                 FROM $tabla p
-                WHERE p.nivel_stgr IN (".NivelStgrId::C1.", " . NivelStgrId::C2 . ")
+                WHERE p.nivel_stgr IN (" . NivelStgrId::C1 . ", " . NivelStgrId::C2 . ")
                 EXCEPT
                 SELECT t.id_nom, t.nom, t.apellido1, t.apellido2, t.ctr
                 FROM $tabla t JOIN $this->tablaNotas n USING (id_nom)

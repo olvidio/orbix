@@ -3,10 +3,10 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
+use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use web\Hash;
@@ -105,7 +105,7 @@ if (empty($continuar)) {
     $ini_m = $_SESSION['oConfig']->getMesIniStgr();
     // busco los profesores que han dado alguna asignatura en actividad.
     $ProfesorDocenciaStgrRepository = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
-    $ActaRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+    $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
     foreach ($cActividades as $oActividad) {
         $id_activ = $oActividad->getId_activ();
         $id_tipo_activ = $oActividad->getId_tipo_activ();

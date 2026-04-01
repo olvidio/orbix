@@ -167,7 +167,7 @@ if ($Qmodo !== 'importar') {
     $sCamposForm .= '!publicado';
 }
 $oHash->setCamposForm($sCamposForm);
-$camposNo = 'id_ubi!nom_activ';
+$camposNo = 'id_ubi!nom_activ!dl_org!extendida!filtro_lugar';
 if (ConfigGlobal::is_app_installed('procesos')) {
     $camposNo .= '!fases_on!fases_off';
 }
