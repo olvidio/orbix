@@ -60,38 +60,38 @@ class TiposActividades
      *
      * @var string
      */
-    private  string $sregexp_id_tipo_activ;
+    private string $sregexp_id_tipo_activ;
 
     /**
      * sfsv de TiposActividades
      *
      * @var string
      */
-    private $ssfsv;
+    private string $ssfsv='';
     /**
      * asistentes de TiposActividades
      *
      * @var string
      */
-    private $sasistentes;
+    private string $sasistentes='';
     /**
      * actividad de TiposActividades
      *
      * @var string
      */
-    private $sactividad;
+    private string $sactividad='';
     /**
      * nom_tipo de TiposActividades
      *
      * @var string
      */
-    private $snom_tipo;
+    private string $snom_tipo='';
     /**
      * aSfsv de TiposActividades
      *
      * @var array
      */
-    private $aSfsv = array(
+    private array $aSfsv = array(
         "sv" => 1,
         "sf" => 2,
         "reservada" => 3,
@@ -103,7 +103,7 @@ class TiposActividades
      *
      * @var array
      */
-    private $aAsistentes = array(
+    private array $aAsistentes = array(
         "n" => 1,
         "nax" => 2,
         "agd" => 3,
@@ -121,7 +121,7 @@ class TiposActividades
      *
      * @var array
      */
-    private $aActividad1Digito = array(
+    private array $aActividad1Digito = array(
         "crt" => '1',
         "ca" => '2',
         "cv" => '3',
@@ -134,7 +134,7 @@ class TiposActividades
      *
      * @var array
      */
-    private $aActividad2Digitos = array(
+    private array $aActividad2Digitos = array(
         "crt" => 10,
         "crt-recientes" => 11,
         "crt-bach" => 15,
@@ -158,27 +158,30 @@ class TiposActividades
     );
 
     //transpongo los vectores para buscar por números y no por el texto
-    private $afSfsv = [];
-    private $afAsistentes = [];
-    private $afActividad1Digito = [];
-    private $afActividad2Digitos = [];
+    private array $afSfsv = [];
+    private array $afAsistentes = [];
+    private array $afActividad1Digito = [];
+    private array $afActividad2Digitos = [];
 
-    private $extendida = FALSE;
+    private bool $extendida = FALSE;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
     private array $afNom_tipo;
     private array $aNom_tipo;
-    private $TipoDeActividadRepository;
+    private TipoDeActividadRepositoryInterface $TipoDeActividadRepository;
 
     /**
      * Constructor de la classe.
-     *
+     * @param int|string $id
+     * @param bool $extendida
      */
-    function __construct(int|string $id = '', $extendida = FALSE)
+    public function __construct(int|string $id = '', bool $extendida = FALSE)
     {
         $this->setExtendida($extendida);
         if (isset($id) && $id !== '') {
-            if (is_int($id)) $this->iid_tipo_activ = $id;
+            if (is_int($id)) {
+                $this->iid_tipo_activ = $id;
+            }
             $this->separarId($id);
         }
         $this->TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
@@ -190,31 +193,31 @@ class TiposActividades
 
     /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 
-    private function getFlipSfsv()
+    private function getFlipSfsv(): array
     {
         if (empty($this->afSfsv)) $this->afSfsv = array_flip($this->aSfsv);
         return $this->afSfsv;
     }
 
-    private function getFlipAsistentes()
+    private function getFlipAsistentes(): array
     {
         if (empty($this->afAsistentes)) $this->afAsistentes = array_flip($this->aAsistentes);
         return $this->afAsistentes;
     }
 
-    private function getFlipActividad1Digito()
+    private function getFlipActividad1Digito(): array
     {
         if (empty($this->afActividad1Digito)) $this->afActividad1Digito = array_flip($this->aActividad1Digito);
         return $this->afActividad1Digito;
     }
 
-    private function getFlipActividad2Digitos()
+    private function getFlipActividad2Digitos(): array
     {
         if (empty($this->afActividad2Digitos)) $this->afActividad2Digitos = array_flip($this->aActividad2Digitos);
         return $this->afActividad2Digitos;
     }
 
-    private function separarId(string $sregexp_id_tipo_activ)
+    private function separarId(string $sregexp_id_tipo_activ): bool
     {
         if (!empty($sregexp_id_tipo_activ)) {
             $inc = 0;
@@ -242,11 +245,12 @@ class TiposActividades
         } else {
             return false;
         }
+        return true;
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-    public function setPosiblesAll($bAll)
+    public function setPosiblesAll($bAll): void
     {
         if ($bAll === FALSE) {
             unset ($this->aSfsv['all']);
@@ -259,9 +263,8 @@ class TiposActividades
      *
      * De momento parece que sólo es necesario para los asistentes.
      *
-     * return array
      */
-    public function getArrayAsistentesIndividual()
+    public function getArrayAsistentesIndividual(): array
     {
         $a_tipos = [];
         $aAsistentes = $this->getAsistentesPosibles();
@@ -278,7 +281,7 @@ class TiposActividades
      *
      * @return string
      */
-    public function getId_tipo_activ()
+    public function getId_tipo_activ(): string
     {
         $txt = $this->ssfsv;
         $txt .= $this->sasistentes;
@@ -292,7 +295,7 @@ class TiposActividades
      *
      * @return string
      */
-    public function getNomPasarela()
+    public function getNomPasarela(): string
     {
         $txt_svsf = $this->getSfsvText();
         // asistentes
@@ -341,12 +344,12 @@ class TiposActividades
      *
      * @return string
      */
-    public function getNomGral()
+    public function getNomGral(): string
     {
         $txt = $this->getSfsvText();
-        if ($this->getAsistentesText() <> 'all') $txt .= ' ' . $this->getAsistentesText();
-        if ($this->getActividadText() <> 'all') $txt .= ' ' . $this->getActividadText();
-        if ($this->getNom_tipoId() <> 0 && $this->getNom_tipoText() <> 'all') $txt .= ' ' . $this->getNom_tipoText();
+        if ($this->getAsistentesText() !== 'all') $txt .= ' ' . $this->getAsistentesText();
+        if ($this->getActividadText() !== 'all') $txt .= ' ' . $this->getActividadText();
+        if ($this->getNom_tipoId() !== 0 && $this->getNom_tipoText() !== 'all') $txt .= ' ' . $this->getNom_tipoText();
         return $txt;
     }
 
@@ -358,9 +361,9 @@ class TiposActividades
     public function getNom(): string
     {
         $txt = $this->getSfsvText();
-        if ($this->getAsistentesText() <> 'all') $txt .= ' ' . $this->getAsistentesText();
-        if ($this->getActividadText() <> 'all') $txt .= ' ' . $this->getActividadText();
-        if ($this->getNom_tipoText() <> 'all') $txt .= ' ' . $this->getNom_tipoText();
+        if ($this->getAsistentesText() !== 'all') $txt .= ' ' . $this->getAsistentesText();
+        if ($this->getActividadText() !== 'all') $txt .= ' ' . $this->getActividadText();
+        if ($this->getNom_tipoText() !== 'all') $txt .= ' ' . $this->getNom_tipoText();
         return $txt;
     }
 
@@ -369,7 +372,7 @@ class TiposActividades
      *
      * @return string
      */
-    public function getSfsvText()
+    public function getSfsvText(): string
     {
         $aText = $this->getFlipSfsv();
         if (is_numeric($this->ssfsv)) {
@@ -382,9 +385,9 @@ class TiposActividades
     /**
      * Estableix l'atribut sfsv en format de text
      *
-     * @return string
+     * @return bool
      */
-    public function setSfsvText($sSfsv)
+    public function setSfsvText($sSfsv): bool
     {
         if (is_string($sSfsv)) {
             if (empty($sSfsv)) {
@@ -394,13 +397,14 @@ class TiposActividades
         } else {
             return false;
         }
+        return true;
     }
 
     /**
      * Recupera el atributo sfsv en format de integer
      *
      */
-    public function getSfsvId()
+    public function getSfsvId(): string
     {
         return $this->ssfsv;
     }
@@ -408,19 +412,17 @@ class TiposActividades
     /**
      * Estableix l'atribut sfsv en format de integer
      *
-     * @return integer
      */
-    public function setSfsvId($isfsv)
+    public function setSfsvId($isfsv): void
     {
-        $this->ssfsv = $isfsv;
+        $this->ssfsv = (string)$isfsv;
     }
 
     /**
      * Recupera el atributo sfsv en format de regexp
      *
-     * @return integer
      */
-    public function getSfsvRegexp()
+    public function getSfsvRegexp(): string
     {
         return '^' . $this->ssfsv;
 
@@ -429,9 +431,8 @@ class TiposActividades
     /**
      * Recupera el atributo sfsv posibles en format de array
      *
-     * @return array
      */
-    public function getSfsvPosibles()
+    public function getSfsvPosibles(): array
     {
         $aText = $this->getFlipSfsv();
         return $this->TipoDeActividadRepository->getSfsvPosibles($aText);
@@ -440,9 +441,8 @@ class TiposActividades
     /**
      * Recupera el atributo asistentes en format de text
      *
-     * @return string
      */
-    public function getAsistentesText()
+    public function getAsistentesText(): string
     {
         $aText = $this->getFlipAsistentes();
         if (is_numeric($this->sasistentes)) {
@@ -455,31 +455,26 @@ class TiposActividades
     /**
      * Estableix l'atribut asistentes en format de text
      *
-     * @return false si falla
      */
-    public function setAsistentesText(string $sAsistentes)
+    public function setAsistentesText(string $sAsistentes): void
     {
-        if (is_string($sAsistentes)) {
-            if (empty($sAsistentes)) {
-                $sAsistentes = 'all';
-            }
-            // puede ser un string separado por comas (s,sg)
-            $a_asistentes_multiple = explode(',', $sAsistentes);
-            if (count($a_asistentes_multiple) > 1) {
-                $asistentes_txt = "[";
-                foreach ($a_asistentes_multiple as $asis) {
-                    $asistentes_txt .= $this->afAsistentes[$asis];
-                }
-                $asistentes_txt .= "]";
-            } else {
-                $asis = $a_asistentes_multiple[0];
-                $asistentes_txt = $this->afAsistentes[$asis];
-            }
-
-            $this->sasistentes = $asistentes_txt;
-        } else {
-            return false;
+        if (empty($sAsistentes) || $sAsistentes === '.') {
+            $sAsistentes = 'all';
         }
+        // puede ser un string separado por comas (s,sg)
+        $a_asistentes_multiple = explode(',', $sAsistentes);
+        if (count($a_asistentes_multiple) > 1) {
+            $asistentes_txt = "[";
+            foreach ($a_asistentes_multiple as $asis) {
+                $asistentes_txt .= $this->aAsistentes[$asis];
+            }
+            $asistentes_txt .= "]";
+        } else {
+            $asis = $a_asistentes_multiple[0];
+            $asistentes_txt = $this->aAsistentes[$asis];
+        }
+
+        $this->sasistentes = $asistentes_txt;
     }
 
     /**
@@ -487,28 +482,26 @@ class TiposActividades
      *
      * @return integer
      */
-    public function getAsistentesId()
+    public function getAsistentesId(): int
     {
-        return $this->sasistentes;
+        return (int)$this->sasistentes;
 
     }
 
     /**
-     * Estableix l'atribut asistentes en format de integer
+     * Estableix l'atribut asistentes
      *
-     * @return 'false' si falla
      */
-    public function setAsistentesId($id)
+    public function setAsistentesId($id): void
     {
-        $this->sasistentes = $id;
+        $this->sasistentes = (string)$id;
     }
 
     /**
      * Recupera el atributo asistentes en format de regexp
      *
-     * @return integer
      */
-    public function getAsistentesRegexp()
+    public function getAsistentesRegexp(): string
     {
         return $this->getSfsvRegexp() . $this->sasistentes;
 
@@ -517,9 +510,8 @@ class TiposActividades
     /**
      * Recupera el atributo asistentes posibles en format de array
      *
-     * @return array
      */
-    public function getAsistentesPosibles()
+    public function getAsistentesPosibles(): array
     {
         $aText = $this->getFlipAsistentes();
         if (!empty($this->sasistentes)) {
@@ -533,9 +525,8 @@ class TiposActividades
     /**
      * Recupera el atributo actividades en format de text
      *
-     * @return string
      */
-    public function getActividadText()
+    public function getActividadText(): string
     {
         if (is_numeric($this->sactividad)) {
             $aText = $this->getFlipActividad1Digito();
@@ -550,9 +541,8 @@ class TiposActividades
     /**
      * Estableix l'atribut actividades en format de text
      *
-     * @return false si falla
      */
-    public function setActividadText($sActividad)
+    public function setActividadText($sActividad): bool
     {
         if (is_string($sActividad)) {
             if (empty($sActividad) || $sActividad === '.') {
@@ -565,6 +555,7 @@ class TiposActividades
         } else {
             return false;
         }
+        return true;
     }
 
     /**
@@ -572,7 +563,7 @@ class TiposActividades
      *
      * @return string
      */
-    public function getActividad2DigitosText()
+    public function getActividad2DigitosText(): string
     {
         $aText = $this->getFlipActividad2Digitos();
         if (is_numeric($this->sactividad)) {
@@ -585,9 +576,8 @@ class TiposActividades
     /**
      * Estableix l'atribut actividades (2 digits) en format de text
      *
-     * @return false si falla
      */
-    public function setActividad2DigitosText($sActividad)
+    public function setActividad2DigitosText($sActividad): bool
     {
         if (is_string($sActividad)) {
             if (empty($sActividad)) {
@@ -597,20 +587,20 @@ class TiposActividades
         } else {
             return false;
         }
+        return true;
     }
 
     /**
      * Recupera el atributo actividades en format de integer
      *
-     * @return integer
      */
-    public function getActividadId()
+    public function getActividadId(): string
     {
         return $this->sactividad;
 
     }
 
-    public function setActividadId($id)
+    public function setActividadId($id): void
     {
         $this->sactividad = $id;
     }
@@ -618,9 +608,8 @@ class TiposActividades
     /**
      * Recupera el atributo actividad en format de regexp
      *
-     * @return integer
      */
-    public function getActividadRegexp()
+    public function getActividadRegexp(): string
     {
         return $this->getAsistentesRegexp() . $this->sactividad;
 
@@ -629,15 +618,14 @@ class TiposActividades
     /**
      * Recupera el atributo actividades posibles en format de array
      *
-     * @return array
      */
-    public function getActividadesPosibles1Digito()
+    public function getActividadesPosibles1Digito(): array
     {
         $aText = $this->getFlipActividad1Digito();
         return $this->TipoDeActividadRepository->getActividadesPosibles(1, $aText, $this->getAsistentesRegexp());
     }
 
-    public function getActividadesPosibles2Digitos()
+    public function getActividadesPosibles2Digitos(): array
     {
         $aText = $this->getFlipActividad2Digitos();
         return $this->TipoDeActividadRepository->getActividadesPosibles(2, $aText, $this->getAsistentesRegexp());
@@ -646,16 +634,15 @@ class TiposActividades
     /**
      * Recupera el atributo nom_tipo en format de text
      *
-     * @return string
      */
-    public function getNom_tipoText()
+    public function getNom_tipoText(): string
     {
         if (is_numeric($this->snom_tipo)) {
             if (isset($this->afNom_tipo)) {
-                return $this->afNom_tipo[$this->snom_tipo]?? '?';
+                return $this->afNom_tipo[$this->snom_tipo] ?? '?';
             } else {
                 $this->getNom_tipoPosibles3Digitos();
-                return $this->afNom_tipo[$this->snom_tipo]?? '?';
+                return $this->afNom_tipo[$this->snom_tipo] ?? '?';
             }
         } else {
             return 'all';
@@ -665,15 +652,15 @@ class TiposActividades
     /**
      * Estableix l'atribut nom_tipo en format de text
      *
-     * @return false si falla
      */
-    public function setNom_tipoText($sNom_tipo)
+    public function setNom_tipoText($sNom_tipo): bool
     {
         if (is_string($sNom_tipo)) {
             $this->snom_tipo = $this->aNom_tipo[$sNom_tipo];
         } else {
             return false;
         }
+        return true;
     }
 
     /**
@@ -681,18 +668,17 @@ class TiposActividades
      *
      * @return integer
      */
-    public function getNom_tipoId()
+    public function getNom_tipoId(): int
     {
-        return $this->snom_tipo;
+        return (int)$this->snom_tipo;
 
     }
 
     /**
      * Recupera el atributo actividad en format de regexp
      *
-     * @return integer
      */
-    public function getNom_tipoRegexp()
+    public function getNom_tipoRegexp(): string
     {
         return $this->getActividadRegexp() . $this->snom_tipo;
 
@@ -703,7 +689,7 @@ class TiposActividades
      *
      * @return array
      */
-    public function getNom_tipoPosibles3Digitos()
+    public function getNom_tipoPosibles3Digitos(): array
     {
         $rta = $this->TipoDeActividadRepository->getNom_tipoPosibles(3, $this->getActividadRegexp());
         $this->afNom_tipo = $rta['tipo_nom'];
@@ -711,7 +697,7 @@ class TiposActividades
         return $rta['tipo_nom'];
     }
 
-    public function getNom_tipoPosibles2Digitos()
+    public function getNom_tipoPosibles2Digitos(): array
     {
         $rta = $this->TipoDeActividadRepository->getNom_tipoPosibles(2, $this->getActividadRegexp());
         $this->afNom_tipo = $rta['tipo_nom'];
@@ -722,10 +708,10 @@ class TiposActividades
     /**
      * Retorna els posibles id_tipo en format de array
      *
-     * @param string regexp expresió regular per tornar el id (substring('bla' from regexp) del postgresql).
+     * @param string $regexp expresió regular per tornar el id (substring('bla' from regexp) del postgresql).
      * @return array
      */
-    public function getId_tipoPosibles($regexp = '.*')
+    public function getId_tipoPosibles(string $regexp = '.*'): array
     {
         return $this->TipoDeActividadRepository->getId_tipoPosibles($regexp, $this->getActividadRegexp());
     }
@@ -733,7 +719,7 @@ class TiposActividades
     /**
      * @return boolean
      */
-    public function getExtendida()
+    public function getExtendida(): bool
     {
         return $this->extendida;
     }
@@ -741,7 +727,7 @@ class TiposActividades
     /**
      * @param boolean $extendida
      */
-    public function setExtendida(bool $extendida)
+    public function setExtendida(bool $extendida): void
     {
         $this->extendida = $extendida;
     }

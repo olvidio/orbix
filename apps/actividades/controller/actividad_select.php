@@ -43,6 +43,7 @@ use src\usuarios\domain\value_objects\PauType;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
+use web\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -181,7 +182,7 @@ if (empty($Qid_tipo_activ)) {
     }
     $sasistentes = empty($Qsasistentes) ? '.' : $Qsasistentes;
     $sactividad = empty($Qsactividad) ? '.' : $Qsactividad;
-    $oTipoActiv = new web\TiposActividades();
+    $oTipoActiv = new TiposActividades();
     $oTipoActiv->setSfsvText($Qssfsv);
     $oTipoActiv->setAsistentesText($sasistentes);
     if (!empty($Qsactividad2)) {
@@ -191,7 +192,7 @@ if (empty($Qid_tipo_activ)) {
     }
     $Qid_tipo_activ = $oTipoActiv->getId_tipo_activ();
 } else {
-    $oTipoActiv = new web\TiposActividades($Qid_tipo_activ);
+    $oTipoActiv = new TiposActividades($Qid_tipo_activ);
     $ssfsv = $oTipoActiv->getSfsvText();
     $sasistentes = $oTipoActiv->getAsistentesText();
     $sactividad = $oTipoActiv->getActividadText();
@@ -446,7 +447,7 @@ foreach ($cActividades as $oActividad) {
     }
     $i++;
 
-    $oTipoActividad = new web\TiposActividades($id_tipo_activ);
+    $oTipoActividad = new TiposActividades($id_tipo_activ);
     $isfsv = $oTipoActividad->getSfsvId();
     $ssfsv = $oTipoActividad->getSfsvText();
     // para ver el nombre en caso de la otra sección
@@ -667,7 +668,7 @@ if (empty($aRolesPau[$id_role]) || ($aRolesPau[$id_role] !== PauType::PAU_CTR &&
 // pero no para crear. Hay que determinar los asistentes:
 $aTiposActiv = [];
 if (!empty($Qid_tipo_activ) && ($Qid_tipo_activ[1] !== '.')) {
-    $oTipoActivCrear = new web\TiposActividades($Qid_tipo_activ);
+    $oTipoActivCrear = new TiposActividades($Qid_tipo_activ);
     $aTiposActiv = $oTipoActivCrear->getArrayAsistentesIndividual();
 }
 // En el caso particular de tener permiso para un tipo más concreto.
