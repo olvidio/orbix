@@ -7,11 +7,10 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use RuntimeException;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use src\shared\traits\HandlesPgBytea;
 
 /**
  * Clase que adapta la tabla e_certificados_rstgr a la interfaz del repositorio
@@ -25,6 +24,7 @@ use function core\is_true;
 class PgCertificadoEmitidoRepository extends ClaseRepository implements CertificadoEmitidoRepositoryInterface
 {
     use HandlesPdoErrors;
+    use HandlesPgBytea;
 
     public function __construct()
     {
@@ -95,17 +95,11 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para los bytea: (resources)
-            $handle = $aDatos['documento'];
-            if ($handle !== null) {
-                $contents = stream_get_contents($handle);
-                fclose($handle);
-                $documento = $contents;
-                $aDatos['documento'] = $documento;
-            }
+            $aDatos['documento'] = $this->normalizeBytea($this->readByteaField($aDatos['documento']));
             // para las fechas del postgres (texto iso)
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado']))->fromPg();
             $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado']))->fromPg();
-            $Certificado =  CertificadoEmitido::fromArray($aDatos);
+            $Certificado = CertificadoEmitido::fromArray($aDatos);
             $CertificadoSet->add($Certificado);
         }
         return $CertificadoSet->getTot();
@@ -134,32 +128,10 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
 
         $aDatos = $Certificado->toArrayForDatabase([
             'h_ini' => fn($v) => (new ConverterDate('time', $v))->toPg(),
-            'documento' => fn($v) => bin2hex($Certificado->getDocumento() ?? ''),
+            'documento' => fn($v) => ($v ? ('\\x' . bin2hex($v)) : null),
             'f_certificado' => fn($v) => (new ConverterDate('date', $v))->toPg(),
             'f_enviado' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
-        /*
-        $aDatos = [];
-        $aDatos['id_nom'] = $Certificado->getId_nom();
-        $aDatos['nom'] = $Certificado->getNom();
-        $aDatos['idioma'] = $Certificado->getIdioma();
-        $aDatos['destino'] = $Certificado->getDestino();
-        $aDatos['certificado'] = $Certificado->getCertificado();
-        $aDatos['esquema_emisor'] = $Certificado->getEsquema_emisor();
-        $aDatos['firmado'] = $Certificado->isFirmado();
-        // para los bytea
-        $aDatos['documento'] = bin2hex($Certificado->getDocumento() ?? '');
-        // para las fechas
-        $aDatos['f_certificado'] = (new ConverterDate('date', $Certificado->getF_certificado()))->toPg();
-        $aDatos['f_enviado'] = (new ConverterDate('date', $Certificado->getF_enviado()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['firmado'])) {
-            $aDatos['firmado'] = 'true';
-        } else {
-            $aDatos['firmado'] = 'false';
-        }
-        */
 
         if ($bInsert === false) {
             //UPDATE
@@ -213,18 +185,14 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-       $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($aDatos === false) {
             return false;
         }
 
         // para los bytea: (resources)
-        $handle = $aDatos['documento'];
-        if (is_resource($handle)) {
-            $contents = stream_get_contents($handle);
-            fclose($handle);
-            $aDatos['documento'] = $contents;
-        }
+        $aDatos['documento'] = $this->normalizeBytea($this->readByteaField($aDatos['documento']));
+
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado']))->fromPg();

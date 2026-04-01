@@ -10,6 +10,7 @@ use PDO;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\entity\Acta;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\HandlesPgBytea;
 
 
 /**
@@ -24,6 +25,7 @@ use src\shared\traits\HandlesPdoErrors;
 class PgActaRepository extends ClaseRepository implements ActaRepositoryInterface
 {
     use HandlesPdoErrors;
+    use HandlesPgBytea;
 
     public function __construct()
     {
@@ -181,13 +183,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para los bytea: (resources)
-            $handle = $aDatos['pdf'];
-            if ($handle !== null) {
-                $contents = stream_get_contents($handle);
-                fclose($handle);
-                $pdf = $contents;
-                $aDatos['pdf'] = $pdf;
-            }
+            $aDatos['pdf'] = $this->normalizeBytea($this->readByteaField($aDatos['pdf']));
             // para las fechas del postgres (texto iso)
             $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta']))->fromPg();
             $ActaDl = Acta::fromArray($aDatos);
@@ -219,26 +215,9 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         $bInsert = $this->isNew($acta);
 
         $aDatos = $Acta->toArrayForDatabase([
-//            'idioma' => fn($v) => (new ConverterEnum('idioma', $v))->toPg(),
-            'pdf' => fn($v) => ($v ? bin2hex($v) : null),
+            'pdf' => fn($v) => ($v ? ('\\x' . bin2hex($v)) : null),
             'f_acta' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
-
-        /*
-        $aDatos = [];
-        $aDatos['id_asignatura'] = $Acta->getIdAsignaturaVo()->value();
-        $aDatos['id_activ'] = $Acta->getId_activ();
-        $aDatos['libro'] = $Acta->getLibroVo()->value();
-        $aDatos['pagina'] = $Acta->getPaginaVo()->value();
-        $aDatos['linea'] = $Acta->getLineaVo()->value();
-        $aDatos['lugar'] = $Acta->getLugarVo()->value();
-        $aDatos['observ'] = $Acta->getObservVo()->value();
-        // para los bytea
-        $aDatos['pdf'] = bin2hex($Acta->getPdfVo()->value());
-        // para las fechas
-        $aDatos['f_acta'] = (new ConverterDate('date', $Acta->getF_acta()))->toPg();
-        array_walk($aDatos, 'core\poner_null');
-        */
 
         if ($bInsert === false) {
             //UPDATE
@@ -297,12 +276,7 @@ class PgActaRepository extends ClaseRepository implements ActaRepositoryInterfac
         }
 
         // para los bytea: (resources)
-        $handle = $aDatos['pdf'];
-        if (is_resource($handle)) {
-            $contents = stream_get_contents($handle);
-            fclose($handle);
-            $aDatos['pdf'] = $contents;
-        }
+        $aDatos['pdf'] = $this->normalizeBytea($this->readByteaField($aDatos['pdf']));
 
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {

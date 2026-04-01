@@ -2,20 +2,25 @@
 
 use core\ConfigGlobal;
 
+include_once(ConfigGlobal::$dir_estilos . '/actas.css.php');
 ?>
 <table class="no_print">
     <tr>
         <td><?= $oPosicion->mostrar_back_arrow(1) ?></td>
         <td align="center">
-	<span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')">
-		<?= _("Cara A (delante)"); ?></span></td>
+        	<span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')">
+		    <?= _("Cara A (delante)"); ?></span></td>
         <td align="center">
-	<span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')">
-		<?= _("Cara B (detrás)"); ?></span></td>
+        	<span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')">
+    		<?= _("Cara B (detrás)"); ?></span></td>
         <td align="center">
-	<span class=link
-          onclick='window.open("<?= ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
-		<?= _("PDF"); ?></span></td>
+        	<span class=link
+                  onclick='window.open("<?= $go_pdf ?>", "sele");'>
+            <!--
+        	<span class=link
+              onclick='window.open("<?= ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
+              -->
+    		<?= _("PDF"); ?></span></td>
     </tr>
     <?php if (!empty($errores)) {
         echo "<tr><td colspan=4>$errores</td></tr>";

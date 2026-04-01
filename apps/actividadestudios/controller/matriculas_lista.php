@@ -110,7 +110,10 @@ foreach ($cMatriculas as $oMatricula) {
     $id_nom = $oMatricula->getId_nom();
     $id_activ = $oMatricula->getId_activ();
     $id_asignatura = $oMatricula->getId_asignatura();
-    $nota_txt = $oMatricula->getNotaSobre();
+    $nota_txt = '';
+    if ($oMatricula->getNotaNumVo() !== null) {
+        $nota_txt = $oMatricula->getNotaNumVo()->value() . ' [' . $oMatricula->getNotaMaxVo()?->value() . ']';
+    }
     $preceptor = $oMatricula->isPreceptor();
     if (is_true($preceptor)) {
         $preceptor = 'x';

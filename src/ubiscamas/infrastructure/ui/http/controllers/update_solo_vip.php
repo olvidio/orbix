@@ -36,6 +36,7 @@ try {
 
 // return json response
 if (ob_get_length()) {
+    ob_start();
     ob_clean();
 }
 header('Content-Type: application/json');

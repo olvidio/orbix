@@ -8,9 +8,9 @@ use core\ConverterDate;
 use core\Set;
 use PDO;
 use src\shared\traits\HandlesPdoErrors;
+use src\shared\traits\HandlesPgBytea;
 use src\ubis\domain\contracts\DireccionRepositoryInterface;
 use src\ubis\domain\entity\Direccion;
-use function core\is_true;
 
 /**
  * Clase que adapta la tabla u_dir_ctr a la interfaz del repositorio
@@ -24,6 +24,7 @@ use function core\is_true;
 class PgDireccionRepository extends ClaseRepository implements DireccionRepositoryInterface
 {
     use HandlesPdoErrors;
+    use HandlesPgBytea;
 
     public function __construct()
     {
@@ -134,13 +135,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para los bytea: (resources)
-            $handle = $aDatos['plano_doc'];
-            if ($handle !== null) {
-                $contents = stream_get_contents($handle);
-                fclose($handle);
-                $plano_doc = $contents;
-                $aDatos['plano_doc'] = $plano_doc;
-            }
+            $aDatos['plano_doc'] = $this->normalizeBytea($this->readByteaField($aDatos['plano_doc']));
             // para las fechas del postgres (texto iso)
             $aDatos['f_direccion'] = (new ConverterDate('date', $aDatos['f_direccion']))->fromPg();
             $Direccion = Direccion::fromArray($aDatos);
@@ -172,37 +167,9 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $bInsert = $this->isNew($id_direccion);
 
         $aDatos = $Direccion->toArrayForDatabase([
-            'plano_doc' => fn($v) => ($v ? bin2hex($v) : null),
+            'plano_doc' => fn($v) => ($v ? ('\\x' . bin2hex($v)) : null),
             'f_direccion' => fn($v) => (new ConverterDate('date', $v))->toPg(),
         ]);
-
-        /*
-         $aDatos = [];
-         $aDatos['direccion'] = $Direccion->getDireccion();
-         $aDatos['c_p'] = $Direccion->getC_p();
-         $aDatos['poblacion'] = $Direccion->getPoblacion();
-         $aDatos['provincia'] = $Direccion->getProvincia();
-         $aDatos['a_p'] = $Direccion->getA_p();
-         $aDatos['pais'] = $Direccion->getPaisVo()->value();
-         $aDatos['observ'] = $Direccion->getObservVo()->value();
-         $aDatos['cp_dcha'] = $Direccion->isCp_dcha();
-         $aDatos['latitud'] = $Direccion->getLatitud();
-         $aDatos['longitud'] = $Direccion->getLongitud();
-         $aDatos['plano_extension'] = $Direccion->getPlano_extension();
-         $aDatos['plano_nom'] = $Direccion->getPlano_nom();
-         $aDatos['nom_sede'] = $Direccion->getNom_sede();
-         // para los bytea
-         $aDatos['plano_doc'] = bin2hex($Direccion->getPlano_doc());
-         // para las fechas
-         $aDatos['f_direccion'] = (new ConverterDate('date', $Direccion->getF_direccion()))->toPg();
-         array_walk($aDatos, 'core\poner_null');
-         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-         if (is_true($aDatos['cp_dcha'])) {
-         $aDatos['cp_dcha'] = 'true';
-         } else {
-         $aDatos['cp_dcha'] = 'false';
-         }
-         */
 
         if ($bInsert === false) {
             //UPDATE
@@ -225,8 +192,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
                     nom_sede                 = :nom_sede";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_direccion = $id_direccion";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
-        else {
+        } else {
             //INSERT
             $campos = "(id_direccion,direccion,c_p,poblacion,provincia,a_p,pais,f_direccion,observ,cp_dcha,latitud,longitud,plano_doc,plano_extension,plano_nom,nom_sede)";
             $valores = "(:id_direccion,:direccion,:c_p,:poblacion,:provincia,:a_p,:pais,:f_direccion,:observ,:cp_dcha,:latitud,:longitud,:plano_doc,:plano_extension,:plano_nom,:nom_sede)";
@@ -255,7 +221,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
      * @param int $id_direccion
      * @return array|bool
      */
-    public function datosById(int $id_direccion): array |bool
+    public function datosById(int $id_direccion): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -267,13 +233,10 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
             return false;
         }
 
+
         // para los bytea: (resources)
-        $handle = $aDatos['plano_doc'];
-        if (is_resource($handle)) {
-            $contents = stream_get_contents($handle);
-            fclose($handle);
-            $aDatos['plano_doc'] = $contents;
-        }
+        $aDatos['plano_doc'] = $this->normalizeBytea($this->readByteaField($aDatos['plano_doc']));
+
         // para las fechas del postgres (texto iso)
         $aDatos['f_direccion'] = (new ConverterDate('date', $aDatos['f_direccion']))->fromPg();
 

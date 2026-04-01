@@ -135,6 +135,8 @@ switch ($Qact) {
         header("Content-Disposition: attachment; filename=\"" . $nom_ext . "\";");
         header("Content-Transfer-Encoding: binary");
         //header("Content-Length: ".$fsize);
+
+        ob_start();
         ob_clean();
         flush();
         echo fpassthru($plano_doc);

@@ -27,12 +27,12 @@ require_once("apps/core/global_header.inc");
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
 // Archivos requeridos por esta url **********************************************
-include_once(ConfigGlobal::$dir_estilos . '/actas.css.php');
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
+
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
@@ -147,16 +147,18 @@ $alum_cara_B = $num_alumnos - $alum_cara_A;
 $caraA = Hash::link('apps/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'A', 'acta' => $acta, 'refresh' => 1)));
 $caraB = Hash::link('apps/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'B', 'acta' => $acta, 'refresh' => 1)));
 
+$url_pdf = ConfigGlobal::getWeb() . '/apps/notas/controller/acta_2_mpdf.php';
 $oHash = new Hash();
-$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/notas/controller/acta_2_mpdf.php');
+$oHash->setUrl($url_pdf);
 $oHash->setCamposForm('acta');
-$h = $oHash->linkSinVal();
+$go_pdf = $url_pdf . "?acta=$acta&" . $oHash->linkConVal();
+
 
 $lugar_fecha = $lugar . ",  " . $oF_acta->getFechaLatin();
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'h' => $h,
+    'go_pdf' => $go_pdf,
     'cara' => $cara,
     'caraA' => $caraA,
     'caraB' => $caraB,

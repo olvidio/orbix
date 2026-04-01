@@ -7,7 +7,7 @@ Hasta ahora, yo me manejaba con Access y tenía una manera de saber qué acta ib
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -74,14 +74,14 @@ $i = 0;
 $aActas = [];
 $aFecha = [];
 $aNivel = [];
-$AsignaturaTipoRepository = $GLOBALS['container']->get(AsignaturaTipoRepositoryInterface::class);
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($cActas as $oActa) {
     $i++;
     $acta = $oActa->getActa();
     $oF_acta = $oActa->getF_acta();
     $f_acta = $oF_acta->getFromLocal();
     $id_asignatura = $oActa->getId_asignatura();
-    $oAsignatura = $AsignaturaTipoRepository->findById($id_asignatura);
+    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }

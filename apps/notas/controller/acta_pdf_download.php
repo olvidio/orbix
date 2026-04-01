@@ -36,6 +36,8 @@ if (!empty($Qacta)) {
     header('Content-Type: application/download', false);
     header('Content-Type: ' . $ctype);
     header('Content-disposition: attachment; filename="' . $nombre_fichero . '"');
+
+    ob_start();
     ob_clean();
     flush();
     echo $doc;

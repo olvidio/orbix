@@ -210,9 +210,11 @@ $oHash1 = new Hash();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
+$url_download = ConfigGlobal::getWeb() . '/apps/notas/controller/acta_pdf_download.php';
 $oHashDown = new Hash();
-$oHashDown->setUrl('apps/notas/controller/acta_pdf_download.php');
-$oHashDown->setCamposForm('key');
+$oHashDown->setUrl($url_download);
+$oHashDown->setCamposForm('key!otro');
+$oHashDown->setCamposNo('otro!acta');
 $h_download = $oHashDown->linkSinVal();
 
 $oTabla = new Lista();
@@ -230,6 +232,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
     'botones' => $botones,
     'txt_eliminar' => $txt_eliminar,
+    'url_download' => $url_download,
     'h_download' => $h_download,
 ];
 
