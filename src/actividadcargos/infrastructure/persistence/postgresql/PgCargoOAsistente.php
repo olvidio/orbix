@@ -34,7 +34,7 @@ class PgCargoOAsistente implements CargoOAsistenteInterface
      * retorna l'array d'objectes tipus CargoOAsistente
      *
      * @param integer id_nom
-     * @return array|false
+     * @return array|bool
      */
     public function getCargoOAsistente(int $iid_nom): array
     {

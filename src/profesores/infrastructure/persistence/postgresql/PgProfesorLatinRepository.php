@@ -39,9 +39,9 @@ class PgProfesorLatinRepository extends ClaseRepository implements ProfesorLatin
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ProfesorLatin
+     * @return array|bool Una colección de objetos de tipo ProfesorLatin
      */
-    public function getProfesoresLatin(array $aWhere = [], array $aOperators = []): array|false
+    public function getProfesoresLatin(array $aWhere = [], array $aOperators = []): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

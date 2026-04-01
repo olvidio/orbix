@@ -23,26 +23,26 @@ interface EncargoCtrRepositoryInterface
      * devuelve una colección (array) de objetos de tipo EncargoCtr
      *
      * @param int $id_ubi
-     * @return array|FALSE Una colección de objetos de tipo EncargoCtr
+     * @return array|bool Una colección de objetos de tipo EncargoCtr
      */
-    public function getEncargosCentro(int $id_ubi): array|false;
+    public function getEncargosCentro(int $id_ubi): array|bool;
 
     /**
      * devuelve una colección (array) de objetos de tipo EncargoCtr
      *
      * @param int $id_enc
-     * @return array|FALSE Una colección de objetos de tipo EncargoCtr
+     * @return array|bool Una colección de objetos de tipo EncargoCtr
      */
-    public function getCentrosEncargo(int $id_enc): array|false;
+    public function getCentrosEncargo(int $id_enc): array|bool;
 
     /**
      * devuelve una colección (array) de objetos de tipo EncargoCtr
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo EncargoCtr
+     * @return array|bool Una colección de objetos de tipo EncargoCtr
      */
-    public function getEncargosCentros(array $aWhere = [], array $aOperators = []): array|false;
+    public function getEncargosCentros(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

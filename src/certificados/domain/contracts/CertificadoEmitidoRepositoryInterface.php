@@ -23,10 +23,10 @@ interface CertificadoEmitidoRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo Certificado
+	 * @return array|bool Una colección de objetos de tipo Certificado
 	
 	 */
-	public function getCertificados(array $aWhere=[], array $aOperators=[]):array|false;
+	public function getCertificados(array $aWhere=[], array $aOperators=[]):array|bool;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

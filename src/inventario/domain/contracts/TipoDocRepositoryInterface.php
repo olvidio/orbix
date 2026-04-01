@@ -17,7 +17,7 @@ use src\inventario\domain\value_objects\TipoDocId;
 interface TipoDocRepositoryInterface
 {
 
-    public function getArrayTipoDoc(): array|false;
+    public function getArrayTipoDoc(): array|bool;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
@@ -26,9 +26,9 @@ interface TipoDocRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo TipoDoc
+     * @return array|bool Una colección de objetos de tipo TipoDoc
      */
-    public function getTipoDocs(array $aWhere = [], array $aOperators = []): array|false;
+    public function getTipoDocs(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

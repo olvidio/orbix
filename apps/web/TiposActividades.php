@@ -51,31 +51,16 @@ class TiposActividades
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /**
-     * aDades de TiposActividades
-     *
-     * @var array
-     */
-    private $aDades;
-
-    /**
-     * bLoaded
-     *
-     * @var boolean
-     */
-    private $bLoaded = FALSE;
-
-    /**
      * Id_tipo_activ de TiposActividades
      *
-     * @var integer
      */
-    private $iid_tipo_activ;
+    private string|int $iid_tipo_activ;
     /**
      * Regexp_id_tipo_activ de TiposActividades
      *
      * @var string
      */
-    private $sregexp_id_tipo_activ;
+    private  string $sregexp_id_tipo_activ;
 
     /**
      * sfsv de TiposActividades
@@ -188,13 +173,12 @@ class TiposActividades
     /**
      * Constructor de la classe.
      *
-     * @param integer|string sid_tipo_proceso
      */
-    function __construct($id = '', $extendida = FALSE)
+    function __construct(int|string $id = '', $extendida = FALSE)
     {
         $this->setExtendida($extendida);
         if (isset($id) && $id !== '') {
-            if (is_numeric($id)) $this->iid_tipo_activ = $id;
+            if (is_int($id)) $this->iid_tipo_activ = $id;
             $this->separarId($id);
         }
         $this->TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
@@ -226,7 +210,7 @@ class TiposActividades
         return $this->afActividad2Digitos;
     }
 
-    private function separarId($sregexp_id_tipo_activ)
+    private function separarId(string $sregexp_id_tipo_activ)
     {
         if (!empty($sregexp_id_tipo_activ)) {
             $inc = 0;

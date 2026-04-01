@@ -354,7 +354,7 @@ class ConfigMagik
     /**
      * @desc                   Lists all keys.
      * @param string|null $section Optional section (needed only when using sections).
-     * @return array|false
+     * @return array|bool
      */
     function listKeys(string $section = null)
     {

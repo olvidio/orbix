@@ -23,9 +23,9 @@ interface InicialesSacdRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo InicialesSacd
+     * @return array|bool Una colección de objetos de tipo InicialesSacd
      */
-    public function getInicialesSacd(array $aWhere = [], array $aOperators = []): array|false;
+    public function getInicialesSacd(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

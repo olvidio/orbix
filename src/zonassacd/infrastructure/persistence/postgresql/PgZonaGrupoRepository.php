@@ -38,7 +38,7 @@ class PgZonaGrupoRepository extends ClaseRepository implements ZonaGrupoReposito
      * Els posibles grups de zones
      *
      * @param string optional $sCondicion Condició de búsqueda (amb el WHERE).
-     * @return array|false
+     * @return array|bool
      */
     public function getArrayZonaGrupos(string $sCondicion = ''): array
     {

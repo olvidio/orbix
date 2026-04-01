@@ -80,7 +80,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     /**
      * retorna un array del tipus: id_asignatura => array(nombre_asignatura, creditos)
      *
-     * @return array|false
+     * @return array|bool
      */
     public function getArrayAsignaturasCreditos(): array
     {
@@ -225,9 +225,9 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Asignatura
+     * @return array|bool Una colección de objetos de tipo Asignatura
      */
-    public function getAsignaturas(array $aWhere = [], array $aOperators = []): array|false
+    public function getAsignaturas(array $aWhere = [], array $aOperators = []): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

@@ -18,7 +18,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 interface ActividadAllRepositoryInterface
 {
 
-    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, $cdc_sel = 0): array|false;
+    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, $cdc_sel = 0): array;
 
     public function getCoincidencia($oActividad): bool;
 
@@ -35,9 +35,9 @@ interface ActividadAllRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ActividadAll
+     * @return array|bool Una colección de objetos de tipo ActividadAll
      */
-    public function getActividades(array $aWhere = [], array $aOperators = []): array|false;
+    public function getActividades(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

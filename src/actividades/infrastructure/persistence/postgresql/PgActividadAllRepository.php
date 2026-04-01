@@ -13,7 +13,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
-use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
+use web\TiposActividades;
 use function core\curso_est;
 
 
@@ -30,11 +30,11 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
 {
     use HandlesPdoErrors;
 
-    private TipoTelecoRepositoryInterface $tipoTelecoRepository;
+    private TiposActividades $tiposActividades;
 
-    public function __construct(TipoTelecoRepositoryInterface $tipoTelecoRepository)
+    public function __construct(TiposActividades $tiposActividades)
     {
-        $this->tipoTelecoRepository = $tipoTelecoRepository;
+        $this->tiposActividades = $tiposActividades;
         $oDbl = $GLOBALS['oDBPC'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBPC_Select'];
@@ -50,14 +50,14 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
      * Se requiere del array $_SESSION['oPermActividades'] para saber si se tiene permisos para ver...
      *
      */
-    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, $cdc_sel = 0): array|bool
+    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, $cdc_sel = 0): array
     {
         $oIniPlanning = $oFini;
         $a = 0;
         $a_cdc = [];
         $aWhere = [];
         $aOperador = [];
-        if (empty($id_ubi) || $id_ubi == 1) { // en estos casos sólo miro las actividades de cada sección.
+        if (empty($id_ubi) || $id_ubi === 1) { // en estos casos sólo miro las actividades de cada sección.
             if (empty($id_ubi)) {
                 $aOperador['id_ubi'] = 'IS NULL';
             }
@@ -91,8 +91,8 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             $nom_activ = $oActividad->getNom_activ();
             $css = PlanningStyle::clase($id_tipo_activ, '', '', $oActividad->getStatus());
 
-            $oTipoActividad = $this->tipoActividadRepository->findById($id_tipo_activ);
-            $ssfsv = $oTipoActividad->getSfsvText();
+            $oTipoActiv = new $this->tiposActividades($id_tipo_activ);
+            $ssfsv = $oTipoActiv->getSfsvText();
 
             //para el caso de que la actividad comience antes
             //del periodo de inicio obligo a que tome una hora de inicio
@@ -120,7 +120,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
                 $nom_curt = $ssfsv;
                 $nom_llarg = "$ssfsv ($ini-$fi)";
             } else {
-                $nom_curt = $oTipoActividad->getAsistentesText() . " " . $oTipoActividad->getActividadText();
+                $nom_curt = $oTipoActiv->getAsistentesText() . " " . $oTipoActiv->getActividadText();
                 $nom_llarg = $nom_activ;
             }
 
@@ -150,7 +150,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
             return $a_cdc;
         }
 
-        return false;
+        return [];
     }
 
     /**
@@ -165,7 +165,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $interval = "P$iTolerancia" . "D";
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $id = (string)$id_tipo_activ; // para convertir id_tipo_activ en un string.
-        $seccion = ($id[0] == "1") ? 2 : 1;
+        $seccion = ($id[0] === "1") ? 2 : 1;
         $oFini0 = $oActividad->getF_ini();
         $oFini1 = clone $oFini0;
         $oFfin0 = $oActividad->getF_fin();
@@ -186,7 +186,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         //echo "sql: $sql<br>";
         $stmt = $this->prepareAndExecute($oDbl, $sql, [], __METHOD__, __FILE__, __LINE__);
 
-        return ($stmt->fetchColumn() > 0) ? true : false;
+        return $stmt->fetchColumn() > 0;
     }
 
     /**
@@ -200,16 +200,20 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $oCondicion = new Condicion();
         $aCondi = [];
         foreach ($aWhere as $camp => $val) {
-            if ($camp === '_ordre') continue;
-            $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
-            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
+            if ($camp === '_ordre') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondi[] = $a;
+            }
             // operadores que no requieren valores
             if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
             if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
             if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
-        if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
+        if ($sCondi !== '') $sCondi = " WHERE " . $sCondi;
         if (isset($GLOBALS['oGestorSessioDelegación'])) {
             $sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador("$nom_tabla", $sCondi, $aWhere);
         } else {
@@ -253,7 +257,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $nom_tabla = $this->getNomTabla();
 
         $cond_nivel_stgr = "(nivel_stgr < 6 OR nivel_stgr=11)";
-        $any_final = $_SESSION['oConfig']?->any_final_curs('est')?? date('Y');
+        $any_final = $_SESSION['oConfig']?->any_final_curs('est') ?? date('Y');
         $any = $any_final - 2;
         $inicurs = curso_est("inicio", $any, "est")->format('Y-m-d');
         $scondicion = "AND f_ini > '$inicurs'";

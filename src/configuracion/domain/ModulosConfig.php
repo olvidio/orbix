@@ -21,7 +21,7 @@ class ModulosConfig
     private $cApps;
 
     private $a_mods_installed = [];
-    private array|false $cModsInstalados;
+    private array|bool $cModsInstalados;
 
     public function __construct()
     {

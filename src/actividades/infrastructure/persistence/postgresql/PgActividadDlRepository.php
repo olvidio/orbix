@@ -6,8 +6,8 @@ use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\shared\traits\HandlesPdoErrors;
-use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\utils_database\domain\GenerateIdGlobal;
+use web\TiposActividades;
 
 
 /**
@@ -23,9 +23,9 @@ class PgActividadDlRepository extends PgActividadAllRepository implements Activi
 {
     use HandlesPdoErrors;
 
-    public function __construct(TipoTelecoRepositoryInterface $tipoTelecoRepository)
+    public function __construct(TiposActividades $tiposActividades)
     {
-        parent::__construct($tipoTelecoRepository);
+        parent::__construct($tiposActividades);
         $oDbl = $GLOBALS['oDBC'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBC_Select'];

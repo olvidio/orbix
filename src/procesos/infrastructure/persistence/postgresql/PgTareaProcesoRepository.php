@@ -43,7 +43,7 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
      * retorna array de fase#traea => fase_previa, tarea_previa.
      *
      * @param integer iid_tipo_proceso tipus de procés.
-     * @return array|false
+     * @return array|bool
      */
     public function getArrayFasesDependientes(int $iid_tipo_proceso): array
     {
@@ -137,7 +137,7 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
      * @param integer id_fase.
      * @param integer id_tarea.
      * @param integer $f nº de fila
-     * @return array|false
+     * @return array|bool
      */
     public function zzzgetListaFasesDependientes(int $iid_tipo_proceso, int $id_fase, int $id_tarea = 0, int $f = 0): array
     {
@@ -263,10 +263,10 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo TareaProceso
+     * @return array|bool Una colección de objetos de tipo TareaProceso
      * @throws JsonException
      */
-    public function getTareasProceso(array $aWhere = [], array $aOperators = []): array|false
+    public function getTareasProceso(array $aWhere = [], array $aOperators = []): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

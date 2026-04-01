@@ -30,7 +30,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
         $this->setNomTabla('i_ubis_dl');
     }
 
-    public function getUbisInventarioLugar($bLugar): array|false
+    public function getUbisInventarioLugar($bLugar): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -53,7 +53,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
         return $UbiInventarioSet->getTot();
     }
 
-    public function getArrayUbisInventario(): array|false
+    public function getArrayUbisInventario(): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -76,9 +76,9 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo UbiInventario
+     * @return array|bool Una colección de objetos de tipo UbiInventario
      */
-    public function getUbisInventario(array $aWhere = [], array $aOperators = []): array|false
+    public function getUbisInventario(array $aWhere = [], array $aOperators = []): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

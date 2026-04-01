@@ -34,7 +34,7 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
     }
 
 
-    public function getEncargosCentro(int $id_ubi): array|false
+    public function getEncargosCentro(int $id_ubi): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -52,7 +52,7 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
         return $EncargoCtrSet->getTot();
     }
 
-    public function getCentrosEncargo(int $id_enc): array|false
+    public function getCentrosEncargo(int $id_enc): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -76,9 +76,9 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo EncargoCtr
+     * @return array|bool Una colección de objetos de tipo EncargoCtr
      */
-    public function getEncargosCentros(array $aWhere = [], array $aOperators = []): array|false
+    public function getEncargosCentros(array $aWhere = [], array $aOperators = []): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

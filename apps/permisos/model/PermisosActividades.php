@@ -245,7 +245,7 @@ class PermisosActividades
      * para dl, ex
      *
      * @param bool $dl_propia dl organizadora
-     * @return array|false
+     * @return array|bool
      */
     public function getPermisoCrear(bool $dl_propia)
     {

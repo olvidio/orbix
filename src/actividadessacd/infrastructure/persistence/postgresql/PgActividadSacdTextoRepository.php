@@ -31,7 +31,7 @@ class PgActividadSacdTextoRepository extends ClaseRepository implements Activida
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ActividadSacdTexto
+     * @return array|bool Una colección de objetos de tipo ActividadSacdTexto
      */
     public function getActividadSacdTextos(array $aWhere = [], array $aOperators = []): array
     {

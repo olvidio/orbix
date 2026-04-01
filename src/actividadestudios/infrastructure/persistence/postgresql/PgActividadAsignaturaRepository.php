@@ -80,9 +80,9 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ActividadAsignatura
+     * @return array|bool Una colección de objetos de tipo ActividadAsignatura
      */
-    public function getActividadAsignaturas(array $aWhere = [], array $aOperators = []): array|false
+    public function getActividadAsignaturas(array $aWhere = [], array $aOperators = []): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -240,7 +240,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
         return $aDatos;
     }
 
-    public function datosByPk(ActividadAsignaturaPk $pk): array|false
+    public function datosByPk(ActividadAsignaturaPk $pk): array|bool
     {
         return $this->datosById($pk->IdActiv(), $pk->IdAsignatura());
     }

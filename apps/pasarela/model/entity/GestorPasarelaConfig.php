@@ -41,7 +41,7 @@ class GestorPasarelaConfig extends ClaseGestor
      * retorna l'array d'objectes de tipus PasarelaConfig
      *
      * @param string sQuery la query a executar.
-     * @return array|false
+     * @return array|bool
      */
     function getPasarelaConfigesQuery($sQuery = '')
     {

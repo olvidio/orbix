@@ -150,7 +150,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         }
     }
 
-    private function getPersonaNotasConCertificado(?string $certificado, ?string $estado = null): array|false
+    private function getPersonaNotasConCertificado(?string $certificado, ?string $estado = null): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

@@ -46,7 +46,7 @@ trait PersonaGlobalListsTrait
      * Lista de posibles SACD en array [id_nom => ape_nom].
      *
      * @param string $sdonde condición extra SQL (debe empezar por AND)
-     * @return array|false
+     * @return array|bool
      */
     public function getArraySacd(string $sdonde = ''): array
     {
@@ -69,7 +69,7 @@ trait PersonaGlobalListsTrait
      * Lista de personas activas en array [id_nom => ape_nom(centro)].
      *
      * @param string $id_tabla únicamente usado cuando la tabla es p_de_paso_ex
-     * @return array|false
+     * @return array|bool
      */
     public function getArrayPersonas(string $id_tabla = ''): array
     {

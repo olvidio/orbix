@@ -43,7 +43,7 @@ class PgCasaPeriodoRepository extends ClaseRepository implements CasaPeriodoRepo
      * @param integer id_ubi
      * @param DatetimeLocal inicio data d'inici del periode a comptar.
      * @param DatetimeLocal fin data de fi del periode a comptar.
-     * @return array|false
+     * @return array|bool
      */
     public function getArrayCasaPeriodos(int $id_ubi, DateTimeLocal $oInicio, DateTimeLocal $oFin): array
     {

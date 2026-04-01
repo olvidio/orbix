@@ -4,7 +4,7 @@ namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\shared\traits\HandlesPdoErrors;
-use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
+use web\TiposActividades;
 
 
 /**
@@ -20,9 +20,9 @@ class PgActividadRepository extends PgActividadAllRepository implements Activida
 {
     use HandlesPdoErrors;
 
-    public function __construct(TipoTelecoRepositoryInterface $tipoTelecoRepository)
+    public function __construct(TiposActividades $tiposActividades)
     {
-        parent::__construct($tipoTelecoRepository);
+        parent::__construct($tiposActividades);
         $oDbl = $GLOBALS['oDBC'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBC_Select'];

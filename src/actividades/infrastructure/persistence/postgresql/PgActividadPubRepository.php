@@ -2,12 +2,9 @@
 
 namespace src\actividades\infrastructure\persistence\postgresql;
 
-use core\ConfigGlobal;
-use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\shared\traits\HandlesPdoErrors;
-use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
-use src\utils_database\domain\GenerateIdGlobal;
+use web\TiposActividades;
 
 
 /**
@@ -23,9 +20,9 @@ class PgActividadPubRepository extends PgActividadAllRepository implements Activ
 {
     use HandlesPdoErrors;
 
-    public function __construct(TipoTelecoRepositoryInterface $tipoTelecoRepositor)
+    public function __construct(TiposActividades $tiposActividades)
     {
-        parent::__construct($tipoTelecoRepositor);
+        parent::__construct($tiposActividades);
         $oDbl = $GLOBALS['oDBPC'];
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBPC_Select'];

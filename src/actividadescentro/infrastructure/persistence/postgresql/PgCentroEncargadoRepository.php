@@ -71,7 +71,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
      *
      * @param integer id_ubi.
      * @param string condicion a añadir (sin where): f_ini BETWEEN '1/1/2010' AND '1/8/2010'.
-     * @return array|false
+     * @return array|bool
      */
     public function getActividadesDeCentros(int $iid_ubi, string $scondicion = ''): array
     {
@@ -100,7 +100,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
      * retorna l'array d'objectes de tipus Ubi
      *
      * @param integer id_actividad.
-     * @return array|false
+     * @return array|bool
      */
     public function getCentrosEncargadosActividad(int $iid_activ): array
     {

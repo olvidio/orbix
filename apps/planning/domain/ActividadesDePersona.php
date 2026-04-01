@@ -12,7 +12,7 @@ use web\TiposActividades;
 class ActividadesDePersona
 {
 
-    public static function actividadesPorPersona(array|false $cPersonas, string $fin_iso, string $inicio_iso, DateTimeLocal $oIniPlanning, string $inicio_local): array
+    public static function actividadesPorPersona(array|bool $cPersonas, string $fin_iso, string $inicio_iso, DateTimeLocal $oIniPlanning, string $inicio_local): array
     {
         $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         $aListaCtr = [];

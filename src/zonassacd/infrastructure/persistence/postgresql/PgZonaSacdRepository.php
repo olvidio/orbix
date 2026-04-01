@@ -38,7 +38,7 @@ class PgZonaSacdRepository extends ClaseRepository implements ZonaSacdRepository
      * retorna l'array de id_nom dels sacd de la zona
      *
      * @param integer iid_zona.
-     * @return array|false
+     * @return array|bool
      */
     public function getIdSacdsDeZona(int $iid_zona): array
     {

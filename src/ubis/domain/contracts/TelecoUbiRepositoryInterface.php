@@ -18,7 +18,7 @@ interface TelecoUbiRepositoryInterface
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-    public function getTelecos(array $aWhere = [], array $aOperators = []): array|false;
+    public function getTelecos(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

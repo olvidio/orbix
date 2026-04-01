@@ -41,9 +41,9 @@ class PgDossierRepository extends ClaseRepository implements DossierRepositoryIn
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Dossier
+     * @return array|bool Una colección de objetos de tipo Dossier
      */
-    public function getDossieres(array $aWhere = [], array $aOperators = []): array|false
+    public function getDossieres(array $aWhere = [], array $aOperators = []): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

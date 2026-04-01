@@ -41,9 +41,9 @@ class AsistenteApplicationService
      *
      * @param array $aWhere
      * @param array $aOperators
-     * @return array|false
+     * @return array|bool
      */
-    public function getAsistentes(array $aWhere = [], array $aOperators = []): array|false
+    public function getAsistentes(array $aWhere = [], array $aOperators = []): array|bool
     {
         return $this->repository->getAsistentes($aWhere, $aOperators);
     }

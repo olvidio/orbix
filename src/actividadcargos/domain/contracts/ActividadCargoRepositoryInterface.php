@@ -23,9 +23,9 @@ interface ActividadCargoRepositoryInterface
 
     public function getActividadCargosDeAsistente(array $aWhereNom, $aWhere = [], $aOperators = []): array;
 
-    public function getAsistenteCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array|false;
+    public function getAsistenteCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array|bool;
 
-    public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array|false;
+    public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array|bool;
 
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -35,9 +35,9 @@ interface ActividadCargoRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ActividadCargo
+     * @return array|bool Una colección de objetos de tipo ActividadCargo
      */
-    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array|false;
+    public function getActividadCargos(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

@@ -42,7 +42,7 @@ interface PersonaSacdRepositoryInterface
     public function getArrayPersonas(string $id_tabla = ''): array;
 
 
-    public function getPersonas(array $aWhere = [], array $aOperators = []): array|false;
+    public function getPersonas(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

@@ -24,9 +24,9 @@ interface UbiGastoRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo UbiGasto
+     * @return array|bool Una colección de objetos de tipo UbiGasto
      */
-    public function getUbisGastos(array $aWhere = [], array $aOperators = []): array|false;
+    public function getUbisGastos(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

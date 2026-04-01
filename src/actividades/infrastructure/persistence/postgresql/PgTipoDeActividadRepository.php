@@ -62,7 +62,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
      * @param string sid_tipo_activ
      * @param boolean dl_propia
      * @param string ssfsv ( '',1,2,all)
-     * @return array|false
+     * @return array|bool
      */
     public function getTiposDeProcesos($sid_tipo_activ = '......', $bdl_propia = true, $sfsv = ''): array
     {
@@ -90,8 +90,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
             if ($isfsv == 1) {
                 $nom_tipo_proceso = "id_tipo_proceso_sv";
                 $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sv";
-            }
-            else {
+            } else {
                 $nom_tipo_proceso = "id_tipo_proceso_sf";
                 $nom_tipo_proceso_ex = "id_tipo_proceso_ex_sf";
             }
@@ -100,8 +99,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
                             FROM $nom_tabla 
                             WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
                             GROUP BY $nom_tipo_proceso";
-            }
-            else {
+            } else {
                 $sQry = "SELECT $nom_tipo_proceso_ex as id_tipo_proceso 
                         FROM $nom_tabla 
                         WHERE id_tipo_activ::text ~ '^$sid_tipo_activ' 
@@ -305,8 +303,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
 					id_tipo_proceso_ex_sf    = :id_tipo_proceso_ex_sf";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_tipo_activ = $id_tipo_activ";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        }
-        else {
+        } else {
             // INSERT
             $campos = "(id_tipo_activ,nombre,id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf)";
             $valores = "(:id_tipo_activ,:nombre,:id_tipo_proceso_sv,:id_tipo_proceso_ex_sv,:id_tipo_proceso_sf,:id_tipo_proceso_ex_sf)";
@@ -335,7 +332,7 @@ class PgTipoDeActividadRepository extends ClaseRepository implements TipoDeActiv
      * @param int $id_tipo_activ
      * @return array|bool
      */
-    public function datosById(int $id_tipo_activ): array |bool
+    public function datosById(int $id_tipo_activ): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

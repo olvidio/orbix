@@ -170,7 +170,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * @param array $aOperador para la asistencia (id_nom y plaza)
      * @param array $aWhereAct para la Actividad
      * @param array $aOperadorAct para la Actividad
-     * @return array|false
+     * @return array|bool
      */
     public function getAsistenteCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array |bool
     {
@@ -236,7 +236,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      * @param array $aOperador para la asistencia (id_nom y plaza)
      * @param array $aWhereAct para la Actividad
      * @param array $aOperadorAct para la Actividad
-     * @return array|false
+     * @return array|bool
      */
     public function getCargoDeActividad(array $aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = []): array |bool
     {
@@ -287,7 +287,7 @@ class PgActividadCargoDlRepository extends ClaseRepository implements ActividadC
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ActividadCargo
+     * @return array|bool Una colección de objetos de tipo ActividadCargo
      */
     public function getActividadCargos(array $aWhere = [], array $aOperators = []): array |bool
     {

@@ -24,9 +24,9 @@ interface ProfesorJuramentoRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ProfesorJuramento
+     * @return array|bool Una colección de objetos de tipo ProfesorJuramento
      */
-    public function getProfesorJuramentos(array $aWhere = [], array $aOperators = []): array|false;
+    public function getProfesorJuramentos(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

@@ -149,7 +149,7 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
      * retorna l'array d'objectes de tipus Cambio
      * Que no s'hagin apuntat a la dl.
      *
-     * @return array|false
+     * @return array|bool
      */
     public function getCambiosNuevos(): array
     {
@@ -209,10 +209,10 @@ class PgCambioRepository extends ClaseRepository implements CambioRepositoryInte
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo CambioDl
+     * @return array|bool Una colección de objetos de tipo CambioDl
      * @throws JsonException
      */
-    public function getCambios(array $aWhere = [], array $aOperators = []): array|false
+    public function getCambios(array $aWhere = [], array $aOperators = []): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

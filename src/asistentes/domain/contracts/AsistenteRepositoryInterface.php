@@ -26,9 +26,9 @@ interface AsistenteRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Asistente
+     * @return array|bool Una colección de objetos de tipo Asistente
      */
-    public function getAsistentes(array $aWhere = [], array $aOperators = []): array|false;
+    public function getAsistentes(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

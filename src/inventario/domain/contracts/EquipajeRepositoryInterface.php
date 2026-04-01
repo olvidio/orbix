@@ -16,9 +16,9 @@ use src\inventario\domain\entity\Equipaje;
 interface EquipajeRepositoryInterface
 {
 
-    public function getEquipajesCoincidentes(string $f_ini_iso, string $f_fin_iso): array|false;
+    public function getEquipajesCoincidentes(string $f_ini_iso, string $f_fin_iso): array|bool;
 
-    public function getArrayEquipajes(string $f_ini_iso = ''): array|false;
+    public function getArrayEquipajes(string $f_ini_iso = ''): array|bool;
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
@@ -27,9 +27,9 @@ interface EquipajeRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Equipaje
+     * @return array|bool Una colección de objetos de tipo Equipaje
      */
-    public function getEquipajes(array $aWhere = [], array $aOperators = []): array|false;
+    public function getEquipajes(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

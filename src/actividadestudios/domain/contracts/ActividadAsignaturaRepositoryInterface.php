@@ -26,9 +26,9 @@ interface ActividadAsignaturaRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo ActividadAsignatura
+     * @return array|bool Una colección de objetos de tipo ActividadAsignatura
      */
-    public function getActividadAsignaturas(array $aWhere = [], array $aOperators = []): array|false;
+    public function getActividadAsignaturas(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
@@ -44,7 +44,7 @@ interface ActividadAsignaturaRepositoryInterface
 
     public function datosById(int $id_activ, int $id_asignatura): array|bool;
 
-    public function datosByPk(ActividadAsignaturaPk $pk): array|false;
+    public function datosByPk(ActividadAsignaturaPk $pk): array|bool;
 
     public function findById(int $id_activ, int $id_asignatura): ?ActividadAsignatura;
 

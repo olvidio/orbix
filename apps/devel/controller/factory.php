@@ -949,13 +949,13 @@ $txt_repository .= '
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo ' . $Q_clase;
+	 * @return array|bool Una colección de objetos de tipo ' . $Q_clase;
 if (!empty($a_use_txt['JsonException'])) {
     $txt_repository .= "\n\t" . ' * @throws JsonException';
 }
 $txt_repository .= "\n\t" . '
 	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|false
+	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|bool
 	{
 	    return $this->repository->get' . $clase_plural . '($aWhere, $aOperators);
 	}
@@ -970,13 +970,13 @@ $txt_interface .= '
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo ' . $Q_clase;
+	 * @return array|bool Una colección de objetos de tipo ' . $Q_clase;
 if (!empty($a_use_txt['JsonException'])) {
     $txt_interface .= "\n\t" . ' * @throws JsonException';
 }
 $txt_interface .= "\n\t" . '
 	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|false;
+	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|bool;
 	';
 
 $txt_pgRepositorio .= "\n";
@@ -989,13 +989,13 @@ $txt_pgRepositorio .= '
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo ' . $Q_clase;
+	 * @return array|bool Una colección de objetos de tipo ' . $Q_clase;
 if (!empty($a_use_txt['JsonException'])) {
     $txt_pgRepositorio .= "\n\t" . ' * @throws JsonException';
 }
 $txt_pgRepositorio .= "\n\t" . '
 	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|false
+	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|bool
 	{';
 if ($Q_db === 'sv-e' || $Q_db === 'comun') {
     $txt_pgRepositorio .= '

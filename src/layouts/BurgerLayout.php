@@ -313,7 +313,7 @@ class BurgerLayout implements LayoutInterface
         return ob_get_clean();
     }
 
-    private function buildUserMenus(array|false $cMenusUtilidades)
+    private function buildUserMenus(array|bool $cMenusUtilidades)
     {
         $MetaMenuReposiroty = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
 

@@ -25,10 +25,10 @@ interface TipoCasaRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo TipoCasa
+	 * @return array|bool Una colección de objetos de tipo TipoCasa
 	
 	 */
-	public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array|false;
+	public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array|bool;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

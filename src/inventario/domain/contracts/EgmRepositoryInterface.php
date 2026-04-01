@@ -16,7 +16,7 @@ use src\inventario\domain\entity\Egm;
 interface EgmRepositoryInterface
 {
 
-    public function getArrayIdFromIdEquipajes($aEquipajes, $lugar = ''): array|false;
+    public function getArrayIdFromIdEquipajes($aEquipajes, $lugar = ''): array|bool;
 
     public function getUltimoGrupo(int $id_equipaje): int;
 
@@ -27,9 +27,9 @@ interface EgmRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Egm
+     * @return array|bool Una colección de objetos de tipo Egm
      */
-    public function getEgmes(array $aWhere = [], array $aOperators = []): array|false;
+    public function getEgmes(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

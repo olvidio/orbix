@@ -39,7 +39,7 @@ class GestorIdMatchPersona extends ClaseGestor
      * retorna l'array d'objectes de tipus IdMatchPersona
      *
      * @param string sQuery la query a executar.
-     * @return array|false
+     * @return array|bool
      */
     function getIdMatchPersonasQuery($sQuery = '')
     {

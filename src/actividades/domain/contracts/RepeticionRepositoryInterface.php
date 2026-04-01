@@ -26,9 +26,9 @@ interface RepeticionRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|false Una colección de objetos de tipo Repeticion
+     * @return array|bool Una colección de objetos de tipo Repeticion
      */
-    public function getRepeticiones(array $aWhere = [], array $aOperators = []): array|false;
+    public function getRepeticiones(array $aWhere = [], array $aOperators = []): array|bool;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
