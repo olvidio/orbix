@@ -18,7 +18,7 @@ $a_actividades = [];
 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 foreach ($aId_activ as $id_activ) {
     $a++;
-    $oActividad = $ActividadAllRepository->indById($id_activ);
+    $oActividad = $ActividadAllRepository->findById($id_activ);
     $nom_activ = $oActividad->getNom_activ();
     if (empty($nom_activ)) {
         $nom_activ = sprintf(_("OJO! No se encuentra la actividad con id: %s"), $id_activ);

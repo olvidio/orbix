@@ -1128,7 +1128,7 @@ class Trasladar
             $oDestino->setEncargoVo($oOrigen->getEncargoVo()->value());
             // cambio para que la dl responsable sea la actual:
             $oDestino->setDlResponsableVo(ConfigGlobal::mi_delef());
-            $oDestino->setObservVo($oOrigen->getObservVo()->value());
+            $oDestino->setObservVo($oOrigen->getObservVo()?->value());
             return $oDestino;
         }
         return null;

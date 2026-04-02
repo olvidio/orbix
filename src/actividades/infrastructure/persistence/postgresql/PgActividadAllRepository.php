@@ -103,10 +103,10 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
                 $hini = "1:16";
             } else {
                 $ini = (string)$oF_ini_act->getFromLocal();
-                $hini = (string)$h_ini;
+                $hini = (string)$h_ini?->format('H:i');
             }
             $fi = (string)$oF_fin_act->getFromLocal();
-            $hfi = (string)$h_fin;
+            $hfi = (string)$h_fin?->format('H:i');
 
             // mirar permisos.
             $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);

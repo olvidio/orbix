@@ -3,6 +3,7 @@
 namespace planning\domain;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
@@ -12,15 +13,17 @@ class ActividadesPorCasas
 
     /**
      * @param int $Qcdc_sel
-     * @param \src\shared\domain\value_objects\DateTimeLocal $oIniPlanning
-     * @param \src\shared\domain\value_objects\DateTimeLocal $oFinPlanning
+     * @param DateTimeLocal $oIniPlanning
+     * @param DateTimeLocal $oFinPlanning
      * @param mixed $sin_activ
-     * @param string $fin_iso
-     * @param string $inicio_iso
+     * @param DateTimeLocal $oFin
+     * @param DateTimeLocal $oInicio
      * @return array
      */
-    public static function actividadesPorCasas(int $Qcdc_sel, \src\shared\domain\value_objects\DateTimeLocal $oIniPlanning, \src\shared\domain\value_objects\DateTimeLocal $oFinPlanning, mixed $sin_activ, string $fin_iso, string $inicio_iso): array
+    public static function actividadesPorCasas(int $Qcdc_sel, DateTimeLocal $oIniPlanning, DateTimeLocal $oFinPlanning, mixed $sin_activ, DateTimeLocal $oFin, DateTimeLocal $oInicio): array
     {
+        $fin_iso = $oFin->format('Y-m-d');
+        $inicio_iso = $oInicio->format('Y-m-d');
         $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
         $sCdc = '';
         if ($Qcdc_sel < 10) { //Para buscar por casas.

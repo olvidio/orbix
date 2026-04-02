@@ -47,7 +47,7 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
         $d++;
         $identificador = $oDocumento->getIdentificador();
         $num_ejemplares = $oDocumento->getNum_ejemplares();
-        $observ = $oDocumento->getObservVo()->value();
+        $observ = $oDocumento->getObservVo()?->value();
         $id_tipo_doc = $oDocumento->getId_tipo_doc();
         $id_lugar_doc = $oDocumento->getId_lugar();
         $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);

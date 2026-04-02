@@ -5,7 +5,9 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use planning\domain\Planning;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\Hash;
+use function core\urlsafe_b64decode;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -26,9 +28,9 @@ $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $Qnueva = (string)filter_input(INPUT_POST, 'nueva');
 $Qdoble = (string)filter_input(INPUT_POST, 'doble');
 
-$Qa_actividades = json_decode(core\urlsafe_b64decode($Qsactividades));
-$QoIniPlanning = unserialize(base64_decode($QsIniPlanning), ['allowed_classes' => true]);
-$QoFinPlanning = unserialize(base64_decode($QsFinPlanning), ['allowed_classes' => true]);
+$Qa_actividades = json_decode(urlsafe_b64decode($Qsactividades),TRUE);
+$QoIniPlanning = new DateTimeLocal(urlsafe_b64decode($QsIniPlanning));
+$QoFinPlanning = new DateTimeLocal(urlsafe_b64decode($QsFinPlanning));
 
 /* TODO: comprobar que tiene permiso para crear algo. Sino: $Qmod = 0; */
 

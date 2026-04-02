@@ -6,6 +6,8 @@ use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
+use web\Posicion;
+use function core\urlsafe_b64decode;
 use function core\urlsafe_b64encode;
 
 /**
@@ -42,26 +44,33 @@ $oPosicion->recordar();
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
-        $oPosicion->goStack($stack);
-        $Qobj_pau = $oPosicion->getParametro('obj_pau');
-        $Qna = $oPosicion->getParametro('na');
-        $Qperiodo = $oPosicion->getParametro('periodo');
-        $Qyear = $oPosicion->getParametro('year');
-        $Qempiezamin = $oPosicion->getParametro('empiezamin');
-        $Qempiezamax = $oPosicion->getParametro('empiezamax');
-        $QsaWhere = $oPosicion->getParametro('saWhere');
-        $QsaOperador = $oPosicion->getParametro('saOperador');
-        $QsaWhereCtr = $oPosicion->getParametro('saWhereCtr');
-        $QsaOperadorCtr = $oPosicion->getParametro('saOperadorCtr');
-        $Qid_sel = $oPosicion->getParametro('id_sel');
-        $Qscroll_id = $oPosicion->getParametro('scroll_id');
-        $oPosicion->olvidar($stack); //limpio todos los estados hacia delante.
+        // No me sirve el de global_object, sino el de la session
+        $oPosicion2 = new Posicion();
+        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+            $Qobj_pau = $oPosicion2->getParametro('obj_pau');
+            $Qna = $oPosicion2->getParametro('na');
+            $Qperiodo = $oPosicion2->getParametro('periodo');
+            $Qyear = $oPosicion2->getParametro('year');
+            $Qempiezamin = $oPosicion2->getParametro('empiezamin');
+            $Qempiezamax = $oPosicion2->getParametro('empiezamax');
+            $QsaWhere = $oPosicion2->getParametro('saWhere');
+            $QsaOperador = $oPosicion2->getParametro('saOperador');
+            $QsaWhereCtr = $oPosicion2->getParametro('saWhereCtr');
+            $QsaOperadorCtr = $oPosicion2->getParametro('saOperadorCtr');
+            $Qid_sel = $oPosicion2->getParametro('id_sel');
+            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+            $oPosicion2->olvidar($stack); //limpio todos los estados hacia delante.
 
-        $aWhere = json_decode(core\urlsafe_b64decode($QsaWhere));
-        $aOperador = json_decode(core\urlsafe_b64decode($QsaOperador));
-        $aWhereCtr = json_decode(core\urlsafe_b64decode($QsaWhereCtr));
-        $aOperadorCtr = json_decode(core\urlsafe_b64decode($QsaOperadorCtr));
+            $aWhere = json_decode(urlsafe_b64decode($QsaWhere), TRUE) ?? [];
+            $aOperador = json_decode(urlsafe_b64decode($QsaOperador), TRUE) ?? [];
+            $aWhereCtr = json_decode(urlsafe_b64decode($QsaWhereCtr), TRUE) ?? [];
+            $aOperadorCtr = json_decode(urlsafe_b64decode($QsaOperadorCtr), TRUE) ?? [];
+        }
     }
+    $aWhere = [];
+    $aOperador = [];
+    $aWhereCtr = [];
+    $aOperadorCtr = [];
 } else { //si no vengo por goto.
     $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
     $Qna = (string)filter_input(INPUT_POST, 'na');
@@ -113,16 +122,16 @@ if (isset($_POST['stack'])) {
 }
 
 if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
-    $GesCentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-    $cCentros = $GesCentroDl->getCentros($aWhereCtr, $aOperadorCtr);
+    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+    $cCentros = $CentroDlRepository->getCentros($aWhereCtr, $aOperadorCtr);
     // por si hay más de uno.
+    $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
     $cPersonas = [];
     foreach ($cCentros as $oCentro) {
         $id_ubi = $oCentro->getId_ubi();
         $aWhere['id_ctr'] = $id_ubi;
         if (!isset($aOperador)) $aOperador = [];
-        $GesPersonas = new GestorPersonaDl();
-        $cPersonas2 = $GesPersonas->getPersonas($aWhere, $aOperador);
+        $cPersonas2 = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
         if (is_array($cPersonas2) && count($cPersonas2) >= 1) {
             if (is_array($cPersonas)) {
                 $cPersonas = $cPersonas + $cPersonas2;
@@ -168,8 +177,7 @@ $aGoBack = array(
     'saWhereCtr' => $QsaWhereCtr,
     'saOperadorCtr' => $QsaOperadorCtr
 );
-$oPosicion->setParametros($aGoBack);
-$oPosicion->recordar();
+$oPosicion->setParametros($aGoBack,1);
 
 $a_botones = array(
     array('txt' => _("vista tabla"), 'click' => "fnjs_ver_planning(\"#seleccionados\",1)"),

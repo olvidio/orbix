@@ -21,7 +21,7 @@ final class PersonaApellido1Text
         if (mb_strlen($value) > 25) {
             throw new \InvalidArgumentException('PersonaApellido1Text must be at most 25 characters');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’´\-()]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'’´\-()·]+$/u", $value)) {
             //throw new \InvalidArgumentException('PersonaApellido1Text has invalid characters');
         }
     }

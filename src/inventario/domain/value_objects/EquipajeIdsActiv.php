@@ -29,11 +29,13 @@ final class EquipajeIdsActiv
     /**
      * @return int[] Parsed list of ids
      */
+    /* Lo anulo, porque en la base de datos se guarda como string, no como array
     public function toArray(): array
     {
         if ($this->value === '') { return []; }
         return array_map('intval', explode(',', $this->value));
     }
+    */
 
     public function __toString(): string
     {

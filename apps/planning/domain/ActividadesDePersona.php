@@ -56,7 +56,7 @@ class ActividadesDePersona
             }
             foreach ($cCargoOAsistente as $oCargoOAsistente) {
                 $id_activ = $oCargoOAsistente->getId_activ();
-                $propio = $oCargoOAsistente->idPropio();
+                $propio = $oCargoOAsistente->isPropio();
 
                 $aWhere['id_activ'] = $id_activ;
                 $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
@@ -66,9 +66,9 @@ class ActividadesDePersona
                 $id_activ = $oActividad->getId_activ();
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $oF_ini = $oActividad->getF_ini();
-                $h_ini = $oActividad->getH_ini();
+                $h_ini = $oActividad->getH_ini()?->format('H:i');
                 $oF_fin = $oActividad->getF_fin();
-                $h_fin = $oActividad->getH_fin();
+                $h_fin = $oActividad->getH_fin()?->format('H:i');
                 $dl_org = $oActividad->getDl_org();
                 $nom_activ = $oActividad->getNom_activ();
 

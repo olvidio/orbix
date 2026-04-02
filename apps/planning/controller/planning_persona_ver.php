@@ -23,8 +23,6 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->recordar();
-
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $aid_nom = [];
 if (!empty($a_sel)) { //vengo de un checkbox
@@ -179,9 +177,9 @@ foreach ($cPersonas as $oPersona) {
         $id_activ = $oActividad->getId_activ();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $oF_ini = $oActividad->getF_ini();
-        $h_ini = $oActividad->getH_ini();
+        $h_ini = $oActividad->getH_ini()?->format('H:i');
         $oF_fin = $oActividad->getF_fin();
-        $h_fin = $oActividad->getH_fin();
+        $h_fin = $oActividad->getH_fin()?->format('H:i');
         $dl_org = $oActividad->getDl_org();
         $nom_activ = $oActividad->getNom_activ();
 

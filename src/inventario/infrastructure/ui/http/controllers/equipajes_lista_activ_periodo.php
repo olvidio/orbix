@@ -59,7 +59,7 @@ if (empty($Qid_cdc)) {
         $f_ini = $oActividad->getF_ini()?->getFromLocal();
         $f_fin = $oActividad->getF_fin()?->getFromLocal();
         $nom_activ = $oActividad->getNom_activ();
-        $observ = $oActividad->getObservVo()->value();
+        $observ = $oActividad->getObservVo()?->value();
 
         $a_valores[$a]['sel'] = ['id' => $id_activ, 'select' => ''];
         $a_valores[$a][1] = $f_ini;

@@ -130,7 +130,7 @@ class Equipaje
 
     public function getCabecera(): ?string
     {
-        return $this->cabecera->value();
+        return $this->cabecera?->value();
     }
 
 
@@ -154,7 +154,7 @@ class Equipaje
 
     public function getCabecerab(): ?string
     {
-        return $this->cabecerab->value();
+        return $this->cabecerab?->value();
     }
 
 

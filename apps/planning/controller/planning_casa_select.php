@@ -7,6 +7,7 @@ use planning\domain\Planning;
 use web\Hash;
 use web\Periodo;
 use function core\is_true;
+use function core\urlsafe_b64decode;
 use function core\urlsafe_b64encode;
 
 /**
@@ -54,8 +55,8 @@ $oPeriodo->setEmpiezaMin($Qempiezamin);
 $oPeriodo->setEmpiezaMax($Qempiezamax);
 $oPeriodo->setPeriodo($Qperiodo);
 
-$inicio_iso = $oPeriodo->getF_ini_iso();
-$fin_iso = $oPeriodo->getF_fin_iso();
+$oInicio_iso = $oPeriodo->getF_ini();
+$oFin_iso = $oPeriodo->getF_fin();
 $oIniPlanning = $oPeriodo->getF_ini();
 $oFinPlanning = $oPeriodo->getF_fin();
 $inicio_local = $oIniPlanning->getFromLocal();
@@ -111,7 +112,7 @@ if ($interval < 2) {
 
 $cabecera = ucfirst(_("calendario de casas"));
 
-list($sCdc, $a_actividades) = ActividadesPorCasas::actividadesPorCasas($Qcdc_sel, $oIniPlanning, $oFinPlanning, $sin_activ, $fin_iso, $inicio_iso);
+list($sCdc, $a_actividades) = ActividadesPorCasas::actividadesPorCasas($Qcdc_sel, $oIniPlanning, $oFinPlanning, $sin_activ, $oFin_iso, $oInicio_iso);
 
 $aGoBack = [
     'modelo' => $Qmodelo,
@@ -145,8 +146,8 @@ $oHashNew->setCamposForm('id_ubi');
 $param_new = $oHashNew->getParamAjax();
 
 $sactividades = urlsafe_b64encode(json_encode($a_actividades), JSON_THROW_ON_ERROR);
-$sIniPlanning = urlsafe_b64encode(json_encode($oIniPlanning), JSON_THROW_ON_ERROR);
-$sFinPlanning = urlsafe_b64encode(json_encode($oFinPlanning), JSON_THROW_ON_ERROR);
+$sIniPlanning = urlsafe_b64encode($oIniPlanning->format(DateTimeInterface::ATOM));
+$sFinPlanning = urlsafe_b64encode($oFinPlanning->format(DateTimeInterface::ATOM));
 
 $oHashVer = new Hash();
 $oHashVer->setUrl(ConfigGlobal::getWeb() . '/apps/planning/controller/planning_casa_ver.php');

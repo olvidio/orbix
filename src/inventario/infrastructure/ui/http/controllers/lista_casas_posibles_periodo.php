@@ -47,7 +47,7 @@ $aIdUbis = $ActividadRepository->getUbis($aWhere, $aOperador);
 $aUbis = [];
 foreach ($aIdUbis as $id_ubi) {
     $oUbi = Ubi::NewUbi($id_ubi);
-    $nombre_ubi = empty($oUbi->getNombreUbiVo()->value()) ? 'sin determinar' : $oUbi->getNombreUbiVo()->value();
+    $nombre_ubi = $oUbi?->getNombreUbiVo()?->value()?? 'sin determinar';
     $aUbis[$id_ubi] = $nombre_ubi;
 }
 asort($aUbis);
