@@ -18,8 +18,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use notas\model\Tesera;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 
@@ -176,13 +175,13 @@ function data($data)
 
 // -----------------------------
 $rowEmpty = [
-        'id_nivel_asig' => '',
-        'id_nivel' => '',
-        'id_asignatura' => '',
-        'nombre_asignatura' => '',
-        'acta' => '',
-        'fecha' => '',
-        'nota' => '',
+    'id_nivel_asig' => '',
+    'id_nivel' => '',
+    'id_asignatura' => '',
+    'nombre_asignatura' => '',
+    'acta' => '',
+    'fecha' => '',
+    'nota' => '',
 ];
 // -----------------------------  cabecera ---------------------------------
 $caraA = Hash::link('apps/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
@@ -192,7 +191,7 @@ $url_pdf = ConfigGlobal::getWeb() . '/apps/notas/controller/tessera_2_mpdf.php';
 $oHash = new Hash();
 $oHash->setUrl($url_pdf);
 $aCamposHidden = ['id_nom' => $id_nom,
-        'id_tabla' => $id_tabla,
+    'id_tabla' => $id_tabla,
 ];
 $oHash->setArrayCamposHidden($aCamposHidden);
 $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
@@ -228,75 +227,30 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
     <?php
     if ($Qcara === "A") {
         ?>
-    <tr>
-        <td class="space"></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS:
-            <?= $region_latin ?>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI:
-            <?= $nom ?>
-        </td>
-    </tr>
-    <?php
+        <tr>
+            <td class="space"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS:
+                <?= $region_latin ?>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI:
+                <?= $nom ?>
+            </td>
+        </tr>
+        <?php
     }
+    $oTesera = new Tesera();
 
-    // Asignaturas posibles:
-    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-    $aWhere = [];
-    $aOperador = [];
-    $aWhere['active'] = 't';
-    $aWhere['id_nivel'] = '1100,2500';
-    $aOperador['id_nivel'] = 'BETWEEN';
-    $aWhere['_ordre'] = 'id_nivel';
-    $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
+    $plan = $oTesera->getPlan($id_nom);
+    $cAsignaturas = $oTesera->getAsignaturasPosibles($plan);
+    $aAprobadas = $oTesera->getAsignaturasAprobadas($id_nom, $plan);
 
-    // Asignaturas cursadas:
-    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-    $aWhere = [];
-    $aOperador = [];
-    $aWhere['id_nom'] = $id_nom;
-    $aWhere['id_nivel'] = '1100,2500';
-    $aOperador['id_nivel'] = 'BETWEEN';
-    $cNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
-    $aAprobadas = [];
-    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-    foreach ($cNotas as $oPersonaNota) {
-        $id_asignatura = $oPersonaNota->getId_asignatura();
-        $id_nivel = $oPersonaNota->getIdNivel()->value();
-        $acta = $oPersonaNota->getActa();
-        $f_acta = $oPersonaNota->getF_acta()?->getFromLocal();
-
-        $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
-        if ($oAsignatura === null) {
-            throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
-        }
-        if ($id_asignatura > 3000) {
-            $id_nivel_asig = $id_nivel;
-        } else {
-            if (!$oAsignatura->isActive()) continue;
-            $id_nivel_asig = $oAsignatura->getId_nivel();
-        }
-        $n = $id_nivel_asig;
-        $aAprobadas[$n]['id_nivel_asig'] = $id_nivel_asig;
-        $aAprobadas[$n]['id_nivel'] = $id_nivel;
-        $aAprobadas[$n]['id_asignatura'] = $id_asignatura;
-        $aAprobadas[$n]['nombre_asignatura'] = $oAsignatura->getNombre_asignatura();
-        $aAprobadas[$n]['acta'] = $acta;
-        $aAprobadas[$n]['fecha'] = $f_acta;
-        //$oNota = new notas\Nota($id_situacion);
-        //$aAprobadas[$n]['nota']= $oNota->getDescripcion();
-        $nota = $oPersonaNota->getNota_txt();
-        $aAprobadas[$n]['nota'] = $nota;
-    }
-    ksort($aAprobadas);
     $num_asig = count($cAsignaturas);
-
     $a = 0;
     $j = 0;
     $i = 0;
@@ -351,19 +305,19 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
             echo titulo($oAsignatura->getId_nivel(), $Qcara);
             $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
             ?>
-    <tr class="<?= $clase; ?>" valign="bottom">
-        <td></td>
-        <td>
-            <?= $nombre_asignatura; ?>&nbsp;
-        </td>
-        <td class="dato">&nbsp;</td>
-        <td>&nbsp;</td>
-        <td class="dato">&nbsp;</td>
-        <td>&nbsp;</td>
-        <td class="dato">&nbsp;</td>
-        <td></td>
-    </tr>
-    <?php
+            <tr class="<?= $clase; ?>" valign="bottom">
+                <td></td>
+                <td>
+                    <?= $nombre_asignatura; ?>&nbsp;
+                </td>
+                <td class="dato">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="dato">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="dato">&nbsp;</td>
+                <td></td>
+            </tr>
+            <?php
             $oAsignatura = $cAsignaturas[$a++];
             if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
                 continue 2;
@@ -381,47 +335,47 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                 $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
                 $algo = $oAsignatura->getNombre_asignatura() . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
                 ?>
-    <tr class="<?= $clase; ?>" valign="bottom">
-        <td></td>
-        <td>
-            <?= $algo; ?>&nbsp;
-        </td>
-        <td class="dato">
-            <?= $row["nota"]; ?>&nbsp;
-        </td>
-        <td>&nbsp;</td>
-        <td class="dato">
-            <?= $row["fecha"]; ?>&nbsp;
-        </td>
-        <td>&nbsp;</td>
-        <td class="dato">
-            <?= $row["acta"]; ?>&nbsp;
-        </td>
-        <td></td>
-    </tr>
-    <?php
+                <tr class="<?= $clase; ?>" valign="bottom">
+                    <td></td>
+                    <td>
+                        <?= $algo; ?>&nbsp;
+                    </td>
+                    <td class="dato">
+                        <?= $row["nota"]; ?>&nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="dato">
+                        <?= $row["fecha"]->getFromLocal() ?>&nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="dato">
+                        <?= $row["acta"]; ?>&nbsp;
+                    </td>
+                    <td></td>
+                </tr>
+                <?php
             } else {
                 $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
                 ?>
-    <tr class="<?= $clase; ?>">
-        <td></td>
-        <td>
-            <?= $nombre_asignatura; ?>&nbsp;
-        </td>
-        <td class="dato">
-            <?= $row["nota"]; ?>&nbsp;
-        </td>
-        <td>&nbsp;</td>
-        <td class="dato">
-            <?= $row["fecha"]; ?>&nbsp;
-        </td>
-        <td>&nbsp;</td>
-        <td class="dato">
-            <?= $row["acta"]; ?>&nbsp;
-        </td>
-        <td></td>
-    </tr>
-    <?php
+                <tr class="<?= $clase; ?>">
+                    <td></td>
+                    <td>
+                        <?= $nombre_asignatura; ?>&nbsp;
+                    </td>
+                    <td class="dato">
+                        <?= $row["nota"]; ?>&nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="dato">
+                        <?= $row["fecha"]->getFromLocal() ?>&nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="dato">
+                        <?= $row["acta"]; ?>&nbsp;
+                    </td>
+                    <td></td>
+                </tr>
+                <?php
             }
             $num_asig++;
         } else {
@@ -429,22 +383,22 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                 $clase = "impar";
                 $i % 2 ? 0 : $clase = "par";
                 $i++;
-                echo titulo($oAsignatura->getId_asignatura(),$Qcara);
+                echo titulo($oAsignatura->getId_asignatura(), $Qcara);
                 $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
                 ?>
-    <tr class="<?= $clase; ?>">
-        <td></td>
-        <td>
-            <?= $nombre_asignatura; ?>&nbsp;
-        </td>
-        <td class="dato">&nbsp;</td>
-        <td>&nbsp;</td>
-        <td class="dato">&nbsp;</td>
-        <td>&nbsp;</td>
-        <td class="dato">&nbsp;</td>
-        <td></td>
-    </tr>
-    <?php
+                <tr class="<?= $clase; ?>">
+                    <td></td>
+                    <td>
+                        <?= $nombre_asignatura; ?>&nbsp;
+                    </td>
+                    <td class="dato">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="dato">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="dato">&nbsp;</td>
+                    <td></td>
+                </tr>
+                <?php
             }
         }
     }

@@ -111,7 +111,7 @@ class Tesera
 
     }
 
-    private function getAsignaturasPosibles(int $plan = 26)
+    public function getAsignaturasPosibles(int $plan = 26)
     {
         $this->getCurso();
 
@@ -126,19 +126,19 @@ class Tesera
         $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
         if ($plan === 97) {
-            // desaparece el id_nivel 2112 y aparecen id_nivel 2113, 2114
+            // desaparece el id_nivel 2114 y aparecen id_nivel 2112, 2113
             // tampoco debería haber ninguna opcional de las nuevas, pero se supone que se hacongelado
             // antes de crear las opcionales.
             $aWhere = [];
             $aOperador = [];
-            $aWhere['id_nivel'] = '2113,2114';
+            $aWhere['id_nivel'] = '2112,2113';
             $aOperador['id_nivel'] = 'IN';
             $aWhere['_ordre'] = 'id_nivel';
             $cAsignaturas97 = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
-            // quitar la 2112
+            // quitar la 2114
             $cAsignaturasNew = [];
             foreach ($cAsignaturas as $k => $oAsignatura) {
-                if ($oAsignatura->getId_nivel() === 2112) {
+                if ($oAsignatura->getId_nivel() === 2114) {
                     // añado las viejas, para que esten en orden
                     $cAsignaturasNew = array_merge($cAsignaturasNew, $cAsignaturas97);
                     continue;
@@ -150,7 +150,7 @@ class Tesera
         return $cAsignaturas;
     }
 
-    public function getAsignaturasAprobadas($id_nom)
+    public function getAsignaturasAprobadas(int $id_nom, int $plan = 26)
     {
         // Asignaturas cursadas:
         $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
@@ -165,6 +165,7 @@ class Tesera
         foreach ($cNotas as $oPersonaNota) {
             $id_asignatura = $oPersonaNota->getId_asignatura();
             $id_nivel = $oPersonaNota->getIdNivelVo()->value();
+            $acta = $oPersonaNota->getActaVo()?->value();
             $oF_acta = $oPersonaNota->getF_acta();
             $id_situacion = $oPersonaNota->getId_situacion();
             $bAprobada = $oPersonaNota->isAprobada();
@@ -175,13 +176,22 @@ class Tesera
             if ($id_asignatura > 3000) {
                 $id_nivel_asig = $id_nivel;
             } else {
-                if (!$oAsignatura->isActive()) continue;
+                if ($plan === 97) {
+                    if ($id_nivel === 2114) {
+                        continue;
+                    }
+                } else {
+                    if (!$oAsignatura->isActive()) {
+                        continue;
+                    }
+                }
                 $id_nivel_asig = $oAsignatura->getId_nivel();
             }
             $n = $id_nivel_asig;
             $aAprobadas[$n]['id_nivel_asig'] = $id_nivel_asig;
             $aAprobadas[$n]['id_nivel'] = $id_nivel;
             $aAprobadas[$n]['id_asignatura'] = $id_asignatura;
+            $aAprobadas[$n]['nombre_asignatura'] = $oAsignatura->getNombreAsignaturaVo()->value();
             $aAprobadas[$n]['nombre_corto'] = $oAsignatura->getNombre_corto();
             $aAprobadas[$n]['fecha'] = $oF_acta;
             $aAprobadas[$n]['id_situacion'] = $id_situacion;
@@ -189,6 +199,7 @@ class Tesera
             //$aAprobadas[$n]['nota']= $oNota->getDescripcion();
             $nota = $oPersonaNota->getNota_txt();
             $aAprobadas[$n]['nota'] = $nota;
+            $aAprobadas[$n]['acta'] = $acta; // para imprimir
         }
         ksort($aAprobadas);
 
@@ -205,7 +216,7 @@ class Tesera
         $plan = $this->getPlan($id_nom);
         $cAsignaturas = $this->getAsignaturasPosibles($plan);
         // Para saber el número total de asignaturas
-        $aAprobadas = $this->getAsignaturasAprobadas($id_nom);
+        $aAprobadas = $this->getAsignaturasAprobadas($id_nom, $plan);
         $num_asig_total = count($cAsignaturas);
         $num_creditos_total = 0;
 
@@ -274,42 +285,7 @@ class Tesera
                         $numcred_year += $oAsignatura->getCreditos();
                     }
                 }
-
-                /*
-                if (in_array($row['id_situacion'],$aIdSuperadas)) {
-                    $numasig ++;
-                    $numcred += $oAsignatura->getCreditos();
-                    $oFActa = $row['fecha'];
-
-                    if($this->oInicio <= $oFActa && $oFActa <= $this->oFin) {
-                        $numasig_year ++;
-                        $numcred_year += $oAsignatura->getCreditos();
-                    }
-                }
-                */
             }
-
-            /*
-            if ($siguiente === FALSE) { // YA no hay más aprobadas:
-                $i++;
-                $tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());
-                $tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
-                $tabla[$i]['nota'] = -1;
-                $tabla[$i]['fecha'] = -1;
-                $tabla[$i]['bAprobada'] = 'f';
-                continue;
-            }
-              */
-            /*
-            if (!$row["id_nivel"]){
-                $i++;
-                $tabla[$i]['titulo'] = $this->getTitulo($oAsignatura->getId_nivel());
-                $tabla[$i]['asignatura'] = $oAsignatura->getNombre_corto();
-                $tabla[$i]['nota'] = -1;
-                $tabla[$i]['fecha'] = -1;
-                $tabla[$i]['bAprobada'] = 'f';
-            }
-            */
         }
 
         $oPosicion = new Posicion();
@@ -331,7 +307,7 @@ class Tesera
         $oView->renderizar('tesera_ver.phtml', $a_campos);
     }
 
-    private function getPlan($id_nom)
+    public function getPlan($id_nom)
     {
         $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $aWhere = [];
