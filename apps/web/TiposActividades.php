@@ -51,11 +51,6 @@ class TiposActividades
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /**
-     * Id_tipo_activ de TiposActividades
-     *
-     */
-    private string|int $iid_tipo_activ;
-    /**
      * Regexp_id_tipo_activ de TiposActividades
      *
      * @var string
@@ -67,25 +62,25 @@ class TiposActividades
      *
      * @var string
      */
-    private string $ssfsv='';
+    private string $ssfsv = '';
     /**
      * asistentes de TiposActividades
      *
      * @var string
      */
-    private string $sasistentes='';
+    private string $sasistentes = '';
     /**
      * actividad de TiposActividades
      *
      * @var string
      */
-    private string $sactividad='';
+    private string $sactividad = '';
     /**
      * nom_tipo de TiposActividades
      *
      * @var string
      */
-    private string $snom_tipo='';
+    private string $snom_tipo = '';
     /**
      * aSfsv de TiposActividades
      *
@@ -179,10 +174,7 @@ class TiposActividades
     {
         $this->setExtendida($extendida);
         if (isset($id) && $id !== '') {
-            if (is_int($id)) {
-                $this->iid_tipo_activ = $id;
-            }
-            $this->separarId($id);
+            $this->separarId((string)$id);
         }
         $this->TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
         $this->getFlipAsistentes();
@@ -217,7 +209,7 @@ class TiposActividades
         return $this->afActividad2Digitos;
     }
 
-    private function separarId(string $sregexp_id_tipo_activ): bool
+    private function separarId(string $sregexp_id_tipo_activ): void
     {
         if (!empty($sregexp_id_tipo_activ)) {
             $inc = 0;
@@ -242,10 +234,7 @@ class TiposActividades
                 $this->sactividad = $matches[3];
                 $this->snom_tipo = $matches[4];
             }
-        } else {
-            return false;
         }
-        return true;
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
@@ -377,36 +366,31 @@ class TiposActividades
         $aText = $this->getFlipSfsv();
         if (is_numeric($this->ssfsv)) {
             return $aText[$this->ssfsv];
-        } else {
-            return 'all';
         }
+        return 'all';
     }
 
     /**
      * Estableix l'atribut sfsv en format de text
      *
+     * @param ?string $sSfsv
      * @return bool
      */
-    public function setSfsvText($sSfsv): bool
+    public function setSfsvText(?string $sSfsv): void
     {
-        if (is_string($sSfsv)) {
-            if (empty($sSfsv)) {
-                $sSfsv = 'all';
-            }
-            $this->ssfsv = $this->aSfsv[$sSfsv];
-        } else {
-            return false;
+        if ($sSfsv === null) {
+            $sSfsv = 'all';
         }
-        return true;
+        $this->ssfsv = $this->aSfsv[$sSfsv];
     }
 
     /**
      * Recupera el atributo sfsv en format de integer
      *
      */
-    public function getSfsvId(): string
+    public function getSfsvId(): int
     {
-        return $this->ssfsv;
+        return (int)$this->ssfsv;
     }
 
     /**
@@ -447,9 +431,8 @@ class TiposActividades
         $aText = $this->getFlipAsistentes();
         if (is_numeric($this->sasistentes)) {
             return $aText[$this->sasistentes];
-        } else {
-            return 'all';
         }
+        return 'all';
     }
 
     /**
@@ -568,9 +551,8 @@ class TiposActividades
         $aText = $this->getFlipActividad2Digitos();
         if (is_numeric($this->sactividad)) {
             return $aText[$this->sactividad];
-        } else {
-            return 'all';
         }
+        return 'all';
     }
 
     /**
@@ -640,13 +622,11 @@ class TiposActividades
         if (is_numeric($this->snom_tipo)) {
             if (isset($this->afNom_tipo)) {
                 return $this->afNom_tipo[$this->snom_tipo] ?? '?';
-            } else {
-                $this->getNom_tipoPosibles3Digitos();
-                return $this->afNom_tipo[$this->snom_tipo] ?? '?';
             }
-        } else {
-            return 'all';
+            $this->getNom_tipoPosibles3Digitos();
+            return $this->afNom_tipo[$this->snom_tipo] ?? '?';
         }
+        return 'all';
     }
 
     /**

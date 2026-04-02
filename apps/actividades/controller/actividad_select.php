@@ -73,7 +73,7 @@ if (isset($_POST['stack'])) {
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
 // sino en $Posicion. Le paso la referencia del stack donde está la información.
-if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
+if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $oPosicion->goStack($QGstack);
     $Qmodo = $oPosicion->getParametro('modo');
     //	$Qque = $oPosicion->getParametro('que');
@@ -103,7 +103,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
     $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
     //Si vengo por medio de Posicion, borro la última
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -157,7 +157,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
 $aWhere = [];
 $aOperador = [];
 // Status
-if ($Qstatus != 9) {
+if ($Qstatus !== 9) {
     $aWhere['status'] = $Qstatus;
 }
 // Id tipo actividad
@@ -173,10 +173,10 @@ if (empty($Qid_tipo_activ)) {
     }
 
     if (empty($Qssfsv)) {
-        if ($mi_sfsv == 1) {
+        if ($mi_sfsv === 1) {
             $Qssfsv = 'sv';
         }
-        if ($mi_sfsv == 2) {
+        if ($mi_sfsv === 2) {
             $Qssfsv = 'sf';
         }
     }
@@ -425,7 +425,7 @@ foreach ($cActividades as $oActividad) {
                 $aFasesCompletadas = $ActividadProcesoTareaRepository->getFasesCompletadas($id_activ);
                 if (!empty($Qfases_on)) {
                     foreach ($Qfases_on as $id_fase) {
-                        if (!in_array($id_fase, $aFasesCompletadas)) {
+                        if (!in_array($id_fase, $aFasesCompletadas, true)) {
                             // falta una fase -> otra actividad:
                             continue 2;
                         }
@@ -433,7 +433,7 @@ foreach ($cActividades as $oActividad) {
                 }
                 if (!empty($Qfases_off)) {
                     foreach ($Qfases_off as $id_fase) {
-                        if (in_array($id_fase, $aFasesCompletadas)) {
+                        if (in_array($id_fase, $aFasesCompletadas, true)) {
                             // Hay un fase on que debería estar off -> otra actividad:
                             continue 2;
                         }
@@ -451,7 +451,7 @@ foreach ($cActividades as $oActividad) {
     $isfsv = $oTipoActividad->getSfsvId();
     $ssfsv = $oTipoActividad->getSfsvText();
     // para ver el nombre en caso de la otra sección
-    if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des'))) {
+    if ($mi_sfsv !== $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des'))) {
         $sactividad = $oTipoActividad->getActividadText();
         $nom_activ = "$ssfsv $sactividad";
     }
@@ -478,14 +478,11 @@ foreach ($cActividades as $oActividad) {
             $a_valores[$i][6] = $ssfsv;
         }
         $a_valores[$i][7] = '';
+        $a_valores[$i][8] = '';
+        $a_valores[$i][9] = '';
         if (empty($aRolesPau[$id_role]) || ($aRolesPau[$id_role] !== PauType::PAU_CTR)) {
-            $a_valores[$i][8] = '';
-            $a_valores[$i][9] = '';
             $a_valores[$i][10] = '';
             $a_valores[$i][11] = '';
-        } else {
-            $a_valores[$i][8] = '';
-            $a_valores[$i][9] = '';
         }
 
     } else {
@@ -578,7 +575,7 @@ foreach ($cActividades as $oActividad) {
         }
     }
     // para poder ordenar por fecha y casa
-    if (empty($id_ubi_actividad) || $id_ubi_actividad == 1) {
+    if (empty($id_ubi_actividad) || $id_ubi_actividad === 1) {
         $nombre_ubi_actividad = 'z';
     } else {
         if (empty($a_casas[$id_ubi_actividad])) {
