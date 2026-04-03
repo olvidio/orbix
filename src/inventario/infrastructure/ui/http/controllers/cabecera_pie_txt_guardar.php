@@ -1,5 +1,6 @@
 <?php
 
+use core\ConfigGlobal;
 use core\ConfigMagik;
 use web\ContestarJson;
 
@@ -10,7 +11,7 @@ $QcabeceraB = (string)filter_input(INPUT_POST, 'cabeceraB');
 $Qfirma = (string)filter_input(INPUT_POST, 'firma');
 $Qpie = (string)filter_input(INPUT_POST, 'pie');
 
-$file = "../cabecera_pie_textos.ini";
+$file = ConfigGlobal::$dir_web ."/data/inventario/cabecera_pie_textos.ini";
 $Config = new ConfigMagik($file, true, true);
 $Config->SYNCHRONIZE = false;
 

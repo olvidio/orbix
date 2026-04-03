@@ -1,5 +1,6 @@
 <?php
 
+use core\ConfigGlobal;
 use core\ConfigMagik;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use web\ContestarJson;
@@ -22,7 +23,7 @@ if (!empty($oEquipaje)) {
 }
 
 // create new ConfigMagik-Object
-$file = "../cabecera_pie_textos.ini";
+$file = ConfigGlobal::$dir_web ."/data/inventario/cabecera_pie_textos.ini";
 $Config = new ConfigMagik($file, true, true);
 $Config->SYNCHRONIZE = false;
 
