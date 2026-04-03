@@ -63,9 +63,9 @@ if (empty($Qid_cdc)) {
 
         $a_valores[$a]['sel'] = ['id' => $id_activ, 'select' => ''];
         $a_valores[$a][1] = $f_ini;
-        $a_valores[$a][3] = $f_fin;
-        $a_valores[$a][8] = $nom_activ;
-        $a_valores[$a][13] = $observ;
+        $a_valores[$a][2] = $f_fin;
+        $a_valores[$a][3] = $nom_activ;
+        $a_valores[$a][4] = $observ;
     }
 }
 

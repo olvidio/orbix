@@ -94,10 +94,10 @@ use core\ConfigGlobal;if (!isset($h)) {
                 timestamp: new Date().getTime()
             };
             var key = 'state_' + base + '_' + tabla;
-            console.log('Saving state to ' + key, state);
+            //console.log('Saving state to ' + key, state);
             sessionStorage.setItem(key, JSON.stringify(state));
         } else {
-            console.log('No state to save for ' + base + '_' + tabla);
+            //console.log('No state to save for ' + base + '_' + tabla);
         }
     });
 }
@@ -113,24 +113,24 @@ use core\ConfigGlobal;if (!isset($h)) {
     return null;
 }
     var state = JSON.parse(sState);
-    console.log('State found in sessionStorage for ' + key, state);
+    //console.log('State found in sessionStorage for ' + key, state);
     // Opcional: limpiar si es muy antiguo (p.ej. > 1 hora)
     if (new Date().getTime() - state.timestamp > 3600000) {
-        console.log('State is too old, ignoring.');
+        //console.log('State is too old, ignoring.');
         sessionStorage.removeItem(key);
         return null;
     }
 
     // SOLO recuperar si existe la marca temporal de 'is_back_navigation'
     var isBack = sessionStorage.getItem('is_back_navigation');
-    console.log('is_back_navigation flag:', isBack);
+    //console.log('is_back_navigation flag:', isBack);
     if (isBack !== 'true') {
         // NO restaurar porque venimos de una navegación 'hacia adelante'.
-        console.log('Not a back navigation, skipping restoration.');
+        //console.log('Not a back navigation, skipping restoration.');
         // No borramos el estado aquí para evitar interferencias encadenadas. Se sobreescribirá al salir.
         return null;
     } else {
-        console.log('Restoring state from sessionStorage.');
+        //console.log('Restoring state from sessionStorage.');
         // Restauramos. La marca 'is_back_navigation' la borra fnjs_mostra_resposta al terminar.
         return state;
     }

@@ -111,5 +111,4 @@ $data = [
 ];
 
 // envía una Response
-
-ContestarJson::send($jsondata);
+ContestarJson::enviar($error_txt,$data);

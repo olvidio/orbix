@@ -87,11 +87,35 @@ $profesion = $oPersona->getProfesion();
 $id_nivel_stgr = $oPersona->getNivel_stgr();
 $a_niveles_stgr = NivelStgrId::getArrayNivelStgr();
 $stgr = $a_niveles_stgr[$id_nivel_stgr] ?? '';
-$ce = $oPersona->getCe();
-$ce_lugar = $oPersona->getCe_lugar();
-$ce_ini = $oPersona->getCe_ini();
-$ce_fin = $oPersona->getCe_fin();
 $observ = $oPersona->getObserv();
+
+if (get_class($oPersona) === 'src\personas\domain\entity\PersonaDl') {
+    $ce = '';
+    $ce_lugar = '';
+    $ce_ini = '';
+    $ce_fin = '';
+    // buscar que tipo de persona es:
+    switch ($oPersona->getId_tabla()) {
+        case 'n':
+            $Qobj_pau = 'PersonaN';
+            break;
+        case 'a':
+            $Qobj_pau = 'PersonaAgd';
+            break;
+        case 's':
+            $Qobj_pau = 'PersonaS';
+            break;
+        case 'sssc':
+            $Qobj_pau = 'PersonaSSSC';
+            break;
+    }
+} else {
+    $ce = $oPersona->getCe();
+    $ce_lugar = $oPersona->getCe_lugar();
+    $ce_ini = $oPersona->getCe_ini();
+    $ce_fin = $oPersona->getCe_fin();
+}
+
 $ctr = '';
 if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {
     $id_ctr = $oPersona->getId_ctr();

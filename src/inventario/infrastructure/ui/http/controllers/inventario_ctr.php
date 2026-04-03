@@ -40,7 +40,7 @@ foreach ($a_sel as $id_ubi) {
     foreach ($cDocumentos as $oDocumento) {
         $d++;
         $id_tipo_doc = $oDocumento->getId_tipo_doc();
-        $observ = $oDocumento->getObservCtr();
+        $observ = $oDocumento->getObservCtrVo()?->value();
         $num_ejemplares = $oDocumento->getNum_ejemplares();
         $num_reg = $oDocumento->getNum_reg();
         // guardo en una colección los tipos de doc para consultas posteriores (de otros lugares).

@@ -107,9 +107,8 @@ function fnjs_comprobar_fecha(id, locale_usa) {
     }
 }
 
-/* Igual que la anterior, pero en vez de actualizar el objeto, devuelve un string con el valor de la fecha */
-/** Parece que ya no se utiliza ?¿?¿ **/
-/*
+<!-- Igual que la anterior, pero en vez de actualizar el objeto, devuelve un string con el valor de la fecha -->
+<!-- Parece que ya no se utiliza? ===> SI en inventario: buscarDocsxSigla -->
 function fnjs_comprobar_fecha_val(id) {
     var calDate = new Date();
     var year = calDate.getFullYear();
@@ -160,7 +159,6 @@ function fnjs_comprobar_fecha_val(id) {
         }
     }
 }
-*/
 
 /**
  * Función para comprobar que el campo hora está bien escrito.

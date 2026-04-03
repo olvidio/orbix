@@ -27,9 +27,9 @@ $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_valores = $data['a_valores'];
 $nombre_ubi = $data['nombre_ubi'];
 
-$a_cabeceras[] = ucfirst(_("sigla"));
-$a_cabeceras[] = ucfirst(_("identificador"));
-$a_cabeceras[] = ucfirst(_("lugar"));
+$a_cabeceras[] = ['id' => 'nombre', 'name' => ucfirst(_("nombre"))];
+$a_cabeceras[] = ['id' => 'identificador', 'name' => ucfirst(_("identificador"))];
+$a_cabeceras[] = ['id' => 'lugar', 'name' => ucfirst(_("lugar"))];
 
 $a_botones[] = array('txt' => _('seleccionar'), 'click' => "fnjs_ver_equipaje()");
 
@@ -63,8 +63,9 @@ $oView = new ViewNewPhtml('frontend\inventario\controller');
 $oView->renderizar('equipajes_doc_casa.phtml', $a_campos);
 echo "<div id='grupos'>";
 
-$a_cabeceras = [ucfirst(_("sigla")),
-    ucfirst(_("identificador")),
+$a_cabeceras = [
+    ['id' => 'nombre' , 'name' => ucfirst(_("sigla"))],
+    ['id' => 'identificador' , 'name' => ucfirst(_("identificador"))],
 ];
 foreach ($a_egm as $aEgm) {
     $id_grupo = $aEgm['id_grupo'];

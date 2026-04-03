@@ -4,6 +4,7 @@ namespace src\shared\infrastructure;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
@@ -40,6 +41,7 @@ trait ProvidesRepositories
     protected function getRepositoryMap(): array
     {
         return [
+            'PersonaDl' => PersonaDlRepositoryInterface::class,
             'PersonaN' => PersonaNRepositoryInterface::class,
             'PersonaNax' => PersonaNaxRepositoryInterface::class,
             'PersonaAgd' => PersonaAgdRepositoryInterface::class,
@@ -72,6 +74,7 @@ trait ProvidesRepositories
     {
         return [
             // Compatibilidad: fuera de ubis se ha usado este helper como alias de repositorio general.
+            'PersonaDl' => PersonaDlRepositoryInterface::class,
             'PersonaN' => PersonaNRepositoryInterface::class,
             'PersonaNax' => PersonaNaxRepositoryInterface::class,
             'PersonaAgd' => PersonaAgdRepositoryInterface::class,

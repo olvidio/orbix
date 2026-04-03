@@ -3,7 +3,6 @@
 namespace web;
 
 use core\ConfigGlobal;
-use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use function core\is_true;
 
@@ -134,80 +133,216 @@ class Lista
         $key = $this->ikey;
         $id_tabla = $this->sid_tabla;
         $clase = 'lista';
+        $cabecera = "";
         //------------------------------------ html ------------------------------
-        $Html = "<table class=\"$clase\"><tr>";
-        foreach ($aCabeceras as $cabecera) {
-            $Html .= "<th>$cabecera</th>";
+        $cab = 1;
+        $aColsVisible = [];
+        $num_col = 0;
+        foreach ($aCabeceras as $Cabecera) {
+            $class = '';
+            $width = '';
+            $visible = TRUE;
+            if (is_array($Cabecera)) {
+                $name = $Cabecera['name']; // esta tiene que existir siempre
+                if (!empty($Cabecera['class'])) {
+                    $class = "class=\"{$Cabecera['class']}\"";
+                }
+                if (!empty($Cabecera['width'])) {
+                    $width = "width=\"{$Cabecera['width']}\"";
+                }
+                if (!empty($Cabecera['visible']) && strtolower($Cabecera['visible']) === 'no') {
+                    $visible = FALSE;
+                }
+            } else {
+                $name = $Cabecera;
+            }
+
+            $aColsVisible[$num_col] = $visible;
+            $num_col++;
+
+            if ($visible) {
+                if (!empty($name)) {
+                    $cabecera .= "<th class=cabecera $width $class >" . trim($name) . "</th>\n";
+                } else {
+                    $cabecera .= "<th class=cabecera tipo='notext' $width $class ></th>\n";
+                }
+                $cab++;
+            }
         }
-        $Html .= "</tr>";
+
+        $Html = "<table class=\"$clase\"><tr>";
+        $Html .= $cabecera . "</tr>";
 
         if (empty($aDatos)) {
             return _("no hay ninguna fila");
         }
-        $Html .= "<tbody class=\"$clase\">";
-        foreach ($aDatos as $aFila) {
-            $Html .= "<tr>";
-            $clase = 'lista';
-            if (!empty($aFila['clase'])) {
-                $clase .= " " . $aFila['clase'];
+        $tbody = "<tbody class=\"$clase\">";
+
+        $f = 1;
+        foreach ($aDatos as $num_fila => $fila) {
+            $clase = "imp";
+            $f % 2 ? 0 : $clase = "par";
+            $f++;
+            if (!empty($fila['clase'])) {
+                $clase .= " " . $fila['clase'];
             }
-            foreach ($aFila as $col => $valor) {
-                if ($col === "clase") {
-                    continue;
-                }
-                if ($col === "order") {
-                    continue;
-                }
-                if ($col === "select") {
-                    continue;
-                }
-                if ($col === "sel") {
-                    continue;
-                }
-                if (is_array($valor)) {
-                    $val = $valor['valor'];
-                    $td_id = empty($valor['id']) ? '' : "id=\"" . $valor['id'] . "\"";
-                    if (!empty($valor['ira'])) {
-                        $ira = $valor['ira'];
-                        $Html .= "<td $td_id class=\"$clase\"><span class=link onclick=fnjs_update_div('#main','$ira') >$val</span></td>";
+            $tbody .= "<tr class='$clase' >";
+
+
+            // 2. Data columns (only those with headers)
+            // Heuristic: identify the starting index for numeric columns.
+            // Usually it's either 0 or 1 (if 0 is the internal ID).
+            $start_icol = 0;
+            if (!isset($fila[0]) && isset($fila[1])) {
+                $start_icol = 1;
+            } elseif (isset($fila[0])) {
+                $is_id = false;
+                if (isset($fila['sel'])) {
+                    $sel_id = is_array($fila['sel']) ? $fila['sel']['id'] : (string)$fila['sel'];
+                    // Use a looser check for ID as it might be a part of a compound key or slightly formatted
+                    if (strpos($sel_id, (string)$fila[0]) !== false || preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', (string)$fila[0])) {
+                        $is_id = true;
                     }
-                    if (!empty($valor['script'])) {
-                        $Html .= "<td $td_id class=\"$clase\"><span class=link onclick=\"" . $valor['script'] . "\" >$val</span></td>";
+                } elseif (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', (string)$fila[0])) {
+                    $is_id = true;
+                }
+
+                if ($is_id) {
+                    $start_icol = 1;
+                }
+            }
+
+            $icol_offset = 0;
+            foreach ($aCabeceras as $num_col => $Cabecera) {
+                if ($aColsVisible[$num_col]) {
+                    $field = (is_array($Cabecera) && !empty($Cabecera['field'])) ? $Cabecera['field'] : null;
+                    $id = (is_array($Cabecera) && !empty($Cabecera['id'])) ? $Cabecera['id'] : null;
+
+                    $valor = '';
+                    if ($field && isset($fila[$field])) {
+                        $valor = $fila[$field];
+                    } elseif ($id && isset($fila[$id])) {
+                        $valor = $fila[$id];
+                    } else {
+                        // Use sequential numeric index
+                        $target_idx = $start_icol + $icol_offset;
+                        $valor = isset($fila[$target_idx]) ? $fila[$target_idx] : '';
+                        $icol_offset++;
                     }
-                    if (!empty($valor['span'])) {
-                        $Html .= "<td $td_id class=\"$clase\" onclick=\"toggleFilterRow_$id_tabla()\" colspan=\"" . $valor['span'] . "\">$val</td>";
-                    }
-                    if (!empty($valor['clase'])) {
-                        $Html .= "<td $td_id class=\"$clase " . $valor['clase'] . "\">$val</td>";
-                    }
-                } else {
-                    $es_fecha = FALSE;
-                    // si es una fecha, pongo la clase fecha, para exportar a excel...
-                    $formato_fecha = DateTimeLocal::getFormat();
-                    if ($formato_fecha === 'd/m/Y') {
+                    if (is_array($valor)) {
+                        $val = $valor['valor'];
+                        $tbody .= "<td>";
+                        if (!empty($valor['ira'])) {
+                            $ira = $valor['ira'];
+                            $tbody .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span>";
+                        } elseif (!empty($valor['script'])) {
+                            $ira = $valor['script'];
+                            $tbody .= "<span class=\"link\" onclick='$ira' >$val</span>";
+                        } else {
+                            $tbody .= $val;
+                        }
+
+                        // Handle multiple IRAs/Scripts
+                        for ($idx = 2; $idx <= 3; $idx++) {
+                            if (!empty($valor["ira$idx"])) {
+                                $ira = $valor["ira$idx"];
+                                $tbody .= " <span class=\"link\" onclick=\"fnjs_update_div('#main','$ira')\" >$val</span>";
+                            }
+                            if (!empty($valor["script$idx"])) {
+                                $ira = $valor["script$idx"];
+                                $tbody .= " <span class=\"link\" onclick='$ira' >$val</span>";
+                            }
+                        }
+
+                        // Handle span (rare in data context but supported in legacy)
+                        // Note: span is usually handled in header or special rows, but kept for parity.
+                        $tbody .= "</td>";
+
+                    } else {
+                        $valor = $valor ?? '';
+                        // Date formatting for Excel export compatibility
                         if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
                             list($d, $m, $y) = preg_split('/[:\/\.-]/', $valor);
-                            $es_fecha = TRUE;
+                            $fecha_iso = date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
+                            $tbody .= "<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
+                        } else {
+                            $tbody .= "<td>$valor</td>";
                         }
-                    }
-                    if ($formato_fecha === 'm/d/Y') {
-                        if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
-                            list($m, $d, $y) = preg_split('/[:\/\.-]/', $valor);
-                            $es_fecha = TRUE;
-                        }
-                    }
-                    if ($es_fecha) {
-                        $fecha_iso = date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
-                        $clase = "fecha $clase";
-                        $Html .= "<td class=\"$clase\" fecha_iso='$fecha_iso'>$valor</td>";
-                    } else {
-                        $Html .= "<td class=\"$clase\">$valor</td>";
                     }
                 }
             }
-            $Html .= "</tr>";
         }
-        $Html .= "</tbody></table>";
+        $tbody .= "</tr>\n";
+
+
+        /* -------------------------------------------------
+    foreach ($aDatos as $aFila) {
+        $Html .= "<tr>";
+        $clase = 'lista';
+        if (!empty($aFila['clase'])) {
+            $clase .= " " . $aFila['clase'];
+        }
+        foreach ($aFila as $col => $valor) {
+            if ($col === "clase") {
+                continue;
+            }
+            if ($col === "order") {
+                continue;
+            }
+            if ($col === "select") {
+                continue;
+            }
+            if ($col === "sel") {
+                continue;
+            }
+            if ($col)
+            if (is_array($valor)) {
+                $val = $valor['valor'];
+                $td_id = empty($valor['id']) ? '' : "id=\"" . $valor['id'] . "\"";
+                if (!empty($valor['ira'])) {
+                    $ira = $valor['ira'];
+                    $Html .= "<td $td_id class=\"$clase\"><span class=link onclick=fnjs_update_div('#main','$ira') >$val</span></td>";
+                }
+                if (!empty($valor['script'])) {
+                    $Html .= "<td $td_id class=\"$clase\"><span class=link onclick=\"" . $valor['script'] . "\" >$val</span></td>";
+                }
+                if (!empty($valor['span'])) {
+                    $Html .= "<td $td_id class=\"$clase\" onclick=\"toggleFilterRow_$id_tabla()\" colspan=\"" . $valor['span'] . "\">$val</td>";
+                }
+                if (!empty($valor['clase'])) {
+                    $Html .= "<td $td_id class=\"$clase " . $valor['clase'] . "\">$val</td>";
+                }
+            } else {
+                $es_fecha = FALSE;
+                // si es una fecha, pongo la clase fecha, para exportar a excel...
+                $formato_fecha = DateTimeLocal::getFormat();
+                if ($formato_fecha === 'd/m/Y') {
+                    if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
+                        list($d, $m, $y) = preg_split('/[:\/\.-]/', $valor);
+                        $es_fecha = TRUE;
+                    }
+                }
+                if ($formato_fecha === 'm/d/Y') {
+                    if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
+                        list($m, $d, $y) = preg_split('/[:\/\.-]/', $valor);
+                        $es_fecha = TRUE;
+                    }
+                }
+                if ($es_fecha) {
+                    $fecha_iso = date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
+                    $clase = "fecha $clase";
+                    $Html .= "<td class=\"$clase\" fecha_iso='$fecha_iso'>$valor</td>";
+                } else {
+                    $Html .= "<td class=\"$clase\">$valor</td>";
+                }
+            }
+        }
+        $Html .= "</tr>";
+
+    }
+        ------------------------------ */
+
+        $Html .= $tbody ."</tbody></table>";
         return $Html;
     }
 
@@ -272,7 +407,7 @@ class Lista
         foreach ($aGrupos as $key => $titulo) {
             $this->aDatos = $aDatos[$key];
             $this->ikey = $key;
-            $id_tabla_key = $id_tabla.'_'.$key;
+            $id_tabla_key = $id_tabla . '_' . $key;
             $this->setId_tabla($id_tabla_key);
             $Html .= "<div class=salta_pag>";
             $Html .= "<h3>$titulo</h3>";
@@ -594,9 +729,9 @@ class Lista
                         if (isset($aFields[$icol])) {
                             $aFilas[$num_fila][$aFields[$icol]] = ($valor === '' || $valor === null) ? '' : addslashes($valor ?? '');
                         } else {
-                             if (!is_numeric($col)) {
-                                 $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes($valor ?? '');
-                             }
+                            if (!is_numeric($col)) {
+                                $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes($valor ?? '');
+                            }
                         }
                         if (is_numeric($col)) {
                             $icol++;
@@ -1166,10 +1301,10 @@ class Lista
             } else {
                 $name = $Cabecera;
             }
-            
+
             $aColsVisible[$num_col] = $visible;
             $num_col++;
-            
+
             if ($visible) {
                 if (!empty($name)) {
                     $cabecera .= "<th class=cabecera $width $class >" . trim($name) . "</th>\n";
@@ -1187,7 +1322,7 @@ class Lista
         // Para generar un id único
         $ahora = date("Hms");
         $f = 1;
-        $tt .= "<!-- DEBUG HTML TABLE: id=$id_tabla, num_headers=" . count($a_cabeceras) . ", b=" . (isset($b)?$b:'undef') . " -->\n";
+        $tt .= "<!-- DEBUG HTML TABLE: id=$id_tabla, num_headers=" . count($a_cabeceras) . ", b=" . (isset($b) ? $b : 'undef') . " -->\n";
 
         if (isset($a_valores['select'])) {
             $a_valores_chk = $a_valores['select'];
@@ -1206,7 +1341,7 @@ class Lista
                 $clase .= " " . $fila['clase'];
             }
             $tbody .= "<tr id='$id_fila' class='$clase' onclick='fnjs_clic_fila(this, event)' data-json='" . htmlspecialchars(json_encode($fila), ENT_QUOTES, 'UTF-8') . "'>";
-            
+
             // checkbox en cada línea.
             if (!empty($b) && $b !== 'x') {
                 if (isset($fila['sel'])) {
@@ -1232,7 +1367,7 @@ class Lista
                     $tbody .= "<td></td>";
                 }
             }
-            
+
             // 2. Data columns (only those with headers)
             // Heuristic: identify the starting index for numeric columns.
             // Usually it's either 0 or 1 (if 0 is the internal ID).
@@ -1250,16 +1385,18 @@ class Lista
                 } elseif (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}/i', (string)$fila[0])) {
                     $is_id = true;
                 }
-                
-                if ($is_id) { $start_icol = 1; }
+
+                if ($is_id) {
+                    $start_icol = 1;
+                }
             }
-            
+
             $icol_offset = 0;
             foreach ($a_cabeceras as $num_col => $Cabecera) {
                 if ($aColsVisible[$num_col]) {
                     $field = (is_array($Cabecera) && !empty($Cabecera['field'])) ? $Cabecera['field'] : null;
                     $id = (is_array($Cabecera) && !empty($Cabecera['id'])) ? $Cabecera['id'] : null;
-                    
+
                     $valor = '';
                     if ($field && isset($fila[$field])) {
                         $valor = $fila[$field];
@@ -1283,7 +1420,7 @@ class Lista
                         } else {
                             $tbody .= $val;
                         }
-                        
+
                         // Handle multiple IRAs/Scripts
                         for ($idx = 2; $idx <= 3; $idx++) {
                             if (!empty($valor["ira$idx"])) {
@@ -1295,11 +1432,11 @@ class Lista
                                 $tbody .= " <span class=\"link\" onclick='$ira' >$val</span>";
                             }
                         }
-                        
+
                         // Handle span (rare in data context but supported in legacy)
                         // Note: span is usually handled in header or special rows, but kept for parity.
                         $tbody .= "</td>";
-                        
+
                     } else {
                         $valor = $valor ?? '';
                         // Date formatting for Excel export compatibility
@@ -1357,7 +1494,8 @@ class Lista
         return $tt;
     }
 
-    public function text_first($a, $b)
+    public
+    function text_first($a, $b)
     {
         if (is_numeric($a)) {
             if (is_numeric($b)) {
@@ -1379,7 +1517,8 @@ class Lista
         return $rta;
     }
 
-    public function getCsv($filename)
+    public
+    function getCsv($filename)
     {
         $a_valores = $this->aDatos;
 
@@ -1441,57 +1580,68 @@ class Lista
 
     /* MÉTODOS GET y SET ----------------------------------------------------------*/
 
-    public function setGrupos($aGrupos)
+    public
+    function setGrupos($aGrupos)
     {
         $this->aGrupos = $aGrupos;
     }
 
-    public function setCabeceras($aCabeceras)
+    public
+    function setCabeceras($aCabeceras)
     {
         $this->aCabeceras = $aCabeceras;
     }
 
-    public function setPie($str)
+    public
+    function setPie($str)
     {
         $this->sPie = $str;
     }
 
-    public function setSortCol($ssortcol)
+    public
+    function setSortCol($ssortcol)
     {
         $this->ssortCol = str_replace(' ', '', $ssortcol);
     }
 
-    public function setColVisible($aColVisible)
+    public
+    function setColVisible($aColVisible)
     {
         $this->aColVisible = $aColVisible;
     }
 
-    public function setDatos($aDatos)
+    public
+    function setDatos($aDatos)
     {
         $this->aDatos = $aDatos;
     }
 
-    public function setBotones($aBotones)
+    public
+    function setBotones($aBotones)
     {
         $this->aBotones = $aBotones;
     }
 
-    public function setId_tabla($sid_tabla)
+    public
+    function setId_tabla($sid_tabla)
     {
         $this->sid_tabla = $sid_tabla;
     }
 
-    public function setFiltro($bFiltro)
+    public
+    function setFiltro($bFiltro)
     {
         $this->bFiltro = $bFiltro;
     }
 
-    public function setColVis($bColVis)
+    public
+    function setColVis($bColVis)
     {
         $this->bColVis = $bColVis;
     }
 
-    public function setFormatoTabla($formatoTabla)
+    public
+    function setFormatoTabla($formatoTabla)
     {
         $this->formato_tabla = $formatoTabla;
     }
