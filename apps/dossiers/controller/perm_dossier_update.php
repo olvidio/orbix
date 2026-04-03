@@ -1,6 +1,6 @@
 <?php
 
-use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
+use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use function core\is_true;
 
 /**
@@ -18,7 +18,7 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qid_tipo_dossier = (integer)filter_input(INPUT_POST, 'id_tipo_dossier');
 $Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
-$TipoDossierRepository = $GLOBALS['container']->get(TipoTelecoRepositoryInterface::class);
+$TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
 switch ($Qque) {
     case 'eliminar':
         $oTipoDossier = $TipoDossierRepository->findById($Qid_tipo_dossier);
@@ -28,6 +28,11 @@ switch ($Qque) {
         break;
     case 'guardar':
         $oTipoDossier = $TipoDossierRepository->findById($Qid_tipo_dossier);
+
+        if ($oTipoDossier === null) {
+            echo sprintf(_("No se encuentra el dossier: %s"), $Qid_tipo_dossier);
+            die();
+        }
 
         $Qdescripcion = (string)filter_input(INPUT_POST, 'descripcion');
         $Qtabla_from = (string)filter_input(INPUT_POST, 'tabla_from');
@@ -49,7 +54,7 @@ switch ($Qque) {
         $oTipoDossier->setDepende_modificar(is_true($Qdepende_modificar));
         $oTipoDossier->setApp($Qapp);
         $oTipoDossier->setClass($Qclass);
-        $oTipoDossier->setId_schema($Qdb);
+        $oTipoDossier->setDb(1);
         //cuando el campo es permiso_lectura, se pasa un array que hay que convertirlo en número.
         if (!empty($aPermiso_lectura) && (count($aPermiso_lectura) > 0)) {
             $byte = 0;
