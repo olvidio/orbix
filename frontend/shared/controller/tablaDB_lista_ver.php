@@ -45,15 +45,21 @@ if (urldecode($Qclase_info_encoded) === $Qclase_info_encoded) {
     $Qclase_info_encoded = urlencode($Qclase_info_encoded);
 }
 
-$QaSerieBuscar = (string)filter_input(INPUT_POST, 'aSerieBuscar');
-$Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');
+$QaSerieBuscar = filter_input(INPUT_POST, 'aSerieBuscar');
+$Qk_buscar = filter_input(INPUT_POST, 'k_buscar');
+if ($QaSerieBuscar !== null) {
+    $QaSerieBuscar = (string)$QaSerieBuscar;
+    $QaSerieBuscar = urldecode($QaSerieBuscar);
+}
+if ($Qk_buscar !== null) {
+    $Qk_buscar = (string)$Qk_buscar;
+$Qk_buscar = urldecode($Qk_buscar);
+}
+
 $Qpermiso = (integer)filter_input(INPUT_POST, 'permiso');
 if (empty($Qpermiso)) {
     $Qpermiso = 3;
 }
-
-$QaSerieBuscar = urldecode($QaSerieBuscar);
-$Qk_buscar = urldecode($Qk_buscar);
 
 // si paso parámetros, definir la colección
 $Qpau = (string)filter_input(INPUT_POST, 'pau');
@@ -61,7 +67,7 @@ $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 
-if (empty($Qk_buscar)) {
+if ($QaSerieBuscar === null && $Qk_buscar === null) {
     /**********************************************************************
      ********* mostrar formulario de búsqueda
      **********************************************************************/
@@ -71,7 +77,7 @@ if (empty($Qk_buscar)) {
     $url_backend = '/src/shared/tablaDB_buscar_datos';
     $a_campos_backend = [
         'clase_info' => $Qclase_info_encoded,
-        'k_buscar' => $Qk_buscar,
+        //'k_buscar' => $Qk_buscar, // En este caso es null y no se envia
         'pau' => $Qpau,
         'id_pau' => $Qid_pau,
         'obj_pau' => $Qobj_pau,
@@ -79,11 +85,11 @@ if (empty($Qk_buscar)) {
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
     $a_campos_buscar = $data['a_campos'];
-    $datos_buscar = empty($data['buscar_view'])? '' : $data['buscar_view'];
-    $namespace = empty($data['namespace_view'])? 'frontend\shared\view' : $data['namespace_view'];
+    $datos_buscar = empty($data['buscar_view']) ? '' : $data['buscar_view'];
+    $namespace = empty($data['namespace_view']) ? 'frontend\shared\view' : $data['namespace_view'];
 
     $camposFormBuscar = 'k_buscar';
-    $camposFormBuscar .= empty($a_campos_buscar['camposForm'])? '' : $a_campos_buscar['camposForm'];
+    $camposFormBuscar .= empty($a_campos_buscar['camposForm']) ? '' : $a_campos_buscar['camposForm'];
     $oHashBuscar = new Hash();
     $oHashBuscar->setCamposForm($camposFormBuscar);
     $a_camposHiddenBuscar = array(
@@ -103,10 +109,11 @@ if (empty($Qk_buscar)) {
         $oView = new ViewNewPhtml('frontend\shared\view');
         $oView->renderizar('tablaDB_busqueda.phtml', $a_campos_buscar);
     }
+    exit();
 }
 
 /**********************************************************************
- ********* mostrar formulario de búsqueda
+ ********* mostrar tabla
  **********************************************************************/
 
 // pedir a Info los datos necesarios para mostrar la tabla

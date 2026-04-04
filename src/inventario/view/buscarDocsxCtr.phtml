@@ -20,9 +20,15 @@
         </tr>
 
         <th colspan=4>
-            <input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario(this.form,'#exportar');"
+            <input type="button" id="btn_ok" name="ok" onclick="fnjs_enviar_formulario(this.form,'#exportar');"
                    value="<?= ucfirst(_("buscar")) ?>" class="btn_ok">
         </th>
     </table>
-
 </form>
+<div id="exportar"></div>
+
+<script>
+    $(function() {
+        $('#btn_ok').click();
+    });
+</script>

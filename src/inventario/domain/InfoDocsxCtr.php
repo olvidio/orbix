@@ -55,9 +55,7 @@ class InfoDocsxCtr extends DatosInfoRepo
     {
         // Si se quiere listar una selección, $k_buscar
         if (empty($this->k_buscar)) {
-            // para evitar que salgan todos
-            $aWhere = array('_limit' => 6, '_ordre' => 'id_ubi,id_lugar');
-            $aOperador = [];
+            $Coleccion = [];
         } else {
             $nom_ubi = str_replace("+", "\+", $this->k_buscar); // para los centros de la sss+
             $aWhereUbi = array('nom_ubi' => $nom_ubi);
@@ -82,10 +80,9 @@ class InfoDocsxCtr extends DatosInfoRepo
                 $aWhere = ['id_ubi' => $lst_id_ubi];
                 $aOperador = ['id_ubi' => 'IN'];
             }
+            $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
+            $Coleccion = $ColeccionRepository->getDocumentos($aWhere, $aOperador);
         }
-
-        $ColeccionRepository = $GLOBALS['container']->get($this->repoInterface);
-        $Coleccion = $ColeccionRepository->getDocumentos($aWhere, $aOperador);
 
         return $Coleccion;
     }
