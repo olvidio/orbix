@@ -3,7 +3,7 @@
 namespace Tests\unit\ubis\domain\entity;
 
 use src\ubis\domain\entity\TipoTeleco;
-use src\ubis\domain\value_objects\int;
+use src\ubis\domain\value_objects\TipoTelecoCode;
 use src\ubis\domain\value_objects\TipoTelecoName;
 use Tests\myTest;
 
@@ -20,9 +20,8 @@ class TipoTelecoTest extends myTest
 
     public function test_set_and_get_tipo_teleco()
     {
-        $tipo_telecoVo = new int('TST');
-        $this->TipoTeleco->setTipoTelecoVo($tipo_telecoVo);
-        $this->assertInstanceOf(int::class, $this->TipoTeleco->getTipoTelecoVo());
+        $this->TipoTeleco->setTipoTelecoVo(TipoTelecoCode::fromNullableString('TST'));
+        $this->assertInstanceOf(TipoTelecoCode::class, $this->TipoTeleco->getTipoTelecoVo());
         $this->assertEquals('TST', $this->TipoTeleco->getTipoTelecoVo()->value());
     }
 
@@ -44,7 +43,7 @@ class TipoTelecoTest extends myTest
     {
         $tipoTeleco = new TipoTeleco();
         $attributes = [
-            'tipo_teleco' => new int('TST'),
+            'tipo_teleco' => new TipoTelecoCode('TST'),
             'nombre_teleco' => new TipoTelecoName('test'),
             'id' => 1,
         ];

@@ -39,6 +39,7 @@ class CertificadoEmitidoDeleteTest extends myTest
         // Lo usa el setConnection
         putenv("UBICACION=sv");
         $this->session_org = $_SESSION['session_auth']['esquema'];
+        $_SESSION['session_auth']['esquema'] = 'H-Hv';
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -73,7 +74,6 @@ class CertificadoEmitidoDeleteTest extends myTest
 
             $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
             $certificadoEmitidoRepository->setoDbl($oDBdst);
-
             $busqueda = $certificadoEmitidoRepository->findById($id_item);
             $this->assertNull($busqueda, "El certificado con ID $id_item debería haber sido eliminado.");
         }

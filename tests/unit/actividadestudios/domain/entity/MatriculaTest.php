@@ -2,12 +2,12 @@
 
 namespace Tests\unit\actividadestudios\domain\entity;
 
-use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividadestudios\domain\entity\Matricula;
 use src\actividadestudios\domain\value_objects\Acta;
 use src\actividadestudios\domain\value_objects\NotaMax;
 use src\actividadestudios\domain\value_objects\NotaNum;
 use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\value_objects\NotaSituacion;
 use Tests\myTest;
 
@@ -59,10 +59,10 @@ class MatriculaTest extends myTest
 
     public function test_set_and_get_id_nivel()
     {
-        $id_nivelVo = new NivelStgrId(1);
+        $id_nivelVo = new NivelId(2104);
         $this->Matricula->setIdNivelVo($id_nivelVo);
-        $this->assertInstanceOf(NivelStgrId::class, $this->Matricula->getIdNivelVo());
-        $this->assertEquals(1, $this->Matricula->getIdNivelVo()->value());
+        $this->assertInstanceOf(NivelId::class, $this->Matricula->getIdNivelVo());
+        $this->assertEquals(2104, $this->Matricula->getIdNivelVo()->value());
     }
 
     public function test_set_and_get_nota_num()
@@ -104,7 +104,7 @@ class MatriculaTest extends myTest
             'id_nom' => 1,
             'id_situacion' => new NotaSituacion(1),
             'preceptor' => true,
-            'id_nivel' => new NivelStgrId(1),
+            'id_nivel' => new NivelId(2104),
             'nota_num' => new NotaNum(1),
             'nota_max' => new NotaMax(1),
             'id_preceptor' => 1,
@@ -117,7 +117,7 @@ class MatriculaTest extends myTest
         $this->assertEquals(1, $matricula->getId_nom());
         $this->assertEquals(1, $matricula->getIdSituacionVo()->value());
         $this->assertTrue($matricula->isPreceptor());
-        $this->assertEquals(1, $matricula->getIdNivelVo()->value());
+        $this->assertEquals(2104, $matricula->getIdNivelVo()->value());
         $this->assertEquals(1, $matricula->getNotaNumVo()->value());
         $this->assertEquals(1, $matricula->getNotaMaxVo()->value());
         $this->assertEquals(1, $matricula->getId_preceptor());
@@ -133,7 +133,7 @@ class MatriculaTest extends myTest
             'id_nom' => 1,
             'id_situacion' => 1,
             'preceptor' => true,
-            'id_nivel' => 1,
+            'id_nivel' => 2104,
             'nota_num' => 1,
             'nota_max' => 1,
             'id_preceptor' => 1,
@@ -146,7 +146,7 @@ class MatriculaTest extends myTest
         $this->assertEquals(1, $matricula->getId_nom());
         $this->assertEquals(1, $matricula->getIdSituacionVo()->value());
         $this->assertTrue($matricula->isPreceptor());
-        $this->assertEquals(1, $matricula->getIdNivelVo()->value());
+        $this->assertEquals(2104, $matricula->getIdNivelVo()->value());
         $this->assertEquals(1, $matricula->getNotaNumVo()->value());
         $this->assertEquals(1, $matricula->getNotaMaxVo()->value());
         $this->assertEquals(1, $matricula->getId_preceptor());

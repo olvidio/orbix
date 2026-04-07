@@ -47,4 +47,14 @@ final class IncCode
         }
         return new self($value_trimmed);
     }
+
+    /**
+     * String representation of the Inc code
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->value;
+    }
 }

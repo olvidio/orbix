@@ -291,8 +291,8 @@ class PersonaGlobalTest extends myTest
         $this->assertEquals('Test', $personaGlobal->getLugarNacimientoVo()->value());
         $this->assertTrue($personaGlobal->isEs_publico());
         $this->assertEquals('nx1 Test value nx2 Test value', $personaGlobal->getApellidos());
-        $this->assertEquals('test', $personaGlobal->getApellidosNombre());
-        $this->assertEquals('test', $personaGlobal->getApellidosNombreCr1_05());
+        $this->assertEquals('Test value nx2 Test value, Dr. Test value nx1', $personaGlobal->getApellidosNombre());
+        $this->assertEquals('nx1 Test value nx2 Test value, Test value', $personaGlobal->getApellidosNombreCr1_05());
         $this->assertEquals('Dr. Test value nx1 Test value nx2 Test value', $personaGlobal->getNombreApellidos());
         $this->assertEquals('Test value nx1 Test value nx2 Test value', $personaGlobal->getNombreApellidosCrSin());
         $this->assertEquals('Dnus. Dr. Test value nx1 Test value nx2 Test value', $personaGlobal->getTituloNombre());
@@ -364,8 +364,8 @@ class PersonaGlobalTest extends myTest
         $this->assertEquals('Test', $personaGlobal->getLugarNacimientoVo()->value());
         $this->assertTrue($personaGlobal->isEs_publico());
         $this->assertEquals('nx1 Test value nx2 Test value', $personaGlobal->getApellidos());
-        $this->assertEquals('test', $personaGlobal->getApellidosNombre());
-        $this->assertEquals('test', $personaGlobal->getApellidosNombreCr1_05());
+        $this->assertEquals('Test value nx2 Test value, Dr. Test value nx1', $personaGlobal->getApellidosNombre());
+        $this->assertEquals('nx1 Test value nx2 Test value, Test value', $personaGlobal->getApellidosNombreCr1_05());
         $this->assertEquals('Dr. Test value nx1 Test value nx2 Test value', $personaGlobal->getNombreApellidos());
         $this->assertEquals('Test value nx1 Test value nx2 Test value', $personaGlobal->getNombreApellidosCrSin());
         $this->assertEquals('Dnus. Dr. Test value nx1 Test value nx2 Test value', $personaGlobal->getTituloNombre());

@@ -3,6 +3,7 @@
 namespace Tests\unit\procesos\domain\entity;
 
 use src\actividades\domain\value_objects\ActividadTipoId;
+use src\actividades\domain\value_objects\ActividadTipoIdTxt;
 use src\procesos\domain\entity\PermUsuarioActividad;
 use src\procesos\domain\value_objects\FaseId;
 use Tests\myTest;
@@ -38,9 +39,9 @@ class PermUsuarioActividadTest extends myTest
 
     public function test_set_and_get_id_tipo_activ_txt()
     {
-        $id_tipo_activ_txtVo = new ActividadTipoId(234567);
+        $id_tipo_activ_txtVo = new ActividadTipoIdTxt(234567);
         $this->PermUsuarioActividad->setIdTipoActivTxtVo($id_tipo_activ_txtVo);
-        $this->assertInstanceOf(ActividadTipoId::class, $this->PermUsuarioActividad->getIdTipoActivTxtVo());
+        $this->assertInstanceOf(ActividadTipoIdTxt::class, $this->PermUsuarioActividad->getIdTipoActivTxtVo());
         $this->assertEquals(234567, $this->PermUsuarioActividad->getIdTipoActivTxtVo()->value());
     }
 
@@ -77,7 +78,7 @@ class PermUsuarioActividadTest extends myTest
             'id_item' => 1,
             'id_usuario' => 1,
             'dl_propia' => true,
-            'id_tipo_activ_txt' => new ActividadTipoId(234567),
+            'id_tipo_activ_txt' => new ActividadTipoIdTxt(234567),
             'fase_ref' => new FaseId(1),
             'afecta_a' => 1,
             'perm_on' => 1,
@@ -102,7 +103,7 @@ class PermUsuarioActividadTest extends myTest
             'id_item' => 1,
             'id_usuario' => 1,
             'dl_propia' => true,
-            'id_tipo_activ_txt' => new ActividadTipoId(234567),
+            'id_tipo_activ_txt' => new ActividadTipoIdTxt(234567),
             'fase_ref' => 1,
             'afecta_a' => 1,
             'perm_on' => 1,

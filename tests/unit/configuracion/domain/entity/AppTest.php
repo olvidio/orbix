@@ -37,7 +37,7 @@ class AppTest extends myTest
         $app = new App();
         $attributes = [
             'id_app' => new AppId(1),
-            'nombre_app' => new AppName('Test value'),
+            'nom' => new AppName('Test value'),
         ];
         $app->setAllAttributes($attributes);
 
@@ -50,7 +50,7 @@ class AppTest extends myTest
         $app = new App();
         $attributes = [
             'id_app' => 1,
-            'nombre_app' => 'Test value',
+            'nom' => 'Test value',
         ];
         $app->setAllAttributes($attributes);
 

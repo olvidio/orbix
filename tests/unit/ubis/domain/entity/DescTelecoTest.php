@@ -4,8 +4,7 @@ namespace Tests\unit\ubis\domain\entity;
 
 use src\ubis\domain\entity\DescTeleco;
 use src\ubis\domain\value_objects\DescTelecoOrder;
-use src\ubis\domain\value_objects\int;
-use src\ubis\domain\value_objects\int;
+use src\ubis\domain\value_objects\DescTelecoText;
 use Tests\myTest;
 
 class DescTelecoTest extends myTest
@@ -17,7 +16,7 @@ class DescTelecoTest extends myTest
         parent::setUp();
         $this->DescTeleco = new DescTeleco();
         $this->DescTeleco->setId_item(1);
-        $this->DescTeleco->setId_tipo_teleco(new int('TST'));
+        $this->DescTeleco->setId_tipo_teleco(15);
     }
 
     public function test_set_and_get_id_item()
@@ -36,17 +35,15 @@ class DescTelecoTest extends myTest
 
     public function test_set_and_get_id_tipo_teleco()
     {
-        $id_tipo_telecoVo = new int('TST');
-        $this->DescTeleco->setId_tipo_teleco($id_tipo_telecoVo);
-        $this->assertInstanceOf(int::class, $this->DescTeleco->getId_tipo_teleco());
-        $this->assertEquals('TST', $this->DescTeleco->getId_tipo_teleco()->value());
+        $this->DescTeleco->setId_tipo_teleco(15);
+        $this->assertEquals(15, $this->DescTeleco->getId_tipo_teleco());
     }
 
     public function test_set_and_get_desc_teleco()
     {
-        $desc_telecoVo = new int('Test');
+        $desc_telecoVo = DescTelecoText::fromNullableString('Test');
         $this->DescTeleco->setDescTelecoVo($desc_telecoVo);
-        $this->assertInstanceOf(int::class, $this->DescTeleco->getDescTelecoVo());
+        $this->assertInstanceOf(DescTelecoText::class, $this->DescTeleco->getDescTelecoVo());
         $this->assertEquals('Test', $this->DescTeleco->getDescTelecoVo()->value());
     }
 
@@ -56,14 +53,14 @@ class DescTelecoTest extends myTest
         $attributes = [
             'id_item' => 1,
             'orden' => new DescTelecoOrder(1),
-            'id_tipo_teleco' => new int('TST'),
-            'desc_teleco' => new int('Test'),
+            'id_tipo_teleco' => 15,
+            'desc_teleco' => DescTelecoText::fromNullableString('Test'),
         ];
         $descTeleco->setAllAttributes($attributes);
 
         $this->assertEquals(1, $descTeleco->getId_item());
         $this->assertEquals(1, $descTeleco->getOrdenVo()->value());
-        $this->assertEquals('TST', $descTeleco->getId_tipo_teleco()->value());
+        $this->assertEquals(15, $descTeleco->getId_tipo_teleco());
         $this->assertEquals('Test', $descTeleco->getDescTelecoVo()->value());
     }
 
@@ -73,14 +70,14 @@ class DescTelecoTest extends myTest
         $attributes = [
             'id_item' => 1,
             'orden' => 1,
-            'id_tipo_teleco' => 'TST',
+            'id_tipo_teleco' => 15,
             'desc_teleco' => 'Test',
         ];
         $descTeleco->setAllAttributes($attributes);
 
         $this->assertEquals(1, $descTeleco->getId_item());
         $this->assertEquals(1, $descTeleco->getOrdenVo()->value());
-        $this->assertEquals('TST', $descTeleco->getId_tipo_teleco()->value());
+        $this->assertEquals(15, $descTeleco->getId_tipo_teleco());
         $this->assertEquals('Test', $descTeleco->getDescTelecoVo()->value());
     }
 }

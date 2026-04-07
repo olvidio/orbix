@@ -299,8 +299,8 @@ class PersonaPubTest extends myTest
         $this->assertEquals(1, $personaPub->getEdad());
         $this->assertTrue($personaPub->isProfesor_stgr());
         $this->assertEquals('nx1 Test value nx2 Test value', $personaPub->getApellidos());
-        $this->assertEquals('test', $personaPub->getApellidosNombre());
-        $this->assertEquals('test', $personaPub->getApellidosNombreCr1_05());
+        $this->assertEquals('Test value nx2 Test value, Dr. Test value nx1', $personaPub->getApellidosNombre());
+        $this->assertEquals('nx1 Test value nx2 Test value, Test value', $personaPub->getApellidosNombreCr1_05());
         $this->assertEquals('Dr. Test value nx1 Test value nx2 Test value', $personaPub->getNombreApellidos());
         $this->assertEquals('Test value nx1 Test value nx2 Test value', $personaPub->getNombreApellidosCrSin());
         $this->assertEquals('Dnus. Dr. Test value nx1 Test value nx2 Test value', $personaPub->getTituloNombre());
@@ -374,8 +374,8 @@ class PersonaPubTest extends myTest
         $this->assertEquals(1, $personaPub->getEdad());
         $this->assertTrue($personaPub->isProfesor_stgr());
         $this->assertEquals('nx1 Test value nx2 Test value', $personaPub->getApellidos());
-        $this->assertEquals('test', $personaPub->getApellidosNombre());
-        $this->assertEquals('test', $personaPub->getApellidosNombreCr1_05());
+        $this->assertEquals('Test value nx2 Test value, Dr. Test value nx1', $personaPub->getApellidosNombre());
+        $this->assertEquals('nx1 Test value nx2 Test value, Test value', $personaPub->getApellidosNombreCr1_05());
         $this->assertEquals('Dr. Test value nx1 Test value nx2 Test value', $personaPub->getNombreApellidos());
         $this->assertEquals('Test value nx1 Test value nx2 Test value', $personaPub->getNombreApellidosCrSin());
         $this->assertEquals('Dnus. Dr. Test value nx1 Test value nx2 Test value', $personaPub->getTituloNombre());

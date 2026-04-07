@@ -6,7 +6,7 @@ use src\actividadtarifas\domain\value_objects\TarifaLetraCode;
 use src\actividadtarifas\domain\value_objects\TarifaId;
 use src\actividadtarifas\domain\value_objects\TarifaModoId;
 use src\shared\domain\traits\Hydratable;
-use src\shared\domain\value_objects\SfsvId;
+use src\shared\domain\value_objects\SfsvOtrosId;
 use src\ubis\domain\value_objects\ObservCasaText;
 
 class TipoTarifa
@@ -22,7 +22,7 @@ class TipoTarifa
 
     private ?TarifaLetraCode $letra = null;
 
-    private ?SfsvId $sfsv = null;
+    private ?SfsvOtrosId $sfsv = null;
 
     private ?ObservCasaText $observ = null;
 
@@ -141,19 +141,19 @@ class TipoTarifa
      */
     public function setSfsv(?int $sfsv = null): void
     {
-        $this->sfsv = SfsvId::fromNullableInt($sfsv);
+        $this->sfsv = SfsvOtrosId::fromNullableInt($sfsv);
     }
 
-    public function getSfsvVo(): ?SfsvId
+    public function getSfsvVo(): ?SfsvOtrosId
     {
         return $this->sfsv;
     }
 
-    public function setSfsvVo(SfsvId|int|null $id = null): void
+    public function setSfsvVo(SfsvOtrosId|int|null $id = null): void
     {
-        $this->sfsv = $id instanceof SfsvId
+        $this->sfsv = $id instanceof SfsvOtrosId
             ? $id
-            : SfsvId::fromNullableInt($id);
+            : SfsvOtrosId::fromNullableInt($id);
     }
 
     /**

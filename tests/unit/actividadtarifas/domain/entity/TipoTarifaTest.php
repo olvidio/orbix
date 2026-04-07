@@ -6,7 +6,7 @@ use src\actividadtarifas\domain\entity\TipoTarifa;
 use src\actividadtarifas\domain\value_objects\TarifaId;
 use src\actividadtarifas\domain\value_objects\TarifaLetraCode;
 use src\actividadtarifas\domain\value_objects\TarifaModoId;
-use src\shared\domain\value_objects\SfsvId;
+use src\shared\domain\value_objects\SfsvOtrosId;
 use src\ubis\domain\value_objects\ObservCasaText;
 use Tests\myTest;
 
@@ -48,9 +48,9 @@ class TipoTarifaTest extends myTest
 
     public function test_set_and_get_sfsv()
     {
-        $sfsvVo = new SfsvId(1);
+        $sfsvVo = new SfsvOtrosId(1);
         $this->TipoTarifa->setSfsvVo($sfsvVo);
-        $this->assertInstanceOf(SfsvId::class, $this->TipoTarifa->getSfsvVo());
+        $this->assertInstanceOf(SfsvOtrosId::class, $this->TipoTarifa->getSfsvVo());
         $this->assertEquals(1, $this->TipoTarifa->getSfsvVo()->value());
     }
 
@@ -69,7 +69,7 @@ class TipoTarifaTest extends myTest
             'id_tarifa' => new TarifaId(1),
             'modo' => new TarifaModoId(1),
             'letra' => new TarifaLetraCode('Test'),
-            'sfsv' => new SfsvId(1),
+            'sfsv' => new SfsvOtrosId(1),
             'observ' => new ObservCasaText('Test value'),
         ];
         $tipoTarifa->setAllAttributes($attributes);

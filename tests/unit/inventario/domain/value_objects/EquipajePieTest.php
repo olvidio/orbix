@@ -16,7 +16,7 @@ class EquipajePieTest extends myTest
     public function test_invalid_length_throws_exception()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new EquipajePie(str_repeat('a', 1000)); // Assuming max length validation
+        new EquipajePie(str_repeat('a', 1100)); // Assuming max length validation
     }
 
     public function test_to_string_returns_equipajePie_value()

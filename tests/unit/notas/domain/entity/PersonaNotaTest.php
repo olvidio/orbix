@@ -41,8 +41,8 @@ class PersonaNotaTest extends myTest
 
     public function test_set_and_get_id_nivel()
     {
-        $this->PersonaNota->setId_nivel(1);
-        $this->assertEquals(1, $this->PersonaNota->getIdNivelVo()->value());
+        $this->PersonaNota->setId_nivel(2134);
+        $this->assertEquals(2134, $this->PersonaNota->getIdNivelVo()->value());
     }
 
     public function test_set_and_get_id_asignatura()
@@ -143,7 +143,7 @@ class PersonaNotaTest extends myTest
         $attributes = [
             'id_schema' => 1,
             'id_nom' => 1,
-            'id_nivel' => 1,
+            'id_nivel' => 2324,
             'id_asignatura' => new AsignaturaId(1001),
             'id_situacion' => new NotaSituacion(1),
             'acta' => new ActaNumero('dlb 23/24'),
@@ -161,7 +161,7 @@ class PersonaNotaTest extends myTest
 
         $this->assertEquals(1, $personaNota->getId_schema());
         $this->assertEquals(1, $personaNota->getId_nom());
-        $this->assertEquals(1, $personaNota->getId_nivel());
+        $this->assertEquals(2324, $personaNota->getId_nivel());
         $this->assertEquals(1001, $personaNota->getIdAsignaturaVo()->value());
         $this->assertEquals(1, $personaNota->getIdSituacionVo()->value());
         $this->assertEquals('dlb 23/24', $personaNota->getActaVo()->value());
@@ -182,7 +182,7 @@ class PersonaNotaTest extends myTest
         $attributes = [
             'id_schema' => 1,
             'id_nom' => 1,
-            'id_nivel' => 1,
+            'id_nivel' => 2324,
             'id_asignatura' => 1001,
             'id_situacion' => 1,
             'acta' => 'dlb 23/24',
@@ -200,7 +200,7 @@ class PersonaNotaTest extends myTest
 
         $this->assertEquals(1, $personaNota->getId_schema());
         $this->assertEquals(1, $personaNota->getId_nom());
-        $this->assertEquals(1, $personaNota->getId_nivel());
+        $this->assertEquals(2324, $personaNota->getId_nivel());
         $this->assertEquals(1001, $personaNota->getIdAsignaturaVo()->value());
         $this->assertEquals(1, $personaNota->getIdSituacionVo()->value());
         $this->assertEquals('dlb 23/24', $personaNota->getActaVo()->value());

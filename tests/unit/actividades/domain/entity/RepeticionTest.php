@@ -17,13 +17,13 @@ class RepeticionTest extends myTest
     {
         parent::setUp();
         $this->Repeticion = new Repeticion();
-        $this->Repeticion->setId_(1);
+        $this->Repeticion->setIdRepeticionVo(RepeticionId::fromNullableInt(1));
         $this->Repeticion->setRepeticionVo(new RepeticionText('Test value'));
     }
 
     public function test_get_id_repeticion()
     {
-        $this->assertEquals(1, $this->Repeticion->getId_());
+        $this->assertEquals(1, $this->Repeticion->getIdRepeticionVo()->value());
     }
 
     public function test_set_and_get_repeticion()
@@ -52,7 +52,7 @@ class RepeticionTest extends myTest
         ];
         $repeticion->setAllAttributes($attributes);
 
-        $this->assertEquals(1, $repeticion->getId_());
+        $this->assertEquals(1, $repeticion->getIdRepeticionVo()->value());
         $this->assertEquals('Test value', $repeticion->getRepeticionVo()->value());
         $this->assertEquals('T', $repeticion->getTemporadaVo()->value());
     }
@@ -67,7 +67,7 @@ class RepeticionTest extends myTest
         ];
         $repeticion->setAllAttributes($attributes);
 
-        $this->assertEquals(1, $repeticion->getId_());
+        $this->assertEquals(1, $repeticion->getIdRepeticionVo()->value());
         $this->assertEquals('Test value', $repeticion->getRepeticionVo()->value());
         $this->assertEquals('T', $repeticion->getTemporadaVo()->value());
     }

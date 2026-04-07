@@ -26,7 +26,7 @@ class ColaMail
 
     private ?string $writed_by = null;
 
-   private ?DateTimeLocal $sended = null;
+    private ?DateTimeLocal $sended = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -106,12 +106,12 @@ class ColaMail
 
     public function getSended(): DateTimeLocal|NullDateTimeLocal|null
     {
-        return $this->dsended ?? new NullDateTimeLocal;
+        return $this->sended ?? new NullDateTimeLocal;
     }
 
 
     public function setSended(DateTimeLocal|null $sended = null): void
     {
-        $this->dsended = $sended;
+        $this->sended = $sended;
     }
 }

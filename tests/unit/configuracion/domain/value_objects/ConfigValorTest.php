@@ -16,7 +16,7 @@ class ConfigValorTest extends myTest
     public function test_invalid_length_throws_exception()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new ConfigValor(str_repeat('a', 1000)); // Assuming max length validation
+        new ConfigValor(str_repeat('a', 5000)); // Assuming max length validation
     }
 
     public function test_equals_returns_true_for_same_configValor()

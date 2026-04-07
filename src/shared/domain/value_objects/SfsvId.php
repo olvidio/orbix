@@ -2,7 +2,7 @@
 
 namespace src\shared\domain\value_objects;
 
-final class SfsvId
+final class SfsvOtrosId
 {
     public const SV = 1;
     public const SF = 2;
@@ -27,7 +27,7 @@ final class SfsvId
         return $this->value;
     }
 
-    public function equals(SfsvId $other): bool
+    public function equals(SfsvOtrosId $other): bool
     {
         return $this->value === $other->value();
     }

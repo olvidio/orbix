@@ -3,7 +3,6 @@
 namespace Tests\unit\ubis\domain\entity;
 
 use src\ubis\domain\entity\TelecoUbi;
-use src\ubis\domain\value_objects\int;
 use src\ubis\domain\value_objects\NumTelecoText;
 use src\ubis\domain\value_objects\ObservTelecoText;
 use src\ubis\domain\value_objects\TelecoUbiId;
@@ -18,16 +17,16 @@ class TelecoUbiTest extends myTest
     {
         parent::setUp();
         $this->TelecoUbi = new TelecoUbi();
-        $this->TelecoUbi->setIdUbiVo(new TelecoUbiId(1));
+        $this->TelecoUbi->setIdUbiVo(new TelecoUbiId(100113));
         $this->TelecoUbi->setIdTipoTelecoVo(new TipoTelecoId(1));
     }
 
     public function test_set_and_get_id_ubi()
     {
-        $id_ubiVo = new TelecoUbiId(1);
+        $id_ubiVo = new TelecoUbiId(100113);
         $this->TelecoUbi->setIdUbiVo($id_ubiVo);
         $this->assertInstanceOf(TelecoUbiId::class, $this->TelecoUbi->getIdUbiVo());
-        $this->assertEquals(1, $this->TelecoUbi->getIdUbiVo()->value());
+        $this->assertEquals(100113, $this->TelecoUbi->getIdUbiVo()->value());
     }
 
     public function test_set_and_get_id_tipo_teleco()
@@ -40,10 +39,8 @@ class TelecoUbiTest extends myTest
 
     public function test_set_and_get_desc_teleco()
     {
-        $desc_telecoVo = new int('Test');
-        $this->TelecoUbi->setId_desc_teleco($desc_telecoVo);
-        $this->assertInstanceOf(int::class, $this->TelecoUbi->getId_desc_teleco());
-        $this->assertEquals('Test', $this->TelecoUbi->getId_desc_teleco()->value());
+        $this->TelecoUbi->setId_desc_teleco(16);
+        $this->assertEquals(16, $this->TelecoUbi->getId_desc_teleco());
     }
 
     public function test_set_and_get_num_teleco()
@@ -72,7 +69,7 @@ class TelecoUbiTest extends myTest
     {
         $telecoUbi = new TelecoUbi();
         $attributes = [
-            'id_ubi' => new TelecoUbiId(1),
+            'id_ubi' => new TelecoUbiId(100113),
             'id_tipo_teleco' => new TipoTelecoId(1),
             'id_desc_teleco' => 3,
             'num_teleco' => new NumTelecoText('Test'),
@@ -81,7 +78,7 @@ class TelecoUbiTest extends myTest
         ];
         $telecoUbi->setAllAttributes($attributes);
 
-        $this->assertEquals(1, $telecoUbi->getIdUbiVo()->value());
+        $this->assertEquals(100113, $telecoUbi->getIdUbiVo()->value());
         $this->assertEquals(1, $telecoUbi->getId_tipo_teleco());
         $this->assertEquals(3, $telecoUbi->getId_desc_teleco());
         $this->assertEquals('Test', $telecoUbi->getNumTelecoVo()->value());
@@ -93,7 +90,7 @@ class TelecoUbiTest extends myTest
     {
         $telecoUbi = new TelecoUbi();
         $attributes = [
-            'id_ubi' => 1,
+            'id_ubi' => 100113,
             'id_tipo_teleco' => 1,
             'id_desc_teleco' => 3,
             'num_teleco' => 'Test',
@@ -102,9 +99,9 @@ class TelecoUbiTest extends myTest
         ];
         $telecoUbi->setAllAttributes($attributes);
 
-        $this->assertEquals(1, $telecoUbi->getIdUbiVo()->value());
+        $this->assertEquals(100113, $telecoUbi->getIdUbiVo()->value());
         $this->assertEquals(1, $telecoUbi->getIdTipoTelecoVo()->value());
-        $this->assertEquals(3, $telecoUbi->getId_desc_teleco()->value());
+        $this->assertEquals(3, $telecoUbi->getId_desc_teleco());
         $this->assertEquals('Test', $telecoUbi->getNumTelecoVo()->value());
         $this->assertEquals('Test', $telecoUbi->getObservVo()->value());
         $this->assertEquals(1, $telecoUbi->getId_item());

@@ -96,7 +96,7 @@ class AsignaturaTest extends myTest
         $attributes = [
             'id_asignatura' => new AsignaturaId(1001),
             'id_nivel' => new NivelId(1001),
-            'nombre_signatura' => 'test',
+            'nombre_asignatura' => 'test',
             'nombre_corto' => new AsignaturaShortName('Test value'),
             'creditos' => new Creditos(1),
             'year' => new YearText('2'),
@@ -123,7 +123,7 @@ class AsignaturaTest extends myTest
         $attributes = [
             'id_asignatura' => 1001,
             'id_nivel' => 1001,
-            'nombre_signatura' => 'test',
+            'nombre_asignatura' => 'test',
             'nombre_corto' => 'Test value',
             'creditos' => 1,
             'year' => '2',

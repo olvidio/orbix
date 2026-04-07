@@ -25,7 +25,7 @@ class CasaTest extends myTest
     {
         parent::setUp();
         $this->Casa = new Casa();
-        $this->Casa->setIdUbiVo(new CasaId(1));
+        $this->Casa->setIdUbiVo(new CasaId(100113));
         $this->Casa->setNombreUbiVo(new UbiNombreText('Test'));
     }
 
@@ -37,10 +37,10 @@ class CasaTest extends myTest
 
     public function test_set_and_get_id_ubi()
     {
-        $id_ubiVo = new CasaId(1);
+        $id_ubiVo = new CasaId(100113);
         $this->Casa->setIdUbiVo($id_ubiVo);
         $this->assertInstanceOf(CasaId::class, $this->Casa->getIdUbiVo());
-        $this->assertEquals(1, $this->Casa->getIdUbiVo()->value());
+        $this->assertEquals(100113, $this->Casa->getIdUbiVo()->value());
     }
 
     public function test_set_and_get_nombre_ubi()
@@ -142,7 +142,7 @@ class CasaTest extends myTest
         $casa = new Casa();
         $attributes = [
             'tipo_ubi' => 'test',
-            'id_ubi' => new CasaId(1),
+            'id_ubi' => new CasaId(100113),
             'nombre_ubi' => new UbiNombreText('Test'),
             'dl' => new DelegacionCode('TST'),
             'pais' => new PaisName('Spain'),
@@ -159,7 +159,7 @@ class CasaTest extends myTest
         $casa->setAllAttributes($attributes);
 
         $this->assertEquals('test', $casa->getTipo_ubi());
-        $this->assertEquals(1, $casa->getIdUbiVo()->value());
+        $this->assertEquals(100113, $casa->getIdUbiVo()->value());
         $this->assertEquals('Test', $casa->getNombreUbiVo()->value());
         $this->assertEquals('TST', $casa->getDlVo()->value());
         $this->assertEquals('Spain', $casa->getPaisVo()->value());
@@ -179,7 +179,7 @@ class CasaTest extends myTest
         $casa = new Casa();
         $attributes = [
             'tipo_ubi' => 'test',
-            'id_ubi' => 1,
+            'id_ubi' => 100113,
             'nombre_ubi' => 'Test',
             'dl' => 'TST',
             'pais' => 'Spain',
@@ -196,7 +196,7 @@ class CasaTest extends myTest
         $casa->setAllAttributes($attributes);
 
         $this->assertEquals('test', $casa->getTipo_ubi());
-        $this->assertEquals(1, $casa->getIdUbiVo()->value());
+        $this->assertEquals(100113, $casa->getIdUbiVo()->value());
         $this->assertEquals('Test', $casa->getNombreUbiVo()->value());
         $this->assertEquals('TST', $casa->getDlVo()->value());
         $this->assertEquals('Spain', $casa->getPaisVo()->value());

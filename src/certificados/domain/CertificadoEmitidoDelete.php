@@ -44,7 +44,6 @@ class CertificadoEmitidoDelete
             // Se supone que si accedo a esta página es porque soy una región del stgr.
             $esquema_region_stgr = $_SESSION['session_auth']['esquema'];
             $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
-            $PersonaNotaOtraRegionStgrRepository = $this->bindConnection($PersonaNotaOtraRegionStgrRepository);
 
             $PersonaNotaOtraRegionStgrRepository->deleteCertificado($certificado);
         } else {
@@ -57,11 +56,5 @@ class CertificadoEmitidoDelete
     {
         $factory = $GLOBALS['container']->get(ConnectionRepositoryFactoryInterface::class);
         return $factory->createWithConnection(CertificadoEmitidoRepositoryInterface::class, $this->oDbl);
-    }
-
-    private function bindConnection(object $object): object
-    {
-        $binder = $GLOBALS['container']->get(ConnectionObjectBinderInterface::class);
-        return $binder->bindConnection($object, $this->oDbl);
     }
 }

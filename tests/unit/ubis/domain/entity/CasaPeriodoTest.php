@@ -3,7 +3,7 @@
 namespace Tests\unit\ubis\domain\entity;
 
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\SfsvId;
+use src\shared\domain\value_objects\SfsvOtrosId;
 use src\ubis\domain\entity\CasaPeriodo;
 use Tests\myTest;
 
@@ -49,9 +49,9 @@ class CasaPeriodoTest extends myTest
 
     public function test_set_and_get_sfsv()
     {
-        $sfsvVo = new SfsvId(1);
+        $sfsvVo = new SfsvOtrosId(1);
         $this->CasaPeriodo->setSfsvVo($sfsvVo);
-        $this->assertInstanceOf(SfsvId::class, $this->CasaPeriodo->getSfsvVo());
+        $this->assertInstanceOf(SfsvOtrosId::class, $this->CasaPeriodo->getSfsvVo());
         $this->assertEquals(1, $this->CasaPeriodo->getSfsvVo()->value());
     }
 
@@ -63,7 +63,7 @@ class CasaPeriodoTest extends myTest
             'id_ubi' => 1,
             'f_ini' => new DateTimeLocal('2024-01-15 10:30:00'),
             'f_fin' => new DateTimeLocal('2024-01-15 10:30:00'),
-            'sfsv' => new SfsvId(1),
+            'sfsv' => new SfsvOtrosId(1),
         ];
         $casaPeriodo->setAllAttributes($attributes);
 

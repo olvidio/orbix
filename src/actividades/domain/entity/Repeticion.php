@@ -50,7 +50,7 @@ class Repeticion
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * @deprecated usar getId()
+     * @deprecated usar getIdRepeticionVo()
      */
     public function getId_repeticion(): int
     {
@@ -62,7 +62,7 @@ class Repeticion
      * @param int $id_repeticion
      */
     /**
-     * @deprecated usar setId(RepeticionId $id)
+     * @deprecated usar setIdRepeticionVo(RepeticionId $id)
      */
     public function setId_repeticion(int $id_repeticion): void
     {
@@ -70,12 +70,12 @@ class Repeticion
     }
 
     // Nuevos métodos con Value Objects
-    public function getId_repeticionVo(): RepeticionId
+    public function getIdRepeticionVo(): RepeticionId
     {
         return $this->id_repeticion;
     }
 
-    public function setId_repeticionVo(RepeticionId $id): void
+    public function setIdRepeticionVo(RepeticionId $id): void
     {
         $this->id_repeticion = $id;
     }

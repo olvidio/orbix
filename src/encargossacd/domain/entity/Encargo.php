@@ -11,7 +11,7 @@ use src\encargossacd\domain\value_objects\LugarDescText;
 use src\encargossacd\domain\value_objects\ObservText;
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\LocaleCode;
-use src\shared\domain\value_objects\SfsvId;
+use src\shared\domain\value_objects\SfsvOtrosId;
 
 
 class Encargo

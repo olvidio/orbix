@@ -27,13 +27,13 @@ class DireccionTest extends myTest
     {
         parent::setUp();
         $this->Direccion = new Direccion();
-        $this->Direccion->setId_direccion(1);
+        $this->Direccion->setId_direccion(100513);
         $this->Direccion->setPoblacionVo( PoblacionText::fromNullableString('Test'));
     }
 
     public function test_get_id_direccion()
     {
-        $this->assertEquals(1, $this->Direccion->getId_direccion());
+        $this->assertEquals(100513, $this->Direccion->getId_direccion());
     }
 
     public function test_set_and_get_direccion()
@@ -156,7 +156,7 @@ class DireccionTest extends myTest
     {
         $direccion = new Direccion();
         $attributes = [
-            'id_direccion' => new DireccionId(1),
+            'id_direccion' => new DireccionId(100513),
             'direccion' => new DireccionText('Test'),
             'c_p' => 'test',
             'poblacion' => new PoblacionText('Test'),
@@ -175,7 +175,7 @@ class DireccionTest extends myTest
         ];
         $direccion->setAllAttributes($attributes);
 
-        $this->assertEquals(1, $direccion->getIdDireccionVo()->value());
+        $this->assertEquals(100513, $direccion->getIdDireccionVo()->value());
         $this->assertEquals('Test', $direccion->getDireccionVo()->value());
         $this->assertEquals('test', $direccion->getC_p());
         $this->assertEquals('Test', $direccion->getPoblacionVo()->value());
@@ -197,7 +197,7 @@ class DireccionTest extends myTest
     {
         $direccion = new Direccion();
         $attributes = [
-            'id_direccion' => 1,
+            'id_direccion' => 100513,
             'direccion' => 'Test',
             'c_p' => 'test',
             'poblacion' => 'Test',
@@ -216,7 +216,7 @@ class DireccionTest extends myTest
         ];
         $direccion->setAllAttributes($attributes);
 
-        $this->assertEquals(1, $direccion->getIdDireccionVo()->value());
+        $this->assertEquals(100513, $direccion->getIdDireccionVo()->value());
         $this->assertEquals('Test', $direccion->getDireccionVo()->value());
         $this->assertEquals('test', $direccion->getC_p());
         $this->assertEquals('Test', $direccion->getPoblacionVo()->value());

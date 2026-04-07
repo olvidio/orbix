@@ -9,19 +9,19 @@ class DireccionIdTest extends myTest
 {
     public function test_create_valid_direccionId()
     {
-        $direccionId = new DireccionId(123);
-        $this->assertEquals(123, $direccionId->value());
+        $direccionId = new DireccionId(300514);
+        $this->assertEquals(300514, $direccionId->value());
     }
 
     public function test_to_string_returns_direccionId_value()
     {
-        $direccionId = new DireccionId(123);
-        $this->assertEquals(123, (string)$direccionId);
+        $direccionId = new DireccionId(300514);
+        $this->assertEquals(300514, (string)$direccionId);
     }
 
     public function test_fromNullableInt_returns_instance_for_valid_value()
     {
-        $direccionId = DireccionId::fromNullableInt(123);
+        $direccionId = DireccionId::fromNullableInt(300514);
         $this->assertInstanceOf(DireccionId::class, $direccionId);
     }
 

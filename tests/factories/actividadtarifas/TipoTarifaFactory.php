@@ -7,7 +7,7 @@ use src\actividadtarifas\domain\entity\TipoTarifa;
 use src\actividadtarifas\domain\value_objects\TarifaLetraCode;
 use src\actividadtarifas\domain\value_objects\TarifaId;
 use src\actividadtarifas\domain\value_objects\TarifaModoId;
-use src\shared\domain\value_objects\SfsvId;
+use src\shared\domain\value_objects\SfsvOtrosId;
 use src\ubis\domain\value_objects\ObservCasaText;
 
 /**
@@ -39,7 +39,7 @@ class TipoTarifaFactory
         $oTipoTarifa->setId_tarifa($id);
 
         $oTipoTarifa->setModoVo(new TarifaModoId(0));
-        $oTipoTarifa->setSfsvVo(new SfsvId(1));
+        $oTipoTarifa->setSfsvVo(new SfsvOtrosId(1));
 
         return $oTipoTarifa;
     }
@@ -59,7 +59,7 @@ class TipoTarifaFactory
 
         $oTipoTarifa->setModoVo(new TarifaModoId($faker->randomKey(TarifaModoId::getArrayModo())));
         $oTipoTarifa->setLetraVo(new TarifaLetraCode($faker->lexify('??????')));
-        $oTipoTarifa->setSfsvVo(new SfsvId($faker->randomElement([1,2])));
+        $oTipoTarifa->setSfsvVo(new SfsvOtrosId($faker->randomElement([1,2])));
         $oTipoTarifa->setObservVo(new ObservCasaText($faker->text));
 
         return $oTipoTarifa;

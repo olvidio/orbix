@@ -15,15 +15,15 @@ class TipoCentroTest extends myTest
     {
         parent::setUp();
         $this->TipoCentro = new TipoCentro();
-        $this->TipoCentro->setTipoCtrVo(new TipoCentroCode('TST'));
+        $this->TipoCentro->setTipoCtrVo(new TipoCentroCode('ctrdl'));
     }
 
     public function test_set_and_get_tipo_centro()
     {
-        $tipo_centroVo = new TipoCentroCode('TST');
+        $tipo_centroVo = new TipoCentroCode('ctrdl');
         $this->TipoCentro->setTipoCtrVo($tipo_centroVo);
         $this->assertInstanceOf(TipoCentroCode::class, $this->TipoCentro->getTipoCtrVo());
-        $this->assertEquals('TST', $this->TipoCentro->getTipoCtrVo()->value());
+        $this->assertEquals('ctrdl', $this->TipoCentro->getTipoCtrVo()->value());
     }
 
     public function test_set_and_get_nombre_tipo_centro()
@@ -38,12 +38,12 @@ class TipoCentroTest extends myTest
     {
         $tipoCentro = new TipoCentro();
         $attributes = [
-            'tipo_centro' => new TipoCentroCode('TST'),
-            'nombre_tipo_centro' => new TipoCentroName('test'),
+            'tipo_ctr' => new TipoCentroCode('ctrdl'),
+            'nombre_tipo_ctr' => new TipoCentroName('test'),
         ];
         $tipoCentro->setAllAttributes($attributes);
 
-        $this->assertEquals('TST', $tipoCentro->getTipoCtrVo()->value());
+        $this->assertEquals('ctrdl', $tipoCentro->getTipoCtrVo()->value());
         $this->assertEquals('test', $tipoCentro->getNombreTipoCtrVo()->value());
     }
 
@@ -51,12 +51,12 @@ class TipoCentroTest extends myTest
     {
         $tipoCentro = new TipoCentro();
         $attributes = [
-            'tipo_centro' => 'TST',
-            'nombre_tipo_centro' => 'test',
+            'tipo_ctr' => 'ctrdl',
+            'nombre_tipo_ctr' => 'test',
         ];
         $tipoCentro->setAllAttributes($attributes);
 
-        $this->assertEquals('TST', $tipoCentro->getTipoCtrVo()->value());
+        $this->assertEquals('ctrdl', $tipoCentro->getTipoCtrVo()->value());
         $this->assertEquals('test', $tipoCentro->getNombreTipoCtrVo()->value());
     }
 }

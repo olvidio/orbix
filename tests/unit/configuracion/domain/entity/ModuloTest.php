@@ -48,18 +48,18 @@ class ModuloTest extends myTest
 
     public function test_set_and_get_mods_req()
     {
-        $mods_reqVo = new ModsReq(['test']);
+        $mods_reqVo = new ModsReq([8]);
         $this->Modulo->setModsReqVo($mods_reqVo);
         $this->assertInstanceOf(ModsReq::class, $this->Modulo->getModsReqVo());
-        $this->assertEquals(['test'], $this->Modulo->getModsReqVo()->toArray());
+        $this->assertEquals([8], $this->Modulo->getModsReqVo()->toArray());
     }
 
     public function test_set_and_get_apps_req()
     {
-        $apps_reqVo = new AppsReq('test');
+        $apps_reqVo = new AppsReq([12]);
         $this->Modulo->setAppsReqVo($apps_reqVo);
         $this->assertInstanceOf(AppsReq::class, $this->Modulo->getAppsReqVo());
-        $this->assertEquals(['test'], $this->Modulo->getAppsReqVo()->toArray());
+        $this->assertEquals([12], $this->Modulo->getAppsReqVo()->toArray());
     }
 
     public function test_set_all_attributes()
@@ -69,16 +69,16 @@ class ModuloTest extends myTest
             'id_mod' => new ModuloId(1),
             'nom' => new ModuloName('Test Name'),
             'descripcion' => new ModuloDescription('test'),
-            'mods_req' => new ModsReq(['test']),
-            'apps_req' => new AppsReq(['test']),
+            'mods_req' => new ModsReq([8]),
+            'apps_req' => new AppsReq([12]),
         ];
         $modulo->setAllAttributes($attributes);
 
         $this->assertEquals(1, $modulo->getIdModVo()->value());
         $this->assertEquals('Test Name', $modulo->getNomVo()->value());
         $this->assertEquals('test', $modulo->getDescripcionVo()->value());
-        $this->assertEquals(['test'], $modulo->getModsReqVo()->toArray());
-        $this->assertEquals(['test'], $modulo->getAppsReqVo()->toArray());
+        $this->assertEquals([8], $modulo->getModsReqVo()->toArray());
+        $this->assertEquals([12], $modulo->getAppsReqVo()->toArray());
     }
 
     public function test_set_all_attributes_with_string_values()
@@ -88,15 +88,15 @@ class ModuloTest extends myTest
             'id_mod' => 1,
             'nom' => 'Test Name',
             'descripcion' => 'test',
-            'mods_req' => ['test'],
-            'apps_req' => ['test'],
+            'mods_req' => [7],
+            'apps_req' => [14],
         ];
         $modulo->setAllAttributes($attributes);
 
         $this->assertEquals(1, $modulo->getIdModVo()->value());
         $this->assertEquals('Test Name', $modulo->getNomVo()->value());
         $this->assertEquals('test', $modulo->getDescripcionVo()->value());
-        $this->assertEquals(['test'], $modulo->getModsReqVo()->toArray());
-        $this->assertEquals(['test'], $modulo->getAppsReqVo()->toArray());
+        $this->assertEquals([7], $modulo->getModsReqVo()->toArray());
+        $this->assertEquals([14], $modulo->getAppsReqVo()->toArray());
     }
 }

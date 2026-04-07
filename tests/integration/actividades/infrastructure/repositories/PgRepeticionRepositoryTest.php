@@ -24,7 +24,7 @@ class PgRepeticionRepositoryTest extends myTest
     {
         // Crear instancia usando factory
         $oRepeticion = $this->factory->createSimple();
-        $id = $oRepeticion->getId_repeticionVo();
+        $id = $oRepeticion->getIdRepeticionVo();
 
         // Guardar
         $result = $this->repository->Guardar($oRepeticion);
@@ -33,7 +33,7 @@ class PgRepeticionRepositoryTest extends myTest
         // Verificar que se guardó
         $oRepeticionGuardado = $this->repository->findById($id);
         $this->assertNotNull($oRepeticionGuardado);
-        $this->assertEquals($id, $oRepeticionGuardado->getId_repeticionVo());
+        $this->assertEquals($id, $oRepeticionGuardado->getIdRepeticionVo());
 
         // Limpiar
         $this->repository->Eliminar($oRepeticionGuardado);
@@ -43,7 +43,7 @@ class PgRepeticionRepositoryTest extends myTest
     {
         // Crear y guardar instancia usando factory
         $oRepeticion = $this->factory->createSimple();
-        $id = $oRepeticion->getId_repeticionVo();
+        $id = $oRepeticion->getIdRepeticionVo();
         $this->repository->Guardar($oRepeticion);
 
         // Crear otra instancia con datos diferentes para actualizar
@@ -65,14 +65,14 @@ class PgRepeticionRepositoryTest extends myTest
     {
         // Crear y guardar instancia usando factory
         $oRepeticion = $this->factory->createSimple();
-        $id = $oRepeticion->getId_repeticionVo();
+        $id = $oRepeticion->getIdRepeticionVo();
         $this->repository->Guardar($oRepeticion);
 
         // Buscar por ID
         $oRepeticionEncontrado = $this->repository->findById($id);
         $this->assertNotNull($oRepeticionEncontrado);
         $this->assertInstanceOf(Repeticion::class, $oRepeticionEncontrado);
-        $this->assertEquals($id, $oRepeticionEncontrado->getId_repeticionVo());
+        $this->assertEquals($id, $oRepeticionEncontrado->getIdRepeticionVo());
 
         // Limpiar
         $this->repository->Eliminar($oRepeticionEncontrado);
@@ -90,7 +90,7 @@ class PgRepeticionRepositoryTest extends myTest
     {
         // Crear y guardar instancia usando factory
         $oRepeticion = $this->factory->createSimple();
-        $id = $oRepeticion->getId_repeticionVo();
+        $id = $oRepeticion->getIdRepeticionVo();
         $this->repository->Guardar($oRepeticion);
 
         // Obtener datos por ID
@@ -116,7 +116,7 @@ class PgRepeticionRepositoryTest extends myTest
     {
         // Crear y guardar instancia usando factory
         $oRepeticion = $this->factory->createSimple();
-        $id = $oRepeticion->getId_repeticionVo();
+        $id = $oRepeticion->getIdRepeticionVo();
         $this->repository->Guardar($oRepeticion);
 
         // Verificar que existe

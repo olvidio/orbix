@@ -9,8 +9,8 @@ class DbSchemaCodeTest extends myTest
 {
     public function test_create_valid_dbSchemaCode()
     {
-        $dbSchemaCode = new DbSchemaCode('test value');
-        $this->assertEquals('test value', $dbSchemaCode->value());
+        $dbSchemaCode = new DbSchemaCode('test-crTest');
+        $this->assertEquals('test-crTest', $dbSchemaCode->value());
     }
 
     public function test_invalid_length_throws_exception()
@@ -21,22 +21,22 @@ class DbSchemaCodeTest extends myTest
 
     public function test_equals_returns_true_for_same_dbSchemaCode()
     {
-        $dbSchemaCode1 = new DbSchemaCode('test value');
-        $dbSchemaCode2 = new DbSchemaCode('test value');
+        $dbSchemaCode1 = new DbSchemaCode('test-crTest');
+        $dbSchemaCode2 = new DbSchemaCode('test-crTest');
         $this->assertTrue($dbSchemaCode1->equals($dbSchemaCode2));
     }
 
     public function test_equals_returns_false_for_different_dbSchemaCode()
     {
-        $dbSchemaCode1 = new DbSchemaCode('test value');
-        $dbSchemaCode2 = new DbSchemaCode('alternative value');
+        $dbSchemaCode1 = new DbSchemaCode('test-crTest');
+        $dbSchemaCode2 = new DbSchemaCode('al-crAl');
         $this->assertFalse($dbSchemaCode1->equals($dbSchemaCode2));
     }
 
     public function test_to_string_returns_dbSchemaCode_value()
     {
-        $dbSchemaCode = new DbSchemaCode('test value');
-        $this->assertEquals('test value', (string)$dbSchemaCode);
+        $dbSchemaCode = new DbSchemaCode('test-crTest');
+        $this->assertEquals('test-crTest', (string)$dbSchemaCode);
     }
 
 }

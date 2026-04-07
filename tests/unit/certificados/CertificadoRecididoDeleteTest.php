@@ -74,8 +74,9 @@ class CertificadoRecididoDeleteTest extends myTest
 
             $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
             $certificadoRecibidoRepository->setoDbl($oDBdst);
-            $this->expectException(RuntimeException::class);
-            $certificadoRecibidoRepository->findById($id_item);
+            $certificadoEliminado = $certificadoRecibidoRepository->findById($id_item);
+
+            $this->assertNull($certificadoEliminado);
 
         }
     }
