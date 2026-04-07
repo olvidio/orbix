@@ -114,7 +114,7 @@ class PersonaGlobalTest extends myTest
         $apellido2Vo = new PersonaApellido2Text('Test value');
         $this->PersonaGlobal->setApellido2Vo($apellido2Vo);
         $this->assertInstanceOf(PersonaApellido2Text::class, $this->PersonaGlobal->getApellido2Vo());
-        $this->assertEquals('Test value', $this->PersonaGlobal->getApellido2Vo()->value());
+        $this->assertEquals('Test value', $this->PersonaGlobal->getApellido2Vo()?->value());
     }
 
     public function test_set_and_get_f_nacimiento()
@@ -275,7 +275,7 @@ class PersonaGlobalTest extends myTest
         $this->assertEquals('nx1', $personaGlobal->getNx1Vo()->value());
         $this->assertEquals('Test value', $personaGlobal->getApellido1Vo()->value());
         $this->assertEquals('nx2', $personaGlobal->getNx2Vo()->value());
-        $this->assertEquals('Test value', $personaGlobal->getApellido2Vo()->value());
+        $this->assertEquals('Test value', $personaGlobal->getApellido2Vo()?->value());
         $this->assertEquals('2024-01-15 10:30:00', $personaGlobal->getF_nacimiento()->format('Y-m-d H:i:s'));
         $this->assertEquals('es_ES.UTF-8', $personaGlobal->getIdiomaPreferidoVo()->value());
         $this->assertEquals('A', $personaGlobal->getSituacionVo()->value());
@@ -348,7 +348,7 @@ class PersonaGlobalTest extends myTest
         $this->assertEquals('nx1', $personaGlobal->getNx1Vo()->value());
         $this->assertEquals('Test value', $personaGlobal->getApellido1Vo()->value());
         $this->assertEquals('nx2', $personaGlobal->getNx2Vo()->value());
-        $this->assertEquals('Test value', $personaGlobal->getApellido2Vo()->value());
+        $this->assertEquals('Test value', $personaGlobal->getApellido2Vo()?->value());
         $this->assertEquals('2024-01-15 10:30:00', $personaGlobal->getF_nacimiento()->format('Y-m-d H:i:s'));
         $this->assertEquals('es_ES.UTF-8', $personaGlobal->getIdiomaPreferidoVo()->value());
         $this->assertEquals('A', $personaGlobal->getSituacionVo()->value());

@@ -32,42 +32,6 @@ class ConstantNotaRepository extends ClaseRepository implements NotaRepositoryIn
         $this->setNomTabla('e_notas_situacion');
     }
 
-    public function getArrayNotasNoSuperadas(): array
-    {
-        $aNoSuperadas = [
-            NotaSituacion::DESCONOCIDO,
-            NotaSituacion::CURSADA,
-            NotaSituacion::PREVISTA_CA,
-            NotaSituacion::PREVISTA_INV,
-            NotaSituacion::NO_HECHA_CA,
-            NotaSituacion::NO_HECHA_INV,
-            NotaSituacion::EXAMINADO,
-            NotaSituacion::FALTA_CERTIFICADO,
-        ];
-
-        return $aNoSuperadas;
-    }
-
-    public function getArrayNotasSuperadas(): array
-    {
-        $aSuperadas = [
-            NotaSituacion::SUPERADA,
-            NotaSituacion::MAGNA,
-            NotaSituacion::SUMMA,
-            NotaSituacion::CONVALIDADA,
-            NotaSituacion::NUMERICA,
-            NotaSituacion::EXENTO,
-        ];
-
-        return $aSuperadas;
-    }
-
-    public function getArrayNotas(): array
-    {
-        $aNotas = NotaSituacion::getArraySituacionTxt();
-        return $aNotas;
-    }
-
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /* -------------------- ENTIDAD --------------------------------------------- */

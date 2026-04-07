@@ -8,6 +8,7 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaEpoca;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;
@@ -163,8 +164,7 @@ switch ($Qque) {
         $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
         // Asignaturas opcionales superadas
-        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-        $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
+        $aSuperadas = NotaSituacion::getArraySuperadas();
         $aWhere = [];
         $aOperador = [];
         $aWhere['id_situacion'] = implode(',', $aSuperadas);

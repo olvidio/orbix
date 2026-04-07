@@ -1,3 +1,7 @@
+<?php
+use core\ConfigGlobal;
+use web\Hash;
+?>
 <script>
     fnjs_buscar = function () {
         var campo = '<input type="hidden" name="refresh" value=1>';
@@ -5,6 +9,7 @@
         $('#periodo_form').append(campo);
         fnjs_enviar_formulario('#periodo_form', '#main');
     }
+
     fnjs_ver_ca = function (formulario, n) {
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
@@ -17,14 +22,30 @@
     }
 
     fnjs_borrar = function (formulario) {
-        var mensaje;
-        mensaje = "<?= $txt_eliminar ?>";
+        let mensaje = "<?= $txt_eliminar ?>";
+
         if (confirm(mensaje)) {
-            var mod = "#mod";
             $(mod).val("eliminar");
-            $(formulario).attr('action', "apps/actividadestudios/controller/update_3103.php");
-            fnjs_enviar_formulario(formulario, '#main');
+            let url = '<?= ConfigGlobal::getWeb() ?>/apps/actividadestudios/controller/update_3103.php';
+            let datos = $(formulario).serialize();
+            let request = $.ajax({
+                data: datos,
+                url: url,
+                method: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    fnjs_actualizar();
+                }
+            });
         }
+    }
+    fnjs_actualizar = function () {
+        var url = '<?= Hash::link(ConfigGlobal::getWeb() . '/apps/actividadestudios/controller/matriculas_lista.php') ?>';
+        fnjs_update_div('#main', url);
     }
     fnjs_left_side_hide();
 </script>

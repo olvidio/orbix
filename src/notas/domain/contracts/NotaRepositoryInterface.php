@@ -17,10 +17,6 @@ use function core\is_true;
 interface NotaRepositoryInterface
 {
 
-    public function getArrayNotasNoSuperadas(): array;
-    public function getArrayNotasSuperadas(): array;
-    public function getArrayNotas(): array;
-
 /* --------------------  BASiC SEARCH ---------------------------------------- */
 
 /* -------------------- ENTIDAD --------------------------------------------- */

@@ -8,6 +8,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
+use src\actividadplazas\domain\entity\PlazaPeticion;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -37,6 +38,11 @@ switch ($Qque) {
             }
             $i++;
             $oPlazaPeticion = $PlazaPeticionRepository->findById($Qid_nom, $id_activ);
+            if ($oPlazaPeticion === null) {
+                $oPlazaPeticion = new PlazaPeticion();
+                $oPlazaPeticion->setId_nom($Qid_nom);
+                $oPlazaPeticion->setId_activ($id_activ);
+            }
             $oPlazaPeticion->setOrden($i);
             $oPlazaPeticion->setTipo($Qsactividad);
             $PlazaPeticionRepository->Guardar($oPlazaPeticion);

@@ -90,6 +90,9 @@ switch ($Qmod) {
         // hay que abrir el dossier para esta persona/actividad/ubi:
         $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
         $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
+        if ($oDossier === null) {
+            $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
+        }
         $oDossier->abrir();
         $DosierRepository->Guardar($oDossier);
         // no break: fall-through
@@ -131,8 +134,10 @@ function eliminar($id_activ, $id_nom): string
         // hay que cerrar el dossier para esta persona/actividad/ubi, si no tiene más:
         $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
         $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1301]));
-        $oDossier->cerrar();
-        $DosierRepository->Guardar($oDossier);
+        if ($oDossier !== null) {
+            $oDossier->cerrar();
+            $DosierRepository->Guardar($oDossier);
+        }
 
         // también borro las matriculas que pueda tener
         $MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);

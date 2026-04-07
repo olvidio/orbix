@@ -58,8 +58,7 @@ class TablaAlumnosAsignaturas
         }
 
         // array de id_situacion que corresponde a superada
-        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-        $a_notas_superada = $NotaRepository->getArrayNotasSuperadas();
+        $a_notas_superada = NotaSituacion::getArraySuperadas();
 
         $aWhere = [];
         $aOperador = [];
@@ -195,8 +194,7 @@ class TablaAlumnosAsignaturas
         }
 
         // array de id_situacion que corresponde a superada
-        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-        $a_notas_superada = $NotaRepository->getArrayNotasSuperadas();
+        $a_notas_superada = NotaSituacion::getArraySuperadas();
 
         $aWhere = [];
         $aOperador = [];

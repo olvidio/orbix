@@ -15,9 +15,12 @@ use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\actividadestudios\domain\entity\Matricula;
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
@@ -35,8 +38,7 @@ $msg = '';
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
-}
-else {
+} else {
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
     $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 }
@@ -45,8 +47,7 @@ $mes = date('m');
 $fin_m = $_SESSION['oConfig']->getMesFinStgr();
 if ($mes > $fin_m) {
     $any = (int)date('Y') + 1;
-}
-else {
+} else {
     $any = (int)date('Y');
 }
 $inicurs_ca = core\curso_est("inicio", $any)->format('Y-m-d');
@@ -70,8 +71,7 @@ if (!empty($Qid_nom)) {
     if ($classname === 'PersonaEx') {
         $PersonaExRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
         $cAlumnos = $PersonaExRepository->getPersonas($aWhere, $aOperador);
-    }
-    else {
+    } else {
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $cAlumnos = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
     }
@@ -79,8 +79,7 @@ if (!empty($Qid_nom)) {
         $msg = _("está de repaso");
     }
     $modo_aviso = 'alert';
-}
-else {
+} else {
     // solo para los de la dl
     $aWhere['situacion'] = 'A';
     $aWhere['nivel_stgr'] = NivelStgrId::R;
@@ -109,8 +108,7 @@ foreach ($cAlumnos as $oPersonaDl) {
         $aWhereNom = array('id_nom' => $id_nom, 'propio' => 't');
         $aOperadorNom = [];
         $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperadores);
-    }
-    else { // puede ser que ya le pase la actividad
+    } else { // puede ser que ya le pase la actividad
         $AsistenteDlRepository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
         $oAsistenteDl = $AsistenteDlRepository->findById($Qid_activ, $id_nom);
         $cAsistencias[0] = $oAsistenteDl;
@@ -131,19 +129,25 @@ foreach ($cAlumnos as $oPersonaDl) {
                 $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
                 $cMatriculas = $MatriculaDlRepository->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ_1));
                 foreach ($cMatriculas as $oMatricula) {
-                    if ($oMatricula->DBEliminar() === false) {
+                    if ($MatriculaDlRepository->Eliminar($oMatricula) === false) {
                         echo _("hay un error, no se ha eliminado");
                         echo "\n" . $oMatricula->getErrorTxt();
                     }
                 }
 
                 //busco las asignaturas que ya están aprobadas y las pongo en un array.
+                $SituacionSuperadas = NotaSituacion::getArraySuperadas();
                 $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-                $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotasSuperadas($id_nom);
-                $a_aprobadas = [];
+                //$cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotasSuperadas($id_nom);
+                $cPersonaNotas = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom]);
+                $aAprobadas = [];
                 foreach ($cPersonaNotas as $oPersonaNota) {
-                    $a_aprobadas[] = $oPersonaNota->getId_asignatura();
+                    $id_asignatura = $oPersonaNota->getId_asignatura();
+                    if ($oPersonaNota->isAprobada()) {
+                        $a_aprobadas[] = $id_asignatura;
+                    }
                 }
+
                 //busco las asignaturas de su ca
                 $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
                 // Ojo. Se ha ido cambiando:
@@ -153,7 +157,7 @@ foreach ($cAlumnos as $oPersonaDl) {
                 $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
                 foreach ($cAsignaturasCa as $oActividadAsignatura) {
                     $id_asignatura = $oActividadAsignatura->getId_asignatura();
-                    $preceptor = ($oActividadAsignatura->getTipo() === 'p') ? 't' : 'f';
+                    $preceptor = ($oActividadAsignatura->getTipo() === 'p');
                     // compruebo que no la tenga ya aprobada:
                     if (in_array($id_asignatura, $a_aprobadas))
                         continue;
@@ -200,9 +204,12 @@ foreach ($cAlumnos as $oPersonaDl) {
                                 }
                                 break;
                         }
-                    }
-                    else {
-                        $oMatricula = $MatriculaDlRepository->findById($id_activ_1, $id_asignatura, $id_nom);
+                    } else {
+                        $oMatricula = new Matricula();
+                        $oMatricula->setId_activ($id_activ_1);
+                        $oMatricula->setIdAsignaturaVo(AsignaturaId::fromNullableInt($id_asignatura));
+                        $oMatricula->setId_nom($id_nom);
+
                         $oMatricula->setPreceptor($preceptor);
                         if ($MatriculaDlRepository->Guardar($oMatricula) === false) {
                             echo _("error al guardar la matrícula");
@@ -212,8 +219,7 @@ foreach ($cAlumnos as $oPersonaDl) {
                 }
                 $msg .= addslashes(sprintf(_("%s se ha matriculado de %s asignaturas"), $oPersonaDl->getPrefApellidosNombre(), $m));
                 $msg .= "\n";
-            }
-            else {
+            } else {
                 $msg .= addslashes(sprintf(_("no se ha hecho nada com %s. ya tiene el plan de estudios confirmado"), $oPersonaDl->getPrefApellidosNombre()));
                 $msg .= "\n";
             }

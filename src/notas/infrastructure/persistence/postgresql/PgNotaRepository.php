@@ -33,58 +33,6 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
         $this->setNomTabla('e_notas_situacion');
     }
 
-    public function getArrayNotasNoSuperadas(): array
-    {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT id_situacion
-				FROM $nom_tabla
-				WHERE superada = 'f'
-				ORDER BY id_situacion";
-        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
-
-        $aOpcinoes = [];
-        foreach ($stmt as $row) {
-            $aOpcinoes[] = $row['id_situacion'];
-        }
-        return $aOpcinoes;
-    }
-
-    public function getArrayNotasSuperadas(): array
-    {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT id_situacion
-				FROM $nom_tabla
-				WHERE superada = 't'
-				ORDER BY id_situacion";
-        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
-
-        $aOpciones = [];
-        foreach ($stmt as $row) {
-            $aOpciones[] = $row['id_situacion'];
-        }
-        return $aOpciones;
-    }
-
-    public function getArrayNotas(): array
-    {
-        $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT id_situacion, descripcion
-				FROM $nom_tabla
-				ORDER BY id_situacion";
-        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
-
-        $aNotas = [];
-        foreach ($stmt as $aDades) {
-            $id_situacion = $aDades['id_situacion'];
-            $descripcion = $aDades['descripcion'];
-            $aNotas[$id_situacion] = $descripcion;
-        }
-        return $aNotas;
-    }
-
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**

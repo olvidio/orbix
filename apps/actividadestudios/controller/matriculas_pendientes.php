@@ -1,10 +1,10 @@
 <?php
 
+use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\application\services\PersonaFinderService;
-use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -24,7 +24,7 @@ require_once("apps/core/global_object.inc");
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -128,14 +128,29 @@ echo $oPosicion->mostrar_left_slide(1);
     }
 
     fnjs_borrar = function (formulario) {
-        var mensaje;
-        mensaje = "<?= _("¿Está seguro que desea borrar todas las matrículas seleccionadas?");?>";
+        let mensaje = "<?= _("¿Está seguro que desea borrar todas las matrículas seleccionadas?");?>";
         if (confirm(mensaje)) {
-            var mod = "#mod";
             $(mod).val("eliminar");
-            $(formulario).attr('action', "apps/actividadestudios/controller/update_3103.php");
-            fnjs_enviar_formulario(formulario, '#main');
+            let url = '<?= ConfigGlobal::getWeb() ?>/apps/actividadestudios/controller/update_3103.php';
+            let datos = $(formulario).serialize();
+            let request = $.ajax({
+                data: datos,
+                url: url,
+                method: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    fnjs_actualizar();
+                }
+            });
         }
+    }
+    fnjs_actualizar = function () {
+        var url = '<?= Hash::link(ConfigGlobal::getWeb() . '/apps/actividadestudios/controller/matriculas_pendientes.php') ?>';
+        fnjs_update_div('#main', url);
     }
 </script>
 <h2 class=titulo><?= $titulo ?></h2>

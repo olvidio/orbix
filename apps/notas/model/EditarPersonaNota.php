@@ -171,10 +171,7 @@ class EditarPersonaNota
                 $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
                 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303]));
                 if ($oDossier === null) {
-                    $oDossier = new Dossier();
-                    $oDossier->setId_pau($id_nom);
-                    $oDossier->setId_tipo_dossier(1303);
-                    $oDossier->setTablaVo(DossierTabla::fromNullableString('p'));
+                    $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303]));
                 }
                 $oDossier->abrir();
                 $DosierRepository->Guardar($oDossier);

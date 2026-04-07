@@ -42,6 +42,32 @@ final class NotaSituacion
         ];
     }
 
+    public static function getArrayNoSuperadas(): array
+    {
+        return [
+            self::DESCONOCIDO,
+            self::CURSADA,
+            self::PREVISTA_CA,
+            self::PREVISTA_INV,
+            self::NO_HECHA_CA,
+            self::NO_HECHA_INV,
+            self::EXAMINADO,
+            self::FALTA_CERTIFICADO,
+        ];
+    }
+
+    public static function getArraySuperadas(): array
+    {
+        return [
+            self::SUPERADA,
+            self::MAGNA,
+            self::SUMMA,
+            self::CONVALIDADA,
+            self::NUMERICA,
+            self::EXENTO,
+        ];
+    }
+
     private int $value;
 
     public function __construct(int $value)

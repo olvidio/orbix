@@ -11,6 +11,7 @@ use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\notas\application\services\ResumenTempTablesService;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use function core\is_true;
@@ -273,8 +274,7 @@ class Resumen extends ClasePropiedades
             NivelStgrId::C2
         );
 
-        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-        $a_superadas = $NotaRepository->getArrayNotasSuperadas();
+        $a_superadas = NotaSituacion::getArraySuperadas();
         // Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
         if (ConfigGlobal::mi_sfsv() == 1) {
             $notas_vf = 'publicv.e_notas';
@@ -584,8 +584,7 @@ class Resumen extends ClasePropiedades
         $any = $this->getAnyFiCurs();
         $curs = $this->getCurso();
 
-        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-        $a_superadas = $NotaRepository->getArrayNotasSuperadas();
+        $a_superadas = NotaSituacion::getArraySuperadas();
         $Where_superada = "AND id_situacion IN (" . implode(',', $a_superadas) . ")";
         /*
         $ssql="SELECT count(*)

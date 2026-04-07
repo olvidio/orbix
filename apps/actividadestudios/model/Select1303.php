@@ -10,6 +10,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 use web\Lista;
@@ -247,7 +248,12 @@ class Select1303
 
         $aviso = '';
         // Compruebo si está de repaso...
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        // OJO con los de paso:
+        if ($this->id_pau < 0) {
+            $PersonaDlRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
+        } else {
+            $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        }
         $oPersona = $PersonaDlRepository->findById($this->id_pau);
         if ($oPersona === null) {
             throw new \Exception(sprintf(_("No se ha encontrado alumno con id_nom: %s"), $this->id_pau));

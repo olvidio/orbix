@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use src\procesos\application\ProcesoActividadService;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
@@ -42,7 +43,7 @@ switch ($Qque) {
             $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
             $id_fase = $oActividadProcesoTarea->getId_fase();
             $id_tarea = $oActividadProcesoTarea->getId_tarea();
-            $completado = $oActividadProcesoTarea->getCompletado();
+            $completado = $oActividadProcesoTarea->isCompletado();
             $observ = $oActividadProcesoTarea->getObserv();
 
             $oFase = $ActividadFseRepository->findById($id_fase);
@@ -105,7 +106,7 @@ switch ($Qque) {
         $ProcesoActividadService = $GLOBALS['container']->get(ProcesoActividadService::class);
         $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
         $oFicha = $ActividadProcesoTareaRepository->findById($Qid_item);
-        $oFicha->setCompletado($Qcompletado);
+        $oFicha->setCompletado(is_true($Qcompletado));
         $oFicha->setObserv($Qobserv);
         //$oFicha->setForce($Qforce); // Esto no parece existir en la entidad nueva, pero ProcesoActividadService puede manejar force
         if ($ProcesoActividadService->guardar($oFicha) === false) {

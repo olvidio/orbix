@@ -38,7 +38,7 @@ class ProfesorStgrService
             $ap_nom = $oPersona->getPrefApellidosNombre();
             $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
             $aAp1[] = $oPersona->getApellido1Vo()->value();
-            $aAp2[] = $oPersona->getApellido2Vo()->value();
+            $aAp2[] = $oPersona->getApellido2Vo()?->value();
             $aNom[] = $oPersona->getNomVo()->value();
         }
         $multisort_args = [];
@@ -85,7 +85,7 @@ class ProfesorStgrService
             $dl = $oPersonaDl->getDlVo()->value();
             $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom, 'dl' => $dl);
             $aAp1[] = $oPersonaDl->getApellido1Vo()->value();
-            $aAp2[] = $oPersonaDl->getApellido2Vo()->value();
+            $aAp2[] = $oPersonaDl->getApellido2Vo()?->value();
             $aNom[] = $oPersonaDl->getNomVo()->value();
         }
         $multisort_args = [];

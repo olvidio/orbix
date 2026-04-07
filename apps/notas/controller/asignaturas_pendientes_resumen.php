@@ -1,10 +1,6 @@
 <?php
 
-use src\actividades\domain\value_objects\NivelStgrId;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;use src\notas\domain\contracts\PersonaNotaRepositoryInterface;use src\notas\domain\value_objects\NotaSituacion;use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 
 /**
  * Esta página sirve para generar un cuadro con el numero de alumnos que tienen
@@ -95,8 +91,7 @@ $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
 
 $p = 0;
 $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-$NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-$arrayNotasSuperadas = $NotaRepository->getArrayNotasSuperadas();
+$arrayNotasSuperadas = NotaSituacion::getArraySuperadas();
 $a_NivelesStgr = [NivelStgrId::B => 'b', NivelStgrId::C1 => 'c1', NivelStgrId::C2 => 'c2'];
 foreach ($cPersonas as $oPersona) {
     $p++;

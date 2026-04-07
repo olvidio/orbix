@@ -4,7 +4,6 @@ namespace src\asistentes\infrastructure\persistence\postgresql;
 
 use core\ClaseRepository;
 use core\Condicion;
-use core\ConverterDate;
 use core\Set;
 use PDO;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
@@ -13,7 +12,6 @@ use src\asistentes\domain\value_objects\AsistentePk;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\DispatchesDomainEvents;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
 
 
 /**
@@ -145,7 +143,10 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         $bInsert = $this->isNew($id_activ, $id_nom);
 
         // Obtener datos actuales si es UPDATE (solo si hay que registrar cambios)
-        $datosActuales = ($registrarCambios && !$bInsert) ? ($this->datosById($id_activ, $id_nom) ?: []) : [];
+        $datosActuales = [];
+        if ($registrarCambios && !$bInsert) {
+            $datosActuales = $this->datosById($id_activ, $id_nom) ?: [];
+        }
 
         $aDatos = $Asistente->toArrayForDatabase();
         unset($aDatos['domainEvents']);
@@ -175,7 +176,8 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
             $campos = "(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,dl_responsable,observ,id_tabla,plaza,propietario,observ_est,cama)";
             $valores = "(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:dl_responsable,:observ,:id_tabla,:plaza,:propietario,:observ_est,:cama)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);    }
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
 
         $success = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 

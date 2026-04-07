@@ -71,13 +71,12 @@ else {
     }
 }
 
-$NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-$aOpciones = $NotaRepository->getArrayNotas();
+$aOpciones = NotaSituacion::getArraySituacionTxt();
 $oDesplNotas = new Desplegable();
 $oDesplNotas->setOpciones($aOpciones);
 $oDesplNotas->setNombre('id_situacion');
 
-$cNotas = $NotaRepository->getArrayNotasNoSuperadas();
+$cNotas = NotaSituacion::getArrayNoSuperadas();
 $lista_situacion_no_acta = '"11"'; // Para el caso de 'exento', es superada pero sin acta.
 foreach ($cNotas as $id_situacion) {
     $lista_situacion_no_acta .= ',"' . $id_situacion . '"';
@@ -187,8 +186,7 @@ else { //caso de nueva asignatura
     $aWhere['_ordre'] = 'nombre_corto';
     $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
     // Asignaturas superadas
-    $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-    $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
+    $aSuperadas = NotaSituacion::getArraySuperadas();
     $aWhere = [];
     $aOperador = [];
     $aWhere['id_situacion'] = implode(',', $aSuperadas);

@@ -4,6 +4,7 @@ namespace notas\model;
 
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
 
 class getDatosActa
@@ -14,8 +15,7 @@ class getDatosActa
         $aWhere = [];
         $aOperador = [];
 
-        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-        $aIdSuperadas = $NotaRepository->getArrayNotasSuperadas();
+        $aIdSuperadas = NotaSituacion::getArraySuperadas();
 
         $aWhere['id_situacion'] = implode(',', $aIdSuperadas);
         $aOperador['id_situacion'] = 'IN';

@@ -50,7 +50,7 @@ function datos($oPersona)
     $eap = '';
     $observ = '';
     $obj_persona = get_class($oPersona);
-    $obj_persona = str_replace("personas\\model\\entity\\", '', $obj_persona);
+    $obj_persona = str_replace("src\\personas\\domain\\entity\\", '', $obj_persona);
     switch ($obj_persona) {
         case 'PersonaN':
         case 'PersonaNax':
@@ -59,7 +59,8 @@ function datos($oPersona)
         case 'PersonaSSSC':
         case 'PersonaDl':
             $profesion = $oPersona->getProfesion();
-            $f_nacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
+            $oF_nacimiento = $oPersona->getF_nacimiento();
+            $edad = $oF_nacimiento !== null ? $oF_nacimiento->diff(new DateTime())->y : '';
             $inc = $oPersona->getInc();
             if (empty($inc) || $inc === "?") {
                 $f_inc = "?";
@@ -72,7 +73,6 @@ function datos($oPersona)
             if (!empty($inc)) {
                 $inc_f_inc = $inc . ' : ' . $f_inc;
             }
-            $edad = $oPersona->getEdad();
             $eap = empty($oPersona->getEap()) ? '?' : $oPersona->getEap();
             break;
         case 'PersonaIn':

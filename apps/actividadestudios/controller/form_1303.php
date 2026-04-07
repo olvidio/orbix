@@ -8,6 +8,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
 use web\Desplegable;
 use web\Hash;
@@ -99,8 +100,7 @@ else { //caso de nueva asignatura
     $aWhere['_ordre'] = 'nombre_corto';
     $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
     // Asignaturas superadas
-    $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-    $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
+    $aSuperadas = NotaSituacion::getArraySuperadas();
     $cond = '';
     $c = 0;
     foreach ($aSuperadas as $id_situacion) {

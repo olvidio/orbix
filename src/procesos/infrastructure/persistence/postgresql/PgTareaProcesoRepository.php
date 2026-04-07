@@ -29,6 +29,7 @@ class PgTareaProcesoRepository extends ClaseRepository implements TareaProcesoRe
     use HandlesPdoErrors;
 
     private array $aFases = [];
+    private array $aFasesArbol = [];
 
     public function __construct()
     {

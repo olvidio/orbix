@@ -74,8 +74,7 @@ else {
     $permiso = 1;
 }
 
-$NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-$aOpciones = $NotaRepository->getArrayNotas();
+$aOpciones = NotaSituacion::getArraySituacionTxt();
 $oDesplNotas = new Desplegable();
 $oDesplNotas->setOpciones($aOpciones);
 $oDesplNotas->setNombre('id_situacion[]');

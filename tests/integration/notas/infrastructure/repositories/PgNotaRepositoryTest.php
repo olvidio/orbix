@@ -131,30 +131,6 @@ class PgNotaRepositoryTest extends myTest
         $this->assertNull($oNotaEliminado);
     }
 
-    public function test_get_array_notas_no_superadas_sin_filtros()
-    {
-        $result = $this->repository->getArrayNotasNoSuperadas();
-        
-        $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
-    }
-
-    public function test_get_array_notas_superadas_sin_filtros()
-    {
-        $result = $this->repository->getArrayNotasSuperadas();
-        
-        $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
-    }
-
-    public function test_get_array_notas_sin_filtros()
-    {
-        $result = $this->repository->getArrayNotas();
-        
-        $this->assertIsArray($result);
-        // TODO: Añadir más aserciones según la estructura esperada
-    }
-
     public function test_get_notas_sin_filtros()
     {
         $result = $this->repository->getNotas();

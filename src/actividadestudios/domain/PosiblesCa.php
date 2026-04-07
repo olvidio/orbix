@@ -5,6 +5,7 @@ namespace src\actividadestudios\domain;
 use core\ClasePropiedades;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\value_objects\NotaSituacion;
 
 /**
  *
@@ -26,8 +27,7 @@ class PosiblesCa extends ClasePropiedades
     function contar_creditos(int $id_nom, array $aAsignaturas): array
     {
         $suma_creditos = 0;
-        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-        $aNotas = $NotaRepository->getArrayNotasSuperadas();
+        $aNotas = NotaSituacion::getArraySuperadas();
         $aSuperadas = [];
         foreach ($aNotas as $id_situacion) {
             $aSuperadas[$id_situacion] = 't';

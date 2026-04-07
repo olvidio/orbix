@@ -94,12 +94,12 @@ switch ($Qmod) {
     case 'publicar':
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $ActividadDlRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
-                $oActividad = $ActividadAllRepository->findById($id_activ);
+                $oActividad = $ActividadDlRepository->findById($id_activ);
                 $oActividad->setPublicado('t');
-                if ($ActividadAllRepository->Guardar($oActividad) === false) {
+                if ($ActividadDlRepository->Guardar($oActividad) === false) {
                     echo _("hay un error, no se ha guardado");
                     echo "\n" . $oActividad->getErrorTxt();
                     $err = 1;
@@ -174,33 +174,36 @@ switch ($Qmod) {
     case "duplicar": // duplicar la actividad.
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) {
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $ActividadDlRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+            $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
             $id_activ = (integer)strtok($a_sel[0], '#');
-            $oActividadAll = $ActividadAllRepository->findById($id_activ);
+            $oActividadAll = $ActividadDlRepository->findById($id_activ);
             $dl = $oActividadAll->getDl_org();
             // des si puede duplicar sf.
             if ($dl === ConfigGlobal::mi_delef() ||
                 ($_SESSION['oPerm']->have_perm_oficina('des') && $dl === ConfigGlobal::mi_dele() . 'f')
             ) {
-                $oActividad = $ActividadAllRepository->findById($id_activ);
+                $oActividad = $ActividadDlRepository->findById($id_activ);
+                $newId = $ActividadDlRepository->getNewId();
+                $newIdActiv = $ActividadDlRepository->getNewIdActividad($newId);
             } else {
                 exit(_("no se puede duplicar actividades que no sean de la propia dl"));
             }
-            $oActividad->setId_activ('0'); //para que al guardar genere un nuevo id.
+            $oActividad->setId_activ($newIdActiv);
             $nom = _("dup") . ' ' . $oActividad->getNom_activ();
             $oActividad->setNom_activ($nom);
             $oActividad->setStatus(StatusId::PROYECTO); // la pongo en estado proyecto
-            $ActividadAllRepository->Guardar($oActividad);
+            $ActividadDlRepository->Guardar($oActividad);
         }
         break;
     case "eliminar": // Eliminar la actividad.
         $error_txt = '';
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
-                $oActividad = $ActividadAllRepository->findById($id_activ);
+                $oActividad = $ActividadDlRepository->findById($id_activ);
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $dl_org = $oActividad->getDl_org();
 
@@ -219,7 +222,7 @@ switch ($Qmod) {
         }
         // si vengo desde la presentación del planning, ya tengo el id_activ.
         if (!empty($Qid_activ)) {
-            $oActividad = $ActividadAllRepository->findById($Qid_activ);
+            $oActividad = $ActividadDlRepository->findById($Qid_activ);
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $dl_org = $oActividad->getDl_org();
 
@@ -289,8 +292,8 @@ switch ($Qmod) {
                 die();
             }
         }
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($Qid_activ);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $oActividad = $ActividadDlRepository->findById($Qid_activ);
         $oActividad->setId_tipo_activ($valor_id_tipo_activ);
         if (isset($Qdl_org)) {
             $dl_org = strtok($Qdl_org, '#');
@@ -329,7 +332,7 @@ switch ($Qmod) {
         // asegurar tipo correcto para idioma
         $Qidioma = empty($Qidioma)? null :new IdLocale($Qidioma);
         $oActividad->setIdiomaVo($Qidioma);
-        $ActividadAllRepository->Guardar($oActividad);
+        $ActividadDlRepository->Guardar($oActividad);
         // Si tiene procesos, hay que hacerlo de nuevo
         if (ConfigGlobal::is_app_installed('procesos')) {
             // Copiado de actividad_proceso_ajax case 'generar':
@@ -385,8 +388,8 @@ switch ($Qmod) {
             $valor_id_tipo_activ = $Qid_tipo_activ;
         }
 
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($Qid_activ);
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $oActividad = $ActividadDlRepository->findById($Qid_activ);
         $plazas_old = $oActividad->getPlazas();
 
         // compruebo que tiene 6 dígitos
@@ -439,7 +442,7 @@ switch ($Qmod) {
         // asegurar tipo correcto para idioma
         $Qidioma = empty($Qidioma)? null : new IdLocale($Qidioma);
         $oActividad->setIdiomaVo($Qidioma);
-        if ($ActividadAllRepository->Guardar($oActividad) === false) {
+        if ($ActividadDlRepository->Guardar($oActividad) === false) {
             $error_txt .= _("hay un error, no se ha guardado");
             $error_txt .= "\n" . $oActividad->getErrorTxt();
         } else {

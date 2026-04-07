@@ -122,10 +122,7 @@ if (!empty($Qnew_dl) && !empty($Qf_dl)) {
 $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_pau, 'id_tipo_dossier' => 1004]));
 if ($oDossier === null) {
-    $oDossier = new Dossier();
-    $oDossier->setTabla('p');
-    $oDossier->setId_pau($Qid_pau);
-    $oDossier->setId_tipo_dossier(1004);
+    $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_pau, 'id_tipo_dossier' => 1004]));
 }
 $oDossier->abrir();
 $DosierRepository->Guardar($oDossier);

@@ -44,7 +44,7 @@ $oDesplDelegaciones->setOpciones($aOpcionesDl);
 $publicado = '';
 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
 $oActividad = $ActividadAllRepository->findById($id_activ);
-$publicado = $oActividad->istPublicado();
+$publicado = $oActividad->isPublicado();
 // Si no es una actividad de la dl, publicado da NULL (igual que todos los campos)
 if (!is_true($publicado) || $publicado === null) {
     $publicado = FALSE;

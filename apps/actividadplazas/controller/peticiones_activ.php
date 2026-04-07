@@ -183,7 +183,7 @@ foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
     // Borrar los aniguos (no están en la nueva selección de actividades)
     if (!in_array($id_activ, $a_IdActividades)) {
         unset($cPlazasPeticion[$key]);
-        $oPlazaPeticion->DBEliminar();
+        $PlazaPeticionRepository->Eliminar($oPlazaPeticion);
     }
     else {
         $sid_activ .= empty($sid_activ) ? $id_activ : ',' . $id_activ;

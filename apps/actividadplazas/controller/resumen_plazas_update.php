@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -13,6 +14,8 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $que = (string)filter_input(INPUT_POST, 'que');
+
+$msg_err = '';
 
 switch ($que) {
     case "ceder":
@@ -39,10 +42,14 @@ switch ($que) {
         }
         //Si es la dl_org, son plazas concedidas, sino pedidas.
         $ActvidadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
-        $cActividadPlazasDl = $ActvidadPlazasDlRepository->getActividadPlazas(['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele]);
+        $cActividadPlazasDl = $ActvidadPlazasDlRepository->getActividadesPlazas(['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele]);
+        if (empty($cActividadPlazasDl)) {
+            $msg_err = _("Todavía no se han asignado las plazas por calendario");
+            break;
+        }
         $oActividadPlazasDl = $cActividadPlazasDl[0];
 
-        $aCedidas = $oActividadPlazasDl->getArrayCedidas() ?? [];
+        $aCedidas = $oActividadPlazasDl?->getArrayCedidas() ?? [];
         if (empty($aCedidas)) {
             $aCedidas = [];
         }
@@ -57,10 +64,12 @@ switch ($que) {
 
         //print_r($oActividadPlazasDl);
         if ($ActvidadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
-            echo _("hay un error, no se ha guardado");
-            echo "\n" . $oActividadPlazasDl->getErrorTxt();
+            $msg_err =  _("hay un error, no se ha guardado");
+            $msg_err .= "\n" . $oActividadPlazasDl->getErrorTxt();
         }
         //$oPosicion = new web\Posicion();
         //echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);
         break;
 }
+
+ContestarJson::enviar($msg_err, 'ok');

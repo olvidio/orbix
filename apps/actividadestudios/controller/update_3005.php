@@ -39,7 +39,7 @@ switch ($Qmod) {
     case 'eliminar':  //------------ BORRAR --------
         if ($Qpau === "a") {
             $oActividadAsignatura = $ActividadAsignaturaDlRepository->findById($Qid_activ, $Qid_asignatura);
-            if ($ActividadAsignaturaDlRepository->Elimiinar($oActividadAsignatura) === false) {
+            if ($ActividadAsignaturaDlRepository->Eliminar($oActividadAsignatura) === false) {
                 $msg_err = _("hay un error, no se ha borrado");
             }
         }
@@ -69,10 +69,7 @@ switch ($Qmod) {
         $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
         $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3005]));
         if ($oDossier === null) {
-            $oDossier = new Dossier();
-            $oDossier->setTabla('a');
-            $oDossier->setId_pau($Qid_activ);
-            $oDossier->setId_tipo_dossier(3005);
+            $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3005]));
         }
         $oDossier->abrir();
         $DosierRepository->Guardar($oDossier);

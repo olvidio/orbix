@@ -94,7 +94,7 @@ class ProcesoActividadService
                 if ($dl_org === ConfigGlobal::mi_delef() || $dl_org_no_f === ConfigGlobal::mi_dele()) {
                     if ($_SESSION['oPerm']->have_perm_oficina('des')) {
                         $oActividad->setStatusVo($statusProceso);
-                        $this->actividadProcesoTareaRepository->Guardar($oActividad);
+                        $this->actividadAllRepository->Guardar($oActividad);
                         // además debería marcar como completado la fase correspondiente del proceso de la sf.
                         $this->marcarFaseEnSf($id_activ, $statusProceso, $statusActividad);
                     } else {
@@ -108,13 +108,13 @@ class ProcesoActividadService
                         $permitido = FALSE;
                     } else {
                         $oActividad->setStatusVo($statusProceso);
-                        $this->actividadProcesoTareaRepository->Guardar($oActividad);
+                        $this->actividadAllRepository->Guardar($oActividad);
                     }
                 }
             } else {
                 if ($dl_org === ConfigGlobal::mi_delef()) {
                     $oActividad->setStatusVo($statusProceso);
-                    $this->actividadProcesoTareaRepository->Guardar($oActividad);
+                    $this->actividadAllRepository->Guardar($oActividad);
                 } else {
                     if ($id_tabla === 'dl') {
                         // No se puede modificar una actividad de otra dl
@@ -122,7 +122,7 @@ class ProcesoActividadService
                         //$permitido = FALSE;
                     } else {
                         $oActividad->setStatusVo($statusProceso);
-                        $this->actividadProcesoTareaRepository->Guardar($oActividad);
+                        $this->actividadAllRepository->Guardar($oActividad);
                     }
                 }
             }

@@ -110,8 +110,10 @@ switch ($Qmod) {
             }
             $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
             $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
-            $oDossier->cerrar();
-            $DosierRepository->Guardar($oDossier);
+            if ($oDossier !== null) {
+                $oDossier->cerrar();
+                $DosierRepository->Guardar($oDossier);
+            }
         }
         break;
     case "nuevo":
@@ -243,10 +245,16 @@ switch ($Qmod) {
                 // si no está abierto, hay que abrir el dossier para esta persona
                 $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
                 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
+                if ($oDossier === null) {
+                    $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
+                }
                 $oDossier->abrir();
                 $DosierRepository->Guardar($oDossier);
                 // ... y si es la primera persona, hay que abrir el dossier para esta actividad
                 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101]));
+                if ($oDossier === null) {
+                    $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101]));
+                }
                 $oDossier->abrir();
                 $DosierRepository->Guardar($oDossier);
             }
@@ -259,10 +267,16 @@ switch ($Qmod) {
                 // si no está abierto, hay que abrir el dossier para esta persona
                 $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
                 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
+                if ($oDossier === null) {
+                    $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301]));
+                }
                 $oDossier->abrir();
                 $DosierRepository->Guardar($oDossier);
                 // ... y si es la primera persona, hay que abrir el dossier para esta actividad
                 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101]));
+                if ($oDossier === null) {
+                    $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101]));
+                }
                 $oDossier->abrir();
             }
         }

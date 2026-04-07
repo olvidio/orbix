@@ -153,7 +153,7 @@ foreach ($cAsistentes as $oAsistente) {
         }
     }
     $oPersona = $PersonaDlRepository->findById($id_nom);
-    $nom_ap = $oPersona->getApellidosNombre();
+    $nom_ap = $oPersona?->getApellidosNombre();
 
     $a_valores[$i][1] = $nom_ap;
     $a_valores[$i][2] = $posibles_activ;

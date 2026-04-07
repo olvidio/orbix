@@ -35,7 +35,7 @@ $alt = _("ver dossiers");
 $dos = _("dossiers");
 
 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-$oActividad = $ActividadAllRepository($Qid_activ);
+$oActividad = $ActividadAllRepository->findById($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 $permiso_calendario = FALSE;

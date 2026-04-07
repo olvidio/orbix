@@ -27,26 +27,24 @@
         ?>
     </tr>
     <?php
-    foreach ($aAsistentes
-
-    as $c => $datos) {
-    $a_datos_cl = $datos['a_datos_cl'];
-    ?>
-    <tr>
-        <td class=contenido_especial align=RIGHT><?= $c ?></td>
-        <td class=contenido_especial><?= $datos['nombre'] ?></td>
-        <td class=contenido_especial></td>
-        <?php
-        if ($queSel == "listcl") {
-            ?>
-            <td class="contenido_especial"><?= $a_datos_cl['estudios'] ?></td>
-            <td class="contenido_especial"><?= $a_datos_cl['profesion'] ?></td>
-            <td class="contenido_especial"><?= $a_datos_cl['edad'] ?></td>
-            <td class="contenido_especial"><?= $a_datos_cl['eap'] ?></td>
-            <td class="contenido_especial"><?= $a_datos_cl['observ'] ?></td>
-            <?php
-        }
-        echo "</tr>";
-        }
+    foreach ($aAsistentes as $c => $datos) {
+        $a_datos_cl = $datos['a_datos_cl'];
         ?>
+        <tr>
+            <td class=contenido_especial align=RIGHT><?= $c ?></td>
+            <td class=contenido_especial><?= $datos['nombre'] ?></td>
+            <td class=contenido_especial></td>
+            <?php
+            if ($queSel == "listcl") {
+                ?>
+                <td class="contenido_especial"><?= $a_datos_cl['estudios'] ?></td>
+                <td class="contenido_especial"><?= $a_datos_cl['profesion'] ?></td>
+                <td class="contenido_especial"><?= $a_datos_cl['edad'] ?></td>
+                <td class="contenido_especial"><?= $a_datos_cl['eap'] ?></td>
+                <td class="contenido_especial"><?= $a_datos_cl['observ'] ?></td>
+                <?php
+            }
+        echo "</tr>";
+    }
+    ?>
 </table>

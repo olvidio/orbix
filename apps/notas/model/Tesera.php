@@ -220,10 +220,6 @@ class Tesera
         $num_asig_total = count($cAsignaturas);
         $num_creditos_total = 0;
 
-        // array con los id_situacion correspondientes a notas 'superadas'
-        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
-        $aIdSuperadas = $NotaRepository->getArrayNotasSuperadas(); // Ojo la numéricas
-
         $a = 0;
         $i = 0;
         $numasig = 0;

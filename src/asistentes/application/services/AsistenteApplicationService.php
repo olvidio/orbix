@@ -2,6 +2,7 @@
 
 namespace src\asistentes\application\services;
 
+use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\shared\domain\contracts\AggregateRoot;
@@ -58,6 +59,8 @@ class AsistenteApplicationService
      */
     public function guardar(Asistente $asistente): bool
     {
+        // Solamente puedo modificar los de mi dl.
+        $this->repository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
         return $this->unitOfWork->execute(function ($uow) use ($asistente) {
             $success = $this->repository->Guardar($asistente);
 
@@ -79,6 +82,8 @@ class AsistenteApplicationService
      */
     public function eliminar(Asistente $asistente): bool
     {
+        // Solamente puedo modificar los de mi dl.
+        $this->repository = $GLOBALS['container']->get(AsistenteDlRepositoryInterface::class);
         return $this->unitOfWork->execute(function ($uow) use ($asistente) {
             $success = $this->repository->Eliminar($asistente);
 

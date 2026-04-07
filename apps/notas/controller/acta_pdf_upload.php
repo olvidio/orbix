@@ -43,7 +43,7 @@ function upload()
             $oActa = $ActaRepository->findById($Qacta);
             $oActa->setPdf($contenido_doc);
 
-            if ($oActa->DBGuardar() === FALSE) {
+            if ($ActaRepository->Guardar($oActa) === FALSE) {
                 $error_txt .= $oActa->getErrorTxt();
             }
         } else {

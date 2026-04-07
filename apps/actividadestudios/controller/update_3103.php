@@ -3,10 +3,12 @@
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\actividadestudios\domain\entity\ActividadAsignatura;
+use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
+use web\ContestarJson;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -30,12 +32,18 @@ if (!empty($a_sel)) { //vengo de un checkbox
     if ($Qpau === "p") {
         $Qid_activ = (integer)strtok($a_sel[0], "#");
         $Qid_asignatura = (integer)strtok("#");
-        $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
+        $Qid_nom = (integer)strtok("#");
+        if (empty($Qid_nom)) {
+            $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
+        }
     }
     if ($Qpau === "a") {
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $Qid_asignatura = (integer)strtok("#");
-        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
+        $Qid_activ = (integer)strtok("#");
+        if (empty($Qid_activ)) {
+            $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
+        }
     }
 } else { // desde el formulario
     $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
@@ -94,8 +102,10 @@ switch ($Qmod) {
                 // hay que cerrar el dossier para esta persona, si no tiene más actividades:
                 $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
                 $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303]));
-                $oDossier->cerrar();
-                $DosierRepository->Guardar($oDossier);
+                if ($oDossier !== null) {
+                    $oDossier->cerrar();
+                    $DosierRepository->Guardar($oDossier);
+                }
                 // Si la puse yo, hay que eliminar esta asignatura a las asignaturas que se dan en el ca
                 // si no hay nadie más matriculado:
                 $cActividadAsignaturas = $ActividadAsignaturaDlRepository->getActividadAsignaturas(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));
@@ -116,8 +126,10 @@ switch ($Qmod) {
             // hay que cerrar el dossier para esta actividad, si no tiene más personas:
             $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
             $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $id_activ, 'id_tipo_dossier' => 3103]));
-            $oDossier->cerrar();
-            $DosierRepository->Guardar($oDossier);
+            if ($oDossier !== null) {
+                $oDossier->cerrar();
+                $DosierRepository->Guardar($oDossier);
+            }
         }
         break;
     case 'nuevo': //------------ NUEVO --------
@@ -132,6 +144,12 @@ switch ($Qmod) {
         $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
         $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
         $oMatricula = $MatriculaDlRepository->findById($Qid_activ, $Qid_asignatura, $Qid_nom);
+        if ($oMatricula === null) {
+            $oMatricula = new Matricula();
+            $oMatricula->setId_activ($Qid_activ);
+            $oMatricula->setId_asignatura($Qid_asignatura);
+            $oMatricula->setId_nom($Qid_nom);
+        }
         $oMatricula->setId_nivel($Qid_nivel);
         $oMatricula->setId_situacion($Qid_situacion);
         empty($Qpreceptor) ? $oMatricula->setPreceptor('f') : $oMatricula->setPreceptor('t');
@@ -142,12 +160,17 @@ switch ($Qmod) {
             // si no está abierto, hay que abrir el dossier para esta persona
             $DosierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
             $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1303]));
+            if ($oDossier === null) {
+                $oDossier = $DosierRepository->crearDossier(DossierPk::fromArray(['tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1303]));
+            }
             $oDossier->abrir();
             $DosierRepository->Guardar($oDossier);
             // ... y si es la primera persona, hay que abrir el dossier para esta actividad
             $oDossier = $DosierRepository->findByPk(DossierPk::fromArray(['tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3103]));
-            $oDossier->cerrar();
-            $DosierRepository->Guardar($oDossier);
+            if ($oDossier !== null) {
+                $oDossier->cerrar();
+                $DosierRepository->Guardar($oDossier);
+            }
 
             // hay que añadir esta asignatura a las asignaturas que se dan en el ca
             // compruebo que no existe:
@@ -173,7 +196,7 @@ switch ($Qmod) {
         isset($Qid_asignatura) ? $oMatricula->setId_asignatura($Qid_asignatura) : $oMatricula->setId_asignatura();
         isset($Qid_nivel) ? $oMatricula->setId_nivel($Qid_nivel) : $oMatricula->setId_nivel();
         isset($Qid_situacion) ? $oMatricula->setId_situacion($Qid_situacion) : $oMatricula->setId_situacion();
-        empty($Qpreceptor) ? $oMatricula->setPreceptor('f') : $oMatricula->setPreceptor('t');
+        is_true($Qpreceptor) ? $oMatricula->setPreceptor(true) : $oMatricula->setPreceptor(false);
         isset($Qid_preceptor) ? $oMatricula->setId_preceptor($Qid_preceptor) : $oMatricula->setId_preceptor();
 
         if ($MatriculaDlRepository->Guardar($oMatricula) === false) {
@@ -181,6 +204,4 @@ switch ($Qmod) {
         }
 }
 
-if (!empty($msg_err)) {
-    echo $msg_err;
-}
+ContestarJson::enviar($msg_err, 'ok');

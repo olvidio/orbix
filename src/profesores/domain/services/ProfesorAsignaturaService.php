@@ -80,7 +80,7 @@ class ProfesorAsignaturaService
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
             $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
             $aAp1[] = $oPersonaDl->getApellido1Vo()->value();
-            $aAp2[] = $oPersonaDl->getApellido2Vo()->value();
+            $aAp2[] = $oPersonaDl->getApellido2Vo()?->value();
             $aNom[] = $oPersonaDl->getNomVo()->value();
         }
         $multisort_args = [];
