@@ -1,0 +1,41 @@
+<?php
+declare(strict_types=1);
+
+namespace src\ubiscamas\domain\value_objects;
+
+use InvalidArgumentException;
+
+/**
+ * Value Object para las observaciones de una habitación.
+ * Máximo 250 caracteres.
+ */
+final class HabitacionObservText
+{
+    private string $value;
+
+    public function __construct(string $value)
+    {
+        if (mb_strlen($value) > 250) {
+            throw new InvalidArgumentException(sprintf('Las observaciones no pueden superar los 250 caracteres. Actual: %d', mb_strlen($value)));
+        }
+        $this->value = $value;
+    }
+
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
+
+    public static function fromNullableString(?string $value): ?self
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        return new self($value);
+    }
+}
