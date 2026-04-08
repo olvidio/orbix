@@ -6,6 +6,7 @@ use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\entity\Dossier;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\shared\domain\value_objects\DateTimeLocal;
+use web\ContestarJson;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
@@ -95,6 +96,4 @@ switch ($Qmod) {
         break;
 }
 
-if (empty($msg_err)) {
-    echo $msg_err;
-}
+ContestarJson::enviar($msg_err, 'ok');

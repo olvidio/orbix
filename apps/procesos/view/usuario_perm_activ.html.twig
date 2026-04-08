@@ -67,9 +67,9 @@
         <tr>
             <td class=etiqueta>{{ "para actividades que organiza"|trans|raw }}:</td>
             <td colspan=5>
-                <input type=radio name=dl_propia value='t' {{ chk_propia }}
+                <input type=radio name=dl_propia value='true' {{ chk_propia }}
                        onchange='fnjs_actualizar_fases();'> {{ "la propia dl"|trans|raw }}
-                <input type=radio name=dl_propia value='f' {{ chk_otra }}
+                <input type=radio name=dl_propia value='false' {{ chk_otra }}
                        onchange='fnjs_actualizar_fases();'> {{ "otras dl"|trans|raw }}
             </td>
         </tr>

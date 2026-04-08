@@ -70,12 +70,7 @@ switch ($Qmod) {
         $AsistenteRepository->Guardar($oAsistente);
         break;
     case 'plan':  //------------ confirmar estudios --------
-        if (is_true($Qest_ok)) {
-            $est_ok = 't';
-        } else {
-            $est_ok = 'f';
-        }
-        $oAsistente->setEst_ok($est_ok);
+        $oAsistente->setEst_ok(is_true($Qest_ok));
         $AsistenteRepository->Guardar($oAsistente);
         break;
     case 'eliminar': //------------ BORRAR --------

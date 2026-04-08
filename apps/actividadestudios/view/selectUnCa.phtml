@@ -10,10 +10,10 @@
                 <tr>
                     <td>
                         <?= ucfirst(_("plan de estudios confirmado")); ?>
-                        <input type='Radio' id='est_ok' name='est_ok' value='t' <?= $chk_1 ?>
+                        <input type='Radio' id='est_ok' name='est_ok' value='true' <?= $chk_1 ?>
                                onclick="fnjs_grabar_est(this.form,<?= $ca_num ?>)">
                         <?= ucfirst(_("sí")); ?>
-                        <input type='Radio' id='est_ok' name='est_ok' value='f' <?= $chk_2 ?>
+                        <input type='Radio' id='est_ok' name='est_ok' value='false' <?= $chk_2 ?>
                                onclick="fnjs_grabar_est(this.form,<?= $ca_num ?>)">
                         <?= ucfirst(_("no")) ?>
                     </td>
@@ -49,9 +49,9 @@
             <tr>
                 <td>
                     <?= ucfirst(_("plan de estudios confirmado")); ?>
-                    <input type='Radio' id='est_ok' name='est_ok' value='t' <?= $chk_1 ?> />
+                    <input type='Radio' id='est_ok' name='est_ok' value='true' <?= $chk_1 ?> />
                     <?= ucfirst(_("sí")); ?>
-                    <input type='Radio' id='est_ok' name='est_ok' value='f' <?= $chk_2 ?> />
+                    <input type='Radio' id='est_ok' name='est_ok' value='false' <?= $chk_2 ?> />
                     <?= ucfirst(_("no")) ?>
                 </td>
                 <td style="text-align: right">

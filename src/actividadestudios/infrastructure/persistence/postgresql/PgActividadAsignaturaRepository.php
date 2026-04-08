@@ -193,7 +193,7 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
 					tipo                     = :tipo,
 					f_ini                    = :f_ini,
 					f_fin                    = :f_fin";
-            $sql = "UPDATE $nom_tabla SET $update WHERE id_activ = $id_activ";
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_activ = $id_activ AND id_asignatura=$id_asignatura";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT

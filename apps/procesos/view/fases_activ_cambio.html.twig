@@ -108,8 +108,8 @@ $(document).ready(fnjs_actualizar_fases ({{ id_fase_nueva }}));
 <table>
 <tr>
 	<td class=etiqueta>{{ "para actividades que organiza"|trans|capitalize }}:
-    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="t" {{ chk_propia }}>{{ "la propia dl"|trans|raw }}
-    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="f" {{ chk_no_propia }}>{{ "otras dl"|trans|raw }}
+    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="true" {{ chk_propia }}>{{ "la propia dl"|trans|raw }}
+    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="false" {{ chk_no_propia }}>{{ "otras dl"|trans|raw }}
 	</td>
 </tr>
 </table>

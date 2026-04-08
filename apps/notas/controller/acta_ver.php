@@ -152,8 +152,11 @@ if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //signifi
         $id_profesor = $oActividadAsignatura->getId_profesor();
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $oPersonaDl = $PersonaDlRepository->findById($id_profesor);
-        $ap_nom = $oPersonaDl->getTituloNombre();
-        $examinador = $ap_nom;
+        if ($oPersonaDl === null) {
+            $examinador = _("No encuentro el profesor.");
+        } else {
+            $examinador =  $oPersonaDl->getTituloNombre();
+        }
     } else { // estoy actualizando la página
         if (!empty($a_sel) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
             $id_activ = (integer)strtok($a_sel[0], '#');

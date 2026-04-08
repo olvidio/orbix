@@ -47,24 +47,21 @@ use core\ConfigGlobal;
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
 
         if (rr === 'ok') {
-            $(formulario).attr('action', 'apps/actividadestudios/controller/update_3005.php');
-            $(formulario).one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
-                })
-                    .done(function (rta_txt) {
-                        if (rta_txt !== '' && rta_txt !== '\\n') {
-                            alert('<?= _("respuesta") ?>: ' + rta_txt);
-                        } else {
-                            <?= $oPosicion->js_atras(1); ?>
-                        }
-                    });
-                return false;
+            let url = '<?= ConfigGlobal::getWeb() ?>/apps/actividadestudios/controller/update_3005.php';
+            let datos = $(formulario).serialize();
+            let request = $.ajax({
+                data: datos,
+                url: url,
+                method: 'POST',
+                dataType: 'json'
             });
-            $(formulario).trigger("submit");
-            $(formulario).off();
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    <?= $oPosicion->js_atras(1); ?>
+                }
+            });
         }
     }
 </script>
