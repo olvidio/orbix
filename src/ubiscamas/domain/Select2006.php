@@ -87,7 +87,7 @@ class Select2006
             _("planta"),
             _("adaptada"),
             _("sillon"),
-            _("fumador"),
+            _("observaciones"),
             _("despacho"),
             _("tipoLavabo"),
         ];
@@ -122,13 +122,12 @@ class Select2006
             $planta = $oHabitacion->getPlanta();
             $sillon = $oHabitacion->isSillon();
             $adaptada = $oHabitacion->isAdaptada();
-            $fumador = $oHabitacion->isFumador();
+            $observaciones = $oHabitacion->getObservacionesVo()?->value() ?? '';
             $tipoLavabo = $oHabitacion->gettipoLavabo();
             $despacho = $oHabitacion->isDespacho();
 
             $sillon_txt = is_true_txt($sillon);
             $adaptada_txt = is_true_txt($adaptada);
-            $fumador_txt = is_true_txt($fumador);
             $despacho_txt = is_true_txt($despacho);
 
             $tipoLavabo_txt = TipoLavabo::getArrayTipoLavabo()[$tipoLavabo];
@@ -138,7 +137,7 @@ class Select2006
             $a_valores[$c][2] = $planta;
             $a_valores[$c][3] = $adaptada_txt;
             $a_valores[$c][4] = $sillon_txt;
-            $a_valores[$c][5] = $fumador_txt;
+            $a_valores[$c][5] = $observaciones;
             $a_valores[$c][6] = $despacho_txt;
             $a_valores[$c][7] = $tipoLavabo_txt;
         }

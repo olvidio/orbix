@@ -41,7 +41,7 @@ $Qplanta = (string)filter_input(INPUT_POST, 'planta');
 $QtipoLavabo = (integer)filter_input(INPUT_POST, 'tipoLavabo', FILTER_VALIDATE_INT);
 $Qsillon = is_true(filter_input(INPUT_POST, 'sillon'));
 $Qadaptada = is_true(filter_input(INPUT_POST, 'adaptada'));
-$Qfumador = is_true(filter_input(INPUT_POST, 'fumador'));
+$Qobservaciones = (string)filter_input(INPUT_POST, 'observaciones');
 $Qdespacho = is_true(filter_input(INPUT_POST, 'despacho'));
 
 $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
@@ -73,7 +73,7 @@ try {
         $oHabitacion->settipoLavaboVo(TipoLavabo::fromNullableInt($QtipoLavabo));
         $oHabitacion->setSillon($Qsillon);
         $oHabitacion->setAdaptada($Qadaptada);
-        $oHabitacion->setFumador($Qfumador);
+        $oHabitacion->setObservacionesVo($Qobservaciones);
         $oHabitacion->setDespacho($Qdespacho);
 
         $HabitacionRepository->Guardar($oHabitacion);

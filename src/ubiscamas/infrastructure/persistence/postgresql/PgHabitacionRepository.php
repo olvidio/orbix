@@ -167,7 +167,7 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
                     planta               = :planta,
                     sillon               = :sillon,
                     adaptada             = :adaptada,
-                    fumador              = :fumador,
+                    observaciones        = :observaciones,
                     tipoLavabo           = :tipoLavabo,
                     despacho             = :despacho";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_habitacion = :id_habitacion_where";
@@ -176,8 +176,8 @@ class PgHabitacionRepository extends ClaseRepository implements HabitacionReposi
         }
         else {
             //INSERT
-            $campos = "(id_ubi,id_habitacion,orden,nombre,numero_camas,numero_camas_vip,planta,sillon,adaptada,fumador,tipoLavabo,despacho)";
-            $valores = "(:id_ubi,:id_habitacion,:orden,:nombre,:numero_camas,:numero_camas_vip,:planta,:sillon,:adaptada,:fumador,:tipoLavabo,:despacho)";
+            $campos = "(id_ubi,id_habitacion,orden,nombre,numero_camas,numero_camas_vip,planta,sillon,adaptada,observaciones,tipoLavabo,despacho)";
+            $valores = "(:id_ubi,:id_habitacion,:orden,:nombre,:numero_camas,:numero_camas_vip,:planta,:sillon,:adaptada,:observaciones,:tipoLavabo,:despacho)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

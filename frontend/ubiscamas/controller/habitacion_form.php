@@ -25,7 +25,7 @@ $numero_camas_vip = '';
 $planta = '';
 $sillon = false;
 $adaptada = false;
-$fumador = false;
+$observaciones = '';
 $despacho = false;
 $tipoLavabo = null;
 $a_camas = [];
@@ -68,7 +68,7 @@ if (empty($Qnuevo)) {
         $planta = $oHabitacion->getPlantaVo()?->value() ?? '';
         $sillon = $oHabitacion->isSillon() ?? false;
         $adaptada = $oHabitacion->isAdaptada() ?? false;
-        $fumador = $oHabitacion->isFumador() ?? false;
+        $observaciones = $oHabitacion->getObservacionesVo()?->value() ?? '';
         $despacho = $oHabitacion->isDespacho() ?? false;
         $tipoLavabo = $oHabitacion->getTipoLavaboVo()?->value();
 
@@ -98,8 +98,8 @@ if (empty($Qid_habitacion)) {
 $a_tipos_tipoLavabo = TipoLavabo::getArrayTipoLavabo();
 
 $oHash = new Hash();
-$camposForm = 'orden!nombre!numero_camas!numero_camas_vip!planta!sillon!adaptada!fumador!despacho!tipoLavabo';
-$camposChk = 'sillon!adaptada!fumador!despacho';
+$camposForm = 'orden!nombre!numero_camas!numero_camas_vip!planta!sillon!adaptada!observaciones!despacho!tipoLavabo';
+$camposChk = 'sillon!adaptada!despacho';
 $camposNo = 'new_camas_desc!new_camas_larga!new_camas_vip';
 
 $oHash->setCamposForm($camposForm);
@@ -143,7 +143,7 @@ $a_campos = [
     'planta' => $planta,
     'sillon' => $sillon,
     'adaptada' => $adaptada,
-    'fumador' => $fumador,
+    'observaciones' => $observaciones,
     'despacho' => $despacho,
     'tipoLavabo' => $tipoLavabo,
     'a_tipos_tipoLavabo' => $a_tipos_tipoLavabo,

@@ -8,7 +8,8 @@ use src\ubiscamas\domain\value_objects\{TipoLavabo,
     HabitacionNombre,
     HabitacionOrden,
     NumeroCamas,
-    PlantaText};
+    PlantaText,
+    HabitacionObservText};
 
 class Habitacion
 {
@@ -36,7 +37,7 @@ class Habitacion
 
     private ?bool $adaptada = null;
 
-    private ?bool $fumador = null;
+    private ?HabitacionObservText $observaciones = null;
 
     private ?TipoLavabo $tipoLavabo = null;
 
@@ -269,14 +270,16 @@ class Habitacion
         $this->adaptada = $adaptada;
     }
 
-    public function isFumador(): ?bool
+    public function getObservacionesVo(): ?HabitacionObservText
     {
-        return $this->fumador;
+        return $this->observaciones;
     }
 
-    public function setFumador(?bool $fumador = null): void
+    public function setObservacionesVo(HabitacionObservText|string|null $texto = null): void
     {
-        $this->fumador = $fumador;
+        $this->observaciones = $texto instanceof HabitacionObservText
+            ? $texto
+            : HabitacionObservText::fromNullableString($texto);
     }
 
     /**

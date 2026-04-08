@@ -61,7 +61,7 @@ class DB extends DBAbstract
                 planta text,
                 sillon bool,
                 adaptada bool,
-                fumador bool,
+                observaciones text,
                 tipoLavabo int,
                 despacho bool
                 ); ";
