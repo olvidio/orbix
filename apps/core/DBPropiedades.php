@@ -118,6 +118,10 @@ class DBPropiedades
                 $ubicacion = 'sf';
             }
         }
+        // si falla quedarse en sv (en los tests)
+        if (empty($ubicacion)) {
+            $ubicacion = 'sv';
+        }
         $a_esquemas = [];
         // Lista de posibles esquemas (en comun)
         $oConfigDB = new ConfigDB('comun');
@@ -134,22 +138,22 @@ class DBPropiedades
         if (is_object($oDblSt)) {
             $oDblSt->execute();
             foreach ($oDblSt as $row) {
-                if ($row[0] == 'public') {
+                if ($row[0] === 'public') {
                     continue;
                 }
-                if ($row[0] == 'resto') {
+                if ($row[0] === 'resto') {
                     continue;
                 }
-                if ($row[0] == 'global') {
+                if ($row[0] === 'global') {
                     continue;
                 }
-                if ($row[0] == 'bucardo') {
+                if ($row[0] === 'bucardo') {
                     continue;
                 }
                 // Para los esquemas tipo 'H-H' o 'H-Hf',
                 if (!$rstgr) {
                     $a_reg = explode('-', $row[0]);
-                    if ($a_reg[0] == $a_reg[1]) {
+                    if ($a_reg[0] === $a_reg[1]) {
                         continue;
                     }
                 }
@@ -157,12 +161,12 @@ class DBPropiedades
                     $sv = $row[0];
                     $a_esquemas[$sv] = $sv;
                 } else {
-                    if ($ubicacion == 'sv') {
+                    if ($ubicacion === 'sv') {
                         $sv = $row[0] . 'v';
                         $a_esquemas[$sv] = $sv;
                     }
                     // 7.3.2019 Parece que sf va por su lado.
-                    if ($ubicacion == 'sf') {
+                    if ($ubicacion === 'sf') {
                         $sf = $row[0] . 'f';
                         $a_esquemas[$sf] = $sf;
                     }

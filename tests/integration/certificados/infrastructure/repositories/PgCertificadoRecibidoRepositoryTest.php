@@ -4,8 +4,8 @@ namespace Tests\integration\certificados\infrastructure\persistence\postgresql;
 
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
-use Tests\myTest;
 use Tests\factories\certificados\CertificadoRecibidoFactory;
+use Tests\myTest;
 
 class PgCertificadoRecibidoRepositoryTest extends myTest
 {
@@ -15,8 +15,8 @@ class PgCertificadoRecibidoRepositoryTest extends myTest
     public function setUp(): void
     {
         parent::setUp();
-        $this->repository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
         $this->factory = new CertificadoRecibidoFactory();
+        $this->repository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
     }
 
     public function test_guardar_nuevo_certificadoRecibido()
@@ -81,7 +81,7 @@ class PgCertificadoRecibidoRepositoryTest extends myTest
     {
         $id_inexistente = 99999999;
         $oCertificadoRecibido = $this->repository->findById($id_inexistente);
-        
+
         $this->assertNull($oCertificadoRecibido);
     }
 
@@ -107,7 +107,7 @@ class PgCertificadoRecibidoRepositoryTest extends myTest
     {
         $id_inexistente = 99999999;
         $aDatos = $this->repository->datosById($id_inexistente);
-        
+
         $this->assertFalse($aDatos);
     }
 
@@ -134,7 +134,7 @@ class PgCertificadoRecibidoRepositoryTest extends myTest
     public function test_get_certificados_sin_filtros()
     {
         $result = $this->repository->getCertificados();
-        
+
         $this->assertIsArray($result);
         // TODO: Añadir más aserciones según la estructura esperada
     }

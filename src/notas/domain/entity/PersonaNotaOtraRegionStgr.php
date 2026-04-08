@@ -83,7 +83,7 @@ class PersonaNotaOtraRegionStgr
     public function getPersonaNotaPk()
     {
          return PersonaNotaPk::fromArray(['id_nom' => $this->id_nom ,
-            'id_nivel' => $this->id_nivel,
+            'id_nivel' => $this->id_nivel->value() ,
             'tipo_acta' => $this->tipo_acta,
         ]);
     }

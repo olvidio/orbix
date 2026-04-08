@@ -95,8 +95,8 @@ class PgEncargoHorarioRepositoryTest extends myTest
         // Obtener datos por ID
         $aDatos = $this->repository->datosById($id);
         $this->assertIsArray($aDatos);
-        $this->assertArrayHasKey('id_enc', $aDatos);
-        $this->assertEquals($id, $aDatos['id_enc']);
+        $this->assertArrayHasKey('id_item_h', $aDatos);
+        $this->assertEquals($id, $aDatos['id_item_h']);
 
         // Limpiar
         $oEncargoHorarioParaborrar = $this->repository->findById($id);

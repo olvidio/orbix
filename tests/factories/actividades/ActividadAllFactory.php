@@ -75,7 +75,7 @@ class ActividadAllFactory
         $oActividadAll = new ActividadAll();
         $oActividadAll->setId_activ($id);
 
-        $oActividadAll->setIdTipoActivVo(new ActividadTipoId($faker->numerify('######')));
+        $oActividadAll->setIdTipoActivVo(new ActividadTipoId($faker->numerify('%#####')));
         $oActividadAll->setDlOrgVo(new DelegacionCode(substr($faker->word(),0,7)));
         $oActividadAll->setNomActivVo(new ActividadNomText($faker->word));
         $oActividadAll->setId_ubi($faker->numberBetween(10022, 100000));

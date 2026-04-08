@@ -138,7 +138,6 @@ class PgEncargoHorarioRepository extends ClaseRepository implements EncargoHorar
         if ($bInsert === false) {
             //UPDATE
             unset($aDatos['id_item_h']);
-            unset($aDatos['id_enc']);
             $update = "
 					id_enc                    = :id_enc,
 					f_ini                    = :f_ini,

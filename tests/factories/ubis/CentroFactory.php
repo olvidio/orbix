@@ -62,7 +62,7 @@ class CentroFactory
         $oCentro = new Centro();
         $oCentro->setId_ubi($id);
 
-        $oCentro->setTipo_ubi($faker->word);
+        $oCentro->setTipo_ubi('ctrdl');
         $oCentro->setNombreUbiVo(new UbiNombreText($faker->name));
         $oCentro->setDlVo(new DelegacionCode($faker->word));
         $oCentro->setPaisVo(new PaisName($faker->word));
@@ -71,7 +71,7 @@ class CentroFactory
         $oCentro->setF_active(new DateTimeLocal($faker->date()));
         $oCentro->setSv($faker->boolean);
         $oCentro->setSf($faker->boolean);
-        $oCentro->setTipoCtrVo(new TipoCentroCode($faker->word));
+        $oCentro->setTipoCtrVo(new TipoCentroCode('nm'));
         $oCentro->setTipoLaborVo(new TipoLaborId($faker->numberBetween(1, 10)));
         $oCentro->setCdc($faker->boolean);
         $oCentro->setIdCtrPadreVo(new CentroId($faker->numberBetween(1, 10)));

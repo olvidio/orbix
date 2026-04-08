@@ -2,6 +2,10 @@
 
 namespace Tests\integration\certificados\infrastructure\persistence\postgresql;
 
+use core\ConfigDB;
+use core\ConfigGlobal;
+use core\DBConnection;
+use core\DBPropiedades;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use Tests\factories\certificados\CertificadoEmitidoFactory;
@@ -12,13 +16,23 @@ class PgCertificadoEmitidoRepositoryTest extends myTest
     private CertificadoEmitidoRepositoryInterface $repository;
     private CertificadoEmitidoFactory $factory;
 
+    private mixed $session_org;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->repository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
         $this->factory = new CertificadoEmitidoFactory();
 
         // TODO: hay que cambiar la conexión a una region que tenga la tabla e_certificados_rstgr
+        // Lo usa el setConnection
+        putenv("UBICACION=sv");
+        $this->session_org = $_SESSION['session_auth']['esquema'];
+        $_SESSION['session_auth']['esquema'] = 'H-Hv';
+
+        $this->repository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
+        $oDBdst = $this->setConexion('H-Hv');
+        $this->repository->setoDbl($oDBdst);
+
     }
 
     public function test_guardar_nuevo_certificadoEmitido()
@@ -141,4 +155,46 @@ class PgCertificadoEmitidoRepositoryTest extends myTest
         // TODO: Añadir más aserciones según la estructura esperada
     }
 
+    ///////////// Conexiones DB. Copiado del TrasladoDl ////////////////////////
+    private function setConexion($esquema, $exterior = FALSE): \PDO
+    {
+
+        if (ConfigGlobal::mi_sfsv() === 2) {
+            $database = 'sf';
+            if ($exterior) {
+                $database = 'sf-e';
+            }
+            if (ConfigGlobal::mi_region_dl() !== $esquema) {
+                $esquema = 'restof';
+            }
+        } else {
+            $database = 'sv';
+            if ($exterior) {
+                $database = 'sv-e';
+            }
+            // dlp?
+            $oDBPropiedades = new DBPropiedades();
+            $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
+            // añadir el H-Hv
+            $aEsquemas['H-Hv'] = 'H-Hv';
+
+            if (!in_array($esquema, $aEsquemas, true)) {
+                $esquema = 'restov';
+            }
+        }
+
+        $oConfigDB = new ConfigDB($database);
+        $config = $oConfigDB->getEsquema($esquema);
+
+        return (new DBConnection($config))->getPDO();
+    }
+
+        /**
+     * Runs at the end of every test.
+     */
+    protected function tearDown(): void
+    {
+        $_SESSION['session_auth']['esquema'] = $this->session_org;
+        parent::tearDown();
+    }
 }
