@@ -3,6 +3,7 @@
 namespace Tests\factories\notas;
 
 use Faker\Factory;
+use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\entity\PersonaNota;
 use src\shared\domain\value_objects\DateTimeLocal;
 
@@ -79,7 +80,7 @@ class NotasFactory
 
             $oPersonaNota = new PersonaNota();
             $oPersonaNota->setId_nom($id_nom);
-            $oPersonaNota->setId_nivel($id_nivel);
+            $oPersonaNota->setIdNivelVo(NivelId::fromNullableInt($id_nivel));
             $oPersonaNota->setIdAsignaturaVo($id_asignatura);
             $oPersonaNota->setIdSituacionVo($id_situacion);
             $oPersonaNota->setActaVo($acta);

@@ -83,6 +83,98 @@ Reglas:
 - [ ] ¿Nombres de clase/método siguen convención?
 - [ ] ¿Se añadieron pruebas (unitarias o integración) para comportamiento nuevo?
 
+## Tests: Convenciones y estructura
+
+### Resumen de cobertura esperada
+- Cada módulo en `src/` debe tener su carpeta en `tests/unit/<modulo>` y `tests/integration/<modulo>`.
+- Usar el script `shell_scripts/check_test_coverage.sh` para detectar módulos sin tests.
+- Módulos excluidos del chequeo automático: `layouts` (código de presentación legacy), `pasarela` (vacío).
+
+### Tests unitarios (`tests/unit/<modulo>/`)
+- Cubren `domain/entity/` y `domain/value_objects/`.
+- Extienden `Tests\myTest`.
+- Sin dependencias de BD ni de `$GLOBALS['container']`.
+- Namespace: `Tests\unit\<modulo>\domain\entity` / `Tests\unit\<modulo>\domain\value_objects`.
+
+#### Patrón para Value Objects
+```php
+namespace Tests\unit\<modulo>\domain\value_objects;
+use src\<modulo>\domain\value_objects\MiVo;
+use Tests\myTest;
+
+class MiVoTest extends myTest {
+    public function test_create_valid() { /* ... */ }
+    public function test_invalid_throws_exception() { /* ... */ }
+    public function test_to_string() { /* ... */ }
+    public function test_fromNullableString_null() { /* ... */ }
+}
+```
+
+#### Patrón para Entidades
+```php
+namespace Tests\unit\<modulo>\domain\entity;
+use src\<modulo>\domain\entity\MiEntidad;
+use Tests\myTest;
+
+class MiEntidadTest extends myTest {
+    private MiEntidad $entidad;
+
+    public function setUp(): void {
+        parent::setUp();
+        $this->entidad = new MiEntidad();
+        // Setear campos obligatorios...
+    }
+    // test_set_and_get_<campo>() por cada propiedad
+}
+```
+
+### Tests de integración (`tests/integration/<modulo>/`)
+- Cubren `infrastructure/persistence/postgresql/Pg*Repository`.
+- Usan `$GLOBALS['container']->get(InterfaceClass::class)` para obtener el repositorio.
+- Usan factories de `tests/factories/<modulo>/` para crear instancias.
+- Namespace: `Tests\integration\<modulo>\infrastructure\persistence\postgresql`.
+- Siempre limpiar los datos creados (llamar `Eliminar` al final).
+
+#### Patrón para tests de repositorio
+```php
+namespace Tests\integration\<modulo>\infrastructure\persistence\postgresql;
+use src\<modulo>\domain\contracts\MiRepositoryInterface;
+use src\<modulo>\domain\entity\MiEntidad;
+use Tests\myTest;
+use Tests\factories\<modulo>\MiEntidadFactory;
+
+class PgMiEntidadRepositoryTest extends myTest {
+    private MiRepositoryInterface $repository;
+    private MiEntidadFactory $factory;
+
+    public function setUp(): void {
+        parent::setUp();
+        $this->repository = $GLOBALS['container']->get(MiRepositoryInterface::class);
+        $this->factory = new MiEntidadFactory();
+    }
+
+    public function test_guardar_nuevo() { /* crear → guardar → findById → eliminar */ }
+    public function test_actualizar_existente() { /* crear → guardar → guardar con mismo ID → eliminar */ }
+    public function test_find_by_id_existente() { /* crear → guardar → findById → assertNotNull → eliminar */ }
+    public function test_find_by_id_no_existente() { /* findById con ID inexistente → assertNull */ }
+    public function test_eliminar() { /* crear → guardar → eliminar → findById → assertNull */ }
+}
+```
+
+### Factories (`tests/factories/<modulo>/`)
+- Una factory por entidad: `<Entidad>Factory.php`.
+- Método `createSimple(?$id = null)`: datos mínimos válidos.
+- Para entidades con IDs de secuencia BD: llamar `$repository->getNewId()` cuando `$id === null`.
+- Para entidades con UUID: generar con `Uuid::uuid4()->toString()` o similar.
+- Para entidades con clave compuesta: pasar todos los campos de la clave al método.
+- **No** dejar FK con valores hardcodeados si pueden fallar; crear la entidad padre primero en `setUp()` y limpiarla en `tearDown()`.
+
+### Checklist de tests por módulo nuevo
+- [ ] `tests/unit/<modulo>/domain/entity/` — un `*Test.php` por entidad
+- [ ] `tests/unit/<modulo>/domain/value_objects/` — un `*Test.php` por value object
+- [ ] `tests/factories/<modulo>/` — una `*Factory.php` por entidad con repositorio
+- [ ] `tests/integration/<modulo>/infrastructure/repositories/` — un `Pg*RepositoryTest.php` por repositorio
+
 ## Criterio de excepción
 Si una regla no puede cumplirse por dependencia legacy:
 - Documentar la excepción en el PR.

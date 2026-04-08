@@ -49,13 +49,13 @@ class notasDuplicadosTest extends myTest
         //$this->expectException(RuntimeException::class);
         // generar un nota
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $esquema = 'GalBel-crGalBelv';
+        $esquema = 'Galbel-crGalbelv';
         $_SESSION['session_auth']['esquema'] = $esquema;
-        $_SESSION['session_auth']['mi_id_schema'] = 1029;
+        $_SESSION['session_auth']['mi_id_schema'] = 1036;
 
         // persona de la dlA
-        $id_nom = 1029156;
-        $id_schema_persona = 1029; // GalBelv
+        $id_nom = 1036156;
+        $id_schema_persona = 1036; // Galbelv
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
         $dl = DelegacionUtils::getDlFromSchema($esquema);
@@ -105,9 +105,9 @@ class notasDuplicadosTest extends myTest
                 $this->id_nom = 10271837;
                 $this->id_schema_persona = 1027;
                 break;
-            case 'GalBel-crGalBel':
-                $this->id_nom = 102912;
-                $this->id_schema_persona = 1029;
+            case 'Galbel-crGalbel':
+                $this->id_nom = 103612;
+                $this->id_schema_persona = 1036;
                 break;
         }
         $NotasFactory = new NotasFactory();

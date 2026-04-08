@@ -29,7 +29,7 @@ class DelegacionCodeTest extends myTest
     public function test_equals_returns_false_for_different_delegacionCode()
     {
         $delegacionCode1 = new DelegacionCode('dlb');
-        $delegacionCode2 = new DelegacionCode('dls');
+        $delegacionCode2 = new DelegacionCode('dlp');
         $this->assertFalse($delegacionCode1->equals($delegacionCode2));
     }
 

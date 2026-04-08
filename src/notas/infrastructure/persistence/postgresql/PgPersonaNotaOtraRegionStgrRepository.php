@@ -12,6 +12,7 @@ use core\DBConnection;
 use core\Set;
 use notas\model\EditarPersonaNota;
 use PDO;
+use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
@@ -261,7 +262,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             $aDatos['json_certificados'] = (new ConverterJson($aDatos['json_certificados'], false))->fromPg();
 
             $a_pkey = array('id_nom' => $aDatos['id_nom'],
-                'id_nivel' => $aDatos['id_nivel'],
+                'id_nivel' =>  NivelId::fromNullableInt($aDatos['id_nivel']),
                 'tipo_acta' => $aDatos['tipo_acta']);
             $PersonaNota = $this->chooseNewObject($a_pkey);
             //$PersonaNota->setAllAttributes($aDatos);

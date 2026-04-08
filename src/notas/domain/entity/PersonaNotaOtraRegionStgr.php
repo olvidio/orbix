@@ -36,7 +36,7 @@ class PersonaNotaOtraRegionStgr
                     $this->id_asignatura = AsignaturaId::fromNullableInt((int)$val_id);
                 }
                 if (($nom_id === 'id_nivel') && $val_id !== '') {
-                    $this->id_nivel = (int)$val_id;
+                    $this->id_nivel = $val_id;
                 }
                 if (($nom_id === 'tipo_acta') && $val_id !== '') {
                     $this->tipo_acta = TipoActa::fromNullableInt((int)$val_id);

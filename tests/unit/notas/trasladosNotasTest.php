@@ -63,9 +63,9 @@ class trasladosNotasTest extends myTest
     public function test_traslado_de_vuelta_de_dlA_a_crB(): void
     {
         $esquemaA = 'H-dlb';
-        $esquemaB = 'GalBel-crGalBel';
+        $esquemaB = 'Galbel-crGalbel';
         $dlA = 'dlb';
-        $dlB = 'crGalBel';
+        $dlB = 'crGalbel';
 
         // preparara entorno con traslado de dlB a crA
         $this->generarNotas($esquemaA);
@@ -93,7 +93,7 @@ class trasladosNotasTest extends myTest
         $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgrB]);
         $PersonaNotaOtraRegionStgrRepository->setoDbl($oDBdst);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
             $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
@@ -105,7 +105,7 @@ class trasladosNotasTest extends myTest
         $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
         $PersonaNotaDBRepository->setoDbl($oDBdst);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
             $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
@@ -117,7 +117,7 @@ class trasladosNotasTest extends myTest
         $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgrA]);
         $PersonaNotaOtraRegionStgrRepository->setoDbl($oDBdst);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
             $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
@@ -127,7 +127,7 @@ class trasladosNotasTest extends myTest
         // 3.4.- Existen en e_notas_dl. de dlA
         $oDBdst = $this->setConexion($esquemaA . 'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
             $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
             $PersonaNotaDBRepository->setoDbl($oDBdst);
             $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
@@ -135,14 +135,14 @@ class trasladosNotasTest extends myTest
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
             //$this->assertEquals($oPersonaNotaA, $oPersonaNotaB);
-            $this->assertEquals($oPersonaNotaA->getIdNom(), $oPersonaNotaB->getId_nom());
-            $this->assertEquals($oPersonaNotaA->getIdNivel(), $oPersonaNotaB->getId_nivel());
-            $this->assertEquals($oPersonaNotaA->getIdAsignatura(), $oPersonaNotaB->getId_asignatura());
-            $this->assertEquals($oPersonaNotaA->getNotaNum(), $oPersonaNotaB->getNota_num());
-            $this->assertEquals($oPersonaNotaA->getIdSituacion(), $oPersonaNotaB->getId_situacion());
+            $this->assertEquals($oPersonaNotaA->getId_nom(), $oPersonaNotaB->getId_nom());
+            $this->assertEquals($oPersonaNotaA->getId_nivel(), $oPersonaNotaB->getId_nivel());
+            $this->assertEquals($oPersonaNotaA->getId_asignatura(), $oPersonaNotaB->getId_asignatura());
+            $this->assertEquals($oPersonaNotaA->getNota_Num(), $oPersonaNotaB->getNota_num());
+            $this->assertEquals($oPersonaNotaA->getId_situacion(), $oPersonaNotaB->getId_situacion());
 
             // 4.- borrar las pruebas
-            $oPersonaNotaB->DBEliminar();
+            $PersonaNotaDBRepository->Eliminar($oPersonaNotaB);
         }
     }
 
@@ -159,9 +159,9 @@ class trasladosNotasTest extends myTest
      */
     public function test_traslado_de_vuelta_de_crA_a_dlB(): void
     {
-        $esquemaA = 'GalBel-crGalBel';
+        $esquemaA = 'Galbel-crGalbel';
         $esquemaB = 'H-dlb';
-        $dlA = 'crGalBel';
+        $dlA = 'crGalbel';
         $dlB = 'dlb';
 
         // preparara entorno con traslado de dlB a crA
@@ -188,7 +188,7 @@ class trasladosNotasTest extends myTest
         // 3.1.- No existen en e_notas_otra_region. de cr A
         $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgrA]);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
             $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
@@ -198,8 +198,8 @@ class trasladosNotasTest extends myTest
         // 3.2.- No existen en e_notas_dl de dlB
         $oDBdst = $this->setConexion($esquemaB . 'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
             $PersonaNotaDBRepository->setoDbl($oDBdst);
             $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
@@ -212,7 +212,7 @@ class trasladosNotasTest extends myTest
         $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgrB]);
         $PersonaNotaOtraRegionStgrRepository->setoDbl($oDBdst);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
             $cPersonaNotasB = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
@@ -222,22 +222,22 @@ class trasladosNotasTest extends myTest
         // 3.4.- Existen en e_notas_dl. de crA
         $oDBdst = $this->setConexion($esquemaA . 'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value() ;
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
             $PersonaNotaDBRepository->setoDbl($oDBdst);
             $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
             //$this->assertEquals($oPersonaNotaA, $oPersonaNotaB);
-            $this->assertEquals($oPersonaNotaA->getIdNom(), $oPersonaNotaB->getId_nom());
-            $this->assertEquals($oPersonaNotaA->getIdNivel(), $oPersonaNotaB->getId_nivel());
-            $this->assertEquals($oPersonaNotaA->getIdAsignatura(), $oPersonaNotaB->getId_asignatura());
-            $this->assertEquals($oPersonaNotaA->getNotaNum(), $oPersonaNotaB->getNota_num());
-            $this->assertEquals($oPersonaNotaA->getIdSituacion(), $oPersonaNotaB->getId_situacion());
+            $this->assertEquals($oPersonaNotaA->getId_nom(), $oPersonaNotaB->getId_nom());
+            $this->assertEquals($oPersonaNotaA->getId_nivel(), $oPersonaNotaB->getId_nivel());
+            $this->assertEquals($oPersonaNotaA->getId_asignatura(), $oPersonaNotaB->getId_asignatura());
+            $this->assertEquals($oPersonaNotaA->getNota_num(), $oPersonaNotaB->getNota_num());
+            $this->assertEquals($oPersonaNotaA->getId_situacion(), $oPersonaNotaB->getId_situacion());
 
             // 4.- borrar las pruebas
-            $oPersonaNotaB->DBEliminar();
+            $PersonaNotaDBRepository->Eliminar($oPersonaNotaB);
         }
     }
 
@@ -256,9 +256,9 @@ class trasladosNotasTest extends myTest
      */
     public function test_traslado_de_crA_a_dlB(): void
     {
-        $esquemaA = 'GalBel-crGalBel';
+        $esquemaA = 'Galbel-crGalbel';
         $esquemaB = 'H-dlb';
-        $dlA = 'crGalBel';
+        $dlA = 'crGalbel';
         $dlB = 'dlb';
 
         // preparara entorno con traslado de dlB a crA
@@ -284,38 +284,38 @@ class trasladosNotasTest extends myTest
             $this->assertEquals($oPersonaNotaA->getId_nom(), $oPersonaNotaB->getId_nom());
             $this->assertEquals($oPersonaNotaA->getId_nivel(), $oPersonaNotaB->getId_nivel());
             $this->assertEquals($oPersonaNotaA->getId_asignatura(), $oPersonaNotaB->getId_asignatura());
-            $this->assertEquals($oPersonaNotaA->getNota_nNum(), $oPersonaNotaB->getNota_num());
+            $this->assertEquals($oPersonaNotaA->getNota_num(), $oPersonaNotaB->getNota_num());
             $this->assertEquals($oPersonaNotaA->getId_situacion(), $oPersonaNotaB->getId_situacion());
 
             // 4.- borrar las pruebas
-            $oPersonaNotaB->DBEliminar();
+            $PersonaNotaOtraRegionStgrRepository->Eliminar($oPersonaNotaB);
         }
 
         // 3.2.- Existen en e_notas_dl region destino con 'falta certificado'
         $oDBdst = $this->setConexion($esquemaB . 'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
             $PersonaNotaDBRepository->setoDbl($oDBdst);
             $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
             //$this->assertEquals($oPersonaNotaA, $oPersonaNotaB);
-            $this->assertEquals($oPersonaNotaA->getIdNom(), $oPersonaNotaB->getId_nom());
-            $this->assertEquals($oPersonaNotaA->getIdNivel(), $oPersonaNotaB->getId_nivel());
-            $this->assertEquals($oPersonaNotaA->getIdAsignatura(), $oPersonaNotaB->getId_asignatura());
-            $this->assertEquals($oPersonaNotaA->getNotaNum(), $oPersonaNotaB->getNota_num());
+            $this->assertEquals($oPersonaNotaA->getId_nom(), $oPersonaNotaB->getId_nom());
+            $this->assertEquals($oPersonaNotaA->getId_nivel(), $oPersonaNotaB->getId_nivel());
+            $this->assertEquals($oPersonaNotaA->getId_asignatura(), $oPersonaNotaB->getId_asignatura());
+            $this->assertEquals($oPersonaNotaA->getNota_num(), $oPersonaNotaB->getNota_num());
             $this->assertEquals(NotaSituacion::FALTA_CERTIFICADO, $oPersonaNotaB->getId_situacion());
 
             // 4.- borrar las pruebas
-            $oPersonaNotaB->DBEliminar();
+            $PersonaNotaDBRepository->Eliminar($oPersonaNotaB);
         }
 
         // 3.3.- No existen en origen crA.e_notas_dl
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+            $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
             $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
@@ -324,11 +324,11 @@ class trasladosNotasTest extends myTest
 
         // 4.- borrar las pruebas
         $oDBdst = $this->setConexion($esquemaA . 'v');
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
         $PersonaNotaDBRepository->setoDbl($oDBdst);
         $cPersonaNotasC = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom]);
         foreach ($cPersonaNotasC as $oPersonaNotaC) {
-            $oPersonaNotaC->DBEliminar();
+            $PersonaNotaDBRepository->Eliminar($oPersonaNotaB);
         }
 
     }
@@ -345,17 +345,17 @@ class trasladosNotasTest extends myTest
      */
     public function test_traslado_de_crA_a_crB(): void
     {
-        $_SESSION['session_auth']['esquema'] = 'L-crLv';
-        $_SESSION['session_auth']['mi_id_schema'] = 1030;
-        $this->id_schema_persona = 1030;
+        $_SESSION['session_auth']['esquema'] = 'P-crPv';
+        $_SESSION['session_auth']['mi_id_schema'] = 1026;
+        $this->id_schema_persona = 1026;
 
-        $dlA = 'crL'; // Doy por supuesto que estoy conectado como dlb.
-        $dlB = 'crGalBel';
+        $dlA = 'crP'; // Doy por supuesto que estoy conectado como dlb.
+        $dlB = 'crGalbel';
 
         $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
 
-        $reg_dl_org = 'L-' . $dlA . $sfsv_txt;
-        $Qnew_dl = 'GalBel-' . $dlB . $sfsv_txt;
+        $reg_dl_org = 'P-' . $dlA . $sfsv_txt;
+        $Qnew_dl = 'Galbel-' . $dlB . $sfsv_txt;
 
         $this->sreg_dl_org = $reg_dl_org;
         $this->sreg_dl_dst = $Qnew_dl;
@@ -363,7 +363,7 @@ class trasladosNotasTest extends myTest
         // 1.- guardar notas del dlA
         foreach ($this->cPersonaNotas as $oPersonaNota) {
             $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
-            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
+            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr($dlA);
             $esquema_region_stgr = $datosRegionStgr['esquema_region_stgr'];
             $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $this->id_schema_persona);
             $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
@@ -423,7 +423,7 @@ class trasladosNotasTest extends myTest
         // 3.3.- No existen en origen crA.e_notas_dl
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignaturaVo()->value();
-            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+            $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaDlRepositoryInterface::class);
             $cPersonaNotasB = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
@@ -452,12 +452,12 @@ class trasladosNotasTest extends myTest
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         $dlA = 'dlb'; // Doy por supuesto que estoy conectado como dlb.
-        $dlB = 'crGalBel';
+        $dlB = 'crGalbel';
 
         $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
 
         $reg_dl_org = 'H-' . $dlA . $sfsv_txt;
-        $Qnew_dl = 'GalBel-' . $dlB . $sfsv_txt;
+        $Qnew_dl = 'Galbel-' . $dlB . $sfsv_txt;
 
         $this->sreg_dl_org = $reg_dl_org;
         $this->sreg_dl_dst = $Qnew_dl;
@@ -465,7 +465,7 @@ class trasladosNotasTest extends myTest
         // 1.- guardar notas del dlA
         foreach ($this->cPersonaNotas as $oPersonaNota) {
             $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
-            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
+            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr($dlA);
             $esquema_region_stgr = $datosRegionStgr['esquema_region_stgr']; // para usar la información más abajo
             $a_ObjetosPersonaNota = $oEditarPersonaNota->getReposPersonaNota($datosRegionStgr, $this->id_schema_persona);
             $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
@@ -547,7 +547,7 @@ class trasladosNotasTest extends myTest
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         $dlA = 'dlb'; // Doy por supuesto que estoy conectado como dlb.
-        $dlB = 'dls';
+        $dlB = 'dlp';
 
         $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
 
@@ -709,13 +709,13 @@ class trasladosNotasTest extends myTest
                 $this->id_nom = 10271837;
                 $this->id_schema_persona = 1027;
                 break;
-            case 'L-crL':
-                $this->id_nom = 103012;
-                $this->id_schema_persona = 1030;
+            case 'P-crP':
+                $this->id_nom = 102612;
+                $this->id_schema_persona = 1026;
                 break;
-            case 'GalBel-crGalBel':
-                $this->id_nom = 102912;
-                $this->id_schema_persona = 1029;
+            case 'Galbel-crGalbel':
+                $this->id_nom = 103612;
+                $this->id_schema_persona = 1036;
                 break;
         }
         $NotasFactory = new NotasFactory();

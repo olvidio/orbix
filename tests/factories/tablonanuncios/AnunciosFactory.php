@@ -76,7 +76,7 @@ class AnunciosFactory
     private array $a_esquemas = [
         "H-H",
         "H-crHv",
-        "GalBel-crGalBelv",
+        "Galbel-crGalbelv",
         "M-crMv",
         "H-dlalv",
         "H-dlbv",

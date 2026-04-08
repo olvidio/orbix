@@ -188,20 +188,20 @@ class EditarPersonaNota
                 $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
                 $cPersonaNotasOtraRegion = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
                 if (!empty($cPersonaNotasOtraRegion)) {
-                    $personaNotaOriginal = $cPersonaNotasOtraRegion[0];
-                    $id_nivel = $personaNotaOriginal->getIdNivelVo()->value();
-                    $id_asignatura = $personaNotaOriginal->getId_asignatura();
-                    $id_situacion = $personaNotaOriginal->getId_situacion();
-                    $acta = $personaNotaOriginal->getActa();
-                    $oF_acta = $personaNotaOriginal->getF_acta();
-                    $tipo_acta = $personaNotaOriginal->getTipo_acta();
-                    $preceptor = $personaNotaOriginal->isPreceptor();
-                    $id_preceptor = $personaNotaOriginal->getId_preceptor();
-                    $detalle = $personaNotaOriginal->getDetalle();
-                    $epoca = $personaNotaOriginal->getEpoca();
-                    $id_activ = $personaNotaOriginal->getId_activ();
-                    $nota_num = $personaNotaOriginal->getNota_num();
-                    $nota_max = $personaNotaOriginal->getNota_max();
+                    $personaNotaOtraROriginal = $cPersonaNotasOtraRegion[0];
+                    $id_nivel = $personaNotaOtraROriginal->getIdNivelVo()->value();
+                    $id_asignatura = $personaNotaOtraROriginal->getId_asignatura();
+                    $id_situacion = $personaNotaOtraROriginal->getId_situacion();
+                    $acta = $personaNotaOtraROriginal->getActa();
+                    $oF_acta = $personaNotaOtraROriginal->getF_acta();
+                    $tipo_acta = $personaNotaOtraROriginal->getTipo_acta();
+                    $preceptor = $personaNotaOtraROriginal->isPreceptor();
+                    $id_preceptor = $personaNotaOtraROriginal->getId_preceptor();
+                    $detalle = $personaNotaOtraROriginal->getDetalle();
+                    $epoca = $personaNotaOtraROriginal->getEpoca();
+                    $id_activ = $personaNotaOtraROriginal->getId_activ();
+                    $nota_num = $personaNotaOtraROriginal->getNota_num();
+                    $nota_max = $personaNotaOtraROriginal->getNota_max();
                 }
             } else {
                 // valores que se cambian:
@@ -239,8 +239,8 @@ class EditarPersonaNota
             $PersonaNotaRepository->Guardar($oPersonaNotaCertificadoDB);
 
             // borrar la original (asegurarme que se ha guardado lo anterior)
-            if (!empty($personaNotaOriginal)) {
-                $PersonaNotaRepository->Eliminar($personaNotaOriginal);
+            if (!empty($personaNotaOtraROriginal)) {
+                $PersonaNotaOtraRegionStgrRepository->Eliminar($personaNotaOtraROriginal);
             }
             // lo recupero de la base de datos, porque falta el id_schema
             $rta['nota_certificado'] = $PersonaNotaRepository->findByPk(PersonaNotaPk::fromArray(['id_nom' => $id_nom, 'id_nivel' => $id_nivel, 'tipo_acta' => $tipo_acta]));

@@ -134,9 +134,9 @@ class CertificadoRecibidoUploadTest extends myTest
                 $this->id_nom = 10271837;
                 $this->id_schema_persona = 1027;
                 break;
-            case 'GalBel-crGalBel':
-                $this->id_nom = 102912;
-                $this->id_schema_persona = 1029;
+            case 'Galbel-crGalbel':
+                $this->id_nom = 103612;
+                $this->id_schema_persona = 1036;
                 break;
         }
         $certificadosFactory = new CertificadosFactory();

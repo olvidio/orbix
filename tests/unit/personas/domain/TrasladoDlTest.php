@@ -32,12 +32,12 @@ class TrasladoDlTest extends TestCase
 
     public function test_set_reg_dl_extrae_dl_sin_sufijo_vf(): void
     {
-        $this->replaceContainerWithDelegaciones(['dlb', 'crGalBel']);
+        $this->replaceContainerWithDelegaciones(['dlb', 'crGalbel']);
         $traslado = new TrasladarSpy();
 
-        $traslado->setDl_persona('crGalBel');
+        $traslado->setDl_persona('crGalbel');
         $traslado->setReg_dl_org('H-dlbv');
-        $traslado->setReg_dl_dst('GalBel-crGalBelf');
+        $traslado->setReg_dl_dst('Galbel-crGalbelf');
         $result = $traslado->trasladar();
 
         $this->assertSame('dlb', $traslado->getDl_org());
@@ -144,7 +144,7 @@ class TrasladoDlTest extends TestCase
         );
         $traslado->setId_nom($idNom);
         $traslado->setReg_dl_org('H-dlOrigenv');
-        $traslado->setReg_dl_dst('GalBel-crGalBelf');
+        $traslado->setReg_dl_dst('Galbel-crGalbelf');
         $traslado->setF_traslado(new DateTimeLocal('2026-03-09'));
 
         $result = $traslado->copiarPersona();
@@ -152,7 +152,7 @@ class TrasladoDlTest extends TestCase
         $this->assertTrue($result, $traslado->getError() ?? '');
         $this->assertInstanceOf(PersonaN::class, $personaNDstRepo->saved);
         $this->assertSame($idNom, $personaNDstRepo->saved->getId_nom());
-        $this->assertSame('crGalBel', $personaNDstRepo->saved->getDl());
+        $this->assertSame('crGalbel', $personaNDstRepo->saved->getDl());
         $this->assertSame('A', $personaNDstRepo->saved->getSituacion());
     }
 

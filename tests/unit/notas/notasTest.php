@@ -77,7 +77,7 @@ class notasTest extends myTest
         //$this->markTestSkipped('Skipped test');
 
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $esquema = 'GalBel-crGalBelv';
+        $esquema = 'Galbel-crGalbelv';
         $_SESSION['session_auth']['esquema'] = $esquema;
 
         // persona de paso: id_nom negativo; esquema = -1001;
@@ -178,8 +178,8 @@ class notasTest extends myTest
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         // persona de la dlA
-        $id_nom = 1029156;
-        $id_schema_persona = 1029; // GalBelv
+        $id_nom = 1036156;
+        $id_schema_persona = 1036; // Galbelv
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
         $dl = DelegacionUtils::getDlFromSchema($esquema);
@@ -198,7 +198,7 @@ class notasTest extends myTest
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
-        // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
+        // Estoy en H-dlbv. La nota debe estar en Galbel-crGalbelv.
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
         $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
         $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
@@ -214,7 +214,7 @@ class notasTest extends myTest
         $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
         $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
 
-        // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
+        // Estoy en H-dlbv. La nota debe estar en Galbel-crGalbelv.
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
         $PersonaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $cPersonaNotaDB = $PersonaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
@@ -241,8 +241,8 @@ class notasTest extends myTest
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         // persona de la dlA
-        $id_nom = 1029156;
-        $id_schema_persona = 1029; // GalBelv
+        $id_nom = 1036156;
+        $id_schema_persona = 1036; // Galbelv
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
         $dl = DelegacionUtils::getDlFromSchema($esquema);
@@ -268,7 +268,7 @@ class notasTest extends myTest
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
-        // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
+        // Estoy en H-dlbv. La nota debe estar en Galbel-crGalbelv.
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
         $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
         $cPersonaNota = $PersonaNotaOtraRegionStgrRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
@@ -284,7 +284,7 @@ class notasTest extends myTest
         $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
         $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
 
-        // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
+        // Estoy en H-dlbv. La nota debe estar en Galbel-crGalbelv.
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
         $PersonaNotaRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
         $cPersonaNotaDB = $PersonaNotaRepository->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getId_asignatura()]);
@@ -315,8 +315,8 @@ class notasTest extends myTest
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         // persona de la dlA
-        $id_nom = 10061256;
-        $id_schema_persona = 1006;
+        $id_nom = 10051256;
+        $id_schema_persona = 1005;
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
         $dl = DelegacionUtils::getDlFromSchema($esquema);

@@ -13,7 +13,7 @@ class CertificadosFactory
     private string $region;
     private $esquemas_posibles = [
         "H-Hv",
-        "GalBel-crGalBelv",
+        "Galbel-crGalbelv",
     ];
 
     public function __construct()
