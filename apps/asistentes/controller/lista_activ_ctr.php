@@ -4,6 +4,7 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
@@ -175,6 +176,7 @@ foreach ($cCentros as $oCentro) {
     $aPersonasCtr = [];
     $aWhereNom = [];
     $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+    $aPlazas = PlazaId::getArrayPosiblesPlazas();
     foreach ($cPersonas as $oPersona) {
         $i++;
         $id_nom = $oPersona->getId_nom();
@@ -195,8 +197,14 @@ foreach ($cCentros as $oCentro) {
                 $id_activ = $oAsistente->getId_activ();
                 $oActividad = $ActividadAllRepository->findById($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
+                $plaza = $oAsistente->getPlazaVo()?->value()?? '';
+                $nom_plaza = '';
+                if ($plaza < PlazaId::ASIGNADA) {
+                    $plaza_txt = $aPlazas[$plaza] ?? '';
+                    $nom_plaza = '<span class=alert> ['. $plaza_txt . ']</span>';
+                }
                 $a++;
-                $aActividades[] = $nom_activ;
+                $aActividades[] = $nom_activ . $nom_plaza;
             }
         }
         $aPersonasCtr[$i]['ap_nom'] = $ap_nom;
