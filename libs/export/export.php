@@ -38,7 +38,7 @@ switch ($_POST['frm_export_tipo']) {
         $documento = stripslashes($documento);
         @header("Content-type: application/octet-stream");
         @header("Content-Disposition: attachment; filename=\"$nom.html\"");
-        echo "<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">";
+        echo "<meta charset=\"utf-8\">";
         echo $documento;
         break;
     case "html_zip": // igual que el anterior más comprimir
@@ -53,7 +53,7 @@ switch ($_POST['frm_export_tipo']) {
         $documento = stripslashes($documento);
         //guardo el fichero html
         $filename = "/tmp/$nom.html";
-        $documento = '<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>' . $documento;
+        $documento = '<meta charset="utf-8">' . $documento;
 
         if (!$handle = fopen($filename, 'wb+')) {
             echo "Cannot open file ($filename)";
@@ -70,7 +70,6 @@ switch ($_POST['frm_export_tipo']) {
 
         @header("Content-type: application/octet-stream");
         @header("Content-Disposition: attachment; filename=\"$nom.zip\"");
-        //echo "<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">";
         echo file_get_contents("/tmp/$nom.zip");
         // elimino el fichero
         unlink("/tmp/$nom.zip");
@@ -89,7 +88,7 @@ switch ($_POST['frm_export_tipo']) {
 
         $documento = html_entity_decode($documento, ENT_NOQUOTES, 'UTF-8');
         $documento = stripslashes($documento);
-        $documento = '<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>' . $documento;
+        $documento = '<meta charset="utf-8">' . $documento;
         //quitar los forms
         $documento = preg_replace('/<form.*>/', '', $documento);
         $documento = str_replace('/<\/form>/', '', $documento);
@@ -161,7 +160,7 @@ switch ($_POST['frm_export_tipo']) {
 
         $documento = html_entity_decode($documento, ENT_NOQUOTES, 'UTF-8');
         $documento = stripslashes($documento);
-        $documento = '<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>' . $documento;
+        $documento = '<meta charset="utf-8">' . $documento;
         //quitar los forms
         $documento = preg_replace('/<form.*>/', '', $documento);
         $documento = str_replace('/<\/form>/', '', $documento);

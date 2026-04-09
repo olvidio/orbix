@@ -1,7 +1,10 @@
 <?php
 // Front Controller con FastRoute + fallback legacy para /src
 
+use core\ConfigGlobal;
+use core\GestorErrores;
 use DI\ContainerBuilder;
+use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
 
@@ -18,7 +21,7 @@ function bootstrapAnonymousSrcRequest(): void
     }
 
     if (!isset($_SESSION['oGestorErrores'])) {
-        $_SESSION['oGestorErrores'] = new \core\GestorErrores();
+        $_SESSION['oGestorErrores'] = new GestorErrores();
     }
 
     if (!isset($GLOBALS['container'])) {
@@ -30,11 +33,11 @@ function bootstrapAnonymousSrcRequest(): void
             }
         }
 
-        if (class_exists(\core\ConfigGlobal::class) && !\core\ConfigGlobal::is_debug_mode()) {
+        if (class_exists(ConfigGlobal::class) && !ConfigGlobal::is_debug_mode()) {
             $cacheDir = __DIR__ . '/../var/cache/php-di';
             if (!is_dir($cacheDir)) {
                 if (!mkdir($cacheDir, 0775, true) && !is_dir($cacheDir)) {
-                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $cacheDir));
+                    throw new RuntimeException(sprintf('Directory "%s" was not created', $cacheDir));
                 }
             }
             $builder->enableCompilation($cacheDir);
@@ -120,7 +123,7 @@ $container = $GLOBALS['container'];
 // - /index.php?r=/src/...
 // - peticiones directas a /src/... (con o sin base path delante).
 // Lo ponemos ANTES del router para que sea inmediato.
-$projectRoot = dirname(__DIR__) . ''; // /home/.../orbix
+$projectRoot = dirname(__DIR__); // /home/.../orbix
 $legacyR = null;
 
 if (isset($_GET['r']) && is_string($_GET['r']) && str_starts_with($_GET['r'], '/src/')) {
@@ -194,18 +197,18 @@ $uri = rawurldecode($uri);
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
 switch ($routeInfo[0]) {
-    case \FastRoute\Dispatcher::NOT_FOUND:
+    case Dispatcher::NOT_FOUND:
         http_response_code(404);
         echo '404 Not Found';
         break;
 
-    case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+    case Dispatcher::METHOD_NOT_ALLOWED:
         http_response_code(405);
         $allowedMethods = $routeInfo[1] ?? [];
         echo '405 Method Not Allowed. Allowed: ' . implode(', ', (array)$allowedMethods);
         break;
 
-    case \FastRoute\Dispatcher::FOUND:
+    case Dispatcher::FOUND:
         $handler = $routeInfo[1];
         $vars = $routeInfo[2] ?? [];
 

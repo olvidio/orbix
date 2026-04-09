@@ -29,7 +29,7 @@ $goMisas = Hash::link('apps/misas/controller/misas_index.php?' . http_build_quer
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="es">
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
     <title>index</title>
 	<script type="application/javascript">
 	function fnjs_windowopen(url) { //para poder hacerlo por el menu

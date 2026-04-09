@@ -136,7 +136,7 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 
 // ---------------------------------------------------------------------------------------
 ?>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta charset="utf-8">
 <div class="A4" >
 <?php if ($cara==="A") { ?>
 <div class="cabecera"><?= $nombre_prelatura ?></div>

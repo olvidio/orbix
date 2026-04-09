@@ -82,7 +82,7 @@ $aAsignaturasMatriculadas[] = array('nom_asignatura' => ' ',
     'acta' => '');
 
 ?>
-<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<meta charset="utf-8">
 <div id="exportar">
     <div class="A4">
         <table class="A4">

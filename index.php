@@ -123,7 +123,7 @@ if (isset($primera)) {
     */
 
     // Obtener la oficina del menú de la sesión
-    $mi_oficina_menu = isset($_SESSION['session_auth']['mi_oficina_menu']) ? $_SESSION['session_auth']['mi_oficina_menu'] : '';
+    $mi_oficina_menu = $_SESSION['session_auth']['mi_oficina_menu'] ?? '';
 
     if ($mi_id_grupmenu === "admin") {
         $mi_id_grupmenu = "sistema";
@@ -255,7 +255,7 @@ $h = $oHash->linkSinVal();
 
 ////////////// antes de enviar headers
 ob_start();
-if ($_SESSION['session_auth']['expire'] == 1) {
+if ($_SESSION['session_auth']['expire'] === 1) {
     include("frontend/usuarios/controller/usuario_form_pwd.php");
 } else if (!empty($pag_ini)) {
     include($pag_ini);
@@ -269,7 +269,7 @@ $portada_html = ob_get_clean();
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8">
     <title>Orbix</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <?php
@@ -358,8 +358,8 @@ $portada_html = ob_get_clean();
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/svg.js/dist/svg.min.js' ?>'></script>
 
-    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/formatos.js.php?' . rand() ?>"></script>
-    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/selects.js.php?' . rand() ?>"></script>
+    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/formatos.js.php?' . mt_rand() ?>"></script>
+    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/selects.js.php?' . mt_rand() ?>"></script>
 
     <?php
     include_once(ConfigGlobal::$dir_scripts . '/exportar.js.php');
@@ -372,7 +372,7 @@ $portada_html = ob_get_clean();
     ?>
 </head>
 
-<body class="otro" id="body">
+<body className="otro" id="body">
 <?php
 // Render the final HTML structure
 $renderParams = [
@@ -382,7 +382,7 @@ echo $oLayout->renderHtml($htmlComponents, $renderParams);
 ?>
 <div id="contenido_sin_menus">
     <div id="cargando">
-        <img class="mb-4" src="<?= ConfigGlobal::getWeb_icons() ?>/loading.gif" alt="cargando" width="32" height="32">
+        <img className="mb-4" src="<?= ConfigGlobal::getWeb_icons() ?>/loading.gif" alt="cargando" width="32" height="32">
         <?= _("Cargando...") ?>
     </div>
     <div id="iframe_export" style="display: none;">
@@ -395,10 +395,10 @@ echo $oLayout->renderHtml($htmlComponents, $renderParams);
             <input type="hidden" id="frm_export_ex" name="frm_export_ex"/>
         </form>
     </div>
-    <div id="left_slide" class="left-slide">
-        <span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
+    <div id="left_slide" className="left-slide">
+        <span className=handle onClick="fnjs_ir_a('#ir_atras');"></span>
     </div>
-    <div class="main" id="main" refe="<?= $pag_ini ?>">
+    <div className="main" id="main" refe="<?= $pag_ini ?>">
         <?php echo $portada_html ?>
         <script>
             $(function () {
