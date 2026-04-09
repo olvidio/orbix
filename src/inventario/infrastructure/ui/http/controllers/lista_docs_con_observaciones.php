@@ -9,7 +9,29 @@ use web\ContestarJson;
 $error_txt = '';
 
 $DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
-$cDocumentos = $DocumentoRepository->getDocumentos(['observ'=>'x'],['observ'=>'IS NOT NULL']);
+$aWhere = [
+    'eliminado' => 'f',
+    'perdido' => 'f',
+    'observ'=>'x',
+    'observ_ctr'=>'x',
+];
+$aOperador = [
+    'observ'=>'IS NOT NULL',
+    'observ_ctr'=>'IS NOT NULL',
+];
+$cDocumentosObservDl = $DocumentoRepository->getDocumentos($aWhere, $aOperador);
+// para hacer un OR
+$aWhere = [
+    'eliminado' => 'f',
+    'perdido' => 'f',
+    'observ_ctr'=>'x',
+];
+$aOperador = [
+    'observ_ctr'=>'IS NOT NULL',
+];
+$cDocumentosObserCtr = $DocumentoRepository->getDocumentos($aWhere, $aOperador);
+
+$cDocumentos = $cDocumentosObservDl + $cDocumentosObserCtr;
 
 $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
 $TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
@@ -22,6 +44,7 @@ foreach ($cDocumentos as $oDocumento) {
     $num_reg = $oDocumento->getNum_reg();
     $id_tipo_doc = $oDocumento->getId_tipo_doc();
     $observ = $oDocumento->getObservVo()?->value();
+    $observCtr = $oDocumento->getObservCtrVo()?->value();
 
     $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);
     $nom_doc = $oTipoDoc->getNom_doc();
@@ -37,6 +60,7 @@ foreach ($cDocumentos as $oDocumento) {
     $a_valores[$i][2] = $NombreDoc;
     $a_valores[$i][3] = $num_reg;
     $a_valores[$i][4] = $observ;
+    $a_valores[$i][5] = $observCtr;
     //para poder ordenar
     $a_nom[$i] = $a_valores[$i][1];
 

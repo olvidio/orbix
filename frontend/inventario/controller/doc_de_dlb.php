@@ -39,6 +39,7 @@ if (empty($Qinventario)) {
     $a_botones[] = array('txt' => _("Asignar"), 'click' => "fnjs_go(\"$url_doc_mod\")");
 } else {
     $nombreDoc = _("Para imprimir inventario");
+    $a_botones[] = array('txt' => _('Imprimir dl'), 'click' => " $(\"#dl\").val(\"true\"); fnjs_go(\"$url_imprimir\")");
     $a_botones[] = array('txt' => _('Imprimir'), 'click' => "fnjs_go(\"$url_imprimir\")");
 }
 
@@ -57,9 +58,11 @@ $oTabla->setGrupos($aGrupos);
 $oHash = new Hash();
 $oHash->setCamposForm('sel');
 $oHash->setArrayCamposHidden([
+    'dl' => false,
     //'inventario' => $Qinventario,
     'id_tipo_doc' => $Qid_tipo_doc
 ]);
+$oHash->setCamposNo('dl');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

@@ -21,6 +21,7 @@ $a_cabeceras = [
     ucfirst(_("documento")),
     ucfirst(_("número")),
     ucfirst(_("observaciones")),
+    ucfirst(_("observaciones ctr")),
 ];
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_observ');

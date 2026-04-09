@@ -11,6 +11,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 $oPosicion->recordar();
 
+$dl = (bool)filter_input(INPUT_POST, 'dl');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $sel_json = json_encode($a_sel);
 
@@ -29,6 +30,9 @@ $a_ubi_nom_coleccion = $data['a_nom_coleccion'];
 $a_cabeceras[] = "";
 $a_cabeceras[] = ucfirst(_("documento"));
 $a_cabeceras[] = ucfirst(_("observaciones"));
+if ($dl) {
+    $a_cabeceras[] = ucfirst(_("observaciones dl"));
+}
 
 $a_botones[] = array('txt' => _('seleccionar'), 'click' => "fnjs_ver_equipaje()");
 

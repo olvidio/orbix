@@ -103,6 +103,13 @@ class Lista
      * @var string
      */
     private $formato_tabla = '';
+    /**
+     * bMultiSort de la Lista
+     *
+     * @var boolean
+     */
+    private $bMultiSort = FALSE;
+
 
 
     private $preferenciaRepository;
@@ -796,7 +803,8 @@ class Lista
                 enableAutoResize: true
                 ,enableCellNavigation: true
                 ,enableAddRow: false
-                ,enableColumnReorder: true
+                ,enableColumnReorder: ".($this->bMultiSort ? 'false' : 'true')."
+                ,multiColumnSort: ".($this->bMultiSort?'true':'false')."
                 ,topPanelHeight: 50
                 ,autoHeight: false
                 ,syncColumnCellResize: true
@@ -946,45 +954,52 @@ class Lista
 				}
 				return true;
 			}
-			function comparer(a,b) {
+			function comparer_values(x, y) {
 				var dateformat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4}$/;
 				var dateTimeFormat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4} \d{2}:\d{2}:\d{2}$/;
 				
-				if ( dateTimeFormat.test(a[sortcol]) && dateTimeFormat.test(b[sortcol]) ) {
-					var dateTime_a = a[sortcol].split(' ');
-					var dateTime_b = b[sortcol].split(' ');
+				if ( dateTimeFormat.test(x) && dateTimeFormat.test(y) ) {
+					var dateTime_a = x.split(' ');
+					var dateTime_b = y.split(' ');
 					var fecha_a = dateTime_a[0].split('/');
 					var hora_a = dateTime_a[1].split(':');
 					var fecha_b = dateTime_b[0].split('/');
 					var hora_b = dateTime_b[1].split(':');
-                ";
+";
         $tt .= $fecha_local;
         $tt .= "
 					var diff = date_a.getTime()-date_b.getTime();
 					return (diff==0?diff:diff/Math.abs(diff));
 				}
-				if ( dateformat.test(a[sortcol]) && dateformat.test(b[sortcol]) ) {
-					var fecha_a = a[sortcol].split('/');
-					var fecha_b = b[sortcol].split('/');
-                ";
+				if ( dateformat.test(x) && dateformat.test(y) ) {
+					var fecha_a = x.split('/');
+					var fecha_b = y.split('/');
+					var hora_a = [0,0,0];
+					var hora_b = [0,0,0];
+";
         $tt .= $fecha_local;
         $tt .= "
 					var diff = date_a.getTime()-date_b.getTime();
 					return (diff==0?diff:diff/Math.abs(diff));
 				} else {
-					var x = a[sortcol], y = b[sortcol];
 					if (isNaN(x) || isNaN(y)) {
+						x=x?' '+x:'';
+						y=y?' '+y:'';
 						x=x.toUpperCase();
 						y=y.toUpperCase();
 						x=fnjs_sin_acentos(x);
 						y=fnjs_sin_acentos(y);
 						return (x == y ? 0 : (x > y ? 1 : -1));
 					} else {
-						int_a=parseInt(a[sortcol],10);
-						int_b=parseInt(b[sortcol],10);
+						int_a=parseInt(x,10);
+						int_b=parseInt(y,10);
 						return (int_a == int_b ? 0 : (int_a > int_b ? 1 : -1));
 					}
 				}
+			}
+
+			function comparer(a,b) {
+				return comparer_values(a[sortcol], b[sortcol]);
 			}
 			";
         $tt .= "
@@ -1065,10 +1080,36 @@ class Lista
 				});
 				
 				grid_$id_tabla.onSort.subscribe(function (e, args) {
+";
+        if ($this->bMultiSort) {
+            $tt .= "
+                    var cols = args.sortCols; // Array con columnas ordenadas
+                    dataView_$id_tabla.sort(function (dataRow1, dataRow2) {
+                        for (var i = 0, l = cols.length; i < l; i++) {
+                          var field = cols[i].sortCol.field;
+                          var sign = cols[i].sortAsc ? 1 : -1;
+                          var value1 = dataRow1[field], value2 = dataRow2[field];
+                          
+                          // Comparación personalizada
+                          var result = comparer_values(value1, value2) * sign;
+                          if (result != 0) {
+                            return result;
+                          }
+                        }
+                        return 0;
+                    });
+                    grid_$id_tabla.invalidate(); // Refrescar la cuadrícula
+                    grid_$id_tabla.render();
+";
+        } else {
+            $tt .= "
 					sortdir = args.sortAsc ? 1 : -1;
 					sortcol = args.sortCol.field;
 					
 					dataView_$id_tabla.sort(comparer, args.sortAsc);
+";
+        }
+        $tt .= "
 				});
 				// wire up model events to drive the grid
 				dataView_$id_tabla.onRowCountChanged.subscribe(function (e, args) {
@@ -1596,6 +1637,18 @@ class Lista
     function setPie($str)
     {
         $this->sPie = $str;
+    }
+
+    public
+    function getMultiSort()
+    {
+        return $this->bMultiSort;
+    }
+
+    public
+    function setMultiSort($bMultiSort)
+    {
+        $this->bMultiSort = $bMultiSort;
     }
 
     public

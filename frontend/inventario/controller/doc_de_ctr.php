@@ -30,12 +30,13 @@ $nombreDoc = $data['nombreDoc'];
 //3
 $url_doc_mod = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_asignar_ctr.php?';
 //12
-$url_imprimir = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_imprimir_ctr.php?';
+$url_imprimir_ctr = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_imprimir_ctr.php?';
 
 if (empty($Qinventario)) {
     $a_botones[] = array('txt' => _("Asignar"), 'click' => "fnjs_go(\"$url_doc_mod\")");
 } else {
-    $a_botones[] = array('txt' => _('Imprimir'), 'click' => "fnjs_go(\"$url_imprimir\")");
+    $a_botones[] = array('txt' => _('Imprimir dl'), 'click' => " $(\"#dl\").val(\"true\"); fnjs_go(\"$url_imprimir_ctr\")");
+    $a_botones[] = array('txt' => _('Imprimir ctr'), 'click' => "fnjs_go(\"$url_imprimir_ctr\")");
 }
 
 $a_cabeceras = array(ucfirst(_("centro")));
@@ -52,9 +53,11 @@ $oTabla->setDatos($a_valores);
 $oHash = new Hash();
 $oHash->setCamposForm('sel');
 $oHash->setArrayCamposHidden([
+    'dl' => false,
     'inventario' => $Qinventario,
     'id_tipo_doc' => $Qid_tipo_doc
 ]);
+$oHash->setCamposNo('dl');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

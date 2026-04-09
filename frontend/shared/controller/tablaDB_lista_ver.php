@@ -152,6 +152,7 @@ $oTabla->setId_tabla($id_tabla);
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
+$oTabla->setMultiSort(true);
 
 $a_campos_lista = [
     'oPosicion' => $oPosicion,

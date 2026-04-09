@@ -45,8 +45,12 @@ foreach ($a_sel as $id_lugar) {
         $d++;
         $id_tipo_doc = $oDocumento->getId_tipo_doc();
         $observ = $oDocumento->getObservVo()?->value();
-        $num_ejemplares = $oDocumento->getNum_ejemplares();
-        $identificador = $oDocumento->getIdentificador();
+        $observ_ctr = $oDocumento->getObservCtrVo()?->value();
+        $num_ejemplares = $oDocumento->getNumEjemplaresVo()?->value();
+        $num_reg = $oDocumento->getNumRegVo()?->value();
+        $num_ini = $oDocumento->getNumIniVo()?->value();
+        $num_fin = $oDocumento->getNumFinVo()?->value();
+        $identificador = $oDocumento->getIdentificadorVo()?->value();
         // guardo en una colección los tipos de doc para consultas posteriores (de otros lugares).
         if (array_key_exists($id_tipo_doc, $colTipoDoc)) {
             $aTipoDoc = $colTipoDoc[$id_tipo_doc];
@@ -73,13 +77,14 @@ foreach ($a_sel as $id_lugar) {
         $nom_compost .= !empty($num_reg) ? ", $num_reg" : '';
         $nom_compost .= (!empty($num_ejemplares) and $num_ejemplares > 1) ? " ($num_ejemplares ej.)" : '';
         if (!empty($num_ini)) {
-            $nom_compost .= " $num_ini" . "-";
+            $nom_compost .= " desde el $num_ini" . "-";
             $nom_compost .= !empty($num_fin) ? " $num_fin" : _("Actual");
         }
         $a_valores[$d][1] = array('clase' => 'check', 'valor' => "<input type=checkbox>");
         $a_valores[$d][2] = array('clase' => 'doc', 'valor' => $nom_compost);
-        $a_valores[$d][3]=array('clase'=>'doc','valor'=>$identificador);
+        $a_valores[$d][3] = array('clase' => 'doc', 'valor' => $identificador);
         $a_valores[$d][4] = $observ;
+        $a_valores[$d][5] = $observ_ctr;
         //para poder ordenar
         $a_llave[$d] = $oTipoDoc->isBajo_llave();
         $a_tipo[$d] = $oTipoDoc->getSigla() . " " . $oTipoDoc->getNom_doc();
@@ -111,4 +116,4 @@ $data = [
 ];
 
 // envía una Response
-ContestarJson::enviar($error_txt,$data);
+ContestarJson::enviar($error_txt, $data);
