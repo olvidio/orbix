@@ -151,8 +151,7 @@ class Posicion
      *
      * @var integer|string $stack indice del array $_SESSION['position']);
      */
-    public
-    function goStack(int|string $stack = '*')
+    public function goStack(int|string $stack = '*')
     { //pongo '*' para distinguirlo del 0.
         if (isset($_SESSION['position'][$stack])) {
             $aPosition = $_SESSION['position'][$stack];
@@ -167,8 +166,7 @@ class Posicion
         }
     }
 
-    public
-    function olvidar($stack = '*')
+    public function olvidar($stack = '*')
     {
         if ($stack !== '*') { //pongo '*' para distinguirlo del 0.
             // hasta el final
@@ -182,8 +180,7 @@ class Posicion
     /*
      * @param $parar Para el incremento de la pila. por defecto 0. El 1 sirve par el caso de actualizar una misma página.
      */
-    public
-    function recordar($parar = 0)
+    public function recordar($parar = 0)
     {
         $this->stack = $this->aParametros['stack'] ?? 0;
         //echo "<script>history.pushState({state:'new'},'New State','?new');</script>";
@@ -218,8 +215,7 @@ class Posicion
         session_write_close();
     }
 
-    private
-    function guardar()
+    private function guardar()
     {
         if (!isset($this->stack)) { //OJO si es el primero tiene valor 0. (no usar empty)
             if ($this->existsSession()) {
@@ -236,8 +232,7 @@ class Posicion
         session_write_close();
     }
 
-    public
-    function go_atras($n = 0)
+    public function go_atras($n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -267,8 +262,7 @@ class Posicion
         return $html;
     }
 
-    public
-    function js_atras($n = 0)
+    public function js_atras($n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -305,8 +299,7 @@ class Posicion
      * @param integer $n número de posiciones atrás. Normalmente 1
      * @return string Html= div (display_none)
      */
-    public
-    function mostrar_left_slide(int $n = 0)
+    public function mostrar_left_slide(int $n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -344,8 +337,7 @@ class Posicion
      * @param integer $n número de posiciones atrás. Normalmente 1
      * @return string Html= div (display_none) + img(arrow)
      */
-    public
-    function mostrar_back_arrow(int $n = 0)
+    public function mostrar_back_arrow(int $n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -374,8 +366,7 @@ class Posicion
         return $html;
     }
 
-    private
-    function limitar($n = 10)
+    private function limitar($n = 10)
     {
         // Cuando hay el doble, borro $n.
         if (isset($_SESSION['position'])) { // No sé porque no deja poner todo junto
@@ -464,8 +455,7 @@ class Posicion
      * @param mixed nomParametre
      * @param mixed valor
      */
-    public
-    function addParametro($nomParametre, $valor, $n = 0)
+    public function addParametro($nomParametre, $valor, $n = 0)
     {
         if (!empty($_SESSION['position'])) {
             $this->go($n);
@@ -480,8 +470,7 @@ class Posicion
      * @param mixed nomParametre
      * @param mixed valor
      */
-    public
-    function setParametro($nomParametre, $valor)
+    public function setParametro($nomParametre, $valor)
     {
         $this->aParametros[$nomParametre] = $valor;
     }
@@ -491,8 +480,7 @@ class Posicion
      *
      * @param array aVars
      */
-    public
-    function setParametros($aVars, $n = 0)
+    public function setParametros($aVars, $n = 0)
     {
         // Si es del constructor no guardo los cambios aquí.
         if ($this->constructor) {
@@ -516,8 +504,7 @@ class Posicion
      *
      * @param string nomParametre
      */
-    public
-    function getParametro($nomParametre, $n = 0)
+    public function getParametro($nomParametre, $n = 0)
     {
         if ($n == 0) {
             if (!isset($this->aParametros[$nomParametre])) {
@@ -537,175 +524,4 @@ class Posicion
         return $valParametre;
     }
 
-    /**
-     *
-     * Esta función sirve para ir a una página. Típico al acabar un procedimiento.
-     *
-     * versión Ajax.
-     *
-     * la variable $go_to puede contener sólo el nombre de la página o también el <div>
-     * donde se quiere la página. (separado por un '|'): pagina|div. ¡OJO!, cuando se pasa
-     * una consulta con concatenaciones (||) es un lio.
-     *
-     * busca la página en el directorio actual. Para usar una referencia absoluta a una página,
-     * el $go_to debería empezar por '#'.
-     */
-    public
-    function ir_a($go_to)
-    {
-        $this->setId_div('ir_a');
-        $url = '';
-        $parametros = '';
-        $frame = '';
-        $go = strtok($go_to, "@");
-        $pag_sin_param = '';
-        $pagina = urldecode($go_to);
-        $pagina = strtok($pagina, "|");
-        $frame = strtok("|");
-        //echo "frame: $frame<br>";
-
-        $_error_txt = "pagina1: $pagina<br>";
-        // separo la url de los parametros
-        $p = strpos($pagina, '?');
-        if ($p !== false) {
-            $pag_sin_param = substr($pagina, 0, $p);
-            $parametros = substr($pagina, $p + 1);
-            $_error_txt .= "pag sin param: $pag_sin_param<br>";
-            $_error_txt .= "param: $parametros<br>";
-        } else {
-            $pag_sin_param = $pagina;
-        }
-        $posi = strpos($parametros, "condicion=");
-        if ($posi === false) {
-            //$cond=substr($parametros,$posi);
-        } else {
-            $cond1 = substr($parametros, $posi + 10);
-            //para asegurar que no tiene barras \
-            $cond1 = stripslashes($cond1);
-            $_error_txt .= "cond1: $cond1<br>";
-            $cond2 = urlencode($cond1);
-            $_error_txt .= "cond2: $cond2<br>";
-            $parametros = str_replace($cond1, $cond2, $parametros);
-        }
-
-        $pagina = $pag_sin_param; // quito la doble barra
-        if (strpos($pagina, ConfigGlobal::getWeb()) !== false) { // Si es una referencia absoluta
-            $url = $pagina;
-        } else {
-            $_error_txt .= "pagina2: $pagina<br>";
-            $dire = getcwd();
-            $_error_txt .= "dire: $dire<br>";
-            $path = str_replace(ConfigGlobal::$directorio, "", $dire);
-            $_error_txt .= "path: $path<br>";
-            if (substr($path, -1) != '/') {
-                $path .= '/';
-            } // me aseguro de que acabe en "/"
-            $_error_txt .= "path2: $path<br>";
-            $pagina = str_replace($path, "", $pagina); //si la dirección ya es absoluta, la quito
-            $_error_txt .= "pagina3: $pagina<br>";
-            //echo "directorio: $dire, path: $path<br>";
-            //echo "pagina: $pagina<br>";
-            if (substr($pagina, 0, 1) == '#') {
-                $pagina = substr($pagina, 1);
-                $path = "";
-            }
-            if (substr($pagina, 0, 2) == './') {
-                $pagina = substr($pagina, 1);
-            }
-            if (substr($pagina, 0, 3) == '../') { //quito un directorio de $path
-                $path = preg_replace('/\w+\/?$/', '', $path);
-                $pagina = substr($pagina, 3);
-            }
-            $_error_txt .= "pagina4: $pagina<br>";
-            //echo "pagina2: $pagina<br>";
-            $url = ConfigGlobal::getWeb() . $path . $pagina;
-        }
-        /*
-        if (ConfigGlobal::mi_id_usuario() == 443) {
-            echo "hola dani<br>";
-            echo $_error_txt;
-        }
-        */
-        if (empty($frame)) $frame = "#main";
-
-        // passarlo a array para usar la funcion add_hash
-        $aParam = [];
-        foreach (explode('&', $parametros) as $param) {
-            $aa = explode('=', $param);
-            $aParam[$aa[0]] = isset($aa[1]) ? $aa[1] : ''; //ojo con el empty y el 0.
-        }
-        $parametros = Hash::add_hash($aParam, $url);
-
-        $html = '<form id="go">';
-        $html .= '	url: <input name="url" type="text" value="' . $url . '" size=70><br>';
-        $html .= '	parametros: <input name="parametros" type="text" value="' . $parametros . '" size=70><br>';
-        $html .= '	bloque: <input name="id_div" type="text" value="' . $frame . '" size=70>';
-        $html .= '</form>';
-        ?>
-        <script>fnjs_mostrar_atras('#ir_a', '<?= $html ?>');</script>
-        <?php
-    }
-
-    /**
-     *
-     * Esta función sirve para ir a una página. desde un link, a traves de java: location.
-     * El parámetro $form sirve para indicar si se pone una direccion absoluta (http:...) o una relativa al $web (es para el caso del action de un formulario).
-     *
-     */
-    public
-    function link_a($go_to, $form = '')
-    {
-        $go = strtok($go_to, "@");
-        $pag_sin_param = '';
-        $pagina = urldecode($go_to);
-        $pagina = strtok($pagina, "|");
-        $frame = strtok("|");
-
-        $pagina = str_replace(ConfigGlobal::getWeb(), "", $pagina); //si la dirección ya es absoluta, la quito
-        $dire = getcwd();
-        $path = str_replace(ConfigGlobal::$directorio, "", $dire);
-        if (substr($path, -1) != '/') {
-            $path .= '/';
-        } // me aseguro de que acabe en "/"
-        $pagina = str_replace($path, "", $pagina); //si la dirección ya es absoluta, la quito
-        //echo "directorio: $dire, path: $path<br>";
-        //echo "pagina: $pagina<br>";
-        if (substr($pagina, 0, 1) == '#') {
-            $pagina = substr($pagina, 1);
-            $path = "";
-        }
-        if (substr($pagina, 0, 2) == './') {
-            $pagina = substr($pagina, 1);
-        }
-        if (substr($pagina, 0, 3) == '../') { //quito un directorio de $path
-            $path = preg_replace('/\w+\/?$/', '', $path);
-            $pagina = substr($pagina, 3);
-        }
-        //echo "pagina2: $pagina<br>";
-        // separo la url de los parametros
-        if ($p = strpos($pagina, '?')) { //"%3F" es "?" cuando está encode)
-            $pag = substr($pagina, 0, $p);
-            // no arrastro el goto, no sé porque estba aqui.
-            $parametros = substr($pagina, $p + 1);
-            //$parametros=substr($pagina,$p+1)."&go_to=$go_to";
-            //echo "param: $parametros<br>";
-        } else {
-            $pag = $pagina;
-            //$parametros="go_to=$go_to";
-        }
-        $posi = strpos($parametros, "condicion=");
-        if ($posi === false) {
-            //$cond=substr($parametros,$posi);
-        } else {
-            $cond1 = substr($parametros, $posi + 10);
-            //para asegurar que no tiene barras \
-            $cond1 = stripslashes($cond1);
-            //echo "cond1: $cond1<br>";
-            $cond2 = urlencode($cond1);
-            //echo "cond2: $cond2<br>";
-            $parametros = str_replace($cond1, $cond2, $parametros);
-        }
-        $url = ConfigGlobal::getWeb() . $path . $pag;
-        return "'" . $url . "?" . $parametros . "'";
-    }
 }

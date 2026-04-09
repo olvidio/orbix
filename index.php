@@ -372,7 +372,7 @@ $portada_html = ob_get_clean();
     ?>
 </head>
 
-<body className="otro" id="body">
+<body class="otro" id="body">
 <?php
 // Render the final HTML structure
 $renderParams = [
@@ -382,7 +382,7 @@ echo $oLayout->renderHtml($htmlComponents, $renderParams);
 ?>
 <div id="contenido_sin_menus">
     <div id="cargando">
-        <img className="mb-4" src="<?= ConfigGlobal::getWeb_icons() ?>/loading.gif" alt="cargando" width="32" height="32">
+        <img class="mb-4" src="<?= ConfigGlobal::getWeb_icons() ?>/loading.gif" alt="cargando" width="32" height="32">
         <?= _("Cargando...") ?>
     </div>
     <div id="iframe_export" style="display: none;">
@@ -395,15 +395,15 @@ echo $oLayout->renderHtml($htmlComponents, $renderParams);
             <input type="hidden" id="frm_export_ex" name="frm_export_ex"/>
         </form>
     </div>
-    <div id="left_slide" className="left-slide">
-        <span className=handle onClick="fnjs_ir_a('#ir_atras');"></span>
+    <div id="left_slide" class="left-slide">
+        <span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
     </div>
-    <div className="main" id="main" refe="<?= $pag_ini ?>">
+    <div class="main" id="main" refe="<?= $pag_ini ?>">
         <?php echo $portada_html ?>
         <script>
             $(function () {
                 fnjs_cambiar_base_link();
-                fnjs_left_side_hide(); // hide it initially
+                //fnjs_left_side_hide(); // hide it initially
             });
             /* Hay que ponerlo aquí, para asegurar que haya terminado de cargar todos los scripts. */
             $(document).ready(function () {

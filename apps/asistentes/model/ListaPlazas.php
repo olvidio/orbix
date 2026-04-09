@@ -141,7 +141,7 @@ class ListaPlazas
             if (!empty($id_ubi_casa)) {
                 $oCasaDl = $CasaDlRepository->findById($id_ubi_casa);
                 $plazas_max = !empty($plazas) ? $plazas : $oCasaDl->getPlazas();
-                $plazas_min = $oCasaDl->getPlazas_min();
+                $plazas_min = $oCasaDl?->getPlazas_min()?? '';
                 $plazas_casa .= !empty($plazas_max) ? $plazas_max : '';
                 $plazas_casa .= !empty($plazas_min) ? ' - ' . $plazas_min : '';
             }
