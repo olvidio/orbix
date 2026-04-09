@@ -82,11 +82,14 @@ Reglas:
 - [ ] ¿No hay archivos vacíos?
 - [ ] ¿Nombres de clase/método siguen convención?
 - [ ] ¿Se añadieron pruebas (unitarias o integración) para comportamiento nuevo?
+- [ ] ¿Se han ejecutado y pasado los tests existentes al modificar código?
+- [ ] ¿Se mantiene la separación estricta: nada de HTML/UI en `src/`, nada de lógica de dominio en `frontend/`?
 
 ## Tests: Convenciones y estructura
 
 ### Resumen de cobertura esperada
 - Cada módulo en `src/` debe tener su carpeta en `tests/unit/<modulo>` y `tests/integration/<modulo>`.
+- **Regla de Oro:** Todo código nuevo requiere tests nuevos. Toda modificación requiere la ejecución de los tests existentes para evitar regresiones.
 - Usar el script `shell_scripts/check_test_coverage.sh` para detectar módulos sin tests.
 - Módulos excluidos del chequeo automático: `layouts` (código de presentación legacy), `pasarela` (vacío).
 
@@ -201,7 +204,8 @@ Los nuevos módulos deben separar claramente la presentación (frontend) de la l
   - `*_update.php` - Procesar guardado/actualización de datos
   - `*_delete.php` - Procesar eliminación de datos
   - Usan casos de uso y repositorios
-  - Devuelven respuestas (texto, JSON, etc.)
+  - Devuelven respuestas puras (texto, JSON, etc.)
+  - **Prohibido:** Generar HTML, usar `frontend/...`, o interactuar directamente con la UI.
 
 ### Ejemplo práctico: módulo ubiscamas
 

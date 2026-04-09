@@ -30,6 +30,7 @@ class PgHabitacionRepositoryTest extends myTest
         $oGuardada = $this->repository->findById($id);
         $this->assertNotNull($oGuardada);
         $this->assertEquals($id, $oGuardada->getId_habitacion());
+        $this->assertEquals($oHabitacion->getObservacionesVo()?->value(), $oGuardada->getObservacionesVo()?->value());
 
         $this->repository->Eliminar($oGuardada);
     }

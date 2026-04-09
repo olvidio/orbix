@@ -63,7 +63,7 @@ class HabitacionFactory
         $oHabitacion->setPlantaVo(new PlantaText('Baja'));
         $oHabitacion->setSillon(false);
         $oHabitacion->setAdaptada(false);
-        $oHabitacion->setFumador(false);
+        $oHabitacion->setObservacionesVo(null);
         $oHabitacion->setTipoLavaboVo(new TipoLavabo(1));
         $oHabitacion->setDespacho(false);
 

@@ -64,6 +64,10 @@ if (isset($_GET['r']) && is_string($_GET['r']) && str_starts_with($_GET['r'], '/
         : '';
     if (is_string($requestPathForBootstrap)) {
         $requestRoute = preg_replace('/^\/(pruebas|orbix)/', '', $requestPathForBootstrap);
+        $esquema_bootstrap = getenv('ESQUEMA');
+        if (!empty($esquema_bootstrap)) {
+            $requestRoute = preg_replace('/^\/' . preg_quote($esquema_bootstrap, '/') . '(?=\/|$)/', '', (string)$requestRoute);
+        }
     }
 }
 $requestRoute = rtrim((string)$requestRoute, '/');
@@ -172,6 +176,12 @@ $uri = $_SERVER['REQUEST_URI'] ?? '/';
 
 // Eliminar el prefix del directori (pruebas o orbix) per al matching
 $uri = preg_replace('/^\/(pruebas|orbix)/', '', $uri);
+
+// Eliminar el esquema del path si está configurado (p.ej. /H-dlmEv/src/... → /src/...)
+$esquema_web = getenv('ESQUEMA');
+if (!empty($esquema_web)) {
+    $uri = preg_replace('/^\/' . preg_quote($esquema_web, '/') . '(?=\/|$)/', '', $uri);
+}
 
 // Eliminar query string para el matching
 if (false !== $pos = strpos($uri, '?')) {

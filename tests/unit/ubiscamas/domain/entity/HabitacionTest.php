@@ -9,6 +9,7 @@ use src\ubiscamas\domain\value_objects\HabitacionOrden;
 use src\ubiscamas\domain\value_objects\NumeroCamas;
 use src\ubiscamas\domain\value_objects\PlantaText;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
+use src\ubiscamas\domain\value_objects\HabitacionObservText;
 use Tests\myTest;
 
 class HabitacionTest extends myTest
@@ -105,10 +106,17 @@ class HabitacionTest extends myTest
         $this->assertTrue($this->habitacion->isAdaptada());
     }
 
-    public function test_set_and_get_fumador()
+    public function test_set_and_get_observaciones()
     {
-        $this->habitacion->setFumador(false);
-        $this->assertFalse($this->habitacion->isFumador());
+        $this->habitacion->setObservacionesVo('Habitación con vistas');
+        $this->assertInstanceOf(HabitacionObservText::class, $this->habitacion->getObservacionesVo());
+        $this->assertEquals('Habitación con vistas', $this->habitacion->getObservacionesVo()->value());
+    }
+
+    public function test_observaciones_is_nullable()
+    {
+        $this->habitacion->setObservacionesVo(null);
+        $this->assertNull($this->habitacion->getObservacionesVo());
     }
 
     public function test_set_and_get_tipo_lavabo()
