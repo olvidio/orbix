@@ -175,15 +175,24 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
 
 // 5) Resolver método y URI de la petición
 $httpMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$uri = $_SERVER['REQUEST_URI'] ?? '/';
 
-// Eliminar el prefix del directori (pruebas o orbix) per al matching
-$uri = preg_replace('/^\/(pruebas|orbix)/', '', $uri);
+// Si $legacyR está definido (viene de $_GET['r'] o de encontrar /src/ en REQUEST_URI),
+// ya es la ruta limpia y sin esquema → úsala directamente para FastRoute.
+// Esto evita depender de REQUEST_URI (que puede tener el esquema) o de getenv('ESQUEMA')
+// (que puede no estar disponible en PHP-FPM via proxy).
+if ($legacyR !== null) {
+    $uri = $legacyR;
+} else {
+    $uri = $_SERVER['REQUEST_URI'] ?? '/';
 
-// Eliminar el esquema del path si está configurado (p.ej. /H-dlmEv/src/... → /src/...)
-$esquema_web = getenv('ESQUEMA');
-if (!empty($esquema_web)) {
-    $uri = preg_replace('/^\/' . preg_quote($esquema_web, '/') . '(?=\/|$)/', '', $uri);
+    // Eliminar el prefix del directori (pruebas o orbix) per al matching
+    $uri = preg_replace('/^\/(pruebas|orbix)/', '', $uri);
+
+    // Eliminar el esquema del path si está configurado (p.ej. /H-dlmEv/src/... → /src/...)
+    $esquema_web = getenv('ESQUEMA') ?: ($_SERVER['ESQUEMA'] ?? '');
+    if (!empty($esquema_web)) {
+        $uri = preg_replace('/^\/' . preg_quote($esquema_web, '/') . '(?=\/|$)/', '', $uri);
+    }
 }
 
 // Eliminar query string para el matching
