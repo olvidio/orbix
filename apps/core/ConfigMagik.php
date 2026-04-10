@@ -284,7 +284,7 @@ class ConfigMagik
         } else {
             // push a message onto error-stack
             $err = "ConfigMagik::save() - Sucessfully saved to file('$path').";
-            array_push($this->ERRORS, $err);
+            //array_push($this->ERRORS, $err);
         }
         fclose($handle);
         return true;

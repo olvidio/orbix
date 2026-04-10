@@ -12,26 +12,33 @@ $DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::
 $aWhere = [
     'eliminado' => 'f',
     'perdido' => 'f',
-    'observ'=>'x',
-    'observ_ctr'=>'x',
+    'observ' => 'x',
 ];
 $aOperador = [
-    'observ'=>'IS NOT NULL',
-    'observ_ctr'=>'IS NOT NULL',
+    'observ' => 'IS NOT NULL',
 ];
 $cDocumentosObservDl = $DocumentoRepository->getDocumentos($aWhere, $aOperador);
+// poner como índice el id_doc para poder sobreescribir co la siguinete colección.
+foreach ($cDocumentosObservDl as $oDocumento) {
+    $id_doc = $oDocumento->getId_doc();
+    $cDocumentosDl[$id_doc] = $oDocumento;
+}
 // para hacer un OR
 $aWhere = [
     'eliminado' => 'f',
     'perdido' => 'f',
-    'observ_ctr'=>'x',
+    'observ_ctr' => 'x',
 ];
 $aOperador = [
-    'observ_ctr'=>'IS NOT NULL',
+    'observ_ctr' => 'IS NOT NULL',
 ];
-$cDocumentosObserCtr = $DocumentoRepository->getDocumentos($aWhere, $aOperador);
-
-$cDocumentos = $cDocumentosObservDl + $cDocumentosObserCtr;
+$cDocumentosObservCtr = $DocumentoRepository->getDocumentos($aWhere, $aOperador);
+// poner como índice el id_doc para poder sobreescribir co la siguinete colección.
+foreach ($cDocumentosObservCtr as $oDocumento) {
+    $id_doc = $oDocumento->getId_doc();
+    $cDocumentosCtr[$id_doc] = $oDocumento;
+}
+$cDocumentos = $cDocumentosDl + $cDocumentosCtr;
 
 $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
 $TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
