@@ -352,3 +352,37 @@ Para una experiencia de usuario fluida, combinamos el estado del backend con el 
 Cuando se añaden campos de estado en el frontend (ej: `<input type="hidden" name="scroll_id_...">`), estos campos deben excluirse de la validación del hash para evitar errores de "Hash mismatch".
 - Modificar `web\Hash::isValid()` para ignorar prefijos específicos (como `scroll_id_`).
 
+
+## Comunicación Frontend-Backend (AJAX y JSON)
+
+Para la comunicación asíncrona entre las vistas (`.phtml`) y los controladores de lógica del backend:
+
+### Backend (Controladores)
+- **Clase Estándar**: Usar `web\ContestarJson` para todas las respuestas JSON.
+- **Método**: `ContestarJson::enviar($error_txt, $data = 'ok')`.
+  - Si `$error_txt` no está vacío, la respuesta tendrá `success: false` y el mensaje de error en la clave `mensaje`.
+  - Si `$error_txt` está vacío, la respuesta tendrá `success: true`.
+- **Ubicación**: Se aplica en los controladores de `src/` (infraestructura) como `*_update.php` o `*_delete.php`.
+- **Importante**: No usar `echo json_encode()` ni `exit($msg)` de forma manual; delegar en `ContestarJson`.
+
+### Frontend (JavaScript)
+- **Llamada**: Usar `$.ajax` especificando siempre `dataType: 'json'`.
+- **Estructura de manejo**:
+  ```javascript
+  let request = $.ajax({
+      data: $(formulario).serialize(),
+      url: 'ruta/al/controlador.php',
+      method: 'POST',
+      dataType: 'json'
+  });
+  request.done(function (json) {
+      if (json.success !== true) {
+          alert("<?= _("respuesta") ?>: " + json.mensaje);
+      } else {
+          // Lógica de éxito (ej: refrescar, volver atrás, alert de guardado)
+          alert("<?= _("guardado") ?>");
+      }
+  });
+  ```
+- **Validaciones Previas**: Realizar validaciones de campos obligatorios en el JavaScript antes de iniciar la petición AJAX para evitar viajes innecesarios al servidor.
+

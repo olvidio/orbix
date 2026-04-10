@@ -153,9 +153,9 @@ if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //signifi
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $oPersonaDl = $PersonaDlRepository->findById($id_profesor);
         if ($oPersonaDl === null) {
-            $examinador = _("No encuentro el profesor.");
+            $examinador_pral = _("No encuentro el profesor.");
         } else {
-            $examinador =  $oPersonaDl->getTituloNombre();
+            $examinador_pral =  $oPersonaDl->getTituloNombre();
         }
     } else { // estoy actualizando la página
         if (!empty($a_sel) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
@@ -256,6 +256,9 @@ if (!empty($cTribunal)) {
         $examinador = $oActaTribunal->getExaminador();
         $examinadores[] = $examinador;
     }
+} else {
+    // por defecto pongo al profesor como examinador principal.
+    $examinadores[] = $examinador_pral;
 }
 
 $url_ajax = ConfigGlobal::getWeb() . '/apps/notas/controller/acta_ajax.php';

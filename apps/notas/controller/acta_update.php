@@ -6,6 +6,7 @@ use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\entity\Acta;
 use src\notas\domain\entity\ActaTribunal;
 use src\shared\domain\value_objects\DateTimeLocal;
+use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -43,7 +44,8 @@ if ($dl_acta != $mi_dele && $dl_acta !== "?") {
         default:
             $msg = _("No puede modificar un acta de otra dl");
     }
-    exit($msg);
+    ContestarJson::enviar($msg);
+    exit();
 }
 
 $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
@@ -61,6 +63,8 @@ if (!empty($Qf_acta)) {
 }
 $oActa = new Acta();
 $ActaDlRepository = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
+
+$error_txt = '';
 switch ($Qmod) {
     case 'nueva':
         // Si se pone un acta ya existente, modificará los datos de ésta. Hay que avisar:
@@ -82,16 +86,16 @@ switch ($Qmod) {
         $oActa->setLugar($Qlugar);
         $oActa->setObserv($Qobserv);
         if ($ActaDlRepository->Guardar($oActa) === false) {
-            echo _("hay un error, no se ha guardado");
-            echo "\n" . $ActaDlRepository->getErrorTxt();
+            $error_txt .= _("hay un error, no se ha guardado");
+            $error_txt .= "\n" . $ActaDlRepository->getErrorTxt();
         }
         break;
     case 'eliminar':
         $oActa = $ActaDlRepository->findById($Qacta);
 
         if ($ActaDlRepository->Eliminar($oActa) === false) {
-            echo _("hay un error, no se ha eliminado");
-            echo "\n" . $ActaDlRepository->getErrorTxt();
+            $error_txt .= _("hay un error, no se ha eliminado");
+            $error_txt .= "\n" . $ActaDlRepository->getErrorTxt();
         }
         break;
     case 'modificar':
@@ -107,8 +111,8 @@ switch ($Qmod) {
         $oActa->setLugar($Qlugar);
         $oActa->setObserv($Qobserv);
         if ($ActaDlRepository->Guardar($oActa) === false) {
-            echo _("hay un error, no se ha guardado");
-            echo "\n" . $ActaDlRepository->getErrorTxt();
+            $error_txt .= _("hay un error, no se ha guardado");
+            $error_txt .= "\n" . $ActaDlRepository->getErrorTxt();
         }
         break;
 }
@@ -118,8 +122,8 @@ $ActaTribunalDlRepository = $GLOBALS['container']->get(ActaTribunalDlRepositoryI
 $cActaTribunal = $ActaTribunalDlRepository->getActasTribunales(['acta' => $Qacta]);
 foreach ($cActaTribunal as $oActaTribunal) {
     if ($ActaTribunalDlRepository->Eliminar($oActaTribunal) === false) {
-        echo _("hay un error, no se ha eliminado");
-        echo "\n" . $ActaTribunalDlRepository->getErrorTxt();
+        $error_txt .= _("hay un error, no se ha eliminado");
+        $error_txt .= "\n" . $ActaTribunalDlRepository->getErrorTxt();
     }
 }
 
@@ -139,8 +143,10 @@ if (!empty($Qexaminadores)) {
         $oActaTribunal->setExaminador($examinador);
         $oActaTribunal->setOrden($i);
         if ($ActaTribunalDlRepository->Guardar($oActaTribunal) === false) {
-            echo _("hay un error, no se ha guardado");
-            echo "\n" . $ActaTribunalDlRepository->getErrorTxt();
+            $error_txt .= _("hay un error, no se ha guardado");
+            $error_txt .= "\n" . $ActaTribunalDlRepository->getErrorTxt();
         }
     }
 }
+
+ContestarJson::enviar($error_txt, 'ok');

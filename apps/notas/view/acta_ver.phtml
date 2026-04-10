@@ -31,44 +31,29 @@
         }
 
         fnjs_guardar_acta = function (formulario) {
+            if ($('#f_acta').val() === '') {
+                alert("<?= _("Debe llenar la fecha del acta") ?>");
+                return;
+            }
             var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
             if (rr === 'ok') {
-                $(formulario).attr('action', 'apps/notas/controller/acta_update.php');
-                <?php if (!empty($notas) && $notas != 'nuevo') { ?>
-                $(formulario).one("submit", function () {
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type: 'post',
-                        data: $(this).serialize()
-                    })
-                        .done(function (rta_txt) {
-                            if (rta_txt !== '' && rta_txt !== '\\n') {
-                                alert('<?= _("respuesta") ?>: ' + rta_txt);
-                            }
-                        });
-                    return false;
+                let request = $.ajax({
+                    data: $(formulario).serialize(),
+                    url: 'apps/notas/controller/acta_update.php',
+                    method: 'POST',
+                    dataType: 'json'
                 });
-                $(formulario).trigger("submit");
-                $(formulario).off();
-                <?php } else { ?>
-                $(formulario).one("submit", function () {
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type: 'post',
-                        data: $(this).serialize()
-                    })
-                        .done(function (rta_txt) {
-                            if (rta_txt !== '' && rta_txt !== '\\n') {
-                                alert('<?= _("respuesta") ?>: ' + rta_txt);
-                            } else {
-                                <?= $oPosicion->js_atras(1); ?>
-                            }
-                        });
-                    return false;
+                request.done(function (json) {
+                    if (json.success !== true) {
+                        alert("<?= _("respuesta") ?>: " + json.mensaje);
+                    } else {
+                        <?php if (!empty($notas) && $notas != 'nuevo') { ?>
+                        alert("<?= _("guardado") ?>");
+                        <?php } else { ?>
+                        <?= $oPosicion->js_atras(1); ?>
+                        <?php } ?>
+                    }
                 });
-                $(formulario).trigger("submit");
-                $(formulario).off();
-                <?php } ?>
             }
         }
     </script>

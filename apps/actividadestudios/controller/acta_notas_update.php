@@ -5,6 +5,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\entity\PersonaNota;
@@ -60,8 +61,6 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
         $aWhere = [];
         $aOperador = [];
         $id_nom = $oMatricula->getId_nom();
-        // para saber a que schema pertenece la persona, utilizo el de la matrícula
-        $id_schema = $oMatricula->getId_schema();
         $id_situacion = $oMatricula->getId_situacion();
         $preceptor = $oMatricula->isPreceptor();
         $nota_num = $oMatricula->getNota_num();
@@ -185,7 +184,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             }
         } else {
             $oAsignatura = $AsignaturaRepository->findById($Qid_asignatura);
-            $id_nivel = $oAsignatura->getId_nivel();
+            $id_nivel = $oAsignatura->getIdNivelVo()->value();
         }
 
         //compruebo que no existe ya la nota:
@@ -240,7 +239,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
 
 
             $oPersonaNota = new PersonaNota();
-            $oPersonaNota->setIdNivelVo($id_nivel);
+            $oPersonaNota->setIdNivelVo(NivelId::fromNullableInt($id_nivel));
             $oPersonaNota->setIdAsignaturaVo($Qid_asignatura);
             $oPersonaNota->setId_nom($id_nom);
             $oPersonaNota->setIdSituacionVo($id_situacion);
