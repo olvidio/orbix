@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use notas\model\AsignaturasPendientes;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use core\ViewPhtml;use notas\model\AsignaturasPendientes;
+use src\actividades\domain\value_objects\NivelStgrId;use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\services\TelecoPersonaService;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -43,7 +43,6 @@ $Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
 $Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
 
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
-$Qlista = is_true($Qlista)? TRUE : FALSE;
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -52,13 +51,12 @@ if (isset($_POST['stack'])) {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar($stack);
         }
     }
 }
 
-if (empty($Qpersonas_n) && empty($Qpersonas_agd)) {
+if (!is_true($Qpersonas_n) && !is_true($Qpersonas_agd)) {
     exit (_("Debe marcar un grupo de personas (n o agd)"));
 }
 //miro las condiciones.
@@ -66,45 +64,47 @@ if ($Qb_c === 'b') {
     $curso = "bienio";
     $curso_txt = "bienio";
 } else {
+    $c1 = is_true($Qc1);
+    $c2 = is_true($Qc2);
     // En caso no tener valores, pongo los dos.
     if (empty($Qc1) && empty($Qc2)) {
-        $Qc1 = TRUE;
-        $Qc2 = TRUE;
+        $c1 = true;
+        $c2 = true;
     }
-    if ($Qc1 && $Qc2) {
+    if ($c1 && $c2) {
         $curso = "cuadrienio";
         $curso_txt = "cuadrienio";
-    } elseif (!empty($Qc2)) {
+    } elseif ($c2) {
         $curso = "c2";
         $curso_txt = "cuadrienio años II-IV";
-    } elseif (!empty($Qc1)) {
+    } elseif ($c1) {
         $curso = "c1";
         $curso_txt = "cuadrienio año I";
     }
 }
-if (!empty($Qpersonas_n)) {
+if (is_true($Qpersonas_n)) {
     $personas = "p_numerarios";
     $gente = "numerarios";
     $obj_pau = 'PersonaN';
 }
-if (!empty($Qpersonas_agd)) {
+if (is_true($Qpersonas_agd)) {
     $personas = "p_agregados";
     $gente = "agregados";
     $obj_pau = 'PersonaAgd';
 }
-if (!empty($Qpersonas_n) && !empty($Qpersonas_agd)) {
+if (is_true($Qpersonas_n) && is_true($Qpersonas_agd)) {
     $personas = "personas_dl";
     $gente = "numerarios y agregados";
     $obj_pau = 'PersonaDl';
 }
 
+$lista = is_true($Qlista)? TRUE : FALSE;
 $Pendientes = new AsignaturasPendientes($personas);
-$Pendientes->setLista($Qlista);
+$Pendientes->setLista($lista);
 $aId_nom = $Pendientes->personasQueLesFalta($Qnumero, $curso);
 
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
-*/
 $aGoBack = array(
         'numero' => $Qnumero,
         'b_c' => $Qb_c,
@@ -113,7 +113,8 @@ $aGoBack = array(
         'lista' => $Qlista,
         'personas_n' => $Qpersonas_n,
         'personas_agd' => $Qpersonas_agd);
-$oPosicion->setParametros($aGoBack, 1);
+//$oPosicion->setParametros($aGoBack, 1);
+*/
 
 $a_botones = array(array('txt' => _("modificar stgr"), 'click' => "fnjs_modificar(\"#seleccionados\")"),
         array('txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")")
@@ -151,12 +152,15 @@ try {
     echo "No existe la clase de la persona";
     die();
 }
+
+$a_NivelStgr = NivelStgrId::getArrayNivelStgr();
 foreach ($aId_nom as $id_nom => $aAsignaturas) {
     $i++;
     $oPersona = $repoPersona->findById($id_nom);
     $id_tabla = $oPersona->getId_tabla();
-    $stgr = $oPersona->getNivel_stgr();
     $nom = $oPersona->getPrefApellidosNombre();
+    $nivel_stgr = $oPersona->getNivelStgrVo()->value();
+    $stgr = $a_NivelStgr[$nivel_stgr];
     // El ctr
     // En el caso cr-stgr, interesa la dl
     if (ConfigGlobal::mi_ambito() === 'rstgr') {
@@ -185,7 +189,7 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
     $condicion_2 = urlencode($condicion_2);
     $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(array('id_nom' => $id_nom, 'obj_pau' => $obj_pau)));
 
-    if (is_true($Qlista)) { //Hacer un listado de las asignaturas que le faltan
+    if ($lista) { //Hacer un listado de las asignaturas que le faltan
         $as = '';
         foreach ($aAsignaturas as $asig) {
             $as .= empty($as) ? '' : " / ";
@@ -208,50 +212,28 @@ if (!empty($a_valores)) {
     if (isset($Qid_sel) && !empty($Qid_sel)) {
         $a_valores['select'] = $Qid_sel;
     }
-    if (isset($Qscroll_id) && !empty($Qscroll_id)) {
-        $a_valores['scroll_id'] = $Qscroll_id;
-    }
 }
 
 
 $oHash = new Hash();
-$oHash->setCamposForm('sel!scroll_id');
+$oHash->setCamposForm('sel');
 $a_camposHidden = array(
         'pau' => 'p',
         'obj_pau' => $obj_pau,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-/* ---------------------------------- html --------------------------------------- */
-?>
-<script>
-    fnjs_tesera = function (formulario) {
-        rta = fnjs_solo_uno(formulario);
-        if (rta == 1) {
-            $(formulario).attr('action', "apps/notas/controller/tessera_ver.php");
-            fnjs_enviar_formulario(formulario);
-        }
-    }
+$oTabla = new Lista();
+$oTabla->setId_tabla('asig_faltan_select');
+$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setBotones($a_botones);
+$oTabla->setDatos($a_valores);
 
-    fnjs_modificar = function (formulario) {
-        rta = fnjs_solo_uno(formulario);
-        if (rta == 1) {
-            $(formulario).attr('action', "apps/personas/controller/stgr_cambio.php");
-            fnjs_enviar_formulario(formulario);
-        }
-    }
+$a_campos = ['oPosicion' => $oPosicion,
+    'oHash' => $oHash,
+    'titulo' => $titulo,
+    'oTabla' => $oTabla,
+];
 
-</script>
-<?= $oPosicion->mostrar_left_slide(1) ?>
-<h2 class=titulo><?= $titulo ?></h2>
-<form id='seleccionados' name='seleccionados' action='' method='post'>
-    <?= $oHash->getCamposHtml(); ?>
-    <?php
-    $oTabla = new Lista();
-    $oTabla->setId_tabla('asig_faltan_select');
-    $oTabla->setCabeceras($a_cabeceras);
-    $oTabla->setBotones($a_botones);
-    $oTabla->setDatos($a_valores);
-    echo $oTabla->mostrar_tabla();
-    ?>
-</form>
+$oView = new ViewPhtml('notas\controller');
+$oView->renderizar('asig_faltan_select.phtml', $a_campos);

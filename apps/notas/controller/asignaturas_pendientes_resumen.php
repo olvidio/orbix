@@ -108,7 +108,7 @@ foreach ($cPersonas as $oPersona) {
         $id_nivel = $oPersonaNota->getIdNivelVo()->value();
         $id_situacion = $oPersonaNota->getId_situacion();
 
-        if ($a_Asig_isActive[$id_asignatura] !== 't') continue;
+        if ($a_Asig_isActive[$id_asignatura] !== true) { continue; }
 
         if ($id_asignatura > 3000) {
             $id_nivel_asig = $id_nivel;

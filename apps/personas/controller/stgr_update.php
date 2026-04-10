@@ -1,6 +1,8 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 use src\shared\infrastructure\ProvidesRepositories;
+use web\ContestarJson;
+
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -26,9 +28,11 @@ $entityTypeByIdTabla = [
 ];
 
 if (!isset($entityTypeByIdTabla[$Qid_tabla])) {
-    echo "No existe la clase de la persona";
-    die();
+    $error_txt = "No existe la clase de la persona";
+    ContestarJson::enviar($error_txt);
+    exit();
 }
+
 
 $repositoryProvider = new class {
     use ProvidesRepositories;
@@ -42,16 +46,20 @@ $repositoryProvider = new class {
 try {
     $repository = $repositoryProvider->get($entityTypeByIdTabla[$Qid_tabla]);
 } catch (\InvalidArgumentException) {
-    echo "No existe la clase de la persona";
-    die();
+    $error_txt = "No existe la clase de la persona";
+    ContestarJson::enviar($error_txt);
+    exit();
 }
+
 
 $oPersona = $repository->findById($Qid_nom);
 
 $oPersona->setNivel_stgr($Qnivel_stgr);
+$error_txt = '';
 if ($repository->Guardar($oPersona) === false) {
-    echo _("hay un error, no se ha guardado");
-    echo "\n" . $oPersona->getErrorTxt();
+    $error_txt = _("hay un error, no se ha guardado");
+    $error_txt .= "\n" . $oPersona->getErrorTxt();
 }
 
-echo $oPosicion->go_atras(1);
+ContestarJson::enviar($error_txt, 'ok');
+

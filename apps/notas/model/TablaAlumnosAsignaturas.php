@@ -2,6 +2,7 @@
 
 namespace notas\model;
 
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -199,10 +200,9 @@ class TablaAlumnosAsignaturas
         $aWhere = [];
         $aOperador = [];
         $aWhere['situacion'] = 'A';
-        $aWhere['nivel_stgr'] = 'b|c1|c2';
+        $aWhere['nivel_stgr'] = NivelStgrId::B.",".NivelStgrId::C1.",".NivelStgrId::C2.",".NivelStgrId::BC;
+        $aOperador['nivel_stgr'] = 'IN';
         $aWhere['_ordre'] = 'nivel_stgr,apellido1,nom';
-
-        $aOperador['nivel_stgr'] = '~';
 
         $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
         $cPersonas = $PersonaDlRepository->getPersonas($aWhere, $aOperador);

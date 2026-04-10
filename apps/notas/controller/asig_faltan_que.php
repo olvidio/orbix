@@ -14,6 +14,7 @@ use core\ViewPhtml;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
+use function core\is_true;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -23,23 +24,23 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
+
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar($stack);
         }
     }
 }
 
-$Qnumero = (string)filter_input(INPUT_POST, 'numero');
+$Qnumero = (int)filter_input(INPUT_POST, 'numero');
 $Qb_c = (string)filter_input(INPUT_POST, 'b_c');
-if ($Qb_c == 'b') {
+if ($Qb_c === 'b') {
     $chk_b = 'checked';
     $chk_c = '';
 } else {
@@ -47,19 +48,19 @@ if ($Qb_c == 'b') {
     $chk_c = 'checked';
 }
 $Qc1 = (string)filter_input(INPUT_POST, 'c1');
-$chk_c1 = empty($Qc1) ? '' : 'checked';
+$chk_c1 = is_true($Qc1) ? 'checked' : '';
 $Qc2 = (string)filter_input(INPUT_POST, 'c2');
-$chk_c2 = empty($Qc2) ? '' : 'checked';
+$chk_c2 = is_true($Qc2) ? 'checked' : '';
 $Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
-$chk_n = empty($Qpersonas_n) ? '' : 'checked';
+$chk_n = is_true($Qpersonas_n) ? 'checked' : '';
 $Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
-$chk_agd = empty($Qpersonas_agd) ? '' : 'checked';
+$chk_agd = is_true($Qpersonas_agd) ? 'checked' : '';
 
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
 
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
-$chk_lista = empty($Qlista) ? '' : 'checked';
+$chk_lista = is_true($Qlista) ? 'checked' : '';
 
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $aOpciones = $AsignaturaRepository->getArrayAsignaturasConSeparador();
