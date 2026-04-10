@@ -103,19 +103,6 @@ $Pendientes = new AsignaturasPendientes($personas);
 $Pendientes->setLista($lista);
 $aId_nom = $Pendientes->personasQueLesFalta($Qnumero, $curso);
 
-/*
-* Defino un array con los datos actuales, para saber volver después de navegar un rato
-$aGoBack = array(
-        'numero' => $Qnumero,
-        'b_c' => $Qb_c,
-        'c1' => $Qc1,
-        'c2' => $Qc2,
-        'lista' => $Qlista,
-        'personas_n' => $Qpersonas_n,
-        'personas_agd' => $Qpersonas_agd);
-//$oPosicion->setParametros($aGoBack, 1);
-*/
-
 $a_botones = array(array('txt' => _("modificar stgr"), 'click' => "fnjs_modificar(\"#seleccionados\")"),
         array('txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")")
 );

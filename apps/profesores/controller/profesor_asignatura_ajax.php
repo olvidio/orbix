@@ -4,6 +4,7 @@ use core\ConfigGlobal;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
+use src\personas\domain\services\TelecoPersonaService;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\services\ProfesorAsignaturaService;
 use web\Lista;
@@ -66,26 +67,10 @@ foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
         $txt_docencia .= $curso;
     }
     // Telecos
-    $cTelecoPersona = $TelecoPersonaDlRepository->getTelecosPersona(array('id_nom' => $id_nom));
-    $telfs = '';
-    $mails = '';
-    foreach ($cTelecoPersona as $oTelecoPersona) {
-        $tipo = $oTelecoPersona->getTipo_teleco();
-        switch ($tipo) {
-            case 'mail':
-            case 'e-mail':
-                $mails .= $oTelecoPersona->getNum_teleco();
-                break;
-            case 'móvil':
-            case 'movil':
-            case 'telf':
-                $telfs .= $oTelecoPersona->getNum_teleco();
-                break;
-            default:
-                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
-                exit ($err_switch);
-        }
-    }
+    $telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
+    $mails = $telecoService->getTelecosPorTipo($id_nom, 'e-mail', ' / ');
+    $telfs = $telecoService->getTelecosPorTipo($id_nom, 'telf', " / ", "*");
+    $telfs .= $telecoService->getTelecosPorTipo($id_nom, 'móvil', " / ", "*");
 
     $pagina = '';
 

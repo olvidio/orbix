@@ -1,0 +1,23 @@
+<script>
+fnjs_tesera = function (formulario) {
+    rta = fnjs_solo_uno(formulario);
+    if (rta == 1) {
+        $(formulario).attr('action', "apps/notas/controller/tessera_ver.php");
+        fnjs_enviar_formulario(formulario);
+    }
+}
+
+fnjs_modificar = function (formulario) {
+    rta = fnjs_solo_uno(formulario);
+    if (rta == 1) {
+        $(formulario).attr('action', "apps/personas/controller/stgr_cambio.php");
+        fnjs_enviar_formulario(formulario);
+    }
+}
+</script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
+<h2 class="titulo" > <?= $titulo ?> </h2>
+<form id='seleccionados' name='seleccionados' action='' method='post'>
+    <?= $oHash->getCamposHtml() ?>
+    <?= $oTabla->mostrar_tabla() ?>
+</form>

@@ -1,13 +1,16 @@
 <?php
 
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use notas\model\AsignaturasPendientes;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
+use function core\is_true;
 
 /**
  * Esta página muestra una tabla con las personas que cumplen con la condicion.
@@ -31,13 +34,12 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
+$Qid_asignatura = (int)filter_input(INPUT_POST, 'id_asignatura');
 $Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
 $Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
 $Qb_c = (string)filter_input(INPUT_POST, 'b_c');
 $Qc1 = (string)filter_input(INPUT_POST, 'c1');
 $Qc2 = (string)filter_input(INPUT_POST, 'c2');
-$Qlista = (string)filter_input(INPUT_POST, 'lista');
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
@@ -47,7 +49,6 @@ if (isset($_POST['stack'])) {
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar($stack);
         }
     }
@@ -57,38 +58,39 @@ if (empty($Qpersonas_n) && empty($Qpersonas_agd)) {
     exit (_("Debe marcar un grupo de personas (n o agd)"));
 }
 //miro las condiciones.
-if ($Qb_c == 'b') {
+if ($Qb_c === 'b') {
     $curso = "bienio";
     $curso_txt = "bienio";
 } else {
+    $c1 = is_true($Qc1);
+    $c2 = is_true($Qc2);
     // En caso no tener valores, pongo los dos.
     if (empty($Qc1) && empty($Qc2)) {
-        $Qc1 = TRUE;
-        $Qc2 = TRUE;
+        $c1 = true;
+        $c2 = true;
     }
-    if ($Qc1 && $Qc2) {
+    if ($c1 && $c2) {
         $curso = "cuadrienio";
         $curso_txt = "cuadrienio";
-    } elseif (!empty($Qc2)) {
+    } elseif ($c2) {
         $curso = "c2";
         $curso_txt = "cuadrienio años II-IV";
-    } elseif (!empty($Qc1)) {
+    } elseif ($c1) {
         $curso = "c1";
         $curso_txt = "cuadrienio año I";
     }
 }
-
-if (!empty($Qpersonas_n)) {
+if (is_true($Qpersonas_n)) {
     $personas = "p_numerarios";
     $gente = "numerarios";
     $obj_pau = 'PersonaN';
 }
-if (!empty($Qpersonas_agd)) {
+if (is_true($Qpersonas_agd)) {
     $personas = "p_agregados";
     $gente = "agregados";
     $obj_pau = 'PersonaAgd';
 }
-if (!empty($Qpersonas_n) && !empty($Qpersonas_agd)) {
+if (is_true($Qpersonas_n) && is_true($Qpersonas_agd)) {
     $personas = "personas_dl";
     $gente = "numerarios y agregados";
     $obj_pau = 'PersonaDl';
@@ -107,29 +109,16 @@ $Pendientes->setLista(true);
 
 $aId_nom = $Pendientes->personasQueLesFaltaAsignatura($Qid_asignatura, $curso, $id_tipo_asignatura);
 
-/*
-* Defino un array con los datos actuales, para saber volver después de navegar un rato
-*/
-$aGoBack = array(
-        'b_c' => $Qb_c,
-        'c1' => $Qc1,
-        'c2' => $Qc2,
-        'lista' => $Qlista,
-        'id_asignatura' => $Qid_asignatura,
-        'personas_n' => $Qpersonas_n,
-        'personas_agd' => $Qpersonas_agd);
-$oPosicion->setParametros($aGoBack, 1);
-
 $a_botones = array(array('txt' => _("modificar stgr"), 'click' => "fnjs_modificar(\"#seleccionados\")"),
-        array('txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")")
+    array('txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")")
 );
 
 $a_cabeceras = array(ucfirst(_("tipo")),
-        array('name' => _("nombre y apellidos"), 'formatter' => 'clickFormatter'),
-        ucfirst(_("centro")),
-        ucfirst(_("stgr")),
-        array('name' => _("telf."), 'width' => 80),
-        array('name' => _("mails"), 'width' => 100),
+    array('name' => _("nombre y apellidos"), 'formatter' => 'clickFormatter'),
+    ucfirst(_("centro")),
+    ucfirst(_("stgr")),
+    array('name' => _("telf."), 'width' => 80),
+    array('name' => _("mails"), 'width' => 100),
 );
 
 $i = 0;
@@ -137,13 +126,13 @@ $a_valores = [];
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
-if (isset($Qscroll_id) && !empty($Qscroll_id)) {
-    $a_valores['scroll_id'] = $Qscroll_id;
-}
-$obj = 'personas\\model\\entity\\' . $obj_pau;
+$PersonaFinderService = $GLOBALS['container']->get(PersonaFinderService::class);
 foreach ($aId_nom as $id_nom => $aAsignaturas) {
+    $oPersona = $PersonaFinderService->findPersonaEnDl($id_nom);
+    if ($oPersona === null) {
+        continue;
+    }
     $i++;
-    $oPersona = new $obj($id_nom);
     $id_tabla = $oPersona->getId_tabla();
     $stgr = $oPersona->getNivel_stgr();
     $nom = $oPersona->getPrefApellidosNombre();
@@ -169,7 +158,6 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
         $telfs .= $telfs_fijo ?? '';
         $telfs .= $telfs_movil ?? '';
     }
-    $mails = '';
     $mails = $telecoService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", FALSE);
 
     $condicion_2 = "Where id_nom='" . $id_nom . "'";
@@ -188,51 +176,29 @@ if (!empty($a_valores)) {
     if (isset($Qid_sel) && !empty($Qid_sel)) {
         $a_valores['select'] = $Qid_sel;
     }
-    if (isset($Qscroll_id) && !empty($Qscroll_id)) {
-        $a_valores['scroll_id'] = $Qscroll_id;
-    }
 }
 
 $titulo = sprintf(_("lista de %s de %s a los que falta la asignatura %s (%s)"), $gente, $curso_txt, $nom_asignatura, $i);
 
 $oHash = new Hash();
-$oHash->setCamposForm('sel!scroll_id');
+$oHash->setCamposForm('sel');
 $a_camposHidden = array(
-        'pau' => 'p',
-        'obj_pau' => $obj_pau
+    'pau' => 'p',
+    'obj_pau' => $obj_pau
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-/* ---------------------------------- html --------------------------------------- */
-?>
-<script>
-    fnjs_tesera = function (formulario) {
-        rta = fnjs_solo_uno(formulario);
-        if (rta == 1) {
-            $(formulario).attr('action', "apps/notas/controller/tessera_ver.php");
-            fnjs_enviar_formulario(formulario);
-        }
-    }
+$oTabla = new Lista();
+$oTabla->setId_tabla('asig_faltan_personas_select');
+$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setBotones($a_botones);
+$oTabla->setDatos($a_valores);
 
-    fnjs_modificar = function (formulario) {
-        rta = fnjs_solo_uno(formulario);
-        if (rta == 1) {
-            $(formulario).attr('action', "apps/personas/controller/stgr_cambio.php");
-            fnjs_enviar_formulario(formulario);
-        }
-    }
+$a_campos = ['oPosicion' => $oPosicion,
+    'oHash' => $oHash,
+    'titulo' => $titulo,
+    'oTabla' => $oTabla,
+];
 
-</script>
-<?= $oPosicion->mostrar_left_slide(1) ?>
-<h2 class=titulo><?= $titulo ?></h2>
-<form id='seleccionados' name='seleccionados' action='' method='post'>
-    <?= $oHash->getCamposHtml(); ?>
-    <?php
-    $oTabla = new Lista();
-    $oTabla->setId_tabla('asig_faltan_personas_select');
-    $oTabla->setCabeceras($a_cabeceras);
-    $oTabla->setBotones($a_botones);
-    $oTabla->setDatos($a_valores);
-    echo $oTabla->mostrar_tabla();
-    ?>
-</form>
+$oView = new ViewPhtml('notas\controller');
+$oView->renderizar('asig_faltan_personas_select.phtml', $a_campos);
