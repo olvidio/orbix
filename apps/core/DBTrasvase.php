@@ -342,7 +342,7 @@ class DBTrasvase extends DBAbstract
                 $RelacionCasaDlDireccion = $GLOBALS['container']->get(RelacionCasaDlDireccionRepositoryInterface::class);
                 $RelacionCasaExDireccion = $GLOBALS['container']->get(RelacionCasaExDireccionRepositoryInterface::class);
                 foreach ($cCasasEx as $oCasaEx) {
-                    $aDades = $oCasaEx->getTot();
+                    $aDades = $oCasaEx->toArrayForDatabase();
                     $oCasaDl = Casa::fromArray($aDades);
                     // actualizar el tipo_ubi.
                     $oCasaDl->setTipo_casa('cdcdl');
@@ -481,7 +481,7 @@ class DBTrasvase extends DBAbstract
                 $RelacionCentroDlDireccion = $GLOBALS['container']->get(RelacionCentroDlDireccionRepositoryInterface::class);
                 $RelacionCentroExDireccion = $GLOBALS['container']->get(RelacionCentroExDireccionRepositoryInterface::class);
                 foreach ($cCentroEx as $oCentroEx) {
-                    $aDades = $oCentroEx->getTot();
+                    $aDades = $oCentroEx->toArrayForDatabase();
                     // actualizar el tipo_ubi.
                     $aDades['tipo_ubi'] = 'ctrdl';
                     // Ahora uso la nomenclatura para dl tipo 'crA'
@@ -568,6 +568,19 @@ class DBTrasvase extends DBAbstract
                 $this->serror = $error;
                 return false;
             case 'dl2resto':
+                // Si ya se trasladó/borró previamente, evitamos fallar al reintentar.
+                $sql = "SELECT to_regclass('\"$esquema\".u_centros_dl') AS tabla";
+                if (($oDblSt = $oDbl->query($sql)) === false) {
+                    $sClauError = 'DBTrasvase.ctr.execute';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+                $aDades = $oDblSt->fetch(PDO::FETCH_ASSOC);
+                if (empty($aDades['tabla'])) {
+                    // No hay nada que trasladar en sv/sf para ese esquema.
+                    return true;
+                }
+
                 // actualizar el tipo_ubi.
                 $sql = "UPDATE \"$esquema\".u_centros_dl SET tipo_ubi='ctrex'";
                 if ($oDbl->query($sql) === false) {

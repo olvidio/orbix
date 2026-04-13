@@ -95,6 +95,7 @@ abstract class DBAbstract
 
         switch ($db) {
             case 'sfsv-e_select':
+                $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
                 // conectar con DB sv-e_select:
                 $oConfigDB = new ConfigDB('importar');
                 $config = $oConfigDB->getEsquema('publicv-e_select');
@@ -158,6 +159,7 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
             case 'sfsv':
+                $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
                 /*
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBP'];
@@ -186,6 +188,7 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDB'];
                 break;
             case 'sfsv-e':
+                $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
                 /*
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBEP'];
@@ -229,6 +232,7 @@ abstract class DBAbstract
 
         switch ($db) {
             case 'sfsv-e_select':
+                $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
                 // conectar con DB sv-e_select:
                 $oConfigDB = new ConfigDB('importar');
                 $config = $oConfigDB->getEsquema('publicv-e_select');
@@ -245,7 +249,7 @@ abstract class DBAbstract
                 }
                 $this->user_orbix = 'orbix' . $vf;
                 $a_sql = [];
-                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN BEGIN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; EXCEPTION WHEN insufficient_privilege THEN NULL; END; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
@@ -266,7 +270,7 @@ abstract class DBAbstract
                 $this->user_orbix = 'orbix';
 
                 $a_sql = [];
-                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN BEGIN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; EXCEPTION WHEN insufficient_privilege THEN NULL; END; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
@@ -292,7 +296,7 @@ abstract class DBAbstract
                 $this->user_orbix = 'orbix';
 
                 $a_sql = [];
-                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN BEGIN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; EXCEPTION WHEN insufficient_privilege THEN NULL; END; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
@@ -303,6 +307,7 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
             case 'sfsv':
+                $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
                 /*
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBP'];
@@ -325,7 +330,7 @@ abstract class DBAbstract
 
 
                 $a_sql = [];
-                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN BEGIN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; EXCEPTION WHEN insufficient_privilege THEN NULL; END; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
@@ -336,6 +341,7 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDB'];
                 break;
             case 'sfsv-e':
+                $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
                 /*
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBEP'];
@@ -356,7 +362,7 @@ abstract class DBAbstract
                 }
                 $this->user_orbix = 'orbix' . $vf;
                 $a_sql = [];
-                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN BEGIN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; EXCEPTION WHEN insufficient_privilege THEN NULL; END; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
                 $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
@@ -394,6 +400,7 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
             case 'sfsv':
+                $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
                 // conectar con DB
                 $oConfigDB = new ConfigDB('importar');
                 $config = $oConfigDB->getEsquema('publicv');
@@ -435,6 +442,7 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
             case 'sfsv':
+                $role_target = (empty($this->role_vf)) ? $role_target : str_replace('"', '', $this->role_vf);
                 // conectar con DB
                 $oConfigDB = new ConfigDB('importar');
                 $config = $oConfigDB->getEsquema('publicv');

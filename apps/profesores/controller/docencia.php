@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\services\ProfesorStgrService;
@@ -47,7 +48,7 @@ foreach ($a_nomProfesor as $id_nom => $aClave) {
     $ap_nom = $aClave['ap_nom'];
     $dl = $aClave['dl'];
     $cProfesorDocenciaStgr = $ProfesorDocenciaStgrRepository->getProfesorDocenciasStgr(['id_nom' => $id_nom]);
-    $a_tipos_docendia = $ProfesorDocenciaStgrRepository->getArrayTiposDocencia();
+    $a_tipos_docendia = TipoActividadAsignatura::getTiposActividad();
     foreach ($cProfesorDocenciaStgr as $oProfesorDocenciaStgr) {
         $p++;
         $id_asignatura = $oProfesorDocenciaStgr->getId_asignatura();

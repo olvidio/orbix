@@ -257,6 +257,8 @@ class DBRol
     {
         $oDbl = $this->getoDbl();
 
+        $this->limpiarDependenciasUsuario();
+
         $sql = "DROP ROLE IF EXISTS \"$this->sUser\";";
 
         if (($oDblSt = $oDbl->prepare($sql)) === false) {
@@ -264,10 +266,44 @@ class DBRol
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         } else {
-            if ($oDblSt->execute() === false) {
+            try {
+                $ok = $oDblSt->execute();
+            } catch (\PDOException $e) {
+                $sClauError = 'DBRol.eliminar.execute';
+                $sClauError .= ' ' . $e->errorInfo[2];
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            if ($ok === false) {
                 $sClauError = 'DBRol.eliminar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
                 return false;
+            }
+        }
+    }
+
+    private function limpiarDependenciasUsuario(): void
+    {
+        $esquemas = ['public', 'publicv', 'publicf', 'publicv-e'];
+        $oConfigDB = new ConfigDB('importar');
+
+        foreach ($esquemas as $esquema) {
+            try {
+                $config = $oConfigDB->getEsquema($esquema);
+            } catch (\RuntimeException $e) {
+                continue;
+            }
+
+            $oConexion = new DBConnection($config);
+            $oDbl = $oConexion->getPDO();
+
+            $sqlDropOwned = "DROP OWNED BY \"$this->sUser\" CASCADE;";
+            if (($oDblSt = $oDbl->prepare($sqlDropOwned)) !== false) {
+                try {
+                    $oDblSt->execute();
+                } catch (\PDOException $e) {
+                    // Best effort: si falla en alguna db, intentamos con las demás.
+                }
             }
         }
     }
