@@ -87,6 +87,12 @@ abstract class DBAbstract
      */
     protected function delPermisoGlobal($db)
     {
+        if (empty($this->role) && empty($this->role_vf)) {
+            return;
+        }
+        $role_target = (empty($this->role)) ? $this->role_vf : $this->role;
+        $role_target = str_replace('"', '', $role_target);
+
         switch ($db) {
             case 'sfsv-e_select':
                 // conectar con DB sv-e_select:
@@ -103,7 +109,7 @@ abstract class DBAbstract
                 }
                 $this->user_orbix = 'orbix' . $vf;
                 $a_sql = [];
-                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'REVOKE \"$this->user_orbix\" FROM \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -121,7 +127,7 @@ abstract class DBAbstract
                 $this->user_orbix = 'orbix';
 
                 $a_sql = [];
-                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'REVOKE \"$this->user_orbix\" FROM \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -133,16 +139,18 @@ abstract class DBAbstract
                 // Conexión Comun public, para entrar como usuario orbix.
                 $this->oDbl = $GLOBALS['oDBPC'];
                 */
+
                 // conectar con DB comun:
                 $oConfigDB = new ConfigDB('importar'); //de la database comun
                 $config = $oConfigDB->getEsquema('public'); //de la database comun
                 $oConexion = new DBConnection($config);
                 $this->oDbl = $oConexion->getPDO();
 
-                // Dar permisos al role H-dlb de orbix (para poder aceder a global)
+                // Dar permisos al role H-dlb de orbix (para poder acceder a global)
                 $this->user_orbix = 'orbix';
+
                 $a_sql = [];
-                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'REVOKE \"$this->user_orbix\" FROM \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -154,13 +162,13 @@ abstract class DBAbstract
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBP'];
                 */
-                // conectar con DB comun:
+                // conectar con DB sv-e:
                 $oConfigDB = new ConfigDB('importar'); //de la database comun
                 $config = $oConfigDB->getEsquema('publicv'); //de la database comun
                 $oConexion = new DBConnection($config);
                 $this->oDbl = $oConexion->getPDO();
 
-                // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)
+                // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
                 } else {
@@ -168,8 +176,9 @@ abstract class DBAbstract
                 }
                 $this->user_orbix = 'orbix' . $vf;
 
+
                 $a_sql = [];
-                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'REVOKE \"$this->user_orbix\" FROM \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -181,22 +190,21 @@ abstract class DBAbstract
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBEP'];
                 */
-                // conectar con DB comun:
+                // conectar con DB sv-e:
                 $oConfigDB = new ConfigDB('importar'); //de la database comun
                 $config = $oConfigDB->getEsquema('publicv-e'); //de la database comun
                 $oConexion = new DBConnection($config);
                 $this->oDbl = $oConexion->getPDO();
 
-                // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)
+                // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
                 } else {
                     $vf = 'f';
                 }
                 $this->user_orbix = 'orbix' . $vf;
-
                 $a_sql = [];
-                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'REVOKE \"$this->user_orbix\" FROM \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -213,6 +221,12 @@ abstract class DBAbstract
      */
     protected function addPermisoGlobal(string $db)
     {
+        if (empty($this->role) && empty($this->role_vf)) {
+            return;
+        }
+        $role_target = (empty($this->role)) ? $this->role_vf : $this->role;
+        $role_target = str_replace('"', '', $role_target);
+
         switch ($db) {
             case 'sfsv-e_select':
                 // conectar con DB sv-e_select:
@@ -224,12 +238,17 @@ abstract class DBAbstract
                 // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
+                    $resto = 'restov';
                 } else {
                     $vf = 'f';
+                    $resto = 'restof';
                 }
                 $this->user_orbix = 'orbix' . $vf;
                 $a_sql = [];
-                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -247,7 +266,10 @@ abstract class DBAbstract
                 $this->user_orbix = 'orbix';
 
                 $a_sql = [];
-                $a_sql[0] = "GRANT $this->user_orbix TO $this->role GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -270,7 +292,10 @@ abstract class DBAbstract
                 $this->user_orbix = 'orbix';
 
                 $a_sql = [];
-                $a_sql[0] = "GRANT $this->user_orbix TO $this->role GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"resto\" TO \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -291,14 +316,19 @@ abstract class DBAbstract
                 // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
+                    $resto = 'restov';
                 } else {
                     $vf = 'f';
+                    $resto = 'restof';
                 }
                 $this->user_orbix = 'orbix' . $vf;
 
 
                 $a_sql = [];
-                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -319,17 +349,104 @@ abstract class DBAbstract
                 // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
+                    $resto = 'restov';
                 } else {
                     $vf = 'f';
+                    $resto = 'restof';
                 }
                 $this->user_orbix = 'orbix' . $vf;
                 $a_sql = [];
-                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf GRANTED BY orbix_admindb;";
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$this->user_orbix') THEN EXECUTE 'GRANT \"$this->user_orbix\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
+                $a_sql[] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto') THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"$resto\" TO \"$role_target\"'; END IF; END $$;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
                 // Conexión sv esquema, para entrar como usuario H-dlbv.
                 $this->oDbl = $GLOBALS['oDBE'];
+                break;
+        }
+    }
+
+    protected function addPermisoRole(string $db, string $role_to_grant)
+    {
+        if (empty($this->role) && empty($this->role_vf)) {
+            return;
+        }
+        $role_to_grant = str_replace('"', '', $role_to_grant);
+        $role_target = (empty($this->role)) ? $this->role_vf : $this->role;
+        $role_target = str_replace('"', '', $role_target);
+
+        switch ($db) {
+            case 'comun':
+                // conectar con DB comun:
+                $oConfigDB = new ConfigDB('importar');
+                $config = $oConfigDB->getEsquema('public');
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                $a_sql = [];
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$role_to_grant') THEN EXECUTE 'GRANT \"$role_to_grant\" TO \"$role_target\"'; END IF; END $$;";
+
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                $this->oDbl = $GLOBALS['oDBC'];
+                break;
+            case 'sfsv':
+                // conectar con DB
+                $oConfigDB = new ConfigDB('importar');
+                $config = $oConfigDB->getEsquema('publicv');
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                $a_sql = [];
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$role_to_grant') THEN EXECUTE 'GRANT \"$role_to_grant\" TO \"$role_target\"'; END IF; END $$;";
+
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                $this->oDbl = $GLOBALS['oDB'];
+                break;
+        }
+    }
+
+    protected function delPermisoRole(string $db, string $role_to_grant)
+    {
+        if (empty($this->role) && empty($this->role_vf)) {
+            return;
+        }
+        $role_to_grant = str_replace('"', '', $role_to_grant);
+        $role_target = (empty($this->role)) ? $this->role_vf : $this->role;
+        $role_target = str_replace('"', '', $role_target);
+
+        switch ($db) {
+            case 'comun':
+                // conectar con DB comun:
+                $oConfigDB = new ConfigDB('importar');
+                $config = $oConfigDB->getEsquema('public');
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                $a_sql = [];
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$role_to_grant') THEN EXECUTE 'REVOKE \"$role_to_grant\" FROM \"$role_target\"'; END IF; END $$;";
+
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                $this->oDbl = $GLOBALS['oDBC'];
+                break;
+            case 'sfsv':
+                // conectar con DB
+                $oConfigDB = new ConfigDB('importar');
+                $config = $oConfigDB->getEsquema('publicv');
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                $a_sql = [];
+                $a_sql[0] = "DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$role_to_grant') THEN EXECUTE 'REVOKE \"$role_to_grant\" FROM \"$role_target\"'; END IF; END $$;";
+
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                $this->oDbl = $GLOBALS['oDB'];
                 break;
         }
     }

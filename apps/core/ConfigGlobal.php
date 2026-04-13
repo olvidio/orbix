@@ -174,6 +174,9 @@ class ConfigGlobal extends ServerConf
 
     public static function mi_region_dl()
     {
+        if (empty($_SESSION['session_auth']['esquema'])) {
+            return (string)getenv('ESQUEMA');
+        }
         return $_SESSION['session_auth']['esquema'];
     }
 

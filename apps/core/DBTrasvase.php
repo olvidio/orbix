@@ -13,25 +13,35 @@ use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaDlDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaExDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\entity\Casa;
+use src\ubis\domain\entity\Centro;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
 use src\utils_database\domain\contracts\MapIdRepositoryInterface;
 use src\utils_database\domain\entity\DBAbstract;
+use src\utils_database\domain\entity\MapId;
 use src\utils_database\domain\value_objects\MapIdDl;
+use src\utils_database\domain\value_objects\MapIdResto;
 
 class DBTrasvase extends DBAbstract
 {
 
-    private $sdbname;
-    private $sregion;
-    private $sdir;
-    private $sdl;
-    private $sEsquema;
+    private string $sdbname;
+    private string $sregion;
+    private string $sdir;
+    private string $sdl;
+    private string $sEsquema;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
     private \PDO $oDbResto;
@@ -40,8 +50,11 @@ class DBTrasvase extends DBAbstract
     function __construct()
     {
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
-        $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+        if (!empty($esquema_sfsv)) {
+            $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+        }
         $this->role = '"' . $this->esquema . '"';
+        $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
 
@@ -105,7 +118,7 @@ class DBTrasvase extends DBAbstract
      *
      * @return object oDbl
      */
-    private function setoDbl($oDbl)
+    private function setoDbl($oDbl): void
     {
         $this->oDbl = $oDbl;
     }
@@ -265,11 +278,10 @@ class DBTrasvase extends DBAbstract
                 }
                 if (empty($error)) {
                     return true;
-                } else {
-                    $this->serror = $error;
-                    return false;
                 }
-                break;
+
+                $this->serror = $error;
+                return false;
             case 'dl2resto':
                 $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
                 $ActividadDlRepository->setoDbl($oDbl);
@@ -282,7 +294,7 @@ class DBTrasvase extends DBAbstract
 
                         if ($ActividadExRepository->Guadar($oActividad, false) === false) { // Pongo el param registrarCambios=false para que no anote cambios.
                             $error .= '<br>' . _("no se ha guardado la actividad");
-                            exit($error);;
+                            exit($error);
                         }
                         //borrar la origen:
                         $ActividadDlRepository->Eliminar($oActividad);
@@ -290,19 +302,19 @@ class DBTrasvase extends DBAbstract
                 }
                 if (empty($error)) {
                     return true;
-                } else {
-                    $this->serror = $error;
-                    return false;
                 }
-                break;
+
+                $this->serror = $error;
+                return false;
+            default:
+                return false;
         }
     }
 
 //---------------- CDC --------------------
 //---------------- Direcciones CDC --------------------
 //---------------- Teleco CDC --------------------
-    public
-    function cdc($que)
+    public function cdc($que)
     {
         // Conexión DB comun
         $oDbl = $this->getoDbl();
@@ -326,48 +338,51 @@ class DBTrasvase extends DBAbstract
                 $CasaExRepository = $GLOBALS['container']->get(CasaExRepositoryInterface::class);
                 $cCasasEx = $CasaExRepository->getCasas($aWhere, $aOperador);
                 $error = '';
-                $CasaDlReposiroty = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
+                $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
+                $RelacionCasaDlDireccion = $GLOBALS['container']->get(RelacionCasaDlDireccionRepositoryInterface::class);
+                $RelacionCasaExDireccion = $GLOBALS['container']->get(RelacionCasaExDireccionRepositoryInterface::class);
                 foreach ($cCasasEx as $oCasaEx) {
                     $aDades = $oCasaEx->getTot();
-                    $oCasaDl =  Casa::fromArray($aDades);
+                    $oCasaDl = Casa::fromArray($aDades);
                     // actualizar el tipo_ubi.
                     $oCasaDl->setTipo_casa('cdcdl');
-                    $CasaDlReposiroty->setoDbl($oDbl);
-                    if ($CasaDlReposiroty->Guardar($oCasaDl) === FALSE) {
+                    $CasaDlRepository->setoDbl($oDbl);
+                    $newIdCasa = $CasaDlRepository->getNewId();
+                    $oCasaDl->setId_ubi($newIdCasa);
+                    if ($CasaDlRepository->Guardar($oCasaDl) === FALSE) {
                         $error .= '<br>' . _("no se ha guardado la casa");
                     } else {
-                        // Al hacer INSERT se genera un id_ubi nuevo. Para conservar el original:
-                        $id_ubi = $oCasaDl->getId_ubi();
                         $id_ubi_old = $aDades['id_ubi'];
                         $oMapId = $MapIdRepository->findById('Casa', $id_ubi_old);
-                        $oMapId->setIdDlVo(MapIdDl::fromString($id_ubi));
+                        if ($oMapId === null) {
+                            $oMapId = new MapId();
+                            $oMapId->setObjeto('Casa');
+                            $oMapId->setIdRestoVo(MapIdResto::fromString($id_ubi_old));
+                        }
+                        $oMapId->setIdDlVo(MapIdDl::fromString($newIdCasa));
                         $MapIdRepository->Guardar($oMapId);
                         // Buscar la dirección
-                        $gesCdcExxDireccion = new GestorCdcExxDireccion();
-                        $cUbixDirecciones = $gesCdcExxDireccion->getCdcxDirecciones(['id_ubi' => $id_ubi_old]);
+                        $aIdDirecciones = $RelacionCasaExDireccion->getDireccionesProUbi($id_ubi_old);
                         $DireccionCasaDlRepository = $GLOBALS['container']->get(DireccionCasaDlRepositoryInterface::class);
                         $DireccionCasaExRepository = $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class);
-                        foreach ($cUbixDirecciones as $oUbixDireccion) {
-                            $id_direccion_old = $oUbixDireccion->getId_direccion();
-                            $oDireccion = $DireccionCasaExRepository->findById($id_direccion_old);
-                            $DireccionCasaDlRepository->Guardar($oDireccion);
-                            $id_direccion = $oDireccionCdcDl->getId_direccion();
+                        foreach ($aIdDirecciones as $aDireccion) {
+                            $id_direccion_old = $aDireccion['id_direccion'];
+                            $principal = $aDireccion['principal'];
+                            $oDireccionEx = $DireccionCasaExRepository->findById($id_direccion_old);
+                            $newIdDireccion = $DireccionCasaDlRepository->getNewId();
+                            $oDireccionDl = clone $oDireccionEx;
+                            $oDireccionDl->setId_direccion($newIdDireccion);
+                            $DireccionCasaDlRepository->Guardar($oDireccionDl);
+                            // Map
                             $oMapId = $MapIdRepository->findById('Direccion', $id_direccion_old);
-                            $oMapId->setIdDlVo(MapIdDl::fromString($id_direccion));
+                            $oMapId->setIdDlVo(MapIdDl::fromString($newIdDireccion));
                             $MapIdRepository->Guardar($oMapId);
                             // cross Direccion
-                            $pkey = ['id_ubi' => $id_ubi, 'id_direccion' => $id_direccion];
-                            $oCrosDireccion = new CdcDlxDireccion($pkey);
-                            $propietario = $oUbixDireccion->getPropietario();
-                            $principal = $oUbixDireccion->getPrincipal();
-                            $oCrosDireccion->setoDbl($oDbl);
-                            $oCrosDireccion->setPropietario($propietario);
-                            $oCrosDireccion->setPrincipal($principal);
-                            $oCrosDireccion->DBGuardar();
+                            $RelacionCasaDlDireccion->asociarDireccion($newIdCasa, $newIdDireccion, $principal);
                             // Eliminar el cross y la direccion
-                            $oDireccion->DBEliminar();
+                            $DireccionCasaExRepository->Eliminar($oDireccionEx);
                             // delete cross (deberia borrarse sólo; por el foreign key).
-                            $oUbixDireccion->DBEliminar();
+                            $RelacionCasaExDireccion->desasociarDireccion($id_ubi_old, $id_direccion_old);
                         }
                         // Buscar las telecos
                         $TelecoCdcExRepository = $GLOBALS['container']->get(TelecoCdcExRepositoryInterface::class);
@@ -385,26 +400,28 @@ class DBTrasvase extends DBAbstract
                             }
                         }
                         //borrar la origen:
-                        $oCasaEx->DBEliminar();
+                        $CasaExRepository->Eliminar($oCasaEx);
                     }
                 }
                 if (empty($error)) {
                     return true;
-                } else {
-                    $this->serror = $error;
-                    return false;
                 }
-                break;
+
+                $this->serror = $error;
+                return false;
             case 'dl2resto':
                 // actualizar el tipo_ubi.
+                /* no hace falta si despues se borra toda la tabla
                 $sql = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcex';";
                 if ($oDbl->query($sql) === false) {
                     $sClauError = 'DBTrasvase.ctr.execute';
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                     return false;
                 }
+                */
 
                 $this->addPermisoGlobal('comun');
+                $this->addPermisoRole('comun', $esquema);
                 $a_sql = [];
                 //cdc
                 $a_sql[] = "INSERT INTO resto.u_cdc_ex SELECT * FROM \"$esquema\".u_cdc_dl ;";
@@ -417,8 +434,11 @@ class DBTrasvase extends DBAbstract
                 $a_sql[] = "TRUNCATE \"$esquema\".u_dir_cdc_dl RESTART IDENTITY CASCADE;";
                 // delete cross (debería borrarse sólo; por el foreign key).
                 $this->executeSql($a_sql);
+                $this->delPermisoRole('comun', $esquema);
                 $this->delPermisoGlobal('comun');
                 break;
+            default:
+                return false;
         }
     }
 
@@ -426,17 +446,17 @@ class DBTrasvase extends DBAbstract
 //---------------- Ctr --------------------
 //---------------- Direcciones Ctr --------------------
 //---------------- Teleco Ctr --------------------
-    public
-    function ctr($que)
+    public function ctr($que)
     {
         // Conexión DB SV/SF
         $oDbl = $this->getoDbl();
+        $esquema = $this->getEsquema();
+        $resto = $this->getResto();
+
         // Conexión DB comun
         $this->setDbName('comun');
         $oDblC = $this->getoDbl();
 
-        $esquema = $this->getEsquema();
-        $resto = $this->getResto();
         $dl = $this->getDl();
         $region = $this->getRegion();
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
@@ -452,75 +472,75 @@ class DBTrasvase extends DBAbstract
                     $aWhere = ['dl' => $dl, 'region' => $region];
                     $aOperador = [];
                 }
-                $gesCentroEx = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
-                $cCentroEx = $gesCentroEx->getCentros($aWhere, $aOperador);
+                $CentroExRepository = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
+                $cCentroEx = $CentroExRepository->getCentros($aWhere, $aOperador);
                 $error = '';
+                $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $CentroEllosRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
+                $RelacionCentroDlDireccion = $GLOBALS['container']->get(RelacionCentroDlDireccionRepositoryInterface::class);
+                $RelacionCentroExDireccion = $GLOBALS['container']->get(RelacionCentroExDireccionRepositoryInterface::class);
                 foreach ($cCentroEx as $oCentroEx) {
                     $aDades = $oCentroEx->getTot();
                     // actualizar el tipo_ubi.
                     $aDades['tipo_ubi'] = 'ctrdl';
                     // Ahora uso la nomenclatura para dl tipo 'crA'
                     $aDades['dl'] = $dl;
-
-                    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+                    $oCentroDl = Centro::fromArray($aDades);
                     $CentroDlRepository->setoDbl($oDbl);
-                    $oCentroDl = new CentroDl();
-                    $oCentroDl->setAllAttributes($aDades, TRUE);
+                    $newIdCentro = $CentroDlRepository->getNewId();
+                    $oCentroDl->setId_ubi($newIdCentro);
                     if ($CentroDlRepository->Guardar($oCentroDl) === FALSE) {
                         $error .= '<br>' . _("no se ha guardado el centro");
                     } else {
                         // Al hacer INSERT se genera un id_ubi nuevo. Para conservar el original:
-                        $id_ubi = $oCentroDl->getId_ubi();
                         $id_ubi_old = $aDades['id_ubi'];
                         $oMapId = $MapIdRepository->findById('Centro', $id_ubi_old);
-                        $oMapId->setIdDlVo(MapIdDl::fromString($id_ubi));
+                        if ($oMapId === null) {
+                            $oMapId = new MapId();
+                            $oMapId->setObjeto('Centro');
+                            $oMapId->setIdRestoVo(MapIdResto::fromString($id_ubi_old));
+                        }
+                        $oMapId->setIdDlVo(MapIdDl::fromString($newIdCentro));
                         $MapIdRepository->Guardar($oMapId);
                         // Además hay que añadirlo a la copia en DB comun:
                         // para la sf (comienza por 2).
-                        if (substr($id_ubi, 0, 1) == 2) {
+                        if (substr($newIdCentro, 0, 1) == 2) {
                             $oCentroEllas = new CentroEllas();
-                            $oCentroEllas->setId_ubi($id_ubi);
+                            $oCentroEllas->setId_ubi($newIdCentro);
                             $oCentroEllas->setAllAttributes($aDades, TRUE);
                             $CentroEllasRepository->setoDbl($oDblC);
                             $CentroEllasRepository->Guardar($oCentroEllas);
                         } else {
                             $oCentroEllos = new CentroEllos();
-                            $oCentroEllos->setId_ubi($id_ubi);
+                            $oCentroEllos->setId_ubi($newIdCentro);
                             $oCentroEllos->setAllAttributes($aDades);
                             $CentroEllosRepository->setoDbl($oDblC);
                             $CentroEllosRepository->Guardar($oCentroEllos);
                         }
                         // Buscar la dirección
-                        $gesCtrExxDireccion = new GestorCtrExxDireccion();
-                        $cUbixDirecciones = $gesCtrExxDireccion->getDireccionesPorUbi($id_ubi_old);
-                        foreach ($cUbixDirecciones as $oUbixDireccion) {
-                            $id_direccion_old = $oUbixDireccion->getId_direccion();
-                            $oDireccion = new DireccionCentroEx($id_direccion_old);
-                            $aDades = $oDireccion->getTot();
-                            $oDireccionCentroDl = new DireccionCentroDl();
-                            $oDireccionCentroDl->setoDbl($oDbl);
-                            $oDireccionCentroDl->setAllAttributes($aDades, FALSE);
-                            $oDireccionCentroDl->DBGuardar();
-                            $id_direccion = $oDireccionCentroDl->getId_direccion();
-                            $pkey = ['objeto' => 'Direccion', 'id_resto' => $id_direccion_old];
+                        $aIdDirecciones = $RelacionCentroExDireccion->getDireccionesProUbi($id_ubi_old);
+                        $DireccionCentroDlRepository = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
+                        $DireccionCentroExRepository = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
+                        foreach ($aIdDirecciones as $aIdDireccion) {
+                            $id_direccion_old = $aIdDireccion ['id_direccion'];
+                            $propietario = $aIdDireccion ['propietario'];
+                            $principal = $aIdDireccion['principal'];
+                            $oDireccionCentroEx = $DireccionCentroExRepository->findBuId($id_direccion_old);
+                            $newIdDireccionCentro = $DireccionCentroDlRepository->getNewId();
+                            $oDireccionCentroDl = clone $oDireccionCentroEx;
+                            $oDireccionCentroDl->setId_direccion($newIdDireccionCentro);
+                            $DireccionCentroDlRepository->Guardar($oDireccionCentroDl);
+                            // Map
                             $oMapId = $MapIdRepository->findById('Direccion', $id_direccion_old);
-                            $oMapId->setIdDlVo(MapIdDl::fromString($id_direccion));
+                            $oMapId->setIdDlVo(MapIdDl::fromString($newIdDireccionCentro));
                             $MapIdRepository->Guardar($oMapId);
                             // cross Direccion
-                            $pkey = ['id_ubi' => $id_ubi, 'id_direccion' => $id_direccion];
-                            $oCrosDireccion = new CtrDlxDireccion($pkey);
-                            $propietario = $oUbixDireccion->getPropietario();
-                            $principal = $oUbixDireccion->getPrincipal();
-                            $oCrosDireccion->setoDbl($oDbl);
-                            $oCrosDireccion->setPropietario($propietario);
-                            $oCrosDireccion->setPrincipal($principal);
-                            $oCrosDireccion->DBGuardar();
+                            $RelacionCentroDlDireccion->asociarDireccion($newIdCentro, $newIdDireccionCentro, $principal, $propietario);
                             // Eliminar el cross y la dirección
-                            $oDireccion->DBEliminar();
+                            $DireccionCentroExRepository->Eliminar($oDireccionCentroEx);
                             // delete cross (debería borrarse sólo; por el foreign key).
-                            $oUbixDireccion->DBEliminar();
+                            $RelacionCentroExDireccion->desasociarDireccion($id_ubi_old, $id_direccion_old);
                         }
                         // Buscar las telecos
                         $TelecoCtrExRepository = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
@@ -543,11 +563,10 @@ class DBTrasvase extends DBAbstract
                 }
                 if (empty($error)) {
                     return true;
-                } else {
-                    $this->serror = $error;
-                    return false;
                 }
-                break;
+
+                $this->serror = $error;
+                return false;
             case 'dl2resto':
                 // actualizar el tipo_ubi.
                 $sql = "UPDATE \"$esquema\".u_centros_dl SET tipo_ubi='ctrex'";
@@ -556,10 +575,16 @@ class DBTrasvase extends DBAbstract
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                     return false;
                 }
-                $sql = "INSERT INTO \"$resto\".u_centros_ex SELECT tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_auto FROM \"$esquema\".u_centros_dl";
+
+                $this->addPermisoGlobal('sfsv');
+                $this->addPermisoRole('sfsv', $esquema);
+
+                $sql = "INSERT INTO \"$resto\".u_centros_ex SELECT tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,active,f_active,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_auto FROM \"$esquema\".u_centros_dl";
                 if ($oDbl->query($sql) === false) {
                     $sClauError = 'DBEliminar.ctr.execute';
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                    $this->delPermisoRole('sfsv', $esquema);
+                    $this->delPermisoGlobal('sfsv');
                     return false;
                 } else {
                     // primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
@@ -567,12 +592,16 @@ class DBTrasvase extends DBAbstract
                     if ($oDbl->query($sql) === false) {
                         $sClauError = 'DBTrasvase.ctr.execute';
                         $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                        $this->delPermisoRole('sfsv', $esquema);
+                        $this->delPermisoGlobal('sfsv');
                         return false;
                     }
                     $sql = "INSERT INTO \"$resto\".u_cross_ctr_ex_dir SELECT * FROM \"$esquema\".u_cross_ctr_dl_dir ";
                     if ($oDbl->query($sql) === false) {
                         $sClauError = 'DBTrasvase.ctr.execute';
                         $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                        $this->delPermisoRole('sfsv', $esquema);
+                        $this->delPermisoGlobal('sfsv');
                         return false;
                     }
                     // delete ctr
@@ -580,6 +609,8 @@ class DBTrasvase extends DBAbstract
                     if ($oDbl->query($sql) === false) {
                         $sClauError = 'DBTrasvase.ctr.execute';
                         $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                        $this->delPermisoRole('sfsv', $esquema);
+                        $this->delPermisoGlobal('sfsv');
                         return false;
                     }
                     // delete dir
@@ -587,11 +618,17 @@ class DBTrasvase extends DBAbstract
                     if ($oDbl->query($sql) === false) {
                         $sClauError = 'DBTrasvase.ctr.execute';
                         $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                        $this->delPermisoRole('sfsv', $esquema);
+                        $this->delPermisoGlobal('sfsv');
                         return false;
                     }
                     // delete cross (debería borrarse sólo; por el foreign key).
                 }
+                $this->delPermisoRole('sfsv', $esquema);
+                $this->delPermisoGlobal('sfsv');
                 break;
+            default:
+                return false;
         }
     }
 

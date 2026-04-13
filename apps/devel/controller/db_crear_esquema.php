@@ -2,6 +2,7 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ServerConf;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
@@ -33,6 +34,11 @@ $DlRef = substr($a_reg[1], 0, -1); // quito la v o la f.
 $RegionNew = $Qregion;
 $DlNew = $Qdl;
 
+// sólo para docker
+$isDocker = FALSE;
+if  (preg_match('/(.*?)\.docker/',ServerConf::SERVIDOR )) {
+    $isDocker = TRUE;
+}
 // comun
 if (!empty($Qcomun)) {
     $oConfigDB = new core\ConfigDB('importar'); //de la database comun
@@ -63,32 +69,34 @@ if (!empty($Qcomun)) {
     $oDBRol->delGrupo('orbix');
 
     // Crear el esquema para sólo lectura (select) en el host interno
-    $config = $oConfigDB->getEsquema('public_select'); //de la database comun
+    // no en el caso de docker
+    if (!$isDocker) {
+        $config = $oConfigDB->getEsquema('public_select'); //de la database comun
 
-    $oConexion = new core\DBConnection($config);
-    $oDevelPC = $oConexion->getPDO();
+        $oConexion = new core\DBConnection($config);
+        $oDevelPC = $oConexion->getPDO();
 
-    // CREAR Esquema
-    $oDBRol->setDbConexion($oDevelPC);
-    $oDBRol->setUser($esquema);
+        // CREAR Esquema
+        $oDBRol->setDbConexion($oDevelPC);
+        $oDBRol->setUser($esquema);
 
-    // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
-    // Después hay que quitarlo para que no tenga permisos para la tabla padre.
-    $oDBRol->addGrupo('orbix');
+        // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
+        // Después hay que quitarlo para que no tenga permisos para la tabla padre.
+        $oDBRol->addGrupo('orbix');
 
-    $oDBRol->crearSchema();
+        $oDBRol->crearSchema();
 
-    $oDBEsquemaCreate = new core\DBEsquemaCreate();
-    $oDBEsquemaCreate->setConfig($config);
-    $oDBEsquemaCreate->setRegionRef($RegionRef);
-    $oDBEsquemaCreate->setDlRef($DlRef);
-    $oDBEsquemaCreate->setRegionNew($RegionNew);
-    $oDBEsquemaCreate->setDlNew($DlNew);
-    $oDBEsquemaCreate->crear_select('comun'); // los select son caso especial...
+        $oDBEsquemaCreate = new core\DBEsquemaCreate();
+        $oDBEsquemaCreate->setConfig($config);
+        $oDBEsquemaCreate->setRegionRef($RegionRef);
+        $oDBEsquemaCreate->setDlRef($DlRef);
+        $oDBEsquemaCreate->setRegionNew($RegionNew);
+        $oDBEsquemaCreate->setDlNew($DlNew);
+        $oDBEsquemaCreate->crear_select('comun'); // los select son caso especial...
 
-    // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
-    $oDBRol->delGrupo('orbix');
-
+        // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
+        $oDBRol->delGrupo('orbix');
+    }
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew . '-' . $DlNew;
     $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
