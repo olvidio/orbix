@@ -42,19 +42,19 @@ $aRoles = $RoleRepository->getArrayRoles();
 
 $aCentros = [];
 
+$oDesplZonas = new Desplegable();
+$aOpciones[-1] = 'centros encargos';
+$oDesplZonas->setBlanco(FALSE);
+$oDesplZonas->setNombre('id_zona');
+$oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
+$oDesplZonas->setOpcion_sel($Qid_zona);
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro sv' || $aRoles[$id_role] === 'Centro sf')) {
     $id_ubi = $oMiUsuario->getId_pauAsString();
     $oCentro = Ubi::newUbi($id_ubi);
     $nombre_ubi = $oCentro->getNombreUbiVo()->value();
     $aCentros[$id_ubi] = $nombre_ubi;
-    $aOpciones[-1] = 'centros encargos';
-    $oDesplZonas = new Desplegable();
     $oDesplZonas->setOpciones($aOpciones);
-    $oDesplZonas->setBlanco(FALSE);
-    $oDesplZonas->setNombre('id_zona');
-    $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
-    $oDesplZonas->setOpcion_sel($Qid_zona);
 }  else {
     if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
         if (!$_SESSION['oConfig']->is_jefeCalendario()) {

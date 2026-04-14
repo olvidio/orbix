@@ -72,6 +72,8 @@ $id_usuario = ConfigGlobal::mi_id_usuario();
 $id_sacd = $oMiUsuario->getCsvIdPauAsString();
 //echo 'id_sacd: '.$id_sacd.'<br>';
 
+$a_sacd=[];
+
 $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
