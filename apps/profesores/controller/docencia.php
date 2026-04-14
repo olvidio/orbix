@@ -51,14 +51,14 @@ foreach ($a_nomProfesor as $id_nom => $aClave) {
     $a_tipos_docendia = TipoActividadAsignatura::getTiposActividad();
     foreach ($cProfesorDocenciaStgr as $oProfesorDocenciaStgr) {
         $p++;
-        $id_asignatura = $oProfesorDocenciaStgr->getId_asignatura();
+        $id_asignatura = $oProfesorDocenciaStgr->getIdAsignaturaVo()?->value();
         $nom_asignatura = empty($a_asignaturas[$id_asignatura]) ? '?' : $a_asignaturas[$id_asignatura];
 
-        $tipo = $oProfesorDocenciaStgr->getTipo();
+        $tipo = $oProfesorDocenciaStgr->getTipoVo()?->value();
         $modo = empty($tipo) ? '' : $a_tipos_docendia[$tipo];
 
         $curso_inicio = $oProfesorDocenciaStgr->getCurso_inicio();
-        $acta = $oProfesorDocenciaStgr->getActa();
+        $acta = $oProfesorDocenciaStgr->getActaVo()?->value();
 
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $a_valores[$p][1] = $dl;

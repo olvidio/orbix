@@ -2,6 +2,8 @@
 
 namespace src\usuarios\domain\entity;
 
+use core\DatosCampo;
+use core\Set;
 use src\shared\domain\traits\Hydratable;
 use src\usuarios\domain\value_objects\Idioma;
 use src\usuarios\domain\value_objects\IdLocale;
@@ -130,5 +132,78 @@ class Local
     public function setActive(bool $active): void
     {
         $this->active = $active;
+    }
+
+    /* ------------------- PARA el mod_tabla  -------------------------------*/
+    public function getPrimary_key(): string
+    {
+        return 'idLocaleVo';
+    }
+
+    public function getDatosCampos(): array
+    {
+        $oLocalSet = new Set();
+
+        $oLocalSet->add($this->getDatosIdLocale());
+        $oLocalSet->add($this->getDatosNom_locale());
+        $oLocalSet->add($this->getDatosIdioma());
+        $oLocalSet->add($this->getDatosNom_idioma());
+        $oLocalSet->add($this->getDatosActive());
+        return $oLocalSet->getTot();
+    }
+
+    private function getDatosIdLocale(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('id_locale');
+        $oDatosCampo->setMetodoGet('getIdLocaleVo');
+        $oDatosCampo->setMetodoSet('setIdLocaleVo');
+        $oDatosCampo->setEtiqueta(_("sigla de locale"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(12);
+        return $oDatosCampo;
+    }
+    private function getDatosNom_locale(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('nom_locale');
+        $oDatosCampo->setMetodoGet('getNomLocaleVo');
+        $oDatosCampo->setMetodoSet('setNomLocaleVo');
+        $oDatosCampo->setEtiqueta(_("nombre de locale"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(200);
+        return $oDatosCampo;
+    }
+    private function getDatosIdioma(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('idioma');
+        $oDatosCampo->setMetodoGet('getIdiomaVo');
+        $oDatosCampo->setMetodoSet('setIdiomaVo');
+        $oDatosCampo->setEtiqueta(_("sigla de idioma"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(3);
+        return $oDatosCampo;
+    }
+     private function getDatosNom_idioma(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('nom_idioma');
+        $oDatosCampo->setMetodoGet('getNomIdiomaVo');
+        $oDatosCampo->setMetodoSet('setNomIdiomaVo');
+        $oDatosCampo->setEtiqueta(_("nombre de idioma"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(200);
+        return $oDatosCampo;
+    }
+    private function getDatosActive(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('active');
+        $oDatosCampo->setMetodoGet('isActive');
+        $oDatosCampo->setMetodoSet('setActive');
+        $oDatosCampo->setEtiqueta(_("en activo"));
+        $oDatosCampo->setTipo('check');
+        return $oDatosCampo;
     }
 }
