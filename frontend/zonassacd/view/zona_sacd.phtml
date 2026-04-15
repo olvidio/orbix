@@ -1,0 +1,125 @@
+<style>
+    .item-details-form { z-index: 1000; display: inline-block; border: 1px solid black; margin: 8px; padding: 10px; background: #fbfbfb; box-shadow: 0px 0px 15px black; position: absolute; top: 10px; left: 150px; }
+    .item-details-form-buttons { float: right; }
+</style>
+
+<form id="frm_zona_sacd" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <table>
+        <thead>
+        <tr>
+            <th class=titulo_inv colspan=4>
+                <label for="lst_zonas"><?= ucfirst(_("lista de sacd de la zona")) ?>:&nbsp;&nbsp;&nbsp;</label>
+                <select class=contenido name="id_zona" id="lst_zonas" onchange="fnjs_busca_sacds()">
+                    <option></option>
+                    <option value="no"><?= _("sin asignar zona") ?></option>
+                    <?= $oDesplZonas->options() ?>
+                </select>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td colspan=2><div class=contenido id="lst_sacds"></div></td></tr>
+        <?php if ($perm_des) { ?>
+            <tr>
+                <th class=titulo_inv colspan=4>
+                    <label for="id_zona_new"><?= _("asignar los sacd marcados a la zona") ?>:&nbsp;&nbsp;&nbsp;</label>
+                    <select class=contenido id="id_zona_new" name="id_zona_new">
+                        <option></option>
+                        <?= $oDesplZonas->options() ?>
+                        <option value="no"><?= _("sin asignar zona") ?></option>
+                    </select>
+                </th>
+            </tr>
+            <tr>
+                <th colspan=4>
+                    <input type="button" onclick="fnjs_guardar(this.form,1);" name="ok" value="<?= _("cambiar asignación zona") ?>">
+                    <input type="button" onclick="fnjs_guardar(this.form,2);" name="ok2" value="<?= _("añadir asignación iglesia/cgi") ?>">
+                </th>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+</form>
+<div class='item-details-form' style="display: none">
+    <label id="titulo_modal">nom sacd</label><hr/>
+    <input type="hidden" id="id_sacd" value=""/>
+    <input type="hidden" id="id_zona" value=""/>
+    <div style="margin-top: 20px;"><label for="dw1"><?= _("Lunes") ?>:</label><input id="dw1" name="dw1" type="checkbox"></div>
+    <div style="margin-top: 20px;"><label for="dw2"><?= _("Martes") ?>:</label><input id="dw2" name="dw2" type="checkbox"></div>
+    <div style="margin-top: 20px;"><label for="dw3"><?= _("Miércoles") ?>:</label><input id="dw3" name="dw3" type="checkbox"></div>
+    <div style="margin-top: 20px;"><label for="dw4"><?= _("Jueves") ?>:</label><input id="dw4" name="dw4" type="checkbox"></div>
+    <div style="margin-top: 20px;"><label for="dw5"><?= _("Viernes") ?>:</label><input id="dw5" name="dw5" type="checkbox"></div>
+    <div style="margin-top: 20px;"><label for="dw6"><?= _("Sábado") ?>:</label><input id="dw6" name="dw6" type="checkbox"></div>
+    <div style="margin-top: 20px;"><label for="dw7"><?= _("Domingo") ?>:</label><input id="dw7" name="dw7" type="checkbox"></div>
+    <hr/>
+    <div class='item-details-form-buttons'>
+        <button data-action='save' class='slick-btn slick-btn-primary'>Grabar</button>
+        <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
+    </div>
+</div>
+
+<script>
+    fnjs_busca_sacds = function () {
+        let id_zona = $('#lst_zonas').val();
+        if (id_zona) {
+            let parametros = 'que=get_lista&id_zona=' + id_zona + '<?= $h_sacd ?>';
+            $.ajax({ url: '<?= $url_ajax ?>', type: 'post', data: parametros, dataType: 'html' }).done(function (rta_txt) { $('#lst_sacds').html(rta_txt); });
+        }
+    }
+    fnjs_guardar = function (formulario, n) {
+        $('#acumular').val(n);
+        $(formulario).attr('action', '<?= $url_ajax ?>');
+        $(formulario).one("submit", function () {
+            $.ajax({ url: $(this).attr('action'), type: 'post', data: $(this).serialize() }).done(function (rta_txt) {
+                if (rta_txt !== '' && rta_txt !== '\n') { alert('<?= _("respuesta") ?>: ' + rta_txt); }
+            });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+        fnjs_busca_sacds();
+    }
+    fnjs_modificar = function (formulario) {
+        let rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            $('#'+$(formulario).attr('id')+' input').each(function (i, item) {
+                if ($(item).prop('checked') === true) { fnjs_modal_zona_sacd_ver($(item).val()); }
+            });
+        }
+    }
+    var modal = $(".item-details-form");
+    $(document).keydown(function (e) {
+        if (modal.css('display') !== 'none') {
+            if (e.which === Slick.keyCode.ENTER) { commitCurrentEdit(); e.stopPropagation(); e.preventDefault(); }
+            else if (e.which === Slick.keyCode.ESCAPE) { modal.hide(); e.stopPropagation(); e.preventDefault(); }
+        }
+    });
+    modal.find("[data-action=save]").click(function () { commitCurrentEdit(); });
+    modal.find("[data-action=cancel]").click(function () { modal.hide(); });
+
+    fnjs_modal_zona_sacd_ver = function (id_sacd) {
+        let id_zona = $('#lst_zonas').val();
+        let parametros = 'id_zona=' + id_zona + '&id_sacd=' + id_sacd + '<?= $h_url_get ?>';
+        $.ajax({ url: 'apps/misas/controller/zona_sacd_datos_get.php', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
+            if (json.success !== true) { alert("<?= _("respuesta") ?>: " + json.mensaje); return; }
+            $('#id_sacd').val(id_sacd); $('#id_zona').val(id_zona); $('#titulo_modal').html(json.nombre_sacd);
+            $('#dw1').prop('checked', json.dw1 === true); $('#dw2').prop('checked', json.dw2 === true); $('#dw3').prop('checked', json.dw3 === true);
+            $('#dw4').prop('checked', json.dw4 === true); $('#dw5').prop('checked', json.dw5 === true); $('#dw6').prop('checked', json.dw6 === true); $('#dw7').prop('checked', json.dw7 === true);
+            modal.show();
+        });
+    }
+
+    function commitCurrentEdit() {
+        let parametros = 'id_zona=' + $('#id_zona').val() + '&id_sacd=' + $('#id_sacd').val();
+        parametros += '&dw1=' + $('#dw1').is(":checked") + '&dw2=' + $('#dw2').is(":checked") + '&dw3=' + $('#dw3').is(":checked");
+        parametros += '&dw4=' + $('#dw4').is(":checked") + '&dw5=' + $('#dw5').is(":checked") + '&dw6=' + $('#dw6').is(":checked") + '&dw7=' + $('#dw7').is(":checked");
+        parametros += '<?= $h_url_put ?>';
+        $.ajax({ url: 'apps/misas/controller/zona_sacd_datos_put.php', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
+            if (json.success !== true) { alert("<?= _("respuesta") ?>: " + json.mensaje); }
+            else { modal.hide(); fnjs_busca_sacds(); }
+        });
+    }
+    fnjs_left_side_hide();
+    modal.hide();
+</script>

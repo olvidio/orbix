@@ -1,0 +1,53 @@
+<script>
+fnjs_busca_ctrs=function(){
+    var id_zona=$('#lst_zonas').val();
+    if (id_zona) {
+        var url='<?= $url_ajax ?>';
+        var parametros='que=get_lista&id_zona='+id_zona+'<?= $h_ctr ?>';
+        $.ajax({ url: url, type: 'post', data: parametros, dataType: 'html' })
+            .done(function (rta_txt) { $('#lst_ctrs').html(rta_txt); });
+    }
+}
+fnjs_guardar=function(formulario){
+    $(formulario).attr('action','<?= $url_ajax ?>');
+    $(formulario).one("submit", function() {
+        $.ajax({ url: $(this).attr('action'), type: 'post', data: $(this).serialize() })
+            .done(function (rta_txt) {
+                if (rta_txt !== '' && rta_txt !== '\n') { alert ('<?= _("respuesta") ?>: '+rta_txt); }
+            });
+        return false;
+    });
+    $(formulario).trigger("submit");
+    $(formulario).off();
+    fnjs_busca_ctrs();
+}
+fnjs_left_side_hide();
+</script>
+<form id="frm_zona_ctr" name="frm_zona_ctr" action="" method="post">
+<?= $oHash->getCamposHtml() ?>
+<table>
+<thead>
+<th class=titulo_inv colspan=4><?= ucfirst(_("lista de centros de la zona")) ?>:&nbsp;&nbsp;&nbsp;
+<select class=contenido id="lst_zonas" onchange="fnjs_busca_ctrs()">
+    <option></option>
+    <option value="no"><?= _("sin asignar zona") ?></option>
+    <?php if ($perm_des) { ?><option value="no_sf"><?= _("sin asignar zona sf") ?></option><?php } ?>
+    <?= $oDesplZonas->options() ?>
+</select></th></tr>
+</thead>
+<tbody>
+<tr><td colspan=4><div class=contenido id="lst_ctrs"></div></td></tr>
+<?php if ($perm_des) { ?>
+    <tr>
+    <th class=titulo_inv colspan=3><?= _("asignar los centros marcados a la zona") ?>:&nbsp;&nbsp;&nbsp;
+    <select class=contenido id="id_zona_new" name="id_zona_new" >
+    <option></option>
+    <?= $oDesplZonas->options() ?>
+    <option value="no"><?= _("sin asignar zona") ?></option>
+    </th>
+    <th><input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);" value="<?= _("asignar") ?>"></th>
+    </tr>
+<?php } ?>
+</tbody>
+</table>
+</form>
