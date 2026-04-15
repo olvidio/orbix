@@ -21,5 +21,5 @@ $a_campos = [
     'oDesplDelegaciones' => $oDesplDelegaciones,
 ];
 
-$oView = new ViewTwig('ubis/controller');
+$oView = new ViewTwig('frontend/ubis/controller');
 $oView->renderizar('delegaciones.html.twig', $a_campos);

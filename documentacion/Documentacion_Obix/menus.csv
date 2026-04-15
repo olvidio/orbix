@@ -71,9 +71,9 @@
 3,por centro (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
 3,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
 4,direcciones (Raiz base),,,1
-4,buscar (buscar ubis),apps/ubis/controller/ubis_buscar.php,simple=1,3
-4,listados (listas de ubis),apps/ubis/controller/list_ctr.php,,3
-4,modificar centros (Centros seleccionar),apps/ubis/controller/centros_que.php,,3
+4,buscar (buscar ubis),frontend/ubis/controller/ubis_buscar.php,simple=1,3
+4,listados (listas de ubis),frontend/ubis/controller/list_ctr.php,,3
+4,modificar centros (Centros seleccionar),frontend/ubis/controller/centros_que.php,,3
 4,cartas presentacion (Raiz cartas presentacion),,,25
 4,modificar (Cartas Presentacion),apps/cartaspresentacion/controller/cartas_presentacion_que.php,,25
 4,lista todo (Listado cartas presentación),apps/cartaspresentacion/controller/cartas_presentacion_lista.php,que=lista_todo,25
@@ -112,7 +112,7 @@
 7,estadística  por casas (Casa resumen),apps/casas/controller/casas_resumen.php,tipo=planning_cdc&ssfsv=sf,27
 7,estadística por años (Casa ec que),apps/casas/controller/casa_ec_que.php,,27
 7,grupos (Grupo Casas),apps/casas/controller/grupo_lista.php,,27
-7,Definir periodos (Calendario Periodos),apps/ubis/controller/calendario_periodos.php,,5
+7,Definir periodos (Calendario Periodos),frontend/ubis/controller/calendario_periodos.php,,5
 7,nuevo planing (Calendario que),apps/actividades/controller/calendario_que.php,,5
 7,Cases comunes (calendario listas),apps/actividades/controller/calendario_listas.php,que=c_comunes&ver_ctr=si,5
 7,listados de todas las casas (calendario listas),apps/actividades/controller/calendario_listas.php,que=c_todas&ver_ctr=si,5
@@ -137,8 +137,8 @@
 8,crt pendientes (actividades pendientes),apps/asistentes/controller/activ_pendientes_select.php,sactividad=crt&tipo_personas=sacd,5
 8,Actualizar datos desde BDU (Sincronizar con los datos de Listas),apps/dbextern/controller/sincro_index.php,tipo=sssc,9
 8,centros y casas (Raiz ubis),,,3
-8,buscar (buscar ubis),apps/ubis/controller/ubis_buscar.php,simple=1&tipo=ctr&loc=dl,3
-8,listados (listas de ubis),apps/ubis/controller/list_ctr.php,,3
+8,buscar (buscar ubis),frontend/ubis/controller/ubis_buscar.php,simple=1&tipo=ctr&loc=dl,3
+8,listados (listas de ubis),frontend/ubis/controller/list_ctr.php,,3
 8,zonas (Raiz Zonas),,,24
 8,zonas geogr. (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\zonassacd\domain\InfoZona,1
 8,zonas (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\zonassacd\domain\InfoZona,1
@@ -200,7 +200,7 @@
 8,ausencias (Raiz encargos sacd),,,21
 8,sacd (Ausencias sacd),apps/encargossacd/controller/sacd_ausencias.php,,21
 8,Nuevo calendario (Raiz activ1),,,5
-8,Definir periodos (Calendario Periodos),apps/ubis/controller/calendario_periodos.php,,5
+8,Definir periodos (Calendario Periodos),frontend/ubis/controller/calendario_periodos.php,,5
 8,nuevo curso (Nuevo Curso),apps/actividades/controller/actividad_nuevo_curso.php,,5
 8,nuevo planing (Planing Casa),apps/planning/controller/planning_casa_que.php,propuesta_calendario=1,6
 8,casas comunes (des) (calendario listas),apps/actividades/controller/calendario_listas.php,que=c_comunes&ver_ctr=si,5
@@ -223,7 +223,7 @@
 9,planning zonas (Planning por zonas),apps/planning/controller/planning_zones_que.php,,24
 9,atención actividades (Comunicación activ sacd),apps/actividadessacd/controller/com_sacd_activ_periodo.php,,20
 9,casas (Raiz activ1),,,5
-9,buscar (buscar ubis),apps/ubis/controller/ubis_buscar.php,simple=1&tipo=tot&loc=tot,3
+9,buscar (buscar ubis),frontend/ubis/controller/ubis_buscar.php,simple=1&tipo=tot&loc=tot,3
 9,planning por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
 9,listado gerentes (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
 9,lista actividades (Casa que),apps/casas/controller/casa_que.php,periodo=tot_any&tipo_lista=lista_activ,27
@@ -237,7 +237,7 @@
 9,lista por casas (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
 10,s de la r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_supernumerarios,1
 10,Actualizar datos desde BDU (Sincronizar con los datos de Listas),apps/dbextern/controller/sincro_index.php,tipo=s,9
-10,lista ctr i nº s (lista ctr sg),apps/ubis/controller/lista_ctrs.php,,1
+10,lista ctr i nº s (lista ctr sg),frontend/ubis/controller/lista_ctrs.php,,1
 10,buscar cv (Listado de Actividades),apps/actividades/controller/actividad_select.php,sasistentes=s&sactividad=cv&que=ver,5
 10,de la r/dl (lista activ sg),apps/actividades/controller/lista_actividades_sg.php,tipo_activ_sg=cv,5
 10,de cada ctr (Centro que activ),apps/actividades/controller/actividades_centro_que.php,tipo_ctr=sg&tipo_lista=cv,5
@@ -396,8 +396,8 @@
 19,tipos de telecos (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\ubis\domain\InfoTipoTeleco,1
 19,descripción teleco (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\ubis\domain\InfoDescTeleco,1
 19,cargos (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\actividadcargos\domain\InfoCargo,1
-20,buscar (buscar ubis),apps/ubis/controller/ubis_buscar.php,simple=1&tipo=ctr&loc=dl,3
-20,listados (listas de ubis),apps/ubis/controller/list_ctr.php,,3
+20,buscar (buscar ubis),frontend/ubis/controller/ubis_buscar.php,simple=1&tipo=ctr&loc=dl,3
+20,listados (listas de ubis),frontend/ubis/controller/list_ctr.php,,3
 20,por centro (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
 20,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
 20,buscar activ (seleccionar actividad),apps/actividades/controller/actividad_que.php,que=ver,5

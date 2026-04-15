@@ -127,12 +127,12 @@ switch ($tipo_ubi) {
         exit(_("falta definir el tipo_ubi"));
 }
 
-$gohome = Hash::link('apps/ubis/controller/home_ubis.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau)));
+$gohome = Hash::link('frontend/ubis/controller/home_ubis.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau)));
 $godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $obj_pau)));
 
-$go_ubi = Hash::link('apps/ubis/controller/ubis_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
-$go_dir = Hash::link('apps/ubis/controller/direcciones_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $obj_dir, 'bloque' => $bloque)));
-$go_tel = Hash::link('apps/ubis/controller/teleco_tabla.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
+$go_ubi = Hash::link('frontend/ubis/controller/ubis_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
+$go_dir = Hash::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $obj_dir, 'bloque' => $bloque)));
+$go_tel = Hash::link('frontend/ubis/controller/teleco_tabla.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
 
 $alt = _("ver dossiers");
 $dos = _("dossiers");
@@ -166,5 +166,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'Qobj_pau' => $obj_pau
 ];
 
-$oView = new ViewPhtml('ubis\controller');
+$oView = new ViewPhtml('frontend\ubis\controller');
 $oView->renderizar('home_ubis.phtml', $a_campos);

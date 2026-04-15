@@ -50,7 +50,7 @@ $oSelCiudades->setBlanco('t');
 $oSelCiudades->setNombre('que_mod');
 $oSelCiudades->setAction('fnjs_poblacion()');
 
-$url_ctr = 'apps/ubis/controller/home_ubis.php';
+$url_ctr = 'frontend/ubis/controller/home_ubis.php';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('bloque!pau!id_ubi');

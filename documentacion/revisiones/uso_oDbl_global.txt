@@ -19,9 +19,9 @@ apps/notas/model/Resumen.php
 apps/pasarela/model/entity/GestorPasarelaConfig.php
 apps/pasarela/model/entity/PasarelaConfig.php
 apps/personas/controller/personas_editar.php
-apps/ubis/controller/direcciones_editar.php
-apps/ubis/controller/ubis_editar.php
-apps/ubis/controller/ubis_tabla.php
+frontend/ubis/controller/direcciones_editar.php
+frontend/ubis/controller/ubis_editar.php
+frontend/ubis/controller/ubis_tabla.php
 apps/ubis/model/TrasladoUbi.php
 classes/production/orbix/actividadcargos/model/entity/ActividadCargoAbstract.php
 classes/production/orbix/actividadcargos/model/entity/ActividadCargoSacd.php

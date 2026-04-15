@@ -14,5 +14,5 @@ require_once("apps/core/global_object.inc");
 
 
 
-$oView = new ViewTwig('ubis/controller');
+$oView = new ViewTwig('frontend/ubis/controller');
 $oView->renderizar('info_ubis.html.twig',[]);

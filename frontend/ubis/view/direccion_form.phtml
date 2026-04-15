@@ -41,7 +41,7 @@
         alert((nom ? nom + "\n" : "") + lin_1 + "\n" + lin_2 + "\n" + prov + "\n" + pais);
     }
     fnjs_ver_documento = function (id_direccion) {
-        var url = '<?= ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/frontend/ubis/controller/plano_bytea.php';
         var parametros = 'act=comprobar&obj_dir=<?= $obj_dir ?><?= $h ?>&id_direccion=' + id_direccion;
         $.ajax({ url: url, type: 'post', data: parametros }).done(function (rta_txt) {
             if (rta_txt == 'si') {
@@ -51,7 +51,7 @@
         });
     }
     fnjs_adjuntar = function (act, id_direccion) {
-        var pagina = '<?= ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php?id_direccion=' + id_direccion + '&act=' + act + '&obj_dir=<?= $obj_dir ?><?= $h ?>';
+        var pagina = '<?= ConfigGlobal::getWeb() ?>/frontend/ubis/controller/plano_bytea.php?id_direccion=' + id_direccion + '&act=' + act + '&obj_dir=<?= $obj_dir ?><?= $h ?>';
         top.newWin = window.open(pagina, "files", "dependent=yes,width=850,height=300,screenX=300,screenY=300,titlebar=yes,scrollbars=yes");
         top.newWin.focus();
     }
@@ -78,7 +78,7 @@
     </table>
 </form>
 <?php if (!empty($botones)) { ?>
-<form id='frm1' name="frm1" action='apps/ubis/controller/plano_bytea.php'>
+<form id='frm1' name="frm1" action='frontend/ubis/controller/plano_bytea.php'>
     <input type=hidden name=sel value='dani'><input type=hidden id=que name=que value=''>
     <table><tr><td class='link' onclick="fnjs_ver_documento(<?= $id_direccion_actual ?>)"><?= _("ver plano") ?></td><td class='link' onclick="fnjs_adjuntar('adjuntar',<?= $id_direccion_actual ?>)"><?= _("adjuntar plano") ?></td><td class='link' onclick="fnjs_adjuntar('eliminar',<?= $id_direccion_actual ?>)"><?= _("eliminar plano") ?></td></tr></table>
 </form><br>

@@ -163,7 +163,7 @@ function getRepository($obj_pau)
             $nom_cabecera = $oUbi->getNombre_ubi();
 
             $sQuery = http_build_query(array('id_ubi' => $id_pau, 'obj_pau' => $Qobj_pau));
-            $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/ubis/controller/home_ubis.php?$sQuery");
+            $goHome = Hash::link(ConfigGlobal::getWeb() . "/frontend/ubis/controller/home_ubis.php?$sQuery");
             break;
         case 'a':
             $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);

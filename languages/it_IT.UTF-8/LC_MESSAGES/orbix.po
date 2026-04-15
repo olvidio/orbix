@@ -27,8 +27,8 @@ msgstr ""
 #: apps/encargossacd/controller/sacd_ausencias_update.php:33 apps/encargossacd/controller/sacd_ficha_ajax.php:510
 #: apps/encargossacd/model/EncargoFuncionesTrait.php:170 apps/encargossacd/model/EncargoFuncionesTrait.php:479
 #: apps/notas/controller/acta_update.php:99 apps/notas/controller/acta_update.php:137 apps/personas/controller/personas_update.php:33
-#: apps/procesos/controller/procesos_ajax.php:348 apps/ubis/controller/calendario_periodos_ajax.php:300
-#: apps/ubis/controller/direcciones_quitar.php:53 apps/ubis/controller/teleco_update.php:56 apps/ubis/controller/ubis_update.php:35
+#: apps/procesos/controller/procesos_ajax.php:348 frontend/ubis/controller/calendario_periodos_ajax.php:300
+#: frontend/ubis/controller/direcciones_quitar.php:53 frontend/ubis/controller/teleco_update.php:56 frontend/ubis/controller/ubis_update.php:35
 #: apps/zonassacd/controller/zona_sacd_ajax.php:205 apps/zonassacd/controller/zona_sacd_ajax.php:250
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_del_doc.php:27
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_eliminar.php:25
@@ -85,8 +85,8 @@ msgstr "questa tassa esiste già per questa attività"
 #: apps/personas/model/entity/TrasladoDl.php:505 apps/personas/model/entity/TrasladoDl.php:646
 #: apps/personas/model/entity/TrasladoDl.php:1036 apps/procesos/controller/actividad_proceso_ajax.php:111
 #: apps/procesos/controller/fases_activ_cambio_ajax.php:290 apps/procesos/controller/procesos_ajax.php:340
-#: apps/ubis/controller/calendario_periodos_ajax.php:291 apps/ubis/controller/direcciones_asignar.php:47
-#: apps/ubis/controller/ubis_update.php:159 apps/ubis/model/entity/GestorTarifaUbi.php:64
+#: frontend/ubis/controller/calendario_periodos_ajax.php:291 frontend/ubis/controller/direcciones_asignar.php:47
+#: frontend/ubis/controller/ubis_update.php:159 apps/ubis/model/entity/GestorTarifaUbi.php:64
 #: apps/zonassacd/controller/zona_sacd_ajax.php:218 apps/zonassacd/controller/zona_sacd_ajax.php:227
 #: apps/zonassacd/controller/zona_sacd_ajax.php:240 apps/zonassacd/controller/zona_sacd_ajax.php:264
 #: src/inventario/infrastructure/ui/http/controllers/doc_asignar_ctr_guardar.php:63
@@ -165,7 +165,7 @@ msgstr "Può essere?"
 #: apps/personas/model/entity/PersonaGlobal.php:1574 apps/personas/model/entity/TelecoPersonaGlobal.php:325
 #: apps/personas/model/entity/Traslado.php:709 apps/procesos/controller/actividad_proceso_ajax.php:36
 #: apps/profesores/model/entity/ProfesorPublicacion.php:815 apps/profesores/model/entity/Publicacion.php:816
-#: apps/ubis/controller/direcciones_tabla.php:48 apps/ubis/model/entity/Casa.php:557 apps/ubis/model/entity/CentroDl.php:725
+#: frontend/ubis/controller/direcciones_tabla.php:48 apps/ubis/model/entity/Casa.php:557 apps/ubis/model/entity/CentroDl.php:725
 #: apps/ubis/model/entity/DireccionGlobal.php:854 apps/ubis/model/entity/TelecoUbiGlobal.php:330
 #: frontend/inventario/controller/doc_imprimir_ctr.php:37 frontend/inventario/controller/doc_imprimir_dlb.php:39
 #: frontend/inventario/controller/docs_con_observaciones.php:30 frontend/inventario/controller/equipajes_lista_activ_periodo.php:47
@@ -218,9 +218,9 @@ msgstr "ordine di carico"
 #: apps/actividadcargos/model/entity/Cargo.php:542 apps/actividades/controller/lista_actividades_sg.php:200
 #: apps/actividadtarifas/controller/tarifa_ajax.php:104 apps/actividadtarifas/controller/tarifa_ajax.php:264
 #: apps/casas/controller/casa_ajax.php:47 apps/procesos/model/entity/ActividadFase.php:501
-#: apps/procesos/model/entity/ProcesoTipo.php:419 apps/ubis/controller/calendario_periodos_ajax.php:76
-#: apps/ubis/controller/calendario_periodos_ajax.php:122 apps/ubis/controller/calendario_periodos_ajax.php:267
-#: apps/ubis/controller/centros_ajax.php:32 apps/ubis/model/entity/UbiGlobal.php:711 apps/devel/view/db_cambiar_nombre_que.phtml:98
+#: apps/procesos/model/entity/ProcesoTipo.php:419 frontend/ubis/controller/calendario_periodos_ajax.php:76
+#: frontend/ubis/controller/calendario_periodos_ajax.php:122 frontend/ubis/controller/calendario_periodos_ajax.php:267
+#: frontend/ubis/controller/centros_ajax.php:32 apps/ubis/model/entity/UbiGlobal.php:711 apps/devel/view/db_cambiar_nombre_que.phtml:98
 #: apps/devel/view/db_que.phtml:128 apps/ubis/view/cdc_form.phtml:92 frontend/usuarios/view/role_form.phtml:65
 msgid "sf"
 msgstr "sf"
@@ -228,8 +228,8 @@ msgstr "sf"
 #: apps/actividadcargos/model/entity/Cargo.php:556 apps/actividadtarifas/controller/tarifa_ajax.php:104
 #: apps/actividadtarifas/controller/tarifa_ajax.php:264 apps/casas/controller/casa_ajax.php:46
 #: apps/procesos/model/entity/ActividadFase.php:516 apps/procesos/model/entity/ProcesoTipo.php:419
-#: apps/ubis/controller/calendario_periodos_ajax.php:75 apps/ubis/controller/calendario_periodos_ajax.php:121
-#: apps/ubis/controller/calendario_periodos_ajax.php:266 apps/ubis/controller/centros_ajax.php:31
+#: frontend/ubis/controller/calendario_periodos_ajax.php:75 frontend/ubis/controller/calendario_periodos_ajax.php:121
+#: frontend/ubis/controller/calendario_periodos_ajax.php:266 frontend/ubis/controller/centros_ajax.php:31
 #: apps/ubis/model/entity/UbiGlobal.php:697 apps/devel/view/db_cambiar_nombre_que.phtml:96 apps/devel/view/db_que.phtml:126
 #: apps/ubis/view/cdc_form.phtml:91 frontend/usuarios/view/role_form.phtml:67
 msgid "sv"
@@ -457,7 +457,7 @@ msgstr "duplicare"
 
 #: apps/actividades/controller/actividad_select.php:279 apps/cambios/controller/avisos_generar.php:142
 #: apps/dbextern/controller/ver_orbix.php:217 apps/notas/controller/comprobar_notas.php:492
-#: apps/tablonanuncios/domain/TablonAnunciosParaGM.php:67 apps/ubis/controller/calendario_periodos_ajax.php:270
+#: apps/tablonanuncios/domain/TablonAnunciosParaGM.php:67 frontend/ubis/controller/calendario_periodos_ajax.php:270
 #: frontend/menus/controller/grupmenu_lista.php:28 src/usuarios/application/GruposLista.php:32
 #: src/usuarios/application/rolesLista.php:57 src/usuarios/application/usuariosLista.php:63
 #: apps/actividadplazas/view/peticiones_activ.phtml:65 apps/asistentes/view/que_ctr_lista.phtml:100
@@ -493,7 +493,7 @@ msgstr "lista"
 
 #: apps/actividades/controller/actividad_select.php:294 apps/actividades/model/entity/ActividadAll.php:1655
 #: apps/actividadplazas/model/entity/ActividadPlazas.php:516 apps/casas/controller/prevision_asistentes.php:129
-#: apps/ubis/controller/centros_ajax.php:126 apps/ubis/controller/centros_ajax.php:278 apps/ubis/model/entity/Casa.php:501
+#: frontend/ubis/controller/centros_ajax.php:126 frontend/ubis/controller/centros_ajax.php:278 apps/ubis/model/entity/Casa.php:501
 #: apps/ubis/model/entity/CentroDl.php:753 apps/actividadplazas/view/resumen_plazas.phtml:51 apps/ubis/view/cdc_form.phtml:85
 #: apps/ubis/view/ctrdl_form.phtml:123
 msgid "plazas"
@@ -578,10 +578,10 @@ msgstr "dl org"
 #: apps/notas/controller/asignaturas_pendientes_resumen.php:81 apps/notas/model/TablaAlumnosAsignaturas.php:44
 #: apps/notas/model/TablaAlumnosAsignaturas.php:184 apps/personas/controller/personas_select.php:406
 #: apps/planning/controller/planning_persona_select.php:198 apps/profesores/controller/profesor_asignatura_ajax.php:34
-#: apps/ubis/controller/centros_ajax.php:60 apps/ubis/controller/centros_ajax.php:90 apps/ubis/controller/centros_ajax.php:123
-#: apps/ubis/controller/centros_ajax.php:197 apps/ubis/controller/centros_ajax.php:237 apps/ubis/controller/centros_ajax.php:275
-#: apps/ubis/controller/home_ubis.php:102 apps/ubis/controller/home_ubis.php:108 apps/ubis/controller/list_ctr.php:257
-#: apps/ubis/controller/lista_ctrs.php:47 apps/zonassacd/controller/zona_ctr_ajax.php:82
+#: frontend/ubis/controller/centros_ajax.php:60 frontend/ubis/controller/centros_ajax.php:90 frontend/ubis/controller/centros_ajax.php:123
+#: frontend/ubis/controller/centros_ajax.php:197 frontend/ubis/controller/centros_ajax.php:237 frontend/ubis/controller/centros_ajax.php:275
+#: apps/ubis/controller/home_ubis.php:102 apps/ubis/controller/home_ubis.php:108 frontend/ubis/controller/list_ctr.php:257
+#: frontend/ubis/controller/lista_ctrs.php:47 apps/zonassacd/controller/zona_ctr_ajax.php:82
 #: frontend/inventario/controller/doc_asignar_ctr.php:46 frontend/inventario/controller/doc_asignar_dlb.php:46
 #: frontend/inventario/controller/doc_de_ctr.php:47 src/inventario/infrastructure/ui/http/controllers/lista_docs_no_asignados_por_tipo.php:48
 #: apps/actividadestudios/view/ca_posibles_que.phtml:67 apps/actividadestudios/view/ca_posibles_que.phtml:84
@@ -641,7 +641,7 @@ msgstr "non dimenticare di modificare il nome dell'attività"
 
 #: apps/actividades/controller/actividad_tipo_get.php:94 apps/actividades/controller/tipo_activ_ajax.php:70
 #: apps/actividadestudios/controller/matriculas_lista_otras_r.php:56 apps/devel/model/entity/DbSchema.php:389
-#: apps/encargossacd/controller/encargo_horario_select.php:50 apps/ubis/controller/direcciones_tabla.php:39
+#: apps/encargossacd/controller/encargo_horario_select.php:50 frontend/ubis/controller/direcciones_tabla.php:39
 #: frontend/inventario/controller/doc_imprimir_dlb.php:38
 msgid "id"
 msgstr "id"
@@ -675,7 +675,7 @@ msgstr "nome"
 #: apps/encargossacd/controller/sacd_ficha_ajax.php:200 apps/encargossacd/controller/sacd_ficha_ajax.php:357
 #: apps/encargossacd/controller/sacd_ficha_ajax.php:530 apps/misas/controller/anadir_ctr_tarea.php:54 apps/notas/model/Resumen.php:110
 #: apps/planning/controller/planning_persona_que.php:124 apps/profesores/controller/profesor_asignatura_ajax.php:83
-#: apps/profesores/controller/profesor_asignatura_ajax.php:135 apps/ubis/controller/ubis_lista.php:47
+#: apps/profesores/controller/profesor_asignatura_ajax.php:135 frontend/ubis/controller/ubis_lista.php:47
 #: apps/zonassacd/controller/zona_sacd_ajax.php:274
 #, php-format
 msgid "opción no definida en switch en %s, linea %s"
@@ -882,7 +882,7 @@ msgstr "CTR org"
 #: apps/personas/model/entity/Traslado.php:629 apps/planning/controller/planning_persona_select.php:196
 #: apps/profesores/controller/congresos.php:25 apps/profesores/model/entity/Congreso.php:676
 #: apps/profesores/model/entity/ProfesorCongreso.php:675 apps/profesores/model/entity/ProfesorDocenciaStgr.php:572
-#: apps/ubis/controller/ubis_lista.php:76 apps/ubis/controller/ubis_tabla.php:462 apps/actividadestudios/view/form_3005.phtml:101
+#: frontend/ubis/controller/ubis_lista.php:76 frontend/ubis/controller/ubis_tabla.php:462 apps/actividadestudios/view/form_3005.phtml:101
 #: apps/personas/view/traslado_form.phtml:75 apps/ubis/view/ubis_buscar.phtml:179
 msgid "tipo"
 msgstr "tipo"
@@ -896,8 +896,8 @@ msgstr "ctr"
 msgid "precio"
 msgstr "prezzo"
 
-#: apps/actividades/controller/lista_actividades_sg.php:361 apps/ubis/controller/calendario_periodos_ajax.php:72
-#: apps/ubis/controller/calendario_periodos_ajax.php:119
+#: apps/actividades/controller/lista_actividades_sg.php:361 frontend/ubis/controller/calendario_periodos_ajax.php:72
+#: frontend/ubis/controller/calendario_periodos_ajax.php:119
 msgid "periodo"
 msgstr "periodo"
 
@@ -947,8 +947,8 @@ msgstr "id_tipo_activ"
 #: apps/core/DatosTabla.php:108 apps/devel/controller/modulos_select.php:62 apps/encargossacd/controller/encargo_horario_select.php:45
 #: apps/encargossacd/controller/encargo_select.php:57 apps/notas/controller/acta_select.php:145
 #: apps/notas/controller/acta_select.php:150 apps/procesos/controller/procesos_ajax.php:241
-#: apps/procesos/controller/procesos_ajax.php:278 apps/ubis/controller/list_ctr.php:251 apps/ubis/controller/teleco_tabla.php:95
-#: apps/ubis/controller/ubis_tabla.php:455 apps/zonassacd/controller/zona_sacd_ajax.php:123
+#: apps/procesos/controller/procesos_ajax.php:278 frontend/ubis/controller/list_ctr.php:251 frontend/ubis/controller/teleco_tabla.php:95
+#: frontend/ubis/controller/ubis_tabla.php:455 apps/zonassacd/controller/zona_sacd_ajax.php:123
 #: frontend/cambios/controller/usuario_form_avisos.php:46 frontend/menus/controller/grupmenu_lista.php:25
 #: src/certificados/domain/CertificadoEmitidoSelect.php:65 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:27
 #: src/shared/domain/DatosTablaRepo.php:113 src/usuarios/application/rolesLista.php:51
@@ -963,9 +963,9 @@ msgstr "cambiamento"
 #: apps/casas/controller/casa_ajax.php:50 apps/casas/controller/casa_ajax.php:106 apps/casas/controller/casa_ec_ajax.php:156
 #: apps/core/mod_tabla_form.php:177 apps/devel/controller/metamenus_get.php:63 apps/encargossacd/controller/sacd_ficha_ajax.php:424
 #: apps/notas/controller/notas_ajax.php:146 apps/procesos/controller/actividad_proceso_ajax.php:90
-#: apps/ubis/controller/calendario_periodos_ajax.php:79 apps/ubis/controller/calendario_periodos_ajax.php:125
-#: apps/ubis/controller/centros_ajax.php:35 apps/ubis/controller/centros_ajax.php:67 apps/ubis/controller/centros_ajax.php:97
-#: apps/ubis/controller/centros_ajax.php:131 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:48
+#: frontend/ubis/controller/calendario_periodos_ajax.php:79 frontend/ubis/controller/calendario_periodos_ajax.php:125
+#: frontend/ubis/controller/centros_ajax.php:35 frontend/ubis/controller/centros_ajax.php:67 frontend/ubis/controller/centros_ajax.php:97
+#: frontend/ubis/controller/centros_ajax.php:131 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:48
 #: apps/actividadestudios/view/form_1303.phtml:126 apps/actividadestudios/view/form_3005.phtml:132
 #: apps/actividadplazas/view/resumen_plazas.phtml:140 apps/asistentes/view/form_1301.phtml:109 apps/asistentes/view/form_mover.phtml:23
 #: apps/notas/view/form_1011.phtml:346 apps/personas/view/stgr_cambio.phtml:14 frontend/inventario/view/cabecera_pie_txt.phtml:58
@@ -981,9 +981,9 @@ msgstr "salvare"
 #: apps/cambios/controller/usuario_avisos_pref_ajax.php:201 apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:199
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:204 apps/casas/controller/casa_ajax.php:51
 #: apps/casas/controller/casa_ajax.php:108 apps/casas/controller/casa_ec_ajax.php:157 apps/notas/controller/notas_ajax.php:147
-#: apps/ubis/controller/calendario_periodos_ajax.php:80 apps/ubis/controller/calendario_periodos_ajax.php:127
-#: apps/ubis/controller/centros_ajax.php:36 apps/ubis/controller/centros_ajax.php:68 apps/ubis/controller/centros_ajax.php:98
-#: apps/ubis/controller/centros_ajax.php:132 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:49
+#: frontend/ubis/controller/calendario_periodos_ajax.php:80 frontend/ubis/controller/calendario_periodos_ajax.php:127
+#: frontend/ubis/controller/centros_ajax.php:36 frontend/ubis/controller/centros_ajax.php:68 frontend/ubis/controller/centros_ajax.php:98
+#: frontend/ubis/controller/centros_ajax.php:132 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:49
 #: frontend/inventario/view/equipajes_form_add.phtml:9 frontend/inventario/view/equipajes_form_nuevo.phtml:8
 #: frontend/inventario/view/equipajes_form_texto_listado.phtml:8
 msgid "cancel"
@@ -995,8 +995,8 @@ msgstr "annullare"
 #: apps/devel/controller/metamenus_get.php:72 apps/devel/controller/modulos_select.php:64
 #: apps/encargossacd/controller/encargo_horario_select.php:46 apps/encargossacd/controller/encargo_select.php:58
 #: apps/notas/controller/acta_select.php:149 apps/procesos/controller/procesos_ajax.php:241
-#: apps/procesos/controller/procesos_ajax.php:279 apps/ubis/controller/calendario_periodos_ajax.php:126
-#: apps/ubis/controller/teleco_tabla.php:96 apps/ubis/controller/ubis_tabla.php:458
+#: apps/procesos/controller/procesos_ajax.php:279 frontend/ubis/controller/calendario_periodos_ajax.php:126
+#: frontend/ubis/controller/teleco_tabla.php:96 frontend/ubis/controller/ubis_tabla.php:458
 #: frontend/cambios/controller/usuario_form_avisos.php:47 src/certificados/domain/CertificadoEmitidoSelect.php:64
 #: src/certificados/domain/Select1010.php:72 src/shared/domain/DatosTablaRepo.php:114
 #: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:65 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:50
@@ -1314,7 +1314,7 @@ msgid "hay un error, no se ha eliminado la asistencia"
 msgstr "c'è un errore, il supporto non è stato rimosso"
 
 #: apps/actividadessacd/controller/activ_sacd_ajax.php:147 apps/actividadtarifas/controller/tarifa_ajax.php:241
-#: apps/casas/controller/casa_ajax.php:436 apps/ubis/controller/calendario_periodos_ajax.php:304
+#: apps/casas/controller/casa_ajax.php:436 frontend/ubis/controller/calendario_periodos_ajax.php:304
 msgid "no sé cuál he de borar"
 msgstr "Non so quale dovrei eliminare"
 
@@ -1735,8 +1735,8 @@ msgstr "ctr"
 #: apps/asistentes/model/Select3101.php:161 apps/dbextern/controller/ver_desaparecidos_de_listas.php:76
 #: apps/dbextern/controller/ver_orbix.php:229 apps/dbextern/model/entity/DlListas.php:397
 #: apps/dbextern/model/entity/PersonaBDU.php:1189 apps/personas/model/entity/PersonaGlobal.php:1318
-#: apps/profesores/controller/congresos.php:21 apps/profesores/controller/docencia.php:30 apps/ubis/controller/ubis_lista.php:77
-#: apps/ubis/controller/ubis_tabla.php:463 apps/ubis/model/entity/UbiGlobal.php:626 apps/actividadcargos/view/select1302.phtml:64
+#: apps/profesores/controller/congresos.php:21 apps/profesores/controller/docencia.php:30 frontend/ubis/controller/ubis_lista.php:77
+#: frontend/ubis/controller/ubis_tabla.php:463 apps/ubis/model/entity/UbiGlobal.php:626 apps/actividadcargos/view/select1302.phtml:64
 #: apps/actividadcargos/view/select3102.phtml:55 apps/asistentes/view/select1301.phtml:63 apps/asistentes/view/select3101.phtml:225
 #: apps/profesores/view/ficha_profesor_stgr.print.phtml:72 apps/ubis/view/ubis_buscar.phtml:243
 msgid "dl"
@@ -2257,7 +2257,7 @@ msgstr "altre attività dl"
 #: apps/asistentes/model/Select3101.php:278 apps/asistentes/model/Select3101.php:370 apps/asistentes/model/Select3101.php:381
 #: apps/asistentes/model/Select3101.php:382 apps/asistentes/model/Select3101.php:454 apps/asistentes/model/Select3101.php:527
 #: apps/asistentes/model/Select3101.php:531 apps/asistentes/model/Select3101.php:532 apps/core/DatosTabla.php:181
-#: apps/notas/model/Select1011.php:182 apps/ubis/controller/teleco_tabla.php:131 src/shared/domain/DatosTablaRepo.php:195
+#: apps/notas/model/Select1011.php:182 frontend/ubis/controller/teleco_tabla.php:131 src/shared/domain/DatosTablaRepo.php:195
 #: apps/actividadestudios/view/selectUnCa.phtml:15 apps/actividadestudios/view/selectUnCa.phtml:53
 #: apps/personas/view/personas_que.phtml:16 apps/planning/view/planning_casa_que.phtml:57 apps/planning/view/planning_ctr_que.phtml:55
 #: apps/profesores/view/ficha_profesor_stgr.phtml:130 apps/profesores/view/ficha_profesor_stgr.phtml:318
@@ -2272,7 +2272,7 @@ msgstr "sì"
 #: apps/asistentes/model/Select3101.php:529 apps/asistentes/model/Select3101.php:531 apps/asistentes/model/Select3101.php:532
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:347
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:435 apps/core/DatosTabla.php:183 apps/notas/model/Select1011.php:182
-#: apps/ubis/controller/centros_ajax.php:263 apps/ubis/controller/teleco_tabla.php:133 apps/zonassacd/controller/zona_sacd_ajax.php:171
+#: frontend/ubis/controller/centros_ajax.php:263 frontend/ubis/controller/teleco_tabla.php:133 apps/zonassacd/controller/zona_sacd_ajax.php:171
 #: src/inventario/infrastructure/ui/http/controllers/documentos_form.php:33 src/shared/domain/DatosTablaRepo.php:197
 #: apps/actividadestudios/view/selectUnCa.phtml:18 apps/actividadestudios/view/selectUnCa.phtml:55
 #: apps/personas/view/personas_que.phtml:15 apps/planning/view/planning_casa_que.phtml:56 apps/planning/view/planning_ctr_que.phtml:54
@@ -2313,9 +2313,9 @@ msgstr "lista"
 
 #: apps/asistentes/controller/lista_ultim_que_ctr.php:70 apps/asistentes/controller/que_ctr_lista.php:44
 #: apps/asistentes/controller/que_ctr_lista.php:54 apps/asistentes/controller/que_ctr_lista.php:67
-#: apps/ubis/controller/ubis_buscar.php:68 apps/ubis/controller/ubis_buscar.php:78 apps/ubis/controller/ubis_buscar.php:93
-#: apps/ubis/controller/ubis_buscar.php:98 apps/ubis/controller/ubis_buscar.php:103 apps/ubis/controller/ubis_lista.php:75
-#: apps/ubis/controller/ubis_tabla.php:461 apps/ubis/view/cdc_form.phtml:79 apps/ubis/view/ctrdl_form.phtml:68
+#: frontend/ubis/controller/ubis_buscar.php:68 frontend/ubis/controller/ubis_buscar.php:78 frontend/ubis/controller/ubis_buscar.php:93
+#: frontend/ubis/controller/ubis_buscar.php:98 frontend/ubis/controller/ubis_buscar.php:103 frontend/ubis/controller/ubis_lista.php:75
+#: frontend/ubis/controller/ubis_tabla.php:461 apps/ubis/view/cdc_form.phtml:79 apps/ubis/view/ctrdl_form.phtml:68
 #: apps/ubis/view/ctrex_form.phtml:69
 msgid "nombre del centro"
 msgstr "nome del centro"
@@ -2753,7 +2753,7 @@ msgstr "avvisare se il valore"
 #: apps/encargossacd/controller/propuestas_ajax.php:269 apps/encargossacd/controller/propuestas_ajax.php:325
 #: apps/encargossacd/model/GestorPropuestas.php:547 apps/encargossacd/model/GestorPropuestas.php:577
 #: apps/encargossacd/model/GestorPropuestas.php:604 apps/encargossacd/model/GestorPropuestas.php:634
-#: apps/ubis/controller/calendario_periodos_ajax.php:207
+#: frontend/ubis/controller/calendario_periodos_ajax.php:207
 #: src/inventario/infrastructure/ui/http/controllers/lista_equipajes_posibles_maletas.php:46 apps/ubis/view/teleco_tabla.phtml:64
 #: frontend/menus/view/grupmenu_lista.phtml:67 frontend/menus/view/menus_get.phtml:71 frontend/menus/view/menus_get_lista.phtml:65
 #: frontend/shared/view/tablaDB_lista_ver.phtml:19
@@ -2809,7 +2809,7 @@ msgstr "Devi prima scegliere un oggetto su cui guardare le modifiche"
 msgid "Hay un error, no se ha guardado"
 msgstr "C'è un errore, non è stato salvato"
 
-#: apps/cambios/controller/usuario_form_avisos.php:69 apps/ubis/controller/list_ctr.php:341
+#: apps/cambios/controller/usuario_form_avisos.php:69 frontend/ubis/controller/list_ctr.php:341
 #: src/usuarios/infrastructure/ui/http/controllers/perm_activ_lista.php:94 src/usuarios/infrastructure/ui/http/controllers/usuario_avisos_form.php:70
 msgid "otras"
 msgstr "altro"
@@ -3085,7 +3085,7 @@ msgid "No puede modificar datos de otra dl"
 msgstr "Non è possibile modificare i dati di un altro dl"
 
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:190 apps/profesores/controller/profesor_asignatura_ajax.php:36
-#: apps/ubis/controller/list_ctr.php:263
+#: frontend/ubis/controller/list_ctr.php:263
 msgid "teléfono"
 msgstr "telefono"
 
@@ -3101,7 +3101,7 @@ msgstr "C'è un errore, non è stato cancellato."
 
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:264 apps/casas/controller/casa_ajax.php:425
 #: apps/casas/controller/casa_ec_ajax.php:63 apps/casas/controller/casa_ec_ajax.php:72 apps/casas/controller/casa_ec_ajax.php:81
-#: apps/casas/controller/grupo_ajax.php:27 apps/ubis/controller/centros_ajax.php:167
+#: apps/casas/controller/grupo_ajax.php:27 frontend/ubis/controller/centros_ajax.php:167
 msgid "Hay un error, no se ha guardado."
 msgstr "C'è un errore, non è stato salvato."
 
@@ -3110,7 +3110,7 @@ msgid "ANULADO"
 msgstr "ANNULLATO"
 
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:350
-#: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:438 apps/ubis/controller/centros_ajax.php:263
+#: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:438 frontend/ubis/controller/centros_ajax.php:263
 #: apps/zonassacd/controller/zona_sacd_ajax.php:171 src/inventario/infrastructure/ui/http/controllers/documentos_form.php:33
 msgid "si"
 msgstr "Sì"
@@ -3127,8 +3127,8 @@ msgstr "rimuovere"
 msgid "carta de presentación"
 msgstr "lettera di presentazione"
 
-#: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:386 apps/ubis/controller/direcciones_tabla.php:41
-#: apps/ubis/controller/list_ctr.php:260 apps/ubis/controller/ubis_lista.php:79 apps/ubis/controller/ubis_tabla.php:465
+#: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:386 frontend/ubis/controller/direcciones_tabla.php:41
+#: frontend/ubis/controller/list_ctr.php:260 frontend/ubis/controller/ubis_lista.php:79 frontend/ubis/controller/ubis_tabla.php:465
 #: apps/ubis/model/entity/DireccionGlobal.php:755 apps/ubis/view/direccion_form.phtml:172 apps/ubis/view/home_ubis.phtml:39
 msgid "dirección"
 msgstr "indirizzo"
@@ -3346,33 +3346,33 @@ msgstr "numero di attività"
 msgid "total según actividades"
 msgstr "totale in base alle attività"
 
-#: apps/casas/controller/casa_ajax.php:42 apps/ubis/controller/centros_ajax.php:27
+#: apps/casas/controller/casa_ajax.php:42 frontend/ubis/controller/centros_ajax.php:27
 msgid "Periodo"
 msgstr "Periodo"
 
-#: apps/casas/controller/casa_ajax.php:45 apps/ubis/controller/calendario_periodos_ajax.php:73
-#: apps/ubis/controller/calendario_periodos_ajax.php:120 apps/ubis/controller/calendario_periodos_ajax.php:265
-#: apps/ubis/controller/centros_ajax.php:30 src/inventario/domain/ListaDocsGrupo.php:57
+#: apps/casas/controller/casa_ajax.php:45 frontend/ubis/controller/calendario_periodos_ajax.php:73
+#: frontend/ubis/controller/calendario_periodos_ajax.php:120 frontend/ubis/controller/calendario_periodos_ajax.php:265
+#: frontend/ubis/controller/centros_ajax.php:30 src/inventario/domain/ListaDocsGrupo.php:57
 #: src/inventario/infrastructure/ui/http/controllers/equipajes_movimientos.php:106
 msgid "de"
 msgstr "da"
 
 #: apps/casas/controller/casa_ajax.php:45 apps/encargossacd/controller/horario_sacd_ver.php:188
-#: apps/ubis/controller/calendario_periodos_ajax.php:73 apps/ubis/controller/calendario_periodos_ajax.php:120
-#: apps/ubis/controller/calendario_periodos_ajax.php:162 apps/ubis/controller/calendario_periodos_ajax.php:265
-#: apps/ubis/controller/centros_ajax.php:30
+#: frontend/ubis/controller/calendario_periodos_ajax.php:73 frontend/ubis/controller/calendario_periodos_ajax.php:120
+#: frontend/ubis/controller/calendario_periodos_ajax.php:162 frontend/ubis/controller/calendario_periodos_ajax.php:265
+#: frontend/ubis/controller/centros_ajax.php:30
 msgid "hasta"
 msgstr "a"
 
-#: apps/casas/controller/casa_ajax.php:46 apps/ubis/controller/calendario_periodos_ajax.php:74
-#: apps/ubis/controller/calendario_periodos_ajax.php:121 apps/ubis/controller/calendario_periodos_ajax.php:163
-#: apps/ubis/controller/calendario_periodos_ajax.php:266 apps/ubis/controller/centros_ajax.php:31
+#: apps/casas/controller/casa_ajax.php:46 frontend/ubis/controller/calendario_periodos_ajax.php:74
+#: frontend/ubis/controller/calendario_periodos_ajax.php:121 frontend/ubis/controller/calendario_periodos_ajax.php:163
+#: frontend/ubis/controller/calendario_periodos_ajax.php:266 frontend/ubis/controller/centros_ajax.php:31
 msgid "asignado a"
 msgstr "assegnato a"
 
-#: apps/casas/controller/casa_ajax.php:48 apps/ubis/controller/calendario_periodos_ajax.php:77
-#: apps/ubis/controller/calendario_periodos_ajax.php:123 apps/ubis/controller/calendario_periodos_ajax.php:268
-#: apps/ubis/controller/centros_ajax.php:33
+#: apps/casas/controller/casa_ajax.php:48 frontend/ubis/controller/calendario_periodos_ajax.php:77
+#: frontend/ubis/controller/calendario_periodos_ajax.php:123 frontend/ubis/controller/calendario_periodos_ajax.php:268
+#: frontend/ubis/controller/centros_ajax.php:33
 msgid "reservado"
 msgstr "prenotato"
 
@@ -4174,7 +4174,7 @@ msgid "Por el momento estos botones no hacen nada"
 msgstr "Al momento questi pulsanti non fanno nulla"
 
 #: apps/dbextern/controller/ver_orbix.php:218 apps/dbextern/controller/ver_orbix_otradl.php:99
-#: apps/dbextern/controller/ver_traslados.php:128 apps/ubis/controller/list_ctr.php:253
+#: apps/dbextern/controller/ver_traslados.php:128 frontend/ubis/controller/list_ctr.php:253
 msgid "trasladar"
 msgstr "mossa"
 
@@ -4182,8 +4182,8 @@ msgstr "mossa"
 msgid "posibles coincidencias con personas de la BDU en otras dl/r"
 msgstr "possibili abbinamenti con persone della BDU in altri dl/r"
 
-#: apps/dbextern/controller/ver_orbix.php:227 apps/ubis/controller/list_ctr.php:258 apps/ubis/controller/ubis_lista.php:78
-#: apps/ubis/controller/ubis_tabla.php:464 apps/ubis/model/entity/UbiGlobal.php:654 apps/devel/view/db_cambiar_nombre_que.phtml:77
+#: apps/dbextern/controller/ver_orbix.php:227 frontend/ubis/controller/list_ctr.php:258 frontend/ubis/controller/ubis_lista.php:78
+#: frontend/ubis/controller/ubis_tabla.php:464 apps/ubis/model/entity/UbiGlobal.php:654 apps/devel/view/db_cambiar_nombre_que.phtml:77
 #: apps/devel/view/db_que.phtml:84 apps/ubis/view/cdc_form.phtml:73 apps/ubis/view/ctrdl_form.phtml:63
 #: apps/ubis/view/ctrex_form.phtml:63 apps/ubis/view/ubis_buscar.phtml:71 apps/ubis/view/ubis_buscar.phtml:245
 msgid "región"
@@ -4892,7 +4892,7 @@ msgid "No se puede guardar. Vuelva a cargar la vista"
 msgstr "Non può essere salvato.Ricarica la vista"
 
 #: apps/encargossacd/controller/propuestas_ajax.php:182 apps/procesos/controller/actividad_proceso_ajax.php:36
-#: apps/ubis/controller/direcciones_tabla.php:40
+#: frontend/ubis/controller/direcciones_tabla.php:40
 msgid "ok"
 msgstr "bene"
 
@@ -7201,95 +7201,95 @@ msgstr "fonte"
 msgid "aviso"
 msgstr "preavviso"
 
-#: apps/ubis/controller/calendario_periodos_ajax.php:161
+#: frontend/ubis/controller/calendario_periodos_ajax.php:161
 msgid "desde"
 msgstr "da"
 
-#: apps/ubis/controller/calendario_periodos_ajax.php:269
+#: frontend/ubis/controller/calendario_periodos_ajax.php:269
 msgid "grabar"
 msgstr "incidere"
 
-#: apps/ubis/controller/centros_ajax.php:61 apps/ubis/controller/centros_ajax.php:198 apps/ubis/model/entity/TipoCentro.php:339
+#: frontend/ubis/controller/centros_ajax.php:61 frontend/ubis/controller/centros_ajax.php:198 apps/ubis/model/entity/TipoCentro.php:339
 #: apps/ubis/view/ctrdl_form.phtml:76 apps/ubis/view/ctrex_form.phtml:76 apps/ubis/view/ubis_buscar.phtml:84
 #: apps/ubis/view/ubis_buscar.phtml:258 apps/ubis/view/ubis_buscar.phtml:280
 msgid "tipo de centro"
 msgstr "tipo di centro"
 
-#: apps/ubis/controller/centros_ajax.php:63 apps/ubis/controller/centros_ajax.php:199 apps/ubis/model/entity/Centro.php:442
+#: frontend/ubis/controller/centros_ajax.php:63 frontend/ubis/controller/centros_ajax.php:199 apps/ubis/model/entity/Centro.php:442
 #: apps/ubis/view/ctrdl_form.phtml:81 apps/ubis/view/ctrex_form.phtml:82 apps/ubis/view/ubis_buscar.phtml:127
 #: apps/ubis/view/ubis_buscar.phtml:323
 msgid "tipo de labor"
 msgstr "tipo di lavoro"
 
-#: apps/ubis/controller/centros_ajax.php:91 apps/ubis/controller/centros_ajax.php:239 apps/ubis/model/entity/CentroDl.php:683
+#: frontend/ubis/controller/centros_ajax.php:91 frontend/ubis/controller/centros_ajax.php:239 apps/ubis/model/entity/CentroDl.php:683
 msgid "número de buzón"
 msgstr "numero di casella postale"
 
-#: apps/ubis/controller/centros_ajax.php:93 apps/ubis/controller/centros_ajax.php:240 apps/ubis/model/entity/CentroDl.php:697
+#: frontend/ubis/controller/centros_ajax.php:93 frontend/ubis/controller/centros_ajax.php:240 apps/ubis/model/entity/CentroDl.php:697
 msgid "número de pi"
 msgstr "numero pi"
 
-#: apps/ubis/controller/centros_ajax.php:95 apps/ubis/controller/centros_ajax.php:241 apps/ubis/model/entity/CentroDl.php:711
+#: frontend/ubis/controller/centros_ajax.php:95 frontend/ubis/controller/centros_ajax.php:241 apps/ubis/model/entity/CentroDl.php:711
 msgid "número de cartas"
 msgstr "numero di lettere"
 
-#: apps/ubis/controller/centros_ajax.php:124 apps/ubis/controller/centros_ajax.php:277
+#: frontend/ubis/controller/centros_ajax.php:124 frontend/ubis/controller/centros_ajax.php:277
 msgid "número de habitaciones individuales"
 msgstr "numero di stanze singole"
 
-#: apps/ubis/controller/centros_ajax.php:129 apps/ubis/controller/centros_ajax.php:279 apps/ubis/model/entity/CentroDl.php:781
+#: frontend/ubis/controller/centros_ajax.php:129 frontend/ubis/controller/centros_ajax.php:279 apps/ubis/model/entity/CentroDl.php:781
 msgid "sede"
 msgstr "sede"
 
-#: apps/ubis/controller/centros_que.php:26
+#: frontend/ubis/controller/centros_que.php:26
 msgid "labor"
 msgstr "lavoro"
 
-#: apps/ubis/controller/centros_que.php:27
+#: frontend/ubis/controller/centros_que.php:27
 msgid "pi, cartas, nº buzón"
 msgstr "pi, lettere, numero di casella di posta"
 
-#: apps/ubis/controller/centros_que.php:28
+#: frontend/ubis/controller/centros_que.php:28
 msgid "sede, plazas"
 msgstr "sedi, luoghi"
 
-#: apps/ubis/controller/direcciones_editar.php:194
+#: frontend/ubis/controller/direcciones_editar.php:194
 msgid "este ubi no dispone de una dirección. Compruebe primero si existe, en este caso, asígnesela. En caso contrario cree una nueva."
 msgstr "Questo ubi non ha un indirizzo. Prima controlla se esiste, in questo caso, assegnaglielo. Altrimenti crearne uno nuovo."
 
-#: apps/ubis/controller/direcciones_editar.php:199
+#: frontend/ubis/controller/direcciones_editar.php:199
 msgid "asignar una dirección"
 msgstr "assegnare un indirizzo"
 
-#: apps/ubis/controller/direcciones_que.php:24 apps/ubis/view/direcciones_que.phtml:7
+#: frontend/ubis/controller/direcciones_que.php:24 apps/ubis/view/direcciones_que.phtml:7
 msgid "introduzca un valor para buscar una dirección existente"
 msgstr "Immettere un valore per cercare un indirizzo esistente"
 
-#: apps/ubis/controller/direcciones_tabla.php:42 apps/ubis/controller/list_ctr.php:261 apps/ubis/controller/ubis_lista.php:80
-#: apps/ubis/controller/ubis_tabla.php:466
+#: frontend/ubis/controller/direcciones_tabla.php:42 frontend/ubis/controller/list_ctr.php:261 frontend/ubis/controller/ubis_lista.php:80
+#: frontend/ubis/controller/ubis_tabla.php:466
 msgid "cp"
 msgstr "cp"
 
-#: apps/ubis/controller/direcciones_tabla.php:43 apps/ubis/controller/list_ctr.php:262 apps/ubis/controller/ubis_lista.php:81
-#: apps/ubis/controller/ubis_tabla.php:467
+#: frontend/ubis/controller/direcciones_tabla.php:43 frontend/ubis/controller/list_ctr.php:262 frontend/ubis/controller/ubis_lista.php:81
+#: frontend/ubis/controller/ubis_tabla.php:467
 msgid "ciudad"
 msgstr "città"
 
-#: apps/ubis/controller/direcciones_tabla.php:44 apps/ubis/model/entity/DireccionGlobal.php:797 apps/ubis/view/direccion_form.phtml:200
+#: frontend/ubis/controller/direcciones_tabla.php:44 apps/ubis/model/entity/DireccionGlobal.php:797 apps/ubis/view/direccion_form.phtml:200
 msgid "provincia"
 msgstr "provincia"
 
-#: apps/ubis/controller/direcciones_tabla.php:45 apps/ubis/model/entity/DireccionGlobal.php:811
+#: frontend/ubis/controller/direcciones_tabla.php:45 apps/ubis/model/entity/DireccionGlobal.php:811
 msgid "ap. correos"
 msgstr "ap. posta"
 
-#: apps/ubis/controller/direcciones_tabla.php:46 apps/ubis/model/entity/DireccionGlobal.php:825
+#: frontend/ubis/controller/direcciones_tabla.php:46 apps/ubis/model/entity/DireccionGlobal.php:825
 #: apps/ubis/model/entity/UbiGlobal.php:640 apps/ubis/view/direccion_form.phtml:206 apps/ubis/view/direcciones_que.phtml:29
 #: apps/ubis/view/ubis_buscar.phtml:75 apps/ubis/view/ubis_buscar.phtml:249
 msgid "país"
 msgstr "paese"
 
-#: apps/ubis/controller/direcciones_tabla.php:47
+#: frontend/ubis/controller/direcciones_tabla.php:47
 msgid "última modif."
 msgstr "ultima modifica"
 
@@ -7302,196 +7302,196 @@ msgstr "l'ubi_type deve essere definito"
 msgid "formato texto"
 msgstr "formato di testo"
 
-#: apps/ubis/controller/list_ctr.php:259
+#: frontend/ubis/controller/list_ctr.php:259
 msgid "tipo ctr o casa"
 msgstr "scrivi ctr o casa"
 
-#: apps/ubis/controller/list_ctr.php:352 apps/ubis/controller/list_ctr.php:370
+#: frontend/ubis/controller/list_ctr.php:352 frontend/ubis/controller/list_ctr.php:370
 msgid "sólo centros de n"
 msgstr "solo n centri"
 
-#: apps/ubis/controller/list_ctr.php:353
+#: frontend/ubis/controller/list_ctr.php:353
 msgid "todos los ctr de la dl"
 msgstr "tutto il ctr del dl"
 
-#: apps/ubis/controller/list_ctr.php:354 apps/ubis/controller/list_ctr.php:371
+#: frontend/ubis/controller/list_ctr.php:354 frontend/ubis/controller/list_ctr.php:371
 msgid "sólo centros de agd"
 msgstr "solo centri agd"
 
-#: apps/ubis/controller/list_ctr.php:355 apps/ubis/controller/list_ctr.php:372
+#: frontend/ubis/controller/list_ctr.php:355 frontend/ubis/controller/list_ctr.php:372
 msgid "sólo centros de s"
 msgstr "solo centri di s"
 
-#: apps/ubis/controller/list_ctr.php:358
+#: frontend/ubis/controller/list_ctr.php:358
 msgid "sólo centros de sss+"
 msgstr "solo sss + centri"
 
-#: apps/ubis/controller/list_ctr.php:361
+#: frontend/ubis/controller/list_ctr.php:361
 msgid "sólo centros de nax"
 msgstr "solo centri nax"
 
-#: apps/ubis/controller/list_ctr.php:363
+#: frontend/ubis/controller/list_ctr.php:363
 msgid "sólo obras corporativas"
 msgstr "solo opere aziendali"
 
-#: apps/ubis/controller/list_ctr.php:364
+#: frontend/ubis/controller/list_ctr.php:364
 msgid "casas de retiros y de cv"
 msgstr "ritiro e case cv"
 
-#: apps/ubis/controller/list_ctr.php:365
+#: frontend/ubis/controller/list_ctr.php:365
 msgid "sólo colegios"
 msgstr "solo scuole"
 
-#: apps/ubis/controller/list_ctr.php:366
+#: frontend/ubis/controller/list_ctr.php:366
 msgid "resto casas cdc"
 msgstr "riposa case di cdc"
 
-#: apps/ubis/controller/list_ctr.php:373
+#: frontend/ubis/controller/list_ctr.php:373
 msgid "todos los centros"
 msgstr "tutti i centri"
 
-#: apps/ubis/controller/list_ctr.php:374
+#: frontend/ubis/controller/list_ctr.php:374
 msgid "sólo delegaciones"
 msgstr "solo delegazioni"
 
-#: apps/ubis/controller/list_ctr.php:375
+#: frontend/ubis/controller/list_ctr.php:375
 msgid "sólo comisiones regionales"
 msgstr "solo commissioni regionali"
 
-#: apps/ubis/controller/list_ctr.php:376
+#: frontend/ubis/controller/list_ctr.php:376
 msgid "todas las casas"
 msgstr "tutte le case"
 
-#: apps/ubis/controller/lista_ctrs.php:37
+#: frontend/ubis/controller/lista_ctrs.php:37
 msgid "error"
 msgstr "errore"
 
-#: apps/ubis/controller/lista_ctrs.php:48
+#: frontend/ubis/controller/lista_ctrs.php:48
 msgid "num s"
 msgstr "numero s"
 
-#: apps/ubis/controller/lista_ctrs.php:56
+#: frontend/ubis/controller/lista_ctrs.php:56
 #, php-format
 msgid "número total de s: %s"
 msgstr "numero totale di s: %s"
 
-#: apps/ubis/controller/plano_bytea.php:84
+#: frontend/ubis/controller/plano_bytea.php:84
 msgid "no existe un plano"
 msgstr "non c'è un aereo"
 
-#: apps/ubis/controller/plano_bytea.php:169
+#: frontend/ubis/controller/plano_bytea.php:169
 msgid "introducir documento"
 msgstr "inserisci il documento"
 
-#: apps/ubis/controller/plano_bytea.php:170
+#: frontend/ubis/controller/plano_bytea.php:170
 msgid "introducir"
 msgstr "introdurre"
 
-#: apps/ubis/controller/plano_bytea.php:190
+#: frontend/ubis/controller/plano_bytea.php:190
 msgid "ya existe un escrito. ¿Desea reemplazarlo?"
 msgstr "C'è già una scrittura. Vuoi sostituirlo?"
 
-#: apps/ubis/controller/plano_bytea.php:207
+#: frontend/ubis/controller/plano_bytea.php:207
 msgid "ubicación del fichero"
 msgstr "posizione del file"
 
-#: apps/ubis/controller/teleco_tabla.php:91 apps/ubis/model/Info2001.php:18
+#: frontend/ubis/controller/teleco_tabla.php:91 apps/ubis/model/Info2001.php:18
 msgid "telecomunicaciones de un centro o casa"
 msgstr "telecomunicazioni di un centro o di una casa"
 
-#: apps/ubis/controller/ubis_buscar.php:66
+#: frontend/ubis/controller/ubis_buscar.php:66
 msgid "centros de la delegación"
 msgstr "Centri di delegazione"
 
-#: apps/ubis/controller/ubis_buscar.php:67 apps/ubis/controller/ubis_buscar.php:77 apps/ubis/controller/ubis_buscar.php:97
+#: frontend/ubis/controller/ubis_buscar.php:67 frontend/ubis/controller/ubis_buscar.php:77 frontend/ubis/controller/ubis_buscar.php:97
 msgid "¿qué centro te interesa?"
 msgstr "A quale centro sei interessato?"
 
-#: apps/ubis/controller/ubis_buscar.php:71
+#: frontend/ubis/controller/ubis_buscar.php:71
 msgid "centros o casas de otras dl/r"
 msgstr "centri o case di altri dl / r"
 
-#: apps/ubis/controller/ubis_buscar.php:72
+#: frontend/ubis/controller/ubis_buscar.php:72
 msgid "¿qué centro o casa te interesa?"
 msgstr "A quale centro o casa sei interessato?"
 
-#: apps/ubis/controller/ubis_buscar.php:73
+#: frontend/ubis/controller/ubis_buscar.php:73
 msgid "nombre del centro o casa"
 msgstr "nome del centro o della casa"
 
-#: apps/ubis/controller/ubis_buscar.php:76
+#: frontend/ubis/controller/ubis_buscar.php:76
 msgid "centros de otras dl/r"
 msgstr "altri centri dl / r"
 
-#: apps/ubis/controller/ubis_buscar.php:81
+#: frontend/ubis/controller/ubis_buscar.php:81
 msgid "casas de la delegación"
 msgstr "case della delegazione"
 
-#: apps/ubis/controller/ubis_buscar.php:82 apps/ubis/controller/ubis_buscar.php:87
+#: frontend/ubis/controller/ubis_buscar.php:82 frontend/ubis/controller/ubis_buscar.php:87
 msgid "¿qué casa te interesa?"
 msgstr "A quale casa sei interessato?"
 
-#: apps/ubis/controller/ubis_buscar.php:83 apps/ubis/controller/ubis_buscar.php:88 apps/ubis/controller/ubis_buscar.php:106
+#: frontend/ubis/controller/ubis_buscar.php:83 frontend/ubis/controller/ubis_buscar.php:88 frontend/ubis/controller/ubis_buscar.php:106
 msgid "nombre de la casa"
 msgstr "nome della casa"
 
-#: apps/ubis/controller/ubis_buscar.php:86
+#: frontend/ubis/controller/ubis_buscar.php:86
 msgid "casas de otras dl/r"
 msgstr "altre case dl / r"
 
-#: apps/ubis/controller/ubis_buscar.php:91
+#: frontend/ubis/controller/ubis_buscar.php:91
 msgid "buscar e-mails de los centros de la dl"
 msgstr "cercare e-mail dai centri del dl"
 
-#: apps/ubis/controller/ubis_buscar.php:92
+#: frontend/ubis/controller/ubis_buscar.php:92
 msgid "escoge un grupo de centros"
 msgstr "scegli un gruppo di centri"
 
-#: apps/ubis/controller/ubis_buscar.php:96
+#: frontend/ubis/controller/ubis_buscar.php:96
 msgid "centros de la sf"
 msgstr "centri sf"
 
-#: apps/ubis/controller/ubis_buscar.php:109
+#: frontend/ubis/controller/ubis_buscar.php:109
 msgid "nombre de la casa o centro"
 msgstr "nome della casa o del centro"
 
-#: apps/ubis/controller/ubis_tabla.php:132
+#: frontend/ubis/controller/ubis_tabla.php:132
 msgid "tabla de centros de la delegación"
 msgstr "tabella dei centri della delegazione"
 
-#: apps/ubis/controller/ubis_tabla.php:144
+#: frontend/ubis/controller/ubis_tabla.php:144
 msgid "tabla de centros de fuera de la delegación"
 msgstr "tavolo dei centri al di fuori della delegazione"
 
-#: apps/ubis/controller/ubis_tabla.php:152
+#: frontend/ubis/controller/ubis_tabla.php:152
 msgid "tabla de centros de la delegación femenina"
 msgstr "tavolo dei centri della delegazione femminile"
 
-#: apps/ubis/controller/ubis_tabla.php:158 apps/ubis/controller/ubis_tabla.php:201 apps/ubis/controller/ubis_tabla.php:270
+#: frontend/ubis/controller/ubis_tabla.php:158 frontend/ubis/controller/ubis_tabla.php:201 frontend/ubis/controller/ubis_tabla.php:270
 msgid "tabla de toda las casas y centros"
 msgstr "tavolo di tutte le case e i centri"
 
-#: apps/ubis/controller/ubis_tabla.php:177
+#: frontend/ubis/controller/ubis_tabla.php:177
 msgid "tabla de casas de la delegación"
 msgstr "tavolo delle case della delegazione"
 
-#: apps/ubis/controller/ubis_tabla.php:186
+#: frontend/ubis/controller/ubis_tabla.php:186
 msgid "tabla de casas de fuera de la delegación"
 msgstr "tavolo di case al di fuori della delegazione"
 
-#: apps/ubis/controller/ubis_tabla.php:195
+#: frontend/ubis/controller/ubis_tabla.php:195
 msgid "tabla de casas de la sf"
 msgstr "tavola di case della sf"
 
-#: apps/ubis/controller/ubis_tabla.php:211
+#: frontend/ubis/controller/ubis_tabla.php:211
 msgid "tabla de casas y centros de la delegación"
 msgstr "tavolo delle case e dei centri della delegazione"
 
-#: apps/ubis/controller/ubis_tabla.php:217
+#: frontend/ubis/controller/ubis_tabla.php:217
 msgid "tabla de casas y centros de fuera de la delegación"
 msgstr "tavolo di case e centri al di fuori della delegazione"
 
-#: apps/ubis/controller/ubis_tabla.php:286
+#: frontend/ubis/controller/ubis_tabla.php:286
 #, php-format
 msgid "debe poner algún criterio de búsqueda"
 msgstr "deve mettere alcuni criteri di ricerca"

@@ -68,11 +68,11 @@
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
 39	20	apps/actividadessacd/controller/activ_sacd.php	\N	Atención sacd
-7	5	apps/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
+7	5	frontend/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
 23	21	apps/encargossacd/controller/que_tipo_de_encargo.php	\N	Tipo de encargo
 14	21	apps/encargossacd/controller/sacd_ficha.php	\N	Encargo sacd ficha
 104	7	apps/actividadestudios/controller/matricular.php	\N	matricular
-48	3	apps/ubis/controller/list_ctr.php	\N	listas de ubis
+48	3	frontend/ubis/controller/list_ctr.php	\N	listas de ubis
 88	4	apps/notas/controller/asignaturas_pendientes.php	\N	cuadro alumnos-asignaturas
 38	1	apps/permisos/controller/config_select.php	\N	config modulos
 40	1	apps/menus/controller/menus_importar.php	\N	importar menus
@@ -92,7 +92,7 @@
 154	26	apps/cambios/controller/avisos_generar.php	\N	avisos generar
 2	26	apps/cambios/controller/avisos_generar_mails.php	\N	avisos mails
 90	1	apps/config/controller/parametros.php	\N	Configuracion esquema
-152	1	apps/ubis/controller/lista_ctrs.php	\N	lista ctr sg
+152	1	frontend/ubis/controller/lista_ctrs.php	\N	lista ctr sg
 12	5	apps/actividades/controller/actividades_centro_que.php	\N	Centro que activ
 51	27	apps/casas/controller/casa_ec_que.php	\N	Casa ec que
 45	27	apps/casas/controller/casa_que.php	\N	Casa que
@@ -108,7 +108,7 @@
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
 3	25	apps/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
 19	2	apps/devel/controller/factory_form.php	\N	generador de clases
-133	3	apps/ubis/controller/ubis_buscar.php	\N	buscar ubis
+133	3	frontend/ubis/controller/ubis_buscar.php	\N	buscar ubis
 119	5	apps/actividades/controller/actividad_que.php	\N	seleccionar actividad
 179	24	\N	\N	Raiz Zonas
 164	1	apps/usuarios/controller/personal.php	\N	preferencias usuario
@@ -168,7 +168,7 @@
 189	4	\N	\N	Raiz stgr
 190	3	\N	\N	Raiz ubis
 191	25	\N	\N	Raiz cartas presentacion
-146	3	apps/ubis/controller/centros_que.php	\N	Centros seleccionar
+146	3	frontend/ubis/controller/centros_que.php	\N	Centros seleccionar
 28	20	apps/actividadessacd/controller/com_sacd_activ_periodo.php	\N	Comunicación activ sacd
 18	20	apps/actividadessacd/controller/asignar_sacd_auto.php	\N	Auto asignar sacd a actividades
 46	26	apps/cambios/controller/avisos_generar_tabla.php	\N	avisos generar tabla

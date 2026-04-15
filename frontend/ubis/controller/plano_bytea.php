@@ -142,7 +142,7 @@ switch ($Qact) {
         echo fpassthru($plano_doc);
         die();
     case 'adjuntar':
-        $url = ConfigGlobal::getWeb() . '/apps/ubis/controller/plano_bytea.php';
+        $url = ConfigGlobal::getWeb() . '/frontend/ubis/controller/plano_bytea.php';
         $oHashComprobar = new Hash();
         $oHashComprobar->setUrl($url);
         /*
@@ -178,7 +178,7 @@ switch ($Qact) {
             fnjs_introducir = function () {
                 var id_direccion = $('#id_direccion').val();
 
-                var url = '<?= ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
+                var url = '<?= ConfigGlobal::getWeb() ?>/frontend/ubis/controller/plano_bytea.php';
                 var parametros = 'act=comprobar&obj_dir=<?= $Qobj_dir?><?= $h ?>&id_direccion=' + id_direccion;
 
                 $.ajax({

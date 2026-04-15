@@ -5,7 +5,7 @@
 38;1;apps/permisos/controller/config_select.php;config modulos
 76;1;apps/personas/controller/personas_que.php;búsqueda de personas
 97;1;apps/personas/controller/personas_select.php;personas Select
-152;1;apps/ubis/controller/lista_ctrs.php;lista ctr sg
+152;1;frontend/ubis/controller/lista_ctrs.php;lista ctr sg
 162;1;fnjs_exportar('odfc');exportar a odf calc
 163;1;fnjs_exportar('odft');exportar a odft txt
 167;1;fnjs_windowopen('http://10.0.0.16/redmine');abrir pag redmine
@@ -32,9 +32,9 @@
 177;2;frontend/menus/view/como.html;ayuda menus
 145;2;frontend/usuarios/controller/borrar_todos_pwd.php;borrar passwords de todos los usuarios
 64;2;src/menus/frontend/controller/menus_ficheros.php;menu a/de ficheros
-146;3;apps/ubis/controller/centros_que.php;Centros seleccionar
-48;3;apps/ubis/controller/list_ctr.php;listas de ubis
-133;3;apps/ubis/controller/ubis_buscar.php;buscar ubis
+146;3;frontend/ubis/controller/centros_que.php;Centros seleccionar
+48;3;frontend/ubis/controller/list_ctr.php;listas de ubis
+133;3;frontend/ubis/controller/ubis_buscar.php;buscar ubis
 178;4;apps/notas/controller/acta_listado_anual.php;listado anual actas
 60;4;apps/notas/controller/acta_select.php;actas
 175;4;apps/notas/controller/asig_faltan_que.php;Asignaturas pendientes
@@ -59,7 +59,7 @@
 73;5;apps/actividadtarifas/controller/tarifa_ubi.php;actividad Tarifa Ubi
 140;5;apps/asistentes/controller/activ_pendientes_select.php;actividades pendientes
 147;5;apps/asistentes/controller/que_ctr_lista.php;Buscar por centro
-7;5;apps/ubis/controller/calendario_periodos.php;Calendario Periodos
+7;5;frontend/ubis/controller/calendario_periodos.php;Calendario Periodos
 143;6;apps/actividades/controller/lista_activ_que.php;Lista Activ que
 58;6;apps/actividades/controller/lista_sr_csv_que.php;Activ Sr Que (csv)
 79;6;apps/asistentes/controller/lista_ultim_que_ctr.php;Ultima asistencia

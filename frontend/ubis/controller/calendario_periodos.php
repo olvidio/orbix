@@ -33,7 +33,7 @@ $oForm->setAction('');
 
 $oFormAny = new web\PeriodoQue();
 
-$url_ajax = ConfigGlobal::getWeb() . '/apps/ubis/controller/calendario_periodos_ajax.php';
+$url_ajax = ConfigGlobal::getWeb() . '/frontend/ubis/controller/calendario_periodos_ajax.php';
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
@@ -58,5 +58,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oFormAny' => $oFormAny,
 ];
 
-$oView = new ViewPhtml('ubis\controller');
+$oView = new ViewPhtml('frontend\ubis\controller');
 $oView->renderizar('calendario_periodos.phtml', $a_campos);

@@ -47,7 +47,7 @@ $oHash->setArraycamposHidden([
     'id_ubi' => $Qid_ubi,
 ]);
 
-$goInfo = Hash::link(ConfigGlobal::getWeb() . '/apps/ubis/controller/info_ubis.php?' . http_build_query(['id_item' => 1]));
+$goInfo = Hash::link(ConfigGlobal::getWeb() . '/frontend/ubis/controller/info_ubis.php?' . http_build_query(['id_item' => 1]));
 $golistadir = Hash::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
 $go_dir = Hash::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query([
     'id_ubi' => $Qid_ubi,
@@ -63,7 +63,7 @@ $oHashPlano->setCamposForm('obj_dir!id_ubi!id_direccion');
 $h_asignar = $oHashPlano->linkSinVal();
 
 $oHashPlano2 = new Hash();
-$oHashPlano2->setUrl('apps/ubis/controller/plano_bytea.php');
+$oHashPlano2->setUrl('frontend/ubis/controller/plano_bytea.php');
 $oHashPlano2->setCamposForm('obj_dir!act!id_direccion');
 $h = $oHashPlano2->linkSinVal();
 

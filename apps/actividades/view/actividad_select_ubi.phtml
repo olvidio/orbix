@@ -125,7 +125,7 @@ use core\ConfigGlobal;
         if (!bloque) {
             bloque = '#main';
         }
-        $(id_form).attr('action', '<?= ConfigGlobal::getWeb() . '/apps/ubis/controller/ubis_lista.php' ?>');
+        $(id_form).attr('action', '<?= ConfigGlobal::getWeb() . '/frontend/ubis/controller/ubis_lista.php' ?>');
         $(id_form).one("submit", function () {
             $.ajax({
                 url: $(this).attr('action'),
