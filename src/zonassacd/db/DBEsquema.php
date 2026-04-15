@@ -1,9 +1,9 @@
 <?php
 
-namespace zonassacd\db;
+namespace src\zonassacd\db;
 
 use core\ConfigGlobal;
-use src\configuracion\domain\DBAbstract;
+use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema.
@@ -12,7 +12,7 @@ use src\configuracion\domain\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ConfigGlobal::DIR . "/apps/zonassacd/db";
+    private $dir_base = ConfigGlobal::DIR . "/src/zonassacd/db";
 
     public function __construct($esquema_sfsv = NULL)
     {

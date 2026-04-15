@@ -1,6 +1,6 @@
 <?php
 
-namespace zonassacd\db;
+namespace src\zonassacd\db;
 
 
 use core\ConfigGlobal;

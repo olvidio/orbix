@@ -12,13 +12,17 @@ $Qacumular = (int)filter_input(INPUT_POST, 'acumular');
 $QAsel = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $QAsel = empty($QAsel) ? [] : $QAsel;
 
-$data = PostRequest::getDataFromUrl('/src/zonassacd/zona_sacd_ajax', [
+$a_campos_backend = [
     'que' => $Qque,
     'id_zona' => $Qid_zona,
-    'id_zona_new' => $Qid_zona_new,
-    'acumular' => $Qacumular,
-    'sel' => $QAsel,
-]);
+];
+if ($Qque === 'update') {
+    $a_campos_backend['id_zona_new'] = $Qid_zona_new;
+    $a_campos_backend['acumular'] = $Qacumular;
+    $a_campos_backend['sel'] = $QAsel;
+}
+
+$data = PostRequest::getDataFromUrl('/src/zonassacd/zona_sacd_ajax', $a_campos_backend);
 
 if (($data['tipo'] ?? '') === 'tabla') {
     $oTabla = new Lista();
