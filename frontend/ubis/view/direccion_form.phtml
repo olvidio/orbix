@@ -1,0 +1,88 @@
+<?php use core\ConfigGlobal; ?>
+<style>
+    .info { display: inline-block; padding: 0px 3px 3px 3px; font-size: 22px; border-radius: 50%; border: solid 3px; width: 20px; height: 20px; font-weight: bold; text-align: center; }
+</style>
+<script>
+    fnjs_guardar_dir = function (formulario) {
+        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
+        if (rr === 'ok') {
+            $('#que').val('direccion');
+            let datos = $(formulario).serialize();
+            $.ajax({ url: "<?= $url_direccion_update ?>", type: 'post', data: datos })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\n') { alert('<?= _("respuesta") ?>: ' + rta_txt); }
+                    else { <?= $oPosicion->js_atras(1); ?> }
+                });
+        }
+    }
+    fnjs_quitar_dir = function (idx) {
+        var formulario = '#frm2';
+        $('#idx').val(idx);
+        let datos = $(formulario).serialize();
+        $.ajax({ url: "<?= $url_direcciones_quitar ?>", type: 'post', data: datos })
+            .done(function (rta_txt) {
+                if (rta_txt !== '' && rta_txt !== '\n') { alert('<?= _("respuesta") ?>: ' + rta_txt); }
+                else { <?= $oPosicion->js_atras(1); ?> }
+            });
+    }
+    fnjs_add_dir = function () { fnjs_update_div('#ficha', '<?= $golistadir ?>'); }
+    fnjs_asignar_dir = function (id_ubi, obj_dir, id_direccion) {
+        var parametros = 'id_ubi=' + id_ubi + '&id_direccion=' + id_direccion + '&obj_dir=<?= $obj_dir ?><?= $h_asignar ?>';
+        $.ajax({ url: '<?= $url_direcciones_asignar ?>', type: 'post', data: parametros })
+            .done(function (rta_txt) {
+                if (rta_txt !== '' && rta_txt !== '\n') { alert('<?= _("respuesta") ?>: ' + rta_txt); }
+                else { <?= $oPosicion->js_atras(1); ?> }
+            });
+    }
+    fnjs_ver_dir = function () {
+        nom = $('#nom_sede').val(); dir = $('#direccion').val(); dir_post = $('#a_p').val(); inv = $('#cp_dcha').prop("checked");
+        cp = $('#c_p').val(); pob = $('#poblacion').val(); prov = $('#provincia').val(); pais = $('#pais').val();
+        lin_1 = dir_post ? dir_post : dir; lin_2 = inv ? pob + " " + cp : cp + " " + pob;
+        alert((nom ? nom + "\n" : "") + lin_1 + "\n" + lin_2 + "\n" + prov + "\n" + pais);
+    }
+    fnjs_ver_documento = function (id_direccion) {
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php';
+        var parametros = 'act=comprobar&obj_dir=<?= $obj_dir ?><?= $h ?>&id_direccion=' + id_direccion;
+        $.ajax({ url: url, type: 'post', data: parametros }).done(function (rta_txt) {
+            if (rta_txt == 'si') {
+                var pagina = url + '?id_direccion=' + id_direccion + '&act=download&obj_dir=<?= $obj_dir ?><?= $h ?>';
+                top.newWin = window.open(pagina, "abrir", ""); top.newWin.focus();
+            } else { alert("<?= _("No existe ningún plano"); ?>"); }
+        });
+    }
+    fnjs_adjuntar = function (act, id_direccion) {
+        var pagina = '<?= ConfigGlobal::getWeb() ?>/apps/ubis/controller/plano_bytea.php?id_direccion=' + id_direccion + '&act=' + act + '&obj_dir=<?= $obj_dir ?><?= $h ?>';
+        top.newWin = window.open(pagina, "files", "dependent=yes,width=850,height=300,screenX=300,screenY=300,titlebar=yes,scrollbars=yes");
+        top.newWin.focus();
+    }
+    fnjs_otro = function (n) { go_dir = '<?= $go_dir ?>'; if (n == 1) { go_dir += '&inc=menos'; } if (n == 2) { go_dir += '&inc=mas'; } fnjs_update_div('#ficha', go_dir); }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<?php if (!empty($menos) || !empty($mas)) { echo _("OJO Más de una dirección") . ':  '; } ?>
+<?php if (!empty($menos)) { ?><input type="button" onclick='fnjs_otro(1)' value="<< <?= _("anterior") ?>"><?php } ?>
+<?php if (!empty($mas)) { ?><input type="button" onclick='fnjs_otro(2)' value="<?= _("siguiente") ?> >>"><?php } ?>
+<form id='frm2'>
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="Hidden" id="que" name="que" value="">
+    <table>
+        <tr><td class=etiqueta><?= ucfirst(_("nombre sede")) ?><input class="contenido" id="nom_sede" name="nom_sede" size=80 value="<?= $nom_sede ?>" style="HEIGHT:22px;WIDTH:342px"></td>
+            <td class=etiqueta><?= ucfirst(_("propietario")) ?><input type="checkbox" id="propietario" name="propietario" size="1" <?= $chk_propietario ?>><span class="info" title="<?= _("ayuda!") ?>" onclick="window.open('<?= $goInfo ?>','leyenda','width=800,height=700,screenX=200,screenY=200,titlebar=yes')">i</span></td></tr>
+        <tr><td class=etiqueta><?= ucfirst(_("dirección")) ?><input class="contenido" id="direccion" name="direccion" size=80 value="<?= $direccion ?>" style="HEIGHT:22px;WIDTH:342px"></td><td class=etiqueta><?= ucfirst(_("principal")) ?><input type="checkbox" id="principal" name="principal" size="1" <?= $chk_principal ?>></td></tr>
+        <tr><td class=etiqueta><?= ucfirst(_("dirección postal")) ?><input class="contenido" id="a_p" name="a_p" size="80" style="HEIGHT: 22px; WIDTH: 342px" value="<?= $a_p ?>"></td></tr>
+        <tr><td class=etiqueta title="invierte el orden: población - cod. postal"><?= _("inv") ?> <input type="checkbox" id="cp_dcha" name="cp_dcha" size="1" <?= $chk_dcha ?>> <?= ucfirst(_("código postal")) ?> <input class="contenido" id="c_p" name="c_p" size="25" value="<?= $c_p ?>" style="HEIGHT: 22px;WIDTH:250px"> <?= ucfirst(_("población")) ?> <input class="contenido" id="poblacion" name="poblacion" size="34" value="<?= $poblacion ?>" style="HEIGHT: 22px; WIDTH: 250px"></td></tr>
+        <tr><td class=etiqueta><?= ucfirst(_("provincia")) ?> <input class="contenido" id="provincia" name="provincia" size="15" value="<?= $provincia ?>"></td></tr>
+        <tr><td class=etiqueta><?= ucfirst(_("país")) ?> <input class="contenido" id="pais" name="pais" size="37" value="<?= $pais ?>"></td></tr>
+        <tr><td class=etiqueta><?= ucfirst(_("comentarios dirección")) ?> <textarea class="contenido" name="observ" rows=3 style="HEIGHT: 40px; WIDTH: 400px"><?= $observ ?></textarea></td></tr>
+        <tr><td class=etiqueta><?= ucfirst(_("fecha introducción de datos")) ?> <input class="contenido" name="f_direccion" size="15" value="<?= $f_direccion ?>"></td><td><span class="link" onclick="fnjs_ver_dir();"><?= _("ver ejemplo dirección") ?></span></td></tr>
+        <tr><td class=etiqueta><?= ucfirst(_("latitud")) ?> <input class="contenido" name="latitud" size="15" value="<?= $latitud ?>"> <?= ucfirst(_("longitud")) ?> <input class="contenido" name="longitud" size="15" value="<?= $longitud ?>"></td></tr>
+    </table>
+</form>
+<?php if (!empty($botones)) { ?>
+<form id='frm1' name="frm1" action='apps/ubis/controller/plano_bytea.php'>
+    <input type=hidden name=sel value='dani'><input type=hidden id=que name=que value=''>
+    <table><tr><td class='link' onclick="fnjs_ver_documento(<?= $id_direccion_actual ?>)"><?= _("ver plano") ?></td><td class='link' onclick="fnjs_adjuntar('adjuntar',<?= $id_direccion_actual ?>)"><?= _("adjuntar plano") ?></td><td class='link' onclick="fnjs_adjuntar('eliminar',<?= $id_direccion_actual ?>)"><?= _("eliminar plano") ?></td></tr></table>
+</form><br>
+<table><tr class=botones>
+<?php $b = strtok($botones, ","); while ($b) { if ($b == 1) { echo "<th class='link_inv' onclick=\"fnjs_guardar_dir('#frm2');\">" . ucwords(_("guardar cambios")) . "</th>"; } if ($b == 3) { echo "<th class='link_inv' onclick='fnjs_eliminar($idx)'>" . ucwords(_("eliminar dirección")) . "</th>"; } if ($b == 4) { echo "<th class='link_inv' onclick='fnjs_quitar_dir($idx)'>" . ucwords(_("quitar dirección")) . "</th>"; } if ($b == 5) { echo "<th class='link_inv' onclick='fnjs_add_dir()'>" . ucwords(_("añadir dirección")) . "</th>"; } $b = strtok(","); } ?>
+</tr></table><br>
+<?php } ?>

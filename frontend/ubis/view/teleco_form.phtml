@@ -1,0 +1,37 @@
+<script>
+    fnjs_guardar = function (formulario) {
+        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
+        if (rr === 'ok') {
+            $('#mod').val('teleco');
+            let datos = $(formulario).serialize();
+            $.ajax({ url: '<?= $url_guardar ?>', type: 'post', data: datos })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                    }
+                });
+        }
+    }
+    fnjs_actualizar_descripcion = function () {
+        var id_tipo_teleco = $('#id_tipo_teleco').val();
+        var parametros = 'id_tipo_teleco=' + id_tipo_teleco;
+        $.ajax({ url: '<?= $url_actualizar ?>', type: 'post', data: parametros })
+            .done(function (rta_txt) { $('#span_descripcion').html(rta_txt); });
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<form id='frm2'>
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="Hidden" id="mod" name="mod" value="">
+    <table>
+        <tr><td class="etiqueta"><?= ucfirst(_("tipo teleco")) ?><?= $oDesplegableTiposTeleco->desplegable(); ?></td></tr>
+        <tr><td class="etiqueta"><?= ucfirst(_("descripción")) ?><span id='span_descripcion'><?= $oDesplegableDescTeleco->desplegable(); ?></span></td></tr>
+        <tr><td class="etiqueta"><?= ucfirst(_("número")) ?><input class="contenido" id="num_teleco" name="num_teleco" value="<?= $num_teleco ?>" size="30"></td></tr>
+        <tr><td class="etiqueta"><?= ucfirst(_("observaciones")) ?><input class="contenido" id="observ" name="observ" value="<?= $observ ?>" size="50"></td></tr>
+    </table>
+    <?php if (!empty($botones)) { ?>
+        <table><tr class=botones><th class='link_inv' onclick='fnjs_guardar("#frm2")'><?= ucwords(_("guardar cambios")) ?></th></tr></table><br>
+    <?php } ?>
+</form>
