@@ -14,11 +14,12 @@ $oDesplZonas->setOpciones($data['a_opciones']);
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setBlanco(0);
 
-$url_ajax = 'frontend/zonassacd/controller/zona_sacd_ajax.php';
+$url_ajax_lista = 'frontend/zonassacd/controller/zona_sacd_lista_ajax.php';
+$url_ajax_update = 'frontend/zonassacd/controller/zona_sacd_update_ajax.php';
 
 $oHashSacd = new Hash();
-$oHashSacd->setUrl($url_ajax);
-$oHashSacd->setCamposForm('que!id_zona');
+$oHashSacd->setUrl($url_ajax_lista);
+$oHashSacd->setCamposForm('id_zona');
 $h_sacd = $oHashSacd->linkSinVal();
 
 $oHashUrlGet = new Hash();
@@ -32,14 +33,15 @@ $oHashUrlPut->setCamposForm('id_sacd!id_zona!dw1!dw2!dw3!dw4!dw5!dw6!dw7');
 $h_url_put = $oHashUrlPut->linkSinVal();
 
 $oHash = new Hash();
-$oHash->setUrl($url_ajax);
-$oHash->setArraycamposHidden(['acumular' => 0, 'que' => 'update']);
+$oHash->setUrl($url_ajax_update);
+$oHash->setArraycamposHidden(['acumular' => 0]);
 $oHash->setCamposForm('id_zona!id_zona_new');
 $oHash->setCamposNo('acumular!scroll_id!sel');
 
 $a_campos = [
     'oHash' => $oHash,
-    'url_ajax' => $url_ajax,
+    'url_ajax_lista' => $url_ajax_lista,
+    'url_ajax_update' => $url_ajax_update,
     'h_sacd' => $h_sacd,
     'h_url_get' => $h_url_get,
     'h_url_put' => $h_url_put,

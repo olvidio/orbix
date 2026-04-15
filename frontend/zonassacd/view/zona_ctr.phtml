@@ -2,24 +2,19 @@
 fnjs_busca_ctrs=function(){
     var id_zona=$('#lst_zonas').val();
     if (id_zona) {
-        var url='<?= $url_ajax ?>';
-        var parametros='que=get_lista&id_zona='+id_zona+'<?= $h_ctr ?>';
+        var url='<?= $url_ajax_lista ?>';
+        var parametros='id_zona='+id_zona+'<?= $h_ctr ?>';
         $.ajax({ url: url, type: 'post', data: parametros, dataType: 'html' })
             .done(function (rta_txt) { $('#lst_ctrs').html(rta_txt); });
     }
 }
 fnjs_guardar=function(formulario){
-    $(formulario).attr('action','<?= $url_ajax ?>');
-    $(formulario).one("submit", function() {
-        $.ajax({ url: $(this).attr('action'), type: 'post', data: $(this).serialize() })
-            .done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\n') { alert ('<?= _("respuesta") ?>: '+rta_txt); }
-            });
-        return false;
-    });
-    $(formulario).trigger("submit");
-    $(formulario).off();
-    fnjs_busca_ctrs();
+    let datos = $(formulario).serialize();
+    $.ajax({ url: '<?= $url_ajax_update ?>', type: 'post', data: datos })
+        .done(function (rta_txt) {
+            if (rta_txt !== '' && rta_txt !== '\n') { alert ('<?= _("respuesta") ?>: '+rta_txt); }
+            fnjs_busca_ctrs();
+        });
 }
 fnjs_left_side_hide();
 </script>

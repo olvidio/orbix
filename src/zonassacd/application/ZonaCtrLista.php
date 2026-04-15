@@ -6,18 +6,9 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
-class ZonaCtrAjax
+class ZonaCtrLista
 {
-    public static function execute(string $que, string $id_zona, string $id_zona_new, array $sel): array
-    {
-        return match ($que) {
-            'get_lista' => self::getLista($id_zona),
-            'update' => self::update($id_zona_new, $sel),
-            default => ['error' => sprintf(_("opción no definida en switch: %s"), $que)],
-        };
-    }
-
-    private static function getLista(string $id_zona): array
+    public static function execute(string $id_zona): array
     {
         $aWhere = [];
         $aOperador = [];
@@ -73,24 +64,5 @@ class ZonaCtrAjax
             'a_valores' => $a_valores,
             'error' => '',
         ];
-    }
-
-    private static function update(string $id_zona_new, array $sel): array
-    {
-        $errores = [];
-        foreach ($sel as $id_ubi) {
-            $id_ubi = (string)$id_ubi;
-            if ((int)$id_ubi[0] === 1) {
-                $CentroRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-            } else {
-                $CentroRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
-            }
-            $oCentro = $CentroRepository->findById($id_ubi);
-            $oCentro->setId_zona($id_zona_new === 'no' ? '' : $id_zona_new);
-            if ($CentroRepository->Guardar($oCentro) === false) {
-                $errores[] = _("hay un error, no se ha guardado.");
-            }
-        }
-        return ['tipo' => 'update', 'mensaje' => implode("\n", $errores), 'error' => ''];
     }
 }

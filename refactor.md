@@ -27,6 +27,21 @@ Referencia: `frontend/usuarios/controller/usuario_lista.php`.
 - Parametros: array asociativo; el hash de seguridad lo genera `PostRequest` internamente.
 - Respuesta: `json_decode` del campo `data`; comprobar `error` en el array devuelto si se maneja sin `exit`.
 
+## Endpoints por accion (evitar `que`)
+
+- Evitar endpoints multiproposito con parametro `que` (ej. `get_lista`, `update`, ...).
+- Preferir **un endpoint por accion**: p.ej. `/src/<modulo>/<recurso>_lista` y `/src/<modulo>/<recurso>_update`.
+- En `application`, separar tambien clases/casos de uso por accion (`...Lista`, `...Update`) para reducir `switch` y facilitar tests.
+- En `frontend`, llamar directamente al endpoint de la accion correspondiente (sin enviar campos de acciones no usadas).
+- Si existe un endpoint legacy con `que`, mantenerlo solo como wrapper de compatibilidad temporal y marcarlo como deprecado en comentario.
+
+## Patron JavaScript para guardar (sin `trigger("submit")`)
+
+- En vistas frontend, evitar el patron `form.one("submit") + trigger("submit") + off()`.
+- Para acciones de guardado, usar llamada directa con `$.ajax(...)` y manejar respuesta en `.done(...)`.
+- Construir `data` con `$(formulario).serialize()` (o parametros explicitos cuando convenga) y enviar a la URL de accion (`..._update`, `..._guardar`, etc.).
+- Hacer el refresco de lista/UI dentro de `.done(...)` para mantener el flujo asíncrono claro y evitar dobles envíos.
+
 ## URLs canonicas y menus
 
 - **Enlaces y menus nuevos:** siempre rutas bajo `frontend/.../controller/....php`.
