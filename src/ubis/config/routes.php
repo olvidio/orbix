@@ -43,5 +43,11 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/ubis/ubis_eliminar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/ubis_eliminar.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/calendario_periodos_guardar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/calendario_periodos_guardar.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/calendario_periodos_eliminar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/calendario_periodos_eliminar.php';
+    });
 
 };
