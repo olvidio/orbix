@@ -584,7 +584,7 @@ class PermDossier
                         "s" => array('nom' => "s", 'obj' => "PersonaS", 'perm' => 0),
                         "x" => array('nom' => "nax", 'obj' => "PersonaNax", 'perm' => 0),
                         "pn" => array('nom' => "n de paso", 'obj' => "PersonaEx&na=n", 'perm' => 1),
-                        "pa" => array('nom' => "agd de paso", 'obj' => "PersonaEx&na=a", 'perm' => 0),
+                        "pa" => array('nom' => "agd de paso", 'obj' => "PersonaEx&na=a", 'perm' => 1),
                         "px" => array('nom' => "nax de paso", 'obj' => "PersonaEx&na=x", 'perm' => 0)
                     );
                     $ref_perm = $this->daniBoleanOr($ref_perm, $ref_perm_of);
