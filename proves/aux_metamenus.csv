@@ -42,7 +42,7 @@
 174;4;apps/notas/controller/asignaturas_pendientes_resumen.php;Resumen asig. pendientes
 57;4;apps/notas/controller/resumen_anual.php;resumen anual
 173;4;apps/profesores/controller/lista_por_departamentos.php;listado claustro
-171;4;apps/profesores/controller/profesor_asignatura_que.php;profesores para asignatura
+171;4;frontend/profesores/controller/profesor_asignatura_que.php;profesores para asignatura
 37;4;frontend/certificados/controller/certificado_emitido_lista.php;Certificado lista
 12;5;apps/actividades/controller/actividades_centro_que.php;Centro que activ
 157;5;apps/actividades/controller/actividad_nuevo_curso.php;Nuevo Curso
@@ -72,8 +72,8 @@
 105;7;apps/actividadestudios/controller/matriculas_lista_otras_r.php;lista alumnos otras r para certificados stgr
 66;7;apps/actividadestudios/controller/matriculas_lista.php;listas de matriculas
 168;7;apps/actividadestudios/controller/matriculas_pendientes.php;matriculas pendientes
-196;7;apps/profesores/controller/congresos.php;congresos
-15;7;apps/profesores/controller/docencia.php;Docencia
+196;7;frontend/profesores/controller/congresos.php;congresos
+15;7;frontend/profesores/controller/docencia.php;Docencia
 169;8;apps/actividadplazas/controller/gestion_plazas.php;Gestión de plazas
 172;8;apps/actividadplazas/controller/incorporar_peticion.php;Incorporar peticiones de plazas
 170;8;apps/actividadplazas/controller/plazas_balance_que.php;Balance de Plazas

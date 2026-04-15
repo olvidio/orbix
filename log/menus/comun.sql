@@ -145,7 +145,7 @@
 43	20	apps/actividadescentro/controller/activ_ctr.php	\N	actividades centro
 166	2	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
 17	2	apps/devel/controller/db_que.php	\N	nuevo esquema
-171	4	apps/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
+171	4	frontend/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
 173	4	apps/profesores/controller/lista_por_departamentos.php	\N	listado claustro
 64	2	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros
 177	2	apps/menus/view/como.phtml	\N	ayuda menus
@@ -189,5 +189,5 @@
 192	2	apps/devel/controller/db_cambiar_nombre_que.php	\N	cambiar nombre dl
 1	7	\N	\N	Raiz stgr 2
 61	6	apps/asistentes/controller/planning_que.php	\N	planning
-15	7	apps/profesores/controller/docencia.php	\N	Docencia
-196	7	apps/profesores/controller/congresos.php	\N	congresos
+15	7	frontend/profesores/controller/docencia.php	\N	Docencia
+196	7	frontend/profesores/controller/congresos.php	\N	congresos

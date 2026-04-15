@@ -274,7 +274,7 @@
 12,agd r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
 12,agd de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=a&tipo=persona,1
 12,matricular a todos (matricular),apps/actividadestudios/controller/matricular.php,,7
-12,profesor para asignatura (profesores para asignatura),apps/profesores/controller/profesor_asignatura_que.php,,4
+12,profesor para asignatura (profesores para asignatura),frontend/profesores/controller/profesor_asignatura_que.php,,4
 12,claustro (listado claustro),apps/profesores/controller/lista_por_departamentos.php,,4
 12,actas... (Raiz stgr),,,4
 12,actas (actas),apps/notas/controller/acta_select.php,,4
@@ -284,8 +284,8 @@
 12,Matrículas (listas de matriculas),apps/actividadestudios/controller/matriculas_lista.php,,7
 12,resumen pendientes (Resumen asig. pendientes),apps/notas/controller/asignaturas_pendientes_resumen.php,,4
 12,buscar asig. pendientes (Asignaturas pendientes),apps/notas/controller/asig_faltan_que.php,,4
-12,ver docencia (Docencia),apps/profesores/controller/docencia.php,,7
-12,asitencia a congresos (congresos),apps/profesores/controller/congresos.php,,7
+12,ver docencia (Docencia),frontend/profesores/controller/docencia.php,,7
+12,asitencia a congresos (congresos),frontend/profesores/controller/congresos.php,,7
 12,certificados (Certificado lista),frontend/certificados/controller/certificado_emitido_lista.php,,4
 12,posibles ca (Raiz stgr 2),,,7
 12,posibles ca (Posibles ca),apps/actividadestudios/controller/ca_posibles_que.php,,7
@@ -430,7 +430,7 @@
 20,Previsión asistentes (prevision asistentes),apps/casas/controller/prevision_asistentes.php,,27
 21,n r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
 21,agd r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
-21,profesor para asignatura (profesores para asignatura),apps/profesores/controller/profesor_asignatura_que.php,,4
+21,profesor para asignatura (profesores para asignatura),frontend/profesores/controller/profesor_asignatura_que.php,,4
 21,claustro (listado claustro),apps/profesores/controller/lista_por_departamentos.php,,4
 21,actas (actas),apps/notas/controller/acta_select.php,,4
 21,tabla alumnos-asignaturas (cuadro alumnos-asignaturas),apps/notas/controller/asignaturas_pendientes.php,,4

@@ -1,0 +1,27 @@
+<script>
+    fnjs_profes = function () {
+        id_asignatura = $("#id_asignatura").val();
+        var parametros = 'id_asignatura=' + id_asignatura + '<?= $h ?>';
+        $.ajax({
+            url: '<?= $url_ajax ?>',
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#resultados').html(rta_txt);
+            });
+    };
+    fnjs_left_side_hide();
+</script>
+<table>
+    <tr class=tab>
+        <th class=titulo_inv colspan=5><?= ucfirst(_("profesores que pueden impartir una asignatura")) ?></th>
+    </tr>
+    <tr>
+        <td class=etiqueta><?= ucfirst(_("asignatura")) ?></td>
+        <td><?= $oDesplAsignaturas->desplegable() ?></td>
+    </tr>
+    </tbody>
+</table>
+<div id="resultados"></div>

@@ -1,0 +1,138 @@
+{
+    "missing_tables_found": 19,
+    "missing_tables": [
+        {
+            "schema": "H-dlbv",
+            "module": "certificados",
+            "table": "e_certificados_rstgr",
+            "entity": "\\src\\certificados\\domain\\entity\\CertificadoEmitido",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlbv",
+            "module": "misas",
+            "table": "misa_plantillas_dl",
+            "entity": "\\src\\misas\\domain\\entity\\Plantilla",
+            "connection_key": "oDBE"
+        },
+        {
+            "schema": "H-dlbv",
+            "module": "notas",
+            "table": "e_notas_otra_region_stgr",
+            "entity": "\\src\\notas\\domain\\entity\\PersonaNota",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlbv",
+            "module": "personas",
+            "table": "p_nax",
+            "entity": "\\src\\personas\\domain\\entity\\PersonaNax",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "certificados",
+            "table": "e_certificados_rstgr",
+            "entity": "\\src\\certificados\\domain\\entity\\CertificadoEmitido",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "inventario",
+            "table": "i_colecciones_dl",
+            "entity": "\\src\\inventario\\domain\\entity\\Coleccion",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "inventario",
+            "table": "i_documentos_dl",
+            "entity": "\\src\\inventario\\domain\\entity\\Documento",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "inventario",
+            "table": "i_egm_dl",
+            "entity": "\\src\\inventario\\domain\\entity\\Egm",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "inventario",
+            "table": "i_equipajes_dl",
+            "entity": "\\src\\inventario\\domain\\entity\\Equipaje",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "inventario",
+            "table": "i_lugares_dl",
+            "entity": "\\src\\inventario\\domain\\entity\\Lugar",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "inventario",
+            "table": "i_tipo_documento_dl",
+            "entity": "\\src\\inventario\\domain\\entity\\TipoDoc",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "inventario",
+            "table": "i_ubis_dl",
+            "entity": "\\src\\inventario\\domain\\entity\\UbiInventario",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "inventario",
+            "table": "i_whereis_dl",
+            "entity": "\\src\\inventario\\domain\\entity\\Whereis",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "misas",
+            "table": "misa_rel_encargo_ctr",
+            "entity": "\\src\\misas\\domain\\entity\\EncargoCtr",
+            "connection_key": "oDBC"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "misas",
+            "table": "misa_cuadricula_dl",
+            "entity": "\\src\\misas\\domain\\entity\\EncargoDia",
+            "connection_key": "oDBC"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "misas",
+            "table": "misa_iniciales_dl",
+            "entity": "\\src\\misas\\domain\\entity\\InicialesSacd",
+            "connection_key": "oDBC"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "misas",
+            "table": "misa_plantillas_dl",
+            "entity": "\\src\\misas\\domain\\entity\\Plantilla",
+            "connection_key": "oDBE"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "notas",
+            "table": "e_notas_otra_region_stgr",
+            "entity": "\\src\\notas\\domain\\entity\\PersonaNota",
+            "connection_key": "oDB"
+        },
+        {
+            "schema": "H-dlpv",
+            "module": "personas",
+            "table": "p_nax",
+            "entity": "\\src\\personas\\domain\\entity\\PersonaNax",
+            "connection_key": "oDB"
+        }
+    ]
+}
