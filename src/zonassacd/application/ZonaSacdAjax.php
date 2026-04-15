@@ -108,8 +108,8 @@ class ZonaSacdAjax
                 $id_zona = $oZonaSacd->getId_zona();
                 $propia = $oZonaSacd->isPropia();
                 $oZona = $ZonaRepository->findById($id_zona);
-                $orden = $propia === true ? 0 : $oZona->getOrden();
-                $a_zonas[$orden] = [$oZona->getNombre_zona(), $propia];
+                $orden = $propia === true ? 0 : $oZona?->getOrden()?? 0;
+                $a_zonas[$orden] = [$oZona?->getNombre_zona()??'', $propia];
             }
             if (count($a_zonas) >= 1) {
                 ksort($a_zonas);
