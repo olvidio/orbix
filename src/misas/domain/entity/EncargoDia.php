@@ -141,10 +141,10 @@ class EncargoDia
      */
     public function getStatus(): ?int
     {
-        return $this->status->value();
+        return $this->status?->value();
     }
 
-    public function getStatusVo(): EncargoDiaStatus
+    public function getStatusVo(): ?EncargoDiaStatus
     {
         return $this->status;
     }

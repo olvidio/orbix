@@ -34,16 +34,11 @@ $Qtstart = (string)filter_input(INPUT_POST, 'tstart');
 $Qtend = (string)filter_input(INPUT_POST, 'tend');
 $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
-$Qdia = (string)filter_input(INPUT_POST, 'dia');
+$Qdia_iso = (string)filter_input(INPUT_POST, 'dia');
 $QTipoPlantilla = (string)filter_input(INPUT_POST, 'tipo_plantilla');
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
-$sdia = $Qdia;
-$dia = DateTimeLocal::createFromLocal($Qdia);
-$dia_iso = $dia->getIso();
-//echo 'Qkey'.$Qkey.'<br>';
 $comprobacion = '';
-
 $error_txt = '';
 
 if (empty($Quuid_item)) {
@@ -91,10 +86,10 @@ if (empty($Qkey)) { // no hay ningún sacd
 
 //    echo 'error_txt: '.$error_txt;
 
-    $QTstart = new EncargoDiaTstart($Qdia, $Qtstart);
+    $QTstart = new EncargoDiaTstart($Qdia_iso, $Qtstart);
     $oEncargoDia->setTstart($QTstart);
 
-    $QTend = new EncargoDiaTend($Qdia, $Qtend);
+    $QTend = new EncargoDiaTend($Qdia_iso, $Qtend);
     $oEncargoDia->setTend($QTend);
 
     $oEncargoDia->setObserv($Qobserv);
@@ -128,9 +123,9 @@ if (!empty($id_sacd_anterior)) {
 //    echo '--------------SACD ANTERIOR<br>';
     $aWhereAct = [];
     $aOperadorAct = [];
-    $aWhereAct['f_ini'] = $dia_iso;
+    $aWhereAct['f_ini'] = $Qdia_iso;
     $aOperadorAct['f_ini'] = '<=';
-    $aWhereAct['f_fin'] = $dia_iso;
+    $aWhereAct['f_fin'] = $Qdia_iso;
     $aOperadorAct['f_fin'] = '>=';
     $aWhereAct['status'] = StatusId::ACTUAL;
     $aWhere = ['id_nom' => $id_sacd_anterior];
@@ -175,9 +170,9 @@ if (!empty($id_sacd_anterior)) {
     $aWhereE = [];
     $aOperadorE = [];
     $aWhereE['id_nom'] = $id_sacd_anterior;
-    $aWhereE['f_ini'] = "'$dia_iso'";
+    $aWhereE['f_ini'] = "'$Qdia_iso'";
     $aOperadorE['f_ini'] = '<=';
-    $aWhereE['f_fin'] = "'$dia_iso'";
+    $aWhereE['f_fin'] = "'$Qdia_iso'";
     $aOperadorE['f_fin'] = '>=';
     $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
     foreach ($cAusencias as $oTareaHorarioSacd) {
@@ -219,9 +214,9 @@ $donde_esta_sacd = '';
 if (!empty($id_nom)) {
     $aWhereAct = [];
     $aOperadorAct = [];
-    $aWhereAct['f_ini'] = $dia_iso;
+    $aWhereAct['f_ini'] = $Qdia_iso;
     $aOperadorAct['f_ini'] = '<=';
-    $aWhereAct['f_fin'] = $dia_iso;
+    $aWhereAct['f_fin'] = $Qdia_iso;
     $aOperadorAct['f_fin'] = '>=';
     $aWhereAct['status'] = StatusId::ACTUAL;
     $aWhere = ['id_nom' => $id_nom];
@@ -264,9 +259,9 @@ if (!empty($id_nom)) {
     $aWhereE = [];
     $aOperadorE = [];
     $aWhereE['id_nom'] = $id_nom;
-    $aWhereE['f_ini'] = "'$dia_iso'";
+    $aWhereE['f_ini'] = "'$Qdia_iso'";
     $aOperadorE['f_ini'] = '<=';
-    $aWhereE['f_fin'] = "'$dia_iso'";
+    $aWhereE['f_fin'] = "'$Qdia_iso'";
     $aOperadorE['f_fin'] = '>=';
     $cAusencias = $EncargoSacdHorarioRepository->getEncargoSacdHorarios($aWhereE, $aOperadorE);
     foreach ($cAusencias as $oTareaHorarioSacd) {
@@ -307,9 +302,11 @@ $texto_anterior = '';
 $texto_sacd_anterior = '--';
 $color_fondo_anterior = 'verdeclaro';
 
-$inicio_dia = $Qdia . ' 00:00:00';
-$fin_dia = $Qdia . ' 23:59:59';
-$num_dia = $Qdia;
+$inicio_dia = $Qdia_iso . ' 00:00:00';
+$fin_dia = $Qdia_iso . ' 23:59:59';
+$num_dia = $Qdia_iso;
+
+$dia = new DateTimeLocal($Qdia_iso, new DateTimeZone('Europe/Madrid'));
 $dws = $dia->format('N');
 
 if (!empty($id_sacd_anterior)) {
@@ -427,6 +424,7 @@ if (!empty($id_nom)) {
     $misas_1a_hora = 0;
     $misas_dia_zona = 0;
     $misas_1a_hora_zona = 0;
+    $EncargoRepository = $GLOBALS['container']->get(EncargoRepositoryInterface::class);
     foreach ($cEncargosDia as $oEncargoDia) {
         $id_enc = $oEncargoDia->getId_enc();
 //            echo 'id_enc: '.$id_enc.'<br>';
@@ -500,7 +498,7 @@ if (!empty($id_nom)) {
 //                echo '1a: '.$misas_1a_hora.'<br>';
             $color_fondo = 'rojo';
         }
-        $texto = 'Está en ' . $donde_esta_sacd[$id_nom][$num_dia];
+        $texto = 'Está en ' . $donde_esta_sacd[$id_nom][$Qdia_iso];
         $texto_sacd = '--';
 //            $data_cols[$num_dia] = '--';
     }

@@ -53,8 +53,8 @@ if (isset($Qid_zona)) {
         $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($id_ubi);
         foreach ($cEncargosCtr as $oEncargoCtr) {
             $id_enc = $oEncargoCtr->getId_enc();
+            $id_item = $oEncargoCtr->getUuidItemVo()->value();
             $oEncargo = $EncargoRepository->findById($id_enc);
-            $id_item = $oEncargo->getUuidItemVo()->value();
             $desc_enc = $oEncargo->getDescEncVo()->value();
             $data_cols = [];
             $data_cols["id_item"] = $id_item;
