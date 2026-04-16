@@ -59,6 +59,10 @@ final class DireccionesEditarData
                 return $data;
             }
             $oDireccionDetallada = $oUbi->getUnaDireccionDetallada((int)$id_direccion_actual);
+            if ($oDireccionDetallada === null) {
+                $data['sin_direccion'] = true;
+                return $data;
+            }
             $oDireccion = $oDireccionDetallada->getDireccionVo();
             $data['idx'] = $idx;
             $data['id_direccion_actual'] = $id_direccion_actual;

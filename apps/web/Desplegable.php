@@ -34,6 +34,20 @@ class Desplegable
         }
     }
 
+    /**
+     * Construye un desplegable a partir de un mapa value => label (p. ej. opciones devueltas por *Dropdown en src).
+     */
+    public static function desdeOpciones(array $opciones, string $nombre, bool $conBlanco = true): static
+    {
+        $d = new static();
+        $d->setNombre($nombre);
+        $d->setOpciones($opciones);
+        if ($conBlanco) {
+            $d->setBlanco(true);
+        }
+        return $d;
+    }
+
     public function export()
     {
         $multiple = $this->bMultiple ?? false;

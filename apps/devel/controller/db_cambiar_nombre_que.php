@@ -20,7 +20,7 @@ $oDBPropiedades = new DBPropiedades();
 $oDBPropiedades->setBlanco(TRUE);
 $oEsquemaRef = $oDBPropiedades->posibles_esquemas('');
 
-$oDesplRegiones = RegionDropdown::activasOrdenNombre('region');
+$oDesplRegiones = Desplegable::desdeOpciones(RegionDropdown::activasOrdenNombre(), 'region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
 $oHash = new Hash();

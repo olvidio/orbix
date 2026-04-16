@@ -5,4 +5,4 @@ use web\ContestarJson;
 
 $service = new UbisGuardar();
 $errorTxt = $service->execute($_POST);
-ContestarJson::send(ContestarJson::respuestaPhp($errorTxt, 'ok'));
+ContestarJson::enviar($errorTxt, 'ok');

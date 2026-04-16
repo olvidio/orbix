@@ -1,19 +1,19 @@
 <?php
 
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use src\ubis\application\services\DelegacionDropdown;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
 require_once("frontend/shared/global_header_front.inc");
 
-
-$oDesplDelegaciones = DelegacionDropdown::listaRegDele(FALSE, 'dl_destino');
-$oDesplDelegaciones->setAction("fnjs_cmb_id_dl()");
-
+$data = PostRequest::getDataFromUrl('/src/ubis/delegacion_que_data', []);
+if (!empty($data['error'])) {
+    exit((string)$data['error']);
+}
 
 $a_campos = [
-    'oDesplDelegaciones' => $oDesplDelegaciones,
+    'opciones_dl_destino' => $data['opciones_dl_destino'] ?? [],
 ];
 
 $oView = new ViewNewPhtml('frontend\ubis\controller');

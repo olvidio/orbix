@@ -6,16 +6,18 @@ use src\ubis\domain\entity\TelecoUbi;
 
 final class TelecoGuardar
 {
-    public static function execute(string $obj_pau, int $id_ubi, array $pkey, int $id_tipo_teleco, int $id_desc_teleco, string $num_teleco, string $observ): array
+    public static function execute(string $obj_pau, int $id_ubi, array $a_pkey, int $id_tipo_teleco, int $id_desc_teleco, string $num_teleco, string $observ): array
     {
         $resolver = new TelecoResolver();
         $Repository = $resolver->getTelecoRepo($obj_pau);
 
-        if (empty($pkey)) {
+        if (empty($a_pkey)) {
             $TelecoUbi = new TelecoUbi();
             $TelecoUbi->setId_item($Repository->getNewId());
             $TelecoUbi->setId_ubi($id_ubi);
         } else {
+            //Aqui no tiene dsentido que haya más de uno
+            $pkey = $a_pkey[0];
             $TelecoUbi = $Repository->findById($pkey);
         }
 
@@ -27,4 +29,5 @@ final class TelecoGuardar
 
         return ['ok' => true];
     }
+
 }

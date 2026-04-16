@@ -22,7 +22,7 @@ if (!empty($a_sel)) {
     $a_pkey = (array)json_decode(urlsafe_b64decode($s_pkey));
 }
 
-$jsondata = ContestarJson::respuestaPhp('', TelecoGuardar::execute(
+ContestarJson::enviar('', TelecoGuardar::execute(
     $Qobj_pau,
     $Qid_ubi,
     $a_pkey,
@@ -31,4 +31,3 @@ $jsondata = ContestarJson::respuestaPhp('', TelecoGuardar::execute(
     $Qnum_teleco,
     $Qobserv
 ));
-ContestarJson::send($jsondata);

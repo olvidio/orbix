@@ -8,4 +8,4 @@ $errorTxt = $service->execute(
     (string)filter_input(INPUT_POST, 'obj_pau'),
     (int)filter_input(INPUT_POST, 'id_ubi')
 );
-ContestarJson::send(ContestarJson::respuestaPhp($errorTxt, 'ok'));
+ContestarJson::enviar($errorTxt, 'ok');

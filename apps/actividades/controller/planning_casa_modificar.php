@@ -91,7 +91,7 @@ if (!empty($id_ubi) && $id_ubi != 1) {
     if (!$id_ubi && !$lugar_esp) $nombre_ubi = _("sin determinar");
 }
 
-$oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones(0, true, 'dl_org');
+$oDesplDelegacionesOrg = Desplegable::desdeOpciones(DelegacionDropdown::delegacionesURegiones(0, true), 'dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
 
 $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);

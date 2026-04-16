@@ -1,22 +1,11 @@
 <?php
 
-use core\ConfigGlobal;
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use src\ubis\application\services\UbiTelecoService;
-use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Posicion;
 
-/**
- * Para asegurar que inicia la sesion, y poder acceder a los permisos
- */
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
+require_once("frontend/shared/global_header_front.inc");
 
 //En el caso de modificar cartas de presentación, quiero que quede dentro del bloque.
 $oPosicion->recordar();
@@ -52,80 +41,19 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $id_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 }
 
-$oUbi = Ubi::NewUbi($id_ubi);
-$nombre_ubi = $oUbi->getNombre_ubi();
-$dl = $oUbi->getDl();
-/* TODO no sé
-// para el caso de sf, podría ser que en el campo dl, se ponga 'dlbf' y no 'dlb'
-if (substr($dl, -1) == 'f') {
-    $dl = substr($dl,0,-1); // quito la f.
-}
-*/
-$region = $oUbi->getRegion();
-$tipo_ubi = $oUbi->getTipo_ubi();
-
-$cDirecciones = $oUbi->getDirecciones();
-$d = 0;
-$direccion = '';
-$poblacion = '';
-$c_p = '';
-$id_direccion = '';
-foreach ($cDirecciones as $oDireccion) {
-    $d++;
-    if ($d > 1) {
-        $direccion .= '<br>';
-        $poblacion .= '<br>';
-        $c_p .= '<br>';
-        $id_direccion .= ',';
-    }
-    $direccion .= $oDireccion->getDireccionVo()?->value() ?? '';
-    $poblacion .= $oDireccion->getPoblacion();
-    $c_p .= $oDireccion->getC_p();
-    $id_direccion .= $oDireccion->getId_direccion();
-}
-$id_pau = $id_ubi;
-$pau = "u";
-
-$mi_dele = ConfigGlobal::mi_delef();
-switch ($tipo_ubi) {
-    case "ctrsf":
-    case "ctrdl":
-        if ($dl != $mi_dele) {
-            $obj_pau = "Centro";
-            $obj_dir = "DireccionCentro";
-        } else {
-            $obj_pau = "CentroDl";
-            $obj_dir = "DireccionCentroDl";
-        }
-        $ubi = _("centro");
-        $tipo = "ctr";
-        break;
-    case "ctrex":
-        $obj_pau = "CentroEx";
-        $obj_dir = "DireccionCentroEx";
-        $ubi = _("centro");
-        $tipo = "ctr";
-        break;
-    case "cdcdl":
-        if ($dl != $mi_dele) {
-            $obj_pau = "Casa";
-            $obj_dir = "DireccionCdc";
-        } else {
-            $obj_pau = "CasaDl";
-            $obj_dir = "DireccionCdcDl";
-        }
-        $ubi = _("casa");
-        $tipo = "cdc";
-        break;
-    case "cdcex":
-        $obj_pau = "CasaEx";
-        $obj_dir = "DireccionCdcEx";
-        $ubi = _("casa");
-        $tipo = "cdc";
-        break;
-    default:
-        exit(_("falta definir el tipo_ubi"));
-}
+$data = PostRequest::getDataFromUrl('/src/ubis/home_ubis_data', ['id_ubi' => $id_ubi]);
+$nombre_ubi = $data['nombre_ubi'];
+$dl = $data['dl'];
+$region = $data['region'];
+$direccion = $data['direccion'];
+$poblacion = $data['poblacion'];
+$c_p = $data['c_p'];
+$id_direccion = $data['id_direccion'];
+$id_pau = $data['id_pau'];
+$pau = $data['pau'];
+$obj_pau = $data['obj_pau'];
+$obj_dir = $data['obj_dir'];
+$ubi = $data['ubi'];
 
 $gohome = Hash::link('frontend/ubis/controller/home_ubis.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau)));
 $godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $obj_pau)));
@@ -139,9 +67,9 @@ $dos = _("dossiers");
 $txt = ucfirst(_("formato texto"));
 $titulo = $nombre_ubi;
 
-$telfs = UbiTelecoService::texto($obj_pau, $id_ubi, 'telf', '*', ' / ');
-$fax = UbiTelecoService::texto($obj_pau, $id_ubi, 'fax', '*', ' / ');
-$mails = UbiTelecoService::texto($obj_pau, $id_ubi, 'e-mail', '*', ' / ');
+$telfs = $data['telfs'];
+$fax = $data['fax'];
+$mails = $data['mails'];
 
 $a_campos = ['oPosicion' => $oPosicion,
     'godossiers' => $godossiers,

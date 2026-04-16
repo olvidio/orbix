@@ -13,6 +13,14 @@ $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $s_pkey = (string)filter_input(INPUT_POST, 's_pkey');
 
+if (empty($s_pkey) && !empty($a_sel[0])) {
+    $s_pkey = (string)explode('#', $a_sel[0])[0];
+}
+
+if ($Qmod === 'nuevo') {
+    $a_sel = ['xx'];
+}
+
 $data = PostRequest::getDataFromUrl('/src/ubis/teleco_editar', [
     'obj_pau' => $Qobj_pau,
     'mod' => $Qmod,
@@ -54,7 +62,7 @@ $a_campos = [
     'observ' => $data['observ'],
     'botones' => $data['botones'],
     'url_actualizar' => 'frontend/ubis/controller/teleco_desc_lista_ajax.php',
-    'url_guardar' => 'frontend/ubis/controller/teleco_guardar_ajax.php',
+    'url_guardar' => 'src/ubis/teleco_guardar',
 ];
 
 $oView = new ViewNewPhtml('frontend\ubis\controller');

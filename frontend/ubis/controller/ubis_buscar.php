@@ -1,11 +1,7 @@
 <?php
 
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use src\ubis\application\services\RegionDropdown;
-use src\ubis\application\services\TipoCasaDropdown;
-use src\ubis\application\services\TipoCentroDropdown;
-use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
-use web\Desplegable;
 use web\Hash;
 use function core\strtoupper_dlb;
 
@@ -21,22 +17,11 @@ use function core\strtoupper_dlb;
  */
 require_once("frontend/shared/global_header_front.inc");
 
-//regiones posibles
-$oDesplRegion = RegionDropdown::activasOrdenNombre('region');
-
-// tipo ctr
-$oDesplTipoCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
-
-// tipo casa
-$oDesplTipoCasa = TipoCasaDropdown::listaTiposCasa(true, 'tipo_casa');
-
-//paises posibles
-$GesPais = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
-$aOpciones = $GesPais->getArrayPaises();
-$oDesplPais = new Desplegable();
-$oDesplPais->setOpciones($aOpciones);
-$oDesplPais->setNombre('pais');
-$oDesplPais->setBlanco(true);
+$data = PostRequest::getDataFromUrl('/src/ubis/ubis_buscar_data', []);
+$opciones_region = $data['opciones_region'] ?? [];
+$opciones_tipo_ctr = $data['opciones_tipo_ctr'] ?? [];
+$opciones_tipo_casa = $data['opciones_tipo_casa'] ?? [];
+$opciones_pais = $data['opciones_pais'] ?? [];
 
 $Qsimple = (integer)filter_input(INPUT_POST, 'simple');
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
@@ -123,11 +108,11 @@ $a_campos = [
     'tipo' => $tipo,
     'simple' => $simple,
     'nomUbi' => $nomUbi,
-    'oDesplRegion' => $oDesplRegion,
-    'oDesplPais' => $oDesplPais,
+    'opciones_region' => $opciones_region,
+    'opciones_pais' => $opciones_pais,
     'loc' => $loc,
-    'oDesplTipoCasa' => $oDesplTipoCasa,
-    'oDesplTipoCentro' => $oDesplTipoCentro,
+    'opciones_tipo_casa' => $opciones_tipo_casa,
+    'opciones_tipo_ctr' => $opciones_tipo_ctr,
     'pagina' => $pagina,
 ];
 

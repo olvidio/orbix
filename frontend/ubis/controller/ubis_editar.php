@@ -1,16 +1,12 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use src\shared\infrastructure\ProvidesRepositories;
-use src\ubis\application\services\DelegacionDropdown;
-use src\ubis\application\services\RegionDropdown;
-use src\ubis\application\services\TipoCasaDropdown;
-use src\ubis\application\services\TipoCentroDropdown;
+use src\ubis\domain\CuadrosLabor;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\contracts\CentroExRepositoryInterface;
-use web\Desplegable;
 use web\Hash;
 use function core\is_true;
 
@@ -168,22 +164,7 @@ if (!empty($Qnuevo)) {
     }
 }
 
-$isfsv = ConfigGlobal::mi_sfsv();
-// Para incluir o no la propia dl
-$Bdl = 't';
-// si es ctr, dlbf, si es casa dlb
-if ($Qobj_pau === 'CasaDl' || $Qobj_pau === 'Casa' || $Qobj_pau === 'CasaEx') {
-    $oDesplDelegaciones = DelegacionDropdown::delegacionesURegiones(1, $Bdl, 'dl');
-} else {
-    $oDesplDelegaciones = DelegacionDropdown::delegacionesURegiones($isfsv, $Bdl, 'dl');
-}
-
-$oDesplRegiones = RegionDropdown::activasOrdenNombre('region');
-
 //----------------------------------Permisos según el usuario
-$oMiUsuario = ConfigGlobal::MiUsuario();
-$miSfsv = ConfigGlobal::mi_sfsv();
-
 $botones = 0;
 /*
 1: guardar cambios
@@ -204,7 +185,7 @@ if (strstr($Qobj_pau, 'Dl')) {
     }
 }
 
-$oPermActiv = new ubis\model\CuadrosLabor();
+$oPermActiv = new CuadrosLabor();
 
 $chk = $oUbi->isActive() ? 'checked' : '';
 $campos_chk = 'active!sv!sf';
@@ -231,6 +212,25 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
+$dlOpc = $dl;
+$regionOpc = $region;
+if ($tipo_ubi === 'ctrdl' || $tipo_ubi === 'ctrsf') {
+    $dlOpc = empty($dl) ? ConfigGlobal::mi_delef() : $dl;
+    $regionOpc = empty($region) ? ConfigGlobal::mi_region() : $region;
+} elseif ($tipo_ubi === 'cdcdl') {
+    $dlOpc = empty($dl) ? ConfigGlobal::mi_dele() : $dl;
+    $regionOpc = empty($region) ? ConfigGlobal::mi_region() : $region;
+}
+
+$dataOpciones = PostRequest::getDataFromUrl('/src/ubis/ubis_editar_data', [
+    'obj_pau' => $Qobj_pau,
+    'tipo_ubi' => $tipo_ubi,
+    'dl' => $dlOpc,
+    'region' => $regionOpc,
+]);
+if (!empty($dataOpciones['error'])) {
+    exit((string)$dataOpciones['error']);
+}
 
 $oView = new ViewNewPhtml('frontend\ubis\controller');
 
@@ -253,36 +253,17 @@ switch ($tipo_ubi) {
         $dl = empty($dl) ? ConfigGlobal::mi_delef() : $dl;
         $region = empty($region) ? ConfigGlobal::mi_region() : $region;
 
-        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        if (!empty($dl)) {
-            $sWhere = "WHERE dl = '$dl'";
-        } else if (!empty($region)) {
-            $sWhere = "WHERE region = '$region'"; //probar con la region
-        } else {
-            $sWhere = ''; // Hay muchos ctr que no tienen puesta la dl.
-        }
-        $aOpciones = $CentroDlRepository->getArrayCentros($sWhere);
-        $oDesplCentros = new Desplegable();
-        $nnom = "id_ctr_padre";
-        $oDesplCentros->setNombre($nnom);
-        $oDesplCentros->setOpciones($aOpciones);
-        $oDesplCentros->setOpcion_sel($id_ctr_padre);
-        $oDesplCentros->setBlanco(true);
-
-        $oDesplegableTiposCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
-        $oDesplegableTiposCentro->setOpcion_sel($tipo_ctr);
-
-        $oDesplDelegaciones->setOpcion_sel($dl);
-        $oDesplRegiones->setOpcion_sel($region);
         $a_campos = ['botones' => $botones,
             'oPosicion' => $oPosicion,
             //'obj' => $obj,
             'oHash' => $oHash,
             'tipo_ubi' => $tipo_ubi,
             'chk' => $chk,
+            'dl' => $dl,
             'region' => $region,
             'nombre_ubi' => $nombre_ubi,
             'tipo_ctr' => $tipo_ctr,
+            'id_ctr_padre' => $id_ctr_padre,
             'num_pi' => $num_pi,
             'num_cartas' => $num_cartas,
             'num_cartas_mensuales' => $num_cartas_mensuales,
@@ -293,10 +274,10 @@ switch ($tipo_ubi) {
             'n_buzon' => $n_buzon,
             'observ' => $observ,
             'chk_cdc' => $chk_cdc,
-            'oDesplCentros' => $oDesplCentros,
-            'oDesplegableTiposCentro' => $oDesplegableTiposCentro,
-            'oDesplDelegaciones' => $oDesplDelegaciones,
-            'oDesplRegiones' => $oDesplRegiones,
+            'opciones_dl' => $dataOpciones['opciones_dl'] ?? [],
+            'opciones_region' => $dataOpciones['opciones_region'] ?? [],
+            'opciones_tipo_ctr' => $dataOpciones['opciones_tipo_ctr'] ?? [],
+            'opciones_id_ctr_padre' => $dataOpciones['opciones_id_ctr_padre'] ?? [],
         ];
 
         $oView->renderizar('ctrdl_form.phtml', $a_campos);
@@ -308,42 +289,24 @@ switch ($tipo_ubi) {
         $id_ctr_padre = $oUbi->getId_ctr_padre();
         $tipo_ctr = $oUbi->getTipo_ctr();
 
-        $CentroExRepository = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
-        if (!empty($dl)) {
-            $sWhere = "WHERE dl = '$dl'";
-        } else if (!empty($region)) {
-            $sWhere = "WHERE region = '$region'"; //probar con la region
-        } else {
-            $sWhere = ''; // Hay muchos ctr que no tienen puesta la dl.
-        }
-        $aOpciones = $CentroExRepository->getArrayCentros($sWhere);
-        $oDesplCentros = new Desplegable();
-        $nnom = "id_ctr_padre";
-        $oDesplCentros->setNombre($nnom);
-        $oDesplCentros->setOpciones($aOpciones);
-        $oDesplCentros->setOpcion_sel($id_ctr_padre);
-        $oDesplCentros->setBlanco(true);
-
-        $oDesplegableTiposCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
-        $oDesplegableTiposCentro->setOpcion_sel($tipo_ctr);
-
-        $oDesplDelegaciones->setOpcion_sel($dl);
-        $oDesplRegiones->setOpcion_sel($region);
         $a_campos = ['botones' => $botones,
             'oPosicion' => $oPosicion,
             //'obj' => $obj,
             'oHash' => $oHash,
             'tipo_ubi' => $tipo_ubi,
             'chk' => $chk,
+            'dl' => $dl,
+            'region' => $region,
             'nombre_ubi' => $nombre_ubi,
             'tipo_ctr' => $tipo_ctr,
+            'id_ctr_padre' => $id_ctr_padre,
             'chk_cdc' => $chk_cdc,
-            'oDesplCentros' => $oDesplCentros,
             'tipo_labor' => $tipo_labor,
             'oPermActiv' => $oPermActiv,
-            'oDesplegableTiposCentro' => $oDesplegableTiposCentro,
-            'oDesplDelegaciones' => $oDesplDelegaciones,
-            'oDesplRegiones' => $oDesplRegiones,
+            'opciones_dl' => $dataOpciones['opciones_dl'] ?? [],
+            'opciones_region' => $dataOpciones['opciones_region'] ?? [],
+            'opciones_tipo_ctr' => $dataOpciones['opciones_tipo_ctr'] ?? [],
+            'opciones_id_ctr_padre' => $dataOpciones['opciones_id_ctr_padre'] ?? [],
         ];
 
         $oView->renderizar('ctrex_form.phtml', $a_campos);
@@ -365,11 +328,6 @@ switch ($tipo_ubi) {
 
         $sv_chk = is_true($sv) ? 'checked' : '';
         $sf_chk = is_true($sf) ? 'checked' : '';
-        $oDesplegableTiposCasa = TipoCasaDropdown::listaTiposCasa(true, 'tipo_casa');
-        $oDesplegableTiposCasa->setOpcion_sel($tipo_casa);
-
-        $oDesplDelegaciones->setOpcion_sel($dl);
-        $oDesplRegiones->setOpcion_sel($region);
 
         $a_campos = ['botones' => $botones,
             'oPosicion' => $oPosicion,
@@ -377,15 +335,18 @@ switch ($tipo_ubi) {
             'oHash' => $oHash,
             'tipo_ubi' => $tipo_ubi,
             'chk' => $chk,
+            'dl' => $dl,
+            'region' => $region,
             'nombre_ubi' => $nombre_ubi,
+            'tipo_casa' => $tipo_casa,
             'plazas' => $plazas,
             'plazas_min' => $plazas_min,
             'num_sacd' => $num_sacd,
             'sv_chk' => $sv_chk,
             'sf_chk' => $sf_chk,
-            'oDesplegableTiposCasa' => $oDesplegableTiposCasa,
-            'oDesplDelegaciones' => $oDesplDelegaciones,
-            'oDesplRegiones' => $oDesplRegiones,
+            'opciones_dl' => $dataOpciones['opciones_dl'] ?? [],
+            'opciones_region' => $dataOpciones['opciones_region'] ?? [],
+            'opciones_tipo_casa' => $dataOpciones['opciones_tipo_casa'] ?? [],
         ];
 
         $oView->renderizar('cdc_form.phtml', $a_campos);

@@ -29,7 +29,7 @@ require_once("apps/core/global_object.inc");
 
 
 //regiones posibles
-$oDesplRegion = RegionDropdown::activasOrdenNombre('region');
+$oDesplRegion = Desplegable::desdeOpciones(RegionDropdown::activasOrdenNombre(), 'region');
 //paises posibles
 $GesPais = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
 $aOpciones = $GesPais->getArrayPaises();
@@ -37,7 +37,7 @@ $oDesplPais = new Desplegable();
 $oDesplPais->setOpciones($aOpciones);
 $oDesplPais->setNombre('pais');
 //delegaciones de H. posibles
-$oDesplDelegacion = DelegacionDropdown::byRegiones(['H'], 'dl');
+$oDesplDelegacion = Desplegable::desdeOpciones(DelegacionDropdown::byRegiones(['H']), 'dl');
 
 $url_lista = 'apps/cartaspresentacion/controller/cartas_presentacion_lista.php';
 $oHash = new Hash();

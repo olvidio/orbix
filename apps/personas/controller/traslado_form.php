@@ -49,7 +49,7 @@ $oDesplCentroDl->setNombre('new_ctr');
 $oDesplCentroDl->setOpciones($aOpciones);
 $oDesplCentroDl->setBlanco(true);
 
-$oDesplDlyR = DelegacionDropdown::listaRegDele(FALSE, 'new_dl'); // False para no incluir mi propia dl en la lista
+$oDesplDlyR = Desplegable::desdeOpciones(DelegacionDropdown::listaRegDele(false), 'new_dl'); // False para no incluir mi propia dl en la lista
 
 $SituacionRepository = $GLOBALS['container']->get(SituacionRepositoryInterface::class);
 $aOpciones = $SituacionRepository->getArraySituaciones($traslado = true);

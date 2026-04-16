@@ -68,10 +68,10 @@
                 <!-- <?= ucfirst(_("tipo de ubi")) ?> -->
                 <input type="hidden" class="contenido" id="tipo_ubi" name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
                 <?= ucfirst(_("región o delegación")) ?>
-                <?= $oDesplDelegaciones->desplegable() ?>
+                <?php $_d = \web\Desplegable::desdeOpciones($opciones_dl, 'dl'); $_d->setOpcion_sel($dl); echo $_d->desplegable(); ?>
                 <?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="status" <?= $chk ?>>
                 <?= ucfirst(_("región")) ?>
-                <?= $oDesplRegiones->desplegable() ?>
+                <?php $_d = \web\Desplegable::desdeOpciones($opciones_region, 'region'); $_d->setOpcion_sel($region); echo $_d->desplegable(); ?>
             </td>
         </tr>
         <tr>
@@ -95,7 +95,7 @@
         <tr>
             <td>
                 <?= ucfirst(_("tipo de casa")) ?>
-                <?= $oDesplegableTiposCasa->desplegable(); ?>
+                <?php $_d = \web\Desplegable::desdeOpciones($opciones_tipo_casa, 'tipo_casa'); $_d->setOpcion_sel($tipo_casa); echo $_d->desplegable(); ?>
             </td>
         </tr>
     </table>

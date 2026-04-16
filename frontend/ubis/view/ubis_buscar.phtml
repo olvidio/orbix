@@ -69,11 +69,11 @@
             </tr>
             <tr>
                 <td class=etiqueta><?= ucfirst(_("región")); ?></td>
-                <td><?= $oDesplRegion->desplegable(); ?></td>
+                <td><?= \web\Desplegable::desdeOpciones($opciones_region, 'region')->desplegable(); ?></td>
             </tr>
             <tr>
                 <td class=etiqueta><?= ucfirst(_("país")); ?></td>
-                <td><?= $oDesplPais->desplegable(); ?></td>
+                <td><?= \web\Desplegable::desdeOpciones($opciones_pais, 'pais')->desplegable(); ?></td>
             </tr>
 
             <?php
@@ -258,7 +258,7 @@
                     ?>
                     <tr>
                         <td class=etiqueta><?= _("tipo de centro"); ?></td>
-                        <td><?= $oDesplTipoCentro->desplegable(); ?>
+                        <td><?= \web\Desplegable::desdeOpciones($opciones_tipo_ctr, 'tipo_ctr')->desplegable(); ?>
                         </td>
                     </tr>
                     <?php
@@ -267,7 +267,7 @@
                     ?>
                     <tr>
                         <td class=etiqueta><?= _("tipo de casa"); ?></td>
-                        <td><?= $oDesplTipoCasa->desplegable(); ?>
+                        <td><?= \web\Desplegable::desdeOpciones($opciones_tipo_casa, 'tipo_casa')->desplegable(); ?>
                         </td>
                     </tr>
                     <?php

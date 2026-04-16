@@ -44,18 +44,26 @@ $oHash->setArraycamposHidden([
     'obj_dir' => $Qobj_dir,
     'id_direccion' => $Qid_direccion,
     'idx' => $data['idx'],
+    'inc' => $Qinc,
     'id_ubi' => $Qid_ubi,
 ]);
 
 $goInfo = Hash::link(ConfigGlobal::getWeb() . '/frontend/ubis/controller/info_ubis.php?' . http_build_query(['id_item' => 1]));
 $golistadir = Hash::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
-$go_dir = Hash::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query([
+
+$oHashGo = new Hash();
+$oHashGo->setUrl('frontend/ubis/controller/direcciones_editar.php?');
+$oHashGo->setcamposNo('inc');
+$oHashGo->setArrayCamposHidden([
     'id_ubi' => $Qid_ubi,
     'id_direccion' => $Qid_direccion,
     'obj_dir' => $Qobj_dir,
     'idx' => $data['idx'],
+    'inc' => $Qinc,
     'refresh' => 1,
-]));
+]);
+$h = $oHashGo->linkConVal();
+$go_dir = 'frontend/ubis/controller/direcciones_editar.php?'.$h;
 
 $oHashPlano = new Hash();
 $oHashPlano->setUrl('frontend/ubis/controller/direcciones_asignar.php');

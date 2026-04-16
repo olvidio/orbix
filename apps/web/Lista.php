@@ -27,89 +27,87 @@ class Lista
      *
      * @var string
      */
-    private $sNombre;
+    private string $sNombre;
     /**
      * ikey del Lista
      *
      * @var integer ?
      */
-    private $ikey;
+    private int $ikey;
 
     /**
      * aGrupos de la Lista
      *
      * @var array ( id => titulo)
      */
-    private $aGrupos;
-    private $botones_grupo = FALSE;
+    private array $aGrupos;
+    private bool $botones_grupo = FALSE;
 
     /**
      * aCabeceras de la Lista
      *
      * @var array
      */
-    private $aCabeceras;
+    private array $aCabeceras;
     /**
      * sPie de la Lista
      *
      * @var string
      */
-    private $sPie;
+    private string $sPie;
     /**
      * ssortcol de la Lista. Columna por la que se ordena la tabla inicialmente.
      *
      * @var string
      */
-    private $ssortCol;
+    private string $ssortCol = '';
     /**
      * aColVisible de la Lista. columnas visibles inicialmente.
      *
      * @var array
      */
-    private $aColVisible = [];
+    private array $aColVisible = [];
     /**
      * aDatos de la Lista
      *
      * @var array lista de arrays (id el del titulo) cada sub-array es la fila.
      */
-    private $aDatos;
+    private array $aDatos;
     /**
      * aBotones de la Lista
      *
      * @var array
      */
-    private $aBotones;
+    private array $aBotones;
     /**
      * sid_tabla de la Lista
      *
-     * @var array
      */
-    private $sid_tabla = 'uno';
+    private string $sid_tabla = 'uno';
     /**
      * bFiltro de la Lista
      *
      * @var boolean
      */
-    private $bFiltro = TRUE;
+    private bool $bFiltro = TRUE;
     /**
      * bColVis de la Lista
      *
      * @var boolean
      */
-    private $bColVis = TRUE;
+    private bool $bColVis = TRUE;
     /**
      * formato_tabla de la lista
      *
      * @var string
      */
-    private $formato_tabla = '';
+    private string $formato_tabla = '';
     /**
      * bMultiSort de la Lista
      *
      * @var boolean
      */
-    private $bMultiSort = FALSE;
-
+    private bool $bMultiSort = FALSE;
 
 
     private $preferenciaRepository;
@@ -269,7 +267,7 @@ class Lista
                         $valor = $valor ?? '';
                         // Date formatting for Excel export compatibility
                         if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
-                            list($d, $m, $y) = preg_split('/[:\/\.-]/', $valor);
+                            list($d, $m, $y) = preg_split('/[:\/.-]/', $valor);
                             $fecha_iso = date("Y-m-d", mktime(0, 0, 0, $m, $d, $y));
                             $tbody .= "<td class='fecha' fecha_iso='$fecha_iso'>$valor</td>";
                         } else {
@@ -349,7 +347,7 @@ class Lista
     }
         ------------------------------ */
 
-        $Html .= $tbody ."</tbody></table>";
+        $Html .= $tbody . "</tbody></table>";
         return $Html;
     }
 
@@ -450,9 +448,9 @@ class Lista
         }
         if ($sPrefs === 'html') {
             return $this->mostrar_tabla_html();
-        } else {
-            return $this->mostrar_tabla_slickgrid();
         }
+
+        return $this->mostrar_tabla_slickgrid();
     }
 
     /**
@@ -803,8 +801,8 @@ class Lista
                 enableAutoResize: true
                 ,enableCellNavigation: true
                 ,enableAddRow: false
-                ,enableColumnReorder: ".($this->bMultiSort ? 'false' : 'true')."
-                ,multiColumnSort: ".($this->bMultiSort?'true':'false')."
+                ,enableColumnReorder: " . ($this->bMultiSort ? 'false' : 'true') . "
+                ,multiColumnSort: " . ($this->bMultiSort ? 'true' : 'false') . "
                 ,topPanelHeight: 50
                 ,autoHeight: false
                 ,syncColumnCellResize: true
@@ -1621,80 +1619,67 @@ class Lista
 
     /* MÉTODOS GET y SET ----------------------------------------------------------*/
 
-    public
-    function setGrupos($aGrupos)
+    public function setGrupos(array $aGrupos)
     {
         $this->aGrupos = $aGrupos;
     }
 
-    public
-    function setCabeceras($aCabeceras)
+    public function setCabeceras(array $aCabeceras)
     {
         $this->aCabeceras = $aCabeceras;
     }
 
-    public
-    function setPie($str)
+    public function setPie(string $str)
     {
         $this->sPie = $str;
     }
 
-    public
-    function getMultiSort()
+    public function getMultiSort(): bool
     {
         return $this->bMultiSort;
     }
 
-    public
-    function setMultiSort($bMultiSort)
+    public function setMultiSort(bool $bMultiSort)
     {
         $this->bMultiSort = $bMultiSort;
     }
 
-    public
-    function setSortCol($ssortcol)
+    public function setSortCol(string $ssortcol)
     {
         $this->ssortCol = str_replace(' ', '', $ssortcol);
     }
 
-    public
-    function setColVisible($aColVisible)
+    public function setColVisible(array $aColVisible)
     {
         $this->aColVisible = $aColVisible;
     }
 
-    public
-    function setDatos($aDatos)
+    public function setDatos(array $aDatos)
     {
         $this->aDatos = $aDatos;
     }
 
-    public
-    function setBotones($aBotones)
+    public function setBotones(array $aBotones)
     {
         $this->aBotones = $aBotones;
     }
 
-    public
-    function setId_tabla($sid_tabla)
+    public function setId_tabla(string $sid_tabla)
     {
         $this->sid_tabla = $sid_tabla;
     }
 
-    public
-    function setFiltro($bFiltro)
+    public function setFiltro(bool $bFiltro)
     {
         $this->bFiltro = $bFiltro;
     }
 
-    public
-    function setColVis($bColVis)
+    public function setColVis(bool $bColVis)
     {
         $this->bColVis = $bColVis;
     }
 
-    public
-    function setFormatoTabla($formatoTabla)
+    public function setFormatoTabla(string $formatoTabla)
     {
         $this->formato_tabla = $formatoTabla;
     }

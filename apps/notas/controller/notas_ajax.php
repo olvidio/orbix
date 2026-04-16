@@ -84,8 +84,7 @@ switch ($Qque) {
             $Qdl_org = ConfigGlobal::mi_delef();
         }
 
-        $oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones();
-        $oDesplDelegacionesOrg->setNombre('dl_org');
+        $oDesplDelegacionesOrg = Desplegable::desdeOpciones(DelegacionDropdown::delegacionesURegiones(), 'dl_org');
         $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
         $oDesplDelegacionesOrg->setAction('fnjs_buscar_ca()');
 

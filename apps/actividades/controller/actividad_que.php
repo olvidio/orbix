@@ -21,6 +21,7 @@ use src\actividades\domain\value_objects\StatusId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\ubis\application\services\DelegacionDropdown;
+use web\Desplegable;
 use web\Hash;
 use web\PeriodoQue;
 use web\Posicion;
@@ -112,7 +113,7 @@ if (empty($Qstatus)) {
 
 $Qisfsv = substr($Qid_tipo_activ, 0, 1);
 $mi_dele = ConfigGlobal::mi_delef($Qisfsv);
-$oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones($Qisfsv, true, 'dl_org');
+$oDesplDelegacionesOrg = Desplegable::desdeOpciones(DelegacionDropdown::delegacionesURegiones($Qisfsv, true), 'dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
 if ($Qmodo === 'importar') {
     $oDesplDelegacionesOrg->setOpcion_no(array($mi_dele));
@@ -127,7 +128,7 @@ if (ConfigGlobal::is_app_installed('procesos')) {
 }
 
 
-$oDesplFiltroLugar = DelegacionDropdown::dlURegionesFiltro($Qisfsv, 'filtro_lugar');
+$oDesplFiltroLugar = Desplegable::desdeOpciones(DelegacionDropdown::dlURegionesFiltro($Qisfsv), 'filtro_lugar');
 $oDesplFiltroLugar->setAction('fnjs_lugar()');
 $oDesplFiltroLugar->setOpcion_sel($Qfiltro_lugar);
 

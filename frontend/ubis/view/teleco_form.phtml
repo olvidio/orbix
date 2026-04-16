@@ -2,16 +2,19 @@
     fnjs_guardar = function (formulario) {
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
         if (rr === 'ok') {
-            $('#mod').val('teleco');
             let datos = $(formulario).serialize();
-            $.ajax({ url: '<?= $url_guardar ?>', type: 'post', data: datos })
-                .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\\n') {
-                        alert('<?= _("respuesta") ?>: ' + rta_txt);
-                    } else {
-                        <?= $oPosicion->js_atras(1); ?>
-                    }
-                });
+            let request = $.ajax({
+                url: '<?= $url_guardar ?>',
+                type: 'post',
+                data: datos
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    <?= $oPosicion->js_atras(1) ?>
+                }
+            });
         }
     }
     fnjs_actualizar_descripcion = function () {

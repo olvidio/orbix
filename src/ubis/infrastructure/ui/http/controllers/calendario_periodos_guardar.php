@@ -3,7 +3,7 @@
 use src\ubis\application\CalendarioPeriodoGuardar;
 use web\ContestarJson;
 
-$jsondata = ContestarJson::respuestaPhp(
+ContestarJson::enviar(
     CalendarioPeriodoGuardar::execute(
         (int)filter_input(INPUT_POST, 'id_item'),
         (int)filter_input(INPUT_POST, 'id_ubi'),
@@ -13,4 +13,3 @@ $jsondata = ContestarJson::respuestaPhp(
     ),
     'ok'
 );
-ContestarJson::send($jsondata);

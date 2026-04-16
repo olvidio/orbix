@@ -1,0 +1,44 @@
+<?php
+
+use core\ConfigGlobal;
+use frontend\shared\PostRequest;
+use web\Hash;
+use function core\is_true;
+
+require_once("frontend/shared/global_header_front.inc");
+
+$Qid_ubi = (int)(filter_input(INPUT_POST, 'id_ubi') ?? filter_input(INPUT_GET, 'id_ubi'));
+$data = PostRequest::getDataFromUrl('/src/ubis/centros_form_plazas', ['id_ubi' => $Qid_ubi]);
+
+$nombre_ubi = $data['nombre_ubi'] ?? '';
+$num_habit_indiv = $data['num_habit_indiv'] ?? '';
+$plazas = $data['plazas'] ?? '';
+$sede = $data['sede'] ?? false;
+
+$chk_sede = is_true($sede) ? 'checked' : '';
+
+$url_update = rtrim(ConfigGlobal::getWeb(), '/') . '/src/ubis/centros_update';
+
+$oHash = new Hash();
+$oHash->setUrl($url_update);
+$oHash->setArrayCamposHidden([
+    'id_ubi' => $Qid_ubi,
+]);
+$oHash->setCamposForm('num_habit_indiv!plazas');
+$oHash->setCamposChk('sede');
+
+$txt = "<form id='frm_plazas' action='$url_update'>";
+$txt .= $oHash->getCamposHtml();
+$txt .= '<h3>' . _("centro") . '  ' . $nombre_ubi . '</h3>';
+$txt .= _("número de habitaciones individuales") . "   <input type=text size=12 name=num_habit_indiv value=\"$num_habit_indiv\">";
+$txt .= '<br>';
+$txt .= _("plazas") . "   <input type=text size=12 name=plazas value=\"$plazas\">";
+$txt .= '<br>';
+$txt .= "<input type=hidden name=sede value=\"false\">"; // para evitar valor null.
+$txt .= _("sede") . "   <input type=checkbox size=12 name=sede $chk_sede value=\"true\">";
+$txt .= '<br><br>';
+$txt .= "<input type='button' value='" . _("guardar") . "' onclick=\"fnjs_guardar('#frm_plazas','guardar');\" >";
+$txt .= "<input type='button' value='" . _("cancel") . "' onclick=\"fnjs_cerrar();\" >";
+$txt .= "</form> ";
+echo $txt;
+

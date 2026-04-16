@@ -4,6 +4,7 @@ use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
 use src\ubis\application\services\RegionDropdown;
+use web\Desplegable;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -19,7 +20,7 @@ $oDBPropiedades = new DBPropiedades();
 $oDBPropiedades->setBlanco(TRUE);
 $oEsquemaRef = $oDBPropiedades->posibles_esquemas('');
 
-$oDesplRegiones = RegionDropdown::activasOrdenNombre('region');
+$oDesplRegiones = Desplegable::desdeOpciones(RegionDropdown::activasOrdenNombre(), 'region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
 $oHash = new Hash();

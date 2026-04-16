@@ -13,21 +13,53 @@ fnjs_modificar=function(id_ubi,tipo){
     $('#div_modificar').height('auto');
     document.getElementById("overlay").style.display = "block";
 
-    var url='<?= $url_ajax ?>';
     if (id_ubi) {
-        var parametros='que=form_'+tipo+'&id_ubi='+id_ubi;
+        var url = '';
+        var parametros = 'id_ubi=' + id_ubi;
+        switch (tipo) {
+            case 'labor':
+                url = '<?= $url_form_labor ?>';
+                parametros = parametros + '<?= $h_form_labor ?>';
+                break;
+            case 'num':
+                url = '<?= $url_form_num ?>';
+                parametros = parametros + '<?= $h_form_num ?>';
+                break;
+            case 'plazas':
+                url = '<?= $url_form_plazas ?>';
+                parametros = parametros + '<?= $h_form_plazas ?>';
+                break;
+        }
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
     } else {
-        id_ubi =$('#id_cdc').val();
-        var parametros='que=nuevo&id_ubi='+id_ubi;
+        // compat: no se usa activamente aquí
     }
-    parametros = parametros+'<?= $h_mod ?>';
-    fnjs_update_div('#div_modificar',url+'?'+parametros);
 }
 
 fnjs_ver=function(){
     pata = $('#seleccion').serialize();
-    var url='<?= $url_ajax ?>';
-    var parametros=pata;
+    var accion = $('#que').val();
+    var url = '';
+    var hash_params = '';
+    switch (accion) {
+        case 'get_labor':
+            url = '<?= $url_get_labor ?>';
+            hash_params = '<?= $param_ajax_labor ?>';
+            break;
+        case 'get_num':
+            url = '<?= $url_get_num ?>';
+            hash_params = '<?= $param_ajax_num ?>';
+            break;
+        case 'get_plazas':
+            url = '<?= $url_get_plazas ?>';
+            hash_params = '<?= $param_ajax_plazas ?>';
+            break;
+        default:
+            url = '<?= $url_get_labor ?>';
+            hash_params = '<?= $param_ajax_labor ?>';
+            break;
+    }
+    var parametros=pata + '&' + hash_params;
     $.ajax({
         url: url,
         type: 'post',
@@ -41,7 +73,6 @@ fnjs_ver=function(){
 }
 
 fnjs_guardar=function(formulario) {
-    $(formulario).attr('action','<?= $url_ajax ?>');
     $(formulario).one("submit", function() {
         $.ajax({
             url: $(this).attr('action'),
@@ -67,7 +98,6 @@ fnjs_guardar=function(formulario) {
 }
 </script>
 <form id=seleccion name=seleccion action="">
-<?= $oHash->getCamposHtml() ?>
 <?= $oDesplOpciones->desplegable() ?>
 <input type=button name="buscar" value="<?= _("buscar") ?>" onclick="fnjs_ver();">
 </form>

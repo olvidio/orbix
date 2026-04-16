@@ -7,5 +7,4 @@ $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface
 $data = [
     'aOpciones' => $AsignaturaRepository->getArrayAsignaturasConSeparador(),
 ];
-$jsondata = ContestarJson::respuestaPhp('', $data);
-ContestarJson::send($jsondata);
+ContestarJson::enviar('', $data);

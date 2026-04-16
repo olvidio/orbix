@@ -135,14 +135,14 @@ switch ($Qsalida) {
     case "dl_org";
         $sfsv = $Qentrada;
         $dl_default = ConfigGlobal::mi_delef($sfsv);
-        $oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones($sfsv, true, 'dl_org');
+        $oDesplDelegacionesOrg = Desplegable::desdeOpciones(DelegacionDropdown::delegacionesURegiones($sfsv, true), 'dl_org');
         $oDesplDelegacionesOrg->setOpcion_sel($dl_default);
         echo $oDesplDelegacionesOrg->desplegable();
         break;
     case "filtro_lugar";
         $sfsv = $Qentrada;
         $dl_default = ConfigGlobal::mi_delef($sfsv);
-        $oDesplFiltroLugar = DelegacionDropdown::dlURegionesFiltro($sfsv, 'filtro_lugar');
+        $oDesplFiltroLugar = Desplegable::desdeOpciones(DelegacionDropdown::dlURegionesFiltro($sfsv), 'filtro_lugar');
         $oDesplFiltroLugar->setAction('fnjs_lugar()');
         echo $oDesplFiltroLugar->desplegable();
         break;

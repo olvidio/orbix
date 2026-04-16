@@ -40,8 +40,7 @@ $a_campos = [
     'tit_txt' => $data['tit_txt'],
     'oTabla' => $oTabla,
     'url_editar' => 'frontend/ubis/controller/teleco_editar.php',
-    'url_guardar' => 'frontend/ubis/controller/teleco_guardar_ajax.php',
-    'url_eliminar' => 'frontend/ubis/controller/teleco_eliminar_ajax.php',
+    'url_eliminar' => 'src/ubis/teleco_eliminar',
     'url_tabla' => 'frontend/ubis/controller/teleco_tabla.php',
 ];
 

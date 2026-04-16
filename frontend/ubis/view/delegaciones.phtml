@@ -1,5 +1,5 @@
 <h3><?= _("Traladar a") ?>:</h3>
-<?= $oDesplDelegaciones->desplegable() ?>
+<?php $_d = \web\Desplegable::desdeOpciones($opciones_dl_destino, 'dl_destino'); $_d->setAction("fnjs_cmb_id_dl()"); echo $_d->desplegable(); ?>
 <br><br>
 <input type="button" onclick="fnjs_cerrar()" value="<?= _("Cancelar") ?>" />
 <input type="button" onclick="fnjs_trasladar()" value="<?= _("Trasladar") ?>" />

@@ -51,7 +51,11 @@ final class TelecoTablaData
                     case 'opciones':
                         $RepoRelacionado = $GLOBALS['container']->get($var_1);
                         $oRelacionado = $RepoRelacionado->findById($valor_camp);
-                        $a_valores[$c][$v] = $oRelacionado?->$var_2() ?: $valor_camp;
+                        if (substr($var_2, -2) === 'Vo'){
+                            $a_valores[$c][$v] = $oRelacionado?->$var_2()?->value() ?: $valor_camp;
+                        } else {
+                            $a_valores[$c][$v] = $oRelacionado?->$var_2() ?: $valor_camp;
+                        }
                         break;
                     case 'check':
                         $a_valores[$c][$v] = is_true($valor_camp) ? _("sí") : _("no");

@@ -257,7 +257,7 @@ if (!empty($id_ubi) && $id_ubi != 1) {
     }
 }
 
-$oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones($isfsv, $Bdl, 'dl_org');
+$oDesplDelegacionesOrg = Desplegable::desdeOpciones(DelegacionDropdown::delegacionesURegiones($isfsv, is_true($Bdl)), 'dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
 
 $TipoTarifaRepository = $GLOBALS['container']->get(TipoTarifaRepositoryInterface::class);

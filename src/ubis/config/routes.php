@@ -37,6 +37,15 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/ubis/direcciones_quitar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/direcciones_quitar.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/direccion_update', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/direccion_update.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/delegacion_que_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/delegacion_que_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/trasladar_ubis', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/trasladar_ubis.php';
+    });
     $r->addRoute(['GET', 'POST'], '/src/ubis/ubis_guardar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/ubis_guardar.php';
     });
@@ -48,6 +57,61 @@ return static function ($r) {
     });
     $r->addRoute(['GET', 'POST'], '/src/ubis/calendario_periodos_eliminar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/calendario_periodos_eliminar.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/calendario_periodos_nuevo_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/calendario_periodos_nuevo_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/calendario_periodos_form_periodo_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/calendario_periodos_form_periodo_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/calendario_periodos_get2_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/calendario_periodos_get2_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/calendario_periodos_get_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/calendario_periodos_get_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/ubis/centros_get_labor', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/centros_get_labor.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/centros_get_num', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/centros_get_num.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/centros_get_plazas', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/centros_get_plazas.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/centros_form_labor', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/centros_form_labor.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/centros_form_num', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/centros_form_num.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/centros_form_plazas', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/centros_form_plazas.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/centros_update', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/centros_update.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/home_ubis_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/home_ubis_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/ubis_lista_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ubis_lista_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/ubis_tabla_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ubis_tabla_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/ubis_buscar_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ubis_buscar_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/ubis_editar_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ubis_editar_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/list_ctr_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/list_ctr_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/lista_ctrs_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/lista_ctrs_data.php';
     });
 
 };

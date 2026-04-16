@@ -681,7 +681,7 @@ class CentroDl
     public function getUnaDireccionDetallada(int $id_direccion): ?DireccionDetalle
     {
         $relaciones = $this->repoCasaDireccion->getRelacionesPorUbi($this->getId_ubi());
-        $direcciDetallada = null;
+        $direccionDetallada = null;
 
         foreach ($relaciones as $row) {
             if ($id_direccion !== $row['id_direccion']) {

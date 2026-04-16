@@ -14,5 +14,4 @@ if (!empty($a_sel)) {
     $a_pkey = (array)json_decode(urlsafe_b64decode($s));
 }
 
-$jsondata = ContestarJson::respuestaPhp('', TelecoEliminar::execute($Qobj_pau, $a_pkey));
-ContestarJson::send($jsondata);
+ContestarJson::enviar('', TelecoEliminar::execute($Qobj_pau, $a_pkey));

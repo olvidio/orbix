@@ -10,43 +10,22 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use frontend\shared\PostRequest;
 use web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
 
-//Para los centros de la dlb
-$CentroRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-$cCentros = $CentroRepository->getCentros(array('tipo_ctr' => '^s[^s]', 'active' => 't', '_ordre' => 'nombre_ubi'), array('tipo_ctr' => '~'));
-
-$PersonaSRepository = $GLOBALS['container']->get(PersonaSRepositoryInterface::class);
-$num_total_s = 0;
-$a_valores = [];
-$i = 0;
-foreach ($cCentros as $oCentro) {
-    $i++;
-    $id_ubi = $oCentro->getId_ubi();
-    $nombre_ubi = $oCentro->getNombre_ubi();
-    $cPersonasCtr = $PersonaSRepository->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A'));
-    if ($cPersonasCtr === false) exit(_('error'));
-    $num_s = count($cPersonasCtr);
-    $num_total_s += $num_s;
-
-
-    $a_valores[$i][1] = $nombre_ubi;
-    $a_valores[$i][2] = $num_s;
-
+$data = PostRequest::getDataFromUrl('/src/ubis/lista_ctrs_data', []);
+if (isset($data['error']) && $data['error'] !== '') {
+    exit((string)$data['error']);
 }
-
-$a_cabeceras = array(ucfirst(_('centro')),
-    _('num s')
-);
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('lista_ctrs');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setDatos($a_valores);
+$oTabla->setCabeceras($data['a_cabeceras'] ?? []);
+$oTabla->setDatos($data['a_valores'] ?? []);
+
+$num_total_s = (int)($data['num_total_s'] ?? 0);
 
 echo "<h3>" . ucfirst(sprintf(_("número total de s: %s"), $num_total_s)) . "</h3>";
 echo $oTabla->mostrar_tabla();

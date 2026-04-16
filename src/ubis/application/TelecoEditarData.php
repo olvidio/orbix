@@ -8,7 +8,7 @@ use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 
 final class TelecoEditarData
 {
-    public static function execute(string $obj_pau, string $mod, int $id_ubi, array $pkey): array
+    public static function execute(string $obj_pau, string $mod, int $id_ubi, int $pkey): array
     {
         $resolver = new TelecoResolver();
         $repoTeleco = $resolver->getTelecoRepo($obj_pau);

@@ -6,6 +6,7 @@ use core\ClaseRepository;
 use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\RelacionUbiDireccionRepositoryInterface;
+use function core\is_true;
 
 /**
  * Repositorio para gestionar la relación Casa-Dirección
@@ -56,7 +57,7 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
         if ($stmt === false) { return false; }
         $aWhere['id_ubi'] = $id_ubi;
         $aWhere['id_direccion'] = $id_direccion;
-        $aWhere['principal'] = $principal;
+        $aWhere['principal'] = is_true($principal) ? 't' : 'f';
         return $this->pdoExecute($stmt, $aWhere, __METHOD__, __FILE__, __LINE__);
     }
 

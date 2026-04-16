@@ -12,8 +12,8 @@ Este documento resume el patron acordado para seguir migrando pantallas desde `a
 
 | Capa | Ruta / carpeta | Responsabilidad |
 |------|----------------|-----------------|
-| Backend API | `src/<modulo>/infrastructure/ui/http/controllers/*.php` | Solo orquestacion HTTP minima: leer input, llamar a `application`, responder con `ContestarJson::send`. **Sin** `echo` de HTML ni `Lista` aqui. |
-| Caso de uso | `src/<modulo>/application/*.php` | Montar arrays de datos (`a_cabeceras`, `a_valores`, ids de tabla, etc.) usando repositorios/servicios del contenedor. Devolver datos listos para serializar con `ContestarJson::respuestaPhp($error, $data)`. |
+| Backend API | `src/<modulo>/infrastructure/ui/http/controllers/*.php` | Solo orquestacion HTTP minima: leer input, llamar a `application`, responder con `ContestarJson::enviar($error, $data)`. **Sin** `echo` de HTML ni `Lista` aqui. |
+| Caso de uso | `src/<modulo>/application/*.php` | Montar arrays de datos (`a_cabeceras`, `a_valores`, ids de tabla, etc.) usando repositorios/servicios del contenedor. Devolver datos de dominio/UI listos para serializar; el controlador HTTP es quien llama a `ContestarJson::enviar(...)`. |
 | Rutas HTTP | `src/<modulo>/config/routes.php` | Registrar `/src/<modulo>/<nombre>` con GET y POST si hace falta (compatibilidad). |
 | Frontend controlador | `frontend/<modulo>/controller/*.php` | `require_once("frontend/shared/global_header_front.inc")`, llamadas `PostRequest::getDataFromUrl('/src/...', $campos)`, construir `web\Lista` u otros componentes UI, pasar variables a la vista. |
 | Frontend vista | `frontend/<modulo>/view/*.phtml` | Presentacion: HTML, scripts, `mostrar_tabla()`, sin consultas a BD ni contenedor. |
@@ -27,6 +27,15 @@ Referencia: `frontend/usuarios/controller/usuario_lista.php`.
 - Parametros: array asociativo; el hash de seguridad lo genera `PostRequest` internamente.
 - Respuesta: `json_decode` del campo `data`; comprobar `error` en el array devuelto si se maneja sin `exit`.
 
+## Patron de respuesta JSON en `src`
+
+- En controladores HTTP de `src/.../infrastructure/ui/http/controllers`, preferir `ContestarJson::enviar($error, $data)` directamente.
+- Evitar el patron intermedio:
+  - `$jsondata = ContestarJson::respuestaPhp(...);`
+  - `ContestarJson::send($jsondata);`
+- En refactors nuevos, `application` deberia devolver datos crudos (array/string) o texto de error, no la respuesta JSON ya montada.
+- Si existe codigo previo donde `application` ya devuelve `ContestarJson::respuestaPhp(...)`, puede mantenerse temporalmente, pero no usarlo como patron para codigo nuevo.
+
 ## Endpoints por accion (evitar `que`)
 
 - Evitar endpoints multiproposito con parametro `que` (ej. `get_lista`, `update`, ...).
@@ -34,6 +43,37 @@ Referencia: `frontend/usuarios/controller/usuario_lista.php`.
 - En `application`, separar tambien clases/casos de uso por accion (`...Lista`, `...Update`) para reducir `switch` y facilitar tests.
 - En `frontend`, llamar directamente al endpoint de la accion correspondiente (sin enviar campos de acciones no usadas).
 - Si existe un endpoint legacy con `que`, mantenerlo solo como wrapper de compatibilidad temporal y marcarlo como deprecado en comentario.
+
+## Modulo `ubis` — patrones ya aplicados (retomar en siguientes refactors)
+
+Linea de trabajo: **frontend** delgado (`PostRequest` + vistas) y **src** con casos de uso + controladores HTTP bajo `src/ubis/infrastructure/ui/http/controllers/`. Rutas en `src/ubis/config/routes.php` con prefijo `/src/ubis/<nombre>` (GET y POST si hace falta).
+
+### Servicios `*Dropdown` y desplegables
+
+- En `src/ubis/application/services/*Dropdown` (p. ej. `RegionDropdown`, `DelegacionDropdown`, `TipoCentroDropdown`, …) **solo devolver `array` value => etiqueta**. No instanciar `web\Desplegable` en `src`.
+- Montar el `<select>` en **vista** `frontend/ubis/view/*.phtml` con `web\Desplegable::desdeOpciones($opciones, 'nombre_campo')`, luego `setOpcion_sel(...)`, `setAction(...)` si aplica, y `desplegable()`.
+
+### Datos de formulario / listados: `*Data` + `PostRequest`
+
+- Agrupar lecturas de repos + dropdowns en clases `src/ubis/application/*Data.php` con `execute(...)` que devuelvan arrays serializables.
+- Controlador HTTP minimo: `ContestarJson::enviar($error, $array)` (salvo excepciones abajo).
+- Controlador **frontend** `frontend/ubis/controller/*.php`: `PostRequest::getDataFromUrl('/src/ubis/<endpoint>', $campos)`; si la respuesta trae `error`, tratarla (`exit`, `echo`, etc.) segun la pantalla.
+- **Ejemplos de endpoints `_data` (solo lectura / opciones):** `ubis_buscar_data`, `ubis_editar_data`, `delegacion_que_data`, `list_ctr_data`, `lista_ctrs_data`.
+- **`ubis_editar`:** calcular `dl`/`region` efectivos para las opciones **antes** del `switch` (`dlOpc` / `regionOpc` segun `tipo_ubi`), **una sola** llamada a `ubis_editar_data`, reutilizar `$dataOpciones` en las tres ramas y comprobar `error`.
+
+### Mutaciones (guardar / trasladar / update direccion)
+
+- Logica en `src/ubis/application/<Accion>.php` (`execute` con `array $input` / `$_POST`).
+- **JSON estandar:** controlador `src/.../*.php` con `ContestarJson::enviar($errorTxt, $data)`. El **proxy** frontend (p. ej. `direccion_update.php`, `trasladar_ubis.php`) hace `PostRequest` y, si hace falta, `echo` solo el error o cuerpo vacio (compatibilidad con AJAX que no parsea JSON).
+- **Respuesta texto plano (legacy AJAX):** si el JS espera string en `.done(rta_txt)` sin JSON — caso **`centros_update`**: el controlador en `src` hace `header('Content-Type: text/plain; charset=UTF-8')` y `echo CentrosUpdate::execute($_POST)`. Los formularios que postean con `web\Hash` deben usar **URL absoluta** `rtrim(ConfigGlobal::getWeb(), '/') . '/src/ubis/centros_update'` para que el hash coincida con el destino.
+- **Direcciones:** `DireccionesResolver` centraliza repos por `obj_dir`; reutilizar en nuevos casos de uso de direcciones.
+
+### Checklist al mover otro controlador `ubis` desde `frontend`
+
+1. `grep` de la ruta antigua (`frontend/ubis/controller/<nombre>.php`) y actualizar llamadas / `Hash::setUrl` / JS.
+2. Añadir ruta en `src/ubis/config/routes.php`.
+3. `php -l` en ficheros tocados.
+4. Decidir tipo de respuesta (JSON `ContestarJson` vs texto plano) segun el consumidor (proxy `PostRequest` vs navegador directo).
 
 ## Patron JavaScript para guardar (sin `trigger("submit")`)
 

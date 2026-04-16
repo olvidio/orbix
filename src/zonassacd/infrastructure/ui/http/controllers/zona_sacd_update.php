@@ -9,5 +9,4 @@ $Qacumular = (int)filter_input(INPUT_POST, 'acumular');
 $QAsel = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $QAsel = empty($QAsel) ? [] : $QAsel;
 
-$jsondata = ContestarJson::respuestaPhp('', ZonaSacdUpdate::execute($Qid_zona, $Qid_zona_new, $Qacumular, $QAsel));
-ContestarJson::send($jsondata);
+ContestarJson::enviar('', ZonaSacdUpdate::execute($Qid_zona, $Qid_zona_new, $Qacumular, $QAsel));

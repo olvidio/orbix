@@ -12,8 +12,9 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use web\Hash;
 use src\ubis\application\services\DelegacionDropdown;
+use web\Desplegable;
+use web\Hash;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -42,7 +43,7 @@ if (empty($Qid_tipo_activ)) {
     $Qid_tipo_activ = $oTipoActiv->getId_tipo_activ();
 }
 
-$desplDelegaciones = DelegacionDropdown::activasOrdenNombre('dl');
+$desplDelegaciones = Desplegable::desdeOpciones(DelegacionDropdown::activasOrdenNombre(), 'dl');
 $desplDelegaciones->setAction("fnjs_comparativa()") ;
 
 $mi_dele = ConfigGlobal::mi_delef();
