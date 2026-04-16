@@ -78,7 +78,7 @@ class Lista
      *
      * @var array
      */
-    private array $aBotones;
+    private array $aBotones = [];
     /**
      * sid_tabla de la Lista
      *
