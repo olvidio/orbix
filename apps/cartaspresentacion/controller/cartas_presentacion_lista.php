@@ -8,7 +8,7 @@ use src\ubis\application\services\UbiTelecoService;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
-use ubis\model\CuadrosLabor;
+use src\ubis\domain\CuadrosLabor;
 use function core\strtoupper_dlb;
 
 // INICIO Cabecera global de URL de controlador *********************************

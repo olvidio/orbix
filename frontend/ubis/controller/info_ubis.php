@@ -1,18 +1,12 @@
 <?php
 // para que funcione bien la seguridad
-use core\ViewTwig;
+use frontend\shared\model\ViewNewPhtml;
 
 $_POST = $_GET;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
+require_once("frontend/shared/global_header_front.inc");
 
 
-
-$oView = new ViewTwig('frontend/ubis/controller');
-$oView->renderizar('info_ubis.html.twig',[]);
+$oView = new ViewNewPhtml('frontend\ubis\controller');
+$oView->renderizar('info_ubis.phtml', []);

@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
@@ -557,5 +557,5 @@ $a_campos = [
     'pagina_link' => $pagina_link,
 ];
 
-$oView = new ViewPhtml('frontend\ubis\controller');
+$oView = new ViewNewPhtml('frontend\ubis\controller');
 $oView->renderizar('ubis_tabla.phtml', $a_campos);

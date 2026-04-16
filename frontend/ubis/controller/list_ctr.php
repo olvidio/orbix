@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use core\DBPropiedades;
-use core\ViewPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use src\ubis\application\services\UbiTelecoService;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
@@ -40,7 +40,7 @@ $miSfsv = ConfigGlobal::mi_sfsv();
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -72,14 +72,14 @@ if ($Qloc !== 'ex') {
     } else {
         $dl = $a_reg[1];
     }
-    if ($dl == ConfigGlobal::mi_delef()) {
+    if ($dl === ConfigGlobal::mi_delef()) {
         $objCentro = 'CentroDl';
         $objCasa = 'CasaDl';
     } else {
         $objCentro = 'Centro';
         $objCasa = 'Casa';
         $aWhere['region'] = $reg;
-        if ($dl != 'cr') {
+        if ($dl !== 'cr') {
             $aWhere['dl'] = $dl;
         }
     }
@@ -272,10 +272,10 @@ foreach ($cUbis as $oCentro) {
     $pagina = Hash::link(ConfigGlobal::getWeb() . '/frontend/ubis/controller/home_ubis.php?' . http_build_query(array('pau' => 'u', 'id_ubi' => $id_ubi)));
     $ctr = $oCentro->getNombre_ubi();
 
-    if (strstr($obj, 'Centro') !== false) {
+    if (str_contains($obj, 'Centro')) {
         $tipo = $oCentro->getTipo_ctr();
     }
-    if (strstr($obj, 'Casa') !== false) {
+    if (str_contains($obj, 'Casa')) {
         $tipo = $oCentro->getTipo_casa();
     }
     $cDirecciones = $oCentro->getDirecciones();
@@ -310,14 +310,12 @@ foreach ($cUbis as $oCentro) {
 
     /*para los ubis cuyo país no sea España se listará entre paréntesis
     tras la población*/
-    if (strstr($obj, 'Ex') === false) {
+    if (!str_contains($obj, 'Ex')) {
+        $a_valores[$i][6] = $poblacion;
+    } else if ($pais === "España") {
         $a_valores[$i][6] = $poblacion;
     } else {
-        if ($pais == "España") {
-            $a_valores[$i][6] = $poblacion;
-        } else {
-            $a_valores[$i][6] = "$poblacion ($pais)";
-        }
+        $a_valores[$i][6] = "$poblacion ($pais)";
     }
     $tels = UbiTelecoService::texto($obj, (int)$id_ubi, 'telf', '', ' ');
 
@@ -345,10 +343,10 @@ if ($Qloc !== 'ex') {
         'ctr_agd' => ucfirst(_("sólo centros de agd")),
         'ctr_s' => ucfirst(_("sólo centros de s")),
     );
-    if ($miSfsv == 1) { // sv
+    if ($miSfsv === 1) { // sv
         $aOpciones['ctr_sssc'] = ucfirst(_("sólo centros de sss+"));
     }
-    if ($miSfsv == 2) { // sf
+    if ($miSfsv === 2) { // sf
         $aOpciones['ctr_nax'] = ucfirst(_("sólo centros de nax"));
     }
     $aOpciones['oc'] = ucfirst(_("sólo obras corporativas"));
@@ -356,7 +354,7 @@ if ($Qloc !== 'ex') {
     $aOpciones['cgi'] = ucfirst(_("sólo colegios"));
     $aOpciones['otros_cdc'] = ucfirst(_("resto casas cdc"));
 }
-if ($Qloc == 'ex') {
+if ($Qloc === 'ex') {
     $aOpciones = array('' => '',
         'ctr_n_ex' => ucfirst(_("sólo centros de n")),
         'ctr_agd_ex' => ucfirst(_("sólo centros de agd")),
@@ -404,5 +402,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h2' => $h2,
 ];
 
-$oView = new ViewPhtml('frontend\ubis\controller');
+$oView = new ViewNewPhtml('frontend\ubis\controller');
 $oView->renderizar('list_ctr.phtml', $a_campos);

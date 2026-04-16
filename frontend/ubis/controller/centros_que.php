@@ -1,6 +1,6 @@
 <?php
 
-use core\ViewTwig;
+use frontend\shared\model\ViewNewPhtml;
 use web\DesplegableArray;
 use web\Hash;
 
@@ -43,5 +43,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplOpciones' => $oDesplOpciones,
 ];
 
-$oView = new ViewTwig('frontend/ubis/controller');
-$oView->renderizar('centros_que.html.twig', $a_campos);
+$oView = new ViewNewPhtml('frontend\ubis\controller');
+$oView->renderizar('centros_que.phtml', $a_campos);

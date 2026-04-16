@@ -71,7 +71,9 @@ use src\ubis\infrastructure\persistence\postgresql\PgTipoTelecoRepository;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\infrastructure\persistence\postgresql\PgCasaPeriodoRepository;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
+use src\ubis\domain\contracts\TrasladoUbiRepositoryInterface;
 use src\ubis\infrastructure\persistence\postgresql\PgTarifaUbiRepository;
+use src\ubis\infrastructure\persistence\postgresql\PgTrasladoUbiRepository;
 use function DI\autowire;
 
 return [
@@ -113,4 +115,5 @@ return [
     TipoTelecoRepositoryInterface::class => autowire(PgTipoTelecoRepository::class),
     CasaPeriodoRepositoryInterface::class => autowire(PgCasaPeriodoRepository::class),
     TarifaUbiRepositoryInterface::class => autowire(PgTarifaUbiRepository::class),
+    TrasladoUbiRepositoryInterface::class => autowire(PgTrasladoUbiRepository::class),
 ];

@@ -61,6 +61,21 @@ Referencia: `frontend/usuarios/controller/usuario_lista.php`.
 - No hacer que `src` renderice HTML de aplicacion (salvo respuestas realmente API-only que ya sean JSON).
 - No eliminar de golpe los wrappers `apps/` hasta que no queden referencias (grep en repo y, si aplica, datos en BD).
 
+## Migracion de vistas y namespace de render
+
+- Al migrar un controlador a `frontend/<modulo>/controller`, migrar tambien su vista a `frontend/<modulo>/view` (incluyendo `*.phtml` y `*.html.twig`).
+- En controladores frontend, usar:
+  - `new ViewNewPhtml('frontend\\<modulo>\\controller')` para vistas `*.phtml`.
+  - `new ViewTwig('frontend/<modulo>/controller')` para vistas `*.html.twig` temporales o casos legacy.
+- Evitar dejar la misma vista activa en `apps/<modulo>/view` y `frontend/<modulo>/view` a la vez; cuando el frontend ya renderiza bien, eliminar la copia legacy de `apps/<modulo>/view`.
+- Revisar rutas hardcodeadas dentro de vistas JS/HTML (`apps/...`) y cambiarlas a `frontend/...` para evitar llamadas mixtas.
+
+## Convencion para legacy en apps
+
+- En `apps/<modulo>/controller`, preferir wrappers minimos que deleguen a `frontend/...`.
+- Si se necesita preservar temporalmente logica antigua para consulta o rollback, moverla a archivos con prefijo `z...` y dejar claro que no son rutas canonicas.
+- Rutas canonicas para nuevas llamadas: siempre `frontend/...` (UI) y `/src/...` (API).
+
 ## Siguiente refactor sugerido en `profesores`
 
 1. `lista_por_departamentos.php` (mismo patron: `application` + JSON + `frontend` + vista).

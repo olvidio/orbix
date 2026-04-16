@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use src\ubis\domain\contracts\TrasladoUbiRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use ubis\model\TrasladoUbi;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -28,9 +28,7 @@ if (empty($a_sel)) {
 $mi_region_dl = ConfigGlobal::mi_region_dl();
 $esquema_org = substr($mi_region_dl, 0, -1); // quito la v o la f.
 
-$oTrasladoUbi = new TrasladoUbi();
-$oTrasladoUbi->setEsquema_org($esquema_org);
-$oTrasladoUbi->setEsquema_dst($dl_dst);
+$TrasladoUbiRepository = $GLOBALS['container']->get(TrasladoUbiRepositoryInterface::class);
 
 foreach ($a_sel as $id_ubi) {
     // averiguar si es ctr o casa
@@ -40,11 +38,11 @@ foreach ($a_sel as $id_ubi) {
     switch ($classname) {
         case 'Centro':
         case 'CentroDl':
-            $oTrasladoUbi->trasladoCtr($id_ubi);
+            $TrasladoUbiRepository->trasladoCtr((int)$id_ubi, $esquema_org, $dl_dst);
             break;
         case 'Casa':
         case 'CasaDl':
-            $oTrasladoUbi->trasladoCdc($id_ubi);
+            $TrasladoUbiRepository->trasladoCdc((int)$id_ubi, $esquema_org, $dl_dst);
             break;
     }
 

@@ -7,9 +7,10 @@
  * @since        15/5/02.
  *
  */
+
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
-use core\ViewPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -58,5 +59,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oFormAny' => $oFormAny,
 ];
 
-$oView = new ViewPhtml('frontend\ubis\controller');
+$oView = new ViewNewPhtml('frontend\ubis\controller');
 $oView->renderizar('calendario_periodos.phtml', $a_campos);

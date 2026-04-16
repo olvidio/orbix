@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\application\services\RegionDropdown;
@@ -37,7 +37,8 @@ $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 $repositoryProvider = new class {
     use ProvidesRepositories;
 
-    public function get(string $entityType): object {
+    public function get(string $entityType): object
+    {
         return $this->getRepository($entityType);
     }
 };
@@ -205,7 +206,7 @@ if (strstr($Qobj_pau, 'Dl')) {
 
 $oPermActiv = new ubis\model\CuadrosLabor();
 
-$chk = $oUbi->isActive()? 'checked' : '';
+$chk = $oUbi->isActive() ? 'checked' : '';
 $campos_chk = 'active!sv!sf';
 
 $camposForm = 'que!dl!tipo_ubi!active!region!nombre_ubi';
@@ -231,7 +232,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 
-$oView = new ViewPhtml('frontend\ubis\controller');
+$oView = new ViewNewPhtml('frontend\ubis\controller');
 
 switch ($tipo_ubi) {
     case "ctrdl":

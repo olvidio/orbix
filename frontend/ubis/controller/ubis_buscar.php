@@ -1,6 +1,6 @@
 <?php
 
-use core\ViewPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use src\ubis\application\services\RegionDropdown;
 use src\ubis\application\services\TipoCasaDropdown;
 use src\ubis\application\services\TipoCentroDropdown;
@@ -131,5 +131,5 @@ $a_campos = [
     'pagina' => $pagina,
 ];
 
-$oView = new ViewPhtml('frontend\ubis\controller');
+$oView = new ViewNewPhtml('frontend\ubis\controller');
 $oView->renderizar('ubis_buscar.phtml', $a_campos);

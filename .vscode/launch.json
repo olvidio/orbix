@@ -4,13 +4,15 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
+
         {
             "name": "Listen for Xdebug on Docker",
             "type": "php",
             "request": "launch",
             "port": 9003,
             "pathMappings": {
-                "/var/www/orbix/apps": "${workspaceFolder}/apps"
+                "/var/www/orbix": "/home/dani/orbix_local/orbix"
             }
         }
     ]

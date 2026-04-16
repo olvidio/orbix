@@ -1,17 +1,18 @@
 <?php
 
-namespace ubis\model;
+namespace src\ubis\domain;
 
 use core\ConfigGlobal;
 use permisos\model\XPermisos;
 
 class CuadrosLabor extends XPermisos
 {
-    public $classname = "CuadrosLabor";
+    public string $classname = "CuadrosLabor";
 
-    public function generarArrayTraducido()
+    public function generarArrayTraducido(): array
     {
-        $tipos = [_("sr") => 512,
+        return [
+            _("sr") => 512,
             _("n") => 256,
             _("agd") => 128,
             _("sg") => 64,
@@ -21,26 +22,24 @@ class CuadrosLabor extends XPermisos
             _("jóvenes") => 2,
             _("mayores") => 1,
         ];
-        return $tipos;
     }
 
     public function __construct()
     {
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-       $this->permissions= $this->generarArrayTraducido();
+        $this->permissions = $this->generarArrayTraducido();
 
-        if ($miSfsv == 1) {
+        if ($miSfsv === 1) {
             $this->permissions[_("sss+")] = 32;
         }
-        if ($miSfsv == 2) {
+        if ($miSfsv === 2) {
             $this->permissions[_("nax")] = 32;
         }
     }
 
-    public function getTxtTiposLabor()
+    public function getTxtTiposLabor(): array
     {
         return array_flip($this->permissions);
     }
-
 }
