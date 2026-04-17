@@ -16,4 +16,8 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_ajax', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_ajax.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/tipo_activ_proceso_ajax', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_proceso_ajax.php';
+    });
 };

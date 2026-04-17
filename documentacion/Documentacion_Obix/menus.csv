@@ -339,7 +339,7 @@
 13,fases-tareas (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\procesos\domain\InfoTareas,1
 13,tipos de procesos (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\procesos\domain\InfoProcesoTipo,1
 13,procesos (procesos select),frontend/procesos/controller/procesos_select.php,,11
-13,tipo activ - proceso (Tipos de actividad),apps/procesos/controller/tipo_activ_proceso.php,,11
+13,tipo activ - proceso (Tipos de actividad),frontend/procesos/controller/tipo_activ_proceso.php,,11
 13,usuarios web (Raiz base),,,1
 13,lista de roles (lista roles),frontend/usuarios/controller/role_lista.php,,1
 13,grup menu (lista grupmenus),frontend/menus/controller/grupmenu_lista.php,,1

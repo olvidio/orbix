@@ -173,7 +173,7 @@
 18	20	apps/actividadessacd/controller/asignar_sacd_auto.php	\N	Auto asignar sacd a actividades
 46	26	apps/cambios/controller/avisos_generar_tabla.php	\N	avisos generar tabla
 143	6	apps/actividades/controller/lista_activ_que.php	\N	Lista Activ que
-44	11	apps/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad
+44	11	frontend/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad
 132	5	apps/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
 79	6	apps/asistentes/controller/lista_ultim_que_ctr.php	\N	Ultima asistencia
 73	5	apps/actividadtarifas/controller/tarifa_ubi.php	\N	actividad Tarifa Ubi

@@ -153,3 +153,75 @@ Seguimiento de la migracion de `apps/procesos` hacia `frontend/procesos` + `src/
 - Fix del JS `fnjs_mas_dependencias` que referencia `aDesplFasesPrevia`
   (singular, inexistente) y del `fnjs_guardar` para migrar al patron
   `$.ajax(...)` sin `.trigger('submit')`.
+
+---
+
+## Slice 3 - `tipo_activ_proceso` + `tipo_activ_proceso_ajax`
+
+### Pantallas
+
+- `tipo_activ_proceso` (listado de tipos de actividad con su tipo de
+  proceso asociado). URL legacy `apps/procesos/controller/tipo_activ_proceso.php`
+  -> canonico `frontend/procesos/controller/tipo_activ_proceso.php`.
+- `tipo_activ_proceso_ajax` (dispatcher AJAX multi-`que`:
+  `lista`, `lst_posibles_procesos`, `asignar`). URL legacy
+  `apps/procesos/controller/tipo_activ_proceso_ajax.php` -> canonico
+  `/src/procesos/tipo_activ_proceso_ajax`.
+
+### Parametros de entrada (`POST`)
+
+- `tipo_activ_proceso`: no recibe parametros; solo prepara hashes.
+- `tipo_activ_proceso_ajax`:
+  - `lista`: sin parametros extra.
+  - `lst_posibles_procesos`: `id_tipo_activ`, `propio`.
+  - `asignar`: `id_tipo_activ`, `propio`, `id_tipo_proceso`.
+
+### Reglas funcionales
+
+- `tipo_activ_proceso`: render puro (solo hashes). El contenido se
+  carga al `$(document).ready()` con `fnjs_lista()`.
+- `tipo_activ_proceso_ajax`:
+  - `lista` devuelve HTML con `web\Lista` + `TiposActividades` +
+    `ProcesoTipoRepository`.
+  - `lst_posibles_procesos` devuelve un mini-tabla con los posibles
+    tipos de proceso filtrados por `mi_sfsv()`.
+  - `asignar` actualiza el `id_tipo_proceso` (propio) o
+    `id_tipo_proceso_ex` segun `propio`.
+  - Salida siempre texto plano para `.done(rta_txt)`.
+
+### Backend nuevo
+
+- Endpoint `/src/procesos/tipo_activ_proceso_ajax`: port 1:1 del
+  dispatcher con `header('Content-Type: text/plain; charset=UTF-8')`.
+  Marcado como DEPRECADO en cabecera.
+
+### Frontend
+
+- `frontend/procesos/controller/tipo_activ_proceso.php`: monta
+  `Hash`es con `setUrl` apuntando a la ruta src; no llama a
+  `PostRequest` porque el render no necesita datos (las llamadas
+  vienen via JS despues del `ready`).
+- `frontend/procesos/view/tipo_activ_proceso.html.twig`: copia 1:1.
+
+### Compatibilidad legacy
+
+- `apps/procesos/controller/tipo_activ_proceso.php`: wrapper al frontend.
+- `apps/procesos/controller/tipo_activ_proceso_ajax.php`: wrapper al src.
+- Se elimina `apps/procesos/view/tipo_activ_proceso.html.twig`.
+
+### Partial views NO migradas
+
+Las siguientes vistas se usan desde `apps/actividades/model/ActividadTipo.php`
+(metodo `render()`) con `core\ViewTwig`, que resuelve rutas bajo
+`apps/<modulo>/view`. Mientras `ActividadTipo` no se migre, se mantienen
+en `apps/procesos/view/`:
+
+- `actividad_tipo_proceso.html.twig` (caso `tipoactiv-procesos`).
+- `actividad_tipo_que_perm.html.twig` (casos `procesos`, `cambios`).
+- `_actividad_tipo_proceso.js.html.twig` (partial JS).
+- `_actividad_tipo.js.html.twig` (partial JS con `fnjs_actualizar_fases`).
+
+Quedan pendientes para una fase en la que tambien se migre
+`ActividadTipo` o cuando los controladores `actividad_proceso`,
+`usuario_perm_activ` y `fases_activ_cambio` necesiten su propia copia
+frontend (ver slices 4-6).
