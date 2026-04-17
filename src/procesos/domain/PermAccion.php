@@ -1,6 +1,6 @@
 <?php
 
-namespace procesos\model;
+namespace src\procesos\domain;
 
 
 use permisos\model\XPermisos;

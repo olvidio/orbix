@@ -2,6 +2,7 @@
 
 namespace procesos\model;
 
+use src\procesos\domain\PermAccion;
 use stdClass;
 use web\Desplegable;
 

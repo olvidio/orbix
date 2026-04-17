@@ -1,9 +1,9 @@
 <?php
 
-namespace procesos\db;
+namespace src\procesos\db;
 
 use core\ConfigGlobal;
-use src\configuracion\domain\DBAbstract;
+use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * Crear las tablas necesaria a nivel de aplicación (global).
@@ -23,7 +23,7 @@ class DB extends DBAbstract
         $this->esquema = 'global';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_a_actividad_proceso();
         $this->eliminar_a_tipos_proceso();
@@ -33,7 +33,7 @@ class DB extends DBAbstract
         $this->eliminar_aux_usuarios_perm();
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_a_actividad_proceso();
         $this->create_a_tipos_procesos();
@@ -48,7 +48,7 @@ class DB extends DBAbstract
      * Tiene un foreing key con el id_activ. Entiendo que no hay problemas con sf, ya
      * los procesos podrian ser distintos, pero no interfieren los ids.
      */
-    public function create_a_actividad_proceso()
+    public function create_a_actividad_proceso(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -74,7 +74,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_actividad_proceso()
+    public function eliminar_a_actividad_proceso(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -86,7 +86,7 @@ class DB extends DBAbstract
     }
 
 
-    public function create_a_tipos_procesos()
+    public function create_a_tipos_procesos(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -108,7 +108,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_tipos_proceso()
+    public function eliminar_a_tipos_proceso(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -119,7 +119,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function create_a_tareas()
+    public function create_a_tareas(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -141,7 +141,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_tareas()
+    public function eliminar_a_tareas(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -152,7 +152,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function create_a_fases()
+    public function create_a_fases(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -174,7 +174,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_fases()
+    public function eliminar_a_fases(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -185,7 +185,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function create_a_tareas_proceso()
+    public function create_a_tareas_proceso(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -210,7 +210,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_tareas_proceso()
+    public function eliminar_a_tareas_proceso(): void
     {
         $this->addPermisoGlobal('comun');
 
@@ -224,7 +224,7 @@ class DB extends DBAbstract
     /**
      * En la BD sf-e/sv-e [exterior] (global).
      */
-    public function create_aux_usuarios_perm()
+    public function create_aux_usuarios_perm(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $this->addPermisoGlobal('sfsv-e');
@@ -250,7 +250,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('sfsv-e');
     }
 
-    public function eliminar_aux_usuarios_perm()
+    public function eliminar_aux_usuarios_perm(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->addPermisoGlobal('sfsv-e');

@@ -2,8 +2,8 @@
 
 namespace permisos\model;
 
+use src\procesos\domain\PermAccion;
 use function core\is_true;
-use procesos\model\PermAccion;
 
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:

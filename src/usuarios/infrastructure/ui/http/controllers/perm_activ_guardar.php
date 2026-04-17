@@ -1,8 +1,8 @@
 <?php
 
-use procesos\model\PermAfectados;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\entity\PermUsuarioActividad;
+use src\procesos\domain\PermAfectados;
 use web\ContestarJson;
 use function core\is_true;
 

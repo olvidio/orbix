@@ -1,9 +1,10 @@
 <?php
 
-namespace procesos\db;
+namespace src\procesos\db;
 
 use core\ConfigGlobal;
-use src\configuracion\domain\DBAbstract;
+use core\ServerConf;
+use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema.
@@ -12,7 +13,7 @@ use src\configuracion\domain\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ConfigGlobal::DIR . "/apps/procesos/db";
+    private string $dir_base = ServerConf::DIR . "/apps/procesos/db";
 
     public function __construct($esquema_sfsv = NULL)
     {
@@ -24,7 +25,7 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_a_actividad_proceso('sv');
         $this->eliminar_a_actividad_proceso('sf');
@@ -40,7 +41,7 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_a_tareas(); // antes que 'actividad_proceso' por el FOREIGN KEY
         $this->create_a_fases(); // antes que 'actividad_proceso' por el FOREIGN KEY
@@ -56,20 +57,18 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function llenarAll()
+    public function llenarAll(): void
     {
-
         $this->llenar_a_tareas();
         $this->llenar_a_fases();
         $this->llenar_a_tipos_actividad();
         $this->llenar_a_tipos_procesos();
         $this->llenar_a_tareas_proceso();
-        $this->llenar_a_actividad_proceso();
         $this->llenar_aux_usuarios_perm();
 
     }
 
-    protected function infoTable($tabla)
+    protected function infoTable($tabla): array
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
@@ -124,7 +123,7 @@ class DBEsquema extends DBAbstract
      * Tiene un foreing key con el id_activ. Entiendo que no hay problemas con sf, ya
      * los procesoso podrian ser distintos, pero no interfieren los ids.
      */
-    public function create_a_actividad_proceso($seccion)
+    public function create_a_actividad_proceso($seccion): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -190,7 +189,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_actividad_proceso($seccion)
+    public function eliminar_a_actividad_proceso($seccion): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -215,7 +214,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function create_a_tipos_procesos()
+    public function create_a_tipos_procesos(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -263,7 +262,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_tipos_proceso()
+    public function eliminar_a_tipos_proceso(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -282,7 +281,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function create_a_tareas()
+    public function create_a_tareas(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -323,7 +322,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_tareas()
+    public function eliminar_a_tareas(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -342,7 +341,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function create_a_fases()
+    public function create_a_fases(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -391,7 +390,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_fases()
+    public function eliminar_a_fases(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -410,7 +409,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function create_a_tareas_proceso()
+    public function create_a_tareas_proceso(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -463,7 +462,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_a_tareas_proceso()
+    public function eliminar_a_tareas_proceso(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
@@ -485,7 +484,7 @@ class DBEsquema extends DBAbstract
     /**
      * En la BD sf-e/sv-e [exterior] (esquema).
      */
-    public function create_aux_usuarios_perm()
+    public function create_aux_usuarios_perm(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -544,7 +543,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_aux_usuarios_perm()
+    public function eliminar_aux_usuarios_perm(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -577,7 +576,7 @@ class DBEsquema extends DBAbstract
      *  parar cada tipo de actividad.
      *  Si hay algún añadido en los tipos de actividad se borrará.
      */
-    public function llenar_a_tipos_actividad()
+    public function llenar_a_tipos_actividad(): void
     {
         $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
@@ -588,7 +587,7 @@ class DBEsquema extends DBAbstract
         $oDbl = $this->oDbl;
 
         // crear tabla temporal
-        $tabla_tmp = $nom_tabla.'_tmp';
+        $tabla_tmp = $nom_tabla . '_tmp';
 
         $a_sql = [];
         $a_sql[0] = "CREATE TABLE IF NOT EXISTS $tabla_tmp AS
@@ -617,12 +616,8 @@ class DBEsquema extends DBAbstract
 
     }
 
-    public function llenar_a_actividad_proceso()
-    {
-        // empty;
-    }
 
-    public function llenar_a_tipos_procesos()
+    public function llenar_a_tipos_procesos(): void
     {
         $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
@@ -656,7 +651,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function llenar_a_tareas()
+    public function llenar_a_tareas(): void
     {
         $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
@@ -693,7 +688,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function llenar_a_fases()
+    public function llenar_a_fases(): void
     {
         $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
@@ -729,7 +724,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function llenar_a_tareas_proceso()
+    public function llenar_a_tareas_proceso(): void
     {
         $this->addPermisoGlobal('comun');
         $this->setConexion('comun');
@@ -764,7 +759,7 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function llenar_aux_usuarios_perm()
+    public function llenar_aux_usuarios_perm(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -781,7 +776,7 @@ class DBEsquema extends DBAbstract
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
         $filename = $datosTabla['filename'];
-        if (ConfigGlobal::mi_sfsv() == 1) {
+        if (ConfigGlobal::mi_sfsv() === 1) {
             $filename .= '_sv';
         } else {
             $filename .= '_sf';

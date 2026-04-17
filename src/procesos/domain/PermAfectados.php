@@ -1,13 +1,13 @@
 <?php
 
-namespace procesos\model;
+namespace src\procesos\domain;
 
 use permisos\model\PermisosActividades;
 use permisos\model\XPermisos;
 
 class PermAfectados extends XPermisos
 {
-    public static $classname = "CuadrosPermActiv";
+    public static string $classname = "CuadrosPermActiv";
 
     public function __construct($iaccion = 0)
     {

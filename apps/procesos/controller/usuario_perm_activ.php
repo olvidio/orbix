@@ -3,10 +3,10 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use permisos\model\PermisosActividades;
-use procesos\model\PermAccion;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
+use src\procesos\domain\PermAccion;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use web\Desplegable;
 use web\Hash;

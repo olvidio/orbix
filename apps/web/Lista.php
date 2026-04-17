@@ -135,8 +135,6 @@ class Lista
     {
         $aCabeceras = $this->aCabeceras;
         $aDatos = $this->aDatos;
-        $key = $this->ikey;
-        $id_tabla = $this->sid_tabla;
         $clase = 'lista';
         $cabecera = "";
         //------------------------------------ html ------------------------------

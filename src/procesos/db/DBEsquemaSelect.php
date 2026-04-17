@@ -1,6 +1,6 @@
 <?php
 
-namespace procesos\db;
+namespace src\procesos\db;
 
 use core\ConfigGlobal;
 use core\DBRefresh;
@@ -12,7 +12,7 @@ use core\DBRefresh;
 class DBEsquemaSelect extends DBEsquema
 {
 
-    public function dropAllSelect()
+    public function dropAllSelect(): void
     {
         $this->eliminar_a_actividad_proceso_selected('sv');
         $this->eliminar_a_actividad_proceso_selected('sf');
@@ -23,7 +23,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->eliminar_aux_usuarios_perm_selected();
     }
 
-    public function createAllSelect()
+    public function createAllSelect(): void
     {
         $this->create_a_tareas_selected(); // antes que 'actividad_proceso' por el FOREIGN KEY
         $this->create_a_fases_selected(); // antes que 'actividad_proceso' por el FOREIGN KEY
@@ -41,7 +41,7 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD Comun (esquema).
      */
-    public function create_a_actividad_proceso_selected($seccion)
+    public function create_a_actividad_proceso_selected($seccion): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -75,7 +75,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_a_actividad_proceso_selected($seccion)
+    public function eliminar_a_actividad_proceso_selected($seccion): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -94,7 +94,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function create_a_tipos_procesos_selected()
+    public function create_a_tipos_procesos_selected(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -124,7 +124,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_a_tipos_proceso_selected()
+    public function eliminar_a_tipos_proceso_selected(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -137,7 +137,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function create_a_tareas_selected()
+    public function create_a_tareas_selected(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -168,7 +168,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_a_tareas_selected()
+    public function eliminar_a_tareas_selected(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -181,7 +181,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function create_a_fases_selected()
+    public function create_a_fases_selected(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -211,7 +211,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_a_fases_selected()
+    public function eliminar_a_fases_selected(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -224,7 +224,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function create_a_tareas_proceso_selected()
+    public function create_a_tareas_proceso_selected(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -255,7 +255,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_a_tareas_proceso_selected()
+    public function eliminar_a_tareas_proceso_selected(): void
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
@@ -271,7 +271,7 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD sf-e/sv-e [exterior] (esquema).
      */
-    public function create_aux_usuarios_perm_selected()
+    public function create_aux_usuarios_perm_selected(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -312,7 +312,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_aux_usuarios_perm_selected()
+    public function eliminar_aux_usuarios_perm_selected(): void
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;

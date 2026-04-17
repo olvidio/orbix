@@ -1,11 +1,11 @@
 <?php
 
 use core\ConfigGlobal;
-use procesos\model\PermAccion;
-use procesos\model\PermAfectados;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
+use src\procesos\domain\PermAccion;
+use src\procesos\domain\PermAfectados;
 use web\ContestarJson;
 use web\TiposActividades;
 use function core\is_true;

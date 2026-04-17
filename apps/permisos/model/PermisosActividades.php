@@ -3,12 +3,11 @@
 namespace permisos\model;
 
 use core\ConfigGlobal;
-use procesos\model\PermAccion;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
-use src\procesos\domain\entity\ActividadFase;
+use src\procesos\domain\PermAccion;
 use src\procesos\domain\value_objects\FaseId;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use function core\is_true;
