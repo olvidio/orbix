@@ -23,7 +23,7 @@ class ProcesosRegenerar
         foreach ($cTareasProceso as $oTareaProceso) {
             $id_fase = $oTareaProceso->getId_fase();
             $id_tarea = $oTareaProceso->getId_tarea();
-            $ActividadProcesoTareaRepository->añadirFaseTarea($Qid_tipo_proceso, $id_fase, $id_tarea);
+            $ActividadProcesoTareaRepository->addFaseTarea($Qid_tipo_proceso, $id_fase, $id_tarea);
         }
         $ActividadProcesoTareaRepository->borrarFaseTareaInexistente($Qid_tipo_proceso, $id_fase, $id_tarea);
 

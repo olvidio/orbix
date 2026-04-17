@@ -53,7 +53,8 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $nom_tabla = $this->getNomTabla();
         $nom_tabla_procesos = 'a_tareas_proceso';
 
-        $temp_table = "tmp_borrar";
+        $temp_table = "tmp_borrar_" . $id_tipo_proceso . "_" . $id_fase . "_" . $id_tarea;
+        $this->pdoQuery($oDbl, "DROP TABLE IF EXISTS $temp_table", __METHOD__, __FILE__, __LINE__);
         $sQuery = "CREATE TEMPORARY TABLE $temp_table AS ";
         $sQuery .= "SELECT a.id_activ,a.id_fase,id_tarea
                     FROM $nom_tabla a LEFT JOIN $nom_tabla_procesos p USING (id_tipo_proceso,id_fase,id_tarea)
@@ -76,6 +77,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $nom_tabla = $this->getNomTabla();
 
         $temp_table = "tmp_proceso_" . $id_fase . "_" . $id_tarea;
+        $this->pdoQuery($oDbl, "DROP TABLE IF EXISTS $temp_table", __METHOD__, __FILE__, __LINE__);
         $sQuery = "CREATE TEMPORARY TABLE $temp_table AS ";
         $sQuery .= "(SELECT DISTINCT id_activ FROM $nom_tabla WHERE id_tipo_proceso=$id_tipo_proceso)";
         $sQuery .= " EXCEPT ";
