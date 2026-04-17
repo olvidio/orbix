@@ -78,7 +78,7 @@
 172;8;apps/actividadplazas/controller/incorporar_peticion.php;Incorporar peticiones de plazas
 170;8;apps/actividadplazas/controller/plazas_balance_que.php;Balance de Plazas
 176;9;apps/dbextern/controller/sincro_index.php;Sincronizar con los datos de Listas
-130;11;apps/procesos/controller/fases_activ_cambio.php;Fases activ cambio
+130;11;frontend/procesos/controller/fases_activ_cambio.php;Fases activ cambio
 32;11;frontend/procesos/controller/procesos_select.php;procesos select
 44;11;frontend/procesos/controller/tipo_activ_proceso.php;Tipos de actividad
 43;20;apps/actividadescentro/controller/activ_ctr.php;actividades centro

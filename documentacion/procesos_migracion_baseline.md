@@ -314,3 +314,83 @@ frontend (ver slices 4-6).
   `update`) con clases de `application/` dedicadas.
 - Refactor del JS inline de `actividad_proceso.html.twig` para salir
   del patron `$.ajax` con hash inline y pasarse a endpoints JSON.
+
+---
+
+## Slice 5 - `fases_activ_cambio` + `fases_activ_cambio_ajax`
+
+### Pantallas
+
+- `fases_activ_cambio` (formulario para cambiar la fase a un grupo
+  de actividades). URL legacy `apps/procesos/controller/fases_activ_cambio.php`
+  -> canonico `frontend/procesos/controller/fases_activ_cambio.php`.
+- `fases_activ_cambio_ajax` (dispatcher AJAX multi-`que`: `lista`,
+  `update`, `get`). URL legacy
+  `apps/procesos/controller/fases_activ_cambio_ajax.php` -> canonico
+  `/src/procesos/fases_activ_cambio_ajax`.
+
+### Parametros de entrada (`POST`)
+
+- `fases_activ_cambio`: `dl_propia`, `id_fase_nueva`, `id_tipo_activ`,
+  `sasistentes`, `sactividad`, `sactividad2`, `periodo`, `year`,
+  `empiezamin`, `empiezamax`, `inicio`, `fin`. Opcionalmente `stack`
+  para restaurar `Posicion` previa.
+- `fases_activ_cambio_ajax`:
+  - `lista`: `id_tipo_activ`, `dl_propia`, `id_fase_nueva`, `periodo`,
+    `year`, `empiezamin`, `empiezamax`, `accion`.
+  - `update`: `id_fase_nueva`, `sel[]`, `accion`.
+  - `get`: `id_tipo_activ`, `dl_propia`, `id_fase_sel`.
+
+### Reglas funcionales
+
+- `fases_activ_cambio` prepara el widget `actividades\model\ActividadTipo`
+  (legacy), el `PeriodoQue` y los `Hash`es (`h_lista`, `h_actualizar`,
+  `h_tipo`) con URL al src. El JS del view hace `fnjs_actualizar_fases`
+  en `ready`, dispara `fnjs_lista` tras cada cambio y usa
+  `frontend/procesos/controller/actividad_proceso.php` para el boton
+  "ver proceso actividad" (ya actualizado en slice 4).
+- `fases_activ_cambio_ajax`:
+  - `lista` construye una tabla HTML con actividades candidatas,
+    marcando si cumplen los requisitos de la fase nueva; usa Posicion
+    para recordar los filtros ante el back.
+  - `update` aplica `setCompletado(t|f)` segun `accion` a la tarea de
+    la fase nueva para cada `id_activ` seleccionado, respetando
+    permisos de oficina del responsable.
+  - `get` devuelve el `Desplegable` con las fases posibles para el
+    `id_tipo_activ` actual y la `dl_propia`.
+  - Salida siempre `text/plain`.
+
+### Backend nuevo
+
+- Endpoint `/src/procesos/fases_activ_cambio_ajax`: port 1:1 del
+  dispatcher con `header('Content-Type: text/plain; charset=UTF-8')`.
+  Marcado como DEPRECADO. Instancia su propio `web\Posicion` ya que
+  los closures de FastRoute no heredan el `$oPosicion` global.
+
+### Frontend
+
+- `frontend/procesos/controller/fases_activ_cambio.php`: copia del
+  controlador legacy cambiando `ViewTwig` por `ViewNewTwig` y los
+  hashes apuntando a la ruta src via `ConfigGlobal::getWeb()`.
+- `frontend/procesos/view/fases_activ_cambio.html.twig`: copia 1:1.
+
+### Compatibilidad legacy
+
+- `apps/procesos/controller/fases_activ_cambio.php`: wrapper al frontend.
+- `apps/procesos/controller/fases_activ_cambio_ajax.php`: wrapper al src.
+- Se elimina `apps/procesos/view/fases_activ_cambio.html.twig`.
+
+### Menus / docs actualizados
+
+- `documentacion/Documentacion_Obix/menus.csv`, `log/menus/comun.sql`,
+  `proves/aux_metamenus.csv`: URL apunta a `frontend/procesos/controller/fases_activ_cambio.php`.
+- Paginas de documentacion (2, 3, 8, 10, 12, 20) actualizadas.
+- `documentacion/Documentacion_Obix/procesos/mapa_fases_activ_cambio.md`
+  refleja la migracion a `frontend/` + `/src/procesos/fases_activ_cambio_ajax`.
+
+### Pendiente futuro
+
+- Seguir dependiendo de `actividades\model\ActividadTipo` (legacy apps)
+  tanto en render como en fetch de fases; bloqueado hasta que se
+  migre `ActividadTipo` al patron nuevo.
+- Split del dispatcher por accion (`lista`, `update`, `get`).

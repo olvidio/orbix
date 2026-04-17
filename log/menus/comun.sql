@@ -150,7 +150,7 @@
 64	2	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros
 177	2	apps/menus/view/como.phtml	\N	ayuda menus
 102	2	apps/devel/controller/apptables.php	\N	Manage tablas de Apps
-130	11	apps/procesos/controller/fases_activ_cambio.php	\N	Fases activ cambio
+130	11	frontend/procesos/controller/fases_activ_cambio.php	\N	Fases activ cambio
 34	24	apps/zonassacd/controller/zona_sacd_ajax.php	\N	Zona sacd ajax
 180	2	\N	\N	Raiz devel
 181	1	\N	\N	Raiz base

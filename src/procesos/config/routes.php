@@ -32,4 +32,8 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_que_fases_ajax', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_que_fases_ajax.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/fases_activ_cambio_ajax', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/fases_activ_cambio_ajax.php';
+    });
 };
