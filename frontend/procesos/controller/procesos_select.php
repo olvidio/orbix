@@ -32,24 +32,40 @@ $oDespl = new Desplegable();
 $oDespl->setOpciones($aTiposProceso);
 $oDespl->setBlanco(true);
 
-// El AJAX multi-`que` esta en src (pendiente de split por accion en refactors
-// posteriores). url_ver apunta ya al frontend controller migrado en el slice 2.
-$url_ajax = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/procesos_ajax';
+// Endpoints por accion (slice 10: split de procesos_ajax). url_ver apunta
+// al frontend controller migrado en el slice 2.
+$webBase = rtrim(ConfigGlobal::getWeb(), '/');
+$url_regenerar = $webBase . '/src/procesos/procesos_regenerar';
+$url_clonar = $webBase . '/src/procesos/procesos_clonar';
+$url_get = $webBase . '/src/procesos/procesos_get';
+$url_get_listado = $webBase . '/src/procesos/procesos_get_listado';
+$url_update = $webBase . '/src/procesos/procesos_update';
+$url_eliminar = $webBase . '/src/procesos/procesos_eliminar';
 $url_ver = 'frontend/procesos/controller/procesos_ver.php';
 
-$oHashAct = new Hash();
-$oHashAct->setUrl($url_ajax);
-$oHashAct->setCamposForm('que!id_tipo_proceso');
-$h_actualizar = $oHashAct->linkSinVal();
+$oHashRegenerar = new Hash();
+$oHashRegenerar->setUrl($url_regenerar);
+$oHashRegenerar->setCamposForm('id_tipo_proceso');
+$h_regenerar = $oHashRegenerar->linkSinVal();
+
+$oHashGet = new Hash();
+$oHashGet->setUrl($url_get);
+$oHashGet->setCamposForm('id_tipo_proceso');
+$h_get = $oHashGet->linkSinVal();
+
+$oHashGetListado = new Hash();
+$oHashGetListado->setUrl($url_get_listado);
+$oHashGetListado->setCamposForm('id_tipo_proceso');
+$h_get_listado = $oHashGetListado->linkSinVal();
 
 $oHashClone = new Hash();
-$oHashClone->setUrl($url_ajax);
-$oHashClone->setCamposForm('que!id_tipo_proceso!id_tipo_proceso_ref');
+$oHashClone->setUrl($url_clonar);
+$oHashClone->setCamposForm('id_tipo_proceso!id_tipo_proceso_ref');
 $h_clonar = $oHashClone->linkSinVal();
 
 $oHashDel = new Hash();
-$oHashDel->setUrl($url_ajax);
-$oHashDel->setCamposForm('que!id_item');
+$oHashDel->setUrl($url_eliminar);
+$oHashDel->setCamposForm('id_item');
 $h_eliminar = $oHashDel->linkSinVal();
 
 $oHashNew = new Hash();
@@ -62,24 +78,25 @@ $oHashMod->setUrl($url_ver);
 $oHashMod->setCamposForm('mod!id_item!id_tipo_proceso');
 $h_modificar = $oHashMod->linkSinVal();
 
-$oHashMover = new Hash();
-$oHashMover->setUrl($url_ajax);
-$oHashMover->setCamposForm('que!id_item!orden');
-$h_mover = $oHashMover->linkSinVal();
-
 $txt_eliminar = _("¿Esta seguro que desea borrar esta fase?");
 $txt_clonar = _("No ha determinado para que proceso");
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'h_actualizar' => $h_actualizar,
+    'h_regenerar' => $h_regenerar,
+    'h_get' => $h_get,
+    'h_get_listado' => $h_get_listado,
     'h_clonar' => $h_clonar,
     'h_eliminar' => $h_eliminar,
     'h_nuevo' => $h_nuevo,
     'h_modificar' => $h_modificar,
-    'h_mover' => $h_mover,
     'oDespl' => $oDespl,
-    'url_ajax' => $url_ajax,
+    'url_regenerar' => $url_regenerar,
+    'url_clonar' => $url_clonar,
+    'url_get' => $url_get,
+    'url_get_listado' => $url_get_listado,
+    'url_update' => $url_update,
+    'url_eliminar' => $url_eliminar,
     'url_ver' => $url_ver,
     'txt_eliminar' => $txt_eliminar,
     'txt_clonar' => $txt_clonar,

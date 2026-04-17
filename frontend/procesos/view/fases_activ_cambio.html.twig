@@ -3,22 +3,16 @@ fnjs_ver_activ=function(formulario) {
 	var url = "frontend/procesos/controller/actividad_proceso.php";
 	rta=fnjs_solo_uno(formulario);
 	if (rta == 1) {
-        $(formulario).attr('action',url);
-        $(formulario).one("submit", function() {
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt) {
-					fnjs_mostra_resposta(rta_txt,'#main'); 
-				}
-            });
-            return false;
-        });
-        $(formulario).trigger("submit");
-        $(formulario).off();
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: $(formulario).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt) {
+				fnjs_mostra_resposta(rta_txt,'#main');
+			}
+		});
 	}
 }
 fnjs_cambiar=function(formulario){
@@ -26,23 +20,17 @@ fnjs_cambiar=function(formulario){
 	// segundo parametro permite multiple selección
 	rta=fnjs_solo_uno(formulario,true);
 	if (rta != 0 ) {
-        $(formulario).attr('action',url);
-        $(formulario).one("submit", function() {
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt) {
-					fnjs_mostra_resposta(rta_txt,'#main'); 
-				}
-				fnjs_lista();
-            });
-            return false;
-        });
-        $(formulario).trigger("submit");
-        $(formulario).off();
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: $(formulario).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt) {
+				fnjs_mostra_resposta(rta_txt,'#main');
+			}
+			fnjs_lista();
+		});
 	}
 }
 

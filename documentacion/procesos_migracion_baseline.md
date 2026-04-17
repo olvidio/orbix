@@ -211,20 +211,15 @@ Seguimiento de la migracion de `apps/procesos` hacia `frontend/procesos` + `src/
 
 ### Partial views NO migradas
 
-Las siguientes vistas se usan desde `apps/actividades/model/ActividadTipo.php`
-(metodo `render()`) con `core\ViewTwig`, que resuelve rutas bajo
-`apps/<modulo>/view`. Mientras `ActividadTipo` no se migre, se mantienen
-en `apps/procesos/view/`:
+Nota historica: estas vistas quedaban en `apps/procesos/view/` mientras
+`ActividadTipo::getHtml()` usara `core\ViewTwig`:
 
-- `actividad_tipo_proceso.html.twig` (caso `tipoactiv-procesos`).
+- `actividad_tipo_proceso.html.twig` (caso `tipoactiv-procesos`, retirado).
 - `actividad_tipo_que_perm.html.twig` (casos `procesos`, `cambios`).
-- `_actividad_tipo_proceso.js.html.twig` (partial JS).
+- `_actividad_tipo_proceso.js.html.twig` (retirado, era el JS del caso muerto).
 - `_actividad_tipo.js.html.twig` (partial JS con `fnjs_actualizar_fases`).
 
-Quedan pendientes para una fase en la que tambien se migre
-`ActividadTipo` o cuando los controladores `actividad_proceso`,
-`usuario_perm_activ` y `fases_activ_cambio` necesiten su propia copia
-frontend (ver slices 4-6).
+Se mueven a `frontend/procesos/view/` en el slice 12.
 
 ---
 
@@ -606,3 +601,210 @@ los casos de uso via `$_POST['que']`.
 ### Pendiente futuro
 
 - Retirar el wrapper legacy cuando ya no queden llamadas activas.
+
+---
+
+## Slice 10 - Split `procesos_ajax` en endpoints por accion
+
+### Objetivo
+
+`procesos_ajax` acumulaba siete `que` (`regenerar`, `clonar`, `get`,
+`get_listado`, `depende`, `update`, `eliminar`) y una funcion muerta
+`mover`. Se extrae cada accion a su propio caso de uso + endpoint siguiendo
+el patron de `refactor.md`.
+
+### Casos de uso nuevos en `src/procesos/application/`
+
+- `ProcesosGet::execute(array $input): string`: arbol HTML con las fases y
+  tareas del tipo de proceso. Incluye los helpers estaticos `dibujarTree`
+  y `dibujarHijos` (antes eran funciones globales `procesos_dibujar_tree`
+  y `procesos_dibujar_hijos` del dispatcher legacy).
+- `ProcesosRegenerar::execute(array $input): string`: regenera las tareas
+  de las actividades del tipo de proceso (insertar nuevas, eliminar las
+  inexistentes). Delega la renderizacion final a `ProcesosGet`.
+- `ProcesosClonar::execute(array $input): string`: clona todas las tareas
+  del proceso de referencia sobre el tipo de proceso destino y retorna el
+  arbol actualizado (llamando a `ProcesosGet`).
+- `ProcesosGetListado::execute(array $input): string`: tabla plana con el
+  listado de tareas del tipo de proceso.
+- `ProcesosDepende::execute(array $input): string`: options HTML del
+  desplegable de tareas (o fases) dependientes de una fase seleccionada.
+- `ProcesosUpdate::execute(array $input): string`: actualiza una tarea
+  (estado, oficina responsable, fase/tarea, fases/tareas previas y mensajes
+  de requisito).
+- `ProcesosEliminar::execute(array $input): string`: borra una tarea del
+  proceso.
+
+### Endpoints HTTP nuevos
+
+- `/src/procesos/procesos_regenerar` (text/plain)
+- `/src/procesos/procesos_clonar` (text/plain)
+- `/src/procesos/procesos_get` (text/plain)
+- `/src/procesos/procesos_get_listado` (text/plain)
+- `/src/procesos/procesos_depende` (text/plain)
+- `/src/procesos/procesos_update` (text/plain)
+- `/src/procesos/procesos_eliminar` (text/plain)
+
+### Dispatcher legacy
+
+`procesos_ajax.php` queda como wrapper DEPRECADO delegando a los casos de
+uso via `$_POST['que']`. Se mantiene la ruta para no romper referencias
+que pudieran persistir durante la transicion.
+
+### Frontend
+
+- `frontend/procesos/controller/procesos_select.php`: sustituye el unico
+  `url_ajax` por `url_regenerar`, `url_clonar`, `url_get`,
+  `url_get_listado`, `url_update` y `url_eliminar`. Cada hash
+  (`h_regenerar`, `h_get`, `h_get_listado`, `h_clonar`, `h_eliminar`)
+  firma su URL destino y ya no incluye `que` en los campos. Se elimina
+  el `h_mover` inutilizado.
+- `frontend/procesos/controller/procesos_ver.php`: el formulario firma
+  con `url_update` (quitando `que` de los campos hidden) y se anade un
+  hash `h_depende` para el endpoint dependiente.
+- `frontend/procesos/view/procesos_select.html.twig`: las funciones JS
+  (`fnjs_regenerar`, `fnjs_clonar`, `fnjs_actualizar`, `fnjs_listado`,
+  `fnjs_eliminar`, `fnjs_guardar`) apuntan a las URLs canonicas y sin
+  `que=...`.
+- `frontend/procesos/view/procesos_ver.html.twig`: `fnjs_get_depende` usa
+  `url_depende` con su `h_depende` firmado.
+
+### Pendiente futuro
+
+- Retirar el wrapper `procesos_ajax` cuando no queden referencias activas.
+- Limpiar el antiguo dispatcher y helpers en `apps/procesos/controller/`
+  (ya no se usan desde el frontend migrado).
+
+---
+
+## Slice 11 - Retirada de wrappers legacy multi-`que`
+
+### Objetivo
+
+Tras verificar que ninguna vista, JS, controller vivo ni ruta referencia
+los dispatchers multi-`que` heredados, se elimina la cadena de wrappers
+deprecados introducida en los slices 7-10.
+
+### Verificacion previa
+
+Busqueda global de referencias activas a `procesos_ajax`,
+`actividad_proceso_ajax`, `tipo_activ_proceso_ajax` y
+`fases_activ_cambio_ajax`:
+
+- Unicas coincidencias en codigo vivo: los propios wrappers auto-referenciandose
+  en comentarios y la cadena `apps/ -> src/`.
+- Resto: metadata de catalogos `.po`/`.pot`, documentacion (`*.md`) y un
+  comentario historico en `apps/actividades/controller/actividad_update.php`
+  (linea 338, solo descriptivo).
+
+### Archivos eliminados
+
+Wrappers intermedios (`src/procesos/infrastructure/ui/http/controllers/`):
+
+- `procesos_ajax.php`
+- `actividad_proceso_ajax.php`
+- `tipo_activ_proceso_ajax.php`
+- `fases_activ_cambio_ajax.php`
+
+Atajos historicos (`apps/procesos/controller/`):
+
+- `procesos_ajax.php`
+- `actividad_proceso_ajax.php`
+- `tipo_activ_proceso_ajax.php`
+- `fases_activ_cambio_ajax.php`
+
+### Rutas retiradas
+
+En `src/procesos/config/routes.php` se retiran las 4 rutas de los
+dispatchers multi-`que`:
+
+- `/src/procesos/procesos_ajax`
+- `/src/procesos/actividad_proceso_ajax`
+- `/src/procesos/tipo_activ_proceso_ajax`
+- `/src/procesos/fases_activ_cambio_ajax`
+
+Se conservan las rutas single-action `actividad_que_fases_ajax` y
+`usuario_perm_activ_ajax` (no son dispatchers multi-`que`, se mantienen
+como endpoints canonicos con su nombre actual hasta ulterior revision).
+
+---
+
+## Slice 12 - Migrar partials de `ActividadTipo` a `frontend/procesos/view`
+
+### Objetivo
+
+Sacar las vistas parciales que aun vivian bajo `apps/procesos/view/`
+enlazadas desde `actividades\model\ActividadTipo::getHtml()`.
+
+### Analisis de callers
+
+- `tipoactiv-procesos`: nadie invoca `setPara('tipoactiv-procesos')`. El
+  case y sus twigs (`actividad_tipo_proceso.html.twig`,
+  `_actividad_tipo_proceso.js.html.twig`) son codigo muerto.
+- `procesos` (usa `actividad_tipo_que_perm.html.twig` +
+  `_actividad_tipo.js.html.twig`): llamado desde
+  `frontend/procesos/controller/fases_activ_cambio.php` y
+  `frontend/procesos/controller/usuario_perm_activ.php`.
+- `cambios`: usa `apps/cambios/view/actividad_tipo_que_perm.html.twig`
+  (fuera del modulo procesos, no se toca).
+
+### Cambios
+
+- `frontend/shared/model/ViewNewTwig::setAbsolutePath()` acepta paths
+  absolutos y paths con prefijo `apps/` para poder compartir partials
+  que aun viven en el arbol legacy via namespaces Twig.
+- `apps/actividades/model/ActividadTipo::getHtml()`:
+  - Elimina el caso muerto `tipoactiv-procesos`.
+  - El caso `procesos` pasa a usar `ViewNewTwig('procesos/controller',
+    ['actividades' => 'apps/actividades/view'])` para renderizar
+    `actividad_tipo_que_perm.html.twig` desde `frontend/procesos/view`
+    manteniendo el namespace `@actividades` apuntando al arbol legacy
+    (aun contiene `_actividad_tipo_body.html.twig`).
+- `frontend/procesos/view/actividad_tipo_que_perm.html.twig` y
+  `frontend/procesos/view/_actividad_tipo.js.html.twig` son las nuevas
+  ubicaciones canonicas.
+
+### Archivos eliminados
+
+En `apps/procesos/view/`:
+
+- `actividad_tipo_proceso.html.twig` (huerfano tras retirar el case muerto).
+- `_actividad_tipo_proceso.js.html.twig` (idem).
+- `actividad_tipo_que_perm.html.twig` (movido a frontend).
+- `_actividad_tipo.js.html.twig` (movido a frontend).
+
+### Pendiente futuro
+
+- Migrar `actividades\model\ActividadTipo` a `src/actividades/*` como
+  caso de uso o servicio de renderizado (es la dependencia legacy que
+  todavia vive en `apps/`).
+- Evaluar si `apps/actividades/view/_actividad_tipo_body.html.twig` se
+  puede mover a `frontend/actividades/view/` cuando se migren los
+  controladores de `actividades` que aun dependen de `apps/actividades/view`.
+
+---
+
+## Slice 13 - Limpieza del patron `trigger("submit")` en el modulo procesos
+
+### Objetivo
+
+Retirar el ciclo `attr('action') + one("submit") + trigger("submit") +
+off()` que sobrevivia en tres funciones JS del modulo procesos. El patron
+mutaba el DOM del formulario y ocultaba la llamada real al endpoint.
+
+### Cambios
+
+Las tres funciones pasan a llamar `$.ajax({ url, type:'post',
+data: $(formulario).serialize() })` directamente:
+
+- `frontend/procesos/view/fases_activ_cambio.html.twig`:
+  `fnjs_ver_activ`, `fnjs_cambiar`.
+- `frontend/procesos/view/procesos_select.html.twig`: `fnjs_guardar`.
+
+No se altera ninguna URL, hash ni contenido enviado: `$(formulario).serialize()`
+cubre exactamente lo mismo que el submit diferido anterior.
+
+### Verificacion
+
+Busqueda en `frontend/procesos/` sin resultados para
+`trigger("submit")` ni `attr('action')`.

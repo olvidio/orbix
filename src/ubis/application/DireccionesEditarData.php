@@ -2,7 +2,7 @@
 
 namespace src\ubis\application;
 
-use core\ConfigGlobal;
+use src\ubis\application\services\UbiPermisos;
 use function core\is_true;
 
 final class DireccionesEditarData
@@ -84,11 +84,7 @@ final class DireccionesEditarData
             $data['menos'] = ($idx < 1) ? 0 : 1;
         }
 
-        if (str_contains($obj_dir, 'Dl')) {
-            if ($oUbi->getDl() === ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('scdl')) {
-                $data['botones'] = '1,4,5';
-            }
-        } elseif (str_contains($obj_dir, 'Ex') && $_SESSION['oPerm']->have_perm_oficina('scdl')) {
+        if (UbiPermisos::puedeModificar($obj_dir, $oUbi)) {
             $data['botones'] = '1,4,5';
         }
 

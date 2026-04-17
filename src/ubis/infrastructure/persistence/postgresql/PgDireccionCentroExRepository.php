@@ -30,7 +30,7 @@ class PgDireccionCentroExRepository extends PgDireccionRepository implements Dir
     public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('u_dir_ctr_ex_id_item_seq'::regclass)";
+        $sQuery = "select nextval('u_dir_ctr_ex_id_auto_seq'::regclass)";
         return $oDbl->query($sQuery)->fetchColumn();
     }
 

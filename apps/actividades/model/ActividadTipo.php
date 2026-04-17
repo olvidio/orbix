@@ -4,6 +4,7 @@ namespace actividades\model;
 
 use core\ConfigGlobal;
 use core\ViewTwig;
+use frontend\shared\model\ViewNewTwig;
 use src\actividades\domain\value_objects\StatusId;
 use web\Desplegable;
 use web\Hash;
@@ -221,14 +222,12 @@ class ActividadTipo
                 $oView = new ViewTwig('actividadtarifas/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que.html.twig', $a_campos);
                 break;
-            case 'tipoactiv-procesos':
-                $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new ViewTwig('procesos/controller', $aditionalPaths);
-                $oView->renderizar('actividad_tipo_proceso.html.twig', $a_campos);
-                break;
             case 'procesos':
-                $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new ViewTwig('procesos/controller', $aditionalPaths);
+                // Plantillas migradas a frontend/procesos/view/. El partial
+                // `_actividad_tipo_body.html.twig` sigue en apps/actividades/view
+                // y se inyecta via namespace @actividades.
+                $aditionalPaths = ['actividades' => 'apps/actividades/view'];
+                $oView = new ViewNewTwig('procesos/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que_perm.html.twig', $a_campos);
                 break;
             case 'cambios':

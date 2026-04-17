@@ -8,7 +8,6 @@ class CentrosGetNumData
 {
     public static function execute(): array
     {
-        $permiso = 'modificar';
         $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $aWhere = ['active' => 't', '_ordre' => 'nombre_ubi'];
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
@@ -26,12 +25,8 @@ class CentrosGetNumData
             $num_pi = empty($num_pi) ? '0' : $num_pi;
             $num_cartas = empty($num_cartas) ? '0' : $num_cartas;
 
-            if ($permiso === 'modificar') {
-                $script = "fnjs_modificar($id_ubi,\"num\")";
-                $a_valores[$c][1] = ['script' => $script, 'valor' => $nombre_ubi];
-            } else {
-                $a_valores[$c][1] = $nombre_ubi;
-            }
+            $script = "fnjs_modificar($id_ubi,\"num\")";
+            $a_valores[$c][1] = ['script' => $script, 'valor' => $nombre_ubi];
             $a_valores[$c][2] = $n_buzon;
             $a_valores[$c][3] = $num_pi;
             $a_valores[$c][4] = $num_cartas;

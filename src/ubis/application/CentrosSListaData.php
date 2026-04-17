@@ -5,7 +5,11 @@ namespace src\ubis\application;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
-class ListaCtrsData
+/**
+ * Listado de centros de tipo 's' (sacerdotes) con el número de personas s asignadas
+ * en cada uno, y el total global.
+ */
+final class CentrosSListaData
 {
     /**
      * @return array{a_cabeceras: list<string>, a_valores: array<int, array<int, int|string>>, num_total_s: int}

@@ -10,8 +10,6 @@ final class CalendarioPeriodosGet2Data
 {
     public static function execute(int $idUbi, int $year): array
     {
-        $permiso = 'modificar';
-
         $cCasaPeriodos = [];
         if ($idUbi > 0 && $year > 0) {
             $inicio = $year . '-1-1';
@@ -55,12 +53,8 @@ final class CalendarioPeriodosGet2Data
 
             $a_valores[$i][1] = $f_ini;
             $a_valores[$i][2] = $f_fin;
-            if ($permiso === 'modificar') {
-                $script = "fnjs_modificar($id_item)";
-                $a_valores[$i][3] = ['script' => $script, 'valor' => $ssfsv];
-            } else {
-                $a_valores[$i][3] = $ssfsv;
-            }
+            $script = "fnjs_modificar($id_item)";
+            $a_valores[$i][3] = ['script' => $script, 'valor' => $ssfsv];
         }
 
         $oDate = new DateTimeLocal();
@@ -70,7 +64,7 @@ final class CalendarioPeriodosGet2Data
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
             'overlap_error' => $overlap_error ?: '',
-            'show_nuevo' => $permiso === 'modificar',
+            'show_nuevo' => true,
         ];
     }
 }

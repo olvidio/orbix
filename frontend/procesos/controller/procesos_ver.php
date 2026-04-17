@@ -72,23 +72,31 @@ foreach ($a_fases_previas as $fila) {
 }
 $dep_num = count($aDesplFasesPrevias);
 
-$url_ajax = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/procesos_ajax';
+$webBase = rtrim(ConfigGlobal::getWeb(), '/');
+$url_update = $webBase . '/src/procesos/procesos_update';
+$url_depende = $webBase . '/src/procesos/procesos_depende';
 
 $oHash = new Hash();
-$oHash->setUrl($url_ajax);
+$oHash->setUrl($url_update);
 $oHash->setCamposForm('dep_num!id_fase!id_fase_previa!id_tarea!id_tarea_previa!mensaje_requisito!id_of_responsable!status');
-$oHash->setCamposNo('que!id_fase_previa[]!id_tarea_previa[]!mensaje_requisito[]');
+$oHash->setCamposNo('id_fase_previa[]!id_tarea_previa[]!mensaje_requisito[]');
 $oHash->setCamposChk('id_tarea_previa');
 $a_camposHidden = [
-    'que' => '',
     'id_item' => $Qid_item,
     'id_tipo_proceso' => $Qid_tipo_proceso,
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
+$oHashDepende = new Hash();
+$oHashDepende->setUrl($url_depende);
+$oHashDepende->setCamposForm('acc!valor_depende');
+$h_depende = $oHashDepende->linkSinVal();
+
 $a_campos = [
     'oHash' => $oHash,
-    'url_ajax' => $url_ajax,
+    'h_depende' => $h_depende,
+    'url_update' => $url_update,
+    'url_depende' => $url_depende,
     'oDesplFase' => $oDesplFase,
     'oDesplTarea' => $oDesplTarea,
     'oDesplStatus' => $oDesplStatus,

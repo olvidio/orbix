@@ -2,20 +2,27 @@
 
 namespace src\ubis\application;
 
-use core\ConfigGlobal;
+use src\shared\infrastructure\ProvidesRepositories;
+use src\ubis\application\services\UbiPermisos;
 use function core\is_true;
 use function core\urlsafe_b64encode;
 
 final class TelecoTablaData
 {
+    use ProvidesRepositories;
+
     public static function execute(string $obj_pau, int $id_ubi): array
     {
-        $resolver = new TelecoResolver();
-        $repoTeleco = $resolver->getTelecoRepo($obj_pau);
-        $repoUbi = $resolver->getUbiRepo($obj_pau);
+        return (new self())->run($obj_pau, $id_ubi);
+    }
+
+    private function run(string $obj_pau, int $id_ubi): array
+    {
+        $repoTeleco = $this->getTelecoRepository($obj_pau);
+        $repoUbi = $this->getRepository($obj_pau);
 
         $coleccion = $repoTeleco->getTelecos(['id_ubi' => $id_ubi]) ?: [];
-        $botones = self::getPermisosBotones($obj_pau, $id_ubi, $repoUbi);
+        $botones = $this->getPermisosBotones($obj_pau, $id_ubi, $repoUbi);
 
         $a_cabeceras = [];
         $a_valores = [];
@@ -51,7 +58,7 @@ final class TelecoTablaData
                     case 'opciones':
                         $RepoRelacionado = $GLOBALS['container']->get($var_1);
                         $oRelacionado = $RepoRelacionado->findById($valor_camp);
-                        if (substr($var_2, -2) === 'Vo'){
+                        if (substr($var_2, -2) === 'Vo') {
                             $a_valores[$c][$v] = $oRelacionado?->$var_2()?->value() ?: $valor_camp;
                         } else {
                             $a_valores[$c][$v] = $oRelacionado?->$var_2() ?: $valor_camp;
@@ -80,19 +87,9 @@ final class TelecoTablaData
         ];
     }
 
-    private static function getPermisosBotones(string $obj_pau, int $id_ubi, object $repoUbi): string
+    private function getPermisosBotones(string $obj_pau, int $id_ubi, object $repoUbi): string
     {
-        if (str_contains($obj_pau, 'Dl')) {
-            $oUbi = $repoUbi->findById($id_ubi);
-            $dl = $oUbi->getDl();
-            if ($dl === ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('scdl')) {
-                return '1';
-            }
-            return '0';
-        }
-        if (str_contains($obj_pau, 'Ex') && $_SESSION['oPerm']->have_perm_oficina('scdl')) {
-            return '1';
-        }
-        return '0';
+        $oUbi = str_contains($obj_pau, 'Dl') ? $repoUbi->findById($id_ubi) : null;
+        return UbiPermisos::puedeModificar($obj_pau, $oUbi) ? '1' : '0';
     }
 }

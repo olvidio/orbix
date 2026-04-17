@@ -30,7 +30,8 @@ final class DireccionUpdate
         }
 
         if ($Qidx === 'nuevo') {
-            $id_direccion = $DireccionRepository->getNewId();
+            $id_auto = $DireccionRepository->getNewId();
+            $id_direccion = $DireccionRepository->getNewIdDireccion($id_auto);
             $oDireccion = new Direccion();
             $oDireccion->setId_direccion($id_direccion);
         } else {
@@ -75,6 +76,9 @@ final class DireccionUpdate
 
         $DireccionRepository->Guardar($oDireccion);
 
+        if ($Qidx === 'nuevo') {
+            $oUbi->addDireccion($id_direccion, $principal, $propietario);
+        }
         $oUbi->cambiarEstadoPropietario($id_direccion, $propietario);
         if ($principal) {
             $oUbi->establecerDireccionPrincipal($id_direccion);

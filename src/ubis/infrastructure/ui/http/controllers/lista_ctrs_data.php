@@ -1,9 +1,9 @@
 <?php
 
-use src\ubis\application\ListaCtrsData;
+use src\ubis\application\CentrosSListaData;
 use web\ContestarJson;
 
-$data = ListaCtrsData::execute();
+$data = CentrosSListaData::execute();
 if (isset($data['error'])) {
     ContestarJson::enviar((string)$data['error'], []);
     return;

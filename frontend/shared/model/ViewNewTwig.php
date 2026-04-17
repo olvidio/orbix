@@ -53,15 +53,25 @@ class ViewNewTwig extends Environment
 
     private function setAbsolutePath(string $dirname): string
     {
-        $base_dir = ServerConf::DIR . DIRECTORY_SEPARATOR . 'frontend';
+        // Rutas absolutas se devuelven tal cual.
+        if ($dirname !== '' && $dirname[0] === DIRECTORY_SEPARATOR) {
+            return $dirname;
+        }
 
         // reemplazo controller o model por view
         $patterns = ['/controller/', '/model/'];
         $replacements = ['view', 'view'];
-
         $new_dir = preg_replace($patterns, $replacements, $dirname);
         $new_dir = str_replace('\\', DIRECTORY_SEPARATOR, $new_dir);
 
+        // Namespaces que siguen en el arbol legacy /apps se resuelven desde la
+        // raiz del proyecto (permite compartir plantillas con ViewTwig durante
+        // la migracion).
+        if (str_starts_with($new_dir, 'apps' . DIRECTORY_SEPARATOR)) {
+            return ServerConf::DIR . DIRECTORY_SEPARATOR . $new_dir;
+        }
+
+        $base_dir = ServerConf::DIR . DIRECTORY_SEPARATOR . 'frontend';
         return $base_dir . DIRECTORY_SEPARATOR . $new_dir;
     }
 

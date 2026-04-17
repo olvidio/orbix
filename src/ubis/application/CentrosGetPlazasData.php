@@ -8,7 +8,6 @@ class CentrosGetPlazasData
 {
     public static function execute(): array
     {
-        $permiso = 'modificar';
         $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $aWhere = ['active' => 't', '_ordre' => 'nombre_ubi'];
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
@@ -23,12 +22,8 @@ class CentrosGetPlazasData
             $plazas = $oCentro->getPlazas();
             $sede = ($oCentro->isSede()) ? _("si") : _("no");
 
-            if ($permiso === 'modificar') {
-                $script = "fnjs_modificar($id_ubi,\"plazas\")";
-                $a_valores[$c][1] = ['script' => $script, 'valor' => $nombre_ubi];
-            } else {
-                $a_valores[$c][1] = $nombre_ubi;
-            }
+            $script = "fnjs_modificar($id_ubi,\"plazas\")";
+            $a_valores[$c][1] = ['script' => $script, 'valor' => $nombre_ubi];
             $a_valores[$c][2] = $num_habit_indiv;
             $a_valores[$c][3] = $plazas;
             $a_valores[$c][4] = $sede;

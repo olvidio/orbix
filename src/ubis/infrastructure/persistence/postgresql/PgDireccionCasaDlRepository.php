@@ -54,7 +54,7 @@ class PgDireccionCasaDlRepository extends PgDireccionRepository implements Direc
     public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('u_dir_cdc_dl_id_item_seq'::regclass)";
+        $sQuery = "select nextval('u_dir_cdc_dl_id_auto_seq'::regclass)";
         return $oDbl->query($sQuery)->fetchColumn();
     }
 

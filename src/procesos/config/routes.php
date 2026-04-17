@@ -13,12 +13,32 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_ver_data.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_ajax', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_ajax.php';
+    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_regenerar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_regenerar.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/procesos/tipo_activ_proceso_ajax', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_proceso_ajax.php';
+    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_clonar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_clonar.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_get', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_get.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_get_listado', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_get_listado.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_depende', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_depende.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_update', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_update.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_eliminar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_eliminar.php';
     });
 
     $r->addRoute(['GET', 'POST'], '/src/procesos/tipo_activ_proceso_lista', function () {
@@ -37,10 +57,6 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_data.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_proceso_ajax', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_ajax.php';
-    });
-
     $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_proceso_generar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_generar.php';
     });
@@ -55,10 +71,6 @@ return static function ($r) {
 
     $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_que_fases_ajax', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_que_fases_ajax.php';
-    });
-
-    $r->addRoute(['GET', 'POST'], '/src/procesos/fases_activ_cambio_ajax', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/fases_activ_cambio_ajax.php';
     });
 
     $r->addRoute(['GET', 'POST'], '/src/procesos/fases_activ_cambio_lista', function () {

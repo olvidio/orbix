@@ -1,8 +1,8 @@
 <script>
 fnjs_get_depende=function(id_campo,acc){
 	var valor=$(id_campo).val();
-	var url='{{ url_ajax }}';
-	var parametros='que=depende&acc='+acc+'&valor_depende='+valor;
+	var url='{{ url_depende }}';
+	var parametros='acc='+acc+'&valor_depende='+valor+'{{ h_depende|raw }}';
 		 
 	$.ajax({
 		url: url,

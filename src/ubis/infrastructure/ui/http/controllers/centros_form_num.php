@@ -1,8 +1,7 @@
 <?php
 
-use src\ubis\application\CentrosFormNumData;
+use src\ubis\application\CentrosFormData;
 use web\ContestarJson;
 
 $Qid_ubi = (int)(filter_input(INPUT_POST, 'id_ubi') ?? filter_input(INPUT_GET, 'id_ubi'));
-ContestarJson::enviar('', CentrosFormNumData::execute($Qid_ubi));
-
+ContestarJson::enviar('', CentrosFormData::execute($Qid_ubi, CentrosFormData::MODO_NUM));

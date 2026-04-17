@@ -13,6 +13,9 @@ final class CalendarioPeriodoEliminar
         }
         $repo = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
         $oCasaPeriodo = $repo->findById($idItem);
+        if ($oCasaPeriodo === null) {
+            return _("no se encuentra el periodo a borrar");
+        }
         if ($repo->Eliminar($oCasaPeriodo) === false) {
             return _("hay un error, no se ha eliminado") . "\n" . $repo->getErrorTxt();
         }

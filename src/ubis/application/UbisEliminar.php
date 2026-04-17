@@ -11,7 +11,11 @@ final class UbisEliminar
     public function execute(string $objPau, int $idUbi): string
     {
         $repo = $this->getRepository($objPau);
-        if ($repo->Eliminar($idUbi) === false) {
+        $oUbi = $repo->findById($idUbi);
+        if ($oUbi === null) {
+            return _("no se encuentra el ubi a borrar");
+        }
+        if ($repo->Eliminar($oUbi) === false) {
             return _("hay un error, no se ha eliminado");
         }
         return '';

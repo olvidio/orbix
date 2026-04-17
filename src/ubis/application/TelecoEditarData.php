@@ -2,18 +2,25 @@
 
 namespace src\ubis\application;
 
-use core\ConfigGlobal;
+use src\shared\infrastructure\ProvidesRepositories;
+use src\ubis\application\services\UbiPermisos;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 
 final class TelecoEditarData
 {
+    use ProvidesRepositories;
+
     public static function execute(string $obj_pau, string $mod, int $id_ubi, int $pkey): array
     {
-        $resolver = new TelecoResolver();
-        $repoTeleco = $resolver->getTelecoRepo($obj_pau);
-        $repoUbi = $resolver->getUbiRepo($obj_pau);
-        $repoName = $resolver->getTelecoRepoClass($obj_pau);
+        return (new self())->run($obj_pau, $mod, $id_ubi, $pkey);
+    }
+
+    private function run(string $obj_pau, string $mod, int $id_ubi, int $pkey): array
+    {
+        $repoTeleco = $this->getTelecoRepository($obj_pau);
+        $repoUbi = $this->getRepository($obj_pau);
+        $repoName = $this->getTelecoRepositoryClass($obj_pau);
 
         $desc_teleco = '';
         $id_tipo_teleco = '';
@@ -27,15 +34,8 @@ final class TelecoEditarData
             $observ = $TelecoUbi->getObserv();
         }
 
-        $botones = '0';
-        if (str_contains($obj_pau, 'Dl')) {
-            $oUbi = $repoUbi->findById($id_ubi);
-            if ($oUbi->getDl() === ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('scdl')) {
-                $botones = '1,3';
-            }
-        } elseif (str_contains($obj_pau, 'Ex') && $_SESSION['oPerm']->have_perm_oficina('scdl')) {
-            $botones = '1,3';
-        }
+        $oUbi = str_contains($obj_pau, 'Dl') ? $repoUbi->findById($id_ubi) : null;
+        $botones = UbiPermisos::puedeModificar($obj_pau, $oUbi) ? '1,3' : '0';
 
         $TipoTelecoRepository = $GLOBALS['container']->get(TipoTelecoRepositoryInterface::class);
         $a_tipos = $TipoTelecoRepository->getArrayTiposTelecoUbi();

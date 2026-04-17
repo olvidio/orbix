@@ -57,13 +57,20 @@ class UbisEditarOpcionesData
 
     private static function whereDlRegion(string $dl, string $region): string
     {
-        if (!empty($dl)) {
+        // Los códigos dl/region son tokens cortos alfanuméricos; cualquier otra
+        // cosa se descarta para evitar SQL injection en getArrayCentros().
+        if (!empty($dl) && self::esCodigoValido($dl)) {
             return "WHERE dl = '$dl'";
         }
-        if (!empty($region)) {
+        if (!empty($region) && self::esCodigoValido($region)) {
             return "WHERE region = '$region'";
         }
 
         return '';
+    }
+
+    private static function esCodigoValido(string $codigo): bool
+    {
+        return (bool)preg_match('/^[A-Za-z0-9_-]{1,16}$/', $codigo);
     }
 }
