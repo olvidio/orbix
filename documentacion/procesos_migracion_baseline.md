@@ -563,3 +563,46 @@ los casos de uso en funcion de `$_POST['que']`.
 
 - Eliminar el wrapper `actividad_proceso_ajax` cuando no quede referencia
   activa (menus, codigo, sesiones).
+
+---
+
+## Slice 9 - Split `tipo_activ_proceso_ajax` en endpoints por accion
+
+### Objetivo
+
+Separar los tres `que` del dispatcher en endpoints canonicos siguiendo
+el patron de `refactor.md`.
+
+### Casos de uso nuevos en `src/procesos/application/`
+
+- `TipoActivProcesoLista::execute(): string`: tabla HTML con todos los
+  tipos de actividad y su proceso propio/no-propio asignado.
+- `TipoActivProcesoLstPosibles::execute(array $input): string`: mini-tabla
+  de procesos asignables para un id_tipo_activ concreto.
+- `TipoActivProcesoAsignar::execute(array $input): string`: asigna un
+  id_tipo_proceso al tipo de actividad, distinguiendo propio/no-propio.
+
+### Endpoints HTTP nuevos
+
+- `/src/procesos/tipo_activ_proceso_lista` (text/plain).
+- `/src/procesos/tipo_activ_proceso_lst_posibles` (text/plain).
+- `/src/procesos/tipo_activ_proceso_asignar` (text/plain).
+
+### Dispatcher legacy
+
+`tipo_activ_proceso_ajax.php` queda como wrapper DEPRECADO delegando a
+los casos de uso via `$_POST['que']`.
+
+### Frontend
+
+- `frontend/procesos/controller/tipo_activ_proceso.php`: introduce
+  `url_lista`, `url_lst_posibles`, `url_asignar` y hashes firmados por
+  cada URL (sin `que` en los campos). El hash de la lista se normaliza
+  a `&hnov=...` porque con `CamposForm` vacio `linkSinVal` devuelve
+  `?hnov=...` (incompatible con body POST).
+- `frontend/procesos/view/tipo_activ_proceso.html.twig`: cada funcion
+  JS apunta directamente a la URL canonica.
+
+### Pendiente futuro
+
+- Retirar el wrapper legacy cuando ya no queden llamadas activas.

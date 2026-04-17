@@ -21,6 +21,18 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_proceso_ajax.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/procesos/tipo_activ_proceso_lista', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_proceso_lista.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/tipo_activ_proceso_lst_posibles', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_proceso_lst_posibles.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/tipo_activ_proceso_asignar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_proceso_asignar.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_proceso_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_data.php';
     });

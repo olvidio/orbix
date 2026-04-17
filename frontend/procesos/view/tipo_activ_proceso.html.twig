@@ -33,8 +33,8 @@ p.tres:hover {
 </style>
 <script>
 fnjs_asignar_proceso=function(evt,id_tipo_activ,propio,id_tipo_proceso){
-	var url='{{ url_ajax|raw }}';
-	var parametros='que=asignar&id_tipo_activ='+id_tipo_activ+'&propio='+propio+'&id_tipo_proceso='+id_tipo_proceso+'{{ h_asignar|raw }}';
+	var url='{{ url_asignar|raw }}';
+	var parametros='id_tipo_activ='+id_tipo_activ+'&propio='+propio+'&id_tipo_proceso='+id_tipo_proceso+'{{ h_asignar|raw }}';
 
 	evt.preventDefault(); // que no siga pasanmdo el evento a submit.
 	evt.stopPropagation();
@@ -52,8 +52,8 @@ fnjs_asignar_proceso=function(evt,id_tipo_activ,propio,id_tipo_proceso){
 }
 
 fnjs_cambiar_proceso=function(id_tipo_activ,propio){
-	var url='{{ url_ajax|raw }}';
-	var parametros='que=lst_posibles_procesos&id_tipo_activ='+id_tipo_activ+'&propio='+propio+'{{ h_nuevo|raw }}';
+	var url='{{ url_lst_posibles|raw }}';
+	var parametros='id_tipo_activ='+id_tipo_activ+'&propio='+propio+'{{ h_nuevo|raw }}';
 	var id = '';
 	if (propio == 't') {
         id = '#dl_'+id_tipo_activ;
@@ -75,8 +75,8 @@ fnjs_cambiar_proceso=function(id_tipo_activ,propio){
 
 fnjs_lista=function(){
 	/* obtener el listado */
-	var url='{{ url_ajax|raw }}';
-	var parametros='que=lista'+'{{ h_lista|raw }}';
+	var url='{{ url_lista|raw }}';
+	var parametros='{{ h_lista|raw }}';
 		 
 	$.ajax({
 		url: url,
