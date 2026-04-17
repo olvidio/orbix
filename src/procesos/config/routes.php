@@ -8,4 +8,12 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_select_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_select_data.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_ver_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_ver_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/procesos_ajax', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/procesos_ajax.php';
+    });
 };

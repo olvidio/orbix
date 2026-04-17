@@ -1,5 +1,6 @@
 <?php
 
+use core\ConfigGlobal;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use web\Desplegable;
@@ -31,10 +32,10 @@ $oDespl = new Desplegable();
 $oDespl->setOpciones($aTiposProceso);
 $oDespl->setBlanco(true);
 
-// Hasta que caigan los slices 2 y siguientes, el JS apunta a los controladores
-// legacy de apps/ para no romper la edicion / ajax.
-$url_ajax = "apps/procesos/controller/procesos_ajax.php";
-$url_ver = "apps/procesos/controller/procesos_ver.php";
+// El AJAX multi-`que` esta en src (pendiente de split por accion en refactors
+// posteriores). url_ver apunta ya al frontend controller migrado en el slice 2.
+$url_ajax = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/procesos_ajax';
+$url_ver = 'frontend/procesos/controller/procesos_ver.php';
 
 $oHashAct = new Hash();
 $oHashAct->setUrl($url_ajax);

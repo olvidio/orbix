@@ -7,9 +7,10 @@ flowchart TD
 
     frontend_procesos_controller_procesos_select_php(["procesos_select.php"]):::controller --> frontend_procesos_view_procesos_select_html_twig[["procesos_select.html.twig"]]:::vista
     frontend_procesos_controller_procesos_select_php --> src_procesos_procesos_select_data_php(["/src/procesos/procesos_select_data"]):::controller
-    frontend_procesos_view_procesos_select_html_twig --> apps_procesos_controller_procesos_ajax_php(["procesos_ajax.php (legacy, slice 2)"]):::controller
-    frontend_procesos_view_procesos_select_html_twig --> apps_procesos_controller_procesos_ver_php(["procesos_ver.php (legacy, slice 2)"]):::controller
-    apps_procesos_controller_procesos_ver_php(["procesos_ver.php"]):::controller --> apps_procesos_view_procesos_ver_html_twig[["procesos_ver.html.twig"]]:::vista
-    apps_procesos_view_procesos_ver_html_twig --> apps_procesos_controller_procesos_ajax_php(["procesos_ajax.php"]):::controller
+    frontend_procesos_view_procesos_select_html_twig --> src_procesos_procesos_ajax_php(["/src/procesos/procesos_ajax"]):::controller
+    frontend_procesos_view_procesos_select_html_twig --> frontend_procesos_controller_procesos_ver_php(["procesos_ver.php"]):::controller
+    frontend_procesos_controller_procesos_ver_php --> frontend_procesos_view_procesos_ver_html_twig[["procesos_ver.html.twig"]]:::vista
+    frontend_procesos_controller_procesos_ver_php --> src_procesos_procesos_ver_data_php(["/src/procesos/procesos_ver_data"]):::controller
+    frontend_procesos_view_procesos_ver_html_twig --> src_procesos_procesos_ajax_php
     %% DESTÍ NO RESOLT des de apps_procesos_view_procesos_ver_html_twig: {{ oHash }} [DESTÍ NO RESOLT]
 ```

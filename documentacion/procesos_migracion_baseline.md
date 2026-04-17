@@ -81,3 +81,75 @@ Seguimiento de la migracion de `apps/procesos` hacia `frontend/procesos` + `src/
 - `proves/aux_metamenus.csv`
 - `documentacion/Documentacion_Obix/13. Sistema.md`
 - `documentacion/Documentacion_Obix/procesos/mapa_procesos_select.md`
+
+---
+
+## Slice 2 - `procesos_ver` + `procesos_ajax`
+
+### Pantallas
+
+- `procesos_ver` (render form editar/nuevo de una fase del tipo de proceso).
+  URL legacy `apps/procesos/controller/procesos_ver.php` -> canonico
+  `frontend/procesos/controller/procesos_ver.php`.
+- `procesos_ajax` (dispatcher AJAX multi-`que`: `regenerar`, `clonar`,
+  `get`, `get_listado`, `depende`, `update`, `eliminar`). URL legacy
+  `apps/procesos/controller/procesos_ajax.php` -> canonico
+  `/src/procesos/procesos_ajax`.
+
+### Parametros de entrada (`POST`)
+
+- `procesos_ver`: `mod` (`editar` / `nuevo`), `id_item`, `id_tipo_proceso`.
+- `procesos_ajax`: `que` (accion) y parametros propios:
+  - `regenerar` / `clonar` / `get` / `get_listado`: `id_tipo_proceso` (+ `id_tipo_proceso_ref` en clonar).
+  - `depende`: `acc`, `valor_depende`.
+  - `update`: `id_item`, `id_tipo_proceso`, `status`, `id_of_responsable`, `id_fase`, `id_tarea`, arrays `id_fase_previa[]`, `id_tarea_previa[]`, `mensaje_requisito[]`.
+  - `eliminar`: `id_item`.
+
+### Reglas funcionales
+
+- `procesos_ver`: monta desplegables de fases, tareas, status, oficinas
+  responsables y fases previas para que el usuario edite la fase del
+  proceso. El submit del formulario va a `procesos_ajax` con `que=update`.
+- `procesos_ajax`: salidas en `text/plain` (el JS las inyecta con
+  `.done(rta_txt)`), conserva el dispatcher con `que` como wrapper
+  transitorio segun `refactor.md`.
+
+### Backend nuevo
+
+- `src\procesos\application\ProcesosVerData::execute(mod, id_item)`:
+  devuelve dropdown data serializable (`a_oficinas`, `a_status`,
+  `a_fases`, `a_tareas`, `a_fases_previas` con sus tareas previas).
+- Endpoint `/src/procesos/procesos_ver_data` (JSON via `ContestarJson`).
+- Endpoint `/src/procesos/procesos_ajax` = port 1:1 del dispatcher
+  legacy con `header('Content-Type: text/plain; charset=UTF-8')`. Se
+  deja marcado como DEPRECADO en cabecera para recordar el split por
+  accion pendiente.
+
+### Frontend
+
+- `frontend/procesos/controller/procesos_ver.php`: llama a
+  `/src/procesos/procesos_ver_data`, construye `Desplegable`s y `Hash`
+  con `setUrl` a `ConfigGlobal::getWeb() . '/src/procesos/procesos_ajax'`
+  para que el form pueda postear directamente al src.
+- `frontend/procesos/view/procesos_ver.html.twig`: copia 1:1 de la
+  vista legacy.
+- `frontend/procesos/controller/procesos_select.php` (slice 1): se
+  actualizan `url_ajax` y `url_ver` para que apunten al src y al
+  frontend migrado.
+
+### Compatibilidad legacy
+
+- `apps/procesos/controller/procesos_ver.php`: wrapper que hace
+  `require` al controlador frontend.
+- `apps/procesos/controller/procesos_ajax.php`: wrapper que hace
+  `require` al controlador HTTP en `src/`.
+- Se elimina `apps/procesos/view/procesos_ver.html.twig`.
+
+### Pendiente futuro
+
+- Split de `procesos_ajax` en endpoints por accion
+  (`procesos_tree`, `procesos_listado`, `procesos_update`, `procesos_eliminar`, `procesos_depende`, `procesos_regenerar`, `procesos_clonar`)
+  extrayendo la logica a clases dedicadas de `application/`.
+- Fix del JS `fnjs_mas_dependencias` que referencia `aDesplFasesPrevia`
+  (singular, inexistente) y del `fnjs_guardar` para migrar al patron
+  `$.ajax(...)` sin `.trigger('submit')`.
