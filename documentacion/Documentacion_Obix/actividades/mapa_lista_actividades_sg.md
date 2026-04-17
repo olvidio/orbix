@@ -12,7 +12,7 @@ flowchart TD
     %% DESTÍ NO RESOLT des de apps_actividades_view_lista_actividades_sg_phtml: $oHashSel->getCamposHtml() [DESTÍ NO RESOLT]
     apps_actividades_controller_lista_actividades_sg_php -. JS .-> apps_actividades_controller_actividad_select_php(["actividad_select.php"]):::controller
     apps_actividades_controller_lista_actividades_sg_php -. JS .-> apps_actividades_controller_actividad_update_php(["actividad_update.php"]):::controller
-    apps_actividades_controller_lista_actividades_sg_php -. JS .-> apps_procesos_controller_actividad_proceso_php(["actividad_proceso.php"]):::controller
+    apps_actividades_controller_lista_actividades_sg_php -. JS .-> frontend_procesos_controller_actividad_proceso_php(["actividad_proceso.php (frontend)"]):::controller
     apps_actividades_controller_lista_actividades_sg_php -. JS .-> apps_actividades_controller_actividad_ver_php(["actividad_ver.php"]):::controller
     apps_actividades_controller_lista_actividades_sg_php -. JS .-> apps_actividadestudios_controller_lista_clases_ca_php(["lista_clases_ca.php"]):::controller
     apps_actividades_controller_lista_actividades_sg_php -. JS .-> apps_actividadestudios_controller_posibles_asignaturas_ca_php(["posibles_asignaturas_ca.php"]):::controller
@@ -30,7 +30,7 @@ flowchart TD
     %% DESTÍ NO RESOLT des de apps_actividades_view_actividad_select_phtml: $oHashSel->getCamposHtml(); [DESTÍ NO RESOLT]
     apps_actividades_controller_actividad_select_php -. JS .-> apps_actividades_controller_actividad_select_php(["actividad_select.php"]):::controller
     apps_actividades_controller_actividad_select_php -. JS .-> apps_actividades_controller_actividad_update_php(["actividad_update.php"]):::controller
-    apps_actividades_controller_actividad_select_php -. JS .-> apps_procesos_controller_actividad_proceso_php(["actividad_proceso.php"]):::controller
+    apps_actividades_controller_actividad_select_php -. JS .-> frontend_procesos_controller_actividad_proceso_php(["actividad_proceso.php (frontend)"]):::controller
     apps_actividades_controller_actividad_select_php -. JS .-> apps_actividades_controller_actividad_ver_php(["actividad_ver.php"]):::controller
     apps_actividades_controller_actividad_select_php -. JS .-> apps_actividadestudios_controller_lista_clases_ca_php(["lista_clases_ca.php"]):::controller
     apps_actividades_controller_actividad_select_php -. JS .-> apps_actividadestudios_controller_posibles_asignaturas_ca_php(["posibles_asignaturas_ca.php"]):::controller
@@ -40,9 +40,10 @@ flowchart TD
     apps_actividades_controller_actividad_select_php -. JS .-> apps_actividadplazas_controller_resumen_plazas_php(["resumen_plazas.php"]):::controller
     apps_actividades_controller_actividad_select_php -. JS .-> apps_asistentes_controller_lista_asistentes_php(["lista_asistentes.php"]):::controller
     apps_actividades_controller_actividad_select_php -. JS .-> apps_actividades_controller_dossiers_historics_php(["historics.php"]):::controller
-    apps_procesos_controller_actividad_proceso_php(["actividad_proceso.php"]):::controller --> apps_procesos_view_actividad_proceso_html_twig[["actividad_proceso.html.twig"]]:::vista
-    apps_procesos_view_actividad_proceso_html_twig --> apps_dossiers_controller_dossiers_ver_php(["dossiers_ver.php"]):::controller
-    apps_procesos_view_actividad_proceso_html_twig --> apps_procesos_controller_actividad_proceso_ajax_php(["actividad_proceso_ajax.php"]):::controller
+    frontend_procesos_controller_actividad_proceso_php --> frontend_procesos_view_actividad_proceso_html_twig[["actividad_proceso.html.twig"]]:::vista
+    frontend_procesos_controller_actividad_proceso_php --> src_procesos_actividad_proceso_data(["/src/procesos/actividad_proceso_data"]):::controller
+    frontend_procesos_view_actividad_proceso_html_twig --> apps_dossiers_controller_dossiers_ver_php(["dossiers_ver.php"]):::controller
+    frontend_procesos_view_actividad_proceso_html_twig --> src_procesos_actividad_proceso_ajax(["/src/procesos/actividad_proceso_ajax"]):::controller
     apps_actividades_controller_actividad_ver_php(["actividad_ver.php"]):::controller --> apps_actividades_view_actividad_form_html_twig[["actividad_form.html.twig"]]:::vista
     apps_actividadestudios_controller_lista_clases_ca_php(["lista_clases_ca.php"]):::controller --> apps_actividadestudios_view_lista_clases_ca_phtml[["lista_clases_ca.phtml"]]:::vista
     apps_actividadestudios_controller_posibles_asignaturas_ca_php(["posibles_asignaturas_ca.php"]):::controller --> apps_actividadestudios_view_posibles_asignaturas_ca_html_twig[["posibles_asignaturas_ca.html.twig"]]:::vista
@@ -57,6 +58,6 @@ flowchart TD
     apps_actividades_view_actividad_que_html_twig --> apps_actividades_controller_actividad_tipo_get_php(["actividad_tipo_get.php"]):::controller
     apps_actividades_view_actividad_que_html_twig --> apps_actividades_controller_lista_activ_php(["lista_activ.php"]):::controller
     apps_actividades_view_actividad_que_html_twig --> apps_actividades_controller_actividad_que_php(["actividad_que.php"]):::controller
-    apps_actividades_view_actividad_que_html_twig --> apps_procesos_controller_actividad_que_fases_ajax_php(["actividad_que_fases_ajax.php"]):::controller
+    apps_actividades_view_actividad_que_html_twig --> src_procesos_actividad_que_fases_ajax(["/src/procesos/actividad_que_fases_ajax"]):::controller
     class programas_actividad_update_php,apps_actividades_controller_dossiers_historics_php error;
 ```

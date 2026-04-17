@@ -269,7 +269,7 @@ $CuadrosFasesOn = '';
 $CuadrosFasesOff = '';
 if (ConfigGlobal::is_app_installed('procesos')) {
     $proceso_installed = TRUE;
-    $url_actualizar_fases = ConfigGlobal::getWeb() . '/apps/procesos/controller/actividad_que_fases_ajax.php';
+    $url_actualizar_fases = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/actividad_que_fases_ajax';
     $oHash1 = new Hash();
     $oHash1->setUrl($url_actualizar_fases);
     $oHash1->setCamposForm('salida!dl_propia!id_tipo_activ');

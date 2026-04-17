@@ -225,3 +225,92 @@ Quedan pendientes para una fase en la que tambien se migre
 `ActividadTipo` o cuando los controladores `actividad_proceso`,
 `usuario_perm_activ` y `fases_activ_cambio` necesiten su propia copia
 frontend (ver slices 4-6).
+
+---
+
+## Slice 4 - `actividad_proceso` + `actividad_proceso_ajax` + `actividad_que_fases_ajax`
+
+### Pantallas
+
+- `actividad_proceso` (panel con las fases del proceso de una actividad
+  concreta). URL legacy `apps/procesos/controller/actividad_proceso.php`
+  -> canonico `frontend/procesos/controller/actividad_proceso.php`.
+- `actividad_proceso_ajax` (dispatcher AJAX multi-`que`:
+  `generar`, `get`, `update`). URL legacy
+  `apps/procesos/controller/actividad_proceso_ajax.php` -> canonico
+  `/src/procesos/actividad_proceso_ajax`.
+- `actividad_que_fases_ajax` (devuelve checkboxes HTML de fases para
+  `fases_on` / `fases_off` en el form `actividad_que` de `actividades`).
+  URL legacy `apps/procesos/controller/actividad_que_fases_ajax.php` ->
+  canonico `/src/procesos/actividad_que_fases_ajax`.
+
+### Parametros de entrada (`POST`)
+
+- `actividad_proceso`: `id_activ` (o `sel[0]` con id#... desde checkbox).
+- `actividad_proceso_ajax`:
+  - `generar`: `id_activ`.
+  - `get`: `id_activ`.
+  - `update`: `id_item`, `completado`, `observ`, `force`.
+- `actividad_que_fases_ajax`: `salida` (`fases_on` / `fases_off`),
+  `id_tipo_activ`, `dl_propia`.
+
+### Reglas funcionales
+
+- `actividad_proceso` prepara hashes (`param_generar`, `param_actualizar`,
+  `h_update`) y pinta la cabecera con nombre de la actividad y el boton
+  regenerar (visible solo si el usuario tiene permiso `calendario`,
+  `vcsd` o `des`). El contenido del proceso se carga al ready via
+  `fnjs_actualizar()`.
+- `actividad_proceso_ajax`:
+  - `generar` regenera el proceso (`generarProceso($id_activ, mi_sfsv(), true)`).
+  - `get` imprime la tabla HTML con checkbox completado, responsable,
+    observ e input para guardar; filtra las filas segun permisos de
+    oficina del responsable de cada tarea.
+  - `update` actualiza el estado/observacion via `ProcesoActividadService::guardar`.
+  - Salida en `text/plain`.
+- `actividad_que_fases_ajax` devuelve un bloque HTML con inputs checkbox
+  para todas las fases que tiene cualquiera de los tipos de proceso
+  asociados al tipo de actividad (o a sus heredados).
+
+### Backend nuevo
+
+- Caso de uso: `src\procesos\application\ActividadProcesoData::execute(int $id_activ)`
+  devuelve `['id_activ', 'nom_activ']`.
+- Endpoint `/src/procesos/actividad_proceso_data`: JSON via `ContestarJson`.
+- Endpoint `/src/procesos/actividad_proceso_ajax`: port 1:1 del
+  dispatcher legacy con `header('Content-Type: text/plain; charset=UTF-8')`.
+  Marcado como DEPRECADO.
+- Endpoint `/src/procesos/actividad_que_fases_ajax`: port 1:1 del
+  controlador legacy.
+
+### Frontend
+
+- `frontend/procesos/controller/actividad_proceso.php`: lee
+  `nom_activ` desde `/src/procesos/actividad_proceso_data`, resuelve
+  permiso de calendario en sesion, monta los `Hash`es apuntando a
+  `ConfigGlobal::getWeb() . '/src/procesos/actividad_proceso_ajax'` y
+  renderiza con `frontend\shared\model\ViewNewTwig('procesos/controller')`.
+- `frontend/procesos/view/actividad_proceso.html.twig`: copia 1:1.
+
+### Compatibilidad legacy
+
+- `apps/procesos/controller/actividad_proceso.php`: wrapper al frontend.
+- `apps/procesos/controller/actividad_proceso_ajax.php`: wrapper al src.
+- `apps/procesos/controller/actividad_que_fases_ajax.php`: wrapper al src.
+- `apps/procesos/view/actividad_proceso.html.twig`: eliminado (vive en `frontend/`).
+
+### Referencias externas actualizadas
+
+- `apps/actividades/controller/actividades.js`: accion "proceso"
+  apunta a `frontend/procesos/controller/actividad_proceso.php`.
+- `apps/actividades/controller/actividad_que.php`: `url_actualizar_fases`
+  apunta a `/src/procesos/actividad_que_fases_ajax`.
+- `apps/procesos/view/fases_activ_cambio.html.twig`: la llamada de
+  `fnjs_ver_activ` apunta a `frontend/procesos/controller/actividad_proceso.php`.
+
+### Pendiente futuro
+
+- Split de `actividad_proceso_ajax` por accion (`generar`, `get`,
+  `update`) con clases de `application/` dedicadas.
+- Refactor del JS inline de `actividad_proceso.html.twig` para salir
+  del patron `$.ajax` con hash inline y pasarse a endpoints JSON.

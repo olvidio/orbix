@@ -20,4 +20,16 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/procesos/tipo_activ_proceso_ajax', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_proceso_ajax.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_proceso_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_proceso_ajax', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_ajax.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_que_fases_ajax', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_que_fases_ajax.php';
+    });
 };
