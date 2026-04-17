@@ -394,3 +394,75 @@ frontend (ver slices 4-6).
   tanto en render como en fetch de fases; bloqueado hasta que se
   migre `ActividadTipo` al patron nuevo.
 - Split del dispatcher por accion (`lista`, `update`, `get`).
+
+---
+
+## Slice 6 - `usuario_perm_activ` + `usuario_perm_activ_ajax`
+
+### Pantallas
+
+- `usuario_perm_activ` (alta/edicion de permisos de actividad para un
+  usuario/grupo). URL legacy
+  `apps/procesos/controller/usuario_perm_activ.php` -> canonico
+  `frontend/procesos/controller/usuario_perm_activ.php`.
+- `usuario_perm_activ_ajax` (endpoint de refresco del desplegable
+  `fase_ref` cuando cambia `id_tipo_activ` o `dl_propia`). URL legacy
+  `apps/procesos/controller/usuario_perm_activ_ajax.php` -> canonico
+  `/src/procesos/usuario_perm_activ_ajax`.
+
+### Parametros de entrada (`POST`)
+
+- `usuario_perm_activ`:
+  - Via checkbox (desde `frontend/usuarios/view/perm_activ_lista.phtml`):
+    `sel[0]` = `id_usuario#id_item#id_tipo_activ_txt#dl_propia`.
+  - Via form directo: `id_usuario`, `id_tipo_activ_txt`, `dl_propia`.
+  - `quien`, `que` se pasan tal cual a los camposHidden del hash.
+- `usuario_perm_activ_ajax`: `id_tipo_activ`, `dl_propia`.
+
+### Reglas funcionales
+
+- `usuario_perm_activ` monta la ficha de permisos: `ActividadTipo`
+  widget (legacy apps), desplegables `fase_ref[]`, `perm_off[]`,
+  `perm_on[]` para cada `afecta_a` de `PermisosActividades::AFECTA`,
+  cargando los permisos existentes via
+  `PermUsuarioActividadRepository::getPermUsuarioActividades`. Calcula
+  `perm_jefe` segun `oConfig->is_jefeCalendario()`, permisos `des` /
+  `vcsd` (en sv) o `calendario`. El submit del form va al endpoint
+  JSON existente `src/usuarios/perm_activ_guardar`.
+- `usuario_perm_activ_ajax`: devuelve en `text/plain` el HTML de los
+  `<option>` para el select `fase_ref[]` combinando
+  `TipoDeActividadRepository::getTiposDeProcesos` y
+  `ActividadFaseRepository::getArrayActividadFases`. No es un
+  dispatcher multi-`que`; el endpoint es de accion unica.
+
+### Backend nuevo
+
+- Endpoint `/src/procesos/usuario_perm_activ_ajax`: port 1:1 del
+  controlador legacy con `header('Content-Type: text/plain; charset=UTF-8')`.
+
+### Frontend
+
+- `frontend/procesos/controller/usuario_perm_activ.php`: copia del
+  controlador legacy cambiando `ViewTwig` por `ViewNewTwig`, las
+  `TRUE`/`FALSE` a `true`/`false`, e `url_actualizar` apuntando a
+  `ConfigGlobal::getWeb() . '/src/procesos/usuario_perm_activ_ajax'`.
+- `frontend/procesos/view/usuario_perm_activ.html.twig`: copia 1:1.
+
+### Compatibilidad legacy
+
+- `apps/procesos/controller/usuario_perm_activ.php`: wrapper al frontend.
+- `apps/procesos/controller/usuario_perm_activ_ajax.php`: wrapper al src.
+- Se elimina `apps/procesos/view/usuario_perm_activ.html.twig`.
+
+### Referencias externas actualizadas
+
+- `frontend/usuarios/view/perm_activ_lista.phtml`: las dos llamadas a
+  `apps/procesos/controller/usuario_perm_activ.php` (nuevo y editar)
+  apuntan ahora a `frontend/procesos/controller/usuario_perm_activ.php`.
+
+### Pendiente futuro
+
+- Migrar el JS inline de `usuario_perm_activ.html.twig` al patron
+  `$.ajax` + JSON en lugar de asumir HTML plano como respuesta.
+- Reemplazar `actividades\model\ActividadTipo` (legacy apps) cuando
+  sea viable.
