@@ -87,7 +87,7 @@
 138	\N	programas/lista_dossiers.php	\N	\N
 92	2	apps/menus/controller/menus_exportar.php	\N	exportar menus
 27	2	apps/devel/controller/modulos_select.php	\N	modulos select
-32	11	apps/procesos/controller/procesos_select.php	\N	procesos select
+32	11	frontend/procesos/controller/procesos_select.php	\N	procesos select
 85	24	apps/zonassacd/controller/zona_ctr.php	\N	Zona-ctr
 154	26	apps/cambios/controller/avisos_generar.php	\N	avisos generar
 2	26	apps/cambios/controller/avisos_generar_mails.php	\N	avisos mails
