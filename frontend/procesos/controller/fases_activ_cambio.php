@@ -95,16 +95,19 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 
 
-$url_ajax = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/fases_activ_cambio_ajax';
+$webBase = rtrim(ConfigGlobal::getWeb(), '/');
+$url_lista = $webBase . '/src/procesos/fases_activ_cambio_lista';
+$url_update = $webBase . '/src/procesos/fases_activ_cambio_update';
+$url_get = $webBase . '/src/procesos/fases_activ_cambio_get';
 
 $oHashLista = new Hash();
-$oHashLista->setUrl($url_ajax);
-$oHashLista->setCamposForm('que!dl_propia!id_tipo_activ!id_fase_nueva!periodo!year!empiezamax!empiezamin!accion');
+$oHashLista->setUrl($url_lista);
+$oHashLista->setCamposForm('dl_propia!id_tipo_activ!id_fase_nueva!periodo!year!empiezamax!empiezamin!accion');
 $h_lista = $oHashLista->linkSinVal();
 
 $oHashAct = new Hash();
-$oHashAct->setUrl($url_ajax);
-$oHashAct->setCamposForm('que!dl_propia!id_tipo_activ!id_fase_sel');
+$oHashAct->setUrl($url_get);
+$oHashAct->setCamposForm('dl_propia!id_tipo_activ!id_fase_sel');
 $h_actualizar = $oHashAct->linkSinVal();
 
 $url_tipo = "apps/actividades/controller/actividad_tipo_get.php";
@@ -131,7 +134,9 @@ $a_campos = [
     'oActividadTipo' => $oActividadTipo,
     'extendida' => $extendida,
     'oFormP' => $oFormP,
-    'url_ajax' => $url_ajax,
+    'url_lista' => $url_lista,
+    'url_update' => $url_update,
+    'url_get' => $url_get,
     'url_tipo' => $url_tipo,
     'txt_eliminar' => $txt_eliminar,
     'chk_propia' => $chk_propia,

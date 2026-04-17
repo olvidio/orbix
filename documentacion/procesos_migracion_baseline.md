@@ -393,7 +393,7 @@ frontend (ver slices 4-6).
 - Seguir dependiendo de `actividades\model\ActividadTipo` (legacy apps)
   tanto en render como en fetch de fases; bloqueado hasta que se
   migre `ActividadTipo` al patron nuevo.
-- Split del dispatcher por accion (`lista`, `update`, `get`).
+- ~~Split del dispatcher por accion (`lista`, `update`, `get`).~~ **Hecho en slice 7.**
 
 ---
 
@@ -466,3 +466,53 @@ frontend (ver slices 4-6).
   `$.ajax` + JSON en lugar de asumir HTML plano como respuesta.
 - Reemplazar `actividades\model\ActividadTipo` (legacy apps) cuando
   sea viable.
+
+---
+
+## Slice 7 - Split `fases_activ_cambio_ajax` en endpoints por accion
+
+### Objetivo
+
+Eliminar el dispatcher multi-`que` del flujo nuevo siguiendo el patron
+descrito en `refactor.md` (seccion *Endpoints por accion*). El flujo
+frontend ya no envia `que=...` sino que apunta directamente al
+endpoint correspondiente.
+
+### Casos de uso nuevos en `src/procesos/application/`
+
+- `FasesActivCambioLista::execute(array $input): string`: construye la
+  tabla HTML con actividades candidatas (incluye su propio `Posicion`
+  para `recordar/setParametros`).
+- `FasesActivCambioUpdate::execute(array $input): string`: aplica
+  `setCompletado(t|f)` a las tareas de `id_fase_nueva` para cada
+  `id_activ` seleccionado y devuelve errores si los hay.
+- `FasesActivCambioGet::execute(array $input): string`: devuelve el
+  `Desplegable` con las fases posibles para el tipo de actividad y la
+  `dl_propia`.
+
+### Endpoints HTTP nuevos
+
+- `/src/procesos/fases_activ_cambio_lista` (text/plain).
+- `/src/procesos/fases_activ_cambio_update` (text/plain).
+- `/src/procesos/fases_activ_cambio_get` (text/plain).
+
+### Dispatcher legacy
+
+`src/procesos/infrastructure/ui/http/controllers/fases_activ_cambio_ajax.php`
+queda como wrapper DEPRECADO: delega a los casos de uso en funcion de
+`$_POST['que']`.
+
+### Frontend
+
+- `frontend/procesos/controller/fases_activ_cambio.php`: sustituye
+  `url_ajax` unico por `url_lista`, `url_update`, `url_get`. Hashes
+  (`h_lista`, `h_actualizar`) firman cada uno su URL destino.
+  `CamposForm` ya no incluye `que` (implicito en la ruta).
+- `frontend/procesos/view/fases_activ_cambio.html.twig`: `fnjs_lista`
+  usa `url_lista`, `fnjs_cambiar` usa `url_update`, `fnjs_actualizar_fases`
+  usa `url_get`. Los parametros JS ya no incluyen `que=...`.
+
+### Pendiente futuro
+
+- Cuando se confirme que nadie llama al dispatcher `fases_activ_cambio_ajax`,
+  eliminar wrapper legacy y la ruta `/src/procesos/fases_activ_cambio_ajax`.

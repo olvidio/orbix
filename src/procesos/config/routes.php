@@ -37,6 +37,18 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/fases_activ_cambio_ajax.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/procesos/fases_activ_cambio_lista', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/fases_activ_cambio_lista.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/fases_activ_cambio_update', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/fases_activ_cambio_update.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/fases_activ_cambio_get', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/fases_activ_cambio_get.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/procesos/usuario_perm_activ_ajax', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_perm_activ_ajax.php';
     });
