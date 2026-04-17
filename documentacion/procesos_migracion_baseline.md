@@ -516,3 +516,50 @@ queda como wrapper DEPRECADO: delega a los casos de uso en funcion de
 
 - Cuando se confirme que nadie llama al dispatcher `fases_activ_cambio_ajax`,
   eliminar wrapper legacy y la ruta `/src/procesos/fases_activ_cambio_ajax`.
+
+---
+
+## Slice 8 - Split `actividad_proceso_ajax` en endpoints por accion
+
+### Objetivo
+
+Misma operacion que en slice 7 para el dispatcher de la pantalla de
+proceso de una actividad. El formulario y los botones ya no envian
+`que=generar|get|update`: cada boton pega directamente a su endpoint.
+
+### Casos de uso nuevos en `src/procesos/application/`
+
+- `ActividadProcesoGenerar::execute(array $input): string`: llama
+  `ActividadProcesoTareaRepository::generarProceso($id_activ, sfsv, true)`.
+- `ActividadProcesoGet::execute(array $input): string`: devuelve la tabla
+  HTML con las fases/tareas del proceso de una actividad, respetando
+  permisos de oficina del responsable.
+- `ActividadProcesoUpdate::execute(array $input): string`: guarda
+  completado/observ para un id_item concreto; devuelve texto de error
+  si `ProcesoActividadService::guardar` falla.
+
+### Endpoints HTTP nuevos
+
+- `/src/procesos/actividad_proceso_generar` (text/plain).
+- `/src/procesos/actividad_proceso_get` (text/plain).
+- `/src/procesos/actividad_proceso_update` (text/plain).
+
+### Dispatcher legacy
+
+`actividad_proceso_ajax.php` queda como wrapper DEPRECADO que delega a
+los casos de uso en funcion de `$_POST['que']`.
+
+### Frontend
+
+- `frontend/procesos/controller/actividad_proceso.php`: sustituye
+  `url_ajax` unico por `url_generar`, `url_get`, `url_update`. Cada hash
+  (`param_generar`, `param_actualizar`, `h_update`) firma su URL destino
+  y ya no incluye `que` en los campos.
+- `frontend/procesos/view/actividad_proceso.html.twig`: cada funcion
+  JS (`fnjs_generar_proceso`, `fnjs_actualizar`, `fnjs_guardar`) apunta
+  a la URL canonica correspondiente.
+
+### Pendiente futuro
+
+- Eliminar el wrapper `actividad_proceso_ajax` cuando no quede referencia
+  activa (menus, codigo, sesiones).

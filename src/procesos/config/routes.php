@@ -29,6 +29,18 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_ajax.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_proceso_generar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_generar.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_proceso_get', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_get.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_proceso_update', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_proceso_update.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/procesos/actividad_que_fases_ajax', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_que_fases_ajax.php';
     });

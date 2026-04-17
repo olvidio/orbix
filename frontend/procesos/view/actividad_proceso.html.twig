@@ -8,7 +8,7 @@ td { border:none; }
 <script>
 fnjs_generar_proceso=function(){
 	if (confirm("{{ txt_confirm }}") ) {
-		var url = "{{ url_ajax }}";
+		var url = "{{ url_generar }}";
 		var parametros="{{ param_generar|raw }}";
 		$.ajax({
 			url: url,
@@ -27,7 +27,7 @@ fnjs_generar_proceso=function(){
 fnjs_actualizar=function(){
 	var id_activ=$('#id_activ').val();
 	/* obtener el listado de fases */
-	var url = "{{ url_ajax }}";
+	var url = "{{ url_get }}";
 	var parametros="{{ param_actualizar|raw }}";
 		 
 	$.ajax({
@@ -47,8 +47,8 @@ fnjs_guardar=function(id_item){
 	var force=$('#force').prop("checked");
 	var completado=$('#comp'+id_item).prop('checked');
 	var observ=$('#observ'+id_item).val();
-	var url = "{{ url_ajax }}";
-	var parametros='que=update&id_item='+id_item+'&completado='+completado+'&force='+force+'&observ='+observ+'{{ h_update|raw }}';
+	var url = "{{ url_update }}";
+	var parametros='id_item='+id_item+'&completado='+completado+'&force='+force+'&observ='+observ+'{{ h_update|raw }}';
 		 
 	$.ajax({
 		url: url,

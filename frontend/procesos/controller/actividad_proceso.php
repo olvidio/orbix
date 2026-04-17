@@ -39,29 +39,28 @@ if (($_SESSION['oPerm']->have_perm_oficina('calendario')) || ($_SESSION['oPerm']
     $permiso_calendario = true;
 }
 
-$url_ajax = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/actividad_proceso_ajax';
+$webBase = rtrim(ConfigGlobal::getWeb(), '/');
+$url_generar = $webBase . '/src/procesos/actividad_proceso_generar';
+$url_get = $webBase . '/src/procesos/actividad_proceso_get';
+$url_update = $webBase . '/src/procesos/actividad_proceso_update';
 
 $oHashGenerar = new Hash();
-$oHashGenerar->setUrl($url_ajax);
-$a_camposHiddenG = [
-    'que' => 'generar',
+$oHashGenerar->setUrl($url_generar);
+$oHashGenerar->setArraycamposHidden([
     'id_activ' => $Qid_activ,
-];
-$oHashGenerar->setArraycamposHidden($a_camposHiddenG);
+]);
 $param_generar = $oHashGenerar->getParamAjax();
 
 $oHashActualizar = new Hash();
-$oHashActualizar->setUrl($url_ajax);
-$a_camposHiddenA = [
-    'que' => 'get',
+$oHashActualizar->setUrl($url_get);
+$oHashActualizar->setArraycamposHidden([
     'id_activ' => $Qid_activ,
-];
-$oHashActualizar->setArraycamposHidden($a_camposHiddenA);
+]);
 $param_actualizar = $oHashActualizar->getParamAjax();
 
 $oHash1 = new Hash();
-$oHash1->setUrl($url_ajax);
-$oHash1->setCamposForm('force!que!id_item!completado!observ');
+$oHash1->setUrl($url_update);
+$oHash1->setCamposForm('force!id_item!completado!observ');
 $h_update = $oHash1->linkSinVal();
 
 $txt_confirm = _("¿Está seguro que desea crear el proceso de nuevo?");
@@ -74,7 +73,9 @@ $a_campos = [
     'nom_activ' => $nom_activ,
     'permiso_calendario' => $permiso_calendario,
     'web_icons' => ConfigGlobal::getWeb_icons(),
-    'url_ajax' => $url_ajax,
+    'url_generar' => $url_generar,
+    'url_get' => $url_get,
+    'url_update' => $url_update,
     'id_activ' => $Qid_activ,
     'param_generar' => $param_generar,
     'param_actualizar' => $param_actualizar,
