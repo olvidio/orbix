@@ -21,14 +21,18 @@ $UsuarioRepository =$GLOBALS['container']->get(UsuarioRepositoryInterface::class
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_sacd = $oMiUsuario->getCsvIdPauAsString();
 $id_role = $oMiUsuario->getId_role();
+//echo 'ID: '.$id_usuario.'-'.$id_role.'<br>';
+//echo 'id_sacd: '.$id_sacd.'<br>';
 $ZonasRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
 $cZonas = $ZonasRepository->getZonas(array('id_nom' => $id_sacd));
 $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
 
 $Qid_sacd_key = (string)filter_input(INPUT_POST, 'id_sacd');
+//echo 'id_sacd_key: '.$Qid_sacd_key.'<br>';
 $exp_id_sacd=explode('#', $Qid_sacd_key);
-$Qid_sacd=$exp_id_sacd[1];
-//echo 'id_sacd: '.$Qid_sacd;
+$Qid_sacd=$exp_id_sacd[0];
+//echo 'Qid_sacd: '.$Qid_sacd;
+//echo $exp_id_sacd[0];
 
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qorden = (string)filter_input(INPUT_POST, 'orden');

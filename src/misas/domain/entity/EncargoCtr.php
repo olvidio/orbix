@@ -15,7 +15,7 @@ use src\shared\domain\traits\Hydratable;
  * @created 20/3/2024
  */
 class EncargoCtr
-{
+{ 
     use Hydratable;
 
 
