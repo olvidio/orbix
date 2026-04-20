@@ -20,7 +20,7 @@ $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
 $QselectedCsv = (string)filter_input(INPUT_POST, 'selected');
 
-$dl_propia = is_true($Qdl_propia);
+$dl_propia = (bool)is_true($Qdl_propia);
 $selected = $QselectedCsv === ''
     ? []
     : array_values(array_filter(array_map('intval', explode(',', $QselectedCsv))));

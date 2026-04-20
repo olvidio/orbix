@@ -215,7 +215,7 @@ class ActividadTipo
             'extendida' => $extendida,
         ];
 
-        $aditionalPaths = ['actividades' => 'frontend/actividades/view'];
+        $aditionalPaths = ['actividades' => 'actividades/view'];
         switch ($this->para) {
             case 'tipoactiv-tarifas':
                 $oView = new ViewNewTwig('apps/actividadtarifas/controller', $aditionalPaths);
