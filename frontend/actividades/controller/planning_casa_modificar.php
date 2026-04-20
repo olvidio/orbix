@@ -6,7 +6,7 @@
  * `src\actividades\application\ActividadVerDatos` via PostRequest, de modo
  * que este controlador no toca repositorios ni entidades.
  *
- * Migrado desde apps/actividades/controller/planning_casa_modificar.php.
+ * Migrado desde frontend/actividades/controller/planning_casa_modificar.php.
  *
  * @package    delegacion
  * @subpackage actividades

@@ -6,7 +6,7 @@
  * preferencia del usuario, que se consulta via PostRequest a
  * `/src/actividades/lista_sr_csv_que_datos`.
  *
- * Migrado desde apps/actividades/controller/lista_sr_csv_que.php.
+ * Migrado desde frontend/actividades/controller/lista_sr_csv_que.php.
  *
  * @package    delegacion
  * @subpackage actividades

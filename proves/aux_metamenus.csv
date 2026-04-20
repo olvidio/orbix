@@ -44,15 +44,15 @@
 173;4;apps/profesores/controller/lista_por_departamentos.php;listado claustro
 171;4;frontend/profesores/controller/profesor_asignatura_que.php;profesores para asignatura
 37;4;frontend/certificados/controller/certificado_emitido_lista.php;Certificado lista
-12;5;apps/actividades/controller/actividades_centro_que.php;Centro que activ
-157;5;apps/actividades/controller/actividad_nuevo_curso.php;Nuevo Curso
-119;5;apps/actividades/controller/actividad_que.php;seleccionar actividad
-71;5;apps/actividades/controller/actividad_select.php;Listado de Actividades
-136;5;apps/actividades/controller/actividad_ver.php;actividad nueva
-21;5;apps/actividades/controller/calendario_listas.php;calendario listas
-141;5;apps/actividades/controller/calendario_que.php;Calendario que
-132;5;apps/actividades/controller/lista_actividades_sg.php;lista activ sg
-68;5;apps/actividades/controller/tipo_activ.php;gestionar tipos actividades
+12;5;frontend/actividades/controller/actividades_centro_que.php;Centro que activ
+157;5;frontend/actividades/controller/actividad_nuevo_curso.php;Nuevo Curso
+119;5;frontend/actividades/controller/actividad_que.php;seleccionar actividad
+71;5;frontend/actividades/controller/actividad_select.php;Listado de Actividades
+136;5;frontend/actividades/controller/actividad_ver.php;actividad nueva
+21;5;frontend/actividades/controller/calendario_listas.php;calendario listas
+141;5;frontend/actividades/controller/calendario_que.php;Calendario que
+132;5;frontend/actividades/controller/lista_actividades_sg.php;lista activ sg
+68;5;frontend/actividades/controller/tipo_activ.php;gestionar tipos actividades
 128;5;apps/actividadtarifas/controller/tarifa_actividad.php;Tarifa actividades
 100;5;apps/actividadtarifas/controller/tarifa.php;Tarifa definir
 108;5;apps/actividadtarifas/controller/tarifa_tipo_actividad.php;Tipo tarifa
@@ -60,8 +60,8 @@
 140;5;apps/asistentes/controller/activ_pendientes_select.php;actividades pendientes
 147;5;apps/asistentes/controller/que_ctr_lista.php;Buscar por centro
 7;5;frontend/ubis/controller/calendario_periodos.php;Calendario Periodos
-143;6;apps/actividades/controller/lista_activ_que.php;Lista Activ que
-58;6;apps/actividades/controller/lista_sr_csv_que.php;Activ Sr Que (csv)
+143;6;frontend/actividades/controller/lista_activ_que.php;Lista Activ que
+58;6;frontend/actividades/controller/lista_sr_csv_que.php;Activ Sr Que (csv)
 79;6;apps/asistentes/controller/lista_ultim_que_ctr.php;Ultima asistencia
 194;6;apps/planning/controller/planning_casa_que.php;Planing Casa
 61;6;apps/planning/controller/planning_ctr_que.php;planning ctr

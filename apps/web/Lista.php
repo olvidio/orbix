@@ -40,7 +40,7 @@ class Lista
      *
      * @var array ( id => titulo)
      */
-    private array $aGrupos;
+    private array $aGrupos = [];
     private bool $botones_grupo = FALSE;
 
     /**
@@ -48,13 +48,13 @@ class Lista
      *
      * @var array
      */
-    private array $aCabeceras;
+    private array $aCabeceras = [];
     /**
      * sPie de la Lista
      *
      * @var string
      */
-    private string $sPie;
+    private string $sPie = '';
     /**
      * ssortcol de la Lista. Columna por la que se ordena la tabla inicialmente.
      *
@@ -72,7 +72,7 @@ class Lista
      *
      * @var array lista de arrays (id el del titulo) cada sub-array es la fila.
      */
-    private array $aDatos;
+    private array $aDatos = [];
     /**
      * aBotones de la Lista
      *
@@ -358,7 +358,6 @@ class Lista
     function listaPaginada()
     {
         $aGrupos = $this->aGrupos;
-        $aCabeceras = $this->aCabeceras;
         $aDatos = $this->aDatos;
         //------------------------------------ html ------------------------------
         reset($aGrupos);

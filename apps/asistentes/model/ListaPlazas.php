@@ -98,7 +98,9 @@ class ListaPlazas
             echo strtoupper_dlb(_("no existe ninguna actividad con esta condición"));
             // retorno una lista vacia para que no dé errores.
             $oLista = new Lista();
-            $oLista->setGrupos(array());
+            $oLista->setGrupos([]);
+            $oLista->setCabeceras([]);
+            $oLista->setDatos([]);
             return $oLista;
         }
 

@@ -93,23 +93,23 @@
 2	26	apps/cambios/controller/avisos_generar_mails.php	\N	avisos mails
 90	1	apps/config/controller/parametros.php	\N	Configuracion esquema
 152	1	frontend/ubis/controller/lista_ctrs.php	\N	lista ctr sg
-12	5	apps/actividades/controller/actividades_centro_que.php	\N	Centro que activ
+12	5	frontend/actividades/controller/actividades_centro_que.php	\N	Centro que activ
 51	27	apps/casas/controller/casa_ec_que.php	\N	Casa ec que
 45	27	apps/casas/controller/casa_que.php	\N	Casa que
 63	27	apps/casas/controller/calendario_ubi_resumen.php	\N	Ubi resumen ec
 91	27	apps/casas/controller/grupo_lista.php	\N	Grupo Casas
 97	1	apps/personas/controller/personas_select.php	\N	personas Select
 145	2	apps/usuarios/controller/borrar_pwd.php	\N	borrar passwords
-58	6	apps/actividades/controller/lista_sr_csv_que.php	\N	Activ Sr Que (csv)
+58	6	frontend/actividades/controller/lista_sr_csv_que.php	\N	Activ Sr Que (csv)
 42	24	apps/zonassacd/controller/zona_sacd.php	\N	Zona sacd
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
-21	5	apps/actividades/controller/calendario_listas.php	\N	calendario listas
-194	5	apps/actividades/controller/planning_casa_que.php	\N	Planing Casa
+21	5	frontend/actividades/controller/calendario_listas.php	\N	calendario listas
+194	5	frontend/actividades/controller/planning_casa_que.php	\N	Planing Casa
 114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
 3	25	apps/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
 19	2	apps/devel/controller/factory_form.php	\N	generador de clases
 133	3	frontend/ubis/controller/ubis_buscar.php	\N	buscar ubis
-119	5	apps/actividades/controller/actividad_que.php	\N	seleccionar actividad
+119	5	frontend/actividades/controller/actividad_que.php	\N	seleccionar actividad
 179	24	\N	\N	Raiz Zonas
 164	1	apps/usuarios/controller/personal.php	\N	preferencias usuario
 76	1	apps/personas/controller/personas_que.php	\N	búsqueda de personas
@@ -122,10 +122,10 @@
 62	21	apps/encargossacd/controller/ctr_ficha.php	\N	Ficha encargos ctr
 127	21	apps/encargossacd/controller/sacd_ausencias.php	\N	Ausencias sacd
 124	21	apps/encargossacd/controller/listas_index.php	\N	Encargos Listas
-136	5	apps/actividades/controller/actividad_ver.php	\N	actividad nueva
-157	5	apps/actividades/controller/actividad_nuevo_curso.php	\N	Nuevo Curso
-71	5	apps/actividades/controller/actividad_select.php	\N	Listado de Actividades
-141	5	apps/actividades/controller/calendario_que.php	\N	Calendario que
+136	5	frontend/actividades/controller/actividad_ver.php	\N	actividad nueva
+157	5	frontend/actividades/controller/actividad_nuevo_curso.php	\N	Nuevo Curso
+71	5	frontend/actividades/controller/actividad_select.php	\N	Listado de Actividades
+141	5	frontend/actividades/controller/calendario_que.php	\N	Calendario que
 168	7	apps/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
 66	7	apps/actividadestudios/controller/matriculas_lista.php	\N	listas de matriculas
 174	4	apps/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
@@ -172,9 +172,9 @@
 28	20	apps/actividadessacd/controller/com_sacd_activ_periodo.php	\N	Comunicación activ sacd
 18	20	apps/actividadessacd/controller/asignar_sacd_auto.php	\N	Auto asignar sacd a actividades
 46	26	apps/cambios/controller/avisos_generar_tabla.php	\N	avisos generar tabla
-143	6	apps/actividades/controller/lista_activ_que.php	\N	Lista Activ que
+143	6	frontend/actividades/controller/lista_activ_que.php	\N	Lista Activ que
 44	11	frontend/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad
-132	5	apps/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
+132	5	frontend/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
 79	6	apps/asistentes/controller/lista_ultim_que_ctr.php	\N	Ultima asistencia
 73	5	apps/actividadtarifas/controller/tarifa_ubi.php	\N	actividad Tarifa Ubi
 89	27	apps/casas/controller/casas_resumen.php	\N	Casa resumen

@@ -4,7 +4,7 @@ namespace src\actividades\application;
 
 /**
  * Recolecta las opciones de desplegables usadas en la pantalla "seleccionar
- * lugar para una actividad" (apps/actividades/controller/actividad_select_ubi).
+ * lugar para una actividad" (frontend/actividades/controller/actividad_select_ubi).
  *
  * Devuelve arrays value => label listos para que la vista los monte con
  * web\Desplegable::desdeOpciones(...).

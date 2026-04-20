@@ -296,9 +296,9 @@ Se mueven a `frontend/procesos/view/` en el slice 12.
 
 ### Referencias externas actualizadas
 
-- `apps/actividades/controller/actividades.js`: accion "proceso"
+- `frontend/actividades/view/actividades.js`: accion "proceso"
   apunta a `frontend/procesos/controller/actividad_proceso.php`.
-- `apps/actividades/controller/actividad_que.php`: `url_actualizar_fases`
+- `frontend/actividades/controller/actividad_que.php`: `url_actualizar_fases`
   apunta a `/src/procesos/actividad_que_fases_ajax`.
 - `apps/procesos/view/fases_activ_cambio.html.twig`: la llamada de
   `fnjs_ver_activ` apunta a `frontend/procesos/controller/actividad_proceso.php`.
@@ -694,7 +694,7 @@ Busqueda global de referencias activas a `procesos_ajax`,
 - Unicas coincidencias en codigo vivo: los propios wrappers auto-referenciandose
   en comentarios y la cadena `apps/ -> src/`.
 - Resto: metadata de catalogos `.po`/`.pot`, documentacion (`*.md`) y un
-  comentario historico en `apps/actividades/controller/actividad_update.php`
+  comentario historico en `frontend/actividades/controller/actividad_update.php`
   (linea 338, solo descriptivo).
 
 ### Archivos eliminados

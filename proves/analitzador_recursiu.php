@@ -15,7 +15,7 @@
 $ruta_base_proves = __DIR__;
 $arrel_projecte = dirname(__DIR__);
 
-$punt_entrada = "apps/actividades/controller/actividad_que.php";
+$punt_entrada = "frontend/actividades/controller/actividad_que.php";
 $nom_modul_principal = explode('/', $punt_entrada)[1];
 $carpeta_desti = $ruta_base_proves . '/' . $nom_modul_principal;
 if (!is_dir($carpeta_desti)) mkdir($carpeta_desti, 0777, true);

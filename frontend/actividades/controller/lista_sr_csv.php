@@ -8,7 +8,7 @@
  *   - que=lista: vista HTML con la tabla.
  *   - que=file : descarga directa como CSV usando `web\Lista::getCsv()`.
  *
- * Migrado desde apps/actividades/controller/lista_sr_csv.php.
+ * Migrado desde frontend/actividades/controller/lista_sr_csv.php.
  *
  * @package    delegacion
  * @subpackage actividades

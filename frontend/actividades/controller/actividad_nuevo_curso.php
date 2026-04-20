@@ -7,7 +7,7 @@
  * `src\actividades\application\ActividadNuevoCursoEjecutar` via PostRequest.
  * Este controlador solo gestiona el formulario y muestra el resultado HTML.
  *
- * Migrado desde apps/actividades/controller/actividad_nuevo_curso.php.
+ * Migrado desde frontend/actividades/controller/actividad_nuevo_curso.php.
  *
  * @package    delegacion
  * @subpackage actividades

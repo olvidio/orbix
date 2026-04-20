@@ -8,7 +8,7 @@ use web\TiposActividades;
 
 /**
  * Devuelve la tabla HTML con los tipos de actividad existentes. Portado desde
- * el case `lista` del dispatcher legacy apps/actividades/controller/tipo_activ_ajax.php.
+ * el case `lista` del dispatcher legacy frontend/actividades/controller/tipo_activ_ajax.php.
  */
 class TipoActivLista
 {

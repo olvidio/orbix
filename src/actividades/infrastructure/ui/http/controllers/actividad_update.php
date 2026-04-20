@@ -4,7 +4,7 @@
  * actividades. Despacha segun el parametro POST 'mod'.
  *
  * Migrado desde frontend/actividades/controller/actividad_update.php (que a su
- * vez se habia migrado desde apps/actividades/controller/actividad_update.php).
+ * vez se habia migrado desde frontend/actividades/controller/actividad_update.php).
  * Esta version vive en la capa backend porque toda su logica es acceso a
  * repositorios y casos de uso del dominio; no hay presentacion.
  *

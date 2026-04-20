@@ -3,7 +3,7 @@
  * Formulario de ver/editar una actividad (tambien para crear nueva o cambiar tipo).
  * Renderiza actividad_form.html.twig (en frontend/actividades/view).
  *
- * Migrado desde apps/actividades/controller/actividad_ver.php.
+ * Migrado desde frontend/actividades/controller/actividad_ver.php.
  *
  * Los bloques que dependen del dominio (entidad actividad, desplegables,
  * nombre_ubi, tarifa por defecto) se obtienen via PostRequest al endpoint

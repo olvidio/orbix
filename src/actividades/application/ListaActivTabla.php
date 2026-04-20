@@ -17,7 +17,7 @@ use function core\is_true;
 
 /**
  * Caso de uso: construye los datos (cabeceras + filas) de la pantalla
- * apps/actividades/controller/lista_activ.php.
+ * frontend/actividades/controller/lista_activ.php.
  *
  * La responsabilidad de leer el POST, gestionar `web\Posicion` y renderizar
  * `web\Lista` queda en el controlador frontend. Aqui solo traducimos un set

@@ -7,7 +7,7 @@
  * y se consumen via PostRequest, de modo que este controlador no toca
  * repositorios ni entidades.
  *
- * Migrado desde apps/actividades/controller/planning_casa_nueva.php.
+ * Migrado desde frontend/actividades/controller/planning_casa_nueva.php.
  *
  * @package    delegacion
  * @subpackage actividades

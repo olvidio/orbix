@@ -20,7 +20,7 @@
  * PostRequest. Este controlador solo parsea el POST, guarda/restaura el
  * estado de `Posicion` y construye los hashes del formulario.
  *
- * Migrado desde apps/actividades/controller/actividad_select.php.
+ * Migrado desde frontend/actividades/controller/actividad_select.php.
  *
  * @package    delegacion
  * @subpackage    actividades

@@ -3,7 +3,7 @@
  * Pantalla para escoger los filtros que determinan una busqueda de actividades.
  * Delega a actividad_select/lista_activ/lista_asis_conjunto_activ segun `que`.
  *
- * Migrado desde apps/actividades/controller/actividad_que.php.
+ * Migrado desde frontend/actividades/controller/actividad_que.php.
  *
  * @package    delegacion
  * @subpackage    actividades

@@ -6,7 +6,7 @@
  */
 
 $root_dir = '/home/dani/orbix_local/orbix/';
-$entry_point = 'apps/actividades/controller/actividad_que.php';
+$entry_point = 'frontend/actividades/controller/actividad_que.php';
 
 function analitzar_fitxer($ruta_relativa, &$mapa = [], $visitats = [])
 {

@@ -9,7 +9,7 @@ require_once "analitzadors/analitzador_llista.php";
 require_once "analitzadors/analitzador_js.php"; // El nou per a fitxers .js
 
 $root_dir = '/home/dani/orbix_local/orbix/';
-$fitxer_inicial = "apps/actividades/controller/actividad_select.php";
+$fitxer_inicial = "frontend/actividades/controller/actividad_select.php";
 
 $analitzats = [];
 $cua = [$fitxer_inicial];

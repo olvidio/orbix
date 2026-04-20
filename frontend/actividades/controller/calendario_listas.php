@@ -7,7 +7,7 @@
  * y se consume via PostRequest. Este controlador solo parsea el POST y echoea
  * el HTML resultante.
  *
- * Migrado desde apps/actividades/controller/calendario_listas.php.
+ * Migrado desde frontend/actividades/controller/calendario_listas.php.
  *
  * @package    delegacion
  * @subpackage actividades

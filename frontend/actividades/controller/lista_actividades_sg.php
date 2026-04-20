@@ -8,7 +8,7 @@
  * PostRequest. Este controlador solo parsea el POST, gestiona `Posicion`
  * y construye los hashes de los formularios.
  *
- * Migrado desde apps/actividades/controller/lista_actividades_sg.php.
+ * Migrado desde frontend/actividades/controller/lista_actividades_sg.php.
  *
  * @package    delegacion
  * @subpackage    actividades

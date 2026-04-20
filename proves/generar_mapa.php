@@ -9,7 +9,7 @@ require_once "analitzadors/analitzador_js.php";
 
 // Paràmetres de línia de comandes
 if ($argc < 2) {
-    die("❌ Error: Cal especificar el fitxer inicial\nÚs: php generar_mapa.php <fitxer_inicial>\nExemple: php generar_mapa.php apps/actividades/controller/actividad_select.php\n");
+    die("❌ Error: Cal especificar el fitxer inicial\nÚs: php generar_mapa.php <fitxer_inicial>\nExemple: php generar_mapa.php frontend/actividades/controller/actividad_select.php\n");
 }
 
 $fitxer_inicial = $argv[1];

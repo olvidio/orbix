@@ -127,7 +127,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:99",
-      "url": "http://orbix.docker:8003/orbix/apps/actividades/controller/actividad_que.php?sasistentes=n&sactividad=ca&que=ver",
+      "url": "http://orbix.docker:8003/orbix/frontend/actividades/controller/actividad_que.php?sasistentes=n&sactividad=ca&que=ver",
       "status": 200,
       "ok": true,
       "kind": "ok",
@@ -135,7 +135,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:102",
-      "url": "http://orbix.docker:8003/orbix/apps/actividades/controller/actividad_que.php?sasistentes=n&sactividad=ca&que=list_cjto",
+      "url": "http://orbix.docker:8003/orbix/frontend/actividades/controller/actividad_que.php?sasistentes=n&sactividad=ca&que=list_cjto",
       "status": 200,
       "ok": true,
       "kind": "ok",
@@ -175,7 +175,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:120",
-      "url": "http://orbix.docker:8003/orbix/apps/actividades/controller/actividad_que.php?sasistentes=agd&sactividad=cv&que=ver",
+      "url": "http://orbix.docker:8003/orbix/frontend/actividades/controller/actividad_que.php?sasistentes=agd&sactividad=cv&que=ver",
       "status": 200,
       "ok": true,
       "kind": "ok",
@@ -183,7 +183,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:123",
-      "url": "http://orbix.docker:8003/orbix/apps/actividades/controller/actividad_que.php?sasistentes=agd&sactividad=cv&que=list_cjto",
+      "url": "http://orbix.docker:8003/orbix/frontend/actividades/controller/actividad_que.php?sasistentes=agd&sactividad=cv&que=list_cjto",
       "status": 200,
       "ok": true,
       "kind": "ok",
@@ -223,7 +223,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:141",
-      "url": "http://orbix.docker:8003/orbix/apps/actividades/controller/actividad_select.php?sasistentes=n&sactividad2=semestre-inv&que=ver",
+      "url": "http://orbix.docker:8003/orbix/frontend/actividades/controller/actividad_select.php?sasistentes=n&sactividad2=semestre-inv&que=ver",
       "status": 200,
       "ok": true,
       "kind": "ok",
@@ -239,7 +239,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:147",
-      "url": "http://orbix.docker:8003/orbix/apps/actividades/controller/actividad_que.php?sasistentes=n&sactividad2=semestre-inv&que=ver&modo=importar",
+      "url": "http://orbix.docker:8003/orbix/frontend/actividades/controller/actividad_que.php?sasistentes=n&sactividad2=semestre-inv&que=ver&modo=importar",
       "status": 200,
       "ok": true,
       "kind": "ok",

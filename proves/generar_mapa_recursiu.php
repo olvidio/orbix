@@ -5,7 +5,7 @@ require_once "analitzadors/analitzador_twig.php";
 require_once "analitzadors/analitzador_phtml.php";
 
 $root_dir = '/home/dani/orbix_local/orbix/';
-$entry_point = 'apps/actividades/controller/actividad_que.php';
+$entry_point = 'frontend/actividades/controller/actividad_que.php';
 $output_file = $root_dir . 'proves/actividades/mapa_recursivo.md';
 
 $mapa_global = [];
@@ -64,7 +64,7 @@ function processar_troballa($origen, $url, $context)
 function localitzar_vista($nom, $dir_actual)
 {
     global $root_dir;
-    $paths = [$dir_actual . '/' . $nom, 'apps/actividades/view/' . $nom, 'apps/actividades/controller/' . $nom];
+    $paths = [$dir_actual . '/' . $nom, 'apps/actividades/view/' . $nom, 'frontend/actividades/controller/' . $nom];
     foreach ($paths as $p) if (file_exists($root_dir . $p)) return $p;
     return null;
 }
@@ -72,7 +72,7 @@ function localitzar_vista($nom, $dir_actual)
 function localitzar_fitxer_php($nom, $dir_actual)
 {
     global $root_dir;
-    $paths = [$dir_actual . '/' . $nom, 'apps/actividades/controller/' . $nom, 'apps/procesos/controller/' . $nom];
+    $paths = [$dir_actual . '/' . $nom, 'frontend/actividades/controller/' . $nom, 'apps/procesos/controller/' . $nom];
     foreach ($paths as $p) if (file_exists($root_dir . $p)) return $p;
     return null;
 }

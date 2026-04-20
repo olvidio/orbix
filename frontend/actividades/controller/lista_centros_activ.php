@@ -8,7 +8,7 @@
  * La logica se ha trasladado a `src\actividades\application\ListaCentrosActivDatos`
  * y se consume via PostRequest.
  *
- * Migrado desde apps/actividades/controller/lista_centros_activ.php.
+ * Migrado desde frontend/actividades/controller/lista_centros_activ.php.
  *
  * @package    delegacion
  * @subpackage actividades

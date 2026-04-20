@@ -19,8 +19,8 @@ msgstr ""
 #: apps/actividadcargos/controller/update_3102.php:82
 #: apps/actividadcargos/controller/update_3102.php:108
 #: apps/actividadcargos/controller/update_3102.php:216
-#: apps/actividades/controller/actividad_update.php:52
-#: apps/actividades/controller/tipo_activ_ajax.php:150
+#: frontend/actividades/controller/actividad_update.php:52
+#: frontend/actividades/controller/tipo_activ_ajax.php:150
 #: apps/actividadestudios/controller/matricular.php:133
 #: apps/actividadtarifas/controller/tarifa_ajax.php:236
 #: apps/asistentes/controller/update_3101.php:75
@@ -67,15 +67,15 @@ msgstr "questa tassa esiste già per questa attività"
 #: apps/actividadcargos/controller/update_3102.php:161
 #: apps/actividadcargos/controller/update_3102.php:189
 #: apps/actividadcargos/controller/update_3102.php:202
-#: apps/actividades/controller/actividad_update.php:58
-#: apps/actividades/controller/actividad_update.php:70
-#: apps/actividades/controller/actividad_update.php:90
-#: apps/actividades/controller/actividad_update.php:178
-#: apps/actividades/controller/actividad_update.php:306
-#: apps/actividades/controller/actividad_update.php:406
-#: apps/actividades/controller/actividad_update.php:448
-#: apps/actividades/controller/tipo_activ_ajax.php:127
-#: apps/actividades/controller/tipo_activ_ajax.php:142
+#: frontend/actividades/controller/actividad_update.php:58
+#: frontend/actividades/controller/actividad_update.php:70
+#: frontend/actividades/controller/actividad_update.php:90
+#: frontend/actividades/controller/actividad_update.php:178
+#: frontend/actividades/controller/actividad_update.php:306
+#: frontend/actividades/controller/actividad_update.php:406
+#: frontend/actividades/controller/actividad_update.php:448
+#: frontend/actividades/controller/tipo_activ_ajax.php:127
+#: frontend/actividades/controller/tipo_activ_ajax.php:142
 #: apps/actividades/domain/ActividadNueva.php:155
 #: apps/actividades/domain/ActividadNueva.php:184
 #: apps/actividades/model/ActividadNuevoCurso.php:264
@@ -213,8 +213,8 @@ msgid "cargo"
 msgstr "ufficio"
 
 #: apps/actividadcargos/model/Select1302.php:98
-#: apps/actividades/controller/actividad_select.php:320
-#: apps/actividades/controller/lista_sr_csv.php:191
+#: frontend/actividades/controller/actividad_select.php:320
+#: frontend/actividades/controller/lista_sr_csv.php:191
 #: apps/actividadescentro/controller/activ_ctr_ajax.php:342
 #: apps/actividadessacd/controller/activ_sacd_ajax.php:397
 #: apps/actividadestudios/controller/matriculas_lista.php:95
@@ -249,8 +249,8 @@ msgstr "Può essere?"
 #: apps/actividadcargos/model/Select1302.php:100
 #: apps/actividadcargos/model/Select3102.php:94
 #: apps/actividadcargos/model/entity/ActividadCargoAbstract.php:654
-#: apps/actividades/controller/actividad_select.php:333
-#: apps/actividades/controller/lista_activ.php:301
+#: frontend/actividades/controller/actividad_select.php:333
+#: frontend/actividades/controller/lista_activ.php:301
 #: apps/actividades/model/entity/ActividadAll.php:1542
 #: apps/actividadtarifas/controller/tarifa_ajax.php:344
 #: apps/actividadtarifas/model/entity/TipoTarifa.php:512
@@ -338,7 +338,7 @@ msgid "orden cargo"
 msgstr "ordine di carico"
 
 #: apps/actividadcargos/model/entity/Cargo.php:542
-#: apps/actividades/controller/lista_actividades_sg.php:200
+#: frontend/actividades/controller/lista_actividades_sg.php:200
 #: apps/actividadtarifas/controller/tarifa_ajax.php:104
 #: apps/actividadtarifas/controller/tarifa_ajax.php:264
 #: apps/casas/controller/casa_ajax.php:47
@@ -390,35 +390,35 @@ msgstr ""
 msgid "afecta a la actividad: %s"
 msgstr "Influisce sull'attività: %s"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:75
+#: frontend/actividades/controller/actividad_nuevo_curso.php:75
 #, fuzzy
 #| msgid "periodo de selección de actividades"
 msgid "tipo repetición => fechas_new :: nom_activ_new"
 msgstr "periodo di selezione delle attività"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:88
+#: frontend/actividades/controller/actividad_nuevo_curso.php:88
 #, fuzzy, php-format
 #| msgid "%s actividades encontradas"
 msgid "%s actividades copiadas"
 msgstr "%s attività trovate"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:91
+#: frontend/actividades/controller/actividad_nuevo_curso.php:91
 #, fuzzy
 msgid "incidencias al borrar"
 msgstr "Incidenti durante l'eliminazione"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:95
+#: frontend/actividades/controller/actividad_nuevo_curso.php:95
 #, fuzzy
 msgid "errores al crear"
 msgstr "Errori durante la creazione"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:99
+#: frontend/actividades/controller/actividad_nuevo_curso.php:99
 #: frontend/menus/view/traducir_menu.phtml:204
 #, fuzzy
 msgid "solapes"
 msgstr "Sovrapposizioni"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:120
+#: frontend/actividades/controller/actividad_nuevo_curso.php:120
 #, fuzzy, php-format
 msgid ""
 "Este progama eliminará todas las actividades para el nuevo curso (%s) en "
@@ -427,7 +427,7 @@ msgstr ""
 "Questo programma eliminerà tutte le attività per il nuovo corso (%s) nello "
 "stato del progetto"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:121
+#: frontend/actividades/controller/actividad_nuevo_curso.php:121
 #, fuzzy, php-format
 msgid ""
 "Este progama creará las actividades para el nuevo curso (%s) tomando como "
@@ -436,24 +436,24 @@ msgstr ""
 "Questo programma creerà le attività per il nuovo corso (%s) in base a quelle "
 "di questo corso"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:122
+#: frontend/actividades/controller/actividad_nuevo_curso.php:122
 #, fuzzy
 msgid "Las actividades nuevas creadas, quedarán en el estado: proyecto"
 msgstr "Le nuove attività create, rimarranno nello stato: progetto"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:123
+#: frontend/actividades/controller/actividad_nuevo_curso.php:123
 #, fuzzy
 #| msgid "periodo de las actividades"
 msgid "Se copiarán los centros encargados de las actividades"
 msgstr "periodo di attività"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:124
+#: frontend/actividades/controller/actividad_nuevo_curso.php:124
 #, fuzzy
 #| msgid "debe concretar los asistentes en el tipo de actividad"
 msgid "Se crean las fases de cada actividad"
 msgstr "deve specificare gli assistenti nel tipo di attività"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:125
+#: frontend/actividades/controller/actividad_nuevo_curso.php:125
 #, fuzzy
 msgid ""
 "Según el número de actividades, puede tardar un rato (3 minutos). Tómate un "
@@ -462,40 +462,40 @@ msgstr ""
 "A seconda del numero di attività, potrebbe essere necessario un po 'di tempo "
 "(3 minuti). Prendi un caffè..."
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:127
+#: frontend/actividades/controller/actividad_nuevo_curso.php:127
 #, fuzzy
 #| msgid "situación"
 msgid "atención"
 msgstr "situazione"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:146
+#: frontend/actividades/controller/actividad_nuevo_curso.php:146
 #, fuzzy
 #| msgid "id origen"
 msgid "año origen:"
 msgstr "origine id"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:152
+#: frontend/actividades/controller/actividad_nuevo_curso.php:152
 #, fuzzy
 #| msgid "destino"
 msgid "año destino:"
 msgstr "destinazione"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:159
+#: frontend/actividades/controller/actividad_nuevo_curso.php:159
 #, fuzzy
 #| msgid "listados"
 msgid "Ver listado"
 msgstr "annunci"
 
-#: apps/actividades/controller/actividad_nuevo_curso.php:161
+#: frontend/actividades/controller/actividad_nuevo_curso.php:161
 #, fuzzy
 #| msgid "crear nuevo"
 msgid "generar nuevo curso"
 msgstr "crea nuovo"
 
-#: apps/actividades/controller/actividad_que.php:147
-#: apps/actividades/controller/actividades_centro_que.php:120
-#: apps/actividades/controller/lista_actividades_sg.php:347
-#: apps/actividades/controller/lista_sr_csv_que.php:28
+#: frontend/actividades/controller/actividad_que.php:147
+#: frontend/actividades/controller/actividades_centro_que.php:120
+#: frontend/actividades/controller/lista_actividades_sg.php:347
+#: frontend/actividades/controller/lista_sr_csv_que.php:28
 #: apps/actividadescentro/controller/activ_ctr.php:36
 #: apps/actividadessacd/controller/activ_sacd.php:40
 #: apps/actividadessacd/controller/com_sacd_activ_periodo.php:60
@@ -517,10 +517,10 @@ msgstr "crea nuovo"
 msgid "todo el año"
 msgstr "tutto l'anno"
 
-#: apps/actividades/controller/actividad_que.php:148
-#: apps/actividades/controller/actividades_centro_que.php:121
-#: apps/actividades/controller/lista_actividades_sg.php:348
-#: apps/actividades/controller/lista_sr_csv_que.php:29
+#: frontend/actividades/controller/actividad_que.php:148
+#: frontend/actividades/controller/actividades_centro_que.php:121
+#: frontend/actividades/controller/lista_actividades_sg.php:348
+#: frontend/actividades/controller/lista_sr_csv_que.php:29
 #: apps/actividadescentro/controller/activ_ctr.php:37
 #: apps/actividadessacd/controller/activ_sacd.php:41
 #: apps/actividadessacd/controller/com_sacd_activ_periodo.php:61
@@ -541,10 +541,10 @@ msgstr "tutto l'anno"
 msgid "primer trimestre"
 msgstr "primo trimestre"
 
-#: apps/actividades/controller/actividad_que.php:149
-#: apps/actividades/controller/actividades_centro_que.php:122
-#: apps/actividades/controller/lista_actividades_sg.php:349
-#: apps/actividades/controller/lista_sr_csv_que.php:30
+#: frontend/actividades/controller/actividad_que.php:149
+#: frontend/actividades/controller/actividades_centro_que.php:122
+#: frontend/actividades/controller/lista_actividades_sg.php:349
+#: frontend/actividades/controller/lista_sr_csv_que.php:30
 #: apps/actividadescentro/controller/activ_ctr.php:38
 #: apps/actividadessacd/controller/activ_sacd.php:42
 #: apps/actividadessacd/controller/com_sacd_activ_periodo.php:62
@@ -565,10 +565,10 @@ msgstr "primo trimestre"
 msgid "segundo trimestre"
 msgstr "secondo trimestre"
 
-#: apps/actividades/controller/actividad_que.php:150
-#: apps/actividades/controller/actividades_centro_que.php:123
-#: apps/actividades/controller/lista_actividades_sg.php:350
-#: apps/actividades/controller/lista_sr_csv_que.php:31
+#: frontend/actividades/controller/actividad_que.php:150
+#: frontend/actividades/controller/actividades_centro_que.php:123
+#: frontend/actividades/controller/lista_actividades_sg.php:350
+#: frontend/actividades/controller/lista_sr_csv_que.php:31
 #: apps/actividadescentro/controller/activ_ctr.php:39
 #: apps/actividadessacd/controller/activ_sacd.php:43
 #: apps/actividadessacd/controller/com_sacd_activ_periodo.php:63
@@ -589,10 +589,10 @@ msgstr "secondo trimestre"
 msgid "tercer trimestre"
 msgstr "terzo trimestre"
 
-#: apps/actividades/controller/actividad_que.php:151
-#: apps/actividades/controller/actividades_centro_que.php:124
-#: apps/actividades/controller/lista_actividades_sg.php:351
-#: apps/actividades/controller/lista_sr_csv_que.php:32
+#: frontend/actividades/controller/actividad_que.php:151
+#: frontend/actividades/controller/actividades_centro_que.php:124
+#: frontend/actividades/controller/lista_actividades_sg.php:351
+#: frontend/actividades/controller/lista_sr_csv_que.php:32
 #: apps/actividadescentro/controller/activ_ctr.php:40
 #: apps/actividadessacd/controller/activ_sacd.php:44
 #: apps/actividadessacd/controller/com_sacd_activ_periodo.php:64
@@ -613,10 +613,10 @@ msgstr "terzo trimestre"
 msgid "cuarto trimestre"
 msgstr "quarto trimestre"
 
-#: apps/actividades/controller/actividad_que.php:153
-#: apps/actividades/controller/actividades_centro_que.php:126
-#: apps/actividades/controller/lista_actividades_sg.php:353
-#: apps/actividades/controller/lista_sr_csv_que.php:34
+#: frontend/actividades/controller/actividad_que.php:153
+#: frontend/actividades/controller/actividades_centro_que.php:126
+#: frontend/actividades/controller/lista_actividades_sg.php:353
+#: frontend/actividades/controller/lista_sr_csv_que.php:34
 #: apps/actividadestudios/controller/actualizar_docencia.php:45
 #: apps/actividadestudios/controller/matriculas_lista.php:218
 #: apps/actividadplazas/controller/gestion_plazas.php:247
@@ -626,20 +626,20 @@ msgstr "quarto trimestre"
 msgid "curso ca"
 msgstr "corso ca"
 
-#: apps/actividades/controller/actividad_que.php:154
-#: apps/actividades/controller/actividades_centro_que.php:127
-#: apps/actividades/controller/lista_actividades_sg.php:354
-#: apps/actividades/controller/lista_sr_csv_que.php:35
+#: frontend/actividades/controller/actividad_que.php:154
+#: frontend/actividades/controller/actividades_centro_que.php:127
+#: frontend/actividades/controller/lista_actividades_sg.php:354
+#: frontend/actividades/controller/lista_sr_csv_que.php:35
 #: apps/actividadplazas/controller/gestion_plazas.php:248
 #: apps/asistentes/controller/que_ctr_lista.php:127
 #: frontend/inventario/controller/equipajes_nuevo.php:26
 msgid "curso crt"
 msgstr "corso crt"
 
-#: apps/actividades/controller/actividad_que.php:156
-#: apps/actividades/controller/actividades_centro_que.php:129
-#: apps/actividades/controller/lista_actividades_sg.php:356
-#: apps/actividades/controller/lista_sr_csv_que.php:37
+#: frontend/actividades/controller/actividad_que.php:156
+#: frontend/actividades/controller/actividades_centro_que.php:129
+#: frontend/actividades/controller/lista_actividades_sg.php:356
+#: frontend/actividades/controller/lista_sr_csv_que.php:37
 #: apps/actividadescentro/controller/activ_ctr.php:42
 #: apps/actividadessacd/controller/activ_sacd.php:46
 #: apps/actividadessacd/controller/com_sacd_activ_periodo.php:66
@@ -667,37 +667,37 @@ msgstr "corso crt"
 msgid "otro"
 msgstr "altro"
 
-#: apps/actividades/controller/actividad_que.php:199
+#: frontend/actividades/controller/actividad_que.php:199
 msgid "buscar actividad de otras dl para importar"
 msgstr "cercare altre attività dl da importare"
 
-#: apps/actividades/controller/actividad_que.php:202
+#: frontend/actividades/controller/actividad_que.php:202
 msgid "buscar actividades de mi dl para publicar"
 msgstr "cerca le mie attività dl da pubblicare"
 
-#: apps/actividades/controller/actividad_que.php:205
+#: frontend/actividades/controller/actividad_que.php:205
 msgid "buscar actividad"
 msgstr "attività di ricerca"
 
-#: apps/actividades/controller/actividad_select.php:255
+#: frontend/actividades/controller/actividad_select.php:255
 #: frontend/menus/view/menus_importar_form.phtml:34
 #: frontend/menus/view/traducir_menu.phtml:335
 #: frontend/menus/view/traducir_menu.phtml:346
 msgid "importar"
 msgstr "importazione"
 
-#: apps/actividades/controller/actividad_select.php:259
-#: apps/actividades/controller/actividad_select.php:269
-#: apps/actividades/controller/actividad_select.php:271
+#: frontend/actividades/controller/actividad_select.php:259
+#: frontend/actividades/controller/actividad_select.php:269
+#: frontend/actividades/controller/actividad_select.php:271
 msgid "datos"
 msgstr "dati"
 
-#: apps/actividades/controller/actividad_select.php:261
+#: frontend/actividades/controller/actividad_select.php:261
 msgid "publicar"
 msgstr "pubblicare"
 
-#: apps/actividades/controller/actividad_select.php:265
-#: apps/actividades/controller/actividad_select.php:302
+#: frontend/actividades/controller/actividad_select.php:265
+#: frontend/actividades/controller/actividad_select.php:302
 #: apps/actividadestudios/controller/matriculas_lista_otras_r.php:55
 #: apps/asignaturas/model/InfoAsignaturas.php:14
 #: apps/asistentes/controller/lista_est_ctr.php:216
@@ -707,11 +707,11 @@ msgstr "pubblicare"
 msgid "asignaturas"
 msgstr "soggetti"
 
-#: apps/actividades/controller/actividad_select.php:276
+#: frontend/actividades/controller/actividad_select.php:276
 msgid "duplicar"
 msgstr "duplicare"
 
-#: apps/actividades/controller/actividad_select.php:279
+#: frontend/actividades/controller/actividad_select.php:279
 #: apps/cambios/controller/avisos_generar.php:142
 #: apps/dbextern/controller/ver_orbix.php:217
 #: apps/notas/controller/comprobar_notas.php:492
@@ -730,40 +730,40 @@ msgstr "duplicare"
 msgid "borrar"
 msgstr "cancellare"
 
-#: apps/actividades/controller/actividad_select.php:280
+#: frontend/actividades/controller/actividad_select.php:280
 #, fuzzy
 #| msgid "cambiar actividad"
 msgid "cambiar tipo"
 msgstr "cambiare attività"
 
-#: apps/actividades/controller/actividad_select.php:284
-#: apps/actividades/controller/lista_actividades_sg.php:191
+#: frontend/actividades/controller/actividad_select.php:284
+#: frontend/actividades/controller/lista_actividades_sg.php:191
 msgid "cargos"
 msgstr "oneri"
 
-#: apps/actividades/controller/actividad_select.php:285
+#: frontend/actividades/controller/actividad_select.php:285
 msgid "lista cl"
 msgstr "lista classica"
 
-#: apps/actividades/controller/actividad_select.php:288
-#: apps/actividades/controller/lista_actividades_sg.php:192
+#: frontend/actividades/controller/actividad_select.php:288
+#: frontend/actividades/controller/lista_actividades_sg.php:192
 #: apps/casas/controller/casa_ajax.php:102
 #: apps/actividadestudios/view/plan_estudios_ca.phtml:38
 msgid "asistentes"
 msgstr "partecipanti"
 
-#: apps/actividades/controller/actividad_select.php:289
+#: frontend/actividades/controller/actividad_select.php:289
 #, fuzzy
 #| msgid "guardar peticiones"
 msgid "otras peticiones"
 msgstr "salva richieste"
 
-#: apps/actividades/controller/actividad_select.php:290
-#: apps/actividades/controller/lista_actividades_sg.php:193
+#: frontend/actividades/controller/actividad_select.php:290
+#: frontend/actividades/controller/lista_actividades_sg.php:193
 msgid "lista"
 msgstr "lista"
 
-#: apps/actividades/controller/actividad_select.php:294
+#: frontend/actividades/controller/actividad_select.php:294
 #: apps/actividades/model/entity/ActividadAll.php:1655
 #: apps/actividadplazas/model/entity/ActividadPlazas.php:516
 #: apps/casas/controller/prevision_asistentes.php:129
@@ -775,31 +775,31 @@ msgstr "lista"
 msgid "plazas"
 msgstr "posti a sedere"
 
-#: apps/actividades/controller/actividad_select.php:297
+#: frontend/actividades/controller/actividad_select.php:297
 #: apps/procesos/controller/tipo_activ_proceso_ajax.php:40
 #, fuzzy
 #| msgid "procesos activ."
 msgid "proceso"
 msgstr "processi attivi"
 
-#: apps/actividades/controller/actividad_select.php:307
+#: frontend/actividades/controller/actividad_select.php:307
 #: apps/asistentes/model/Select3101.php:146
 #: apps/personas/controller/personas_select.php:345
 msgid "plan estudios"
 msgstr "pianificare gli studi"
 
-#: apps/actividades/controller/actividad_select.php:310
+#: frontend/actividades/controller/actividad_select.php:310
 msgid "listas de clase"
 msgstr "liste di classe"
 
-#: apps/actividades/controller/actividad_select.php:311
+#: frontend/actividades/controller/actividad_select.php:311
 #, fuzzy
 #| msgid "tipo de asignatura"
 msgid "posibles asignaturas"
 msgstr "tipo di soggetto"
 
-#: apps/actividades/controller/actividad_select.php:318
-#: apps/actividades/controller/lista_actividades_sg.php:198
+#: frontend/actividades/controller/actividad_select.php:318
+#: frontend/actividades/controller/lista_actividades_sg.php:198
 #: apps/actividadestudios/model/Select3005.php:87
 #: apps/casas/controller/casa_ajax.php:366
 #: apps/profesores/controller/congresos.php:27
@@ -807,8 +807,8 @@ msgstr "tipo di soggetto"
 msgid "inicio"
 msgstr "iniziazione"
 
-#: apps/actividades/controller/actividad_select.php:319
-#: apps/actividades/controller/lista_actividades_sg.php:199
+#: frontend/actividades/controller/actividad_select.php:319
+#: frontend/actividades/controller/lista_actividades_sg.php:199
 #: apps/actividadestudios/model/Select3005.php:88
 #: apps/casas/controller/casa_ajax.php:367
 #: apps/profesores/controller/congresos.php:28
@@ -816,17 +816,17 @@ msgstr "iniziazione"
 msgid "fin"
 msgstr "fine"
 
-#: apps/actividades/controller/actividad_select.php:321
-#: apps/actividades/controller/lista_activ.php:281
+#: frontend/actividades/controller/actividad_select.php:321
+#: frontend/actividades/controller/lista_activ.php:281
 #: apps/casas/controller/casa_ajax.php:587
 #: apps/encargossacd/controller/encargo_horario_select.php:55
 msgid "hora ini"
 msgstr "ini tempo"
 
-#: apps/actividades/controller/actividad_select.php:322
-#: apps/actividades/controller/calendario_listas.php:342
-#: apps/actividades/controller/calendario_listas.php:354
-#: apps/actividades/controller/lista_activ.php:285
+#: frontend/actividades/controller/actividad_select.php:322
+#: frontend/actividades/controller/calendario_listas.php:342
+#: frontend/actividades/controller/calendario_listas.php:354
+#: frontend/actividades/controller/lista_activ.php:285
 #: apps/actividades/model/entity/ActividadAll.php:1458
 #: apps/casas/controller/casa_ajax.php:589
 #: apps/encargossacd/controller/encargo_horario_select.php:56
@@ -835,20 +835,20 @@ msgstr "ini tempo"
 msgid "hora fin"
 msgstr "ora di fine"
 
-#: apps/actividades/controller/actividad_select.php:325
+#: frontend/actividades/controller/actividad_select.php:325
 #: apps/casas/controller/casa_ajax.php:590
 msgid "sf/sv"
 msgstr "sf / sv"
 
-#: apps/actividades/controller/actividad_select.php:327
-#: apps/actividades/controller/lista_activ.php:296
+#: frontend/actividades/controller/actividad_select.php:327
+#: frontend/actividades/controller/lista_activ.php:296
 #: apps/casas/controller/casa_ajax.php:595
 msgid "tar."
 msgstr "tar."
 
-#: apps/actividades/controller/actividad_select.php:329
-#: apps/actividades/controller/lista_activ.php:300
-#: apps/actividades/controller/lista_actividades_sg.php:205
+#: frontend/actividades/controller/actividad_select.php:329
+#: frontend/actividades/controller/lista_activ.php:300
+#: frontend/actividades/controller/lista_actividades_sg.php:205
 #: apps/actividadessacd/controller/activ_sacd_ajax.php:266
 #: apps/actividadessacd/controller/activ_sacd_ajax.php:632
 #: apps/cambios/model/GestorAvisoCambios.php:35
@@ -865,14 +865,14 @@ msgstr "tar."
 msgid "sacd"
 msgstr "SACD"
 
-#: apps/actividades/controller/actividad_select.php:330
+#: frontend/actividades/controller/actividad_select.php:330
 #: apps/actividadplazas/controller/plazas_balance_dl.php:191
 msgid "dl org"
 msgstr "dl org"
 
-#: apps/actividades/controller/actividad_select.php:332
-#: apps/actividades/controller/lista_activ.php:298
-#: apps/actividades/controller/lista_sr_csv.php:194
+#: frontend/actividades/controller/actividad_select.php:332
+#: frontend/actividades/controller/lista_activ.php:298
+#: frontend/actividades/controller/lista_sr_csv.php:194
 #: apps/actividadescentro/controller/activ_ctr_ajax.php:156
 #: apps/actividadescentro/controller/activ_ctr_ajax.php:172
 #: apps/actividadescentro/controller/activ_ctr_ajax.php:188
@@ -920,46 +920,46 @@ msgstr "dl org"
 msgid "centro"
 msgstr "centro"
 
-#: apps/actividades/controller/actividad_select.php:358
-#: apps/actividades/controller/lista_actividades_sg.php:214
+#: frontend/actividades/controller/actividad_select.php:358
+#: frontend/actividades/controller/lista_actividades_sg.php:214
 #, php-format
 msgid "son %s actividades a mostrar. ¿Seguro que quiere continuar?."
 msgstr "sono %s attività da mostrare. Sei sicuro di voler continuare?"
 
-#: apps/actividades/controller/actividad_select.php:359
-#: apps/actividades/controller/lista_actividades_sg.php:215
+#: frontend/actividades/controller/actividad_select.php:359
+#: frontend/actividades/controller/lista_actividades_sg.php:215
 #: src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php:42
 msgid "continuar"
 msgstr "continuare"
 
-#: apps/actividades/controller/actividad_select.php:360
-#: apps/actividades/controller/lista_actividades_sg.php:216
+#: frontend/actividades/controller/actividad_select.php:360
+#: frontend/actividades/controller/lista_actividades_sg.php:216
 msgid "volver"
 msgstr "torna indietro"
 
-#: apps/actividades/controller/actividad_select.php:466
-#: apps/actividades/controller/lista_actividades_sg.php:276
+#: frontend/actividades/controller/actividad_select.php:466
+#: frontend/actividades/controller/lista_actividades_sg.php:276
 #, php-format
 msgid "ocupado %s (%s-%s)"
 msgstr "occupato %s ( %s - %s )"
 
-#: apps/actividades/controller/actividad_select.php:580
+#: frontend/actividades/controller/actividad_select.php:580
 #, fuzzy, php-format
 msgid "no se encuentra el ubi para la actividad: %s"
 msgstr "Impossibile trovare l'UBI per l'attività: %s"
 
-#: apps/actividades/controller/actividad_select.php:608
-#: apps/actividades/controller/lista_actividades_sg.php:406
+#: frontend/actividades/controller/actividad_select.php:608
+#: frontend/actividades/controller/lista_actividades_sg.php:406
 #, php-format
 msgid "%s actividades encontradas (%s sin permiso)"
 msgstr "%s attività trovate ( %s senza permesso)"
 
-#: apps/actividades/controller/actividad_select.php:610
+#: frontend/actividades/controller/actividad_select.php:610
 #, php-format
 msgid "%s actividades encontradas"
 msgstr "%s attività trovate"
 
-#: apps/actividades/controller/actividad_select.php:617
+#: frontend/actividades/controller/actividad_select.php:617
 #: apps/asistentes/controller/lista_ultima_activ.php:117
 #: apps/casas/controller/prevision_asistentes.php:192
 #, fuzzy, php-format
@@ -967,17 +967,17 @@ msgstr "%s attività trovate"
 msgid "entre %s y %s"
 msgstr "registra %s di %s"
 
-#: apps/actividades/controller/actividad_select.php:671
+#: frontend/actividades/controller/actividad_select.php:671
 #, fuzzy
 msgid "del mismo tipo"
 msgstr "dello stesso tipo"
 
-#: apps/actividades/controller/actividad_select_ubi.php:96
+#: frontend/actividades/controller/actividad_select_ubi.php:96
 msgid "no olvides ajustar el nombre de la actividad"
 msgstr "non dimenticare di modificare il nome dell'attività"
 
-#: apps/actividades/controller/actividad_tipo_get.php:94
-#: apps/actividades/controller/tipo_activ_ajax.php:70
+#: frontend/actividades/controller/actividad_tipo_get.php:94
+#: frontend/actividades/controller/tipo_activ_ajax.php:70
 #: apps/actividadestudios/controller/matriculas_lista_otras_r.php:56
 #: apps/devel/model/entity/DbSchema.php:389
 #: apps/encargossacd/controller/encargo_horario_select.php:50
@@ -986,9 +986,9 @@ msgstr "non dimenticare di modificare il nome dell'attività"
 msgid "id"
 msgstr "id"
 
-#: apps/actividades/controller/actividad_tipo_get.php:94
-#: apps/actividades/controller/tipo_activ_ajax.php:71
-#: apps/actividades/controller/tipo_activ_ajax.php:102
+#: frontend/actividades/controller/actividad_tipo_get.php:94
+#: frontend/actividades/controller/tipo_activ_ajax.php:71
+#: frontend/actividades/controller/tipo_activ_ajax.php:102
 #: apps/actividades/model/entity/TipoDeActividad.php:645
 #: apps/asistentes/controller/lista_est_ctr.php:214
 #: apps/asistentes/controller/tabla_peticiones.php:69
@@ -1022,12 +1022,12 @@ msgstr "id"
 msgid "nombre"
 msgstr "nome"
 
-#: apps/actividades/controller/actividad_tipo_get.php:155
-#: apps/actividades/controller/actividad_update.php:465
-#: apps/actividades/controller/calendario_listas.php:129
-#: apps/actividades/controller/calendario_listas.php:173
-#: apps/actividades/controller/calendario_listas.php:220
-#: apps/actividades/controller/calendario_listas.php:361
+#: frontend/actividades/controller/actividad_tipo_get.php:155
+#: frontend/actividades/controller/actividad_update.php:465
+#: frontend/actividades/controller/calendario_listas.php:129
+#: frontend/actividades/controller/calendario_listas.php:173
+#: frontend/actividades/controller/calendario_listas.php:220
+#: frontend/actividades/controller/calendario_listas.php:361
 #: apps/asistentes/controller/update_3101.php:201
 #: apps/cartaspresentacion/controller/cartas_presentacion_ajax.php:486
 #: apps/config/model/Config.php:301 apps/core/ConverterDate.php:39
@@ -1051,33 +1051,33 @@ msgstr "nome"
 msgid "opción no definida en switch en %s, linea %s"
 msgstr "Opzione non definita nell'interruttore in %s, riga %s"
 
-#: apps/actividades/controller/actividad_update.php:104
+#: frontend/actividades/controller/actividad_update.php:104
 #: apps/actividades/domain/ActividadNueva.php:163
 msgid "hay un error, no se ha importado"
 msgstr "c'è un errore, non è stato importato"
 
-#: apps/actividades/controller/actividad_update.php:119
-#: apps/actividades/controller/actividad_update.php:274
-#: apps/actividades/controller/actividad_update.php:356
+#: frontend/actividades/controller/actividad_update.php:119
+#: frontend/actividades/controller/actividad_update.php:274
+#: frontend/actividades/controller/actividad_update.php:356
 msgid "debe seleccionar un tipo de actividad"
 msgstr "devi selezionare un tipo di attività"
 
-#: apps/actividades/controller/actividad_update.php:170
+#: frontend/actividades/controller/actividad_update.php:170
 msgid "no se puede duplicar actividades que no sean de la propia dl"
 msgstr "non puoi duplicare attività che non sono tue dl"
 
-#: apps/actividades/controller/actividad_update.php:174
+#: frontend/actividades/controller/actividad_update.php:174
 msgid "dup"
 msgstr "dup"
 
-#: apps/actividades/controller/actividad_update.php:200
-#: apps/actividades/controller/actividad_update.php:219
+#: frontend/actividades/controller/actividad_update.php:200
+#: frontend/actividades/controller/actividad_update.php:219
 #, fuzzy
 #| msgid "no tiene permisos para ver esto"
 msgid "No tiene permiso para borrar esta actividad"
 msgstr "non hai il permesso di vederlo"
 
-#: apps/actividades/controller/actividad_ver.php:69
+#: frontend/actividades/controller/actividad_ver.php:69
 #: apps/dossiers/controller/dossiers_ver.php:174
 #: apps/personas/controller/personas_select.php:291
 #: apps/procesos/controller/actividad_proceso.php:38
@@ -1090,7 +1090,7 @@ msgstr "non hai il permesso di vederlo"
 msgid "ver dossiers"
 msgstr "vedi fascicoli"
 
-#: apps/actividades/controller/actividad_ver.php:70
+#: frontend/actividades/controller/actividad_ver.php:70
 #: apps/dossiers/controller/dossiers_ver.php:175
 #: apps/procesos/controller/actividad_proceso.php:39
 #: apps/ubis/controller/home_ubis.php:140
@@ -1102,29 +1102,29 @@ msgstr "vedi fascicoli"
 msgid "dossiers"
 msgstr "dossier"
 
-#: apps/actividades/controller/actividad_ver.php:210
-#: apps/actividades/controller/actividad_ver.php:226
+#: frontend/actividades/controller/actividad_ver.php:210
+#: frontend/actividades/controller/actividad_ver.php:226
 #: apps/actividades/domain/ActividadNueva.php:96
 #, fuzzy
 #| msgid "no tiene permisos para ver esto"
 msgid "No tiene permiso para crear una actividad de este tipo"
 msgstr "non hai il permesso di vederlo"
 
-#: apps/actividades/controller/actividad_ver.php:244
+#: frontend/actividades/controller/actividad_ver.php:244
 #, fuzzy
 #| msgid "no existe esta ficha"
 msgid "ya no existe: cambiarlo"
 msgstr "questa scheda non esiste"
 
-#: apps/actividades/controller/actividad_ver.php:256
-#: apps/actividades/controller/lista_actividades_sg.php:294
-#: apps/actividades/controller/planning_casa_modificar.php:86
-#: apps/actividades/controller/planning_casa_nueva.php:81
+#: frontend/actividades/controller/actividad_ver.php:256
+#: frontend/actividades/controller/lista_actividades_sg.php:294
+#: frontend/actividades/controller/planning_casa_modificar.php:86
+#: frontend/actividades/controller/planning_casa_nueva.php:81
 #: apps/actividades/view/actividad_select_ubi.phtml:228
 msgid "sin determinar"
 msgstr "non determinato"
 
-#: apps/actividades/controller/actividades_centro_que.php:116
+#: frontend/actividades/controller/actividades_centro_que.php:116
 #: apps/casas/controller/casa_ec_que.php:73
 #: apps/casas/controller/casa_que.php:80
 #, fuzzy
@@ -1132,8 +1132,8 @@ msgstr "non determinato"
 msgid "resumen económico"
 msgstr "sommario eccezionale"
 
-#: apps/actividades/controller/actividades_centro_que.php:117
-#: apps/actividades/controller/actividades_centro_que.php:141
+#: frontend/actividades/controller/actividades_centro_que.php:117
+#: frontend/actividades/controller/actividades_centro_que.php:141
 #: apps/actividadescentro/controller/activ_ctr.php:50
 #: apps/actividadessacd/controller/activ_sacd.php:54
 #: apps/actividadessacd/controller/com_sacd_activ_periodo.php:73
@@ -1177,36 +1177,36 @@ msgstr "sommario eccezionale"
 msgid "buscar"
 msgstr "ricerca"
 
-#: apps/actividades/controller/actividades_centro_que.php:139
+#: frontend/actividades/controller/actividades_centro_que.php:139
 #, fuzzy
 #| msgid "debe seleccionar un centro o grupo de centros"
 msgid "seleccionar un centro y un período"
 msgstr "devi selezionare un centro o un gruppo di centri"
 
-#: apps/actividades/controller/calendario_listas.php:246
+#: frontend/actividades/controller/calendario_listas.php:246
 #, fuzzy, php-format
 #| msgid "esta actividad no tiene ninguna asignatura"
 msgid "La actividad: %s  No tiene lugar asignado"
 msgstr "questa attività non ha alcun soggetto"
 
-#: apps/actividades/controller/calendario_listas.php:287
+#: frontend/actividades/controller/calendario_listas.php:287
 #: apps/casas/controller/casa_ajax.php:526
 #, fuzzy
 #| msgid "ocupadas"
 msgid "ocupado"
 msgstr "occupato"
 
-#: apps/actividades/controller/calendario_listas.php:338
-#: apps/actividades/controller/calendario_listas.php:349
+#: frontend/actividades/controller/calendario_listas.php:338
+#: frontend/actividades/controller/calendario_listas.php:349
 #, fuzzy
 msgid "sv/sf"
 msgstr "SV/SF"
 
-#: apps/actividades/controller/calendario_listas.php:339
-#: apps/actividades/controller/calendario_listas.php:350
-#: apps/actividades/controller/lista_activ.php:292
-#: apps/actividades/controller/lista_sr_csv.php:192
-#: apps/actividades/controller/tipo_activ_ajax.php:29
+#: frontend/actividades/controller/calendario_listas.php:339
+#: frontend/actividades/controller/calendario_listas.php:350
+#: frontend/actividades/controller/lista_activ.php:292
+#: frontend/actividades/controller/lista_sr_csv.php:192
+#: frontend/actividades/controller/tipo_activ_ajax.php:29
 #: apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php:76
 #: apps/asistentes/controller/lista_ultima_activ.php:274
 #: apps/casas/controller/casa_ajax.php:593
@@ -1216,30 +1216,30 @@ msgstr "SV/SF"
 msgid "tipo actividad"
 msgstr "tipo di attività"
 
-#: apps/actividades/controller/calendario_listas.php:340
-#: apps/actividades/controller/calendario_listas.php:352
+#: frontend/actividades/controller/calendario_listas.php:340
+#: frontend/actividades/controller/calendario_listas.php:352
 #: apps/asistentes/model/Select1301.php:97
 msgid "fechas"
 msgstr "date"
 
-#: apps/actividades/controller/calendario_listas.php:341
-#: apps/actividades/controller/calendario_listas.php:353
+#: frontend/actividades/controller/calendario_listas.php:341
+#: frontend/actividades/controller/calendario_listas.php:353
 #: apps/actividades/model/entity/ActividadAll.php:1429
 #: apps/encargossacd/controller/horario_sacd_ver.php:260
 #: apps/pasarela/controller/exportar_select.php:116
 msgid "hora inicio"
 msgstr "ora di inizio"
 
-#: apps/actividades/controller/calendario_listas.php:343
-#: apps/actividades/controller/calendario_listas.php:355
+#: frontend/actividades/controller/calendario_listas.php:343
+#: frontend/actividades/controller/calendario_listas.php:355
 #: apps/casas/controller/casa_ajax.php:370
 #, fuzzy
 #| msgid "asistentes"
 msgid "asistentes previstos"
 msgstr "partecipanti"
 
-#: apps/actividades/controller/calendario_listas.php:344
-#: apps/actividades/controller/calendario_listas.php:356
+#: frontend/actividades/controller/calendario_listas.php:344
+#: frontend/actividades/controller/calendario_listas.php:356
 #: apps/actividadtarifas/controller/tarifa_ajax.php:271
 #: apps/actividadtarifas/model/entity/TipoActivTarifa.php:495
 #: apps/casas/controller/calendario_ubi_resumen_ajax.php:265
@@ -1248,20 +1248,20 @@ msgstr "partecipanti"
 msgid "id_tarifa"
 msgstr "tasso"
 
-#: apps/actividades/controller/calendario_listas.php:345
-#: apps/actividades/controller/calendario_listas.php:357
+#: frontend/actividades/controller/calendario_listas.php:345
+#: frontend/actividades/controller/calendario_listas.php:357
 #, fuzzy
 #| msgid "centro y encargos"
 msgid "centros encargados"
 msgstr "centro e commissioni"
 
-#: apps/actividades/controller/calendario_listas.php:351
+#: frontend/actividades/controller/calendario_listas.php:351
 #: apps/ubis/model/entity/Centro.php:456
 msgid "cdc"
 msgstr "cdc"
 
-#: apps/actividades/controller/lista_activ.php:249
-#: apps/actividades/controller/lista_sr_csv.php:183
+#: frontend/actividades/controller/lista_activ.php:249
+#: frontend/actividades/controller/lista_sr_csv.php:183
 #: apps/actividadessacd/controller/activ_sacd_ajax.php:394
 #: apps/casas/controller/prevision_asistentes.php:183
 #, fuzzy
@@ -1269,21 +1269,21 @@ msgstr "cdc"
 msgid "listado de actividades"
 msgstr "vai al dossier di attività"
 
-#: apps/actividades/controller/lista_activ.php:276
+#: frontend/actividades/controller/lista_activ.php:276
 #, fuzzy
 msgid "común"
 msgstr "comune"
 
-#: apps/actividades/controller/lista_activ.php:278
-#: apps/actividades/controller/lista_sr_csv.php:187
+#: frontend/actividades/controller/lista_activ.php:278
+#: frontend/actividades/controller/lista_sr_csv.php:187
 #: apps/casas/controller/casa_ajax.php:586
 #: frontend/inventario/controller/equipajes_lista_activ_periodo.php:44
 #, fuzzy
 msgid "empieza"
 msgstr "Inizia"
 
-#: apps/actividades/controller/lista_activ.php:283
-#: apps/actividades/controller/lista_sr_csv.php:188
+#: frontend/actividades/controller/lista_activ.php:283
+#: frontend/actividades/controller/lista_sr_csv.php:188
 #: apps/casas/controller/casa_ajax.php:588
 #: frontend/inventario/controller/equipajes_lista_activ_periodo.php:45
 #, fuzzy
@@ -1291,25 +1291,25 @@ msgstr "Inizia"
 msgid "termina"
 msgstr "finito"
 
-#: apps/actividades/controller/lista_activ.php:290
+#: frontend/actividades/controller/lista_activ.php:290
 #: apps/casas/controller/casa_ajax.php:591
 #, fuzzy
 #| msgid "activo"
 msgid "activ."
 msgstr "attivo"
 
-#: apps/actividades/controller/lista_activ.php:291
-#: apps/actividades/controller/lista_actividades_sg.php:202
-#: apps/actividades/controller/lista_sr_csv.php:190
+#: frontend/actividades/controller/lista_activ.php:291
+#: frontend/actividades/controller/lista_actividades_sg.php:202
+#: frontend/actividades/controller/lista_sr_csv.php:190
 #: apps/casas/controller/casa_ajax.php:592
 #, fuzzy
 #| msgid "no asiste"
 msgid "asist."
 msgstr "non frequenta"
 
-#: apps/actividades/controller/lista_activ.php:293
-#: apps/actividades/controller/lista_actividades_sg.php:203
-#: apps/actividades/controller/lista_sr_csv.php:193
+#: frontend/actividades/controller/lista_activ.php:293
+#: frontend/actividades/controller/lista_actividades_sg.php:203
+#: frontend/actividades/controller/lista_sr_csv.php:193
 #: apps/casas/controller/casa_ajax.php:594
 #: apps/encargossacd/controller/encargo_select.php:61
 #: apps/notas/model/entity/Acta.php:943
@@ -1328,36 +1328,36 @@ msgstr "non frequenta"
 msgid "lugar"
 msgstr "posto"
 
-#: apps/actividades/controller/lista_activ.php:398
+#: frontend/actividades/controller/lista_activ.php:398
 #, fuzzy
 #| msgid "asistentes"
 msgid "ver asistentes"
 msgstr "partecipanti"
 
-#: apps/actividades/controller/lista_activ_que.php:51
+#: frontend/actividades/controller/lista_activ_que.php:51
 #, fuzzy
 #| msgid "todas las actividades sf"
 msgid "datos del listado actividades san rafael sf"
 msgstr "tutte le attività sf"
 
-#: apps/actividades/controller/lista_activ_que.php:56
+#: frontend/actividades/controller/lista_activ_que.php:56
 #, fuzzy
 #| msgid "todas las actividades sf"
 msgid "datos del listado actividades san rafael"
 msgstr "tutte le attività sf"
 
-#: apps/actividades/controller/lista_activ_que.php:61
+#: frontend/actividades/controller/lista_activ_que.php:61
 #, fuzzy
 #| msgid "todas las actividades sv"
 msgid "datos del listado actividades san gabriel"
 msgstr "tutte le attività sv"
 
-#: apps/actividades/controller/lista_actividades_sg.php:194
+#: frontend/actividades/controller/lista_actividades_sg.php:194
 #, fuzzy
 msgid "ctrs org"
 msgstr "Ctrs org"
 
-#: apps/actividades/controller/lista_actividades_sg.php:201
+#: frontend/actividades/controller/lista_actividades_sg.php:201
 #: apps/actividades/model/entity/Repeticion.php:454
 #: apps/actividadestudios/model/Select3005.php:84
 #: apps/actividadestudios/model/entity/ActividadAsignatura.php:594
@@ -1381,12 +1381,12 @@ msgstr "Ctrs org"
 msgid "tipo"
 msgstr "tipo"
 
-#: apps/actividades/controller/lista_actividades_sg.php:204
+#: frontend/actividades/controller/lista_actividades_sg.php:204
 #, fuzzy
 msgid "ctrs"
 msgstr "CTRS"
 
-#: apps/actividades/controller/lista_actividades_sg.php:206
+#: frontend/actividades/controller/lista_actividades_sg.php:206
 #: apps/actividades/model/entity/ActividadAll.php:1486
 #: apps/actividadtarifas/controller/tarifa_ajax.php:118
 #: apps/casas/controller/casa_ajax.php:99
@@ -1394,19 +1394,19 @@ msgstr "CTRS"
 msgid "precio"
 msgstr "prezzo"
 
-#: apps/actividades/controller/lista_actividades_sg.php:361
+#: frontend/actividades/controller/lista_actividades_sg.php:361
 #: frontend/ubis/controller/calendario_periodos_ajax.php:72
 #: frontend/ubis/controller/calendario_periodos_ajax.php:119
 msgid "periodo"
 msgstr "periodo"
 
-#: apps/actividades/controller/lista_sr_csv.php:77
+#: frontend/actividades/controller/lista_sr_csv.php:77
 #, fuzzy
 #| msgid "hay un error, no se ha guardado"
 msgid "hay un error, no se ha guardado la preferencia"
 msgstr "c'è un errore, non è stato salvato"
 
-#: apps/actividades/controller/lista_sr_csv.php:186
+#: frontend/actividades/controller/lista_sr_csv.php:186
 #: apps/actividades/model/entity/ActividadAll.php:1526
 #: apps/procesos/controller/procesos_ajax.php:240
 #: apps/procesos/model/entity/TareaProceso.php:648
@@ -1414,40 +1414,40 @@ msgstr "c'è un errore, non è stato salvato"
 msgid "status"
 msgstr "stato"
 
-#: apps/actividades/controller/lista_sr_csv.php:189
+#: frontend/actividades/controller/lista_sr_csv.php:189
 #, fuzzy
 #| msgid "activo"
 msgid "nom activ."
 msgstr "attivo"
 
-#: apps/actividades/controller/lista_sr_csv_que.php:98
+#: frontend/actividades/controller/lista_sr_csv_que.php:98
 #, fuzzy
 msgid "ocupación de casas compartidas"
 msgstr "Occupazione di case condivise"
 
-#: apps/actividades/controller/lista_sr_csv_que.php:117
+#: frontend/actividades/controller/lista_sr_csv_que.php:117
 #, fuzzy
 #| msgid "todas las actividades sf"
 msgid "selección de actividades de san rafael"
 msgstr "tutte le attività sf"
 
-#: apps/actividades/controller/planning_casa_modificar.php:136
+#: frontend/actividades/controller/planning_casa_modificar.php:136
 #, fuzzy
 #| msgid "cambiar actividad"
 msgid "modificar actividad"
 msgstr "cambiare attività"
 
-#: apps/actividades/controller/planning_casa_nueva.php:133
+#: frontend/actividades/controller/planning_casa_nueva.php:133
 msgid "nueva actividad"
 msgstr "nuova attività"
 
-#: apps/actividades/controller/tipo_activ.php:31
+#: frontend/actividades/controller/tipo_activ.php:31
 #, fuzzy
 #| msgid "¿Está seguro que desea eliminar este tipo de casa?"
 msgid "¿Está seguro que quiere eliminar este tipo de actividad?"
 msgstr "Sei sicuro di voler eliminare questo tipo di casa?"
 
-#: apps/actividades/controller/tipo_activ_ajax.php:28
+#: frontend/actividades/controller/tipo_activ_ajax.php:28
 #: apps/actividades/model/entity/ActividadAll.php:1342
 #: apps/actividadtarifas/model/entity/TipoActivTarifa.php:509
 #: apps/cambios/model/entity/Cambio.php:1201
@@ -1455,8 +1455,8 @@ msgstr "Sei sicuro di voler eliminare questo tipo di casa?"
 msgid "id_tipo_activ"
 msgstr "id_tipo_activ"
 
-#: apps/actividades/controller/tipo_activ_ajax.php:30
-#: apps/actividades/controller/tipo_activ_ajax.php:41
+#: frontend/actividades/controller/tipo_activ_ajax.php:30
+#: frontend/actividades/controller/tipo_activ_ajax.php:41
 #: apps/actividadestudios/model/Select1303.php:79
 #: apps/actividadestudios/model/Select3005.php:72
 #: apps/actividadtarifas/controller/tarifa_ajax.php:300
@@ -1484,8 +1484,8 @@ msgstr "id_tipo_activ"
 msgid "modificar"
 msgstr "cambiamento"
 
-#: apps/actividades/controller/tipo_activ_ajax.php:73
-#: apps/actividades/controller/tipo_activ_ajax.php:104
+#: frontend/actividades/controller/tipo_activ_ajax.php:73
+#: frontend/actividades/controller/tipo_activ_ajax.php:104
 #: apps/actividadtarifas/controller/tarifa_ajax.php:81
 #: apps/actividadtarifas/controller/tarifa_ajax.php:346
 #: apps/cambios/controller/usuario_avisos_pref_ajax.php:199
@@ -1522,8 +1522,8 @@ msgstr "cambiamento"
 msgid "guardar"
 msgstr "salvare"
 
-#: apps/actividades/controller/tipo_activ_ajax.php:74
-#: apps/actividades/controller/tipo_activ_ajax.php:106
+#: frontend/actividades/controller/tipo_activ_ajax.php:74
+#: frontend/actividades/controller/tipo_activ_ajax.php:106
 #: apps/actividadtarifas/controller/tarifa_ajax.php:83
 #: apps/actividadtarifas/controller/tarifa_ajax.php:348
 #: apps/cambios/controller/usuario_avisos_pref_ajax.php:201
@@ -1546,7 +1546,7 @@ msgstr "salvare"
 msgid "cancel"
 msgstr "annullare"
 
-#: apps/actividades/controller/tipo_activ_ajax.php:105
+#: frontend/actividades/controller/tipo_activ_ajax.php:105
 #: apps/actividadtarifas/controller/tarifa_ajax.php:82
 #: apps/actividadtarifas/controller/tarifa_ajax.php:347
 #: apps/cambios/controller/usuario_avisos_pref_ajax.php:200
@@ -1577,12 +1577,12 @@ msgstr "annullare"
 msgid "eliminar"
 msgstr "rimuovere"
 
-#: apps/actividades/controller/tipo_activ_ajax.php:122
+#: frontend/actividades/controller/tipo_activ_ajax.php:122
 #, fuzzy
 msgid "Id incorrecto"
 msgstr "ID errato"
 
-#: apps/actividades/controller/tipo_activ_ajax.php:130
+#: frontend/actividades/controller/tipo_activ_ajax.php:130
 #, fuzzy
 #| msgid "debe concretar el tipo de actividad"
 msgid "IMPORTANTE: Debe añadir un proceso para el nuevo tipo de actividad"
