@@ -123,6 +123,24 @@
     fnjs_enviar_formulario('#modifica');
 }
 }
+    // Construye un <select> a partir del payload {id, opciones, selected, blanco}
+    fnjs_construir_desplegable_lugar = function (data) {
+        if (!data) { return ''; }
+        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+        if (data.blanco !== false) {
+            $sel.append($('<option></option>').val('').text(''));
+        }
+        var opciones = data.opciones || {};
+        $.each(opciones, function (value, label) {
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data.selected && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        });
+        return $sel.prop('outerHTML');
+    }
+
     fnjs_lugar=function(){
     var opcion_sel='{{ Qid_ubi }}';
     var extendida=$('#extendida').val();
@@ -140,7 +158,7 @@
     if (!json || json.success !== true) { return; }
     try {
         var data = JSON.parse(json.data);
-        $('#lst_lugar').html(data.content || '');
+        $('#lst_lugar').html(fnjs_construir_desplegable_lugar(data));
     } catch (e) {}
 });
 }

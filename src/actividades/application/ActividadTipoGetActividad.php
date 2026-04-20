@@ -2,18 +2,21 @@
 
 namespace src\actividades\application;
 
-use web\Desplegable;
 use web\TiposActividades;
 
 use function core\is_true;
 
 /**
- * Devuelve el HTML del desplegable de actividades posibles. Portado del case
- * `actividad` del dispatcher legacy actividad_tipo_get.php.
+ * Devuelve el payload (id, opciones, selected, blanco, val_blanco, action) del
+ * desplegable de actividades posibles. El frontend construye el `<select>`.
  */
 class ActividadTipoGetActividad
 {
-    public function execute(array $input = []): string
+    /**
+     * @param array $input
+     * @return array{id: string, opciones: array<int|string,string>, selected: string, blanco: bool, val_blanco: string, action: string}
+     */
+    public function execute(array $input = []): array
     {
         $Qentrada = (string)($input['entrada'] ?? '');
         $Qextendida = (string)($input['extendida'] ?? '');
@@ -30,11 +33,13 @@ class ActividadTipoGetActividad
             $opcion_blanco = '.';
         }
 
-        $oDespl = new Desplegable('iactividad_val', $a_actividades_posibles, '', true);
-        $oDespl->setAction('fnjs_nom_tipo()');
-        $oDespl->setValBlanco($opcion_blanco);
-        $oDespl->setOpcion_sel($opcion_blanco);
-
-        return $oDespl->desplegable();
+        return [
+            'id' => 'iactividad_val',
+            'opciones' => $a_actividades_posibles,
+            'selected' => $opcion_blanco,
+            'blanco' => true,
+            'val_blanco' => $opcion_blanco,
+            'action' => 'fnjs_nom_tipo()',
+        ];
     }
 }

@@ -42,7 +42,9 @@ final class ActividadQueFiltrosBloque
         $oDesplegableCasasHtml = '';
         if (!empty($filtro_lugar)) {
             $oActividadLugar = new ActividadLugar();
-            $oDesplegableCasas = $oActividadLugar->getLugaresPosibles($filtro_lugar);
+            $aOpcionesCasas = $oActividadLugar->getLugaresPosibles($filtro_lugar);
+            $oDesplegableCasas = Desplegable::desdeOpciones($aOpcionesCasas, 'id_ubi');
+            $oDesplegableCasas->setBlanco(true);
             if (!empty($id_ubi)) {
                 $oDesplegableCasas->setOpcion_sel($id_ubi);
             }

@@ -4,23 +4,28 @@ namespace src\actividades\application;
 
 use core\ConfigGlobal;
 use src\ubis\application\services\DelegacionDropdown;
-use web\Desplegable;
 
 /**
- * Devuelve el HTML del desplegable de delegaciones organizadoras para el sfsv
- * indicado en `entrada`. Portado del case `dl_org` del dispatcher legacy.
+ * Devuelve el payload (id, opciones, selected, blanco) del desplegable de
+ * delegaciones organizadoras para el sfsv indicado en `entrada`. El frontend
+ * construye el `<select>`.
  */
 class ActividadTipoGetDlOrg
 {
-    public function execute(array $input = []): string
+    /**
+     * @param array $input
+     * @return array{id: string, opciones: array<int|string,string>, selected: string, blanco: bool}
+     */
+    public function execute(array $input = []): array
     {
         $sfsv = (string)($input['entrada'] ?? '');
         $dl_default = ConfigGlobal::mi_delef($sfsv);
 
-        $opciones = DelegacionDropdown::delegacionesURegiones($sfsv, true);
-        $oDesplDelegacionesOrg = Desplegable::desdeOpciones($opciones, 'dl_org');
-        $oDesplDelegacionesOrg->setOpcion_sel($dl_default);
-
-        return $oDesplDelegacionesOrg->desplegable();
+        return [
+            'id' => 'dl_org',
+            'opciones' => DelegacionDropdown::delegacionesURegiones($sfsv, true),
+            'selected' => $dl_default,
+            'blanco' => true,
+        ];
     }
 }

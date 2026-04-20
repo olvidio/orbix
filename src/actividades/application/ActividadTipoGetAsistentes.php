@@ -2,19 +2,21 @@
 
 namespace src\actividades\application;
 
-use web\Desplegable;
 use web\TiposActividades;
 
 use function core\is_true;
 
 /**
- * Devuelve el HTML del desplegable de asistentes posibles segun el
- * sfsv/seccion recibido en `entrada`. Portado del case `asistentes` del
- * dispatcher legacy actividad_tipo_get.php.
+ * Devuelve el payload (id, opciones, selected, blanco, val_blanco, action) del
+ * desplegable de asistentes posibles. El frontend construye el `<select>`.
  */
 class ActividadTipoGetAsistentes
 {
-    public function execute(array $input = []): string
+    /**
+     * @param array $input
+     * @return array{id: string, opciones: array<int|string,string>, selected: string, blanco: bool, val_blanco: string, action: string}
+     */
+    public function execute(array $input = []): array
     {
         $Qentrada = (string)($input['entrada'] ?? '');
         $Qextendida = (string)($input['extendida'] ?? '');
@@ -33,11 +35,13 @@ class ActividadTipoGetAsistentes
             $blanco = true;
         }
 
-        $oDespl = new Desplegable('iasistentes_val', $a_asistentes_posibles, '', $blanco);
-        $oDespl->setAction('fnjs_actividad(' . ($extendida ? 'true' : 'false') . ')');
-        $oDespl->setValBlanco('.');
-        $oDespl->setOpcion_sel('.');
-
-        return $oDespl->desplegable();
+        return [
+            'id' => 'iasistentes_val',
+            'opciones' => $a_asistentes_posibles,
+            'selected' => '.',
+            'blanco' => $blanco,
+            'val_blanco' => '.',
+            'action' => 'fnjs_actividad(' . ($extendida ? 'true' : 'false') . ')',
+        ];
     }
 }

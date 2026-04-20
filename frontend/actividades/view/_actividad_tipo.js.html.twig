@@ -13,6 +13,34 @@
         }
     }
 
+    // Construye el HTML de un `<select>` a partir del payload JSON estandar
+    // de /src/actividades/actividad_tipo_get para salidas desplegable
+    // (id, opciones, selected, blanco, val_blanco, action).
+    fnjs_construir_desplegable = function (json) {
+        if (!json || json.success !== true) { return ''; }
+        try {
+            var data = JSON.parse(json.data);
+            if (!data) { return ''; }
+            var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+            if (data.action) { $sel.attr('onchange', data.action); }
+            if (data.blanco) {
+                var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+                $sel.append($('<option></option>').val(vb).text(''));
+            }
+            var opciones = data.opciones || {};
+            $.each(opciones, function (value, label) {
+                var $opt = $('<option></option>').val(value).text(label);
+                if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+                    $opt.prop('selected', true);
+                }
+                $sel.append($opt);
+            });
+            return $sel.prop('outerHTML');
+        } catch (e) {
+            return '';
+        }
+    }
+
     fnjs_asistentes = function () {
         var url = '{{ url }}';
         var extendida = $('#extendida').val();
@@ -31,7 +59,7 @@
                 dataType: 'json'
             })
                 .done(function (json) {
-                    $('#lst_asistentes').html(fnjs_actividad_tipo_get_content(json));
+                    $('#lst_asistentes').html(fnjs_construir_desplegable(json));
                     {% if procesos_installed %}
                     fnjs_actualizar_fases();
                     {% endif %}
@@ -59,7 +87,8 @@
                 dataType: 'json'
             })
                 .done(function (json) {
-                    $('#dl_org').html(fnjs_actividad_tipo_get_content(json));
+                    var html = fnjs_construir_desplegable(json);
+                    if (html) { $('#dl_org').replaceWith(html); }
                 });
         }
         // y ya puestos el del filtro lugar:
@@ -74,7 +103,8 @@
                 dataType: 'json'
             })
                 .done(function (json) {
-                    $('#filtro_lugar').html(fnjs_actividad_tipo_get_content(json));
+                    var html = fnjs_construir_desplegable(json);
+                    if (html) { $('#filtro_lugar').replaceWith(html); }
                 });
         }
     }
@@ -92,7 +122,7 @@
             dataType: 'json'
         })
             .done(function (json) {
-                $('#lst_actividad').html(fnjs_actividad_tipo_get_content(json));
+                $('#lst_actividad').html(fnjs_construir_desplegable(json));
                 {% if procesos_installed %}
                 fnjs_actualizar_fases();
                 {% endif %}
@@ -112,7 +142,7 @@
             dataType: 'json'
         })
             .done(function (json) {
-                $('#lst_nom_tipo').html(fnjs_actividad_tipo_get_content(json));
+                $('#lst_nom_tipo').html(fnjs_construir_desplegable(json));
                 {% if procesos_installed %}
                 fnjs_actualizar_fases();
                 {% endif %}

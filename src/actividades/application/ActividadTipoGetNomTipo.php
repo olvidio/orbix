@@ -2,18 +2,22 @@
 
 namespace src\actividades\application;
 
-use web\Desplegable;
 use web\TiposActividades;
 
 use function core\is_true;
 
 /**
- * Devuelve el HTML del desplegable de nombres de tipo de actividad. Portado
- * del case `nom_tipo` del dispatcher legacy.
+ * Devuelve el payload (id, opciones, selected, blanco, val_blanco, action) del
+ * desplegable de nombres de tipo de actividad. El frontend construye el
+ * `<select>`.
  */
 class ActividadTipoGetNomTipo
 {
-    public function execute(array $input = []): string
+    /**
+     * @param array $input
+     * @return array{id: string, opciones: array<int|string,string>, selected: string, blanco: bool, val_blanco: string, action: string}
+     */
+    public function execute(array $input = []): array
     {
         $Qentrada = (string)($input['entrada'] ?? '');
         $Qextendida = (string)($input['extendida'] ?? '');
@@ -32,15 +36,15 @@ class ActividadTipoGetNomTipo
             $opcion_blanco = '...';
         }
 
-        $oDespl = new Desplegable('inom_tipo_val', $a_nom_tipo_posibles, '', true);
-        $oDespl->setValBlanco($opcion_blanco);
-        $oDespl->setOpcion_sel($opcion_blanco);
-        if ($Qmodo === 'buscar') {
-            $oDespl->setAction('fnjs_id_activ()');
-        } else {
-            $oDespl->setAction('fnjs_act_id_activ()');
-        }
+        $action = $Qmodo === 'buscar' ? 'fnjs_id_activ()' : 'fnjs_act_id_activ()';
 
-        return $oDespl->desplegable();
+        return [
+            'id' => 'inom_tipo_val',
+            'opciones' => $a_nom_tipo_posibles,
+            'selected' => $opcion_blanco,
+            'blanco' => true,
+            'val_blanco' => $opcion_blanco,
+            'action' => $action,
+        ];
     }
 }

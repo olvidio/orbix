@@ -13,6 +13,33 @@ fnjs_actividad_tipo_get_content = function (json) {
     }
 }
 
+// Construye el HTML de un `<select>` a partir del payload JSON estandar
+// de /src/actividades/actividad_tipo_get para salidas desplegable.
+fnjs_construir_desplegable = function (json) {
+    if (!json || json.success !== true) { return ''; }
+    try {
+        var data = JSON.parse(json.data);
+        if (!data) { return ''; }
+        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+        if (data.action) { $sel.attr('onchange', data.action); }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        var opciones = data.opciones || {};
+        $.each(opciones, function (value, label) {
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        });
+        return $sel.prop('outerHTML');
+    } catch (e) {
+        return '';
+    }
+}
+
 fnjs_asistentes=function(){
     var url='{{ url }}';
     var extendida=$('#extendida').val();
@@ -31,7 +58,7 @@ fnjs_asistentes=function(){
 			dataType: 'json'
 		})
 		.done(function (json) {
-			$('#lst_asistentes').html(fnjs_actividad_tipo_get_content(json));
+			$('#lst_asistentes').html(fnjs_construir_desplegable(json));
 		});
 		// borrar el resto.
 		$('#iasistentes_val').val(".");
@@ -58,7 +85,7 @@ fnjs_actividad=function(){
 		dataType: 'json'
 	})
 	.done(function (json) {
-		$('#lst_actividad').html(fnjs_actividad_tipo_get_content(json));
+		$('#lst_actividad').html(fnjs_construir_desplegable(json));
 	});
 	// borrar el resto.
     if (extendida === "1") {
@@ -82,7 +109,7 @@ fnjs_nom_tipo=function(){
 		dataType: 'json'
 	})
 	.done(function (json) {
-		$('#lst_nom_tipo').html(fnjs_actividad_tipo_get_content(json));
+		$('#lst_nom_tipo').html(fnjs_construir_desplegable(json));
 	});
 	fnjs_actualizar_fases ();
 }

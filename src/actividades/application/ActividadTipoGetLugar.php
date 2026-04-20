@@ -3,12 +3,16 @@
 namespace src\actividades\application;
 
 /**
- * Devuelve el HTML del desplegable de lugares posibles. Portado del case
- * `lugar` del dispatcher legacy.
+ * Devuelve el payload (id, opciones, selected, blanco) del desplegable de
+ * lugares posibles para el frontend. El frontend construye el `<select>`.
  */
 class ActividadTipoGetLugar
 {
-    public function execute(array $input = []): string
+    /**
+     * @param array $input
+     * @return array{id: string, opciones: array<int|string,string>, selected: string, blanco: bool}
+     */
+    public function execute(array $input = []): array
     {
         $Qentrada = (string)($input['entrada'] ?? '');
         $Qisfsv = (int)($input['isfsv'] ?? 0);
@@ -20,8 +24,13 @@ class ActividadTipoGetLugar
         $oActividadLugar->setSsfsv($Qssfsv);
         $oActividadLugar->setOpcion_sel($Qopcion_sel);
 
-        $oDesplegableCasas = $oActividadLugar->getLugaresPosibles($Qentrada);
+        $opciones = $oActividadLugar->getLugaresPosibles($Qentrada);
 
-        return $oDesplegableCasas->desplegable();
+        return [
+            'id' => 'id_ubi',
+            'opciones' => $opciones,
+            'selected' => $Qopcion_sel,
+            'blanco' => true,
+        ];
     }
 }

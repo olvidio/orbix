@@ -146,7 +146,7 @@ use core\ConfigGlobal;
                 if (!json || json.success !== true) { return; }
                 try {
                     var data = JSON.parse(json.data);
-                    $('#lst_lugar').html(data.content || '');
+                    $('#lst_lugar').html(fnjs_construir_desplegable(data));
                 } catch (e) {}
             });
     }

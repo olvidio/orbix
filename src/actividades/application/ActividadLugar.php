@@ -11,7 +11,6 @@ namespace src\actividades\application;
 use core\ConfigGlobal;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
-use web\Desplegable;
 
 /**
  * Description of actividadlugar
@@ -23,7 +22,7 @@ class ActividadLugar
 
     private int $isfsv;
     private string $ssfsv;
-    private int $opcion_sel;
+    private int|string $opcion_sel = '';
 
     public function getFiltroLugar($id_ubi)
     {
@@ -41,10 +40,20 @@ class ActividadLugar
         return $filtro_lugar;
     }
 
-    public function getLugaresPosibles($Qentrada = '')
+    /**
+     * Devuelve el array de opciones (value => label) de casas y centros que
+     * encajan con la entrada (dl|xxx, r|xxx, crXxx). El frontend es responsable
+     * de construir el `<select>` a partir de este array.
+     *
+     * @param string $Qentrada
+     * @return array<string|int,string>
+     */
+    public function getLugaresPosibles(string $Qentrada = ''): array
     {
         $donde_sfsv = '';
-        if (empty($Qentrada)) die();
+        if (empty($Qentrada)) {
+            return [];
+        }
 
         $dl_r = strtok($Qentrada, "|");
         $reg = strtok("|");
@@ -106,16 +115,7 @@ class ActividadLugar
         $centroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
         $oOpcionesCentros = $centroRepository->getArrayCentrosCdc($donde_ctr);
 
-        $oOpcionesTotal = $oOpcionesCasas + $oOpcionesCentros;
-
-        $oDesplCasas = new Desplegable(array('oOpciones' => $oOpcionesTotal));
-        $oDesplCasas->setNombre('id_ubi');
-        $oDesplCasas->setBlanco(true);
-        if (!empty($this->opcion_sel)) {
-            $oDesplCasas->setOpcion_sel($this->opcion_sel);
-        }
-        return $oDesplCasas;
-
+        return $oOpcionesCasas + $oOpcionesCentros;
     }
 
     public function setIsfsv($isfsv)
