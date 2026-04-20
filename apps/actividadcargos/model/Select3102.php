@@ -128,8 +128,12 @@ class Select3102
             $id_nom = $oActividadCargo->getId_nom();
             $id_cargo = $oActividadCargo->getId_cargo();
             $oCargo = $CargoRepository->findById($id_cargo);
-            $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
-            $cargo = $oCargo->getCargoVo()->value();
+            $tipo_cargo = '';
+            $cargo = '';
+            if ($oCargo !== null) {
+                $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
+                $cargo = $oCargo->getCargoVo()->value();
+            }
             // para los sacd en sf
             if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
                 continue;

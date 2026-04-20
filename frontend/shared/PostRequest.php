@@ -88,14 +88,18 @@ class PostRequest
 
     /**
      * Un array vacío no genera inputs hidden en web\Hash::getCamposHiddenHtml;
-     * en el receptor validatePost usa '' si el campo no llega en $_POST.
+     * validatePost trata el campo ausente como ''.
      * Firmar con [] hace que http_build_query difiera de '' y falle el hash hh.
+     *
+     * No sustituir [] por '': un escalar vacío en POST + FILTER_REQUIRE_ARRAY
+     * hace que filter_input devuelva false y (array)false sea [false] en el backend.
+     * Omitir la clave equivale a "sin fases" y filter_input(null) → (array) → [].
      */
     private static function normalizeCamposParaHash(array $campos): array
     {
         foreach ($campos as $k => $v) {
             if (is_array($v) && $v === []) {
-                $campos[$k] = '';
+                unset($campos[$k]);
             }
         }
         return $campos;
