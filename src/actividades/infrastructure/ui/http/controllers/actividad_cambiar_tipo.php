@@ -73,8 +73,10 @@ $oF_ini = empty($Qf_ini) ? null : DateTimeLocal::createFromLocal($Qf_ini);
 $oActividad->setF_ini($oF_ini);
 $oF_fin = empty($Qf_fin) ? null : DateTimeLocal::createFromLocal($Qf_fin);
 $oActividad->setF_fin($oF_fin);
-$Qprecio = empty($Qprecio) ? null : new Dinero($Qprecio);
-$oActividad->setPrecio($Qprecio);
+$precioVo = ($Qprecio === false || $Qprecio === null || $Qprecio === '')
+    ? null
+    : new Dinero($Qprecio);
+$oActividad->setPrecioVo($precioVo);
 $oActividad->setNum_asistentes($Qnum_asistentes);
 $oActividad->setStatus($Qstatus);
 $oActividad->setObserv($Qobserv);
