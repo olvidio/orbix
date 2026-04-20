@@ -74,6 +74,7 @@ class PostRequest
         $oHash = new Hash();
         $oHash->setUrl($url_hased);
         if (!empty($campos)) {
+            $campos = self::normalizeCamposParaHash($campos);
             $oHash->setArrayCamposHidden($campos);
         }
         $hash_params = $oHash->getArrayCampos();
@@ -83,6 +84,21 @@ class PostRequest
             exit ($data['error']);
         }
         return $data;
+    }
+
+    /**
+     * Un array vacío no genera inputs hidden en web\Hash::getCamposHiddenHtml;
+     * en el receptor validatePost usa '' si el campo no llega en $_POST.
+     * Firmar con [] hace que http_build_query difiera de '' y falle el hash hh.
+     */
+    private static function normalizeCamposParaHash(array $campos): array
+    {
+        foreach ($campos as $k => $v) {
+            if (is_array($v) && $v === []) {
+                $campos[$k] = '';
+            }
+        }
+        return $campos;
     }
 
     /**
