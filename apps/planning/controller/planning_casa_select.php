@@ -128,7 +128,7 @@ $oPosicion->setParametros($aGoBack, 1);
 
 
 $oHashMod = new Hash();
-$oHashMod->setUrl(ConfigGlobal::getWeb() . '/apps/actividades/controller/planning_casa_modificar.php');
+$oHashMod->setUrl(ConfigGlobal::getWeb() . '/frontend/actividades/controller/planning_casa_modificar.php');
 $a_camposHidden = array(
     'que' => 'modificar',
 );
@@ -137,7 +137,7 @@ $oHashMod->setCamposForm('id_activ');
 $param_mod = $oHashMod->getParamAjax();
 
 $oHashNew = new Hash();
-$oHashNew->setUrl(ConfigGlobal::getWeb() . '/apps/actividades/controller/planning_casa_nueva.php');
+$oHashNew->setUrl(ConfigGlobal::getWeb() . '/frontend/actividades/controller/planning_casa_nueva.php');
 $a_camposHidden = array(
     'que' => 'nueva',
 );

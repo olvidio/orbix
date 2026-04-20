@@ -1,0 +1,272 @@
+<?php
+
+namespace src\actividades\application;
+
+use core\ConfigGlobal;
+use permisos\model\PermisosActividadesTrue;
+use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
+use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
+use src\ubis\domain\entity\Ubi;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
+use web\Hash;
+use web\Lista;
+use web\Periodo;
+use web\TiposActividades;
+
+/**
+ * Monta el listado de actividades sf/sg (crt, cv) aplicando los filtros
+ * fijados por la pantalla `lista_actividades_sg`. Concentra todos los
+ * accesos a repositorios del dominio y devuelve datos listos para serializar:
+ *   - html_tabla (string)        HTML de la tabla de resultados.
+ *   - result_busqueda (string)   Texto resumen ("X actividades encontradas (Y sin permiso)").
+ *   - id_tipo_activ (string)     Filtro efectivo aplicado (1[45]1 o 1[45]3).
+ *   - html_advertencia (string)  Bloque HTML de aviso si hay >200 actividades.
+ */
+final class ListaActividadesSgListado
+{
+    public function ejecutar(array $input, int $stackGo): array
+    {
+        $num_max_actividades = 200;
+        $mi_sfsv = ConfigGlobal::mi_sfsv();
+
+        $Qcontinuar = (string)($input['continuar'] ?? '');
+        $Qstatus = (int)($input['status'] ?? 0);
+        $Qtipo_activ_sg = (string)($input['tipo_activ_sg'] ?? '');
+        $Qid_ubi = (int)($input['id_ubi'] ?? 0);
+        $Qperiodo = (string)($input['periodo'] ?? '');
+        $Qyear = (string)($input['year'] ?? '');
+        $Qdl_org = (string)($input['dl_org'] ?? '');
+        $Qempiezamin = (string)($input['empiezamin'] ?? '');
+        $Qempiezamax = (string)($input['empiezamax'] ?? '');
+        $Qid_sel = $input['sel'] ?? [];
+        $Qscroll_id = (string)($input['scroll_id'] ?? '');
+
+        $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
+
+        $aWhere = [];
+        $aOperador = [];
+        if ($Qstatus !== 5) {
+            $aWhere['status'] = $Qstatus;
+        }
+
+        if (empty($Qtipo_activ_sg)) {
+            $Qtipo_activ_sg = 'crt';
+        }
+        switch ($Qtipo_activ_sg) {
+            case 'crt':
+                $Qid_tipo_activ = '1[45]1';
+                break;
+            case 'cv':
+                $Qid_tipo_activ = '1[45]3';
+                break;
+            default:
+                $Qid_tipo_activ = '1[45]1';
+        }
+        $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
+        $aOperador['id_tipo_activ'] = '~';
+
+        if (!empty($Qid_ubi)) {
+            $aWhere['id_ubi'] = $Qid_ubi;
+        }
+
+        $oPeriodo = new Periodo();
+        $oPeriodo->setDefaultAny('next');
+        $oPeriodo->setAny($Qyear);
+        $oPeriodo->setEmpiezaMin($Qempiezamin);
+        $oPeriodo->setEmpiezaMax($Qempiezamax);
+        $oPeriodo->setPeriodo($Qperiodo);
+
+        $inicioIso = $oPeriodo->getF_ini_iso();
+        $finIso = $oPeriodo->getF_fin_iso();
+        if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
+            $aWhere['f_fin'] = "'$inicioIso','$finIso'";
+            $aOperador['f_fin'] = 'BETWEEN';
+        } else {
+            $aWhere['f_ini'] = "'$inicioIso','$finIso'";
+            $aOperador['f_ini'] = 'BETWEEN';
+        }
+
+        if (!empty($Qdl_org)) {
+            $aWhere['dl_org'] = $Qdl_org;
+        }
+
+        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
+
+        $a_botones = [
+            ['txt' => _('cargos'), 'click' => "jsForm.mandar(\"#seleccionados\",\"carg\")"],
+            ['txt' => _('asistentes'), 'click' => "jsForm.mandar(\"#seleccionados\",\"asis\")"],
+            ['txt' => _('lista'), 'click' => "jsForm.mandar(\"#seleccionados\",\"list\")"],
+            ['txt' => _('ctrs org'), 'click' => "jsForm.mandar(\"#seleccionados\",\"ctrs\")"],
+        ];
+
+        $a_cabeceras = [];
+        $a_cabeceras[] = ['name' => _("inicio"), 'width' => 40, 'class' => 'fecha'];
+        $a_cabeceras[] = ['name' => _("fin"), 'width' => 40, 'class' => 'fecha'];
+        $a_cabeceras[] = ['name' => _("sf"), 'width' => 40];
+        $a_cabeceras[] = ['name' => ucfirst(_("tipo")), 'width' => 30];
+        $a_cabeceras[] = ['name' => ucfirst(_("asist.")), 'width' => 30];
+        $a_cabeceras[] = ucfirst(_("lugar"));
+        $a_cabeceras[] = ucfirst(_("ctrs"));
+        $a_cabeceras[] = ucfirst(_("sacd"));
+        $a_cabeceras[] = ucfirst(_("precio"));
+
+        $aWhere['_ordre'] = 'f_ini';
+        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
+        $num_activ = count($cActividades);
+
+        if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
+            $go_avant = Hash::link(ConfigGlobal::getWeb() . '/frontend/actividades/controller/lista_actividades_sg.php?' . http_build_query(['continuar' => 'si', 'stack' => $stackGo]));
+            $go_atras = Hash::link(ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_que.php?' . http_build_query(['stack' => $stackGo]));
+            $html_advertencia = "<h2>" . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $num_activ) . '</h2>';
+            $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
+            $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
+            return [
+                'html_tabla' => '',
+                'result_busqueda' => '',
+                'id_tipo_activ' => $Qid_tipo_activ,
+                'html_advertencia' => $html_advertencia,
+            ];
+        }
+
+        $i = 0;
+        $sin = 0;
+        $a_valores = [];
+        $id_usuario = ConfigGlobal::mi_id_usuario();
+        $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
+        $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'tabla_presentacion');
+        // (sPrefs se calculaba pero no se usaba en el listado; se omite.)
+        if ($oPreferencia !== null) {
+            // no-op: preservamos la carga por compat con el comportamiento original
+            $oPreferencia->getPreferencia();
+        }
+        $CentroEncargadoRepository = $GLOBALS['container']->get(CentroEncargadoRepositoryInterface::class);
+
+        foreach ($cActividades as $oActividad) {
+            $id_activ = $oActividad->getId_activ();
+            $id_tipo_activ = $oActividad->getId_tipo_activ();
+            $nom_activ = $oActividad->getNom_activ();
+            $dl_org = $oActividad->getDl_org();
+            $id_ubi = $oActividad->getId_ubi();
+            $lugar_esp = $oActividad->getLugar_esp();
+            $f_ini = $oActividad->getF_ini()?->getFromLocal();
+            $f_fin = $oActividad->getF_fin()?->getFromLocal();
+            $precio = $oActividad->getPrecio();
+
+            if (ConfigGlobal::is_app_installed('procesos')) {
+                $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
+                $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
+                $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+            } else {
+                $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+                $oPermActiv = $oPermActividades->getPermisoActual('datos');
+                $oPermSacd = $oPermActividades->getPermisoActual('sacd');
+            }
+            $i++;
+
+            $oTipoActividad = new TiposActividades($id_tipo_activ);
+            $isfsv = $oTipoActividad->getSfsvId();
+            $ssfsv = $oTipoActividad->getSfsvText();
+            if ($mi_sfsv !== $isfsv && !$_SESSION['oPerm']->have_perm_oficina('des')) {
+                $sactividadOtra = $oTipoActividad->getActividadText();
+                $nom_activ = "$ssfsv $sactividadOtra";
+            }
+
+            $sasistentes = $oTipoActividad->getAsistentesText();
+            $sactividad = $oTipoActividad->getActividadText();
+
+            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) {
+                $sin++;
+                continue;
+            }
+            if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) {
+                $a_valores[$i]['sel'] = '';
+                $a_valores[$i][1] = sprintf(_('ocupado %s (%s-%s)'), $ssfsv, $f_ini, $f_fin);
+                $a_valores[$i][2] = '';
+                $a_valores[$i][3] = '';
+                $a_valores[$i][4] = '';
+                $a_valores[$i][5] = '';
+                $a_valores[$i][6] = '';
+                $a_valores[$i][7] = '';
+                $a_valores[$i][8] = '';
+                $a_valores[$i][9] = '';
+                continue;
+            }
+
+            $nombre_ubi = '';
+            if (!empty($id_ubi) && $id_ubi !== 1) {
+                $oCasa = Ubi::newUbi($id_ubi);
+                $nombre_ubi = $oCasa->getNombre_ubi();
+            } else {
+                if ($id_ubi === 1 && $lugar_esp) {
+                    $nombre_ubi = $lugar_esp;
+                }
+                if (!$id_ubi && !$lugar_esp) {
+                    $nombre_ubi = _("sin determinar");
+                }
+            }
+
+            $sacds = "";
+            if (ConfigGlobal::is_app_installed('actividadessacd')) {
+                if ($oPermSacd->have_perm_action('ver') === true) {
+                    $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
+                    foreach ($ActividadCargoRepository->getActividadSacds($id_activ) as $oPersona) {
+                        $sacds .= $oPersona->getPrefApellidosNombre() . "# ";
+                    }
+                    $sacds = substr($sacds, 0, -2);
+                }
+            }
+
+            $ctrs = "";
+            if (ConfigGlobal::is_app_installed('actividadescentro')) {
+                $n = 0;
+                foreach ($CentroEncargadoRepository->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
+                    $n++;
+                    $ctrs .= $oEncargado->getNombre_ubi() . ", ";
+                }
+                $ctrs = (!empty($n)) ? substr($ctrs, 0, -2) : '';
+            }
+
+            $coincide = $ActividadRepository->getCoincidencia($oActividad);
+            $con = ($coincide) ? '*' : '';
+
+            $a_valores[$i]['sel'] = "$id_activ#$nom_activ";
+            $a_valores[$i][1] = $f_ini;
+            $a_valores[$i][2] = $f_fin;
+            $a_valores[$i][3] = $con;
+            $a_valores[$i][4] = $sactividad;
+            $a_valores[$i][5] = $sasistentes;
+            $a_valores[$i][6] = $nombre_ubi;
+            $a_valores[$i][7] = $ctrs;
+            $a_valores[$i][8] = $sacds;
+            $a_valores[$i][9] = $precio;
+        }
+
+        $num = $i;
+        if (!empty($a_valores)) {
+            if (!empty($Qid_sel)) {
+                $a_valores['select'] = $Qid_sel;
+            }
+            if (!empty($Qscroll_id)) {
+                $a_valores['scroll_id'] = $Qscroll_id;
+            }
+        }
+
+        $oTabla = new Lista();
+        $oTabla->setId_tabla('lista_actividades_sg');
+        $oTabla->setCabeceras($a_cabeceras);
+        $oTabla->setBotones($a_botones);
+        $oTabla->setDatos($a_valores);
+        $html_tabla = $oTabla->mostrar_tabla();
+
+        $result_busqueda = sprintf(_("%s actividades encontradas (%s sin permiso)"), $num, $sin);
+
+        return [
+            'html_tabla' => $html_tabla,
+            'result_busqueda' => $result_busqueda,
+            'id_tipo_activ' => $Qid_tipo_activ,
+            'html_advertencia' => '',
+        ];
+    }
+}

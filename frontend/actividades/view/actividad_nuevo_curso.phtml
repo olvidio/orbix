@@ -1,0 +1,36 @@
+<?php
+/** @var \web\Hash $oHash */
+/** @var string $txt */
+/** @var string $txt_lento */
+/** @var int $any0 */
+/** @var int $any1 */
+/** @var int $any2 */
+/** @var int $year1 */
+/** @var int $year2 */
+/** @var int $year3 */
+?>
+<?= $txt ?>
+<br>
+<br>
+<?= $txt_lento ?>
+<br>
+<br>
+<form id="frm_sin_nombre" name="frm_sin_nombre" action="frontend/actividades/controller/actividad_nuevo_curso.php">
+    <?= $oHash->getCamposHtml(); ?>
+    <?= _("año origen:") ?>
+    <select name="year_ref">
+        <option value="<?= $any2 ?>"><?= $any2 ?></option>
+        <option value="<?= $any1 ?>"><?= $any1 ?></option>
+        <option value="<?= $any0 ?>" selected><?= $any0 ?></option>
+    </select>
+    <?= _("año destino:") ?>
+    <select name="year">
+        <option value="<?= $year1 ?>" selected><?= $year1 ?></option>
+        <option value="<?= $year2 ?>"><?= $year2 ?></option>
+        <option value="<?= $year3 ?>"><?= $year3 ?></option>
+    </select>
+    <br>
+    <input type="checkbox" name="ver_lista" value="t"><?= _("Ver listado") ?>
+    <br>
+    <input type="button" onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?= _("generar nuevo curso") ?>">
+</form>

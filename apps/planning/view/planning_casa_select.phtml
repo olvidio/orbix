@@ -10,7 +10,7 @@ use core\ConfigGlobal;
         $('#div_modificar').height('auto');
         document.getElementById("overlay").style.display = "block";
 
-        var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividades/controller/planning_casa_nueva.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/frontend/actividades/controller/planning_casa_nueva.php';
         var parametros = 'id_ubi=' + id_ubi + "&<?= $param_new ?>";
 
         fnjs_update_div('#div_modificar', url + '?' + parametros, 1);
@@ -22,7 +22,7 @@ use core\ConfigGlobal;
         $('#div_modificar').height('auto');
         document.getElementById("overlay").style.display = "block";
 
-        var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividades/controller/planning_casa_modificar.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/frontend/actividades/controller/planning_casa_modificar.php';
         var parametros = 'id_activ=' + id_activ + "&<?= $param_mod ?>";
 
         fnjs_update_div('#div_modificar', url + '?' + parametros, 1);

@@ -171,7 +171,7 @@ function getRepository($obj_pau)
             $nom_cabecera = $oActividad->getNom_activ();
 
             $sQuery = http_build_query(array('id_activ' => $id_pau, 'obj_pau' => $Qobj_pau));
-            $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/actividades/controller/actividad_ver.php?$sQuery");
+            $goHome = Hash::link(ConfigGlobal::getWeb() . "/frontend/actividades/controller/actividad_ver.php?$sQuery");
             break;
     }
 

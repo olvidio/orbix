@@ -53,7 +53,7 @@ jsForm.refresh = function () {
 }
 jsForm.actualizar = function () {
     var continuar = '<input type="hidden" name="continuar" value="si">';
-    $(this.form).attr('action', "apps/actividades/controller/actividad_select.php");
+    $(this.form).attr('action', "frontend/actividades/controller/actividad_select.php");
     $(this.form).append(continuar);
     fnjs_enviar_formulario(this.form, '#main');
 }
@@ -65,17 +65,17 @@ jsForm.update = function (formulario, que) {
         case "publicar":
             this.SoloUno = false;
             $('#mod').val(que);
-            this.action = "apps/actividades/controller/actividad_update.php";
+            this.action = "src/actividades/actividad_update";
             break;
         case "importar":
             this.SoloUno = false;
             $('#mod').val(que);
-            this.action = "apps/actividades/controller/actividad_update.php";
+            this.action = "src/actividades/actividad_update";
             break;
         case "duplicar":
             this.Aviso = "Seguro que desa duplicar esta actividad";
             $('#mod').val(que);
-            this.action = "apps/actividades/controller/actividad_update.php";
+            this.action = "src/actividades/actividad_update";
             break;
     }
     this.refresh();
@@ -89,11 +89,11 @@ jsForm.mandar = function (formulario, que) {
             this.action = "frontend/procesos/controller/actividad_proceso.php";
             break;
         case "datos":
-            this.action = "apps/actividades/controller/actividad_ver.php";
+            this.action = "frontend/actividades/controller/actividad_ver.php";
             break;
         case "cambiar_tipo":
             $('#mod').val(que);
-            this.action = "apps/actividades/controller/actividad_ver.php";
+            this.action = "frontend/actividades/controller/actividad_ver.php";
             break;
         case "lista_clase":
             this.action = "apps/actividadestudios/controller/lista_clases_ca.php";

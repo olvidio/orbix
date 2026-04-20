@@ -1,0 +1,43 @@
+{% block head %}
+{{  oHash.getCamposHtml|raw }}
+<input type='hidden' id='mod' name='mod' value="{{ mod }}">
+{% if ((mod == 'nuevo') or (mod == 'cambiar_tipo')) %}
+	<table><tr><th class=titulo_inv>{{ "nueva actividad"|trans|capitalize }}
+	</th></tr>
+	<tr><td class=subtitulo>{{ "escoger el tipo de actividad"|trans|capitalize }}
+	</td></tr>
+	<tr>
+		{{ oActividadTipo.getHtml(extendida)|raw }}
+	</tr>
+	</table>
+	<table><tr>
+{% else %}
+	<table><tr>
+	<td>
+	<span class="link" onclick="fnjs_update_div('#main','{{ godossiers }}');" ><img src="{{ web_icons}}/dossiers.gif" border=0 width=40 height=40 alt="{{ alt }}">({{ dos }})</span>
+	</td>
+	<td class=titulo>{{ nom_activ }}</td>
+	</tr></table>
+	<table>
+	<tr><th colspan='8' class=titulo_inv>{{ "datos actividad"|trans|upper }}</th>
+	</tr>
+	<tr>
+		<td class=etiqueta>{{ "tipo de actividad"|trans|capitalize }} </td>
+		{% if permiso_des %}
+			<td>{{ "sf/sv"|trans|raw }}:
+			<span class=contenido>{{ ssfsv }}</span></td>
+        {% endif %}
+		<td class=etiqueta>{{ "asistentes"|trans|capitalize }}: 
+			<span class=contenido>{{ sasistentes }}
+			<input type='Hidden' id='sasistentes' name='sasistentes' value="{{ sasistentes }}"></span></td>
+		<td class=etiqueta>{{ "actividad"|trans|capitalize }}:
+			<span class=contenido>{{ sactividad }}
+			<input type='Hidden' id='sactividad' name='sactividad' value="{{ sactividad }}"></span></td>
+		<td class=etiqueta>{{ "tipo de actividad"|trans|capitalize }}:
+		<!--para no hacerse un lio con el generar actividad válido para otros formularios,--> 
+			<span class=contenido>{{ snom_tipo }}:
+				<input type='Hidden' id='snom_tipo' name='snom_tipo' value="{{ snom_tipo }}"></span></td>
+	</tr>
+    </table>
+{% endif %}
+{% endblock %}

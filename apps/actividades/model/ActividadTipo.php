@@ -3,7 +3,6 @@
 namespace actividades\model;
 
 use core\ConfigGlobal;
-use core\ViewTwig;
 use frontend\shared\model\ViewNewTwig;
 use src\actividades\domain\value_objects\StatusId;
 use web\Desplegable;
@@ -182,15 +181,15 @@ class ActividadTipo
             }
         }
 
-        $url = ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php';
+        $url = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get';
         $oHashTipo = new Hash();
-        $oHashTipo->setUrl('apps/actividades/controller/actividad_tipo_get.php');
+        $oHashTipo->setUrl($url);
         $oHashTipo->setCamposForm('extendida!modo!salida!entrada');
         $h = $oHashTipo->linkSinVal();
 
-        $url_act = ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_ver.php';
+        $url_act = ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_ver.php';
         $oHashAct = new Hash();
-        $oHashAct->setUrl('apps/actividades/controller/actividad_ver.php');
+        $oHashAct->setUrl('frontend/actividades/controller/actividad_ver.php');
         $oHashAct->setCamposForm('id_tipo_activ!refresh');
         $h_act = $oHashAct->linkSinVal();
 
@@ -216,34 +215,27 @@ class ActividadTipo
             'extendida' => $extendida,
         ];
 
+        $aditionalPaths = ['actividades' => 'frontend/actividades/view'];
         switch ($this->para) {
             case 'tipoactiv-tarifas':
-                $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new ViewTwig('actividadtarifas/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('apps/actividadtarifas/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que.html.twig', $a_campos);
                 break;
             case 'procesos':
-                // Plantillas migradas a frontend/procesos/view/. El partial
-                // `_actividad_tipo_body.html.twig` sigue en apps/actividades/view
-                // y se inyecta via namespace @actividades.
-                $aditionalPaths = ['actividades' => 'apps/actividades/view'];
                 $oView = new ViewNewTwig('procesos/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que_perm.html.twig', $a_campos);
                 break;
             case 'cambios':
-                $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new ViewTwig('cambios/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('apps/cambios/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que_perm.html.twig', $a_campos);
                 break;
             case 'gestion':
-                $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new ViewTwig('actividades/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('actividades/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que_gestion.html.twig', $a_campos);
                 break;
             case 'actividades':
             default:
-                $aditionalPaths = ['actividades' => 'actividades/view'];
-                $oView = new ViewTwig('actividades/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('actividades/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que.html.twig', $a_campos);
         }
     }

@@ -110,7 +110,7 @@ $oHashAct->setUrl($url_get);
 $oHashAct->setCamposForm('dl_propia!id_tipo_activ!id_fase_sel');
 $h_actualizar = $oHashAct->linkSinVal();
 
-$url_tipo = "apps/actividades/controller/actividad_tipo_get.php";
+$url_tipo = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get';
 $oHash1 = new Hash();
 $oHash1->setUrl($url_tipo);
 $oHash1->setCamposForm('extendida!modo!salida!entrada');

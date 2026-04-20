@@ -122,7 +122,7 @@ switch ($tipo_lista) {
         break;
     case 'ctrsEncargados':
         $Qver_ctr = (string)filter_input(INPUT_POST, 'ver_ctr');
-        $url_ajax = 'apps/actividades/controller/calendario_listas.php';
+        $url_ajax = 'frontend/actividades/controller/calendario_listas.php';
         $param = "que=lista_cdc&ver_ctr=$Qver_ctr";
         $sCamposForm .= '!periodo!ver_ctr';
         break;

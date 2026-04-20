@@ -1,0 +1,152 @@
+<style>
+.dos {
+	background-attachment:scroll;
+	background-color:wheat;
+	background-image:none;
+	background-position:0 0;
+	background-repeat:repeat;
+	display:inline;
+	float:left;
+	position:absolute;
+	z-index:10;
+}
+div.proceso {
+	display:inline;
+	float:left;
+	height:40%;
+	position:absolute;
+	z-index:10;
+	overflow: scroll;
+	width: 17em;
+	background-color: darkgray;
+}
+div.proceso table {
+	width: 100%;
+	background-color:wheat;
+}
+div.proceso td.cabecera {
+	text-align: center;
+}
+p.tres:hover {
+	background-color:black;
+}
+</style>
+<script>
+fnjs_guardar_nuevo=function(formulario){
+	var err=0;
+	var id_nom_tipo_activ=$('#id_nom_tipo_activ').val();
+	var nom_tipo_activ=$('#nom_tipo_activ').val();
+	if (!id_nom_tipo_activ) { alert ("{{ "Tipo no válido"|trans|raw }}"); err=1; }
+	if (!nom_tipo_activ) { alert ("{{ "debe indicar un nombre"|trans|raw }}"); err=1; }
+	if (err) { return; }
+
+	var data = $(formulario).serialize();
+	// Estos campos no están dentro del formulario. Los añado:
+	var isfsv_val=$('#isfsv_val').val();
+	var iactividad_val=$('#iactividad_val').val();
+	var iasistentes_val=$('#iasistentes_val').val();
+	data += '&isfsv_val='+isfsv_val;
+	data += '&iactividad_val='+iactividad_val;
+	data += '&iasistentes_val='+iasistentes_val;
+
+	$.ajax({
+		url: '{{ url_nuevo }}',
+		type: 'post',
+		data: data
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\n') {
+			alert (rta_txt);
+		}
+		fnjs_lista();
+		fnjs_cerrar();
+	});
+}
+
+fnjs_guardar=function(formulario,que){
+	var err=0;
+	if (que=="eliminar") {
+		if (!confirm("{{ txt_eliminar }}")) { return; }
+	}
+	var nom_tipo_activ=$('#nom_tipo_activ').val();
+	var id_tipo_activ=$('#id_tipo_activ').val();
+	if (!id_tipo_activ) { alert ("{{ "Tipo no válido"|trans|raw }}"); err=1; }
+	if (!nom_tipo_activ) { alert ("{{ "debe indicar un nombre"|trans|raw }}"); err=1; }
+	if (err) { return; }
+
+	var url = (que === 'eliminar') ? '{{ url_eliminar }}' : '{{ url_update }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: $(formulario).serialize()
+	})
+	.done(function (rta_txt) {
+		if (rta_txt != '' && rta_txt != '\n') {
+			alert (rta_txt);
+		} else {
+			fnjs_lista();
+			fnjs_cerrar();
+		}
+	});
+}
+
+fnjs_nuevo=function(){
+	document.getElementById("div_modificar").style.display = "block";
+	$('#div_modificar').addClass('ventana');
+	$('#div_modificar').width('auto');
+	$('#div_modificar').height('auto');
+	document.getElementById("overlay").style.display = "block";
+
+	var url='{{ url_form_nuevo }}';
+	var parametros=''+'{{ h_form_nuevo|raw }}';
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+}
+
+fnjs_modificar=function(id_tipo_activ){
+	document.getElementById("div_modificar").style.display = "block";
+	$('#div_modificar').addClass('ventana');
+	$('#div_modificar').width('auto');
+	$('#div_modificar').height('auto');
+	document.getElementById("overlay").style.display = "block";
+
+	var url='{{ url_form_modificar }}';
+	var parametros='id_tipo_activ='+id_tipo_activ+'{{ h_form_modificar|raw }}';
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+}
+
+fnjs_lista=function(){
+	var url='{{ url_lista }}';
+	var parametros=''+'{{ h_lista|raw }}';
+
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			$('#div_tabla').html(rta_txt);
+		}
+		fnjs_cerrar();
+	});
+}
+
+fnjs_cerrar=function(){
+	$('#div_modificar').html('');
+	document.getElementById("div_modificar").style.display = "none";
+	document.getElementById("overlay").style.display = "none";
+}
+
+
+$(document).ready(function(){
+	fnjs_lista();
+});
+
+fnjs_left_side_hide();
+</script>
+<div id='div_botones'>
+<input type="button" value="{{ "nuevo"|trans|raw }}" onclick="fnjs_nuevo();">
+</div>
+<div id='div_tabla'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

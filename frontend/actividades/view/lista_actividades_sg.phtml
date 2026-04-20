@@ -1,0 +1,62 @@
+<div id="condiciones" class="no_print">
+    <form id="modifica" name="modifica" action="">
+        <?= $oHash->getCamposHtml() ?>
+        <table>
+            <tr>
+                <?= $oFormP->getTd(); ?>
+                <td>
+                    <input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?= _("buscar") ?>"
+                           onclick="fnjs_buscar()">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="resultados">
+    <h3><?= $result_busqueda ?></h3>
+    <form id='seleccionados' name='seleccionados' action='' method='post'>
+        <input type='hidden' id='mod' name='mod' value="">
+        <?= $oHashSel->getCamposHtml() ?>
+        <?= $html_tabla ?>
+    </form>
+</div>
+
+<script type="text/javascript" src="<?= 'apps/actividades/controller/actividades.js?' . rand(); ?>"></script>
+<script>
+    fnjs_borrar = function (formulario, que_val) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            if (confirm("<?= _("¿Está seguro que desea borrar esta actividad?") ?>")) {
+                $('#mod').val(que_val);
+                let url = "src/actividades/actividad_update";
+                let datos = $(formulario).serialize();
+
+                let request = $.ajax({
+                    data: datos,
+                    url: url,
+                    method: 'POST',
+                    dataType: 'json'
+                });
+
+                request.done(function (json) {
+                    if (json.success !== true) {
+                        alert('error: ' + json.mensaje);
+                    } else {
+                        $(formulario + ' input.sel').each(function () {
+                            if ($(this).prop('checked') === true) {
+                                $(this).parent().siblings().addClass('tachado');
+                                $(this).prop('checked', false);
+                            }
+                        });
+                    }
+                    return false;
+                });
+            }
+        }
+    };
+
+    fnjs_buscar = function () {
+        $('#modifica').attr('action', 'frontend/actividades/controller/lista_actividades_sg.php');
+        fnjs_enviar_formulario('#modifica', '#main');
+    };
+</script>

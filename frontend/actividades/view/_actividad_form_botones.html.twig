@@ -1,0 +1,11 @@
+{% block botones %}
+{% if mod == "editar" %}
+    {% if oPermActiv.have_perm_action('modificar') and mod != "importar" %}
+        <input TYPE="button" VALUE="{{ "guardar cambios"|trans|capitalize }}"  onclick="fnjs_guardar('editar')">
+    {% endif %}
+{% elseif mod == "nuevo" %}
+    <input TYPE="button" VALUE="{{ "crear ficha"|trans|capitalize }}" onclick="fnjs_guardar('nuevo')">
+{% elseif mod == "cambiar_tipo" %}
+    <input TYPE="button" VALUE="{{ "guardar ficha"|trans|capitalize }}" onclick="fnjs_guardar('cambiar_tipo')">
+{% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+<style>
+<!--
+table { border:none; }
+td { border:none; }
+-->
+</style>
+{% block scripts %}{% endblock %}
+{% block arrow %}{% endblock %}
+{# pongo exportar2 porque en plannig ya existe, y se llama a este formulario #}
+<div id="exportar2" export_modo="formulario">
+<form id="modifica" name="modifica" action="" method="POST" >
+{% block head %}{% endblock %}
+{% block body %}{% endblock %}
+{% block botones %}{% endblock %}
+</form>
+</div>
