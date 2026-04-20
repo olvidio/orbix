@@ -8,8 +8,8 @@
  * (asistentes, actividad, nom_tipo, dl_org, filtro_lugar, lugar) devuelven
  * bajo `data` el payload {id, opciones, selected, blanco, val_blanco, action}
  * y el frontend construye el `<select>`. Las salidas nom_tipo_tabla e
- * id_tarifa mantienen la forma legacy {content: string} con HTML o valor
- * escalar.
+ * id_tarifa y nivel_stgr_defecto mantienen la forma legacy {content: string}
+ * con HTML o valor escalar.
  */
 
 use src\actividades\application\ActividadTipoGetActividad;
@@ -20,6 +20,7 @@ use src\actividades\application\ActividadTipoGetIdTarifa;
 use src\actividades\application\ActividadTipoGetLugar;
 use src\actividades\application\ActividadTipoGetNomTipo;
 use src\actividades\application\ActividadTipoGetNomTipoTabla;
+use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
 use web\ContestarJson;
 
 $Qsalida = (string)filter_input(INPUT_POST, 'salida');
@@ -55,6 +56,9 @@ switch ($Qsalida) {
         break;
     case 'id_tarifa':
         $content = (new ActividadTipoGetIdTarifa())->execute($_POST);
+        break;
+    case 'nivel_stgr_defecto':
+        $content = (new ActividadTipoGetNivelStgrDefecto())->execute($_POST);
         break;
     default:
         ContestarJson::enviar(sprintf(_('opción no definida: salida=%s'), $Qsalida));

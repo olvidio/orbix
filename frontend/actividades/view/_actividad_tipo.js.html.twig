@@ -16,6 +16,38 @@
     // Construye el HTML de un `<select>` a partir del payload JSON estandar
     // de /src/actividades/actividad_tipo_get para salidas desplegable
     // (id, opciones, selected, blanco, val_blanco, action).
+    /**
+     * Ajusta el desplegable nivel_stgr al valor por defecto que calcularía
+     * {@see ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad} (vía salida AJAX).
+     */
+    fnjs_actualizar_nivel_stgr = function () {
+        if (!$('#nivel_stgr').length) {
+            return;
+        }
+        var id_tipo_activ = $('#id_tipo_activ').val() || '';
+        if (!id_tipo_activ || id_tipo_activ.indexOf('.') !== -1) {
+            return;
+        }
+        var url = '{{ url }}';
+        var extendida = $('#extendida').val();
+        var parametros = 'extendida=' + extendida + '&modo=buscar&salida=nivel_stgr_defecto&entrada=' + id_tipo_activ + '{{ h|raw }}';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        }).done(function (json) {
+            var nivel = fnjs_actividad_tipo_get_content(json);
+            if (nivel === '') {
+                return;
+            }
+            var $sel = $('#nivel_stgr');
+            if ($sel.length && $sel.find('option[value="' + nivel + '"]').length) {
+                $sel.val(nivel);
+            }
+        });
+    };
+
     fnjs_construir_desplegable = function (json) {
         if (!json || json.success !== true) { return ''; }
         try {
@@ -172,6 +204,7 @@
                 {% if procesos_installed %}
                 fnjs_actualizar_fases();
                 {% endif %}
+                fnjs_actualizar_nivel_stgr();
             });
     }
     fnjs_act_id_activ = function () {
@@ -195,6 +228,9 @@
         })
             .done(function (json) {
                 $('#id_tarifa').val(fnjs_actividad_tipo_get_content(json));
+                {% if not procesos_installed %}
+                fnjs_actualizar_nivel_stgr();
+                {% endif %}
             });
         // buscar el desplegable dl_org segun permisos en procesos
         // Como también afecta al status de la actividad, mejor rehacer toda la página.

@@ -30,7 +30,9 @@ $data = $useCase->ejecutar([
     'dl_org' => $Qdl_org,
     'Bdl' => $QBdl === '' ? 't' : $QBdl,
     'tarifa' => $Qtarifa,
-    'nivel_stgr' => $Qnivel_stgr === null ? 'r' : $Qnivel_stgr,
+    'nivel_stgr' => $Qnivel_stgr === null
+        ? ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad((string)$Qid_tipo_activ)
+        : $Qnivel_stgr,
     'idioma' => $Qidioma,
     'id_repeticion' => $Qid_repeticion,
     'id_ubi' => $Qid_ubi,

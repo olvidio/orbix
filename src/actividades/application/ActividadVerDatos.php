@@ -4,6 +4,7 @@ namespace src\actividades\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
@@ -11,6 +12,7 @@ use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\Desplegable;
+use web\TiposActividades;
 
 /**
  * Devuelve todos los datos y fragmentos HTML que el formulario
@@ -26,6 +28,29 @@ use web\Desplegable;
  */
 final class ActividadVerDatos
 {
+    /**
+     * Nivel STGR por defecto en formulario según `id_tipo_activ` (p. ej. cursos de repaso → R).
+     * Usa parsing extendido de {@see TiposActividades} para reconocer `ca-repaso`, `cv-repaso`, etc.
+     */
+    public static function nivelStgrPorDefectoParaIdTipoActividad(string $idTipoActiv): int
+    {
+        if ($idTipoActiv === '') {
+            return NivelStgrId::N;
+        }
+        $oTipo = new TiposActividades($idTipoActiv, true);
+        if (str_contains($oTipo->getActividad2DigitosText(), 'est')) {
+            return NivelStgrId::C1;
+        }
+        if (str_contains($oTipo->getActividad2DigitosText(), 'repaso')) {
+            return NivelStgrId::R;
+        }
+        if (str_contains($oTipo->getActividad2DigitosText(), 'semestre')) {
+            return NivelStgrId::C1;
+        }
+
+        return NivelStgrId::N;
+    }
+
     /**
      * @param array $input Claves admitidas (todas opcionales):
      *   - id_activ (int): si > 0, carga actividad por id.
@@ -43,12 +68,12 @@ final class ActividadVerDatos
         $dl_org = (string)($input['dl_org'] ?? '');
         $Bdl = (string)($input['Bdl'] ?? 't');
         $tarifa = $input['tarifa'] ?? '';
-        $nivel_stgr = $input['nivel_stgr'] ?? 'r';
         $idioma = (string)($input['idioma'] ?? '');
         $id_repeticion = (int)($input['id_repeticion'] ?? 0);
         $id_ubi = (int)($input['id_ubi'] ?? 0);
         $lugar_esp = (string)($input['lugar_esp'] ?? '');
         $id_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
+        $nivel_stgr = $input['nivel_stgr'] ?? self::nivelStgrPorDefectoParaIdTipoActividad($id_tipo_activ);
         $calcTarifaInicial = !empty($input['calc_tarifa_inicial']);
 
         $entidad = null;
@@ -79,7 +104,7 @@ final class ActividadVerDatos
                 // Para los desplegables usamos los valores reales de la actividad.
                 $dl_org = (string)$entidad['dl_org'];
                 $tarifa = $entidad['tarifa'];
-                $nivel_stgr = $entidad['nivel_stgr'] ?? 'r';
+                $nivel_stgr = $entidad['nivel_stgr'] ?? self::nivelStgrPorDefectoParaIdTipoActividad((string)$entidad['id_tipo_activ']);
                 $idioma = (string)$entidad['idioma'];
                 $id_repeticion = (int)$entidad['id_repeticion'];
                 $id_ubi = (int)$entidad['id_ubi'];

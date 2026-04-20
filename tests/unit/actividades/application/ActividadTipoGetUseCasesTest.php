@@ -6,6 +6,8 @@ use src\actividades\application\ActividadTipoGetActividad;
 use src\actividades\application\ActividadTipoGetAsistentes;
 use src\actividades\application\ActividadTipoGetFiltroLugar;
 use src\actividades\application\ActividadTipoGetNomTipo;
+use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
+use src\actividades\domain\value_objects\NivelStgrId;
 use Tests\myTest;
 
 final class ActividadTipoGetUseCasesTest extends myTest
@@ -72,5 +74,11 @@ final class ActividadTipoGetUseCasesTest extends myTest
         $this->assertTrue($out['blanco']);
         $this->assertSame('fnjs_lugar()', $out['action']);
         $this->assertArrayHasKey('opciones', $out);
+    }
+
+    public function test_actividad_tipo_get_nivel_stgr_defecto_vacio_es_sin_estudios(): void
+    {
+        $out = (new ActividadTipoGetNivelStgrDefecto())->execute(['entrada' => '']);
+        $this->assertSame((string)NivelStgrId::N, $out);
     }
 }

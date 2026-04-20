@@ -17,6 +17,7 @@ use src\actividadplazas\domain\entity\ActividadPlazas;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\usuarios\domain\value_objects\IdLocale;
 
 class ActividadNueva
 {
@@ -46,6 +47,7 @@ class ActividadNueva
         $Qh_ini = $datosActividad['h_ini'];
         $Qh_fin = $datosActividad['h_fin'];
         $Qplazas = $datosActividad['plazas'];
+        $Qidioma = (string)($datosActividad['idioma'] ?? '');
 
         // si estoy creando una actividad de otra dl es porque la quiero importar y por tanto debe estar publicada.
         if ($Qdl_org !== ConfigGlobal::mi_delef()) {
@@ -146,6 +148,8 @@ class ActividadNueva
         $oActividad->setH_fin($oH_fin);
         $oActividad->setPublicado($Qpublicado);
         $oActividad->setPlazas($Qplazas);
+        $idiomaVo = empty($Qidioma) ? null : new IdLocale($Qidioma);
+        $oActividad->setIdiomaVo($idiomaVo);
         if ($ActividadRepository->Guardar($oActividad) === false) {
             throw new \RuntimeException(_("hay un error, no se ha guardado") . ": " . $ActividadRepository->getErrorTxt());
         }

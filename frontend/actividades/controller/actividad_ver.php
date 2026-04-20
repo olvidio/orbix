@@ -18,6 +18,8 @@ use core\ConfigGlobal;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use src\actividades\application\ActividadTipo;
+use src\actividades\application\ActividadVerDatos;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use web\Hash;
 use web\TiposActividades;
@@ -77,7 +79,7 @@ $publicado = '';
 $lugar_esp = '';
 $tarifa = '';
 $id_repeticion = 0;
-$nivel_stgr = 'r';
+$nivel_stgr = NivelStgrId::N;
 $id_ubi = 0;
 $dl_org = '';
 $status = 0;
@@ -114,7 +116,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $precio = $entidad['precio'];
     $status = (int)$entidad['status'];
     $observ = (string)$entidad['observ'];
-    $nivel_stgr = $entidad['nivel_stgr'] ?? 'r';
+    $nivel_stgr = $entidad['nivel_stgr'] ?? NivelStgrId::N;
     $lugar_esp = (string)$entidad['lugar_esp'];
     $tarifa = $entidad['tarifa'];
     $id_repeticion = (int)$entidad['id_repeticion'];
@@ -220,6 +222,10 @@ if (!empty($Qid_activ)) { // caso de modificar
     // Para el permiso del boton guardar, en el caso de editar. Cuando es nuevo
     // no se utiliza. Se inicializa para que no de error.
     $oPermActiv = [];
+
+    if (!empty($id_tipo_activ)) {
+        $nivel_stgr = ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad($id_tipo_activ);
+    }
 
     // Pedir desplegables + tarifa inicial para el caso 'nuevo'.
     $dataRender = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
