@@ -2,8 +2,6 @@
 
 namespace src\actividades\application;
 
-use actividades\model\ActividadLugar;
-
 /**
  * Devuelve el HTML del desplegable de lugares posibles. Portado del case
  * `lugar` del dispatcher legacy.

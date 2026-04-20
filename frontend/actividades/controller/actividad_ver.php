@@ -14,10 +14,10 @@
  * @subpackage    actividades
  */
 
-use actividades\model\ActividadTipo;
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
+use src\actividades\application\ActividadTipo;
 use src\actividades\domain\value_objects\StatusId;
 use web\Hash;
 use web\TiposActividades;

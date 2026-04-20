@@ -2,7 +2,7 @@
 
 namespace src\actividades\application;
 
-use actividades\model\ActividadLugar;
+use src\actividades\application\ActividadLugar;
 use core\ConfigGlobal;
 use src\ubis\application\services\DelegacionDropdown;
 use src\usuarios\domain\entity\Role;

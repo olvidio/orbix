@@ -1,6 +1,6 @@
 <?php
 
-namespace actividades\domain;
+namespace src\actividades\application;
 
 use core\ConfigGlobal;
 use core\DBPropiedades;
@@ -16,7 +16,6 @@ use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use ubis;
 
 class ActividadNueva
 {
@@ -92,8 +91,7 @@ class ActividadNueva
             $oActividad = new ActividadAll();
             $oActividad->setId_activ($newIdActividad);
             $oActividad->setIdTablaVo(new IdTablaCode('dl'));
-        }
-        else {
+        } else {
             $ActividadRepository = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
             $newId = $ActividadRepository->newId();
             $newIdActividad = $ActividadRepository->newIdActividad($newId);
@@ -115,8 +113,7 @@ class ActividadNueva
         if (!empty($Qid_ubi) && $Qid_ubi !== 1) {
             $oActividad->setId_ubi($Qid_ubi);
             $oActividad->setLugar_esp('');
-        }
-        else {
+        } else {
             $oActividad->setId_ubi($Qid_ubi);
             $oActividad->setLugar_esp($Qlugar_esp);
         }

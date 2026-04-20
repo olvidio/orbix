@@ -14,9 +14,9 @@
  * @subpackage    actividades
  */
 
-use actividades\domain\ActividadNueva;
 use core\ConfigGlobal;
 use Illuminate\Http\JsonResponse;
+use src\actividades\application\ActividadNueva;
 use src\actividades\application\BorrarActividad;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;

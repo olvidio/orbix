@@ -67,7 +67,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('vcsd')
     }
 }
 
-$oActividadTipo = new actividades\model\ActividadTipo();
+$oActividadTipo = new \src\actividades\application\ActividadTipo();
 $oActividadTipo->setPerm_jefe($permiso_des);
 $oActividadTipo->setSfsv($Qssfsv);
 $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);

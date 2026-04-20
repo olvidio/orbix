@@ -177,7 +177,7 @@ $actividad = $oTipoActiv->getActividadText();
 $nom_tipo = $oTipoActiv->getNom_tipoText();
 $id_tipo_activ = $oTipoActiv->getId_tipo_activ();
 
-$oActividadTipo = new actividades\model\ActividadTipo();
+$oActividadTipo = new \src\actividades\application\ActividadTipo();
 $oActividadTipo->setSfsvAll(FALSE);
 if (!empty($id_tipo_activ)) {
     $oActividadTipo->setId_tipo_activ($id_tipo_activ);

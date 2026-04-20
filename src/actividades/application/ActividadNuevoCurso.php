@@ -1,6 +1,6 @@
 <?php
 
-namespace actividades\model;
+namespace src\actividades\application;
 
 use core\ConfigGlobal;
 use DateInterval;

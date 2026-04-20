@@ -338,7 +338,7 @@ Se mueven a `frontend/procesos/view/` en el slice 12.
 
 ### Reglas funcionales
 
-- `fases_activ_cambio` prepara el widget `actividades\model\ActividadTipo`
+- `fases_activ_cambio` prepara el widget `src\actividades\application\ActividadTipo`
   (legacy), el `PeriodoQue` y los `Hash`es (`h_lista`, `h_actualizar`,
   `h_tipo`) con URL al src. El JS del view hace `fnjs_actualizar_fases`
   en `ready`, dispara `fnjs_lista` tras cada cambio y usa
@@ -385,7 +385,7 @@ Se mueven a `frontend/procesos/view/` en el slice 12.
 
 ### Pendiente futuro
 
-- Seguir dependiendo de `actividades\model\ActividadTipo` (legacy apps)
+- Seguir dependiendo de `src\actividades\application\ActividadTipo` (legacy apps)
   tanto en render como en fetch de fases; bloqueado hasta que se
   migre `ActividadTipo` al patron nuevo.
 - ~~Split del dispatcher por accion (`lista`, `update`, `get`).~~ **Hecho en slice 7.**
@@ -459,7 +459,7 @@ Se mueven a `frontend/procesos/view/` en el slice 12.
 
 - Migrar el JS inline de `usuario_perm_activ.html.twig` al patron
   `$.ajax` + JSON en lugar de asumir HTML plano como respuesta.
-- Reemplazar `actividades\model\ActividadTipo` (legacy apps) cuando
+- Reemplazar `src\actividades\application\ActividadTipo` (legacy apps) cuando
   sea viable.
 
 ---
@@ -734,7 +734,7 @@ como endpoints canonicos con su nombre actual hasta ulterior revision).
 ### Objetivo
 
 Sacar las vistas parciales que aun vivian bajo `apps/procesos/view/`
-enlazadas desde `actividades\model\ActividadTipo::getHtml()`.
+enlazadas desde `src\actividades\application\ActividadTipo::getHtml()`.
 
 ### Analisis de callers
 
@@ -775,7 +775,7 @@ En `apps/procesos/view/`:
 
 ### Pendiente futuro
 
-- Migrar `actividades\model\ActividadTipo` a `src/actividades/*` como
+- Migrar `src\actividades\application\ActividadTipo` a `src/actividades/*` como
   caso de uso o servicio de renderizado (es la dependencia legacy que
   todavia vive en `apps/`).
 - Evaluar si `apps/actividades/view/_actividad_tipo_body.html.twig` se

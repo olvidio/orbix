@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace actividades\model;
+namespace src\actividades\application;
 
 use core\ConfigGlobal;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
@@ -21,9 +21,9 @@ use web\Desplegable;
 class ActividadLugar
 {
 
-    private $isfsv;
-    private $ssfsv;
-    private $opcion_sel;
+    private int $isfsv;
+    private string $ssfsv;
+    private int $opcion_sel;
 
     public function getFiltroLugar($id_ubi)
     {

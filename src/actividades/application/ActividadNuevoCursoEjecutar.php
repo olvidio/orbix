@@ -2,7 +2,6 @@
 
 namespace src\actividades\application;
 
-use actividades\model\ActividadNuevoCurso;
 use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use function core\is_true;
