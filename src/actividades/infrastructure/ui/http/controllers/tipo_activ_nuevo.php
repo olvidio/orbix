@@ -1,8 +1,9 @@
 <?php
 
 use src\actividades\application\TipoActivNuevo;
-
-header('Content-Type: text/plain; charset=UTF-8');
+use web\ContestarJson;
 
 $useCase = new TipoActivNuevo();
-echo $useCase->execute($_POST);
+$mensaje = $useCase->execute($_POST);
+
+ContestarJson::enviar('', ['mensaje' => $mensaje]);

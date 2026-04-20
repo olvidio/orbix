@@ -140,15 +140,44 @@ use core\ConfigGlobal;
             url: url,
             type: 'post',
             data: parametros,
-            dataType: 'html'
+            dataType: 'json'
         })
-            .done(function (rta_txt) {
-                $('#lst_lugar').html(rta_txt);
+            .done(function (json) {
+                if (!json || json.success !== true) { return; }
+                try {
+                    var data = JSON.parse(json.data);
+                    $('#lst_lugar').html(data.content || '');
+                } catch (e) {}
             });
     }
 
-    // Carga inicial de los desplegables "frequentes" y "region" via endpoint backend.
-    fnjs_cargar_desplegable = function (tipo, contenedor) {
+    // Construye un <select> a partir del payload JSON devuelto por el endpoint
+    // /src/actividades/actividad_select_ubi_desplegable. Si el backend envia
+    // mensaje, se muestra en lugar del desplegable.
+    fnjs_construir_desplegable = function (data) {
+        if (!data) { return ''; }
+        if (data.mensaje) {
+            return $('<span></span>').text(data.mensaje).prop('outerHTML');
+        }
+        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+        if (data.action) {
+            $sel.attr('onchange', data.action);
+        }
+        // opcion en blanco.
+        $sel.append($('<option></option>').val('').text(''));
+        var opciones = data.opciones || {};
+        $.each(opciones, function (value, label) {
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data.selected && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        });
+        return $sel.prop('outerHTML');
+    }
+
+    // Carga el desplegable (freq/region) via endpoint backend JSON.
+    fnjs_cargar_desplegable = function (tipo, contenedor, cb) {
         var url = '<?= $url_desplegable ?>';
         var isfsv = <?= $isfsv ?>;
         var dl_org = '<?= addslashes($dl_org) ?>';
@@ -157,24 +186,28 @@ use core\ConfigGlobal;
             url: url,
             type: 'post',
             data: parametros,
-            dataType: 'html'
-        }).done(function (rta_txt) {
-            $(contenedor).html(rta_txt);
+            dataType: 'json'
+        }).done(function (json) {
+            if (!json || json.success !== true) {
+                $(contenedor).html('');
+                return;
+            }
+            try {
+                var data = JSON.parse(json.data);
+                $(contenedor).html(fnjs_construir_desplegable(data));
+            } catch (e) {
+                $(contenedor).html('');
+            }
+            if (typeof cb === 'function') { cb(); }
         });
     }
     $(function () {
         fnjs_cargar_desplegable('freq', '#td_despl_freq');
         // Tras cargar el desplegable de region disparamos fnjs_lugar() para
         // poblar el listado de lugares asociado al filtro inicial.
-        var url_region = '<?= $url_desplegable ?>';
-        var isfsv_region = <?= $isfsv ?>;
-        var dl_org_region = '<?= addslashes($dl_org) ?>';
-        var params_region = 'tipo=region&dl_org=' + encodeURIComponent(dl_org_region) + '&isfsv=' + isfsv_region + '<?= $h_desplegable ?>';
-        $.ajax({ url: url_region, type: 'post', data: params_region, dataType: 'html' })
-            .done(function (rta_txt) {
-                $('#td_despl_region').html(rta_txt);
-                if (typeof fnjs_lugar === 'function') { fnjs_lugar(); }
-            });
+        fnjs_cargar_desplegable('region', '#td_despl_region', function () {
+            if (typeof fnjs_lugar === 'function') { fnjs_lugar(); }
+        });
     });
 
     fnjs_buscar = function (formulario, id) {

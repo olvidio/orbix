@@ -177,7 +177,7 @@ las paginas que los generan*/
 switch ($Qque) {
     case "list_activ" :
     case "list_activ_compl" :
-        $accion = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/lista_activ';
+        $accion = ConfigGlobal::getWeb() . '/frontend/actividades/controller/lista_activ.php';
         break;
     case "list_cjto" :
     case "list_cjto_sacd" :

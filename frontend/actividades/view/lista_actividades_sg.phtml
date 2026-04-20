@@ -28,7 +28,7 @@
         if (rta == 1) {
             if (confirm("<?= _("¿Está seguro que desea borrar esta actividad?") ?>")) {
                 $('#mod').val(que_val);
-                let url = "src/actividades/actividad_update";
+                let url = "src/actividades/actividad_eliminar";
                 let datos = $(formulario).serialize();
 
                 let request = $.ajax({

@@ -1,4 +1,17 @@
 <script>
+    // Parsea la respuesta JSON estandar de /src/actividades/actividad_tipo_get.
+    fnjs_actividad_tipo_get_content = function (json) {
+        if (!json || json.success !== true) {
+            return '';
+        }
+        try {
+            var data = JSON.parse(json.data);
+            return data.content || '';
+        } catch (e) {
+            return '';
+        }
+    }
+
     fnjs_asistentes = function () {
         var url = '{{ url }}';
         var extendida = $('#extendida').val();
@@ -14,10 +27,10 @@
                 url: url,
                 type: 'post',
                 data: parametros,
-                dataType: 'html'
+                dataType: 'json'
             })
-                .done(function (rta_txt) {
-                    $('#lst_asistentes').html(rta_txt);
+                .done(function (json) {
+                    $('#lst_asistentes').html(fnjs_actividad_tipo_get_content(json));
                     {% if procesos_installed %}
                     fnjs_actualizar_fases();
                     {% endif %}
@@ -42,10 +55,10 @@
                 url: url,
                 type: 'post',
                 data: parametros,
-                dataType: 'html'
+                dataType: 'json'
             })
-                .done(function (rta_txt) {
-                    $('#dl_org').html(rta_txt);
+                .done(function (json) {
+                    $('#dl_org').html(fnjs_actividad_tipo_get_content(json));
                 });
         }
         // y ya puestos el del filtro lugar:
@@ -57,10 +70,10 @@
                 url: url,
                 type: 'post',
                 data: parametros,
-                dataType: 'html'
+                dataType: 'json'
             })
-                .done(function (rta_txt) {
-                    $('#filtro_lugar').html(rta_txt);
+                .done(function (json) {
+                    $('#filtro_lugar').html(fnjs_actividad_tipo_get_content(json));
                 });
         }
     }
@@ -74,10 +87,10 @@
             url: url,
             type: 'post',
             data: parametros,
-            dataType: 'html'
+            dataType: 'json'
         })
-            .done(function (rta_txt) {
-                $('#lst_actividad').html(rta_txt);
+            .done(function (json) {
+                $('#lst_actividad').html(fnjs_actividad_tipo_get_content(json));
                 {% if procesos_installed %}
                 fnjs_actualizar_fases();
                 {% endif %}
@@ -94,10 +107,10 @@
             url: url,
             type: 'post',
             data: parametros,
-            dataType: 'html'
+            dataType: 'json'
         })
-            .done(function (rta_txt) {
-                $('#lst_nom_tipo').html(rta_txt);
+            .done(function (json) {
+                $('#lst_nom_tipo').html(fnjs_actividad_tipo_get_content(json));
                 {% if procesos_installed %}
                 fnjs_actualizar_fases();
                 {% endif %}
@@ -119,10 +132,11 @@
         $.ajax({
             url: url,
             type: 'post',
-            data: parametros
+            data: parametros,
+            dataType: 'json'
         })
-            .done(function (rta_txt) {
-                $('#id_tarifa').val(rta_txt);
+            .done(function (json) {
+                $('#id_tarifa').val(fnjs_actividad_tipo_get_content(json));
                 {% if procesos_installed %}
                 fnjs_actualizar_fases();
                 {% endif %}
@@ -144,10 +158,11 @@
         $.ajax({
             url: url,
             type: 'post',
-            data: parametros
+            data: parametros,
+            dataType: 'json'
         })
-            .done(function (rta_txt) {
-                $('#id_tarifa').val(rta_txt);
+            .done(function (json) {
+                $('#id_tarifa').val(fnjs_actividad_tipo_get_content(json));
             });
         // buscar el desplegable dl_org según permisos en procesos
         // Como también afecta al status de la actividad, mejor rehacer toda la página.

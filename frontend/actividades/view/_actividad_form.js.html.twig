@@ -97,8 +97,13 @@ fnjs_guardar=function(tipo='') {
     //alert ("EEE "+rr);
     if (rr=='ok' && err==0) {
         $('#mod').val(tipo);
+        var urlUpdate = {
+            'nuevo': 'src/actividades/actividad_nuevo',
+            'editar': 'src/actividades/actividad_editar',
+            'cambiar_tipo': 'src/actividades/actividad_cambiar_tipo'
+        }[tipo];
         $.ajax({
-            url: 'src/actividades/actividad_update',
+            url: urlUpdate,
             type: 'post',
             data: $('#modifica').serialize()
         })

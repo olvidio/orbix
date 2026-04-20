@@ -10,6 +10,7 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use web\Hash;
+use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
 
@@ -17,12 +18,12 @@ use function core\is_true;
 
 /**
  * Caso de uso: construye los datos (cabeceras + filas) de la pantalla
- * frontend/actividades/controller/lista_activ.php.
+ * frontend/actividades/controller/lista_activ.php y devuelve tambien el
+ * HTML ya renderizado de la tabla (`html_tabla`).
  *
- * La responsabilidad de leer el POST, gestionar `web\Posicion` y renderizar
- * `web\Lista` queda en el controlador frontend. Aqui solo traducimos un set
- * de filtros + opciones de entorno (permisos, dmz, etc.) al array de datos
- * que necesita la tabla.
+ * La responsabilidad de leer el POST y gestionar `web\Posicion` queda en el
+ * controlador frontend. Aqui traducimos un set de filtros + opciones de
+ * entorno (permisos, dmz, etc.) al array de datos y al HTML de la tabla.
  */
 class ListaActivTabla
 {
@@ -40,7 +41,8 @@ class ListaActivTabla
      *   ver_tarifa: int,
      *   ver_sacd: int,
      *   a_cabeceras: array,
-     *   a_valores: array
+     *   a_valores: array,
+     *   html_tabla: string
      * }
      */
     public function execute(array $input, array $opts): array
@@ -297,6 +299,13 @@ class ListaActivTabla
             }
         }
 
+        $oTabla = new Lista();
+        $oTabla->setId_tabla('lista_activ');
+        $oTabla->setCabeceras($a_cabeceras);
+        $oTabla->setBotones([]);
+        $oTabla->setDatos($a_valores);
+        $html_tabla = $oTabla->mostrar_tabla();
+
         return [
             'titulo' => $titulo,
             'ver_hora' => $ver_hora,
@@ -304,6 +313,7 @@ class ListaActivTabla
             'ver_sacd' => $ver_sacd,
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
+            'html_tabla' => $html_tabla,
         ];
     }
 }

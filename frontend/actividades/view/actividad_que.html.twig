@@ -134,10 +134,14 @@
     url: url,
     type: 'post',
     data: parametros,
-    dataType: 'html'
+    dataType: 'json'
 })
-    .done(function (rta_txt) {
-    $('#lst_lugar').html(rta_txt);
+    .done(function (json) {
+    if (!json || json.success !== true) { return; }
+    try {
+        var data = JSON.parse(json.data);
+        $('#lst_lugar').html(data.content || '');
+    } catch (e) {}
 });
 }
     fnjs_left_side_hide();
@@ -146,10 +150,15 @@
     $.ajax({
         url: '{{ url_filtros }}',
         type: 'post',
-        data: 'sfsv={{ Qsfsv }}&modo={{ modo }}&dl_org={{ Qdl_org }}&filtro_lugar={{ Qfiltro_lugar }}&id_ubi={{ Qid_ubi }}&publicado={{ Qpublicado }}{{ h_filtros|raw }}'
+        data: 'sfsv={{ Qsfsv }}&modo={{ modo }}&dl_org={{ Qdl_org }}&filtro_lugar={{ Qfiltro_lugar }}&id_ubi={{ Qid_ubi }}&publicado={{ Qpublicado }}{{ h_filtros|raw }}',
+        dataType: 'json'
     })
-            .done(function (rta_txt) {
-                $('#filtros_extra').html(rta_txt);
+            .done(function (json) {
+                if (!json || json.success !== true) { return; }
+                try {
+                    var data = JSON.parse(json.data);
+                    $('#filtros_extra').html(data.html || '');
+                } catch (e) {}
             });
 }
 

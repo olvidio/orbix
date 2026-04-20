@@ -4,12 +4,13 @@
  * (filtro_lugar + lugar + organiza + publicada) de la pantalla
  * `actividad_que`. Incluye la comprobacion de permiso `perm_ctr`:
  * si el usuario no tiene el permiso, devuelve cadena vacia.
+ *
+ * Responde JSON via web\ContestarJson::enviar con la clave `html`.
  */
 
 use core\ConfigGlobal;
 use src\actividades\application\ActividadQueFiltrosBloque;
-
-header('Content-Type: text/plain; charset=UTF-8');
+use web\ContestarJson;
 
 $sfsv = (int)filter_input(INPUT_POST, 'sfsv');
 if ($sfsv === 0) {
@@ -27,4 +28,6 @@ $publicado = (int)filter_input(INPUT_POST, 'publicado');
 $proceso_installed = ConfigGlobal::is_app_installed('procesos');
 
 $useCase = new ActividadQueFiltrosBloque();
-echo $useCase->ejecutar($sfsv, $modo, $dl_org, $filtro_lugar, $id_ubi, $publicado, $proceso_installed);
+$html = $useCase->ejecutar($sfsv, $modo, $dl_org, $filtro_lugar, $id_ubi, $publicado, $proceso_installed);
+
+ContestarJson::enviar('', ['html' => $html]);

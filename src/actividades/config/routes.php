@@ -37,12 +37,36 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_que_filtros.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/actividades/lista_activ', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/lista_activ.php';
+    $r->addRoute(['GET', 'POST'], '/src/actividades/lista_activ_datos', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/lista_activ_datos.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_update', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_update.php';
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_publicar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_publicar.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_importar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_importar.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_nuevo', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_nuevo.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_duplicar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_duplicar.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_eliminar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_eliminar.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_cambiar_tipo', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_cambiar_tipo.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_editar', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_editar.php';
     });
 
     $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_select_ubi_desplegable', function () {

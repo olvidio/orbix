@@ -10,7 +10,7 @@ use web\Hash;
         if (rta == 1) {
             if (confirm("<?= _("¿Está seguro que desea borrar esta actividad?");?>")) {
                 $('#mod').val(que_val);
-                url = "src/actividades/actividad_update";
+                url = "src/actividades/actividad_eliminar";
                 datos = $(formulario).serialize();
 
                 let request = $.ajax({

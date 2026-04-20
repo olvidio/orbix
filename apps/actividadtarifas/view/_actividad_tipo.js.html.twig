@@ -1,4 +1,17 @@
 <script>
+    // Parsea la respuesta JSON estandar de /src/actividades/actividad_tipo_get.
+    fnjs_actividad_tipo_get_content = function (json) {
+        if (!json || json.success !== true) {
+            return '';
+        }
+        try {
+            var data = JSON.parse(json.data);
+            return data.content || '';
+        } catch (e) {
+            return '';
+        }
+    }
+
     fnjs_asistentes = function () {
         var url = '{{ url }}';
         var extendida = $('#extendida').val();
@@ -14,10 +27,10 @@
                 url: url,
                 type: 'post',
                 data: parametros,
-                dataType: 'html'
+                dataType: 'json'
             })
-                .done(function (rta_txt) {
-                    $('#lst_asistentes').html(rta_txt);
+                .done(function (json) {
+                    $('#lst_asistentes').html(fnjs_actividad_tipo_get_content(json));
                 });
             // borrar el resto.
             $('#iasistentes_val').val(".");
@@ -41,10 +54,10 @@
             url: url,
             type: 'post',
             data: parametros,
-            dataType: 'html'
+            dataType: 'json'
         })
-            .done(function (rta_txt) {
-                $('#lst_actividad').html(rta_txt);
+            .done(function (json) {
+                $('#lst_actividad').html(fnjs_actividad_tipo_get_content(json));
             });
         // borrar el resto.
         if (extendida === "1") {
@@ -64,10 +77,10 @@
             url: url,
             type: 'post',
             data: parametros,
-            dataType: 'html'
+            dataType: 'json'
         })
-            .done(function (rta_txt) {
-                $('#lst_nom_tipo').html(rta_txt);
+            .done(function (json) {
+                $('#lst_nom_tipo').html(fnjs_actividad_tipo_get_content(json));
             });
     }
     fnjs_act_id_activ = function () {

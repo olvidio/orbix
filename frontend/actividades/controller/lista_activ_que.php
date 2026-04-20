@@ -1,7 +1,8 @@
 <?php
 /**
  * Pantalla de filtros para listados particulares de sr/sg. La accion real
- * (`listar`) se delega al endpoint backend /src/actividades/lista_activ.
+ * (`listar`) se delega al controlador frontend lista_activ.php, que a su
+ * vez consume el endpoint backend /src/actividades/lista_activ_datos.
  *
  * @package    delegacion
  * @subpackage    actividades
@@ -22,7 +23,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_pe
     $permiso_des = true;
 }
 
-$url_lista = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/lista_activ';
+$url_lista = ConfigGlobal::getWeb() . '/frontend/actividades/controller/lista_activ.php';
 
 $oHash = new Hash();
 $oHash->setCamposForm('seccion!status!empiezamin!empiezamax!asist!c_activ!tit_list_grupo');

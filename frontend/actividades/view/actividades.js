@@ -36,14 +36,31 @@ jsForm.refresh = function () {
             $.ajax({
                 url: url,
                 type: 'post',
-                data: param
+                data: param,
+                dataType: 'json'
             })
-                .done(function (rta_txt) {
-                    if (rta_txt != '' && rta_txt != '\n') {
-                        alert(rta_txt);
+                .done(function (rta) {
+                    if (rta && typeof rta === 'object') {
+                        if (rta.success === false) {
+                            alert(rta.mensaje || '');
+                            return;
+                        }
+                        jsForm.actualizar();
+                    } else if (rta && rta !== '\n') {
+                        alert(rta);
                     } else {
                         jsForm.actualizar();
                     }
+                })
+                .fail(function (jqXHR) {
+                    var msg = '';
+                    try {
+                        var json = JSON.parse(jqXHR.responseText || '{}');
+                        msg = json.mensaje || jqXHR.responseText || '';
+                    } catch (e) {
+                        msg = jqXHR.responseText || '';
+                    }
+                    if (msg) { alert(msg); }
                 });
             return false;
         });
@@ -65,17 +82,17 @@ jsForm.update = function (formulario, que) {
         case "publicar":
             this.SoloUno = false;
             $('#mod').val(que);
-            this.action = "src/actividades/actividad_update";
+            this.action = "src/actividades/actividad_publicar";
             break;
         case "importar":
             this.SoloUno = false;
             $('#mod').val(que);
-            this.action = "src/actividades/actividad_update";
+            this.action = "src/actividades/actividad_importar";
             break;
         case "duplicar":
             this.Aviso = "Seguro que desa duplicar esta actividad";
             $('#mod').val(que);
-            this.action = "src/actividades/actividad_update";
+            this.action = "src/actividades/actividad_duplicar";
             break;
     }
     this.refresh();

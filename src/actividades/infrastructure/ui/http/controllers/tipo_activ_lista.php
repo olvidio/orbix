@@ -1,8 +1,9 @@
 <?php
 
 use src\actividades\application\TipoActivLista;
-
-header('Content-Type: text/plain; charset=UTF-8');
+use web\ContestarJson;
 
 $useCase = new TipoActivLista();
-echo $useCase->execute($_POST);
+$html = $useCase->execute($_POST);
+
+ContestarJson::enviar('', ['html' => $html]);

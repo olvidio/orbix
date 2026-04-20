@@ -1,8 +1,9 @@
 <?php
 
 use src\actividades\application\TipoActivEliminar;
-
-header('Content-Type: text/plain; charset=UTF-8');
+use web\ContestarJson;
 
 $useCase = new TipoActivEliminar();
-echo $useCase->execute($_POST);
+$mensaje = $useCase->execute($_POST);
+
+ContestarJson::enviar('', ['mensaje' => $mensaje]);
