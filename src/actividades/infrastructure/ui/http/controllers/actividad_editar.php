@@ -119,7 +119,7 @@ $Qidioma = empty($Qidioma) ? null : new IdLocale($Qidioma);
 $oActividad->setIdiomaVo($Qidioma);
 if ($ActividadDlRepository->Guardar($oActividad) === false) {
     $error_txt .= _("hay un error, no se ha guardado");
-    $error_txt .= "\n" . $oActividad->getErrorTxt();
+    $error_txt .= "\n" . $ActividadDlRepository->getErrorTxt();
 } else {
     // Si cambio de dl_propia a otra (o al reves), hay que cambiar el proceso.
     if (ConfigGlobal::is_app_installed('procesos')) {
@@ -160,7 +160,7 @@ if ($ActividadDlRepository->Guardar($oActividad) === false) {
 
                 if ($ActividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
                     $error_txt .= _("hay un error, no se ha guardado");
-                    $error_txt .= "\n" . $oActividadPlazasDl->getErrorTxt();
+                    $error_txt .= "\n" . $ActividadPlazasDlRepository->getErrorTxt();
                 }
             }
         }

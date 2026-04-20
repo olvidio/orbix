@@ -80,4 +80,10 @@ class PgActividadDlRepository extends PgActividadAllRepository implements Activi
         }
         return $aOpciones;
     }
+
+    public function execMaintenanceSql(string $sql): bool
+    {
+        $oDbl = $this->getoDbl();
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+    }
 }

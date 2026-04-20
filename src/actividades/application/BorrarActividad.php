@@ -40,12 +40,12 @@ class BorrarActividad
             $status = $oActividad->getStatus();
             if (!empty($status) && $status === StatusId::PROYECTO) {
                 if ($repoActividad->Eliminar($oActividad) === false) {
-                    $error_txt = _("hay un error, no se ha eliminado") . "\n" . $oActividad->getErrorTxt();
+                    $error_txt = _("hay un error, no se ha eliminado") . "\n" . $repoActividad->getErrorTxt();
                 }
             } else {
                 $oActividad->setStatus(StatusId::BORRABLE);
                 if ($repoActividad->Guardar($oActividad) === false) {
-                    $error_txt = _("hay un error, no se ha guardado") . "\n" . $oActividad->getErrorTxt();
+                    $error_txt = _("hay un error, no se ha guardado") . "\n" . $repoActividad->getErrorTxt();
                 }
             }
         } else {
@@ -58,7 +58,7 @@ class BorrarActividad
                 $repoActividad = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
                 $oActividad->setStatus(StatusId::BORRABLE);
                 if ($repoActividad->Guardar($oActividad) === false) {
-                    $error_txt = _("hay un error, no se ha guardado") . "\n" . $oActividad->getErrorTxt();
+                    $error_txt = _("hay un error, no se ha guardado") . "\n" . $repoActividad->getErrorTxt();
                 }
             }
         }

@@ -29,7 +29,7 @@ class ActividadTipoGetNomTipoTabla
         }
 
         $oTabla = new Lista();
-        $oTabla->setBotones('');
+        $oTabla->setBotones([]);
         $oTabla->setCabeceras($a_cabeceras);
         $oTabla->setDatos($a_valores);
 

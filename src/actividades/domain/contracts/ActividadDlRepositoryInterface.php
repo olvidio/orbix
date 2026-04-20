@@ -22,4 +22,9 @@ interface ActividadDlRepositoryInterface extends ActividadAllRepositoryInterface
     public function deleteActividadesEnPeriodoEnProyecto($f_ini, $f_fin): bool;
 
     public function getArrayActividadesEnPeriodoNoEnProyecto($f_ini, $f_fin): array;
+
+    /**
+     * Ejecuta SQL de mantenimiento en la conexión de escritura del esquema común (p. ej. limpieza de huérfanos).
+     */
+    public function execMaintenanceSql(string $sql): bool;
 }

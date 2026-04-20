@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use src\configuracion\domain\entity\Config;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
+use src\usuarios\domain\entity\Usuario;
 
 class myTest extends TestCase
 {
@@ -61,6 +62,24 @@ class myTest extends TestCase
                 'ordenApellidos' => $ordenApellidos,
                 'mi_id_schema' => $id_schema,];
             $_SESSION['session_auth'] = $session_auth;
+        }
+
+        if (!isset($_SESSION['session_auth']['MiUsuario'])) {
+            $uid = (int)($_SESSION['session_auth']['id_usuario'] ?? $id_usuario);
+            $rid = (int)($_SESSION['session_auth']['id_role'] ?? $id_role);
+            $oMiUsuario = new Usuario();
+            $oMiUsuario->setId_usuario($uid);
+            $oMiUsuario->setId_role($rid);
+            $_SESSION['session_auth']['MiUsuario'] = $oMiUsuario;
+        }
+
+        if (!isset($_SESSION['oPerm'])) {
+            $_SESSION['oPerm'] = new class {
+                public function have_perm_oficina(string $p): bool
+                {
+                    return false;
+                }
+            };
         }
 
         //si existe, registro la sesión con la configuración

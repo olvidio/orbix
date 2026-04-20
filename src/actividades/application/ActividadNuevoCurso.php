@@ -74,11 +74,17 @@ class ActividadNuevoCurso
     {
         $txt = '';
         $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-        $sQry = "SELECT id_activ, to_char(f_ini,'YYYYMMDD')||COALESCE(to_char(h_ini,'HH24MISS'),'200000') as inicio 
-                    FROM a_actividades_dl
-                    WHERE dl_org = '" . ConfigGlobal::mi_delef() . "' AND f_ini >= '$inicio' AND f_ini <= '$fin' AND status < 4 
-                    ORDER BY inicio";
-        $cActividades = $ActividadDlRepository->getActividadesQuery($sQry);
+        $aWhere = [
+            'dl_org' => ConfigGlobal::mi_delef(),
+            'f_ini' => "'$inicio','$fin'",
+            'status' => 4,
+            '_ordre' => 'f_ini, h_ini NULLS LAST',
+        ];
+        $aOperador = [
+            'f_ini' => 'BETWEEN',
+            'status' => '<',
+        ];
+        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
         $num_act = count($cActividades);
         for ($i = 0; $i < ($num_act - 1); $i++) {
             $id_ubi1 = $cActividades[$i]->getId_ubi();
@@ -128,7 +134,7 @@ class ActividadNuevoCurso
     {
         $txt = '';
         $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-        $ActividadDlRepository->deleteActividadesPeriodo($f_ini, $f_fin);
+        $ActividadDlRepository->deleteActividadesEnPeriodoEnProyecto($f_ini, $f_fin);
 
         if (ConfigGlobal::is_app_installed('procesos')) {
             // Borrar los procesos, No se puede crear una clave foránea a una tabla padre (a_actividades_all). Sólo
@@ -138,7 +144,7 @@ class ActividadNuevoCurso
                     FROM a_actividad_proceso_sv d LEFT JOIN public.a_actividades_all a USING (id_activ)
                     WHERE a.id_activ IS NULL
                  )";
-            if ($ActividadDlRepository->getActividadesQuery($sql) === false) {
+            if (!$ActividadDlRepository->execMaintenanceSql($sql)) {
                 $txt .= _("error al borrar los procesos de la sv") . "<br>";
             }
             $sql = "DELETE FROM a_actividad_proceso_sf WHERE id_activ IN (
@@ -146,7 +152,7 @@ class ActividadNuevoCurso
                     FROM a_actividad_proceso_sf d LEFT JOIN public.a_actividades_all a USING (id_activ)
                     WHERE a.id_activ IS NULL
                  )";
-            if ($ActividadDlRepository->getActividadesQuery($sql) === false) {
+            if (!$ActividadDlRepository->execMaintenanceSql($sql)) {
                 $txt .= _("error al borrar los procesos de la sf") . "<br>";
             }
         }
@@ -222,8 +228,8 @@ class ActividadNuevoCurso
         //cambio el status a proyecto:
         $status = StatusId::PROYECTO;
         $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-        $newId = $ActividadDlRepository->newId();
-        $newIdActividad = $ActividadDlRepository->newIdActividad($newId);
+        $newId = $ActividadDlRepository->getNewId();
+        $newIdActividad = $ActividadDlRepository->getNewIdActividad($newId);
         $oActividad = new ActividadAll();
         $oActividad->setId_auto($newId);
         $oActividad->setId_activ($newIdActividad);

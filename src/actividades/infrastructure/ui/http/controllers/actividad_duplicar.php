@@ -39,7 +39,7 @@ if (empty($a_sel)) {
         $oActividad->setStatus(StatusId::PROYECTO);
         if ($ActividadDlRepository->Guardar($oActividad) === false) {
             $error_txt = _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $oActividad->getErrorTxt();
+            $error_txt .= "\n" . $ActividadDlRepository->getErrorTxt();
         }
     } else {
         $error_txt = _("no se puede duplicar actividades que no sean de la propia dl");

@@ -13,6 +13,7 @@ use src\actividades\domain\value_objects\IdTablaCode;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
+use src\actividadplazas\domain\entity\ActividadPlazas;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -86,15 +87,15 @@ class ActividadNueva
         $mi_dele = ConfigGlobal::mi_delef($isfsv);
         if ($Qdl_org === $mi_dele) {
             $ActividadRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-            $newId = $ActividadRepository->newId();
-            $newIdActividad = $ActividadRepository->newIdActividad($newId);
+            $newId = $ActividadRepository->getNewId();
+            $newIdActividad = $ActividadRepository->getNewIdActividad($newId);
             $oActividad = new ActividadAll();
             $oActividad->setId_activ($newIdActividad);
             $oActividad->setIdTablaVo(new IdTablaCode('dl'));
         } else {
             $ActividadRepository = $GLOBALS['container']->get(ActividadExRepositoryInterface::class);
-            $newId = $ActividadRepository->newId();
-            $newIdActividad = $ActividadRepository->newIdActividad($newId);
+            $newId = $ActividadRepository->getNewId();
+            $newIdActividad = $ActividadRepository->getNewIdActividad($newId);
             $oActividad = new ActividadAll();
             $oActividad->setId_activ($newIdActividad);
             $oActividad->setPublicado(true);
@@ -170,7 +171,19 @@ class ActividadNueva
                 }
                 //Si es la dl_org, son plazas concedidas, sino pedidas.
                 $ActividadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
-                $oActividadPlazasDl = $ActividadPlazasDlRepository->getActividadesPlazas(['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele]);
+                $cActividadPlazasDl = $ActividadPlazasDlRepository->getActividadesPlazas(['id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele]);
+                if ($cActividadPlazasDl === false) {
+                    throw new \RuntimeException(_("hay un error, no se ha guardado") . ": " . $ActividadPlazasDlRepository->getErrorTxt());
+                }
+                $oActividadPlazasDl = (is_array($cActividadPlazasDl) && count($cActividadPlazasDl) > 0)
+                    ? reset($cActividadPlazasDl)
+                    : null;
+                if ($oActividadPlazasDl === null) {
+                    $oActividadPlazasDl = new ActividadPlazas();
+                    $oActividadPlazasDl->setId_activ($id_activ);
+                    $oActividadPlazasDl->setId_dl($id_dl);
+                    $oActividadPlazasDl->setDlTablaVo($mi_dele);
+                }
                 $oActividadPlazasDl->setPlazas($Qplazas);
 
                 //print_r($oActividadPlazasDl);
@@ -179,6 +192,6 @@ class ActividadNueva
                 }
             }
         }
-        return $id_activ;
+        return (string) $oActividad->getId_activ();
     }
 }

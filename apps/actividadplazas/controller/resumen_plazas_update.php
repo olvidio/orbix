@@ -65,7 +65,7 @@ switch ($que) {
         //print_r($oActividadPlazasDl);
         if ($ActvidadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
             $msg_err =  _("hay un error, no se ha guardado");
-            $msg_err .= "\n" . $oActividadPlazasDl->getErrorTxt();
+            $msg_err .= "\n" . $ActvidadPlazasDlRepository->getErrorTxt();
         }
         //$oPosicion = new web\Posicion();
         //echo $oPosicion->ir_a("usuario_form.php?quien=usuario&id_usuario=".$_POST['id_usuario']);

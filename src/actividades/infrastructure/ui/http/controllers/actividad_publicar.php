@@ -24,7 +24,7 @@ if (!empty($a_sel)) {
         $oActividad->setPublicado('t');
         if ($ActividadDlRepository->Guardar($oActividad) === false) {
             $error_txt .= _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $oActividad->getErrorTxt();
+            $error_txt .= "\n" . $ActividadDlRepository->getErrorTxt();
         }
     }
 }

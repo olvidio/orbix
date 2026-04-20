@@ -90,7 +90,7 @@ $oActividad->setH_fin($oH_fin);
 $oActividad->setPlazas($Qplazas);
 if ($ActividadDlRepository->Guardar($oActividad) === false) {
     $error_txt .= _("hay un error, no se ha guardado");
-    $error_txt .= "\n" . $oActividad->getErrorTxt();
+    $error_txt .= "\n" . $ActividadDlRepository->getErrorTxt();
 } else {
     if (ConfigGlobal::is_app_installed('procesos')) {
         $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
