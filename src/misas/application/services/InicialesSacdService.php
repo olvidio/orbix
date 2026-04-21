@@ -9,7 +9,7 @@ use src\personas\domain\entity\PersonaPub;
 
 class InicialesSacdService
 {
-    private PersonaSacd|PersonaPub|null $persona;
+    private PersonaSacd|PersonaPub|null $persona = null;
 
     public function __construct(
         private InicialesSacdRepositoryInterface $inicialesRepo,

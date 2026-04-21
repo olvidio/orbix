@@ -24,7 +24,7 @@ $aQuery = [ 'pau' => 'a' ];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$goMisas = Hash::link('apps/misas/controller/misas_index.php?' . http_build_query($aQuery));
+$goMisas = Hash::link('frontend/misas/controller/misas_index.php?' . http_build_query($aQuery));
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="es">

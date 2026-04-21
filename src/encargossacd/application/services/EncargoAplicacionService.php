@@ -11,6 +11,7 @@ use src\encargossacd\domain\entity\Encargo;
 use src\encargossacd\domain\entity\EncargoHorario;
 use src\encargossacd\domain\entity\EncargoSacd;
 use src\encargossacd\domain\entity\EncargoSacdHorario;
+use src\encargossacd\domain\value_objects\EncargoGrupo;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
@@ -20,7 +21,7 @@ class EncargoAplicacionService
 
     public function getArrayTraducciones($idioma)
     {
-        $idioma = empty($idioma) ? 'es' : $idioma;
+        $idioma = empty($idioma) ? 'es_ES.UTF-8' : $idioma;
         if (empty($this->a_txt[$idioma])) {
             $EncargoTextoRepository = $GLOBALS['container']->get(EncargoTextoRepositoryInterface::class);
             $cEncargoTextos = $EncargoTextoRepository->getEncargoTextos();
@@ -41,13 +42,14 @@ class EncargoAplicacionService
 
     public function getTraduccion($clave, $idioma)
     {
+        $txt_traduccion = '';
         $a_traduccion = $this->getArrayTraducciones($idioma);
         if (!empty($a_traduccion[$clave])) {
             $txt_traduccion = $a_traduccion[$clave];
         } else {
-            // El idioma por defecto (es) debería existir siempre
-            $a_traduccion = $this->getArrayTraducciones('es');
-            if (!empty($a_traduccion[$clave])) {
+            // El idioma por defecto (es_ES.UTF-8) debería existir siempre
+            $a_traduccion = $this->getArrayTraducciones('es_ES.UTF-8');
+            if (is_array($a_traduccion) && !empty($a_traduccion[$clave])) {
                 $txt_traduccion = $a_traduccion[$clave];
             } else {
                 echo sprintf(_("falta definir el texto %s en este idioma: %s"), $clave, $idioma);
@@ -138,7 +140,7 @@ class EncargoAplicacionService
         $dedicacion_t_txt = "";
         $dedicacion_v_txt = "";
         foreach ($cEncargoHorarios as $oEncargoHorario) {
-            $dia_ref = $oEncargoHorario->getDiaRefVo()->value();
+            $dia_ref = $oEncargoHorario->getDiaRefVo()?->value();
             $dia_inc = $oEncargoHorario->getDia_inc();
             switch ($dia_ref) {
                 case "m":
@@ -418,7 +420,7 @@ class EncargoAplicacionService
         $oEncargo = new Encargo();
         $oEncargo->setId_enc($newId_enc);
         $oEncargo->setId_tipo_enc($id_tipo_enc);
-        $oEncargo->setSf_sv($sf_sv);
+        $oEncargo->setGrupoEncargoVo(EncargoGrupo::fromNullableInt($sf_sv));
         $oEncargo->setId_ubi($id_ubi);
         $oEncargo->setId_zona($id_zona);
         $oEncargo->setDesc_enc($desc_enc);

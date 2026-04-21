@@ -56,4 +56,6 @@ interface TipoDossierRepositoryInterface
     public function datosById(int $id_tipo_dossier): array|bool;
 
     public function findById(int $id_tipo_dossier): ?TipoDossier;
+
+    public function findByCodigo(string $codigo): ?TipoDossier;
 }

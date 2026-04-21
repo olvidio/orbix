@@ -58,4 +58,14 @@ interface EncargoSacdHorarioRepositoryInterface
     public function findById(int $id_item): ?EncargoSacdHorario;
 	
     public function getNewId();
+
+    /**
+     * Filas en `encargo_sacd_horario_excepcion` para este horario.
+     */
+    public function countExcepcionesByHorarioId(int $id_item_h): int;
+
+    /**
+     * Elimina excepciones asociadas (p. ej. antes de borrar el horario sacd).
+     */
+    public function eliminarExcepcionesPorHorarioId(int $id_item_h): bool;
 }

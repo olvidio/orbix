@@ -37,11 +37,11 @@ class PgEncargoSacdRepository extends ClaseRepository implements EncargoSacdRepo
     /**
      * Elimina los sacd encargados de encargos inexistentes
      */
-    public function deleteEncargos(): string
+    public function deleteEncargos(array $a_Id_enc): string
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sQuery = "DELETE FROM $nom_tabla s USING encargos e WHERE s.id_enc=e.id_enc AND e.id_enc is null ";
+        $sQuery = "DELETE FROM $nom_tabla WHERE id_enc NOT IN (".implode(',', $a_Id_enc).")";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         $count = $stmt->rowCount();
         return sprintf(_("se han eliminado %s sacd de encargos inexistentes \n"), $count);

@@ -120,7 +120,7 @@
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
             $('#mod').val("editar");
-            $(formulario).attr('action', "apps/actividadcargos/controller/form_3102.php");
+            $(formulario).attr('action', "<?= htmlspecialchars((string) $url_form_cargos_actividad, ENT_QUOTES, 'UTF-8') ?>");
             fnjs_enviar_formulario(formulario, '<?= $bloque ?>');
         }
     }
@@ -128,7 +128,7 @@
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
             $('#mod').val("nuevo");
-            $(formulario).attr('action', "apps/actividadcargos/controller/form_3102.php");
+            $(formulario).attr('action', "<?= htmlspecialchars((string) $url_form_cargos_actividad, ENT_QUOTES, 'UTF-8') ?>");
             fnjs_enviar_formulario(formulario, '<?= $bloque ?>');
         }
     }
@@ -164,7 +164,7 @@
         if (rta == 1) {
             if (confirm("<?= _("¿Está seguro que desea quitar este cargo a esta persona?");?>")) {
                 $('#mod').val("eliminar");
-                $(formulario).attr('action', "apps/actividadcargos/controller/update_3102.php");
+                $(formulario).attr('action', "<?= htmlspecialchars((string) $url_update_cargos_actividad, ENT_QUOTES, 'UTF-8') ?>");
                 $(formulario).one("submit", function () {
                     $.ajax({
                         url: $(this).attr('action'),

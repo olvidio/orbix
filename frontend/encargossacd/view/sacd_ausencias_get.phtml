@@ -1,0 +1,101 @@
+<script>
+fnjs_guardar=function(formulario){
+	var err=0;
+
+	if (err != 1) {
+        $(formulario).attr('action','<?= $url_update ?>');
+		$(formulario).one("submit", function() {
+			$.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt !== '' && rta_txt !== '\n') {
+					alert ('<?= _("respuesta") ?>: '+rta_txt);
+				} else {
+					<?= $oPosicion->js_atras(1) ?>
+				}
+			});
+			return false;
+		});
+		$(formulario).trigger("submit");
+		$(formulario).off();
+	}
+	
+}
+
+fnjs_mas_enc=function(){
+	var id_enc=$('#mas').val();
+	var encargo=$('#mas :selected').text();
+	if (!encargo) return;
+	
+	var n=$('#enc_num').val();
+	var dedicacion;
+	
+	dedicacion='<tr><td class=etiqueta>'+encargo+':<input type=hidden id=id_enc_'+n+' name=id_enc['+n+'] value='+id_enc+'></td>';
+	dedicacion+='<td><?= _("inicio") ?> <input type=text size=12 id=inicio_'+n+' name=inicio['+n+'] class=fecha></td>';
+	dedicacion+='<td><?= _("fin") ?><input type=text size=12 id=fin_'+n+' name=fin['+n+'] class=fecha></td>';
+	
+	$('#pie').before(dedicacion);
+	$('#mas').val(0);
+	$('#inicio_'+n).datepicker();
+	$('#inicio_'+n).change(fnjs_date_fin);
+	$('#fin_'+n).datepicker();
+	$('#inicio_'+n).trigger("focus");
+	$('#enc_num').val(++n);
+}
+
+fnjs_date_fin=function(id){
+    id_name = $(this).attr('id');
+    var id = id_name.match(/\d+/g);
+  	var id_fin='#'+'fin_'+id;
+    var id_ini='#'+'inicio_'+id;
+    var ini = $(id_ini).val();
+    var fin = $(id_fin).val();
+    if (ini && !fin) {
+        $(id_fin).datepicker('setDate',ini);
+    } else {
+        $(id_fin).datepicker();
+    }
+}
+
+$('#frm_ausencias').ready(function(){
+	$('#frm_ausencias .fecha').each(function(i){
+        $(this).datepicker();
+	});
+});
+
+</script>
+<form id="frm_ausencias" name="frm_ausencias" action="">
+<?= $oHash->getCamposHtml() ?>
+<?= $lnk_historia ?>
+<table border=1>
+<tr><th><?= _("ausencias/tareas") ?></th><th colspan=2><?= _("fechas") ?></th><th><?= _("horario") ?></th></tr>
+<?php if ($enc_num > 0): ?>
+	<?php for ($j = 0; $j < $enc_num; $j++): ?>
+		<tr>
+		<td class=etiqueta>
+		<input type=hidden name=id_enc[<?= $j ?>] value="<?= htmlspecialchars((string)$id_enc[$j], ENT_QUOTES, 'UTF-8') ?>">
+		<input type=hidden name=id_item[<?= $j ?>] value="<?= htmlspecialchars((string)$id_item[$j], ENT_QUOTES, 'UTF-8') ?>">
+		<?= htmlspecialchars((string)$desc_enc[$j], ENT_QUOTES, 'UTF-8') ?></td>
+		<td><?= _("inicio") ?>
+		<input class=fecha type=text size=12 name=inicio[<?= $j ?>] value="<?= htmlspecialchars((string)$inicio[$j], ENT_QUOTES, 'UTF-8') ?>" >
+		<td><?= _("fin") ?>
+		<input class=fecha type=text size=12 name=fin[<?= $j ?>] value="<?= htmlspecialchars((string)$fin[$j], ENT_QUOTES, 'UTF-8') ?>"></td>
+		<td><span class="link" onclick="fnjs_horario(<?= (int)$id_enc[$j] ?>)"><?= _("crear horario") ?></span></td>
+    <?php endfor; ?>
+<?php endif; ?>
+<tr id=pie><td colspan=4>
+	<?= _("añadir actividades personales") ?>
+	<select id=mas name=mas onchange="fnjs_mas_enc();">
+		<option></option>
+		<?php foreach ($array_tipo_ausencias as $id => $desc): ?>
+			<option value="<?= htmlspecialchars((string)$id, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars((string)$desc, ENT_QUOTES, 'UTF-8') ?></option>
+		<?php endforeach; ?>
+	</select>
+</td></tr>
+
+<th colspan=4><input type="button" onclick="fnjs_guardar(this.form);" name="ok" value="<?= ucfirst(_("guardar")) ?>"></th>
+</table>
+<p><?= _("Para borrar basta dejar en blanco la fecha inicio y la fecha fin") ?></p>

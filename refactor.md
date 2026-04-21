@@ -114,11 +114,14 @@ Linea de trabajo: **frontend** delgado (`PostRequest` + vistas) y **src** con ca
 
 ## Migracion de vistas y namespace de render
 
-- Al migrar un controlador a `frontend/<modulo>/controller`, migrar tambien su vista a `frontend/<modulo>/view` (incluyendo `*.phtml` y `*.html.twig`).
-- En controladores frontend, usar:
-  - `new ViewNewPhtml('frontend\\<modulo>\\controller')` para vistas `*.phtml`.
-  - `new ViewTwig('frontend/<modulo>/controller')` para vistas `*.html.twig` temporales o casos legacy.
-- Evitar dejar la misma vista activa en `apps/<modulo>/view` y `frontend/<modulo>/view` a la vez; cuando el frontend ya renderiza bien, eliminar la copia legacy de `apps/<modulo>/view`.
+- Al migrar un controlador a `frontend/<modulo>/controller`, migrar tambien su vista a `frontend/<modulo>/view` (plantillas **`.phtml`**; no dejar la vista canónica solo en `apps/<modulo>/view`).
+- **Render canónico (patrón `encargossacd`, `misas`, etc.):** en el controlador `frontend/<modulo>/controller/*.php` usar siempre:
+  - `use frontend\shared\model\ViewNewPhtml;`
+  - `$oView = new ViewNewPhtml('frontend\\<modulo>\\controller');`
+  - `$oView->renderizar('nombre_plantilla.phtml', $a_campos);`
+- `ViewNewPhtml` resuelve la ruta física sustituyendo `controller` (o `model`) por `view` bajo `DOCUMENT_ROOT` + `ConfigGlobal::$web_path`, es decir las plantillas viven en **`frontend/<modulo>/view/`**, no en `apps/`.
+- **Twig:** reservado para casos excepcionales; si hace falta, `new ViewTwig(...)` debe apuntar a un directorio bajo `apps/` donde exista el loader Twig (no mezclar con la convención `ViewNewPhtml` + `frontend/.../view`).
+- Cuando el frontend ya renderiza bien, eliminar la copia legacy en `apps/<modulo>/view` y actualizar referencias (`grep`, exportación ODT, menús).
 - Revisar rutas hardcodeadas dentro de vistas JS/HTML (`apps/...`) y cambiarlas a `frontend/...` para evitar llamadas mixtas.
 
 ## Convencion para legacy en apps

@@ -11,6 +11,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\entity\Ubi;
@@ -923,6 +924,8 @@ class Select3101
             'msg_err' => $this->msg_err,
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
+            'url_form_cargos_actividad' => DossierTipoPublicUrls::relativeFormController(3102),
+            'url_update_cargos_actividad' => DossierTipoPublicUrls::relativeUpdate(3102),
         ];
 
         $oView = new ViewPhtml(__NAMESPACE__);

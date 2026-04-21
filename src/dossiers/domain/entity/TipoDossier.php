@@ -50,6 +50,9 @@ class TipoDossier
 
     private ?TipoDossierDb $db = null;
 
+    /** Slug para nombres de fichero Select_codigo, form_codigo, update_codigo (nullable = solo legacy numérico). */
+    private ?string $codigo = null;
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     public function getId_tipo_dossier(): int
@@ -91,7 +94,7 @@ class TipoDossier
      */
     public function setDescripcion(?string $descripcion = null): void
     {
-        $this->descripcion = TipodossierDescripcion::fromNullableString($descripcion);
+        $this->descripcion = TipoDossierDescripcion::fromNullableString($descripcion);
     }
 
     /**
@@ -336,6 +339,18 @@ class TipoDossier
         $this->db = TipoDossierDb::fromNullableInt($db);
     }
 
+
+    public function getCodigo(): ?string
+    {
+        return $this->codigo;
+    }
+
+
+    public function setCodigo(?string $codigo = null): void
+    {
+        $this->codigo = $codigo === null || $codigo === '' ? null : $codigo;
+    }
+
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
@@ -358,6 +373,7 @@ class TipoDossier
         $oTipoDossierSet->add($this->getDatosApp());
         $oTipoDossierSet->add($this->getDatosClass());
         $oTipoDossierSet->add($this->getDatosDb());
+        $oTipoDossierSet->add($this->getDatosCodigo());
         return $oTipoDossierSet->getTot();
     }
 
@@ -490,6 +506,18 @@ class TipoDossier
         $oDatosCampo->setEtiqueta(_("db"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(1);
+        return $oDatosCampo;
+    }
+
+    private function getDatosCodigo(): DatosCampo
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('codigo');
+        $oDatosCampo->setMetodoGet('getCodigo');
+        $oDatosCampo->setMetodoSet('setCodigo');
+        $oDatosCampo->setEtiqueta(_("código (slug ficheros)"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(80);
         return $oDatosCampo;
     }
 }

@@ -183,10 +183,12 @@ switch ($_POST['frm_export_tipo']) {
             $conv_ref = $_POST['frm_export_ref'];
             switch ($conv_ref) {
                 case "encargossacd/view/lista_com_ctr.phtml":
+                case "frontend/encargossacd/view/listas_com_ctr.phtml":
                     $xslt = "html2ootext_list_com_ctr.xslt";
                     $conv_style = "3";
                     break;
                 case "encargossacd/view/lista_com_sacd.phtml":
+                case "frontend/encargossacd/view/listas_com_sacd.phtml":
                     $xslt = "html2ootext_list_com_sacd.xslt";
                     $conv_style = "3";
                     break;

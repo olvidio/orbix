@@ -111,7 +111,7 @@ if ($miRole < 4) { // es administrador
             $camposMas = 'id_ctr';
         }
         if ($pau === PauType::PAU_CTR && $isSf) { //centroSf
-            $id_pau = $oUsuario->getId_pauAsString();
+            $id_pau = $oUsuario->getCsvIdPauVo()?->value();
             $CentroDlRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
             $aOpciones = $CentroDlRepository->getArrayCentros();
 

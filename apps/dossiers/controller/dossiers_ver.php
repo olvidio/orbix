@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\dossiers\application\DossierTipoFileSuffixResolver;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\DatosTablaRepo;
@@ -213,25 +214,8 @@ function getRepository($obj_pau)
             $bloque = '#ficha' . $id_dossier;
             echo "<div id=\"$nom_bloque\">";
             $oTipoDossier = $TipoDossierRepository->findById($id_dossier);
-            $app = $oTipoDossier->getApp();
-            $db = $oTipoDossier->getDbVo()?->value();
-            $nameClaseSelect = '';
-            if ($db === 5) { // nuevas clases en /src
-                $nameFile = "../../../src/$app/domain/Select" . $id_dossier . ".php";
-                if (realpath($nameFile)) { //como file_exists
-                    $nameClaseSelect = "src\\$app\\domain\\Select" . $id_dossier;
-                }
-            } else {
-                // Para presentaciones particulares
-                $nameFile = "../../$app/model/Select" . $id_dossier . ".php";
-                $nameFile2 = "../../$app/domain/Select" . $id_dossier . ".php";
-                if (realpath($nameFile)) { //como file_exists
-                    $nameClaseSelect = "$app\\model\\Select" . $id_dossier;
-                }
-                if (realpath($nameFile2)) { //como file_exists
-                    $nameClaseSelect = "$app\\domain\\Select" . $id_dossier;
-                }
-            }
+            $oResSelect = DossierTipoFileSuffixResolver::fromDefaultProjectRoot();
+            $nameClaseSelect = $oResSelect->resolveSelectClassFqcn($oTipoDossier) ?? '';
 
             if (!empty($nameClaseSelect)) {
                 $claseSelect = new $nameClaseSelect();

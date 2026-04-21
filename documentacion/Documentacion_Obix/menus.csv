@@ -1,4 +1,4 @@
-﻿id_grupmenu,?column?,url,parametros,id_mod
+id_grupmenu,?column?,url,parametros,id_mod
 1,preferencias (preferencias usuario),frontend/usuarios/controller/preferencias.php,,1
 1,a ODF Calc (exportar a odf calc),fnjs_exportar('odfc'),,1
 1,a ODF Text (exportar a odft txt),fnjs_exportar('odft'),,1
@@ -192,13 +192,13 @@
 8,solapes (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=solape,20
 8,Encargos (Raiz encargos sacd),,,21
 8,propuestas (propuestas encargos sacd),apps/encargossacd/controller/propuestas_menu.php,,21
-8,ficha ctr (Ficha encargos ctr),apps/encargossacd/controller/ctr_ficha.php,,21
-8,ficha sacd (Encargo sacd ficha),apps/encargossacd/controller/sacd_ficha.php,,21
-8,listados (Encargos Listas),apps/encargossacd/controller/listas_index.php,,21
+8,ficha ctr (Ficha encargos ctr),frontend/encargossacd/controller/ctr_ficha.php,,21
+8,ficha sacd (Encargo sacd ficha),frontend/encargossacd/controller/sacd_ficha.php,,21
+8,listados (Encargos Listas),frontend/encargossacd/controller/listas_index.php,,21
 8,tipo encargo (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\encargossacd\domain\InfoEncargoTipo,1
-8,ver encargo (Encargos lista),apps/encargossacd/controller/encargo_select.php,,21
+8,ver encargo (Encargos lista),frontend/encargossacd/controller/encargo_select.php,,21
 8,ausencias (Raiz encargos sacd),,,21
-8,sacd (Ausencias sacd),apps/encargossacd/controller/sacd_ausencias.php,,21
+8,sacd (Ausencias sacd),frontend/encargossacd/controller/sacd_ausencias.php,,21
 8,Nuevo calendario (Raiz activ1),,,5
 8,Definir periodos (Calendario Periodos),frontend/ubis/controller/calendario_periodos.php,,5
 8,nuevo curso (Nuevo Curso),frontend/actividades/controller/actividad_nuevo_curso.php,,5
@@ -218,7 +218,7 @@
 8,parámetros (pasarela parametros),apps/pasarela/controller/parametros_menu.php,,29
 8,exportar actividades (exportar actividades),apps/pasarela/controller/exportar_que.php,,29
 8,Misas (Raiz Misas),,,31
-8,aaaaaaaaaaaaa (llista de modul misas),apps/misas/controller/misas_index.php,,31
+8,aaaaaaaaaaaaa (llista de modul misas),frontend/misas/controller/misas_index.php,,31
 8,resto (listas de matriculas),apps/actividadestudios/controller/matriculas_lista.php,,7
 9,planning zonas (Planning por zonas),apps/planning/controller/planning_zones_que.php,,24
 9,atención actividades (Comunicación activ sacd),apps/actividadessacd/controller/com_sacd_activ_periodo.php,,20

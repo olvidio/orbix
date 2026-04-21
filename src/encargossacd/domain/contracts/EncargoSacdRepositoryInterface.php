@@ -17,7 +17,7 @@ use src\encargossacd\domain\entity\EncargoSacd;
 interface EncargoSacdRepositoryInterface
 {
 
-    public function deleteEncargos(): string;
+    public function deleteEncargos(array $a_Id_enc): string;
     /* --------------------  BASiC SEARCH ---------------------------------------- */
 
     /**

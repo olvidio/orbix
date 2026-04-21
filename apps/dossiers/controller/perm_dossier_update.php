@@ -42,6 +42,7 @@ switch ($Qque) {
         $Qdepende_modificar = (string)filter_input(INPUT_POST, 'depende_modificar');
         $Qapp = (string)filter_input(INPUT_POST, 'app');
         $Qclass = (string)filter_input(INPUT_POST, 'class');
+        $Qcodigo = (string)filter_input(INPUT_POST, 'codigo');
         $Qdb = (integer)filter_input(INPUT_POST, 'db');
         $aPermiso_lectura = (array)filter_input(INPUT_POST, 'Permiso_lectura', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         $aPermiso_escritura = (array)filter_input(INPUT_POST, 'Permiso_escritura', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -54,6 +55,7 @@ switch ($Qque) {
         $oTipoDossier->setDepende_modificar(is_true($Qdepende_modificar));
         $oTipoDossier->setApp($Qapp);
         $oTipoDossier->setClass($Qclass);
+        $oTipoDossier->setCodigo(trim($Qcodigo) !== '' ? trim($Qcodigo) : null);
         $oTipoDossier->setDb(1);
         //cuando el campo es permiso_lectura, se pasa un array que hay que convertirlo en número.
         if (!empty($aPermiso_lectura) && (count($aPermiso_lectura) > 0)) {

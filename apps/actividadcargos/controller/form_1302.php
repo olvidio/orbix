@@ -36,6 +36,7 @@ use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
+use src\dossiers\application\DossierTipoPublicUrls;
 use web\Hash;
 use function core\is_true;
 
@@ -66,6 +67,10 @@ else {
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $pau = (string)filter_input(INPUT_POST, 'pau');
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qid_dossier = (int)filter_input(INPUT_POST, 'id_dossier');
+if ($Qid_dossier <= 0) {
+    $Qid_dossier = 1302;
+}
 //$obj_pau = (string)  filter_input(INPUT_POST, 'obj_pau');
 
 $obj = 'actividadcargos\\model\\entity\\ActividadCargo';
@@ -158,6 +163,7 @@ $a_campos = ['obj' => $obj,
     'chk' => $chk,
     'observ' => $observ,
     'Qmod' => $Qmod,
+    'url_update' => DossierTipoPublicUrls::relativeUpdate($Qid_dossier),
 ];
 
 $oView = new ViewPhtml('actividadcargos\model');

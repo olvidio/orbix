@@ -4,6 +4,7 @@ namespace actividadcargos\model;
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\dossiers\application\DossierTipoPublicUrls;
 use dossiers\model\PermDossier;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -238,10 +239,17 @@ class Select1302
             'aLinks_otros' => $this->aLinks_otros,
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
+            'url_form' => DossierTipoPublicUrls::relativeFormController((int) $this->id_dossier),
+            'url_update' => DossierTipoPublicUrls::relativeUpdate((int) $this->id_dossier),
         ];
 
         $oView = new ViewPhtml(__NAMESPACE__);
-        $oView->renderizar('select1302.phtml', $a_campos);
+        $oView->renderizar($this->selectTemplateFile(), $a_campos);
+    }
+
+    protected function selectTemplateFile(): string
+    {
+        return 'select1302.phtml';
     }
 
     private function setLinksInsert()
@@ -269,7 +277,7 @@ class Select1302
                 if (is_array($aQuery)) {
                     array_walk($aQuery, 'core\poner_empty_on_null');
                 }
-                $pagina = Hash::link('apps/actividadcargos/controller/form_1302.php?' . http_build_query($aQuery));
+                $pagina = DossierTipoPublicUrls::hashedFormControllerQuery((int) $this->id_dossier, $aQuery);
                 $this->aLinks_dl[$nom] = $pagina;
             }
         }
@@ -288,7 +296,7 @@ class Select1302
                 if (is_array($aQuery)) {
                     array_walk($aQuery, 'core\poner_empty_on_null');
                 }
-                $pagina = Hash::link('apps/actividadcargos/controller/form_1302.php?' . http_build_query($aQuery));
+                $pagina = DossierTipoPublicUrls::hashedFormControllerQuery((int) $this->id_dossier, $aQuery);
                 $this->aLinks_otros[$nom] = $pagina;
             }
         }

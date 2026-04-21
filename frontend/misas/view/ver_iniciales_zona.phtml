@@ -1,0 +1,448 @@
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+    <title>SlickGrid example: CompositeEditor</title>
+
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-icons.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
+
+    <style>
+        .cell-title {
+            font-weight: bold;
+        }
+
+        .cell-effort-driven {
+            justify-content: center;
+        }
+
+        .item-details-form {
+            z-index: 1000;
+            display: inline-block;
+            border: 1px solid black;
+            margin: 8px;
+            padding: 10px;
+            background: #fbfbfb;
+            -moz-box-shadow: 0px 0px 15px black;
+            -webkit-box-shadow: 0px 0px 15px black;
+            box-shadow: 0px 0px 15px black;
+
+            position: absolute;
+            top: 10px;
+            left: 150px;
+        }
+
+        .item-details-form-buttons {
+            float: right;
+        }
+
+        .item-details-label {
+            margin-left: 10px;
+            margin-top: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .item-details-editor-container {
+            width: 300px;
+            height: 20px;
+            border: 1px solid silver;
+            background: white;
+            display: block;
+            margin: 10px;
+            margin-top: 4px;
+            padding: 0;
+            padding-left: 4px;
+            padding-right: 0px;
+        }
+
+        .color-palette-wrap {
+            margin-top: 20px;
+        }
+
+        .color-swatches {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+            max-width: 280px;
+        }
+
+        .color-swatch {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .color-swatch:hover {
+            border-color: #333;
+            transform: scale(1.08);
+        }
+
+        .color-swatch.is-selected {
+            border-color: #0066cc;
+            box-shadow: 0 0 0 1px #0066cc;
+        }
+
+        .color-picker-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .color-picker-row input[type="color"] {
+            width: 48px;
+            height: 32px;
+            padding: 2px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        /* Solo el muestreo en la grid: cuadrado pequeño, sin reglas sobre .slick-cell */
+        .slick-color-swatch {
+            width: 18px;
+            height: 18px;
+            border-radius: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.28);
+            box-sizing: border-box;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .slick-color-cell--empty {
+            color: #bbb;
+        }
+
+        .ver-iniciales-zona-grid-wrap {
+            max-width: 420px;
+            width: 100%;
+        }
+    </style>
+</head>
+<div style="position:relative">
+
+    <div class="ver-iniciales-zona-grid-wrap">
+        <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
+    </div>
+
+
+    <div class='item-details-form' style="display: none">
+
+        <label id="titulo_modal"></label>
+        <hr/>
+        <input type="hidden" id="cell_selected" value=""/>
+        <input type="hidden" id="row_selected" value=""/>
+        <input type="hidden" id="id_sacd" value=""/>
+
+        <div style="margin-top: 20px;">
+            <label for="iniciales"> <?= _("Iniciales") ?>: </label>
+            <input id="iniciales" type="text" class="form-control" size="20" value="">
+        </div>
+
+        <div class="color-palette-wrap">
+            <label> <?= _("Color") ?>: </label>
+            <div id="color_swatches" class="color-swatches" aria-label="<?= _("Paleta de colores") ?>">
+                <button type="button" class="color-swatch" data-color="#000000" title="#000000" style="background:#000000"></button>
+                <button type="button" class="color-swatch" data-color="#434343" title="#434343" style="background:#434343"></button>
+                <button type="button" class="color-swatch" data-color="#666666" title="#666666" style="background:#666666"></button>
+                <button type="button" class="color-swatch" data-color="#999999" title="#999999" style="background:#999999"></button>
+                <button type="button" class="color-swatch" data-color="#cccccc" title="#cccccc" style="background:#cccccc"></button>
+                <button type="button" class="color-swatch" data-color="#ffffff" title="#ffffff" style="background:#ffffff"></button>
+                <button type="button" class="color-swatch" data-color="#980000" title="#980000" style="background:#980000"></button>
+                <button type="button" class="color-swatch" data-color="#ff0000" title="#ff0000" style="background:#ff0000"></button>
+                <button type="button" class="color-swatch" data-color="#ff9900" title="#ff9900" style="background:#ff9900"></button>
+                <button type="button" class="color-swatch" data-color="#ffff00" title="#ffff00" style="background:#ffff00"></button>
+                <button type="button" class="color-swatch" data-color="#00ff00" title="#00ff00" style="background:#00ff00"></button>
+                <button type="button" class="color-swatch" data-color="#00ffff" title="#00ffff" style="background:#00ffff"></button>
+                <button type="button" class="color-swatch" data-color="#4a86e8" title="#4a86e8" style="background:#4a86e8"></button>
+                <button type="button" class="color-swatch" data-color="#0000ff" title="#0000ff" style="background:#0000ff"></button>
+                <button type="button" class="color-swatch" data-color="#9900ff" title="#9900ff" style="background:#9900ff"></button>
+                <button type="button" class="color-swatch" data-color="#ff00ff" title="#ff00ff" style="background:#ff00ff"></button>
+                <button type="button" class="color-swatch" data-color="#e6b8af" title="#e6b8af" style="background:#e6b8af"></button>
+                <button type="button" class="color-swatch" data-color="#f6b26b" title="#f6b26b" style="background:#f6b26b"></button>
+                <button type="button" class="color-swatch" data-color="#ffe599" title="#ffe599" style="background:#ffe599"></button>
+                <button type="button" class="color-swatch" data-color="#b6d7a8" title="#b6d7a8" style="background:#b6d7a8"></button>
+                <button type="button" class="color-swatch" data-color="#a4c2f4" title="#a4c2f4" style="background:#a4c2f4"></button>
+                <button type="button" class="color-swatch" data-color="#9fc5e8" title="#9fc5e8" style="background:#9fc5e8"></button>
+            </div>
+            <div class="color-picker-row">
+                <label for="color_picker"><?= _("Más colores") ?>:</label>
+                <input type="color" id="color_picker" value="#000000" title="<?= _("Elegir otro color") ?>">
+            </div>
+        </div>
+        <hr/>
+        <div class='item-details-form-buttons'>
+            <button data-action='save' class='slick-btn slick-btn-primary'>Grabar</button>
+            <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="node_modules/slickgrid/dist/browser/slick.core.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.interactions.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.grid.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellrangeselector.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.formatters.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.editors.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
+
+<script>
+
+    var modal = $(".item-details-form");
+    var colorOriginal = '';
+    var colorDirty = false;
+
+    function normalizeHexForPicker(s) {
+        if (s == null || s === '') {
+            return '#000000';
+        }
+        s = String(s).trim();
+        if (s.charAt(0) !== '#') {
+            s = '#' + s;
+        }
+        if (/^#[0-9A-Fa-f]{6}$/i.test(s)) {
+            return s.toLowerCase();
+        }
+        if (/^#[0-9A-Fa-f]{3}$/i.test(s)) {
+            var m = s.match(/^#([0-9A-Fa-f])([0-9A-Fa-f])([0-9A-Fa-f])$/i);
+            return ('#' + m[1] + m[1] + m[2] + m[2] + m[3] + m[3]).toLowerCase();
+        }
+        return '#000000';
+    }
+
+    /** Hex de 6 caracteres sin '#', como en la base de datos. */
+    function hexToStorage6(s) {
+        if (s == null || s === '') {
+            return '';
+        }
+        s = String(s).trim();
+        if (s.charAt(0) === '#') {
+            s = s.slice(1);
+        }
+        if (/^[0-9A-Fa-f]{6}$/i.test(s)) {
+            return s.toLowerCase();
+        }
+        if (/^[0-9A-Fa-f]{3}$/i.test(s)) {
+            return (s[0] + s[0] + s[1] + s[1] + s[2] + s[2]).toLowerCase();
+        }
+        return '';
+    }
+
+    function isValidStoredHex(s) {
+        if (s == null || s === '') {
+            return false;
+        }
+        return hexToStorage6(s) !== '';
+    }
+
+    var MSG_SIN_COLOR = <?= json_encode(_('Sin color')) ?>;
+
+    function escapeHtmlAttr(s) {
+        if (s == null || s === '') {
+            return '';
+        }
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function colorSwatchFormatter(row, cell, value, columnDef, dataContext) {
+        var hex6 = hexToStorage6(value == null ? '' : String(value));
+        if (hex6 === '') {
+            return '<span class="slick-color-cell slick-color-cell--empty" title="' + escapeHtmlAttr(MSG_SIN_COLOR) + '">—</span>';
+        }
+        var full = '#' + hex6;
+        return '<span class="slick-color-cell slick-color-cell--filled" title="' + escapeHtmlAttr(full) + '">'
+            + '<span class="slick-color-swatch" style="background-color:' + full + '"></span>'
+            + '</span>';
+    }
+
+    function updateSwatchSelection(hex) {
+        var norm = normalizeHexForPicker(hex);
+        $('.color-swatch').removeClass('is-selected');
+        $('.color-swatch').each(function () {
+            var c = normalizeHexForPicker($(this).attr('data-color'));
+            if (c === norm) {
+                $(this).addClass('is-selected');
+            }
+        });
+    }
+
+    $('#color_swatches').on('click', '.color-swatch', function () {
+        var hex = $(this).attr('data-color');
+        $('#color_picker').val(hex);
+        colorDirty = true;
+        updateSwatchSelection(hex);
+    });
+
+    $('#color_picker').on('input change', function () {
+        colorDirty = true;
+        updateSwatchSelection($(this).val());
+    });
+
+    modal.keydown(function (e) {
+        if (e.which == Slick.keyCode.ENTER) {
+            commitCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        } else if (e.which == Slick.keyCode.ESCAPE) {
+            cancelCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    });
+
+    modal.find("[data-action=save]").click(function () {
+        commitCurrentEdit();
+    });
+
+    modal.find("[data-action=cancel]").click(function () {
+        cancelCurrentEdit();
+    });
+
+    function cancelCurrentEdit() {
+        modal.hide();
+    }
+
+    function commitCurrentEdit(cell) {
+        cell = $('#cell_selected').val();
+        row = $('#row_selected').val();
+        let id_sacd = $('#id_sacd').val();
+        let iniciales = $('#iniciales').val();
+        var colorRaw = colorDirty ? $('#color_picker').val() : colorOriginal;
+        let color = hexToStorage6(colorRaw);
+
+        parametros = 'id_sacd=' + id_sacd + '&iniciales=' + iniciales + '&color=' + encodeURIComponent(color) + '<?= $h_iniciales ?>';
+
+        // guardar cambios en DB
+        var request = $.ajax({
+            url: '<?= $url_update_iniciales ?>',
+            method: 'POST',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>: " + json.mensaje);
+            } else {
+                data[row]['id_sacd'] = id_sacd;
+                data[row]['iniciales'] = iniciales;
+                data[row]['color'] = color;
+                grid.updateRow(row);
+                modal.hide();
+                reset_campos_modal();
+            }
+        });
+    }
+
+    function reset_campos_modal() {
+        $('#titulo_modal').html('');
+        $('#id_sacd').val('');
+        $('#iniciales').val('');
+        colorOriginal = '';
+        colorDirty = false;
+        $('#color_picker').val('#000000');
+        $('.color-swatch').removeClass('is-selected');
+    }
+
+
+    function openDetails(cell) {
+        const url = URL.createObjectURL(new Blob());
+        $('#cell_selected').val(cell.cell);
+        $('#row_selected').val(cell.row);
+
+        let sacd = data[cell.row].nombre_sacd;
+        let id_sacd = data[cell.row].id_sacd;
+        let iniciales = data[cell.row].iniciales;
+        let color = data[cell.row].color;
+
+        $('#titulo_modal').html(sacd);
+        $('#id_sacd').val(id_sacd);
+        $('#iniciales').val(iniciales);
+
+        colorOriginal = (color == null || color === undefined) ? '' : String(color);
+        colorDirty = false;
+        if (isValidStoredHex(colorOriginal)) {
+            var ph = normalizeHexForPicker(hexToStorage6(colorOriginal));
+            $('#color_picker').val(ph);
+            updateSwatchSelection(ph);
+        } else {
+            $('#color_picker').val('#000000');
+            $('.color-swatch').removeClass('is-selected');
+        }
+
+        modal.show();
+    }
+
+    function requiredFieldValidator(value) {
+        if (value == null || value == undefined || !value.length) {
+            return {valid: false, msg: "This is a required field"};
+        } else {
+            return {valid: true, msg: null};
+        }
+    }
+
+    var grid;
+    var data = <?= $json_data_cuadricula ?>;
+    var columns = <?= $json_columns_cuadricula ?>;
+    columns.forEach(function (col) {
+        if (col.field === 'color') {
+            col.formatter = colorSwatchFormatter;
+        }
+    });
+    var options = {
+        editable: false,
+        enableAddRow: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: false
+    };
+
+
+    $(function () {
+        grid = new Slick.Grid("#myGrid", data, columns, options);
+
+        grid.onClick.subscribe(function (e) {
+            var cell = grid.getCellFromEvent(e);
+            openDetails(cell);
+            e.stopPropagation();
+        });
+
+        grid.setActiveCell(0, 0);
+    })
+
+
+    $('.clockpicker').clockpicker({
+            placement: 'bottom',
+            align: 'right',
+            donetext: 'Correcto!'
+        }
+    );
+
+    fnjs_generarNomEnc = function (formulario) {
+        var nom_tipo = '';
+        nom_tipo = $('#id_tipo_enc :selected').text();
+        lloc = $('#id_ubi :selected').text();
+        tipus = nom_tipo;
+        if (lloc == '') {
+            $('#encargo').val(tipus);
+        } else {
+            $('#encargo').val(tipus + ' (' + lloc + ')');
+        }
+    }
+
+</script>

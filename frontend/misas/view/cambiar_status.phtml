@@ -1,0 +1,120 @@
+<div id="div_nuevo_periodo">
+    <form id="frm_nuevo_periodo" name="frm_nuevo_periodo" action="" method="post">
+        <?= $oHash->getCamposHtml() ?>
+        <table>
+            <thead>
+            <tr>
+                <th class="titulo_inv" colspan="12">
+                    <?= ucfirst(_('Cambiar estado del Plan de Misas')) ?>
+                </th>
+            </tr>
+            <tr>
+                <th class="titulo_inv" colspan="4"><?= ucfirst(_('Plan de Misas Zona')) ?>:&nbsp;&nbsp;&nbsp;
+                    <?= $oDesplZonas->desplegable() ?>
+                </th>
+                <th class="titulo_inv" colspan="4"><?= ucfirst(_('Nuevo estado')) ?>:&nbsp;&nbsp;&nbsp;
+                    <?= $oDesplEstados->desplegable() ?>
+                </th>
+                <th class="titulo_inv" colspan="4"><?= ucfirst(_('Orden')) ?>:&nbsp;&nbsp;&nbsp;
+                    <?= $oDesplOrden->desplegable() ?>
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <?= ucfirst(_('Periodo')) ?>:&nbsp;&nbsp;&nbsp;
+                </td>
+                <?= $periodo_td_html ?>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" name="cambiar" value="cambiar" onclick="fnjs_nuevo_estado();"><br>
+                </td>
+            </tr>
+            <tr>
+            </tr>
+            </thead>
+        </table>
+    </form>
+</div>
+
+<br>
+<div id="div_cuadricula">
+</div>
+
+<script>
+    $("#empiezamin").datepicker();
+    $("#empiezamax").datepicker();
+
+    fnjs_ver_cuadricula_zona = function () {
+        let id_zona = $('#id_zona').val();
+        if (id_zona) {
+            let url = '<?= $url_ver_cuadricula_zona ?>';
+            var periodo = $('#periodo').val();
+            var empiezamax = $('#empiezamax').val();
+            var empiezamin = $('#empiezamin').val();
+            let orden = $('#orden').val();
+
+            let parametros = 'id_zona=' + encodeURIComponent(id_zona)
+                + '&periodo=' + encodeURIComponent(periodo)
+                + '&empiezamin=' + encodeURIComponent(empiezamin)
+                + '&empiezamax=' + encodeURIComponent(empiezamax)
+                + '&orden=' + encodeURIComponent(orden)
+                + '&tipo_plantilla=p'
+                + '<?= $h_zona_status ?>';
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#div_cuadricula').html(rta_txt);
+                });
+        }
+    };
+
+    fnjs_nuevo_estado = function () {
+        let id_zona = $('#id_zona').val();
+        let estado = $('#estado').val();
+        if (id_zona) {
+            let url = '<?= $url_nuevo_status ?>';
+
+            var periodo = $('#periodo').val();
+            var empiezamax = $('#empiezamax').val();
+            var empiezamin = $('#empiezamin').val();
+            let parametros = 'id_zona=' + encodeURIComponent(id_zona)
+                + '&estado=' + encodeURIComponent(estado)
+                + '&periodo=' + encodeURIComponent(periodo)
+                + '&empiezamax=' + encodeURIComponent(empiezamax)
+                + '&empiezamin=' + encodeURIComponent(empiezamin)
+                + '<?= $h_nuevo_status ?>';
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt && String(rta_txt).trim() !== '') {
+                        alert(rta_txt);
+                        return;
+                    }
+                    fnjs_ver_cuadricula_zona();
+                });
+        }
+    };
+    $(document).ready($('#periodo').change(function () {
+        funjs_activar_fecha();
+        fnjs_ver_cuadricula_zona();
+    }));
+    $(document).ready($('#empiezamin').change(function () {
+        funjs_activar_fecha();
+        fnjs_ver_cuadricula_zona();
+    }));
+    $(document).ready($('#empiezamax').change(function () {
+        funjs_activar_fecha();
+        fnjs_ver_cuadricula_zona();
+    }));
+    fnjs_ver_cuadricula_zona();
+</script>

@@ -149,13 +149,14 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
 					depende_modificar        = :depende_modificar,
 					app                      = :app,
 					class                    = :class,
-					db                       = :db";
+					db                       = :db,
+					codigo                   = :codigo";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_tipo_dossier = $id_tipo_dossier";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $campos = "(id_tipo_dossier,descripcion,tabla_from,tabla_to,campo_to,id_tipo_dossier_rel,permiso_lectura,permiso_escritura,depende_modificar,app,class,db)";
-            $valores = "(:id_tipo_dossier,:descripcion,:tabla_from,:tabla_to,:campo_to,:id_tipo_dossier_rel,:permiso_lectura,:permiso_escritura,:depende_modificar,:app,:class,:db)";
+            $campos = "(id_tipo_dossier,descripcion,tabla_from,tabla_to,campo_to,id_tipo_dossier_rel,permiso_lectura,permiso_escritura,depende_modificar,app,class,db,codigo)";
+            $valores = "(:id_tipo_dossier,:descripcion,:tabla_from,:tabla_to,:campo_to,:id_tipo_dossier_rel,:permiso_lectura,:permiso_escritura,:depende_modificar,:app,:class,:db,:codigo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
@@ -206,5 +207,18 @@ class PgTipoDossierRepository extends ClaseRepository implements TipoDossierRepo
             return null;
         }
         return TipoDossier::fromArray($aDatos);
+    }
+
+    public function findByCodigo(string $codigo): ?TipoDossier
+    {
+        $codigo = trim($codigo);
+        if ($codigo === '') {
+            return null;
+        }
+        $a = $this->getTiposDossiers(['codigo' => $codigo], ['codigo' => '=']);
+        if ($a === false || !is_array($a) || count($a) === 0) {
+            return null;
+        }
+        return $a[array_key_first($a)];
     }
 }

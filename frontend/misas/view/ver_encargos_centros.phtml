@@ -1,0 +1,329 @@
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+    <title>SlickGrid example: CompositeEditor</title>
+
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-icons.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
+
+    <style>
+        .cell-title {
+            font-weight: bold;
+        }
+
+        .cell-effort-driven {
+            justify-content: center;
+        }
+
+        .item-details-form {
+            z-index: 1000;
+            display: inline-block;
+            border: 1px solid black;
+            margin: 8px;
+            padding: 10px;
+            background: #fbfbfb;
+            -moz-box-shadow: 0px 0px 15px black;
+            -webkit-box-shadow: 0px 0px 15px black;
+            box-shadow: 0px 0px 15px black;
+
+            position: absolute;
+            top: 10px;
+            left: 150px;
+        }
+
+        .item-details-form-buttons {
+            float: right;
+        }
+
+        .item-details-label {
+            margin-left: 10px;
+            margin-top: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .item-details-editor-container {
+            width: 300px;
+            height: 20px;
+            border: 1px solid silver;
+            background: white;
+            display: block;
+            margin: 10px;
+            margin-top: 4px;
+            padding: 0;
+            padding-left: 4px;
+            padding-right: 0px;
+        }
+
+        /* Grid más estrecho que el 100% del viewport (columnas definidas en VerEncargosCentrosData). */
+        .encargos-centros-grid-wrap {
+            width: 100%;
+            max-width: 380px;
+        }
+    </style>
+</head>
+<div style="position:relative">
+
+    <input type=button name="nuevo" value="<?= _('nuevo') ?>" onclick="fnjs_nuevo();">
+
+    <div class="encargos-centros-grid-wrap">
+        <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
+    </div>
+
+    <div class='item-details-form' style="display: none">
+
+        <label id="titulo_modal"></label>
+        <hr/>
+        <input type="hidden" id="cell_selected" value=""/>
+        <input type="hidden" id="row_selected" value=""/>
+        <input type="hidden" id="id_enc_selected" value=""/>
+        <input type="hidden" id="id_ctr_selected" value=""/>
+        <input type="hidden" id="id_item" value=""/>
+        <input type="hidden" id="que" value=""/>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <label for="id_zona_enc"><?= _('Zona del encargo: ') ?></label>
+            <?= $oDesplZonasCtr->desplegable() ?>
+        </div>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <label for="id_enc"><?= _('Encargo: ') ?></label>
+            <div id="desplegable_encargo">
+            </div>
+        </div>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <label for="id_ctr"><?= _('Centro: ') ?></label>
+            <?= $oDesplCentros->desplegable() ?>
+        </div>
+
+        <hr/>
+        <div class='item-details-form-buttons'>
+            <button data-action='save' class='slick-btn slick-btn-primary'><?= _('Grabar') ?></button>
+            <button data-action='eliminar_encargo' class='slick-btn slick-btn-primary'><?= _('Eliminar encargo') ?></button>
+            <button data-action='cancel' class='slick-btn slick-btn-default'><?= _('Cancelar') ?></button>
+        </div>
+    </div>
+
+</div>
+
+<script src="node_modules/slickgrid/dist/browser/slick.core.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.interactions.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.grid.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellrangeselector.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.formatters.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.editors.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
+
+<script>
+
+    var modal = $(".item-details-form");
+
+    modal.keydown(function (e) {
+        if (e.which == Slick.keyCode.ENTER) {
+            commitCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        } else if (e.which == Slick.keyCode.ESCAPE) {
+            cancelCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    });
+
+    modal.find("[data-action=save]").click(function () {
+        commitCurrentEdit();
+    });
+
+    modal.find("[data-action=eliminar_encargo]").click(function () {
+        eliminarCurrentEdit();
+    });
+
+    modal.find("[data-action=cancel]").click(function () {
+        cancelCurrentEdit();
+    });
+
+    function cancelCurrentEdit() {
+        modal.hide();
+    }
+
+    // Helper estandar para construir un `<select>` a partir del payload JSON
+    // de un endpoint de desplegable (contrato definido en `refactor.md`).
+    fnjs_construir_desplegable = function (data) {
+        if (!data) { return ''; }
+        var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+        if (data.action) {
+            $sel.attr('onchange', data.action);
+        }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        var opciones = data.opciones || {};
+        $.each(opciones, function (value, label) {
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data.selected && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        });
+        return $sel.prop('outerHTML');
+    }
+
+    function commitCurrentEdit() {
+        var id_item = $('#id_item').val();
+        var id_enc = $('#id_enc').val();
+        var id_ctr = $('#id_ubi').val();
+
+        if (!id_enc || !id_ctr) {
+            alert('<?= _('Falta encargo o centro') ?>');
+            return;
+        }
+
+        var url = '<?= $url_guardar_encargo_centro ?>';
+        var parametros = 'id_item=' + encodeURIComponent(id_item) +
+                         '&id_enc=' + encodeURIComponent(id_enc) +
+                         '&id_ctr=' + encodeURIComponent(id_ctr) +
+                         '<?= $h_guardar_encargo_centro ?>';
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: parametros,
+            dataType: 'json'
+        }).done(function (json) {
+            if (!json || json.success !== true) {
+                alert('<?= _('respuesta') ?>: ' + (json && json.mensaje ? json.mensaje : ''));
+                return;
+            }
+            modal.hide();
+            fnjs_refresh_grid();
+        });
+    }
+
+    function eliminarCurrentEdit() {
+        var id_item = $('#id_item').val();
+        if (!id_item) {
+            modal.hide();
+            return;
+        }
+
+        var url = '<?= $url_eliminar_encargo_centro ?>';
+        var parametros = 'id_item=' + encodeURIComponent(id_item) +
+                         '<?= $h_eliminar_encargo_centro ?>';
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: parametros,
+            dataType: 'json'
+        }).done(function (json) {
+            if (!json || json.success !== true) {
+                alert('<?= _('respuesta') ?>: ' + (json && json.mensaje ? json.mensaje : ''));
+                return;
+            }
+            modal.hide();
+            fnjs_refresh_grid();
+        });
+    }
+
+    function fnjs_refresh_grid() {
+        var id_zona = <?= (int)$id_zona ?>;
+        var url = '<?= $url_ver_encargos_centros ?>';
+        var parametros = 'id_zona=' + id_zona + '<?= $h_ver_encargos_centros ?>';
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: parametros,
+            dataType: 'html'
+        }).done(function (rta_txt) {
+            $('#div_encargos').html(rta_txt);
+        });
+    }
+
+    function fnjs_prepara_select_encargo() {
+        var enc_selected = $('#id_enc_selected').val();
+        var id_zona_modal = $('#id_zona_enc').val();
+        var url = '<?= $url_desplegable_encargos ?>';
+        var parametros = 'id_zona=' + encodeURIComponent(id_zona_modal) +
+                         '&id_enc=' + encodeURIComponent(enc_selected || '') +
+                         '<?= $h_desplegable_encargos ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        }).done(function (json) {
+            if (!json || json.success !== true) { return; }
+            try {
+                var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                $('#desplegable_encargo').html(fnjs_construir_desplegable(data));
+            } catch (e) {}
+        });
+
+        modal.show();
+    }
+
+    function fnjs_nuevo() {
+        reset_campos_modal();
+        $('#que').val('nuevo');
+        $('#titulo_modal').html('<?= _('nuevo encargo visible para un centro') ?>');
+        fnjs_prepara_select_encargo();
+        modal.show();
+    }
+
+    function reset_campos_modal() {
+        $('#titulo_modal').html('');
+        $('#id_item').val('');
+        $('#id_enc_selected').val('');
+        $('#id_ctr_selected').val('');
+    }
+
+    function openDetails(cell) {
+        $('#cell_selected').val(cell.cell);
+        $('#row_selected').val(cell.row);
+
+        var id_item = data[cell.row].id_item;
+        var id_encargo = data[cell.row].id_encargo;
+        var id_centro = data[cell.row].id_centro;
+
+        $('#titulo_modal').html('<?= _('modificar encargo visible para un centro') ?>');
+        $('#que').val('modificar');
+        $('#id_item').val(id_item);
+        $('#id_enc_selected').val(id_encargo);
+        $('#id_ctr_selected').val(id_centro);
+        $('#id_ubi').val(id_centro);
+
+        fnjs_prepara_select_encargo();
+        modal.show();
+    }
+
+    var grid;
+    var data = <?= $json_data_cuadricula ?>;
+    var columns = <?= $json_columns_cuadricula ?>;
+    var options = {
+        editable: false,
+        enableAddRow: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: false
+    };
+
+    $(function () {
+        grid = new Slick.Grid("#myGrid", data, columns, options);
+
+        grid.onClick.subscribe(function (e) {
+            var cell = grid.getCellFromEvent(e);
+            openDetails(cell);
+            e.stopPropagation();
+        });
+
+        grid.setActiveCell(0, 0);
+    });
+</script>

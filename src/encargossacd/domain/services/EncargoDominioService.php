@@ -41,7 +41,7 @@ class EncargoDominioService
         $dedic_h = 0;
         foreach ($cEncargoSacdHorario as $oEncargoSacdHorario) {
             $dia_inc = $oEncargoSacdHorario->getDia_inc();
-            switch ($oEncargoSacdHorario->getDiaRefVo()->value()) {
+            switch ($oEncargoSacdHorario->getDiaRefVo()?->value()) {
                 case "m":
                     // supongo que la mañana es de 5 horas (para que dé 35 h/semana)
                     $dedic_h += $dia_inc * 5;

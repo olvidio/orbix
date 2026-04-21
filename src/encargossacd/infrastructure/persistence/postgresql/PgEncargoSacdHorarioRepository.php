@@ -218,4 +218,24 @@ class PgEncargoSacdHorarioRepository extends ClaseRepository implements EncargoS
         $sQuery = "select nextval('propuesta_encargo_sacd_horario_id_item_seq'::regclass)";
         return $oDbl->query($sQuery)->fetchColumn();
     }
+
+    public function countExcepcionesByHorarioId(int $id_item_h): int
+    {
+        $oDbl = $this->getoDbl_Select();
+        $sql = 'SELECT COUNT(*) AS n FROM encargo_sacd_horario_excepcion WHERE id_item_h = :id_item_h';
+        $stmt = $this->prepareAndExecute($oDbl, $sql, ['id_item_h' => $id_item_h], __METHOD__, __FILE__, __LINE__);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)($row['n'] ?? 0);
+    }
+
+    public function eliminarExcepcionesPorHorarioId(int $id_item_h): bool
+    {
+        $oDbl = $this->getoDbl();
+        $sql = 'DELETE FROM encargo_sacd_horario_excepcion WHERE id_item_h = :id_item_h';
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) {
+            return false;
+        }
+        return $this->pdoExecute($stmt, ['id_item_h' => $id_item_h], __METHOD__, __FILE__, __LINE__);
+    }
 }

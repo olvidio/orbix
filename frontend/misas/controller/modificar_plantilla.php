@@ -1,0 +1,66 @@
+<?php
+
+use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
+use web\Desplegable;
+use web\Hash;
+
+require_once 'frontend/shared/global_header_front.inc';
+
+$data = PostRequest::getDataFromUrl('/src/misas/modificar_plantilla_data');
+
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($data['zonas_opciones'] ?? []);
+$oDesplZonas->setBlanco(false);
+$oDesplZonas->setNombre('id_zona');
+$oDesplZonas->setAction('fnjs_ver_plantilla_zona()');
+
+$oDesplTipoPlantilla = new Desplegable();
+$oDesplTipoPlantilla->setOpciones($data['tipos_plantilla'] ?? []);
+$oDesplTipoPlantilla->setNombre('tipo_plantilla');
+$oDesplTipoPlantilla->setOpcion_sel((string)($data['plantilla_selected'] ?? ''));
+$oDesplTipoPlantilla->setAction('fnjs_ver_plantilla_zona()');
+
+$a_TiposPlantilla2 = array_merge(
+    ['-' => ''],
+    $data['tipos_plantilla'] ?? []
+);
+$oDesplImportarDePlantilla = new Desplegable();
+$oDesplImportarDePlantilla->setOpciones($a_TiposPlantilla2);
+$oDesplImportarDePlantilla->setNombre('importar_de_plantilla');
+
+$oDesplOrden = new Desplegable();
+$oDesplOrden->setOpciones($data['orden_opciones'] ?? []);
+$oDesplOrden->setNombre('orden');
+$oDesplOrden->setAction('fnjs_ver_plantilla_zona()');
+
+$url_importar_plantilla = 'frontend/misas/controller/importar_plantilla.php';
+$oHashImportarPlantilla = new Hash();
+$oHashImportarPlantilla->setUrl($url_importar_plantilla);
+$oHashImportarPlantilla->setCamposForm('id_zona!tipo_plantilla_origen!tipo_plantilla_destino');
+$h_importar_plantilla = $oHashImportarPlantilla->linkSinVal();
+
+$url_modificar_cuadricula_zona = 'frontend/misas/controller/modificar_cuadricula_zona.php';
+$oHashZonaTipo = new Hash();
+$oHashZonaTipo->setUrl($url_modificar_cuadricula_zona);
+$oHashZonaTipo->setCamposForm('id_zona!tipo_plantilla!orden');
+$h_zona_tipo = $oHashZonaTipo->linkSinVal();
+
+$oHash = new Hash();
+$oHash->setUrl('frontend/misas/controller/modificar_plantilla.php');
+$oHash->setCamposForm('id_zona!tipo_plantilla!orden!importar_de_plantilla');
+
+$a_campos = [
+    'oDesplZonas' => $oDesplZonas,
+    'oDesplTipoPlantilla' => $oDesplTipoPlantilla,
+    'oDesplImportarDePlantilla' => $oDesplImportarDePlantilla,
+    'oDesplOrden' => $oDesplOrden,
+    'url_modificar_cuadricula_zona' => $url_modificar_cuadricula_zona,
+    'url_importar_plantilla' => $url_importar_plantilla,
+    'h_zona_tipo' => $h_zona_tipo,
+    'h_importar_plantilla' => $h_importar_plantilla,
+    'oHash' => $oHash,
+];
+
+$oView = new ViewNewPhtml('frontend\\misas\\controller');
+$oView->renderizar('modificar_plantilla.phtml', $a_campos);

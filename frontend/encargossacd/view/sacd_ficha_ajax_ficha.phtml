@@ -1,0 +1,146 @@
+<?php
+/**
+ * Fragmento HTML de la ficha de encargos de un SACD.
+ * Renderizado desde `sacd_ficha_ajax.php` con `que=ficha`.
+ *
+ * @var int $permiso
+ * @var string $observ_sacd
+ * @var list<array<string, mixed>> $encargos
+ * @var list<string> $avisos
+ * @var \web\Desplegable $oDesplEncs
+ * @var \web\Hash $oHash
+ * @var int $enc_num
+ * @var int $id_nom
+ */
+?>
+<script>
+    fnjs_mas_enc = function () {
+        var tipo_enc = $('#mas').val();
+        var encargo = $('#mas :selected').text();
+        if (!encargo) return;
+        var n = $('#enc_num').val();
+        var dedicacion;
+        ++n;
+
+        switch (tipo_enc) {
+            case '1110':
+            case '1210':
+                dedicacion = "<tr><td>rtm en: <span class='link' onclick=fnjs_update_div('#main','des/tareas/horario_ver.php?id_tipo_enc=" + tipo_enc + "')><?= _("definir horario") ?></span></td></tr>";
+                break;
+            case '6000':
+            case '5020':
+            case '5030':
+                dedicacion = '<tr><td class=etiqueta>' + encargo + ':<input type=hidden name=id_tipo_enc[' + n + '] value=' + tipo_enc + '></td><td><input type=text size=2 name=dedic_m[' + n + ']> <?= _("mañanas") ?></td><td><input type=text size=2 name=dedic_t[' + n + ']> <?= _("tarde 1ª hora") ?></td><td><input type=text size=2 name=dedic_v[' + n + ']> <?= _("tarde 2ª hora") ?></td></tr>';
+                break;
+        }
+
+        $('#pie').before(dedicacion);
+        $('#mas').val(0);
+        $('#enc_num').val(n);
+    }
+</script>
+<?php foreach ($avisos as $aviso): ?>
+    <div><?= htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') ?></div>
+<?php endforeach; ?>
+<form id="datos_sacd" action="frontend/encargossacd/controller/sacd_ficha_ajax.php" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <input type="hidden" id="enc_num" name="enc_num" value="<?= (int)$enc_num ?>">
+    <table border=1>
+        <?php
+        $modo_ant = '';
+        $otros_enc = '';
+        foreach ($encargos as $j => $e) {
+            $id_tipo_enc = (int)($e['id_tipo_enc'] ?? 0);
+            $id_enc = (int)($e['id_enc'] ?? 0);
+            $modo = (int)($e['modo'] ?? 0);
+            $mod_horario = (int)($e['mod_horario'] ?? 0);
+            $sf_sv = (int)($e['sf_sv'] ?? 0);
+            $desc_enc = (string)($e['desc_enc'] ?? '');
+            $dedic_sacd = (string)($e['dedic_sacd'] ?? '');
+            $dedic_m = (string)($e['dedic_m'] ?? '');
+            $dedic_t = (string)($e['dedic_t'] ?? '');
+            $dedic_v = (string)($e['dedic_v'] ?? '');
+
+            if ($id_tipo_enc === 4002 || $id_tipo_enc === 1110 || $id_tipo_enc === 1210) {
+                $txt = $dedic_sacd === '' ? _("crear horario") : $dedic_sacd;
+                $otros_enc .= '<tr><td>' . htmlspecialchars($desc_enc, ENT_QUOTES, 'UTF-8') . '</td>'
+                    . '<td colspan=3>' . htmlspecialchars($txt, ENT_QUOTES, 'UTF-8') . '</td></tr>';
+                continue;
+            }
+
+            if ($modo_ant !== $modo) {
+                $cabecera = match ($modo) {
+                    1 => _("coordinador"),
+                    2 => _("titular"),
+                    3 => _("titular (no cl)"),
+                    4 => _("suplente"),
+                    5 => _("colaborador"),
+                    default => '',
+                };
+                if ($cabecera === '') {
+                    $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                    exit ($err_switch);
+                }
+                echo '<tr><th colspan=4>' . htmlspecialchars($cabecera, ENT_QUOTES, 'UTF-8') . '</th></tr>';
+            }
+            $modo_ant = $modo;
+
+            $pagina = (string)($e['pagina_ctr'] ?? '');
+            ?>
+            <tr>
+                <td class=etiqueta>
+                    <input type=hidden name=id_tipo_enc[<?= $j ?>] value=<?= $id_tipo_enc ?>>
+                    <input type=hidden name=id_enc[<?= $j ?>] value=<?= $id_enc ?>>
+                    <?php if ($permiso !== 1 && $sf_sv === 2): ?>
+                        <?= htmlspecialchars($desc_enc, ENT_QUOTES, 'UTF-8') ?>
+                    <?php else: ?>
+                        <span class="link"
+                              onclick="fnjs_update_div('#main','<?= $pagina ?>');"><?= htmlspecialchars($desc_enc, ENT_QUOTES, 'UTF-8') ?></span>
+                    <?php endif; ?>
+                </td>
+                <?php
+                if ($modo !== 4) {
+                    if ($mod_horario === 3) {
+                        $txt_dedic = $dedic_sacd === '' ? _("crear horario") : $dedic_sacd;
+                        ?>
+                        <td colspan=3>
+                            <span class="link"
+                                  onclick="fnjs_crear_horario(<?= $j ?>);"><?= htmlspecialchars($txt_dedic, ENT_QUOTES, 'UTF-8') ?></span>
+                        </td>
+                        <?php
+                    } else {
+                        ?>
+                        <td><input type=text size=1 name="dedic_m[<?= $j ?>]"
+                                   value="<?= htmlspecialchars($dedic_m, ENT_QUOTES, 'UTF-8') ?>"> <?= _("mañanas") ?></td>
+                        <td><input type=text size=1 name="dedic_t[<?= $j ?>]"
+                                   value="<?= htmlspecialchars($dedic_t, ENT_QUOTES, 'UTF-8') ?>"> <?= _("tarde 1ª hora") ?></td>
+                        <td><input type=text size=1 name="dedic_v[<?= $j ?>]"
+                                   value="<?= htmlspecialchars($dedic_v, ENT_QUOTES, 'UTF-8') ?>"> <?= _("tarde 2ª hora") ?></td>
+                        <?php
+                    }
+                }
+                ?>
+            </tr>
+            <?php
+        }
+        if ($otros_enc !== '') {
+            echo '<tr><th colspan=4>' . htmlspecialchars(_("otros"), ENT_QUOTES, 'UTF-8') . '</th></tr>';
+            echo $otros_enc;
+        }
+        ?>
+        <tr id=pie>
+            <td><?= _("añadir encargo") ?>
+                <?= $oDesplEncs->desplegable() ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan=4><?= _("observaciones") ?>: <textarea rows=3 cols=50
+                                                               name=observ><?= htmlspecialchars($observ_sacd, ENT_QUOTES, 'UTF-8') ?></textarea>
+            </td>
+        </tr>
+        <?php if ($permiso === 1): ?>
+            <th colspan=4><input type="button" name="ok" onclick="fnjs_guardar('#datos_sacd');"
+                                 value="<?= htmlspecialchars(ucfirst(_("guardar")), ENT_QUOTES, 'UTF-8') ?>"></th>
+        <?php endif; ?>
+    </table>
+</form>

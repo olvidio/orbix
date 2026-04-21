@@ -1,0 +1,252 @@
+<script>
+    fnjs_construir_desplegable = function (data) {
+        if (!data) { return ''; }
+        var id = data.id || 'lst_tipo_enc_sel';
+        var name = data.name || data.id || 'id_tipo_enc';
+        var $sel = $('<select></select>').attr({ id: id, name: name });
+        if (data.action) {
+            $sel.attr('onchange', data.action);
+        }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        var opciones = data.opciones || {};
+        $.each(opciones, function (value, label) {
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        });
+        return $sel.prop('outerHTML');
+    };
+
+    fnjs_strip_hash_params = function (serialized) {
+        return serialized.split('&').filter(function (p) {
+            return p !== '' && !/^h=/.test(p) && !/^hnov=/.test(p);
+        }).join('&');
+    };
+
+    fnjs_lista_ctrs_por_zona = function () {
+        var id_zona_sel = $('#id_zona_sel').val();
+        $('#id_zona').val(id_zona_sel);
+
+        var url = '<?= $url_ctr ?>';
+        var parametros = 'id_zona=' + id_zona_sel + '<?= $h_ctr_zona ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        })
+            .done(function (json) {
+                if (!json || json.success !== true) {
+                    return;
+                }
+                try {
+                    var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                    $('#centros').html(fnjs_construir_desplegable(data));
+                } catch (e) {
+                }
+            });
+    }
+
+    fnjs_lista_zonas = function () {
+        var id_zona = $('#id_zona').val();
+        var url = '<?= $url_zona ?>';
+        var parametros = 'id_zona=' + id_zona + '<?= $h_zona ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        })
+            .done(function (json) {
+                if (!json || json.success !== true) {
+                    return;
+                }
+                try {
+                    var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                    var prefix = data.label_prefix || '';
+                    $('#zonas').html(prefix + fnjs_construir_desplegable(data));
+                } catch (e) {
+                }
+            });
+    }
+
+    fnjs_lista_ctrs = function () {
+        var filtro_ctr = $('#filtro_ctr').val();
+
+        if (filtro_ctr === '8') { // zonas
+            fnjs_lista_zonas();
+        } else {
+            // borrar las zonas
+            $('#zonas').html('');
+
+            var url = '<?= $url_ctr ?>';
+            var parametros = 'filtro_ctr=' + filtro_ctr + '<?= $h_ctr ?>';
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'json'
+            })
+                .done(function (json) {
+                    if (!json || json.success !== true) {
+                        return;
+                    }
+                    try {
+                        var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                        $('#centros').html(fnjs_construir_desplegable(data));
+                    } catch (e) {
+                    }
+                });
+        }
+    }
+
+    fnjs_guardar = function (formulario) {
+        var err = 0;
+        var desc_enc = $('#desc_enc').val();
+
+        if (!desc_enc) {
+            alert("Debe llenar el campo de Descripción del encargo");
+            err = 1;
+        }
+
+        if (err != 1) {
+            var que = $('input[name="que"]').val() || '';
+            var url = (que === 'nuevo') ? '<?= $url_encargo_ver_nuevo ?>' : '<?= $url_encargo_ver_editar ?>';
+            var hExtra = (que === 'nuevo') ? '<?= $h_encargo_ver_nuevo ?>' : '<?= $h_encargo_ver_editar ?>';
+            var parametros = fnjs_strip_hash_params($(formulario).serialize()) + hExtra;
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'json'
+            })
+                .done(function (json) {
+                    if (!json || json.success !== true) {
+                        alert('<?= _("respuesta") ?>: ' + (json && json.mensaje ? json.mensaje : ''));
+                        return;
+                    }
+                    <?= $oPosicion->js_atras(1) ?>
+                });
+        }
+
+    }
+
+    fnjs_generarNomEnc = function (formulario) {
+        var sf = $('#filtro_ctr').val();
+        var id_ubi = $('#lst_ctrs').val();
+        var nom_tipo = '';
+
+        nom_tipo = $('#lst_tipo_enc :selected').text();
+        lloc = $('#lst_ctrs :selected').text();
+        if (sf == 2) {
+            sf = 'sf ';
+        } else {
+            sf = '';
+        }
+        tipus = sf + nom_tipo;
+        if (lloc == '') {
+            $('#desc_enc').val(tipus);
+        } else {
+            $('#desc_enc').val(tipus + ' (' + lloc + ')');
+        }
+    }
+
+    fnjs_lst_tipo_enc = function () {
+        var grupo = $('#grupo').val();
+        var idTipo = $('#lst_tipo_enc select').first().val() || '';
+        var parametros = 'grupo=' + encodeURIComponent(grupo) + '&id_tipo_enc=' + encodeURIComponent(idTipo) + '<?= $h_lst_tipo ?>';
+        var url = '<?= $url_lst_tipo_data ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        })
+            .done(function (json) {
+                if (!json || json.success !== true) {
+                    return;
+                }
+                try {
+                    var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                    $('#lst_tipo_enc').html(fnjs_construir_desplegable(data));
+                } catch (e) {
+                }
+            });
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
+<form id="modifica" name="modifica" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <?php if (empty($id_enc)): ?>
+    <table>
+        <tr>
+            <th class=titulo_inv><?= _("nuevo encargo") ?></th>
+        </tr>
+        <?php else: ?>
+        <table>
+            <tr>
+                <th class=titulo_inv><?= ucfirst(_("modificar encargo")) ?></th>
+            </tr>
+
+            <?php endif; ?>
+            <tr>
+                <td class=subtitulo><?= _("escoger el tipo de encargo") ?></td>
+            </tr>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td class="etiqueta"><?= _("grupo") ?></td>
+                            <td>
+                                <?= $oDesplGrupos->desplegable() ?>
+                            </td>
+                            <td class="etiqueta"><?= _("tipo encargo") ?></td>
+                            <td id="lst_tipo_enc">
+                                <?= $oDesplNoms->desplegable() ?>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td><?= _("grupo de ctrs") ?>:</td>
+                <td>
+                    <?= $oDesplGrupoCtrs->desplegable() ?>
+                </td>
+                <td id="zonas">
+                    <?php if ($grupo == 8): ?>
+                        <?= _("zona") ?> :
+                        <?= $oDesplZonas->desplegable() ?>
+                    <?php endif; ?>
+                </td>
+                <td> <?= _("centro") ?> :</td>
+                <td id="centros">
+                    <?= $oDesplCtrs->desplegable() ?>
+                </td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= _("descripción") ?>:</td>
+                <td colspan=7>
+                    <input class=contenido size='50' id='desc_enc' name='desc_enc' value="<?= htmlspecialchars((string)$desc_enc, ENT_QUOTES, 'UTF-8') ?>">&nbsp;&nbsp;&nbsp;
+                    <span class=link onclick="fnjs_generarNomEnc(document.modifica)"><?= _("generar") ?></span>
+                </td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= _("lugar") ?>:</td>
+                <td colspan=5><input class=contenido size="30" name="desc_lugar" value="<?= htmlspecialchars((string)$desc_lugar, ENT_QUOTES, 'UTF-8') ?>"></td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= _("idioma") ?>:</td>
+                <td><?= $oDesplIdiomas->desplegable() ?></td>
+            </tr>
+        </table>
+        <input TYPE="button" VALUE="<?= htmlspecialchars((string)$txt_btn, ENT_QUOTES, 'UTF-8') ?>" onclick="javascript:fnjs_guardar('#modifica')">
+</form>

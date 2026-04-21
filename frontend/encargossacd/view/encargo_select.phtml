@@ -1,0 +1,86 @@
+<script>
+    fnjs_strip_hash_sel = function (serialized) {
+        return serialized.split('&').filter(function (p) {
+            return p !== '' && !/^h=/.test(p) && !/^hnov=/.test(p);
+        }).join('&');
+    };
+
+    fnjs_horario = function (formulario) {
+        var url = '<?= $url_horario ?>';
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $(formulario).attr('action', url);
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_modificar = function (formulario) {
+        var url = '<?= $url_modificar ?>';
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $('#que').val("editar");
+            $(formulario).attr('action', url);
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_borrar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        var seguro;
+        if (rta == 1) {
+            seguro = confirm("<?= htmlspecialchars((string)$txt_eliminar, ENT_QUOTES, 'UTF-8') ?>");
+            if (seguro) {
+                $('#que').val("eliminar");
+                $(formulario).one("submit", function () {
+                    var url = '<?= $url_borrar ?>';
+                    var hExtra = '<?= $h_borrar ?>';
+                    var parametros = fnjs_strip_hash_sel($(this).serialize()) + hExtra;
+                    $.ajax({
+                        url: url,
+                        type: 'post',
+                        data: parametros,
+                        dataType: 'json'
+                    })
+                        .done(function (json) {
+                            if (!json || json.success !== true) {
+                                alert('<?= _("respuesta") ?>: ' + (json && json.mensaje ? json.mensaje : ''));
+                                return;
+                            }
+                            <?= $oPosicion->js_atras() ?>
+                        });
+                    return false;
+                });
+                $(formulario).trigger("submit");
+                $(formulario).off();
+            }
+        }
+    }
+</script>
+<?php if ($no_tipo_enc): ?>
+    <form id="frm_encargo_que" action="frontend/encargossacd/controller/encargo_select.php" method="post"
+          onkeydown="fnjs_enviar(event,this);">
+        <table>
+            <thead>
+            <th class=titulo_inv colspan=4><?= ucfirst(_("buscar un encargo")) ?>&nbsp;&nbsp;&nbsp;
+                <input class=contenido name="desc_enc" size="25"></th>
+            <th colspan=4>
+                <input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_encargo_que');"
+                       value="<?= _("buscar") ?>" class="btn_ok"></th>
+            </thead>
+        </table>
+    </form>
+<?php endif; ?>
+<h2 class=subtitulo><?= htmlspecialchars((string)$titulo, ENT_QUOTES, 'UTF-8') ?></h2>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <input type='Hidden' id='que' name='que' value=''>
+    <?= $oHash->getCamposHtml() ?>
+    <?= $oTabla->mostrar_tabla() ?>
+</form>
+<br>
+<table class=botones>
+    <tr class=botones>
+        <td class=botones>
+	<span class=cabecera class=link onclick="fnjs_update_div('#main','<?= $pagina_nuevo ?>')">
+		<?= _("añadir encargo") ?>
+	</span>
+        </td>
+    </tr>
+</table>

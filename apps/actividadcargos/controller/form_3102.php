@@ -34,6 +34,7 @@ use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
 use web\Hash;
 use function core\is_true;
@@ -53,6 +54,9 @@ $Qid_cargo = '';
 
 $Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
 $Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
+if ($Qid_dossier <= 0) {
+    $Qid_dossier = 3102;
+}
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
@@ -198,6 +202,7 @@ $a_campos = ['obj' => $obj,
     'chk' => $chk,
     'observ' => $observ,
     'Qmod' => $Qmod,
+    'url_update' => DossierTipoPublicUrls::relativeUpdate($Qid_dossier),
 ];
 
 $oView = new ViewPhtml('actividadcargos\model');
