@@ -1,40 +1,23 @@
 <?php
 
-use function core\strtoupper_dlb;
-
+use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\domain\value_objects\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
-use web\PeriodoQue;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $data = PostRequest::getDataFromUrl('/src/misas/plan_de_misas_pantalla_data', ['pantalla' => 'ver']);
 
-$aOpciones = [
+$periodo_td_html = PeriodoTdHelper::build([
     'esta_semana' => _('esta semana'),
     'este_mes' => _('este mes'),
     'proxima_semana' => _('próxima semana de lunes a domingo'),
     'proximo_mes' => _('próximo mes natural'),
     'separador' => '---------',
     'otro' => _('otro'),
-];
-
-$oFormP = new PeriodoQue();
-$oFormP->setFormName('frm_nuevo_periodo');
-$oFormP->setTitulo(strtoupper_dlb(_('seleccionar un periodo')));
-$oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplPeriodosOpcion_sel('este_mes');
-$oFormP->setisDesplAnysVisible(false);
-
-$ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy->format('d/m/Y');
-$oFormP->setEmpiezaMin($shoy);
-$oFormP->setEmpiezaMax($shoy);
-
-$periodo_td_html = $oFormP->getTd();
+], 'este_mes');
 
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($data['zonas_opciones'] ?? []);

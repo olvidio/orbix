@@ -1,32 +1,38 @@
 <?php
 
+use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
-use src\encargossacd\domain\contracts\EncargoHorarioRepositoryInterface;
+use frontend\shared\PostRequest;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $Qid_item_h = (int)filter_input(INPUT_POST, 'id_item_h');
 
-$EncargoHorarioRepository = $GLOBALS['container']->get(EncargoHorarioRepositoryInterface::class);
-$oEncargoHorario = $EncargoHorarioRepository->findById($Qid_item_h);
+$data = PostRequest::getDataFromUrl('/src/misas/horario_tarea_data', [
+    'id_item_h' => $Qid_item_h,
+]);
 
-$t_start = $oEncargoHorario !== null ? $oEncargoHorario->getH_ini() : '';
-$t_end = $oEncargoHorario !== null ? $oEncargoHorario->getH_fin() : '';
+$t_start = (string)($data['t_start'] ?? '');
+$t_end = (string)($data['t_end'] ?? '');
 
+$url_guardar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/guardar_horario';
 $oHash = new Hash();
 $oHash->setArrayCamposHidden(['id_item_h' => $Qid_item_h]);
-$oHash->setUrl('apps/misas/controller/guardar_horario.php');
+$oHash->setUrl($url_guardar);
 $oHash->setCamposForm('t_start!t_end');
 $param_guardar = $oHash->getParamAjax();
 
-$oHash->setUrl('apps/misas/controller/quitar_horario.php');
+$url_quitar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/quitar_horario';
+$oHash->setUrl($url_quitar);
 $oHash->setCamposForm('id_item');
 $param_quitar = $oHash->getParamAjax();
 
 $a_campos = [
     't_start' => $t_start,
     't_end' => $t_end,
+    'url_guardar' => $url_guardar,
+    'url_quitar' => $url_quitar,
     'param_guardar' => $param_guardar,
     'param_quitar' => $param_quitar,
 ];

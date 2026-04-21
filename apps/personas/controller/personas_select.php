@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
@@ -13,7 +13,6 @@ use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
-use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 use web\Hash;
 use web\Lista;
@@ -427,8 +426,7 @@ $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia !== null) {
     $sPrefs = $oPreferencia->getPreferencia();
 }
-$NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
-$aNivelStgr = $NivelStgrRepository->getArrayNivelesStgrBreve();
+$aNivelStgr = NivelStgrId::getArrayNivelStgr();
 foreach ($cPersonas as $oPersona) {
     $i++;
     $a_val = [];
@@ -447,7 +445,7 @@ foreach ($cPersonas as $oPersona) {
                 $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             }
             $oCentroDl = $CentroDlRepository->findById($id_ctr);
-            $nombre_ubi = $oCentroDl?->getNombre_ubi()?? '';
+            $nombre_ubi = $oCentroDl?->getNombre_ubi() ?? '';
         }
     } else {
         $nombre_ubi = $oPersona->getDl();
@@ -473,7 +471,7 @@ foreach ($cPersonas as $oPersona) {
     para los n y agd siempre que no estemos ante una selección para ver
     un planning*/
     if ((($tabla === 'p_numerarios') || ($tabla === 'p_agregados')) and ($tipo !== 'planning')) {
-        $a_val[5] = $aNivelStgr[$oPersona->getNivel_stgr()]?? '';
+        $a_val[5] = $aNivelStgr[$oPersona->getNivel_stgr()] ?? '';
     }
     if (!empty($Qcmb)) {
         $a_val[6] = $oPersona->getSituacion();

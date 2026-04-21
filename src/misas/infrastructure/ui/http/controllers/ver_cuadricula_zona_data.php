@@ -17,9 +17,7 @@ $in = [
 
 $result = CuadriculaZonaGridData::build($in);
 
-if (!empty($result['error'])) {
-    ContestarJson::enviar($result['error'], []);
-}
-
+$error = (string)($result['error'] ?? '');
 unset($result['error']);
-ContestarJson::enviar('', $result);
+
+ContestarJson::enviar($error, $result);

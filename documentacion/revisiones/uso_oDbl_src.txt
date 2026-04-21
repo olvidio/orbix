@@ -6,7 +6,6 @@ src/actividades/infrastructure/persistence/postgresql/PgActividadExRepository.ph
 src/actividades/infrastructure/persistence/postgresql/PgActividadPubRepository.php
 src/actividades/infrastructure/persistence/postgresql/PgActividadRepository.php
 src/actividades/infrastructure/persistence/postgresql/PgImportadaRepository.php
-src/actividades/infrastructure/persistence/postgresql/PgNivelStgrRepository.php
 src/actividades/infrastructure/persistence/postgresql/PgRepeticionRepository.php
 src/actividades/infrastructure/persistence/postgresql/PgTipoDeActividadRepository.php
 src/actividadescentro/infrastructure/persistence/postgresql/PgCentroEncargadoRepository.php

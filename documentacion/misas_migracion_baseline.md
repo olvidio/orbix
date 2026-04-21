@@ -186,6 +186,20 @@ El modulo `misas` usa varios dispatchers que habra que partir por accion en cada
 - **Zona / SACD (modal en `frontend/zonassacd`):** rutas `/src/misas/zona_sacd_datos_get` y `/src/misas/zona_sacd_datos_put` (`ZonaSacdDatosGet` / `ZonaSacdDatosPut`; `dw*` como boolean via `FILTER_VALIDATE_BOOLEAN`). Wrappers `apps/misas/controller/zona_sacd_datos_*.php` sin cambiar las URLs que ya usa `zona_sacd.phtml`.
 - **Compatibilidad legacy:** wrappers `apps` para `cambiar_status`, `nuevo_status`, `ver_misas_zona`.
 
+## Slice 12 — Refactor post-migracion (simplificaciones internas)
+
+Cambios centrados en **coherencia con `refactor.md` y reduccion de duplicacion** tras cerrar slices 1–11 (sin alterar comportamiento visible para el usuario):
+
+- **URLs rotas corregidas.** `frontend/encargossacd/controller/horario_sacd_ver.php` + `frontend/zonassacd/view/zona_sacd.phtml` + `frontend/misas/controller/horario_tarea.php` apuntaban a `apps/misas/controller/...` (directorio eliminado). Ahora apuntan a endpoints canonicos `/src/misas/...`.
+- **`horario_tarea` (lectura):** nueva `src/misas/application/HorarioTareaData` + endpoint `/src/misas/horario_tarea_data`. El frontend ya no instancia repositorios backend ni accede al contenedor DI.
+- **`nuevo_status` movido a backend.** Se elimina `frontend/misas/controller/nuevo_status.php` (actuaba de endpoint HTML) y se crea `src/misas/infrastructure/ui/http/controllers/nuevo_status.php` (JSON). El frontend de `cambiar_status` adapta la llamada AJAX a JSON (`ContestarJson`).
+- **Helper `IdNomJefeResolver`** (`src/misas/application/support`). Centraliza el calculo de `id_nom_jefe` + chequeo de permisos que estaba duplicado (13 lineas) en 5 clases (`CambiarStatusPantallaData`, `PlanDeMisasPantallaData`, `BuscarPlanCtrData`, `ModificarEncargosData`, `ModificarEncargosCentrosData`). Se elimina el `exit()` en capa application; ahora devuelve error estructurado (`RuntimeException` o array `error`) y el controlador HTTP responde con `ContestarJson`.
+- **Fragmentos `_*_fragment.php` absorbidos.** Se fusionan en su `*_data_build.php` hermano los cuatro fragmentos procedurales (`ver_misas_zona`, `crear_nuevo_periodo`, `cuadricula_zona_grid`, `importar_plantilla`), eliminando los `use` duplicados y el salto adicional `require`.
+- **Helper frontend `PeriodoTdHelper`** (`frontend/misas/support`). Sustituye ~20 lineas duplicadas de configuracion de `web\\PeriodoQue` en 6 controllers (`buscar_plan_ctr`, `buscar_plan_sacd`, `cambiar_status`, `preparar_plan_de_misas`, `modificar_plan_de_misas`, `ver_plan_de_misas`).
+- **Helper frontend `CuadriculaZonaRenderer`** (`frontend/misas/support`). Encapsula la construccion de `Hash` (`cuadricula_update`, `desplegable_sacd`, self) y la composicion de `$a_campos` para `ver_cuadricula_zona.phtml`. Aplicado a los 4 controllers que compartian ~60 lineas: `ver_cuadricula_zona`, `modificar_cuadricula_zona`, `ver_misas_zona`, `crear_nuevo_periodo`.
+- **`ver_cuadricula_zona_data.php` homogeneizado.** Cambio `if (error) enviar; unset; enviar` a `unset + enviar` unico, alineandose con el patron usado por el resto de `*_data.php`.
+- **`VerPlanCtrData` / `VerPlanSacdData` ya no devuelven HTML.** Ambos use case se convierten en productores de datos (`columns`, `rows`, `legend`). El HTML pasa a `frontend/misas/view/ver_plan_ctr.phtml`, `ver_plan_sacd.phtml` e `imprimir_plan_ctr.phtml`. Con ello los tres controllers frontend dejan de hacer `echo $data['html']` y usan `ViewNewPhtml`, respetando la separacion application ↔ view de `refactor.md`. Se extrae ademas `PeriodoDateRange` (`src/misas/application/support`) para eliminar la duplicacion del calculo de rango entre ambos use cases.
+
 ## Slice 11 — Limpieza y menus (completado)
 
 - **`documentacion/Documentacion_Obix/menus.csv`** y **`proves/aux_metamenus.csv`:** entrada del modulo misas → `frontend/misas/controller/misas_index.php`.

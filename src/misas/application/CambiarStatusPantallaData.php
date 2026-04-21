@@ -2,10 +2,9 @@
 
 namespace src\misas\application;
 
-use core\ConfigGlobal;
+use RuntimeException;
+use src\misas\application\support\IdNomJefeResolver;
 use src\misas\domain\value_objects\EncargoDiaStatus;
-use src\usuarios\domain\contracts\RoleRepositoryInterface;
-use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 
 /**
@@ -22,26 +21,13 @@ class CambiarStatusPantallaData
      */
     public static function getData(): array
     {
-        $container = $GLOBALS['container'];
-
-        $UsuarioRepository = $container->get(UsuarioRepositoryInterface::class);
-        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
-        $id_role = $oMiUsuario->getId_role();
-
-        $RoleRepository = $container->get(RoleRepositoryInterface::class);
-        $aRoles = $RoleRepository->getArrayRoles();
-
-        $id_nom_jefe = null;
-        if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-            if (!$_SESSION['oConfig']->is_jefeCalendario()) {
-                $id_nom_jefe = (int)$oMiUsuario->getCsvIdPauAsString();
-                if ($id_nom_jefe === 0) {
-                    exit(_('No tiene permiso para ver esta página'));
-                }
-            }
+        $jefe = IdNomJefeResolver::resolve();
+        if ($jefe['error'] !== '') {
+            throw new RuntimeException($jefe['error']);
         }
+        $id_nom_jefe = $jefe['id_nom_jefe'];
 
-        $ZonaRepository = $container->get(ZonaRepositoryInterface::class);
+        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
         $zonas = $ZonaRepository->getArrayZonas($id_nom_jefe);
 
         $orden = [

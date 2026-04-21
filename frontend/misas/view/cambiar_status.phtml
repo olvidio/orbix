@@ -93,11 +93,11 @@
                 url: url,
                 type: 'post',
                 data: parametros,
-                dataType: 'html'
+                dataType: 'json'
             })
-                .done(function (rta_txt) {
-                    if (rta_txt && String(rta_txt).trim() !== '') {
-                        alert(rta_txt);
+                .done(function (json) {
+                    if (json && json.success === false) {
+                        alert(json.mensaje || '');
                         return;
                     }
                     fnjs_ver_cuadricula_zona();

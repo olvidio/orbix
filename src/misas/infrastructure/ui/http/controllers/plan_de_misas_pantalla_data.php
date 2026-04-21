@@ -8,4 +8,8 @@ if ($pantalla === '') {
     $pantalla = 'preparar';
 }
 
-ContestarJson::enviar('', PlanDeMisasPantallaData::getData($pantalla));
+try {
+    ContestarJson::enviar('', PlanDeMisasPantallaData::getData($pantalla));
+} catch (\RuntimeException $e) {
+    ContestarJson::enviar($e->getMessage());
+}

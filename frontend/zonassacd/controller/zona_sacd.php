@@ -22,13 +22,16 @@ $oHashSacd->setUrl($url_ajax_lista);
 $oHashSacd->setCamposForm('id_zona');
 $h_sacd = $oHashSacd->linkSinVal();
 
+$url_zona_sacd_get = '/src/misas/zona_sacd_datos_get';
+$url_zona_sacd_put = '/src/misas/zona_sacd_datos_put';
+
 $oHashUrlGet = new Hash();
-$oHashUrlGet->setUrl('apps/misas/controller/zona_sacd_datos_get.php');
+$oHashUrlGet->setUrl($url_zona_sacd_get);
 $oHashUrlGet->setCamposForm('id_sacd!id_zona');
 $h_url_get = $oHashUrlGet->linkSinVal();
 
 $oHashUrlPut = new Hash();
-$oHashUrlPut->setUrl('apps/misas/controller/zona_sacd_datos_put.php');
+$oHashUrlPut->setUrl($url_zona_sacd_put);
 $oHashUrlPut->setCamposForm('id_sacd!id_zona!dw1!dw2!dw3!dw4!dw5!dw6!dw7');
 $h_url_put = $oHashUrlPut->linkSinVal();
 
@@ -45,6 +48,8 @@ $a_campos = [
     'h_sacd' => $h_sacd,
     'h_url_get' => $h_url_get,
     'h_url_put' => $h_url_put,
+    'url_zona_sacd_get' => $url_zona_sacd_get,
+    'url_zona_sacd_put' => $url_zona_sacd_put,
     'perm_des' => !empty($data['perm_des']),
     'oDesplZonas' => $oDesplZonas,
 ];

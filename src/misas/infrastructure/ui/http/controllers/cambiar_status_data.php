@@ -3,4 +3,8 @@
 use src\misas\application\CambiarStatusPantallaData;
 use web\ContestarJson;
 
-ContestarJson::enviar('', CambiarStatusPantallaData::getData());
+try {
+    ContestarJson::enviar('', CambiarStatusPantallaData::getData());
+} catch (\RuntimeException $e) {
+    ContestarJson::enviar($e->getMessage());
+}

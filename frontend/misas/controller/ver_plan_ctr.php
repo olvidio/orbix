@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -18,5 +19,9 @@ $data = PostRequest::getDataFromUrl('/src/misas/ver_plan_ctr_data', [
     'empiezamax' => $Qempiezamax,
 ]);
 
-header('Content-Type: text/html; charset=UTF-8');
-echo $data['html'] ?? '';
+$oView = new ViewNewPhtml('frontend\\misas\\controller');
+$oView->renderizar('ver_plan_ctr.phtml', [
+    'columns' => $data['columns'] ?? [],
+    'rows' => $data['rows'] ?? [],
+    'legend' => $data['legend'] ?? [],
+]);

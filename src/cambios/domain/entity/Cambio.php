@@ -4,9 +4,9 @@ namespace src\cambios\domain\entity;
 
 use core\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\domain\value_objects\ActividadTipoId;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\cambios\domain\contracts\CambioRepositoryInterface;
@@ -173,8 +173,7 @@ class Cambio
                 $sValor_new = empty($sValor_new) ? $sValor_new : $aRepeticion[$sValor_new];
             }
             if ($sPropiedad === 'nivel_stgr') {
-                $NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
-                $aNivelStgr = $NivelStgrRepository->getArrayNivelesStgr();
+                $aNivelStgr = NivelStgrId::getArrayNivelStgr();
                 $sValor_old = empty($sValor_old) ? $sValor_old : $aNivelStgr[$sValor_old];
                 $sValor_new = empty($sValor_new) ? $sValor_new : $aNivelStgr[$sValor_new];
             }

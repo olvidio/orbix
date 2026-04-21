@@ -3,9 +3,8 @@
 namespace src\actividades\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
-use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\application\services\DelegacionDropdown;
@@ -111,7 +110,7 @@ final class ActividadVerDatos
                 $lugar_esp = (string)$entidad['lugar_esp'];
                 // isfsv derivado del id_tipo_activ.
                 $id_tipo_activ = (string)$entidad['id_tipo_activ'];
-                $isfsv = (int)substr($id_tipo_activ, 0, 1);
+                $isfsv = (int)$id_tipo_activ[0];
             }
         }
 
@@ -132,8 +131,7 @@ final class ActividadVerDatos
         $oDesplTarifa->setOpcion_sel($tarifa);
         $html_despl_tarifa = $oDesplTarifa->desplegable();
 
-        $NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
-        $aOpciones = $NivelStgrRepository->getArrayNivelesStgr();
+        $aOpciones = NivelStgrId::getArrayNivelStgr();
         $oDesplNivel = new Desplegable();
         $oDesplNivel->setOpciones($aOpciones);
         $oDesplNivel->setNombre('nivel_stgr');

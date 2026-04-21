@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
-use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\value_objects\IncCode;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -164,7 +164,7 @@ if (!empty($Qnuevo)) {
             $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         }
         $oCentroDl = $CentroDlRepository->findById($id_ctr);
-        $nom_ctr = $oCentroDl?->getNombre_ubi()?? '';
+        $nom_ctr = $oCentroDl?->getNombre_ubi() ?? '';
         $oDesplCentroDl = [];
     } else {
         $nom_ctr = '';
@@ -328,8 +328,7 @@ $oDesplLengua->setNombre('idioma_preferido');
 $oDesplLengua->setOpcion_sel($idioma_preferido);
 
 //posibles valores de stgr
-$NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
-$aTipos_stgr = $NivelStgrRepository->getArrayNivelesStgr();
+$aTipos_stgr = NivelStgrId::getArrayNivelStgr();
 $oDesplStgr = new Desplegable();
 $oDesplStgr->setNombre('nivel_stgr');
 $oDesplStgr->setOpciones($aTipos_stgr);
@@ -371,7 +370,6 @@ $a_parametros = array('pau' => 'p', 'id_nom' => $Qid_nom, 'obj_pau' => $Qobj_pau
 $gohome = Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($a_parametros));
 $a_parametros = array('pau' => 'p', 'id_pau' => $Qid_nom, 'obj_pau' => $Qobj_pau);
 $godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros));
-
 
 
 $a_campos = ['obj_txt' => $obj,

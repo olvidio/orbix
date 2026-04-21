@@ -11,7 +11,7 @@
  */
 
 use core\ViewPhtml;
-use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\shared\infrastructure\ProvidesRepositories;
 use web\Desplegable;
 use web\Hash;
@@ -75,8 +75,7 @@ $nom = $oPersona->getNombreApellidos();
 $stgr = $oPersona->getNivel_stgr();
 
 //posibles valores de stgr
-$NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
-$aNivelStgr = $NivelStgrRepository->getArrayNivelesStgr();
+$aNivelStgr = NivelStgrId::getArrayNivelStgr();
 
 $oDespl = new Desplegable();
 $oDespl->setNombre('nivel_stgr');

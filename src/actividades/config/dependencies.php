@@ -3,12 +3,10 @@
 use src\actividades\domain\contracts\ActividadExRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
-use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\infrastructure\persistence\postgresql\PgActividadExRepository;
 use src\actividades\infrastructure\persistence\postgresql\PgActividadPubRepository;
 use src\actividades\infrastructure\persistence\postgresql\PgActividadRepository;
-use src\actividades\infrastructure\persistence\postgresql\PgNivelStgrRepository;
 use src\actividades\infrastructure\persistence\postgresql\PgRepeticionRepository;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\infrastructure\persistence\postgresql\PgActividadAllRepository;
@@ -22,7 +20,6 @@ use function DI\autowire;
 
 return [
     // Mapeos de Interfaces a Implementaciones
-    NivelStgrRepositoryInterface::class => autowire(PgNivelStgrRepository::class),
     RepeticionRepositoryInterface::class => autowire(PgRepeticionRepository::class),
     ActividadAllRepositoryInterface::class => autowire(PgActividadAllRepository::class),
     ActividadDlRepositoryInterface::class => autowire(PgActividadDlRepository::class),

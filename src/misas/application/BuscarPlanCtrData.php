@@ -5,6 +5,7 @@ namespace src\misas\application;
 use core\ConfigGlobal;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
+use src\misas\application\support\IdNomJefeResolver;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
@@ -65,12 +66,18 @@ class BuscarPlanCtrData
         }
 
         if ($role_nom === 'p-sacd') {
-            if (!$_SESSION['oConfig']->is_jefeCalendario()) {
-                $id_nom_jefe = (int)$oMiUsuario->getCsvIdPauAsString();
-                if ($id_nom_jefe === 0) {
-                    exit(_('No tiene permiso para ver esta página'));
-                }
+            $jefe = IdNomJefeResolver::resolve();
+            if ($jefe['error'] !== '') {
+                return [
+                    'view' => 'none',
+                    'zonas_opciones' => [],
+                    'zonas_selected' => 0,
+                    'centros_opciones' => [],
+                    'centros_selected' => '',
+                    'id_ubi_centro' => '',
+                ];
             }
+            $id_nom_jefe = $jefe['id_nom_jefe'];
 
             if ($id_zona === 0) {
                 $id_zona = -1;

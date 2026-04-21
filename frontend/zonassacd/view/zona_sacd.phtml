@@ -96,7 +96,7 @@
     fnjs_modal_zona_sacd_ver = function (id_sacd) {
         let id_zona = $('#lst_zonas').val();
         let parametros = 'id_zona=' + id_zona + '&id_sacd=' + id_sacd + '<?= $h_url_get ?>';
-        $.ajax({ url: 'apps/misas/controller/zona_sacd_datos_get.php', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
+        $.ajax({ url: '<?= $url_zona_sacd_get ?>', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
             if (!json || json.success !== true) { alert("<?= _("respuesta") ?>: " + (json ? json.mensaje : '')); return; }
             var payload = (typeof json.data === 'string') ? JSON.parse(json.data) : (json.data || {});
             $('#id_sacd').val(id_sacd); $('#id_zona').val(id_zona); $('#titulo_modal').html(payload.nombre_sacd);
@@ -111,7 +111,7 @@
         parametros += '&dw1=' + $('#dw1').is(":checked") + '&dw2=' + $('#dw2').is(":checked") + '&dw3=' + $('#dw3').is(":checked");
         parametros += '&dw4=' + $('#dw4').is(":checked") + '&dw5=' + $('#dw5').is(":checked") + '&dw6=' + $('#dw6').is(":checked") + '&dw7=' + $('#dw7').is(":checked");
         parametros += '<?= $h_url_put ?>';
-        $.ajax({ url: 'apps/misas/controller/zona_sacd_datos_put.php', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
+        $.ajax({ url: '<?= $url_zona_sacd_put ?>', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
             if (json.success !== true) { alert("<?= _("respuesta") ?>: " + json.mensaje); }
             else { modal.hide(); fnjs_busca_sacds(); }
         });

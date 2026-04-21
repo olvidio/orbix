@@ -99,6 +99,14 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/anadir_ctr_tarea.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/misas/horario_tarea_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/horario_tarea_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/misas/nuevo_status', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/nuevo_status.php';
+    });
+
     // Slice 10 — Cambiar estado + datos zona/sacd (JSON).
     $r->addRoute(['GET', 'POST'], '/src/misas/cambiar_status_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/cambiar_status_data.php';

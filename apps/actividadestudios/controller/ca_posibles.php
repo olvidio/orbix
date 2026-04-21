@@ -4,7 +4,6 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
-use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
@@ -74,15 +73,13 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $year = date("Y");
     if (date("m") < $ini_m) {
         $finIso = date("Y-m-t", strtotime("$year-$ini_m-01"));
-    }
-    else {
+    } else {
         $next_year = (int)$year + 1;
         $finIso = date("Y-m-t", strtotime("$next_year-$ini_m-01"));
     }
     $Qid_ctr_agd = 0;
     $Qid_ctr_n = 0;
-}
-else {
+} else {
     $Qid_ctr_agd = (integer)filter_input(INPUT_POST, 'id_ctr_agd');
     $Qid_ctr_n = (integer)filter_input(INPUT_POST, 'id_ctr_n');
     $Qna = (string)filter_input(INPUT_POST, 'na');
@@ -139,8 +136,7 @@ switch ($Qna) {
 
         if (is_true($Qca_todos)) {
             $id_tipo_activ = '^' . $mi_sfsv . '33';
-        }
-        else {
+        } else {
             // por defecto, todos los ca. Sobreescribo.
             $id_tipo_activ = '^' . $mi_sfsv . '33';
             if (is_true($Qca_estudios)) {
@@ -160,8 +156,7 @@ switch ($Qna) {
 
         if (is_true($Qca_todos)) {
             $id_tipo_activ = '^' . $mi_sfsv . '12';
-        }
-        else {
+        } else {
             // por defecto, todos los ca. Sobreescribo.
             $id_tipo_activ = '^' . $mi_sfsv . '12';
             if (is_true($Qca_estudios)) {
@@ -199,13 +194,11 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
     $Qtexto = "image";
     $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-}
-else {
+} else {
     switch ($id_tabla_persona) {
         case 'n':
-            $NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
-            $niveles_stgr_con_esturdios = implode(',', $NivelStgrRepository->getArrayIdNiveleStgrActivo());
-            $aWhere['nivel_stgr'] = $niveles_stgr_con_esturdios;
+            $niveles_stgr_con_estudios = NivelStgrId::getArrayNivelStgrOn();
+            $aWhere['nivel_stgr'] = $niveles_stgr_con_estudios;
             $aOperador['nivel_stgr'] = 'IN';
             $PersonaRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
             break;
@@ -263,8 +256,7 @@ $sql_where = '';
 $msg_txt = '';
 if (!empty($Qidca)) {
 
-}
-else { //no vengo del formulario: es para todos los ca de la zona.
+} else { //no vengo del formulario: es para todos los ca de la zona.
     $a_datos_ca = [];
     $i = 0;
     $max_len_activ = 1;
@@ -296,14 +288,13 @@ else { //no vengo del formulario: es para todos los ca de la zona.
             $nivel_stgr = NivelStgrId::generarNivelStgr($id_tipo_activ);
         }
         // repaso, mayores 30, menores 30, pa-ad
-        if ($nivel_stgr == 4 || $nivel_stgr == 9 || $nivel_stgr == 8 || $nivel_stgr == 7) {
+        if ($nivel_stgr === 4 || $nivel_stgr === 9 || $nivel_stgr === 8 || $nivel_stgr === 7) {
             $aAsignaturasCa = array("dd");
-        }
-        else {
+        } else {
             // por cada ca creo un array con las asignaturas y los créditos.
             $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
             $aAsignaturasCa = $ActividadAsignaturaRepository->getAsignaturasCa($id_activ);
-            if (count($aAsignaturasCa) == 0 && $nivel_stgr) {
+            if (count($aAsignaturasCa) === 0 && $nivel_stgr) {
                 $msg_txt .= sprintf(_("el ca: %s no tiene puesta ninguna asignatura.") . "<br>", $nom_activ);
                 continue;
             }
@@ -356,8 +347,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
         $ctr = strtolower($Ctr ?? '');
         $cOrdPersonas[$ctr][] = array('Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl);
     }
-}
-else {
+} else {
     /* para ordenar por orden alfabético de ctr */
     $cOrdPersonas = [];
     $id_ubi_old = '';
@@ -386,8 +376,7 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
 
         if (method_exists($oPersonaDl, 'getCe')) {
             $ce = $oPersonaDl->getCe(); //está en el ce? 1,2,3
-        }
-        else {
+        } else {
             $ce = '';
         }
         //echo "persona: $id_nom,$nom,$ctr,$stgr<br>";
@@ -410,8 +399,7 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
                 case "n":
                     if (in_array($nivel_stgr, [9, 8, 7])) {
                         $creditos = 'x';
-                    }
-                    else {
+                    } else {
                         $creditos = "-";
                     }
                     break;
@@ -420,8 +408,7 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
                         $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
                         $creditos = $result['suma'];
                         $aLista = $result['lista'];
-                    }
-                    else {
+                    } else {
                         $creditos = "-";
                     }
                     break;
@@ -430,13 +417,11 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
                         $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
                         $creditos = $result['suma'];
                         $aLista = $result['lista'];
-                    }
-                    elseif ($nivel_stgr == 3) {
+                    } elseif ($nivel_stgr == 3) {
                         $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
                         $creditos = $result['suma'];
                         $aLista = $result['lista'];
-                    }
-                    else {
+                    } else {
                         $creditos = "-";
                     }
                     break;
@@ -445,8 +430,7 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
                         $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
                         $creditos = $result['suma'];
                         $aLista = $result['lista'];
-                    }
-                    else {
+                    } else {
                         $creditos = "-";
                     }
                     break;
@@ -454,16 +438,13 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
                     if ($id_tabla_persona === 'n') {
                         if ($nivel_stgr == 4) {
                             $creditos = "x";
-                        }
-                        else {
+                        } else {
                             $creditos = "-";
                         }
-                    }
-                    else {
+                    } else {
                         if (in_array($nivel_stgr, [4, 9, 8, 7])) {
                             $creditos = 'x';
-                        }
-                        else {
+                        } else {
                             $creditos = "-";
                         }
                     }
@@ -473,8 +454,7 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
                         $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
                         $creditos = $result['suma'];
                         $aLista = $result['lista'];
-                    }
-                    else {
+                    } else {
                         $creditos = "-";
                     }
                     break;
@@ -526,8 +506,7 @@ if (!empty($a_sel) && $alum == 1) { //vengo de un 'checkbox' => sólo una person
 
     $oView = new ViewPhtml('actividadestudios\controller');
     $oView->renderizar('ca_posibles_lista.phtml', $a_campos);
-}
-else {
+} else {
     // -------------------------- si es para el centro/s saco una tabla -------------------------
     foreach ($cuadro as $ctr => $datos_persona) {
 

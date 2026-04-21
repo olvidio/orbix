@@ -15,7 +15,6 @@
 
 use core\ViewTwig;
 use notas\model\AsignaturasPendientes;
-use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
