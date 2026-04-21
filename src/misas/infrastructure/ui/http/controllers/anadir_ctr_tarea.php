@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\JsonResponse;
 use src\misas\application\AnadirCtrTarea;
+use web\ContestarJson;
 
 $result = AnadirCtrTarea::execute([
     'que' => filter_input(INPUT_POST, 'que'),
@@ -10,11 +10,4 @@ $result = AnadirCtrTarea::execute([
     'id_item' => filter_input(INPUT_POST, 'id_item'),
 ]);
 
-if ($result['error'] === '') {
-    $jsondata = ['success' => true, 'mensaje' => 'ok'];
-} else {
-    $jsondata = ['success' => false, 'mensaje' => $result['error']];
-}
-
-(new JsonResponse($jsondata))->send();
-exit();
+ContestarJson::enviar((string)($result['error'] ?? ''));

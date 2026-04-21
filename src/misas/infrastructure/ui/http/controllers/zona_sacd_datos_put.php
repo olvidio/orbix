@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\JsonResponse;
 use src\misas\application\ZonaSacdDatosPut;
+use web\ContestarJson;
 
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
 $Qid_sacd = (int)filter_input(INPUT_POST, 'id_sacd');
@@ -16,11 +16,4 @@ $result = ZonaSacdDatosPut::execute($Qid_zona, $Qid_sacd, [
     'dw7' => (string)filter_input(INPUT_POST, 'dw7'),
 ]);
 
-if ($result['error'] === '') {
-    $jsondata = ['success' => true, 'mensaje' => 'Tot correcte.'];
-} else {
-    $jsondata = ['success' => false, 'mensaje' => $result['error']];
-}
-
-(new JsonResponse($jsondata))->send();
-exit();
+ContestarJson::enviar((string)($result['error'] ?? ''));

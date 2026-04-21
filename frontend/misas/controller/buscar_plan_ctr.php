@@ -1,9 +1,13 @@
 <?php
 
+use function core\strtoupper_dlb;
+
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
+use web\PeriodoQue;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -12,7 +16,29 @@ $id_zona = (int)filter_input(INPUT_POST, 'id_zona');
 $data = PostRequest::getDataFromUrl('/src/misas/buscar_plan_ctr_data', ['id_zona' => $id_zona]);
 
 $view = $data['view'] ?? 'none';
-$periodo_td_html = (string)($data['periodo_td_html'] ?? '');
+
+$aOpciones = [
+    'esta_semana' => _('esta semana'),
+    'este_mes' => _('este mes'),
+    'proxima_semana' => _('próxima semana de lunes a domingo'),
+    'proximo_mes' => _('próximo mes natural'),
+    'separador' => '---------',
+    'otro' => _('otro'),
+];
+
+$oFormP = new PeriodoQue();
+$oFormP->setFormName('frm_nuevo_periodo');
+$oFormP->setTitulo(strtoupper_dlb(_('seleccionar un periodo')));
+$oFormP->setPosiblesPeriodos($aOpciones);
+$oFormP->setDesplPeriodosOpcion_sel('esta_semana');
+$oFormP->setisDesplAnysVisible(false);
+
+$ohoy = new DateTimeLocal(date('Y-m-d'));
+$shoy = $ohoy->format('d/m/Y');
+$oFormP->setEmpiezaMin($shoy);
+$oFormP->setEmpiezaMax($shoy);
+
+$periodo_td_html = $oFormP->getTd();
 
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setBlanco(false);

@@ -1,13 +1,37 @@
 <?php
 
+use function core\strtoupper_dlb;
+
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\domain\value_objects\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
+use web\PeriodoQue;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $data = PostRequest::getDataFromUrl('/src/misas/plan_de_misas_pantalla_data', ['pantalla' => 'preparar']);
+
+$aOpciones = [
+    'proxima_semana' => _('próxima semana de lunes a domingo'),
+    'proximo_mes' => _('próximo mes natural'),
+    'otro' => _('otro'),
+];
+
+$oFormP = new PeriodoQue();
+$oFormP->setFormName('frm_nuevo_periodo');
+$oFormP->setTitulo(strtoupper_dlb(_('seleccionar un periodo')));
+$oFormP->setPosiblesPeriodos($aOpciones);
+$oFormP->setDesplPeriodosOpcion_sel('proxima_semana');
+$oFormP->setisDesplAnysVisible(false);
+
+$ohoy = new DateTimeLocal(date('Y-m-d'));
+$shoy = $ohoy->format('d/m/Y');
+$oFormP->setEmpiezaMin($shoy);
+$oFormP->setEmpiezaMax($shoy);
+
+$periodo_td_html = $oFormP->getTd();
 
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($data['zonas_opciones'] ?? []);
@@ -46,7 +70,7 @@ $a_campos = [
     'oDesplZonas' => $oDesplZonas,
     'oDesplTipoPlantilla' => $oDesplTipoPlantilla,
     'oDesplOrden' => $oDesplOrden,
-    'periodo_td_html' => (string)($data['periodo_td_html'] ?? ''),
+    'periodo_td_html' => $periodo_td_html,
     'url_crear_nuevo_periodo' => $url_crear_nuevo_periodo,
     'h_nuevo_periodo' => $h_nuevo_periodo,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,

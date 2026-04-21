@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\JsonResponse;
 use src\misas\application\GuardarHorarioTarea;
+use web\ContestarJson;
 
 $result = GuardarHorarioTarea::execute([
     'id_item_h' => filter_input(INPUT_POST, 'id_item_h'),
@@ -9,11 +9,4 @@ $result = GuardarHorarioTarea::execute([
     't_end' => filter_input(INPUT_POST, 't_end'),
 ]);
 
-if ($result['error'] === '') {
-    $jsondata = ['success' => true, 'mensaje' => 'ok'];
-} else {
-    $jsondata = ['success' => false, 'mensaje' => $result['error']];
-}
-
-(new JsonResponse($jsondata))->send();
-exit();
+ContestarJson::enviar((string)($result['error'] ?? ''));

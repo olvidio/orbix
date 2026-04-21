@@ -121,4 +121,19 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/misas/ver_cuadricula_zona_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/ver_cuadricula_zona_data.php';
     });
+
+    // Slice 8 (revision): Crear nuevo periodo (mutaciones EncargoDia + payload SlickGrid).
+    $r->addRoute(['GET', 'POST'], '/src/misas/crear_nuevo_periodo_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/crear_nuevo_periodo_data.php';
+    });
+
+    // Slice 9 (revision): Importar plantilla (mutacion masiva EncargoDia).
+    $r->addRoute(['GET', 'POST'], '/src/misas/importar_plantilla_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/importar_plantilla_data.php';
+    });
+
+    // Slice 10 (revision): Ver misas zona (payload SlickGrid read-only).
+    $r->addRoute(['GET', 'POST'], '/src/misas/ver_misas_zona_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ver_misas_zona_data.php';
+    });
 };

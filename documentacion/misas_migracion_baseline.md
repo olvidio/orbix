@@ -161,14 +161,15 @@ El modulo `misas` usa varios dispatchers que habra que partir por accion en cada
 - **Destino:**
   - `frontend/misas/controller/preparar_plan_de_misas.php`, `modificar_plan_de_misas.php`, `ver_plan_de_misas.php` — `PostRequest` a `/src/misas/plan_de_misas_pantalla_data` con `pantalla = preparar|modificar|ver`.
   - `src/misas/application/PlanDeMisasPantallaData.php` + `plan_de_misas_pantalla_data.php` — JSON (`zonas`, `orden`, permisos, tipos de plantilla en preparar, `periodo_td_html`, etc.).
-  - `frontend/misas/controller/crear_nuevo_periodo.php` — logica de negocio intacta (periodos, `EncargoDia`, plantilla); salida: `ver_cuadricula_zona.phtml` con hashes a `/src/misas/cuadricula_update` y `/src/misas/desplegable_sacd`.
-- **Ruta nueva:** `/src/misas/plan_de_misas_pantalla_data`.
+  - `frontend/misas/controller/crear_nuevo_periodo.php` — ahora solo `PostRequest::getDataFromUrl('/src/misas/crear_nuevo_periodo_data', $post)` + construccion de hashes (`cuadricula_update`, `desplegable_sacd`, self) y render de `ver_cuadricula_zona.phtml`. Toda la logica de negocio (periodos, `EncargoDia`, plantilla, lectura/mutacion de repositorios) vive en backend.
+  - `src/misas/application/CrearNuevoPeriodoData.php` (wrapper fino) + `crear_nuevo_periodo_data_build.php` (funcion global con `use`) + `_crear_nuevo_periodo_data_fragment.php` (fragmento procedural con los mismos `use`); controlador HTTP `crear_nuevo_periodo_data.php` responde `ContestarJson`.
+- **Rutas nuevas:** `/src/misas/plan_de_misas_pantalla_data` y `/src/misas/crear_nuevo_periodo_data`.
 - **Compatibilidad legacy:** wrappers en `apps/misas/controller/` para los cuatro entry points.
 
 ## Slice 9 — Plantillas y horarios (completado)
 
-- **Pantalla plantilla:** `frontend/misas/controller/modificar_plantilla.php` + `modificar_plantilla.phtml` — `PostRequest` a `/src/misas/modificar_plantilla_data` (reutiliza `PlanDeMisasPantallaData` con `pantalla = modificar_plantilla`: zonas, orden, tipos + preferencia `ultima_plantilla`). AJAX de cuadricula: `modificar_cuadricula_zona.php`; importacion masiva: `importar_plantilla.php` (logica procedural intacta, cabecera `global_header_front`).
-- **Importar:** `frontend/misas/controller/importar_plantilla.php`; wrapper `apps/misas/controller/importar_plantilla.php`.
+- **Pantalla plantilla:** `frontend/misas/controller/modificar_plantilla.php` + `modificar_plantilla.phtml` — `PostRequest` a `/src/misas/modificar_plantilla_data` (reutiliza `PlanDeMisasPantallaData` con `pantalla = modificar_plantilla`: zonas, orden, tipos + preferencia `ultima_plantilla`). AJAX de cuadricula: `modificar_cuadricula_zona.php`; importacion masiva: `importar_plantilla.php` (ahora solo `PostRequest` al endpoint `/src/misas/importar_plantilla_data`; la logica de negocio vive en backend).
+- **Importar:** `frontend/misas/controller/importar_plantilla.php` (thin) + `src/misas/application/ImportarPlantillaData.php` (wrapper) + `importar_plantilla_data_build.php` (funcion global con `use`) + `_importar_plantilla_data_fragment.php` (fragmento procedural con los mismos `use`) + controlador HTTP `importar_plantilla_data.php`. Wrapper legacy `apps/misas/controller/importar_plantilla.php`.
 - **Horario (modal):** `frontend/misas/controller/horario_tarea.php` + `horario_tarea.phtml`; los botones siguen llamando a `fnjs_guardar_horario` / `fnjs_quitar_horario` definidos en la vista contenedora cuando existan.
 - **JSON (mutaciones, contrato historico `success`/`mensaje` plano):**
   - `/src/misas/guardar_horario` — `GuardarHorarioTarea` (`EncargoHorario`).
@@ -181,7 +182,7 @@ El modulo `misas` usa varios dispatchers que habra que partir por accion en cada
 
 - **Cambiar estado:** `frontend/misas/controller/cambiar_status.php` + `cambiar_status.phtml` — `PostRequest` a `/src/misas/cambiar_status_data` (`CambiarStatusPantallaData`: zonas, estados, orden, `periodo_td_html` con tres periodos). AJAX cuadricula: `ver_cuadricula_zona.php`; aplicar estado: `nuevo_status.php`. Corregidos parametros AJAX (sin espacios) y nombre del hash de cuadricula (`h_zona_status`).
 - **Nuevo estado masivo:** `NuevoStatusPeriodo` + `frontend/misas/controller/nuevo_status.php` — actualiza `status` de `EncargoDia` en rango; respuesta HTML vacia o texto de error (el padre hace `alert` si hay cuerpo y luego recarga la cuadricula).
-- **Ver misas zona:** `frontend/misas/controller/ver_misas_zona.php` — salida `ver_cuadricula_zona.phtml`; corregidos fechas (`d/m/Y` → ISO), bucles por dias (lista materializada de `DatePeriod`), y ramas `Qseleccion` usaban `$PersonaSacd` en vez de `$oPersonaSacd`; metadatos de celda incluyen `dia` y `tipo` para el grid.
+- **Ver misas zona:** `frontend/misas/controller/ver_misas_zona.php` — salida `ver_cuadricula_zona.phtml`; corregidos fechas (`d/m/Y` → ISO), bucles por dias (lista materializada de `DatePeriod`), y ramas `Qseleccion` usaban `$PersonaSacd` en vez de `$oPersonaSacd`; metadatos de celda incluyen `dia` y `tipo` para el grid. Revision posterior: el frontend ya solo llama a `/src/misas/ver_misas_zona_data` (`VerMisasZonaData` + `ver_misas_zona_data_build.php` + `_ver_misas_zona_data_fragment.php`) y construye los `Hash` locales; los repositorios (`PersonaSacd`, `Zona`, `EncargoDia`) viven en backend y el `exit(_("..."))` se convierte en `RuntimeException`.
 - **Zona / SACD (modal en `frontend/zonassacd`):** rutas `/src/misas/zona_sacd_datos_get` y `/src/misas/zona_sacd_datos_put` (`ZonaSacdDatosGet` / `ZonaSacdDatosPut`; `dw*` como boolean via `FILTER_VALIDATE_BOOLEAN`). Wrappers `apps/misas/controller/zona_sacd_datos_*.php` sin cambiar las URLs que ya usa `zona_sacd.phtml`.
 - **Compatibilidad legacy:** wrappers `apps` para `cambiar_status`, `nuevo_status`, `ver_misas_zona`.
 

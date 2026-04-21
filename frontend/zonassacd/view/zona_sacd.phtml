@@ -97,10 +97,11 @@
         let id_zona = $('#lst_zonas').val();
         let parametros = 'id_zona=' + id_zona + '&id_sacd=' + id_sacd + '<?= $h_url_get ?>';
         $.ajax({ url: 'apps/misas/controller/zona_sacd_datos_get.php', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
-            if (json.success !== true) { alert("<?= _("respuesta") ?>: " + json.mensaje); return; }
-            $('#id_sacd').val(id_sacd); $('#id_zona').val(id_zona); $('#titulo_modal').html(json.nombre_sacd);
-            $('#dw1').prop('checked', json.dw1 === true); $('#dw2').prop('checked', json.dw2 === true); $('#dw3').prop('checked', json.dw3 === true);
-            $('#dw4').prop('checked', json.dw4 === true); $('#dw5').prop('checked', json.dw5 === true); $('#dw6').prop('checked', json.dw6 === true); $('#dw7').prop('checked', json.dw7 === true);
+            if (!json || json.success !== true) { alert("<?= _("respuesta") ?>: " + (json ? json.mensaje : '')); return; }
+            var payload = (typeof json.data === 'string') ? JSON.parse(json.data) : (json.data || {});
+            $('#id_sacd').val(id_sacd); $('#id_zona').val(id_zona); $('#titulo_modal').html(payload.nombre_sacd);
+            $('#dw1').prop('checked', payload.dw1 === true); $('#dw2').prop('checked', payload.dw2 === true); $('#dw3').prop('checked', payload.dw3 === true);
+            $('#dw4').prop('checked', payload.dw4 === true); $('#dw5').prop('checked', payload.dw5 === true); $('#dw6').prop('checked', payload.dw6 === true); $('#dw7').prop('checked', payload.dw7 === true);
             modal.show();
         });
     }
