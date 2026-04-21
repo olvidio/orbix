@@ -101,6 +101,17 @@ Documento de referencia según `refactor.md` (misma línea que `profesores` / `m
 
 Ninguna: `rg "^use src\\\\" frontend/encargossacd/` no reporta coincidencias.
 
+## Slice post-migracion — limpieza / simplificaciones internas (completado)
+
+Cambios sin impacto funcional, centrados en coherencia con `refactor.md` y reducir ruido:
+
+- **URLs rotas a `des/tareas/*`**. Varias vistas JS aun apuntaban a controladores legacy inexistentes (`des/tareas/horario_ver.php`, `des/tareas/horario_update.php`, `des/tareas/horario_excepcion_ver.php`, `des/tareas/encargo_horario`, `des/tareas/sacd_ausencias_get.php`). Se redirigen a los canonicos bajo `frontend/encargossacd/controller/...`. El fallback `mod == 'excepcion'` en `horario_ver.phtml` era codigo muerto (el `action` se sobreescribia en la linea siguiente): eliminado.
+- **`web\Desplegable` fuera de `src/application`.** `EncargoCtrSelectData` y `EncargoZonasSelectData` ya no instancian `web\Desplegable` para despues llamar a `->export()`. Devuelven directamente el payload estandar (`refactor.md`: "payload + constructor en frontend"). El frontend (`DesplCentros`, `fnjs_construir_desplegable`) no cambia de contrato.
+- **Dispatcher `listas_com_txt_ajax` eliminado.** Se partio el endpoint multiproposito (`que=get_texto|update`) en dos endpoints independientes (`/src/encargossacd/listas_com_txt_get` y `/src/encargossacd/listas_com_txt_update`), con sus dos clases application (`ListasComTxtGet`, `ListasComTxtUpdate`) y sus dos proxies frontend (`listas_com_txt_get.php`, `listas_com_txt_update.php`). Se suprimieron `EncargoTextoListasComAjax`, el HTTP controller y el proxy antiguos. La vista `listas_com_txt.phtml` deja de enviar `que=` y apunta cada accion a su proxy.
+- **`listas_index.php` simplificado.** Se extrajo un closure `$lnk(...)` para armar URLs con `Hash::link + http_build_query + poner_empty_on_null`, eliminando el patron duplicado 12 veces (`$aQuery = [...]; if (is_array($aQuery)) array_walk(...);`).
+- **Helper `frontend\encargossacd\support\SacdFichaAjaxHashes`**. Centraliza las piezas duplicadas byte a byte en `sacd_ficha.php`, `sacd_ausencias.php` y `sacd_ausencias_jefe_zona.php`: el `<select>` de `filtro_sacd` con sus 4 opciones, los hashes hacia `sacd_ficha_ajax.php` (`h_ficha`, `h_lista`) y hacia `horario_sacd_ver.php` (`h_horario`).
+- **`DesplCentros` sin estado mutable.** Se sustituye `new DesplCentros(); setIdZona(); getDesplPorFiltro()` por `DesplCentros::build($filtro_ctr, $id_ubi, $id_zona)`. Dos callers (`ctr_ficha.php`, `encargo_ver.php`) quedan mas compactos y alineados con el resto de helpers frontend (`PeriodoTdHelper`, `CuadriculaZonaRenderer`, `SacdFichaAjaxHashes`, ...).
+
 ## Próximos slices sugeridos (sin mezclar en un solo PR)
 
 1. Endpoints JSON para AJAX que aún devuelven HTML (p. ej. partes de `sacd_ficha_ajax`) con contrato `refactor.md`.

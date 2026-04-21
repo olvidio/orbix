@@ -10,8 +10,8 @@
     fnjs_crear_horario = function (enc) {
         var id_enc = $('#id_enc_' + enc).val();
 
-        var url = 'des/tareas/encargo_horario';
-        var parametros = 'origen=ctr&nuevo=1&id_enc=' + id_enc;
+        var url = 'frontend/encargossacd/controller/horario_ver.php';
+        var parametros = 'origen=ctr&mod=nuevo&id_enc=' + id_enc;
         fnjs_update_div('#main', url + '?' + parametros);
     }
 

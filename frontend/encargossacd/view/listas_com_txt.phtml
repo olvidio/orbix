@@ -3,8 +3,8 @@ fnjs_get_texto=function(){
 	var clave = $('#clave').val();
 	var idioma = $('#idioma').val();
 
-	var url='<?= $url_ajax ?>';
-	var parametros='que=get_texto&clave='+clave+'&idioma='+idioma+'<?= $h_get ?>';
+	var url='<?= $url_get ?>';
+	var parametros='clave='+clave+'&idioma='+idioma+'<?= $h_get ?>';
 	$.ajax({
 		url: url,
 		type: 'post',
@@ -36,7 +36,7 @@ fnjs_guardar=function(formulario){
 
 </script>
 <h1><?= _("textos para las comunicaciones") ?></h1>
-<form id=textos name=textos action="<?= $url_ajax ?>" >
+<form id=textos name=textos action="<?= $url_update ?>" >
 <?= $oHash->getCamposHtml() ?>
 <table>
 <tr><td>

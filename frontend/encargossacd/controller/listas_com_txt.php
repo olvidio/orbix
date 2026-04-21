@@ -11,6 +11,11 @@ use web\Hash;
  * Los datos (idiomas y texto inicial) se obtienen de
  * `/src/encargossacd/listas_com_txt_data`
  * ({@see \src\encargossacd\application\ListasComTxtData}).
+ *
+ * Las acciones AJAX se dirigen a dos proxies/endpoints separados (sin
+ * dispatcher `que`, segun `refactor.md`):
+ * - lectura: `listas_com_txt_get.php`  -> `/src/encargossacd/listas_com_txt_get`
+ * - escritura: `listas_com_txt_update.php` -> `/src/encargossacd/listas_com_txt_update`
  */
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
@@ -47,21 +52,22 @@ $oDesplClaves->setAction('fnjs_get_texto()');
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, 'es', true);
 $oDesplIdiomas->setAction('fnjs_get_texto()');
 
-$url_ajax = 'frontend/encargossacd/controller/listas_com_txt_ajax.php';
+$url_update = 'frontend/encargossacd/controller/listas_com_txt_update.php';
 $oHash = new Hash();
-$oHash->setUrl($url_ajax);
-$oHash->setArrayCamposHidden(['que' => 'update']);
+$oHash->setUrl($url_update);
 $oHash->setCamposForm('comunicacion!clave!idioma');
 
+$url_get = 'frontend/encargossacd/controller/listas_com_txt_get.php';
 $oHashGet = new Hash();
-$oHashGet->setUrl($url_ajax);
-$oHashGet->setCamposForm('que!clave!idioma');
+$oHashGet->setUrl($url_get);
+$oHashGet->setCamposForm('clave!idioma');
 $h_get = $oHashGet->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
-    'url_ajax' => $url_ajax,
+    'url_update' => $url_update,
+    'url_get' => $url_get,
     'h_get' => $h_get,
     'comunicacion' => $comunicacion,
     'oDesplClaves' => $oDesplClaves,

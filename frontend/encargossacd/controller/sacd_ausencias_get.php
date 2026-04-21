@@ -51,7 +51,7 @@ $a_cosas = [
     'filtro_sacd' => $Qfiltro_sacd,
     'historial' => 1,
 ];
-$go_to = Hash::link('des/tareas/sacd_ausencias_get.php?' . http_build_query($a_cosas));
+$go_to = Hash::link('frontend/encargossacd/controller/sacd_ausencias_get.php?' . http_build_query($a_cosas));
 $lnk_historia = "<span class='link' onclick=\"fnjs_update_div('#ficha','$go_to');\">" . _("ver anteriores") . "</span>";
 
 $url_update = "frontend/encargossacd/controller/sacd_ausencias_update.php";

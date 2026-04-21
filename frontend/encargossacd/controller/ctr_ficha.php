@@ -42,8 +42,7 @@ $oDesplGrupoCtrs->setOpcion_sel($Qfiltro_ctr);
 $oDesplGrupoCtrs->setBlanco(1);
 $oDesplGrupoCtrs->setAction("fnjs_lista_ctrs();");
 
-$oGrupoCtr = new DesplCentros();
-$oDesplCtrs = $oGrupoCtr->getDesplPorFiltro($Qfiltro_ctr, $Qid_ubi);
+$oDesplCtrs = DesplCentros::build($Qfiltro_ctr, $Qid_ubi);
 
 
 $webBase = rtrim(ConfigGlobal::getWeb(), '/');

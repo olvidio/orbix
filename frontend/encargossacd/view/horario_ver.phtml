@@ -36,11 +36,6 @@ fnjs_guardar=function(formulario){
 	}
 
         if (err != 1) {
-            mod = $('#mod').val();
-            if (mod == 'excepcion') {
-                $(formulario).attr('action', 'des/tareas/horario_excepcion_ver.php');
-            }
-            fnjs_enviar_formulario('#modifica');
             $(formulario).attr('action', 'frontend/encargossacd/controller/horario_update.php');
             $(formulario).one("submit", function () {
                 $.ajax({

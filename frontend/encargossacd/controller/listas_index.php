@@ -7,91 +7,50 @@ use web\Hash;
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+/**
+ * Construye la URL firmada a un controlador de `frontend/encargossacd/controller`
+ * con los parametros dados (filtra nulls con `poner_empty_on_null`).
+ *
+ * @param array<string, int|string|null> $params
+ */
+$lnk = static function (string $script, array $params = []): string {
+    array_walk($params, 'core\poner_empty_on_null');
+    $url = 'frontend/encargossacd/controller/' . $script;
+    if ($params !== []) {
+        $url .= '?' . http_build_query($params);
+    }
+
+    return Hash::link($url);
+};
+
 $url = 'frontend/encargossacd/controller/comprobaciones.php';
 $oHash = new Hash();
 $oHash->setUrl($url);
 $oHash->setCamposForm('que');
 $h = $oHash->linkSinVal();
 
-$aQuery = ['sf' => 0];
-// el hppt_build_query no pasa los valores null
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_a = Hash::link('frontend/encargossacd/controller/listas_a.php?' . http_build_query($aQuery));
-$aQuery = ['sf' => 1];
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_af = Hash::link('frontend/encargossacd/controller/listas_a.php?' . http_build_query($aQuery));
+$url_lista_a = $lnk('listas_a.php', ['sf' => 0]);
+$url_lista_af = $lnk('listas_a.php', ['sf' => 1]);
+$url_lista_b = $lnk('listas_b.php', ['sf' => 0]);
+$url_lista_bf = $lnk('listas_b.php', ['sf' => 1]);
+$url_lista_c = $lnk('listas_c.php');
+$url_lista_d = $lnk('listas_d.php', ['sf' => 0]);
+$url_lista_df = $lnk('listas_d.php', ['sf' => 1]);
 
-$aQuery = ['sf' => 0];
-// el hppt_build_query no pasa los valores null
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_b = Hash::link('frontend/encargossacd/controller/listas_b.php?' . http_build_query($aQuery));
-$aQuery = ['sf' => 1];
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_bf = Hash::link('frontend/encargossacd/controller/listas_b.php?' . http_build_query($aQuery));
+$url_lista_ctr = $lnk('listas_exigencia_ctr.php', ['ctr_igl' => 'ctr']);
+$url_lista_ctrf = $lnk('listas_exigencia_ctr.php', ['ctr_igl' => 'ctr', 'sf' => 1]);
+$url_lista_igl = $lnk('listas_exigencia_ctr.php', ['ctr_igl' => 'igl']);
 
-$url_lista_c = Hash::link('frontend/encargossacd/controller/listas_c.php');
+$url_lista_com_sacd_na = $lnk('listas_com_sacd.php', ['sel' => 'nagd']);
+$url_lista_com_sacd_sss = $lnk('listas_com_sacd.php', ['sel' => 'sssc']);
 
-$aQuery = ['sf' => 0];
-// el hppt_build_query no pasa los valores null
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_d = Hash::link('frontend/encargossacd/controller/listas_d.php?' . http_build_query($aQuery));
-$aQuery = ['sf' => 1];
-$url_lista_df = Hash::link('frontend/encargossacd/controller/listas_d.php?' . http_build_query($aQuery));
+$url_lista_com_ctr_sv = $lnk('listas_com_ctr.php', ['sfsv' => 'sv']);
+$url_lista_com_ctr_sf = $lnk('listas_com_ctr.php', ['sfsv' => 'sf']);
 
+$url_lista_com_txt = $lnk('listas_com_txt.php');
 
-$aQuery = ['ctr_igl' => 'ctr'];
-// el hppt_build_query no pasa los valores null
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_ctr = Hash::link('frontend/encargossacd/controller/listas_exigencia_ctr.php?' . http_build_query($aQuery));
-$aQuery = ['ctr_igl' => 'ctr', 'sf' => 1];
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_ctrf = Hash::link('frontend/encargossacd/controller/listas_exigencia_ctr.php?' . http_build_query($aQuery));
-$aQuery = ['ctr_igl' => 'igl'];
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_igl = Hash::link('frontend/encargossacd/controller/listas_exigencia_ctr.php?' . http_build_query($aQuery));
-
-$aQuery = ['sel' => 'nagd'];
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_com_sacd_na = Hash::link('frontend/encargossacd/controller/listas_com_sacd.php?' . http_build_query($aQuery));
-$aQuery = ['sel' => 'sssc'];
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_com_sacd_sss = Hash::link('frontend/encargossacd/controller/listas_com_sacd.php?' . http_build_query($aQuery));
-
-$aQuery = ['sfsv' => 'sv'];
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_com_ctr_sv = Hash::link('frontend/encargossacd/controller/listas_com_ctr.php?' . http_build_query($aQuery));
-$aQuery = ['sfsv' => 'sf'];
-if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
-}
-$url_lista_com_ctr_sf = Hash::link('frontend/encargossacd/controller/listas_com_ctr.php?' . http_build_query($aQuery));
-
-$url_lista_com_txt = Hash::link('frontend/encargossacd/controller/listas_com_txt.php');
-
-
-$a_campos = ['oPosicion' => $oPosicion,
+$a_campos = [
+    'oPosicion' => $oPosicion,
     'url' => $url,
     'h' => $h,
     'url_lista_a' => $url_lista_a,

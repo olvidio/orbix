@@ -98,9 +98,7 @@ if ($Qid_zona !== 0) {
     $oDesplZonas->setOpcion_sel($Qid_zona);
 }
 
-$oGrupoCtr = new DesplCentros();
-$oGrupoCtr->setIdZona($Qid_zona);
-$oDesplCtrs = $oGrupoCtr->getDesplPorFiltro((int)$Qfiltro_ctr, $Qid_ubi);
+$oDesplCtrs = DesplCentros::build((int)$Qfiltro_ctr, $Qid_ubi, $Qid_zona);
 
 $oDesplIdiomas = new Desplegable('idioma_enc', $opciones_locales, $idioma_enc, true);
 

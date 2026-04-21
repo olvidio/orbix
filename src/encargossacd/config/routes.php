@@ -35,8 +35,12 @@ return static function ($r) {
         require $base . '/comprobaciones_ctr.php';
     });
 
-    $r->addRoute(['GET', 'POST'], '/src/encargossacd/listas_com_txt_ajax_data', function () use ($base) {
-        require $base . '/listas_com_txt_ajax_data.php';
+    $r->addRoute(['GET', 'POST'], '/src/encargossacd/listas_com_txt_get', function () use ($base) {
+        require $base . '/listas_com_txt_get.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/encargossacd/listas_com_txt_update', function () use ($base) {
+        require $base . '/listas_com_txt_update.php';
     });
 
     $r->addRoute(['GET', 'POST'], '/src/encargossacd/horario_ver_data', function () use ($base) {
