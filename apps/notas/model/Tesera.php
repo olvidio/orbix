@@ -8,7 +8,7 @@
 
 namespace notas\model;
 
-use core\ViewPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
@@ -299,7 +299,7 @@ class Tesera
             'numcred_year' => $numcred_year,
         ];
 
-        $oView = new ViewPhtml(__NAMESPACE__);
+        $oView = new ViewNewPhtml('frontend\\notas\\controller');
         $oView->renderizar('tesera_ver.phtml', $a_campos);
     }
 

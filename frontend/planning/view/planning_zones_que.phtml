@@ -1,0 +1,90 @@
+<script>
+    fnjs_ver_planning = function (n) {
+        $('#modelo').val(n);
+        $('#sel').attr('action', "<?= $url ?>");
+        fnjs_enviar_formulario('#sel');
+    }
+</script>
+<form name="que" id="sel" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <table>
+        <tr>
+            <th class=titulo_inv colspan=5><?= _("trimestre o mes que interesa") ?></th>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="radio" name="trimestre" value=1 <?= $checksTrim[1] ?>><?= _("enero-marzo") ?></td>
+            <td><input type="radio" name="trimestre" value=101 <?= $checksTrim[101] ?>><?= _("enero") ?></td>
+            <td><input type="radio" name="trimestre" value=102 <?= $checksTrim[102] ?>><?= _("febrero") ?></td>
+            <td><input type="radio" name="trimestre" value=103 <?= $checksTrim[103] ?>><?= _("marzo") ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="radio" name="trimestre" value=2 <?= $checksTrim[2] ?>><?= _("abril-junio") ?></td>
+            <td><input type="radio" name="trimestre" value=104 <?= $checksTrim[104] ?>><?= _("abril") ?></td>
+            <td><input type="radio" name="trimestre" value=105 <?= $checksTrim[105] ?>><?= _("mayo") ?></td>
+            <td><input type="radio" name="trimestre" value=106 <?= $checksTrim[106] ?>><?= _("junio") ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="radio" name="trimestre" value=3 <?= $checksTrim[3] ?>><?= _("julio-septiembre") ?></td>
+            <td><input type="radio" name="trimestre" value=107 <?= $checksTrim[107] ?>><?= _("julio") ?></td>
+            <td><input type="radio" name="trimestre" value=108 <?= $checksTrim[108] ?>><?= _("agosto") ?></td>
+            <td><input type="radio" name="trimestre" value=109 <?= $checksTrim[109] ?>><?= _("septiembre") ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="radio" name="trimestre" value=4 <?= $checksTrim[4] ?>><?= _("octubre-diciembre") ?></td>
+            <td><input type="radio" name="trimestre" value=110 <?= $checksTrim[110] ?>><?= _("octubre") ?></td>
+            <td><input type="radio" name="trimestre" value=111 <?= $checksTrim[111] ?>><?= _("noviembre") ?></td>
+            <td><input type="radio" name="trimestre" value=112 <?= $checksTrim[112] ?>><?= _("diciembre") ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="radio" name="trimestre" value=5 <?= $checksTrim[5] ?>><?= _("navidad: diciembre-enero") ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="radio" name="trimestre" value=6 <?= $checksTrim[6] ?>><?= _("verano: julilo-agosto") ?></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= _("año") ?>:</td>
+            <td><?= $oFormAny->getDesplAnys()->desplegable() ?></td>
+        </tr>
+        <tr>
+            <th class=titulo_inv colspan=5><?= _("zonas o subzona") ?></th>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <select name='id_zona' class=contenido>
+                    <?php if ($is_jefeCalendario): ?>
+                        <option value="todo_propias" selected><?= _("todas las zonas de misas") ?> (30s)</option>
+                        <option value="todo"><?= _("todas las zonas") ?> (80s)</option>
+                    <?php endif; ?>
+                    <?= $oDesplZonas->options() ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th class=titulo_inv colspan=5><?= _("¿con actividades?") ?></th>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="radio" name="actividad" value="si" <?= $chk_actividad_si ?>><?= _("con actividades") ?>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="radio" name="actividad" value="no" <?= $chk_actividad_no ?>><?= _("sin actividades") ?>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table>
+        <tr class=botones>
+            <td><input type="button" onclick="fnjs_ver_planning(1)" value="<?= _("planning vista tabla") ?>"></td>
+            <td><input type="button" onclick="fnjs_ver_planning(3)" value="<?= _("planning vista grid") ?>"></td>
+        </tr>
+    </table>
+</form>

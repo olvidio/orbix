@@ -1,56 +1,15 @@
 <?php
 
+use src\notas\application\TesseraCopiar;
+use web\ContestarJson;
 
 /**
- * Esta página sirve para la tessera de una persona.
- *
- *
- * @package    delegacion
- * @subpackage    estudios
- * @author    Daniel Serrabou
- * @since        22/11/02.
- *
+ * @deprecated Usar `src/notas/infrastructure/ui/http/controllers/tessera_copiar.php`.
+ * Shim de compatibilidad para `tessera_copiar_select.html.twig` hasta la
+ * migracion a `frontend/notas/view/tessera_copiar_select.phtml`.
  */
+require_once 'apps/core/global_header.inc';
+require_once 'apps/core/global_object.inc';
 
-/**
- * Funciones más comunes de la aplicación
- */
-// INICIO Cabecera global de URL de controlador *********************************
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
-
-$id_nom_org = (integer)filter_input(INPUT_POST, 'id_nom_org');
-$id_nom_dst = (integer)filter_input(INPUT_POST, 'id_nom_dst');
-
-$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-$cPersonaOrgNotas = $PersonaNotaDBRepository->getPersonaNotas(['id_nom' => $id_nom_org]);
-
-$error = '';
-// TODO
-foreach ($cPersonaOrgNotas as $oPersonaNota) {
-    //print_r($oPersonaNota);
-    $NuevoObj = clone $oPersonaNota;
-    $NuevoObj->setId_nom($id_nom_dst);
-    if ($NuevoObj->DBGuardar() === false) {
-        $error .= '<br>' . _("no se ha guardado la nota");
-    }
-}
-
-if (!empty($error)) {
-    $jsondata['success'] = FALSE;
-    $jsondata['mensaje'] = $error;
-} else {
-    $jsondata['success'] = TRUE;
-}
-
-//Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-header('Content-type: application/json; charset=utf-8');
-echo json_encode($jsondata, JSON_THROW_ON_ERROR);
-exit();
+$error_txt = TesseraCopiar::execute($_POST);
+ContestarJson::enviar($error_txt, 'ok');

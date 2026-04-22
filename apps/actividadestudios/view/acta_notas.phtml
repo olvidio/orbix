@@ -27,7 +27,7 @@ use function core\is_true;
             alert("<?= $txt_alert_acta ?>");
         } else {
             fnjs_left_side_hide();
-            $(form_acta).attr('action', "apps/notas/controller/acta_imprimir.php");
+            $(form_acta).attr('action', "frontend/notas/controller/acta_imprimir.php");
             fnjs_enviar_formulario(form_acta);
         }
     }

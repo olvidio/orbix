@@ -1,152 +1,39 @@
 <?php
 
-use core\ConfigGlobal;
-use src\notas\domain\contracts\ActaDlRepositoryInterface;
-use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
-use src\notas\domain\entity\Acta;
-use src\notas\domain\entity\ActaTribunal;
-use src\shared\domain\value_objects\DateTimeLocal;
+use src\notas\application\ActaEliminar;
+use src\notas\application\ActaModificar;
+use src\notas\application\ActaNueva;
 use web\ContestarJson;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
+/**
+ * Shim de compatibilidad para `acta_ver.phtml`.
+ *
+ * @deprecated Usar los endpoints granulares de `src/notas`:
+ *   - `src/notas/acta_nueva`
+ *   - `src/notas/acta_modificar`
+ *   - `src/notas/acta_eliminar`
+ *
+ * La logica de negocio vive en `ActaNueva`, `ActaModificar` y
+ * `ActaEliminar`. Este dispatcher se mantiene hasta que `acta_ver.phtml`
+ * se migre (slice 3/4) y apunte directamente a los endpoints por
+ * accion.
+ */
+require_once 'apps/core/global_header.inc';
+require_once 'apps/core/global_object.inc';
 
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
-$mi_dele = ConfigGlobal::mi_delef();
-$mi_region = ConfigGlobal::mi_region();
-
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qacta = (string)filter_input(INPUT_POST, 'acta');
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 
-if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
-    $Qacta = urldecode(strtok($a_sel[0], "#"));
-}
-
-$dl_acta = strtok($Qacta, ' ');
-
-if ($dl_acta != $mi_dele && $dl_acta !== "?") {
-    // Ojo si la dl ya existe no debería hacerse
-    switch ($Qmod) {
-        case 'nueva':
-            $msg = _("No puede generar un acta de otra dl");
-            break;
-        case 'eliminar':
-            $msg = _("No puede eliminar un acta de otra dl");
-            break;
-        case 'modificar':
-            $msg = _("No puede modificar un acta de otra dl");
-            break;
-        default:
-            $msg = _("No puede modificar un acta de otra dl");
-    }
-    ContestarJson::enviar($msg);
-    exit();
-}
-
-$Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
-$Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
-$Qf_acta = (string)filter_input(INPUT_POST, 'f_acta');
-$Qlibro = (integer)filter_input(INPUT_POST, 'libro');
-$Qpagina = (integer)filter_input(INPUT_POST, 'pagina');
-$Qlinea = (integer)filter_input(INPUT_POST, 'linea');
-$Qlugar = (string)filter_input(INPUT_POST, 'lugar');
-$Qobserv = (string)filter_input(INPUT_POST, 'observ');
-
-$oF_acta = null;
-if (!empty($Qf_acta)) {
-    $oF_acta = DateTimeLocal::createFromLocal($Qf_acta);
-}
-$oActa = new Acta();
-$ActaDlRepository = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
-
-$error_txt = '';
 switch ($Qmod) {
     case 'nueva':
-        // Si se pone un acta ya existente, modificará los datos de ésta. Hay que avisar:
-        $oActa->setActa($Qacta);
-        //if (!empty($oActa->getF_acta())) { exit(_("esta acta ya existe")); }
-
-        $oActa->setId_asignatura($Qid_asignatura);
-        $oActa->setId_activ($Qid_activ);
-        // la fecha debe ir antes que el acta por si hay que inventar el acta, tener la referencia de la fecha
-        $oActa->setF_acta($oF_acta);
-        // comprobar valor del acta
-        if (isset($Qacta)) {
-            $valor = Acta::inventarActa($Qacta, $oF_acta);
-            $oActa->setActa($valor);
-        }
-        $oActa->setLibro($Qlibro);
-        $oActa->setPagina($Qpagina);
-        $oActa->setLinea($Qlinea);
-        $oActa->setLugar($Qlugar);
-        $oActa->setObserv($Qobserv);
-        if ($ActaDlRepository->Guardar($oActa) === false) {
-            $error_txt .= _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $ActaDlRepository->getErrorTxt();
-        }
+        $error_txt = ActaNueva::execute($_POST);
         break;
     case 'eliminar':
-        $oActa = $ActaDlRepository->findById($Qacta);
-
-        if ($ActaDlRepository->Eliminar($oActa) === false) {
-            $error_txt .= _("hay un error, no se ha eliminado");
-            $error_txt .= "\n" . $ActaDlRepository->getErrorTxt();
-        }
+        $error_txt = ActaEliminar::execute($_POST);
         break;
     case 'modificar':
     default:
-        $oActa = $ActaDlRepository->findById($Qacta);
-
-        $oActa->setId_asignatura($Qid_asignatura);
-        $oActa->setId_activ($Qid_activ);
-        $oActa->setF_acta($oF_acta);
-        $oActa->setLibro($Qlibro);
-        $oActa->setPagina($Qpagina);
-        $oActa->setLinea($Qlinea);
-        $oActa->setLugar($Qlugar);
-        $oActa->setObserv($Qobserv);
-        if ($ActaDlRepository->Guardar($oActa) === false) {
-            $error_txt .= _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $ActaDlRepository->getErrorTxt();
-        }
+        $error_txt = ActaModificar::execute($_POST);
         break;
-}
-
-//borrar todos (y después poner los nuevos)
-$ActaTribunalDlRepository = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
-$cActaTribunal = $ActaTribunalDlRepository->getActasTribunales(['acta' => $Qacta]);
-foreach ($cActaTribunal as $oActaTribunal) {
-    if ($ActaTribunalDlRepository->Eliminar($oActaTribunal) === false) {
-        $error_txt .= _("hay un error, no se ha eliminado");
-        $error_txt .= "\n" . $ActaTribunalDlRepository->getErrorTxt();
-    }
-}
-
-$Qexaminadores = (array)filter_input(INPUT_POST, 'examinadores', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($Qexaminadores)) {
-    $i = 0;
-    foreach ($Qexaminadores as $examinador) {
-        $i++;
-        // puede estar en blanco => no guardar.
-        if (empty($examinador)) {
-            continue;
-        }
-        $newIdItem = $ActaTribunalDlRepository->getNewId();
-        $oActaTribunal = new ActaTribunal();
-        $oActaTribunal->setId_item($newIdItem);
-        $oActaTribunal->setActa($Qacta);
-        $oActaTribunal->setExaminador($examinador);
-        $oActaTribunal->setOrden($i);
-        if ($ActaTribunalDlRepository->Guardar($oActaTribunal) === false) {
-            $error_txt .= _("hay un error, no se ha guardado");
-            $error_txt .= "\n" . $ActaTribunalDlRepository->getErrorTxt();
-        }
-    }
 }
 
 ContestarJson::enviar($error_txt, 'ok');

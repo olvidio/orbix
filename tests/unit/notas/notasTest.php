@@ -4,7 +4,7 @@ namespace Tests\unit\notas;
 
 use core\ConfigGlobal;
 use Exception;
-use notas\model\EditarPersonaNota;
+use src\notas\application\EditarPersonaNota;
 use RuntimeException;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;

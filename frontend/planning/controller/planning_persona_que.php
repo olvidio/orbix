@@ -1,0 +1,78 @@
+<?php
+
+namespace frontend\planning\controller;
+
+use core\ConfigGlobal;
+use frontend\planning\support\PeriodoPlanningHelper;
+use frontend\shared\model\ViewNewPhtml;
+use web\Hash;
+use web\Posicion;
+
+/**
+ * Formulario de filtros para el planning por persona (numerarios, agd,
+ * supernumerarios, sacd, de paso...).
+ *
+ * Migrado desde `apps/planning/controller/planning_persona_que.php`
+ * (slice 2 de la migracion del modulo planning).
+ */
+require_once("frontend/shared/global_header_front.inc");
+require_once("apps/core/global_object.inc");
+
+/** @var Posicion $oPosicion */
+$oPosicion->recordar();
+
+if (isset($_POST['stack'])) {
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack !== '' && $stack !== null) {
+        $oPosicion2 = new Posicion();
+        if ($oPosicion2->goStack((int)$stack)) {
+            $oPosicion2->olvidar((int)$stack);
+        }
+    }
+}
+
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qna = (string)filter_input(INPUT_POST, 'na');
+$Qyear = (int)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+
+$periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto((int)$_SESSION['oConfig']->getMesFinStgr());
+$locale_us = ConfigGlobal::is_locale_us();
+
+$oHash = new Hash();
+$oHash->setCamposForm('nombre!apellido1!apellido2!centro!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
+$oHash->setcamposNo('modelo');
+$oHash->setArraycamposHidden([
+    'obj_pau' => $Qobj_pau,
+    'na' => $Qna,
+]);
+
+$oFormP = PeriodoPlanningHelper::formPeriodo($Qperiodo, $Qyear, $Qempiezamin, $Qempiezamax);
+
+$personas_txt = match ($Qobj_pau) {
+    'PersonaN' => _("numerarios"),
+    'PersonaNax' => _("nax"),
+    'PersonaAgd' => _("agregados"),
+    'PersonaS' => _("supernumerarios"),
+    'PersonaSSSC' => _("de la sss+"),
+    'PersonaDl' => _("de la dl"),
+    'PersonaEx' => _("de paso"),
+    'PersonaSacd' => _("sacd"),
+    default => exit(sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__)),
+};
+
+$urlSelect = 'frontend/planning/controller/planning_persona_select.php';
+
+$a_campos = [
+    'oPosicion' => $oPosicion,
+    'oHash' => $oHash,
+    'oFormP' => $oFormP,
+    'personas_txt' => $personas_txt,
+    'locale_us' => $locale_us,
+    'urlSelect' => $urlSelect,
+];
+
+$oView = new ViewNewPhtml('frontend\planning\controller');
+$oView->renderizar('planning_persona_que.phtml', $a_campos);

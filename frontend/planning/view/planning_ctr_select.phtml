@@ -1,0 +1,23 @@
+<?php
+
+echo $oPosicion->mostrar_left_slide(1);
+if (!empty($msg_txt)) {
+    echo $msg_txt;
+}
+
+echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >" . _("Descargar html") . "</button>";
+echo "<button class='no_print' onclick=\"window.open('$goLeyenda','leyenda','width=400,height=500,screenX=200,screenY=200,titlebar=yes');\" >" . _("Ver leyenda") . "</button>";
+
+echo "<div id=\"exportar\">";
+echo "<span id=\"span_exportar\" title=\"$cabecera_title\">";
+uksort($a_actividades2, "strnatcasecmp");
+foreach ($a_actividades2 as $nombre_ubi => $a_actividades) {
+    $cabecera = $nombre_ubi;
+    // Linea en blanco al final para que se vean las 3 divisiones aun con todas las casas ocupadas.
+    $a_actividades[] = ['###' => []];
+    $oPlanning->setCabecera($cabecera);
+    $oPlanning->setActividades($a_actividades);
+    echo $oPlanning->dibujar();
+}
+echo "</span>";
+echo "</div>";

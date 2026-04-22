@@ -1,6 +1,6 @@
 <?php
 
-use notas\model\EditarPersonaNota;
+use src\notas\application\EditarPersonaNota;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;

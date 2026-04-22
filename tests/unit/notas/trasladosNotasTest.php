@@ -6,7 +6,7 @@ use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
-use notas\model\EditarPersonaNota;
+use src\notas\application\EditarPersonaNota;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;

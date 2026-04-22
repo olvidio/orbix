@@ -1,39 +1,28 @@
 <?php
 
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
+use src\notas\application\AsignaturasSearchData;
+use src\notas\application\ExaminadoresSearchData;
 
 /**
- * Esta página sirve para dar una lista de examinadores para los inputs autocomplete
+ * Shim AJAX consumido por los autocomplete de `acta_ver.phtml`
+ * (examinadores y asignaturas). El contrato de respuesta es un JSON
+ * raw `[{label, value}, ...]` para jQuery-UI autocomplete, por eso no
+ * se usa `ContestarJson` aqui.
  *
- *
- * @package    delegacion
- * @subpackage    estudios
- * @author    Daniel Serrabou
- * @since        19/08/15.
- *
+ * @deprecated Slice 3 lo sustituira por endpoints dedicados:
+ *   - `src/notas/infrastructure/ui/http/controllers/examinadores_search.php`
+ *   - `src/notas/infrastructure/ui/http/controllers/asignaturas_search.php`
  */
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
+require_once 'apps/core/global_header.inc';
+require_once 'apps/core/global_object.inc';
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
-$sQuery = (string)filter_input(INPUT_POST, 'search');
 
 switch ($Qque) {
     case 'examinadores':
-        $ActaTribunalDlRepository = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
-        $json = $ActaTribunalDlRepository->getJsonExaminadores($sQuery);
+        echo ExaminadoresSearchData::execute($_POST);
         break;
     case 'asignaturas':
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $json = $AsignaturaRepository->getJsonAsignaturas(array('nombre_asignatura' => $sQuery));
+        echo AsignaturasSearchData::execute($_POST);
         break;
 }
-echo $json;

@@ -6,7 +6,7 @@ use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
-use notas\model\EditarPersonaNota;
+use src\notas\application\EditarPersonaNota;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;

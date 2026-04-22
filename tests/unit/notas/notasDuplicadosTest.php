@@ -2,7 +2,7 @@
 
 namespace Tests\unit\notas;
 
-use notas\model\EditarPersonaNota;
+use src\notas\application\EditarPersonaNota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\ubis\application\services\DelegacionUtils;
 use Tests\factories\notas\NotasFactory;

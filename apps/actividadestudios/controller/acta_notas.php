@@ -160,7 +160,7 @@ if (!empty($msg_err)) {
 $txt_alert_acta = _("primero debe guadar los datos del acta");
 
 // El formulario del acta:
-include_once("apps/notas/controller/acta_ver.php");
+include_once("frontend/notas/controller/acta_ver.php");
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHashNotas' => $oHashNotas,

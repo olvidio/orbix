@@ -73,7 +73,7 @@
 14	21	apps/encargossacd/controller/sacd_ficha.php	\N	Encargo sacd ficha
 104	7	apps/actividadestudios/controller/matricular.php	\N	matricular
 48	3	frontend/ubis/controller/list_ctr.php	\N	listas de ubis
-88	4	apps/notas/controller/asignaturas_pendientes.php	\N	cuadro alumnos-asignaturas
+88	4	frontend/notas/controller/asignaturas_pendientes.php	\N	cuadro alumnos-asignaturas
 38	1	apps/permisos/controller/config_select.php	\N	config modulos
 40	1	apps/menus/controller/menus_importar.php	\N	importar menus
 122	1	apps/usuarios/controller/grupo_lista.php	\N	lista grupos
@@ -116,8 +116,8 @@
 176	9	apps/dbextern/controller/sincro_index.php	\N	Sincronizar con los datos de Listas
 147	5	apps/asistentes/controller/que_ctr_lista.php	\N	Buscar por centro
 140	5	apps/asistentes/controller/activ_pendientes_select.php	\N	actividades pendientes
-60	4	apps/notas/controller/acta_select.php	\N	actas
-57	4	apps/notas/controller/resumen_anual.php	\N	resumen anual
+60	4	frontend/notas/controller/acta_select.php	\N	actas
+57	4	frontend/notas/controller/resumen_anual.php	\N	resumen anual
 156	21	apps/encargossacd/controller/encargo_select.php	\N	Encargos lista
 62	21	apps/encargossacd/controller/ctr_ficha.php	\N	Ficha encargos ctr
 127	21	apps/encargossacd/controller/sacd_ausencias.php	\N	Ausencias sacd
@@ -128,9 +128,9 @@
 141	5	frontend/actividades/controller/calendario_que.php	\N	Calendario que
 168	7	apps/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
 66	7	apps/actividadestudios/controller/matriculas_lista.php	\N	listas de matriculas
-174	4	apps/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
-175	4	apps/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
-178	4	apps/notas/controller/acta_listado_anual.php	\N	listado anual actas
+174	4	frontend/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
+175	4	frontend/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
+178	4	frontend/notas/controller/acta_listado_anual.php	\N	listado anual actas
 142	1	apps/menus/controller/menus_generar_txt.php	\N	pasa los menus a texto
 148	1	apps/menus/controller/menus_que.php	\N	gestor de menus
 160	1	apps/core/mod_tabla_sql.php	\N	modificar los datos de una tabla

@@ -1,62 +1,15 @@
 <?php
 
+use src\notas\application\ActaPdfSubir;
+use web\ContestarJson;
 
-// INICIO Cabecera global de URL de controlador *********************************
-use src\notas\domain\contracts\ActaRepositoryInterface;
+/**
+ * @deprecated Usar `src/notas/infrastructure/ui/http/controllers/acta_pdf_subir.php`.
+ * Shim de compatibilidad para `acta_ver.phtml` hasta la migracion completa
+ * de vistas de actas.
+ */
+require_once 'apps/core/global_header.inc';
+require_once 'apps/core/global_object.inc';
 
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
-
-// example of a PHP server code that is called in `uploadUrl` above
-// file-upload-batch script
-header('Content-Type: application/json'); // set json response headers
-$outData = upload(); // a function to upload the bootstrap-fileinput files
-echo json_encode($outData); // return json data
-exit(); // terminate
-
-function upload()
-{
-    $Qacta = (string)filter_input(INPUT_POST, 'acta_num');
-
-    $error_txt = '';
-    $input = 'acta_pdf'; // the input name for the fileinput plugin
-    if (empty($_FILES[$input])) {
-        return [];
-    } else {
-        $tmpFilePath = $_FILES[$input]['tmp_name']; // the temp file path
-        $fileName = $_FILES[$input]['name']; // the file name
-        //$fileSize = $_FILES[$input]['size']; // the file size
-
-        //Make sure we have a file path
-        if ($tmpFilePath != "") {
-
-            $fp = fopen($tmpFilePath, 'rb');
-            $contenido_doc = fread($fp, filesize($tmpFilePath));
-
-            $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-            $oActa = $ActaRepository->findById($Qacta);
-            $oActa->setPdf($contenido_doc);
-
-            if ($ActaRepository->Guardar($oActa) === FALSE) {
-                $error_txt .= $oActa->getErrorTxt();
-            }
-        } else {
-            $error_txt .= sprintf(_("No se puede subir el archivo %s"), $fileName);
-        }
-
-        if (!empty($error_txt)) {
-            $jsondata['success'] = FALSE;
-            $jsondata['mensaje'] = $error_txt;
-        } else {
-            $jsondata['success'] = TRUE;
-        }
-
-        return $jsondata;
-    }
-}
+$error_txt = ActaPdfSubir::execute($_POST, $_FILES);
+ContestarJson::enviar($error_txt, 'ok');

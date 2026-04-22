@@ -1,0 +1,400 @@
+<?php
+
+/**
+ * Esta página sirve para la tessera de una persona.
+ *
+ *
+ * @package    delegacion
+ * @subpackage    estudios
+ * @author    Daniel Serrabou
+ * @since        22/11/02.
+ *
+ */
+
+/**
+ * Funciones más comunes de la aplicación
+ */
+
+use core\ConfigGlobal;
+use notas\model\Tesera;
+use src\personas\domain\entity\Persona;
+use web\Hash;
+
+require_once 'frontend/shared/global_header_front.inc';
+
+// En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$oPosicion->recordar($Qrefresh);
+
+echo "<script>fnjs_left_side_hide()</script>";
+include_once(ConfigGlobal::$dir_estilos . '/tessera.css.php');
+
+//Si vengo por medio de Posicion, borro la última
+if (isset($_POST['stack'])) {
+    $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack2 !== '') {
+        $oPosicion2 = new web\Posicion();
+        if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
+            $Qid_sel = $oPosicion2->getParametro('id_sel');
+            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+            $oPosicion2->olvidar($stack2);
+        }
+    }
+}
+
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) { //vengo de un checkbox
+    $id_nom = (integer)strtok($a_sel[0], "#");
+    $id_tabla = (string)strtok("#");
+} else {
+    $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+    $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
+}
+
+$Qcara = (string)filter_input(INPUT_POST, 'cara');
+$Qcara = empty($Qcara) ? "A" : $Qcara;
+
+$oPersona = Persona::findPersonaEnGlobal($id_nom);
+if ($oPersona === null) {
+    $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+    exit($msg_err);
+}
+$nom = $oPersona->getNombreApellidos();
+$region_latin = $_SESSION['oConfig']->getNomRegionLatin();
+
+// conversion 
+$replace = src\configuracion\domain\entity\Config::$replace;
+
+function titulo($id_asignatura, $cara = "")
+{
+    $html = '';
+    $cabecera = '<tr><td class="space"></td></tr>
+	 		<tr style="vertical-align=bottom"><td style="width: 2%"></td>
+			<td class="cabecera" style="width: 46%">DISCIPLIN&#198;</td>
+			<td class="cabecera" style="width: 25%">CUM NOTA</td>
+			<td class="cabecera" style="width: 1%"></td>
+			<td class="cabecera" style="width: 10%">DIES EXAMINIS</td>
+			<td class="cabecera" style="width: 1%"></td>
+			<td class="cabecera" style="width: 10%">NUMERUS IN ACTIS</td>
+			<td style="width: 1%"></td>
+			</tr>';
+    switch ($id_asignatura) {
+        case 1101:
+            $html = " 
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES PHILOSOPHI&#198;</td></tr>
+				$cabecera
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS I</td></tr>
+				<tr><td class=\"space\"></td></tr>
+				";
+            break;
+        case 1201:
+            $html = " 
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS II</td></tr>
+				<tr><td class=\"space\"></td></tr>
+				";
+            break;
+        case 2101:
+            $html = " 
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES S THEOLOGI&#198;</td></tr>
+				$cabecera
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS I</td></tr>
+				<tr><td class=\"space\"></td></tr>
+				";
+            break;
+        case 2108:
+            $html = "";
+            if ($cara === "A") {
+                $html = "
+			</table>
+			</div>
+			<div class=\"A4\">
+			<table class=\"A4\">
+			<col style=\"width: 2%\">
+				<col style=\"width: 46%\">
+				<col style=\"width: 25%\">
+				<col style=\"width: 1%\">
+				<col style=\"width: 10%\">
+				<col style=\"width: 1%\">
+				<col style=\"width: 10%\">
+				<col style=\"width: 1%\">
+				";
+
+            }
+            $html .= "
+				$cabecera
+				<tr><td class=\"space\"></td></tr>
+			";
+            break;
+        case 2201:
+            $html = "
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS II</td></tr>
+				<tr><td class=\"space\"></td></tr>
+			";
+            break;
+        case 2301:
+            $html = "
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS III</td></tr>
+				<tr><td class=\"space\"></td></tr>
+			";
+            break;
+        case 2401:
+            $html = "
+				<tr><td class=\"space\"></td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS IV</td></tr>
+				<tr><td class=\"space\"></td></tr>
+			";
+            break;
+    }
+    return $html;
+}
+
+function data($data)
+{
+    $fecha = explode("-", $data);
+    $any = substr($fecha[0], 2);
+    $fechaok = $fecha[2] . "." . $fecha[1] . "." . $any;
+    if ($fecha[1] == 00) {
+        $fechaok = "";
+    }
+    echo "$fechaok";
+}
+
+// -----------------------------
+$rowEmpty = [
+    'id_nivel_asig' => '',
+    'id_nivel' => '',
+    'id_asignatura' => '',
+    'nombre_asignatura' => '',
+    'acta' => '',
+    'fecha' => '',
+    'nota' => '',
+];
+// -----------------------------  cabecera ---------------------------------
+$caraA = Hash::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
+$caraB = Hash::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
+
+$url_pdf = ConfigGlobal::getWeb() . '/frontend/notas/controller/tessera_2_mpdf.php';
+$oHash = new Hash();
+$oHash->setUrl($url_pdf);
+$aCamposHidden = ['id_nom' => $id_nom,
+    'id_tabla' => $id_tabla,
+];
+$oHash->setArrayCamposHidden($aCamposHidden);
+$go_pdf = $url_pdf . '?' . $oHash->linkConVal();
+
+?>
+<table class="no_print">
+    <tr>
+        <td class="atras">
+            <?= $oPosicion->mostrar_back_arrow(1); ?>
+        </td>
+        <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')">
+                <?= _("Cara A (delante)"); ?>
+            </span>
+        </td>
+        <td align="center"><span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')">
+                <?= _("Cara B (detrás)"); ?>
+            </span>
+        </td>
+        <td align="center"><span class=link onclick='window.open("<?= $go_pdf ?>", "sele");'>
+                <?= _("PDF"); ?>
+            </span></td>
+    </tr>
+</table>
+<table class="A4">
+    <col style="width: 2%">
+    <col style="width: 46%">
+    <col style="width: 25%">
+    <col style="width: 1%">
+    <col style="width: 10%">
+    <col style="width: 1%">
+    <col style="width: 10%">
+    <col style="width: 1%">
+    <?php
+    if ($Qcara === "A") {
+        ?>
+        <tr>
+            <td class="space"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS:
+                <?= $region_latin ?>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI:
+                <?= $nom ?>
+            </td>
+        </tr>
+        <?php
+    }
+    $oTesera = new Tesera();
+
+    $plan = $oTesera->getPlan($id_nom);
+    $cAsignaturas = $oTesera->getAsignaturasPosibles($plan);
+    $aAprobadas = $oTesera->getAsignaturasAprobadas($id_nom, $plan);
+
+    $num_asig = count($cAsignaturas);
+    $a = 0;
+    $j = 0;
+    $i = 0;
+    reset($aAprobadas);
+    $row = current($aAprobadas);
+    if (key($aAprobadas) === null) { // ha llegado al final
+        $row = $rowEmpty;
+    }
+
+    while ($a < count($cAsignaturas)) {
+        $oAsignatura = $cAsignaturas[$a++];
+
+        // para imprimir sólo una cara:
+        // cara A hasta la asignatura 2107
+        if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
+            $row = current($aAprobadas);
+            continue;
+        }
+        if ($Qcara === "B" && $oAsignatura->getId_nivel() < 2108) {
+            if (key($aAprobadas) === null) { // ha llegado al final
+                $row = $rowEmpty;
+            }
+            while (($row["id_nivel"] < 2107) && ($j < $num_asig)) {
+                if (key($aAprobadas) === null) { // ha llegado al final
+                    $row = $rowEmpty;
+                } else {
+                    $row = current($aAprobadas);
+                }
+                if (next($aAprobadas) === FALSE) {
+                    $row = $rowEmpty;
+                    break;
+                }
+                $j++;
+            }
+            continue;
+        }
+        while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
+            if (key($aAprobadas) === null) { // ha llegado al final
+                $row = $rowEmpty;
+                break;
+            }
+            $row = current($aAprobadas);
+            if (next($aAprobadas) === FALSE) {
+                break;
+            }
+            $j++;
+        }
+        while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
+            $clase = "impar";
+            $i % 2 ? 0 : $clase = "par";
+            $i++;
+            echo titulo($oAsignatura->getId_nivel(), $Qcara);
+            $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+            ?>
+            <tr class="<?= $clase; ?>" valign="bottom">
+                <td></td>
+                <td>
+                    <?= $nombre_asignatura; ?>&nbsp;
+                </td>
+                <td class="dato">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="dato">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="dato">&nbsp;</td>
+                <td></td>
+            </tr>
+            <?php
+            $oAsignatura = $cAsignaturas[$a++];
+            if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
+                continue 2;
+            }
+        }
+
+        if ($oAsignatura->getId_nivel() == $row["id_nivel_asig"]) {
+            $clase = "impar";
+            $i % 2 ? 0 : $clase = "par";
+            $i++;
+            echo titulo($oAsignatura->getId_nivel(), $Qcara);
+            // para las opcionales
+            if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
+
+                $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
+                $algo = $oAsignatura->getNombre_asignatura() . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
+                ?>
+                <tr class="<?= $clase; ?>" valign="bottom">
+                    <td></td>
+                    <td>
+                        <?= $algo; ?>&nbsp;
+                    </td>
+                    <td class="dato">
+                        <?= $row["nota"]; ?>&nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="dato">
+                        <?= $row["fecha"]->getFromLocal() ?>&nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="dato">
+                        <?= $row["acta"]; ?>&nbsp;
+                    </td>
+                    <td></td>
+                </tr>
+                <?php
+            } else {
+                $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                ?>
+                <tr class="<?= $clase; ?>">
+                    <td></td>
+                    <td>
+                        <?= $nombre_asignatura; ?>&nbsp;
+                    </td>
+                    <td class="dato">
+                        <?= $row["nota"]; ?>&nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="dato">
+                        <?= $row["fecha"]->getFromLocal() ?>&nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class="dato">
+                        <?= $row["acta"]; ?>&nbsp;
+                    </td>
+                    <td></td>
+                </tr>
+                <?php
+            }
+            $num_asig++;
+        } else {
+            if (!$row["id_nivel"] || ($j == $num_asig)) {
+                $clase = "impar";
+                $i % 2 ? 0 : $clase = "par";
+                $i++;
+                echo titulo($oAsignatura->getId_asignatura(), $Qcara);
+                $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                ?>
+                <tr class="<?= $clase; ?>">
+                    <td></td>
+                    <td>
+                        <?= $nombre_asignatura; ?>&nbsp;
+                    </td>
+                    <td class="dato">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="dato">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="dato">&nbsp;</td>
+                    <td></td>
+                </tr>
+                <?php
+            }
+        }
+    }
+    ?>
+    </tr>
+</table>

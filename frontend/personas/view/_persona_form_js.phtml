@@ -1,0 +1,68 @@
+<?php
+
+use core\ConfigGlobal;
+
+/**
+ * Fragmento JS compartido por `persona_form.phtml`, `persona_sss_form.phtml`
+ * y `persona_de_paso.phtml`: define `fnjs_guardar` / `fnjs_eliminar` llamando
+ * a los endpoints JSON `/src/personas/persona_update` y `/src/personas/persona_eliminar`.
+ *
+ * Variables esperadas:
+ *   - `$oPosicion` (web\Posicion)
+ *   - `$obj_txt` (string) nombre de clase para `fnjs_comprobar_campos`.
+ */
+?>
+<script>
+    fnjs_act_ctr = function (camp) {
+        var idCamp = '#id_' + camp;
+        var centre = $(idCamp).val();
+        $(camp).val(centre);
+    }
+
+    fnjs_guardar = function (formulario) {
+        var rr = fnjs_comprobar_campos('#frm2', '<?= addslashes($obj_txt) ?>');
+        if (rr === 'ok') {
+            $(formulario).attr('action', "<?= ConfigGlobal::getWeb() ?>/src/personas/persona_update");
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    type: 'post',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    dataType: 'json'
+                }).done(function (json) {
+                    if (json.success !== true) {
+                        alert('<?= _("respuesta") ?>: ' + json.mensaje);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                    }
+                });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+
+    fnjs_eliminar = function (formulario) {
+        if (confirm("<?= _("¿Está seguro que desea borrar esta persona?") ?>")) {
+            $(formulario).attr('action', "<?= ConfigGlobal::getWeb() ?>/src/personas/persona_eliminar");
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize(),
+                    dataType: 'json'
+                }).done(function (json) {
+                    if (json.success !== true) {
+                        alert('<?= _("respuesta") ?>: ' + json.mensaje);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                    }
+                });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+</script>

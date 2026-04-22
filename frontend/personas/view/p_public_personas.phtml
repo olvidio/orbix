@@ -1,0 +1,79 @@
+<?php
+
+use core\ConfigGlobal;
+use function core\is_true;
+
+/**
+ * Ficha pubica (solo lectura) de N / Agd / S / Nax cuando el usuario no
+ * tiene permisos para editarla.
+ */
+?>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<table id="datospersonales">
+    <tr>
+        <td class="titulo" colspan="5"><?= strtoupper(_("datos personales")) ?></td>
+    </tr>
+    <tr>
+        <td><?= _("delegación") ?>:</td>
+        <td class="contenido"><?= $dl ?></td>
+        <td><?= _("centro-sede") ?>:</td>
+        <td class="contenido"><?= $nom_ctr ?></td>
+    </tr>
+    <tr>
+        <td>
+            <span class="etiqueta"><?= _("Trato") ?></span>
+            <input class="contenido" size="7" id="trato" name="trato" value="<?= $trato ?>">
+        </td>
+        <td><span class="etiqueta"><?= _("Nombre") ?></span></td>
+        <td colspan="2"><input class="contenido" size="20" id="nom" name="nom" value="<?= $nom ?>"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><span class="etiqueta"><?= _("Apelativo") ?></span></td>
+        <td colspan="2"><input class="contenido" size="20" id="apel_fam" name="apel_fam" value="<?= $apel_fam ?>"></td>
+    </tr>
+    <tr>
+        <td>
+            <span class="etiqueta"><?= _("nx1") ?></span>
+            <input class="contenido" size="7" id="nx1" name="nx1" value="<?= $nx1 ?>">
+        </td>
+        <td><span class="etiqueta"><?= _("Apellido") ?></span></td>
+        <td colspan="2"><input class="contenido" size="25" id="apellido1" name="apellido1" value="<?= $apellido1 ?>"></td>
+    </tr>
+    <tr>
+        <td>
+            <span class="etiqueta"><?= _("nx2") ?></span>
+            <input class="contenido" size="7" id="nx2" name="nx2" value="<?= $nx2 ?>">
+        </td>
+        <td><span class="etiqueta"><?= _("Segundo Apellido") ?></span></td>
+        <td colspan="2"><input class="contenido" size="25" id="apellido2" name="apellido2" value="<?= $apellido2 ?>"></td>
+    </tr>
+    <tr>
+        <td>
+            <span class="etiqueta"><?= _("Fecha Nacimiento") ?></span>
+            <input class="fecha contenido" size="11" id="f_nacimiento" name="f_nacimiento" value="<?= $f_nacimiento ?>">
+        </td>
+    </tr>
+    <tr>
+        <td><span class="etiqueta"><?= ucfirst('situacion') ?></span></td>
+        <td colspan="2"><?= $oDesplSituacion->desplegable() ?></td>
+        <td>
+            <span class="etiqueta"><?= _("Fecha situación") ?></span>
+            <input class="fecha contenido" size="11" id="f_situacion" name="f_situacion" value="<?= $f_situacion ?>">
+        </td>
+    </tr>
+    <tr>
+        <td><span class="etiqueta"><?= ucfirst('Idioma preferido') ?></span></td>
+        <td colspan="2"><?= $oDesplLengua->desplegable() ?></td>
+    </tr>
+    <tr>
+        <td><span class="etiqueta"><?= _("Profesión") ?></span></td>
+        <td colspan="2"><input class="contenido" size="30" id="profesion" name="profesion" value="<?= $profesion ?>"></td>
+    </tr>
+    <tr>
+        <?php if (ConfigGlobal::mi_sfsv() == 1) : ?>
+            <td><span class="etiqueta"><?= _("sacd") ?></span></td>
+            <td><input class="contenido" id="sacd" name="sacd" type="checkbox" <?= is_true($sacd) ? 'checked' : '' ?>></td>
+        <?php endif; ?>
+    </tr>
+</table>

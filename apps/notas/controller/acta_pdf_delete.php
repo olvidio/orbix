@@ -1,38 +1,15 @@
 <?php
-// INICIO Cabecera global de URL de controlador *********************************
-use Illuminate\Http\JsonResponse;
-use src\notas\domain\contracts\ActaDlRepositoryInterface;
-use src\notas\domain\contracts\ActaRepositoryInterface;
 
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
+use src\notas\application\ActaPdfEliminar;
+use web\ContestarJson;
 
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
+/**
+ * @deprecated Usar `src/notas/infrastructure/ui/http/controllers/acta_pdf_eliminar.php`.
+ * Shim de compatibilidad para `acta_ver.phtml` hasta la migracion completa
+ * de vistas de actas.
+ */
+require_once 'apps/core/global_header.inc';
+require_once 'apps/core/global_object.inc';
 
-// FIN de  Cabecera global de URL de controlador ********************************
-
-// El delete es via POST!!!";
-
-$Qacta = (string)filter_input(INPUT_POST, 'acta_num');
-
-if (!empty($Qacta)) {
-    $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-    $oActa = $ActaRepository->findById($Qacta);
-    $oActa->setPdf('');
-    if ($ActaRepository->Guardar($oActa) === FALSE) {
-        $error_txt = $ActaRepository->getErrorTxt();
-    }
-} else {
-    $error_txt = _("No se encuentra el acta");
-}
-
-if (!empty($error_txt)) {
-    $jsondata['success'] = FALSE;
-    $jsondata['mensaje'] = $error_txt;
-} else {
-    $jsondata['success'] = TRUE;
-}
-(new JsonResponse($jsondata))->send();
-exit();
+$error_txt = ActaPdfEliminar::execute($_POST);
+ContestarJson::enviar($error_txt, 'ok');

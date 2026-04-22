@@ -6,8 +6,8 @@ id_grupmenu,?column?,url,parametros,id_mod
 1,Ayuda (Ayuda),public/ayuda/index.php,,1
 1,Informar de un bug (abrir pag redmine),fnjs_windowopen('http://10.0.0.16/redmine'),,1
 2,buscar n (Raiz base),,,1
-2,n r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
-2,n de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1
+2,n r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
+2,n de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1
 2,Actualizar datos desde BDU (Sincronizar con los datos de Listas),apps/dbextern/controller/sincro_index.php,tipo=n,9
 2,crt (Raiz activ1),,,5
 2,importar crt (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=n&sactividad=crt&que=ver&modo=importar,5
@@ -37,9 +37,9 @@ id_grupmenu,?column?,url,parametros,id_mod
 2,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=n&sactividad=cve,8
 2,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=n&sactividad=cve,11
 2,planning (Raiz activ1),,,5
-2,persona r/dl vsm (Planning persona),apps/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
-2,por centro (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
-2,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
+2,persona r/dl vsm (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
+2,por centro (planning ctr),frontend/planning/controller/planning_ctr_que.php,,6
+2,por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
 3,buscar n (Raiz base),,,1
 3,Actualizar datos desde BDU (Sincronizar con los datos de Listas),apps/dbextern/controller/sincro_index.php,tipo=a,9
 3,crt (Raiz activ1),,,5
@@ -67,9 +67,9 @@ id_grupmenu,?column?,url,parametros,id_mod
 3,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=agd&sactividad=cve,8
 3,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=agd&sactividad=cve,11
 3,planning  (Raiz activ1),,,5
-3,persona r/dl (Planning persona),apps/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
-3,por centro (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
-3,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
+3,persona r/dl (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
+3,por centro (planning ctr),frontend/planning/controller/planning_ctr_que.php,,6
+3,por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
 4,direcciones (Raiz base),,,1
 4,buscar (buscar ubis),frontend/ubis/controller/ubis_buscar.php,simple=1,3
 4,listados (listas de ubis),frontend/ubis/controller/list_ctr.php,,3
@@ -80,11 +80,11 @@ id_grupmenu,?column?,url,parametros,id_mod
 4,lista dl (Listado cartas presentación),apps/cartaspresentacion/controller/cartas_presentacion_lista.php,que=lista_dl,25
 4,buscar (Buscar Cartas presentacion),apps/cartaspresentacion/controller/cartas_presentacion_buscar.php,,25
 4,planning (Raiz base),,,1
-4,persona dl (Planning persona),apps/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
-4,num de paso (Planning persona),apps/planning/controller/planning_persona_que.php,obj_pau=PersonaEx&na=n,6
-4,agd de paso (Planning persona),apps/planning/controller/planning_persona_que.php,obj_pau=PersonaEx&na=a,6
-4,por ctr (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
-4,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
+4,persona dl (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
+4,num de paso (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaEx&na=n,6
+4,agd de paso (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaEx&na=a,6
+4,por ctr (planning ctr),frontend/planning/controller/planning_ctr_que.php,,6
+4,por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
 4,inventario (Raiz documentos),,,28
 4,Colecciones (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\inventario\domain\InfoColeccion,1
 4,documentos (Raiz base),,,1
@@ -105,7 +105,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 4,lista docs perdidos (Lista documentos perdidos),frontend/inventario/controller/docs_perdidos.php,,28
 4,lista docs con observ. (Lista doscumentos con observaciones),frontend/inventario/controller/docs_con_observaciones.php,,28
 4,traslado de doc (Traslado Documentos),frontend/inventario/controller/traslado_doc_que.php,,28
-7,Planing Casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
+7,Planing Casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
 7,listado gerentes (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
 7,Gestión económica (Casa que),apps/casas/controller/casa_que.php,,27
 7,gastos casas (Casa que),apps/casas/controller/casa_que.php,tipo_lista=datosEcGastos,27
@@ -125,13 +125,13 @@ id_grupmenu,?column?,url,parametros,id_mod
 7,tarifas por casa y año (actividad Tarifa Ubi),apps/actividadtarifas/controller/tarifa_ubi.php,,5
 7,activ -> tarifa (Tarifa actividades),apps/actividadtarifas/controller/tarifa_actividad.php,,5
 8,personas (Raiz base),,,1
-8,sacd num (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_numerarios&na=n&tipo=persona&es_sacd=1,1
-8,n de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona&es_sacd=1,1
-8,sacd agd (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_agregados&na=a&tipo=persona&es_sacd=1,1
-8,agd de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=a&tipo=persona&es_sacd=1,1
-8,sacd sssc (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_sssc&tipo=persona,1
-8,sssc de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=sss&tipo=persona,1
-8,cp & as.ecles (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_cp_ae_sssc&tipo=persona,1
+8,sacd num (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&na=n&tipo=persona&es_sacd=1,1
+8,n de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona&es_sacd=1,1
+8,sacd agd (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_agregados&na=a&tipo=persona&es_sacd=1,1
+8,agd de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=a&tipo=persona&es_sacd=1,1
+8,sacd sssc (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_sssc&tipo=persona,1
+8,sssc de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=sss&tipo=persona,1
+8,cp & as.ecles (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_cp_ae_sssc&tipo=persona,1
 8,lista varias activ (seleccionar actividad),frontend/actividades/controller/actividad_que.php,ssfsv=sv&sasistentes=n&que=list_cjto_sacd,5
 8,ca pendientes (actividades pendientes),apps/asistentes/controller/activ_pendientes_select.php,sactividad=ca&tipo_personas=sacd,5
 8,crt pendientes (actividades pendientes),apps/asistentes/controller/activ_pendientes_select.php,sactividad=crt&tipo_personas=sacd,5
@@ -146,10 +146,10 @@ id_grupmenu,?column?,url,parametros,id_mod
 8,zonas-sacd (Zona sacd),apps/zonassacd/controller/zona_sacd.php,,24
 8,lista sacd-zona (Zona sacd ajax),apps/zonassacd/controller/zona_sacd_ajax.php,que=get_lista_tot,24
 8,planning (Raiz activ1),,,5
-8,sacd r/dl des (Planning persona),apps/planning/controller/planning_persona_que.php,obj_pau=PersonaSacd&tipo=planning,6
-8,por centro (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
-8,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
-8,por zonas (Planning por zonas),apps/planning/controller/planning_zones_que.php,,24
+8,sacd r/dl des (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaSacd&tipo=planning,6
+8,por centro (planning ctr),frontend/planning/controller/planning_ctr_que.php,,6
+8,por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
+8,por zonas (Planning por zonas),frontend/planning/controller/planning_zones_que.php,,24
 8,actividades (Raiz activ1),,,5
 8,buscar activ (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver,5
 8,sv  n (Listado de Actividades),frontend/actividades/controller/actividad_select.php,id_tipo_activ=11&status=2&periodo=desdeHoy,5
@@ -178,7 +178,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 8,sssc (Raiz activ1),,,5
 8,buscar activ (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver&ssfsv=sv&sasistentes=sss%2B,5
 8,propuesta cl cv (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=sss+&sactividad=cv&que=list_cjto,5
-8,planing zonas (Planning por zonas),apps/planning/controller/planning_zones_que.php,propuesta=true,24
+8,planing zonas (Planning por zonas),frontend/planning/controller/planning_zones_que.php,propuesta=true,24
 8,lista activ. sacd (Comunicación activ sacd),apps/actividadessacd/controller/com_sacd_activ_periodo.php,propuesta=true,20
 8,asignar sacd (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,,20
 8,activ sv sg (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=sg&periodo=desdeHoy,20
@@ -202,7 +202,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 8,Nuevo calendario (Raiz activ1),,,5
 8,Definir periodos (Calendario Periodos),frontend/ubis/controller/calendario_periodos.php,,5
 8,nuevo curso (Nuevo Curso),frontend/actividades/controller/actividad_nuevo_curso.php,,5
-8,nuevo planing (Planing Casa),apps/planning/controller/planning_casa_que.php,propuesta_calendario=1,6
+8,nuevo planing (Planing Casa),frontend/planning/controller/planning_casa_que.php,propuesta_calendario=1,6
 8,casas comunes (des) (calendario listas),frontend/actividades/controller/calendario_listas.php,que=c_comunes&ver_ctr=si,5
 8,casas comunes sf (calendario listas),frontend/actividades/controller/calendario_listas.php,que=c_comunes_sf,5
 8,casas comunes sv (calendario listas),frontend/actividades/controller/calendario_listas.php,que=c_comunes_sv&ver_ctr=si,5
@@ -220,11 +220,11 @@ id_grupmenu,?column?,url,parametros,id_mod
 8,Misas (Raiz Misas),,,31
 8,aaaaaaaaaaaaa (llista de modul misas),frontend/misas/controller/misas_index.php,,31
 8,resto (listas de matriculas),apps/actividadestudios/controller/matriculas_lista.php,,7
-9,planning zonas (Planning por zonas),apps/planning/controller/planning_zones_que.php,,24
+9,planning zonas (Planning por zonas),frontend/planning/controller/planning_zones_que.php,,24
 9,atención actividades (Comunicación activ sacd),apps/actividadessacd/controller/com_sacd_activ_periodo.php,,20
 9,casas (Raiz activ1),,,5
 9,buscar (buscar ubis),frontend/ubis/controller/ubis_buscar.php,simple=1&tipo=tot&loc=tot,3
-9,planning por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
+9,planning por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
 9,listado gerentes (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
 9,lista actividades (Casa que),apps/casas/controller/casa_que.php,periodo=tot_any&tipo_lista=lista_activ,27
 9,gastos casa (Casa que),apps/casas/controller/casa_que.php,tipo_lista=datosEcGastos,27
@@ -235,7 +235,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 9,activ -> tarifa (Tarifa definir),apps/actividadtarifas/controller/tarifa.php,,5
 9,buscar (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver,5
 9,lista por casas (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
-10,s de la r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_supernumerarios,1
+10,s de la r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_supernumerarios,1
 10,Actualizar datos desde BDU (Sincronizar con los datos de Listas),apps/dbextern/controller/sincro_index.php,tipo=s,9
 10,lista ctr i nº s (lista ctr sg),frontend/ubis/controller/lista_ctrs.php,,1
 10,buscar cv (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=s&sactividad=cv&que=ver,5
@@ -261,29 +261,29 @@ id_grupmenu,?column?,url,parametros,id_mod
 10,Balance de plazas (Balance de Plazas),apps/actividadplazas/controller/plazas_balance_que.php,sasistentes=s&sactividad=crt,8
 10,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=s&sactividad=crt,11
 10,actividades-centros (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sg,20
-10,n r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
-10,n de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1
-10,agd r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
-10,agd de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=a&tipo=persona,1
-10,persona r/dl (Planning persona),apps/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
-10,por centro (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
-10,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
+10,n r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
+10,n de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1
+10,agd r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
+10,agd de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=a&tipo=persona,1
+10,persona r/dl (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
+10,por centro (planning ctr),frontend/planning/controller/planning_ctr_que.php,,6
+10,por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
 12,buscar persona (Raiz base),,,1
-12,n r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
-12,n de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1
-12,agd r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
-12,agd de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=a&tipo=persona,1
+12,n r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
+12,n de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1
+12,agd r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
+12,agd de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=a&tipo=persona,1
 12,matricular a todos (matricular),apps/actividadestudios/controller/matricular.php,,7
 12,profesor para asignatura (profesores para asignatura),frontend/profesores/controller/profesor_asignatura_que.php,,4
 12,claustro (listado claustro),apps/profesores/controller/lista_por_departamentos.php,,4
 12,actas... (Raiz stgr),,,4
-12,actas (actas),apps/notas/controller/acta_select.php,,4
-12,tabla alumnos-asignaturas (cuadro alumnos-asignaturas),apps/notas/controller/asignaturas_pendientes.php,,4
-12,resúmenes (resumen anual),apps/notas/controller/resumen_anual.php,,4
+12,actas (actas),frontend/notas/controller/acta_select.php,,4
+12,tabla alumnos-asignaturas (cuadro alumnos-asignaturas),frontend/notas/controller/asignaturas_pendientes.php,,4
+12,resúmenes (resumen anual),frontend/notas/controller/resumen_anual.php,,4
 12,Matr. Pendientes (matriculas pendientes),apps/actividadestudios/controller/matriculas_pendientes.php,,7
 12,Matrículas (listas de matriculas),apps/actividadestudios/controller/matriculas_lista.php,,7
-12,resumen pendientes (Resumen asig. pendientes),apps/notas/controller/asignaturas_pendientes_resumen.php,,4
-12,buscar asig. pendientes (Asignaturas pendientes),apps/notas/controller/asig_faltan_que.php,,4
+12,resumen pendientes (Resumen asig. pendientes),frontend/notas/controller/asignaturas_pendientes_resumen.php,,4
+12,buscar asig. pendientes (Asignaturas pendientes),frontend/notas/controller/asig_faltan_que.php,,4
 12,ver docencia (Docencia),frontend/profesores/controller/docencia.php,,7
 12,asitencia a congresos (congresos),frontend/profesores/controller/congresos.php,,7
 12,certificados (Certificado lista),frontend/certificados/controller/certificado_emitido_lista.php,,4
@@ -309,9 +309,9 @@ id_grupmenu,?column?,url,parametros,id_mod
 12,importar (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=n&sactividad2=semestre-inv&que=ver&modo=importar,5
 12,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=n&sactividad2=semestre-inv,11
 12,planning (Raiz activ1),,,5
-12,persona r/dl (Planning persona),apps/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
-12,por centro (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
-12,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
+12,persona r/dl (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
+12,por centro (planning ctr),frontend/planning/controller/planning_ctr_que.php,,6
+12,por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
 12,mantenimiento (Raiz base),,,1
 12,dic latin (modificar los datos de una tabla),apps/core/mod_tabla_sql.php,clase_info=personas\model\InfoLatin,1
 12,actualizar docencia (guardar docencia ca en dossier),apps/actividadestudios/controller/actualizar_docencia.php,,7
@@ -357,10 +357,10 @@ id_grupmenu,?column?,url,parametros,id_mod
 13,traducciones (Raiz base),,,1
 13,menus a texto (pasa los menus a texto),src/menus/infrastructure/ui/http/controllers/menus_generar_txt.php,,1
 13,posibles idiomas (modificar los datos de una tabla),apps/core/mod_tabla_sql.php,clase_info=usuarios\model\InfoLocales,1
-15,n r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
-15,n de paso  (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1
-15,agd r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
-15,agd de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=a&tipo=persona,1
+15,n r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
+15,n de paso  (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1
+15,agd r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
+15,agd de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=a&tipo=persona,1
 15,buscar cv (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=sr&sactividad=cv,5
 15,lista cargos (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=sr&sactividad=cv&que=list_cjto,5
 15,tabla de cv (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=list_activ&ssfsv=sv&sasistentes=sr&sactividad=cv,5
@@ -368,12 +368,12 @@ id_grupmenu,?column?,url,parametros,id_mod
 15,tabla de crt (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=list_activ&ssfsv=sv&sasistentes=sr&sactividad=crt,5
 15,listado csv (Activ Sr Que (csv)),frontend/actividades/controller/lista_sr_csv_que.php,,6
 15,actividades-centros (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sr,20
-15,por ctr (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
-15,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
-15,por zonas (Planning por zonas),apps/planning/controller/planning_zones_que.php,,24
+15,por ctr (planning ctr),frontend/planning/controller/planning_ctr_que.php,,6
+15,por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
+15,por zonas (Planning por zonas),frontend/planning/controller/planning_zones_que.php,,24
 16,buscar nax (Raiz base),,,1
-16,nax r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_nax&tipo=persona,1
-16,nax de paso (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_de_paso&na=x&tipo=persona,1
+16,nax r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_nax&tipo=persona,1
+16,nax de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=x&tipo=persona,1
 16,crt (Raiz activ1),,,5
 16,buscar crt (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=nax&sactividad=crt&que=ver,5
 16,ca (Raiz activ1),,,5
@@ -398,8 +398,8 @@ id_grupmenu,?column?,url,parametros,id_mod
 19,cargos (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\actividadcargos\domain\InfoCargo,1
 20,buscar (buscar ubis),frontend/ubis/controller/ubis_buscar.php,simple=1&tipo=ctr&loc=dl,3
 20,listados (listas de ubis),frontend/ubis/controller/list_ctr.php,,3
-20,por centro (planning ctr),apps/planning/controller/planning_ctr_que.php,,6
-20,por casas (Planing Casa),apps/planning/controller/planning_casa_que.php,,6
+20,por centro (planning ctr),frontend/planning/controller/planning_ctr_que.php,,6
+20,por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
 20,buscar activ (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver,5
 20,sf n (Listado de Actividades),frontend/actividades/controller/actividad_select.php,id_tipo_activ=21....&status=2&periodo=desdeHoy,5
 20,sf nax (Listado de Actividades),frontend/actividades/controller/actividad_select.php,id_tipo_activ=22....&status=2&periodo=desdeHoy,5
@@ -428,9 +428,9 @@ id_grupmenu,?column?,url,parametros,id_mod
 20,tarifas por casa y año (actividad Tarifa Ubi),apps/actividadtarifas/controller/tarifa_ubi.php,,5
 20,Previsión económica (Ubi resumen ec),apps/casas/controller/calendario_ubi_resumen.php,,27
 20,Previsión asistentes (prevision asistentes),apps/casas/controller/prevision_asistentes.php,,27
-21,n r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
-21,agd r/dl (búsqueda de personas),apps/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
+21,n r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
+21,agd r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
 21,profesor para asignatura (profesores para asignatura),frontend/profesores/controller/profesor_asignatura_que.php,,4
 21,claustro (listado claustro),apps/profesores/controller/lista_por_departamentos.php,,4
-21,actas (actas),apps/notas/controller/acta_select.php,,4
-21,tabla alumnos-asignaturas (cuadro alumnos-asignaturas),apps/notas/controller/asignaturas_pendientes.php,,4
+21,actas (actas),frontend/notas/controller/acta_select.php,,4
+21,tabla alumnos-asignaturas (cuadro alumnos-asignaturas),frontend/notas/controller/asignaturas_pendientes.php,,4

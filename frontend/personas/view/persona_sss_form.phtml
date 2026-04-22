@@ -1,0 +1,82 @@
+<?php
+
+use core\ConfigGlobal;
+
+/**
+ * Ficha de PersonaSSSC. Las funciones JS `fnjs_guardar` y `fnjs_eliminar`
+ * viven en el fragmento compartido `_persona_form_js.phtml`.
+ */
+include __DIR__ . '/_persona_form_js.phtml';
+include __DIR__ . '/_persona_header.phtml';
+?>
+<!-- ============================== Ficha ============================= -->
+<form id="frm2">
+    <?= $oHash->getCamposHtml(); ?>
+    <table id="datospersonales">
+        <tr>
+            <td class="titulo" colspan="5"><?= strtoupper(_("datos personales")) ?></td>
+        </tr>
+        <tr>
+            <td><span class="etiqueta">Delegación</span></td>
+            <td><input class="datos" size="6" name="dl" value="<?= $dl ?>"></td>
+            <?php if (empty($id_nom) || empty($nom_ctr)) : ?>
+                <td>Centro-sede: <?= $oDesplCentro->desplegable() ?></td>
+            <?php elseif (!empty($botones)) : ?>
+                <td>
+                    <span class="link" onclick="fnjs_update_div('#main','<?= $ir_a_traslado ?>');">&nbsp;Centro-sede:&nbsp;</span>
+                    <b class="contenido"><?= $nom_ctr ?></b>
+                    <input class="contenido" type="hidden" name="id_ctr" id="id_ctr" value="<?= $id_ctr ?>">
+                </td>
+            <?php else : ?>
+                <td>&nbsp;Centro-sede:&nbsp;<b class="contenido"><?= $nom_ctr ?></b></td>
+            <?php endif; ?>
+        </tr>
+        <tr>
+            <?php
+            echo web\dibujar_campo($obj, "trato", 7, 1, 0);
+            echo web\dibujar_campo($obj, "nom", 20, 1, 2);
+            echo "</tr><tr><td></td>";
+            echo web\dibujar_campo($obj, "apel_fam", 20, 1, 2);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "nx1", 7, 1, 0);
+            echo web\dibujar_campo($obj, "apellido1", 25, 1, 2);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "nx2", 7, 1, 0);
+            echo web\dibujar_campo($obj, "apellido2", 25, 1, 2);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "lugar_nacimiento", 15, 1, 1);
+            echo web\dibujar_campo($obj, "f_nacimiento", 11, 1, 0);
+            echo "</tr><tr>";
+            ?>
+            <td><span class="etiqueta"><?= ucfirst('situacion') ?></span></td>
+            <td colspan="2"><?= $oDesplSituacion->desplegable() ?></td>
+            <?php
+            echo web\dibujar_campo($obj, "f_situacion", 11, 1, 0);
+            echo "</tr><tr>";
+            ?>
+            <td><span class="etiqueta"><?= ucfirst('lengua') ?></span></td>
+            <td colspan="2"><?= $oDesplLengua->desplegable() ?></td>
+            <?php
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "profesion", 30, 1, 2);
+            echo "</tr><tr>";
+            if (ConfigGlobal::mi_sfsv() == 1) {
+                echo web\dibujar_campo($obj, "sacd", 9, 1, 1);
+            }
+            ?>
+            <td>
+                <span class="etiqueta">Stgr&nbsp;</span>
+                <?= $oDesplStgr->desplegable() ?>
+            </td>
+            <?php
+            echo web\dibujar_campo($obj, "eap", 20, 2, 0);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "inc", 5, 1, 0);
+            echo web\dibujar_campo($obj, "f_inc", 11, 1, 1);
+            echo "</tr><tr>";
+            echo web\dibujar_campo($obj, "observ", 60, 1, 4);
+            ?>
+        </tr>
+    </table>
+    <?php include __DIR__ . '/_persona_form_botones.phtml'; ?>
+</form>

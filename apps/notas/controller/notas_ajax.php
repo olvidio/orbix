@@ -1,231 +1,76 @@
 <?php
 
-use core\ConfigGlobal;
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividades\domain\contracts\ActividadRepositoryInterface;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\ActaRepositoryInterface;
-use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\notas\domain\value_objects\NotaEpoca;
-use src\notas\domain\value_objects\NotaSituacion;
-use src\profesores\domain\services\ProfesorStgrService;
-use src\ubis\application\services\DelegacionDropdown;
+use src\notas\application\ActividadesBuscarData;
+use src\notas\application\BuscarActaData;
+use src\notas\application\PosiblesOpcionalesData;
+use src\notas\application\PosiblesPreceptoresData;
 use web\Desplegable;
 use web\Hash;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
+/**
+ * Shim AJAX consumido por `form_1011.phtml` y `form_1303.phtml`.
+ *
+ * @deprecated Cuando las vistas migren (slice 4), cada case se movera a
+ * un endpoint propio bajo `src/notas/infrastructure/ui/http/controllers/`
+ * que responda JSON con `ContestarJson`. De momento se preserva el
+ * contrato historico (JSON literal para `buscar_acta`, HTML inline para
+ * los demas casos), pero la logica de negocio ya vive en application
+ * services reutilizables.
+ */
+require_once 'apps/core/global_header.inc';
+require_once 'apps/core/global_object.inc';
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
-$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 
 switch ($Qque) {
     case 'buscar_acta':
-        $Qacta = (string)filter_input(INPUT_POST, 'acta');
-        // si es número busca en la dl.
-        $matches = [];
-        preg_match("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
-        if (!empty($matches[1])) {
-            $mi_dele = ConfigGlobal::mi_delef();
-            $Qacta = empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date("y") : "$mi_dele $Qacta";
-        }
-        $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-        $cActas = $ActaRepository->getActas(['acta' => $Qacta]);
-        $json = "{\"id_asignatura\":\"no\"}";
-        if (count($cActas) === 1) {
-            $oActa = $cActas[0];
-            $f_acta = $oActa->getF_acta()?->getFromLocal();
-            $id_asignatura = $oActa->getId_asignatura();
-            $id_activ = $oActa->getId_activ();
-            if (!empty($id_activ)) {
-                $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-                $oActividad = $ActividadAllRepository->findById($id_activ);
-                $nom_activ = $oActividad->getNom_activ();
-                $id_tipo_actividad = $oActividad->getId_tipo_activ();
-                $epoca = NotaEpoca::EPOCA_CA;
-                if ($id_tipo_actividad === 132500) { //sem invierno
-                    $epoca = NotaEpoca::EPOCA_INVIERNO;
-                }
-            } else {
-                $nom_activ = '';
-                $epoca = NotaEpoca::EPOCA_OTRO;
-            }
-            // hace falta el id_nivel (para las no opcionales):
-            $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
-            if ($oAsignatura === null) {
-                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
-            }
-            $id_nivel = $oAsignatura->getId_nivel();
-            $json = "{\"id_asignatura\":\"$id_asignatura\",
-                        \"id_nivel\":\"$id_nivel\",
-                        \"id_activ\":\"$id_activ\",
-                          \"f_acta\":\"$f_acta\",
-                       \"nom_activ\":\"$nom_activ\",
-                       \"epoca\":\"$epoca\",
-                       \"acta\":\"$Qacta\"
-                    }";
-
-        }
-        echo $json;
+        echo json_encode(BuscarActaData::execute($_POST), JSON_THROW_ON_ERROR);
         break;
+
     case 'frm_buscar':
-        $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
-        $Qf_acta_iso = (string)filter_input(INPUT_POST, 'f_acta_string');
-        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+        $datos = ActividadesBuscarData::execute($_POST);
 
-        if (empty($Qdl_org)) {
-            $Qdl_org = ConfigGlobal::mi_delef();
-        }
+        $oDesplDelegaciones = Desplegable::desdeOpciones($datos['delegaciones'], 'dl_org');
+        $oDesplDelegaciones->setOpcion_sel($datos['dl_org_sel']);
+        $oDesplDelegaciones->setAction('fnjs_buscar_ca()');
 
-        $oDesplDelegacionesOrg = Desplegable::desdeOpciones(DelegacionDropdown::delegacionesURegiones(), 'dl_org');
-        $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
-        $oDesplDelegacionesOrg->setAction('fnjs_buscar_ca()');
-
-
-        if (!empty($Qf_acta_iso)) { // 3 meses cerca de la fecha del acta.
-            $oF_acta = new DateTime($Qf_acta_iso);
-            $oData2 = new DateTime($Qf_acta_iso);
-            $oF_acta->add(new DateInterval('P3M'));
-            $f_fin_iso = $oF_acta->format('Y-m-d');
-            $oData2->sub(new DateInterval('P3M'));
-            $f_ini_iso = $oData2->format('Y-m-d');
-        } else { // desde hoy, 10 meses antes.
-            $oData = new \src\shared\domain\value_objects\DateTimeLocal();
-            $oData2 = clone $oData;
-            $oData->add(new DateInterval('P1M'));
-            $f_fin_iso = $oData->format('Y-m-d');
-            $oData2->sub(new DateInterval('P10M'));
-            $f_ini_iso = $oData2->format('Y-m-d');
-        }
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['f_ini'] = "'$f_ini_iso','$f_fin_iso'";
-        $aOperador['f_ini'] = 'BETWEEN';
-        $aWhere['id_tipo_activ'] = '^1(12|33)';
-        $aOperador['id_tipo_activ'] = '~';
-        $aWhere['_ordre'] = 'f_ini';
-        $aWhere['dl_org'] = $Qdl_org;
-        $ActividadRepository = $GLOBALS['container']->get(ActividadRepositoryInterface::class);
-        $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
-        $aActividades = [];
-        foreach ($cActividades as $oActividad) {
-            $id_actividad = $oActividad->getId_activ();
-            $nom_activ = $oActividad->getNom_activ();
-            $aActividades[$id_actividad] = $nom_activ;
-        }
         $oDesplActividades = new Desplegable();
-        $oDesplActividades->setOpciones($aActividades);
+        $oDesplActividades->setOpciones($datos['actividades']);
         $oDesplActividades->setBlanco(1);
         $oDesplActividades->setNombre('id_activ_sel');
-        $oDesplActividades->setOpcion_sel($Qid_activ);
+        $oDesplActividades->setOpcion_sel($datos['id_activ_sel']);
 
         $oHash = new Hash();
-        //$oHash->setUrl($url_ajax);
-        //$oHash->setArrayCamposHidden(['que' => 'update', 'id_ubi' => $Qid_ubi]);
-
         $oHash->setCamposForm('pres_nom!pres_telf!pres_mail!zona!observ');
         $oHash->setCamposNo('scroll_id!sel');
 
         $txt = "<form id='frm_buscar'>";
         $txt .= '<h3>' . _("seleccionar la actividad") . '</h3>';
         $txt .= $oHash->getCamposHtml();
-        $txt .= '<br>';
-        $txt .= _("organniza");
-        $txt .= '<br>';
-        $txt .= $oDesplDelegacionesOrg->desplegable();
-        $txt .= '<br>';
-        $txt .= _("actividad");
-        $txt .= '<br>';
-        $txt .= $oDesplActividades->desplegable();
-        $txt .= '<br>';
-        $txt .= '<br><br>';
-        $txt .= "<input type='button' value='" . _("guardar") . "' onclick=\"fnjs_update_activ('#frm_buscar');\" >";
-        $txt .= "<input type='button' value='" . _("cancel") . "' onclick=\"fnjs_cerrar();\" >";
-        $txt .= "</form> ";
-
+        $txt .= '<br>' . _("organniza") . '<br>' . $oDesplDelegaciones->desplegable();
+        $txt .= '<br>' . _("actividad") . '<br>' . $oDesplActividades->desplegable();
+        $txt .= '<br><br><br>';
+        $txt .= "<input type='button' value='" . _("guardar") . "' onclick=\"fnjs_update_activ('#frm_buscar');\">";
+        $txt .= "<input type='button' value='" . _("cancel") . "' onclick=\"fnjs_cerrar();\">";
+        $txt .= '</form>';
         echo $txt;
         break;
-    case 'posibles_opcionales':
-        // todas las opcionales
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['active'] = 't';
-        $aWhere['id_nivel'] = '3000,5000';
-        $aOperador['id_nivel'] = 'BETWEEN';
-        $aWhere['_ordre'] = 'nombre_corto';
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-        $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
-        // Asignaturas opcionales superadas
-        $aSuperadas = NotaSituacion::getArraySuperadas();
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['id_situacion'] = implode(',', $aSuperadas);
-        $aOperador['id_situacion'] = 'IN';
-        $aWhere['id_nom'] = $Qid_nom;
-        $aWhere['id_asignatura'] = 3000;
-        $aOperador['id_asignatura'] = '>';
-        $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-        $cAsignaturasOpSuperadas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
-        $aOpSuperadas = [];
-        foreach ($cAsignaturasOpSuperadas as $oAsignatura) {
-            $id_asignatura = $oAsignatura->getId_asignatura();
-            $aOpSuperadas[$id_asignatura] = $id_asignatura;
-        }
-        // asignaturas opcionales posibles
-        $aFaltan = [];
-        foreach ($cOpcionales as $oAsignatura) {
-            $id_asignatura = $oAsignatura->getId_asignatura();
-            $nombre_corto = $oAsignatura->getNombre_corto();
-            if (array_key_exists($id_asignatura, $aOpSuperadas)) continue;
-            $aFaltan[$id_asignatura] = $nombre_corto;
-        }
 
-        $oDesplPosiblesOpcionales = new Desplegable();
-        $oDesplPosiblesOpcionales->setNombre('id_asignatura');
-        $oDesplPosiblesOpcionales->setOpciones($aFaltan);
-//		$oDesplPosiblesOpcionales->setOpcion_sel($Qid_asignatura);
-        $oDesplPosiblesOpcionales->setBlanco(1);
-        echo $oDesplPosiblesOpcionales->desplegable();
+    case 'posibles_opcionales':
+        $aFaltan = PosiblesOpcionalesData::execute($_POST);
+        $oDespl = new Desplegable();
+        $oDespl->setNombre('id_asignatura');
+        $oDespl->setOpciones($aFaltan);
+        $oDespl->setBlanco(1);
+        echo $oDespl->desplegable();
         break;
 
     case 'posibles_preceptores':
-        $ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
-        $aOpciones = $ProfesorStgrService->getArrayProfesoresDl();
-        $oDesplProfesores = new Desplegable();
-        $oDesplProfesores->setOpciones($aOpciones);
-        $oDesplProfesores->setBlanco(1);
-        $oDesplProfesores->setNombre('id_preceptor');
-        echo $oDesplProfesores->desplegable();
-        /*
-        $cProfesores= $GesProfes->getProfesoresStgr();
-        $aProfesores=[];
-        $msg_err = '';
-        foreach ($cProfesores as $oProfesor) {
-            $id_nom=$oProfesor->getId_nom();
-            $oPersona = personas\Persona::NewPersona($id_nom);
-            if (!is_object($oPersona)) {
-                $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  ".__FILE__.": line ". __LINE__;
-                continue;
-            }
-            $ap_nom=$oPersona->getPrefApellidosNombre();
-            $aProfesores[$id_nom]=$ap_nom;
-        }
-        uasort($aProfesores,'core\strsinacentocmp');
-
-        $oDesplProfesores = new Desplegable();
-        $oDesplProfesores->setOpciones($aProfesores);
-        $oDesplProfesores->setBlanco(1);
-        $oDesplProfesores->setNombre('id_preceptor');
-        echo $oDesplProfesores->desplegable();
-         *
-         */
+        $aProfesores = PosiblesPreceptoresData::execute();
+        $oDespl = new Desplegable();
+        $oDespl->setOpciones($aProfesores);
+        $oDespl->setBlanco(1);
+        $oDespl->setNombre('id_preceptor');
+        echo $oDespl->desplegable();
         break;
-
 }

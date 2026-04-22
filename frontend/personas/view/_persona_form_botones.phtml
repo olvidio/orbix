@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * Botonera comun de las 3 fichas (`persona_form`, `persona_sss_form`,
+ * `persona_de_paso`). Se invoca con `include __DIR__ . '/_persona_form_botones.phtml'`.
+ *
+ * Variables esperadas:
+ *   - `$botones` (string, e.g. "1,2")
+ *   - `$id_nom` (int)
+ *   - `$Qobj_pau` (string)
+ */
+
+if (empty($botones)) {
+    return;
+}
+?>
+<table>
+    <tr class="botones">
+        <?php foreach (explode(',', (string)$botones) as $b) :
+            $b = (int)$b;
+            if ($b === 1) : ?>
+                <th class="link_inv" onclick='fnjs_guardar("#frm2")'><?= ucwords(_("guardar cambios")) ?></th>
+            <?php elseif ($b === 2) : ?>
+                <th class="link_inv" onclick='fnjs_eliminar("#frm2")'><?= ucwords(_("eliminar")) ?></th>
+            <?php elseif ($b === 3) :
+                $pag = "programas/ficha_texto.php?id_nom={$id_nom}&obj_pau={$Qobj_pau}"; ?>
+                <th class="link_inv" onclick="fnjs_update_div('#main','<?= $pag ?>')"><?= ucwords(_("formato texto")) ?></th>
+            <?php endif;
+        endforeach; ?>
+    </tr>
+</table>
+<br>

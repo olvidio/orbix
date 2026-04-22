@@ -3,8 +3,8 @@ id_metamenu;id_mod;url;descripcion
 121;1;apps/dossiers/controller/perm_dossiers.php;permisos dossiers
 40;1;apps/menus/controller/menus_importar.php;importar menus old
 38;1;apps/permisos/controller/config_select.php;config modulos
-76;1;apps/personas/controller/personas_que.php;búsqueda de personas
-97;1;apps/personas/controller/personas_select.php;personas Select
+76;1;frontend/personas/controller/personas_que.php;búsqueda de personas
+97;1;frontend/personas/controller/personas_select.php;personas Select
 152;1;frontend/ubis/controller/lista_ctrs.php;lista ctr sg
 162;1;fnjs_exportar('odfc');exportar a odf calc
 163;1;fnjs_exportar('odft');exportar a odft txt
@@ -35,12 +35,12 @@ id_metamenu;id_mod;url;descripcion
 146;3;frontend/ubis/controller/centros_que.php;Centros seleccionar
 48;3;frontend/ubis/controller/list_ctr.php;listas de ubis
 133;3;frontend/ubis/controller/ubis_buscar.php;buscar ubis
-178;4;apps/notas/controller/acta_listado_anual.php;listado anual actas
-60;4;apps/notas/controller/acta_select.php;actas
-175;4;apps/notas/controller/asig_faltan_que.php;Asignaturas pendientes
-88;4;apps/notas/controller/asignaturas_pendientes.php;cuadro alumnos-asignaturas
-174;4;apps/notas/controller/asignaturas_pendientes_resumen.php;Resumen asig. pendientes
-57;4;apps/notas/controller/resumen_anual.php;resumen anual
+178;4;frontend/notas/controller/acta_listado_anual.php;listado anual actas
+60;4;frontend/notas/controller/acta_select.php;actas
+175;4;frontend/notas/controller/asig_faltan_que.php;Asignaturas pendientes
+88;4;frontend/notas/controller/asignaturas_pendientes.php;cuadro alumnos-asignaturas
+174;4;frontend/notas/controller/asignaturas_pendientes_resumen.php;Resumen asig. pendientes
+57;4;frontend/notas/controller/resumen_anual.php;resumen anual
 173;4;apps/profesores/controller/lista_por_departamentos.php;listado claustro
 171;4;frontend/profesores/controller/profesor_asignatura_que.php;profesores para asignatura
 37;4;frontend/certificados/controller/certificado_emitido_lista.php;Certificado lista
@@ -63,9 +63,9 @@ id_metamenu;id_mod;url;descripcion
 143;6;frontend/actividades/controller/lista_activ_que.php;Lista Activ que
 58;6;frontend/actividades/controller/lista_sr_csv_que.php;Activ Sr Que (csv)
 79;6;apps/asistentes/controller/lista_ultim_que_ctr.php;Ultima asistencia
-194;6;apps/planning/controller/planning_casa_que.php;Planing Casa
-61;6;apps/planning/controller/planning_ctr_que.php;planning ctr
-138;6;apps/planning/controller/planning_persona_que.php;Planning persona
+194;6;frontend/planning/controller/planning_casa_que.php;Planing Casa
+61;6;frontend/planning/controller/planning_ctr_que.php;planning ctr
+138;6;frontend/planning/controller/planning_persona_que.php;Planning persona
 52;7;apps/actividadestudios/controller/actualizar_docencia.php;guardar docencia ca en dossier
 155;7;apps/actividadestudios/controller/ca_posibles_que.php;Posibles ca
 104;7;apps/actividadestudios/controller/matricular.php;matricular
@@ -92,7 +92,7 @@ id_metamenu;id_mod;url;descripcion
 23;21;apps/encargossacd/controller/que_tipo_de_encargo.php;Tipo de encargo
 127;21;frontend/encargossacd/controller/sacd_ausencias.php;Ausencias sacd
 14;21;frontend/encargossacd/controller/sacd_ficha.php;Encargo sacd ficha
-139;24;apps/planning/controller/planning_zones_que.php;Planning por zonas
+139;24;frontend/planning/controller/planning_zones_que.php;Planning por zonas
 85;24;apps/zonassacd/controller/zona_ctr.php;Zona-ctr
 34;24;apps/zonassacd/controller/zona_sacd_ajax.php;Zona sacd ajax
 42;24;apps/zonassacd/controller/zona_sacd.php;Zona sacd

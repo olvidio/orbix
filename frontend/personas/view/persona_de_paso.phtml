@@ -1,0 +1,121 @@
+<?php
+
+use core\ConfigGlobal;
+use function core\is_true;
+
+/**
+ * Ficha de "de paso" (PersonaEx). Las funciones JS `fnjs_guardar` y
+ * `fnjs_eliminar` viven en el fragmento compartido `_persona_form_js.phtml`.
+ */
+include __DIR__ . '/_persona_form_js.phtml';
+include __DIR__ . '/_persona_header.phtml';
+
+$edad = $edad ?? '';
+?>
+<!-- ============================== Ficha ============================= -->
+<form id="frm2">
+    <?= $oHash->getCamposHtml(); ?>
+    <table id="datospersonales">
+        <tr>
+            <td class="titulo" colspan="5"><?= strtoupper(_("datos personales")) ?></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <span class="etiqueta">n, agd o sss+:</span>
+                <select class="datos" name="id_tabla">
+                    <option value="pn" <?= $id_tabla === "pn" ? 'selected' : '' ?>><?= _("numerario") ?></option>
+                    <option value="pa" <?= $id_tabla === "pa" ? 'selected' : '' ?>><?= _("agregado") ?></option>
+                    <?php if (ConfigGlobal::mi_sfsv() === 2) : ?>
+                        <option value="px" <?= $id_tabla === "px" ? 'selected' : '' ?>><?= _("numeraria auxiliar") ?></option>
+                    <?php else : ?>
+                        <option value="psssc" <?= $id_tabla === "psssc" ? 'selected' : '' ?>><?= _("sss+") ?></option>
+                    <?php endif; ?>
+                </select>
+            </td>
+            <td><span class="etiqueta"><?= _("Delegación") ?></span></td>
+            <td colspan="2"><?= $oDesplDl->desplegable() ?></td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"><?= _("Trato") ?></span>
+                <input class="contenido" size="7" id="trato" name="trato" value="<?= $trato ?>">
+            </td>
+            <td><span class="etiqueta"><?= _("Nombre") ?></span></td>
+            <td colspan="2"><input class="contenido" size="20" id="nom" name="nom" value="<?= $nom ?>"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><span class="etiqueta"><?= _("Apelativo") ?></span></td>
+            <td colspan="2"><input class="contenido" size="20" id="apel_fam" name="apel_fam" value="<?= $apel_fam ?>"></td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"><?= _("nx1") ?></span>
+                <input class="contenido" size="7" id="nx1" name="nx1" value="<?= $nx1 ?>">
+            </td>
+            <td><span class="etiqueta"><?= _("Apellido") ?></span></td>
+            <td colspan="2"><input class="contenido" size="25" id="apellido1" name="apellido1" value="<?= $apellido1 ?>"></td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"><?= _("nx2") ?></span>
+                <input class="contenido" size="7" id="nx2" name="nx2" value="<?= $nx2 ?>">
+            </td>
+            <td><span class="etiqueta"><?= _("Segundo Apellido") ?></span></td>
+            <td colspan="2"><input class="contenido" size="25" id="apellido2" name="apellido2" value="<?= $apellido2 ?>"></td>
+        </tr>
+        <tr>
+            <td><span class="etiqueta"><?= _("Lugar de nacimiento") ?></span></td>
+            <td><input class="contenido" size="15" id="lugar_nacimiento" name="lugar_nacimiento" value="<?= $lugar_nacimiento ?>"></td>
+            <td>
+                <span class="etiqueta"><?= _("Fecha Nacimiento") ?></span>
+                <input class="fecha contenido" size="11" id="f_nacimiento" name="f_nacimiento" value="<?= $f_nacimiento ?>">
+            </td>
+            <td><span class="etiqueta"><?= _("Edad") ?></span></td>
+            <td><input class="contenido" size="4" id="edad" name="edad" value="<?= $edad ?>"></td>
+        </tr>
+        <tr>
+            <td><span class="etiqueta"><?= ucfirst('situacion') ?></span></td>
+            <td colspan="2"><?= $oDesplSituacion->desplegable() ?></td>
+            <td>
+                <span class="etiqueta"><?= _("Fecha situación") ?></span>
+                <input class="fecha contenido" size="11" id="f_situacion" name="f_situacion" value="<?= $f_situacion ?>">
+            </td>
+        </tr>
+        <tr>
+            <td><span class="etiqueta"><?= ucfirst('Idioma preferido') ?></span></td>
+            <td colspan="2"><?= $oDesplLengua->desplegable() ?></td>
+        </tr>
+        <tr>
+            <td><span class="etiqueta"><?= _("Profesión") ?></span></td>
+            <td colspan="2"><input class="contenido" size="30" id="profesion" name="profesion" value="<?= $profesion ?>"></td>
+        </tr>
+        <tr>
+            <?php if (ConfigGlobal::mi_sfsv() == 1) : ?>
+                <td><span class="etiqueta"><?= _("sacd") ?></span></td>
+                <td><input class="contenido" id="sacd" name="sacd" type="checkbox" <?= is_true($sacd) ? 'checked' : '' ?>></td>
+            <?php endif; ?>
+            <td>
+                <span class="etiqueta"><?= _("Stgr") ?></span>
+                <?= $oDesplStgr->desplegable() ?>
+            </td>
+            <td colspan="2">
+                <span class="etiqueta"><?= _("eap") ?></span>
+                <input class="contenido" size="20" id="eap" name="eap" value="<?= $eap ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="etiqueta"><?= _("inc") ?></span>
+                <input class="contenido" size="5" id="inc" name="inc" value="<?= $inc ?>">
+            </td>
+            <td><span class="etiqueta"><?= _("Fecha inc") ?></span></td>
+            <td><input class="fecha contenido" size="11" id="f_inc" name="f_inc" value="<?= $f_inc ?>"></td>
+        </tr>
+        <tr>
+            <td><span class="etiqueta"><?= _("Observaciones") ?></span></td>
+            <td colspan="4"><input class="contenido" size="60" id="observ" name="observ" value="<?= $observ ?>"></td>
+        </tr>
+    </table>
+    <?php include __DIR__ . '/_persona_form_botones.phtml'; ?>
+</form>

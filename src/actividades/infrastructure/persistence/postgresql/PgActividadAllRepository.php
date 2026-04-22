@@ -8,7 +8,7 @@ use core\ConverterDate;
 use core\Set;
 use DateInterval;
 use PDO;
-use planning\domain\PlanningStyle;
+use src\planning\domain\value_objects\PlanningStyle;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\shared\domain\value_objects\DateTimeLocal;

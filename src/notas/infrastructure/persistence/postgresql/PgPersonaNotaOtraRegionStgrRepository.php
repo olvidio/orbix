@@ -10,7 +10,7 @@ use core\ConverterDate;
 use core\ConverterJson;
 use core\DBConnection;
 use core\Set;
-use notas\model\EditarPersonaNota;
+use src\notas\application\EditarPersonaNota;
 use PDO;
 use src\asignaturas\domain\value_objects\NivelId;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
