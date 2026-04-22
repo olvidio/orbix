@@ -118,24 +118,33 @@ $oHash->setCamposForm($camposForm);
 $oHash->setcamposNo($camposNo);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_ajax = ConfigGlobal::getWeb() . '/apps/notas/controller/notas_ajax.php'; // shim activo
+$web = rtrim(ConfigGlobal::getWeb(), '/');
 
-$oHash1 = new Hash();
-$oHash1->setUrl($url_ajax);
-$oHash1->setCamposForm('que!id_nom');
-$h1 = $oHash1->linkSinVal();
-$oHash2 = new Hash();
-$oHash2->setUrl($url_ajax);
-$oHash2->setCamposForm('que');
-$h2 = $oHash2->linkSinVal();
-$oHashMod = new Hash();
-$oHashMod->setUrl($url_ajax);
-$oHashMod->setCamposForm('dl_org!f_acta_iso!que');
-$h_modificar = $oHashMod->linkSinVal();
-$oHashActa = new Hash();
-$oHashActa->setUrl($url_ajax);
-$oHashActa->setCamposForm('acta!que');
-$h_acta = $oHashActa->linkSinVal();
+$url_posibles_opcionales = $web . '/src/notas/posibles_opcionales_data';
+$oHashOpcionales = new Hash();
+$oHashOpcionales->setUrl($url_posibles_opcionales);
+$oHashOpcionales->setCamposForm('id_nom');
+$h_posibles_opcionales = $oHashOpcionales->linkSinVal();
+
+$url_posibles_preceptores = $web . '/src/notas/posibles_preceptores_data';
+$oHashPreceptores = new Hash();
+$oHashPreceptores->setUrl($url_posibles_preceptores);
+$h_posibles_preceptores = $oHashPreceptores->linkSinVal();
+
+$url_actividad_buscar = $web . '/frontend/notas/controller/actividad_buscar_form.php';
+$oHashActivBuscar = new Hash();
+$oHashActivBuscar->setUrl($url_actividad_buscar);
+$oHashActivBuscar->setCamposForm('dl_org!f_acta_iso');
+$h_actividad_buscar = $oHashActivBuscar->linkSinVal();
+
+$url_buscar_acta = $web . '/src/notas/buscar_acta';
+$oHashBuscarActa = new Hash();
+$oHashBuscarActa->setUrl($url_buscar_acta);
+$oHashBuscarActa->setCamposForm('acta');
+$h_buscar_acta = $oHashBuscarActa->linkSinVal();
+
+$url_persona_nota_nueva = $web . '/src/notas/persona_nota_nueva';
+$url_persona_nota_editar = $web . '/src/notas/persona_nota_editar';
 
 $nota_max_default = $_SESSION['oConfig']->getNotaMax();
 $nota_max = empty($datos['nota_max']) ? $nota_max_default : $datos['nota_max'];
@@ -144,11 +153,16 @@ $a_campos = [
     'obj' => $obj,
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
-    'url_ajax' => $url_ajax,
-    'h1' => $h1,
-    'h2' => $h2,
-    'h_modificar' => $h_modificar,
-    'h_acta' => $h_acta,
+    'url_posibles_opcionales' => $url_posibles_opcionales,
+    'h_posibles_opcionales' => $h_posibles_opcionales,
+    'url_posibles_preceptores' => $url_posibles_preceptores,
+    'h_posibles_preceptores' => $h_posibles_preceptores,
+    'url_actividad_buscar' => $url_actividad_buscar,
+    'h_actividad_buscar' => $h_actividad_buscar,
+    'url_buscar_acta' => $url_buscar_acta,
+    'h_buscar_acta' => $h_buscar_acta,
+    'url_persona_nota_nueva' => $url_persona_nota_nueva,
+    'url_persona_nota_editar' => $url_persona_nota_editar,
     'op_genericas' => $helpers['op_genericas_json'],
     'condicion_js' => $helpers['condicion_js'],
     'Qid_asignatura_real' => $id_asignatura_real,

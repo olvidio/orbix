@@ -2,27 +2,29 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use notas\model\TablaAlumnosAsignaturas;
+use src\notas\application\TablaAlumnosAsignaturas;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
 
 /**
- * Esta página sirve para generar un cuadro con las asignaturas pendientes de todos los alumnos.
- *
+ * Cuadro "alumnos x asignaturas": genera una tabla con las asignaturas
+ * pendientes de todos los alumnos, filtrando por delegacion (`ambito = dl`)
+ * o por las delegaciones seleccionadas de la region stgr (`ambito = rstgr`).
  *
  * @package    delegacion
  * @subpackage    estudios
  * @author    Daniel Serrabou
  * @since        24/10/12.
- *
  */
 
 require_once 'frontend/shared/global_header_front.inc';
 
 
 $Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+$oService = new TablaAlumnosAsignaturas();
 
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
 
@@ -38,24 +40,22 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
 
     $oHash = new Hash();
     $oHash->setCamposForm('dl');
-    $camposNo = 'dl';
-    $oHash->setcamposNo($camposNo);
+    $oHash->setcamposNo('dl');
 
     if (!empty($Qdl)) {
-        $oTablaAlumnosAsignaturas = new TablaAlumnosAsignaturas();
-        $oTablaAlumnosAsignaturas->setA_delegacionesStgr($a_delegacionesStgr);
-        $oTabla = $oTablaAlumnosAsignaturas->getTablaCr($Qdl);
+        $datosTabla = $oService->paraRegionStgr($Qdl, $a_delegacionesStgr);
     } else {
-        // tabla vacia
-        $oTabla = new Lista();
+        $datosTabla = ['cabeceras' => [], 'filas' => []];
     }
 
 } else {
-    $oTablaAlumnosAsignaturas = new TablaAlumnosAsignaturas();
-    $oTabla = $oTablaAlumnosAsignaturas->getTablaDl();
+    $datosTabla = $oService->paraDelegacion();
 }
 
-// ------------------- html --------------
+$oTabla = new Lista();
+$oTabla->setId_tabla('pendientes');
+$oTabla->setCabeceras($datosTabla['cabeceras']);
+$oTabla->setDatos($datosTabla['filas']);
 
 
 if (ConfigGlobal::mi_ambito() === 'rstgr') {

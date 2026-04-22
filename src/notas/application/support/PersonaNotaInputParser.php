@@ -16,10 +16,10 @@ use function core\is_true;
  * listo para alimentar los use cases `PersonaNotaNueva`, `PersonaNotaEditar`
  * y `PersonaNotaEliminar`.
  *
- * Encapsula la logica dispersa en `apps/notas/controller/update_1011.php`
- * (inputs via checkbox con formato `id_nivel#id_asignatura#tipo_acta`,
+ * Encapsula la logica historica del antiguo `update_1011.php`: inputs
+ * via checkbox con formato `id_nivel#id_asignatura#tipo_acta`,
  * normalizacion de `tipo_acta` y `epoca`, resolucion de asignatura si
- * `id_asignatura === 1`, etc.).
+ * `id_asignatura === 1`, etc.
  */
 final class PersonaNotaInputParser
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace notas\model;
+namespace src\notas\application\legacy;
 
 use core\ClasePropiedades;
 use core\ConfigGlobal;
@@ -36,11 +36,7 @@ class Resumen extends ClasePropiedades
     protected $dfincurso;
     protected $iany;
     protected $iany2;
-    protected $diniverano;
     protected $sce_lugar;
-
-    protected $a_asignaturas;
-    protected $a_creditos;
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /**
@@ -75,8 +71,10 @@ class Resumen extends ClasePropiedades
                 $personas = "personas_dl";
                 break;
             default:
-                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
-                exit ($err_switch);
+                throw new \InvalidArgumentException(sprintf(
+                    'Resumen: tipo "%s" no soportado (esperaba numerarios|agregados|agd|profesores)',
+                    $nom
+                ));
         }
 
         $this->setNomTabla($tabla);
@@ -169,7 +167,7 @@ class Resumen extends ClasePropiedades
 
     public function setAnyFiCurs($iany2)
     {
-        $this->iany = $iany2;
+        $this->iany2 = $iany2;
     }
 
     public function getIniCurso()
@@ -289,60 +287,6 @@ class Resumen extends ClasePropiedades
         $this->tempTablesService->rebuildAsignaturasTable($asignaturas, $cAsignaturas);
     }
 
-    public function ListaAsig($a_Asql, $statement)
-    {
-        // Para sacar una lista
-        $html = "<table>";
-        $id_nom = 0;
-        $cont = 0; // para saber cuánta gente le queda
-        $cont_asig = 0;
-        $cont_nom = 0;
-        $a_sql = $statement->fetchAll();
-        foreach ($a_sql as $nombre) {
-            $cont_nom++;
-            // Si cambio de persona, vuelvo a empezar con las asignaturas
-            if ($nombre["id_nom"] != $id_nom) {
-                $cont_asig = 0;
-                $cont++;
-                $id_nom = $nombre["id_nom"];
-                $nom_ap = $nombre["nom_ap"];
-                $html .= "<tr><td colspan=2 class=titulo>$nom_ap</td></tr>";
-            }
-            if ($cont_asig >= 28) {
-                $html .= "Pasa de 28 asignaturas";
-            } else {
-                $asig_nivel = $a_Asql[$cont_asig]['id_nivel'];
-                $cont_asig++;
-                while ($nombre['id_nivel'] > $asig_nivel) {
-
-                    $asig_nivel = $a_Asql[$cont_asig]['id_nivel'];
-                    $asig_nombre_corto = $a_Asql[$cont_asig]['nombre_corto'];
-
-                    $html .= "<tr><td></td><td>$asig_nombre_corto</td></tr>";
-                    $cont_asig++;
-                    if ($cont_asig > 28) exit ("Pasa de 28 asignaturas!!");
-                }
-            }
-            //miro si el siguiente registro es de la misma persona, sino, pongo las asignaturas que quedan hasta acabar el bienio
-            if (count($a_sql) > $cont_nom) {
-                $siguiente_id_nom = $a_sql[$cont_nom]['id_nom'];
-                if ($siguiente_id_nom != $id_nom) {
-                    while ($asig_nombre_corto = @$a_Asql[$cont_asig++]['nombre_corto']) {
-                        $html .= "<tr><td></td><td>$asig_nombre_corto</td></tr>";
-                    }
-                    //$cont_asig=0;
-                }
-            }
-        }
-
-        $html .= "<tr><td colspan=7><hr>";
-        $html .= "</table>";
-        // end lista
-        $html .= "<p>Total: $cont</p>";
-        return $html;
-    }
-
-
     public function Lista($sql, $campos, $cabecera)
     {
         // $campos es un string con los campos que se quiere listar, separados por comas
@@ -455,31 +399,6 @@ class Resumen extends ClasePropiedades
             $rta['lista'] = '';
         }
         return $rta;
-    }
-
-    public function enStgrSinO()
-    {
-        $iniverano = $this->diniverano;
-        $tabla = $this->getNomTabla();
-
-        /*
-         $ssql="SELECT p.nom, p.apellido1, p.apellido2
-         FROM $tabla p
-         WHERE p.f_fl IS NULL
-         AND (p.nivel_stgr='b' OR p.nivel_stgr ILIKE 'c%') AND (p.f_o > '$iniverano' OR p.f_o IS NULL)
-         ORDER BY p.apellido1,p.apellido2,p.nom
-         ";
-         
-         $statement = $this->tempTablesService->query($ssql);
-         $rta['num'] = $statement->rowCount();
-         if (is_true($this->blista) && $rta['num'] > 0) {
-         $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
-         } else {
-         $rta['lista'] = '';
-         }
-         return $rta;
-         */
-        return array('num' => '?', 'lista' => 'falta poner fecha o en tablas');
     }
 
     /**
@@ -785,6 +704,7 @@ class Resumen extends ClasePropiedades
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
+        $numAsig = (int)$numAsig;
 
         $ssql = "SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		FROM $tabla p,$notas n,$asignaturas a
@@ -810,6 +730,7 @@ class Resumen extends ClasePropiedades
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
+        $creditos = (float)$creditos;
 
         $ssql = "SELECT n.id_nom, p.nom, p.apellido1, p.apellido2, p.ctr
 		FROM $tabla p,$notas n,$asignaturas a
@@ -835,6 +756,7 @@ class Resumen extends ClasePropiedades
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
+        $numASig = (int)$numASig;
 
         $ssql = "SELECT n.id_nom,p.nom, p.apellido1,p.apellido2,p.ctr
 		FROM $tabla p, $notas n, $asignaturas a
@@ -860,6 +782,7 @@ class Resumen extends ClasePropiedades
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
         $asignaturas = $this->getNomAsignaturas();
+        $creditos = (float)$creditos;
 
         $ssql = "SELECT n.id_nom,p.nom, p.apellido1,p.apellido2,p.ctr
 		FROM $tabla p, $notas n, $asignaturas a
@@ -1021,24 +944,12 @@ class Resumen extends ClasePropiedades
         $personas = $this->getNomPersonas();
 
         $this->tempTablesService->rebuildProfesorTable($tabla, $personas);
-
-        /*
-         try {
-         $this->tempTablesService->query($sqlCreate);
-         $this->tempTablesService->query("CREATE INDEX IF NOT EXISTS $tabla"."_id_nom"." ON $tabla (id_nom)");
-         } catch (\PDOException $e) {
-         echo $e->getMessage();
-         $stmt = $this->tempTablesService->prepare($sqlDelete);
-         $stmt->execute();
-         echo 'The number of row(s) deleted: ' . $deletedRows . '<br>';
-         }
-         *
-         */
     }
 
     public function profesorDeTipo($id_tipo = 0)
     {
         $tabla = $this->getNomTabla();
+        $id_tipo = (int)$id_tipo;
 
         $where_tipo = '';
         if ($id_tipo > 0) {
@@ -1129,12 +1040,7 @@ class Resumen extends ClasePropiedades
 
                     $nom_activ = '';
                     if (!empty($id_activ)) {
-                        // En el caso cr-stgr, se consulta la tabla global.
-                        if (ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) {
-                            $oActividad = $ActividadAllRepository->findById($id_activ);
-                        } else {
-                            $oActividad = $ActividadAllRepository->findById($id_activ);
-                        }
+                        $oActividad = $ActividadAllRepository->findById($id_activ);
                         $nom_activ = $oActividad->getNom_activ();
                     }
                     $nombres[$id_nom] = array('nom' => $nom,

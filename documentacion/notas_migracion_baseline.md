@@ -66,9 +66,6 @@ src/notas/
 | `EditarPersonaNota.php` | 493 | crear/editar/eliminar `PersonaNota` con replicacion en region/dl/certificado | quasi-application; mover a `src/notas/application/` casi tal cual |
 | `Resumen.php` | 1294 | Reportes anuales con tablas temporales | mover a `src/notas/application/` por fases |
 | `AsignaturasPendientes.php` | 385 | Cuenta asignaturas pendientes por nivel/dl | mover a `src/notas/application/` |
-| `TablaAlumnosAsignaturas.php` | 299 | Devuelve **`web\\Lista`** ya construido | violacion: model UI; separar `data` de `Lista` |
-| `Tesera.php` | 325 | Renderiza tesera (HTML + datos) | separar datos de presentacion |
-| `Select1011.php` | 305 | Construye `web\\Lista` + `web\\Hash` + `ViewPhtml::renderizar()` desde model | violacion: model = controller + vista pegados |
 | `CentroEstudios.php` | 54 | Abre PDO propio contra schema `public` para leer `x_config_schema` | mover a `src/notas/application/services/` |
 | `getDatosActa.php` | 28 | Thin wrapper sobre `PersonaNotaRepository->getPersonaNotas()` | candidato a borrar (inline en use case) |
 
@@ -91,7 +88,6 @@ asig_faltan_*.phtml: 1-2 cada una
 2. **0 endpoints en `src/notas/infrastructure/ui/http/controllers/`**, **0 use cases en `src/notas/application/`**.
 3. **Dispatchers `$Qque` / `$Qmod`** en al menos 6 controllers (`acta_update`, `acta_ver`, `update_1011`, `notas_ajax`, `acta_ajax`, `form_1011`).
 4. **Models construyen UI** (`web\\Lista`, `web\\Desplegable`):
-    - `Select1011.php` instancia `Lista` + `Hash` + `ViewPhtml`.
     - `TablaAlumnosAsignaturas.php` devuelve `Lista`.
 5. **Mutaciones sin `ContestarJson`**:
     - `update_1011.php` → `echo $msg_err` (texto plano).
@@ -237,39 +233,93 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
 
 - **Slice 0 completado** (22/04/2026): scaffolding + `src/notas/config/routes.php`.
 - **Slice 1 completado**: `acta_*`, `persona_nota_*`, `acta_pdf_*`, `tessera_copiar` en `src/notas/application` + endpoints `/src/notas/*`. Shims en `apps/` con `ContestarJson`.
-- **Slice 2 completado**: AJAX dispatchers (`acta_ajax`, `notas_ajax`) con logica extraida a `ActividadesBuscarData`, `BuscarActaData`, `PosiblesOpcionalesData`, `PosiblesPreceptoresData`, `ExaminadoresSearchData`, `AsignaturasSearchData`. Los shims `notas_ajax.php` / `acta_ajax.php` se conservan hasta migrar los JS consumidores (pendiente).
-- **Slice 3 completado**: flujo `acta_*` (`acta_listado_anual` + endpoint `/src/notas/acta_listado_anual_data`, `DatosActaService`).
+- **Slice 2 completado**: AJAX dispatchers (`acta_ajax`, `notas_ajax`) con logica extraida a `ActividadesBuscarData`, `BuscarActaData`, `PosiblesOpcionalesData`, `PosiblesPreceptoresData`, `ExaminadoresSearchData`, `AsignaturasSearchData`. `acta_ajax.php` ya eliminado — `acta_ver.phtml` llama directamente a `/src/notas/examinadores_search` y `/src/notas/asignaturas_search`. `notas_ajax.php` se conserva (HTML inline en respuestas + hash firmado contra `apps/...` en JS).
+- **Slice 3 completado**: flujo `acta_*` (`acta_listado_anual` + endpoint `/src/notas/acta_listado_anual_data`, `DatosActa`).
 - **Slice 4 completado**: `NotaPersonaFormData` + `Select1011Data` extraidos a `src/notas/application`.
 - **Slice 5 completado**: `asig_faltan_*` (3) + `tessera_copiar_select` (Twig→PHTML) migrados a `frontend/notas/`.
 - **Slice 6 completado**: `resumen_anual`, `informe_stgr_*`, `asignaturas_pendientes*`, `comprobar_notas` migrados a `frontend/notas/`. `CentroEstudios` → `src/notas/application/CentroEstudiosLookup` con shim. `getDatosActa` shim borrado.
 - **Slice 7 completado**: `tessera_ver`, `tessera_imprimir`, `tessera_imprimir_mpdf`, `tessera_2_mpdf` migrados a `frontend/notas/`. `Tesera` model sigue en `apps/notas/model` (usa `ViewNewPhtml` apuntando a `frontend/notas/view/tesera_ver.phtml`).
 - **Slice 8 completado**: `acta_select`, `acta_ver`, `acta_imprimir`, `acta_imprimir_mpdf`, `acta_2_mpdf`, `acta_pdf_download`, `form_1011` migrados a `frontend/notas/`. Todas las vistas del modulo viven ahora en `frontend/notas/view/` (directorio `apps/notas/view/` eliminado). `Select1011` y `Tesera` renderizan con `ViewNewPhtml` hacia `frontend/notas/view/`. Menus (`Documentacion_Obix/menus.csv`, `proves/aux_metamenus.csv`, `log/menus/comun.sql`) apuntan a `frontend/notas/controller/`. Shims minimos en `apps/notas/controller/` para los consumidores externos (`apps/actividadestudios/...`, JS legacy que firma el hash con URLs `apps/...`).
+- **Slice 9 completado**: dispatcher `notas_ajax.php` eliminado y sustituido por 4 endpoints dedicados:
+    - `/src/notas/buscar_acta` (JSON `BuscarActaData`).
+    - `/src/notas/posibles_opcionales_data` (payload `fnjs_construir_desplegable` para `id_asignatura`).
+    - `/src/notas/posibles_preceptores_data` (payload `fnjs_construir_desplegable` para `id_preceptor`).
+    - `/src/notas/actividades_buscar_data` (JSON) + `frontend/notas/controller/actividad_buscar_form.php` con vista `actividad_buscar_form.phtml` que arma el `<form>` del dialogo "añadir ca" (la construccion del HTML vive ahora en `frontend/`, no en `src/`).
+    Consumidores actualizados: `frontend/notas/view/form_1011.phtml` y `apps/actividadestudios/view/form_1303.phtml` (con helper `fnjs_construir_desplegable` inline). `apps/notas/controller/notas_ajax.php` borrado.
+- **Slice 10 completado**: dispatchers `acta_update.php` y `update_1011.php` eliminados. Los consumidores llaman ahora directamente a los endpoints granulares ya existentes en `/src/notas/*`:
+    - `acta_select.phtml` → `/src/notas/acta_eliminar` (`fnjs_eliminar`).
+    - `acta_ver.phtml` → `/src/notas/acta_nueva` o `/src/notas/acta_modificar` segun el hidden `mod` del form (`fnjs_guardar_acta`).
+    - `select1011.phtml` → `/src/notas/persona_nota_eliminar` (`fnjs_borrar`, JSON + `dataType: 'json'`).
+    - `form_1011.phtml` → `/src/notas/persona_nota_nueva` o `/src/notas/persona_nota_editar` segun el hidden `mod` (`fnjs_guardar`, JSON + `dataType: 'json'`).
+    Los hashes (`h`, `hh`, `hhc`) emitidos por `Hash::getCamposHtml()` no dependen de la URL del `action`, por lo que basta con reescribir el `url` del `$.ajax` y ajustar las callbacks `.done` a la respuesta JSON de `ContestarJson`. `apps/notas/controller/acta_update.php` y `apps/notas/controller/update_1011.php` borrados.
+- **Slice 14 completado**: `apps/notas/model/Select1011.php` (152 LOC) migrado a `src/notas/application/Select1011.php`. Cambios:
+    - Para poder mover widgets dossier ya refactorizados a la capa `src/` sin necesidad de mantener shims en `apps/<app>/model/`, se extiende `src/dossiers/application/DossierTipoFileSuffixResolver` con una tercera ruta de lookup: `src/<app>/application/Select<suffix>.php` (FQCN `src\<app>\application\Select<suffix>`) como fallback tras `apps/<app>/{model,domain}/`. Es un cambio de efecto inofensivo: solo se busca un archivo adicional si los dos primeros no existen.
+    - Ambos metodos afectados (`resolveSelectClassFqcn()` y `absolutePathSelect()`) se actualizan en coherencia.
+    - El widget `Select1011` conserva su comportamiento (mismos setters, misma vista `select1011.phtml`, misma `Lista` + `Hash`). Los unicos cambios estilisticos son: `PERMISO_INSERTAR` (`3`) e `ID_DOSSIER` (`'1011'`) como constantes nombradas, e invierto la guarda de `setLinksInsert()` (early return) para reducir indentacion.
+    - La logica de datos sigue en `Select1011Data` (ya estaba en `src/notas/application/` desde el Slice 4).
+    - El resolver es invocado desde `apps/dossiers/controller/dossiers_ver.php` (linea 218) y no tiene tests; cambio verificado con `php -l` y `rg` (sin referencias residuales al FQCN antiguo `notas\\model\\Select1011`).
+- **Slice 16 completado**: `Resumen.php` aislado en `src/notas/application/legacy/` y frontend desacoplado de la clase legacy.
+    - `apps/notas/model/Resumen.php` → `src/notas/application/legacy/Resumen.php` (namespace `src\notas\application\legacy`). La carpeta `legacy/` avisa explicitamente de que es un bloque heredado (1294 LOC de SQL ad-hoc + tablas temporales); no se reescribe, solo se encapsula.
+    - Tres nuevos use cases en `src/notas/application/` hacen de fachada tipada sobre `Resumen`:
+      - `InformeStgrNumerarios` (ya existia desde el slice 6; ahora tambien se usa de verdad desde el frontend, antes el controller duplicaba los 18 calculos inline).
+      - `InformeStgrAgregados` (nuevo).
+      - `InformeStgrProfesores` (nuevo).
+    - Los tres `frontend/notas/controller/informe_stgr_{n,agd,profesores}.php` pasan de 119-229 LOC con `use notas\model\Resumen;` + calculos inline a 33-43 LOC delegando en `->calcular()` y renderizando la vista compartida `frontend/notas/view/informe_stgr_tabla.phtml` (38 LOC que reemplaza tres copias casi identicas de `<table>` / `foreach`).
+    - Ya no hay ningun `use notas\model\Resumen` fuera de `src/notas/application/`: el frontend no conoce la clase legacy.
+    - Limpieza interna menor en `Resumen.php` (sin tocar la logica de reportes):
+      - Bug real corregido: `setAnyFiCurs($iany2)` asignaba a `$this->iany` en vez de `$this->iany2` (pisaba el año inicial silenciosamente).
+      - `exit()` en el constructor reemplazado por `\InvalidArgumentException` con mensaje tipado.
+      - `(int)`/`(float)` defensivo en los 5 metodos con interpolacion de parametro numerico en `HAVING`/`WHERE` (`masAsignaturasQue`, `menosAsignaturasQue`, `masCreditosQue`, `menosCreditosQue`, `profesorDeTipo`): elimina el riesgo teorico de SQL injection manteniendo `query()` directo (no puedo saltar a `prepare()` porque el mismo `$ssql` se reutiliza en `Lista($ssql, ...)`).
+      - Eliminado codigo muerto: metodo `ListaAsig()` (~50 LOC sin callers en el repo), metodo `enStgrSinO()` (solo devolvia `['num' => '?']`, SQL comentado), propiedades sin usar `$a_asignaturas`, `$a_creditos`, `$diniverano`, comentario con bloque `try/catch` abandonado dentro de `nuevaTablaProfe()`.
+      - Eliminado `if/else` con ambas ramas identicas en `profesorEspecialidad()` (`ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()` llamaba a `findById()` en los dos brazos).
+    - `Resumen.php` baja de 1294 → 1200 LOC; los 3 controllers del frontend de 528 → 110 LOC combinados. Los 3 use cases + vista compartida son 479 LOC.
+- **Slice 15 completado**: renombrado de use cases en `src/notas/application/` para unificar la convencion de naming con el resto de casos de uso publicos (sin sufijo `Service`): `AsignaturasPendientesService` → `AsignaturasPendientes`, `TablaAlumnosAsignaturasService` → `TablaAlumnosAsignaturas`, `TeseraService` → `Tesera`, `DatosActaService` → `DatosActa`. El sufijo `Service` queda reservado para la subcarpeta `src/notas/application/services/` (helpers compartidos, ej. `ResumenTempTablesService`). Consumidores actualizados: `frontend/notas/controller/{asig_faltan_select,asig_faltan_personas_select,asignaturas_pendientes,tessera_ver,tessera_imprimir,tessera_imprimir_mpdf,acta_imprimir,acta_imprimir_mpdf}.php` y `apps/actividadestudios/controller/posibles_asignaturas_ca.php`.
+- **Slice 13 completado**: `apps/notas/model/Tesera.php` (325 LOC) migrado a `src/notas/application/Tesera.php`. Mejoras respecto al legacy:
+    - Ya no renderiza vistas (`ViewNewPhtml->renderizar()` desaparece del modelo). `datosParaVistaTesera()` devuelve un array neutro y la vista `frontend/notas/view/tesera_ver.phtml` se encarga de montar el HTML, incluida la cabecera por tramo (`<tr>...ANNUS I</b></tr>`, split de columnas del cuadrienio).
+    - Magic numbers encapsulados como constantes: `ID_NIVEL_ASIG_DESDE/HASTA`, `ID_NIVEL_MAX_CUADRIENIO` (`2434`), `ID_ASIG_OPCIONAL_UMBRAL` (`3000`), `ID_ASIG_OPCIONAL_MAX` (`9000`), `ID_ASIG_FIN_CUADRIENIO` (`9998`), `PLAN_NUEVO` (`26`), `PLAN_VIEJO` (`97`), `ID_NIVEL_PLAN97_DESAPARECIDO` (`2114`), `ID_NIVEL_PLAN97_NUEVOS` (`2112,2113`), `FECHA_LIMITE_PLAN97` (`2026-03-30`).
+    - Bug latente corregido: el merge de `cAsignaturas` + `aAprobadas` podia acceder fuera de rango cuando la ultima asignatura era pendiente (`$cAsignaturas[$a++]` con `$a == count`). Ahora la condicion del while interno comprueba `$a < $numAsigTotal`.
+    - Metodo privado `getCurso()` reemplazado por `cursoActual()` publico tipado (`['inicio', 'fin', 'texto']`) sin mutar estado de la instancia.
+    - `getTitulo()` (HTML inline con `<tr>...</tr>` de la tessera vista) movido a la vista como closure local `render_titulo()`: datos y UI separados. `getVariasTesera()` era una funcion vacia; eliminada.
+    - `getAsignaturasAprobadas()` valida la asignatura con `findById()` (ya lo hacia el legacy) pero ahora lanza `\RuntimeException` en vez de `\Exception`.
+    Consumidores actualizados: `frontend/notas/controller/tessera_{ver,imprimir,imprimir_mpdf}.php` ahora importan `src\notas\application\Tesera`. Fichero legacy borrado.
+- **Slice 12 completado**: `apps/notas/model/TablaAlumnosAsignaturas.php` (299 LOC) migrado a `src/notas/application/TablaAlumnosAsignaturas.php`. Mejoras respecto al legacy:
+    - Ya no devuelve `web\\Lista`; devuelve arrays neutros (`cabeceras` + `filas`). La `Lista` se construye en `frontend/notas/controller/asignaturas_pendientes.php`.
+    - `getTablaCr()` y `getTablaDl()` (duplicados al 95 %) se unifican en un unico pipeline privado `construirTabla()`, parametrizado por filtros de persona y por un flag `usarDlComoCentro` (dl vs centro de estudios).
+    - Se elimina el N+1: antes se hacian `2 * N` consultas (una a `PersonaNota` para los marcadores `fin_bienio/cuadrienio` y otra para todas las notas de la persona); ahora se carga todo en un unico `getPersonaNotas(..., 'id_nom' => 'IN')` y se agrupa en memoria.
+    - Los magic numbers (`3000`, `9990`, `9998`, `9999`, `2000`, `1100`, `2500`, `1`, `2`) pasan a ser constantes nombradas (`ID_ASIG_FIN_BIENIO`, `ID_ASIG_FIN_CUADRIENIO`, `ID_ASIG_OPCIONAL_UMBRAL`, `ID_NIVEL_MARCADOR`, `ID_NIVEL_BIENIO_MAX`, `ID_NIVEL_ASIG_DESDE/HASTA`, `CELDA_PENDIENTE/CURSADA/APROBADA`).
+    - Se pierde la propiedad mutable `a_delegacionesStgr` (setter/getter): ahora el mapa `id_dl => cod_dl` se pasa como argumento explicito a `paraRegionStgr()`.
+    - `getTablaDl()` cargaba `$a_Asig_status` (via `isActive()`) y nunca lo usaba: codigo muerto eliminado.
+    Consumidor actualizado: `frontend/notas/controller/asignaturas_pendientes.php`. Fichero legacy borrado.
+- **Slice 11 completado**: `apps/notas/model/AsignaturasPendientes.php` (385 LOC) migrado a `src/notas/application/AsignaturasPendientes.php`. Mejoras respecto al legacy:
+    - Sin estado mutable compartido entre getters (bug real: `aIdNivel` se pisaba al alternar tramos cacheados).
+    - API tipada con enum `src\notas\domain\value_objects\CursoStgr` (`BIENIO | CUADRIENIO | C1 | C2`) en vez de strings magicos. Los rangos de `id_nivel` y los `nivel_stgr` asociados viven en el propio enum.
+    - `personasQueLesFalta()` partido en dos metodos tipados: `contarFaltantesPorPersona(): array<int,int>` y `listarFaltantesPorPersona(): array<int,array<string>>`; desaparece el flag `setLista()`.
+    - Prepared statements para `id_asignatura`, `id_nom`, `min_aprobadas` y `num_curso`.
+    - `createAsignaturasTemp()` se ejecuta una unica vez por instancia (antes se reconstruia en cada llamada a `asignaturasQueFaltanPersona()` — cuello de botella en `posibles_asignaturas_ca.php`) y envuelve los `INSERT` del catalogo en una transaccion.
+    - Warnings de PHP 8 corregidos: inicializacion de `$condicion`/`$condicion_stgr` en el path `default`, `$aId_nom[$id_nom]++` sobre clave indefinida.
+    Consumidores actualizados (`frontend/notas/controller/asig_faltan_{,personas_}select.php`, `apps/actividadestudios/controller/posibles_asignaturas_ca.php`). Fichero legacy borrado.
 
 ## Estado final del modulo `notas`
 
 ### Ficheros en `apps/notas/` (legacy)
 
-- `apps/notas/controller/` — 30 ficheros, casi todos shims (`require_once 'frontend/notas/controller/X.php';`). Sobreviven con logica propia:
-    - `acta_update.php`, `update_1011.php`: dispatchers `$Qmod` que delegan en los use cases split de `src/notas/application/`. Se conservan porque las vistas JS (`frontend/notas/view/acta_*.phtml`, `form_1011.phtml`, `select1011.phtml`) firman el hash contra la URL `apps/...`.
-    - `acta_ajax.php`, `notas_ajax.php`: dispatchers `$Qque` que delegan en `ExaminadoresSearchData`, `AsignaturasSearchData`, `BuscarActaData`, `ActividadesBuscarData`, `PosiblesOpcionalesData`, `PosiblesPreceptoresData`. Conservados por el mismo motivo (JS legacy + formato de respuesta no-JSON).
+- `apps/notas/controller/` — 27 ficheros, casi todos shims (`require_once 'frontend/notas/controller/X.php';`). Sobreviven con logica propia:
     - `acta_pdf_upload.php`, `acta_pdf_delete.php`, `tessera_copiar.php`: shims con `ContestarJson::enviar` delegando en `ActaPdfSubir`, `ActaPdfEliminar`, `TesseraCopiar`. Conservados para compatibilidad con JS legacy.
-- `apps/notas/model/` — 7 ficheros legacy:
-    - `Resumen.php` (1294 LOC): SQL ad-hoc + tablas temporales para reportes. Refactor no trivial; se usa desde `frontend/notas/controller/{informe_stgr_*,resumen_anual,comprobar_notas}.php`.
-    - `TablaAlumnosAsignaturas.php` (299 LOC): construye `web\\Lista`; usada por `frontend/notas/controller/asignaturas_pendientes.php`.
-    - `AsignaturasPendientes.php` (385 LOC): conteo de asignaturas pendientes por nivel/dl; usada por `frontend/notas/controller/asig_faltan_*.php` y `asignaturas_pendientes_resumen.php`.
-    - `Tesera.php` (325 LOC): genera HTML de tessera, renderiza `frontend/notas/view/tesera_ver.phtml` via `ViewNewPhtml`.
-    - `Select1011.php` (152 LOC): widget dossier, construye `web\\Lista` y renderiza `frontend/notas/view/select1011.phtml` via `ViewNewPhtml`. Instanciado dinamicamente por `DossierTipoFileSuffixResolver`.
+- `apps/notas/model/` — 2 ficheros legacy:
     - `CentroEstudios.php`, `EditarPersonaNota.php`: shims que extienden las clases movidas a `src/notas/application/`.
 
 ### Ficheros en `frontend/notas/` y `src/notas/`
 
-- `frontend/notas/controller/` — 24 controllers delgados, todos con header `frontend/shared/global_header_front.inc` y render `ViewNewPhtml('frontend\\notas\\controller')`.
-- `frontend/notas/view/` — 11 vistas PHTML (+ `tesera_ver.phtml` usada por `Tesera` model).
-- `src/notas/application/` — 21 use cases + `services/` y `support/`.
-- `src/notas/infrastructure/ui/http/controllers/` — 13 endpoints HTTP registrados en `src/notas/config/routes.php`.
+- `frontend/notas/controller/` — 25 controllers delgados, todos con header `frontend/shared/global_header_front.inc` y render `ViewNewPhtml('frontend\\notas\\controller')`. Incluye `actividad_buscar_form.php` (dialogo "añadir ca").
+- `frontend/notas/view/` — 12 vistas PHTML (+ `tesera_ver.phtml` usada por `Tesera` model; + `actividad_buscar_form.phtml`).
+- `src/notas/application/` — use cases + `services/` (helpers compartidos) + `support/` + `legacy/` (bloque `Resumen.php` heredado, encapsulado tras los use cases `InformeStgr*`). Los casos de uso publicos van sin sufijo (`AsignaturasPendientes`, `TablaAlumnosAsignaturas`, `Tesera`, `DatosActa`, `Select1011`, `ActaNueva`, `InformeStgrNumerarios/Agregados/Profesores`, etc.); el sufijo `Service` queda reservado para los helpers dentro de `application/services/` (ej. `ResumenTempTablesService`).
+- `src/notas/infrastructure/ui/http/controllers/` — 17 endpoints HTTP registrados en `src/notas/config/routes.php` (incluye `buscar_acta`, `posibles_opcionales_data`, `posibles_preceptores_data`, `actividades_buscar_data`).
 
 ### Deuda tecnica pendiente (post-refactor)
 
-1. **Dispatchers `acta_ajax`, `notas_ajax`, `acta_update`, `update_1011`**: migrar cuando los JS consumidores (vistas con `apps/...` hardcoded + hash firmado) se reescriban para llamar a los endpoints granulares `/src/notas/*`.
-2. **`Resumen.php`, `AsignaturasPendientes.php`, `TablaAlumnosAsignaturas.php`, `Tesera.php`, `Select1011.php`**: pendientes de mover a `src/notas/application/` separando datos y UI. Riesgo alto por volumen y acoplamiento al resolver de dossiers (`Select1011`).
-3. **`form_1011.php`, `acta_imprimir.php`, `acta_ver.php`, `acta_select.php`**: frontend controllers que importan `src\\notas\\application\\*Data` directamente en vez de usar `PostRequest::getDataFromUrl()`. Pragmatico de momento (estas pantallas son renderizados side-effect-free con mucho contexto PHP) pero viola el principio estricto de `refactor.md` §133. Candidatos a exponer como endpoint `/src/notas/*_data` si se necesita aislamiento o testing independiente.
+1. **`Resumen.php` (bloque legacy en `src/notas/application/legacy/`)**: aislado y encapsulado tras los use cases `InformeStgr{Numerarios,Agregados,Profesores}`, el frontend ya no lo conoce. Queda pendiente (deuda tecnica interna, sin impacto arquitectonico):
+    - Emite HTML (`Lista()`) desde la capa `application/`. Candidato a que los use cases consuman arrays y el renderizado pase a la vista PHTML.
+    - Mezcla alumnos + profesores en la misma clase; partir en `ResumenAlumnos` + `ResumenProfesores` es mecanico.
+    - N+1 en `profesorEspecialidad()` (1 query + 2 `findById` por profesor).
+    - Extraer `comprobar_notas.php` (~500 LOC inline en `frontend/`) a un `ComprobarNotas` use case tambien esta pendiente; no consume `Resumen` pero es el mismo patron.
+2. **`form_1011.php`, `acta_imprimir.php`, `acta_ver.php`, `acta_select.php`**: frontend controllers que importan `src\\notas\\application\\*Data` directamente en vez de usar `PostRequest::getDataFromUrl()`. Pragmatico de momento (estas pantallas son renderizados side-effect-free con mucho contexto PHP) pero viola el principio estricto de `refactor.md` §133. Candidatos a exponer como endpoint `/src/notas/*_data` si se necesita aislamiento o testing independiente.

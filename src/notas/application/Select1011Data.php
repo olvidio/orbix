@@ -13,7 +13,7 @@ use function core\is_true;
 /**
  * Agrega los datos de la tabla "select1011" (listado de notas de una
  * persona dentro del dossier 1011). Se usa desde
- * `apps/notas/model/Select1011` que se ocupa solo del pintado con
+ * `src\notas\application\Select1011` que se ocupa solo del pintado con
  * `web\Lista` + `ViewPhtml`.
  */
 final class Select1011Data

@@ -35,9 +35,13 @@
                 alert("<?= _("Debe llenar la fecha del acta") ?>");
                 return;
             }
+            var mod = $(formulario).find('input[name=mod]').val();
+            var url_acta = (mod === 'nueva')
+                ? '<?= $url_acta_nueva ?>'
+                : '<?= $url_acta_modificar ?>';
             let request = $.ajax({
                 data: $(formulario).serialize(),
-                url: 'apps/notas/controller/acta_update.php',
+                url: url_acta,
                 method: 'POST',
                 dataType: 'json'
             });
@@ -230,12 +234,11 @@
                 source: function (request, response) {
                     //Fetch data
                     $.ajax({
-                        url: "<?= $url_ajax ?>",
+                        url: "<?= $url_examinadores ?>",
                         type: "POST",
                         dataType: "json",
                         data: {
-                            <?= $h_ajax ?>,
-                            que: 'examinadores',
+                            <?= $h_examinadores ?>,
                             search: request.term
                         },
                         success: response
@@ -256,12 +259,11 @@
                 source: function (request, response) {
                     //Fetch data
                     $.ajax({
-                        url: "<?= $url_ajax ?>",
+                        url: "<?= $url_asignaturas ?>",
                         type: "POST",
                         dataType: "json",
                         data: {
-                            <?= $h_ajax ?>,
-                            que: 'asignaturas',
+                            <?= $h_asignaturas ?>,
                             search: request.term
                         },
                         success: response

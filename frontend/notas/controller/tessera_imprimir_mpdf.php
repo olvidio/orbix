@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use notas\model\Tesera;
+use src\notas\application\Tesera;
 use src\personas\domain\entity\Persona;
 
 /**

@@ -14,11 +14,12 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use core\ViewTwig;
-use notas\model\AsignaturasPendientes;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use src\notas\application\AsignaturasPendientes;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\value_objects\CursoStgr;
 use src\personas\domain\entity\Persona;
 
 require_once("apps/core/global_header.inc");
@@ -45,6 +46,7 @@ $a_alumnos_fin_c = [];
 $a_alumnos = [];
 $AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
 $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
+$Pendientes = new AsignaturasPendientes();
 foreach ($AsistenteRepository->getAsistentes(array('id_activ' => $id_activ)) as $oAsistente) {
     $id_nom = $oAsistente->getId_nom();
     $oPersona = Persona::findPersonaEnGlobal($id_nom);
@@ -59,9 +61,7 @@ foreach ($AsistenteRepository->getAsistentes(array('id_activ' => $id_activ)) as 
     }
     $ap_nom = $oPersona->getPrefApellidosNombre();
     // miro si son de los qeu sólo les faltan 4 para terminar el cuadrienio.
-    $curso = 'cuadrienio';
-    $Pendientes = new AsignaturasPendientes();
-    $aNomAsignaturasFaltan = $Pendientes->asignaturasQueFaltanPersona($id_nom, $curso);
+    $aNomAsignaturasFaltan = $Pendientes->asignaturasQueFaltanPersona($id_nom, CursoStgr::CUADRIENIO);
     if (count($aNomAsignaturasFaltan) < 5) {
         $a_alumnos_fin_c[] = ['apellidos_nombre' => $ap_nom, 'asignaturas' => $aNomAsignaturasFaltan];
     }

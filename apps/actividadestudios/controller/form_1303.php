@@ -192,23 +192,26 @@ else {
 $oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_ajax = ConfigGlobal::getWeb() . '/apps/notas/controller/notas_ajax.php';
-$oHash1 = new Hash();
-$oHash1->setUrl($url_ajax);
-$oHash1->setCamposForm('que!id_nom');
-//$oHash1->setCamposNo('id_nom'); 
-$h1 = $oHash1->linkSinVal();
-$oHash2 = new Hash();
-$oHash2->setUrl($url_ajax);
-$oHash2->setCamposForm('que');
-$h2 = $oHash2->linkSinVal();
+$web = rtrim(ConfigGlobal::getWeb(), '/');
+
+$url_posibles_opcionales = $web . '/src/notas/posibles_opcionales_data';
+$oHashOpcionales = new Hash();
+$oHashOpcionales->setUrl($url_posibles_opcionales);
+$oHashOpcionales->setCamposForm('id_nom');
+$h_posibles_opcionales = $oHashOpcionales->linkSinVal();
+
+$url_posibles_preceptores = $web . '/src/notas/posibles_preceptores_data';
+$oHashPreceptores = new Hash();
+$oHashPreceptores->setUrl($url_posibles_preceptores);
+$h_posibles_preceptores = $oHashPreceptores->linkSinVal();
 
 $a_campos = ['obj' => $obj,
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
-    'url_ajax' => $url_ajax,
-    'h1' => $h1,
-    'h2' => $h2,
+    'url_posibles_opcionales' => $url_posibles_opcionales,
+    'h_posibles_opcionales' => $h_posibles_opcionales,
+    'url_posibles_preceptores' => $url_posibles_preceptores,
+    'h_posibles_preceptores' => $h_posibles_preceptores,
     'condicion_js' => $condicion_js,
     'nom_activ' => $nom_activ,
     'id_asignatura_real' => $id_asignatura_real,

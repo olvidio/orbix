@@ -1,0 +1,11 @@
+<form id='frm_buscar'>
+    <h3><?= _("seleccionar la actividad") ?></h3>
+    <?= $oHash->getCamposHtml() ?>
+    <br><?= _("organniza") ?><br>
+    <?= $oDesplDelegaciones->desplegable() ?>
+    <br><?= _("actividad") ?><br>
+    <?= $oDesplActividades->desplegable() ?>
+    <br><br><br>
+    <input type='button' value='<?= _("guardar") ?>' onclick="fnjs_update_activ('#frm_buscar');">
+    <input type='button' value='<?= _("cancel") ?>' onclick="fnjs_cerrar();">
+</form>

@@ -14,7 +14,7 @@ use src\notas\domain\value_objects\TipoActa;
  *
  * Migrado desde `apps/notas/model/getDatosActa`.
  */
-final class DatosActaService
+final class DatosActa
 {
     /**
      * @return \src\notas\domain\entity\PersonaNota[]

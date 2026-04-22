@@ -60,4 +60,21 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/notas/tessera_copiar_select_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/tessera_copiar_select_data.php';
     });
+
+    // Slice 9 (post limpieza): notas_ajax dispatcher split en endpoints dedicados.
+    $r->addRoute(['GET', 'POST'], '/src/notas/buscar_acta', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/buscar_acta.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/posibles_opcionales_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/posibles_opcionales_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/posibles_preceptores_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/posibles_preceptores_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/actividades_buscar_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividades_buscar_data.php';
+    });
 };

@@ -1,0 +1,38 @@
+<?php
+/**
+ * Vista compartida para los 3 informes STGR (numerarios, agregados, profesores).
+ *
+ * Variables esperadas:
+ *   string $titulo       titulo ya mayusculizado para mostrar en el header.
+ *   string $curso_txt    periodo del curso (ej. `2024-2025`).
+ *   array  $res          array indexado `[n => ['num' => ..., 'lista' => ...]]`.
+ *   array  $textos       array indexado `[n => 'texto']` con el mismo keyset.
+ *   \web\Posicion $oPosicion
+ *
+ * @var \web\Posicion $oPosicion
+ * @var string $titulo
+ * @var string $curso_txt
+ * @var array $res
+ * @var array $textos
+ */
+?>
+<?= $oPosicion->mostrar_left_slide(1) ?>
+<p><?= $titulo ?>   <?= $curso_txt ?></p>
+<table border="1">
+    <?php foreach ($res as $n => $datos): ?>
+        <?php
+        $pos = strpos((string)$n, '.');
+        $tab = $pos !== false
+            ? "<td></td><td>$n. "
+            : "<th>$n. </th><td>";
+        ?>
+        <tr><?= $tab ?><?= $textos[$n] ?? '' ?></td>
+            <td><?= $datos['num'] ?? '' ?></td>
+        </tr>
+        <?php if (!empty($datos['lista'])): ?>
+            <tr>
+                <td colspan="3"><?= $datos['lista'] ?></td>
+            </tr>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</table>

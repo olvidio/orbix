@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use src\notas\application\DatosActaService;
+use src\notas\application\DatosActa;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -76,7 +76,7 @@ switch ($any) {
 
 // -----------------------------
 
-$cPersonaNotas = DatosActaService::getNotasActa($acta);
+$cPersonaNotas = DatosActa::getNotasActa($acta);
 
 // para ordenar
 $errores = '';

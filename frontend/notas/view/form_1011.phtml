@@ -9,21 +9,48 @@ use src\notas\domain\value_objects\TipoActa;
         $("#f_acta").datepicker();
     });
 
+    fnjs_construir_desplegable = function (json) {
+        if (!json || json.success !== true) { return ''; }
+        try {
+            var data = JSON.parse(json.data);
+            if (!data) { return ''; }
+            var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+            if (data.action) { $sel.attr('onchange', data.action); }
+            if (data.blanco) {
+                var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+                $sel.append($('<option></option>').val(vb).text(''));
+            }
+            $.each(data.opciones || {}, function (value, label) {
+                var $opt = $('<option></option>').val(value).text(label);
+                if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+                    $opt.prop('selected', true);
+                }
+                $sel.append($opt);
+            });
+            return $sel.prop('outerHTML');
+        } catch (e) {
+            return '';
+        }
+    }
+
     fnjs_buscar_acta = function () {
         var tipo_acta = $('input[name=tipo_acta]:checked').val();
         var mod = $('#mod').val();
         if (mod == 'nuevo' && tipo_acta == <?= TipoActa::FORMATO_ACTA ?>) {
             var acta = $('#acta').val();
 
-            var url = '<?= $url_ajax ?>';
-            var parametros = 'que=buscar_acta&acta=' + acta + '<?= $h_acta ?>';
             $.ajax({
-                url: url,
+                url: '<?= $url_buscar_acta ?>',
                 type: 'post',
-                data: parametros,
+                data: 'acta=' + acta + '<?= $h_buscar_acta ?>',
                 dataType: 'json'
             })
-                .done(function (rta_json) {
+                .done(function (json) {
+                    if (!json || json.success !== true) {
+                        alert('<?= _("respuesta") ?>: ' + (json && json.mensaje ? json.mensaje : ''));
+                        return;
+                    }
+                    var rta_json = JSON.parse(json.data);
                     id_asignatura = rta_json.id_asignatura;
                     if (id_asignatura == 'no') {
                         //borrar
@@ -86,19 +113,17 @@ use src\notas\domain\value_objects\TipoActa;
         $('#div_modificar').height('auto');
         document.getElementById("overlay").style.display = "block";
 
-        var url = '<?= $url_ajax ?>';
-        var parametros = 'dl_org=&que=frm_buscar&f_acta_iso=<?= $f_acta_iso ?><?= $h_modificar ?>';
+        var url = '<?= $url_actividad_buscar ?>';
+        var parametros = 'dl_org=&f_acta_iso=<?= $f_acta_iso ?><?= $h_actividad_buscar ?>';
         fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
 
     fnjs_buscar_ca = function () {
         var dl_org = $('#dl_org').val();
-        var url = '<?= $url_ajax ?>';
-        var parametros = 'que=frm_buscar&f_acta_iso=<?= $f_acta_iso ?>&dl_org=' + dl_org + '<?= $h_modificar ?>';
         $.ajax({
-            url: url,
+            url: '<?= $url_actividad_buscar ?>',
             type: 'post',
-            data: parametros
+            data: 'f_acta_iso=<?= $f_acta_iso ?>&dl_org=' + dl_org + '<?= $h_actividad_buscar ?>'
         })
             .done(function (rta_txt) {
                 $('#div_modificar').html(rta_txt);
@@ -117,22 +142,16 @@ use src\notas\domain\value_objects\TipoActa;
 
     fnjs_cmb_preceptor = function () {
         if ($('#preceptor').prop('checked')) {
-            var id_nom = $('#id_pau').val();
-            //alert ('nom: '+id_nom);
-            var url = '<?= $url_ajax ?>';
-            var parametros = 'que=posibles_preceptores<?= $h2 ?>';
-
             $.ajax({
-                url: url,
+                url: '<?= $url_posibles_preceptores . $h_posibles_preceptores ?>',
                 type: 'post',
-                data: parametros
+                dataType: 'json'
             })
-                .done(function (rta_txt) {
-                    $('#lst_preceptores').html(rta_txt);
+                .done(function (json) {
+                    $('#lst_preceptores').html(fnjs_construir_desplegable(json));
                 });
         } else { // al cambiar a NO preceptor
-            var rta_txt = '';
-            $('#lst_preceptores').html(rta_txt);
+            $('#lst_preceptores').html('');
         }
     }
     /**
@@ -143,22 +162,18 @@ use src\notas\domain\value_objects\TipoActa;
         var id = $('#id_nivel').val();
         if (<?= $condicion_js; ?>) { //solo si es opcional
             var id_nom = $('#id_pau').val();
-            //alert ('nom: '+id_nom);
-            var url = '<?= $url_ajax ?>';
-            var parametros = 'que=posibles_opcionales&id_nom=' + id_nom + '<?= $h1 ?>';
-
             $.ajax({
-                url: url,
+                url: '<?= $url_posibles_opcionales ?>',
                 type: 'post',
-                data: parametros
+                data: 'id_nom=' + id_nom + '<?= $h_posibles_opcionales ?>',
+                dataType: 'json'
             })
-                .done(function (rta_txt) {
-                    $('#lst_opcionales').html(rta_txt);
+                .done(function (json) {
+                    $('#lst_opcionales').html(fnjs_construir_desplegable(json));
                     $('#id_asignatura').val(id_asignatura);
                 });
         } else { // al cambiar a NO opcional
-            var rta_txt = '<input type="hidden" id="id_asignatura" name="id_asignatura" value="1">';
-            $('#lst_opcionales').html(rta_txt);
+            $('#lst_opcionales').html('<input type="hidden" id="id_asignatura" name="id_asignatura" value="1">');
         }
     }
     fnjs_nota = function () {
@@ -221,16 +236,20 @@ use src\notas\domain\value_objects\TipoActa;
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
         //alert ("EEE "+rr);
         if (rr == 'ok' && err != 1) {
-            $(formulario).attr('action', "apps/notas/controller/update_1011.php");
+            var url_guardar = (mod === 'editar')
+                ? '<?= $url_persona_nota_editar ?>'
+                : '<?= $url_persona_nota_nueva ?>';
+            $(formulario).attr('action', url_guardar);
             $(formulario).one("submit", function () {
                 $.ajax({
                     url: $(this).attr('action'),
                     type: 'post',
-                    data: $(this).serialize()
+                    data: $(this).serialize(),
+                    dataType: 'json'
                 })
-                    .done(function (rta_txt) {
-                        if (rta_txt !== '' && rta_txt !== '\\n') {
-                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    .done(function (json) {
+                        if (!json || json.success !== true) {
+                            alert('<?= _("respuesta") ?>: ' + ((json && json.mensaje) ? json.mensaje : ''));
                         } else {
                             <?= $oPosicion->js_atras(1); ?>
                         }

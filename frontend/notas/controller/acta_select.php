@@ -209,6 +209,8 @@ $oHashDown->setCamposForm('key!otro');
 $oHashDown->setCamposNo('otro!acta');
 $h_download = $oHashDown->linkSinVal();
 
+$url_acta_eliminar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/acta_eliminar';
+
 $oTabla = new Lista();
 $oTabla->setId_tabla('acta_select');
 $oTabla->setCabeceras($a_cabeceras);
@@ -226,6 +228,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
     'url_download' => $url_download,
     'h_download' => $h_download,
+    'url_acta_eliminar' => $url_acta_eliminar,
 ];
 
 $oView = new ViewNewPhtml('frontend\notas\controller');

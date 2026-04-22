@@ -1,0 +1,14 @@
+<?php
+
+use src\notas\application\BuscarActaData;
+use web\ContestarJson;
+
+/**
+ * Busca un acta por su numero abreviado. Consumido por
+ * `frontend/notas/view/form_1011.phtml` (`fnjs_buscar_acta`).
+ *
+ * Respuesta: `ContestarJson` con `data` = payload JSON devuelto por
+ * `BuscarActaData::execute`. El JS hace `JSON.parse(json.data)`.
+ */
+$data = BuscarActaData::execute($_POST);
+ContestarJson::enviar('', $data);

@@ -6,14 +6,48 @@
 use core\ConfigGlobal;
 use function core\is_true;
 
-include_once(ConfigGlobal::$dir_estilos . '/tessera.css.php'); ?>
+include_once(ConfigGlobal::$dir_estilos . '/tessera.css.php');
+
+/**
+ * Cabecera HTML para la fila segun el `id_nivel` de la asignatura.
+ * Acoplada a la estructura en dos columnas (`border semi`) de esta vista:
+ * el caso 2201 cierra la tabla anidada de la izquierda y abre la de la
+ * derecha para pintar el cuadrienio.
+ */
+$render_titulo = static function (int $id_nivel): string {
+    switch ($id_nivel) {
+        case 1101:
+            return '<tr><td colspan="3" style="text-align: center;"><h3>'
+                . ucfirst(_("filosofía")) . '</h3></td></tr>'
+                . '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' I</b></td></tr>';
+        case 1201:
+            return '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' II</b></td></tr>';
+        case 2101:
+            return '<tr><td><br></td></tr>'
+                . '<tr><td colspan="4" style="text-align: center;"><h3>'
+                . ucfirst(_("teología")) . '</h3></td></tr>'
+                . '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' I</b></td></tr>';
+        case 2201:
+            return '</table></td>'
+                . '<td class="border semi">'
+                . '<table style="width: 100%">'
+                . '<tr><td colspan="3" style="text-align: center;"><h3>'
+                . ucfirst(_("teología")) . '</h3></td></tr>'
+                . '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' II</b></td></tr>';
+        case 2301:
+            return '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' III</b></td></tr>';
+        case 2401:
+            return '<tr><td colspan="3"><b>' . ucfirst(_("año")) . ' IV</b></td></tr>';
+    }
+    return '';
+};
+?>
 <div class="salta_pag">
     <span id="span_exportar" title="tesseras"></span>
     <table>
         <tr>
             <td class="atras no_print">
                 <?php
-                // sólo pongo el primero, porque sino hay varios div con  el mismo id="ir_atras2"
                 echo $oPosicion->mostrar_back_arrow(1);
                 ?>
             </td>
@@ -28,8 +62,9 @@ include_once(ConfigGlobal::$dir_estilos . '/tessera.css.php'); ?>
                 <table style="width: 100%">
                     <?php
                     foreach ($tabla as $fila => $row) {
-                        if (!empty($row['titulo'])) {
-                            echo $row['titulo'];
+                        $titulo = $render_titulo((int)$row['id_nivel']);
+                        if ($titulo !== '') {
+                            echo $titulo;
                         }
                         echo "<tr><td>{$row['asignatura']}</td>";
 
@@ -38,12 +73,12 @@ include_once(ConfigGlobal::$dir_estilos . '/tessera.css.php'); ?>
                             $class = 'alert';
                         }
                         if ($row['nota'] < 0) {
-                            $class = "alert";
+                            $class = 'alert';
                             $nota = _("pendiente");
                             $fecha = '';
                         } else {
                             if ($row['nota'] === 'cursada' || $row['nota'] === 'examinado') {
-                                $class = "alert";
+                                $class = 'alert';
                             }
                             $nota = $row['nota'];
                             $fecha = $row['fecha'];

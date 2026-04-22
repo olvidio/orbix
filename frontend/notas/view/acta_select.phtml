@@ -43,7 +43,7 @@
                 $('#mod').val("eliminar");
                 let request = $.ajax({
                     data: $(formulario).serialize(),
-                    url: 'apps/notas/controller/acta_update.php',
+                    url: '<?= $url_acta_eliminar ?>',
                     method: 'POST',
                     dataType: 'json'
                 });

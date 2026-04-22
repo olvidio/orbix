@@ -2,8 +2,9 @@
 
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
-use notas\model\AsignaturasPendientes;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\application\AsignaturasPendientes;
+use src\notas\domain\value_objects\CursoStgr;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -39,7 +40,7 @@ if (empty($Qpersonas_n) && empty($Qpersonas_agd)) {
 }
 
 if ($Qb_c === 'b') {
-    $curso = 'bienio';
+    $curso = CursoStgr::BIENIO;
     $curso_txt = 'bienio';
 } else {
     $c1 = is_true($Qc1);
@@ -49,13 +50,13 @@ if ($Qb_c === 'b') {
         $c2 = true;
     }
     if ($c1 && $c2) {
-        $curso = 'cuadrienio';
+        $curso = CursoStgr::CUADRIENIO;
         $curso_txt = 'cuadrienio';
     } elseif ($c2) {
-        $curso = 'c2';
+        $curso = CursoStgr::C2;
         $curso_txt = 'cuadrienio años II-IV';
     } elseif ($c1) {
-        $curso = 'c1';
+        $curso = CursoStgr::C1;
         $curso_txt = 'cuadrienio año I';
     }
 }
@@ -84,8 +85,6 @@ $nom_asignatura = $oAsignatura->getNombre_corto();
 $id_tipo_asignatura = $oAsignatura->getId_tipo(); // tipo 8 = OPCIONAL
 
 $Pendientes = new AsignaturasPendientes($personas);
-$Pendientes->setLista(true);
-
 $aId_nom = $Pendientes->personasQueLesFaltaAsignatura($Qid_asignatura, $curso, $id_tipo_asignatura);
 
 $a_botones = [

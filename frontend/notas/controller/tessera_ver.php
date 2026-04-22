@@ -1,33 +1,31 @@
 <?php
 /**
- * Esta página sirve para la tessera de una persona.
- *
+ * Tessera de una persona (vista HTML): muestra por cada asignatura del
+ * bienio+cuadrienio si esta pendiente, cursada o aprobada, con nota y fecha.
  *
  * @package    delegacion
  * @subpackage    estudios
  * @author    Daniel Serrabou
  * @since        22/11/02.
- *
  */
 
-use notas\model\Tesera;
+use frontend\shared\model\ViewNewPhtml;
+use src\notas\application\Tesera;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $oPosicion->recordar();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    $id_nom = (integer)strtok($a_sel[0], "#");
-    $id_tabla = (string)strtok("#");
-} else {
+if (empty($a_sel)) {
     exit('no sé de que va');
 }
 
-$oTesera = new Tesera();
-$p = 0;
+$oService = new Tesera();
+$oView = new ViewNewPhtml('frontend\\notas\\controller');
 foreach ($a_sel as $PersonaSel) {
-    $p++;
     $id_nom = (integer)strtok($PersonaSel, "#");
-    echo $oTesera->verTesera($id_nom);
+    $a_campos = $oService->datosParaVistaTesera($id_nom);
+    $a_campos['oPosicion'] = $oPosicion;
+    $oView->renderizar('tesera_ver.phtml', $a_campos);
 }

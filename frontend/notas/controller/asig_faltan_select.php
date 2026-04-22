@@ -2,8 +2,9 @@
 
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
-use notas\model\AsignaturasPendientes;
 use src\actividades\domain\value_objects\NivelStgrId;
+use src\notas\application\AsignaturasPendientes;
+use src\notas\domain\value_objects\CursoStgr;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\services\TelecoPersonaService;
 use src\shared\infrastructure\ProvidesRepositories;
@@ -40,7 +41,7 @@ if (!is_true($Qpersonas_n) && !is_true($Qpersonas_agd)) {
 }
 
 if ($Qb_c === 'b') {
-    $curso = 'bienio';
+    $curso = CursoStgr::BIENIO;
     $curso_txt = 'bienio';
 } else {
     $c1 = is_true($Qc1);
@@ -50,13 +51,13 @@ if ($Qb_c === 'b') {
         $c2 = true;
     }
     if ($c1 && $c2) {
-        $curso = 'cuadrienio';
+        $curso = CursoStgr::CUADRIENIO;
         $curso_txt = 'cuadrienio';
     } elseif ($c2) {
-        $curso = 'c2';
+        $curso = CursoStgr::C2;
         $curso_txt = 'cuadrienio años II-IV';
     } elseif ($c1) {
-        $curso = 'c1';
+        $curso = CursoStgr::C1;
         $curso_txt = 'cuadrienio año I';
     }
 }
@@ -78,8 +79,9 @@ if (is_true($Qpersonas_n) && is_true($Qpersonas_agd)) {
 
 $lista = is_true($Qlista);
 $Pendientes = new AsignaturasPendientes($personas);
-$Pendientes->setLista($lista);
-$aId_nom = $Pendientes->personasQueLesFalta($Qnumero, $curso);
+$aId_nom = $lista
+    ? $Pendientes->listarFaltantesPorPersona($Qnumero, $curso)
+    : $Pendientes->contarFaltantesPorPersona($Qnumero, $curso);
 
 $a_botones = [
     ['txt' => _("modificar stgr"), 'click' => "fnjs_modificar(\"#seleccionados\")"],

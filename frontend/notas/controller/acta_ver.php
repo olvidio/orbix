@@ -255,11 +255,20 @@ if (!empty($cTribunal)) {
     $examinadores[] = $examinador_pral;
 }
 
-$url_ajax = ConfigGlobal::getWeb() . '/apps/notas/controller/acta_ajax.php';
-$oHashLink = new Hash();
-$oHashLink->setUrl($url_ajax);
-$oHashLink->setCamposForm('que!search');
-$h_ajax = $oHashLink->getParamAjaxEnArray();
+$url_examinadores = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/examinadores_search';
+$oHashExaminadores = new Hash();
+$oHashExaminadores->setUrl($url_examinadores);
+$oHashExaminadores->setCamposForm('search');
+$h_examinadores = $oHashExaminadores->getParamAjaxEnArray();
+
+$url_asignaturas = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/asignaturas_search';
+$oHashAsignaturas = new Hash();
+$oHashAsignaturas->setUrl($url_asignaturas);
+$oHashAsignaturas->setCamposForm('search');
+$h_asignaturas = $oHashAsignaturas->getParamAjaxEnArray();
+
+$url_acta_nueva = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/acta_nueva';
+$url_acta_modificar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/acta_modificar';
 
 if (empty($pdf)) {
     $readonly = '';
@@ -301,8 +310,12 @@ $a_campos = ['obj' => $obj,
     'ult_lin' => $ult_lin,
     'lugar' => $lugar,
     'observ' => $observ,
-    'url_ajax' => $url_ajax,
-    'h_ajax' => $h_ajax,
+    'url_examinadores' => $url_examinadores,
+    'h_examinadores' => $h_examinadores,
+    'url_asignaturas' => $url_asignaturas,
+    'h_asignaturas' => $h_asignaturas,
+    'url_acta_nueva' => $url_acta_nueva,
+    'url_acta_modificar' => $url_acta_modificar,
     'id_asignatura' => $id_asignatura_actual,
     'nombre_asignatura' => $nombre_asignatura,
     'examinadores' => $examinadores,
