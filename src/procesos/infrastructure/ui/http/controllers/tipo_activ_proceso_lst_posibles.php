@@ -1,8 +1,7 @@
 <?php
 
 use src\procesos\application\TipoActivProcesoLstPosibles;
-
-header('Content-Type: text/plain; charset=UTF-8');
+use web\ContestarJson;
 
 $useCase = new TipoActivProcesoLstPosibles();
-echo $useCase->execute($_POST);
+ContestarJson::enviar('', $useCase->execute($_POST));

@@ -808,3 +808,264 @@ cubre exactamente lo mismo que el submit diferido anterior.
 
 Busqueda en `frontend/procesos/` sin resultados para
 `trigger("submit")` ni `attr('action')`.
+
+---
+
+## Slice 14 - Limpieza post-migracion (cumplimiento estricto de `refactor.md`)
+
+### Objetivo
+
+Retirar las violaciones de capas detectadas al revisar el modulo contra
+`refactor.md` y homogeneizar los contratos JSON / HTML:
+
+- `frontend/<modulo>/controller/*` **no** puede hacer `use src\...` ni
+  acceder a `$GLOBALS['container']->get(...)`.
+- `src/<modulo>/application/*` **no** puede instanciar `web\Desplegable`
+  ni `web\Lista` ni devolver HTML renderizado de esos componentes.
+- `src/<modulo>/infrastructure/ui/http/controllers/*` no contiene logica
+  de negocio: delega en un caso de uso.
+
+### Cambios
+
+1. **`usuario_perm_activ` (frontend) → endpoint `usuario_perm_activ_data`.**
+
+   - Antes: el controlador `frontend/procesos/controller/usuario_perm_activ.php`
+     importaba `use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface`,
+     `use src\procesos\domain\contracts\ActividadFaseRepositoryInterface`,
+     `use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface`,
+     `use src\procesos\domain\PermAccion` y
+     `use src\usuarios\domain\contracts\GrupoRepositoryInterface`, y hacia
+     `$GLOBALS['container']->get(...)` para cargar usuario, fases y permisos.
+   - Ahora: nuevo caso de uso `src\procesos\application\UsuarioPermActivData`
+     que devuelve `['nombre','dl_propia','perm_jefe','a_fases','a_acciones',
+     'a_afecta_a','aPerm']`. Nuevo endpoint `/src/procesos/usuario_perm_activ_data`
+     con `ContestarJson::enviar`. El controlador frontend lee los datos
+     con `PostRequest::getDataFromUrl` y monta los `web\Desplegable`.
+   - La unica dependencia directa de `src\` que sobrevive en el frontend
+     es `new \src\actividades\application\ActividadTipo()` (misma excepcion
+     documentada para `fases_activ_cambio`: pendiente de migrar la clase
+     legacy `ActividadTipo`).
+
+2. **`usuario_perm_activ_ajax` (src) → use case + JSON estandar.**
+
+   - Antes: el controlador HTTP accedia directamente a los repositorios
+     (`TipoDeActividadRepositoryInterface`, `ActividadFaseRepositoryInterface`)
+     y terminaba con `echo $aOpciones;` sobre un array (bug latente).
+   - Ahora: nuevo caso de uso `src\procesos\application\UsuarioPermActivFases`
+     que devuelve `['opciones' => array<id,label>]`. El controlador HTTP
+     llama al caso de uso y responde con `ContestarJson::enviar('', $data)`.
+   - `frontend/procesos/view/usuario_perm_activ.html.twig`: `fnjs_actualizar_fases`
+     cambia a `dataType: 'json'` y construye los `<option>` a partir de
+     `json.data.opciones` conforme al contrato de desplegables AJAX de
+     `refactor.md`.
+
+3. **`FasesActivCambioGet` → payload JSON estandar.**
+
+   - `src\procesos\application\FasesActivCambioGet::execute` ya no
+     instancia `web\Desplegable`. Devuelve `['id','opciones','selected',
+     'blanco','action']` segun contrato de desplegables.
+   - El controlador HTTP responde con `ContestarJson::enviar`.
+   - `frontend/procesos/view/fases_activ_cambio.html.twig`: `fnjs_actualizar_fases`
+     pasa a `dataType: 'json'` y usa un helper JS local
+     `fnjs_construir_desplegable(json)` para pintar el `<select>` en
+     `#div_proceso`.
+
+4. **`ProcesosDepende` → payload JSON de `<option>`.**
+
+   - `src\procesos\application\ProcesosDepende::execute` ya no instancia
+     `web\Desplegable`. Devuelve `['opciones','blanco']`.
+   - El controlador HTTP responde con `ContestarJson::enviar`.
+   - `frontend/procesos/view/procesos_ver.html.twig`: `fnjs_get_depende`
+     cambia a `dataType: 'json'` y construye los `<option>` a partir de
+     `json.data.opciones` inyectandolos en el `<select>` objetivo.
+
+5. **`TipoActivProcesoLista` → datos crudos + renderer frontend.**
+
+   - `src\procesos\application\TipoActivProcesoLista::execute` deja de
+     instanciar `web\Lista` y de emitir spans con `onclick`. Devuelve
+     `['a_cabeceras','a_tipos']` con los campos crudos (`id_tipo_activ`,
+     `nom`, `id_tipo_proceso`, `nom_proceso_propio`, `id_tipo_proceso_ex`,
+     `nom_proceso_no_propio`).
+   - Nuevo controlador frontend `frontend/procesos/controller/tipo_activ_proceso_lista.php`
+     que llama al endpoint via `PostRequest`, monta los spans con
+     `onclick='fnjs_cambiar_proceso(...)'` y renderiza la tabla con
+     `web\Lista` (HTML en `text/html` para `.done(rta_txt)`).
+   - `frontend/procesos/controller/tipo_activ_proceso.php`: `url_lista`
+     apunta al nuevo controlador frontend.
+   - El endpoint `/src/procesos/tipo_activ_proceso_lista` pasa a devolver
+     JSON (`ContestarJson::enviar`).
+
+6. **`FasesActivCambioLista` → datos crudos + renderer frontend.**
+
+   - `src\procesos\application\FasesActivCambioLista::execute` deja de
+     instanciar `web\Lista` y `web\Hash`. Devuelve `['error','msg','num_activ',
+     'num_ok','accion','id_fase_nueva','a_cabeceras','a_valores']`.
+   - Nuevo controlador frontend `frontend/procesos/controller/fases_activ_cambio_lista.php`
+     que fabrica el formulario (`web\Hash`), la tabla (`web\Lista`) y
+     emite HTML (`text/html`) para `.done(rta_txt)`.
+   - `frontend/procesos/controller/fases_activ_cambio.php`: `url_lista`
+     apunta al nuevo controlador frontend.
+   - El endpoint `/src/procesos/fases_activ_cambio_lista` pasa a devolver
+     JSON (`ContestarJson::enviar`).
+
+### Verificacion
+
+- `grep` de `web\\Desplegable` y `web\\Lista` en `src/procesos/`: solo
+  quedan coincidencias en comentarios docblock (descriptivos, no `use`).
+- `grep` de `use src\\` en `frontend/procesos/`: sin resultados (aparte
+  del `new \src\actividades\application\ActividadTipo()` inline, ya
+  listado como deuda tecnica).
+- `php -l` en los 18 ficheros PHP tocados: todos OK.
+
+### Pendiente futuro
+
+- Sustituir `new \src\actividades\application\ActividadTipo()` en los
+  controladores frontend (`usuario_perm_activ`, `fases_activ_cambio`)
+  cuando la clase legacy se migre a un servicio accesible por endpoint.
+
+---
+
+## Slice 15 - Mutaciones JSON + renderers para HTML crudo
+
+### Objetivo
+
+Eliminar el ultimo frente de desalineamiento con `refactor.md`: casos de
+uso que devuelven HTML / mensajes de texto directos, y respuestas
+AJAX en `text/plain`. Todas las mutaciones pasan al contrato JSON
+`{success, mensaje}` y todas las lecturas que antes devolvian HTML
+crudo se parten en endpoint JSON + renderer frontend.
+
+### Cambios
+
+1. **Mutaciones → JSON `{success, mensaje, data}`.**
+
+   Casos de uso afectados (devuelven `''` en exito, string de error en
+   caso contrario) y controladores HTTP que ahora usan
+   `ContestarJson::enviar($error)`:
+
+   - `ProcesosUpdate`, `ProcesosEliminar`, `ProcesosRegenerar`,
+     `ProcesosClonar` (antes devolvia HTML `ProcesosGet`, ahora solo
+     informa exito; el frontend llama a `fnjs_actualizar()` tras clonar),
+     `ActividadProcesoGenerar`, `ActividadProcesoUpdate`,
+     `FasesActivCambioUpdate`, `TipoActivProcesoAsignar`.
+
+   JS actualizado a `dataType: 'json'` + lectura de
+   `json.success` / `json.mensaje` en:
+
+   - `frontend/procesos/view/procesos_select.html.twig` (`fnjs_regenerar`,
+     `fnjs_clonar`, `fnjs_guardar`, `fnjs_eliminar`).
+   - `frontend/procesos/view/actividad_proceso.html.twig`
+     (`fnjs_generar_proceso`, `fnjs_guardar`).
+   - `frontend/procesos/view/fases_activ_cambio.html.twig` (`fnjs_cambiar`).
+   - `frontend/procesos/view/tipo_activ_proceso.html.twig`
+     (`fnjs_asignar_proceso`).
+
+2. **`ProcesosGet` (arbol de fases) → datos crudos + renderer frontend.**
+
+   - `ProcesosGet::execute` devuelve `['aPadres' => [...]]` (array
+     padre->hijos) sin HTML.
+   - Endpoint `/src/procesos/procesos_get` responde con JSON via
+     `ContestarJson::enviar`.
+   - Nuevo renderer `frontend/procesos/controller/procesos_get.php`:
+     consume el JSON y dibuja `<div id="tree">` con `branch`/`entry`.
+   - `procesos_select.php`: `url_get` apunta al renderer frontend.
+
+3. **`ProcesosGetListado` → datos crudos + renderer frontend.**
+
+   - `ProcesosGetListado::execute` devuelve `['a_rows' => [...]]`
+     con `id_item`, `status_txt`, `responsable`, `fase`, `tarea`,
+     `fase_previa`.
+   - Endpoint `/src/procesos/procesos_get_listado` responde JSON.
+   - Nuevo renderer `frontend/procesos/controller/procesos_get_listado.php`
+     monta la `<table>` con los `<span onclick="fnjs_modificar/eliminar">`.
+   - `procesos_select.php`: `url_get_listado` apunta al renderer frontend.
+
+4. **`ActividadProcesoGet` → datos crudos + renderer frontend.**
+
+   - `ActividadProcesoGet::execute` devuelve `['error','a_rows']` donde
+     cada `row` contiene `id_item`, `fase`, `tarea`, `of_responsable_txt`,
+     `completado`, `observ`, `puede_editar`.
+   - Endpoint `/src/procesos/actividad_proceso_get` responde JSON.
+   - Nuevo renderer `frontend/procesos/controller/actividad_proceso_get.php`
+     monta la tabla con los checkboxes / inputs / iconos segun permisos.
+   - `actividad_proceso.php`: `url_get` apunta al renderer frontend.
+
+5. **`TipoActivProcesoLstPosibles` → datos crudos + renderer frontend.**
+
+   - `TipoActivProcesoLstPosibles::execute` devuelve
+     `['id_tipo_activ','propio','a_procesos']`.
+   - Endpoint `/src/procesos/tipo_activ_proceso_lst_posibles` responde
+     JSON.
+   - Nuevo renderer `frontend/procesos/controller/tipo_activ_proceso_lst_posibles.php`
+     monta la mini-tabla con `onclick=fnjs_asignar_proceso(...)`.
+   - `tipo_activ_proceso.php`: `url_lst_posibles` apunta al renderer
+     frontend.
+
+6. **`ActividadQueFasesCuadro` → datos crudos + construccion en cliente.**
+
+   - `ActividadQueFasesCuadro::ejecutar` elimina el parametro `$name`
+     (era `fases_on` / `fases_off` y forzaba un dispatcher `salida=`).
+     Devuelve `['a_fases' => [{id, nom, checked}]]`.
+   - Endpoint `/src/procesos/actividad_que_fases_ajax` responde JSON y
+     ya no acepta `salida`; el JS en
+     `frontend/actividades/view/actividad_que.html.twig` hace dos
+     llamadas (una por columna) y ensambla en cliente los
+     `<input type="checkbox" name="fases_on[]|fases_off[]">` con un
+     helper `fnjs_construir_cuadro_fases(url, params, name, selector)`.
+   - `frontend/actividades/controller/actividad_que.php` quita `salida`
+     de `setCamposForm` del hash.
+
+7. **Helper `ProcesosHashes`.**
+
+   Nuevo `frontend/procesos/support/ProcesosHashes.php`:
+
+   ```php
+   ProcesosHashes::formLink(string $url, string $camposForm = ''): string
+   ```
+
+   Colapsa el patron `new Hash; setUrl; setCamposForm; linkSinVal()`.
+   Aplicado en:
+
+   - `frontend/procesos/controller/procesos_select.php`: 7 hashes
+     (`h_regenerar`, `h_get`, `h_get_listado`, `h_clonar`, `h_eliminar`,
+     `h_nuevo`, `h_modificar`) pasan de ~28 lineas a 7 one-liners y se
+     elimina el `use web\Hash`.
+   - `frontend/procesos/controller/tipo_activ_proceso.php`: 3 hashes
+     (`h_asignar`, `h_nuevo`, `h_lista`) colapsados y se elimina el
+     `use web\Hash`.
+
+### Verificacion
+
+- `php -l` en los 28 ficheros tocados: todos OK.
+- `grep` de `text/plain` en `src/procesos/infrastructure/ui/http/controllers/`:
+  sin resultados (todos los endpoints devuelven JSON via
+  `ContestarJson::enviar`).
+- `grep` de `.done(rta_txt)` en `frontend/procesos/view/`: solo queda en
+  los casos donde el destino es explicitamente un renderer frontend que
+  devuelve HTML (`tipo_activ_proceso_lista`, `fases_activ_cambio_lista`,
+  `procesos_get`, `procesos_get_listado`, `actividad_proceso_get`,
+  `tipo_activ_proceso_lst_posibles`), y en `fases_activ_cambio.html.twig`
+  para `fnjs_lista` (HTML del renderer `fases_activ_cambio_lista`).
+
+### Limpieza final de `apps/procesos/`
+
+- `apps/procesos/model/CuadrosFases.php` eliminado: codigo muerto
+  (ningun `use`, `new` o referencia en el codebase; los metodos con
+  nombre similar `cuadros_check`, `cuadros_lista_perm`,
+  `lista_tiene_txt` que si se usan viven en `apps/permisos/model/XPermisos.php`
+  y `apps/web/Desplegable.php`, no aqui).
+- Directorio `apps/procesos/` borrado por completo (controller/, view/
+  y model/ ya estaban vacios tras los slices anteriores). Las
+  referencias residuales en `.po` se regeneraran cuando se vuelvan a
+  extraer las traducciones.
+
+### Pendiente futuro (consolidado)
+
+- **ActividadTipo legacy**: el `new \src\actividades\application\ActividadTipo()`
+  inline en `usuario_perm_activ.php` y `fases_activ_cambio.php` se
+  migrara cuando la clase legacy se convierta en servicio accesible por
+  endpoint.
+- **Twig → PHTML**: el modulo sigue usando plantillas `.html.twig`
+  (excepcion tolerable segun `refactor.md`). La migracion a PHTML +
+  `ViewNewPhtml` es una pasada independiente.
+

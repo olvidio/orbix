@@ -2,20 +2,17 @@
 
 /*
  * Port de apps/procesos/controller/actividad_que_fases_ajax.php.
- * Devuelve HTML (text/plain) con los checkboxes de fases para
- * `fases_on` / `fases_off` en funcion de los tipos de proceso de una
- * actividad. Consumido desde `frontend/actividades/view/actividad_que`.
+ * Devuelve JSON con la lista de fases aplicables al tipo de actividad,
+ * para que el frontend construya los checkboxes de fases_on / fases_off
+ * (`frontend/actividades/view/actividad_que`).
  *
- * Acepta `selected` (CSV de ids) para marcar las fases ya seleccionadas
- * en una restauracion de estado inicial.
+ * Acepta `selected` (CSV de ids) para marcar las fases ya seleccionadas.
  */
 
 use function core\is_true;
 use src\procesos\application\ActividadQueFasesCuadro;
+use web\ContestarJson;
 
-header('Content-Type: text/plain; charset=UTF-8');
-
-$Qsalida = (string)filter_input(INPUT_POST, 'salida');
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
 $QselectedCsv = (string)filter_input(INPUT_POST, 'selected');
@@ -25,11 +22,5 @@ $selected = $QselectedCsv === ''
     ? []
     : array_values(array_filter(array_map('intval', explode(',', $QselectedCsv))));
 
-if ($Qsalida !== 'fases_on' && $Qsalida !== 'fases_off') {
-    http_response_code(400);
-    echo sprintf(_("opción no definida: salida=%s"), $Qsalida);
-    return;
-}
-
 $useCase = new ActividadQueFasesCuadro();
-echo $useCase->ejecutar($Qid_tipo_activ, $dl_propia, $Qsalida, $selected);
+ContestarJson::enviar('', $useCase->ejecutar($Qid_tipo_activ, $dl_propia, $selected));

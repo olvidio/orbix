@@ -41,7 +41,9 @@ if (($_SESSION['oPerm']->have_perm_oficina('calendario')) || ($_SESSION['oPerm']
 
 $webBase = rtrim(ConfigGlobal::getWeb(), '/');
 $url_generar = $webBase . '/src/procesos/actividad_proceso_generar';
-$url_get = $webBase . '/src/procesos/actividad_proceso_get';
+// Renderer frontend que consume /src/procesos/actividad_proceso_get y
+// devuelve HTML.
+$url_get = 'frontend/procesos/controller/actividad_proceso_get.php';
 $url_update = $webBase . '/src/procesos/actividad_proceso_update';
 
 $oHashGenerar = new Hash();

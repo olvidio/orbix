@@ -6,9 +6,9 @@ use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 
 /**
  * Caso de uso: clona las tareas de un proceso de referencia al proceso
- * indicado (borrando las existentes previamente). Devuelve la vista
- * del proceso resultante (equivalente a `get`) para coincidir con el
- * comportamiento del dispatcher legacy.
+ * indicado (borrando las existentes previamente). Devuelve '' si ha ido
+ * bien o un mensaje de error. El frontend se encarga de recargar la vista
+ * del proceso tras el clonado.
  */
 class ProcesosClonar
 {
@@ -16,6 +16,10 @@ class ProcesosClonar
     {
         $Qid_tipo_proceso = (int)($input['id_tipo_proceso'] ?? 0);
         $Qid_tipo_proceso_ref = (int)($input['id_tipo_proceso_ref'] ?? 0);
+
+        if ($Qid_tipo_proceso <= 0 || $Qid_tipo_proceso_ref <= 0) {
+            return _("no se ha indicado el proceso a clonar");
+        }
 
         $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
         $cTareasProceso = $TareaProcesoRepository->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso]);
@@ -30,6 +34,6 @@ class ProcesosClonar
             $TareaProcesoRepository->Guardar($oTareaProceso);
         }
 
-        return (new ProcesosGet())->execute($input);
+        return '';
     }
 }

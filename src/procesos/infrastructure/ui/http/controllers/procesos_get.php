@@ -1,8 +1,7 @@
 <?php
 
 use src\procesos\application\ProcesosGet;
-
-header('Content-Type: text/plain; charset=UTF-8');
+use web\ContestarJson;
 
 $useCase = new ProcesosGet();
-echo $useCase->execute($_POST);
+ContestarJson::enviar('', $useCase->execute($_POST));

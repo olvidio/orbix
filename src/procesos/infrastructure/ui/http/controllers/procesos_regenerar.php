@@ -1,8 +1,8 @@
 <?php
 
 use src\procesos\application\ProcesosRegenerar;
-
-header('Content-Type: text/plain; charset=UTF-8');
+use web\ContestarJson;
 
 $useCase = new ProcesosRegenerar();
-echo $useCase->execute($_POST);
+$error = $useCase->execute($_POST);
+ContestarJson::enviar($error);

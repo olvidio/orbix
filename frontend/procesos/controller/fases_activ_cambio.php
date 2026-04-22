@@ -96,7 +96,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 
 
 $webBase = rtrim(ConfigGlobal::getWeb(), '/');
-$url_lista = $webBase . '/src/procesos/fases_activ_cambio_lista';
+$url_lista = 'frontend/procesos/controller/fases_activ_cambio_lista.php';
 $url_update = $webBase . '/src/procesos/fases_activ_cambio_update';
 $url_get = $webBase . '/src/procesos/fases_activ_cambio_get';
 

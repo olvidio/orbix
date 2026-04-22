@@ -11,12 +11,16 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
 /**
- * Caso de uso: devuelve el HTML del arbol de fases del proceso
- * filtrando segun el sfsv/role del usuario.
+ * Caso de uso: devuelve la estructura de padres/hijos del arbol de fases
+ * del proceso filtrando segun el sfsv/role del usuario.
+ *
+ * Retorna un array donde cada clave es el id de fase padre (0 = raiz) y
+ * cada valor es una lista de ['id', 'nom']. El render HTML se hace en
+ * el frontend (frontend/procesos/controller/procesos_get.php).
  */
 class ProcesosGet
 {
-    public function execute(array $input): string
+    public function execute(array $input): array
     {
         $Qid_tipo_proceso = (int)($input['id_tipo_proceso'] ?? 0);
 
@@ -75,52 +79,10 @@ class ProcesosGet
                     continue;
                 }
             }
-            $id_fase_previa = empty($id_fase_previa) ? 0 : $id_fase_previa;
-            $aPadres[$id_fase_previa][$j] = ['id' => $id_fase, 'nom' => $fase];
+            $id_fase_previa = empty($id_fase_previa) ? 0 : (int)$id_fase_previa;
+            $aPadres[$id_fase_previa][$j] = ['id' => (int)$id_fase, 'nom' => $fase];
         }
 
-        return empty($aPadres) ? '' : self::dibujarTree($aPadres);
-    }
-
-    public static function dibujarTree(array $aPadres): string
-    {
-        $html_tree = '<div id="tree">';
-        ksort($aPadres);
-        foreach ($aPadres[0] as $padre) {
-            $id_fase_i = $padre['id'];
-            $nom = $padre['nom'];
-            if (array_key_exists($id_fase_i, $aPadres)) {
-                $html_tree .= '<div class="branch">';
-                $html_tree .= '<div class="entry"><span>' . $nom . '</span>';
-                $html_tree .= '<div class="branch">';
-                $html_tree .= self::dibujarHijos($aPadres, $id_fase_i);
-                $html_tree .= "</div>";
-                $html_tree .= "</div>";
-            } else {
-                $html_tree .= '<div class="entry"><span>' . $nom . '</span></div>';
-            }
-        }
-        $html_tree .= '</div>';
-        return $html_tree;
-    }
-
-    private static function dibujarHijos(array $aPadres, int $id_fase): string
-    {
-        $html = '';
-        foreach ($aPadres[$id_fase] as $padre) {
-            $id_fase_i = $padre['id'];
-            $nom = $padre['nom'];
-            if (array_key_exists($id_fase_i, $aPadres)) {
-                $html .= '<div class="branch">';
-                $html .= '<div class="entry"><span>' . $nom . '</span>';
-                $html .= '<div class="branch">';
-                $html .= self::dibujarHijos($aPadres, $id_fase_i);
-                $html .= "</div>";
-                $html .= "</div>";
-            } else {
-                $html .= '<div class="entry"><span>' . $nom . '</span></div>';
-            }
-        }
-        return $html;
+        return ['aPadres' => $aPadres];
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
 use src\procesos\application\ActividadProcesoUpdate;
-
-header('Content-Type: text/plain; charset=UTF-8');
+use web\ContestarJson;
 
 $useCase = new ActividadProcesoUpdate();
-echo $useCase->execute($_POST);
+$error = $useCase->execute($_POST);
+ContestarJson::enviar($error);

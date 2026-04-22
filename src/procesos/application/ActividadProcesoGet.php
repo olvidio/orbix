@@ -10,13 +10,13 @@ use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use function core\is_true;
 
 /**
- * Caso de uso: devuelve la tabla HTML con las tareas del proceso
- * para un id_activ, incluyendo el control de completado y observaciones
- * segun los permisos de oficina del responsable.
+ * Caso de uso: devuelve las tareas del proceso para un id_activ como
+ * estructura (completado, fase, tarea, responsable, observ) + flag de
+ * permiso de edicion. El render HTML se hace en el frontend.
  */
 class ActividadProcesoGet
 {
-    public function execute(array $input): string
+    public function execute(array $input): array
     {
         $Qid_activ = (int)($input['id_activ'] ?? 0);
 
@@ -26,19 +26,19 @@ class ActividadProcesoGet
         ];
         $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
         $oLista = $ActividadProcesoTareaRepository->getActividadProcesoTareas($aWhere);
-        $txt = '<table>';
-        $txt .= '<tr><th>' . _("ok") . '</th><th>' . _("fase (tarea)") . '</th><th>' . _("responsable") . '</th><th>' . _("observaciones") . '</th><th></th></tr>';
-        $i = 0;
+
         $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
         $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
         $TareaProcesoRepository = $GLOBALS['container']->get(TareaProcesoRepositoryInterface::class);
+
+        $aRows = [];
         foreach ($oLista as $oActividadProcesoTarea) {
-            $id_item = $oActividadProcesoTarea->getId_item();
+            $id_item = (int)$oActividadProcesoTarea->getId_item();
             $id_tipo_proceso = $oActividadProcesoTarea->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
             $id_fase = $oActividadProcesoTarea->getId_fase();
             $id_tarea = $oActividadProcesoTarea->getId_tarea();
-            $completado = $oActividadProcesoTarea->isCompletado();
-            $observ = $oActividadProcesoTarea->getObserv();
+            $completado = is_true($oActividadProcesoTarea->isCompletado());
+            $observ = (string)$oActividadProcesoTarea->getObserv();
 
             $oFase = $ActividadFaseRepository->findById($id_fase);
             $fase = $oFase->getDesc_fase();
@@ -47,47 +47,42 @@ class ActividadProcesoGet
             }
             $oTarea = $ActividadTareaRepository->findById($id_tarea);
             $tarea = $oTarea->getDesc_tarea();
-            $chk = is_true($completado) ? 'checked' : '';
+
             $cTareasProceso = $TareaProcesoRepository->getTareasProceso([
                 'id_tipo_proceso' => $id_tipo_proceso,
                 'id_fase' => $id_fase,
                 'id_tarea' => $id_tarea,
             ]);
-            if (!empty($cTareasProceso)) {
-                $oTareaProceso = $cTareasProceso[0];
-            } else {
-                return sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"), $id_tipo_proceso, $id_fase, $id_tarea);
+            if (empty($cTareasProceso)) {
+                return [
+                    'error' => sprintf(
+                        _("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"),
+                        $id_tipo_proceso,
+                        $id_fase,
+                        $id_tarea
+                    ),
+                    'a_rows' => [],
+                ];
             }
-            $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
+            $oTareaProceso = $cTareasProceso[0];
+            $of_responsable_txt = (string)$oTareaProceso->getOf_responsable_txt();
+            $puede_editar = empty($of_responsable_txt)
+                || ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt));
 
-            $clase = ($i % 2) ? 'tono1' : 'tono3';
-            $i++;
-            $txt .= "<tr class='$clase'>";
-            if (empty($of_responsable_txt) || ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt))) {
-                $txt .= "<td style='text-align: center;' ><input type='checkbox' id='comp$id_item' name='completado' $chk></td>";
-                $obs = "<td><input type='text' id='observ$id_item' name='observ' value='$observ' ></td>";
-            } else {
-                if (is_true($completado)) {
-                    $icon = '<img src="' . ConfigGlobal::getWeb_icons() . '/checkbox-checked.png" title="ok">';
-                } else {
-                    $icon = '<img src="' . ConfigGlobal::getWeb_icons() . '/check-box-outline-blank.png" title="">';
-                }
-                $txt .= "<td style='text-align: center;' >$icon</td>";
-                $obs = "<td></td>";
-            }
-            $txt_fase = empty($tarea) ? '' : "($tarea)";
-            $txt .= "<td style='text-align: left;' >$fase $txt_fase</td>";
-            $txt .= "<td>$of_responsable_txt</td>";
-            $txt .= $obs;
-            if (empty($of_responsable_txt) || ($_SESSION['oPerm']->have_perm_oficina($of_responsable_txt))) {
-                $txt .= "<td><input type='button' name='b_guardar' value='" . _("guardar") . "' onclick='fnjs_guardar($id_item)'></td>";
-            } else {
-                $txt .= '<td></td>';
-            }
-            $txt .= '</tr>';
+            $aRows[] = [
+                'id_item' => $id_item,
+                'fase' => $fase,
+                'tarea' => $tarea,
+                'of_responsable_txt' => $of_responsable_txt,
+                'completado' => $completado,
+                'observ' => $observ,
+                'puede_editar' => $puede_editar,
+            ];
         }
-        $txt .= '</table>';
 
-        return $txt;
+        return [
+            'error' => '',
+            'a_rows' => $aRows,
+        ];
     }
 }

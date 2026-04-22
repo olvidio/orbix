@@ -224,7 +224,7 @@ if (ConfigGlobal::is_app_installed('procesos')) {
     $url_actualizar_fases = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/actividad_que_fases_ajax';
     $oHash1 = new Hash();
     $oHash1->setUrl($url_actualizar_fases);
-    $oHash1->setCamposForm('salida!dl_propia!id_tipo_activ!selected');
+    $oHash1->setCamposForm('dl_propia!id_tipo_activ!selected');
     $h_actualizar_fases = $oHash1->linkSinVal();
 
     if (empty($Qid_tipo_activ)) {

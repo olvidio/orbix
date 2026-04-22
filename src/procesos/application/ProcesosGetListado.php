@@ -12,12 +12,12 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
 /**
- * Caso de uso: devuelve la tabla HTML con el listado de fases del
- * proceso (responsable, tarea, fase previa) filtrando por sfsv/role.
+ * Caso de uso: devuelve el listado (estructurado) de fases/tareas del
+ * proceso filtrando por sfsv/role. El render HTML se hace en el frontend.
  */
 class ProcesosGetListado
 {
-    public function execute(array $input): string
+    public function execute(array $input): array
     {
         $Qid_tipo_proceso = (int)($input['id_tipo_proceso'] ?? 0);
         $a_status = StatusId::getArrayStatus();
@@ -52,15 +52,12 @@ class ProcesosGetListado
             'id_tipo_proceso' => $Qid_tipo_proceso,
             '_ordre' => 'status,id_of_responsable',
         ]);
-        $txt = '<table>';
-        $txt .= '<tr><th>' . _("status") . '</th><th>' . _("responsable") . '</th>';
-        $txt .= '<th colspan=3>' . _("fase - tarea") . '</th><th>' . _("modificar") . '</th><th>' . _("eliminar") . '</th></tr>';
-        $i = 0;
+
         $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
         $ActividadTareaRepository = $GLOBALS['container']->get(ActividadTareaRepositoryInterface::class);
+
+        $aRows = [];
         foreach ($cTareasProceso as $oTareaProceso) {
-            $i++;
-            $clase = ($i % 2 === 0) ? 'tono2' : 'tono4';
             $id_item = $oTareaProceso->getId_item();
             $status = $oTareaProceso->getStatus();
             $status_txt = $a_status[$status] ?? '';
@@ -73,15 +70,12 @@ class ProcesosGetListado
             $sf = ($oFase->isSf()) ? 2 : 0;
             $sv = ($oFase->isSv()) ? 1 : 0;
             if (!(($soy & $sf) || ($soy & $sv))) {
-                $i--;
                 continue;
             }
             $id_tarea = $oTareaProceso->getId_tarea();
             $oTarea = $ActividadTareaRepository->findById($id_tarea);
             $tarea = $oTarea->getDesc_tarea();
-            $tarea_txt = empty($tarea) ? '' : "($tarea)";
             $fase_previa = '';
-            $tarea_previa_txt = '';
             $aFases_previas = $oTareaProceso->getJson_fases_previas(true);
             foreach ($aFases_previas as $oFaseP) {
                 $id_fase_previa = $oFaseP['id_fase'];
@@ -93,14 +87,16 @@ class ProcesosGetListado
                 $fase_previa .= $oFase_previa->getDesc_fase();
             }
 
-            $mod = "<span class=link onclick=fnjs_modificar($id_item) title='" . _("modificar") . "' >" . _("modificar") . "</span>";
-            $drop = "<span class=link onclick=fnjs_eliminar($id_item) title='" . _("eliminar") . "' >" . _("eliminar") . "</span>";
-
-            $txt .= "<tr class=$clase><td>($status_txt)</td><td>$responsable</td><td colspan=3>$fase $tarea_txt</td><td>$mod</td><td>$drop</td></tr>";
-            $txt .= "<tr><td></td><td></td><td>&nbsp;&nbsp;&nbsp;" . _("requisito") . ":</td><td>$fase_previa $tarea_previa_txt</td></tr>";
+            $aRows[] = [
+                'id_item' => (int)$id_item,
+                'status_txt' => $status_txt,
+                'responsable' => $responsable,
+                'fase' => $fase,
+                'tarea' => $tarea,
+                'fase_previa' => $fase_previa,
+            ];
         }
-        $txt .= '</table>';
 
-        return $txt;
+        return ['a_rows' => $aRows];
     }
 }

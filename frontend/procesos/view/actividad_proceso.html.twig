@@ -13,11 +13,12 @@ fnjs_generar_proceso=function(){
 		$.ajax({
 			url: url,
 			type: 'post',
-			data: parametros
+			data: parametros,
+			dataType: 'json'
 		})
-		.done(function (rta_txt) {
-			if (rta_txt != '' && rta_txt != '\n') {
-				alert ('respuesta: '+rta_txt);
+		.done(function (json) {
+			if (json && json.success === false && json.mensaje) {
+				alert('respuesta: ' + json.mensaje);
 			}
 		});
 		fnjs_actualizar();
@@ -53,11 +54,12 @@ fnjs_guardar=function(id_item){
 	$.ajax({
 		url: url,
 		type: 'post',
-		data: parametros
+		data: parametros,
+		dataType: 'json'
 	})
-	.done(function (rta_txt) {
-		if (rta_txt != '' && rta_txt != '\n') {
-			alert ('respuesta: '+rta_txt);
+	.done(function (json) {
+		if (json && json.success === false && json.mensaje) {
+			alert('respuesta: ' + json.mensaje);
 		}
 	});
 	fnjs_actualizar();

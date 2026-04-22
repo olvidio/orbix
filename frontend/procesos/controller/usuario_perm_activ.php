@@ -1,21 +1,14 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
-use permisos\model\PermisosActividades;
-use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
-use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
-use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
-use src\procesos\domain\PermAccion;
-use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use web\TiposActividades;
 use function core\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
-
-$oAcciones = new PermAccion();
 
 $oPosicion->recordar();
 
@@ -27,35 +20,35 @@ if (!empty($a_sel)) {
     $Qdl_propia = (string)strtok("#");
 } else {
     $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
-    $Qid_tipo_activ_txt = (int)filter_input(INPUT_POST, 'id_tipo_activ_txt');
-    $Qdl_propia = (int)filter_input(INPUT_POST, 'dl_propia');
+    $Qid_item = '';
+    $Qid_tipo_activ_txt = (string)filter_input(INPUT_POST, 'id_tipo_activ_txt');
+    $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
 }
-$Qdl_propia = is_true($Qdl_propia) ? 't' : 'f';
 
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
-$oUsuario = $GrupoRepository->findById($Qid_usuario);
-$nombre = $oUsuario->getUsuario();
-
-$aAfecta_a = PermisosActividades::AFECTA;
-$oAcciones = new PermAccion();
-$aOpcionesAction = $oAcciones->lista_array();
-
-
-if (empty($Qid_tipo_activ_txt)) {
-    $Qdl_propia = 't';
-}
-
 $oTipoActiv = new TiposActividades($Qid_tipo_activ_txt, true);
-
+$id_tipo_activ = $oTipoActiv->getId_tipo_activ();
 $sfsv = $oTipoActiv->getSfsvText();
 $asistentes = $oTipoActiv->getAsistentesText();
 $actividad = $oTipoActiv->getActividadText();
 $nom_tipo = $oTipoActiv->getNom_tipoText();
 
-$id_tipo_activ = $oTipoActiv->getId_tipo_activ();
+$data = PostRequest::getDataFromUrl('/src/procesos/usuario_perm_activ_data', [
+    'id_usuario' => $Qid_usuario,
+    'id_tipo_activ_txt' => $Qid_tipo_activ_txt,
+    'id_tipo_activ' => $id_tipo_activ,
+    'dl_propia' => $Qdl_propia,
+]);
+
+$nombre = $data['nombre'] ?? '';
+$Qdl_propia = $data['dl_propia'] ?? 't';
+$perm_jefe = (bool)($data['perm_jefe'] ?? false);
+$a_fases = (array)($data['a_fases'] ?? []);
+$a_acciones = (array)($data['a_acciones'] ?? []);
+$aPermData = (array)($data['aPerm'] ?? []);
+
 $oActividadTipo = new \src\actividades\application\ActividadTipo();
 if (!empty($id_tipo_activ)) {
     $oActividadTipo->setId_tipo_activ($id_tipo_activ);
@@ -64,68 +57,28 @@ $oActividadTipo->setAsistentes($asistentes);
 $oActividadTipo->setActividad($actividad);
 $oActividadTipo->setNom_tipo($nom_tipo);
 $oActividadTipo->setPara('procesos');
-$perm_jefe = false;
-if ($_SESSION['oConfig']->is_jefeCalendario()
-    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() === 1)
-    || ($_SESSION['oPerm']->have_perm_oficina('calendario'))
-) {
-    $perm_jefe = true;
-}
 $oActividadTipo->setPerm_jefe($perm_jefe);
 
-$TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-$aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $Qdl_propia);
-
-$ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
-$aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
-$oDesplFases = new Desplegable();
-$oDesplFases->setOpciones($aOpciones);
-
 $aPerm = [];
-$PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
-$i = 0;
-asort($aAfecta_a);
-foreach ($aAfecta_a as $afecta_a_txt => $num) {
-    $aWhere = [
-        'id_usuario' => $Qid_usuario,
-        'dl_propia' => $Qdl_propia,
-        'id_tipo_activ_txt' => $Qid_tipo_activ_txt,
-        'afecta_a' => $num,
-    ];
-
-    $fase_ref = '';
-    $perm_on = '';
-    $perm_off = '';
-    $afecta_a = '';
-    $cPermUsuarioActividad = $PermUsuarioActividadRepository->getPermUsuarioActividades($aWhere);
-    foreach ($cPermUsuarioActividad as $oPermiso) {
-        $fase_ref = $oPermiso->getFase_ref();
-        $afecta_a = $oPermiso->getAfecta_a();
-        $perm_on = $oPermiso->getPerm_on();
-        $perm_off = $oPermiso->getPerm_off();
-    }
-
-    $aOpciones = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
+foreach ($aPermData as $i => $fila) {
     $oDesplFases = new Desplegable();
-    $oDesplFases->setOpciones($aOpciones);
+    $oDesplFases->setOpciones($a_fases);
     $oDesplFases->setBlanco(true);
     $oDesplFases->setNombre("fase_ref[]");
-    $oDesplFases->setOpcion_sel($fase_ref);
+    $oDesplFases->setOpcion_sel((string)$fila['fase_ref']);
 
-    $oDesplPermOn = new Desplegable('perm_on[]', $aOpcionesAction, $perm_on, false);
-    $oDesplPermOff = new Desplegable('perm_off[]', $aOpcionesAction, $perm_off, false);
-    $chk = ($afecta_a === $num) ? 'checked' : '';
+    $oDesplPermOn = new Desplegable('perm_on[]', $a_acciones, (string)$fila['perm_on'], false);
+    $oDesplPermOff = new Desplegable('perm_off[]', $a_acciones, (string)$fila['perm_off'], false);
 
     $aPerm[] = [
-        'afecta_a' => $afecta_a_txt,
+        'afecta_a' => $fila['afecta_a'],
         'nameAfecta_a' => "afecta_a[$i]",
-        'num' => $num,
-        'chk' => $chk,
+        'num' => $fila['num'],
+        'chk' => $fila['marcado'] ? 'checked' : '',
         'oDesplFases' => $oDesplFases,
         'oDesplPermOff' => $oDesplPermOff,
         'oDesplPermOn' => $oDesplPermOn,
     ];
-    $i++;
 }
 
 $oHash = new Hash();
@@ -137,7 +90,6 @@ $a_camposHidden = [
     'extendida' => true,
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
-
 
 $url_actualizar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/usuario_perm_activ_ajax';
 $oHash1 = new Hash();

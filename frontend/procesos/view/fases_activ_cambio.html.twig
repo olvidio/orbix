@@ -23,11 +23,12 @@ fnjs_cambiar=function(formulario){
 		$.ajax({
 			url: url,
 			type: 'post',
-			data: $(formulario).serialize()
+			data: $(formulario).serialize(),
+			dataType: 'json'
 		})
-		.done(function (rta_txt) {
-			if (rta_txt) {
-				fnjs_mostra_resposta(rta_txt,'#main');
+		.done(function (json) {
+			if (json && json.success === false && json.mensaje) {
+				fnjs_mostra_resposta(json.mensaje,'#main');
 			}
 			fnjs_lista();
 		});
@@ -64,6 +65,26 @@ fnjs_lista=function(){
 	});
 }
 
+fnjs_construir_desplegable=function(json){
+	if (!json || json.success !== true) { return ''; }
+	var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+	if (!data) { return ''; }
+	var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+	if (data.action) { $sel.attr('onchange', data.action); }
+	if (data.blanco) {
+		var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+		$sel.append($('<option></option>').val(vb).text(''));
+	}
+	$.each(data.opciones || {}, function (value, label) {
+		var $opt = $('<option></option>').val(value).text(label);
+		if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+			$opt.prop('selected', true);
+		}
+		$sel.append($opt);
+	});
+	return $sel.prop('outerHTML');
+}
+
 fnjs_actualizar_fases=function(id_fase_sel=''){
 	var dl_propia=$('input[name="dl_propia"]:checked').val();
 	var isfsv=$('#isfsv_val').val();
@@ -80,10 +101,11 @@ fnjs_actualizar_fases=function(id_fase_sel=''){
 		url: url,
 		type: 'post',
 		data: parametros,
-		dataType: 'html'
+		dataType: 'json'
 	})
-	.done(function (rta_txt) {
-		$('#div_proceso').html(rta_txt);			
+	.done(function (json) {
+		var html = fnjs_construir_desplegable(json);
+		if (html) { $('#div_proceso').html(html); }
 	});
 }
  

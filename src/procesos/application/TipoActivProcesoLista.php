@@ -5,16 +5,22 @@ namespace src\procesos\application;
 use core\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
-use web\Lista;
 use web\TiposActividades;
 
 /**
- * Caso de uso: devuelve la tabla HTML con todos los tipos de actividad y
- * el proceso asignado (propio y no-propio) para cada uno.
+ * Caso de uso: devuelve el listado estructurado de tipos de actividad
+ * con el proceso propio / no-propio asignado. El frontend renderiza la
+ * tabla con `web\Lista`.
  */
 class TipoActivProcesoLista
 {
-    public function execute(array $input = []): string
+    /**
+     * @return array{
+     *     a_cabeceras:array<int,string>,
+     *     a_tipos:array<int,array{id_tipo_activ:string,nom:string,id_tipo_proceso:int,nom_proceso_propio:string,id_tipo_proceso_ex:int,nom_proceso_no_propio:string}>
+     * }
+     */
+    public static function execute(): array
     {
         $aWhere = ['_ordre' => 'id_tipo_activ'];
         $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
@@ -35,34 +41,27 @@ class TipoActivProcesoLista
             _("proceso no dl"),
         ];
 
-        $a_valores = [];
-        $i = 0;
+        $a_tipos = [];
         foreach ($cTiposDeActividades as $oTipo) {
-            $i++;
             $id_tipo_activ = $oTipo->getId_tipo_activ();
-            $id_tipo_proceso = $oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
-            $id_tipo_proceso_ex = $oTipo->getId_tipo_proceso_ex(ConfigGlobal::mi_sfsv());
+            $id_tipo_proceso = (int)$oTipo->getId_tipo_proceso(ConfigGlobal::mi_sfsv());
+            $id_tipo_proceso_ex = (int)$oTipo->getId_tipo_proceso_ex(ConfigGlobal::mi_sfsv());
             $oTiposActividades = new TiposActividades($id_tipo_activ);
-            $a_valores[$i][1] = $id_tipo_activ;
-            $a_valores[$i][2] = $oTiposActividades->getNom();
-
-            $propio = 't';
-            $id_txt_dl = 'dl_' . $id_tipo_activ;
-            $nom_proceso = empty($a_procesos_tipo[$id_tipo_proceso]) ? '----' : $a_procesos_tipo[$id_tipo_proceso];
-            $txt_proceso_dl = "<span class=link id=$id_txt_dl onclick=fnjs_cambiar_proceso('$id_tipo_activ','$propio')> $nom_proceso</span>";
-
-            $propio = 'f';
-            $id_txt_nodl = 'nodl_' . $id_tipo_activ;
-            $nom_proceso = empty($a_procesos_tipo[$id_tipo_proceso_ex]) ? '----' : $a_procesos_tipo[$id_tipo_proceso_ex];
-            $txt_proceso_nodl = "<span class=link id=$id_txt_nodl onclick=fnjs_cambiar_proceso('$id_tipo_activ','$propio')> $nom_proceso</span>";
-
-            $a_valores[$i][3] = $txt_proceso_dl;
-            $a_valores[$i][4] = $txt_proceso_nodl;
+            $nom_proceso_propio = empty($a_procesos_tipo[$id_tipo_proceso]) ? '----' : $a_procesos_tipo[$id_tipo_proceso];
+            $nom_proceso_no_propio = empty($a_procesos_tipo[$id_tipo_proceso_ex]) ? '----' : $a_procesos_tipo[$id_tipo_proceso_ex];
+            $a_tipos[] = [
+                'id_tipo_activ' => $id_tipo_activ,
+                'nom' => $oTiposActividades->getNom(),
+                'id_tipo_proceso' => $id_tipo_proceso,
+                'nom_proceso_propio' => $nom_proceso_propio,
+                'id_tipo_proceso_ex' => $id_tipo_proceso_ex,
+                'nom_proceso_no_propio' => $nom_proceso_no_propio,
+            ];
         }
-        $oLista = new Lista();
-        $oLista->setCabeceras($a_cabeceras);
-        $oLista->setDatos($a_valores);
 
-        return $oLista->lista();
+        return [
+            'a_cabeceras' => $a_cabeceras,
+            'a_tipos' => $a_tipos,
+        ];
     }
 }

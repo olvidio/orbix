@@ -1,8 +1,7 @@
 <?php
 
 use src\procesos\application\ProcesosGetListado;
-
-header('Content-Type: text/plain; charset=UTF-8');
+use web\ContestarJson;
 
 $useCase = new ProcesosGetListado();
-echo $useCase->execute($_POST);
+ContestarJson::enviar('', $useCase->execute($_POST));

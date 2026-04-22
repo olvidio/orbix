@@ -6,19 +6,20 @@ fnjs_regenerar=function(){
 	if (!id_tipo_proceso) {
 		alert ("{{ txt_clonar }}");
 	} else {
-        /* obtener el listado de fases */
         var url="{{ url_regenerar }}";
         var parametros='id_tipo_proceso='+id_tipo_proceso+'{{ h_regenerar|raw }}';
              
         $.ajax({
             url: url,
             type: 'post',
-            data: parametros
+            data: parametros,
+            dataType: 'json'
         })
-        .done(function (rta_txt) {
-            if (rta_txt !== '' && rta_txt !== '\\n') {
-                /* añadir debajo de la actividad */
-                $('#div_proceso').html(rta_txt);
+        .done(function (json) {
+            if (json && json.success === false && json.mensaje) {
+                alert(json.mensaje);
+            } else {
+                fnjs_actualizar();
             }
         });
         document.getElementById("overlay").style.display = "none";
@@ -32,19 +33,20 @@ fnjs_clonar=function(){
 	if (!id_tipo_proceso) {
 		alert ("{{ txt_clonar }}");
 	} else {
-        /* obtener el listado de fases */
         var url="{{ url_clonar }}";
         var parametros='id_tipo_proceso='+id_tipo_proceso+'&id_tipo_proceso_ref='+id_tipo_proceso_ref+'{{ h_clonar|raw }}';
              
         $.ajax({
             url: url,
             type: 'post',
-            data: parametros
+            data: parametros,
+            dataType: 'json'
         })
-        .done(function (rta_txt) {
-            if (rta_txt !== '' && rta_txt !== '\\n') {
-                /* añadir debajo de la actividad */
-                $('#div_proceso').html(rta_txt);
+        .done(function (json) {
+            if (json && json.success === false && json.mensaje) {
+                alert(json.mensaje);
+            } else {
+                fnjs_actualizar();
             }
         });
         document.getElementById("overlay").style.display = "none";
@@ -63,11 +65,12 @@ fnjs_guardar=function(formulario){
 	$.ajax({
 		url: "{{ url_update }}",
 		type: 'post',
-		data: $(formulario).serialize()
+		data: $(formulario).serialize(),
+		dataType: 'json'
 	})
-	.done(function (rta_txt) {
-		if (rta_txt != '' && rta_txt != '\n') {
-			alert (rta_txt);
+	.done(function (json) {
+		if (json && json.success === false && json.mensaje) {
+			alert(json.mensaje);
 		} else {
 			$('#div_modificar').html('');
 			$('#div_modificar').width('0');
@@ -125,11 +128,12 @@ fnjs_eliminar=function(id_item){
         $.ajax({
             url: url,
             type: 'post',
-            data: parametros
+            data: parametros,
+            dataType: 'json'
 		})
-		.done(function (rta_txt) {
-			if (rta_txt != '' && rta_txt != '\n') {
-				alert ('respuesta: '+rta_txt);
+		.done(function (json) {
+			if (json && json.success === false && json.mensaje) {
+				alert('respuesta: ' + json.mensaje);
 			} else {
 				fnjs_actualizar();
 			}

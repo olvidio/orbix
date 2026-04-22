@@ -18,11 +18,22 @@
         $.ajax({
             url: url,
             type: 'post',
-            data: parametros
+            data: parametros,
+            dataType: 'json'
         })
-            .done(function (rta_txt) {
+            .done(function (json) {
+                if (!json || json.success !== true) {
+                    alert("{{ "respuesta"|trans|raw }}" + ': ' + (json ? json.mensaje : ''));
+                    return;
+                }
+                var payload = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                var opciones = (payload && payload.opciones) ? payload.opciones : {};
+                var html = '<option value=""></option>';
+                $.each(opciones, function (value, label) {
+                    html += '<option value="' + value + '">' + label + '</option>';
+                });
                 $("select[name^='fase_ref']").each(function () {
-                    $(this).html(rta_txt);
+                    $(this).html(html);
                 });
                 alert("{{ "OJO! Comprobar la fase de referencia."|trans|raw }}");
             });

@@ -59,23 +59,29 @@
 }
 
     var url='{{ url_actualizar_fases }}';
-    // lista fases on
+    var params_on='dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&selected='+encodeURIComponent(selected_on)+'{{ h_actualizar_fases|raw }}';
+    var params_off='dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&selected='+encodeURIComponent(selected_off)+'{{ h_actualizar_fases|raw }}';
+    fnjs_construir_cuadro_fases(url, params_on, 'fases_on', '#td_fases_on');
+    fnjs_construir_cuadro_fases(url, params_off, 'fases_off', '#td_fases_off');
+}
+
+    fnjs_construir_cuadro_fases=function(url, params, name, selector){
     $.ajax({
     url: url,
     type: 'post',
-    data: 'salida=fases_on&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&selected='+encodeURIComponent(selected_on)+'{{ h_actualizar_fases|raw }}'
+    data: params,
+    dataType: 'json'
 })
-    .done(function (rta_txt) {
-    $('#td_fases_on').html(rta_txt);
+    .done(function (json) {
+    if (!json || json.success !== true) { return; }
+    var payload = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+    var aFases = (payload && payload.a_fases) ? payload.a_fases : [];
+    var html = '';
+    $.each(aFases, function (_i, fase) {
+    var chk = fase.checked ? ' checked' : '';
+    html += "<input type='checkbox' name='"+name+"[]' value='"+fase.id+"'"+chk+" /> "+fase.nom;
 });
-    // lista fases off
-    $.ajax({
-    url: url,
-    type: 'post',
-    data: 'salida=fases_off&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&selected='+encodeURIComponent(selected_off)+'{{ h_actualizar_fases|raw }}'
-})
-    .done(function (rta_txt) {
-    $('#td_fases_off').html(rta_txt);
+    $(selector).html(html);
 });
 }
 
