@@ -103,12 +103,12 @@ id_metamenu;id_mod;url;descripcion
 154;26;apps/cambios/controller/avisos_generar.php;avisos generar
 137;26;apps/cambios/controller/avisos_generar.php;lista avisos
 46;26;apps/cambios/controller/avisos_generar_tabla.php;avisos generar tabla
-63;27;apps/casas/controller/calendario_ubi_resumen.php;Ubi resumen ec
-51;27;apps/casas/controller/casa_ec_que.php;Casa ec que
-45;27;apps/casas/controller/casa_que.php;Casa que
-89;27;apps/casas/controller/casas_resumen.php;Casa resumen
-91;27;apps/casas/controller/grupo_lista.php;Grupo Casas
-5;27;apps/casas/controller/prevision_asistentes.php;prevision asistentes
+63;27;frontend/casas/controller/calendario_ubi_resumen.php;Ubi resumen ec
+51;27;frontend/casas/controller/casa_ec.php;Casa ec que
+45;27;frontend/casas/controller/casa.php;Casa que
+89;27;frontend/casas/controller/casa_resumen.php;Casa resumen
+91;27;frontend/casas/controller/grupo.php;Grupo Casas
+5;27;frontend/casas/controller/prevision_asistentes.php;prevision asistentes
 53;28;frontend/inventario/controller/buscar_docs_por_ctr.php;buscar docs por centro
 144;28;frontend/inventario/controller/cabecera_pie_txt.php;textos inventario
 16;28;frontend/inventario/controller/docs_asignar_que.php;asignar documentos

@@ -94,10 +94,10 @@
 90	1	apps/config/controller/parametros.php	\N	Configuracion esquema
 152	1	frontend/ubis/controller/lista_ctrs.php	\N	lista ctr sg
 12	5	frontend/actividades/controller/actividades_centro_que.php	\N	Centro que activ
-51	27	apps/casas/controller/casa_ec_que.php	\N	Casa ec que
-45	27	apps/casas/controller/casa_que.php	\N	Casa que
-63	27	apps/casas/controller/calendario_ubi_resumen.php	\N	Ubi resumen ec
-91	27	apps/casas/controller/grupo_lista.php	\N	Grupo Casas
+51	27	frontend/casas/controller/casa_ec.php	\N	Casa ec que
+45	27	frontend/casas/controller/casa.php	\N	Casa que
+63	27	frontend/casas/controller/calendario_ubi_resumen.php	\N	Ubi resumen ec
+91	27	frontend/casas/controller/grupo.php	\N	Grupo Casas
 97	1	apps/personas/controller/personas_select.php	\N	personas Select
 145	2	apps/usuarios/controller/borrar_pwd.php	\N	borrar passwords
 58	6	frontend/actividades/controller/lista_sr_csv_que.php	\N	Activ Sr Que (csv)
@@ -177,10 +177,10 @@
 132	5	frontend/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
 79	6	apps/asistentes/controller/lista_ultim_que_ctr.php	\N	Ultima asistencia
 73	5	frontend/actividadtarifas/controller/tarifa_ubi.php	\N	actividad Tarifa Ubi
-89	27	apps/casas/controller/casas_resumen.php	\N	Casa resumen
+89	27	frontend/casas/controller/casa_resumen.php	\N	Casa resumen
 108	5	frontend/actividadtarifas/controller/tarifa_tipo_actividad.php	\N	Tipo id_tarifa
 128	5	frontend/actividadtarifas/controller/tarifa.php	\N	Tarifa actividades
-5	27	apps/casas/controller/prevision_asistentes.php	\N	prevision asistentes
+5	27	frontend/casas/controller/prevision_asistentes.php	\N	prevision asistentes
 54	2	apps/devel/controller/db_mover_que.php	\N	DB mover tabla
 100	5	frontend/actividadtarifas/controller/tarifa.php	\N	Tarifa definir
 165	1	public/ayuda/index.php	\N	Ayuda

@@ -3,6 +3,7 @@
 namespace src\casas\domain\contracts;
 
 use src\casas\domain\entity\UbiGasto;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 
 /**
@@ -27,6 +28,17 @@ interface UbiGastoRepositoryInterface
      * @return array|bool Una colección de objetos de tipo UbiGasto
      */
     public function getUbisGastos(array $aWhere = [], array $aOperators = []): array|bool;
+
+    /**
+     * devuelve el sumatorio de gastos (o aportaciones) de una ubicación entre dos fechas para un tipo dado
+     *
+     * @param int $id_ubi id de la ubicación (casa)
+     * @param int $tipo 1: aportación de asistentes, 2: aportación de centros, 3: gasto
+     * @param DateTimeLocal $oInicio fecha de inicio (incluida)
+     * @param DateTimeLocal $oFin fecha de fin (incluida)
+     * @return float suma total del tipo solicitado
+     */
+    public function getSumaGastos(int $id_ubi, int $tipo, DateTimeLocal $oInicio, DateTimeLocal $oFin): float;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 

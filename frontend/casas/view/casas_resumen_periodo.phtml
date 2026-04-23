@@ -1,0 +1,113 @@
+<?php foreach ((array)$avisos as $aviso): ?>
+    <br><?= htmlspecialchars((string)$aviso) ?>
+<?php endforeach; ?>
+<table border="1">
+    <tr>
+        <th></th><th></th>
+        <th><?= _("días ocupados") ?></th><th>%</th>
+        <th><?= _("nº días x nº asistentes (previsto)") ?></th><th>%</th>
+        <th><?= _("nº días x nº asistentes (real)") ?></th><th>%</th>
+        <th><?= _("ingresos previstos acumulados") ?></th><th>%</th>
+        <th><?= _("ingresos reales acumulados") ?></th><th>%</th>
+        <th><?= _("gastos reales") ?></th><th>%</th>
+        <th><?= _("aportación real dl") ?></th>
+        <th><?= _("superávit") ?></th>
+    </tr>
+    <?php foreach ((array)$a_resumen as $id_ubi => $row): ?>
+        <tr id="detalles_<?= (int)$id_ubi ?>_0" style="display:none;">
+            <td colspan="16">
+                <table>
+                    <tr><th><?= _("actividad") ?></th><th><?= _("ocupación sv") ?></th><th><?= _("ocupación sf") ?></th><th><?= _("ingresos sv") ?></th><th><?= _("ingresos sf") ?></th></tr>
+                    <?php foreach ((array)$row[0]['detalles'] as $det): ?>
+                        <?php if (!empty($det['vacio'])): ?>
+                            <tr><td><?= _("no tiene actividades") ?></td></tr>
+                        <?php else: ?>
+                            <tr>
+                                <td><?= htmlspecialchars((string)$det['nom_activ']) ?></td>
+                                <td><?= $det['ocup_sv'] ?></td>
+                                <td><?= $det['ocup_sf'] ?></td>
+                                <td><?= $det['in_sv'] ?></td>
+                                <td><?= $det['in_sf'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td><?= htmlspecialchars((string)$row[0]['nom']) ?></td><td>dlb</td>
+            <td class="derecha"><?= $row[1]['dias'] ?></td><td class="derecha"><?= $row[1]['dias%'] ?></td>
+            <td class="derecha"><?= $row[1]['asist_prev'] ?></td><td class="derecha"><?= $row[1]['asist_prev%'] ?></td>
+            <td class="derecha"><?= $row[1]['asist'] ?></td><td class="derecha"><?= $row[1]['asist%'] ?></td>
+            <td class="derecha"><?= $row[1]['in_prev_acu'] ?></td><td class="derecha"><?= $row[1]['in_prev_acu%'] ?></td>
+            <td class="derecha"><?= $row[1]['in_acu'] ?></td><td class="derecha"><?= $row[1]['in_acu%'] ?></td>
+            <td class="derecha"><?= $row[1]['gasto'] ?></td><td class="derecha"><?= $row[1]['gasto%'] ?></td>
+            <td class="derecha"><?= $row[1]['aportacion'] ?></td>
+            <td class="derecha"><?= $row[1]['superavit'] ?></td>
+        </tr>
+        <tr>
+            <td>
+                <span id="span_detalles_<?= (int)$id_ubi ?>_0" class="link" onclick="fnjs_detalles(<?= (int)$id_ubi ?>,0)">
+                    <p><?= _("mostrar detalles") ?></p>
+                    <p style="display:none"><?= _("ocultar detalles") ?></p>
+                </span>
+            </td>
+            <td>dlbf</td>
+            <td class="derecha"><?= $row[2]['dias'] ?></td><td class="derecha"><?= $row[2]['dias%'] ?></td>
+            <td class="derecha"><?= $row[2]['asist_prev'] ?></td><td class="derecha"><?= $row[2]['asist_prev%'] ?></td>
+            <td class="derecha"><?= $row[2]['asist'] ?></td><td class="derecha"><?= $row[2]['asist%'] ?></td>
+            <td class="derecha"><?= $row[2]['in_prev_acu'] ?></td><td class="derecha"><?= $row[2]['in_prev_acu%'] ?></td>
+            <td class="derecha"><?= $row[2]['in_acu'] ?></td><td class="derecha"><?= $row[2]['in_acu%'] ?></td>
+            <td class="derecha"><?= $row[2]['gasto'] ?></td><td class="derecha"><?= $row[2]['gasto%'] ?></td>
+            <td class="derecha"><?= $row[2]['aportacion'] ?></td>
+            <td class="derecha"><?= $row[2]['superavit'] ?></td>
+        </tr>
+        <tr>
+            <td></td><td><?= _("totales") ?></td>
+            <td class="derecha"><?= $row[1]['dias'] + $row[2]['dias'] ?></td><td></td>
+            <td class="derecha"><?= $row[1]['asist_prev'] + $row[2]['asist_prev'] ?></td><td></td>
+            <td class="derecha"><?= $row[1]['asist'] + $row[2]['asist'] ?></td><td></td>
+            <td class="derecha"><?= round(((float)$row[1]['in_prev_acu'] + (float)$row[2]['in_prev_acu']), 2) ?></td><td></td>
+            <td class="derecha"><?= round(((float)$row[1]['in_acu'] + (float)$row[2]['in_acu']), 2) ?></td><td></td>
+            <td class="derecha"><?= $row[0]['gasto'] ?></td><td></td>
+            <td></td>
+            <td class="derecha"><?= round(((float)$row[1]['superavit'] + (float)$row[2]['superavit']), 2) ?></td>
+        </tr>
+    <?php endforeach; ?>
+
+    <?php if (!empty($tot)): ?>
+        <tr>
+            <td rowspan="3"><?= _("totales") ?></td><td>dlb</td>
+            <td class="derecha"><?= $tot[1]['dias'] ?? 0 ?></td><td class="derecha"><?= $tot[1]['dias%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[1]['asist_prev'] ?? 0 ?></td><td class="derecha"><?= $tot[1]['asist_prev%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[1]['asist'] ?? 0 ?></td><td class="derecha"><?= $tot[1]['asist%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[1]['in_prev_acu'] ?? 0 ?></td><td class="derecha"><?= $tot[1]['in_prev_acu%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[1]['in_acu'] ?? 0 ?></td><td class="derecha"><?= $tot[1]['in_acu%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[1]['gasto'] ?? 0 ?></td><td class="derecha"><?= $tot[1]['gasto%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[1]['aportacion'] ?? 0 ?></td>
+            <td class="derecha"><?= $tot[1]['superavit'] ?? 0 ?></td>
+        </tr>
+        <tr>
+            <td>dlbf</td>
+            <td class="derecha"><?= $tot[2]['dias'] ?? 0 ?></td><td class="derecha"><?= $tot[2]['dias%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[2]['asist_prev'] ?? 0 ?></td><td class="derecha"><?= $tot[2]['asist_prev%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[2]['asist'] ?? 0 ?></td><td class="derecha"><?= $tot[2]['asist%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[2]['in_prev_acu'] ?? 0 ?></td><td class="derecha"><?= $tot[2]['in_prev_acu%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[2]['in_acu'] ?? 0 ?></td><td class="derecha"><?= $tot[2]['in_acu%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[2]['gasto'] ?? 0 ?></td><td class="derecha"><?= $tot[2]['gasto%'] ?? '-' ?></td>
+            <td class="derecha"><?= $tot[2]['aportacion'] ?? 0 ?></td>
+            <td class="derecha"><?= $tot[2]['superavit'] ?? 0 ?></td>
+        </tr>
+        <tr>
+            <td><?= _("totales") ?></td>
+            <td class="derecha"><?= ((float)($tot[1]['dias'] ?? 0) + (float)($tot[2]['dias'] ?? 0)) ?></td><td></td>
+            <td class="derecha"><?= ((float)($tot[1]['asist_prev'] ?? 0) + (float)($tot[2]['asist_prev'] ?? 0)) ?></td><td></td>
+            <td class="derecha"><?= ((float)($tot[1]['asist'] ?? 0) + (float)($tot[2]['asist'] ?? 0)) ?></td><td></td>
+            <td class="derecha"><?= round((float)($tot[1]['in_prev_acu'] ?? 0) + (float)($tot[2]['in_prev_acu'] ?? 0), 2) ?></td><td></td>
+            <td class="derecha"><?= round((float)($tot[1]['in_acu'] ?? 0) + (float)($tot[2]['in_acu'] ?? 0), 2) ?></td><td></td>
+            <td class="derecha"><?= $tot[0]['gasto'] ?? 0 ?></td><td></td>
+            <td></td>
+            <td class="derecha"><?= round((float)($tot[1]['superavit'] ?? 0) + (float)($tot[2]['superavit'] ?? 0), 2) ?></td>
+        </tr>
+    <?php endif; ?>
+</table>

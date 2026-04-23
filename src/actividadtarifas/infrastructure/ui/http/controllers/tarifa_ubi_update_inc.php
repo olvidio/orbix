@@ -3,7 +3,7 @@
  * Endpoint backend: actualiza en lote las cantidades de varias
  * `TarifaUbi` desde el estudio economico de casa.
  *
- * Consumido por `apps/casas/controller/calendario_ubi_resumen_ajax.php`
+ * Consumido por `frontend/casas/controller/calendario_ubi_resumen.php`
  * y el form `frm_tarifas` dentro de `ubi_resumen.html.twig`.
  */
 

@@ -13,7 +13,7 @@ use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
  *
  * Sucesor de la rama `update_inc` del dispatcher legacy
  * `apps/actividadtarifas/controller/tarifa_ajax.php`. Consumido por
- * `apps/casas/controller/calendario_ubi_resumen_ajax.php`.
+ * `frontend/casas/controller/calendario_ubi_resumen.php`.
  */
 final class TarifaUbiUpdateInc
 {

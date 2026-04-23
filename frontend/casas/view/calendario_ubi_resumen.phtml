@@ -1,0 +1,47 @@
+<script>
+fnjs_ver = function (seccion) {
+    $('#seccion').val(seccion);
+    var url = '<?= $url_body ?>';
+    var parametros = $('#frm_que').serialize();
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: parametros,
+        success: function (rta_txt) {
+            if (rta_txt) {
+                $('#exportar').html(rta_txt);
+            }
+        }
+    });
+};
+
+fnjs_guardar = function (formulario) {
+    $('#' + formulario).attr('action', '<?= $url_tarifas ?>');
+    $.ajax({
+        url: $('#' + formulario).attr('action'),
+        type: 'post',
+        data: $('#' + formulario).serialize(),
+        dataType: 'json'
+    }).done(function (rta) {
+        if (!rta || rta.success !== true) {
+            alert((rta && rta.mensaje) ? rta.mensaje : '');
+        }
+    });
+    return false;
+};
+</script>
+<form id="frm_que" name="frm_que" action="">
+    <?= $oHash->getCamposHtml() ?>
+
+    <?= $oDesplCasas->desplegable() ?>
+
+    <?= _("incremeto id_tarifa") ?> <input type="text" size="2" name="inc_t" value="<?= $Qinc_t ?>">%
+    <?= _("incremento gasto") ?> <input type="text" size="2" name="G" value="<?= $QG ?>">%
+    <input type="hidden" id="seccion" name="seccion">
+    <br>
+    <input type="button" onclick="fnjs_ver('sf');" value="resumen sf">
+    <input type="button" onclick="fnjs_ver('sv');" value="resumen sv">
+</form>
+<div id="exportar"></div>
+<div id="div_modificar"></div>
+<div id="overlay"></div>

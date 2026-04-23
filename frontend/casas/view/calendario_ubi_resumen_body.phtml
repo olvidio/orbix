@@ -1,0 +1,164 @@
+<style>
+    td { text-align: right; }
+</style>
+<?php
+/** @var array $a_tarifas_actual */
+/** @var array $a_tarifas_prev */
+$tar_txt = '';
+$cantidad_txt = '';
+$incremento_txt = '';
+$prevision_txt = '';
+foreach ($a_tarifas_actual as $id_tarifa => $aTarifa) {
+    $tar_txt .= '<td>' . htmlspecialchars((string)$aTarifa['letra']) . '</td>';
+    $cantidad_txt .= '<td>' . htmlspecialchars((string)$aTarifa['cantidad']) . '</td>';
+    $cantidad_actual = (float)($aTarifa['cantidad'] ?? 0);
+    $cantidad_prev = (float)($a_tarifas_prev[$id_tarifa]['cantidad'] ?? 0);
+    $inc = $cantidad_actual == 0.0 ? _("no disponible") : round((($cantidad_prev / $cantidad_actual) - 1) * 100);
+    $incremento_txt .= '<td>' . $inc . '%</td>';
+}
+foreach ($a_tarifas_prev as $id_tarifa => $aTarifa) {
+    $valor = (string)($aTarifa['cantidad'] ?? '');
+    $id_item = (int)($aTarifa['id_item'] ?? 0);
+    $index = "$id_tarifa#$id_item";
+    $prevision_txt .= "<td><input type=\"text\" name=\"inc_cantidad[$index]\" size=\"4\" value=\"$valor\"></td>";
+}
+?>
+<h2 class="titulo"><?= ucfirst(sprintf(_("Estudio económico y de ocupación de %s para %s"), $nombre_ubi, $seccion)) ?></h2>
+<form id="frm_tarifas" action="">
+    <input type="hidden" name="id_ubi" value="<?= (int)$id_ubi ?>">
+    <input type="hidden" name="year" value="<?= (int)$any_prev ?>">
+    <table>
+        <tr>
+            <td><?= _("id_tarifa") ?></td>
+            <?= $tar_txt ?>
+        </tr>
+        <tr>
+            <td><?= _("actual") ?></td><?= $cantidad_txt ?>
+        </tr>
+        <tr>
+            <td><?= _("previsión") ?></td><?= $prevision_txt ?>
+        </tr>
+        <tr>
+            <td><?= _("incremento") ?></td><?= $incremento_txt ?>
+        </tr>
+        <tr>
+            <td><input type="button" onclick="fnjs_guardar('frm_tarifas');" value="grabar tarifas"></td>
+        </tr>
+    </table>
+</form>
+<p><?= sprintf(_("Para hacer una estimación de los gastos de %s, se toman los de %s que son los únicos gastos reales a 31 de diciembre."), $any_prev, $any_anterior) ?></p>
+<p><?= _("Se parte de que los gastos totales = ingresos totales. Hipótesis que es cierta si en los ingresos se consignan los procedentes de los asistentes, las multas pagadas por los ctr y las cantidades aportadas directamente por las dl para equilibrar los gastos.") ?></p>
+<p><br/></p>
+<p><span class="contenido"><?= sprintf(_("Año anterior %s"), $any_anterior) ?></span></p>
+<ul>
+    <li><span class="contenido"><?= $r_it ?> €</span> [r_it] <?= _("Ingresos totales año anterior (sv+sf)") ?></li>
+    <li><span class="contenido"><?= $r_idef ?> €</span> [r_idef] <?= _("Ingresos totales año anterior procedentes de deficits (multa)") ?></li>
+    <li><span class="contenido"><?= $r_idl ?> €</span> [r_idl] <?= _("Ingresos totales año anterior procedentes de dl") ?></li>
+    <li><span class="contenido"><?= $r_ip ?> €</span> [r_ip] <?= _("Ingresos totales año anterior procedentes de asistencias") ?></li>
+    <li><span class="contenido"><?= $r_ta ?></span> [r_Rta] <?= _("número total de asistencias") ?></li>
+</ul>
+<p></p>
+<p><span class="contenido"><?= sprintf(_("Año previsión %s"), $any_prev) ?></span></p>
+<ul>
+    <li><span class="contenido"><?= $p_dv ?></span> [p_dv] <?= _("Días de ocupación sv") ?></li>
+    <li><span class="contenido"><?= $p_df ?></span> [p_df] <?= _("Días de ocupación sf") ?></li>
+    <li><span class="contenido"><?= $plazas_min ?></span> [M] <?= _("número mínimo de asistentes") ?></li>
+    <li><span class="contenido"><?= $G ?>%</span> [G] <?= _("Incremento de gastos 2 años") ?></li>
+    <li><span class="contenido"><?= $p_ip ?></span> [p_ip] <?= $p_ip_txt ?></li>
+    <li><span class="contenido"><?= $p_ta_min ?></span> [p_ta_min] <?= $p_ta_min_txt ?></li>
+    <li><span class="contenido"><?= $p_tarifa ?> €</span> [p_tarifa] <?= _("id_tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/[p_ta]") ?></li>
+</ul>
+<table border="1">
+    <tr>
+        <td colspan="8" class="titulo"><?= _("Actividades próximo año") ?></td>
+    </tr>
+    <tr>
+        <td colspan="2"><?= _("actividad") ?></td>
+        <td><?= _("nº de días") ?></td>
+        <td><?= _("previsión de asistentes") ?></td>
+        <td><?= _("nº total de asistencias") ?></td>
+        <td><?= _("id_tarifa") ?></td>
+        <td><?= _("ingresos previstos de asistentes") ?></td>
+    </tr>
+    <?php foreach ($a_actividades as $actividad) { ?>
+        <tr>
+            <td colspan="2"><?= htmlspecialchars((string)$actividad['nom']) ?></td>
+            <td><?= $actividad['dias'] ?></td>
+            <td><?= $actividad['asistentes'] ?></td>
+            <td><?= $actividad['asistencias'] ?></td>
+            <td><?= htmlspecialchars((string)$actividad['id_tarifa']) ?></td>
+            <td><?= $actividad['ingresos'] ?></td>
+        </tr>
+    <?php } ?>
+    <tr class="total">
+        <td><?= _("total") ?> <?= $any_prev ?></td>
+        <td><?= $p_tac ?></td>
+        <td><?= $p_tda ?></td>
+        <td><?= $p_tap ?></td>
+        <td><?= $p_ta ?></td>
+        <td></td>
+        <td><?= $p_tia ?></td>
+    </tr>
+    <tr>
+        <td><?= _("total") ?> <?= $any_anterior ?></td>
+        <td><?= $r_tac ?></td>
+        <td><?= $r_tda ?></td>
+        <td><?= $r_tap ?></td>
+        <td><?= $r_ta ?></td>
+        <td></td>
+        <td><?= $p_ip ?></td>
+    </tr>
+    <tr>
+        <td><?= _("diferencia") ?></td>
+        <td><?= $p_tac - $r_tac ?></td>
+        <td><?= $p_tda - $r_tda ?></td>
+        <td><?= $p_tap - $r_tap ?></td>
+        <td><?= $p_ta - $r_ta ?></td>
+        <td></td>
+        <td><?= $p_tia - $p_ip ?></td>
+    </tr>
+</table>
+<p><?= sprintf(_("ingresos previstos por actividades: %s"), $p_tia) ?>
+    <?= sprintf(_("gastos reales del %s proyectados al %s: %s"), $any_anterior, $any_prev, $p_ip) ?></p>
+
+<h2><?= _("pistas para equilibrar la gestión") ?></h2>
+<p><?= sprintf(_("incrementar las asistencias en %s"), $inc_p) ?>
+    <?= sprintf(_("que supone %s dias de actividad"), $inc_d) ?></p>
+<p><?= sprintf(_("incrementar las tarifas en %s %%"), $inc_pt) ?></p>
+<table border="1">
+    <tr>
+        <td colspan="8" class="titulo"><?= _("Comparación con los mínimos de la casa") ?></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><?= _("nº de actividades") ?></td>
+        <td><?= _("nº de días") ?></td>
+        <td><?= _("previsión de asistentes") ?></td>
+        <td><?= _("nº total de asistencias") ?></td>
+        <td><?= _("ingresos previstos de asistentes") ?></td>
+    </tr>
+    <tr class="total">
+        <td><?= _("total según actividades") ?> <?= $any_prev ?></td>
+        <td><?= $p_tac ?></td>
+        <td><?= $p_tda ?></td>
+        <td><?= $p_tap ?></td>
+        <td><?= $p_ta ?></td>
+        <td><?= $p_tia ?></td>
+    </tr>
+    <tr class="total">
+        <td><?= htmlspecialchars((string)$total_txt) ?> <?= $any_prev ?></td>
+        <td></td>
+        <td><?= $p_dseccion ?></td>
+        <td></td>
+        <td><?= $p_ta_min ?></td>
+        <td><?= $p_ti_min ?></td>
+    </tr>
+    <tr>
+        <td><?= _("diferencia") ?></td>
+        <td></td>
+        <td><?= $dias_libres ?></td>
+        <td></td>
+        <td><?= $dif_asistencias ?></td>
+        <td><?= $dif_ingresos ?></td>
+    </tr>
+</table>

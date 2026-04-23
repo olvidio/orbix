@@ -545,4 +545,112 @@ class ActividadAll
             : IdLocale::fromNullableString($valor);
     }
 
+    /* --------------- Duraciones (en días) --------------- */
+
+    /**
+     * Duración real de la actividad en días (con decimales), calculada a partir
+     * de las horas de inicio/fin. Si no hay hora: inicio 21:00, fin 10:00.
+     */
+    public function getDuracionReal(): float
+    {
+        $oInicio = $this->f_ini_con_hora();
+        $oFin = $this->f_fin_con_hora();
+        return $oInicio->duracion($oFin);
+    }
+
+    /**
+     * Duración en días ajustada a múltiplos de 0.5.
+     */
+    public function getDuracion(): float
+    {
+        return (float)$this->f_ini_con_hora()->duracionAjustada($this->f_fin_con_hora());
+    }
+
+    /**
+     * Duración ajustada y aumentada en medio día (legacy `getDuracionAumentada`).
+     */
+    public function getDuracionAumentada(): float
+    {
+        return (float)$this->f_ini_con_hora()->duracionAjustadaAumentada($this->f_fin_con_hora());
+    }
+
+    /**
+     * Duración de la actividad en días, recortada al periodo indicado.
+     * Sucesor del legacy `getDuracionEnPeriodo` de apps.
+     */
+    public function getDuracionEnPeriodo(DateTimeLocal $oIniPeriodo, DateTimeLocal $oFinPeriodo): float
+    {
+        $num_dias = $this->getDuracionReal();
+
+        $oIniPeriodo = clone $oIniPeriodo;
+        $oFinPeriodo = clone $oFinPeriodo;
+        $oIniPeriodo->setTime(0, 0, 0);
+        $oFinPeriodo->setTime(23, 59, 59);
+
+        $oInicio = $this->f_ini_con_hora();
+        $oFin = $this->f_fin_con_hora();
+
+        if ($oInicio < $oIniPeriodo) {
+            $interval = $oIniPeriodo->diff($oFin);
+            $horas = $interval->format('%a') * 24
+                + $interval->format('%h')
+                + $interval->format('%i') / 60
+                + $interval->format('%s') / 3600;
+            $num_dias = round($horas / 24, 2);
+        }
+        if ($oFin > $oFinPeriodo) {
+            $interval = $oInicio->diff($oFinPeriodo);
+            $horas = $interval->format('%a') * 24
+                + $interval->format('%h')
+                + $interval->format('%i') / 60
+                + $interval->format('%s') / 3600;
+            $num_dias = round($horas / 24, 2);
+        }
+        return (float)$num_dias;
+    }
+
+    private function f_ini_con_hora(): DateTimeLocal
+    {
+        $oIni = $this->getF_ini();
+        if (!$oIni instanceof DateTimeLocal) {
+            $oIni = new DateTimeLocal();
+        }
+        $oIni = clone $oIni;
+        $hIni = $this->h_ini_txt('21:00:00');
+        [$h, $m, $s] = array_pad(explode(':', $hIni), 3, '0');
+        $oIni->setTime((int)$h, (int)$m, (int)$s);
+        return $oIni;
+    }
+
+    private function f_fin_con_hora(): DateTimeLocal
+    {
+        $oFin = $this->getF_fin();
+        if (!$oFin instanceof DateTimeLocal) {
+            $oFin = new DateTimeLocal();
+        }
+        $oFin = clone $oFin;
+        $hFin = $this->h_fin_txt('10:00:00');
+        [$h, $m, $s] = array_pad(explode(':', $hFin), 3, '0');
+        $oFin->setTime((int)$h, (int)$m, (int)$s);
+        return $oFin;
+    }
+
+    private function h_ini_txt(string $default): string
+    {
+        return $this->time_txt($this->getH_ini(), $default);
+    }
+
+    private function h_fin_txt(string $default): string
+    {
+        return $this->time_txt($this->getH_fin(), $default);
+    }
+
+    private function time_txt(?TimeLocal $h, string $default): string
+    {
+        if ($h === null || $h instanceof NullTimeLocal) {
+            return $default;
+        }
+        $txt = $h->toDatabaseString();
+        return $txt === '' ? $default : $txt;
+    }
 }

@@ -106,20 +106,20 @@ id_grupmenu,?column?,url,parametros,id_mod
 4,lista docs con observ. (Lista doscumentos con observaciones),frontend/inventario/controller/docs_con_observaciones.php,,28
 4,traslado de doc (Traslado Documentos),frontend/inventario/controller/traslado_doc_que.php,,28
 7,Planing Casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
-7,listado gerentes (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
-7,Gestión económica (Casa que),apps/casas/controller/casa_que.php,,27
-7,gastos casas (Casa que),apps/casas/controller/casa_que.php,tipo_lista=datosEcGastos,27
-7,estadística  por casas (Casa resumen),apps/casas/controller/casas_resumen.php,tipo=planning_cdc&ssfsv=sf,27
-7,estadística por años (Casa ec que),apps/casas/controller/casa_ec_que.php,,27
-7,grupos (Grupo Casas),apps/casas/controller/grupo_lista.php,,27
+7,listado gerentes (Casa que),frontend/casas/controller/casa.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
+7,Gestión económica (Casa que),frontend/casas/controller/casa.php,,27
+7,gastos casas (Casa que),frontend/casas/controller/casa.php,tipo_lista=datosEcGastos,27
+7,estadística  por casas (Casa resumen),frontend/casas/controller/casa_resumen.php,tipo=planning_cdc&ssfsv=sf,27
+7,estadística por años (Casa ec que),frontend/casas/controller/casa_ec.php,,27
+7,grupos (Grupo Casas),frontend/casas/controller/grupo.php,,27
 7,Definir periodos (Calendario Periodos),frontend/ubis/controller/calendario_periodos.php,,5
 7,nuevo planing (Calendario que),frontend/actividades/controller/calendario_que.php,,5
 7,Cases comunes (calendario listas),frontend/actividades/controller/calendario_listas.php,que=c_comunes&ver_ctr=si,5
 7,listados de todas las casas (calendario listas),frontend/actividades/controller/calendario_listas.php,que=c_todas&ver_ctr=si,5
 7,listado por oficinas (calendario listas),frontend/actividades/controller/calendario_listas.php,que=o_todas&ver_ctr=si,5
-7,Estadística por años (Casa ec que),apps/casas/controller/casa_ec_que.php,periodo=no&tipo_lista=datosEc,27
-7,Previsión económica (Ubi resumen ec),apps/casas/controller/calendario_ubi_resumen.php,,27
-7,previsión asistentes (prevision asistentes),apps/casas/controller/prevision_asistentes.php,,27
+7,Estadística por años (Casa ec que),frontend/casas/controller/casa_ec.php,periodo=no&tipo_lista=datosEc,27
+7,Previsión económica (Ubi resumen ec),frontend/casas/controller/calendario_ubi_resumen.php,,27
+7,previsión asistentes (prevision asistentes),frontend/casas/controller/prevision_asistentes.php,,27
 7,definir tarifa (Tarifa definir),frontend/actividadtarifas/controller/tarifa.php,,5
 7,tarifa <-> tipo de actividad (Tipo tarifa),frontend/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
 7,tarifas por casa y año (actividad Tarifa Ubi),frontend/actividadtarifas/controller/tarifa_ubi.php,,5
@@ -225,16 +225,16 @@ id_grupmenu,?column?,url,parametros,id_mod
 9,casas (Raiz activ1),,,5
 9,buscar (buscar ubis),frontend/ubis/controller/ubis_buscar.php,simple=1&tipo=tot&loc=tot,3
 9,planning por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
-9,listado gerentes (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
-9,lista actividades (Casa que),apps/casas/controller/casa_que.php,periodo=tot_any&tipo_lista=lista_activ,27
-9,gastos casa (Casa que),apps/casas/controller/casa_que.php,tipo_lista=datosEcGastos,27
-9,Gestión económica (Casa que),apps/casas/controller/casa_que.php,,27
+9,listado gerentes (Casa que),frontend/casas/controller/casa.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
+9,lista actividades (Casa que),frontend/casas/controller/casa.php,periodo=tot_any&tipo_lista=lista_activ,27
+9,gastos casa (Casa que),frontend/casas/controller/casa.php,tipo_lista=datosEcGastos,27
+9,Gestión económica (Casa que),frontend/casas/controller/casa.php,,27
 9,definir tarifa (Tarifa definir),frontend/actividadtarifas/controller/tarifa.php,,5
 9,tarifa <-> tipo de actividad (Tipo tarifa),frontend/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
 9,tarifas por casa y año (actividad Tarifa Ubi),frontend/actividadtarifas/controller/tarifa_ubi.php,,5
 9,activ -> tarifa (Tarifa definir),frontend/actividadtarifas/controller/tarifa.php,,5
 9,buscar (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver,5
-9,lista por casas (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
+9,lista por casas (Casa que),frontend/casas/controller/casa.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
 10,s de la r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_supernumerarios,1
 10,Actualizar datos desde BDU (Sincronizar con los datos de Listas),apps/dbextern/controller/sincro_index.php,tipo=s,9
 10,lista ctr i nº s (lista ctr sg),frontend/ubis/controller/lista_ctrs.php,,1
@@ -410,7 +410,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 20,publicar activ (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver&modo=publicar,5
 20,nueva activ (actividad nueva),frontend/actividades/controller/actividad_ver.php,,5
 20,listas sg (Lista Activ que),frontend/actividades/controller/lista_activ_que.php,que=list_activ_inv_sg,6
-20,listas gerentes (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
+20,listas gerentes (Casa que),frontend/casas/controller/casa.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
 20,asignar centros (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,,20
 20,sf s y sg (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sfsg,20
 20,sf sr (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sfsr,20
@@ -426,8 +426,8 @@ id_grupmenu,?column?,url,parametros,id_mod
 20,definir tarifa (Tarifa actividades),frontend/actividadtarifas/controller/tarifa.php,,5
 20,tarifa <-> tipo de actividad (Tipo tarifa),frontend/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
 20,tarifas por casa y año (actividad Tarifa Ubi),frontend/actividadtarifas/controller/tarifa_ubi.php,,5
-20,Previsión económica (Ubi resumen ec),apps/casas/controller/calendario_ubi_resumen.php,,27
-20,Previsión asistentes (prevision asistentes),apps/casas/controller/prevision_asistentes.php,,27
+20,Previsión económica (Ubi resumen ec),frontend/casas/controller/calendario_ubi_resumen.php,,27
+20,Previsión asistentes (prevision asistentes),frontend/casas/controller/prevision_asistentes.php,,27
 21,n r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
 21,agd r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
 21,profesor para asignatura (profesores para asignatura),frontend/profesores/controller/profesor_asignatura_que.php,,4

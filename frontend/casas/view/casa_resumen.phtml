@@ -1,0 +1,47 @@
+<script>
+fnjs_mas_casas = function (e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (e === 'x') {
+        var valor = 1;
+    } else {
+        var id_campo = '#' + e.currentTarget.id;
+        var valor = $(id_campo).val();
+        if (code !== 9) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+    if (code === 9 || e.type === 'change' || e === 'x') {
+        if (valor != 0) {
+            <?= $oSelects->ListaSelectsJs() ?>
+        }
+    }
+};
+<?= $oSelects->ComprobarSelectJs() ?>
+
+fnjs_detalles = function (id_ubi, any) {
+    var id = '#detalles_' + id_ubi + '_' + any;
+    var span_id = '#span_detalles_' + id_ubi + '_' + any;
+    $(id).toggle();
+    $(span_id + ' p').toggle();
+};
+
+fnjs_ver = function () {
+    var pata = $('#seleccion').serialize();
+    $.ajax({
+        url: '<?= $url_ajax ?>',
+        type: 'post',
+        data: pata,
+        success: function (rta_txt) {
+            if (rta_txt) {
+                $('#exportar').html(rta_txt);
+            }
+        }
+    });
+};
+</script>
+<form id="seleccion" name="seleccion" action="">
+<?= $oHash->getCamposHtml() ?>
+<?= $oFormP->getHtml() ?>
+</form>
+<div id="exportar"></div>

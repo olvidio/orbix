@@ -1,0 +1,36 @@
+<?php
+/**
+ * Vista de `prevision_asistentes`: formulario de filtro + tabla
+ * editable. El submit del filtro recarga la pantalla en `#main`; la
+ * edición inline de celdas la gestiona `TablaEditable`.
+ *
+ * @var \web\TablaEditable $oTabla
+ * @var \web\PeriodoQue $oFormP
+ * @var \web\Hash $oHash
+ * @var string $titulo
+ * @var string $url_filtro
+ */
+?>
+<script>
+    var URL_FILTRO = <?= json_encode($url_filtro) ?>;
+
+    fnjs_buscar = function () {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $('#periodo_form').attr('action', URL_FILTRO);
+        $('#periodo_form').append(campo);
+        fnjs_enviar_formulario('#periodo_form', '#main');
+    };
+    fnjs_left_side_hide();
+</script>
+
+<form id="periodo_form" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <?= $oFormP->getHtml() ?>
+</form>
+
+<p>
+    <h3><?= htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') ?></h3>
+    <?= _("editar celdas con doble click") ?>
+</p>
+<br>
+<?= $oTabla->mostrar_tabla() ?>

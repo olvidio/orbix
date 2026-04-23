@@ -9,6 +9,7 @@ use core\Set;
 use PDO;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\casas\domain\entity\UbiGasto;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
 
 
@@ -101,6 +102,28 @@ class PgUbiGastoRepository extends ClaseRepository implements UbiGastoRepository
             $UbiGastoSet->add($UbiGasto);
         }
         return $UbiGastoSet->getTot();
+    }
+
+    public function getSumaGastos(int $id_ubi, int $tipo, DateTimeLocal $oInicio, DateTimeLocal $oFin): float
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $sQry = "SELECT COALESCE(SUM(cantidad), 0) FROM $nom_tabla
+                WHERE id_ubi = :id_ubi AND tipo = :tipo AND f_gasto BETWEEN :inicio AND :fin";
+        $stmt = $this->prepareAndExecute(
+            $oDbl,
+            $sQry,
+            [
+                'id_ubi' => $id_ubi,
+                'tipo' => $tipo,
+                'inicio' => $oInicio->getIso(),
+                'fin' => $oFin->getIso(),
+            ],
+            __METHOD__,
+            __FILE__,
+            __LINE__
+        );
+        return (float) $stmt->fetchColumn();
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
