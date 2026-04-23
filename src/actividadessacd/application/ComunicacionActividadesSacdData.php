@@ -133,7 +133,7 @@ final class ComunicacionActividadesSacdData
             $id_role = $oMiUsuario->getId_role();
             $aRoles = $RoleRepository->getArrayRoles();
             if (!empty($aRoles[$id_role]) && $aRoles[$id_role] === 'p-sacd') {
-                $id_nom = (int)$oMiUsuario->getCsv_id_pau();
+                $id_nom = (int)$oMiUsuario->getCsvIdPauAsString();
                 $que = 'un_sacd';
             }
         }
