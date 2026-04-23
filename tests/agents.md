@@ -45,10 +45,29 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 - Tests que **inserten** en BD: usar nombres o fechas **únicos** donde haga falta; en **`finally`**, borrar actividades / plazas / entidades creadas para no contaminar otras pruebas.
 - Al manipular configuración o sesión, **siempre** restaurar estado en **`finally`**.
 
+## Ramas condicionadas por rol de usuario
+
+- Los use cases que discriminan por **rol del usuario en sesión** (`RoleRepository::getArrayRoles()` + `Usuario::getId_role()`) deben tener al menos un test por rama de rol. PHP no detecta typos en nombres de método hasta ejecutar la rama exacta, así que sin un test específico bugs como `Usuario::getCsv_id_pau()` (el getter correcto es `getCsvIdPauAsString()` / `getCsvIdPauVo()`) solo revientan en producción cuando entra un usuario con ese rol.
+- Patrón recomendado (unitario, sin `myTest`):
+  - Mockear **`UsuarioRepositoryInterface`** para que `findById($id)` devuelva una entidad `Usuario` con `id_role` y los VOs poblados (`setCsvIdPauVo(...)`, etc.).
+  - Mockear **`RoleRepositoryInterface`** con `getArrayRoles()` devolviendo `[id_role => 'nombre_rol']`.
+  - Inyectar ambos en un **contenedor DI minimal** (ver abajo).
+- Añade también un **control negativo** (rol distinto) y un test para **`findById()===null`** que verifique que el código no explota si el usuario no se encuentra.
+
+## Unitarios sobre use cases con `ConfigGlobal` / sesión
+
+- Un use case en `application/` que solo consulta 2–4 repos + `ConfigGlobal::mi_id_usuario()` / `mi_delef()` **sigue siendo unitariable** sin arrancar `myTest` (BD real, DI completo). Patrón:
+  - Extender **`PHPUnit\Framework\TestCase`** directamente.
+  - En `setUp`, guardar `$GLOBALS['container']` y `$_SESSION` previos; en `tearDown`, restaurarlos (`unset` si eran `null`).
+  - Montar **`$_SESSION['session_auth']`** mínimo con las claves que realmente lee el código bajo prueba (p. ej. `id_usuario`, `esquema`, `sfsv`, `idioma`). No copiar el setup completo de `myTest`.
+  - Para `DateTimeLocal::getFormat()` basta con **`$_SESSION['session_auth']['idioma'] = 'ca'`** (o similar): evita tener que construir `$_SESSION['oConfig']`.
+  - Usar un **contenedor anónimo** con `get(string $id)` que lance `RuntimeException` si se pide una clase no mapeada: así cualquier dependencia olvidada se ve al instante.
+- Esto mantiene el test **rápido** (sin PDO, sin views, sin refresco de matviews) y **determinista**, que es el objetivo de la fase "unitarios donde compense" de `refactor.md`.
+
 ## Ejecutar PHPUnit
 
 - Desde la raíz del proyecto: **`libs/vendor/bin/phpunit`**, con ruta al fichero o directorio de tests según `phpunit.xml`.
 
 ---
 
-*Última actualización: criterios alineados con tests de integración en `tests/integration/actividades/application/` y bootstrap en `tests/myTest.php`.*
+*Última actualización: criterios alineados con tests de integración en `tests/integration/actividades/application/`, unitarios de `tests/unit/actividadessacd/application/` y bootstrap en `tests/myTest.php`.*
