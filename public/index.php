@@ -53,9 +53,13 @@ $anonymousSrcRoutes = [
     '/src/usuarios/usuario_ayuda_info',
     '/src/usuarios/recuperar_password_mail',
     '/src/usuarios/recuperar_2fa_mail',
+    '/src/usuarios/app_login',
+    '/src/usuarios/app_session',
     '/src/usuarios/infrastructure/ui/http/controllers/usuario_ayuda_info.php',
     '/src/usuarios/infrastructure/ui/http/controllers/recuperar_password_mail.php',
     '/src/usuarios/infrastructure/ui/http/controllers/recuperar_2fa_mail.php',
+    '/src/usuarios/infrastructure/ui/http/controllers/app_login.php',
+    '/src/usuarios/infrastructure/ui/http/controllers/app_session.php',
 ];
 $requestRoute = '';
 if (isset($_GET['r']) && is_string($_GET['r']) && str_starts_with($_GET['r'], '/src/')) {

@@ -8,6 +8,13 @@ return static function ($r) {
     // se mapea a la ruta /usuarios/<nombre_archivo_sin_php>
     // Permitimos GET y POST para máxima compatibilidad durante la migración.
 
+    $r->addRoute(['GET', 'POST'], '/src/usuarios/app_login', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/app_login.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/usuarios/app_session', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/app_session.php';
+    });
+
     $r->addRoute(['GET','POST'], '/src/usuarios/borrar_pwd', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/borrar_pwd.php';
     });
