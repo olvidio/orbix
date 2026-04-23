@@ -158,6 +158,7 @@ Linea de trabajo: **frontend** delgado (`PostRequest` + vistas) y **src** con ca
 - En `apps/<modulo>/controller`, preferir wrappers minimos que deleguen a `frontend/...`.
 - Si se necesita preservar temporalmente logica antigua para consulta o rollback, moverla a archivos con prefijo `z...` y dejar claro que no son rutas canonicas.
 - Rutas canonicas para nuevas llamadas: siempre `frontend/...` (UI) y `/src/...` (API).
+- **No tocar las clases `Info*.php` de `apps/<modulo>/model/`** (`Info3010`, `Info1011`, …). Son metadatos de dossier (`extends core\DatosInfo` con `getId_dossier()`, titulos, textos, clase y metodo gestor) que el sistema de dossiers resuelve dinamicamente por numero. Aunque parezcan huerfanas (`rg` no siempre encuentra callers estaticos), son usadas en runtime y **no** deben moverse ni eliminarse durante un refactor de la pantalla; se mantienen en `apps/<modulo>/model/` tal cual.
 
 ## Bloques heredados encapsulados en `src/<modulo>/application/legacy/`
 

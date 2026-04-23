@@ -40,7 +40,7 @@ fnjs_tipo_activ_parseRta=function(json){
 		return null;
 	}
 	try {
-		return JSON.parse(json.data);
+		return (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
 	} catch (e) {
 		return {};
 	}

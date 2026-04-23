@@ -67,7 +67,7 @@
 129	\N	programas/lista_activ_sg_que.php	\N	\N
 134	\N	scdl/registro/mod_ini.php	\N	\N
 135	\N	sg/que_resumen.php	\N	\N
-39	20	apps/actividadessacd/controller/activ_sacd.php	\N	Atención sacd
+39	20	frontend/actividadessacd/controller/activ_sacd.php	\N	Atención sacd
 7	5	frontend/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
 23	21	apps/encargossacd/controller/que_tipo_de_encargo.php	\N	Tipo de encargo
 14	21	apps/encargossacd/controller/sacd_ficha.php	\N	Encargo sacd ficha
@@ -142,7 +142,7 @@
 169	8	apps/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
 172	8	apps/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
 170	8	apps/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
-43	20	apps/actividadescentro/controller/activ_ctr.php	\N	actividades centro
+43	20	frontend/actividadescentro/controller/activ_ctr.php	\N	actividades centro
 166	2	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
 17	2	apps/devel/controller/db_que.php	\N	nuevo esquema
 171	4	frontend/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
@@ -169,8 +169,8 @@
 190	3	\N	\N	Raiz ubis
 191	25	\N	\N	Raiz cartas presentacion
 146	3	frontend/ubis/controller/centros_que.php	\N	Centros seleccionar
-28	20	apps/actividadessacd/controller/com_sacd_activ_periodo.php	\N	Comunicación activ sacd
-18	20	apps/actividadessacd/controller/asignar_sacd_auto.php	\N	Auto asignar sacd a actividades
+28	20	frontend/actividadessacd/controller/com_sacd_activ_periodo.php	\N	Comunicación activ sacd
+18	20	frontend/actividadessacd/controller/asignar_sacd_auto.php	\N	Auto asignar sacd a actividades
 46	26	apps/cambios/controller/avisos_generar_tabla.php	\N	avisos generar tabla
 143	6	frontend/actividades/controller/lista_activ_que.php	\N	Lista Activ que
 44	11	frontend/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad

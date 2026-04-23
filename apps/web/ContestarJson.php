@@ -8,18 +8,27 @@ class ContestarJson
 {
 
     /**
-     * codifica la clave 'data' del array con json_encode
+     * Envía JSON. Si `data` no es string, se serializa con `json_encode` (sin
+     * JSON_FORCE_OBJECT) para que arrays sigan siendo `[]` en el payload.
+     * Así el envelope sigue siendo `{ "data": "<string JSON>" }` y el cliente
+     * puede seguir usando `JSON.parse(rta.data)` donde ya lo hace.
+     *
      * @param array $jsondata
      * @return void
      */
     static public function send(array $jsondata): void
     {
-        $jsondata['data'] = json_encode($jsondata['data'],  JSON_FORCE_OBJECT);
+        if (array_key_exists('data', $jsondata) && !is_string($jsondata['data'])) {
+            $jsondata['data'] = json_encode($jsondata['data']);
+        }
         (new JsonResponse($jsondata))->send();
     }
 
     /**
-     * codifica la clave 'data' del array con json_encode
+     * Respuesta estándar `{success, mensaje?, data}`.
+     * `data` estructurado (array) se expone como string JSON escapado en el
+     * cuerpo (compatibilidad); `data` ya string (p. ej. `'ok'`) no se vuelve a codificar.
+     *
      * @param string $error_txt
      * @param string|array $data
      * @return void
@@ -27,9 +36,9 @@ class ContestarJson
     static public function enviar(string $error_txt = '', string|array $data = 'ok'): void
     {
         $jsondata = self::respuestaPhp($error_txt, $data);
-
-        $jsondata['data'] = json_encode($jsondata['data'],  JSON_FORCE_OBJECT);
-
+        if (!is_string($jsondata['data'])) {
+            $jsondata['data'] = json_encode($jsondata['data']);
+        }
         (new JsonResponse($jsondata))->send();
     }
 

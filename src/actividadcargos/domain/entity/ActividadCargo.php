@@ -46,7 +46,7 @@ class ActividadCargo extends Entity
      *
      * @var bool
      */
-    private bool $puede_agd;
+    private bool $puede_agd = false;
     /**
      * Observ de ActividadCargo
      *

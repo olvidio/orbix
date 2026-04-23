@@ -164,32 +164,32 @@ id_grupmenu,?column?,url,parametros,id_mod
 8,importar activ (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver&modo=importar,5
 8,publicar activ (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver&modo=publicar,5
 8,nueva activ (actividad nueva),frontend/actividades/controller/actividad_ver.php,,5
-8,comunic. sacd (Comunicación activ sacd),apps/actividadessacd/controller/com_sacd_activ_periodo.php,,20
+8,comunic. sacd (Comunicación activ sacd),frontend/actividadessacd/controller/com_sacd_activ_periodo.php,,20
 8,listas sg (Lista Activ que),frontend/actividades/controller/lista_activ_que.php,que=list_activ_inv_sg,6
-8,asignar centros (actividades centro),apps/actividadescentro/controller/activ_ctr.php,,20
-8,activ sg (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sg,20
-8,activ sr (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sr,20
-8,sv n y agd (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=nagd,20
-8,sf s y sg (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sfsg,20
-8,sf sr (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sfsr,20
-8,"sf n, nax y agd (actividades centro)",apps/actividadescentro/controller/activ_ctr.php,tipo=sfnagd,20
-8,sss+ (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sssc,20
+8,asignar centros (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,,20
+8,activ sg (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sg,20
+8,activ sr (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sr,20
+8,sv n y agd (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=nagd,20
+8,sf s y sg (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sfsg,20
+8,sf sr (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sfsr,20
+8,"sf n, nax y agd (actividades centro)",frontend/actividadescentro/controller/activ_ctr.php,tipo=sfnagd,20
+8,sss+ (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sssc,20
 8,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,,11
 8,sssc (Raiz activ1),,,5
 8,buscar activ (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver&ssfsv=sv&sasistentes=sss%2B,5
 8,propuesta cl cv (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=sss+&sactividad=cv&que=list_cjto,5
 8,planing zonas (Planning por zonas),frontend/planning/controller/planning_zones_que.php,propuesta=true,24
-8,lista activ. sacd (Comunicación activ sacd),apps/actividadessacd/controller/com_sacd_activ_periodo.php,propuesta=true,20
-8,asignar sacd (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,,20
-8,activ sv sg (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=sg&periodo=desdeHoy,20
-8,activ sv sr (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=sr,20
-8,activ sv n y agd (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=na,20
-8,activ sf sg (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=sf_sg,20
-8,activ sf sr (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=sf_sr,20
-8,"activ sf n,nax y agd (Atención sacd)",apps/actividadessacd/controller/activ_sacd.php,tipo=sf_na,20
-8,activ sss+ (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=sssc,20
-8,falta sacd (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=falta_sacd,20
-8,solapes (Atención sacd),apps/actividadessacd/controller/activ_sacd.php,tipo=solape,20
+8,lista activ. sacd (Comunicación activ sacd),frontend/actividadessacd/controller/com_sacd_activ_periodo.php,propuesta=true,20
+8,asignar sacd (Atención sacd),frontend/actividadessacd/controller/activ_sacd.php,,20
+8,activ sv sg (Atención sacd),frontend/actividadessacd/controller/activ_sacd.php,tipo=sg&periodo=desdeHoy,20
+8,activ sv sr (Atención sacd),frontend/actividadessacd/controller/activ_sacd.php,tipo=sr,20
+8,activ sv n y agd (Atención sacd),frontend/actividadessacd/controller/activ_sacd.php,tipo=na,20
+8,activ sf sg (Atención sacd),frontend/actividadessacd/controller/activ_sacd.php,tipo=sf_sg,20
+8,activ sf sr (Atención sacd),frontend/actividadessacd/controller/activ_sacd.php,tipo=sf_sr,20
+8,"activ sf n,nax y agd (Atención sacd)",frontend/actividadessacd/controller/activ_sacd.php,tipo=sf_na,20
+8,activ sss+ (Atención sacd),frontend/actividadessacd/controller/activ_sacd.php,tipo=sssc,20
+8,falta sacd (Atención sacd),frontend/actividadessacd/controller/activ_sacd.php,tipo=falta_sacd,20
+8,solapes (Atención sacd),frontend/actividadessacd/controller/activ_sacd.php,tipo=solape,20
 8,Encargos (Raiz encargos sacd),,,21
 8,propuestas (propuestas encargos sacd),apps/encargossacd/controller/propuestas_menu.php,,21
 8,ficha ctr (Ficha encargos ctr),frontend/encargossacd/controller/ctr_ficha.php,,21
@@ -221,7 +221,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 8,aaaaaaaaaaaaa (llista de modul misas),frontend/misas/controller/misas_index.php,,31
 8,resto (listas de matriculas),apps/actividadestudios/controller/matriculas_lista.php,,7
 9,planning zonas (Planning por zonas),frontend/planning/controller/planning_zones_que.php,,24
-9,atención actividades (Comunicación activ sacd),apps/actividadessacd/controller/com_sacd_activ_periodo.php,,20
+9,atención actividades (Comunicación activ sacd),frontend/actividadessacd/controller/com_sacd_activ_periodo.php,,20
 9,casas (Raiz activ1),,,5
 9,buscar (buscar ubis),frontend/ubis/controller/ubis_buscar.php,simple=1&tipo=tot&loc=tot,3
 9,planning por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
@@ -260,7 +260,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 10,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,"sasistentes=s,sg&sactividad=crt",8
 10,Balance de plazas (Balance de Plazas),apps/actividadplazas/controller/plazas_balance_que.php,sasistentes=s&sactividad=crt,8
 10,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=s&sactividad=crt,11
-10,actividades-centros (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sg,20
+10,actividades-centros (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sg,20
 10,n r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
 10,n de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona,1
 10,agd r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_agregados&tipo=persona,1
@@ -367,7 +367,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 15,buscar crt (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=sr&sactividad=crt,5
 15,tabla de crt (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=list_activ&ssfsv=sv&sasistentes=sr&sactividad=crt,5
 15,listado csv (Activ Sr Que (csv)),frontend/actividades/controller/lista_sr_csv_que.php,,6
-15,actividades-centros (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sr,20
+15,actividades-centros (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sr,20
 15,por ctr (planning ctr),frontend/planning/controller/planning_ctr_que.php,,6
 15,por casas (Planing Casa),frontend/planning/controller/planning_casa_que.php,,6
 15,por zonas (Planning por zonas),frontend/planning/controller/planning_zones_que.php,,24
@@ -411,10 +411,10 @@ id_grupmenu,?column?,url,parametros,id_mod
 20,nueva activ (actividad nueva),frontend/actividades/controller/actividad_ver.php,,5
 20,listas sg (Lista Activ que),frontend/actividades/controller/lista_activ_que.php,que=list_activ_inv_sg,6
 20,listas gerentes (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
-20,asignar centros (actividades centro),apps/actividadescentro/controller/activ_ctr.php,,20
-20,sf s y sg (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sfsg,20
-20,sf sr (actividades centro),apps/actividadescentro/controller/activ_ctr.php,tipo=sfsr,20
-20,"sf n, nax y agd (actividades centro)",apps/actividadescentro/controller/activ_ctr.php,tipo=sfnagd,20
+20,asignar centros (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,,20
+20,sf s y sg (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sfsg,20
+20,sf sr (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sfsr,20
+20,"sf n, nax y agd (actividades centro)",frontend/actividadescentro/controller/activ_ctr.php,tipo=sfnagd,20
 20,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,,11
 20,ver lista cambios (avisos generar),apps/cambios/controller/avisos_generar.php,,26
 20,nuevo planing (Calendario que),frontend/actividades/controller/calendario_que.php,,5

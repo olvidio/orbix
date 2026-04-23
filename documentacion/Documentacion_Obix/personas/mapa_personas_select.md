@@ -11,7 +11,7 @@ flowchart TD
     apps_personas_view_personas_select_phtml --> apps_dossiers_controller_dossiers_ver_php(["dossiers_ver.php"]):::controller
     apps_personas_view_personas_select_phtml --> apps_personas_controller_personas_editar_php(["personas_editar.php"]):::controller
     apps_personas_view_personas_select_phtml --> apps_notas_controller_tessera_ver_php(["tessera_ver.php"]):::controller
-    apps_personas_view_personas_select_phtml --> apps_actividadessacd_controller_com_sacd_activ_php(["com_sacd_activ.php"]):::controller
+    apps_personas_view_personas_select_phtml --> apps_actividadessacd_controller_com_sacd_activ_php(["com_sacd_activ_periodo.php (frontend)"]):::controller
     apps_personas_view_personas_select_phtml --> apps_actividadestudios_controller_ca_posibles_php(["ca_posibles.php"]):::controller
     apps_personas_view_personas_select_phtml --> apps_actividadplazas_controller_peticiones_activ_php(["peticiones_activ.php"]):::controller
     apps_personas_view_personas_select_phtml --> apps_notas_controller_tessera_imprimir_php(["tessera_imprimir.php"]):::controller
@@ -30,8 +30,7 @@ flowchart TD
     apps_personas_view_traslado_form_phtml --> apps_dossiers_controller_dossiers_ver_php(["dossiers_ver.php"]):::controller
     apps_personas_view_traslado_form_phtml --> apps_personas_controller_home_persona_php(["home_persona.php"]):::controller
     %% DESTÍ NO RESOLT des de apps_personas_view_traslado_form_phtml: $oHash->getCamposHtml(); [DESTÍ NO RESOLT]
-    apps_actividadessacd_controller_com_sacd_activ_php(["com_sacd_activ.php"]):::controller --> apps_actividadessacd_view_com_un_sacd_activ_print_phtml[["com_un_sacd_activ_print.phtml"]]:::vista
-    apps_actividadessacd_view_com_un_sacd_activ_print_phtml --> apps_actividadessacd_controller_com_sacd_activ_php(["com_sacd_activ.php"]):::controller
+    apps_actividadessacd_controller_com_sacd_activ_php --> frontend_actividadessacd_view_com_sacd_activ_periodo_phtml[["com_sacd_activ_periodo.phtml (frontend)"]]:::vista
     apps_actividadestudios_controller_ca_posibles_php(["ca_posibles.php"]):::controller --> apps_actividadestudios_view_ca_posibles_lista_phtml[["ca_posibles_lista.phtml"]]:::vista
     apps_actividadestudios_view_ca_posibles_lista_phtml --> apps_dossiers_controller_dossiers_ver_php(["dossiers_ver.php"]):::controller
     apps_actividadplazas_controller_peticiones_activ_php(["peticiones_activ.php"]):::controller --> apps_actividadplazas_view_peticiones_activ_phtml[["peticiones_activ.phtml"]]:::vista

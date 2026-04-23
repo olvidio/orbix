@@ -170,7 +170,7 @@
             if (json.success !== true) {
                 alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
             } else {
-                let dataAsObject = JSON.parse(json.data);
+                let dataAsObject = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                 let id_item_egm = dataAsObject.id_item_egm;
                 fnjs_lista_docs(id_grupo, 'cabecera', id_item_egm);
             }

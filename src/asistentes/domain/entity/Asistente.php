@@ -45,13 +45,13 @@ class Asistente extends Entity implements AggregateRoot
 
     private ?bool $propio;
 
-    private ?bool $est_ok;
+    private ?bool $est_ok = false;
 
-    private ?bool $cfi;
+    private ?bool $cfi = false;
 
     private ?int $cfi_con = null;
 
-    private ?bool $falta;
+    private ?bool $falta = false;
 
     private ?AsistenteEncargo $encargo = null;
 

@@ -163,7 +163,7 @@
     .done(function (json) {
     if (!json || json.success !== true) { return; }
     try {
-        var data = JSON.parse(json.data);
+        var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
         $('#lst_lugar').html(fnjs_construir_desplegable_lugar(data));
     } catch (e) {}
 });
@@ -180,7 +180,7 @@
             .done(function (json) {
                 if (!json || json.success !== true) { return; }
                 try {
-                    var data = JSON.parse(json.data);
+                    var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                     $('#filtros_extra').html(data.html || '');
                 } catch (e) {}
             });

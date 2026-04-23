@@ -72,7 +72,7 @@
                 // Throw an error to be caught by the catch block
                 throw new Error(jsonResponse.mensaje || "Error en la respuesta del servidor.");
             } else {
-                let data = JSON.parse(jsonResponse.data);
+                let data = (typeof jsonResponse.data === 'string') ? JSON.parse(jsonResponse.data) : jsonResponse.data;
                 if (Object.keys(data).length !== 0) {
                     fnjs_put_desplegable_lugares('id_ubi_new', data);
                 } else {
@@ -97,7 +97,7 @@
                 alert("<?= _("respuesta") ?>" + ': ' + jsonResponse.mensaje);
                 throw new Error(jsonResponse.mensaje || "Error en la respuesta del servidor.");
             } else {
-                let data = JSON.parse(jsonResponse.data);
+                let data = (typeof jsonResponse.data === 'string') ? JSON.parse(jsonResponse.data) : jsonResponse.data;
                 if (Object.keys(data).length !== 0) {
                     fnjs_put_desplegable_lugares('id_ubi', data);
                 } else {

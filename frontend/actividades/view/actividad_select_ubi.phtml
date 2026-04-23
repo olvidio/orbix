@@ -145,7 +145,7 @@ use core\ConfigGlobal;
             .done(function (json) {
                 if (!json || json.success !== true) { return; }
                 try {
-                    var data = JSON.parse(json.data);
+                    var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                     $('#lst_lugar').html(fnjs_construir_desplegable(data));
                 } catch (e) {}
             });
@@ -193,7 +193,7 @@ use core\ConfigGlobal;
                 return;
             }
             try {
-                var data = JSON.parse(json.data);
+                var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                 $(contenedor).html(fnjs_construir_desplegable(data));
             } catch (e) {
                 $(contenedor).html('');

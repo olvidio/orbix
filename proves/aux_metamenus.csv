@@ -81,10 +81,10 @@ id_metamenu;id_mod;url;descripcion
 130;11;frontend/procesos/controller/fases_activ_cambio.php;Fases activ cambio
 32;11;frontend/procesos/controller/procesos_select.php;procesos select
 44;11;frontend/procesos/controller/tipo_activ_proceso.php;Tipos de actividad
-43;20;apps/actividadescentro/controller/activ_ctr.php;actividades centro
-39;20;apps/actividadessacd/controller/activ_sacd.php;Atención sacd
-18;20;apps/actividadessacd/controller/asignar_sacd_auto.php;Auto asignar sacd a actividades
-28;20;apps/actividadessacd/controller/com_sacd_activ_periodo.php;Comunicación activ sacd
+43;20;frontend/actividadescentro/controller/activ_ctr.php;actividades centro
+39;20;frontend/actividadessacd/controller/activ_sacd.php;Atención sacd
+18;20;frontend/actividadessacd/controller/asignar_sacd_auto.php;Auto asignar sacd a actividades
+28;20;frontend/actividadessacd/controller/com_sacd_activ_periodo.php;Comunicación activ sacd
 62;21;frontend/encargossacd/controller/ctr_ficha.php;Ficha encargos ctr
 156;21;frontend/encargossacd/controller/encargo_select.php;Encargos lista
 124;21;frontend/encargossacd/controller/listas_index.php;Encargos Listas

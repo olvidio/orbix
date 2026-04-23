@@ -91,7 +91,7 @@ class PgCentroEncargadoRepository extends ClaseRepository implements CentroEncar
         $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
         foreach ($stmt as $aDades) {
             $id_activ = $aDades['id_activ'];
-            $oActividad = $ActividadDlRepository->finfById($id_activ);
+            $oActividad = $ActividadDlRepository->findById($id_activ);
             $oActividadSet->add($oActividad);
         }
         return $oActividadSet->getTot();

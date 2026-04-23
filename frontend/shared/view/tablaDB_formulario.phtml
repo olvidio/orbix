@@ -39,7 +39,7 @@ use core\ConfigGlobal;
             if (json.success !== true) {
                 alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
             } else {
-                rta = JSON.parse(json.data);
+                rta = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                 rta_txt = rta.aOpciones;
                 $('#' + accion).html(rta_txt);
             }

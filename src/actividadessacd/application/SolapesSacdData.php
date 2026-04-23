@@ -1,0 +1,132 @@
+<?php
+
+namespace src\actividadessacd\application;
+
+use core\ConfigGlobal;
+use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
+use src\personas\domain\entity\Persona;
+use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
+use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
+use src\procesos\domain\value_objects\FaseId;
+use web\Periodo;
+
+/**
+ * Caso de uso: construye el listado de sacd con actividades incompatibles
+ * (solapes). Para cada sacd de la dl/de paso, devuelve las actividades que
+ * le caen en el periodo y que se solapan entre si segun el criterio de
+ * `CargoOAsistenteInterface::getSolapes`.
+ *
+ * Sucesor de la rama `solape` del dispatcher legacy
+ * `apps/actividadessacd/controller/activ_sacd_ajax.php`. Se ha extraido
+ * del caso `lista_activ` original porque el refactor.md pide "un endpoint
+ * por accion".
+ */
+final class SolapesSacdData
+{
+    public static function execute(array $input): array
+    {
+        $year = (string)($input['year'] ?? '');
+        $periodo = (string)($input['periodo'] ?? '');
+        $empiezamin = (string)($input['empiezamin'] ?? '');
+        $empiezamax = (string)($input['empiezamax'] ?? '');
+
+        $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
+        $oActividadFase = $ActividadFaseRepository->findById(FaseId::FASE_OK_SACD);
+        $txt_fase_ok_sacd = $oActividadFase !== null
+            ? (string)$oActividadFase->getDesc_fase()
+            : '';
+
+        $oPeriodo = new Periodo();
+        $oPeriodo->setDefaultAny('next');
+        $oPeriodo->setAny($year);
+        $oPeriodo->setEmpiezaMin($empiezamin);
+        $oPeriodo->setEmpiezaMax($empiezamax);
+        $oPeriodo->setPeriodo($periodo);
+        $inicioIso = $oPeriodo->getF_ini_iso();
+        $finIso = $oPeriodo->getF_fin_iso();
+
+        $aWhere = [
+            'f_ini' => "'$inicioIso','$finIso'",
+            'status' => StatusId::TERMINADA,
+            '_ordre' => 'f_ini',
+        ];
+        $aOperador = [
+            'f_ini' => 'BETWEEN',
+            'status' => '<',
+        ];
+
+        $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
+        $cActividades = $ActividadDlRepository->getActividades($aWhere, $aOperador);
+
+        // sacd de la dl (n y a).
+        $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
+        $mi_dl = ConfigGlobal::mi_delef();
+        $cSacds = $PersonaSacdRepository->getPersonas(
+            [
+                'id_tabla' => "'n','a'",
+                'sacd' => 't',
+                'dl' => $mi_dl,
+                '_ordre' => 'apellido1,apellido2,nom',
+            ],
+            ['id_tabla' => 'IN']
+        );
+
+        $CargoOAsistenteRepository = $GLOBALS['container']->get(CargoOAsistenteInterface::class);
+        $a_solapes = $CargoOAsistenteRepository->getSolapes($cSacds, $cActividades);
+
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+
+        $filas = [];
+        foreach ($a_solapes as $id_nom => $aId_activ) {
+            $id_nom = (int)$id_nom;
+            $oPersona = Persona::findPersonaEnGlobal($id_nom);
+            $nom_sacd = is_object($oPersona)
+                ? (string)$oPersona->getApellidosNombre()
+                : (string)$oPersona;
+
+            $actividades = [];
+            $id_ubi_anterior = '';
+            foreach ($aId_activ as $id_activ) {
+                $oActividad = $ActividadAllRepository->findById((int)$id_activ);
+                if ($oActividad === null) {
+                    continue;
+                }
+                $nom_activ = (string)$oActividad->getNom_activ();
+                $id_ubi = (string)$oActividad->getId_ubi();
+                $status = (int)$oActividad->getStatus();
+                $sacd_aprobado = $ActividadProcesoTareaRepository->getSacdAprobado((int)$id_activ);
+                $clase = ($sacd_aprobado === true) ? 'plaza4' : '';
+                if ($status === StatusId::PROYECTO) {
+                    $clase = 'wrong-soft';
+                }
+                if ($id_ubi_anterior === $id_ubi) {
+                    $clase .= ' tachado';
+                }
+                $id_ubi_anterior = $id_ubi;
+                $actividades[] = [
+                    'clase' => trim($clase),
+                    'nom_activ' => $nom_activ,
+                ];
+            }
+
+            $filas[] = [
+                'id_nom' => $id_nom,
+                'nom_sacd' => $nom_sacd,
+                'actividades' => $actividades,
+            ];
+        }
+
+        return [
+            'titulo' => ucfirst(_("listado de sacd con actividades incompatibles")),
+            'inicio_iso' => $inicioIso,
+            'fin_iso' => $finIso,
+            'texto_fase_ok_sacd' => $txt_fase_ok_sacd,
+            'filas' => $filas,
+        ];
+    }
+}

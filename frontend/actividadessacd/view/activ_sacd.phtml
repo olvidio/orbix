@@ -1,0 +1,418 @@
+<?php
+/**
+ * Vista principal de `actividadessacd`.
+ *
+ * Renderiza el formulario de filtros (periodo) + checkboxes de seleccion
+ * (solo para tipo `des`) y expone los helpers JS que consumen los
+ * endpoints `/src/actividadessacd/*` devolviendo JSON. El HTML de la tabla
+ * principal, la de solapes y el de los desplegables laterales se
+ * construye en cliente a partir del JSON, no llega nunca desde el backend.
+ *
+ * @var web\PeriodoQue $oFormP
+ * @var web\Hash       $oHash
+ * @var string         $tipo
+ * @var bool           $perm_des
+ * @var string         $url_lista
+ * @var string         $url_solapes
+ * @var string         $url_encargados
+ * @var string         $url_disponibles
+ * @var string         $url_asignar
+ * @var string         $url_reordenar
+ * @var string         $url_eliminar
+ */
+
+$i18n = [
+    'plus_prioridad' => _("+ prioridad"),
+    'menos_prioridad' => _("- prioridad"),
+    'borrar' => _("borrar"),
+    'sacd' => _("sacd"),
+    'sacd_encargados' => ucfirst(_("sacd encargados")),
+    'actividad' => ucfirst(_("actividad")),
+    'actividades' => ucfirst(_("actividades")),
+    'sacd_sacd' => ucfirst(_("sacd")),
+    'nuevo' => _("nuevo"),
+    'respuesta' => _("respuesta"),
+    'leyenda' => _("Leyenda"),
+    'activ_en_proyecto' => _("Actividad en proyecto"),
+    'activ_con_fase' => _("Actividad con fase %s"),
+    'activ_aprobada' => _("Actividad aprobada"),
+    'en_mismo_lugar' => _("En el mismo lugar"),
+    'nota_sv' => _("NOTA: en sv, al asignar un sacd, se añade la asistencia a la actividad."),
+    'nota_falta_1' => _("Actividades aprobadas y no aprobadas sin sacds (independiente de la fase \"%s\")"),
+    'nota_falta_2' => _("+ Actividades con sacds sin la fase \"%s\""),
+    'err_comunicacion' => _("error de comunicación con el servidor"),
+    'err_desconocido' => _("error desconocido"),
+];
+?>
+<style type="text/css">
+    div.orden {
+        background-attachment: scroll;
+        background-color: wheat;
+        background-image: none;
+        background-position: 0 0;
+        background-repeat: repeat;
+        display: inline;
+        float: left;
+        position: absolute;
+        z-index: 10;
+    }
+    div.sacd {
+        display: inline;
+        float: left;
+        height: 60%;
+        position: absolute;
+        z-index: 10;
+        overflow: scroll;
+        width: 25em;
+        bottom: 3em;
+        right: 10em;
+        background-color: darkgray;
+    }
+    div.sacd table {
+        width: 100%;
+        background-color: wheat;
+    }
+    div.sacd td.cabecera {
+        text-align: center;
+    }
+    p.tres:hover {
+        background-color: black;
+    }
+</style>
+<script>
+    var URL_LISTA = <?= json_encode($url_lista) ?>;
+    var URL_SOLAPES = <?= json_encode($url_solapes) ?>;
+    var URL_ENCARGADOS = <?= json_encode($url_encargados) ?>;
+    var URL_DISPONIBLES = <?= json_encode($url_disponibles) ?>;
+    var URL_ASIGNAR = <?= json_encode($url_asignar) ?>;
+    var URL_REORDENAR = <?= json_encode($url_reordenar) ?>;
+    var URL_ELIMINAR = <?= json_encode($url_eliminar) ?>;
+    var TIPO = <?= json_encode($tipo) ?>;
+    var PERM_DES = <?= json_encode((bool)$perm_des) ?>;
+    var I18N = <?= json_encode($i18n, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+
+    // Extrae `data` del patron `ContestarJson::enviar`.
+    fnjs_parse_rta = function (rta) {
+        if (!rta || rta.success !== true) {
+            var msg = (rta && rta.mensaje) ? rta.mensaje : I18N.err_desconocido;
+            alert(I18N.respuesta + ': ' + msg);
+            return null;
+        }
+        try {
+            return (typeof rta.data === 'string') ? JSON.parse(rta.data) : rta.data;
+        } catch (e) {
+            return null;
+        }
+    };
+
+    fnjs_esc = function (txt) {
+        if (txt === null || txt === undefined) { return ''; }
+        return String(txt)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    };
+
+    // ------------------------------------------------------- LISTA PRINCIPAL
+    fnjs_ver = function () {
+        var formData = $('#frm_cond').serializeArray();
+        var payload = {};
+        $.each(formData, function (_, kv) { payload[kv.name] = kv.value; });
+        payload.tipo = TIPO;
+
+        var url = (TIPO === 'solape') ? URL_SOLAPES : URL_LISTA;
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: payload,
+            dataType: 'json'
+        }).done(function (rta) {
+            var data = fnjs_parse_rta(rta);
+            if (data === null) { return; }
+            if (TIPO === 'solape') {
+                $('#exportar').html(fnjs_construir_tabla_solapes(data));
+            } else {
+                $('#exportar').html(fnjs_construir_tabla_lista(data));
+            }
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    fnjs_construir_tabla_lista = function (data) {
+        var html = '<h3>' + fnjs_esc(data.titulo || '') + '</h3>';
+        html += '<span class="comentario">' + fnjs_esc(I18N.nota_sv);
+        if (data.mostrar_nota_falta_sacd) {
+            var fase = data.texto_fase_ok_sacd || '';
+            html += '<br>' + fnjs_esc(I18N.nota_falta_1.replace('%s', fase));
+            html += '<br>' + fnjs_esc(I18N.nota_falta_2.replace('%s', fase));
+        }
+        html += '</span><br>';
+        html += '<table>';
+        html += '<tr>';
+        html += '<td>' + fnjs_esc(I18N.actividad) + '</td>';
+        html += '<td>' + fnjs_esc(I18N.sacd_encargados) + '</td>';
+        html += '<td id="lst_sacd"></td>';
+        html += '<td></td>';
+        html += '</tr>';
+        var filas = data.filas || [];
+        for (var i = 0; i < filas.length; i++) {
+            var fila = filas[i];
+            var id_activ = fila.id_activ;
+            var txt_sacd = fnjs_construir_celda_sacds(fila);
+            var nuevo_txt = '';
+            if (PERM_DES && fila.perm_crear === true) {
+                var onclickNuevo = 'fnjs_nuevo_sacd(event,' + id_activ
+                    + ',' + JSON.stringify(fila.f_ini || '')
+                    + ',' + JSON.stringify(fila.f_fin || '') + ')';
+                nuevo_txt = '<span class="link" onclick="' + fnjs_esc(onclickNuevo) + '">'
+                    + fnjs_esc(I18N.nuevo) + '</span>';
+            }
+            html += '<tr class="' + fnjs_esc(fila.clase || '') + '" id="' + id_activ + '">';
+            html += '<td>' + fnjs_esc(fila.nom_activ || '') + '</td>';
+            html += '<td id="' + id_activ + '_sacds">' + txt_sacd + '</td>';
+            html += '<td>' + nuevo_txt + '</td>';
+            html += '</tr>';
+        }
+        html += '</table>';
+        html += fnjs_construir_leyenda(data.texto_fase_ok_sacd || '', false);
+        return html;
+    };
+
+    fnjs_construir_tabla_solapes = function (data) {
+        var html = '<h3>' + fnjs_esc(data.titulo || '') + '</h3>';
+        html += '<span class="comentario"></span><br>';
+        html += '<table>';
+        html += '<tr>';
+        html += '<td>' + fnjs_esc(I18N.sacd_sacd) + '</td>';
+        html += '<td>' + fnjs_esc(I18N.actividades) + '</td>';
+        html += '</tr>';
+        var filas = data.filas || [];
+        for (var i = 0; i < filas.length; i++) {
+            var fila = filas[i];
+            var actividades = fila.actividades || [];
+            for (var j = 0; j < actividades.length; j++) {
+                var act = actividades[j];
+                var nom = (j === 0) ? fnjs_esc(fila.nom_sacd) : '';
+                html += '<tr class="' + fnjs_esc(act.clase || '') + '">';
+                html += '<td>' + nom + '</td>';
+                html += '<td>' + fnjs_esc(act.nom_activ) + '</td>';
+                html += '</tr>';
+            }
+        }
+        html += '</table>';
+        html += fnjs_construir_leyenda(data.texto_fase_ok_sacd || '', true);
+        return html;
+    };
+
+    fnjs_construir_leyenda = function (fase, incluirTachado) {
+        var html = '<hr><table>';
+        html += '<tr><th>' + fnjs_esc(I18N.leyenda) + '</th></tr>';
+        html += '<tr class="wrong-soft"><td>' + fnjs_esc(I18N.activ_en_proyecto) + '</td></tr>';
+        html += '<tr class="plaza4"><td>'
+            + fnjs_esc(I18N.activ_con_fase.replace('%s', fase)) + '</td></tr>';
+        html += '<tr><td>' + fnjs_esc(I18N.activ_aprobada) + '</td></tr>';
+        if (incluirTachado) {
+            html += '<tr class="tachado"><td>' + fnjs_esc(I18N.en_mismo_lugar) + '</td></tr>';
+        }
+        html += '</table>';
+        return html;
+    };
+
+    // Construye la celda de sacd encargados. Acepta tanto una fila del
+    // listado (`perm_modificar`) como la respuesta de
+    // `sacds_encargados_data` (`permite_modificar`).
+    fnjs_construir_celda_sacds = function (obj) {
+        var id_activ = obj.id_activ;
+        var sacds = obj.sacds || [];
+        var puedeMod = (obj.perm_modificar === true) || (obj.permite_modificar === true);
+        var txt = '';
+        for (var j = 0; j < sacds.length; j++) {
+            var s = sacds[j];
+            var ap = fnjs_esc(s.ap_nom || '');
+            if (puedeMod) {
+                var id_txt = id_activ + '_' + s.id_nom;
+                var onclick = 'fnjs_cambiar_sacd(event,' + id_activ + ',' + s.id_cargo + ',' + s.id_nom + ')';
+                txt += '<span class="link" id="' + id_txt + '" onclick="' + fnjs_esc(onclick) + '"> '
+                    + ap + ';</span>';
+            } else {
+                txt += '<span> ' + ap + '</span>';
+            }
+        }
+        return txt;
+    };
+
+    // ------------------------------------------------------- NUEVO: candidatos
+    fnjs_nuevo_sacd = function (evt, id_activ, f_ini, f_fin) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        var na = $('#sacd_na').prop('checked');
+        var p = $('#sacd_p').prop('checked');
+        var sss = $('#sacd_sss').prop('checked');
+        var cp = $('#sacd_cp').prop('checked');
+        var seleccion = 0;
+        if (na) seleccion += 2;
+        if (p) seleccion += 4;
+        if (sss) seleccion += 8;
+        if (cp) seleccion += 16;
+
+        $.ajax({
+            url: URL_DISPONIBLES,
+            type: 'post',
+            data: { id_activ: id_activ, seleccion: seleccion },
+            dataType: 'json'
+        }).done(function (rta) {
+            var data = fnjs_parse_rta(rta);
+            if (data === null) { return; }
+            if ($('#div_sacd').length) { $('#div_sacd').remove(); }
+            var html = '<div id="div_sacd" class="sacd">'
+                + fnjs_construir_tabla_disponibles(data) + '</div>';
+            $('#lst_sacd').append(html);
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    fnjs_construir_tabla_disponibles = function (data) {
+        var id_activ = data.id_activ;
+        var ctr = data.sacds_ctr || [];
+        var todos = data.sacds_todos || [];
+        var html = '<table>';
+        html += '<tr><td class="cabecera">' + fnjs_esc(I18N.sacd) + '</td></tr>';
+        for (var i = 0; i < ctr.length; i++) {
+            var c = ctr[i];
+            var onclick = "fnjs_asignar_sacd('" + id_activ + "','" + c.id_nom + "')";
+            html += '<tr><td><span class="link" id="' + c.id_nom
+                + '" onclick="' + fnjs_esc(onclick) + '">'
+                + fnjs_esc(c.num_orden) + ' * ' + fnjs_esc(c.ap_nom) + '</span></td></tr>';
+        }
+        for (var j = 0; j < todos.length; j++) {
+            var t = todos[j];
+            var onclickT = "fnjs_asignar_sacd('" + id_activ + "','" + t.id_nom + "')";
+            html += '<tr><td><span class="link" id="' + t.id_nom
+                + '" onclick="' + fnjs_esc(onclickT) + '"> '
+                + fnjs_esc(t.ap_nom) + '</span></td></tr>';
+        }
+        html += '</table>';
+        return html;
+    };
+
+    // ------------------------------------------------------- ASIGNAR
+    fnjs_asignar_sacd = function (id_activ, id_nom) {
+        $.ajax({
+            url: URL_ASIGNAR,
+            type: 'post',
+            data: { id_activ: id_activ, id_nom: id_nom },
+            dataType: 'json'
+        }).done(function (rta) {
+            if (!rta || rta.success !== true) {
+                var msg = (rta && rta.mensaje) ? rta.mensaje : I18N.err_desconocido;
+                alert(I18N.respuesta + ': ' + msg);
+                return;
+            }
+            fnjs_actualizar_activ(id_activ);
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    // ------------------------------------------------------- ORDEN / BORRAR
+    fnjs_cambiar_sacd = function (evt, id_activ, id_cargo, id_nom) {
+        if ($('#div_orden').length) { $('#div_orden').remove(); }
+        if (id_activ && id_nom) {
+            var onMas = "fnjs_orden('" + id_activ + "','" + id_cargo + "','" + id_nom + "','mas')";
+            var onMenos = "fnjs_orden('" + id_activ + "','" + id_cargo + "','" + id_nom + "','menos')";
+            var onBorrar = "fnjs_orden('" + id_activ + "','" + id_cargo + "','" + id_nom + "','borrar')";
+            var html = '<div id="div_orden" class="orden">'
+                + '<p class="tres" onclick="' + fnjs_esc(onMas) + '">' + fnjs_esc(I18N.plus_prioridad) + '</p>'
+                + '<p class="tres" onclick="' + fnjs_esc(onMenos) + '">' + fnjs_esc(I18N.menos_prioridad) + '</p>'
+                + '<p class="tres" onclick="' + fnjs_esc(onBorrar) + '">' + fnjs_esc(I18N.borrar) + '</p>'
+                + '</div>';
+            $('#' + id_activ + '_' + id_nom).append(html);
+        }
+        evt.preventDefault();
+        evt.stopPropagation();
+        return false;
+    };
+
+    fnjs_orden = function (id_activ, id_cargo, id_nom, num_orden) {
+        if (num_orden === 'borrar') {
+            $.ajax({
+                url: URL_ELIMINAR,
+                type: 'post',
+                data: { id_activ: id_activ, id_nom: id_nom, id_cargo: id_cargo },
+                dataType: 'json'
+            }).done(function (rta) {
+                if (!rta || rta.success !== true) {
+                    var msg = (rta && rta.mensaje) ? rta.mensaje : I18N.err_desconocido;
+                    alert(I18N.respuesta + ': ' + msg);
+                }
+                fnjs_actualizar_activ(id_activ);
+            }).fail(function () {
+                alert(I18N.err_comunicacion);
+            });
+            return;
+        }
+        $.ajax({
+            url: URL_REORDENAR,
+            type: 'post',
+            data: { id_activ: id_activ, id_nom: id_nom, num_orden: num_orden },
+            dataType: 'json'
+        }).done(function (rta) {
+            if (!rta || rta.success !== true) {
+                var msg = (rta && rta.mensaje) ? rta.mensaje : I18N.err_desconocido;
+                alert(I18N.respuesta + ': ' + msg);
+            }
+            fnjs_actualizar_activ(id_activ);
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    // Refresca la celda `<td id="<id_activ>_sacds">`.
+    fnjs_actualizar_activ = function (id_activ) {
+        $.ajax({
+            url: URL_ENCARGADOS,
+            type: 'post',
+            data: { id_activ: id_activ, id_tipo_activ: '', dl_org: '' },
+            dataType: 'json'
+        }).done(function (rta) {
+            var data = fnjs_parse_rta(rta);
+            if (data === null) { return; }
+            $('#' + id_activ + '_sacds').html(fnjs_construir_celda_sacds(data));
+            fnjs_cerrar();
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    fnjs_cerrar = function () {
+        if ($('#div_sacd').length) { $('#div_sacd').remove(); }
+        if ($('#div_orden').length) { $('#div_orden').remove(); }
+    };
+
+    $(document).ready(function () {
+        $('#exportar').on('click', function () {
+            fnjs_cerrar();
+        });
+    });
+
+    fnjs_left_side_hide();
+</script>
+<div id="condiciones" class="no_print">
+    <form name="frm_cond" id="frm_cond" action="" method="post" onkeydown="fnjs_enviar(event,this);">
+        <?= $oHash->getCamposHtml() ?>
+        <?= $oFormP->getHtml() ?>
+    </form>
+    <?php if ($perm_des): ?>
+        <p><?= _("Selección de sacd") ?>:
+            <input id="sacd_na" type="checkbox" value="2" checked><?= _("prelatura") ?>
+            <input id="sacd_p" type="checkbox" value="4"><?= _("de paso") ?>
+            <input id="sacd_sss" type="checkbox" value="8"><?= _("sss+") ?>
+            <input id="sacd_cp" type="checkbox" value="16"><?= _("cp") ?>
+        </p>
+    <?php endif; ?>
+</div>
+<div id="exportar"></div>

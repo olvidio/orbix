@@ -6,7 +6,7 @@ fnjs_actividad_tipo_get_content = function (json) {
         return '';
     }
     try {
-        var data = JSON.parse(json.data);
+        var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
         return data.content || '';
     } catch (e) {
         return '';
@@ -18,7 +18,7 @@ fnjs_actividad_tipo_get_content = function (json) {
 fnjs_construir_desplegable = function (json) {
     if (!json || json.success !== true) { return ''; }
     try {
-        var data = JSON.parse(json.data);
+        var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
         if (!data) { return ''; }
         var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
         if (data.action) { $sel.attr('onchange', data.action); }

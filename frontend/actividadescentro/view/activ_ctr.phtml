@@ -1,0 +1,350 @@
+<?php
+/**
+ * Vista principal de `actividadescentro`.
+ *
+ * Renderiza el formulario de filtros (periodo) y expone los helpers JS que
+ * consumen los endpoints `/src/actividadescentro/*` devolviendo JSON. El HTML
+ * de la tabla principal y el de los desplegables laterales se construye en
+ * cliente a partir del JSON, no llega nunca desde el backend.
+ *
+ * @var web\PeriodoQue $oFormP
+ * @var web\Hash       $oHash
+ * @var string         $tipo
+ * @var string         $url_lista
+ * @var string         $url_encargados
+ * @var string         $url_disponibles
+ * @var string         $url_asignar
+ * @var string         $url_reordenar
+ * @var string         $url_eliminar
+ */
+
+// Traducciones servidas al JS via json_encode (seguro dentro de <script>).
+$i18n = [
+    'plus_prioridad' => _("+ prioridad"),
+    'menos_prioridad' => _("- prioridad"),
+    'borrar' => _("borrar"),
+    'centro' => _("centro"),
+    'num' => _("num"),
+    'dif_dias' => _("dif días"),
+    'ctr_encargados' => ucfirst(_("ctr encargados")),
+    'actividad' => ucfirst(_("actividad")),
+    'nuevo' => _("nuevo"),
+    'respuesta' => _("respuesta"),
+    'err_comunicacion' => _("error de comunicación con el servidor"),
+    'err_desconocido' => _("error desconocido"),
+];
+?>
+<style>
+    div.orden {
+        background-attachment: scroll;
+        background-color: wheat;
+        background-image: none;
+        background-position: 0 0;
+        background-repeat: repeat;
+        display: inline;
+        float: left;
+        position: absolute;
+        z-index: 10;
+    }
+    div.ctr {
+        display: inline;
+        float: left;
+        height: 60%;
+        position: absolute;
+        z-index: 10;
+        overflow: scroll;
+        width: 17em;
+        background-color: darkgray;
+    }
+    div.ctr table {
+        width: 100%;
+        background-color: wheat;
+    }
+    div.ctr td.cabecera {
+        text-align: center;
+    }
+    p.tres:hover {
+        background-color: black;
+    }
+</style>
+<script>
+    // URLs de los endpoints JSON (ya firmadas con ?hnov=1&h=...).
+    var URL_LISTA = <?= json_encode($url_lista) ?>;
+    var URL_ENCARGADOS = <?= json_encode($url_encargados) ?>;
+    var URL_DISPONIBLES = <?= json_encode($url_disponibles) ?>;
+    var URL_ASIGNAR = <?= json_encode($url_asignar) ?>;
+    var URL_REORDENAR = <?= json_encode($url_reordenar) ?>;
+    var URL_ELIMINAR = <?= json_encode($url_eliminar) ?>;
+    var TIPO = <?= json_encode($tipo) ?>;
+    var I18N = <?= json_encode($i18n, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+
+    // Periodo iso del ultimo listado, para pasarlo al buscar centros
+    // disponibles (relevante sobre todo para tipo=sg).
+    var INICIO_ISO = '';
+    var FIN_ISO = '';
+
+    // Extrae `data` del patron `ContestarJson::enviar` (devuelve null si hay
+    // error y ya muestra alert al usuario).
+    fnjs_parse_rta = function (rta) {
+        if (!rta || rta.success !== true) {
+            var msg = (rta && rta.mensaje) ? rta.mensaje : I18N.err_desconocido;
+            alert(I18N.respuesta + ': ' + msg);
+            return null;
+        }
+        try {
+            return (typeof rta.data === 'string') ? JSON.parse(rta.data) : rta.data;
+        } catch (e) {
+            return null;
+        }
+    };
+
+    // Escape basico para generar HTML desde datos dinamicos.
+    fnjs_esc = function (txt) {
+        if (txt === null || txt === undefined) { return ''; }
+        return String(txt)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    };
+
+    // ------------------------------------------------------- LISTA PRINCIPAL
+    fnjs_ver = function () {
+        var formData = $('#frm_cond').serializeArray();
+        var payload = {};
+        $.each(formData, function (_, kv) { payload[kv.name] = kv.value; });
+        payload.tipo = TIPO;
+
+        $.ajax({
+            url: URL_LISTA,
+            type: 'post',
+            data: payload,
+            dataType: 'json'
+        }).done(function (rta) {
+            var data = fnjs_parse_rta(rta);
+            if (data === null) { return; }
+            INICIO_ISO = data.inicio_iso || '';
+            FIN_ISO = data.fin_iso || '';
+            $('#exportar').html(fnjs_construir_tabla_lista(data));
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    fnjs_construir_tabla_lista = function (data) {
+        var html = '<h3>' + fnjs_esc(data.titulo || '') + '</h3>';
+        html += '<table>';
+        html += '<tr>';
+        html += '<td>' + fnjs_esc(I18N.actividad) + '</td>';
+        html += '<td>' + fnjs_esc(I18N.ctr_encargados) + '</td>';
+        html += '<td id="lst_ctr"></td>';
+        html += '<td></td>';
+        html += '</tr>';
+        var filas = data.filas || [];
+        for (var i = 0; i < filas.length; i++) {
+            var fila = filas[i];
+            var id_activ = fila.id_activ;
+            var txt_ctr = fnjs_construir_celda_ctrs(fila);
+            var nuevo_txt = '';
+            if (fila.perm_crear_ctr === true) {
+                var onclickNuevo = 'fnjs_nuevo_ctr(event,' + id_activ
+                    + ',' + JSON.stringify(fila.f_ini || '')
+                    + ',' + JSON.stringify(fila.f_fin || '') + ')';
+                nuevo_txt = '<span class="link" onclick="' + fnjs_esc(onclickNuevo) + '">'
+                    + fnjs_esc(I18N.nuevo) + '</span>';
+            }
+            html += '<tr id="' + id_activ + '">';
+            html += '<td>' + fnjs_esc(fila.nom_activ || '') + '</td>';
+            html += '<td id="' + id_activ + '_ctrs">' + txt_ctr + '</td>';
+            html += '<td>' + nuevo_txt + '</td>';
+            html += '</tr>';
+        }
+        html += '</table>';
+        return html;
+    };
+
+    // Construye el contenido de la celda de centros encargados. Acepta tanto
+    // una fila del listado (`perm_modificar_ctr`) como la respuesta de
+    // `centros_encargados_data` (`permite_modificar`).
+    fnjs_construir_celda_ctrs = function (obj) {
+        var id_activ = obj.id_activ;
+        var centros = obj.centros || [];
+        var puedeMod = (obj.perm_modificar_ctr === true) || (obj.permite_modificar === true);
+        var txt = '';
+        for (var j = 0; j < centros.length; j++) {
+            var c = centros[j];
+            var nombre = fnjs_esc(c.nombre_ubi || '');
+            if (puedeMod) {
+                var id_txt = id_activ + '_' + c.id_ubi;
+                var onclick = 'fnjs_cambiar_ctr(event,' + id_activ + ',' + c.id_ubi + ')';
+                txt += '<span class="link" id="' + id_txt + '" onclick="' + fnjs_esc(onclick) + '"> '
+                    + nombre + ';</span>';
+            } else {
+                txt += '<span> ' + nombre + '</span>';
+            }
+        }
+        return txt;
+    };
+
+    // ------------------------------------------------------- NUEVO: candidatos
+    fnjs_nuevo_ctr = function (evt, id_activ, f_ini, f_fin) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        $.ajax({
+            url: URL_DISPONIBLES,
+            type: 'post',
+            data: {
+                tipo: TIPO,
+                id_activ: id_activ,
+                inicio: INICIO_ISO,
+                fin: FIN_ISO,
+                f_ini_act: f_ini || ''
+            },
+            dataType: 'json'
+        }).done(function (rta) {
+            var data = fnjs_parse_rta(rta);
+            if (data === null) { return; }
+            if ($('#div_ctr').length) { $('#div_ctr').remove(); }
+            var html = '<div id="div_ctr" class="ctr">' + fnjs_construir_tabla_disponibles(data) + '</div>';
+            $('#lst_ctr').append(html);
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    fnjs_construir_tabla_disponibles = function (data) {
+        var centros = data.centros || [];
+        var esSg = (data.tipo === 'sg');
+        var html = '<table><tr>';
+        html += '<td class="cabecera">' + fnjs_esc(I18N.centro) + '</td>';
+        if (esSg) {
+            html += '<td class="cabecera">' + fnjs_esc(I18N.num) + '</td>';
+            html += '<td class="cabecera">' + fnjs_esc(I18N.dif_dias) + '</td>';
+        }
+        html += '</tr>';
+        for (var i = 0; i < centros.length; i++) {
+            var c = centros[i];
+            var onclick = 'fnjs_asignar_ctr(' + data.id_activ + ',' + c.id_ubi + ')';
+            html += '<tr><td class="link" id="' + c.id_ubi + '" onclick="' + fnjs_esc(onclick) + '"> '
+                + fnjs_esc(c.nombre_ubi) + '</td>';
+            if (esSg) {
+                html += '<td>' + fnjs_esc(c.num_actividades_periodo) + '</td>';
+                html += '<td>' + fnjs_esc(c.dif_dias) + '</td>';
+            }
+            html += '</tr>';
+        }
+        html += '</table>';
+        return html;
+    };
+
+    // ------------------------------------------------------- ASIGNAR
+    fnjs_asignar_ctr = function (id_activ, id_ubi) {
+        $.ajax({
+            url: URL_ASIGNAR,
+            type: 'post',
+            data: { id_activ: id_activ, id_ubi: id_ubi },
+            dataType: 'json'
+        }).done(function (rta) {
+            if (!rta || rta.success !== true) {
+                var msg = (rta && rta.mensaje) ? rta.mensaje : I18N.err_desconocido;
+                alert(I18N.respuesta + ': ' + msg);
+                return;
+            }
+            fnjs_actualizar_activ(id_activ);
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    // ------------------------------------------------------- ORDEN / BORRAR
+    fnjs_cambiar_ctr = function (evt, id_activ, id_ubi) {
+        if ($('#div_orden').length) { $('#div_orden').remove(); }
+        if (id_activ && id_ubi) {
+            var onMas = 'fnjs_reordenar(' + id_activ + ',' + id_ubi + ",'mas')";
+            var onMenos = 'fnjs_reordenar(' + id_activ + ',' + id_ubi + ",'menos')";
+            var onBorrar = 'fnjs_eliminar(' + id_activ + ',' + id_ubi + ')';
+            var html = '<div id="div_orden" class="orden">'
+                + '<p class="tres" onclick="' + fnjs_esc(onMas) + '">' + fnjs_esc(I18N.plus_prioridad) + '</p>'
+                + '<p class="tres" onclick="' + fnjs_esc(onMenos) + '">' + fnjs_esc(I18N.menos_prioridad) + '</p>'
+                + '<p class="tres" onclick="' + fnjs_esc(onBorrar) + '">' + fnjs_esc(I18N.borrar) + '</p>'
+                + '</div>';
+            $('#' + id_activ + '_' + id_ubi).append(html);
+        }
+        evt.preventDefault();
+        evt.stopPropagation();
+        return false;
+    };
+
+    fnjs_reordenar = function (id_activ, id_ubi, direccion) {
+        $.ajax({
+            url: URL_REORDENAR,
+            type: 'post',
+            data: { id_activ: id_activ, id_ubi: id_ubi, num_orden: direccion },
+            dataType: 'json'
+        }).done(function (rta) {
+            if (!rta || rta.success !== true) {
+                var msg = (rta && rta.mensaje) ? rta.mensaje : I18N.err_desconocido;
+                alert(msg);
+            }
+            fnjs_actualizar_activ(id_activ);
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    fnjs_eliminar = function (id_activ, id_ubi) {
+        $.ajax({
+            url: URL_ELIMINAR,
+            type: 'post',
+            data: { id_activ: id_activ, id_ubi: id_ubi },
+            dataType: 'json'
+        }).done(function (rta) {
+            if (!rta || rta.success !== true) {
+                var msg = (rta && rta.mensaje) ? rta.mensaje : I18N.err_desconocido;
+                alert(msg);
+            }
+            fnjs_actualizar_activ(id_activ);
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    // Refresca la celda `<td id="<id_activ>_ctrs">` con la lista actualizada.
+    fnjs_actualizar_activ = function (id_activ) {
+        $.ajax({
+            url: URL_ENCARGADOS,
+            type: 'post',
+            data: { id_activ: id_activ, id_tipo_activ: '', dl_org: '' },
+            dataType: 'json'
+        }).done(function (rta) {
+            var data = fnjs_parse_rta(rta);
+            if (data === null) { return; }
+            var txt = fnjs_construir_celda_ctrs(data);
+            $('#' + id_activ + '_ctrs').html(txt);
+            fnjs_cerrar();
+        }).fail(function () {
+            alert(I18N.err_comunicacion);
+        });
+    };
+
+    fnjs_cerrar = function () {
+        if ($('#div_ctr').length) { $('#div_ctr').remove(); }
+        if ($('#div_orden').length) { $('#div_orden').remove(); }
+    };
+
+    $(document).ready(function () {
+        $('#exportar').on('click', function () {
+            fnjs_cerrar();
+        });
+    });
+
+    fnjs_left_side_hide();
+</script>
+<div id="condiciones" class="no_print">
+    <form name="frm_cond" id="frm_cond" action="" method="post" onkeydown="fnjs_enviar(event,this);">
+        <?= $oHash->getCamposHtml() ?>
+        <?= $oFormP->getHtml() ?>
+    </form>
+</div>
+<div id="exportar"></div>

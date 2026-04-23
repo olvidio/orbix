@@ -12,7 +12,7 @@ use src\notas\domain\value_objects\TipoActa;
     fnjs_construir_desplegable = function (json) {
         if (!json || json.success !== true) { return ''; }
         try {
-            var data = JSON.parse(json.data);
+            var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
             if (!data) { return ''; }
             var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
             if (data.action) { $sel.attr('onchange', data.action); }
@@ -50,7 +50,7 @@ use src\notas\domain\value_objects\TipoActa;
                         alert('<?= _("respuesta") ?>: ' + (json && json.mensaje ? json.mensaje : ''));
                         return;
                     }
-                    var rta_json = JSON.parse(json.data);
+                    var rta_json = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                     id_asignatura = rta_json.id_asignatura;
                     if (id_asignatura == 'no') {
                         //borrar
