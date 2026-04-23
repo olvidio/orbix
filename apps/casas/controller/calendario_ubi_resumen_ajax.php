@@ -260,7 +260,6 @@ if (!empty($Qseccion)) {
 <form id="frm_tarifas" action="">
     <input type="hidden" name="id_ubi" value="<?= $Qid_ubi ?>">
     <input type="hidden" name="year" value="<?= $any_prev ?>">
-    <input type="hidden" name="que" value="update_inc">
     <table>
         <tr>
             <td><?= _("id_tarifa"); ?></td>

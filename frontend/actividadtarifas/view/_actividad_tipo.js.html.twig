@@ -12,8 +12,9 @@
         }
     }
 
-    // Construye el HTML de un `<select>` a partir del payload JSON estandar
-    // de /src/actividades/actividad_tipo_get para salidas desplegable.
+    // Construye el HTML de un `<select>` a partir del payload JSON
+    // estandar de /src/actividades/actividad_tipo_get para salidas
+    // desplegable.
     fnjs_construir_desplegable = function (json) {
         if (!json || json.success !== true) { return ''; }
         try {
@@ -111,9 +112,6 @@
             });
     }
     fnjs_act_id_activ = function () {
-        var url = '{{ url }}';
-        var que = $('#que').val();
-        var extendida = $('#extendida').val();
         var isfsv = $('#isfsv_val').val();
         var iasistentes = $('#iasistentes_val').val();
         var iactividad = $('#iactividad_val').val();

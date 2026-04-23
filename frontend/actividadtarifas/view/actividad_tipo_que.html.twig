@@ -1,0 +1,6 @@
+{# Se llama desde la clase oActividadTipo con el metodo getHtml() cuando
+   para === 'tipoactiv-tarifas'. Incluye el bloque JS de desplegables
+   dinamicos (versión simple, sin referencias a procesos/fases) y el
+   body compartido con `actividades/_actividad_tipo_body.html.twig`. #}
+{% include "_actividad_tipo.js.html.twig" %}
+{% include "@actividades/_actividad_tipo_body.html.twig" %}

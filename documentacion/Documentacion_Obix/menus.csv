@@ -120,10 +120,10 @@ id_grupmenu,?column?,url,parametros,id_mod
 7,Estadística por años (Casa ec que),apps/casas/controller/casa_ec_que.php,periodo=no&tipo_lista=datosEc,27
 7,Previsión económica (Ubi resumen ec),apps/casas/controller/calendario_ubi_resumen.php,,27
 7,previsión asistentes (prevision asistentes),apps/casas/controller/prevision_asistentes.php,,27
-7,definir tarifa (Tarifa definir),apps/actividadtarifas/controller/tarifa.php,,5
-7,tarifa <-> tipo de actividad (Tipo tarifa),apps/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
-7,tarifas por casa y año (actividad Tarifa Ubi),apps/actividadtarifas/controller/tarifa_ubi.php,,5
-7,activ -> tarifa (Tarifa actividades),apps/actividadtarifas/controller/tarifa_actividad.php,,5
+7,definir tarifa (Tarifa definir),frontend/actividadtarifas/controller/tarifa.php,,5
+7,tarifa <-> tipo de actividad (Tipo tarifa),frontend/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
+7,tarifas por casa y año (actividad Tarifa Ubi),frontend/actividadtarifas/controller/tarifa_ubi.php,,5
+7,activ -> tarifa (Tarifa actividades),frontend/actividadtarifas/controller/tarifa.php,,5
 8,personas (Raiz base),,,1
 8,sacd num (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&na=n&tipo=persona&es_sacd=1,1
 8,n de paso (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_de_paso&na=n&tipo=persona&es_sacd=1,1
@@ -211,9 +211,9 @@ id_grupmenu,?column?,url,parametros,id_mod
 8,todas casas sv (calendario listas),frontend/actividades/controller/calendario_listas.php,que=c_todas_sv&ver_ctr=si,5
 8,listado por oficinas (calendario listas),frontend/actividades/controller/calendario_listas.php,que=o_todas&ver_ctr=si,5
 8,listado oficina propia (calendario listas),frontend/actividades/controller/calendario_listas.php,que=o_actual&ver_ctr=si,5
-8,definir tarifa (Tarifa definir),apps/actividadtarifas/controller/tarifa.php,,5
-8,tarifa <-> tipo actividad (Tipo tarifa),apps/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
-8,tarifas por casa y año (actividad Tarifa Ubi),apps/actividadtarifas/controller/tarifa_ubi.php,,5
+8,definir tarifa (Tarifa definir),frontend/actividadtarifas/controller/tarifa.php,,5
+8,tarifa <-> tipo actividad (Tipo tarifa),frontend/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
+8,tarifas por casa y año (actividad Tarifa Ubi),frontend/actividadtarifas/controller/tarifa_ubi.php,,5
 8,Pasarela (Raiz pasarela),,,29
 8,parámetros (pasarela parametros),apps/pasarela/controller/parametros_menu.php,,29
 8,exportar actividades (exportar actividades),apps/pasarela/controller/exportar_que.php,,29
@@ -229,10 +229,10 @@ id_grupmenu,?column?,url,parametros,id_mod
 9,lista actividades (Casa que),apps/casas/controller/casa_que.php,periodo=tot_any&tipo_lista=lista_activ,27
 9,gastos casa (Casa que),apps/casas/controller/casa_que.php,tipo_lista=datosEcGastos,27
 9,Gestión económica (Casa que),apps/casas/controller/casa_que.php,,27
-9,definir tarifa (Tarifa definir),apps/actividadtarifas/controller/tarifa.php,,5
-9,tarifa <-> tipo de actividad (Tipo tarifa),apps/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
-9,tarifas por casa y año (actividad Tarifa Ubi),apps/actividadtarifas/controller/tarifa_ubi.php,,5
-9,activ -> tarifa (Tarifa definir),apps/actividadtarifas/controller/tarifa.php,,5
+9,definir tarifa (Tarifa definir),frontend/actividadtarifas/controller/tarifa.php,,5
+9,tarifa <-> tipo de actividad (Tipo tarifa),frontend/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
+9,tarifas por casa y año (actividad Tarifa Ubi),frontend/actividadtarifas/controller/tarifa_ubi.php,,5
+9,activ -> tarifa (Tarifa definir),frontend/actividadtarifas/controller/tarifa.php,,5
 9,buscar (seleccionar actividad),frontend/actividades/controller/actividad_que.php,que=ver,5
 9,lista por casas (Casa que),apps/casas/controller/casa_que.php,periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si,27
 10,s de la r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_supernumerarios,1
@@ -423,9 +423,9 @@ id_grupmenu,?column?,url,parametros,id_mod
 20,todas casas sf (calendario listas),frontend/actividades/controller/calendario_listas.php,que=c_todas_sf&ver_ctr=si,5
 20,listado por oficinas (calendario listas),frontend/actividades/controller/calendario_listas.php,que=o_todas&ver_ctr=si,5
 20,listado oficina propia (calendario listas),frontend/actividades/controller/calendario_listas.php,que=o_actual&ver_ctr=si,5
-20,definir tarifa (Tarifa actividades),apps/actividadtarifas/controller/tarifa_actividad.php,,5
-20,tarifa <-> tipo de actividad (Tipo tarifa),apps/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
-20,tarifas por casa y año (actividad Tarifa Ubi),apps/actividadtarifas/controller/tarifa_ubi.php,,5
+20,definir tarifa (Tarifa actividades),frontend/actividadtarifas/controller/tarifa.php,,5
+20,tarifa <-> tipo de actividad (Tipo tarifa),frontend/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
+20,tarifas por casa y año (actividad Tarifa Ubi),frontend/actividadtarifas/controller/tarifa_ubi.php,,5
 20,Previsión económica (Ubi resumen ec),apps/casas/controller/calendario_ubi_resumen.php,,27
 20,Previsión asistentes (prevision asistentes),apps/casas/controller/prevision_asistentes.php,,27
 21,n r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1

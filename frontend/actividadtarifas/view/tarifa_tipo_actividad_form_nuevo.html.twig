@@ -1,16 +1,18 @@
+{# Form nuevo de `RelacionTarifaTipoActividad` (HTML AJAX).
+   Incluye el bloque de desplegables dinamicos servido por
+   `ActividadTipo::getHtml()`. El submit llama a
+   `/src/actividadtarifas/relacion_tarifa_update` via el global
+   `fnjs_guardar` definido en `tarifa_tipo_actividad.phtml`. #}
 <style>
     <!--
     table {
         border: none;
     }
-
     td {
         border: none;
     }
-
     -->
 </style>
-
 <form id="nuevo">
     {{ oActividadTipo.getHtml()|raw }}
     {{ oHash.getCamposHtml()|raw }}

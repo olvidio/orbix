@@ -1,0 +1,128 @@
+<?php
+/**
+ * Vista principal de la relacion `TipoTarifa` ↔ tipo de actividad.
+ *
+ * Shell con `#ficha` (lista) + `#div_modificar` (form) + `#overlay`.
+ * El listado se carga via AJAX HTML desde
+ * `tarifa_tipo_actividad_lista.php`; el form desde
+ * `tarifa_tipo_actividad_form.php`. Las mutaciones llaman a
+ * `/src/actividadtarifas/relacion_tarifa_*`.
+ *
+ * @var string $url_lista
+ * @var string $url_form
+ * @var string $url_update
+ * @var string $url_eliminar
+ * @var string $txt_eliminar
+ */
+?>
+<script>
+    var URL_LISTA = <?= json_encode($url_lista) ?>;
+    var URL_FORM = <?= json_encode($url_form) ?>;
+    var URL_UPDATE = <?= json_encode($url_update) ?>;
+    var URL_ELIMINAR = <?= json_encode($url_eliminar) ?>;
+    var TXT_ELIMINAR = <?= json_encode($txt_eliminar) ?>;
+    var TXT_ERR_COMUNICACION = <?= json_encode(_("error de comunicación con el servidor")) ?>;
+    var TXT_DEBE_TIPO_ACTIV = <?= json_encode(_("debe indicar el tipo de actividad")) ?>;
+    var TXT_DEBE_TARIFA = <?= json_encode(_("debe indicar la id_tarifa")) ?>;
+
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    };
+
+    fnjs_ver = function () {
+        $.ajax({
+            url: URL_LISTA,
+            type: 'post'
+        }).done(function (rta_txt) {
+            if (rta_txt) {
+                $('#ficha').html(rta_txt);
+            }
+        });
+        document.getElementById("overlay").style.display = "none";
+    };
+
+    fnjs_modificar = function (id_item) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
+
+        var sep = URL_FORM.indexOf('?') === -1 ? '?' : '&';
+        fnjs_update_div('#div_modificar', URL_FORM + sep + 'id_item=' + encodeURIComponent(id_item));
+    };
+
+    // Reconstruye `id_tipo_activ` concatenando los desplegables del
+    // ActividadTipo. Si ya viene relleno (modo modificar) se usa el valor
+    // del input hidden.
+    fnjs_guardar = function (formulario, accion) {
+        if (accion === "eliminar" && !confirm(TXT_ELIMINAR)) {
+            return;
+        }
+        var err = 0;
+        var tar = $('#id_tarifa').val();
+        var id_tipo_activ = $('#id_tipo_activ').val();
+        if (!id_tipo_activ) {
+            var isfsv = $('#isfsv_val').val();
+            var iasistentes = $('#iasistentes_val').val();
+            var iactividad = $('#iactividad_val').val();
+            var inom_tipo = $('#inom_tipo_val').val();
+            if (!isfsv || !iasistentes || !iactividad) {
+                alert(TXT_DEBE_TIPO_ACTIV);
+                err = 1;
+            }
+            if (!inom_tipo && !err) {
+                id_tipo_activ = isfsv + iasistentes + iactividad + "000";
+            } else {
+                id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+            }
+        }
+        if (!tar) {
+            alert(TXT_DEBE_TARIFA);
+            err = 1;
+        }
+        if (err) {
+            return;
+        }
+
+        $('#id_tipo_activ').val(id_tipo_activ);
+        var url = (accion === "eliminar") ? URL_ELIMINAR : URL_UPDATE;
+        $(formulario).attr('action', url);
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize(),
+                dataType: 'json'
+            }).done(function (rta) {
+                if (!rta || rta.success !== true) {
+                    alert((rta && rta.mensaje) ? rta.mensaje : '');
+                    return;
+                }
+                fnjs_cerrar();
+                fnjs_ver();
+            }).fail(function () {
+                alert(TXT_ERR_COMUNICACION);
+            });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    };
+
+    fnjs_id_activ = function () {
+        var isfsv = $('#isfsv_val').val();
+        var iasistentes = $('#iasistentes_val').val();
+        var iactividad = $('#iactividad_val').val();
+        var inom_tipo = $('#inom_tipo_val').val();
+        $('#id_tipo_activ').val(isfsv + iasistentes + iactividad + inom_tipo);
+    };
+
+    $(document).ready(function () { fnjs_ver(); });
+</script>
+<div id="ficha"></div>
+<div id="div_modificar"></div>
+<div id="overlay"></div>

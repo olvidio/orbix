@@ -176,13 +176,13 @@
 44	11	frontend/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad
 132	5	frontend/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
 79	6	apps/asistentes/controller/lista_ultim_que_ctr.php	\N	Ultima asistencia
-73	5	apps/actividadtarifas/controller/tarifa_ubi.php	\N	actividad Tarifa Ubi
+73	5	frontend/actividadtarifas/controller/tarifa_ubi.php	\N	actividad Tarifa Ubi
 89	27	apps/casas/controller/casas_resumen.php	\N	Casa resumen
-108	5	apps/actividadtarifas/controller/tarifa_tipo_actividad.php	\N	Tipo id_tarifa
-128	5	apps/actividadtarifas/controller/tarifa_actividad.php	\N	Tarifa actividades
+108	5	frontend/actividadtarifas/controller/tarifa_tipo_actividad.php	\N	Tipo id_tarifa
+128	5	frontend/actividadtarifas/controller/tarifa.php	\N	Tarifa actividades
 5	27	apps/casas/controller/prevision_asistentes.php	\N	prevision asistentes
 54	2	apps/devel/controller/db_mover_que.php	\N	DB mover tabla
-100	5	apps/actividadtarifas/controller/id_tarifa.php	\N	Tarifa definir
+100	5	frontend/actividadtarifas/controller/tarifa.php	\N	Tarifa definir
 165	1	public/ayuda/index.php	\N	Ayuda
 137	26	apps/cambios/controller/avisos_generar.php	\N	lista avisos
 87	21	apps/encargossacd/controller/propuestas_menu.php	\N	propuestas encargos sacd

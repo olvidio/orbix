@@ -34,9 +34,12 @@ if ($Qid_item !== 'nuevo') {
     $oTipoActiv = new web\TiposActividades($id_tipo_activ);
     $isfsv = $oTipoActiv->getSfsvId();
 
+    // NOTA: `nombre_form.php` esta muerto (solo referenciado por
+    // ficheros .po). Se actualizan las URLs a los endpoints migrados
+    // para que `grep` no quede apuntando a rutas `apps/` borradas.
     $oHash = new Hash();
-    $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
-    $oHash->setCamposForm('que!id_tarifa');
+    $oHash->setUrl(ConfigGlobal::getWeb() . '/src/actividadtarifas/relacion_tarifa_update');
+    $oHash->setCamposForm('id_item!id_tarifa!id_tipo_activ');
     $a_camposHidden = array(
         'id_tipo_activ' => $Qid_tipo_activ,
         'id_item' => $Qid_item,
@@ -44,11 +47,11 @@ if ($Qid_item !== 'nuevo') {
     $oHash->setArraycamposHidden($a_camposHidden);
 
     $oHash1 = new Hash();
-    $oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
+    $oHash1->setUrl(ConfigGlobal::getWeb() . '/src/actividades/actividad_tipo_get');
     $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 
-    $url_ajax = ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php';
+    $url_ajax = ConfigGlobal::getWeb() . '/src/actividadtarifas/relacion_tarifa_update';
 
     $a_campos = ['oPosicion' => $oPosicion,
         'oHash' => $oHash,
@@ -83,17 +86,16 @@ if ($Qid_item !== 'nuevo') {
 
 
     $oHash = new Hash();
-    $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+    $oHash->setUrl(ConfigGlobal::getWeb() . '/src/actividadtarifas/relacion_tarifa_update');
     $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!nombre_actividad');
-    $oHash->setCamposNo('id_tipo_activ!que');
+    $oHash->setCamposNo('id_tipo_activ');
     $a_camposHidden = array(
         'id_tipo_activ' => '',
-        'que' => '',
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
     $oHash1 = new Hash();
-    $oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
+    $oHash1->setUrl(ConfigGlobal::getWeb() . '/src/actividades/actividad_tipo_get');
     $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 

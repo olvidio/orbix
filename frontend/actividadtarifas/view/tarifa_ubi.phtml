@@ -1,0 +1,126 @@
+<?php
+/**
+ * Vista principal de tarifas por casa y año (`TarifaUbi`).
+ *
+ * Renderiza los filtros (casa + año) y un shell con `#ficha` +
+ * `#div_modificar` + `#overlay`. El listado se carga via AJAX HTML
+ * desde `tarifa_ubi_lista.php`; el form desde `tarifa_ubi_form.php`.
+ * Las mutaciones llaman a `/src/actividadtarifas/tarifa_ubi_*`.
+ *
+ * @var web\CasasQue   $oForm
+ * @var web\PeriodoQue $oFormAny
+ * @var string $url_lista
+ * @var string $url_form
+ * @var string $url_copiar
+ * @var string $url_update
+ * @var string $url_eliminar
+ * @var string $txt_eliminar
+ * @var string $txt_copiar
+ */
+?>
+<script>
+    var URL_LISTA = <?= json_encode($url_lista) ?>;
+    var URL_FORM = <?= json_encode($url_form) ?>;
+    var URL_COPIAR = <?= json_encode($url_copiar) ?>;
+    var URL_UPDATE = <?= json_encode($url_update) ?>;
+    var URL_ELIMINAR = <?= json_encode($url_eliminar) ?>;
+    var TXT_ELIMINAR = <?= json_encode($txt_eliminar) ?>;
+    var TXT_COPIAR = <?= json_encode($txt_copiar) ?>;
+
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    };
+
+    fnjs_ver = function () {
+        var id_ubi = $('#id_cdc').val();
+        var year = $('#year').val();
+        $.ajax({
+            url: URL_LISTA,
+            type: 'post',
+            data: { id_ubi: id_ubi, year: year }
+        }).done(function (rta_txt) {
+            if (rta_txt) {
+                $('#ficha').html(rta_txt);
+            }
+        });
+        document.getElementById("overlay").style.display = "none";
+    };
+
+    fnjs_modificar = function (id_item, letra) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
+
+        var sep = URL_FORM.indexOf('?') === -1 ? '?' : '&';
+        var params;
+        if (id_item === 'nuevo') {
+            var id_ubi = $('#id_cdc').val();
+            var year = $('#year').val();
+            params = 'id_ubi=' + encodeURIComponent(id_ubi) + '&year=' + encodeURIComponent(year);
+        } else {
+            params = 'id_item=' + encodeURIComponent(id_item) + '&letra=' + encodeURIComponent(letra || '');
+        }
+        fnjs_update_div('#div_modificar', URL_FORM + sep + params);
+    };
+
+    fnjs_copiar_tarifas = function () {
+        if (!confirm(TXT_COPIAR)) { return; }
+        var id_ubi = $('#id_cdc').val();
+        var year = $('#year').val();
+        $.ajax({
+            url: URL_COPIAR,
+            type: 'post',
+            data: { id_ubi: id_ubi, year: year },
+            dataType: 'json'
+        }).done(function (rta) {
+            if (!rta || rta.success !== true) {
+                alert((rta && rta.mensaje) ? rta.mensaje : '');
+            }
+            fnjs_ver();
+        }).fail(function () {
+            alert('<?= _("error de comunicación con el servidor") ?>');
+        });
+    };
+
+    // accion: 'update' | 'eliminar'. El form define los inputs apropiados.
+    fnjs_guardar = function (formulario, accion) {
+        if (accion === "eliminar" && !confirm(TXT_ELIMINAR)) {
+            return;
+        }
+        var url = (accion === "eliminar") ? URL_ELIMINAR : URL_UPDATE;
+        $(formulario).attr('action', url);
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize(),
+                dataType: 'json'
+            }).done(function (rta) {
+                if (!rta || rta.success !== true) {
+                    alert((rta && rta.mensaje) ? rta.mensaje : '');
+                    return;
+                }
+                fnjs_cerrar();
+                fnjs_ver();
+            }).fail(function () {
+                alert('<?= _("error de comunicación con el servidor") ?>');
+            });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    };
+</script>
+<form name="seleccion" action="">
+    <?= $oForm->getDesplCasas()->desplegable(); ?>
+    <?= $oFormAny->getDesplAnys()->desplegable(); ?>
+    <input type="button" name="buscar" value="<?= _("buscar") ?>" onclick="fnjs_ver()">
+</form>
+<div id="ficha"></div>
+<div id="div_modificar"></div>
+<div id="overlay"></div>

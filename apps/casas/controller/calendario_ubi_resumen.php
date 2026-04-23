@@ -44,7 +44,17 @@ $oDesplCasas->setOpciones($aCasas);
 $oDesplCasas->setOpcion_sel($Qid_ubi);
 
 $url_ajax = 'apps/casas/controller/calendario_ubi_resumen_ajax.php';
-$url_tarifas = 'apps/actividadtarifas/controller/tarifa_ajax.php';
+
+// El form `frm_tarifas` (dentro del resumen ajax) postea las cantidades
+// incrementadas al endpoint JSON `/src/actividadtarifas/tarifa_ubi_update_inc`.
+// Lo firmamos con `Hash::linkSinVal` para incluir `hnov`+`h`; el submit
+// devuelve JSON (`ContestarJson`), el frontend ignora `rta_txt` vacio.
+$web = rtrim(ConfigGlobal::getWeb(), '/');
+$oHashTarifas = new Hash();
+$oHashTarifas->setUrl($web . '/src/actividadtarifas/tarifa_ubi_update_inc');
+$oHashTarifas->setCamposForm('id_ubi!year!inc_cantidad');
+$url_tarifas = $web . '/src/actividadtarifas/tarifa_ubi_update_inc' . $oHashTarifas->linkSinVal();
+
 $param = 'que=get';
 
 $oHash = new Hash();

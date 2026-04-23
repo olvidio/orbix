@@ -53,10 +53,10 @@ id_metamenu;id_mod;url;descripcion
 141;5;frontend/actividades/controller/calendario_que.php;Calendario que
 132;5;frontend/actividades/controller/lista_actividades_sg.php;lista activ sg
 68;5;frontend/actividades/controller/tipo_activ.php;gestionar tipos actividades
-128;5;apps/actividadtarifas/controller/tarifa_actividad.php;Tarifa actividades
-100;5;apps/actividadtarifas/controller/tarifa.php;Tarifa definir
-108;5;apps/actividadtarifas/controller/tarifa_tipo_actividad.php;Tipo tarifa
-73;5;apps/actividadtarifas/controller/tarifa_ubi.php;actividad Tarifa Ubi
+128;5;frontend/actividadtarifas/controller/tarifa.php;Tarifa actividades
+100;5;frontend/actividadtarifas/controller/tarifa.php;Tarifa definir
+108;5;frontend/actividadtarifas/controller/tarifa_tipo_actividad.php;Tipo tarifa
+73;5;frontend/actividadtarifas/controller/tarifa_ubi.php;actividad Tarifa Ubi
 140;5;apps/asistentes/controller/activ_pendientes_select.php;actividades pendientes
 147;5;apps/asistentes/controller/que_ctr_lista.php;Buscar por centro
 7;5;frontend/ubis/controller/calendario_periodos.php;Calendario Periodos

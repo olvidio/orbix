@@ -19,22 +19,23 @@ fnjs_ver=function(seccion){
 }
 
 fnjs_guardar=function(formulario){
-    $(formulario).attr('action','{{ url_tarifas }}');
-	$(formulario).one("submit", function() {
+    $('#'+formulario).attr('action','{{ url_tarifas }}');
+	$('#'+formulario).one("submit", function() {
 		$.ajax({
 			url: $(this).attr('action'),
 			type: 'post',
-			data: $(this).serialize()
+			data: $(this).serialize(),
+			dataType: 'json'
 		})
-		.done(function (rta_txt) {
-            if (rta_txt != '' && rta_txt != '\n') {
-                alert (rta_txt);
+		.done(function (rta) {
+            if (!rta || rta.success !== true) {
+                alert ((rta && rta.mensaje) ? rta.mensaje : '');
             }
 		});
 		return false;
 	});
-	$(formulario).trigger("submit");
-	$(formulario).off();
+	$('#'+formulario).trigger("submit");
+	$('#'+formulario).off();
 }
 </script>
 <form id=frm_que name=frm_que action="">
