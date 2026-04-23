@@ -925,22 +925,32 @@ class TablaEditable
         $fnjs = '';
         $url = $this->getUpdateUrl();
         if (!empty($url)) {
+            // Contrato JSON estandar `{success, mensaje, data}` devuelto por
+            // `web\ContestarJson::enviar(...)`. El backend ya no puede responder
+            // en texto plano.
+            $txtRespuesta = _('respuesta');
+            $txtError = _('hay un error, no se ha guardado');
             $fnjs = "
 				var url='$url';
-				$('#form_update').one('submit', function() {
-					$.ajax({
+				\$('#form_update').one('submit', function() {
+					\$.ajax({
 						url: url,
 						type: 'post',
-						data: $(this).serialize()
+						data: \$(this).serialize(),
+						dataType: 'json'
 					})
-					.done(function (rta_txt) {
-						if (rta_txt !== '' && rta_txt !== '\\n') {
-							alert ('<?= _(\"respuesta\") ?>: '+rta_txt);
+					.done(function (json) {
+						if (!json || json.success !== true) {
+							var msg = (json && json.mensaje) ? json.mensaje : '$txtError';
+							alert('$txtRespuesta: ' + msg);
 						}
+					})
+					.fail(function (xhr) {
+						alert('$txtRespuesta: ' + (xhr.responseText || '$txtError'));
 					});
 					return false;
 				});
-				$('#form_update').trigger(\"submit\");
+				\$('#form_update').trigger(\"submit\");
 				";
         }
         return $fnjs;

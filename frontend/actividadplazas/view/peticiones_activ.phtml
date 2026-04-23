@@ -10,43 +10,41 @@
         }
         if (evt.keyCode == 9 || evt.type == "change" || evt == "x") {
             if (valor != 0) {
-                <?php
-                echo $oSelects->ListaSelectsJs();
-                ?>
-            } else {
-                //ir_a('f_entrada');
+                <?php echo $oSelects->ListaSelectsJs(); ?>
             }
         }
     }
     fnjs_guardar = function (formulario) {
-        $('#que').val('update');
-        $(formulario).attr('action', "apps/actividadplazas/controller/peticiones_activ_ajax.php");
-        fnjs_enviar_formulario(formulario);
+        $.ajax({
+            type: 'post',
+            url: <?= json_encode($url_guardar) ?>,
+            data: $(formulario).serialize(),
+            dataType: 'json'
+        }).done(function (json) {
+            if (json && json.success === true) {
+                fnjs_actualizar();
+            } else {
+                alert(json && json.mensaje ? json.mensaje : '<?= _("error al guardar") ?>');
+            }
+        });
     }
     fnjs_borrar = function (formulario) {
-        $('#que').val('borrar');
-        $(formulario).attr('action', "apps/actividadplazas/controller/peticiones_activ_ajax.php");
-        $(formulario).one("submit", function () {
-            $.ajax({
-                type: 'post',
-                url: $(this).attr('action'),
-                data: $(this).serialize()
-            })
-                .done(function (rta_txt) {
-                    if (rta_txt != '' && rta_txt != '\n') {
-                        alert(rta_txt);
-                    } else {
-                        fnjs_actualizar();
-                    }
-                });
-            return false;
+        $.ajax({
+            type: 'post',
+            url: <?= json_encode($url_eliminar) ?>,
+            data: $(formulario).serialize(),
+            dataType: 'json'
+        }).done(function (json) {
+            if (json && json.success === true) {
+                fnjs_actualizar();
+            } else {
+                alert(json && json.mensaje ? json.mensaje : '<?= _("error al borrar") ?>');
+            }
         });
-        $(formulario).trigger("submit");
-        $(formulario).off();
     }
 
     fnjs_actualizar = function () {
-        $('#frm_peticiones').attr('action', 'apps/actividadplazas/controller/peticiones_activ.php');
+        $('#frm_peticiones').attr('action', 'frontend/actividadplazas/controller/peticiones_activ.php');
         fnjs_enviar_formulario('#frm_peticiones');
     }
     <?= $oSelects->ComprobarSelectJs(); ?>

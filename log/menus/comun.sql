@@ -139,9 +139,9 @@
 121	1	apps/dossiers/controller/perm_dossiers.php	\N	permisos dossiers
 182	1	\N	\N	Raiz admin
 98	25	apps/cartaspresentacion/controller/cartas_presentacion_lista.php	\N	Listado cartas presentación
-169	8	apps/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
-172	8	apps/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
-170	8	apps/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
+169	8	frontend/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
+172	8	frontend/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
+170	8	frontend/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
 43	20	frontend/actividadescentro/controller/activ_ctr.php	\N	actividades centro
 166	2	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
 17	2	apps/devel/controller/db_que.php	\N	nuevo esquema

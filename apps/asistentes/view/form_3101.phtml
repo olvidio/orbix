@@ -7,20 +7,42 @@
      * se ejecuta al cambiar el desplegable $oDesplegablePersonas
      * @returns desplegable de posibles propietarios de plaza
      */
+    fnjs_construir_desplegable_propietario = function (data) {
+        if (!data) { return ''; }
+        var id = data.id || 'propietario';
+        var $sel = $('<select></select>').attr({ id: id, name: id });
+        if (data.action) { $sel.attr('onchange', data.action); }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        var opciones = data.opciones || {};
+        $.each(opciones, function (value, label) {
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        });
+        return $sel.prop('outerHTML');
+    };
     fnjs_cmb_propietario = function () {
         var id_nom = $('#id_nom').val();
-        //alert ('nom: '+id_nom);
         var url = '<?= $url_ajax ?>';
-        var parametros = 'que=lst_propietarios&id_nom=' + id_nom + '&id_activ=<?= $id_activ ?><?= $h1 ?>';
+        var parametros = 'id_nom=' + id_nom + '&id_activ=<?= $id_activ ?><?= $h1 ?>';
 
         $.ajax({
             url: url,
             type: 'post',
-            data: parametros
-        })
-            .done(function (rta_txt) {
-                $('#lst_propietarios').html(rta_txt);
-            });
+            data: parametros,
+            dataType: 'json'
+        }).done(function (json) {
+            if (!json || json.success !== true) { return; }
+            try {
+                var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                $('#lst_propietarios').html(fnjs_construir_desplegable_propietario(data));
+            } catch (e) {}
+        });
     }
 
     <?php

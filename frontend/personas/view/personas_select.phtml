@@ -95,7 +95,7 @@ use core\ConfigGlobal;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             $('#que').val(sactividad);
-            $(formulario).attr('action', "apps/actividadplazas/controller/peticiones_activ.php");
+            $(formulario).attr('action', "frontend/actividadplazas/controller/peticiones_activ.php");
             fnjs_enviar_formulario(formulario);
         }
     }

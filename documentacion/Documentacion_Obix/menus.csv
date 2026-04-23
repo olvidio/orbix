@@ -15,9 +15,9 @@ id_grupmenu,?column?,url,parametros,id_mod
 2,list varios crt (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=n&sactividad=crt&que=list_cjto,5
 2,list por ctr (Buscar por centro),apps/asistentes/controller/que_ctr_lista.php,lista=list_activ&n_agd=n&sasistentes=n&sactividad=crt,5
 2,pendientes (actividades pendientes),apps/asistentes/controller/activ_pendientes_select.php,sactividad=crt&tipo_personas=n,5
-2,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=n&sactividad=crt,8
-2,Balance de plazas (Balance de Plazas),apps/actividadplazas/controller/plazas_balance_que.php,sasistentes=n&sactividad=crt,8
-2,Incorporar 1ª petición (Incorporar peticiones de plazas),apps/actividadplazas/controller/incorporar_peticion.php,sasistentes=n&sactividad=crt,8
+2,Gestión de plazas (Gestión de plazas),frontend/actividadplazas/controller/gestion_plazas.php,sasistentes=n&sactividad=crt,8
+2,Balance de plazas (Balance de Plazas),frontend/actividadplazas/controller/plazas_balance_que.php,sasistentes=n&sactividad=crt,8
+2,Incorporar 1ª petición (Incorporar peticiones de plazas),frontend/actividadplazas/controller/incorporar_peticion.php,sasistentes=n&sactividad=crt,8
 2,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=n&sactividad=crt,11
 2,ca (Raiz activ1),,,5
 2,importar ca (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=n&sactividad=ca&que=ver&modo=importar,5
@@ -25,16 +25,16 @@ id_grupmenu,?column?,url,parametros,id_mod
 2,lista varios ca (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=n&sactividad=ca&que=list_cjto,5
 2,lista por ctr (Buscar por centro),apps/asistentes/controller/que_ctr_lista.php,lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca,5
 2,pendientes (actividades pendientes),apps/asistentes/controller/activ_pendientes_select.php,sactividad=ca&tipo_personas=n,5
-2,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=n&sactividad=ca,8
-2,Balance de plazas (Balance de Plazas),apps/actividadplazas/controller/plazas_balance_que.php,sasistentes=n&sactividad=ca,8
-2,Incorporar 1ª petición (Incorporar peticiones de plazas),apps/actividadplazas/controller/incorporar_peticion.php,sasistentes=n&sactividad=ca,8
+2,Gestión de plazas (Gestión de plazas),frontend/actividadplazas/controller/gestion_plazas.php,sasistentes=n&sactividad=ca,8
+2,Balance de plazas (Balance de Plazas),frontend/actividadplazas/controller/plazas_balance_que.php,sasistentes=n&sactividad=ca,8
+2,Incorporar 1ª petición (Incorporar peticiones de plazas),frontend/actividadplazas/controller/incorporar_peticion.php,sasistentes=n&sactividad=ca,8
 2,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=n&sactividad=ca,11
 2,cve (Raiz activ1),,,5
 2,buscar cve (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=n&sactividad=cve&que=ver,5
 2,importar cve (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=n&sactividad=cve&que=ver&modo=importar,5
 2,lista varias cve (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=n&sactividad=cve&que=list_cjto,5
 2,lista por ctr (Buscar por centro),apps/asistentes/controller/que_ctr_lista.php,lista=list_activ&n_agd=n&sasistentes=n&sactividad=cve,5
-2,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=n&sactividad=cve,8
+2,Gestión de plazas (Gestión de plazas),frontend/actividadplazas/controller/gestion_plazas.php,sasistentes=n&sactividad=cve,8
 2,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=n&sactividad=cve,11
 2,planning (Raiz activ1),,,5
 2,persona r/dl vsm (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
@@ -47,9 +47,9 @@ id_grupmenu,?column?,url,parametros,id_mod
 3,buscar crt (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=agd&sactividad=crt&que=ver,5
 3,lista por ctr (Buscar por centro),apps/asistentes/controller/que_ctr_lista.php,lista=list_activ&n_agd=a&sasistentes=agd&sactividad=crt,5
 3,list varios crt (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=agd&sactividad=crt&que=list_cjto,5
-3,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=agd&sactividad=crt,8
-3,Balance de plazas (Balance de Plazas),apps/actividadplazas/controller/plazas_balance_que.php,sasistentes=agd&sactividad=crt,8
-3,Incorporar 1ª petición (Incorporar peticiones de plazas),apps/actividadplazas/controller/incorporar_peticion.php,sasistentes=agd&sactividad=crt,8
+3,Gestión de plazas (Gestión de plazas),frontend/actividadplazas/controller/gestion_plazas.php,sasistentes=agd&sactividad=crt,8
+3,Balance de plazas (Balance de Plazas),frontend/actividadplazas/controller/plazas_balance_que.php,sasistentes=agd&sactividad=crt,8
+3,Incorporar 1ª petición (Incorporar peticiones de plazas),frontend/actividadplazas/controller/incorporar_peticion.php,sasistentes=agd&sactividad=crt,8
 3,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,id_tipo_activ=131,11
 3,cv (Raiz activ1),,,5
 3,importar cv (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=agd&sactividad=cv&que=ver&modo=importar,5
@@ -57,14 +57,14 @@ id_grupmenu,?column?,url,parametros,id_mod
 3,list varias cv (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=agd&sactividad=cv&que=list_cjto,5
 3,list por centros (Buscar por centro),apps/asistentes/controller/que_ctr_lista.php,lista=list_activ&n_agd=a&sasistentes=agd&sactividad=cv,5
 3,pendientes (actividades pendientes),apps/asistentes/controller/activ_pendientes_select.php,sactividad=ca&tipo_personas=agd,5
-3,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=agd&sactividad=cv,8
-3,Balance de plazas (Balance de Plazas),apps/actividadplazas/controller/plazas_balance_que.php,sasistentes=agd&sactividad=cv,8
-3,Incorporar 1ª petición (Incorporar peticiones de plazas),apps/actividadplazas/controller/incorporar_peticion.php,sasistentes=agd&sactividad=cv,8
+3,Gestión de plazas (Gestión de plazas),frontend/actividadplazas/controller/gestion_plazas.php,sasistentes=agd&sactividad=cv,8
+3,Balance de plazas (Balance de Plazas),frontend/actividadplazas/controller/plazas_balance_que.php,sasistentes=agd&sactividad=cv,8
+3,Incorporar 1ª petición (Incorporar peticiones de plazas),frontend/actividadplazas/controller/incorporar_peticion.php,sasistentes=agd&sactividad=cv,8
 3,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=agd&sactividad=ca,11
 3,cve (Raiz activ1),,,5
 3,buscar cve agd (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=agd&sactividad=cve,5
 3,importar cve (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=agd&sactividad=cve&que=ver&modo=importar,5
-3,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=agd&sactividad=cve,8
+3,Gestión de plazas (Gestión de plazas),frontend/actividadplazas/controller/gestion_plazas.php,sasistentes=agd&sactividad=cve,8
 3,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=agd&sactividad=cve,11
 3,planning  (Raiz activ1),,,5
 3,persona r/dl (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
@@ -246,8 +246,8 @@ id_grupmenu,?column?,url,parametros,id_mod
 10,corresponde ir a cv ad (Ultima asistencia),apps/asistentes/controller/lista_ultim_que_ctr.php,que=cv_s_ad,6
 10,corresponde ir a cv joves (Ultima asistencia),apps/asistentes/controller/lista_ultim_que_ctr.php,que=cv_jovenes,6
 10,lista cargos (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=s&sactividad=cv&que=list_cjto,5
-10,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=s&sactividad=cv,8
-10,Balance de plazas (Balance de Plazas),apps/actividadplazas/controller/plazas_balance_que.php,sasistentes=s&sactividad=cv,8
+10,Gestión de plazas (Gestión de plazas),frontend/actividadplazas/controller/gestion_plazas.php,sasistentes=s&sactividad=cv,8
+10,Balance de plazas (Balance de Plazas),frontend/actividadplazas/controller/plazas_balance_que.php,sasistentes=s&sactividad=cv,8
 10,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=s&sactividad=cv,11
 10,buscar crt s (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=s&sactividad=crt,5
 10,buscar crt sg (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=sg&sactividad=crt,5
@@ -257,8 +257,8 @@ id_grupmenu,?column?,url,parametros,id_mod
 10,el curso pasado (Ultima asistencia),apps/asistentes/controller/lista_ultim_que_ctr.php,que=crt_s_sg&curso=anterior,6
 10,s que han de hacer crt interno (Ultima asistencia),apps/asistentes/controller/lista_ultim_que_ctr.php,que=crt_s,6
 10,s que han de hacer el crt de cel (Ultima asistencia),apps/asistentes/controller/lista_ultim_que_ctr.php,que=crt_cel,6
-10,Gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,"sasistentes=s,sg&sactividad=crt",8
-10,Balance de plazas (Balance de Plazas),apps/actividadplazas/controller/plazas_balance_que.php,sasistentes=s&sactividad=crt,8
+10,Gestión de plazas (Gestión de plazas),frontend/actividadplazas/controller/gestion_plazas.php,"sasistentes=s,sg&sactividad=crt",8
+10,Balance de plazas (Balance de Plazas),frontend/actividadplazas/controller/plazas_balance_que.php,sasistentes=s&sactividad=crt,8
 10,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=s&sactividad=crt,11
 10,actividades-centros (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sg,20
 10,n r/dl (búsqueda de personas),frontend/personas/controller/personas_que.php,tabla=p_numerarios&tipo=persona,1
@@ -305,7 +305,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 12,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,id_tipo_activ=112,11
 12,sem inv. (Raiz activ1),,,5
 12,buscar (Listado de Actividades),frontend/actividades/controller/actividad_select.php,sasistentes=n&sactividad2=semestre-inv&que=ver,5
-12,gestión de plazas (Gestión de plazas),apps/actividadplazas/controller/gestion_plazas.php,sasistentes=n&sactividad2=semestre-inv,8
+12,gestión de plazas (Gestión de plazas),frontend/actividadplazas/controller/gestion_plazas.php,sasistentes=n&sactividad2=semestre-inv,8
 12,importar (seleccionar actividad),frontend/actividades/controller/actividad_que.php,sasistentes=n&sactividad2=semestre-inv&que=ver&modo=importar,5
 12,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,sasistentes=n&sactividad2=semestre-inv,11
 12,planning (Raiz activ1),,,5

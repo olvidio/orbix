@@ -169,10 +169,10 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
         $oDesplPosiblesPropietarios = new Desplegable('propietario', [], '');
     }
 
-    $url_ajax = ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/gestion_plazas_ajax.php';
+    $url_ajax = ConfigGlobal::getWeb() . '/src/actividadplazas/posibles_propietarios_data';
     $oHash1 = new Hash();
     $oHash1->setUrl($url_ajax);
-    $oHash1->setCamposForm('que!id_activ!id_nom');
+    $oHash1->setCamposForm('id_activ!id_nom');
     //$oHash1->setCamposNo('id_nom');
     $h1 = $oHash1->linkSinVal();
 }

@@ -1,20 +1,18 @@
 <?php
 
-use core\ConfigGlobal;use function core\is_true;
+use function core\is_true;
 
 ?>
 <script>
     fnjs_guardar = function (formulario) {
-        $('#que').value = 'ceder';
-        let url = '<?= ConfigGlobal::getWeb() ?>/apps/actividadplazas/controller/resumen_plazas_update.php';
+        let url = <?= json_encode($url_ceder) ?>;
         let datos = $(formulario).serialize();
-        let request = $.ajax({
+        $.ajax({
             data: datos,
             url: url,
             method: 'POST',
             dataType: 'json'
-        });
-        request.done(function (json) {
+        }).done(function (json) {
             if (json.success !== true) {
                 alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
             } else {
@@ -25,7 +23,7 @@ use core\ConfigGlobal;use function core\is_true;
 
     fnjs_actualizar = function (formulario) {
         var campo = '<input type="hidden" name="refresh" value=1>';
-        $(formulario).attr('action', 'apps/actividadplazas/controller/resumen_plazas.php');
+        $(formulario).attr('action', 'frontend/actividadplazas/controller/resumen_plazas.php');
         $(formulario).append(campo);
         fnjs_enviar_formulario(formulario, '#main');
     }
@@ -60,14 +58,12 @@ use core\ConfigGlobal;use function core\is_true;
             <td></td>
         </tr>
         <?php
-        //plazas
         $d = 0;
         $libres = 0;
         foreach ($a_plazas as $dl => $pl) {
-            if ($dl == 'total') {
+            if ($dl === 'total') {
                 continue;
             }
-            // evitar errores si no existe el indice.
             $pl['calendario'] = empty($pl['calendario']) ? '-' : $pl['calendario'];
             $pl['total_cedidas'] = empty($pl['total_cedidas']) ? '-' : $pl['total_cedidas'];
             $pl['total_conseguidas'] = empty($pl['total_conseguidas']) ? '-' : $pl['total_conseguidas'];
@@ -101,7 +97,6 @@ use core\ConfigGlobal;use function core\is_true;
                         echo "<td></td><td></td>";
                         echo "<td></td><td></td></tr>";
                     }
-                    echo "</tr>";
                 }
             }
             if (!empty($pl['conseguidas'])) {
@@ -115,7 +110,6 @@ use core\ConfigGlobal;use function core\is_true;
                 echo "<td></td><td></td><td></td></tr>";
             }
         }
-        // TOTALES
         $tot_libres = $tot_disponibles - $tot_ocupadas;
         echo "<tr>";
         echo "<td>" . _("totales") . "</td><td>$tot_calendario ($plazas_totales)</td>";
@@ -137,3 +131,4 @@ use core\ConfigGlobal;use function core\is_true;
         <input type="button" id="btn_ok" name="btn_ok" class="btn_ok" onclick="fnjs_guardar(this.form);"
                value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE"/>
     </form>
+</form>

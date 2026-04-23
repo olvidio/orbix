@@ -149,7 +149,7 @@ jsForm.mandar = function (formulario, que) {
             break;
         case "plazas":
             $('#queSel').val(que);
-            this.action = "apps/actividadplazas/controller/resumen_plazas.php";
+            this.action = "frontend/actividadplazas/controller/resumen_plazas.php";
             break;
         case "list":
             $('#queSel').val(que);

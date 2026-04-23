@@ -82,28 +82,27 @@ class ResumenPlazasService
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
     /**
-     * Posibles propietarios de la plaza: propias más cedidas
+     * Devuelve el array de opciones para el desplegable de posibles
+     * propietarios de la plaza (propias + cedidas) en la actividad
+     * `id_activ`. Es datos puros; la UI se construye en
+     * {@see getPosiblesPropietarios()} (legacy) o en el frontend
+     * (con el payload de {@see \src\actividadplazas\application\PosiblesPropietariosData}).
      *
-     * @param bool dl_de_paso
-     * @return object Desplegable
+     * @param false|string $dl_de_paso
+     * @return array<string,string> clave "dl_org>dl_destino" => label
      */
-    public function getPosiblesPropietarios($dl_de_paso = FALSE)
+    public function getPosiblesPropietariosOpciones($dl_de_paso = false): array
     {
         $id_activ = $this->getId_activ();
         $mi_dl = ConfigGlobal::mi_delef();
         $id_mi_dl = $this->getDlId($mi_dl);
-        $dl_org = $this->getDl_org();
 
         $asistenteActividadService = $this->AsistenteActividadService;
-        //Conseguidas
-        // plazas de calendario de cada dl
         $a_dl = [];
-        $plazas_conseguidas = 0;
-        $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(array('id_activ' => $id_activ));
+        $cActividadPlazas = $this->ActividadPlazasRepository->getActividadesPlazas(['id_activ' => $id_activ]);
         foreach ($cActividadPlazas as $oActividadPlazas) {
             $id_dl_otra = $oActividadPlazas->getId_dl();
             $dl_otra = $this->getDlText($id_dl_otra);
-            $dl_tabla = $oActividadPlazas->getDlTablaVo()->value();
 
             $aCedidas = $oActividadPlazas->getArrayCedidas();
             if (!empty($aCedidas)) {
@@ -112,8 +111,7 @@ class ResumenPlazasService
                         $ocu = $asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $dl_otra);
                         $a_dl["$dl_otra>$dl_2"] = "$dl_otra ($ocu de $num_plazas)";
                     }
-                    //Si son plazas cedidas a una dl de paso. Solo cuento las que he cedido yo
-                    if ($dl_de_paso !== FALSE) {
+                    if ($dl_de_paso !== false) {
                         if ($dl_de_paso == $dl_2 && $id_dl_otra == $id_mi_dl) {
                             $ocu = $asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $dl_2, $mi_dl);
                             $a_dl["$mi_dl>$dl_de_paso"] = "$dl_de_paso ($ocu de $num_plazas)";
@@ -122,18 +120,29 @@ class ResumenPlazasService
                 }
             }
         }
-        // las que me corresponden por calendario - las cedidas
         $pl_propias = $this->getPlazasPropias();
         if ($pl_propias > 0) {
             $ocu = $asistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dl, $mi_dl);
             $a_dl["$mi_dl>$mi_dl"] = "$mi_dl ($ocu de $pl_propias)";
         }
-        // Debe haber al menos un valor para que se pase el campo y no dé error de 'llega distinto número de campos...'
-        //if (count($a_dl) == 0 ) $a_dl["nadie"] = "nadie";
-        if (count($a_dl) == 0) {
-            //$a_dl["$dl_org>$dl_org"] = $dl_org;
-            $a_dl["xxx"] = _("no disponibles");
+        if (count($a_dl) === 0) {
+            $a_dl['xxx'] = (string)_("no disponibles");
         }
+        return $a_dl;
+    }
+
+    /**
+     * Wrapper legacy que devuelve un `web\Desplegable` envolviendo las
+     * opciones de {@see getPosiblesPropietariosOpciones()}. Se mantiene
+     * para compatibilidad con callers que aun renderizan el `<select>`
+     * en servidor (ver `apps/asistentes/controller/form_{1301,3101}.php`).
+     * El resto debe consumir las opciones directamente.
+     *
+     * @param false|string $dl_de_paso
+     */
+    public function getPosiblesPropietarios($dl_de_paso = false): Desplegable
+    {
+        $a_dl = $this->getPosiblesPropietariosOpciones($dl_de_paso);
         return new Desplegable('', $a_dl, '', true);
     }
 
