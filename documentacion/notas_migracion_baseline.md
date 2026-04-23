@@ -298,6 +298,11 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
     - `createAsignaturasTemp()` se ejecuta una unica vez por instancia (antes se reconstruia en cada llamada a `asignaturasQueFaltanPersona()` — cuello de botella en `posibles_asignaturas_ca.php`) y envuelve los `INSERT` del catalogo en una transaccion.
     - Warnings de PHP 8 corregidos: inicializacion de `$condicion`/`$condicion_stgr` en el path `default`, `$aId_nom[$id_nom]++` sobre clave indefinida.
     Consumidores actualizados (`frontend/notas/controller/asig_faltan_{,personas_}select.php`, `apps/actividadestudios/controller/posibles_asignaturas_ca.php`). Fichero legacy borrado.
+- **Slice 17 completado**: `form_1011.php` deja de importar `NotaPersonaFormData` directamente. Se expone via endpoint HTTP y se consume con `PostRequest::getDataFromUrl()`, en linea con `refactor.md` §"Patron de llamada backend desde frontend":
+    - Nuevo controlador `src/notas/infrastructure/ui/http/controllers/nota_persona_form_data.php` que recibe por POST los 5 campos que leia la use case (`id_pau`, `id_asignatura_real`, `sel`, `pau`, `mod`), llama a `NotaPersonaFormData::execute()` y añade los helpers `opcionalesGenericasHelpers()` dentro del mismo payload (clave `helpers`), devolviendo todo con `ContestarJson::enviar('', $data)`.
+    - Ruta `/src/notas/nota_persona_form_data` registrada en `src/notas/config/routes.php`.
+    - `frontend/notas/controller/form_1011.php` cambia `use src\\notas\\application\\NotaPersonaFormData;` por `use frontend\\shared\\PostRequest;`; la llamada directa `NotaPersonaFormData::execute($_POST)` + `NotaPersonaFormData::opcionalesGenericasHelpers()` se sustituye por una unica invocacion `PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [...])` y la lectura de `$datos['helpers']`.
+    - `rg 'use src\\\\[a-zA-Z_]+\\\\application\\\\[A-Za-z_]+Data;' frontend apps` no devuelve resultados: el antipatron queda eliminado en todo el repo (no solo en `notas`). Los otros controladores que se mencionaban como sospechosos (`acta_imprimir`, `acta_ver`, `acta_select`) ya importan solo use cases sin sufijo `Data` (`DatosActa`, repos, VOs), asi que no requieren cambios.
 
 ## Estado final del modulo `notas`
 
@@ -313,7 +318,7 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
 - `frontend/notas/controller/` — 25 controllers delgados, todos con header `frontend/shared/global_header_front.inc` y render `ViewNewPhtml('frontend\\notas\\controller')`. Incluye `actividad_buscar_form.php` (dialogo "añadir ca").
 - `frontend/notas/view/` — 12 vistas PHTML (+ `tesera_ver.phtml` usada por `Tesera` model; + `actividad_buscar_form.phtml`).
 - `src/notas/application/` — use cases + `services/` (helpers compartidos) + `support/` + `legacy/` (bloque `Resumen.php` heredado, encapsulado tras los use cases `InformeStgr*`). Los casos de uso publicos van sin sufijo (`AsignaturasPendientes`, `TablaAlumnosAsignaturas`, `Tesera`, `DatosActa`, `Select1011`, `ActaNueva`, `InformeStgrNumerarios/Agregados/Profesores`, etc.); el sufijo `Service` queda reservado para los helpers dentro de `application/services/` (ej. `ResumenTempTablesService`).
-- `src/notas/infrastructure/ui/http/controllers/` — 17 endpoints HTTP registrados en `src/notas/config/routes.php` (incluye `buscar_acta`, `posibles_opcionales_data`, `posibles_preceptores_data`, `actividades_buscar_data`).
+- `src/notas/infrastructure/ui/http/controllers/` — 18 endpoints HTTP registrados en `src/notas/config/routes.php` (incluye `buscar_acta`, `posibles_opcionales_data`, `posibles_preceptores_data`, `actividades_buscar_data`, `nota_persona_form_data`).
 
 ### Deuda tecnica pendiente (post-refactor)
 
@@ -322,4 +327,4 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
     - Mezcla alumnos + profesores en la misma clase; partir en `ResumenAlumnos` + `ResumenProfesores` es mecanico.
     - N+1 en `profesorEspecialidad()` (1 query + 2 `findById` por profesor).
     - Extraer `comprobar_notas.php` (~500 LOC inline en `frontend/`) a un `ComprobarNotas` use case tambien esta pendiente; no consume `Resumen` pero es el mismo patron.
-2. **`form_1011.php`, `acta_imprimir.php`, `acta_ver.php`, `acta_select.php`**: frontend controllers que importan `src\\notas\\application\\*Data` directamente en vez de usar `PostRequest::getDataFromUrl()`. Pragmatico de momento (estas pantallas son renderizados side-effect-free con mucho contexto PHP) pero viola el principio estricto de `refactor.md` §133. Candidatos a exponer como endpoint `/src/notas/*_data` si se necesita aislamiento o testing independiente.
+2. ~~**`form_1011.php`, `acta_imprimir.php`, `acta_ver.php`, `acta_select.php`**: frontend controllers que importan `src\\notas\\application\\*Data` directamente en vez de usar `PostRequest::getDataFromUrl()`.~~ Resuelto en Slice 17: `form_1011.php` ya consume el nuevo endpoint `/src/notas/nota_persona_form_data`. Los otros tres controladores que se señalaban en esta deuda no importan realmente ningun `*Data` (solo `DatosActa`, VOs y repos), asi que la lista original estaba sobreestimada.

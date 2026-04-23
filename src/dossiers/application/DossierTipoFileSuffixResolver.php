@@ -32,7 +32,7 @@ final class DossierTipoFileSuffixResolver
     public function resolveSuffix(TipoDossier $tipo, string $kind): string
     {
         $id = $tipo->getId_tipo_dossier();
-        $codigo = trim((string) ($tipo->getCodigo() ?? ''));
+        $codigo = trim((string) ($tipo->getCodigoVo()?->value() ?? ''));
         if ($codigo === '') {
             return (string) $id;
         }

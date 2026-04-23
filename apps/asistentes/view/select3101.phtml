@@ -159,31 +159,29 @@
         }
     }
     fnjs_borrar_cargo = function (formulario) {
-        var asis = "test";
-        rta = fnjs_solo_uno(formulario);
-        if (rta == 1) {
-            if (confirm("<?= _("¿Está seguro que desea quitar este cargo a esta persona?");?>")) {
-                $('#mod').val("eliminar");
-                $(formulario).attr('action', "<?= htmlspecialchars((string) $url_update_cargos_actividad, ENT_QUOTES, 'UTF-8') ?>");
-                $(formulario).one("submit", function () {
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type: 'post',
-                        data: $(this).serialize()
-                    })
-                        .done(function (rta_txt) {
-                            if (rta_txt !== '' && rta_txt !== '\\n') {
-                                alert('<?= _("respuesta") ?>: ' + rta_txt);
-                            } else {
-                                fnjs_actualizar(formulario);
-                            }
-                        });
-                    return false;
-                });
-                $(formulario).trigger("submit");
-                $(formulario).off();
-            }
+        var rta = fnjs_solo_uno(formulario);
+        if (rta !== 1) {
+            return;
         }
+        if (!confirm("<?= _("¿Está seguro que desea quitar este cargo a esta persona?");?>")) {
+            return;
+        }
+        $('#mod').val("eliminar");
+        $.ajax({
+            url: '<?= htmlspecialchars((string) $url_cargo_eliminar, ENT_QUOTES, 'UTF-8') ?>',
+            type: 'post',
+            dataType: 'json',
+            data: $(formulario).serialize()
+        }).done(function (rta) {
+            if (rta && rta.success) {
+                fnjs_actualizar(formulario);
+            } else {
+                var msg = (rta && rta.mensaje) ? rta.mensaje : '<?= _("error desconocido") ?>';
+                alert('<?= _("respuesta") ?>: ' + msg);
+            }
+        }).fail(function () {
+            alert('<?= _("error de comunicación con el servidor") ?>');
+        });
     }
     fnjs_transferir = function (formulario) {
         if (confirm("<?= _("¿Está seguro que desea transferir todas las personas seleccionadas a históricos?");?>")) {

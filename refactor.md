@@ -50,6 +50,35 @@ Referencia: `frontend/usuarios/controller/usuario_lista.php`.
 - Si existe un endpoint legacy con dispatcher, mantenerlo solo como wrapper de compatibilidad temporal y marcarlo como deprecado en comentario; cuando no queden referencias, eliminarlo.
 - **Excepcion tolerable** temporalmente: dispatcher que agrupa salidas muy relacionadas de lectura (ej. `actividad_tipo_get` con `salida=asistentes|actividad|nom_tipo|...`) si todas las ramas comparten ya el contrato JSON estandar y viven como use cases independientes en `application`. Documentar que es transicion.
 
+### Playbook de eliminacion de dispatcher `*_ajax` / `*_update`
+
+Patron mecanico repetido en `notas` (`acta_ajax`, `notas_ajax`, `acta_update`, `update_1011`). Un dispatcher es un controlador con `switch($Qque)` / `switch($Qmod)` que enruta a acciones diferentes; se desmonta asi:
+
+1. **Mapear cada rama del switch a un endpoint `/src/<modulo>/<accion>` dedicado.** Extraer la logica a un use case en `src/<modulo>/application/` con responsabilidad unica (ej. `ActaNueva`, `ActaModificar`, `ActaEliminar`; `PersonaNotaNueva`, `PersonaNotaEditar`, `PersonaNotaEliminar`).
+2. **Actualizar todos los consumidores JS en el mismo commit** — cambiar el `url` del `$.ajax` a la accion concreta segun el hidden `mod` / `que` del form.
+3. **Ajustar los `.done` a la respuesta JSON estandar** (`ContestarJson`) con `dataType: 'json'`; dejar de esperar HTML/texto legacy.
+4. **Borrar el dispatcher** cuando `rg "<nombre_dispatcher>"` este limpio en todo el repo.
+
+**Excepcion**: si alguna rama del dispatcher devolvia **HTML inline** (construyendo un `<form>`, `<select>`, bloque de tabla, etc.), esa rama no se convierte a endpoint JSON sino a `frontend/<modulo>/controller/<accion>_form.php` + vista `.phtml`. El HTML se monta en el frontend; los endpoints `/src/...` nunca devuelven HTML. Ejemplo real: rama `frm_buscar` de `notas_ajax` → `frontend/notas/controller/actividad_buscar_form.php`.
+
+## Convencion de naming en `src/<modulo>/application/`
+
+La jerarquia tipica de `src/<modulo>/application/` tiene tres zonas con semantica distinta. **El nombre de la clase y su ubicacion indican su rol**:
+
+| Ubicacion | Sufijo esperado | Rol | Ejemplos |
+|-----------|-----------------|-----|----------|
+| `application/` (raiz) | **sin sufijo** | Caso de uso publico: accion del modulo (mutacion o lectura compleja). Lo llaman los controladores HTTP de `src/.../controllers/` o los use cases `*Data`. | `ActaNueva`, `ActaEliminar`, `PersonaNotaEditar`, `AsignaturasPendientes`, `TablaAlumnosAsignaturas`, `Tesera`, `Select1011`, `InformeStgrNumerarios` |
+| `application/` (raiz) | `*Data` | *Data builder*: junta lecturas de repos + dropdowns en un array serializable que el controlador HTTP pasa a `ContestarJson::enviar(...)`. No tiene efectos secundarios. | `BuscarActaData`, `PosiblesOpcionalesData`, `NotaPersonaFormData`, `ActividadesBuscarData` |
+| `application/services/` | **`*Service`** | Helper compartido entre varios use cases (SQL repetido, parseo de input, tablas temporales…). No es un caso de uso en si mismo. | `ResumenTempTablesService` |
+| `application/support/` | libre | Soporte interno que solo usan los use cases del modulo (parsers, policies). | `PersonaNotaInputParser` |
+| `application/legacy/` | libre | Bloque heredado grande encapsulado tras use cases tipados (ver seccion dedicada mas abajo). | `legacy\Resumen` |
+
+**Reglas derivadas:**
+
+- **No mezclar sufijo `Service` con clases en la raiz.** Si se encuentra un `FooService.php` en `application/`, o se mueve a `application/services/` (es un helper) o se renombra a `Foo` (es un use case). En `notas` se corrigieron cuatro casos (`AsignaturasPendientesService` → `AsignaturasPendientes`, etc.).
+- Un use case en la raiz **no puede heredar de una clase de `services/`**; al reves si (`ResumenTempTablesService` se inyecta dentro de un use case, no lo hereda).
+- Un use case **no deberia `use` a otro use case de su raiz en tiempo de ejecucion** (si lo hace es señal de que uno de los dos es helper y deberia estar en `services/`). Los use cases se componen via el controlador HTTP o el `*Data`.
+
 ## Modulo `ubis` — patrones ya aplicados (retomar en siguientes refactors)
 
 Linea de trabajo: **frontend** delgado (`PostRequest` + vistas) y **src** con casos de uso + controladores HTTP bajo `src/ubis/infrastructure/ui/http/controllers/`. Rutas en `src/ubis/config/routes.php` con prefijo `/src/ubis/<nombre>` (GET y POST si hace falta).
@@ -129,6 +158,42 @@ Linea de trabajo: **frontend** delgado (`PostRequest` + vistas) y **src** con ca
 - En `apps/<modulo>/controller`, preferir wrappers minimos que deleguen a `frontend/...`.
 - Si se necesita preservar temporalmente logica antigua para consulta o rollback, moverla a archivos con prefijo `z...` y dejar claro que no son rutas canonicas.
 - Rutas canonicas para nuevas llamadas: siempre `frontend/...` (UI) y `/src/...` (API).
+
+## Bloques heredados encapsulados en `src/<modulo>/application/legacy/`
+
+A veces un modelo legacy es tan grande (cientos/miles de LOC de SQL ad-hoc + tablas temporales) que reescribirlo no aporta valor inmediato, **pero** el frontend no deberia seguir importandolo como si fuera una clase de dominio. Para ese caso hay una tercera via entre *mover tal cual a `application/`* y *dejarlo en `apps/.../model/`*: **aislarlo en `src/<modulo>/application/legacy/`** detras de wrappers tipados.
+
+Caso real: `apps/notas/model/Resumen.php` (1294 LOC) → `src/notas/application/legacy/Resumen.php`, encapsulado por `InformeStgrNumerarios`, `InformeStgrAgregados`, `InformeStgrProfesores` en `application/` raiz.
+
+### Reglas
+
+- El **frontend nunca** hace `use src\<modulo>\application\legacy\...`. La unica capa que conoce el legacy es `application/` (raiz), que expone casos de uso con API tipada.
+- Cada flujo del frontend que necesite el legacy tiene su **wrapper tipado** en `application/` que:
+    - Recibe input simple (enteros, arrays, DTOs), no `$_POST` ni propiedades mutables.
+    - Devuelve **arrays neutros** (datos), nunca HTML. Si el legacy aun emite HTML (`Lista()`, `mostrar_tabla()`, …) queda como deuda interna pero **no se propaga al wrapper**: el wrapper pone el HTML dentro del array como string y la vista lo imprime con `<?= $datos['lista'] ?>`. Mas adelante se puede convertir a estructura si compensa.
+    - No expone setters/getters del legacy al caller: el wrapper encapsula la secuencia `setX() → nuevaTabla() → enY()` que el legacy requiere.
+- Los **use cases wrapper siguen la convencion de naming** (`InformeStgrNumerarios`, sin `Service`). Solo el bloque heredado vive en `legacy/`.
+- **No es deuda arquitectonica a ojos del resto del modulo**: la capa `legacy/` puede vivir indefinidamente. Lo que si es deuda es importar `legacy/` desde fuera de `application/`.
+
+### Cuando elegir `application/legacy/` vs otra opcion
+
+| Situacion | Destino |
+|-----------|---------|
+| Clase legacy pequeña (<300 LOC) y sin SQL raro | Reescribir en `application/` raiz, borrar legacy. Patron `Tesera`, `TablaAlumnosAsignaturas`, `AsignaturasPendientes`. |
+| Clase legacy grande, pero con 3-4 responsabilidades separables por reescritura | Partir en use cases en `application/` raiz + helpers en `application/services/`; borrar legacy. |
+| Clase legacy grande, SQL muy especifico, reescribir no aporta valor (ej. >1000 LOC de reportes con tablas temporales) | **`application/legacy/<Clase>.php`** + wrappers tipados. |
+| Widget `SelectNNNN.php` usado por `DossierTipoFileSuffixResolver` | `application/<Clase>.php` (resolver extendido para mirar tambien en `application/`); ver `src/dossiers/application/DossierTipoFileSuffixResolver::resolveSelectClassFqcn()`. |
+
+### Limpieza minima que si conviene hacer en el legacy al moverlo
+
+Aunque no se reescribe la logica de reportes, **si** vale la pena hacer una pasada mecanica al moverlo a `legacy/`:
+
+- Arreglar bugs locales evidentes (pisado de propiedades, `exit()` en constructor → `\InvalidArgumentException`, typos).
+- `(int)` / `(float)` defensivo en parametros que se interpolan en `WHERE` / `HAVING` cuando no se puede migrar a `prepare()` (ver punto sobre N+1 / prepared abajo).
+- Eliminar codigo muerto evidente: metodos sin callers (`rg`), propiedades no asignadas, bloques comentados.
+- Eliminar `if`/`else` tautologicos.
+
+Reescribir logica de reportes o partir la clase en dos se considera *fase 2* y solo se aborda si hay necesidad concreta.
 
 ## Separacion frontend ↔ backend: nunca instanciar `src` desde `frontend/view/controller`
 
@@ -225,6 +290,31 @@ Cuando se cambia que devuelve un endpoint en `src/` (p.ej. de HTML a JSON, o de 
 4. Forzar `dataType: 'json'` en las llamadas AJAX y manejar `success === false` mostrando `mensaje`.
 5. Si varias vistas comparten consumidor (varios `_actividad_tipo.js.html.twig` en distintos modulos), tocar todos — suelen ser copias divergentes con pequenas diferencias.
 6. `php -l` en los ficheros tocados y abrir al menos una pantalla por consumidor para verificar que se sigue pintando.
+
+## `Hash` y reescritura de URLs de AJAX al mover un endpoint
+
+Al migrar una ruta de `apps/.../controller/foo_ajax.php` a `/src/<modulo>/<accion>`, la URL cambia **pero tambien la firma del hash**. Hay que saber que hace cada helper antes de copiar codigo a ciegas:
+
+- **`Hash::getCamposHtml($aCampos, $aHidden)`** — hashea **campos del form** y hidden; **no** incluye la URL. Genera un `<input type="hidden" name="hash" value="...">` que se envia con el form. **Sirve para `POST`** donde los datos viajan en el body y la URL es fija.
+- **`Hash::linkSinVal($url, $aCampos)`** — hashea **URL + nombres de campos** (los valores viajan aparte). Devuelve un fragmento `...&hash=X&campos=...` o `?hash=...&campos=...` **dependiendo de si `$url` ya lleva `?`**. Sirve para `GET` / AJAX donde la URL y los nombres de parametros forman parte de la firma.
+
+### Reglas practicas
+
+1. **Una URL nueva = un Hash nuevo.** No reutilizar el `oHash` del dispatcher viejo cuando se migra a endpoints dedicados. Si `acta_ajax.php` tenia un hash que cubria `examinadores` + `asignaturas`, al partirlo en `/src/notas/examinadores_search` y `/src/notas/asignaturas_search` hacen falta **dos `Hash` distintos**, cada uno con sus campos.
+2. **`linkSinVal` y `?`/`&`.** Si se concatena el resultado de `linkSinVal` a una URL que ya llevaba query string (`?foo=bar`), se queda con `?` duplicado. Dos soluciones:
+    - Pasar `$url` sin query a `linkSinVal`, y añadir los parametros dinamicos como `data` del `$.ajax`.
+    - Si la URL ya tiene `?`, concatenar el hash string manualmente con `&` y llamar al `$.ajax` **sin `data`** (todo va en la URL). Patron usado en `form_1011.phtml` / `form_1303.phtml` para `posibles_preceptores`.
+3. **No meter campos opcionales en `setCamposForm`.** El hash se calcula con los nombres declarados; si un campo no siempre viaja, romperia la verificacion. Solo declarar los campos que viajan *siempre*.
+4. **Pasar las URLs construidas al frontend como strings**, no reconstruir en JS. El controlador hace `$a_campos['url_foo'] = $oHash->...()` y la vista / JS las consume por nombre. Esto ata el hash a su URL y facilita el `rg`.
+5. **Cuando una misma vista elige URL segun el modo del form** (`mod=nueva` vs `mod=modificar`), generar los dos hashes en el controlador (`url_acta_nueva`, `url_acta_modificar`) y que el JS haga `var url = ($form.find('[name=mod]').val() === 'nueva') ? url_acta_nueva : url_acta_modificar;`. No se vale un solo hash con URL dinamica.
+
+### Checklist al cambiar la URL de un endpoint consumido por AJAX
+
+1. Generar el nuevo `Hash` en el controlador frontend para esa URL concreta.
+2. Pasar `url_xxx` al `.phtml` via `$a_campos`.
+3. En JS leer `url_xxx` (declarado por la vista como `var url_xxx = '<?= $url_xxx ?>';`).
+4. Ajustar el `$.ajax` a `dataType: 'json'` y parsear la respuesta de `ContestarJson` (`if (!response.success) { … }`).
+5. Si el endpoint viejo queda sin callers → borrarlo en el mismo commit (`rg` final).
 
 ## Siguiente refactor sugerido en `profesores`
 

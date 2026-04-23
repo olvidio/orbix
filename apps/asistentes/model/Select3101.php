@@ -925,7 +925,10 @@ class Select3101
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
             'url_form_cargos_actividad' => DossierTipoPublicUrls::relativeFormController(3102),
-            'url_update_cargos_actividad' => DossierTipoPublicUrls::relativeUpdate(3102),
+            // Sustituye al antiguo `url_update_cargos_actividad` (=> update_3102.php):
+            // ahora la eliminacion de cargo va al nuevo endpoint JSON
+            // `src\actividadcargos\infrastructure\ui\http\controllers\cargo_eliminar.php`.
+            'url_cargo_eliminar' => rtrim(\core\ConfigGlobal::getWeb(), '/') . '/src/actividadcargos/cargo_eliminar',
         ];
 
         $oView = new ViewPhtml(__NAMESPACE__);

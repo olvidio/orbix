@@ -13,12 +13,14 @@
  * @param array   $_POST['sel']       [id_activ#id_asignatura]
  *
  * Orquesta la vista `frontend/notas/view/form_1011.phtml`. La logica de
- * preparacion de datos vive en `src\notas\application\NotaPersonaFormData`.
+ * preparacion de datos vive en `src\notas\application\NotaPersonaFormData`
+ * y se consume via PostRequest desde `/src/notas/nota_persona_form_data`
+ * (el frontend no importa el caso de uso directamente).
  */
 
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
-use src\notas\application\NotaPersonaFormData;
+use frontend\shared\PostRequest;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
@@ -36,7 +38,13 @@ $Qid_pau = (int)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qpermiso = (int)filter_input(INPUT_POST, 'permiso');
 
-$datos = NotaPersonaFormData::execute($_POST);
+$datos = PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [
+    'id_pau' => $Qid_pau,
+    'id_asignatura_real' => (string)filter_input(INPUT_POST, 'id_asignatura_real'),
+    'sel' => (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY),
+    'pau' => $Qpau,
+    'mod' => (string)filter_input(INPUT_POST, 'mod'),
+]);
 $mod = $datos['mod'];
 $id_asignatura_real = $datos['id_asignatura_real'];
 
@@ -91,7 +99,7 @@ if (!empty($epoca)) {
     $chk_epoca_otro = '';
 }
 
-$helpers = NotaPersonaFormData::opcionalesGenericasHelpers();
+$helpers = $datos['helpers'];
 
 $oHash = new Hash();
 $campos_chk = '!preceptor!epoca!tipo_acta';

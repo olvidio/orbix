@@ -7,6 +7,7 @@ use core\Set;
 use src\dossiers\domain\value_objects\TipoDossierApp;
 use src\dossiers\domain\value_objects\TipoDossierCampoTo;
 use src\dossiers\domain\value_objects\TipoDossierClass;
+use src\dossiers\domain\value_objects\TipoDossierCodigo;
 use src\dossiers\domain\value_objects\TipoDossierDb;
 use src\dossiers\domain\value_objects\TipoDossierDescripcion;
 use src\dossiers\domain\value_objects\TipoDossierTablaFrom;
@@ -51,7 +52,7 @@ class TipoDossier
     private ?TipoDossierDb $db = null;
 
     /** Slug para nombres de fichero Select_codigo, form_codigo, update_codigo (nullable = solo legacy numérico). */
-    private ?string $codigo = null;
+    private ?TipoDossierCodigo $codigo = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -340,15 +341,17 @@ class TipoDossier
     }
 
 
-    public function getCodigo(): ?string
+    public function getCodigoVo(): ?TipoDossierCodigo
     {
         return $this->codigo;
     }
 
 
-    public function setCodigo(?string $codigo = null): void
+    public function setCodigoVo(TipoDossierCodigo|string|null $codigo = null): void
     {
-        $this->codigo = $codigo === null || $codigo === '' ? null : $codigo;
+        $this->codigo = $codigo instanceof TipoDossierCodigo
+            ? $codigo
+            : TipoDossierCodigo::fromNullableString($codigo);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
