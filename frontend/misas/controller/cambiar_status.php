@@ -36,13 +36,13 @@ $url_nuevo_status = '/src/misas/nuevo_status';
 $oHashNuevoStatus = new Hash();
 $oHashNuevoStatus->setUrl($url_nuevo_status);
 $oHashNuevoStatus->setCamposForm('id_zona!periodo!estado!empiezamin!empiezamax');
-$h_nuevo_status = $oHashNuevoStatus->linkSinVal();
+$h_nuevo_status = $oHashNuevoStatus->linkSinValParams();
 
 $url_ver_cuadricula_zona = 'frontend/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaStatus = new Hash();
 $oHashZonaStatus->setUrl($url_ver_cuadricula_zona);
 $oHashZonaStatus->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
-$h_zona_status = $oHashZonaStatus->linkSinVal();
+$h_zona_status = $oHashZonaStatus->linkSinValParams();
 
 $oHash = new Hash();
 $oHash->setUrl('frontend/misas/controller/cambiar_status.php');

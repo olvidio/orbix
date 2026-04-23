@@ -8,8 +8,8 @@ use web\Hash;
  * Helper para construir los `Hash` repetitivos de las pantallas de procesos
  * (`procesos_select`, `procesos_ver`, `tipo_activ_proceso`, ...).
  *
- * Usa el patron `setUrl + setCamposForm + linkSinVal()` que se repite una y
- * otra vez por cada boton/AJAX de la pantalla.
+ * Usa el patron `setUrl + setCamposForm + linkSinValParams()` que se repite
+ * una y otra vez por cada boton/AJAX de la pantalla.
  */
 final class ProcesosHashes
 {
@@ -22,6 +22,6 @@ final class ProcesosHashes
         $oHash = new Hash();
         $oHash->setUrl($url);
         $oHash->setCamposForm($camposForm);
-        return $oHash->linkSinVal();
+        return $oHash->linkSinValParams();
     }
 }

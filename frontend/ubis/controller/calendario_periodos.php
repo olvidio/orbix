@@ -38,17 +38,17 @@ $url_eliminar = $web . '/src/ubis/calendario_periodos_eliminar';
 $oHash = new Hash();
 $oHash->setUrl($url_get2);
 $oHash->setCamposForm('id_ubi!year');
-$h_ver = $oHash->linkSinVal();
+$h_ver = $oHash->linkSinValParams();
 
 $oHashNew = new Hash();
 $oHashNew->setUrl($url_nuevo);
 $oHashNew->setCamposForm('id_ubi!year');
-$h_nuevo = $oHashNew->linkSinVal();
+$h_nuevo = $oHashNew->linkSinValParams();
 
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_form_periodo);
 $oHashMod->setCamposForm('id_item');
-$h_modificar = $oHashMod->linkSinVal();
+$h_modificar = $oHashMod->linkSinValParams();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'h_ver' => $h_ver,

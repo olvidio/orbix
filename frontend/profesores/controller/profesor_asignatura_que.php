@@ -22,7 +22,7 @@ $oHash->setCamposForm('id_asignatura');
 
 $a_campos = [
     'oDesplAsignaturas' => $oDesplAsignaturas,
-    'h' => $oHash->linkSinVal(),
+    'h' => $oHash->linkSinValParams(),
     'url_ajax' => ConfigGlobal::getWeb() . '/frontend/profesores/controller/profesor_asignatura_ajax.php',
 ];
 

@@ -193,13 +193,13 @@ $url_sincro_ajax = ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_aj
 $oHash1 = new Hash();
 $oHash1->setUrl($url_sincro_ajax);
 $oHash1->setCamposForm('que!region!dl_listas!tipo_persona');
-$h1 = $oHash1->linkSinVal();
+$h1 = $oHash1->linkSinValParams();
 
 $url_refrescar = ConfigGlobal::getWeb() . '/apps/dbextern/controller/refrescarTablaBdu.php';
 $oHash2 = new Hash();
 $oHash2->setUrl($url_refrescar);
 $oHash2->setCamposForm('que');
-$h2 = $oHash2->linkSinVal();
+$h2 = $oHash2->linkSinValParams();
 
 $url_actualizar = Hash::link(ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_index.php?' . http_build_query(['tipo' => $tipo_persona]));
 

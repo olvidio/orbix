@@ -29,7 +29,7 @@ $url = ConfigGlobal::getWeb() . '/frontend/menus/controller/menus_get.php';
 $oHash1 = new Hash();
 $oHash1->setUrl($url);
 $oHash1->setCamposForm('filtro_grupo');
-$h1 = $oHash1->linkSinVal();
+$h1 = $oHash1->linkSinValParams();
 
 $a_campos = ['url' => $url,
     'h1' => $h1,

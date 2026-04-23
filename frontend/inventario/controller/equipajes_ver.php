@@ -62,7 +62,7 @@ $oHash->setArrayCamposHidden(['eliminar' => $Qeliminar, 'imprimir' => $Qimprimir
 $oHash1 = new Hash();
 $oHash1->setUrl('frontend/inventario/controller/equipajes_form_texto_listado.php');
 $oHash1->setCamposForm('loc!id_equipaje!texto');
-$h_mod_txt = $oHash1->linkSinVal();
+$h_mod_txt = $oHash1->linkSinValParams();
 
 $a_campos = [
     'oHash' => $oHash,

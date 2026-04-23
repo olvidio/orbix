@@ -30,7 +30,7 @@
             return;
         }
         let url = '<?= $url_cama_form ?>';
-        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + '<?= $oHashCamaForm->linkSinVal() ?>';
+        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + '<?= $oHashCamaForm->linkSinValParams() ?>';
         fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
 
@@ -49,14 +49,14 @@
     fnjs_editar_cama = function (id_cama) {
         let id_habitacion = $('#frm2 [name="id_habitacion"]').val();
         let url = '<?= $url_cama_form ?>';
-        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaForm->linkSinVal() ?>';
+        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaForm->linkSinValParams() ?>';
         fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
 
     fnjs_eliminar_cama = function (id_cama) {
         if (confirm("<?= _("¿Seguro que desea borrar esta cama?") ?>")) {
             let url = '<?= $url_cama_delete ?>';
-            let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaDelete->linkSinVal() ?>';
+            let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaDelete->linkSinValParams() ?>';
             let request = $.ajax({
                 data: parametros,
                 url: 'src/ubiscamas/cama_delete',

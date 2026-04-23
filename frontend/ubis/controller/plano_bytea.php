@@ -147,7 +147,7 @@ switch ($Qact) {
         $oHashComprobar->setArraycamposHidden($a_camposHidden);
         */
         $oHashComprobar->setCamposForm('id_direccion!obj_dir!act');
-        $h = $oHashComprobar->linkSinVal();
+        $h = $oHashComprobar->linkSinValParams();
 
         $oHash = new Hash();
         $a_camposHidden = array(

@@ -899,12 +899,12 @@ class Select3101
         $oHash3 = new Hash();
         $oHash3->setUrl(ConfigGlobal::getWeb() . "/apps/asistentes/controller/form_mover.php");
         $oHash3->setCamposForm('id_pau!id_activ');
-        $h3 = $oHash3->linkSinVal();
+        $h3 = $oHash3->linkSinValParams();
 
         $oHash4 = new Hash();
         $oHash4->setUrl(ConfigGlobal::getWeb() . "/apps/asistentes/controller/update_3101.php");
         $oHash4->setCamposForm('mod!plaza!lista_json!id_activ');
-        $h4 = $oHash4->linkSinVal();
+        $h4 = $oHash4->linkSinValParams();
 
         $this->setLinksInsert();
 

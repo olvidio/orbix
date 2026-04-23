@@ -95,7 +95,7 @@ $url_actualizar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/usuario_pe
 $oHash1 = new Hash();
 $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');
-$h_actualizar = $oHash1->linkSinVal();
+$h_actualizar = $oHash1->linkSinValParams();
 
 if (is_true($Qdl_propia)) {
     $chk_propia = 'checked';

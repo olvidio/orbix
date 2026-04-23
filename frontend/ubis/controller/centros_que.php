@@ -38,17 +38,17 @@ $url_get_plazas = 'frontend/ubis/controller/centros_get_plazas.php';
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_form_labor);
 $oHashMod->setCamposForm('id_ubi');
-$h_form_labor = $oHashMod->linkSinVal();
+$h_form_labor = $oHashMod->linkSinValParams();
 
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_form_num);
 $oHashMod->setCamposForm('id_ubi');
-$h_form_num = $oHashMod->linkSinVal();
+$h_form_num = $oHashMod->linkSinValParams();
 
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_form_plazas);
 $oHashMod->setCamposForm('id_ubi');
-$h_form_plazas = $oHashMod->linkSinVal();
+$h_form_plazas = $oHashMod->linkSinValParams();
 
 $oHashLabor = new Hash();
 $oHashLabor->setUrl($url_get_labor);

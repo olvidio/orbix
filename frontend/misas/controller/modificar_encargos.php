@@ -33,7 +33,7 @@ $url_ver_encargos_zona = 'frontend/misas/controller/ver_encargos_zona.php';
 $oHashZona = new Hash();
 $oHashZona->setUrl($url_ver_encargos_zona);
 $oHashZona->setCamposForm('id_zona!orden');
-$h_zona = $oHashZona->linkSinVal();
+$h_zona = $oHashZona->linkSinValParams();
 
 $a_campos = [
     'oDesplZonas' => $oDesplZonas,

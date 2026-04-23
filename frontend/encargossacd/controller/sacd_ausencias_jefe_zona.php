@@ -33,7 +33,7 @@ $url_get = 'frontend/encargossacd/controller/sacd_ausencias_get.php';
 $oHashGet = new Hash();
 $oHashGet->setUrl($url_get);
 $oHashGet->setCamposForm('filtro_sacd!id_nom!historial');
-$h_get = $oHashGet->linkSinVal();
+$h_get = $oHashGet->linkSinValParams();
 
 $hashes = SacdFichaAjaxHashes::hashesComunes();
 

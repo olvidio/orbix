@@ -36,12 +36,12 @@ $url_desplegable = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/activi
 $oHashDespl = new Hash();
 $oHashDespl->setUrl($url_desplegable);
 $oHashDespl->setCamposForm('tipo!dl_org!isfsv');
-$h_desplegable = $oHashDespl->linkSinVal();
+$h_desplegable = $oHashDespl->linkSinValParams();
 
 $oHash = new Hash();
 $oHash->setUrl(rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get');
 $oHash->setCamposForm('extendida!modo!salida!entrada!isfsv');
-$h = $oHash->linkSinVal();
+$h = $oHash->linkSinValParams();
 
 $oHash1 = new Hash();
 $oHash1->setCamposForm('id_ubi_1');

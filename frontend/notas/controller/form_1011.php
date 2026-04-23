@@ -132,7 +132,7 @@ $url_posibles_opcionales = $web . '/src/notas/posibles_opcionales_data';
 $oHashOpcionales = new Hash();
 $oHashOpcionales->setUrl($url_posibles_opcionales);
 $oHashOpcionales->setCamposForm('id_nom');
-$h_posibles_opcionales = $oHashOpcionales->linkSinVal();
+$h_posibles_opcionales = $oHashOpcionales->linkSinValParams();
 
 $url_posibles_preceptores = $web . '/src/notas/posibles_preceptores_data';
 $oHashPreceptores = new Hash();
@@ -143,13 +143,13 @@ $url_actividad_buscar = $web . '/frontend/notas/controller/actividad_buscar_form
 $oHashActivBuscar = new Hash();
 $oHashActivBuscar->setUrl($url_actividad_buscar);
 $oHashActivBuscar->setCamposForm('dl_org!f_acta_iso');
-$h_actividad_buscar = $oHashActivBuscar->linkSinVal();
+$h_actividad_buscar = $oHashActivBuscar->linkSinValParams();
 
 $url_buscar_acta = $web . '/src/notas/buscar_acta';
 $oHashBuscarActa = new Hash();
 $oHashBuscarActa->setUrl($url_buscar_acta);
 $oHashBuscarActa->setCamposForm('acta');
-$h_buscar_acta = $oHashBuscarActa->linkSinVal();
+$h_buscar_acta = $oHashBuscarActa->linkSinValParams();
 
 $url_persona_nota_nueva = $web . '/src/notas/persona_nota_nueva';
 $url_persona_nota_editar = $web . '/src/notas/persona_nota_editar';

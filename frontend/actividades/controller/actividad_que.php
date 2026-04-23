@@ -106,7 +106,7 @@ $url_filtros = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_
 $oHashFiltros = new Hash();
 $oHashFiltros->setUrl($url_filtros);
 $oHashFiltros->setCamposForm('sfsv!modo!dl_org!filtro_lugar!id_ubi!publicado');
-$h_filtros = $oHashFiltros->linkSinVal();
+$h_filtros = $oHashFiltros->linkSinValParams();
 
 $aOpciones = array(
     'tot_any' => _("todo el año"),
@@ -150,7 +150,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHash1 = new Hash();
 $oHash1->setUrl(rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get');
 $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
-$h = $oHash1->linkSinVal();
+$h = $oHash1->linkSinValParams();
 
 $aQuery = array('que' => $Qque, 'sactividad' => $Qsactividad, 'sasistentes' => $Qsasistentes);
 if (is_array($aQuery)) {
@@ -225,7 +225,7 @@ if (ConfigGlobal::is_app_installed('procesos')) {
     $oHash1 = new Hash();
     $oHash1->setUrl($url_actualizar_fases);
     $oHash1->setCamposForm('dl_propia!id_tipo_activ!selected');
-    $h_actualizar_fases = $oHash1->linkSinVal();
+    $h_actualizar_fases = $oHash1->linkSinValParams();
 
     if (empty($Qid_tipo_activ)) {
         $Qid_tipo_activ = ConfigGlobal::mi_sfsv();

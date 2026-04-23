@@ -49,11 +49,15 @@ class ZonaCtrLista
             if ($id_ubi[0] === '2') {
                 $a_valores[$i]['clase'] = 'tono2';
             }
+            // En las ramas `no` / `no_sf` los centros no tienen zona
+            // asignada (`id_zona IS NULL`), por lo que `findById(null)`
+            // rompe la firma `int`. Saltamos la busqueda y dejamos el
+            // nombre vacio cuando no hay zona.
             $idZonaCentro = $oCentro->getId_zona();
-            $oZona = $ZonaRepository->findById($idZonaCentro);
+            $oZona = $idZonaCentro !== null ? $ZonaRepository->findById($idZonaCentro) : null;
             $a_valores[$i]['sel'] = $id_ubi;
             $a_valores[$i][1] = $oCentro->getNombre_ubi();
-            $a_valores[$i][2] = $oZona->getNombre_zona();
+            $a_valores[$i][2] = $oZona?->getNombre_zona() ?? '';
         }
 
         return [

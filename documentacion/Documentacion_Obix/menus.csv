@@ -75,10 +75,10 @@ id_grupmenu,?column?,url,parametros,id_mod
 4,listados (listas de ubis),frontend/ubis/controller/list_ctr.php,,3
 4,modificar centros (Centros seleccionar),frontend/ubis/controller/centros_que.php,,3
 4,cartas presentacion (Raiz cartas presentacion),,,25
-4,modificar (Cartas Presentacion),apps/cartaspresentacion/controller/cartas_presentacion_que.php,,25
-4,lista todo (Listado cartas presentación),apps/cartaspresentacion/controller/cartas_presentacion_lista.php,que=lista_todo,25
-4,lista dl (Listado cartas presentación),apps/cartaspresentacion/controller/cartas_presentacion_lista.php,que=lista_dl,25
-4,buscar (Buscar Cartas presentacion),apps/cartaspresentacion/controller/cartas_presentacion_buscar.php,,25
+4,modificar (Cartas Presentacion),frontend/cartaspresentacion/controller/cartas_presentacion.php,,25
+4,lista todo (Listado cartas presentación),frontend/cartaspresentacion/controller/cartas_presentacion_lista.php,que=lista_todo,25
+4,lista dl (Listado cartas presentación),frontend/cartaspresentacion/controller/cartas_presentacion_lista.php,que=lista_dl,25
+4,buscar (Buscar Cartas presentacion),frontend/cartaspresentacion/controller/cartas_presentacion_buscar.php,,25
 4,planning (Raiz base),,,1
 4,persona dl (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaDl,6
 4,num de paso (Planning persona),frontend/planning/controller/planning_persona_que.php,obj_pau=PersonaEx&na=n,6

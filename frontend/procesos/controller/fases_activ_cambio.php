@@ -103,12 +103,12 @@ $url_get = $webBase . '/src/procesos/fases_activ_cambio_get';
 $oHashLista = new Hash();
 $oHashLista->setUrl($url_lista);
 $oHashLista->setCamposForm('dl_propia!id_tipo_activ!id_fase_nueva!periodo!year!empiezamax!empiezamin!accion');
-$h_lista = $oHashLista->linkSinVal();
+$h_lista = $oHashLista->linkSinValParams();
 
 $oHashAct = new Hash();
 $oHashAct->setUrl($url_get);
 $oHashAct->setCamposForm('dl_propia!id_tipo_activ!id_fase_sel');
-$h_actualizar = $oHashAct->linkSinVal();
+$h_actualizar = $oHashAct->linkSinValParams();
 
 $url_tipo = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get';
 $oHash1 = new Hash();

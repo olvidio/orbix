@@ -174,7 +174,7 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
     $oHash1->setUrl($url_ajax);
     $oHash1->setCamposForm('id_activ!id_nom');
     //$oHash1->setCamposNo('id_nom');
-    $h1 = $oHash1->linkSinVal();
+    $h1 = $oHash1->linkSinValParams();
 }
 
 $oHash = new Hash();

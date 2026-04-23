@@ -34,7 +34,7 @@ $url_ver_cuadricula_zona = 'frontend/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaPeriodo = new Hash();
 $oHashZonaPeriodo->setUrl($url_ver_cuadricula_zona);
 $oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
-$h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
+$h_zona_periodo = $oHashZonaPeriodo->linkSinValParams();
 
 $oHash = new Hash();
 $oHash->setUrl('frontend/misas/controller/ver_plan_de_misas.php');

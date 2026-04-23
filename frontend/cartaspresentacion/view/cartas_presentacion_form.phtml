@@ -1,0 +1,42 @@
+<?php
+/**
+ * Vista del formulario modal de modificacion de una carta de presentacion.
+ *
+ * @var bool $ok
+ * @var string $mensaje
+ * @var string $nombre_ubi
+ * @var string $pres_nom
+ * @var string $pres_telf
+ * @var string $pres_mail
+ * @var string $zona
+ * @var string $observ
+ * @var \web\Hash $oHashUpdate
+ */
+?>
+<form id="frm_pres">
+<?php if ($ok): ?>
+    <h3><?= _("centro") ?>  <?= htmlspecialchars($nombre_ubi, ENT_QUOTES) ?></h3>
+    <?= $oHashUpdate->getCamposHtml() ?>
+    <?= _("nombre") ?>
+    <input type="text" size="30" name="pres_nom" value="<?= htmlspecialchars($pres_nom, ENT_QUOTES) ?>">
+    <br>
+    <?= _("teléfono") ?>
+    <input type="text" size="12" name="pres_telf" value="<?= htmlspecialchars($pres_telf, ENT_QUOTES) ?>">
+    <br>
+    <?= _("e-mail") ?>
+    <input type="text" size="20" name="pres_mail" value="<?= htmlspecialchars($pres_mail, ENT_QUOTES) ?>">
+    <br>
+    <?= _("zona") ?>
+    <input type="text" size="20" name="zona" value="<?= htmlspecialchars($zona, ENT_QUOTES) ?>">
+    <br>
+    <?= _("observaciones") ?>
+    <input type="text" size="60" name="observ" value="<?= htmlspecialchars($observ, ENT_QUOTES) ?>">
+    <br><br>
+    <input type="button" value="<?= _("guardar") ?>" onclick="fnjs_guardar_cp('#frm_pres');">
+    <input type="button" value="<?= _("cancel") ?>" onclick="fnjs_cerrar();">
+<?php else: ?>
+    <?= htmlspecialchars($mensaje, ENT_QUOTES) ?>
+    <br><br>
+    <input type="button" value="<?= _("cancel") ?>" onclick="fnjs_cerrar();">
+<?php endif; ?>
+</form>

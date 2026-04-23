@@ -171,7 +171,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     $oHash2 = new Hash();
     $oHash2->setUrl($url);
     $oHash2->setCamposForm('filtro_grupo!id_menu');
-    $h2 = $oHash2->linkSinVal();
+    $h2 = $oHash2->linkSinValParams();
 
     $a_campos = ['oPosicion' => $oPosicion,
         'url' => $url,

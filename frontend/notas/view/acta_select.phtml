@@ -10,7 +10,7 @@
                 if ($(this).prop('checked') === true) {
                     key = $(this).prop('value');
                     url = '<?= $url_download ?>';
-                    url_download = url + '?key=' + key + '&<?= $h_download ?>';
+                    url_download = url + '?key=' + key + '<?= $h_download ?>';
                     window.open(url_download);
                 }
             });

@@ -50,7 +50,7 @@ final class SacdAusenciasJefeZonaData
             $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
             foreach ($cZonas as $oZona) {
                 $id_zona = $oZona->getId_zona();
-                $cSacds = $ZonaSacdRepository->getSacdsZona($id_zona) ?: [];
+                $cSacds = $ZonaSacdRepository->getIdSacdsDeZona($id_zona);
                 foreach ($cSacds as $id_nom) {
                     $oPersonaSacd = $PersonaSacdRepository->findById($id_nom);
                     $sacd = $oPersonaSacd?->getNombreApellidos();

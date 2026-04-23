@@ -263,8 +263,9 @@ class ActividadesPorZonasService
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $oF_ini = $oActividad->getF_ini();
             $oF_fin = $oActividad->getF_fin();
-            $h_ini = $oActividad->getH_ini();
-            $h_fin = $oActividad->getH_fin();
+            // `TimeLocal` no implementa `__toString`; formateamos explicitamente.
+            $h_ini = $oActividad->getH_ini()?->format('H:i');
+            $h_fin = $oActividad->getH_fin()?->format('H:i');
             $dl_org = $oActividad->getDl_org();
             $nom_activ = $oActividad->getNom_activ();
 

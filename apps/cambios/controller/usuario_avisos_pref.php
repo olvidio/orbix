@@ -220,17 +220,17 @@ $url_actualizar = ConfigGlobal::getWeb() . '/apps/cambios/controller/usuario_avi
 $oHash1 = new Hash();
 $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('salida!dl_propia!id_tipo_activ!id_usuario!objeto');
-$h_actualizar = $oHash1->linkSinVal();
+$h_actualizar = $oHash1->linkSinValParams();
 
 $oHash2 = new Hash();
 $oHash2->setUrl($url_actualizar);
 $oHash2->setCamposForm('salida!objeto!id_item_usuario_objeto');
-$h_propiedades = $oHash2->linkSinVal();
+$h_propiedades = $oHash2->linkSinValParams();
 
 $oHash3 = new Hash();
 $oHash3->setUrl($url_actualizar);
 $oHash3->setCamposForm('salida!objeto!propiedad!id_item');
-$h_mod = $oHash3->linkSinVal();
+$h_mod = $oHash3->linkSinValParams();
 
 if (is_true($dl_propia)) {
     $chk_propia = 'checked';

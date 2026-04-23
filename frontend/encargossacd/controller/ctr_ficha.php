@@ -50,13 +50,13 @@ $url_ctr = $webBase . '/src/encargossacd/ctr_get_select_data';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('filtro_ctr!id_ubi');
-$h_ctr = $oHashCtr->linkSinVal();
+$h_ctr = $oHashCtr->linkSinValParams();
 
 $url_ficha = 'frontend/encargossacd/controller/ctr_get_ficha.php';
 $oHashFicha = new Hash();
 $oHashFicha->setUrl($url_ficha);
 $oHashFicha->setCamposForm('id_ubi');
-$h_ficha = $oHashFicha->linkSinVal();
+$h_ficha = $oHashFicha->linkSinValParams();
 
 $fase = 'fase real';
 

@@ -30,7 +30,7 @@ $oHash->setcamposNo('comun!sv!sf');
 $oHash1 = new Hash();
 $oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/devel/controller/db_ajax.php');
 $oHash1->setCamposForm('salida!entrada');
-$h = $oHash1->linkSinVal();
+$h = $oHash1->linkSinValParams();
 
 $msg_falta_dl = _("debe poner la delegación");
 $msg_falta_esquema = _("debe poner la delegación de referencia");

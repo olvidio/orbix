@@ -42,19 +42,19 @@ $url_guardar_encargo_zona = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/gua
 $oHashGuardar = new Hash();
 $oHashGuardar->setUrl($url_guardar_encargo_zona);
 $oHashGuardar->setCamposForm('id_enc!id_tipo_enc!id_ubi!id_zona!descripcion_lugar!encargo!idioma_enc!observ!orden!prioridad');
-$h_guardar_encargo_zona = $oHashGuardar->linkSinVal();
+$h_guardar_encargo_zona = $oHashGuardar->linkSinValParams();
 
 $url_eliminar_encargo_zona = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/eliminar_encargo_zona';
 $oHashEliminar = new Hash();
 $oHashEliminar->setUrl($url_eliminar_encargo_zona);
 $oHashEliminar->setCamposForm('id_enc');
-$h_eliminar_encargo_zona = $oHashEliminar->linkSinVal();
+$h_eliminar_encargo_zona = $oHashEliminar->linkSinValParams();
 
 $url_ver_encargos_zona = 'frontend/misas/controller/ver_encargos_zona.php';
 $oHashVer = new Hash();
 $oHashVer->setUrl($url_ver_encargos_zona);
 $oHashVer->setCamposForm('id_zona!orden');
-$h_ver_encargos_zona = $oHashVer->linkSinVal();
+$h_ver_encargos_zona = $oHashVer->linkSinValParams();
 
 $a_campos = [
     'json_columns_cuadricula' => json_encode($columns),

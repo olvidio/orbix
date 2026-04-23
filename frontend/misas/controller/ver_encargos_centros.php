@@ -35,30 +35,32 @@ $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setOpciones($a_centros_zona);
 
 // URLs absolutas para los endpoints backend: los hashes se calculan sobre la
-// URL absoluta, y el JS debe postear contra la misma ruta.
+// URL absoluta, y el JS debe postear contra la misma ruta. Usamos
+// `linkSinValParams()` porque en el phtml el hash se concatena SIEMPRE tras
+// otros parametros en el body POST (p.e. 'id_zona=' + id_zona + $h).
 $url_guardar_encargo_centro = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/guardar_encargo_centro';
 $oHashGuardar = new Hash();
 $oHashGuardar->setUrl($url_guardar_encargo_centro);
 $oHashGuardar->setCamposForm('id_item!id_enc!id_ctr');
-$h_guardar_encargo_centro = $oHashGuardar->linkSinVal();
+$h_guardar_encargo_centro = $oHashGuardar->linkSinValParams();
 
 $url_eliminar_encargo_centro = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/eliminar_encargo_centro';
 $oHashEliminar = new Hash();
 $oHashEliminar->setUrl($url_eliminar_encargo_centro);
 $oHashEliminar->setCamposForm('id_item');
-$h_eliminar_encargo_centro = $oHashEliminar->linkSinVal();
+$h_eliminar_encargo_centro = $oHashEliminar->linkSinValParams();
 
 $url_desplegable_encargos = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/desplegable_encargos';
 $oHashDespl = new Hash();
 $oHashDespl->setUrl($url_desplegable_encargos);
 $oHashDespl->setCamposForm('id_zona!id_enc');
-$h_desplegable_encargos = $oHashDespl->linkSinVal();
+$h_desplegable_encargos = $oHashDespl->linkSinValParams();
 
 $url_ver_encargos_centros = 'frontend/misas/controller/ver_encargos_centros.php';
 $oHashVer = new Hash();
 $oHashVer->setUrl($url_ver_encargos_centros);
 $oHashVer->setCamposForm('id_zona');
-$h_ver_encargos_centros = $oHashVer->linkSinVal();
+$h_ver_encargos_centros = $oHashVer->linkSinValParams();
 
 $a_campos = [
     'json_columns_cuadricula' => json_encode($columns),

@@ -35,7 +35,7 @@ $url_ver_plan_sacd = 'frontend/misas/controller/ver_plan_sacd.php';
 $oHashPlanSacd = new Hash();
 $oHashPlanSacd->setUrl($url_ver_plan_sacd);
 $oHashPlanSacd->setCamposForm('id_sacd!periodo!empiezamin!empiezamax');
-$h_plan_sacd = $oHashPlanSacd->linkSinVal();
+$h_plan_sacd = $oHashPlanSacd->linkSinValParams();
 
 $a_campos = [
     'oDesplSacd' => $oDesplSacd,

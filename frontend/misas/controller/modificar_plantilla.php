@@ -38,13 +38,13 @@ $url_importar_plantilla = 'frontend/misas/controller/importar_plantilla.php';
 $oHashImportarPlantilla = new Hash();
 $oHashImportarPlantilla->setUrl($url_importar_plantilla);
 $oHashImportarPlantilla->setCamposForm('id_zona!tipo_plantilla_origen!tipo_plantilla_destino');
-$h_importar_plantilla = $oHashImportarPlantilla->linkSinVal();
+$h_importar_plantilla = $oHashImportarPlantilla->linkSinValParams();
 
 $url_modificar_cuadricula_zona = 'frontend/misas/controller/modificar_cuadricula_zona.php';
 $oHashZonaTipo = new Hash();
 $oHashZonaTipo->setUrl($url_modificar_cuadricula_zona);
 $oHashZonaTipo->setCamposForm('id_zona!tipo_plantilla!orden');
-$h_zona_tipo = $oHashZonaTipo->linkSinVal();
+$h_zona_tipo = $oHashZonaTipo->linkSinValParams();
 
 $oHash = new Hash();
 $oHash->setUrl('frontend/misas/controller/modificar_plantilla.php');

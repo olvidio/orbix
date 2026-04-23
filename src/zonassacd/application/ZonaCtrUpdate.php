@@ -18,7 +18,9 @@ class ZonaCtrUpdate
                 $CentroRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
             }
             $oCentro = $CentroRepository->findById($id_ubi);
-            $oCentro->setId_zona($id_zona_new === 'no' ? '' : $id_zona_new);
+            // `setId_zona` espera `?int`; `'no'` significa "sin zona", el
+            // resto es el id numerico codificado como string en el form.
+            $oCentro->setId_zona($id_zona_new === 'no' ? null : (int)$id_zona_new);
             if ($CentroRepository->Guardar($oCentro) === false) {
                 $errores[] = _("hay un error, no se ha guardado.");
             }

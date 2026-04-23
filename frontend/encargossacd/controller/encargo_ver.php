@@ -119,42 +119,33 @@ $url_zona = $webBase . '/src/encargossacd/zonas_get_select_data';
 $oHashZona = new Hash();
 $oHashZona->setUrl($url_zona);
 $oHashZona->setCamposForm('id_zona');
-$h_zona = $oHashZona->linkSinVal();
+$h_zona = $oHashZona->linkSinValParams();
 
 $url_ctr = $webBase . '/src/encargossacd/ctr_get_select_data';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('filtro_ctr');
-$h_ctr = $oHashCtr->linkSinVal();
+$h_ctr = $oHashCtr->linkSinValParams();
 $oHashCtr->setCamposForm('id_zona');
-$h_ctr_zona = $oHashCtr->linkSinVal();
+$h_ctr_zona = $oHashCtr->linkSinValParams();
 
 $url_lst_tipo_data = $webBase . '/src/encargossacd/encargo_lst_tipo_enc_data';
 $oHashLstTipo = new Hash();
 $oHashLstTipo->setUrl($url_lst_tipo_data);
 $oHashLstTipo->setCamposForm('grupo!id_tipo_enc');
-$h_lst_tipo = $oHashLstTipo->linkSinVal();
-if ($h_lst_tipo !== '' && $h_lst_tipo[0] === '?') {
-    $h_lst_tipo = '&' . substr($h_lst_tipo, 1);
-}
+$h_lst_tipo = $oHashLstTipo->linkSinValParams();
 
 $url_encargo_ver_nuevo = $webBase . '/src/encargossacd/encargo_ver_nuevo';
 $oHashEncNuevo = new Hash();
 $oHashEncNuevo->setUrl($url_encargo_ver_nuevo);
 $oHashEncNuevo->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!observ!nom_tipo!que');
-$h_encargo_ver_nuevo = $oHashEncNuevo->linkSinVal();
-if ($h_encargo_ver_nuevo !== '' && $h_encargo_ver_nuevo[0] === '?') {
-    $h_encargo_ver_nuevo = '&' . substr($h_encargo_ver_nuevo, 1);
-}
+$h_encargo_ver_nuevo = $oHashEncNuevo->linkSinValParams();
 
 $url_encargo_ver_editar = $webBase . '/src/encargossacd/encargo_ver_editar';
 $oHashEncEditar = new Hash();
 $oHashEncEditar->setUrl($url_encargo_ver_editar);
 $oHashEncEditar->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!observ!nom_tipo!que!id_enc');
-$h_encargo_ver_editar = $oHashEncEditar->linkSinVal();
-if ($h_encargo_ver_editar !== '' && $h_encargo_ver_editar[0] === '?') {
-    $h_encargo_ver_editar = '&' . substr($h_encargo_ver_editar, 1);
-}
+$h_encargo_ver_editar = $oHashEncEditar->linkSinValParams();
 
 $txt_btn = $Qque === 'nuevo' ? _("crear encargo") : _("guardar encargo");
 

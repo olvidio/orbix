@@ -105,22 +105,19 @@ $url_horario = "frontend/encargossacd/controller/encargo_horario_select.php";
 $oHashHorario = new Hash();
 $oHashHorario->setUrl($url_horario);
 $oHashHorario->setCamposForm('que!id_activ!id_nom');
-$h_horario = $oHashHorario->linkSinVal();
+$h_horario = $oHashHorario->linkSinValParams();
 
 $url_modificar = "frontend/encargossacd/controller/encargo_ver.php";
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_modificar);
 $oHashMod->setCamposForm('que!scroll_id!sel');
-$h_modificar = $oHashMod->linkSinVal();
+$h_modificar = $oHashMod->linkSinValParams();
 
 $url_borrar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/encargossacd/encargo_ver_eliminar';
 $oHashBorrar = new Hash();
 $oHashBorrar->setUrl($url_borrar);
 $oHashBorrar->setCamposForm('que!sel');
-$h_borrar = $oHashBorrar->linkSinVal();
-if ($h_borrar !== '' && $h_borrar[0] === '?') {
-    $h_borrar = '&' . substr($h_borrar, 1);
-}
+$h_borrar = $oHashBorrar->linkSinValParams();
 
 $oHash = new Hash();
 $oHash->setCamposForm('que');

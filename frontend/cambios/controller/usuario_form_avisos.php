@@ -57,7 +57,7 @@ $a_camposHidden = array(
 );
 $oHashAvisos->setArraycamposHidden($a_camposHidden);
 $oHashAvisos->setPrefix('av'); // prefijo par el id.
-$h1 = $oHashAvisos->linkSinVal();
+$h1 = $oHashAvisos->linkSinValParams();
 
 $a_camposAvisos = [
     'oPosicion' => $oPosicion,

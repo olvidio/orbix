@@ -14,7 +14,7 @@ use src\misas\domain\contracts\EncargoDiaRepositoryInterface;
 use src\misas\domain\EncargosZona;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 
 /**
  * @see \src\misas\application\VerMisasZonaData::build()
@@ -79,8 +79,11 @@ function _misas_ver_misas_zona_grid(int $Qid_zona, string $QEmpiezaMin, string $
     $PersonaSacdRepository = $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
 
     if ($Qseleccion & 2) {
-        $ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-        $a_Id_nom = $ZonaRepository->getIdSacdsDeZona($Qid_zona);
+        // `getIdSacdsDeZona` vive en `ZonaSacdRepositoryInterface`, no en
+        // `ZonaRepositoryInterface`; usar el repo equivocado revienta con
+        // "Call to undefined method" al ejecutar esta rama.
+        $ZonaSacdRepository = $GLOBALS['container']->get(ZonaSacdRepositoryInterface::class);
+        $a_Id_nom = $ZonaSacdRepository->getIdSacdsDeZona($Qid_zona);
 
         foreach ($a_Id_nom as $id_nom) {
             $PersonaSacd = $PersonaSacdRepository->findById($id_nom);

@@ -130,7 +130,7 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     );
     $oHashAvisos->setArraycamposHidden($a_camposHidden);
     $oHashAvisos->setPrefix('av'); // prefijo par el id.
-    $h1 = $oHashAvisos->linkSinVal();
+    $h1 = $oHashAvisos->linkSinValParams();
 
     $a_camposAvisos = [
         'oPosicion' => $oPosicion,

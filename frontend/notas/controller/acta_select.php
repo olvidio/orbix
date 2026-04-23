@@ -207,7 +207,7 @@ $oHashDown = new Hash();
 $oHashDown->setUrl($url_download);
 $oHashDown->setCamposForm('key!otro');
 $oHashDown->setCamposNo('otro!acta');
-$h_download = $oHashDown->linkSinVal();
+$h_download = $oHashDown->linkSinValParams();
 
 $url_acta_eliminar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/acta_eliminar';
 

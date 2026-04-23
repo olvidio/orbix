@@ -79,7 +79,7 @@ $oHash = new Hash();
 $oHash->setUrl($url_sincro_ajax);
 //$oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposForm('que!dl!id_nom_orbix!tipo_persona');
-$h = $oHash->linkSinVal();
+$h = $oHash->linkSinValParams();
 
 $txt_alert = _("se va a poner la fecha de hoy como fecha de traslado. Para cambiarlo ir al a ficha de la persona y al dossier de traslados")
 // ------------------ html ----------------------------------

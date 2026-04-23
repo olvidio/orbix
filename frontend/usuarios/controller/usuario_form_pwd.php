@@ -38,7 +38,7 @@ $url_usuario_chk = ConfigGlobal::getWeb() . '/src/usuarios/usuario_check_pwd';
 $oHash2 = new Hash();
 $oHash2->setUrl($url_usuario_chk);
 $oHash2->setCamposForm('id_usuario!password');
-$h2 = $oHash2->linkSinVal();
+$h2 = $oHash2->linkSinValParams();
 
 $txt_guardar = _("guardar datos");
 $txt_ok = _("se ha cambiado el password");

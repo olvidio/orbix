@@ -104,7 +104,7 @@ $oHashSelect->setArraycamposHidden($a_camposHidden);
 $oHash1 = new Hash();
 $oHash1->setUrl($web_depende);
 $oHash1->setCamposForm('clase_info!accion!valor_depende');
-$h = $oHash1->linkSinVal();
+$h = $oHash1->linkSinValParams();
 
 echo $oPosicion->mostrar_left_slide(1);
 ?>

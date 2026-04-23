@@ -63,7 +63,7 @@ $param_actualizar = $oHashActualizar->getParamAjax();
 $oHash1 = new Hash();
 $oHash1->setUrl($url_update);
 $oHash1->setCamposForm('force!id_item!completado!observ');
-$h_update = $oHash1->linkSinVal();
+$h_update = $oHash1->linkSinValParams();
 
 $txt_confirm = _("¿Está seguro que desea crear el proceso de nuevo?");
 

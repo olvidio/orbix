@@ -219,7 +219,7 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
     $oHash1 = new Hash();
     $oHash1->setUrl($url_ajax);
     $oHash1->setCamposForm('id_activ!id_nom');
-    $h1 = $oHash1->linkSinVal();
+    $h1 = $oHash1->linkSinValParams();
 }
 else {
     $h1 = '';

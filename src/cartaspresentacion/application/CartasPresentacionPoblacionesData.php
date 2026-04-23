@@ -1,0 +1,103 @@
+<?php
+
+namespace src\cartaspresentacion\application;
+
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
+
+/**
+ * Data builder: opciones del desplegable de poblaciones del modulo
+ * `cartaspresentacion`, en funcion del filtro elegido en la pantalla
+ * principal.
+ *
+ * Sucesor de la rama `que_mod=poblaciones` del dispatcher
+ * `apps/cartaspresentacion/controller/cartas_presentacion_ajax.php`.
+ *
+ * El payload devuelto sigue el contrato estandar
+ * (ver `refactor.md > Desplegables devueltos por endpoints AJAX`), de
+ * modo que el frontend lo transforma con `fnjs_construir_desplegable`.
+ */
+final class CartasPresentacionPoblacionesData
+{
+    /**
+     * @param array{filtro?: string} $input
+     * @return array{
+     *   id: string,
+     *   opciones: array<string,string>,
+     *   selected: string,
+     *   blanco: bool,
+     *   val_blanco: string,
+     *   action: string
+     * }
+     */
+    public static function execute(array $input): array
+    {
+        $filtro = (string)($input['filtro'] ?? '');
+
+        $aOpciones = match ($filtro) {
+            'get_H' => self::poblacionesPaisEspaña(),
+            'get_r' => self::poblacionesPaisExtranjero(),
+            'get_dl' => self::poblacionesDelegacion(),
+            default => [],
+        };
+
+        return [
+            'id' => 'poblacion_sel',
+            'opciones' => $aOpciones,
+            'selected' => '',
+            'blanco' => true,
+            'val_blanco' => '',
+            'action' => '',
+        ];
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private static function poblacionesPaisEspaña(): array
+    {
+        $repo = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
+        $opciones = (array)$repo->getArrayPoblaciones("WHERE pais ILIKE 'españa'");
+        return $opciones;
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private static function poblacionesPaisExtranjero(): array
+    {
+        $repo = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
+        $opciones = (array)$repo->getArrayPoblaciones("WHERE pais NOT ILIKE 'españa'");
+        return $opciones;
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private static function poblacionesDelegacion(): array
+    {
+        $repoCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        $repoDir = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
+        $repoCtrxDir = $GLOBALS['container']->get(RelacionCentroDlDireccionRepositoryInterface::class);
+
+        $cCentros = $repoCentro->getCentros();
+        $poblaciones = [];
+        foreach ($cCentros as $oCentro) {
+            $aDirecciones = $repoCtrxDir->getDireccionesPorUbi($oCentro->getId_ubi());
+            foreach ($aDirecciones as $aDireccion) {
+                $oDir = $repoDir->findById((int)$aDireccion['id_direccion']);
+                if ($oDir === null) {
+                    continue;
+                }
+                $pob = (string)$oDir->getPoblacion();
+                if ($pob !== '' && !isset($poblaciones[$pob])) {
+                    $poblaciones[$pob] = $pob;
+                }
+            }
+        }
+        uksort($poblaciones, 'core\\strsinacentocmp');
+        return $poblaciones;
+    }
+}

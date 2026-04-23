@@ -1,0 +1,55 @@
+<?php
+/**
+ * Vista: formulario de busqueda de cartas de presentacion.
+ *
+ * @var \web\Hash $oHash
+ * @var string $url_lista
+ * @var \web\Desplegable $oDesplRegion
+ * @var \web\Desplegable $oDesplPais
+ * @var \web\Desplegable $oDesplDelegacion
+ */
+?>
+<script>
+fnjs_buscar = function (formulario) {
+    var url = '<?= $url_lista ?>';
+    $('#resultados').html("");
+    $(formulario).attr('action', url);
+    fnjs_enviar_formulario(formulario, '#resultados');
+};
+</script>
+<div id="condiciones">
+<form id="frm_buscar_1" name="frm_buscar_1" action="" onkeydown="fnjs_enviar(event, this);">
+<?= $oHash->getCamposHtml() ?>
+<table border="1">
+<thead>
+    <tr><th class="titulo_inv" colspan="4"><?= _("Cartas de presentación") ?></th></tr>
+</thead>
+<tfoot>
+    <tr>
+        <td colspan="5" style="text-align:right;">
+            <input type="button" onclick="fnjs_buscar('#frm_buscar_1')" id="btn_ok" name="btn_ok" value="<?= _("buscar") ?>" class="btn_ok">
+        </td>
+    </tr>
+</tfoot>
+<tbody>
+    <tr>
+        <td class="etiqueta"><?= _("población") ?></td>
+        <td colspan="4"><input class="contenido" id="poblacion" name="poblacion" size="60"></td>
+    </tr>
+    <tr>
+        <td class="etiqueta"><?= _("región") ?></td>
+        <td><?= $oDesplRegion->desplegable() ?></td>
+    </tr>
+    <tr>
+        <td class="etiqueta"><?= _("país") ?></td>
+        <td><?= $oDesplPais->desplegable() ?></td>
+    </tr>
+    <tr>
+        <td class="etiqueta"><?= _("delegación (H)") ?></td>
+        <td><?= $oDesplDelegacion->desplegable() ?></td>
+    </tr>
+</tbody>
+</table>
+</form>
+</div>
+<div id="resultados"></div>

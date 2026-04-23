@@ -54,7 +54,7 @@ class InfoDocsxSigla extends DatosInfoRepo
         $sCamposForm = 'id_tipo_doc!documentos';
         $oHash->setUrl($url_bloque);
         $oHash->setCamposForm($sCamposForm);
-        $h1 = $oHash->linkSinVal();
+        $h1 = $oHash->linkSinValParams();
 
         $a_campos['url_bloque'] = $url_bloque;
         $a_campos['h1'] = $h1;

@@ -19,7 +19,7 @@ $url_ver_iniciales_zona = 'frontend/misas/controller/ver_iniciales_zona.php';
 $oHashZona = new Hash();
 $oHashZona->setUrl($url_ver_iniciales_zona);
 $oHashZona->setCamposForm('id_zona');
-$h_zona = $oHashZona->linkSinVal();
+$h_zona = $oHashZona->linkSinValParams();
 
 $a_campos = [
     'oDesplZonas' => $oDesplZonas,

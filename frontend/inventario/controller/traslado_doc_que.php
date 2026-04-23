@@ -31,7 +31,7 @@ $oHash->setCamposNo('sel!id_lugar!id_lugar_new');
 $oHashLugar = new Hash();
 $oHashLugar->setUrl(ConfigGlobal::getWeb(). '/src/inventario/lista_lugares_de_ubi');
 $oHashLugar->setCamposForm('id_ubi');
-$h_lugar = $oHashLugar->linkSinVal();
+$h_lugar = $oHashLugar->linkSinValParams();
 
 $a_campos = [
     'oHash' => $oHash,

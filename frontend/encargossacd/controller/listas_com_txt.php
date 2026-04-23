@@ -61,7 +61,7 @@ $url_get = 'frontend/encargossacd/controller/listas_com_txt_get.php';
 $oHashGet = new Hash();
 $oHashGet->setUrl($url_get);
 $oHashGet->setCamposForm('clave!idioma');
-$h_get = $oHashGet->linkSinVal();
+$h_get = $oHashGet->linkSinValParams();
 
 $a_campos = [
     'oPosicion' => $oPosicion,

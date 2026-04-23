@@ -134,7 +134,7 @@ $url_ficha = 'frontend/encargossacd/controller/ctr_get_ficha.php';
 $oHashFicha = new Hash();
 $oHashFicha->setUrl($url_ficha);
 $oHashFicha->setCamposForm('id_ubi!seleccion_sacd');
-$h_ficha = $oHashFicha->linkSinVal();
+$h_ficha = $oHashFicha->linkSinValParams();
 
 $fase = 'AAA';
 

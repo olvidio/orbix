@@ -125,7 +125,7 @@ $oHash1 = new Hash();
 $oHash1->setUrl($url);
 $oHash1->setCamposForm('id_usuario');
 $oHash1->setCamposNo('scroll_id');
-$h_lst = $oHash1->linkSinVal();
+$h_lst = $oHash1->linkSinValParams();
 $a_campos['h_lst'] = $h_lst;
 
 $url = ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_grupo_del_lst.php';
@@ -133,14 +133,14 @@ $oHash2 = new Hash();
 $oHash2->setUrl($url);
 $oHash2->setCamposForm('id_usuario');
 $oHash2->setCamposNo('scroll_id');
-$h_del_lst = $oHash2->linkSinVal();
+$h_del_lst = $oHash2->linkSinValParams();
 $a_campos['h_del_lst'] = $h_del_lst;
 
 $url_usuario_update = ConfigGlobal::getWeb() . '/src/usuarios/usuario_check_pwd';
 $oHash3 = new Hash();
 $oHash3->setUrl($url_usuario_update);
 $oHash3->setCamposForm('id_usuario!usuario!password');
-$h_pwd = $oHash3->linkSinVal();
+$h_pwd = $oHash3->linkSinValParams();
 $a_campos['h_pwd'] = $h_pwd;
 
 $a_campos['id_usuario'] = $a_campos_src['id_usuario'];

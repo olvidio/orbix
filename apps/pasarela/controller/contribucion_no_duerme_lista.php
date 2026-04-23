@@ -17,22 +17,22 @@ $url_ajax = "apps/pasarela/controller/contribucion_no_duerme_ajax.php";
 $oHashDefault = new Hash();
 $oHashDefault->setUrl($url_ajax);
 $oHashDefault->setCamposForm('que');
-$h_default = $oHashDefault->linkSinVal();
+$h_default = $oHashDefault->linkSinValParams();
 
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_ajax);
 $oHashMod->setCamposForm('contribucion!que!id_tipo_activ');
-$h_modificar = $oHashMod->linkSinVal();
+$h_modificar = $oHashMod->linkSinValParams();
 
 $oHashNew = new Hash();
 $oHashNew->setUrl($url_ajax);
 $oHashNew->setCamposForm('que');
-$h_nuevo = $oHashNew->linkSinVal();
+$h_nuevo = $oHashNew->linkSinValParams();
 
 $oHashLista = new Hash();
 $oHashLista->setUrl($url_ajax);
 $oHashLista->setCamposForm('que');
-$h_lista = $oHashLista->linkSinVal();
+$h_lista = $oHashLista->linkSinValParams();
 
 $txt_eliminar = _("¿Está seguro que quiere eliminar esta fila?");
 

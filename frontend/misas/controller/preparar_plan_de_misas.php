@@ -37,13 +37,13 @@ $url_crear_nuevo_periodo = 'frontend/misas/controller/crear_nuevo_periodo.php';
 $oHashNuevoPeriodo = new Hash();
 $oHashNuevoPeriodo->setUrl($url_crear_nuevo_periodo);
 $oHashNuevoPeriodo->setCamposForm('id_zona!tipoplantilla!periodo!empiezamin!empiezamax');
-$h_nuevo_periodo = $oHashNuevoPeriodo->linkSinVal();
+$h_nuevo_periodo = $oHashNuevoPeriodo->linkSinValParams();
 
 $url_ver_cuadricula_zona = 'frontend/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaPeriodo = new Hash();
 $oHashZonaPeriodo->setUrl($url_ver_cuadricula_zona);
 $oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
-$h_cuadricula_zona = $oHashZonaPeriodo->linkSinVal();
+$h_cuadricula_zona = $oHashZonaPeriodo->linkSinValParams();
 
 $oHash = new Hash();
 $oHash->setUrl('frontend/misas/controller/preparar_plan_de_misas.php');

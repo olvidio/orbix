@@ -20,7 +20,7 @@ $url_ajax_update = 'frontend/zonassacd/controller/zona_sacd_update_ajax.php';
 $oHashSacd = new Hash();
 $oHashSacd->setUrl($url_ajax_lista);
 $oHashSacd->setCamposForm('id_zona');
-$h_sacd = $oHashSacd->linkSinVal();
+$h_sacd = $oHashSacd->linkSinValParams();
 
 $url_zona_sacd_get = '/src/misas/zona_sacd_datos_get';
 $url_zona_sacd_put = '/src/misas/zona_sacd_datos_put';
@@ -28,12 +28,12 @@ $url_zona_sacd_put = '/src/misas/zona_sacd_datos_put';
 $oHashUrlGet = new Hash();
 $oHashUrlGet->setUrl($url_zona_sacd_get);
 $oHashUrlGet->setCamposForm('id_sacd!id_zona');
-$h_url_get = $oHashUrlGet->linkSinVal();
+$h_url_get = $oHashUrlGet->linkSinValParams();
 
 $oHashUrlPut = new Hash();
 $oHashUrlPut->setUrl($url_zona_sacd_put);
 $oHashUrlPut->setCamposForm('id_sacd!id_zona!dw1!dw2!dw3!dw4!dw5!dw6!dw7');
-$h_url_put = $oHashUrlPut->linkSinVal();
+$h_url_put = $oHashUrlPut->linkSinValParams();
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax_update);

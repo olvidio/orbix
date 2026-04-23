@@ -37,7 +37,7 @@ $oHash = new Hash();
 $oHash->setUrl($url_sincro_ajax);
 //$oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposForm('que!id_nom_listas!tipo_persona');
-$h = $oHash->linkSinVal();
+$h = $oHash->linkSinValParams();
 
 // ------------------ html ----------------------------------
 ?>

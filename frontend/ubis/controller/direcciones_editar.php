@@ -68,12 +68,12 @@ $go_dir = 'frontend/ubis/controller/direcciones_editar.php?'.$h;
 $oHashPlano = new Hash();
 $oHashPlano->setUrl('frontend/ubis/controller/direcciones_asignar.php');
 $oHashPlano->setCamposForm('obj_dir!id_ubi!id_direccion');
-$h_asignar = $oHashPlano->linkSinVal();
+$h_asignar = $oHashPlano->linkSinValParams();
 
 $oHashPlano2 = new Hash();
 $oHashPlano2->setUrl('frontend/ubis/controller/plano_bytea.php');
 $oHashPlano2->setCamposForm('obj_dir!act!id_direccion');
-$h = $oHashPlano2->linkSinVal();
+$h = $oHashPlano2->linkSinValParams();
 
 $a_campos = array_merge($data, [
     'oPosicion' => $oPosicion,

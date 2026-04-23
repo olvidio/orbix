@@ -251,7 +251,7 @@ $htmlComponents = $oLayout->generateMenuHtml($layoutParams);
 $oHash = new Hash();
 $oHash->setUrl(ConfigGlobal::getWeb() . '/src/usuarios/preferencias_guardar');
 $oHash->setCamposForm('que!tabla!sPrefs');
-$h = $oHash->linkSinVal();
+$h = $oHash->linkSinValParams();
 
 ////////////// antes de enviar headers
 ob_start();

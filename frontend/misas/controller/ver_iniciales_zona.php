@@ -23,7 +23,7 @@ $url_update_iniciales = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/update_
 $oHashIniciales = new Hash();
 $oHashIniciales->setUrl($url_update_iniciales);
 $oHashIniciales->setCamposForm('id_sacd!iniciales!color');
-$h_iniciales = $oHashIniciales->linkSinVal();
+$h_iniciales = $oHashIniciales->linkSinValParams();
 
 $a_campos = [
     'json_columns_cuadricula' => json_encode($columns),

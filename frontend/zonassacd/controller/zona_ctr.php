@@ -19,7 +19,7 @@ $url_ajax_update = 'frontend/zonassacd/controller/zona_ctr_update_ajax.php';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ajax_lista);
 $oHashCtr->setCamposForm('id_zona');
-$h_ctr = $oHashCtr->linkSinVal();
+$h_ctr = $oHashCtr->linkSinValParams();
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax_update);

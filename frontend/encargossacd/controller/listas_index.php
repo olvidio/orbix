@@ -27,7 +27,7 @@ $url = 'frontend/encargossacd/controller/comprobaciones.php';
 $oHash = new Hash();
 $oHash->setUrl($url);
 $oHash->setCamposForm('que');
-$h = $oHash->linkSinVal();
+$h = $oHash->linkSinValParams();
 
 $url_lista_a = $lnk('listas_a.php', ['sf' => 0]);
 $url_lista_af = $lnk('listas_a.php', ['sf' => 1]);

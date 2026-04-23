@@ -164,7 +164,7 @@ function showPortada(groupName){
         $oHash1 = new Hash();
         $oHash1->setUrl("public/portada.php");
         $oHash1->setCamposForm('grupmenu');
-        $h = $oHash1->linkSinVal();
+        $h = $oHash1->linkSinValParams();
     ?>
     url = "public/portada.php";
     datos = 'grupmenu='+groupName+'<?= $h ?>';

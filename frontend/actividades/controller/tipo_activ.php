@@ -17,25 +17,17 @@ $url_eliminar = $webBase . '/src/actividades/tipo_activ_eliminar';
 $oHashLista = new Hash();
 $oHashLista->setUrl($url_lista);
 $oHashLista->setCamposForm('');
-$h_lista = $oHashLista->linkSinVal();
-// linkSinVal con camposForm vacio devuelve "?hnov=1&h=..."; lo convertimos en
-// "&hnov=1&h=..." para poder concatenarlo a una cadena de parametros vacia.
-if (!empty($h_lista) && $h_lista[0] === '?') {
-    $h_lista = '&' . substr($h_lista, 1);
-}
+$h_lista = $oHashLista->linkSinValParams();
 
 $oHashFormNuevo = new Hash();
 $oHashFormNuevo->setUrl($url_form_nuevo);
 $oHashFormNuevo->setCamposForm('');
-$h_form_nuevo = $oHashFormNuevo->linkSinVal();
-if (!empty($h_form_nuevo) && $h_form_nuevo[0] === '?') {
-    $h_form_nuevo = '&' . substr($h_form_nuevo, 1);
-}
+$h_form_nuevo = $oHashFormNuevo->linkSinValParams();
 
 $oHashFormMod = new Hash();
 $oHashFormMod->setUrl($url_form_modificar);
 $oHashFormMod->setCamposForm('id_tipo_activ');
-$h_form_modificar = $oHashFormMod->linkSinVal();
+$h_form_modificar = $oHashFormMod->linkSinValParams();
 
 $txt_eliminar = _("¿Está seguro que quiere eliminar este tipo de actividad?");
 

@@ -43,13 +43,13 @@ $url_buscar_plan_ctr = 'frontend/misas/controller/buscar_plan_ctr.php';
 $oHashBuscarPlanCtr = new Hash();
 $oHashBuscarPlanCtr->setUrl($url_buscar_plan_ctr);
 $oHashBuscarPlanCtr->setCamposForm('id_zona');
-$h_buscar_plan_ctr = $oHashBuscarPlanCtr->linkSinVal();
+$h_buscar_plan_ctr = $oHashBuscarPlanCtr->linkSinValParams();
 
 $url_ver_plan_ctr = 'frontend/misas/controller/ver_plan_ctr.php';
 $oHashPlanCtr = new Hash();
 $oHashPlanCtr->setUrl($url_ver_plan_ctr);
 $oHashPlanCtr->setCamposForm('id_zona!id_ubi!periodo!empiezamin!empiezamax');
-$h_plan_ctr = $oHashPlanCtr->linkSinVal();
+$h_plan_ctr = $oHashPlanCtr->linkSinValParams();
 
 $a_campos = [
     'oDesplZonas' => $oDesplZonas,

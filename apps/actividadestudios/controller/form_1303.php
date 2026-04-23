@@ -198,7 +198,7 @@ $url_posibles_opcionales = $web . '/src/notas/posibles_opcionales_data';
 $oHashOpcionales = new Hash();
 $oHashOpcionales->setUrl($url_posibles_opcionales);
 $oHashOpcionales->setCamposForm('id_nom');
-$h_posibles_opcionales = $oHashOpcionales->linkSinVal();
+$h_posibles_opcionales = $oHashOpcionales->linkSinValParams();
 
 $url_posibles_preceptores = $web . '/src/notas/posibles_preceptores_data';
 $oHashPreceptores = new Hash();

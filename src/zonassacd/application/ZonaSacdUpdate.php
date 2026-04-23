@@ -14,25 +14,35 @@ class ZonaSacdUpdate
         if (empty($id_zona_new)) {
             return ['tipo' => 'update', 'mensaje' => '', 'error' => ''];
         }
-        $nuevaZona = $id_zona_new === 'no' ? '' : $id_zona_new;
+        // `$nuevaZona` llega como string desde el form (id numerico o `'no'`).
+        // Guardamos la version int porque las entidades/contratos de dominio
+        // la manejan asi; mantenemos un booleano auxiliar para el caso
+        // "quitar la zona" (equivalente al viejo `'no'`).
+        $zonaSinAsignar = $id_zona_new === 'no';
+        $idZonaNueva = $zonaSinAsignar ? 0 : (int)$id_zona_new;
         foreach ($sel as $id_nom) {
+            $idNom = (int)$id_nom;
             if ($acumular === 2) {
-                if (empty($nuevaZona)) {
-                    $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $id_nom, 'id_zona' => $id_zona]);
-                    if (!empty($cZonaSacd) && $cZonaSacd[0]->DBEliminar() === false) {
+                if ($zonaSinAsignar) {
+                    // `ZonaSacd` es una entidad de dominio, no tiene `DBEliminar()`;
+                    // la eliminacion va por el repositorio.
+                    $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $idNom, 'id_zona' => $id_zona]);
+                    if (!empty($cZonaSacd) && $ZonaSacdRepository->Eliminar($cZonaSacd[0]) === false) {
                         $errores[] = _("hay un error, no se ha eliminado");
                     }
                 } else {
-                    $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $id_nom, 'id_zona' => $nuevaZona]);
+                    $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $idNom, 'id_zona' => $idZonaNueva]);
                     if (!empty($cZonaSacd)) {
                         $oZonaSacd = $cZonaSacd[0];
-                        $oZonaSacd->setPropia('f');
+                        // `setPropia` espera `bool`; con `'f'` PHP lo coerciona
+                        // silenciosamente a `true` en modo no-strict (bug).
+                        $oZonaSacd->setPropia(false);
                     } else {
                         $oZonaSacd = new ZonaSacd();
-                        $oZonaSacd->setId_item($ZonaSacdRepository->getNewId());
-                        $oZonaSacd->setId_nom($id_nom);
-                        $oZonaSacd->setId_zona($nuevaZona);
-                        $oZonaSacd->setPropia('f');
+                        $oZonaSacd->setId_item((int)$ZonaSacdRepository->getNewId());
+                        $oZonaSacd->setId_nom($idNom);
+                        $oZonaSacd->setId_zona($idZonaNueva);
+                        $oZonaSacd->setPropia(false);
                     }
                     if ($ZonaSacdRepository->Guardar($oZonaSacd) === false) {
                         $errores[] = _("hay un error, no se ha guardado");
@@ -41,24 +51,25 @@ class ZonaSacdUpdate
             } else {
                 if ($id_zona === 'no' || $id_zona == 0) {
                     $oZonaSacd = new ZonaSacd();
-                    $oZonaSacd->setId_item($ZonaSacdRepository->getNewId());
-                    $oZonaSacd->setId_nom($id_nom);
-                    $oZonaSacd->setId_zona($nuevaZona);
-                    $oZonaSacd->setPropia('t');
+                    $oZonaSacd->setId_item((int)$ZonaSacdRepository->getNewId());
+                    $oZonaSacd->setId_nom($idNom);
+                    $oZonaSacd->setId_zona($idZonaNueva);
+                    $oZonaSacd->setPropia(true);
                     if ($ZonaSacdRepository->Guardar($oZonaSacd) === false) {
                         $errores[] = _("hay un error, no se ha guardado");
                     }
-                } elseif (empty($nuevaZona)) {
-                    $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $id_nom, 'id_zona' => $id_zona]);
-                    if (!empty($cZonaSacd) && $cZonaSacd[0]->DBEliminar() === false) {
+                } elseif ($zonaSinAsignar) {
+                    // Idem: eliminamos via `ZonaSacdRepositoryInterface::Eliminar`.
+                    $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $idNom, 'id_zona' => $id_zona]);
+                    if (!empty($cZonaSacd) && $ZonaSacdRepository->Eliminar($cZonaSacd[0]) === false) {
                         $errores[] = _("hay un error, no se ha eliminado");
                     }
                 } else {
-                    $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $id_nom, 'id_zona' => $id_zona]);
+                    $cZonaSacd = $ZonaSacdRepository->getZonasSacds(['id_nom' => $idNom, 'id_zona' => $id_zona]);
                     if (!empty($cZonaSacd)) {
                         $oZonaSacd = $cZonaSacd[0];
-                        $oZonaSacd->setId_zona($nuevaZona);
-                        $oZonaSacd->setPropia('t');
+                        $oZonaSacd->setId_zona($idZonaNueva);
+                        $oZonaSacd->setPropia(true);
                         if ($ZonaSacdRepository->Guardar($oZonaSacd) === false) {
                             $errores[] = _("hay un error, no se ha guardado");
                         }

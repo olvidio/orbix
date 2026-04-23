@@ -96,9 +96,9 @@ id_metamenu;id_mod;url;descripcion
 85;24;apps/zonassacd/controller/zona_ctr.php;Zona-ctr
 34;24;apps/zonassacd/controller/zona_sacd_ajax.php;Zona sacd ajax
 42;24;apps/zonassacd/controller/zona_sacd.php;Zona sacd
-3;25;apps/cartaspresentacion/controller/cartas_presentacion_buscar.php;Buscar Cartas presentacion
-98;25;apps/cartaspresentacion/controller/cartas_presentacion_lista.php;Listado cartas presentación
-114;25;apps/cartaspresentacion/controller/cartas_presentacion_que.php;Cartas Presentacion
+3;25;frontend/cartaspresentacion/controller/cartas_presentacion_buscar.php;Buscar Cartas presentacion
+98;25;frontend/cartaspresentacion/controller/cartas_presentacion_lista.php;Listado cartas presentación
+114;25;frontend/cartaspresentacion/controller/cartas_presentacion.php;Cartas Presentacion
 2;26;apps/cambios/controller/avisos_generar_mails.php;avisos mails
 154;26;apps/cambios/controller/avisos_generar.php;avisos generar
 137;26;apps/cambios/controller/avisos_generar.php;lista avisos

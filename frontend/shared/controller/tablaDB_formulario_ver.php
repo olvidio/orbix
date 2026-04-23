@@ -51,7 +51,7 @@ $web_depende = ConfigGlobal::getWeb() . "/src/shared/tablaDB_depende_datos";
 $oHashDepende = new Hash();
 $oHashDepende->setUrl($web_depende);
 $oHashDepende->setCamposForm('clase_info!accion!valor_depende');
-$h_depende = $oHashDepende->linkSinVal();
+$h_depende = $oHashDepende->linkSinValParams();
 
 /* generar url go_to para volver a la tabla */
 $aQuery['s_pkey'] = $Qs_pkey;

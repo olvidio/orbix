@@ -122,13 +122,13 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHashTipo = new Hash();
 $oHashTipo->setUrl('apps/actividadestudios/controller/lista_profesores_ajax.php');
 $oHashTipo->setCamposForm('salida');
-$h = $oHashTipo->linkSinVal();
+$h = $oHashTipo->linkSinValParams();
 
 $oHashTipo->setCamposForm('salida!id_activ');
-$h1 = $oHashTipo->linkSinVal();
+$h1 = $oHashTipo->linkSinValParams();
 
 $oHashTipo->setCamposForm('salida!id_activ!id_asignatura');
-$h2 = $oHashTipo->linkSinVal();
+$h2 = $oHashTipo->linkSinValParams();
 
 $a_campos = ['obj' => $obj,
     'oPosicion' => $oPosicion,

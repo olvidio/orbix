@@ -48,7 +48,7 @@ $url_balance_dl = $web . '/frontend/actividadplazas/controller/plazas_balance_dl
 $oHash = new Hash();
 $oHash->setUrl($url_balance_dl);
 $oHash->setCamposForm('dl!id_tipo_activ');
-$h = $oHash->linkSinVal();
+$h = $oHash->linkSinValParams();
 
 $a_campos = [
     'Qid_tipo_activ' => $Qid_tipo_activ,

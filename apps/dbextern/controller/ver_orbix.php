@@ -145,7 +145,7 @@ if ($max === 0) {
     $oHash1 = new Hash();
     $oHash1->setUrl($url_sincro_ajax);
     $oHash1->setCamposForm('que!region!dl!id_nom_listas!id!id_orbix!tipo_persona');
-    $h1 = $oHash1->linkSinVal();
+    $h1 = $oHash1->linkSinValParams();
 
     $html_reg = sprintf(_("registro %s de %s"), $new_id, $max);
 }

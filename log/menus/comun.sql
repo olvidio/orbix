@@ -105,8 +105,8 @@
 139	24	apps/zonassacd/controller/planning_zones.php	\N	Planning por zonas
 21	5	frontend/actividades/controller/calendario_listas.php	\N	calendario listas
 194	5	frontend/actividades/controller/planning_casa_que.php	\N	Planing Casa
-114	25	apps/cartaspresentacion/controller/cartas_presentacion_que.php	\N	Cartas Presentacion
-3	25	apps/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
+114	25	frontend/cartaspresentacion/controller/cartas_presentacion.php	\N	Cartas Presentacion
+3	25	frontend/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
 19	2	apps/devel/controller/factory_form.php	\N	generador de clases
 133	3	frontend/ubis/controller/ubis_buscar.php	\N	buscar ubis
 119	5	frontend/actividades/controller/actividad_que.php	\N	seleccionar actividad
@@ -138,7 +138,7 @@
 161	1	apps/usuarios/controller/role_lista.php	\N	lista roles
 121	1	apps/dossiers/controller/perm_dossiers.php	\N	permisos dossiers
 182	1	\N	\N	Raiz admin
-98	25	apps/cartaspresentacion/controller/cartas_presentacion_lista.php	\N	Listado cartas presentación
+98	25	frontend/cartaspresentacion/controller/cartas_presentacion_lista.php	\N	Listado cartas presentación
 169	8	frontend/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
 172	8	frontend/actividadplazas/controller/incorporar_peticion.php	\N	Incorporar peticiones de plazas
 170	8	frontend/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas

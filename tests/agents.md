@@ -40,6 +40,33 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 - **`DateTimeLocal::createFromLocal()`** espera fechas en **formato local** según sesión (p. ej. `j/n/Y` con `/`), no necesariamente `Y-m-d`. En tests de integración que lleguen hasta el parseo, usar cadenas válidas para ese formato.
 - **`ActividadTipoId`**: **6 dígitos**. El **primer dígito** se usa con **`ConfigGlobal::mi_delef($isfsv)`** para alinear **`dl_org`** (sv vs sf / sufijo `f`). Los datos de test deben ser **coherentes** (tipo + `dl_org` + sesión).
 
+## Value objects sin `__toString()` (casts implícitos)
+
+- **`TimeLocal`** y **`DateTimeLocal`** heredan de `\DateTime` y **no** implementan `__toString()`. Un cast directo como `(string)$oActividad->getH_ini()` **revienta en runtime** con `Object of class TimeLocal could not be converted to string` — el tipado PHP no lo detecta, solo se ve al ejecutar la rama.
+- Patrón correcto (usado en `ActividadesDePersonaService`): **`$oActividad->getH_ini()?->format('H:i')`** antes de cualquier concatenación o cast.
+- Cuando un test mockea entidades (`ActividadAll`, `EncargoSacdHorario`, ...) con VOs reales como h\_ini, **devolver instancias reales** (`TimeLocal::fromString('10:30:00')`, `new DateTimeLocal('2030-02-15')`), **no strings**: así el test ejerce la conversión tal como ocurre en producción.
+
+## Cobertura de rutas "felices" en servicios con repos agregadores
+
+- Si un servicio recorre listas provenientes de un repo (p. ej. `getAsistenteCargoDeActividad`, `getActividades`, `getEncargoSacdHorarios`) y los tests dejan esos repos con stubs por defecto, el **bucle interno nunca se ejecuta**. Toda la lógica de formateo (casts, construcción de arrays de salida, llamadas a `new TiposActividades`) queda **sin cubrir** aunque el servicio "pase" todos los tests.
+- Regla: al testear un servicio que itera sobre resultados de repositorio, incluir **al menos un caso** que devuelva **una fila real** con todos los campos poblados con sus tipos de producción (VOs, no strings), y **aserciones sobre la forma concreta** del item de salida (p. ej. `'h_ini' => '10:30'`).
+- Si el bucle llama a **`new TiposActividades($id_tipo_activ)`** directamente, recordar:
+  - Registrar **`TipoDeActividadRepositoryInterface`** en el contenedor (stub), porque el constructor lo pide del container.
+  - Usar un `id_tipo_activ` **válido** (6 dígitos coherentes con `aSfsv` / `aAsistentes` / `aActividad1Digito`), p. ej. `141` (sv + s + crt). Un id inválido hace fallar `getAsistentesText()` con `TypeError: Return value must be of type string, null returned` — ruido que despista del bug real.
+
+## Repos resueltos por `$GLOBALS['container']->get(...)` y typos de método
+
+- Cuando un `application/` obtiene un repositorio con `$GLOBALS['container']->get(FooRepositoryInterface::class)`, la variable queda **tipada como `object`** por el contenedor. PHP **no detecta typos** en el nombre del método hasta que la rama concreta se ejecuta. Ejemplo real: `SacdAusenciasJefeZonaData` llamaba `$ZonaSacdRepository->getSacdsZona(...)` cuando el método del contrato se llama `getIdSacdsDeZona(...)`. El fallo solo aparecía cuando el usuario **era jefe de una zona con sacds**, rama que no se recorría nunca en los tests existentes.
+- Regla: para cada servicio de `application/`, añade **al menos un test feliz por cada método de repo** que invoque. No basta con la rama de error temprano / parámetro inválido / lista vacía.
+- Patrón recomendado en el test:
+  - Mockear el repo con **`createMock(FooRepositoryInterface::class)`** y usar **`expects($this->once())->method('nombreDelMetodo')`**. Como `createMock` refleja el contrato, si el servicio llama a un nombre inexistente el test estalla con *"Call to undefined method MockObject_FooRepositoryInterface_...::nombreMal()"*, idéntico a lo que pasaría en producción con la implementación concreta.
+  - Tipar los stubs de entidades del grafo (`Zona`, `PersonaSacd`, ...) con `createStub(Clase::class)` para asegurar que los getters del service existen realmente en la entidad.
+- Control negativo: si un servicio resuelve repos **perezosamente** (solo en ciertas ramas), registra esos repos también en el contenedor (por ejemplo con un `createStub` por defecto) para que el `->get(...)` no lance `RuntimeException` y puedas seguir testando el camino. Si ves el `RuntimeException` del contenedor helper, significa que el servicio toca un repo que aún no has mapeado: añádelo.
+
+## `is_true()` y valores aceptados
+
+- **`core\is_true($val)`** usa `filter_var(..., FILTER_VALIDATE_BOOLEAN)`. **Reconoce** `'t'`, `'true'`, `'1'`, `'yes'`, `'on'`; **no reconoce** `'si'` (devuelve `null`, que es *falsy*). Si un test necesita forzar la rama "propuesta" o similar pasando un flag tipo `Qpropuesta`, usar **`'true'`** (o `true`), no `'si'`. Pasar `'si'` a una rama controlada por `is_true()` manda el flujo al *else* silenciosamente y el test acaba fallando por una dependencia aguas abajo que parecía no relacionada.
+
 ## Limpieza y aislamiento
 
 - Tests que **inserten** en BD: usar nombres o fechas **únicos** donde haga falta; en **`finally`**, borrar actividades / plazas / entidades creadas para no contaminar otras pruebas.

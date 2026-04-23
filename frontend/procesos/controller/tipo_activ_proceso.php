@@ -16,11 +16,6 @@ $url_asignar = $webBase . '/src/procesos/tipo_activ_proceso_asignar';
 $h_asignar = ProcesosHashes::formLink($url_asignar, 'id_tipo_activ!propio!id_tipo_proceso');
 $h_nuevo = ProcesosHashes::formLink($url_lst_posibles, 'id_tipo_activ!propio');
 $h_lista = ProcesosHashes::formLink($url_lista, '');
-// linkSinVal con camposForm vacio devuelve "?hnov=1&h=...": lo convertimos
-// en "&hnov=1&h=..." para poder concatenarlo tras unos parametros vacios.
-if (!empty($h_lista) && $h_lista[0] === '?') {
-    $h_lista = '&' . substr($h_lista, 1);
-}
 
 $a_campos = [
     'oPosicion' => $oPosicion,

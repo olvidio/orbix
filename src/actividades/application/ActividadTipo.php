@@ -185,13 +185,13 @@ class ActividadTipo
         $oHashTipo = new Hash();
         $oHashTipo->setUrl($url);
         $oHashTipo->setCamposForm('extendida!modo!salida!entrada');
-        $h = $oHashTipo->linkSinVal();
+        $h = $oHashTipo->linkSinValParams();
 
         $url_act = ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_ver.php';
         $oHashAct = new Hash();
         $oHashAct->setUrl('frontend/actividades/controller/actividad_ver.php');
         $oHashAct->setCamposForm('id_tipo_activ!refresh');
-        $h_act = $oHashAct->linkSinVal();
+        $h_act = $oHashAct->linkSinValParams();
 
 
         if ($this->getEvitarProcesos() !== TRUE) {

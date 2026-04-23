@@ -90,7 +90,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHashDepende = new Hash();
 $oHashDepende->setUrl($url_depende);
 $oHashDepende->setCamposForm('acc!valor_depende');
-$h_depende = $oHashDepende->linkSinVal();
+$h_depende = $oHashDepende->linkSinValParams();
 
 $a_campos = [
     'oHash' => $oHash,

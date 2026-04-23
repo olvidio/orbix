@@ -82,10 +82,10 @@ final class SacdFichaAjaxHashes
 
         return [
             'url_ajax' => $url_ajax,
-            'h_ficha' => $oHashFicha->linkSinVal(),
-            'h_lista' => $oHashLst->linkSinVal(),
+            'h_ficha' => $oHashFicha->linkSinValParams(),
+            'h_lista' => $oHashLst->linkSinValParams(),
             'url_horario' => $url_horario,
-            'h_horario' => $oHashHorario->linkSinVal(),
+            'h_horario' => $oHashHorario->linkSinValParams(),
         ];
     }
 }
