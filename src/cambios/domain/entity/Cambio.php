@@ -50,7 +50,7 @@ class Cambio
      */
     public function generarTabla(): void
     {
-        $program = ConfigGlobal::$directorio . '/apps/cambios/controller/avisos_generar_tabla.php';
+        $program = ConfigGlobal::$directorio . '/src/cambios/infrastructure/cli/avisos_generar_tabla.php';
         $username = ConfigGlobal::mi_usuario();
         $pwd = ConfigGlobal::mi_pass();
         $err = ConfigGlobal::$directorio . '/log/avisos.err';
@@ -182,7 +182,7 @@ class Cambio
         $etiqueta = $sPropiedad;
 
         /*
-        $ObjetoFullPath = GestorAvisoCambios::getFullPathObj($sObjeto);
+        $ObjetoFullPath = AvisoObjetoCatalog::getFullPathObj($sObjeto);
         $oObject = new $ObjetoFullPath();
         $cDatosCampos = $oObject->getDatosCampos();
         // para ajustar el nombre del campo y el valor a algo más legible:

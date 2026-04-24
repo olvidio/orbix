@@ -99,10 +99,10 @@ id_metamenu;id_mod;url;descripcion
 3;25;frontend/cartaspresentacion/controller/cartas_presentacion_buscar.php;Buscar Cartas presentacion
 98;25;frontend/cartaspresentacion/controller/cartas_presentacion_lista.php;Listado cartas presentación
 114;25;frontend/cartaspresentacion/controller/cartas_presentacion.php;Cartas Presentacion
-2;26;apps/cambios/controller/avisos_generar_mails.php;avisos mails
-154;26;apps/cambios/controller/avisos_generar.php;avisos generar
-137;26;apps/cambios/controller/avisos_generar.php;lista avisos
-46;26;apps/cambios/controller/avisos_generar_tabla.php;avisos generar tabla
+2;26;src/cambios/infrastructure/cli/avisos_generar_mails.php;avisos mails
+154;26;frontend/cambios/controller/avisos_generar.php;avisos generar
+137;26;frontend/cambios/controller/avisos_generar.php;lista avisos
+46;26;src/cambios/infrastructure/cli/avisos_generar_tabla.php;avisos generar tabla
 63;27;frontend/casas/controller/calendario_ubi_resumen.php;Ubi resumen ec
 51;27;frontend/casas/controller/casa_ec.php;Casa ec que
 45;27;frontend/casas/controller/casa.php;Casa que

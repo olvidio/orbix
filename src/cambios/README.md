@@ -76,7 +76,9 @@ Para poder llamar por cron, hay que pasar las variables de sessión en la linea 
 > $command = "nohup /usr/bin/php $program $username $pwd $dirweb $doc_root $ubicacion $esquema_web $private
 > $db_server >> $out 2>> $err < /dev/null &";
 
-	$program = ConfigGlobal::$directorio.'/apps/cambios/controller/avisos_generar_tabla.php';
+	$program = ConfigGlobal::$directorio.'/src/cambios/infrastructure/cli/avisos_generar_tabla.php';
+	(el path `apps/cambios/controller/avisos_generar_tabla.php` es un wrapper deprecado
+	 que hace `require` al driver nuevo; sigue funcionando para crontabs viejos).
 	$username;
 	$password;
 	$dir_web = orbix | pruebas;

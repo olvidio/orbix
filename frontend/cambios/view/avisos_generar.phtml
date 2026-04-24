@@ -1,0 +1,102 @@
+<script>
+    $(function () {
+        $("#f_fin").datepicker({
+            numberOfMonths: 1,
+            showButtonPanel: true
+        });
+    });
+
+    fnjs_borrar_hasta_fecha = function (formulario) {
+        var f_fin = $('#f_fin').val();
+        if (!f_fin) {
+            alert("<?= _("debe indicar la fecha") ?>");
+            return;
+        }
+        $.ajax({
+            url: '<?= $url_eliminar_fecha ?>',
+            type: 'post',
+            dataType: 'json',
+            data: 'f_fin=' + encodeURIComponent(f_fin) + '<?= $h_eliminar_fecha ?>'
+        }).done(function (rta) {
+            if (!rta || rta.success !== true) {
+                alert('<?= _("respuesta") ?>: ' + (rta && rta.mensaje ? rta.mensaje : ''));
+                return;
+            }
+            fnjs_actualizar(formulario);
+        });
+    }
+
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "frontend/cambios/controller/avisos_generar.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#exportar');
+    }
+
+    fnjs_borrar = function (formulario) {
+        var data_sel = $(formulario).serialize();
+        $.ajax({
+            url: '<?= $url_eliminar ?>',
+            type: 'post',
+            dataType: 'json',
+            data: data_sel + '<?= $h_eliminar ?>'
+        }).done(function (rta) {
+            if (!rta || rta.success !== true) {
+                alert(rta && rta.mensaje ? rta.mensaje : '');
+            }
+        });
+        // Tacho los marcados y les quito el checkbox.
+        $(formulario + ' input.sel').each(function () {
+            if ($(this).prop('checked') === true) {
+                $(this).parent().siblings().addClass('tachado');
+                $(this).prop('checked', false);
+            }
+        });
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
+<?php if ($is_admin && empty($Qid_usuario)): ?>
+    <ul>
+        <li class="comentario">
+            <?= _("Para los avisos por mail, debe existir una linea en el crontab del servidor externo (conexión a internet).") ?>
+            <?= _("Es un cron distinto para cada dl (sv y sf).") ?>
+        </li>
+        <li class="comentario">
+            <?= _("Si no está instalado el módulo de procesos, las fases de los avisos son los estados de la actividad.") ?>
+        </li>
+        <li class="comentario">
+            <?= _("Si el cambio es en una actividad de otra dl, la tabla de avisos no se genera automáticamente (si se hace para la dl que ha hecho el cambio) Hay que hacerlo manual, o por cron, o esperar a que se genere por algún cambio de la propia dl.") ?>
+        </li>
+        <li class="comentario">
+            <?= _("El sistema no es perfecto. Si hay dudas, hay que mirar la web para ver como está. Por ejemplo (para cambios en otras dl) puede ser que apunte cambios que se han hecho en una fase en la que no se debe avisar, y al hacer otro cambio en una fase que si debe avisar, puede anotar el cambio que se había reallizado con anterioridad...") ?>
+        </li>
+    </ul>
+    <div id="condiciones" class="no_print">
+        <form name="frm_cond" id="frm_cond" action="frontend/cambios/controller/avisos_generar.php" method="post">
+            <?= $oHashCond->getCamposHtml() ?>
+            <?= _("usuario") ?>:
+            <?= $oDesplUsuarios->desplegable() ?>
+            <?= _("tipo de aviso") ?>:
+            <?= $oDesplTiposAviso->desplegable() ?>
+            <input type="button" onclick="fnjs_enviar_formulario('#frm_cond','#exportar')"
+                   value="<?= _("buscar") ?>">
+        </form>
+    </div>
+    <br><br>
+<?php endif; ?>
+<?php if (!empty($Qid_usuario) && $oTabla !== null): ?>
+    <div id="exportar">
+        <span class="comentario"><?= _("Sólo se seleccionan las filas que se ven") ?></span>
+        <br>
+        <br>
+        <form id="seleccionados" name="seleccionados" action='' method='post'>
+            <?= $oHash->getCamposHtml() ?>
+            <?= $oTabla->mostrar_tabla() ?>
+            <br>
+            <?= _("borrar avisos anteriores a") ?>:
+            <input class="fecha" size="11" id="f_fin" name="f_fin">
+            <input type="button" value="<?= ucfirst(_("eliminar")) ?>"
+                   onclick="javascript:fnjs_borrar_hasta_fecha(this.form);">
+        </form>
+    </div>
+<?php endif; ?>

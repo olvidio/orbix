@@ -89,8 +89,8 @@
 27	2	apps/devel/controller/modulos_select.php	\N	modulos select
 32	11	frontend/procesos/controller/procesos_select.php	\N	procesos select
 85	24	apps/zonassacd/controller/zona_ctr.php	\N	Zona-ctr
-154	26	apps/cambios/controller/avisos_generar.php	\N	avisos generar
-2	26	apps/cambios/controller/avisos_generar_mails.php	\N	avisos mails
+154	26	frontend/cambios/controller/avisos_generar.php	\N	avisos generar
+2	26	src/cambios/infrastructure/cli/avisos_generar_mails.php	\N	avisos mails
 90	1	apps/config/controller/parametros.php	\N	Configuracion esquema
 152	1	frontend/ubis/controller/lista_ctrs.php	\N	lista ctr sg
 12	5	frontend/actividades/controller/actividades_centro_que.php	\N	Centro que activ
@@ -171,7 +171,7 @@
 146	3	frontend/ubis/controller/centros_que.php	\N	Centros seleccionar
 28	20	frontend/actividadessacd/controller/com_sacd_activ_periodo.php	\N	Comunicación activ sacd
 18	20	frontend/actividadessacd/controller/asignar_sacd_auto.php	\N	Auto asignar sacd a actividades
-46	26	apps/cambios/controller/avisos_generar_tabla.php	\N	avisos generar tabla
+46	26	src/cambios/infrastructure/cli/avisos_generar_tabla.php	\N	avisos generar tabla
 143	6	frontend/actividades/controller/lista_activ_que.php	\N	Lista Activ que
 44	11	frontend/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad
 132	5	frontend/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
@@ -184,7 +184,7 @@
 54	2	apps/devel/controller/db_mover_que.php	\N	DB mover tabla
 100	5	frontend/actividadtarifas/controller/tarifa.php	\N	Tarifa definir
 165	1	public/ayuda/index.php	\N	Ayuda
-137	26	apps/cambios/controller/avisos_generar.php	\N	lista avisos
+137	26	frontend/cambios/controller/avisos_generar.php	\N	lista avisos
 87	21	apps/encargossacd/controller/propuestas_menu.php	\N	propuestas encargos sacd
 192	2	apps/devel/controller/db_cambiar_nombre_que.php	\N	cambiar nombre dl
 1	7	\N	\N	Raiz stgr 2

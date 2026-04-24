@@ -745,8 +745,11 @@ enlazadas desde `src\actividades\application\ActividadTipo::getHtml()`.
   `_actividad_tipo.js.html.twig`): llamado desde
   `frontend/procesos/controller/fases_activ_cambio.php` y
   `frontend/procesos/controller/usuario_perm_activ.php`.
-- `cambios`: usa `apps/cambios/view/actividad_tipo_que_perm.html.twig`
-  (fuera del modulo procesos, no se toca).
+- `cambios`: ya migrado tambien. Vive en
+  `frontend/cambios/view/actividad_tipo_que_perm.html.twig` +
+  `frontend/cambios/view/_actividad_tipo.js.html.twig` (fuera del modulo
+  procesos, con su propia copia porque el JS llama al endpoint JSON
+  `/src/actividades/actividad_tipo_get`).
 
 ### Cambios
 

@@ -3,9 +3,12 @@ flowchart TD
     %% Estils de nodes
     classDef controller fill:#f9f,stroke:#333,stroke-width:2px;
     classDef vista fill:#bbf,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5;
-    classDef error fill:#ff9999,stroke:#cc0000,stroke-width:2px;
+    classDef backend fill:#bfb,stroke:#333,stroke-width:1px;
 
-    apps_cambios_controller_avisos_generar_php(["avisos_generar.php"]):::controller --> apps_cambios_view_avisos_generar_condicion_html_twig[["avisos_generar_condicion.html.twig"]]:::vista
-    apps_cambios_view_avisos_generar_condicion_html_twig --> apps_cambios_controller_avisos_generar_php(["avisos_generar.php"]):::controller
-    %% DESTÍ NO RESOLT des de apps_cambios_view_avisos_generar_condicion_html_twig: {{ oHashCond }} [DESTÍ NO RESOLT]
+    frontend_cambios_controller_avisos_generar_php(["frontend/cambios/controller/avisos_generar.php"]):::controller --> frontend_cambios_view_avisos_generar_phtml[["frontend/cambios/view/avisos_generar.phtml"]]:::vista
+    frontend_cambios_controller_avisos_generar_php --> src_cambios_avisos_generar_lista_data[["/src/cambios/avisos_generar_lista_data"]]:::backend
 ```
+
+> El legacy usaba dos vistas Twig (`avisos_generar_condicion.html.twig` y
+> `avisos_generar_lista.html.twig` en `apps/cambios/view/`). Ambas han
+> sido eliminadas tras la migracion a `frontend/` (vertical slice 2).

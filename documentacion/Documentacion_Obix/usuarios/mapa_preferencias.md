@@ -40,3 +40,16 @@ flowchart TD
     %% DESTÍ NO RESOLT des de frontend_usuarios_view_ayuda_2fa_reset_phtml: $url_index [DESTÍ NO RESOLT]
     class recuperar_2fa_php error;
 ```
+
+> Nota: tras la migracion del modulo `cambios`, los nodos que aqui
+> aparecen como `apps/cambios/controller/avisos_generar.php`,
+> `apps/cambios/controller/usuario_avisos_pref.php` y
+> `apps/cambios/controller/usuario_avisos_pref_ajax.php` son en
+> realidad wrappers o ya no existen; los flujos vivos son
+> `frontend/cambios/controller/avisos_generar.php`,
+> `frontend/cambios/controller/usuario_avisos_pref.php` y los
+> controladores `usuario_avisos_pref_*` hermanos. Las vistas Twig
+> `avisos_generar_condicion.html.twig` y
+> `usuario_avisos_pref.html.twig` se han eliminado. Este diagrama
+> se regenera automaticamente; volvera a reflejar el estado real en
+> la proxima pasada.

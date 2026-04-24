@@ -2,7 +2,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 1,preferencias (preferencias usuario),frontend/usuarios/controller/preferencias.php,,1
 1,a ODF Calc (exportar a odf calc),fnjs_exportar('odfc'),,1
 1,a ODF Text (exportar a odft txt),fnjs_exportar('odft'),,1
-1,lista de cambios (lista avisos),apps/cambios/controller/avisos_generar.php,,26
+1,lista de cambios (lista avisos),frontend/cambios/controller/avisos_generar.php,,26
 1,Ayuda (Ayuda),public/ayuda/index.php,,1
 1,Informar de un bug (abrir pag redmine),fnjs_windowopen('http://10.0.0.16/redmine'),,1
 2,buscar n (Raiz base),,,1
@@ -345,8 +345,8 @@ id_grupmenu,?column?,url,parametros,id_mod
 13,grup menu (lista grupmenus),frontend/menus/controller/grupmenu_lista.php,,1
 13,lista usuarios (lista usuarios),frontend/usuarios/controller/usuario_lista.php,,1
 13,lista grupos (lista grupos),frontend/usuarios/controller/grupo_lista.php,,1
-13,generar tabla avisos (avisos generar tabla),apps/cambios/controller/avisos_generar_tabla.php,,26
-13,ver lista cambios (avisos generar),apps/cambios/controller/avisos_generar.php,,26
+13,generar tabla avisos (avisos generar tabla),src/cambios/infrastructure/cli/avisos_generar_tabla.php,,26
+13,ver lista cambios (avisos generar),frontend/cambios/controller/avisos_generar.php,,26
 13,Configuración (Raiz admin),,,1
 13,aplicaciones (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\configuracion\domain\InfoApps,1
 13,definir módulos (modulos select),frontend/configuracion/controller/modulos_select.php,"",2
@@ -416,7 +416,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 20,sf sr (actividades centro),frontend/actividadescentro/controller/activ_ctr.php,tipo=sfsr,20
 20,"sf n, nax y agd (actividades centro)",frontend/actividadescentro/controller/activ_ctr.php,tipo=sfnagd,20
 20,cambiar de fase (Fases activ cambio),frontend/procesos/controller/fases_activ_cambio.php,,11
-20,ver lista cambios (avisos generar),apps/cambios/controller/avisos_generar.php,,26
+20,ver lista cambios (avisos generar),frontend/cambios/controller/avisos_generar.php,,26
 20,nuevo planing (Calendario que),frontend/actividades/controller/calendario_que.php,,5
 20,casas comunes (calendario listas),frontend/actividades/controller/calendario_listas.php,que=c_comunes&ver_ctr=si&periodo=actual,5
 20,casas comunes sf (calendario listas),frontend/actividades/controller/calendario_listas.php,que=c_comunes_sf,5

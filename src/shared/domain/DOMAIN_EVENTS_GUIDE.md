@@ -41,7 +41,7 @@ Los **eventos de dominio** son notificaciones que una entidad emite cuando ocurr
          ▼
 ┌─────────────────────────┐
 │ RegistrarCambioListener │  Guarda en av_cambios
-│ GestorAvisoCambios      │  (auditoría y notificaciones)
+│ RegistrarCambio         │  (auditoría y notificaciones)
 └─────────────────────────┘
 ```
 

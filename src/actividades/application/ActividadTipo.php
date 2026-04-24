@@ -226,7 +226,7 @@ class ActividadTipo
                 $oView->renderizar('actividad_tipo_que_perm.html.twig', $a_campos);
                 break;
             case 'cambios':
-                $oView = new ViewNewTwig('apps/cambios/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('cambios/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que_perm.html.twig', $a_campos);
                 break;
             case 'gestion':

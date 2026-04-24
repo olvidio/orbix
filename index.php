@@ -138,7 +138,7 @@ if (isset($primera)) {
             break;
         case "avisos":
             $id_grupmenu = $mi_id_grupmenu;
-            $pag_ini = ConfigGlobal::$directorio . '/apps/cambios/controller/avisos_generar.php';
+            $pag_ini = ConfigGlobal::$directorio . '/frontend/cambios/controller/avisos_generar.php';
             break;
         case "aniversarios":
             $id_grupmenu = $mi_id_grupmenu;

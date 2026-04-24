@@ -2,31 +2,25 @@
 
 namespace src\shared\application\listeners;
 
-use cambios\model\GestorAvisoCambios;
+use src\cambios\application\RegistrarCambio;
 use src\shared\domain\events\EntidadModificada;
 
 /**
- * Listener que registra los cambios en las entidades
- * Delega en GestorAvisoCambios para la persistencia del cambio
+ * Listener que reacciona a `EntidadModificada` y delega el registro
+ * del cambio en el caso de uso `RegistrarCambio` del modulo cambios.
  */
 class RegistrarCambioListener
 {
-    private GestorAvisoCambios $gestorCambios;
+    private RegistrarCambio $registrarCambio;
 
     public function __construct()
     {
-        $this->gestorCambios = new GestorAvisoCambios();
+        $this->registrarCambio = new RegistrarCambio();
     }
 
-    /**
-     * Procesa el evento EntidadModificada y registra el cambio
-     *
-     * @param EntidadModificada $event
-     * @return void
-     */
     public function __invoke(EntidadModificada $event): void
     {
-        $this->gestorCambios->addCanvi(
+        $this->registrarCambio->execute(
             $event->objeto,
             $event->tipoCambio,
             $event->idActiv,

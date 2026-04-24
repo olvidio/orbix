@@ -2,10 +2,10 @@
 
 //////////// Esto lo ven todos ////////////
 // si no hay usuario, no puedo poner permisos.
-use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\actividades\domain\value_objects\StatusId;
+use src\cambios\domain\AvisoObjetoCatalog;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
@@ -27,7 +27,7 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     // Tipos de avisos
     $aTipos_aviso = AvisoTipoId::getArrayAvisoTipo();
     // Nombre de los possibles objetos (que manejan la tablas) susceptibles de avisar.
-    $aObjetos = GestorAvisoCambios::getArrayObjetosPosibles();
+    $aObjetos = AvisoObjetoCatalog::getArrayObjetosPosibles();
 
     $i = 0;
     $a_cabeceras_avisos = [
