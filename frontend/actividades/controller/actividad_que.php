@@ -181,7 +181,7 @@ switch ($Qque) {
         break;
     case "list_cjto" :
     case "list_cjto_sacd" :
-        $accion = ConfigGlobal::getWeb() . '/apps/asistentes/controller/lista_asis_conjunto_activ.php';
+        $accion = ConfigGlobal::getWeb() . '/frontend/asistentes/controller/lista_asis_conjunto_activ.php';
         break;
     default;
         $accion = ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_select.php';

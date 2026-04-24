@@ -1,0 +1,29 @@
+
+{{ oPosicion.mostrar_left_slide(1)|raw }}
+<h3> {{ nom_activ }}</h3>
+{{ oTabla.mostrar_tabla_html()|raw }}
+<script>
+
+fnjs_cambiar_actividad=function(param){
+    var url_ajax = 'src/asistentes/asistente_guardar';
+
+    request=$.ajax({
+        data: param,
+        url: url_ajax,
+        method: 'POST',
+        dataType: 'json'
+    });
+    request.done( function (rta) {
+        if (rta && rta.success) {
+            {{ oPosicion.js_atras()|raw }}
+        } else {
+            var msg = (rta && rta.mensaje) ? rta.mensaje : 'error';
+            alert(msg);
+        }
+    });
+    request.fail(function () {
+        alert('error de comunicacion con el servidor');
+    });
+}
+
+</script>

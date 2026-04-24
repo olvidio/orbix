@@ -29,7 +29,7 @@ $aQuery = [
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\\poner_empty_on_null');
 }
-$godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
+$godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $alt = _("ver dossiers");
 $dos = _("dossiers");

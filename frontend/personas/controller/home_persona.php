@@ -94,7 +94,7 @@ $a_parametros = ['pau' => $pau, 'id_nom' => $id_nom, 'obj_pau' => $Qobj_pau];
 $gohome = Hash::link(ConfigGlobal::getWeb() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
 $go_ficha = Hash::link(ConfigGlobal::getWeb() . '/frontend/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => $pau, 'id_pau' => $id_nom, 'obj_pau' => $Qobj_pau];
-$godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
+$godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
 $a_campos = [
     'oPosicion' => $oPosicion,

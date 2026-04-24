@@ -12,7 +12,7 @@
  * La logica de negocio vive en `src\cambios\application\AvisosGenerarTabla`.
  * Este fichero solo:
  *   1. Parsea `$argv` a `$_SERVER`/`putenv`/`$_POST` para el bootstrap legacy.
- *   2. Arranca el contenedor (`global_header.inc` + `global_object.inc`).
+ *   2. Arranca el contenedor (ver requires más abajo: salida de CLI, sin public/index).
  *   3. Llama al use case.
  *   4. Imprime la tabla HTML de errores en stdout (legacy) y sale con codigo
  *      `1` si detecta bucle infinito.
@@ -52,6 +52,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 use core\ConfigGlobal;
 use src\cambios\application\AvisosGenerarTabla;
 
+// No entra por public/index.php: hace falta el mismo arranque que el front (autoload, sesión, contenedor).
 require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 

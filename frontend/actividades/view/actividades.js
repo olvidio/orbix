@@ -113,35 +113,35 @@ jsForm.mandar = function (formulario, que) {
             this.action = "frontend/actividades/controller/actividad_ver.php";
             break;
         case "lista_clase":
-            this.action = "apps/actividadestudios/controller/lista_clases_ca.php";
+            this.action = "frontend/actividadestudios/controller/lista_clases_ca.php";
             break;
         case "posibles_asignaturas":
-            this.action = "apps/actividadestudios/controller/posibles_asignaturas_ca.php";
+            this.action = "frontend/actividadestudios/controller/posibles_asignaturas_ca.php";
             break;
         case "plan_estudios":
-            this.action = "apps/actividadestudios/controller/plan_estudios_ca.php";
+            this.action = "frontend/actividadestudios/controller/plan_estudios_ca.php";
             break;
         case "dossiers":
             //$('#queSel').val(que);
-            this.action = "apps/dossiers/controller/dossiers_ver.php";
+            this.action = "frontend/dossiers/controller/dossiers_ver.php";
             break;
         case "asig":
             $('#queSel').val(que);
-            this.action = "apps/dossiers/controller/dossiers_ver.php";
+            this.action = "frontend/dossiers/controller/dossiers_ver.php";
             break;
         case "carg":
             $('#queSel').val(que);
             $('#id_dossier').val(3102);
-            this.action = "apps/dossiers/controller/dossiers_ver.php";
+            this.action = "frontend/dossiers/controller/dossiers_ver.php";
             break;
         case "asis":
             $('#queSel').val(que);
             $('#id_dossier').val(3101);
-            this.action = "apps/dossiers/controller/dossiers_ver.php";
+            this.action = "frontend/dossiers/controller/dossiers_ver.php";
             break;
         case "asis_peticiones":
             $('#queSel').val(que);
-            this.action = "apps/asistentes/controller/tabla_peticiones.php";
+            this.action = "frontend/asistentes/controller/tabla_peticiones.php";
             break;
         case "camas":
             $('#queSel').val(que);
@@ -153,11 +153,11 @@ jsForm.mandar = function (formulario, que) {
             break;
         case "list":
             $('#queSel').val(que);
-            this.action = "apps/asistentes/controller/lista_asistentes.php";
+            this.action = "frontend/asistentes/controller/lista_asistentes.php";
             break;
         case "listcl":
             $('#queSel').val(que);
-            this.action = "apps/asistentes/controller/lista_asistentes.php";
+            this.action = "frontend/asistentes/controller/lista_asistentes.php";
             break;
         case "historicos":
             $('#queSel').val(que);

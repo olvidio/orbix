@@ -76,7 +76,7 @@ $oHash->setArraycamposHidden([
 $a_parametros = ['pau' => 'p', 'id_nom' => $id_pau, 'obj_pau' => $Qobj_pau];
 $gohome = Hash::link(ConfigGlobal::getWeb() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => 'p', 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau];
-$godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
+$godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
 $a_campos = [
     'oPosicion' => $oPosicion,

@@ -59,7 +59,7 @@ $aQuery['s_pkey'] = $Qs_pkey;
 if (!empty($Qobj_pau)) {
     $aQuery['obj_pau'] = $Qobj_pau;
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
+    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/frontend/dossiers/controller/dossiers_ver.php?$sQuery");
 } else {
     $sQuery = http_build_query($aQuery);
     $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/src/shared/tablaDB_lista_datos?$sQuery");

@@ -3,7 +3,7 @@
 namespace src\actividadcargos\application;
 
 use core\ConfigGlobal;
-use dossiers\model\PermDossier;
+use src\dossiers\application\PermDossier;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;

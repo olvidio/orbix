@@ -294,7 +294,7 @@ class ListaActivTabla
                 $a_valores[$i][14] = $observ;
             }
             if ($is_dmz === false) {
-                $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/asistentes/controller/lista_asistentes.php?' . "id_pau=$id_activ&que=$Qque");
+                $pagina = Hash::link(ConfigGlobal::getWeb() . '/frontend/asistentes/controller/lista_asistentes.php?' . "id_pau=$id_activ&que=$Qque");
                 $a_valores[$i][15] = ['ira' => $pagina, 'valor' => _("ver asistentes")];
             }
         }

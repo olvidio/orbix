@@ -25,7 +25,7 @@ use core\ConfigGlobal;
     fnjs_dossiers = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+            $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -46,7 +46,7 @@ use core\ConfigGlobal;
         if (rta === 1) {
             $('#que').val("activ");
             $('#id_dossier').val("1301y1302");
-            $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+            $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -76,7 +76,7 @@ use core\ConfigGlobal;
         if (rta === 1) {
             $('#que').val("matriculas");
             $('#id_dossier').val("1303");
-            $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+            $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -85,7 +85,7 @@ use core\ConfigGlobal;
     fnjs_posibles_ca = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "apps/actividadestudios/controller/ca_posibles.php");
+            $(formulario).attr('action', "frontend/actividadestudios/controller/ca_posibles.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -115,7 +115,7 @@ use core\ConfigGlobal;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             $('#id_dossier').val("1011");
-            $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+            $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
             fnjs_enviar_formulario(formulario);
         }
     }

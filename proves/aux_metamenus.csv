@@ -1,6 +1,6 @@
 id_metamenu;id_mod;url;descripcion
 160;1;apps/core/mod_tabla_sql.php;modificar los datos de una tabla
-121;1;apps/dossiers/controller/perm_dossiers.php;permisos dossiers
+121;1;frontend/dossiers/controller/perm_dossiers.php;permisos dossiers
 40;1;apps/menus/controller/menus_importar.php;importar menus old
 38;1;apps/permisos/controller/config_select.php;config modulos
 76;1;frontend/personas/controller/personas_que.php;búsqueda de personas
@@ -57,21 +57,21 @@ id_metamenu;id_mod;url;descripcion
 100;5;frontend/actividadtarifas/controller/tarifa.php;Tarifa definir
 108;5;frontend/actividadtarifas/controller/tarifa_tipo_actividad.php;Tipo tarifa
 73;5;frontend/actividadtarifas/controller/tarifa_ubi.php;actividad Tarifa Ubi
-140;5;apps/asistentes/controller/activ_pendientes_select.php;actividades pendientes
-147;5;apps/asistentes/controller/que_ctr_lista.php;Buscar por centro
+140;5;frontend/asistentes/controller/activ_pendientes_select.php;actividades pendientes
+147;5;frontend/asistentes/controller/que_ctr_lista.php;Buscar por centro
 7;5;frontend/ubis/controller/calendario_periodos.php;Calendario Periodos
 143;6;frontend/actividades/controller/lista_activ_que.php;Lista Activ que
 58;6;frontend/actividades/controller/lista_sr_csv_que.php;Activ Sr Que (csv)
-79;6;apps/asistentes/controller/lista_ultim_que_ctr.php;Ultima asistencia
+79;6;frontend/asistentes/controller/lista_ultim_que_ctr.php;Ultima asistencia
 194;6;frontend/planning/controller/planning_casa_que.php;Planing Casa
 61;6;frontend/planning/controller/planning_ctr_que.php;planning ctr
 138;6;frontend/planning/controller/planning_persona_que.php;Planning persona
-52;7;apps/actividadestudios/controller/actualizar_docencia.php;guardar docencia ca en dossier
-155;7;apps/actividadestudios/controller/ca_posibles_que.php;Posibles ca
-104;7;apps/actividadestudios/controller/matricular.php;matricular
-105;7;apps/actividadestudios/controller/matriculas_lista_otras_r.php;lista alumnos otras r para certificados stgr
-66;7;apps/actividadestudios/controller/matriculas_lista.php;listas de matriculas
-168;7;apps/actividadestudios/controller/matriculas_pendientes.php;matriculas pendientes
+52;7;frontend/actividadestudios/controller/actualizar_docencia.php;guardar docencia ca en dossier
+155;7;frontend/actividadestudios/controller/ca_posibles_que.php;Posibles ca
+104;7;frontend/actividadestudios/controller/matricular.php;matricular
+105;7;frontend/actividadestudios/controller/matriculas_lista_otras_r.php;lista alumnos otras r para certificados stgr
+66;7;frontend/actividadestudios/controller/matriculas_lista.php;listas de matriculas
+168;7;frontend/actividadestudios/controller/matriculas_pendientes.php;matriculas pendientes
 196;7;frontend/profesores/controller/congresos.php;congresos
 15;7;frontend/profesores/controller/docencia.php;Docencia
 169;8;frontend/actividadplazas/controller/gestion_plazas.php;Gestión de plazas

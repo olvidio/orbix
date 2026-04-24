@@ -3,10 +3,6 @@
 use src\asistentes\application\services\AsistenteActividadService;
 use src\ubiscamas\domain\value_objects\CamaId;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 $Qid_cama = (string)filter_input(INPUT_POST, 'id_cama'); // can be string (uuid)

@@ -1,0 +1,9 @@
+<table>
+    <th colspan="2"><?= ucfirst(_("dossiers seleccionados")); ?></th>
+    <?php foreach ($a_filas as $fila): ?>
+        <tr>
+            <td><?= $fila['descripcion']; ?></td>
+            <td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['pagina'] ?>');"><?= _("ver o modificar permisos") ?></span></td>
+        </tr>
+    <?php endforeach; ?>
+</table>

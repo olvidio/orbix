@@ -13,7 +13,7 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ServerConf::DIR . "/apps/config/db";
+    private $dir_base = ServerConf::DIR . "/src/config/db";
 
     public function __construct($esquema_sfsv = NULL)
     {

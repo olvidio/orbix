@@ -1,0 +1,139 @@
+<script>
+    $(function () {
+        $("#f_ini").datepicker({ numberOfMonths: 3, showButtonPanel: true });
+    });
+    $(function () {
+        $("#f_fin").datepicker({ numberOfMonths: 3, showButtonPanel: true });
+    });
+    fnjs_construir_desplegable = function (json) {
+        if (!json || json.success !== true) { return ''; }
+        try {
+            var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+            if (!data) { return ''; }
+            var $sel = $('<select></select>').attr({ id: data.id, name: data.id });
+            if (data.action) { $sel.attr('onchange', data.action); }
+            if (data.blanco) {
+                var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+                $sel.append($('<option></option>').val(vb).text(''));
+            }
+            $.each(data.opciones || {}, function (value, label) {
+                var $opt = $('<option></option>').val(value).text(label);
+                if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+                    $opt.prop('selected', true);
+                }
+                $sel.append($opt);
+            });
+            return $sel.prop('outerHTML');
+        } catch (e) {
+            return '';
+        }
+    }
+    fnjs_mas_profes = function (filtro) {
+        var url = '<?= $url_profesores ?>';
+        switch (filtro) {
+            case 'asignatura':
+                id_asignatura = $("#id_asignatura").val();
+                var parametros = 'salida=asignatura&id_asignatura=' + id_asignatura + '&id_activ=<?= $id_activ ?><?= $h2 ?>';
+                break;
+            case 'dl':
+                var parametros = 'salida=dl&id_activ=<?= $id_activ ?><?= $h1 ?>';
+                break;
+            case 'all':
+                var parametros = 'salida=todos<?= $h ?>';
+                break;
+        }
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        }).done(function (json) {
+            $('#lst_profes').html(fnjs_construir_desplegable(json));
+        });
+    }
+
+    fnjs_guardar = function (formulario) {
+        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
+
+        if (rr === 'ok') {
+            var mod = $(formulario).find('[name=mod]').val();
+            var url = (mod === 'editar') ? '<?= $url_actividad_asignatura_editar ?>' : '<?= $url_actividad_asignatura_nueva ?>';
+            var datos = $(formulario).serialize();
+            $.ajax({
+                data: datos,
+                url: url,
+                method: 'POST',
+                dataType: 'json'
+            }).done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    <?= $oPosicion->js_atras(1); ?>
+                }
+            });
+        }
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="Hidden" id="mod" name="mod" value="<?= $mod ?>">
+    <table>
+        <tr class=tab>
+            <th class=titulo_inv colspan=5><?= ucfirst(_("asignatura de una actividad")); ?></th>
+        </tr>
+        <?php if (!empty($id_asignatura)) { ?>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td>
+                <td class=contenido><?= $nombre_corto ?></td>
+        <?php } else { ?>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td>
+                <td>
+                    <?= $oDesplAsignaturas->desplegable(); ?>
+                </td>
+            </tr>
+        <?php } ?>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("profesor")) ?>:</td>
+            <td id="lst_profes">
+                <?= $oDesplProfesores->desplegable(); ?>
+            </td>
+            <td><input type=button onclick="fnjs_mas_profes('asignatura')" value="<?= _("corresponde") ?>"></td>
+            <td><input type=button onclick="fnjs_mas_profes('dl')" value="<?= _("dl y asistentes") ?>"></td>
+            <td><input type=button onclick="fnjs_mas_profes('all')" value="<?= _("otros de paso") ?>"></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= _("tipo") ?></td>
+            <td><select class=contenido id='tipo' name='tipo'>
+                    <option></option>
+                    <option value='p' <?= $chk_preceptor ?>><?= _("preceptor") ?></option>
+                </select></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= _("¿Profesor avisado?") ?></td>
+            <td><select class=contenido id='avis_profesor' name='avis_profesor'>
+                    <option></option>
+                    <option value='a' <?= $chk_avisado ?>><?= _("avisado") ?></option>
+                    <option value='c' <?= $chk_confirmado ?>><?= _("confirmado") ?></option>
+                </select></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= _("inicio clases") ?></td>
+            <td>
+                <input id='f_ini' name='f_ini' type="text" class="fecha" size="11" value="<?= $f_ini ?>"
+                       onchange="fnjs_comprobar_fecha('#f_ini',<?= $locale_us ?>)">
+            </td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= _("fin clases") ?></td>
+            <td>
+                <input id='f_fin' name='f_fin' type="text" class="fecha" size="11" value="<?= $f_fin ?>"
+                       onchange="fnjs_comprobar_fecha('#f_fin',<?= $locale_us ?>)">
+            </td>
+        </tr>
+    </table>
+    <br>
+    <input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);"
+           value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE">
+</form>

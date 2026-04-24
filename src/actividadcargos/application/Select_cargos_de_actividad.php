@@ -3,7 +3,7 @@
 namespace src\actividadcargos\application;
 
 use core\ConfigGlobal;
-use dossiers\model\PermDossier;
+use src\dossiers\application\PermDossier;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -19,7 +19,7 @@ use function core\is_true;
  * Widget del dossier `3102` (codigo `cargos_de_actividad`): relacion de personas
  * con cargo en una actividad. Instanciado dinamicamente por
  * {@see \src\dossiers\application\DossierTipoFileSuffixResolver::resolveSelectClassFqcn()}
- * desde `apps/dossiers/controller/dossiers_ver.php` (el resolver busca
+ * desde `frontend/dossiers/controller/dossiers_ver.php` (el resolver busca
  * `src/<app>/application/Select_<codigo>.php` tras haber comprobado `apps/`).
  *
  * Sucesor de `apps/actividadcargos/model/Select3102.php` y de su shim

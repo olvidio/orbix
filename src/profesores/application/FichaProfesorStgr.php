@@ -3,7 +3,7 @@
 namespace src\profesores\application;
 
 use core\ConfigGlobal;
-use dossiers\model\PermDossier;
+use src\dossiers\application\PermDossier;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;

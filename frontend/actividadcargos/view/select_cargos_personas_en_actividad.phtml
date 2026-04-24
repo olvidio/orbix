@@ -35,7 +35,7 @@
     };
     fnjs_actualizar = function (formulario) {
         var campo = '<input type="hidden" name="refresh" value=1>';
-        $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+        $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
         $(formulario).append(campo);
         fnjs_enviar_formulario(formulario, '#main');
     };

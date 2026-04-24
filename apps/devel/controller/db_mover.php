@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use core\DBPropiedades;
+use core\ServerConf;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -57,7 +58,7 @@ if (!empty($msg)) {
 if (ConfigGlobal::SERVIDOR === 'orbix.local') {
     $a_rta = [];
     $command = "grep -r \"setNomTabla('$Qtabla');\" ";
-    $command .= ConfigGlobal::DIR . "/*";
+    $command .= ServerConf::DIR . "/*";
     exec($command, $a_rta);
 
     foreach ($a_rta as $rta_txt) {

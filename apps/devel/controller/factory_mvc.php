@@ -3,6 +3,7 @@
 namespace devel\controller;
 
 use core\ConfigGlobal;
+use core\ServerConf;
 
 /**
  * programa per generar les classes a partir de la taula
@@ -816,7 +817,7 @@ $txt .= '
 ';
 
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = ConfigGlobal::DIR . '/apps/' . $grupo . '/model/entity/' . $Qclase . '.php';
+$filename = ServerConf::DIR . '/apps/' . $grupo . '/model/entity/' . $Qclase . '.php';
 
 if (!$handle = fopen($filename, 'w')) {
 	echo "Cannot open file ($filename)";
@@ -968,7 +969,7 @@ $txt2 .= '
 }
 ';
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = ConfigGlobal::DIR . '/apps/' . $grupo . '/model/entity/Gestor' . $Qclase . '.php';
+$filename = ServerConf::DIR . '/apps/' . $grupo . '/model/entity/Gestor' . $Qclase . '.php';
 
 
 if (!$handle = fopen($filename, 'w')) {

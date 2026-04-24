@@ -1,0 +1,43 @@
+<script>
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $('#mod').val(2);
+            $(formulario).attr('action', "<?= $url_form ?>");
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_borrar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            if (confirm("<?= $txt_eliminar ?>")) {
+                $('#mod').val("eliminar");
+                var datos = $(formulario).serialize();
+                $.ajax({
+                    data: datos,
+                    url: '<?= $url_matricula_eliminar ?>',
+                    method: 'POST',
+                    dataType: 'json'
+                }).done(function (json) {
+                    if (json.success !== true) {
+                        alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    } else {
+                        fnjs_actualizar(formulario);
+                    }
+                });
+            }
+        }
+    }
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+</script>
+<h2 class=titulo><?= ucfirst($nom_activ) ?></h2>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHashSelect->getCamposHtml(); ?>
+    <input type='hidden' id='mod' name='mod' value=''>
+    <?= $oTabla->listaPaginada(); ?>
+</form>

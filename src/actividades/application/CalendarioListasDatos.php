@@ -3,7 +3,7 @@
 namespace src\actividades\application;
 
 use core\ConfigGlobal;
-use dossiers\model\PermisoDossier;
+use src\dossiers\application\PermisoDossier;
 use permisos\model\PermisosActividadesTrue;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;

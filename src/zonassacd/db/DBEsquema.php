@@ -3,6 +3,7 @@
 namespace src\zonassacd\db;
 
 use core\ConfigGlobal;
+use core\ServerConf;
 use src\utils_database\domain\entity\DBAbstract;
 
 /**
@@ -12,7 +13,7 @@ use src\utils_database\domain\entity\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ConfigGlobal::DIR . "/src/zonassacd/db";
+    private $dir_base = ServerConf::DIR . "/src/zonassacd/db";
 
     public function __construct($esquema_sfsv = NULL)
     {

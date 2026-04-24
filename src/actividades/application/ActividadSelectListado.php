@@ -422,7 +422,7 @@ final class ActividadSelectListado
 
                 if ($Qmodo !== 'importar') {
                     if ($sPrefs === 'html') {
-                        $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/dossiers/controller/dossiers_ver.php?' . http_build_query(['pau' => 'a', 'id_pau' => $id_activ, 'obj_pau' => $obj_pau]));
+                        $pagina = Hash::link(ConfigGlobal::getWeb() . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(['pau' => 'a', 'id_pau' => $id_activ, 'obj_pau' => $obj_pau]));
                         $a_valores[$i][3] = ['ira' => $pagina, 'valor' => $nom_activ . $con];
                     } else {
                         $pagina = 'jsForm.mandar("#seleccionados","dossiers")';

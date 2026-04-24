@@ -765,7 +765,7 @@ if (!is_dir($dir_entity)) {
         throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_entity));
     }
 }
-$filename = ConfigGlobal::DIR . '/src/' . $grupo . '/domain/entity/' . $Q_clase . '.php';
+$filename = ServerConf::DIR . '/src/' . $grupo . '/domain/entity/' . $Q_clase . '.php';
 if (!$handle = fopen($filename, 'w')) {
     echo "Cannot open file ($filename)";
     die();

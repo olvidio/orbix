@@ -1,0 +1,135 @@
+<script>
+    <?php
+    use core\ConfigGlobal;if (ConfigGlobal::is_app_installed('actividadplazas')) {
+    ?>
+    fnjs_construir_desplegable_propietario = function (data) {
+        if (!data) { return ''; }
+        var id = data.id || 'propietario';
+        var $sel = $('<select></select>').attr({ id: id, name: id });
+        if (data.action) { $sel.attr('onchange', data.action); }
+        if (data.blanco) {
+            var vb = (data.val_blanco !== undefined && data.val_blanco !== null) ? data.val_blanco : '';
+            $sel.append($('<option></option>').val(vb).text(''));
+        }
+        var opciones = data.opciones || {};
+        $.each(opciones, function (value, label) {
+            var $opt = $('<option></option>').val(value).text(label);
+            if (data.selected !== undefined && data.selected !== '' && String(data.selected) === String(value)) {
+                $opt.prop('selected', true);
+            }
+            $sel.append($opt);
+        });
+        return $sel.prop('outerHTML');
+    };
+    fnjs_cmb_propietario = function () {
+        var id_activ = $('#id_activ').val();
+        var url = '<?= $url_ajax ?>';
+        var parametros = 'id_nom=<?= $id_nom ?>&id_activ=' + id_activ + '<?= $h1 ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        }).done(function (json) {
+            if (!json || json.success !== true) { return; }
+            try {
+                var data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                $('#lst_propietarios').html(fnjs_construir_desplegable_propietario(data));
+            } catch (e) {}
+        });
+    }
+
+    <?php
+    }
+    ?>
+    fnjs_guardar = function (formulario) {
+        id_activ = $('#id_activ').val();
+        if (!id_activ) {
+            alert("<?= _("debe indicar una actividad") ?>");
+            return;
+        }
+        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
+        if (rr === 'ok') {
+            $(formulario).attr('action', "<?= $url_guardar ?>");
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    dataType: 'json',
+                    data: $(this).serialize()
+                }).done(function (rta) {
+                    if (rta && rta.success) {
+                        <?= $oPosicion->js_atras(1); ?>
+                    } else {
+                        var msg = (rta && rta.mensaje) ? rta.mensaje : '<?= _("error desconocido") ?>';
+                        alert('<?= _("respuesta") ?>: ' + msg);
+                    }
+                }).fail(function () {
+                    alert('<?= _("error de comunicación con el servidor") ?>');
+                });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<form id="frm_actividades_de_una_persona" name="frm_actividades_de_una_persona" action="" method="POST">
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr class=tab>
+            <th class=titulo_inv colspan=4><?= ucfirst(_("asistencia a una actividad")); ?></th>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("actividad")) ?>:</td>
+            <?php
+            if (!empty($id_activ_real)) {
+                echo "<td class=contenido colspan=3 >$nom_activ</td>";
+            } else {
+                echo "<td colspan=3>";
+                echo $oDesplActividades->desplegable();
+                echo "</td>";
+            }
+            ?>
+        <tr>
+            <td class=etiqueta><?= _("propio") ?></td>
+            <td><input type="Checkbox" id="propio" name="propio" value="true" <?= $propio_chk ?>></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= _("falta") ?></td>
+            <td><input type="Checkbox" id="falta" name="falta" value="true" <?= $falta_chk ?>></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= _("estudios confirmados") ?></td>
+            <td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("observaciones")); ?></td>
+            <td class=contenido colspan="3">
+                <textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ ?? '') ?></textarea></td>
+        </tr>
+        <?php
+        if (ConfigGlobal::is_app_installed('actividadplazas')) {
+            ?>
+            <tr>
+                <td class=etiqueta><?= _("plaza") ?></td>
+                <td><?= $oDesplegablePlaza->desplegable(); ?></td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= _("propiedad de") ?></td>
+                <td>
+                    <div id='lst_propietarios'>
+                        <?= $oDesplPosiblesPropietarios->desplegable(); ?>
+                    </div>
+                </td>
+            </tr>
+            <?php
+        }
+        ?>
+    </table>
+    <br>
+    <input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);"
+           value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE">
+</form>

@@ -71,7 +71,7 @@
 7	5	frontend/ubis/controller/calendario_periodos.php	\N	Calendario Periodos
 23	21	apps/encargossacd/controller/que_tipo_de_encargo.php	\N	Tipo de encargo
 14	21	apps/encargossacd/controller/sacd_ficha.php	\N	Encargo sacd ficha
-104	7	apps/actividadestudios/controller/matricular.php	\N	matricular
+104	7	frontend/actividadestudios/controller/matricular.php	\N	matricular
 48	3	frontend/ubis/controller/list_ctr.php	\N	listas de ubis
 88	4	frontend/notas/controller/asignaturas_pendientes.php	\N	cuadro alumnos-asignaturas
 38	1	apps/permisos/controller/config_select.php	\N	config modulos
@@ -114,8 +114,8 @@
 164	1	apps/usuarios/controller/personal.php	\N	preferencias usuario
 76	1	apps/personas/controller/personas_que.php	\N	búsqueda de personas
 176	9	apps/dbextern/controller/sincro_index.php	\N	Sincronizar con los datos de Listas
-147	5	apps/asistentes/controller/que_ctr_lista.php	\N	Buscar por centro
-140	5	apps/asistentes/controller/activ_pendientes_select.php	\N	actividades pendientes
+147	5	frontend/asistentes/controller/que_ctr_lista.php	\N	Buscar por centro
+140	5	frontend/asistentes/controller/activ_pendientes_select.php	\N	actividades pendientes
 60	4	frontend/notas/controller/acta_select.php	\N	actas
 57	4	frontend/notas/controller/resumen_anual.php	\N	resumen anual
 156	21	apps/encargossacd/controller/encargo_select.php	\N	Encargos lista
@@ -126,8 +126,8 @@
 157	5	frontend/actividades/controller/actividad_nuevo_curso.php	\N	Nuevo Curso
 71	5	frontend/actividades/controller/actividad_select.php	\N	Listado de Actividades
 141	5	frontend/actividades/controller/calendario_que.php	\N	Calendario que
-168	7	apps/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
-66	7	apps/actividadestudios/controller/matriculas_lista.php	\N	listas de matriculas
+168	7	frontend/actividadestudios/controller/matriculas_pendientes.php	\N	matriculas pendientes
+66	7	frontend/actividadestudios/controller/matriculas_lista.php	\N	listas de matriculas
 174	4	frontend/notas/controller/asignaturas_pendientes_resumen.php	\N	Resumen asig. pendientes
 175	4	frontend/notas/controller/asig_faltan_que.php	\N	Asignaturas pendientes
 178	4	frontend/notas/controller/acta_listado_anual.php	\N	listado anual actas
@@ -136,7 +136,7 @@
 160	1	apps/core/mod_tabla_sql.php	\N	modificar los datos de una tabla
 131	1	apps/usuarios/controller/usuario_lista.php	\N	lista usuarios
 161	1	apps/usuarios/controller/role_lista.php	\N	lista roles
-121	1	apps/dossiers/controller/perm_dossiers.php	\N	permisos dossiers
+121	1	frontend/dossiers/controller/perm_dossiers.php	\N	permisos dossiers
 182	1	\N	\N	Raiz admin
 98	25	frontend/cartaspresentacion/controller/cartas_presentacion_lista.php	\N	Listado cartas presentación
 169	8	frontend/actividadplazas/controller/gestion_plazas.php	\N	Gestión de plazas
@@ -154,8 +154,8 @@
 34	24	apps/zonassacd/controller/zona_sacd_ajax.php	\N	Zona sacd ajax
 180	2	\N	\N	Raiz devel
 181	1	\N	\N	Raiz base
-52	7	apps/actividadestudios/controller/actualizar_docencia.php	\N	guardar docencia ca en dossier
-155	7	apps/actividadestudios/controller/ca_posibles_que.php	\N	Posibles ca
+52	7	frontend/actividadestudios/controller/actualizar_docencia.php	\N	guardar docencia ca en dossier
+155	7	frontend/actividadestudios/controller/ca_posibles_que.php	\N	Posibles ca
 162	1	fnjs_exportar('odfc')	\N	exportar a odf calc
 163	1	fnjs_exportar('odft')	\N	exportar a odft txt
 167	1	fnjs_windowopen('http://10.0.0.16/redmine')	\N	abrir pag redmine
@@ -175,7 +175,7 @@
 143	6	frontend/actividades/controller/lista_activ_que.php	\N	Lista Activ que
 44	11	frontend/procesos/controller/tipo_activ_proceso.php	\N	Tipos de actividad
 132	5	frontend/actividades/controller/lista_actividades_sg.php	\N	lista activ sg
-79	6	apps/asistentes/controller/lista_ultim_que_ctr.php	\N	Ultima asistencia
+79	6	frontend/asistentes/controller/lista_ultim_que_ctr.php	\N	Ultima asistencia
 73	5	frontend/actividadtarifas/controller/tarifa_ubi.php	\N	actividad Tarifa Ubi
 89	27	frontend/casas/controller/casa_resumen.php	\N	Casa resumen
 108	5	frontend/actividadtarifas/controller/tarifa_tipo_actividad.php	\N	Tipo id_tarifa
@@ -188,6 +188,6 @@
 87	21	apps/encargossacd/controller/propuestas_menu.php	\N	propuestas encargos sacd
 192	2	apps/devel/controller/db_cambiar_nombre_que.php	\N	cambiar nombre dl
 1	7	\N	\N	Raiz stgr 2
-61	6	apps/asistentes/controller/planning_que.php	\N	planning
+61	6	frontend/asistentes/controller/planning_que.php	\N	planning
 15	7	frontend/profesores/controller/docencia.php	\N	Docencia
 196	7	frontend/profesores/controller/congresos.php	\N	congresos

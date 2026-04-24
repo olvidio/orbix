@@ -11,7 +11,7 @@ use web\Lista;
  * Widget "select1011": listado de notas (`PersonaNota`) de una persona
  * dentro del dossier 1011. Instanciado dinamicamente por
  * {@see \src\dossiers\application\DossierTipoFileSuffixResolver}
- * desde `apps/dossiers/controller/dossiers_ver.php`.
+ * desde `frontend/dossiers/controller/dossiers_ver.php`.
  *
  * Sucesor de `apps/notas/model/Select1011.php` (eliminado). El resolver
  * localiza esta clase en `src/<app>/application/Select<id_dossier>.php`

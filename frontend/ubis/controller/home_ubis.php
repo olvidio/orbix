@@ -56,7 +56,7 @@ $obj_dir = $data['obj_dir'];
 $ubi = $data['ubi'];
 
 $gohome = Hash::link('frontend/ubis/controller/home_ubis.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau)));
-$godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $obj_pau)));
+$godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $obj_pau)));
 
 $go_ubi = Hash::link('frontend/ubis/controller/ubis_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
 $go_dir = Hash::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $obj_dir, 'bloque' => $bloque)));

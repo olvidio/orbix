@@ -2,10 +2,6 @@
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 $Qsolo_vip = (string)filter_input(INPUT_POST, 'solo_vip'); // 'true' or 'false' as string from JS
 

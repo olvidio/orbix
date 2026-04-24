@@ -143,7 +143,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:105",
-      "url": "http://orbix.docker:8003/orbix/apps/asistentes/controller/que_ctr_lista.php?lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca",
+      "url": "http://orbix.docker:8003/orbix/frontend/asistentes/controller/que_ctr_lista.php?lista=list_activ&n_agd=n&sasistentes=n&sactividad=ca",
       "status": 200,
       "ok": false,
       "kind": "runtime",
@@ -151,7 +151,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:108",
-      "url": "http://orbix.docker:8003/orbix/apps/asistentes/controller/que_ctr_lista.php?lista=list_est&n_agd=n&sasistentes=n&sactividad=ca",
+      "url": "http://orbix.docker:8003/orbix/frontend/asistentes/controller/que_ctr_lista.php?lista=list_est&n_agd=n&sasistentes=n&sactividad=ca",
       "status": 200,
       "ok": false,
       "kind": "runtime",
@@ -159,7 +159,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:111",
-      "url": "http://orbix.docker:8003/orbix/apps/asistentes/controller/activ_pendientes_select.php?sactividad=ca&tipo_personas=n",
+      "url": "http://orbix.docker:8003/orbix/frontend/asistentes/controller/activ_pendientes_select.php?sactividad=ca&tipo_personas=n",
       "status": 200,
       "ok": false,
       "kind": "runtime",
@@ -191,7 +191,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:126",
-      "url": "http://orbix.docker:8003/orbix/apps/asistentes/controller/que_ctr_lista.php?lista=list_activ&n_agd=a&sasistentes=agd&sactividad=cv",
+      "url": "http://orbix.docker:8003/orbix/frontend/asistentes/controller/que_ctr_lista.php?lista=list_activ&n_agd=a&sasistentes=agd&sactividad=cv",
       "status": 200,
       "ok": false,
       "kind": "runtime",
@@ -199,7 +199,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:129",
-      "url": "http://orbix.docker:8003/orbix/apps/asistentes/controller/que_ctr_lista.php?lista=list_est&n_agd=a&sasistentes=n&sactividad=cv",
+      "url": "http://orbix.docker:8003/orbix/frontend/asistentes/controller/que_ctr_lista.php?lista=list_est&n_agd=a&sasistentes=n&sactividad=cv",
       "status": 200,
       "ok": false,
       "kind": "runtime",
@@ -207,7 +207,7 @@
     },
     {
       "source": "12. Estudios y STGR.md:132",
-      "url": "http://orbix.docker:8003/orbix/apps/asistentes/controller/activ_pendientes_select.php?sactividad=ca&tipo_personas=agd",
+      "url": "http://orbix.docker:8003/orbix/frontend/asistentes/controller/activ_pendientes_select.php?sactividad=ca&tipo_personas=agd",
       "status": 200,
       "ok": false,
       "kind": "runtime",
