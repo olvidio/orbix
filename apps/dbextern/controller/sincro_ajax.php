@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use dbextern\model\entity\GestorIdMatchPersona;
 use dbextern\model\entity\GestorPersonaBDU;
 use dbextern\model\entity\IdMatchPersona;

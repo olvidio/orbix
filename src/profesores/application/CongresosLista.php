@@ -2,7 +2,7 @@
 
 namespace src\profesores\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\profesores\domain\value_objects\CongresoTipo;

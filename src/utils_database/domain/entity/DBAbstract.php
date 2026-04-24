@@ -2,9 +2,9 @@
 
 namespace src\utils_database\domain\entity;
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
 
 /**
  * Crear las tablas necesaria a nivel de aplicación (global).

@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;

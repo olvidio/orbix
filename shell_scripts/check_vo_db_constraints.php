@@ -3,9 +3,9 @@
 
 declare(strict_types=1);
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
 
 require dirname(__DIR__) . '/apps/core/global_header.inc';
 

@@ -2,7 +2,7 @@
 
 namespace src\configuracion\domain\entity;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 
 /**

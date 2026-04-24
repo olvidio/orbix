@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 /**
  * Condició sobre un sol camp. Els operadors són cadenes compatibles amb
- * {@see \core\Condicion} / {@see PostgresCriteriaRenderer} (p. ex. =, <>, ~, IN, IS NULL, BETWEEN...).
+ * {@see \src\shared\infrastructure\persistence\postgresql\Condicion} / {@see PostgresCriteriaRenderer} (p. ex. =, <>, ~, IN, IS NULL, BETWEEN...).
  */
 final class FieldFilter implements Criteria
 {

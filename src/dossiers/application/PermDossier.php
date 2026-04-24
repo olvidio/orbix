@@ -1,7 +1,7 @@
 <?php
 namespace src\dossiers\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\personas\domain\entity\Persona;
 use web\TiposActividades;
 use function core\is_true;

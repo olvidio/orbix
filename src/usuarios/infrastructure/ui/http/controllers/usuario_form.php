@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use Illuminate\Http\JsonResponse;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;

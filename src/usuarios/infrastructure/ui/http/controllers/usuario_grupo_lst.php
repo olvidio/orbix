@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;

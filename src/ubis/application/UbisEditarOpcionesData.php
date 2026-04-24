@@ -2,7 +2,7 @@
 
 namespace src\ubis\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\application\services\RegionDropdown;
 use src\ubis\application\services\TipoCasaDropdown;

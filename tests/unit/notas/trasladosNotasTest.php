@@ -2,10 +2,10 @@
 
 namespace Tests\unit\notas;
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
-use core\DBPropiedades;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\notas\application\EditarPersonaNota;
 use src\notas\domain\contracts\PersonaNotaDlRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;

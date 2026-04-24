@@ -11,7 +11,7 @@
  * `refactor.md`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use web\Desplegable;

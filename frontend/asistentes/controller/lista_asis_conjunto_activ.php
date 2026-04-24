@@ -1,7 +1,7 @@
 <?php
 
 use src\asistentes\application\ListaPlazasConjuntoActividades;
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\StatusId;
 use web\Periodo;
 

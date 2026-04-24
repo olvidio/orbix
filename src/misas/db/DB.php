@@ -2,7 +2,7 @@
 
 namespace srtc\misas\db;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\utils_database\domain\entity\DBAbstract;
 
 /**

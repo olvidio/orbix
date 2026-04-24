@@ -1,7 +1,7 @@
 <?php
 
-use core\ConfigGlobal;
-use core\ConfigMagik;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ConfigMagik;
 use web\ContestarJson;
 
 $error_txt = '';

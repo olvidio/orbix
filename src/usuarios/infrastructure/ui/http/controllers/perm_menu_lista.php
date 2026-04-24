@@ -1,6 +1,6 @@
 <?php
 
-use permisos\model\PermDl;
+use src\permisos\domain\PermDl;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use web\ContestarJson;
 

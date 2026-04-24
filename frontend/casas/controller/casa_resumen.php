@@ -6,7 +6,7 @@
  * versión unificamos el comportamiento de `casa_ec`).
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\domain\value_objects\PauType;
 use web\CasasQue;

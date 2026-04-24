@@ -10,7 +10,7 @@
  * Sucesor de `apps/casas/controller/calendario_ubi_resumen_ajax.php`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;

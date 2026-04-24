@@ -2,7 +2,7 @@
 
 namespace src\notas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\notas\application\legacy\Resumen;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 

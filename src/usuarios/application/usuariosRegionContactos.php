@@ -2,9 +2,9 @@
 
 namespace src\usuarios\application;
 
-use core\ConfigDB;
-use core\DBConnection;
-use permisos\model\PermDl;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\permisos\domain\PermDl;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;

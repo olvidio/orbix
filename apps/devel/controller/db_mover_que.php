@@ -1,6 +1,6 @@
 <?php
 
-use core\DBPropiedades;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use core\ViewPhtml;
 use web\Hash;
 

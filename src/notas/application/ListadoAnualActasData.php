@@ -2,7 +2,7 @@
 
 namespace src\notas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;

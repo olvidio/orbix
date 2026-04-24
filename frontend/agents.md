@@ -10,7 +10,7 @@ Las nuevas funcionalidades deben usar respuestas JSON para una mejor gestión de
 ### Patrón Estándar (`fnjs_guardar`)
 ```javascript
 fnjs_guardar = function (formulario) {
-    let url = '<?= core\ConfigGlobal::getWeb() ?>/src/modulo/update_endpoint';
+    let url = '<?= src\shared\config\ConfigGlobal::getWeb() ?>/src/modulo/update_endpoint';
     $.ajax({
         url: url,
         type: 'post',

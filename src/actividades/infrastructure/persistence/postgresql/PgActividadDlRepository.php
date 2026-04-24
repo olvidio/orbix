@@ -2,7 +2,7 @@
 
 namespace src\actividades\infrastructure\persistence\postgresql;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\shared\traits\HandlesPdoErrors;

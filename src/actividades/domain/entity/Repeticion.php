@@ -3,7 +3,7 @@
 namespace src\actividades\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\actividades\domain\value_objects\{RepeticionId, RepeticionText, TemporadaCode, RepeticionTipo};
 use src\shared\domain\traits\Hydratable;
 

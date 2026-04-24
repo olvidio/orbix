@@ -2,9 +2,9 @@
 
 namespace src\casas\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\casas\domain\contracts\GrupoCasaRepositoryInterface;
 use src\casas\domain\entity\GrupoCasa;

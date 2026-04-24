@@ -1,7 +1,7 @@
 <?php
 
 use actividades\model\ActividadTipo;
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use core\ViewTwig;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\CasasQue;

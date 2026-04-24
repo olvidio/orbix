@@ -10,7 +10,7 @@ use src\shared\domain\criteria\OrCriteria;
 
 /**
  * Tradueix un arbre de {@see Criteria} a un fragment de WHERE per a PostgreSQL + paràmetres pels placeholders de PDO.
- * Els operadors de {@see FieldFilter} segueixen el mateix contracte que `core\Condicion::getCondicion` on escau.
+ * Els operadors de {@see FieldFilter} segueixen el mateix contracte que `src\shared\infrastructure\persistence\postgresql\Condicion::getCondicion` on escau.
  */
 final class PostgresCriteriaRenderer
 {

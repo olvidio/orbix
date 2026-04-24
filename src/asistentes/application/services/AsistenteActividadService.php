@@ -2,7 +2,7 @@
 
 namespace src\asistentes\application\services;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;

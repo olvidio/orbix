@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\encargossacd\model\DesplCentros;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;

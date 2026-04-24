@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use core\ViewTwig;
 use frontend\shared\model\ViewNewPhtml;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;

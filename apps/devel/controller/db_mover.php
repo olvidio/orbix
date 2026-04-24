@@ -1,8 +1,8 @@
 <?php
 
-use core\ConfigGlobal;
-use core\DBPropiedades;
-use core\ServerConf;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\shared\config\ServerConf;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -24,7 +24,7 @@ $a_esquemas = $oDBPropiedades->array_esquemas_con_tabla($Qtabla);
 
 print_r($a_esquemas);
 
-$oConfigDB = new core\ConfigDB('importar');
+$oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
 $configRef = $oConfigDB->getEsquema('publicv');
 $configNew = $oConfigDB->getEsquema('publicv-e');
 
@@ -35,7 +35,7 @@ foreach ($a_esquemas as $esquema) {
     $esquemaRefv = $esquema;
 
     $aTablas = [$Qtabla => $Qtabla];
-    $oDBTabla = new core\DBTabla();
+    $oDBTabla = new src\shared\infrastructure\persistence\postgresql\DBTabla();
     $oDBTabla->setTablas($aTablas);
     $oDBTabla->setRef($esquemaRefv);
     $oDBTabla->setNew($esquemaNewv);

@@ -8,7 +8,7 @@
 
 namespace src\actividades\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 

@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 // Abierto via `window.open` (GET). El incluido `tessera_imprimir_mpdf.php`
 // ya lee `$_GET` directamente, asi que no hace falta reasignar `$_POST`.

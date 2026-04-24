@@ -2,7 +2,7 @@
 
 namespace src\actividadessacd\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividadessacd\application\services\ComunicarActividadesSacdService;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;

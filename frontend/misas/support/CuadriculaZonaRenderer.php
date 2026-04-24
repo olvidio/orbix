@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\misas\support;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 

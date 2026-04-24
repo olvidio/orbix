@@ -9,7 +9,7 @@ use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
 use src\cambios\domain\value_objects\AvisoTipoId;
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Lista;

@@ -1,7 +1,7 @@
 <?php
 
-use core\ConfigGlobal;
-use core\ServerConf;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use src\personas\domain\entity\Persona;

@@ -2,7 +2,7 @@
 
 namespace src\notas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use PDO;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\value_objects\CursoStgr;

@@ -3,7 +3,7 @@
 namespace src\dossiers\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\dossiers\domain\value_objects\TipoDossierApp;
 use src\dossiers\domain\value_objects\TipoDossierCampoTo;
 use src\dossiers\domain\value_objects\TipoDossierClass;

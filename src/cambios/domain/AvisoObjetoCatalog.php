@@ -2,7 +2,7 @@
 
 namespace src\cambios\domain;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\entity\ActividadCargo;
 use src\actividades\domain\entity\ActividadAll;
 use src\actividadescentro\domain\entity\CentroEncargado;

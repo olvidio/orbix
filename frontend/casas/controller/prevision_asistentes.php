@@ -10,7 +10,7 @@
  * `prevision_asistentes_ajax.php` siguiendo `refactor.md`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use src\shared\domain\value_objects\DateTimeLocal;

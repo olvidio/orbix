@@ -55,10 +55,10 @@ $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 //xa_tipo_tarifa
 */
 
-$oConfigDB = new core\ConfigDB('importar'); //de la database comun
+$oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database comun
 $config = $oConfigDB->getEsquema('public'); //de la database comun
 
-$oConexion = new core\DBConnection($config);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $oAlterSchema = new DBAlterSchema();
@@ -121,7 +121,7 @@ $oAlterSchema->setInserts($aInserts);
 
 $config = $oConfigDB->getEsquema('publicv'); //de la database sv
 
-$oConexion = new core\DBConnection($config);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $oAlterSchema = new DBAlterSchema();
@@ -265,7 +265,7 @@ $oAlterSchema->updateCedidasAll($dl_old, $dl_new);
 // sv-e 
 $config = $oConfigDB->getEsquema('publicv-e'); //de la database sv
 
-$oConexion = new core\DBConnection($config);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $oAlterSchema = new DBAlterSchema();
@@ -323,13 +323,13 @@ if ($DelegacionRepository->Guardar($oDelegacion) === false) {
 
 
 // cambiar nombre del esquema (para no borrar):
-$oDBRol = new core\DBRol();
+$oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
 $esquema_zz = 'zz' . $QEsquemaDel;
 $esquemav_zz = 'zz' . $esquemaDelv;
 
 // comun
 $configComunP = $oConfigDB->getEsquema('public');
-$oConexion = new core\DBConnection($configComunP);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($configComunP);
 $oConComun = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConComun);
 $oDBRol->setUser($esquema_zz);
@@ -339,7 +339,7 @@ $oAlterSchema->quitarHerencias($oConComun, $esquema_zz);
 
 // sv
 $configSv = $oConfigDB->getEsquema('publicv');
-$oConexion = new core\DBConnection($configSv);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($configSv);
 $oConSv = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSv);
 $oDBRol->setUser($esquemav_zz);
@@ -349,7 +349,7 @@ $oAlterSchema->quitarHerencias($oConSv, $esquemav_zz);
 
 // sv-e
 $configSve = $oConfigDB->getEsquema('publicv-e');
-$oConexion = new core\DBConnection($configSve);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($configSve);
 $oConSve = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSve);
 $oDBRol->setUser($esquemav_zz);

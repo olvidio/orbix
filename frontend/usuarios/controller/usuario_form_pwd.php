@@ -2,7 +2,7 @@
 // para que funcione bien la seguridad
 $_POST = (empty($_POST)) ? $_GET : $_POST;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\UrlBaseProject;

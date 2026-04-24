@@ -2,7 +2,7 @@
 
 namespace src\ubis\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\ubis\application\services\UbiTelecoService;
 use src\ubis\domain\entity\Ubi;
 

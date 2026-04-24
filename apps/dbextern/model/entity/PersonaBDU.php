@@ -5,7 +5,7 @@ namespace dbextern\model\entity;
 
 use core\ClasePropiedades;
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use DateTime;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;

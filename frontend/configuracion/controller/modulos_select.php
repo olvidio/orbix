@@ -1,6 +1,5 @@
 <?php
 
-use core\ViewPhtml;
 use frontend\shared\model\ViewNewPhtml;
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;

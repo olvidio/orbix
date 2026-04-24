@@ -3,7 +3,7 @@
 namespace src\profesores\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;

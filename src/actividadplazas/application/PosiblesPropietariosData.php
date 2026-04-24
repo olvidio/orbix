@@ -2,7 +2,7 @@
 
 namespace src\actividadplazas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\personas\domain\entity\Persona;
 

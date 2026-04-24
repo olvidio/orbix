@@ -16,7 +16,7 @@
  * @param array   $_POST['sel']         [id_item#elim_asis]
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;

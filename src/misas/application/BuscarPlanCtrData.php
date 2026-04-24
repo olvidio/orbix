@@ -2,7 +2,7 @@
 
 namespace src\misas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdRepositoryInterface;
 use src\misas\application\support\IdNomJefeResolver;

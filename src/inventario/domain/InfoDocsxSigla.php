@@ -2,7 +2,7 @@
 
 namespace src\inventario\domain;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;

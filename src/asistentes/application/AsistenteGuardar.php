@@ -2,7 +2,7 @@
 
 namespace src\asistentes\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\asistentes\application\services\AsistenteApplicationService;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;

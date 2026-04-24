@@ -27,25 +27,25 @@ $esquema = "$Qregion-$Qdl";
 $esquemav = $esquema . 'v';
 //$esquemaf = $esquema.'f';
 
-$oDBRol = new core\DBRol();
+$oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
 
 //  USUARIOS Y CAMBIO NOMBRE ESQUEMA  ///////////////////////////////////
 
 // Hay que pasar como parámetro el nombre de la database, que corresponde al archivo database.inc
 // donde están los passwords. En este caso en importar.inc, tenemos al superadmin.
-$oConfigDB = new core\ConfigDB('importar');
+$oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
 //coge los valores de public: 1.la database comun; 2.nombre superusuario; 3.pasword superusuario;
 
 
-$oDBRol = new core\DBRol();
+$oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
 
 //************** comun ****************************************
 $configComunP = $oConfigDB->getEsquema('public');
-$oConexion = new core\DBConnection($configComunP);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($configComunP);
 $oConComun = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConComun);
 // mantener el password:
-$oConfigDBComun = new core\ConfigDB('comun');
+$oConfigDBComun = new src\shared\infrastructure\persistence\ConfigDB('comun');
 $configComun = $oConfigDBComun->getEsquema($esquema_old);
 $esquema_pwd = $configComun['password'];
 
@@ -61,11 +61,11 @@ $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'comun');
 
 /////////  para comun en interior (select)
 $configComunP = $oConfigDB->getEsquema('public_select');
-$oConexion = new core\DBConnection($configComunP);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($configComunP);
 $oConComun = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConComun);
 // mantener el password:
-$oConfigDBComun = new core\ConfigDB('comun');
+$oConfigDBComun = new src\shared\infrastructure\persistence\ConfigDB('comun');
 $configComun = $oConfigDBComun->getEsquema($esquema_old);
 $esquema_pwd = $configComun['password'];
 
@@ -77,11 +77,11 @@ $oConfigDBComun->renombrarListaEsquema('comun_select', $esquema_old, $esquema);
 
 // *********************  sv  *********************************
 $configSvP = $oConfigDB->getEsquema('publicv');
-$oConexion = new core\DBConnection($configSvP);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($configSvP);
 $oConSv = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSv);
 // mantener el password:
-$oConfigDBSv = new core\ConfigDB('sv');
+$oConfigDBSv = new src\shared\infrastructure\persistence\ConfigDB('sv');
 $configSv = $oConfigDBSv->getEsquema($esquema_oldv);
 $esquema_pwdv = $configSv['password'];
 
@@ -97,11 +97,11 @@ $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv');
 
 // *********************  sv-e  ********************************
 $configSveP = $oConfigDB->getEsquema('publicv-e');
-$oConexion = new core\DBConnection($configSveP);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($configSveP);
 $oConSve = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSve);
 // mantener el password:
-$oConfigDBSve = new core\ConfigDB('sv-e');
+$oConfigDBSve = new src\shared\infrastructure\persistence\ConfigDB('sv-e');
 $configSve = $oConfigDBSve->getEsquema($esquema_oldv);
 $esquema_pwdve = $configSve['password'];
 
@@ -132,7 +132,7 @@ $oDBRol->setUser($esquemaf);
 $oDBRol->setPwd($esquema_pwdf);
 $oDBRol->renombrarSchema($esquema_oldf); // Cambia el nombre del esquema
 $oDBRol->renombrarUsuario($esquema_oldf); // reescribe el password que ya tenia.
-$oConfigDBSf = new core\ConfigDB('sf');
+$oConfigDBSf = new src\shared\infrastructure\persistence\ConfigDB('sf');
 $oConfigDBSf->renombrarListaEsquema('sf', $esquema_oldf, $esquemaf);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
@@ -202,10 +202,10 @@ if (!empty($Qcomun)) {
     ];
 
     // comun normal
-    $oConfigDB = new core\ConfigDB('importar'); //de la database comun
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public'); //de la database comun
 
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oAlterSchema = new DBAlterSchema();
@@ -216,10 +216,10 @@ if (!empty($Qcomun)) {
     $oAlterSchema->updateDatosRegexp($aDatos);
 
     // comun_select (servidor interno)
-    $oConfigDB = new core\ConfigDB('importar'); //de la database comun
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public_select'); //de la database comun
 
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oAlterSchema = new DBAlterSchema();
@@ -233,10 +233,10 @@ if (!empty($Qcomun)) {
 
 // sv
 if (!empty($Qsv)) {
-    $oConfigDB = new core\ConfigDB('importar'); //de la database sv
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database sv
     $config = $oConfigDB->getEsquema('publicv');
 
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oAlterSchema = new DBAlterSchema();
@@ -381,10 +381,10 @@ if (!empty($Qsv)) {
     ];
 
     ///// sv-e normal
-    $oConfigDB = new core\ConfigDB('importar'); //de la database sv
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database sv
     $config = $oConfigDB->getEsquema('publicv-e');
 
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oAlterSchema = new DBAlterSchema();
@@ -396,10 +396,10 @@ if (!empty($Qsv)) {
     $oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
 
     ///// sv-e_select (servidor interno)
-    $oConfigDB = new core\ConfigDB('importar'); //de la database sv
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database sv
     $config = $oConfigDB->getEsquema('publicv-e_select');
 
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oAlterSchema = new DBAlterSchema();
@@ -415,7 +415,7 @@ if (!empty($Qsv)) {
 /*
 // sf
 if (!empty($Qsf)) {
-    $oConfigDB = new core\ConfigDB('importar'); //de la database sf
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database sf
     $config = $oConfigDB->getEsquema('publicf');
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();

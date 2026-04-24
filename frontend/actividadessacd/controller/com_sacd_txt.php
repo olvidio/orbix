@@ -14,7 +14,7 @@
  * legacy con ramas `get_texto` y `update`) siguiendo `refactor.md`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadessacd\application\TextoComunicacionData;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;

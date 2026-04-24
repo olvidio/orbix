@@ -2,14 +2,14 @@
 
 namespace src\notas\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\ConverterDate;
-use core\ConverterJson;
-use core\DBConnection;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\ConverterJson;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\notas\application\EditarPersonaNota;
 use PDO;
 use src\asignaturas\domain\value_objects\NivelId;

@@ -1,7 +1,7 @@
 <?php
 
-use core\ConfigGlobal;
-use core\ServerConf;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 
 /*
  * Para que no de errror al ejecutar psql. usuario root no coincide con dani
@@ -15,10 +15,10 @@ use core\ServerConf;
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 
-$oConfigDB = new core\ConfigDB('importar'); //de la database comun 
+$oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database comun 
 $config = $oConfigDB->getEsquema('public'); //de la database comun 
 
-$oConexion = new core\DBConnection($config);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $Qaccion = (string)filter_input(INPUT_POST, 'accion');

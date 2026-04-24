@@ -1,8 +1,8 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
-use core\ConfigGlobal;
-use core\ServerConf;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use web\Desplegable;

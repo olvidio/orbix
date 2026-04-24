@@ -45,7 +45,7 @@ src/notas/
 | `asignaturas_pendientes.php` | 87 | Cuadro alumnos | `TablaAlumnosAsignaturas->getTabla*()` | model devuelve `Lista` |
 | `asignaturas_pendientes_resumen.php` | 168 | Resumen cuadro | logica inline | mucho codigo en controller |
 | `comprobar_notas.php` | 515 | Validador notas | logica inline + DB queries | gigante, mezcla todo |
-| `form_1011.php` | 403 | Form notas persona | `$Qmod`, `Hash`, `Desplegable` | dispatcher + URL ajax hardcoded |
+| `form_notas_de_una_persona.php` | 403 | Form notas persona | `$Qmod`, `Hash`, `Desplegable` | dispatcher + URL ajax hardcoded |
 | `informe_stgr_agd.php` | 184 | Informe agd | `Resumen->...` | controller arma reporte |
 | `informe_stgr_n.php` | 233 | Informe n | `Resumen->...` | controller arma reporte |
 | `informe_stgr_profesores.php` | 123 | Informe profesores | `Resumen->...` | controller arma reporte |
@@ -75,12 +75,12 @@ src/notas/
 
 ```
 acta_select.phtml: 5 referencias a apps/notas/controller/...
-form_1011.phtml: 1 referencia
+form_notas_de_una_persona.phtml: 1 referencia
 acta_ver.phtml: ~3 referencias
 asig_faltan_*.phtml: 1-2 cada una
 ```
 
-`form_1011.phtml` ademas hace `use src\\notas\\domain\\value_objects\\NotaEpoca;` y `TipoActa` — aceptable para constantes de VO, pero formalmente viola la regla "vistas no usan `src\\`".
+`form_notas_de_una_persona.phtml` ademas hace `use src\\notas\\domain\\value_objects\\NotaEpoca;` y `TipoActa` — aceptable para constantes de VO, pero formalmente viola la regla "vistas no usan `src\\`".
 
 ## Violaciones de `refactor.md` detectadas
 
@@ -101,13 +101,13 @@ asig_faltan_*.phtml: 1-2 cada una
     - `acta_ajax.php` → `$repo->getJsonExaminadores()` (devuelve string ya formateado por el repositorio).
 7. **`$_POST = $_GET` hack**: `acta_2_mpdf.php` y `tessera_2_mpdf.php` (workaround para pasar `global_header` con GET).
 8. **Hash de URL absoluta hardcoded en JS**:
-    - `apps/notas/controller/notas_ajax.php` referenciado por `form_1011.phtml` con `$url_ajax = ConfigGlobal::getWeb() . '/apps/notas/controller/notas_ajax.php'`.
-    - `apps/notas/controller/update_1011.php` en `form_1011.phtml`.
+    - `apps/notas/controller/notas_ajax.php` referenciado por `form_notas_de_una_persona.phtml` con `$url_ajax = ConfigGlobal::getWeb() . '/apps/notas/controller/notas_ajax.php'`.
+    - `apps/notas/controller/update_1011.php` en `form_notas_de_una_persona.phtml`.
     - `apps/notas/controller/acta_select.php`, `acta_ver.php`, `acta_imprimir.php`, `acta_pdf_download.php`, `acta_update.php` en `acta_select.phtml`.
     - `apps/notas/controller/tessera_copiar.php` en `tessera_copiar_select.html.twig`.
-9. **Vistas con `use src\\...`** — `form_1011.phtml` (constantes VO).
+9. **Vistas con `use src\\...`** — `form_notas_de_una_persona.phtml` (constantes VO).
 10. **Twig solitario**: `tessera_copiar_select.html.twig` debe migrarse a PHTML.
-11. **Patron JS legacy `form.one('submit') + trigger('submit') + off()`** en `form_1011.phtml`.
+11. **Patron JS legacy `form.one('submit') + trigger('submit') + off()`** en `form_notas_de_una_persona.phtml`.
 12. **Codigo posiblemente muerto**: bloque comentado en `notas_ajax.php` case `posibles_preceptores`; `example.php` vacios en `src/notas/application` y `src/notas/domain`.
 
 ## Menus / consumidores externos
@@ -116,7 +116,7 @@ asig_faltan_*.phtml: 1-2 cada una
 documentacion/Documentacion_Obix/menus.csv → 7 entradas a apps/notas/controller/...
 proves/aux_metamenus.csv                  → ?
 log/menus/comun.sql                        → seeds con paths apps/notas/...
-apps/actividadestudios/controller/form_1303.php   → llama acta_ver.php / form_1011.php
+apps/actividadestudios/controller/form_1303.php   → llama acta_ver.php / form_notas_de_una_persona.php
 apps/actividadestudios/view/acta_notas.phtml      → llama acta_ver.php
 apps/actividadestudios/controller/acta_notas.php  → integra apps/notas/controller/acta_ver
 ```
@@ -161,7 +161,7 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
     - `notas_ajax::posibles_preceptores` → `/src/notas/preceptores_data` (idem).
     - `acta_ajax::examinadores` → `/src/notas/examinadores_data`.
     - `acta_ajax::asignaturas` → `/src/notas/asignaturas_data` (autocomplete; ya devuelve JSON, normalizar contrato).
-- Adaptar `form_1011.phtml`, `acta_ver.phtml` y demas consumidores a llamar a los nuevos endpoints + `fnjs_construir_desplegable`.
+- Adaptar `form_notas_de_una_persona.phtml`, `acta_ver.phtml` y demas consumidores a llamar a los nuevos endpoints + `fnjs_construir_desplegable`.
 - Eliminar `notas_ajax.php` y `acta_ajax.php` cuando no queden referencias.
 
 ### Slice 3 — Flujo `acta_*` (lecturas + vistas)
@@ -175,11 +175,11 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
 
 ### Slice 4 — Form notas (`form_1011`)
 
-- `frontend/notas/controller/form_1011.php` + `view/form_1011.phtml`:
+- `frontend/notas/controller/form_notas_de_una_persona.php` + `view/form_notas_de_una_persona.phtml`:
     - Cargar opciones desde repos directamente (es vista de oficina).
     - Ajustar URLs JS a los nuevos endpoints `/src/notas/*` del slice 1 y 2.
     - Reescribir `fnjs_guardar` con patron `$.ajax(...).done(...)` (sin `form.one("submit") + trigger`).
-- Borrar `apps/notas/model/Select1011.php` (split en data + view): el listado se monta en `frontend/notas/view/select1011.phtml` con `web\\Lista` instanciado en el controller.
+- Borrar `apps/notas/model/Select_notas_de_una_persona.php` (split en data + view): el listado se monta en `frontend/notas/view/select_notas_de_una_persona.phtml` con `web\\Lista` instanciado en el controller.
 
 ### Slice 5 — `asig_faltan_*` + `tessera_copiar_select`
 
@@ -235,29 +235,29 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
 - **Slice 1 completado**: `acta_*`, `persona_nota_*`, `acta_pdf_*`, `tessera_copiar` en `src/notas/application` + endpoints `/src/notas/*`. Shims en `apps/` con `ContestarJson`.
 - **Slice 2 completado**: AJAX dispatchers (`acta_ajax`, `notas_ajax`) con logica extraida a `ActividadesBuscarData`, `BuscarActaData`, `PosiblesOpcionalesData`, `PosiblesPreceptoresData`, `ExaminadoresSearchData`, `AsignaturasSearchData`. `acta_ajax.php` ya eliminado — `acta_ver.phtml` llama directamente a `/src/notas/examinadores_search` y `/src/notas/asignaturas_search`. `notas_ajax.php` se conserva (HTML inline en respuestas + hash firmado contra `apps/...` en JS).
 - **Slice 3 completado**: flujo `acta_*` (`acta_listado_anual` + endpoint `/src/notas/acta_listado_anual_data`, `DatosActa`).
-- **Slice 4 completado**: `NotaPersonaFormData` + `Select1011Data` extraidos a `src/notas/application`.
+- **Slice 4 completado**: `NotaPersonaFormData` + `NotasDeUnaPersonaData` extraidos a `src/notas/application`.
 - **Slice 5 completado**: `asig_faltan_*` (3) + `tessera_copiar_select` (Twig→PHTML) migrados a `frontend/notas/`.
 - **Slice 6 completado**: `resumen_anual`, `informe_stgr_*`, `asignaturas_pendientes*`, `comprobar_notas` migrados a `frontend/notas/`. `CentroEstudios` → `src/notas/application/CentroEstudiosLookup` con shim. `getDatosActa` shim borrado.
 - **Slice 7 completado**: `tessera_ver`, `tessera_imprimir`, `tessera_imprimir_mpdf`, `tessera_2_mpdf` migrados a `frontend/notas/`. `Tesera` model sigue en `apps/notas/model` (usa `ViewNewPhtml` apuntando a `frontend/notas/view/tesera_ver.phtml`).
-- **Slice 8 completado**: `acta_select`, `acta_ver`, `acta_imprimir`, `acta_imprimir_mpdf`, `acta_2_mpdf`, `acta_pdf_download`, `form_1011` migrados a `frontend/notas/`. Todas las vistas del modulo viven ahora en `frontend/notas/view/` (directorio `apps/notas/view/` eliminado). `Select1011` y `Tesera` renderizan con `ViewNewPhtml` hacia `frontend/notas/view/`. Menus (`Documentacion_Obix/menus.csv`, `proves/aux_metamenus.csv`, `log/menus/comun.sql`) apuntan a `frontend/notas/controller/`. Shims minimos en `apps/notas/controller/` para los consumidores externos (`apps/actividadestudios/...`, JS legacy que firma el hash con URLs `apps/...`).
+- **Slice 8 completado**: `acta_select`, `acta_ver`, `acta_imprimir`, `acta_imprimir_mpdf`, `acta_2_mpdf`, `acta_pdf_download`, `form_1011` migrados a `frontend/notas/`. Todas las vistas del modulo viven ahora en `frontend/notas/view/` (directorio `apps/notas/view/` eliminado). `Select_notas_de_una_persona` y `Tesera` renderizan con `ViewNewPhtml` hacia `frontend/notas/view/`. Menus (`Documentacion_Obix/menus.csv`, `proves/aux_metamenus.csv`, `log/menus/comun.sql`) apuntan a `frontend/notas/controller/`. Shims minimos en `apps/notas/controller/` para los consumidores externos (`apps/actividadestudios/...`, JS legacy que firma el hash con URLs `apps/...`).
 - **Slice 9 completado**: dispatcher `notas_ajax.php` eliminado y sustituido por 4 endpoints dedicados:
     - `/src/notas/buscar_acta` (JSON `BuscarActaData`).
     - `/src/notas/posibles_opcionales_data` (payload `fnjs_construir_desplegable` para `id_asignatura`).
     - `/src/notas/posibles_preceptores_data` (payload `fnjs_construir_desplegable` para `id_preceptor`).
     - `/src/notas/actividades_buscar_data` (JSON) + `frontend/notas/controller/actividad_buscar_form.php` con vista `actividad_buscar_form.phtml` que arma el `<form>` del dialogo "añadir ca" (la construccion del HTML vive ahora en `frontend/`, no en `src/`).
-    Consumidores actualizados: `frontend/notas/view/form_1011.phtml` y `apps/actividadestudios/view/form_1303.phtml` (con helper `fnjs_construir_desplegable` inline). `apps/notas/controller/notas_ajax.php` borrado.
+    Consumidores actualizados: `frontend/notas/view/form_notas_de_una_persona.phtml` y `apps/actividadestudios/view/form_1303.phtml` (con helper `fnjs_construir_desplegable` inline). `apps/notas/controller/notas_ajax.php` borrado.
 - **Slice 10 completado**: dispatchers `acta_update.php` y `update_1011.php` eliminados. Los consumidores llaman ahora directamente a los endpoints granulares ya existentes en `/src/notas/*`:
     - `acta_select.phtml` → `/src/notas/acta_eliminar` (`fnjs_eliminar`).
     - `acta_ver.phtml` → `/src/notas/acta_nueva` o `/src/notas/acta_modificar` segun el hidden `mod` del form (`fnjs_guardar_acta`).
-    - `select1011.phtml` → `/src/notas/persona_nota_eliminar` (`fnjs_borrar`, JSON + `dataType: 'json'`).
-    - `form_1011.phtml` → `/src/notas/persona_nota_nueva` o `/src/notas/persona_nota_editar` segun el hidden `mod` (`fnjs_guardar`, JSON + `dataType: 'json'`).
+    - `select_notas_de_una_persona.phtml` → `/src/notas/persona_nota_eliminar` (`fnjs_borrar`, JSON + `dataType: 'json'`).
+    - `form_notas_de_una_persona.phtml` → `/src/notas/persona_nota_nueva` o `/src/notas/persona_nota_editar` segun el hidden `mod` (`fnjs_guardar`, JSON + `dataType: 'json'`).
     Los hashes (`h`, `hh`, `hhc`) emitidos por `Hash::getCamposHtml()` no dependen de la URL del `action`, por lo que basta con reescribir el `url` del `$.ajax` y ajustar las callbacks `.done` a la respuesta JSON de `ContestarJson`. `apps/notas/controller/acta_update.php` y `apps/notas/controller/update_1011.php` borrados.
-- **Slice 14 completado**: `apps/notas/model/Select1011.php` (152 LOC) migrado a `src/notas/application/Select1011.php`. Cambios:
+- **Slice 14 completado**: `apps/notas/model/Select_notas_de_una_persona.php` (152 LOC) migrado a `src/notas/application/Select_notas_de_una_persona.php`. Cambios:
     - Para poder mover widgets dossier ya refactorizados a la capa `src/` sin necesidad de mantener shims en `apps/<app>/model/`, se extiende `src/dossiers/application/DossierTipoFileSuffixResolver` con una tercera ruta de lookup: `src/<app>/application/Select<suffix>.php` (FQCN `src\<app>\application\Select<suffix>`) como fallback tras `apps/<app>/{model,domain}/`. Es un cambio de efecto inofensivo: solo se busca un archivo adicional si los dos primeros no existen.
     - Ambos metodos afectados (`resolveSelectClassFqcn()` y `absolutePathSelect()`) se actualizan en coherencia.
-    - El widget `Select1011` conserva su comportamiento (mismos setters, misma vista `select1011.phtml`, misma `Lista` + `Hash`). Los unicos cambios estilisticos son: `PERMISO_INSERTAR` (`3`) e `ID_DOSSIER` (`'1011'`) como constantes nombradas, e invierto la guarda de `setLinksInsert()` (early return) para reducir indentacion.
-    - La logica de datos sigue en `Select1011Data` (ya estaba en `src/notas/application/` desde el Slice 4).
-    - El resolver es invocado desde `apps/dossiers/controller/dossiers_ver.php` (linea 218) y no tiene tests; cambio verificado con `php -l` y `rg` (sin referencias residuales al FQCN antiguo `notas\\model\\Select1011`).
+    - El widget `Select_notas_de_una_persona` conserva su comportamiento (mismos setters, misma vista `select_notas_de_una_persona.phtml`, misma `Lista` + `Hash`). Los unicos cambios estilisticos son: `PERMISO_INSERTAR` (`3`) e `ID_DOSSIER` (`'1011'`) como constantes nombradas, e invierto la guarda de `setLinksInsert()` (early return) para reducir indentacion.
+    - La logica de datos sigue en `NotasDeUnaPersonaData` (ya estaba en `src/notas/application/` desde el Slice 4).
+    - El resolver es invocado desde `apps/dossiers/controller/dossiers_ver.php` (linea 218) y no tiene tests; cambio verificado con `php -l` y `rg` (sin referencias residuales al FQCN antiguo `notas\\model\\Select_notas_de_una_persona`).
 - **Slice 16 completado**: `Resumen.php` aislado en `src/notas/application/legacy/` y frontend desacoplado de la clase legacy.
     - `apps/notas/model/Resumen.php` → `src/notas/application/legacy/Resumen.php` (namespace `src\notas\application\legacy`). La carpeta `legacy/` avisa explicitamente de que es un bloque heredado (1294 LOC de SQL ad-hoc + tablas temporales); no se reescribe, solo se encapsula.
     - Tres nuevos use cases en `src/notas/application/` hacen de fachada tipada sobre `Resumen`:
@@ -298,10 +298,10 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
     - `createAsignaturasTemp()` se ejecuta una unica vez por instancia (antes se reconstruia en cada llamada a `asignaturasQueFaltanPersona()` — cuello de botella en `posibles_asignaturas_ca.php`) y envuelve los `INSERT` del catalogo en una transaccion.
     - Warnings de PHP 8 corregidos: inicializacion de `$condicion`/`$condicion_stgr` en el path `default`, `$aId_nom[$id_nom]++` sobre clave indefinida.
     Consumidores actualizados (`frontend/notas/controller/asig_faltan_{,personas_}select.php`, `apps/actividadestudios/controller/posibles_asignaturas_ca.php`). Fichero legacy borrado.
-- **Slice 17 completado**: `form_1011.php` deja de importar `NotaPersonaFormData` directamente. Se expone via endpoint HTTP y se consume con `PostRequest::getDataFromUrl()`, en linea con `refactor.md` §"Patron de llamada backend desde frontend":
+- **Slice 17 completado**: `form_notas_de_una_persona.php` deja de importar `NotaPersonaFormData` directamente. Se expone via endpoint HTTP y se consume con `PostRequest::getDataFromUrl()`, en linea con `refactor.md` §"Patron de llamada backend desde frontend":
     - Nuevo controlador `src/notas/infrastructure/ui/http/controllers/nota_persona_form_data.php` que recibe por POST los 5 campos que leia la use case (`id_pau`, `id_asignatura_real`, `sel`, `pau`, `mod`), llama a `NotaPersonaFormData::execute()` y añade los helpers `opcionalesGenericasHelpers()` dentro del mismo payload (clave `helpers`), devolviendo todo con `ContestarJson::enviar('', $data)`.
     - Ruta `/src/notas/nota_persona_form_data` registrada en `src/notas/config/routes.php`.
-    - `frontend/notas/controller/form_1011.php` cambia `use src\\notas\\application\\NotaPersonaFormData;` por `use frontend\\shared\\PostRequest;`; la llamada directa `NotaPersonaFormData::execute($_POST)` + `NotaPersonaFormData::opcionalesGenericasHelpers()` se sustituye por una unica invocacion `PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [...])` y la lectura de `$datos['helpers']`.
+    - `frontend/notas/controller/form_notas_de_una_persona.php` cambia `use src\\notas\\application\\NotaPersonaFormData;` por `use frontend\\shared\\PostRequest;`; la llamada directa `NotaPersonaFormData::execute($_POST)` + `NotaPersonaFormData::opcionalesGenericasHelpers()` se sustituye por una unica invocacion `PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [...])` y la lectura de `$datos['helpers']`.
     - `rg 'use src\\\\[a-zA-Z_]+\\\\application\\\\[A-Za-z_]+Data;' frontend apps` no devuelve resultados: el antipatron queda eliminado en todo el repo (no solo en `notas`). Los otros controladores que se mencionaban como sospechosos (`acta_imprimir`, `acta_ver`, `acta_select`) ya importan solo use cases sin sufijo `Data` (`DatosActa`, repos, VOs), asi que no requieren cambios.
 
 ## Estado final del modulo `notas`
@@ -317,7 +317,7 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
 
 - `frontend/notas/controller/` — 25 controllers delgados, todos con header `frontend/shared/global_header_front.inc` y render `ViewNewPhtml('frontend\\notas\\controller')`. Incluye `actividad_buscar_form.php` (dialogo "añadir ca").
 - `frontend/notas/view/` — 12 vistas PHTML (+ `tesera_ver.phtml` usada por `Tesera` model; + `actividad_buscar_form.phtml`).
-- `src/notas/application/` — use cases + `services/` (helpers compartidos) + `support/` + `legacy/` (bloque `Resumen.php` heredado, encapsulado tras los use cases `InformeStgr*`). Los casos de uso publicos van sin sufijo (`AsignaturasPendientes`, `TablaAlumnosAsignaturas`, `Tesera`, `DatosActa`, `Select1011`, `ActaNueva`, `InformeStgrNumerarios/Agregados/Profesores`, etc.); el sufijo `Service` queda reservado para los helpers dentro de `application/services/` (ej. `ResumenTempTablesService`).
+- `src/notas/application/` — use cases + `services/` (helpers compartidos) + `support/` + `legacy/` (bloque `Resumen.php` heredado, encapsulado tras los use cases `InformeStgr*`). Los casos de uso publicos van sin sufijo (`AsignaturasPendientes`, `TablaAlumnosAsignaturas`, `Tesera`, `DatosActa`, `Select_notas_de_una_persona`, `ActaNueva`, `InformeStgrNumerarios/Agregados/Profesores`, etc.); el sufijo `Service` queda reservado para los helpers dentro de `application/services/` (ej. `ResumenTempTablesService`).
 - `src/notas/infrastructure/ui/http/controllers/` — 18 endpoints HTTP registrados en `src/notas/config/routes.php` (incluye `buscar_acta`, `posibles_opcionales_data`, `posibles_preceptores_data`, `actividades_buscar_data`, `nota_persona_form_data`).
 
 ### Deuda tecnica pendiente (post-refactor)
@@ -327,4 +327,4 @@ Objetivo: cumplir "una accion = un endpoint" y `ContestarJson::enviar` en todas 
     - Mezcla alumnos + profesores en la misma clase; partir en `ResumenAlumnos` + `ResumenProfesores` es mecanico.
     - N+1 en `profesorEspecialidad()` (1 query + 2 `findById` por profesor).
     - Extraer `comprobar_notas.php` (~500 LOC inline en `frontend/`) a un `ComprobarNotas` use case tambien esta pendiente; no consume `Resumen` pero es el mismo patron.
-2. ~~**`form_1011.php`, `acta_imprimir.php`, `acta_ver.php`, `acta_select.php`**: frontend controllers que importan `src\\notas\\application\\*Data` directamente en vez de usar `PostRequest::getDataFromUrl()`.~~ Resuelto en Slice 17: `form_1011.php` ya consume el nuevo endpoint `/src/notas/nota_persona_form_data`. Los otros tres controladores que se señalaban en esta deuda no importan realmente ningun `*Data` (solo `DatosActa`, VOs y repos), asi que la lista original estaba sobreestimada.
+2. ~~**`form_notas_de_una_persona.php`, `acta_imprimir.php`, `acta_ver.php`, `acta_select.php`**: frontend controllers que importan `src\\notas\\application\\*Data` directamente en vez de usar `PostRequest::getDataFromUrl()`.~~ Resuelto en Slice 17: `form_notas_de_una_persona.php` ya consume el nuevo endpoint `/src/notas/nota_persona_form_data`. Los otros tres controladores que se señalaban en esta deuda no importan realmente ningun `*Data` (solo `DatosActa`, VOs y repos), asi que la lista original estaba sobreestimada.

@@ -13,7 +13,7 @@
  * `tarifa_ajax.php` (dispatcher legacy) siguiendo `refactor.md`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use web\CasasQue;
 use web\Hash;

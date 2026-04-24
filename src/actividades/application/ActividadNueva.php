@@ -2,8 +2,8 @@
 
 namespace src\actividades\application;
 
-use core\ConfigGlobal;
-use core\DBPropiedades;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadExRepositoryInterface;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;

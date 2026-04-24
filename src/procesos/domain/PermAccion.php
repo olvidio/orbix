@@ -3,7 +3,7 @@
 namespace src\procesos\domain;
 
 
-use permisos\model\XPermisos;
+use src\permisos\domain\XPermisos;
 
 class PermAccion extends XPermisos
 {

@@ -2,7 +2,7 @@
 
 namespace frontend\personas\controller;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;

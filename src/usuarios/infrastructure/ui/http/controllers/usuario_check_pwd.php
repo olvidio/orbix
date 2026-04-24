@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Http\JsonResponse;
-use permisos\model\MyCrypt;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Username;
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
@@ -18,7 +18,7 @@ if (!empty($Qusuario)) { // si es nuevo no tiene id
 }
 
 if (!empty($Qpassword)) {
-    $oCrypt = new MyCrypt();
+    $oCrypt = new PasswordHasher();
     $jsondata = $oCrypt->is_valid_password($usuario, $Qpassword);
     (new JsonResponse($jsondata))->send();
     exit();

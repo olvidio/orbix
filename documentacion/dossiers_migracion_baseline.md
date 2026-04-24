@@ -63,9 +63,9 @@ HTTP / dominio).
 - `frontend/planning/view/planning_persona_select.phtml`
 - `frontend/procesos/controller/actividad_proceso.php`
 - `frontend/shared/controller/tablaDB_formulario_ver.php`
-- `frontend/notas/view/select1011.phtml`
+- `frontend/notas/view/select_notas_de_una_persona.phtml`
 - `frontend/certificados/view/select1010.phtml`
-- `frontend/ubiscamas/view/select2006.phtml`
+- `frontend/ubiscamas/view/select_habitaciones_cdc.phtml`
 - `frontend/asistentes/view/select_actividades_de_una_persona.phtml`
 - `frontend/asistentes/view/select_asistentes_a_una_actividad.phtml`
 - `frontend/actividadcargos/view/select_cargos_de_actividad.phtml`
@@ -80,7 +80,7 @@ HTTP / dominio).
 - `src/actividadestudios/application/Select_matriculas_de_una_persona.php`
 - `src/actividadcargos/application/Select_cargos_de_actividad.php`
   (comentario)
-- `src/notas/application/Select1011.php` (comentario)
+- `src/notas/application/Select_notas_de_una_persona.php` (comentario)
 - `apps/core/mod_tabla_form.php`
 
 ### Consumidores de `dossiers\model\PermDossier` / `PermisoDossier` actualizados
@@ -153,9 +153,9 @@ ni `infrastructure/ui/http/controllers/`.
 - `frontend/planning/view/planning_persona_select.phtml`
 - `frontend/procesos/controller/actividad_proceso.php`
 - `frontend/shared/controller/tablaDB_formulario_ver.php`
-- `frontend/notas/view/select1011.phtml`
+- `frontend/notas/view/select_notas_de_una_persona.phtml`
 - `frontend/certificados/view/select1010.phtml`
-- `frontend/ubiscamas/view/select2006.phtml`
+- `frontend/ubiscamas/view/select_habitaciones_cdc.phtml`
 - `frontend/asistentes/view/select_actividades_de_una_persona.phtml`
 - `frontend/actividadcargos/view/select_cargos_de_actividad.phtml`
 - `frontend/actividadcargos/view/select_cargos_personas_en_actividad.phtml`
@@ -238,7 +238,7 @@ ni `infrastructure/ui/http/controllers/`.
   `src/actividades/application/ActividadSelectListado.php`,
   `src/actividadestudios/application/Select_matriculas_de_una_persona.php`,
   comentarios en `src/actividadcargos/application/Select_cargos_de_actividad.php`
-  y `src/notas/application/Select1011.php`).
+  y `src/notas/application/Select_notas_de_una_persona.php`).
 - Borrar `apps/dossiers/` por completo.
 
 ## Verificacion post-migracion

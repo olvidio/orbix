@@ -2,7 +2,7 @@
 
 namespace src\procesos\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\StatusId;
 use src\menus\domain\PermisoMenu;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;

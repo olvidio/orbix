@@ -2,8 +2,8 @@
 
 namespace src\actividadplazas\application;
 
-use core\ConfigGlobal;
-use core\DBPropiedades;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use function core\is_true;

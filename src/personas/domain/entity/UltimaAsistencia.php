@@ -3,7 +3,7 @@
 namespace src\personas\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\value_objects\ActividadTipoId;
 use src\personas\domain\value_objects\AsistenciaDescripcionText;

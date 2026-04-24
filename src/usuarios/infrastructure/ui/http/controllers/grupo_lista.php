@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\usuarios\application\GruposLista;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;

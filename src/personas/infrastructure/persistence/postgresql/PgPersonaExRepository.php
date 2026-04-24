@@ -2,11 +2,11 @@
 
 namespace src\personas\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\ConfigGlobal;
-use core\ConverterDate;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use Exception;
 use PDO;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;

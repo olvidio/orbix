@@ -3,7 +3,7 @@
 namespace frontend\shared\model;
 
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 /**
  * Set

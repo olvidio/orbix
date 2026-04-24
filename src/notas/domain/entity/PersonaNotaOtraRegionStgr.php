@@ -2,7 +2,7 @@
 
 namespace src\notas\domain\entity;
 
-use core\ConverterJson;
+use src\shared\infrastructure\persistence\ConverterJson;
 use NumberFormatter;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\asignaturas\domain\value_objects\NivelId;

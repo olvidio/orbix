@@ -2,8 +2,8 @@
 
 namespace src\actividadescentro\application;
 
-use permisos\model\PermisosActividadesTrue;
-use core\ConfigGlobal;
+use src\permisos\domain\PermisosActividadesTrue;
+use src\shared\config\ConfigGlobal;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\notas\application\Tesera;
 use src\personas\domain\entity\Persona;
 

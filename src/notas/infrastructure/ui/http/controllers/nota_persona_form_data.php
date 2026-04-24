@@ -4,10 +4,10 @@ use src\notas\application\NotaPersonaFormData;
 use web\ContestarJson;
 
 /**
- * Endpoint backend que prepara los datos para `form_1011.phtml`
+ * Endpoint backend que prepara los datos para `form_notas_de_una_persona.phtml`
  * (alta/edicion de `PersonaNota`).
  *
- * Consumido por `frontend/notas/controller/form_1011.php` via
+ * Consumido por `frontend/notas/controller/form_notas_de_una_persona.php` via
  * `PostRequest::getDataFromUrl()` (ver refactor.md "Patron de llamada
  * backend desde frontend").
  *

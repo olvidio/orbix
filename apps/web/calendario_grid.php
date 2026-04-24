@@ -9,7 +9,7 @@
  *
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 /**
  * Función para dibujar un plannig.

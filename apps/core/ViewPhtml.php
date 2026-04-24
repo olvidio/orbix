@@ -2,6 +2,7 @@
 
 namespace core;
 
+use src\shared\config\ConfigGlobal;
 
 /**
  * Set

@@ -2,8 +2,8 @@
 
 namespace src\actividades\application;
 
-use core\ConfigGlobal;
-use permisos\model\PermisosActividadesTrue;
+use src\shared\config\ConfigGlobal;
+use src\permisos\domain\PermisosActividadesTrue;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;

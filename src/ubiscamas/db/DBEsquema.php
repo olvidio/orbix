@@ -2,8 +2,8 @@
 
 namespace src\ubiscamas\db;
 
-use core\ConfigGlobal;
-use core\ServerConf;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use src\cambios\db\DBEsquemaSelect;
 use src\utils_database\domain\entity\DBAbstract;
 

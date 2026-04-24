@@ -2,10 +2,10 @@
 
 namespace Tests\unit\certificados;
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
-use core\DBPropiedades;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use Faker\Factory;
 use src\certificados\domain\CertificadoEmitidoUpload;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;

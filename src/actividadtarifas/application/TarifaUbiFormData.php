@@ -2,7 +2,7 @@
 
 namespace src\actividadtarifas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividadtarifas\application\services\TipoTarifaDropdown;
 use src\actividadtarifas\domain\value_objects\SerieId;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;

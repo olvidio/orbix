@@ -2,7 +2,7 @@
 
 namespace src\personas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\personas\application\support\PersonaRepositoryResolver;
 
 /**

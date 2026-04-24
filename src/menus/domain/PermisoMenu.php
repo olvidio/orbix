@@ -2,7 +2,7 @@
 
 namespace src\menus\domain;
 
-use permisos\model\XPermisos;
+use src\permisos\domain\XPermisos;
 
 /**
  * Para saber los permisos de un usuario sobre los menus.

@@ -2,8 +2,8 @@
 
 namespace src\ubis\domain;
 
-use core\ConfigGlobal;
-use permisos\model\XPermisos;
+use src\shared\config\ConfigGlobal;
+use src\permisos\domain\XPermisos;
 
 class CuadrosLabor extends XPermisos
 {

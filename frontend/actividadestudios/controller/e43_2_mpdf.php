@@ -1,6 +1,6 @@
 <?php
 // para que funcione bien la seguridad
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 $_POST = $_GET;
 

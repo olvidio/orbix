@@ -2,8 +2,8 @@
 
 namespace src\ubis\application;
 
-use core\ConfigGlobal;
-use core\DBPropiedades;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\ubis\application\services\UbiTelecoService;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;

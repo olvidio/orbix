@@ -2,7 +2,7 @@
 
 namespace src\certificados\domain;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\personas\domain\entity\Persona;

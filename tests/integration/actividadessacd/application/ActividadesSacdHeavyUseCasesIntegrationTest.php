@@ -2,9 +2,9 @@
 
 namespace Tests\integration\actividadessacd\application;
 
-use core\ConfigGlobal;
-use permisos\model\PermisosActividades;
-use permisos\model\PermisosActividadesTrue;
+use src\shared\config\ConfigGlobal;
+use src\permisos\domain\PermisosActividades;
+use src\permisos\domain\PermisosActividadesTrue;
 use src\actividadessacd\application\ComunicacionActividadesSacdData;
 use src\actividadessacd\application\ComunicacionActividadesSacdEnviar;
 use src\actividadessacd\application\ListaActividadesSacdData;

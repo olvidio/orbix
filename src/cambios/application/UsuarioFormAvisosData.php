@@ -2,7 +2,7 @@
 
 namespace src\cambios\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\StatusId;
 use src\cambios\domain\AvisoObjetoCatalog;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;

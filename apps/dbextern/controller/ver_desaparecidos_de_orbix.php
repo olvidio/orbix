@@ -1,7 +1,7 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");

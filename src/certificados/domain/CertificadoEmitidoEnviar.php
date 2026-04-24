@@ -2,8 +2,8 @@
 
 namespace src\certificados\domain;
 
-use core\ConfigGlobal;
-use core\DBPropiedades;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use Exception;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\personas\domain\entity\Persona;

@@ -2,10 +2,10 @@
 
 namespace Tests\integration\certificados\infrastructure\persistence\postgresql;
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
-use core\DBPropiedades;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use Tests\factories\certificados\CertificadoEmitidoFactory;

@@ -2,7 +2,7 @@
 
 namespace src\tablonanuncios\domain;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 use web\Lista;
 

@@ -2,7 +2,7 @@
 
 namespace src\asistentes\domain\entity;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\value_objects\AsistenteEncargo;

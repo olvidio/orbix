@@ -3,7 +3,7 @@
 namespace src\shared;
 
 // INICIO Cabecera global de URL de controlador *********************************
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;

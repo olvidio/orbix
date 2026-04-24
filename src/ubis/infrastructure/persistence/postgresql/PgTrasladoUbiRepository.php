@@ -2,9 +2,9 @@
 
 namespace src\ubis\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\ConfigDB;
-use core\DBConnection;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
 use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\TrasladoUbiRepositoryInterface;

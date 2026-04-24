@@ -1,7 +1,7 @@
 <?php
 
-use core\ConfigGlobal;
-use core\DBPropiedades;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use core\ViewPhtml;
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use web\Desplegable;

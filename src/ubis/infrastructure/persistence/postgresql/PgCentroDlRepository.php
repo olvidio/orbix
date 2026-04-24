@@ -2,11 +2,11 @@
 
 namespace src\ubis\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\ConfigGlobal;
-use core\ConverterDate;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;

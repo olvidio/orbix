@@ -2,7 +2,7 @@
 
 namespace src\planning\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\planning\domain\value_objects\PlanningStyle;

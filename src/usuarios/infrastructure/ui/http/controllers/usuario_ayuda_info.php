@@ -1,7 +1,7 @@
 <?php
 
-use core\ConfigDB;
-use core\DBConnection;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
 use frontend\shared\OfuscarEmail;
 use web\ContestarJson;
 

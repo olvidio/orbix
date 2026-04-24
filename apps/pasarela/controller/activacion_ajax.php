@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use core\ViewTwig;
 use pasarela\model\Activacion;
 use web\Hash;

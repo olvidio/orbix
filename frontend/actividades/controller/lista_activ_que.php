@@ -8,7 +8,7 @@
  * @subpackage    actividades
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewTwig;
 use web\Hash;
 

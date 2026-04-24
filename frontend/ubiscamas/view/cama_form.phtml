@@ -1,6 +1,6 @@
 <script>
     fnjs_guardar = function (formulario) {
-        let url = '<?= core\ConfigGlobal::getWeb() ?>/src/ubiscamas/cama_update';
+        let url = '<?= src\shared\config\ConfigGlobal::getWeb() ?>/src/ubiscamas/cama_update';
         $.ajax({
             url: url,
             type: 'post',

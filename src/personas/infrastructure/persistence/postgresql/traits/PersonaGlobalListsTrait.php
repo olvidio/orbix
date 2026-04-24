@@ -4,7 +4,7 @@ namespace src\personas\infrastructure\persistence\postgresql\traits;
 
 /**
  * Trait con utilidades de listados para personas, extraído de GestorPersonaGlobal.
- * Debe ser usado por repositorios que heredan de core\ClaseRepository, ya que
+ * Debe ser usado por repositorios que heredan de src\shared\infrastructure\persistence\ClaseRepository, ya que
  * requiere los métodos `getoDbl()` y `getNomTabla()`.
  */
 trait PersonaGlobalListsTrait

@@ -3,7 +3,7 @@
 namespace src\actividades\application;
 
 use src\actividades\application\ActividadLugar;
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\ubis\application\services\DelegacionDropdown;
 use src\usuarios\domain\entity\Role;
 use web\Desplegable;

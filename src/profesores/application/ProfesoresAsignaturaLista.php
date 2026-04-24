@@ -2,7 +2,7 @@
 
 namespace src\profesores\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;

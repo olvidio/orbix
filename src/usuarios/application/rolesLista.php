@@ -2,7 +2,7 @@
 
 namespace src\usuarios\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;

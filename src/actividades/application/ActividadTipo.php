@@ -2,7 +2,7 @@
 
 namespace src\actividades\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewTwig;
 use src\actividades\domain\value_objects\StatusId;
 use web\Desplegable;

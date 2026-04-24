@@ -3,7 +3,7 @@
 namespace src\personas\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\personas\domain\value_objects\NombreCentroText;
 use src\personas\domain\value_objects\ObservText;
 use src\personas\domain\value_objects\TrasladoTipoCmbCode;

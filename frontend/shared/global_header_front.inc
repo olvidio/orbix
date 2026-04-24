@@ -37,7 +37,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     }
 }
 
-require_once('apps/permisos/controller/login_obj.php');
+require_once('frontend/usuarios/controller/login.php');
 
 
 session_write_close();

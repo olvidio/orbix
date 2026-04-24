@@ -2,7 +2,7 @@
 
 namespace src\usuarios\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use web\Hash;
 

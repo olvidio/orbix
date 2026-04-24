@@ -2,9 +2,9 @@
 
 namespace src\cambios\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;

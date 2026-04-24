@@ -49,7 +49,7 @@ $dir_web = $_SERVER['DIRWEB'];
 $path = "$document_root/$dir_web";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\cambios\application\AvisosGenerarTabla;
 
 // No entra por public/index.php: hace falta el mismo arranque que el front (autoload, sesión, contenedor).

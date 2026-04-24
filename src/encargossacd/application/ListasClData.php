@@ -2,7 +2,7 @@
 
 namespace src\encargossacd\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use PDO;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\shared\domain\value_objects\DateTimeLocal;

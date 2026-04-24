@@ -3,7 +3,7 @@
 namespace src\asignaturas\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\value_objects\{DepartamentoId, SectorId, SectorName};
 use src\shared\domain\traits\Hydratable;

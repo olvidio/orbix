@@ -2,7 +2,7 @@
 
 namespace src\personas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\personas\application\support\PersonaRepositoryResolver;

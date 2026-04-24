@@ -2,7 +2,7 @@
 
 namespace src\actividades\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use function core\is_true;
 

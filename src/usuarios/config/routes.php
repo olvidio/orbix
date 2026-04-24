@@ -96,9 +96,6 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/usuarios/usuario_2fa_verify', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_2fa_verify.php';
     });
-    $r->addRoute(['GET','POST'], '/src/usuarios/usuario_avisos_form', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_avisos_form.php';
-    });
     $r->addRoute(['GET','POST'], '/src/usuarios/usuario_ayuda_info', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/usuario_ayuda_info.php';
     });

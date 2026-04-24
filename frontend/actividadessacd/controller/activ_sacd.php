@@ -16,7 +16,7 @@
  * legacy) siguiendo el patron de `refactor.md`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 use web\PeriodoQue;

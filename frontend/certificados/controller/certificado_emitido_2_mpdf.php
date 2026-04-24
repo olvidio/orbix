@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;

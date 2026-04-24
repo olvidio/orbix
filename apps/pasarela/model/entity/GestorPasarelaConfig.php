@@ -3,8 +3,8 @@
 namespace pasarela\model\entity;
 
 use core\ClaseGestor;
-use core\Condicion;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 
 /**
  * GestorPasarelaConfig

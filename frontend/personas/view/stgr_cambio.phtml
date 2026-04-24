@@ -2,7 +2,7 @@
     fnjs_guardar_stgr = function (formulario) {
         $.ajax({
             data: $(formulario).serialize(),
-            url: '<?= core\ConfigGlobal::getWeb() ?>/src/personas/stgr_update',
+            url: '<?= src\shared\config\ConfigGlobal::getWeb() ?>/src/personas/stgr_update',
             method: 'POST',
             dataType: 'json'
         }).done(function (json) {

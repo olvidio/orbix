@@ -3,7 +3,7 @@
  *  Está como include en 'home_persona.phtml' y 'home_ubis.phtml'
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\dossiers\application\PermDossier;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;

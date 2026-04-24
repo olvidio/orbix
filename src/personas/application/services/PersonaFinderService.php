@@ -2,7 +2,7 @@
 
 namespace src\personas\application\services;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use PDO;
 use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;

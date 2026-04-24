@@ -2,8 +2,8 @@
 
 namespace src\personas\infrastructure\persistence\postgresql;
 
-use core\ConfigGlobal;
-use core\ConverterDate;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\ConverterDate;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\entity\PersonaAgd;
 use src\personas\domain\entity\PersonaDl;

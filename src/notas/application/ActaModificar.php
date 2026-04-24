@@ -2,7 +2,7 @@
 
 namespace src\notas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\notas\application\support\ActaDlGuard;
 use src\notas\application\support\ActaTribunalSync;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;

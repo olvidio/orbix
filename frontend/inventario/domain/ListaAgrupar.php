@@ -2,7 +2,7 @@
 
 namespace frontend\inventario\domain;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 use web\Hash;
 

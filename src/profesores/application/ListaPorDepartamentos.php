@@ -2,7 +2,7 @@
 
 namespace src\profesores\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;

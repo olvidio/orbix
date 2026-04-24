@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dialogo "buscar actividad" que abre `form_1011.phtml` al pulsar
+ * Dialogo "buscar actividad" que abre `form_notas_de_una_persona.phtml` al pulsar
  * "añadir ca". Muestra dos desplegables (delegacion + actividades en
  * +/- 3 meses respecto a `f_acta_iso`) y recoge la seleccion.
  *

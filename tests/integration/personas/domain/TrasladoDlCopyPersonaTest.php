@@ -2,10 +2,10 @@
 
 namespace Tests\integration\personas\domain;
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
-use core\DBPropiedades;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\entity\PersonaN;
 use src\personas\domain\Trasladar;

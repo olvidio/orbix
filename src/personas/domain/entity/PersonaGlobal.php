@@ -2,7 +2,7 @@
 
 namespace src\personas\domain\entity;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use ReflectionClass;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\domain\value_objects\{ApelFamText,

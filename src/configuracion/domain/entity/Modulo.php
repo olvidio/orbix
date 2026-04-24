@@ -3,7 +3,7 @@
 namespace src\configuracion\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\configuracion\domain\value_objects\AppsReq;
 use src\configuracion\domain\value_objects\ModuloDescription;
 use src\configuracion\domain\value_objects\ModuloId;

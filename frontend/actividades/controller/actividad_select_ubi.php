@@ -10,7 +10,7 @@
  * desde el endpoint backend /src/actividades/actividad_select_ubi_desplegable.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 

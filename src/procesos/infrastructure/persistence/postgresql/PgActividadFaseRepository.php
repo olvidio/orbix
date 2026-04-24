@@ -2,12 +2,12 @@
 
 namespace src\procesos\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\ConfigGlobal;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
-use permisos\model\PermDl;
+use src\permisos\domain\PermDl;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\entity\ActividadFase;

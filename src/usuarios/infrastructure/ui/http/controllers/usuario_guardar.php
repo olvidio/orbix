@@ -1,9 +1,9 @@
 <?php
 
-use permisos\model\MyCrypt;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
+use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Username;
 use src\usuarios\domain\value_objects\Email;
 use src\usuarios\domain\value_objects\Password;
@@ -51,7 +51,7 @@ $oUsuario->setNomUsuarioVo(!empty($Qnom_usuario) ? new NombreUsuario($Qnom_usuar
 $oUsuario->setCambio_password($Qcambio_password);
 $oUsuario->setHas_2fa($Qhas_2fa);
 if (!empty($Qpassword)) {
-    $oCrypt = new MyCrypt();
+    $oCrypt = new PasswordHasher();
     $my_passwd = $oCrypt->encode($Qpassword);
     $oUsuario->setPasswordVo(new Password($my_passwd));
 }

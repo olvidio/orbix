@@ -5,12 +5,12 @@
  * y envía la nueva contraseña por correo electrónico.
  */
 
-use core\ConfigDB;
-use core\DBConnection;
-use permisos\model\MyCrypt;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\domain\entity\ColaMail;
 use src\shared\domain\value_objects\ColaMailId;
 use src\shared\domain\value_objects\Uuid;
+use src\usuarios\domain\PasswordHasher;
 use web\ContestarJson;
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');
@@ -66,7 +66,7 @@ if (empty($error_txt) && ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC))) {
         $new_password = generateRandomPassword();
 
         // Encriptar la contraseña
-        $oCrypt = new MyCrypt();
+        $oCrypt = new PasswordHasher();
         $hashed_password = $oCrypt->encode($new_password);
 
         // Actualizar la contraseña en la base de datos y marcar que debe cambiarla

@@ -67,7 +67,7 @@ La jerarquia tipica de `src/<modulo>/application/` tiene tres zonas con semantic
 
 | Ubicacion | Sufijo esperado | Rol | Ejemplos |
 |-----------|-----------------|-----|----------|
-| `application/` (raiz) | **sin sufijo** | Caso de uso publico: accion del modulo (mutacion o lectura compleja). Lo llaman los controladores HTTP de `src/.../controllers/` o los use cases `*Data`. | `ActaNueva`, `ActaEliminar`, `PersonaNotaEditar`, `AsignaturasPendientes`, `TablaAlumnosAsignaturas`, `Tesera`, `Select1011`, `InformeStgrNumerarios` |
+| `application/` (raiz) | **sin sufijo** | Caso de uso publico: accion del modulo (mutacion o lectura compleja). Lo llaman los controladores HTTP de `src/.../controllers/` o los use cases `*Data`. | `ActaNueva`, `ActaEliminar`, `PersonaNotaEditar`, `AsignaturasPendientes`, `TablaAlumnosAsignaturas`, `Tesera`, `Select_notas_de_una_persona`, `InformeStgrNumerarios` |
 | `application/` (raiz) | `*Data` | *Data builder*: junta lecturas de repos + dropdowns en un array serializable que el controlador HTTP pasa a `ContestarJson::enviar(...)`. No tiene efectos secundarios. | `BuscarActaData`, `PosiblesOpcionalesData`, `NotaPersonaFormData`, `ActividadesBuscarData` |
 | `application/services/` | **`*Service`** | Helper compartido entre varios use cases (SQL repetido, parseo de input, tablas temporales…). No es un caso de uso en si mismo. | `ResumenTempTablesService` |
 | `application/support/` | libre | Soporte interno que solo usan los use cases del modulo (parsers, policies). | `PersonaNotaInputParser` |
@@ -304,7 +304,7 @@ Al migrar una ruta de `apps/.../controller/foo_ajax.php` a `/src/<modulo>/<accio
 1. **Una URL nueva = un Hash nuevo.** No reutilizar el `oHash` del dispatcher viejo cuando se migra a endpoints dedicados. Si `acta_ajax.php` tenia un hash que cubria `examinadores` + `asignaturas`, al partirlo en `/src/notas/examinadores_search` y `/src/notas/asignaturas_search` hacen falta **dos `Hash` distintos**, cada uno con sus campos.
 2. **`linkSinVal` y `?`/`&`.** Si se concatena el resultado de `linkSinVal` a una URL que ya llevaba query string (`?foo=bar`), se queda con `?` duplicado. Dos soluciones:
     - Pasar `$url` sin query a `linkSinVal`, y añadir los parametros dinamicos como `data` del `$.ajax`.
-    - Si la URL ya tiene `?`, concatenar el hash string manualmente con `&` y llamar al `$.ajax` **sin `data`** (todo va en la URL). Patron usado en `form_1011.phtml` / `form_1303.phtml` para `posibles_preceptores`.
+    - Si la URL ya tiene `?`, concatenar el hash string manualmente con `&` y llamar al `$.ajax` **sin `data`** (todo va en la URL). Patron usado en `form_notas_de_una_persona.phtml` / `form_1303.phtml` para `posibles_preceptores`.
 3. **No meter campos opcionales en `setCamposForm`.** El hash se calcula con los nombres declarados; si un campo no siempre viaja, romperia la verificacion. Solo declarar los campos que viajan *siempre*.
 4. **Pasar las URLs construidas al frontend como strings**, no reconstruir en JS. El controlador hace `$a_campos['url_foo'] = $oHash->...()` y la vista / JS las consume por nombre. Esto ata el hash a su URL y facilita el `rg`.
 5. **Cuando una misma vista elige URL segun el modo del form** (`mod=nueva` vs `mod=modificar`), generar los dos hashes en el controlador (`url_acta_nueva`, `url_acta_modificar`) y que el JS haga `var url = ($form.find('[name=mod]').val() === 'nueva') ? url_acta_nueva : url_acta_modificar;`. No se vale un solo hash con URL dinamica.

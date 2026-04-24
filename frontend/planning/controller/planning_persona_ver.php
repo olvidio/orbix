@@ -2,7 +2,7 @@
 
 namespace frontend\planning\controller;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\planning\support\PlanningRenderer;
 use frontend\shared\model\ViewNewPhtml;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;

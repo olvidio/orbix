@@ -2,7 +2,7 @@
 
 namespace src\usuarios\domain;
 
-use permisos\model\XPermisos;
+use src\permisos\domain\XPermisos;
 
 class PermCtr extends XPermisos
 {

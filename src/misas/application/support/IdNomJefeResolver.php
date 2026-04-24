@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace src\misas\application\support;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 

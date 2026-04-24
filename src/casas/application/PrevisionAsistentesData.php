@@ -2,7 +2,7 @@
 
 namespace src\casas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;

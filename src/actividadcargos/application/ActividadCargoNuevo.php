@@ -2,7 +2,7 @@
 
 namespace src\actividadcargos\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\entity\ActividadCargo;
 use src\asistentes\application\services\AsistenteActividadService;

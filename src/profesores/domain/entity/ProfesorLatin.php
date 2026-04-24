@@ -3,7 +3,7 @@
 namespace src\profesores\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\domain\traits\Hydratable;
 use function core\is_true;
 

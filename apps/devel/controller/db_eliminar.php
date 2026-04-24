@@ -20,10 +20,10 @@ $esquemaf = $esquema . 'f';
 $RegionNew = $Qregion;
 $DlNew = $Qdl;
 
-$oConfigDB = new core\ConfigDB('importar');
+$oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
 // COMUN
 if (!empty($Qcomun)) {
-    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase = new src\shared\infrastructure\persistence\postgresql\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     $oTrasvase->setDbName('comun');
@@ -35,14 +35,14 @@ if (!empty($Qcomun)) {
 if (!empty($Qsv)) {
     $config = $oConfigDB->getEsquema('publicv');
 
-    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase = new src\shared\infrastructure\persistence\postgresql\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     $oTrasvase->setDbName('sv');
 
     $oTrasvase->ctr('dl2resto');
 
-    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate = new src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate();
     $oDBEsquemaCreate->setConfig($config);
     $oDBEsquemaCreate->setRegionNew($RegionNew);
     $oDBEsquemaCreate->setDlNew($DlNew);
@@ -59,7 +59,7 @@ if (!empty($Qsf)) {
 
     /* desde dentro la db sf es inaccesible */
     /*
-    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase = new src\shared\infrastructure\persistence\postgresql\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     $oTrasvase->setDbName('sf');
@@ -78,17 +78,17 @@ if (!empty($Qsf)) {
 // Borrar esquema comun y usuarios.
 if (!empty($Qsv) && !empty($Qsf)) {
     $config = $oConfigDB->getEsquema('public');
-    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate = new src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate();
     $oDBEsquemaCreate->setConfig($config);
     $oDBEsquemaCreate->setRegionNew($RegionNew);
     $oDBEsquemaCreate->setDlNew($DlNew);
     $oDBEsquemaCreate->eliminar();
     // Eliminar usuarios
 
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-    $oDBRol = new core\DBRol();
+    $oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
 
     $oDBRol->setUser($esquema);

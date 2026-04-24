@@ -2,7 +2,7 @@
 
 namespace Tests\unit\notas;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use Exception;
 use src\notas\application\EditarPersonaNota;
 use RuntimeException;

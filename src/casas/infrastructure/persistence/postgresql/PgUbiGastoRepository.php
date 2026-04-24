@@ -2,10 +2,10 @@
 
 namespace src\casas\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\ConverterDate;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\casas\domain\contracts\UbiGastoRepositoryInterface;
 use src\casas\domain\entity\UbiGasto;

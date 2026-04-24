@@ -3,7 +3,7 @@
 namespace src\usuarios\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\domain\traits\Hydratable;
 use src\usuarios\domain\value_objects\Idioma;
 use src\usuarios\domain\value_objects\IdLocale;

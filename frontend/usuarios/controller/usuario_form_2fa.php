@@ -1,7 +1,7 @@
 <?php
 
-use core\ConfigGlobal;
-use core\ServerConf;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;

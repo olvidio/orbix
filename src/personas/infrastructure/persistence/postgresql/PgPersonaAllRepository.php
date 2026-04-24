@@ -2,8 +2,8 @@
 
 namespace src\personas\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\ConfigGlobal;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\config\ConfigGlobal;
 use src\personas\domain\contracts\PersonaAllRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 
@@ -22,9 +22,9 @@ class PgPersonaAllRepository extends ClaseRepository implements PersonaAllReposi
     function __construct()
     {
         /*
-            $oConfigDB = new core\ConfigDB('importar'); //de la database sv
+            $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database sv
     $config = $oConfigDB->getEsquema('publicv');
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
         $this->setoDbl($oDevelPC);

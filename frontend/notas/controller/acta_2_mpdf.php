@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 // Este controlador se abre via `window.open` (GET). El incluido
 // `acta_imprimir_mpdf.php` solo usa la variable `$acta` de scope y

@@ -3,7 +3,7 @@
 namespace src\actividadcargos\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\actividadcargos\domain\value_objects\{CargoCode, OrdenCargo, TipoCargoCode};
 use src\shared\domain\traits\Hydratable;
 

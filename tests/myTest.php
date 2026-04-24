@@ -2,16 +2,16 @@
 
 namespace Tests;
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
-use core\DBView;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBView;
 use core\GestorErrores;
 use DI\ContainerBuilder;
 use PDOException;
-use permisos\model\PermDl;
-use permisos\model\PermisosActividades;
-use permisos\model\PermisosActividadesTrue;
+use src\permisos\domain\PermDl;
+use src\permisos\domain\PermisosActividades;
+use src\permisos\domain\PermisosActividadesTrue;
 use PHPUnit\Framework\TestCase;
 use src\configuracion\domain\entity\Config;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;

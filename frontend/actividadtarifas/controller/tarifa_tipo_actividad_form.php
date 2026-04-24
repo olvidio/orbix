@@ -13,7 +13,7 @@
  * `apps/actividadtarifas/controller/tarifa_tipo_actividad_form.php`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use src\actividades\application\ActividadTipo;

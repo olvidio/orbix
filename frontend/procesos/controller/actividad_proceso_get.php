@@ -4,7 +4,7 @@
  * Llama a /src/procesos/actividad_proceso_get (JSON) y pinta la tabla.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 
 require_once("frontend/shared/global_header_front.inc");

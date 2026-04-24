@@ -1,7 +1,7 @@
 <?php
 
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;

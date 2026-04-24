@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\dossiers\application\PermisoDossier;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;

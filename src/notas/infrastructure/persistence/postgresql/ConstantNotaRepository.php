@@ -2,7 +2,7 @@
 
 namespace src\notas\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
+use src\shared\infrastructure\persistence\ClaseRepository;
 use PDO;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;

@@ -9,7 +9,7 @@
  * @subpackage    actividades
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\application\ListaActivTabla;
 use web\ContestarJson;
 

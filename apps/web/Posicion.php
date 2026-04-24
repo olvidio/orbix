@@ -2,7 +2,7 @@
 
 namespace web;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 class Posicion
 {

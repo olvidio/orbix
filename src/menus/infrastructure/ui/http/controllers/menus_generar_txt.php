@@ -11,7 +11,7 @@
  *
  */
 
-use core\ServerConf;
+use src\shared\config\ServerConf;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 

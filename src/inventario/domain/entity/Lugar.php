@@ -3,7 +3,7 @@
 namespace src\inventario\domain\entity;
 
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\inventario\domain\value_objects\LugarId;
 use src\inventario\domain\value_objects\LugarName;

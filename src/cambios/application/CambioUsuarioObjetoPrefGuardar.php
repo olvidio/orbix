@@ -2,7 +2,7 @@
 
 namespace src\cambios\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
 use function core\is_true;

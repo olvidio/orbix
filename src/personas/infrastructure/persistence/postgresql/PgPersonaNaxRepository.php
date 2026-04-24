@@ -2,8 +2,8 @@
 
 namespace src\personas\infrastructure\persistence\postgresql;
 
-use core\ConfigGlobal;
-use core\ConverterDate;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\ConverterDate;
 use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
 use src\personas\domain\entity\PersonaNax;
 use src\utils_database\domain\GenerateIdGlobal;

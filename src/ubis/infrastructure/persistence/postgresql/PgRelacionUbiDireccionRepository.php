@@ -2,7 +2,7 @@
 
 namespace src\ubis\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
+use src\shared\infrastructure\persistence\ClaseRepository;
 use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\RelacionUbiDireccionRepositoryInterface;

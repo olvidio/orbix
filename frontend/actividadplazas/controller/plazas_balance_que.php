@@ -9,7 +9,7 @@
  * siguiendo `refactor.md`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;

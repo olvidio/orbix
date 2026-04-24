@@ -2,7 +2,7 @@
 
 namespace src\encargossacd\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\encargossacd\application\services\EncargoAplicacionService;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;

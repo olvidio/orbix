@@ -2,7 +2,7 @@
 
 namespace frontend\shared;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;

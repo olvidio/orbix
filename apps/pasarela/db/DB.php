@@ -2,7 +2,7 @@
 
 namespace pasarela\db;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\configuracion\domain\DBAbstract;
 
 /**

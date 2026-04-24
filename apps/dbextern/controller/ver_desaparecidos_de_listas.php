@@ -1,7 +1,7 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use web\Hash;
 

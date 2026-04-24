@@ -4,7 +4,7 @@ use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewTwig;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\unit\ubis\application\services;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use PHPUnit\Framework\TestCase;
 use src\ubis\application\services\UbiPermisos;
 

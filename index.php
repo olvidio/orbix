@@ -36,7 +36,7 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use DI\ContainerBuilder;
 use src\layouts\LayoutFactory;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;

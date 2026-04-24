@@ -2,8 +2,8 @@
 
 namespace src\actividadessacd\db;
 
-use core\ConfigGlobal;
-use core\DBRefresh;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 
 /**
  * crear las tablas necesarias para el esquema select,

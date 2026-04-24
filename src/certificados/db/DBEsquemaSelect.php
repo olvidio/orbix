@@ -2,8 +2,8 @@
 
 namespace src\certificados\db;
 
-use core\ConfigGlobal;
-use core\DBRefresh;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**

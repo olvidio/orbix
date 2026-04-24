@@ -2,10 +2,10 @@
 
 namespace src\actividades\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\ConverterDate;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use DateInterval;
 use PDO;
 use src\planning\domain\value_objects\PlanningStyle;

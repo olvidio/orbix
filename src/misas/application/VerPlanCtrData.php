@@ -2,7 +2,7 @@
 
 namespace src\misas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\misas\application\support\PeriodoDateRange;
 use src\misas\domain\contracts\EncargoCtrRepositoryInterface;

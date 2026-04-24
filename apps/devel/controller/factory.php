@@ -2,8 +2,8 @@
 
 namespace devel\controller;
 
-use core\ConfigGlobal;
-use core\ServerConf;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use RuntimeException;
 use src\shared\domain\value_objects\DateTimeLocal;
 use function core\is_true;
@@ -271,19 +271,19 @@ foreach ($oDbl->query($sql) as $row) {
         case 'timestamptz';
             $a_use_txt['DateTimeLocal'] = "use src\shared\domain\value_objects\DateTimeLocal";
             $a_use_txt['NullDateTimeLocal'] = "use src\shared\domain\value_objects\NullDateTimeLocal";
-            $a_use_txt['ConverterDate'] = "use core\ConverterDate";
+            $a_use_txt['ConverterDate'] = "use src\shared\infrastructure\persistence\ConverterDate";
             break;
         case 'time':
             $a_use_txt['TimeLocal'] = "use src\shared\domain\value_objects\TimeLocal";
             $a_use_txt['NullTimeLocal'] = "use src\shared\domain\value_objects\NullTimeLocal";
-            $a_use_txt['ConverterDate'] = "use core\ConverterDate";
+            $a_use_txt['ConverterDate'] = "use src\shared\infrastructure\persistence\ConverterDate";
             break;
         case 'bool':
             $a_use_txt['is_true'] = "use function core\is_true";
             break;
         case 'json':
         case 'jsonb':
-            $a_use_txt['ConverterJson'] = "use core\ConverterJson";
+            $a_use_txt['ConverterJson'] = "use src\shared\infrastructure\persistence\ConverterJson";
             $a_use_txt['JsonException'] = "use JsonException";
             $a_use_txt['stdClass'] = "use stdClass";
             break;
@@ -891,9 +891,9 @@ $txt_pgRepositorio = "<?php
 
 namespace src\\$grupo\\infrastructure\\repositories;
 
-use core\\ClaseRepository;
-use core\\Condicion;
-use core\\Set;
+use src\\shared\\infrastructure\\persistence\\ClaseRepository;
+use src\\shared\\infrastructure\\persistence\\postgresql\\Condicion;
+use src\\shared\\infrastructure\\persistence\\postgresql\\Set;
 use PDO;
 use PDOException;
 ";

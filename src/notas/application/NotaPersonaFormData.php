@@ -12,7 +12,7 @@ use src\personas\domain\entity\Persona;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 
 /**
- * Prepara los datos que necesita `form_1011.phtml` para pintar el form
+ * Prepara los datos que necesita `form_notas_de_una_persona.phtml` para pintar el form
  * de alta / edicion de una `PersonaNota`.
  *
  * Dos modos:
@@ -25,7 +25,7 @@ final class NotaPersonaFormData
 {
     /**
      * @param array $input  claves: id_pau, id_asignatura_real, sel
-     * @return array Datos listos para `form_1011.phtml`.
+     * @return array Datos listos para `form_notas_de_una_persona.phtml`.
      */
     public static function execute(array $input): array
     {

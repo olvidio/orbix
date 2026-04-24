@@ -4,6 +4,8 @@ namespace core;
 
 use Exception;
 use jblond\TwigTrans\Translation;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;

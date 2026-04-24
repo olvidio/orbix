@@ -3,6 +3,7 @@
 namespace core;
 
 use PDOStatement;
+use src\shared\config\ConfigGlobal;
 
 /**
  * Clase para manejar los errores

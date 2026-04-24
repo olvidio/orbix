@@ -2,9 +2,9 @@
 
 namespace src\notas\application;
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
 use RuntimeException;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\entity\Dossier;

@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -51,14 +51,14 @@ $esquemaf_pwd = generar_password(11);
 // CREAR USUARIOS ----------------------
 // Hay que pasar como parámetro el nombre de la database, que corresponde al archivo database.inc
 // donde están los passwords. En este caso en importar.inc, tenemos al superadmin.
-$oConfigDB = new core\ConfigDB('importar');
+$oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
 //coge los valores de public: 1.la database comun; 2.nombre superusuario; 3.pasword superusuario;
 $config = $oConfigDB->getEsquema('public');
 
-$oConexion = new core\DBConnection($config);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
-$oDBRol = new core\DBRol();
+$oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
 $oDBRol->setDbConexion($oDevelPC);
 // necesito crear los tres usuarios para dar permisos
 // comun
@@ -69,13 +69,13 @@ $oConfigDB->addEsquemaEnFicheroPasswords('comun', $esquema, $esquema_pwd);
 
 // Con las bases de datos en distintos servidores, hay que ir cambiando la conexión:
 // sv
-$oConfigDB = new core\ConfigDB('importar');
+$oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
 //coge los valores de public: 1.la database sv; 2.nombre superusuario; 3.pasword superusuario;
 $config = $oConfigDB->getEsquema('publicv');
-$oConexion = new core\DBConnection($config);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
-$oDBRol = new core\DBRol();
+$oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
 $oDBRol->setDbConexion($oDevelPC);
 
 $oDBRol->setUser($esquemav);
@@ -93,17 +93,17 @@ $oDBRol->crearUsuario();
 // Si es el mismo servidor (portátil) me lo salto:
 $host_sv = $config['host'];
 $port_sv = $config['port'];
-$oConfigDB = new core\ConfigDB('importar');
+$oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
 //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
 $config = $oConfigDB->getEsquema('publicv-e');
-$oConexion = new core\DBConnection($config);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 $host_sve = $config['host'];
 $port_sve = $config['port'];
 
 // Si es el mismo servidor (portátil) me lo salto:
 if ($host_sv != $host_sve || $port_sv != $port_sve) {
-    $oDBRol = new core\DBRol();
+    $oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
 
     $oDBRol->setUser($esquemav);
@@ -119,12 +119,12 @@ $oConfigDB->addEsquemaEnFicheroPasswords('sv-e', $esquemav, $esquemav_pwd);
  */
 
 // desde sv y sf:
-$oConfigDB = new core\ConfigDB('importar');
+$oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
 $config = $oConfigDB->getEsquema('public'); //de la database comun
-$oConexion = new core\DBConnection($config);
+$oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
-$oDBRol = new core\DBRol();
+$oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
 $oDBRol->setDbConexion($oDevelPC);
 
 $oDBRol->setUser($esquemaf);
@@ -134,13 +134,13 @@ $oConfigDB->addEsquemaEnFicheroPasswords('sf', $esquemaf, $esquemaf_pwd);
 
 // desde sf (añado el esquema al Role)
 if ($_SESSION['sfsv'] == 'sf') {
-    $oConfigDB = new core\ConfigDB('importar');
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
     //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
     $config = $oConfigDB->getEsquema('publicf');
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-    $oDBRol = new core\DBRol();
+    $oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
 
     $oDBRol->setUser($esquemaf);

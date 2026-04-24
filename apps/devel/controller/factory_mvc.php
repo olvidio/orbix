@@ -2,8 +2,8 @@
 
 namespace devel\controller;
 
-use core\ConfigGlobal;
-use core\ServerConf;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 
 /**
  * programa per generar les classes a partir de la taula

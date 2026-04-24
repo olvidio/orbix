@@ -2,11 +2,11 @@
 
 namespace src\utils_database\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\ConfigDB;
-use core\DBConnection;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;

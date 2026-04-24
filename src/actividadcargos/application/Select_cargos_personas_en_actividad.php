@@ -2,7 +2,7 @@
 
 namespace src\actividadcargos\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermDossier;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;

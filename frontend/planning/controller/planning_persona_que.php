@@ -2,7 +2,7 @@
 
 namespace frontend\planning\controller;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\planning\support\PeriodoPlanningHelper;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;

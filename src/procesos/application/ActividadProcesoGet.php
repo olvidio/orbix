@@ -2,7 +2,7 @@
 
 namespace src\procesos\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;

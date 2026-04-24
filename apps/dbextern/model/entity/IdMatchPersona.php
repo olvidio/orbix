@@ -4,7 +4,7 @@ namespace dbextern\model\entity;
 
 use core\ClasePropiedades;
 use core\DatosCampo;
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula conv_id_personas

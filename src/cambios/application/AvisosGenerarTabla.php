@@ -2,9 +2,9 @@
 
 namespace src\cambios\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\cambios\application\legacy\Avisos;
-use permisos\model\PermisosActividades;
+use src\permisos\domain\PermisosActividades;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;

@@ -15,7 +15,7 @@
  * Funciones más comunes de la aplicación
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\notas\application\Tesera;
 use src\personas\domain\entity\Persona;
 use web\Hash;

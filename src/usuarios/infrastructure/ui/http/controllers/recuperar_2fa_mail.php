@@ -1,7 +1,7 @@
 <?php
 
-use core\ConfigDB;
-use core\DBConnection;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\domain\contracts\ColaMailRepositoryInterface;
 use src\shared\domain\entity\ColaMail;
 use src\shared\domain\value_objects\ColaMailId;

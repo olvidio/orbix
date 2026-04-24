@@ -1,9 +1,9 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use permisos\model\PermDl;
+use src\permisos\domain\PermDl;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************

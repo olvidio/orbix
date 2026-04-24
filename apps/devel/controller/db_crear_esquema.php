@@ -2,7 +2,7 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use core\ServerConf;
+use src\shared\config\ServerConf;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
@@ -23,7 +23,7 @@ $esquema = "$Qregion-$Qdl";
 $esquemav = $esquema . 'v';
 $esquemaf = $esquema . 'f';
 
-$oDBRol = new core\DBRol();
+$oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
 
 // ESQUEMAS 
 // Copiar esquema de...
@@ -41,10 +41,10 @@ if  (preg_match('/(.*?)\.docker/',ServerConf::SERVIDOR )) {
 }
 // comun
 if (!empty($Qcomun)) {
-    $oConfigDB = new core\ConfigDB('importar'); //de la database comun
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public'); //de la database comun
 
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     // CREAR Esquema
@@ -57,7 +57,7 @@ if (!empty($Qcomun)) {
 
     $oDBRol->crearSchema();
 
-    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate = new src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate();
     $oDBEsquemaCreate->setConfig($config);
     $oDBEsquemaCreate->setRegionRef($RegionRef);
     $oDBEsquemaCreate->setDlRef($DlRef);
@@ -73,7 +73,7 @@ if (!empty($Qcomun)) {
     if (!$isDocker) {
         $config = $oConfigDB->getEsquema('public_select'); //de la database comun
 
-        $oConexion = new core\DBConnection($config);
+        $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
         $oDevelPC = $oConexion->getPDO();
 
         // CREAR Esquema
@@ -86,7 +86,7 @@ if (!empty($Qcomun)) {
 
         $oDBRol->crearSchema();
 
-        $oDBEsquemaCreate = new core\DBEsquemaCreate();
+        $oDBEsquemaCreate = new src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate();
         $oDBEsquemaCreate->setConfig($config);
         $oDBEsquemaCreate->setRegionRef($RegionRef);
         $oDBEsquemaCreate->setDlRef($DlRef);
@@ -105,20 +105,20 @@ if (!empty($Qcomun)) {
 
 // sv
 if (!empty($Qsv)) {
-    $oConfigDB = new core\ConfigDB('importar'); //de la database sv
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database sv
     $config = $oConfigDB->getEsquema('publicv');
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     // CREAR Esquema sv
-    $oDBRol = new core\DBRol();
+    $oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquemav);
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
     // Después hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixv');
     $oDBRol->crearSchema();
-    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate = new src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate();
     $oDBEsquemaCreate->setConfig($config);
     $oDBEsquemaCreate->setRegionRef($RegionRef);
     $oDBEsquemaCreate->setDlRef($DlRef);
@@ -135,17 +135,17 @@ if (!empty($Qsv)) {
 
     // CREAR Esquema sv-e
     $config = $oConfigDB->getEsquema('publicv-e');
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-    $oDBRol = new core\DBRol();
+    $oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquemav);
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
     // Después hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixv');
     $oDBRol->crearSchema();
-    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate = new src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate();
     $oDBEsquemaCreate->setConfig($config);
     $oDBEsquemaCreate->setRegionRef($RegionRef);
     $oDBEsquemaCreate->setDlRef($DlRef);
@@ -157,17 +157,17 @@ if (!empty($Qsv)) {
 
     // Crear el esquema para sólo lectura (select) en el host interno
     $config = $oConfigDB->getEsquema('publicv-e_select');
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-    $oDBRol = new core\DBRol();
+    $oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquemav);
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
     // Después hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixv');
     $oDBRol->crearSchema();
-    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate = new src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate();
     $oDBEsquemaCreate->setConfig($config);
     $oDBEsquemaCreate->setRegionRef($RegionRef);
     $oDBEsquemaCreate->setDlRef($DlRef);
@@ -184,9 +184,9 @@ if (!empty($Qsv)) {
 }
 // sf
 if (!empty($Qsf)) {
-    $oConfigDB = new core\ConfigDB('importar'); //de la database sf
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database sf
     $config = $oConfigDB->getEsquema('publicf');
-    $oConexion = new core\DBConnection($config);
+    $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     // CREAR Esquema sf
@@ -197,7 +197,7 @@ if (!empty($Qsf)) {
     $oDBRol->addGrupo('orbixf');
     $oDBRol->crearSchema();
     // Copiar esquema
-    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate = new src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate();
     $oDBEsquemaCreate->setConfig($config);
     $oDBEsquemaCreate->setRegionRef($RegionRef);
     $oDBEsquemaCreate->setDlRef($DlRef);
@@ -219,7 +219,7 @@ if (!empty($Qsf)) {
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-    $oDBRol = new core\DBRol();
+    $oDBRol = new src\shared\infrastructure\persistence\postgresql\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquemaf);
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.

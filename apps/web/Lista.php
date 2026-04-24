@@ -2,7 +2,7 @@
 
 namespace web;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use function core\is_true;
 

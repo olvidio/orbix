@@ -2,7 +2,7 @@
 
 namespace src\actividadessacd\application\services;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividadessacd\domain\contracts\ActividadSacdTextoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 

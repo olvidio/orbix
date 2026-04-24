@@ -9,7 +9,7 @@ use web\ContestarJson;
  * devueltos por endpoints AJAX: payload + constructor en frontend").
  *
  * Consumido por `fnjs_cmb_opcional` en:
- * - `frontend/notas/view/form_1011.phtml`
+ * - `frontend/notas/view/form_notas_de_una_persona.phtml`
  * - `apps/actividadestudios/view/form_1303.phtml`
  */
 $aOpciones = PosiblesOpcionalesData::execute($_POST);

@@ -2,8 +2,8 @@
 
 namespace src\notas\application;
 
-use core\ConfigDB;
-use core\DBConnection;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**

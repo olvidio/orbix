@@ -2,10 +2,10 @@
 
 namespace src\notas\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\ConfigGlobal;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\notas\domain\entity\ActaTribunal;

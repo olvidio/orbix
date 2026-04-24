@@ -2,7 +2,7 @@
 
 
 // Crea los objetos de uso global **********************************************
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************

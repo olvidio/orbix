@@ -14,7 +14,7 @@
  * @subpackage    actividades
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use src\actividades\domain\value_objects\StatusId;

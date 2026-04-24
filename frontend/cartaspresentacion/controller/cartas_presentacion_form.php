@@ -8,7 +8,7 @@
  * `que_mod=form_pres` del dispatcher legacy `cartas_presentacion_ajax.php`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 

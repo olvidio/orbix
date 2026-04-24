@@ -2,7 +2,7 @@
 
 namespace pasarela\db;
 
-use core\DBRefresh;
+use src\shared\infrastructure\persistence\postgresql\DBRefresh;
 
 /**
  * crear las tablas necesarias para el esquema select,

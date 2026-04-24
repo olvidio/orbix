@@ -2,7 +2,7 @@
 
 namespace src\zonassacd\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;

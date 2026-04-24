@@ -2,7 +2,7 @@
 
 namespace src\cambios\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\entity\Role;

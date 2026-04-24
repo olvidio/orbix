@@ -11,7 +11,7 @@
  * y `cartas_presentacion_form.php`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use web\DesplegableArray;
 use web\Hash;

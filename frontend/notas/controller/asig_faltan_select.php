@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\notas\application\AsignaturasPendientes;

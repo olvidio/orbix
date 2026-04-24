@@ -2,8 +2,8 @@
 
 namespace src\procesos\domain;
 
-use permisos\model\PermisosActividades;
-use permisos\model\XPermisos;
+use src\permisos\domain\PermisosActividades;
+use src\permisos\domain\XPermisos;
 
 class PermAfectados extends XPermisos
 {

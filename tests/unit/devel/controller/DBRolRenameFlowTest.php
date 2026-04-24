@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\unit\devel\controller;
 
-use core\DBRol;
+use src\shared\infrastructure\persistence\postgresql\DBRol;
 use PHPUnit\Framework\TestCase;
 
 final class DBRolRenameFlowTest extends TestCase

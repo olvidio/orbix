@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use dbextern\model\CopiarBDU;
 
 // INICIO Cabecera global de URL de controlador *********************************

@@ -3,9 +3,13 @@
 namespace core;
 
 use DI\ContainerBuilder;
-use permisos\model\PermDl;
-use permisos\model\PermisosActividades;
-use permisos\model\PermisosActividadesTrue;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBView;
+use src\permisos\domain\PermDl;
+use src\permisos\domain\PermisosActividades;
+use src\permisos\domain\PermisosActividadesTrue;
 use src\configuracion\domain\entity\Config;
 use src\menus\domain\PermisoMenu;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
@@ -48,7 +52,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     }
 }
 
-require_once('apps/permisos/controller/login_obj.php');
+require_once('frontend/usuarios/controller/login.php');
 
 $_SESSION['oGestorErrores'] = new GestorErrores();
 

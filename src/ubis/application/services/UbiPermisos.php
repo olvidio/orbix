@@ -2,7 +2,7 @@
 
 namespace src\ubis\application\services;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 /**
  * Reglas de permisos comunes para operar sobre un ubi (centro/casa) según su objeto.

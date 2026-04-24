@@ -2,7 +2,7 @@
 
 namespace src\ubis\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\TrasladoUbiRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 

@@ -11,7 +11,7 @@
  * Sucesor de `apps/casas/controller/casa_ec_ajax.php?que=getGastos`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;

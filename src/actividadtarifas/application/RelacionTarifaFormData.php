@@ -2,7 +2,7 @@
 
 namespace src\actividadtarifas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividadtarifas\application\services\TipoTarifaDropdown;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use web\TiposActividades;

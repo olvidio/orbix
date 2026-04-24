@@ -54,7 +54,7 @@ frontend/actividadcargos/                         (no existe)
 - `apps/asistentes/model/Select3101.php` inyecta `url_form_cargos_actividad` (`relativeFormController(3102)`) y `url_update_cargos_actividad` (`relativeUpdate(3102)`) en `apps/asistentes/view/select3101.phtml`.
 - `apps/dossiers/controller/dossiers_ver.php` instancia el widget `Select*` via `DossierTipoFileSuffixResolver::resolveSelectClassFqcn()`.
 
-Ningun JS/PHP mas referencia `form_3102`, `form_1302`, `update_3102`, `Select3102` o `Select1302` (solo aparecen en comentarios o como id_tabla reutilizado en `src/ubiscamas/domain/Select2006.php` y `apps/asistentes/model/Select3101.php`, sin consecuencias funcionales).
+Ningun JS/PHP mas referencia `form_3102`, `form_1302`, `update_3102`, `Select3102` o `Select1302` (solo aparecen en comentarios o como id_tabla reutilizado en `src/ubiscamas/domain/SelectHabitacionesCdc.php` y `apps/asistentes/model/Select3101.php`, sin consecuencias funcionales).
 
 ## Violaciones de `refactor.md`
 

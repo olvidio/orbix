@@ -2,12 +2,12 @@
 
 namespace src\usuarios\application;
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
-use core\DBPropiedades;
-use permisos\model\MyCrypt;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\usuarios\domain\entity\Usuario;
+use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\Verify2fa;
 
 /**
@@ -101,7 +101,7 @@ final class AppMobileLogin
         $row['password'] = $password_db;
         $MiUsuario = (new Usuario())->setAllAttributes($row);
 
-        $oCrypt = new MyCrypt();
+        $oCrypt = new PasswordHasher();
         if ($oCrypt->encode($password, $password_db) !== $password_db) {
             return [
                 'ok' => false,

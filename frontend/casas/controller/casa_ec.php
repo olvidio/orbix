@@ -8,7 +8,7 @@
  * y `que=get`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\domain\value_objects\PauType;
 use web\CasasQue;

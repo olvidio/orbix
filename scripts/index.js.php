@@ -3,7 +3,7 @@
 // This file contains all the JavaScript functions that were previously embedded in index.php
 
 // This file requires the $h variable to be defined before inclusion
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 if (!isset($h)) {
     $h = '';
 }

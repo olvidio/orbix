@@ -29,7 +29,7 @@ $esquemaReff = $esquemaRef . 'f';
 
 // COMUN
 if (!empty($Qcomun)) {
-    $oConfigDB = new core\ConfigDB('importar'); //de la database comun
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public'); //de la database comun
 
     /**
@@ -44,7 +44,7 @@ if (!empty($Qcomun)) {
         "xa_tipo_tarifa" => ['id_schema' => 'yes'],
         "x_config_schema" => ['id_schema' => 'yes'],
     ];
-    $oDBTabla = new core\DBTabla();
+    $oDBTabla = new src\shared\infrastructure\persistence\postgresql\DBTabla();
     $oDBTabla->setConfig($config);
     $oDBTabla->setRef($esquemaRef);
     $oDBTabla->setNew($esquema);
@@ -56,7 +56,7 @@ if (!empty($Qcomun)) {
     // (( para saber el nombre: SELECT oid, subdbid, subname, subconninfo, subpublications FROM pg_subscription; ))
     // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
 
-    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase = new src\shared\infrastructure\persistence\postgresql\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     $oTrasvase->setDbName('comun');
@@ -68,7 +68,7 @@ if (!empty($Qcomun)) {
 }
 // SV
 if (!empty($Qsv)) {
-    $oConfigDB = new core\ConfigDB('importar');
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
     $config = $oConfigDB->getEsquema('publicv-e'); // Todas estas tablas están en sv-e
 
     $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
@@ -81,14 +81,14 @@ if (!empty($Qsv)) {
         "web_preferencias" => ['id_schema' => 'yes'],
         "m0_mods_installed_dl" => ['id_schema' => 'yes'],
     ];
-    $oDBTabla = new core\DBTabla();
+    $oDBTabla = new src\shared\infrastructure\persistence\postgresql\DBTabla();
     $oDBTabla->setConfig($config);
     $oDBTabla->setRef($esquemaRefv);
     $oDBTabla->setNew($esquemav);
     $oDBTabla->setTablas($aTablas);
     $oDBTabla->copiar();
 
-    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase = new src\shared\infrastructure\persistence\postgresql\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     $oTrasvase->setDbName('sv');
@@ -100,7 +100,7 @@ if (!empty($Qsv)) {
 }
 // SF
 if (!empty($Qsf)) {
-    $oConfigDB = new core\ConfigDB('importar');
+    $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('importar');
     $config = $oConfigDB->getEsquema('publicf-e'); // Todas estas tablas están en sv-e
 
     $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
@@ -113,14 +113,14 @@ if (!empty($Qsf)) {
         "web_preferencias" => ['id_schema' => 'yes'],
         "m0_mods_installed_dl" => ['id_schema' => 'yes'],
     ];
-    $oDBTabla = new core\DBTabla();
+    $oDBTabla = new src\shared\infrastructure\persistence\postgresql\DBTabla();
     $oDBTabla->setConfig($config);
     $oDBTabla->setRef($esquemaReff);
     $oDBTabla->setNew($esquemaf);
     $oDBTabla->setTablas($aTablas);
     $oDBTabla->copiar();
 
-    $oTrasvase = new core\DBTrasvase();
+    $oTrasvase = new src\shared\infrastructure\persistence\postgresql\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     $oTrasvase->setDbName('sf');

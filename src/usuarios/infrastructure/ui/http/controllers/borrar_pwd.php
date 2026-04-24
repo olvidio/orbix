@@ -1,11 +1,11 @@
 <?php
 
-use core\ConfigDB;
-use core\DBConnection;
-use core\DBPropiedades;
-use core\ServerConf;
-use permisos\model\MyCrypt;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\infrastructure\persistence\DBConnection;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\shared\config\ServerConf;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Password;
 use web\ContestarJson;
 use function core\is_true;
@@ -52,7 +52,7 @@ foreach ($a_posibles_esquemas as $esquema) {
         // poner de password el mismo login
         $login = $oUsuario->getUsuarioAsString();
         if (!empty($login) && ($login !== 'dani')) {
-            $oCrypt = new MyCrypt();
+            $oCrypt = new PasswordHasher();
             $my_passwd = $oCrypt->encode($login);
             $oUsuario->setPasswordVo(new Password($my_passwd));
             if ($UsuarioRepository->Guardar($oUsuario) === false) {

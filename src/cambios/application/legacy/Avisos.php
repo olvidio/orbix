@@ -2,8 +2,8 @@
 
 namespace src\cambios\application\legacy;
 
-use core\ConfigGlobal;
-use permisos\model\PermisosActividades;
+use src\shared\config\ConfigGlobal;
+use src\permisos\domain\PermisosActividades;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;

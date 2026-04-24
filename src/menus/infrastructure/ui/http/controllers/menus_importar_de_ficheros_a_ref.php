@@ -1,7 +1,7 @@
 <?php
 
-use core\ConfigGlobal;
-use core\DBPropiedades;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use web\Hash;
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
@@ -59,14 +59,14 @@ if ($Qseguro === 1) {
         $sec = substr($esquema, -1); // la 'v' o la 'f'.
         echo ">>>$sec>>actualizando menus para $esquema<br>";
         if ($sec === 'v') {
-            $oConfigDB = new core\ConfigDB('sv-e');
+            $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('sv-e');
         }
         if ($sec === 'f') {
-            $oConfigDB = new core\ConfigDB('sf-e');
+            $oConfigDB = new src\shared\infrastructure\persistence\ConfigDB('sf-e');
 
         }
         $config = $oConfigDB->getEsquema($esquema);
-        $oConexion = new core\DBConnection($config);
+        $oConexion = new src\shared\infrastructure\persistence\DBConnection($config);
         $oDB = $oConexion->getPDO();
 
         echo "actualizando menus para $esquema<br>";

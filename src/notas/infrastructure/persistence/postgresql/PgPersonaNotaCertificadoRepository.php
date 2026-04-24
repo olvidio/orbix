@@ -1,9 +1,9 @@
 <?php
 namespace src\notas\infrastructure\persistence\postgresql;
 
-use core\ConfigDB;
-use core\ConfigGlobal;
-use core\DBConnection;
+use src\shared\infrastructure\persistence\ConfigDB;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\DBConnection;
 use src\notas\domain\contracts\PersonaNotaCertificadoRepositoryInterface;
 
 class PgPersonaNotaCertificadoRepository extends PgPersonaNotaRepository implements PersonaNotaCertificadoRepositoryInterface

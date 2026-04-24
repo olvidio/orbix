@@ -2,7 +2,7 @@
 
 namespace src\shared\domain;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use web\Desplegable;
 use function core\is_true;
 

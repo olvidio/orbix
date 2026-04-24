@@ -2,14 +2,14 @@
 
 namespace src\notas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\application\services\DelegacionDropdown;
 
 /**
  * Datos necesarios para pintar el dialogo "buscar actividad" que se
- * abre desde `form_1011.phtml` al modificar una nota asociada a una
+ * abre desde `form_notas_de_una_persona.phtml` al modificar una nota asociada a una
  * actividad (cursos, convivencias, ...).
  *
  * Devuelve:

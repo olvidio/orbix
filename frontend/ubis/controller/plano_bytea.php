@@ -5,7 +5,7 @@
  *
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use web\Hash;
 
 // para que funcione bien la seguridad

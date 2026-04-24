@@ -2,7 +2,7 @@
 
 namespace src\notas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
@@ -15,7 +15,7 @@ use src\notas\domain\value_objects\NotaEpoca;
  *
  * Si no encuentra ninguna coincidencia unica, devuelve
  * `['id_asignatura' => 'no']` para preservar el contrato historico
- * consumido por `form_1011.phtml`.
+ * consumido por `form_notas_de_una_persona.phtml`.
  */
 final class BuscarActaData
 {

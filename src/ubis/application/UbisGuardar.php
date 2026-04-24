@@ -2,7 +2,7 @@
 
 namespace src\ubis\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\Centro;

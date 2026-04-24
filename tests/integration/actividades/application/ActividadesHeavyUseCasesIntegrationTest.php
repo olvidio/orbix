@@ -13,9 +13,9 @@ use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
-use core\ConfigGlobal;
-use permisos\model\PermisosActividades;
-use permisos\model\PermisosActividadesTrue;
+use src\shared\config\ConfigGlobal;
+use src\permisos\domain\PermisosActividades;
+use src\permisos\domain\PermisosActividadesTrue;
 use Tests\myTest;
 
 /**

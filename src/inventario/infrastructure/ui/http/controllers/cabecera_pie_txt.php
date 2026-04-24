@@ -1,7 +1,7 @@
 <?php
 
-use core\ConfigGlobal;
-use core\ConfigMagik;
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ConfigMagik;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use web\ContestarJson;
 

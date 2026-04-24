@@ -2,7 +2,7 @@
 
 namespace src\ubis\application\services;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**

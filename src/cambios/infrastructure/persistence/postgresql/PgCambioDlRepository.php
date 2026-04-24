@@ -2,11 +2,11 @@
 
 namespace src\cambios\infrastructure\persistence\postgresql;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\ConverterDate;
-use core\ConverterJson;
-use core\Set;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\ConverterJson;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use JsonException;
 use PDO;
 use src\cambios\domain\contracts\CambioDlRepositoryInterface;

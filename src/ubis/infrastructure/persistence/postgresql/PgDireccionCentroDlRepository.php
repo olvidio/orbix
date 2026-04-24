@@ -2,7 +2,7 @@
 
 namespace src\ubis\infrastructure\persistence\postgresql;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
 use src\utils_database\domain\GenerateIdGlobal;
 

@@ -2,7 +2,7 @@
 
 namespace src\encargossacd\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\misas\domain\entity\InicialesSacd;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;

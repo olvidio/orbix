@@ -2,7 +2,7 @@
 
 namespace src\cartaspresentacion\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;

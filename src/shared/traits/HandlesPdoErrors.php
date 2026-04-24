@@ -16,7 +16,7 @@ use PDOStatement;
 trait HandlesPdoErrors
 {
     // Requiere que la clase que use el trait tenga un método setErrorTxt(string): self
-    // (provisto por core\ClaseRepository como método protegido). No se declara abstract para
+    // (provisto por src\shared\infrastructure\persistence\ClaseRepository como método protegido). No se declara abstract para
     // mantener compatibilidad de visibilidad y tipo de retorno.
 
     /**

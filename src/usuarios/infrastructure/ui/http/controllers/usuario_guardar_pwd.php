@@ -1,7 +1,7 @@
 <?php
 
-use permisos\model\MyCrypt;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Password;
 use web\ContestarJson;
 
@@ -15,7 +15,7 @@ $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 $usuario = $oUsuario->getUsuario();
 
 if (!empty($Qpassword)) {
-    $oCrypt = new MyCrypt();
+    $oCrypt = new PasswordHasher();
     $jsondata = $oCrypt->is_valid_password($usuario, $Qpassword);
 
     if ($jsondata['success'] === false) {

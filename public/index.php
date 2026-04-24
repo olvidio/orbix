@@ -1,7 +1,7 @@
 <?php
 // Front Controller con FastRoute + fallback legacy para /src
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use core\GestorErrores;
 use DI\ContainerBuilder;
 use FastRoute\Dispatcher;

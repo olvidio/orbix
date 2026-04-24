@@ -1,0 +1,63 @@
+<script>
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $('#mod').val("editar");
+            $(formulario).attr('action', "frontend/notas/controller/form_notas_de_una_persona.php");
+            fnjs_enviar_formulario(formulario, '<?= $bloque ?>');
+        }
+    }
+    fnjs_borrar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            if (confirm("<?= $txt_eliminar ?>")) {
+                $('#mod').val("eliminar");
+                $(formulario).attr('action', '<?= $url_persona_nota_eliminar ?>');
+                $(formulario).one("submit", function () {
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'post',
+                        data: $(this).serialize(),
+                        dataType: 'json'
+                    })
+                        .done(function (json) {
+                            if (!json || json.success !== true) {
+                                alert('<?= _("respuesta") ?>: ' + ((json && json.mensaje) ? json.mensaje : ''));
+                            } else {
+                                fnjs_actualizar(formulario);
+                            }
+                        });
+                    return false;
+                });
+                $(formulario).trigger("submit");
+                $(formulario).off();
+            }
+        }
+    }
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+</script>
+<h2 class=titulo><?= ucfirst(_("notas del stgr")); ?></h2>
+<?php if (!empty($msg)) { ?>
+    <h3 class=subtitulo><?= $msg ?></h3>
+<?php } ?>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHashSelect->getCamposHtml(); ?>
+    <input type="hidden" id="mod" name="mod" value="">
+    <?= $oTabla->mostrar_tabla(); ?>
+</form>
+<?php
+// <!-- =========== boton insert ============  --> 
+if (!empty($link_insert)) { ?>
+    <br>
+    <table cellspacing=3 class=botones>
+        <tr class=botones>
+            <td class=botones><span class=link_inv onclick="fnjs_update_div('<?= $bloque ?>','<?= $link_insert ?>');">
+	<?= sprintf(_("añadir nota")) ?></span></td>
+        </tr>
+    </table>
+<?php } ?>

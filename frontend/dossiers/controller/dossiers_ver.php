@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\dossiers\application\DossierTipoFileSuffixResolver;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;

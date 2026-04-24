@@ -13,7 +13,7 @@
  * + `apps/actividadessacd/model/AsignarSacd.php` siguiendo `refactor.md`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\shared\domain\value_objects\DateTimeLocal;
 use web\Hash;

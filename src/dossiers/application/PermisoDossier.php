@@ -2,8 +2,8 @@
 
 namespace src\dossiers\application;
 
-use core\ConfigGlobal;
-use permisos\model\XPermisos;
+use src\shared\config\ConfigGlobal;
+use src\permisos\domain\XPermisos;
 
 /**
  * Classe per saber els permisos d'un usuari sobre els menus.

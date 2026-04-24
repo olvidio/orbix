@@ -2,7 +2,7 @@
 
 namespace dbextern\model;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use DateTimeInterface;
 use PDO;
 use src\shared\domain\value_objects\DateTimeLocal;

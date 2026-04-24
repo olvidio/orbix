@@ -2,7 +2,7 @@
 
 namespace src\cambios\domain\entity;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\domain\value_objects\ActividadTipoId;

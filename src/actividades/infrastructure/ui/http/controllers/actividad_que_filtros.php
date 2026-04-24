@@ -8,7 +8,7 @@
  * Responde JSON via web\ContestarJson::enviar con la clave `html`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\application\ActividadQueFiltrosBloque;
 use web\ContestarJson;
 

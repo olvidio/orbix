@@ -10,7 +10,7 @@
  * @subpackage    actividades
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ImportadaRepositoryInterface;
 use src\actividades\domain\entity\Importada;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;

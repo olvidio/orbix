@@ -2,8 +2,8 @@
 
 namespace src\procesos\application;
 
-use core\ConfigGlobal;
-use permisos\model\PermisosActividades;
+use src\shared\config\ConfigGlobal;
+use src\permisos\domain\PermisosActividades;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;

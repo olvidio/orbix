@@ -2,7 +2,7 @@
 
 namespace src\layouts;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use web\Hash;

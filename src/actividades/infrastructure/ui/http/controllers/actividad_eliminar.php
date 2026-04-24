@@ -15,7 +15,7 @@
  * @subpackage    actividades
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\application\BorrarActividad;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use web\ContestarJson;

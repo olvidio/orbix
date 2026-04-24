@@ -2,7 +2,7 @@
 
 namespace src\actividadcargos\infrastructure\persistence\postgresql;
 
-use core\Set;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\actividadcargos\domain\contracts\CargoOAsistenteInterface;
 use src\actividadcargos\domain\entity\CargoOAsistente;

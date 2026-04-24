@@ -78,7 +78,7 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividades_buscar_data.php';
     });
 
-    // Slice 17: form_1011 deja de importar NotaPersonaFormData y lo consume via PostRequest.
+    // Slice 17: form_notas_de_una_persona deja de importar NotaPersonaFormData y lo consume via PostRequest.
     $r->addRoute(['GET', 'POST'], '/src/notas/nota_persona_form_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/nota_persona_form_data.php';
     });

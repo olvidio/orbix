@@ -217,7 +217,7 @@ frontend/ubiscamas/
   view/
     habitacion_form.phtml ← Vista HTML del formulario
     cama_form.phtml      ← Vista HTML del formulario
-    select2006.phtml     ← Vista de listado
+    select_habitaciones_cdc.phtml ← Vista de listado
 
 src/ubiscamas/
   domain/
@@ -260,7 +260,7 @@ $oEntidad->setIdVo($newId);
 
 Para entidades con id_schema:
 ```php
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 
 // Obtener id_schema de la configuración
 $miRegionDl = ConfigGlobal::mi_region_dl();

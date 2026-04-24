@@ -3,7 +3,7 @@
 namespace src\actividadplazas\application\services;
 
 use src\asistentes\application\services\AsistenteActividadService;
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;

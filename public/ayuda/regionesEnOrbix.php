@@ -1,6 +1,6 @@
 <?php
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use web\Hash;
 
 $url = Hash::cmdSinParametros(ConfigGlobal::getWeb()

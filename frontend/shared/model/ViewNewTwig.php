@@ -2,14 +2,14 @@
 
 namespace frontend\shared\model;
 
-use core\ServerConf;
+use src\shared\config\ServerConf;
 use Exception;
 use jblond\TwigTrans\Translation;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
 
-require_once(\core\ConfigGlobal::$dir_libs . '/vendor/autoload.php');
+require_once(\src\shared\config\ConfigGlobal::$dir_libs . '/vendor/autoload.php');
 
 /**
  * ViewNewTwig: motor de plantillas Twig para el árbol de frontend/

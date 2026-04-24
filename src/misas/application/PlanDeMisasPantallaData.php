@@ -2,7 +2,7 @@
 
 namespace src\misas\application;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use RuntimeException;
 use src\misas\application\support\IdNomJefeResolver;
 use src\misas\domain\value_objects\PlantillaConfig;

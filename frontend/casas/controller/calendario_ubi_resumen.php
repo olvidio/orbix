@@ -14,7 +14,7 @@
  * `calendario_ubi_resumen_ajax.php` siguiendo `refactor.md`.
  */
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\Desplegable;

@@ -2,7 +2,7 @@
 
 namespace src\certificados\domain;
 
-use core\ConfigGlobal;
+use src\shared\config\ConfigGlobal;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
