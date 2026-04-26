@@ -36,17 +36,17 @@
             if (rta && rta.success) {
                 <?= $oPosicion->js_atras(1); ?>
             } else {
-                var msg = (rta && rta.mensaje) ? rta.mensaje : '<?= _("error desconocido") ?>';
-                alert('<?= _("respuesta") ?>: ' + msg);
+                var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + msg);
             }
         }).fail(function () {
-            alert('<?= _("error de comunicación con el servidor") ?>');
+            alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
         });
     };
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <form id="frm_cargos_personas_en_actividad" name="frm_cargos_personas_en_actividad" action="" method="POST">
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $hash_campos_html ?>
     <table>
         <tr class="tab">
             <th class="titulo_inv" colspan="2"><?= ucfirst(_("cargo de una actividad")) ?></th>
@@ -58,8 +58,8 @@
             <?php } else { ?>
                 <td>
                     <select class="contenido" id="id_activ" name="id_activ">
-                        <?php foreach ($cActividades as $oActividad) { ?>
-                            <option value="<?= (int) $oActividad->getId_activ() ?>"><?= htmlspecialchars((string) $oActividad->getNom_activ()) ?></option>
+                        <?php foreach ($aActividades as $row) { ?>
+                            <option value="<?= (int)$row['id_activ'] ?>"><?= htmlspecialchars((string)$row['nom_activ']) ?></option>
                         <?php } ?>
                     </select>
                 </td>
@@ -67,7 +67,7 @@
         </tr>
         <tr>
             <td class="etiqueta"><?= ucfirst(_("cargo")) ?>:</td>
-            <td><?= $oDesplegableCargos->desplegable() ?></td>
+            <td><?= $desplegable_cargos_html ?></td>
         </tr>
         <tr>
             <td class="etiqueta"><?= _("¿Puede ser agd?") ?></td>

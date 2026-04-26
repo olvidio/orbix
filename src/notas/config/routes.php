@@ -3,7 +3,7 @@
 // Rutas del modulo `notas`. Las registra `public/index.php` via glob sobre
 // `src/*/config/routes.php`. Cada endpoint vive en
 // `src/notas/infrastructure/ui/http/controllers/` y responde JSON mediante
-// `web\ContestarJson::enviar(...)`.
+// `frontend\shared\web\ContestarJson::enviar(...)`.
 return static function ($r) {
     // Slice 1: Mutaciones criticas (actas, notas de persona, pdf, tessera).
     $r->addRoute(['GET', 'POST'], '/src/notas/acta_nueva', function () {
@@ -81,5 +81,13 @@ return static function ($r) {
     // Slice 17: form_notas_de_una_persona deja de importar NotaPersonaFormData y lo consume via PostRequest.
     $r->addRoute(['GET', 'POST'], '/src/notas/nota_persona_form_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/nota_persona_form_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/asignaturas_pendientes_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/asignaturas_pendientes_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/asignaturas_pendientes_resumen_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/asignaturas_pendientes_resumen_data.php';
     });
 };

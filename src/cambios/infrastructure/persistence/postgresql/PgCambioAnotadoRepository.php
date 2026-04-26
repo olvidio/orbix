@@ -9,7 +9,7 @@ use PDO;
 use src\cambios\domain\contracts\CambioAnotadoRepositoryInterface;
 use src\cambios\domain\entity\CambioAnotado;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

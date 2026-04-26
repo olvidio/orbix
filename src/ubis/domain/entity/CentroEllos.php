@@ -13,7 +13,7 @@ use src\ubis\domain\value_objects\RegionNameText;
 use src\ubis\domain\value_objects\TipoCentroCode;
 use src\ubis\domain\value_objects\TipoLaborId;
 use src\ubis\domain\value_objects\UbiNombreText;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class CentroEllos
 {

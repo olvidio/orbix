@@ -10,8 +10,8 @@ use PDO;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\entity\TipoDeActividad;
 use src\shared\traits\HandlesPdoErrors;
-use web\TiposActividades;
-use function core\is_true;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

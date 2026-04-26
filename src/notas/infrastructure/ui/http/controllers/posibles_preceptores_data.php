@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\PosiblesPreceptoresData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Devuelve el desplegable de posibles preceptores (profesores STGR) con

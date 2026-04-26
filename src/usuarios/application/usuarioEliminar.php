@@ -3,7 +3,7 @@
 namespace src\usuarios\application;
 
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 class usuarioEliminar
 {

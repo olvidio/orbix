@@ -1,13 +1,13 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use src\shared\config\ServerConf;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -79,7 +79,7 @@ if (($file_handle = @fopen($filename_pdf, 'wb')) !== false) {
     fwrite($file_handle, $content_pdf);
     fclose($file_handle);
     //file_put_contents($filename_pdf, $content_pdf);
-    $filename_pdf_web = ConfigGlobal::getWeb() . '/log/tmp/' . $filename_sin_espacio . '.pdf';
+    $filename_pdf_web = AppUrlConfig::getPublicAppBaseUrl() . '/log/tmp/' . $filename_sin_espacio . '.pdf';
 } else {
     $filename_pdf_web = '';
 }

@@ -3,7 +3,7 @@
 use core\ViewTwig;
 use pasarela\model\ContribucionNoDuerme;
 use web\Hash;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");

@@ -2,20 +2,23 @@
 
 namespace frontend\personas\controller;
 
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use src\actividades\domain\value_objects\NivelStgrId;
-use src\personas\application\support\PersonaRepositoryResolver;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 /**
  * Formulario para cambiar el `nivel_stgr` de una persona.
  *
- * Migrado desde `apps/personas/controller/stgr_cambio.php` (slice 1).
+ * Migrado desde `apps/personas/controller/stgr_cambio.php` (slice 1) y, en un
+ * segundo paso, refactorizado conforme a `refactor.md`: la resolucion del
+ * repositorio y la lectura de la persona viven ahora en
+ * `src/personas/application/StgrCambioData.php` tras el endpoint
+ * `/src/personas/stgr_cambio_data`. Este controlador no importa clases `src\`.
  */
-require_once("apps/core/global_header.inc");
-require_once("apps/core/global_object.inc");
+require_once("frontend/shared/global_header_front.inc");
+
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -29,31 +32,21 @@ if (!empty($a_sel)) {
     $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 }
 
-if (empty($id_tabla)) {
-    echo _("No existe la clase de la persona");
-    die();
-}
+$campos = [
+    'id_nom' => $id_nom,
+    'id_tabla' => $id_tabla,
+];
 
-$resolver = new PersonaRepositoryResolver();
-try {
-    $repository = $resolver->repositorioPorIdTabla($id_tabla);
-} catch (\InvalidArgumentException) {
-    echo _("No existe la clase de la persona");
-    die();
-}
+$data = PostRequest::getDataFromUrl('/src/personas/stgr_cambio_data', $campos);
+$payload = is_array($data) ? $data : [];
 
-$oPersona = $repository->findById($id_nom);
-if ($oPersona === null) {
-    echo _("No se encuentra la persona");
-    die();
-}
-
-$nom = $oPersona->getNombreApellidos();
-$stgr = $oPersona->getNivel_stgr();
+$nom = (string)($payload['nom'] ?? '');
+$stgr = (string)($payload['nivel_stgr'] ?? '');
+$opciones = (array)($payload['opciones_nivel_stgr'] ?? []);
 
 $oDespl = new Desplegable();
 $oDespl->setNombre('nivel_stgr');
-$oDespl->setOpciones(NivelStgrId::getArrayNivelStgr());
+$oDespl->setOpciones($opciones);
 $oDespl->setOpcion_sel($stgr);
 $oDespl->setBlanco(true);
 

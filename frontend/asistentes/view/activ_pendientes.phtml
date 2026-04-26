@@ -1,11 +1,6 @@
-<?php
-
-use src\shared\config\ConfigGlobal;
-
-?>
-    <form id="que_pdte" action="<?= ConfigGlobal::getWeb() ?>/frontend/asistentes/controller/activ_pendientes_select.php"
-          method="post" onkeydown="fnjs_enviar(event,this);">
-    <?= $oHash->getCamposHtml(); ?>
+<form id="que_pdte" action="<?= htmlspecialchars((string)($form_action ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+      method="post" onkeydown="fnjs_enviar(event,this);">
+    <?= $hash_campos_html ?? '' ?>
     <table>
         <thead>
         <th class=titulo_inv colspan=4><?= ucfirst(_("personas")); ?>
@@ -37,6 +32,6 @@ use src\shared\config\ConfigGlobal;
 </FORM>
 <!--  *********************  Listado   *********************     -->
 <h2 class=subtitulo><?= $titulo ?></h2>
-<?= $oTablaDl->mostrar_tabla(); ?>
+<?= $tabla_dl_html ?? '' ?>
 <h2 class=subtitulo><?= _("personas en otras r") ?></h2>
-<?= $oTablaOtrasDl->mostrar_tabla(); ?>
+<?= $tabla_otras_html ?? '' ?>

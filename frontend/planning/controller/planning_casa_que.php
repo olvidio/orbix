@@ -2,15 +2,15 @@
 
 namespace frontend\planning\controller;
 
-use src\shared\config\ConfigGlobal;
 use frontend\planning\support\PeriodoPlanningHelper;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
-use web\CasasQue;
+use frontend\shared\web\CasasQue;
 use web\Hash;
-use web\Posicion;
-use function core\strtoupper_dlb;
+use frontend\shared\web\Posicion;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 /**
  * Formulario de filtros para el planning por casas (se selecciona el
@@ -35,10 +35,10 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$oMiUsuario = ConfigGlobal::MiUsuario();
+$oMiUsuario = $_SESSION['session_auth']['MiUsuario'];
 $oRole = new Role();
 $oRole->setId_role($oMiUsuario->getId_role());
-$miSfsv = ConfigGlobal::mi_sfsv();
+$miSfsv = OrbixRuntime::miSfsv();
 
 $periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto((int)$_SESSION['oConfig']->getMesFinStgr());
 
@@ -66,22 +66,21 @@ $oFormP = PeriodoPlanningHelper::formPeriodo($Qperiodo, $Qyear, $Qempiezamin, $Q
 $oForm = new CasasQue();
 $oForm->setTitulo(strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
 
-$donde = '';
+$filtro = ['active' => true];
 if ($oRole->isRolePau(PauType::PAU_CDC)) {
     $id_pau = $oMiUsuario->getCsv_id_pau();
-    $donde = "WHERE active='t' AND id_ubi IN ($id_pau)";
+    $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', (string)$id_pau)), static fn ($v) => $v > 0));
     $oForm->setCasas('casa');
 } elseif ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
     $oForm->setCasas('all');
-    $donde = "WHERE active='t'";
 } elseif ($miSfsv === 1) {
     $oForm->setCasas('sv');
-    $donde = "WHERE active='t' AND sv='t'";
+    $filtro['sv'] = true;
 } elseif ($miSfsv === 2) {
     $oForm->setCasas('sf');
-    $donde = "WHERE active='t' AND sf='t'";
+    $filtro['sf'] = true;
 }
-$oForm->setPosiblesCasas($donde);
+$oForm->setFiltroCasas($filtro);
 $oForm->setCdcSel($Qcdc_sel);
 $oForm->setSeleccionados($QsSeleccionados);
 
@@ -93,7 +92,7 @@ $a_campos = [
     'oHash' => $oHash,
     'oFormP' => $oFormP,
     'oForm' => $oForm,
-    'locale_us' => ConfigGlobal::is_locale_us(),
+    'locale_us' => OrbixRuntime::isLocaleUs(),
     'chk_actividad_no' => $chk_actividad_no,
     'chk_actividad_si' => $chk_actividad_si,
     'urlSelect' => $urlSelect,

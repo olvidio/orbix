@@ -2,10 +2,10 @@
 
 namespace frontend\planning\controller;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 /**
  * Pantalla intermedia entre `planning_casa_que` y `planning_casa_ver`.
@@ -18,7 +18,7 @@ use web\Posicion;
  * de los filtros.
  */
 require_once("frontend/shared/global_header_front.inc");
-require_once("apps/core/global_object.inc");
+
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -48,13 +48,13 @@ $aGoBack = [
 $oPosicion->setParametros($aGoBack, 1);
 
 $oHashMod = new Hash();
-$oHashMod->setUrl(ConfigGlobal::getWeb() . '/frontend/actividades/controller/planning_casa_modificar.php');
+$oHashMod->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/planning_casa_modificar.php');
 $oHashMod->setArraycamposHidden(['que' => 'modificar']);
 $oHashMod->setCamposForm('id_activ');
 $param_mod = $oHashMod->getParamAjax();
 
 $oHashNew = new Hash();
-$oHashNew->setUrl(ConfigGlobal::getWeb() . '/frontend/actividades/controller/planning_casa_nueva.php');
+$oHashNew->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/planning_casa_nueva.php');
 $oHashNew->setArraycamposHidden(['que' => 'nueva']);
 $oHashNew->setCamposForm('id_ubi');
 $param_new = $oHashNew->getParamAjax();
@@ -72,7 +72,7 @@ $aCamposHiddenVer = [
 ];
 
 $oHashVer = new Hash();
-$oHashVer->setUrl(ConfigGlobal::getWeb() . '/frontend/planning/controller/planning_casa_ver.php');
+$oHashVer->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/planning_casa_ver.php');
 $oHashVer->setArraycamposHidden($aCamposHiddenVer);
 $param_ver = $oHashVer->getParamAjax();
 

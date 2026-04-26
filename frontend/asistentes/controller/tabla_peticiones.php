@@ -1,184 +1,28 @@
 <?php
 
-use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
-use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
-use src\actividadplazas\domain\value_objects\PlazaId;
-use src\asistentes\application\services\AsistenteActividadService;
-use src\shared\config\ConfigGlobal;
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\Hash;
-use web\Lista;
-use web\TiposActividades;
 
-//probar github
-
-/**
- * Funciones más comunes de la aplicación
- */
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
+require_once 'frontend/shared/global_header_front.inc';
 
 $oPosicion->recordar();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    $id_activ_old = (integer)strtok($a_sel[0], "#");
-    $nom_activ = strtok("#");
-}
-else {
-    $id_activ_old = (integer)filter_input(INPUT_POST, 'id_activ_old');
-    $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-    $oActividad = $ActividadAllRepository->findById($id_activ_old);
-    $nom_activ = $oActividad->getNom_activ();
+if (!empty($a_sel)) {
+    $id_activ_old = (int)strtok($a_sel[0], '#');
+} else {
+    $id_activ_old = (int)filter_input(INPUT_POST, 'id_activ_old');
 }
 
-//Si vengo por medio de Posicion, borro la última
-if (isset($_POST['stack'])) {
-    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== '') {
-        $oPosicion2 = new web\Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
-        }
-    }
-}
-
-/*
- * Defino un array con los datos actuales, para saber volver después de navegar un rato
- */
-$aGoBack = array(
+$oPosicion->setParametros([
     'id_activ_old' => $id_activ_old,
-);
-$oPosicion->setParametros($aGoBack, 1);
+], 1);
 
+$campos = array_merge($_GET, $_POST);
+$data = PostRequest::getDataFromUrl('/src/asistentes/tabla_peticiones_data', $campos);
+$payload = is_array($data) ? $data : [];
 
-$queSel = (string)filter_input(INPUT_POST, 'queSel');
+$a_campos = array_merge($payload, ['oPosicion' => $oPosicion]);
 
-$a_cabeceras = [_("nombre"),
-    _("peticiones (libres/concedidas)"),
-];
-
-$a_botones = [];
-
-$AsistenteActividadService = $GLOBALS['container']->get(AsistenteActividadService::class);
-$cAsistentes = $AsistenteActividadService->getAsistentesDeActividad($id_activ_old);
-
-$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-$oActividad = $ActividadAllRepository->findById($id_activ_old);
-$id_tipo_activ = $oActividad->getId_tipo_activ();
-
-$oTipoActividad = new TiposActividades($id_tipo_activ);
-$sactividad = $oTipoActividad->getActividadText();
-
-$mi_dele = ConfigGlobal::mi_delef();
-$repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-$cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
-$oDelegacion = $cDelegaciones[0];
-$id_dl = $oDelegacion->getIdDlVo()->value();
-
-$a_valores = [];
-$i = 0;
-$PlazaPeticionRepository = $GLOBALS['container']->get(PlazaPeticionRepositoryInterface::class);
-$ActividadPlazasRepository = $GLOBALS['container']->get(ActividadPlazasRepositoryInterface::class);
-$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-foreach ($cAsistentes as $oAsistente) {
-    $i++;
-    $id_nom = $oAsistente->getId_nom();
-    // buscar otras opciones de ca
-    $aWhere = ['id_nom' => $id_nom, 'tipo' => $sactividad, '_ordre' => 'orden'];
-    $aOperador['tipo'] = '~';
-    $cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion($aWhere, $aOperador);
-    $posibles_activ = '';
-    foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
-        $id_activ = $oPlazaPeticion->getId_activ();
-        $nom_activ_i = '';
-        if (!empty($id_activ)) {
-            $oActividadPosible = $ActividadAllRepository->findById($id_activ);
-            $nom_activ_i = $oActividadPosible->getNom_activ();
-            $dl_org = $oActividad->getDl_org();
-            // añadir plazas libres sobre totales
-
-            $txt_plazas = '';
-            if (ConfigGlobal::is_app_installed('actividadplazas')) {
-                $concedidas = 0;
-                $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
-                foreach ($cActividadPlazas as $oActividadPlazas) {
-                    $dl_tabla = $oActividadPlazas->getDl_tabla();
-                    if ($dl_org === $dl_tabla) {
-                        $concedidas = $oActividadPlazas->getPlazas();
-                    }
-                }
-                $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
-                if ($ocupadas < 0) { // No se sabe
-                    $libres = '-';
-                }
-                else {
-                    $libres = $concedidas - $ocupadas;
-                }
-                if (!empty($concedidas)) {
-                    $txt_plazas = " ($libres/$concedidas)";
-                }
-                $nom_activ_i .= $txt_plazas;
-            }
-            // link
-            if ($id_activ !== $id_activ_old) {
-
-                $aCamposHidden = ['mod' => 'mover',
-                    'id_nom' => $id_nom,
-                    'id_activ_old' => $id_activ_old,
-                    'id_activ' => $id_activ,
-                    'plaza' => PlazaId::ASIGNADA,
-                ];
-
-                $oHash = new Hash();
-                $oHash->setUrl(ConfigGlobal::getWeb() . '/src/asistentes/asistente_guardar');
-                $oHash->setArrayCamposHidden($aCamposHidden);
-                $param_mover = $oHash->getParamAjax();
-
-                $nom_activ_i = "<span class=\"link\" onClick=\"fnjs_cambiar_actividad('$param_mover')\">" . $nom_activ_i . "</span>";
-            }
-
-            $posibles_activ .= empty($posibles_activ) ? '' : ', ';
-            $posibles_activ .= $nom_activ_i;
-        }
-    }
-    $oPersona = $PersonaDlRepository->findById($id_nom);
-    $nom_ap = $oPersona?->getApellidosNombre();
-
-    $a_valores[$i][1] = $nom_ap;
-    $a_valores[$i][2] = $posibles_activ;
-}
-
-if (!empty($a_valores)) {
-    if (isset($Qid_sel) && !empty($Qid_sel)) {
-        $a_valores['select'] = $Qid_sel;
-    }
-    if (isset($Qscroll_id) && !empty($Qscroll_id)) {
-        $a_valores['scroll_id'] = $Qscroll_id;
-    }
-}
-
-
-$oTabla = new Lista();
-$oTabla->setId_tabla('tabla_peticiones');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
-
-$a_campos = ['oPosicion' => $oPosicion,
-    'nom_activ' => $nom_activ,
-    'oTabla' => $oTabla,
-];
-
-$oView = new ViewNewTwig('frontend/asistentes/controller');
-$oView->renderizar('tabla_peticiones.html.twig', $a_campos);
+(new ViewNewTwig('frontend/asistentes/controller'))
+    ->renderizar('tabla_peticiones.html.twig', $a_campos);

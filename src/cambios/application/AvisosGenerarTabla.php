@@ -13,7 +13,7 @@ use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso para generar la tabla de avisos de cambios.

@@ -4,7 +4,7 @@ namespace src\actividades\application;
 
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\Periodo;
+use frontend\shared\web\Periodo;
 
 /**
  * Lista centros encargados de actividades en un periodo dado y, para cada

@@ -6,14 +6,14 @@ use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBView;
-use core\GestorErrores;
+use src\shared\infrastructure\logging\GestorErrores;
 use DI\ContainerBuilder;
 use PDOException;
 use src\permisos\domain\PermDl;
 use src\permisos\domain\PermisosActividades;
 use src\permisos\domain\PermisosActividadesTrue;
 use PHPUnit\Framework\TestCase;
-use src\configuracion\domain\entity\Config;
+use src\configuracion\application\ObtenerConfigSnapshot;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
@@ -349,12 +349,11 @@ class myTest extends TestCase
         }
 
         // Datos de configuración propios de cada dl.
-        $oConfig = new Config();
-        $_SESSION['oConfig'] = $oConfig;
+        $_SESSION['oConfig'] = $GLOBALS['container']->get(ObtenerConfigSnapshot::class)->execute();
 
         // func_tablas. Es necesaria para permisos\PermisosActividades->carregar()...
         // Usamos una ruta absoluta para asegurar que se encuentre el archivo sin importar desde dónde se ejecute el test
-        include_once(__DIR__ . '/../apps/core/func_tablas.php');
+        include_once(__DIR__ . '/../src/shared/domain/helpers/func_tablas.php');
 
         // para mantener los permisos por actividades en una variable
         if (empty($_SESSION['oPermActividades'])) {

@@ -10,7 +10,7 @@ use PDO;
 use src\personas\domain\contracts\UltimaAsistenciaRepositoryInterface;
 use src\personas\domain\entity\UltimaAsistencia;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

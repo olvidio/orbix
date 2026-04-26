@@ -1,7 +1,7 @@
 <?php
 
 use src\procesos\application\ActividadProcesoUpdate;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $useCase = new ActividadProcesoUpdate();
 $error = $useCase->execute($_POST);

@@ -9,7 +9,7 @@ use src\actividadestudios\domain\entity\Matricula;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Crea una matricula (asignatura de una persona en una actividad) y

@@ -3,7 +3,7 @@
 namespace dbextern\model\entity;
 
 use core\ClasePropiedades;
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 
 /**

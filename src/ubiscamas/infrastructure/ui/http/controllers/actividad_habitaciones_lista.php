@@ -1,7 +1,7 @@
 <?php
 
 use src\ubiscamas\application\HabitacionesCamaLista;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_activ = (string)filter_input(INPUT_POST, 'id_activ');
 

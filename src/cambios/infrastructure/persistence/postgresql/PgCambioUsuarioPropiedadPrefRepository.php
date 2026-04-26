@@ -9,7 +9,7 @@ use PDO;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

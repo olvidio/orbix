@@ -4,7 +4,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use src\certificados\domain\CertificadoEmitidoUpload;
 use src\shared\domain\value_objects\DateTimeLocal;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");

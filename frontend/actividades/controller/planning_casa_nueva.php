@@ -13,7 +13,9 @@
  * @subpackage actividades
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\AppInstalled;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use src\actividades\application\ActividadTipo;
@@ -31,8 +33,8 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
 }
 
 $id_tipo_activ = '';
-$isfsv_input = ConfigGlobal::mi_sfsv();
-$dl_org = ConfigGlobal::mi_delef();
+$isfsv_input = OrbixRuntime::miSfsv();
+$dl_org = OrbixRuntime::miDelef();
 $status = StatusId::PROYECTO;
 
 $data = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
@@ -80,7 +82,7 @@ $oHash->setCamposForm($camposForm);
 $oHash->setCamposNo($camposNo);
 
 $oHash1 = new Hash();
-$oHash1->setUrl(ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_select_ubi.php');
+$oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinValParams();
 
@@ -90,7 +92,7 @@ $oActividadTipo->setAsistentes($sasistentes);
 $oActividadTipo->setActividad($sactividad);
 $oActividadTipo->setNom_tipo($snom_tipo);
 
-$procesos_installed = ConfigGlobal::is_app_installed('procesos');
+$procesos_installed = AppInstalled::is('procesos');
 
 $a_status = StatusId::getArrayStatus();
 $status_txt = $a_status[$status] ?? '';
@@ -131,10 +133,10 @@ $a_campos = [
     'html_despl_nivel_stgr' => $html_despl_nivel_stgr,
     'html_despl_idioma' => $html_despl_idioma,
     'html_despl_repeticion' => $html_despl_repeticion,
-    'web' => ConfigGlobal::getWeb(),
-    'web_icons' => ConfigGlobal::getWeb_icons(),
+    'web' => AppUrlConfig::getPublicAppBaseUrl(),
+    'web_icons' => OrbixRuntime::getWebIcons(),
     'procesos_installed' => $procesos_installed,
-    'locale_us' => ConfigGlobal::is_locale_us(),
+    'locale_us' => OrbixRuntime::isLocaleUs(),
 ];
 
 $oView = new ViewNewTwig('actividades/controller');

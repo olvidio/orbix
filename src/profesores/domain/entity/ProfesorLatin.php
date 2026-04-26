@@ -2,10 +2,10 @@
 
 namespace src\profesores\domain\entity;
 
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class ProfesorLatin
 {

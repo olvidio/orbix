@@ -89,7 +89,7 @@ $txt_alert = _("se va a poner la fecha de hoy como fecha de traslado. Para cambi
         var url = '<?= $url_sincro_ajax ?>';
         var parametros = 'que=trasladar&dl=' + dl + '&id_nom_orbix=' + id_orbix + '&tipo_persona=<?= $tipo_persona ?><?= $h ?>';
 
-        alert("<?= $txt_alert ?>");
+        alert(<?= json_encode((string)$txt_alert) ?>);
 
         var request = $.ajax({
             url: url,
@@ -99,7 +99,7 @@ $txt_alert = _("se va a poner la fecha de hoy como fecha de traslado. Para cambi
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>: " + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 //tachar la fila
                 $("#fila" + fila).addClass('tachado');

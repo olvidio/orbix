@@ -8,7 +8,7 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\planning\domain\value_objects\PlanningStyle;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Recoge las actividades de cada persona dentro de un periodo dado.

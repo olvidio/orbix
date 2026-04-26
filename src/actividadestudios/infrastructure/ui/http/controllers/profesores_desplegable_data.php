@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadestudios\application\ProfesoresDesplegableData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Devuelve JSON con los datos para construir el desplegable de profesores.

@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
@@ -260,7 +259,7 @@ if (!empty($nf)) {
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
     /* end lista
-    $go=Hash::link(ConfigGlobal::getWeb().'/frontend/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
+    $go=Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
     echo "<p class=action>";
     printf (_("para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
@@ -295,7 +294,7 @@ if (!empty($nf)) {
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
     /* end lista */
-    $go = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 9999)));
+    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 9999)));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
     echo "<p class=action>";
     printf(_("para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."), $pag);
@@ -328,7 +327,7 @@ if (!empty($nf)) {
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
     /* end lista */
-    $go = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 9998)));
+    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 9998)));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
     echo "<p class=action>";
     printf(_("para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."), $pag);
@@ -391,7 +390,7 @@ if (!empty($nf)) {
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
-    $go = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'c1')));
+    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'c1')));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
     echo "<p class=action>";
     printf(_("para poner c1 a todos los de la lista, hacer %s"), $pag);
@@ -423,7 +422,7 @@ if (!empty($nf)) {
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
-    $go = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'c2')));
+    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'c2')));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
 
     echo "<p class=action>";
@@ -452,7 +451,7 @@ if (!empty($nf)) {
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
-    $go = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'r')));
+    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'r')));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
 
     echo "<p class=action>";
@@ -472,7 +471,7 @@ $nf = $oDBSt_sql->rowCount();
 echo "<br><p>8. $tabla_txt con asignaturas cursadas sin examinar: $nf</p>";
 
 /* Para sacar una lista*/
-$go = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'caduca_cursada')));
+$go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'caduca_cursada')));
 $caduca_cursada = $_SESSION['oConfig']->getCaducaCursada();
 
 echo "<table>";
@@ -492,7 +491,7 @@ foreach ($oDBSt_sql->fetchAll() as $algo) {
             'id_asignatura' => $id_asignatura,
             'id_tabla' => $Qid_tabla,
             'actualizar' => 'borrar_cursada'];
-    $go_borrar = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($aParam));
+    $go_borrar = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($aParam));
     $pag_borrar = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go_borrar');\">" . _("borrar") . "</span>";
     echo "<tr><td width=20></td>";
     echo "<td>$nom</td><td>$fecha</td><td>$asig</td><td>$pag_borrar</td></tr>";

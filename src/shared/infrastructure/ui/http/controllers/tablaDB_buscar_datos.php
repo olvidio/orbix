@@ -3,7 +3,7 @@
 namespace src\shared;
 
 use src\shared\domain\DatosTablaRepo;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
 $Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');

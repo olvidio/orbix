@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadestudios\application\MatriculaEliminar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Elimina una o varias matriculas. Responde JSON `{success, mensaje, data}`.

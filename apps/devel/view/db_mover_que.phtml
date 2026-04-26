@@ -2,7 +2,7 @@
     fnjs_db_mover_tabla = function () {
         tabla = $('#tabla').val();
         if (!tabla) {
-            alert("<?= $msg_falta_tabla ?>");
+            alert(<?= json_encode((string)$msg_falta_tabla) ?>);
         } else {
             $('#frm').attr('action', 'apps/devel/controller/db_mover.php');
             fnjs_enviar_formulario('#frm', '#main');

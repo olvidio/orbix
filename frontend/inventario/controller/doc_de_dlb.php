@@ -1,10 +1,10 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\web\Lista;
 use web\Hash;
-use web\Lista;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -31,9 +31,9 @@ $aGrupos = $data['aGrupos'];
 $nombreDoc = $data['nombreDoc'];
 
 //6
-$url_doc_mod = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_asignar_dlb.php?';
+$url_doc_mod = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignar_dlb.php?';
 //13
-$url_imprimir = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_imprimir_dlb.php?';
+$url_imprimir = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_imprimir_dlb.php?';
 
 if (empty($Qinventario)) {
     $a_botones[] = array('txt' => _("Asignar"), 'click' => "fnjs_go(\"$url_doc_mod\")");

@@ -10,7 +10,8 @@
  * `src/actividadestudios/`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
@@ -21,11 +22,11 @@ use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
-require_once 'apps/core/global_header.inc';
+require_once("frontend/shared/global_header_front.inc");
 require_once 'apps/core/global_object.inc';
 
 $Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
@@ -57,7 +58,7 @@ if (!empty($a_sel)) {
     $id_activ = (int) filter_input(INPUT_POST, 'id_activ');
 }
 
-$mi_dele = ConfigGlobal::mi_delef();
+$mi_dele = OrbixRuntime::miDelef();
 $permiso = (int) filter_input(INPUT_POST, 'permiso');
 $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
 $cActivAsignaturas = $ActividadAsignaturaRepository->getActividadAsignaturas(['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura]);
@@ -94,7 +95,7 @@ if ($matriculados > 0) {
         $nom = $oPersona->getPrefApellidosNombre();
         $aPersonasMatriculadas[$nom] = $oMatricula;
     }
-    uksort($aPersonasMatriculadas, 'core\strsinacentocmp');
+    uksort($aPersonasMatriculadas, 'src\shared\domain\helpers\strsinacentocmp');
 } else {
     echo _('no hay ninguna persona matriculada de esta asignatura');
 }
@@ -152,7 +153,7 @@ $txt_alert_acta = _('primero debe guadar los datos del acta');
 // Form del acta (dossier notas). Comparte las variables de scope como antes.
 include_once 'frontend/notas/controller/acta_ver.php';
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$web = AppUrlConfig::getPublicAppBaseUrl();
 $url_matricula_guardar = $web . '/src/actividadestudios/acta_notas_matricula_guardar';
 $url_notas_definitivas = $web . '/src/actividadestudios/acta_notas_definitivas_grabar';
 

@@ -4,7 +4,7 @@ namespace src\asignaturas\domain\contracts;
 
 use src\asignaturas\domain\entity\Asignatura;
 
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase Asignatura y su Repositorio
  *

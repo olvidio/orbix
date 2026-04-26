@@ -11,7 +11,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\DesplegableArray;
+use frontend\shared\web\DesplegableArray;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';

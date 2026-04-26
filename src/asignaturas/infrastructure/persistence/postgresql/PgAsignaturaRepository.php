@@ -10,7 +10,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
 use src\shared\traits\HandlesPdoErrors;
 use stdClass;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla xa_asignaturas a la interfaz del repositorio

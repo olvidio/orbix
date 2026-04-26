@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\misas\support;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 
@@ -38,13 +38,13 @@ class CuadriculaZonaRenderer
         $columns_cuadricula = $data['columns_cuadricula'] ?? '[]';
         $json_data_cuadricula = $data['data_cuadricula'] ?? [];
 
-        $url_cuadricula_update = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/cuadricula_update';
+        $url_cuadricula_update = AppUrlConfig::getApiBaseUrl() . '/src/misas/cuadricula_update';
         $oHashUpd = new Hash();
         $oHashUpd->setUrl($url_cuadricula_update);
         $oHashUpd->setCamposForm('dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona');
         $h_cuadricula_update = $oHashUpd->linkSinValParams();
 
-        $url_desplegable_sacd = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/desplegable_sacd';
+        $url_desplegable_sacd = AppUrlConfig::getApiBaseUrl() . '/src/misas/desplegable_sacd';
         $oHashDs = new Hash();
         $oHashDs->setUrl($url_desplegable_sacd);
         $oHashDs->setCamposForm('id_zona!id_sacd!seleccion!dia');

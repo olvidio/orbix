@@ -3,8 +3,8 @@
 namespace src\shared\domain;
 
 use src\shared\config\ConfigGlobal;
-use web\Desplegable;
-use function core\is_true;
+use frontend\shared\web\Desplegable;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que implementa la entidad d_dossiers_abiertos

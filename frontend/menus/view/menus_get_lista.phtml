@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 
 ?>
 <script>
@@ -40,7 +40,7 @@ use src\shared\config\ConfigGlobal;
         //echo "m: $perm_menu,l: $perm_login, ";
         $perm_menu = $oCuadros->lista_txt2($menu_perm);
         // hago las rutas absolutas, en vez de relativas:
-        if (!empty($url)) $url = ConfigGlobal::getWeb() . '/$url';
+        if (!empty($url)) $url = AppUrlConfig::getPublicAppBaseUrl() . '/$url';
         $indice = count($orden);
         $orden_txt = implode(',',$orden);
         // para poder hacer click si he borrado el nombre

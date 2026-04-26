@@ -10,7 +10,7 @@ use src\actividadtarifas\domain\value_objects\TarifaModoId;
  * Data builder para la pantalla "catalogo de tipos de tarifa".
  *
  * Devuelve cabeceras + filas serializables y las banderas de permiso
- * que el frontend necesita para pintar el `web\Lista` y decidir si
+ * que el frontend necesita para pintar el `frontend\shared\web\Lista` y decidir si
  * muestra el enlace "añadir tarifa" / "modificar".
  *
  * Sucesor de la rama `tarifas` del dispatcher legacy

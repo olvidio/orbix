@@ -1,6 +1,6 @@
 <?php
 
 use src\ubis\application\UbisBuscarOpcionesData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', UbisBuscarOpcionesData::execute());

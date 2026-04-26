@@ -12,7 +12,7 @@ use src\personas\domain\entity\Persona;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\value_objects\FaseId;
-use web\Periodo;
+use frontend\shared\web\Periodo;
 
 /**
  * Caso de uso: construye el listado de sacd con actividades incompatibles

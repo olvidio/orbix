@@ -6,7 +6,7 @@
  */
 
 use src\actividadessacd\application\SacdReordenar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = SacdReordenar::execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

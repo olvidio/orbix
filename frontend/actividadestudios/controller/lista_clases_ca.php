@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
@@ -11,11 +11,11 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
@@ -115,7 +115,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
         if ($oPersona === null) {
             // Normalmente es gente a la que no tengoo acceso (otra dl),
             // sino soy la dl organizadora no me preocupo:
-            if ($dl_org == ConfigGlobal::mi_delef()) {
+            if ($dl_org == OrbixRuntime::miDelef()) {
                 $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             }
             continue;
@@ -124,7 +124,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
         $ctr = $oPersona->getCentro_o_dl();
         $aMatriculados[$nom_persona] = $ctr;
     }
-    uksort($aMatriculados, 'core\strsinacentocmp');
+    uksort($aMatriculados, 'src\shared\domain\helpers\strsinacentocmp');
     $datos_asignatura[$a]['alumnos'] = $aMatriculados;
 
 }

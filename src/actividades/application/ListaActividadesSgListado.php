@@ -11,9 +11,9 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use web\Hash;
-use web\Lista;
-use web\Periodo;
-use web\TiposActividades;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Periodo;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Monta el listado de actividades sf/sg (crt, cv) aplicando los filtros

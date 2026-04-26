@@ -5,7 +5,7 @@ use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');

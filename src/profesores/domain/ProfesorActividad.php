@@ -6,8 +6,8 @@ namespace src\profesores\domain;
 use src\asistentes\domain\contracts\AsistentePubRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\profesores\domain\services\ProfesorStgrService;
-use web\Desplegable;
-use function core\is_true;
+use frontend\shared\web\Desplegable;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * GestorProfesor

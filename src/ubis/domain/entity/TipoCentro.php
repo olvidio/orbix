@@ -1,7 +1,7 @@
 <?php
 
 namespace src\ubis\domain\entity;
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\value_objects\{TipoCentroCode, TipoCentroName};

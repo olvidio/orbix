@@ -11,6 +11,6 @@
  */
 
 use src\procesos\application\UsuarioPermActivFases;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', UsuarioPermActivFases::execute($_POST));

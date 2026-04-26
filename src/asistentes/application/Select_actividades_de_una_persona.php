@@ -9,12 +9,12 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
-use web\BotonesCurso;
+use frontend\shared\web\BotonesCurso;
 use web\Hash;
-use web\Lista;
-use web\Posicion;
-use web\TiposActividades;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Widget del dossier `1301` (codigo `actividades_de_una_persona`):

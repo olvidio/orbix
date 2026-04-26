@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\GuardarEncargoCentro;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 $Qid_enc = (int)filter_input(INPUT_POST, 'id_enc');

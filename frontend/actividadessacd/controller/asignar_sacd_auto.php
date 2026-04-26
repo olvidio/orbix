@@ -13,7 +13,7 @@
  * + `apps/actividadessacd/model/AsignarSacd.php` siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use src\shared\domain\value_objects\DateTimeLocal;
 use web\Hash;
@@ -25,7 +25,7 @@ $oF_inicurs_des = new DateTimeLocal('@' . mktime(0, 0, 0, 9, 2, $any_final_curs)
 $inicurs_des = $oF_inicurs_des->getFromLocal();
 $inicurs_des_iso = $oF_inicurs_des->format('Y-m-d');
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
     $oHash = new Hash();
     $oHash->setUrl($url);
@@ -34,7 +34,7 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 };
 
 $url_asignar_auto = $buildHashedUrl(
-    $web . '/src/actividadessacd/sacd_asignar_auto',
+    $api . '/src/actividadessacd/sacd_asignar_auto',
     'f_ini_iso'
 );
 

@@ -4,8 +4,8 @@ namespace core;
 
 // INICIO Cabecera global de URL de controlador *********************************
 use web\Hash;
-use web\Lista;
-use web\Posicion;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************

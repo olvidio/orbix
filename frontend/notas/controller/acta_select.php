@@ -10,21 +10,22 @@
  *
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\web\Lista;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\ActaDlRepositoryInterface;
 use src\notas\domain\contracts\ActaExRepositoryInterface;
 use src\notas\domain\contracts\ActaRepositoryInterface;
+use frontend\shared\config\OrbixRuntime;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Hash;
-use web\Lista;
-use function core\curso_est;
+use function src\shared\domain\helpers\curso_est;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$mi_dele = ConfigGlobal::mi_delef();
-$mi_region = ConfigGlobal::mi_region();
+$mi_dele = OrbixRuntime::miDelef();
+$mi_region = OrbixRuntime::miRegion();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
@@ -33,7 +34,7 @@ $oPosicion->recordar($Qrefresh);
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -67,7 +68,7 @@ if (!empty($Qacta)) {
     preg_match("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
     if (!empty($matches[1])) {
         // Si es cr, se mira en todas (las suyas):
-        if (ConfigGlobal::mi_ambito() === 'rstgr') {
+        if (OrbixRuntime::miAmbito() === 'rstgr') {
             $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
             $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]); // [id_dl => dl]
             $aDl = array_values($aDlMap);
@@ -85,7 +86,7 @@ if (!empty($Qacta)) {
         $cActas = $repoActas->getActas($aWhere, $aOperador);
     } else {
         // busca en la tabla de la dl, sin mirar el nombre:
-        if (ConfigGlobal::mi_ambito() === 'rstgr') {
+        if (OrbixRuntime::miAmbito() === 'rstgr') {
             $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
             $cActas = $repoActas->getActas($aWhere, $aOperador);
         } else {
@@ -104,9 +105,9 @@ if (!empty($Qacta)) {
     $mes = date('m');
     $fin_m = $_SESSION['oConfig']->getMesFinStgr();
     if ($mes > $fin_m) {
-        $any = (int) date('Y') + 1;
+        $any = (int)date('Y') + 1;
     } else {
-        $any = (int) date('Y');
+        $any = (int)date('Y');
     }
     $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
     $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
@@ -119,7 +120,7 @@ if (!empty($Qacta)) {
 
     $titulo = ucfirst(sprintf(_("lista de actas del curso %s. Máximo %s"), $txt_curso, $aWhere['_limit']));
     // Si es cr, se mira en todas:
-    if (ConfigGlobal::mi_ambito() === 'rstgr') {
+    if (OrbixRuntime::miAmbito() === 'rstgr') {
         $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]);
         $aDl = array_values($aDlMap);
@@ -137,7 +138,7 @@ if (!empty($Qacta)) {
 $botones = 0; // para 'añadir acta'
 $a_botones = [];
 // Si soy region del stgr, no puedo modificar actas: que lo hagan las dl.
-if (ConfigGlobal::mi_ambito() === 'rstgr') {
+if (OrbixRuntime::miAmbito() === 'rstgr') {
     $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
     $botones = 0;
 } else {
@@ -148,8 +149,8 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     }
 }
 
-$a_botones[] =  ['txt' => _("imprimir"), 'click' => "fnjs_imprimir(\"#seleccionados\")"];
-$a_botones[] =  ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#seleccionados\")"];
+$a_botones[] = ['txt' => _("imprimir"), 'click' => "fnjs_imprimir(\"#seleccionados\")"];
+$a_botones[] = ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#seleccionados\")"];
 
 $a_cabeceras = [['name' => ucfirst(_("acta")), 'formatter' => 'clickFormatter'],
     ['name' => ucfirst(_("fecha")), 'class' => 'fecha'],
@@ -169,7 +170,7 @@ foreach ($cActas as $oActa) {
     $id_asignatura = $oActa->getId_asignatura();
     // TODO
     $pdf = $oActa->getPdf();
-    $hasPdf = ($pdf === null)? '': _("Sí");
+    $hasPdf = ($pdf === null) ? '' : _("Sí");
 
     if (empty($a_asignaturas[$id_asignatura])) {
         $nombre_corto = sprintf(_("nombre corto no definido para id asignatura: %s"), $id_asignatura);
@@ -202,14 +203,14 @@ $oHash1 = new Hash();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
-$url_download = ConfigGlobal::getWeb() . '/frontend/notas/controller/acta_pdf_download.php';
+$url_download = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/acta_pdf_download.php';
 $oHashDown = new Hash();
 $oHashDown->setUrl($url_download);
 $oHashDown->setCamposForm('key!otro');
 $oHashDown->setCamposNo('otro!acta');
 $h_download = $oHashDown->linkSinValParams();
 
-$url_acta_eliminar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/acta_eliminar';
+$url_acta_eliminar = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_eliminar';
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('acta_select');

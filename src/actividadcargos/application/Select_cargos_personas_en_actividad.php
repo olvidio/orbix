@@ -10,10 +10,10 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
-use web\BotonesCurso;
+use frontend\shared\web\BotonesCurso;
 use web\Hash;
-use web\Lista;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Widget del dossier `1302` (codigo `cargos_personas_en_actividad`): relacion

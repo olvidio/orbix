@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\PlanDeMisasPantallaData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $base = PlanDeMisasPantallaData::getData('modificar_plantilla');
 

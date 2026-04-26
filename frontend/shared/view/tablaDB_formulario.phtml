@@ -5,7 +5,7 @@ use src\shared\config\ConfigGlobal;
 ?>
 <script>
     fnjs_grabar = function (formulario) {
-        var url = '<?= ConfigGlobal::getWeb() ?>/src/shared/tablaDB_update';
+        var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/shared/tablaDB_update';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
@@ -15,7 +15,7 @@ use src\shared\config\ConfigGlobal;
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 <?= $oPosicion->js_atras(1); ?>
             }
@@ -37,7 +37,7 @@ use src\shared\config\ConfigGlobal;
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 rta = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                 rta_txt = rta.aOpciones;

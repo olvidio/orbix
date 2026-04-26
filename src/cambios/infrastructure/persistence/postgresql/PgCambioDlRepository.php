@@ -85,7 +85,7 @@ class PgCambioDlRepository extends PgCambioRepository implements CambioDlReposit
         // para los json
         $aDatos['json_fases_sv'] = (new ConverterJson($Cambio->getJson_fases_sv(), false))->toPg(false);
         $aDatos['json_fases_sf'] = (new ConverterJson($Cambio->getJson_fases_sf(), false))->toPg(false);
-        array_walk($aDatos, 'core\poner_null');
+        array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
         */
 
         if ($bInsert === false) {

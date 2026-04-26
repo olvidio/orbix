@@ -1,10 +1,9 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -48,7 +47,7 @@ $oHash->setArraycamposHidden([
     'id_ubi' => $Qid_ubi,
 ]);
 
-$goInfo = Hash::link(ConfigGlobal::getWeb() . '/frontend/ubis/controller/info_ubis.php?' . http_build_query(['id_item' => 1]));
+$goInfo = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/info_ubis.php?' . http_build_query(['id_item' => 1]));
 $golistadir = Hash::link('frontend/ubis/controller/direcciones_que.php?' . http_build_query(['id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir]));
 
 $oHashGo = new Hash();

@@ -14,9 +14,9 @@ use src\planning\domain\value_objects\PlanningStyle;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use web\Desplegable;
-use web\TiposActividades;
-use function core\is_true;
+use frontend\shared\web\Desplegable;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Devuelve las actividades agrupadas por zona sacd en un periodo dado.

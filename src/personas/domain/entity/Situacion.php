@@ -2,7 +2,7 @@
 
 namespace src\personas\domain\entity;
 
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\personas\domain\value_objects\{SituacionCode, SituacionName};
 use src\shared\domain\traits\Hydratable;

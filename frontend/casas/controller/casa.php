@@ -12,14 +12,15 @@
  * `casa_ajax.php` siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\domain\value_objects\PauType;
-use web\CasasQue;
+use frontend\shared\web\CasasQue;
 use web\Hash;
-use web\PeriodoQue;
+use frontend\shared\web\PeriodoQue;
 
-use function core\strtoupper_dlb;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -35,26 +36,23 @@ if ($Qtipo_lista === 'datosEcGastos') {
 }
 
 $oForm = new CasasQue();
-$oMiUsuario = ConfigGlobal::MiUsuario();
-$miRolePau = ConfigGlobal::mi_role_pau();
+$oMiUsuario = $_SESSION['session_auth']['MiUsuario'];
+$miRolePau = OrbixRuntime::miRolePau();
+$filtro = ['active' => true];
 if ($miRolePau === PauType::PAU_CDC) {
     $id_pau = $oMiUsuario->getCsv_id_pau();
-    $sDonde = str_replace(',', ' OR id_ubi=', $id_pau);
-    $donde = "WHERE active='t' AND (id_ubi=$sDonde)";
+    $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', (string)$id_pau)), static fn ($v) => $v > 0));
     $oForm->setCasas('casa');
 } elseif ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
     $oForm->setCasas('all');
-    $donde = "WHERE active='t'";
-} elseif (ConfigGlobal::mi_sfsv() === 1) {
+} elseif (OrbixRuntime::miSfsv() === 1) {
     $oForm->setCasas('sv');
-    $donde = "WHERE active='t' AND sv='t'";
-} elseif (ConfigGlobal::mi_sfsv() === 2) {
+    $filtro['sv'] = true;
+} elseif (OrbixRuntime::miSfsv() === 2) {
     $oForm->setCasas('sf');
-    $donde = "WHERE active='t' AND sf='t'";
-} else {
-    $donde = "WHERE active='t'";
+    $filtro['sf'] = true;
 }
-$oForm->setPosiblesCasas($donde);
+$oForm->setFiltroCasas($filtro);
 $oForm->setAction('');
 
 $oSelects = $oForm->getDesplCasas();
@@ -92,7 +90,7 @@ if ($Qperiodo === 'no') {
     $oFormP->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");
 }
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$web = AppUrlConfig::getPublicAppBaseUrl();
 
 $sCamposForm = 'que!id_cdc!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!year';
 

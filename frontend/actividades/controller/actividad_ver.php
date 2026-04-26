@@ -14,7 +14,9 @@
  * @subpackage    actividades
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\AppInstalled;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use src\actividades\application\ActividadTipo;
@@ -22,8 +24,8 @@ use src\actividades\application\ActividadVerDatos;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use web\Hash;
-use web\TiposActividades;
-use function core\is_true;
+use src\actividades\domain\entity\TiposActividades;
+use function frontend\shared\helpers\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -50,7 +52,7 @@ $aQuery = array(
     'obj_pau' => $Qobj_pau,
 );
 if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
+    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 }
 $godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
@@ -138,7 +140,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $snom_tipo = $oTipoActiv->getNom_tipoText();
     $isfsv = $oTipoActiv->getSfsvId();
 
-    if (ConfigGlobal::is_app_installed('procesos')) {
+    if (AppInstalled::is('procesos')) {
         $Bdl = $oPermActiv->have_perm_activ('ver') ? 't' : 'f';
     }
 
@@ -147,10 +149,10 @@ if (!empty($Qid_activ)) { // caso de modificar
     $dataRender = $dataEntidad;
 } else { // caso de nueva actividad
     $Qmod = 'nuevo';
-    $isfsv = ConfigGlobal::mi_sfsv();
+    $isfsv = OrbixRuntime::miSfsv();
 
     $a_status = StatusId::getArrayStatus();
-    $dl_org = ConfigGlobal::mi_delef();
+    $dl_org = OrbixRuntime::miDelef();
     $status = StatusId::PROYECTO;
     $id_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
     $id_tipo_activ = urldecode($id_tipo_activ); // En el caso de sr, sg, se pasa la cadena tipo 2[789]... (con [, que se encodan).
@@ -167,11 +169,11 @@ if (!empty($Qid_activ)) { // caso de modificar
         }
         if ($isfsv == 1) {
             $ssfsv = 'sv';
-            $dl_org = ConfigGlobal::mi_dele();
+            $dl_org = OrbixRuntime::miDele();
         }
         if ($isfsv == 2) {
             $ssfsv = 'sf';
-            $dl_org = ConfigGlobal::mi_dele() . 'f';
+            $dl_org = OrbixRuntime::miDele() . 'f';
         }
     } else {
         if ($isfsv == 1) {
@@ -185,7 +187,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $sasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
     $sactividad = (string)filter_input(INPUT_POST, 'sactividad');
 
-    if (ConfigGlobal::is_app_installed('procesos')) {
+    if (AppInstalled::is('procesos')) {
         // Depende del proceso, para dl u otra
         // primera fase de los posibles procesos.
         // si no permiso para ninguno de los dos => die
@@ -291,7 +293,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new Hash();
-$oHash1->setUrl(ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_select_ubi.php');
+$oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinVal();
 
@@ -306,7 +308,7 @@ $oActividadTipo->setActividad($sactividad);
 $oActividadTipo->setNom_tipo($snom_tipo);
 $extendida = (($Qmod !== 'cambiar_tipo') && (strlen($id_tipo_activ) > 3));
 
-$procesos_installed = ConfigGlobal::is_app_installed('procesos');
+$procesos_installed = AppInstalled::is('procesos');
 
 $status_txt = $a_status[$status] ?? '';
 $a_campos = [
@@ -347,10 +349,10 @@ $a_campos = [
     'oActividadTipo' => $oActividadTipo,
     'extendida' => $extendida,
     'id_tipo_activ' => $id_tipo_activ,
-    'web' => ConfigGlobal::getWeb(),
-    'web_icons' => ConfigGlobal::getWeb_icons(),
+    'web' => AppUrlConfig::getPublicAppBaseUrl(),
+    'web_icons' => OrbixRuntime::getWebIcons(),
     'procesos_installed' => $procesos_installed,
-    'locale_us' => ConfigGlobal::is_locale_us(),
+    'locale_us' => OrbixRuntime::isLocaleUs(),
 ];
 
 $oView = new ViewNewTwig('actividades/controller');

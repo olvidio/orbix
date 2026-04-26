@@ -7,7 +7,7 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class CertificadoEmitidoSelect
 {

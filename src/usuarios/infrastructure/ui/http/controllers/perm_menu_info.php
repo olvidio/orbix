@@ -2,7 +2,7 @@
 
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');

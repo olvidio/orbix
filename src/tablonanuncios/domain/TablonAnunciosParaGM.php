@@ -4,7 +4,7 @@ namespace src\tablonanuncios\domain;
 
 use src\shared\config\ConfigGlobal;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 class TablonAnunciosParaGM
 {

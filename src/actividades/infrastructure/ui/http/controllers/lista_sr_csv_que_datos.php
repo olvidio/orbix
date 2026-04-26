@@ -6,7 +6,7 @@
  */
 
 use src\actividades\application\ListaSrCsvQueDatos;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $useCase = new ListaSrCsvQueDatos();
 $data = $useCase->ejecutar();

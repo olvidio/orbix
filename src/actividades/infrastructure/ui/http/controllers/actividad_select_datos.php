@@ -7,7 +7,7 @@
  */
 
 use src\actividades\application\ActividadSelectListado;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'continuar' => (string)filter_input(INPUT_POST, 'continuar'),

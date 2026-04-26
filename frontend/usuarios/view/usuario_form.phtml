@@ -114,7 +114,7 @@
             });
             request.done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= "respuesta: " ?>" + json.mensaje);
+                    alert(<?= json_encode("respuesta: ") ?> + json.mensaje);
                 } else {
                     <?= $oPosicion->js_atras(1) ?>
                 }

@@ -1,11 +1,11 @@
 
 {{ oPosicion.mostrar_left_slide(1)|raw }}
 <h3> {{ nom_activ }}</h3>
-{{ oTabla.mostrar_tabla_html()|raw }}
+{{ tabla_html|raw }}
 <script>
 
 fnjs_cambiar_actividad=function(param){
-    var url_ajax = 'src/asistentes/asistente_guardar';
+    var url_ajax = {{ url_guardar_ajax_json|raw }};
 
     request=$.ajax({
         data: param,

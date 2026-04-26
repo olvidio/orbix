@@ -9,7 +9,7 @@
  * (que mezclaba UI + mutacion) siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 
@@ -18,11 +18,11 @@ require_once 'frontend/shared/global_header_front.inc';
 $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
 $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$apiBase = AppUrlConfig::getApiBaseUrl();
 $oHash = new Hash();
-$oHash->setUrl($web . '/src/actividadplazas/peticiones_incorporar');
+$oHash->setUrl($apiBase . '/src/actividadplazas/peticiones_incorporar');
 $oHash->setCamposForm('sactividad!sasistentes');
-$url_incorporar = $web . '/src/actividadplazas/peticiones_incorporar' . $oHash->linkSinVal();
+$url_incorporar = $apiBase . '/src/actividadplazas/peticiones_incorporar' . $oHash->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,

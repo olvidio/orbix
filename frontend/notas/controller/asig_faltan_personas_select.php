@@ -1,6 +1,7 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\application\AsignaturasPendientes;
@@ -9,9 +10,9 @@ use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
-use web\Lista;
-use web\Posicion;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
+use function frontend\shared\helpers\is_true;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -118,7 +119,7 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
     $id_tabla = $oPersona->getId_tabla();
     $stgr = $oPersona->getNivel_stgr();
     $nom = $oPersona->getPrefApellidosNombre();
-    if (ConfigGlobal::mi_ambito() === 'rstgr') {
+    if (OrbixRuntime::miAmbito() === 'rstgr') {
         $nombre_ubi = $oPersona->getDl();
     } else {
         $id_ctr = $oPersona->getId_ctr();
@@ -135,7 +136,7 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
     }
     $mails = $telecoService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", false);
 
-    $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(['id_nom' => $id_nom, 'obj_pau' => $obj_pau]));
+    $pagina = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query(['id_nom' => $id_nom, 'obj_pau' => $obj_pau]));
 
     $a_valores[$i]['sel'] = "$id_nom#$id_tabla";
     $a_valores[$i][1] = $id_tabla;

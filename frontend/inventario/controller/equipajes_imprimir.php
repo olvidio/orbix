@@ -1,9 +1,8 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\inventario\domain\ListaAgrupar;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use web\Hash;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -28,7 +27,7 @@ $cabeceraB = $data['cabeceraB'];
 $firma = $data['firma'];
 $pie = $data['pie'];
 
-$pencil = ConfigGlobal::getWeb_icons() . '/pencil.png';
+$pencil = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/images/pencil.png';
 
 //-------- nombres de las actividades que deben comprobar el equipaje -----------------------------------
 $url_backend = '/src/inventario/equipajes_lista_activ_equipaje';

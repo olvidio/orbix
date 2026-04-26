@@ -2,7 +2,7 @@
 
 namespace src\profesores\domain\entity;
 
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;

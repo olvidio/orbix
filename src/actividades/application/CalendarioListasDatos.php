@@ -13,9 +13,9 @@ use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
-use web\Lista;
-use web\Periodo;
-use web\TiposActividades;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Periodo;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Caso de uso para la pantalla `calendario_listas`.

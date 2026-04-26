@@ -33,4 +33,6 @@ return array(
     'b33e3d135e5d9e47d845c576147bda89' => $vendorDir . '/php-di/php-di/src/functions.php',
     'ec07570ca5a812141189b1fa81503674' => $vendorDir . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     'e39a8b23c42d4e1452234d762b03835a' => $vendorDir . '/ramsey/uuid/src/functions.php',
+    '8fad53453774bd862429f2a16f3233f3' => $baseDir . '/frontend/shared/helpers/func_tablas.php',
+    'bdd9b8a407e50bcd33960c6c3fbec910' => $baseDir . '/src/shared/domain/helpers/func_tablas.php',
 );

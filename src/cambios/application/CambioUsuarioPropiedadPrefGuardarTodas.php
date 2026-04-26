@@ -4,7 +4,7 @@ namespace src\cambios\application;
 
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Mutacion: sincroniza las propiedades vigiladas (`CambioUsuarioPropiedadPref`)

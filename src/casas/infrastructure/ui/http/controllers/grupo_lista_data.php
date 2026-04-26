@@ -4,7 +4,7 @@
  */
 
 use src\casas\application\GrupoCasaListaData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $data = GrupoCasaListaData::execute();
 ContestarJson::enviar('', $data);

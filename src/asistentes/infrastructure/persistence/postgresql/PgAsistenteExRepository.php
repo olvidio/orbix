@@ -11,8 +11,8 @@ use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\HandlesPdoErrors;
-use web\Desplegable;
-use function core\is_true;
+use frontend\shared\web\Desplegable;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

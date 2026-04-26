@@ -8,8 +8,8 @@ use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\ContestarJson;
-use function core\is_true;
+use frontend\shared\web\ContestarJson;
+use function src\shared\domain\helpers\is_true;
 
 $id_item = (string)filter_input(INPUT_POST, 'id_item');
 
@@ -53,7 +53,7 @@ $lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
 $region = $region_latin;
 
 // conversion
-$replace = src\configuracion\domain\entity\Config::$replace;
+$replace = src\configuracion\domain\value_objects\ConfigSnapshot::$replace;
 
 // para los distintos idiomas. Cargar el fichero:
 $filename_textos = __DIR__ . '/' . "textos_certificados.php";

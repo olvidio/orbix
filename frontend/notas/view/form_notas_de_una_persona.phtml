@@ -47,7 +47,7 @@ use src\notas\domain\value_objects\TipoActa;
             })
                 .done(function (json) {
                     if (!json || json.success !== true) {
-                        alert('<?= _("respuesta") ?>: ' + (json && json.mensaje ? json.mensaje : ''));
+                        alert(<?= json_encode(_("respuesta") . ": ") ?> + (json && json.mensaje ? json.mensaje : ''));
                         return;
                     }
                     var rta_json = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
@@ -207,11 +207,11 @@ use src\notas\domain\value_objects\TipoActa;
                 num = parseFloat(num);
                 max = parseFloat(max);
                 if (isNaN(num)) {
-                    alert('<?= _("valor de nota no válido") ?>');
+                    alert(<?= json_encode(_("valor de nota no válido")) ?>);
                     err = 1;
                 }
                 if (num < 0 || num > max) {
-                    alert('<?= _("nota fuera de rango") ?>');
+                    alert(<?= json_encode(_("nota fuera de rango")) ?>);
                     err = 1;
                 }
             }
@@ -249,7 +249,7 @@ use src\notas\domain\value_objects\TipoActa;
                 })
                     .done(function (json) {
                         if (!json || json.success !== true) {
-                            alert('<?= _("respuesta") ?>: ' + ((json && json.mensaje) ? json.mensaje : ''));
+                            alert(<?= json_encode(_("respuesta") . ": ") ?> + ((json && json.mensaje) ? json.mensaje : ''));
                         } else {
                             <?= $oPosicion->js_atras(1); ?>
                         }

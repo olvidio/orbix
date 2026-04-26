@@ -3,7 +3,7 @@
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use frontend\shared\OfuscarEmail;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');
 $Qubicacion = (string)filter_input(INPUT_POST, 'ubicacion');

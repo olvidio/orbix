@@ -3,7 +3,7 @@
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\entity\Documento;
 use src\shared\domain\value_objects\DateTimeLocal;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_tipo_doc = (string)filter_input(INPUT_POST, 'id_tipo_doc');
 $Qnumerado = (string)filter_input(INPUT_POST, 'numerado');

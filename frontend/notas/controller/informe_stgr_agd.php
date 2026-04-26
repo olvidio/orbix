@@ -23,7 +23,7 @@ $oInforme = new InformeStgrAgregados();
 $datos = $oInforme->calcular($Qdl, $lista);
 
 $a_campos = [
-    'titulo' => \core\strtoupper_dlb(_("alumnos agregados")),
+    'titulo' => \src\shared\domain\helpers\strtoupper_dlb(_("alumnos agregados")),
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],

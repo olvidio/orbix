@@ -3,7 +3,7 @@
 namespace frontend\encargossacd\model;
 
 use frontend\shared\PostRequest;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 
 /**
  * Helper que monta un {@see Desplegable} de centros consumiendo el endpoint

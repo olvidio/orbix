@@ -2,14 +2,14 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 /**
  * Ficha de atencion sacerdotal de un centro. Datos de negocio obtenidos del
  * backend a traves de {@see \src\encargossacd\application\CtrGetFichaData}
  * (`/src/encargossacd/ctr_get_ficha_data`). Aqui solo se arman los
- * `web\Desplegable` / HTML de colaboradores y se pasan a la vista.
+ * `frontend\shared\web\Desplegable` / HTML de colaboradores y se pasan a la vista.
  *
  * @package    delegacion
  * @subpackage    des

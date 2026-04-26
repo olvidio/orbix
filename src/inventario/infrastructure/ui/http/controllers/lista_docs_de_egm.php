@@ -5,7 +5,7 @@ use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_item_egm = (integer)filter_input(INPUT_POST, 'id_item_egm');
 $error_txt = '';

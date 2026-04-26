@@ -7,9 +7,9 @@ use frontend\shared\model\ViewNewPhtml;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
-use web\Lista;
-use web\Posicion;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Gestiona el dossier 1301: Actividades a las que asiste una persona.

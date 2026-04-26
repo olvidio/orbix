@@ -1,7 +1,7 @@
 <?php
 
 use src\casas\application\CasaEcGastosFormData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'year' => (int)filter_input(INPUT_POST, 'year'),

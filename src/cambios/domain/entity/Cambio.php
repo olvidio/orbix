@@ -21,7 +21,7 @@ use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\entity\Ubi;
 use src\ubis\domain\value_objects\DelegacionCode;
 use stdClass;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que implementa la entidad av_cambios_dl

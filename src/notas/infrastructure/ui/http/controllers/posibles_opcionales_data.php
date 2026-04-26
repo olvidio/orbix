@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\PosiblesOpcionalesData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Devuelve las asignaturas opcionales que puede cursar la persona con el

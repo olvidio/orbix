@@ -53,8 +53,8 @@ use src\shared\config\ConfigGlobal;
 use src\cambios\application\AvisosGenerarTabla;
 
 // No entra por public/index.php: hace falta el mismo arranque que el front (autoload, sesión, contenedor).
-require_once("apps/core/global_header.inc");
-require_once("apps/core/global_object.inc");
+require_once("src/shared/global_header.inc");
+require_once("src/shared/global_object.inc");
 
 if (empty($argv[1])) { // Si lo hago desde el menu
     $username = ConfigGlobal::mi_usuario();

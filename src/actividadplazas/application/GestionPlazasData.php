@@ -8,15 +8,15 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use web\Periodo;
-use web\TiposActividades;
+use frontend\shared\web\Periodo;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder de la pantalla principal `gestion_plazas`.
  *
  * Calcula el grupo de estudios de mi dl, la lista de actividades del
  * periodo y las plazas concedidas/pedidas por dl. Devuelve arrays
- * neutros; el controlador frontend monta el `web\TablaEditable`.
+ * neutros; el controlador frontend monta el `frontend\shared\web\TablaEditable`.
  *
  * Sucesor de la mayor parte de `apps/actividadplazas/controller/gestion_plazas.php`.
  */

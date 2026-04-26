@@ -10,17 +10,17 @@
  * `prevision_asistentes_ajax.php` siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use src\shared\domain\value_objects\DateTimeLocal;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\Periodo;
-use web\PeriodoQue;
-use web\TablaEditable;
+use frontend\shared\web\Periodo;
+use frontend\shared\web\PeriodoQue;
+use frontend\shared\web\TablaEditable;
 
-use function core\strtoupper_dlb;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -32,7 +32,7 @@ $Qyear = (int)filter_input(INPUT_POST, 'year');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-$oPeriodo = new Periodo();
+$oPeriodo = Periodo::conCalendarioDesdeBackend();
 $oPeriodo->setDefaultAny('next');
 $oPeriodo->setAny($Qyear);
 $oPeriodo->setEmpiezaMin($Qempiezamin);
@@ -95,7 +95,7 @@ if ($_SESSION['oConfig']->getGestionCalendario() === 'central') {
     $oFormP->setAntes(_('oficina') . '</td><td>' . $oDesplOficinas->desplegable());
 }
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$web = AppUrlConfig::getPublicAppBaseUrl();
 
 $oTabla = new TablaEditable();
 $oTabla->setId_tabla('prevision_asistentes');

@@ -2,7 +2,7 @@
 
 namespace src\dossiers\domain\entity;
 
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\dossiers\domain\value_objects\TipoDossierApp;
 use src\dossiers\domain\value_objects\TipoDossierCampoTo;
@@ -13,7 +13,7 @@ use src\dossiers\domain\value_objects\TipoDossierDescripcion;
 use src\dossiers\domain\value_objects\TipoDossierTablaFrom;
 use src\dossiers\domain\value_objects\TipoDossierTablaTo;
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 class TipoDossier

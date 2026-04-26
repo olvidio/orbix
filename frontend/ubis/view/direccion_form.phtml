@@ -1,4 +1,3 @@
-<?php use src\shared\config\ConfigGlobal; ?>
 <style>
     .info { display: inline-block; padding: 0px 3px 3px 3px; font-size: 22px; border-radius: 50%; border: solid 3px; width: 20px; height: 20px; font-weight: bold; text-align: center; }
 </style>
@@ -10,7 +9,7 @@
             let datos = $(formulario).serialize();
             $.ajax({ url: "<?= $url_direccion_update ?>", type: 'post', data: datos })
                 .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\n') { alert('<?= _("respuesta") ?>: ' + rta_txt); }
+                    if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
                     else { <?= $oPosicion->js_atras(1); ?> }
                 });
         }
@@ -21,7 +20,7 @@
         let datos = $(formulario).serialize();
         $.ajax({ url: "<?= $url_direcciones_quitar ?>", type: 'post', data: datos })
             .done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\n') { alert('<?= _("respuesta") ?>: ' + rta_txt); }
+                if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
                 else { <?= $oPosicion->js_atras(1); ?> }
             });
     }
@@ -30,7 +29,7 @@
         var parametros = 'id_ubi=' + id_ubi + '&id_direccion=' + id_direccion + '&obj_dir=<?= $obj_dir ?><?= $h_asignar ?>';
         $.ajax({ url: '<?= $url_direcciones_asignar ?>', type: 'post', data: parametros })
             .done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\n') { alert('<?= _("respuesta") ?>: ' + rta_txt); }
+                if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
                 else { <?= $oPosicion->js_atras(1); ?> }
             });
     }
@@ -41,17 +40,17 @@
         alert((nom ? nom + "\n" : "") + lin_1 + "\n" + lin_2 + "\n" + prov + "\n" + pais);
     }
     fnjs_ver_documento = function (id_direccion) {
-        var url = '<?= ConfigGlobal::getWeb() ?>/frontend/ubis/controller/plano_bytea.php';
+        var url = '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/ubis/controller/plano_bytea.php';
         var parametros = 'act=comprobar&obj_dir=<?= $obj_dir ?><?= $h ?>&id_direccion=' + id_direccion;
         $.ajax({ url: url, type: 'post', data: parametros }).done(function (rta_txt) {
             if (rta_txt == 'si') {
                 var pagina = url + '?id_direccion=' + id_direccion + '&act=download&obj_dir=<?= $obj_dir ?><?= $h ?>';
                 top.newWin = window.open(pagina, "abrir", ""); top.newWin.focus();
-            } else { alert("<?= _("No existe ningún plano"); ?>"); }
+            } else { alert(<?= json_encode(_("No existe ningún plano")) ?>); }
         });
     }
     fnjs_adjuntar = function (act, id_direccion) {
-        var pagina = '<?= ConfigGlobal::getWeb() ?>/frontend/ubis/controller/plano_bytea.php?id_direccion=' + id_direccion + '&act=' + act + '&obj_dir=<?= $obj_dir ?><?= $h ?>';
+        var pagina = '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/ubis/controller/plano_bytea.php?id_direccion=' + id_direccion + '&act=' + act + '&obj_dir=<?= $obj_dir ?><?= $h ?>';
         top.newWin = window.open(pagina, "files", "dependent=yes,width=850,height=300,screenX=300,screenY=300,titlebar=yes,scrollbars=yes");
         top.newWin.focus();
     }

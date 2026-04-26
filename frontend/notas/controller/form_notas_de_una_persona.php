@@ -18,13 +18,14 @@
  * (el frontend no importa el caso de uso directamente).
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -126,7 +127,7 @@ $oHash->setCamposForm($camposForm);
 $oHash->setcamposNo($camposNo);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$web = AppUrlConfig::getPublicAppBaseUrl();
 
 $url_posibles_opcionales = $web . '/src/notas/posibles_opcionales_data';
 $oHashOpcionales = new Hash();
@@ -195,7 +196,7 @@ $a_campos = [
     'nom_activ' => $datos['nom_activ'],
     'detalle' => $datos['detalle'],
     'lista_situacion_no_acta' => $lista_situacion_no_acta,
-    'locale_us' => ConfigGlobal::is_locale_us(),
+    'locale_us' => OrbixRuntime::isLocaleUs(),
 ];
 
 $oView = new ViewNewPhtml('frontend\\notas\\controller');

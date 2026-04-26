@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 
 /*
 * Devuelvo un desplegable con los valores posibles según el valor de entrada.

@@ -5,7 +5,7 @@
  */
 
 use src\casas\application\CalendarioUbiResumenData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),

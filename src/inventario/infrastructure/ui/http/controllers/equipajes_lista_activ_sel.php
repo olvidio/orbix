@@ -2,7 +2,7 @@
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qid_cdc = (int)filter_input(INPUT_POST, 'id_cdc');

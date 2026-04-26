@@ -10,7 +10,7 @@
             })
                 .done(function (json) {
                     if (json.success !== true) {
-                        alert('<?= _("respuesta") ?>: ' + json.mensaje);
+                        alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
                     } else {
                         <?= $oPosicion->js_atras(1); ?>
                     }
@@ -21,7 +21,7 @@
         $(formulario).off();
     }
     fnjs_eliminar = function (formulario) {
-        if (confirm("<?= _("¿Está seguro que desea borrar este centro?");?>")) {
+        if (confirm(<?= json_encode(_("¿Está seguro que desea borrar este centro?")) ?>)) {
             $('#que').val('eliminar_ubi');
             $(formulario).attr('action', 'frontend/ubis/controller/ubis_eliminar.php');
             $(formulario).one("submit", function () {
@@ -32,7 +32,7 @@
                 })
                     .done(function (json) {
                         if (json.success !== true) {
-                            alert('<?= _("respuesta") ?>: ' + json.mensaje);
+                            alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
                         } else {
                             <?= $oPosicion->js_atras(2); ?>
                         }

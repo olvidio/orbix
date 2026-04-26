@@ -4,7 +4,7 @@
  * Rutas del modulo `actividadessacd`. Las registra `public/index.php` via
  * glob sobre `src/*\/config/routes.php`. Cada endpoint vive en
  * `src/actividadessacd/infrastructure/ui/http/controllers/` y responde
- * JSON mediante `web\ContestarJson::enviar(...)`.
+ * JSON mediante `frontend\shared\web\ContestarJson::enviar(...)`.
  */
 return static function ($r) {
     // Mutaciones.

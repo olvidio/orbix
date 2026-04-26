@@ -2,7 +2,7 @@
 
 namespace src\inventario\domain\entity;
 
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\inventario\domain\value_objects\{EquipajeCabecera,
     EquipajeCabecerab,

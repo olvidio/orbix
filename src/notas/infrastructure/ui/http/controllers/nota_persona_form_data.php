@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\NotaPersonaFormData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Endpoint backend que prepara los datos para `form_notas_de_una_persona.phtml`

@@ -10,13 +10,13 @@
  * `grupo_form.php` + `grupo_ajax.php` siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$web = AppUrlConfig::getPublicAppBaseUrl();
 
 $oHashLista = new Hash();
 $oHashLista->setUrl($web . '/frontend/casas/controller/grupo_lista.php');

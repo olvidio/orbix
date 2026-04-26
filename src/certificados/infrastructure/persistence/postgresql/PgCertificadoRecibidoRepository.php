@@ -10,7 +10,7 @@ use PDO;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla e_certificados_dl a la interfaz del repositorio

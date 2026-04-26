@@ -19,8 +19,8 @@ use src\shared\domain\value_objects\Uuid;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\TiposActividades;
-use function core\is_true;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Servicio que construye la estructura de comunicacion de actividades a

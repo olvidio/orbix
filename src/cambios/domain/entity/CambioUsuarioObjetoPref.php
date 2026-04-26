@@ -7,7 +7,7 @@ use src\cambios\domain\value_objects\ObjetoNombre;
 use src\cambios\domain\value_objects\CsvPauId;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\value_objects\DelegacionCode;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class CambioUsuarioObjetoPref
 {

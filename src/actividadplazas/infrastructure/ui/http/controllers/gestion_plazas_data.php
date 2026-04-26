@@ -2,11 +2,11 @@
 /**
  * Endpoint backend: devuelve los datos del cuadro de gestion de
  * plazas (cabeceras, valores, a_grupo y metadatos de periodo/tipo)
- * para que el controller frontend monte el `web\TablaEditable`.
+ * para que el controller frontend monte el `frontend\shared\web\TablaEditable`.
  */
 
 use src\actividadplazas\application\GestionPlazasData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),

@@ -7,7 +7,7 @@ use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\shared\traits\HandlesPdoErrors;
 use src\utils_database\domain\GenerateIdGlobal;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 
 /**

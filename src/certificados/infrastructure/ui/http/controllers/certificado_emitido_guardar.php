@@ -6,8 +6,8 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
-use web\ContestarJson;
-use function core\is_true;
+use frontend\shared\web\ContestarJson;
+use function src\shared\domain\helpers\is_true;
 
 $Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');

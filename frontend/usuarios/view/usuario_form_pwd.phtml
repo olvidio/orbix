@@ -49,15 +49,15 @@
         var pwd1 = encodeURIComponent($("#password1").val());
 
         if (!pwd) {
-            alert("<?= _("error: password no válido") ?>");
+            alert(<?= json_encode(_("error: password no válido")) ?>);
             return false;
         }
         if (!pwd1) {
-            alert("<?= _("error: debes confirmar el password") ?>");
+            alert(<?= json_encode(_("error: debes confirmar el password")) ?>);
             return false;
         }
         if (pwd !== pwd1) {
-            alert("<?= _("error: passwords no coincidentes") ?>");
+            alert(<?= json_encode(_("error: passwords no coincidentes")) ?>);
             return false;
         }
 
@@ -75,9 +75,9 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                alert("<?= _("paswword guardado") ?>");
+                alert(<?= json_encode(_("paswword guardado")) ?>);
                 fnjs_logout();
             }
         });

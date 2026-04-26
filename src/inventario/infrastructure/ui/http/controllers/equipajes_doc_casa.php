@@ -6,7 +6,7 @@ use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 $error_txt = '';

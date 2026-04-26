@@ -14,7 +14,7 @@ use src\procesos\domain\entity\ActividadFase;
 use src\shared\traits\HandlesPdoErrors;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

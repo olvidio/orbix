@@ -7,7 +7,7 @@ use src\permisos\domain\PermisosActividadesTrue;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
-use web\Periodo;
+use frontend\shared\web\Periodo;
 
 /**
  * Caso de uso: construye la tabla principal de la pantalla

@@ -5,7 +5,7 @@ namespace src\personas\application;
 use src\personas\application\support\PersonaRepositoryResolver;
 use src\shared\domain\value_objects\DateTimeLocal;
 
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Guarda los datos de una persona (crear o actualizar).

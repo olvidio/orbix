@@ -3,7 +3,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 require_once("frontend/shared/global_header_front.inc");
 

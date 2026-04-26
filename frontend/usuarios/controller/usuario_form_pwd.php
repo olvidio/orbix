@@ -2,7 +2,7 @@
 // para que funcione bien la seguridad
 $_POST = (empty($_POST)) ? $_GET : $_POST;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\UrlBaseProject;
@@ -15,8 +15,7 @@ use web\Hash;
 require_once("frontend/shared/global_header_front.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
-$oMiUsuario = ConfigGlobal::MiUsuario();
-$id_usuario = $oMiUsuario->getId_usuario();
+$id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
 $url_backend = '/src/usuarios/usuario_info';
@@ -33,8 +32,8 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_usuario_guardar = ConfigGlobal::getWeb() . '/src/usuarios/usuario_guardar_pwd';
-$url_usuario_chk = ConfigGlobal::getWeb() . '/src/usuarios/usuario_check_pwd';
+$url_usuario_guardar = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_guardar_pwd';
+$url_usuario_chk = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_check_pwd';
 $oHash2 = new Hash();
 $oHash2->setUrl($url_usuario_chk);
 $oHash2->setCamposForm('id_usuario!password');
@@ -43,7 +42,7 @@ $h2 = $oHash2->linkSinValParams();
 $txt_guardar = _("guardar datos");
 $txt_ok = _("se ha cambiado el password");
 
-$url_jquery = ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js';
+$url_jquery = AppUrlConfig::getNodeModulesBaseUrl() . '/jquery/dist/jquery.min.js';
 $url_base = UrlBaseProject::getUrlBase();
 
 $a_campos = [

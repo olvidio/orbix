@@ -1,12 +1,12 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use web\Hash;
 
 ?>
     <script>
     fnjs_del_grupmenu = function (formulario) {
-        let url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/role_grupmenu_del';
+        let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/role_grupmenu_del';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
@@ -16,7 +16,7 @@ use web\Hash;
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 fnjs_actualizar(formulario);
             }
@@ -31,7 +31,7 @@ use web\Hash;
     fnjs_guardar = function (formulario) {
         let rr = fnjs_comprobar_campos(formulario, '\\src\\usuarios\\domain\\entity\\Role');
         if (rr === 'ok') {
-            var url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/role_guardar';
+            var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/role_guardar';
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
@@ -41,7 +41,7 @@ use web\Hash;
             });
             request.done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 } else {
                     <?= $oPosicion->js_atras(1) ?>
                 }

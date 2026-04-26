@@ -12,7 +12,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 /**
  * Widget del dossier `3103` (codigo `matriculas_de_una_actividad`):

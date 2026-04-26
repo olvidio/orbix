@@ -10,7 +10,7 @@ use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\dossiers\domain\entity\TipoDossier;
 use src\dossiers\domain\value_objects\TipoDossierId;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

@@ -9,7 +9,7 @@
     fnjs_borrar_hasta_fecha = function (formulario) {
         var f_fin = $('#f_fin').val();
         if (!f_fin) {
-            alert("<?= _("debe indicar la fecha") ?>");
+            alert(<?= json_encode(_("debe indicar la fecha")) ?>);
             return;
         }
         $.ajax({
@@ -19,7 +19,7 @@
             data: 'f_fin=' + encodeURIComponent(f_fin) + '<?= $h_eliminar_fecha ?>'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {
-                alert('<?= _("respuesta") ?>: ' + (rta && rta.mensaje ? rta.mensaje : ''));
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + (rta && rta.mensaje ? rta.mensaje : ''));
                 return;
             }
             fnjs_actualizar(formulario);

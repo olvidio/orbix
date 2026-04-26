@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
@@ -20,12 +20,12 @@ include(__DIR__ . '/certificado_emitido_imprimir_mpdf.php');
 $content = ob_get_clean();
 
 // convert to PDF
-require_once(ConfigGlobal::$dir_libs . '/vendor/autoload.php');
+require_once(OrbixRuntime::dirLibs() . '/vendor/autoload.php');
 
 //echo "$content";
 //exit();
 // quitar los acentos , ñ etc. del nombre
-$nom = web\QuitarAcentos::convert($nom);
+$nom = frontend\shared\web\QuitarAcentos::convert($nom);
 
 $config = [
     'format' => 'A4',

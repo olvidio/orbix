@@ -5,7 +5,7 @@
  */
 
 use src\actividadtarifas\application\TarifaUbiFormData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'id_item' => (string)filter_input(INPUT_POST, 'id_item'),

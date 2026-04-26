@@ -377,10 +377,10 @@ Para la comunicación asíncrona entre las vistas (`.phtml`) y los controladores
   });
   request.done(function (json) {
       if (json.success !== true) {
-          alert("<?= _("respuesta") ?>: " + json.mensaje);
+          alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
       } else {
           // Lógica de éxito (ej: refrescar, volver atrás, alert de guardado)
-          alert("<?= _("guardado") ?>");
+          alert(<?= json_encode(_("guardado")) ?>);
       }
   });
   ```

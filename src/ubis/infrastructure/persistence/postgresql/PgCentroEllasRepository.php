@@ -10,7 +10,7 @@ use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\CentroEllas;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla cu_centros_dlf a la interfaz del repositorio

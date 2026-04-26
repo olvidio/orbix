@@ -1,65 +1,24 @@
 <?php
 
 use frontend\shared\model\ViewNewPhtml;
-use Ramsey\Uuid\Uuid;
-use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
-use src\ubiscamas\domain\value_objects\CamaId;
-use web\Hash;
+use frontend\shared\PostRequest;
 
-// Crea los objetos de uso global **********************************************
-require_once("frontend/shared/global_header_front.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
+require_once 'frontend/shared/global_header_front.inc';
 
-$Qmod = (string)filter_input(INPUT_POST, 'mod');
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-
-//$oPosicion->recordar($Qrefresh);
-
-$Qid_cama = (string)filter_input(INPUT_POST, 'id_cama');
-$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
-// hace falta la habitación cuando es para una nueva cama
-$Qid_habitacion = (integer)filter_input(INPUT_POST, 'id_habitacion');
-
-$uuid_cama = CamaId::fromNullableString($Qid_cama);
-$descripcion = '';
-$larga = false;
-$vip = false;
-
-if ($uuid_cama === null) {
-    //  nueva cama
-    $Qid_cama = Uuid::uuid4()->toString();
-} else {
-    $CamaRepository = $GLOBALS['container']->get(CamaDlRepositoryInterface::class);
-    $oCama = $CamaRepository->findById($uuid_cama);
-    $Qid_habitacion = $oCama->getIdHabitacionVo()->value();
-    $descripcion = $oCama->getDescripcion() ?? '';
-    $larga = $oCama->isLarga() ?? false;
-    $vip = $oCama->isVip() ?? false;
-}
-
-$oHash = new Hash();
-$camposForm = 'descripcion!larga!vip';
-$camposChk = 'larga!vip';
-
-$oHash->setCamposForm($camposForm);
-$oHash->setCamposChk($camposChk);
-$a_camposHidden = array(
-    'id_cama' => $Qid_cama,
-    'id_habitacion' => $Qid_habitacion,
-    'id_ubi' => $Qid_ubi,
-    'mod' => $Qmod,
-);
-$oHash->setArraycamposHidden($a_camposHidden);
+$campos = array_merge($_GET, $_POST);
+$data = PostRequest::getDataFromUrl('/src/ubiscamas/cama_form_data', $campos);
+$payload = is_array($data) ? $data : [];
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'oHash' => $oHash,
-    'id_cama' => $Qid_cama,
-    'id_habitacion' => $Qid_habitacion,
-    'id_ubi' => $Qid_ubi,
-    'descripcion' => $descripcion,
-    'larga' => $larga,
-    'vip' => $vip,
+    'hash_form_html' => (string)($payload['hash_form_html'] ?? ''),
+    'id_cama' => (string)($payload['id_cama'] ?? ''),
+    'id_habitacion' => (string)($payload['id_habitacion'] ?? ''),
+    'id_ubi' => (int)($payload['id_ubi'] ?? 0),
+    'descripcion' => (string)($payload['descripcion'] ?? ''),
+    'larga' => (bool)($payload['larga'] ?? false),
+    'vip' => (bool)($payload['vip'] ?? false),
+    'cama_update_url' => (string)($payload['cama_update_url'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\\ubiscamas\\controller');

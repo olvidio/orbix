@@ -13,7 +13,7 @@
         if (rta !== 1) {
             return;
         }
-        if (!confirm("<?= $txt_eliminar ?>")) {
+        if (!confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
             return;
         }
         $('#mod').val('eliminar');
@@ -26,11 +26,11 @@
             if (rta && rta.success) {
                 fnjs_actualizar(formulario);
             } else {
-                var msg = (rta && rta.mensaje) ? rta.mensaje : '<?= _("error desconocido") ?>';
-                alert('<?= _("respuesta") ?>: ' + msg);
+                var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + msg);
             }
         }).fail(function () {
-            alert('<?= _("error de comunicación con el servidor") ?>');
+            alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
         });
     };
     fnjs_actualizar = function (formulario) {

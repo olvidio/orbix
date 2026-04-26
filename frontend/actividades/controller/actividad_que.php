@@ -9,14 +9,16 @@
  * @subpackage    actividades
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\AppInstalled;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
+use frontend\shared\web\PeriodoQue;
+use frontend\shared\web\Posicion;
 use src\actividades\application\ActividadTipo;
 use src\actividades\domain\value_objects\StatusId;
 use web\Hash;
-use web\PeriodoQue;
-use web\Posicion;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -53,7 +55,7 @@ $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTE
 $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
-$isfsv = ConfigGlobal::mi_sfsv();
+$isfsv = OrbixRuntime::miSfsv();
 $permiso_des = FALSE;
 $ssfsv = '';
 if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
@@ -96,13 +98,13 @@ if (empty($Qstatus)) {
 }
 
 $Qisfsv = substr($Qid_tipo_activ, 0, 1);
-$mi_dele = ConfigGlobal::mi_delef($Qisfsv);
+$mi_dele = OrbixRuntime::miDelef((string)$Qisfsv);
 
 // El bloque de filtros extra (filtro_lugar, dl_org, publicada) se carga en
 // cliente via AJAX al endpoint backend /src/actividades/actividad_que_filtros,
 // que se encarga de comprobar perm_ctr y resolver desplegables de delegaciones
 // y de lugares.
-$url_filtros = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_que_filtros';
+$url_filtros = AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_que_filtros';
 $oHashFiltros = new Hash();
 $oHashFiltros->setUrl($url_filtros);
 $oHashFiltros->setCamposForm('sfsv!modo!dl_org!filtro_lugar!id_ubi!publicado');
@@ -136,7 +138,7 @@ if ($Qmodo !== 'importar') {
 }
 $oHash->setCamposForm($sCamposForm);
 $camposNo = 'id_ubi!nom_activ!dl_org!extendida!filtro_lugar';
-if (ConfigGlobal::is_app_installed('procesos')) {
+if (AppInstalled::is('procesos')) {
     $camposNo .= '!fases_on!fases_off';
 }
 $oHash->setcamposNo($camposNo);
@@ -148,13 +150,13 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new Hash();
-$oHash1->setUrl(rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get');
+$oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_tipo_get');
 $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinValParams();
 
 $aQuery = array('que' => $Qque, 'sactividad' => $Qsactividad, 'sasistentes' => $Qsasistentes);
 if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
+    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 }
 $Link_borrar = Hash::link('frontend/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
 
@@ -177,21 +179,21 @@ las paginas que los generan*/
 switch ($Qque) {
     case "list_activ" :
     case "list_activ_compl" :
-        $accion = ConfigGlobal::getWeb() . '/frontend/actividades/controller/lista_activ.php';
+        $accion = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/lista_activ.php';
         break;
     case "list_cjto" :
     case "list_cjto_sacd" :
-        $accion = ConfigGlobal::getWeb() . '/frontend/asistentes/controller/lista_asis_conjunto_activ.php';
+        $accion = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/asistentes/controller/lista_asis_conjunto_activ.php';
         break;
     default;
-        $accion = ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_select.php';
+        $accion = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select.php';
         break;
 }
 
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() === 1)
-    || ($_SESSION['oPerm']->have_perm_oficina('admin_sf') && ConfigGlobal::mi_sfsv() === 2)
+    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && OrbixRuntime::miSfsv() === 1)
+    || ($_SESSION['oPerm']->have_perm_oficina('admin_sf') && OrbixRuntime::miSfsv() === 2)
 ) {
     $perm_jefe = TRUE;
 }
@@ -219,16 +221,16 @@ $url_actualizar_fases = '';
 $h_actualizar_fases = '';
 $fases_on_csv = '';
 $fases_off_csv = '';
-if (ConfigGlobal::is_app_installed('procesos')) {
+if (AppInstalled::is('procesos')) {
     $proceso_installed = TRUE;
-    $url_actualizar_fases = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/actividad_que_fases_ajax';
+    $url_actualizar_fases = AppUrlConfig::getPublicAppBaseUrl() . '/src/procesos/actividad_que_fases_ajax';
     $oHash1 = new Hash();
     $oHash1->setUrl($url_actualizar_fases);
     $oHash1->setCamposForm('dl_propia!id_tipo_activ!selected');
     $h_actualizar_fases = $oHash1->linkSinValParams();
 
     if (empty($Qid_tipo_activ)) {
-        $Qid_tipo_activ = ConfigGlobal::mi_sfsv();
+        $Qid_tipo_activ = OrbixRuntime::miSfsv();
     }
     $fases_on_csv = implode(',', array_filter(array_map('intval', $Qfases_on)));
     $fases_off_csv = implode(',', array_filter(array_map('intval', $Qfases_off)));
@@ -261,7 +263,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'fases_on_csv' => $fases_on_csv,
     'fases_off_csv' => $fases_off_csv,
     'mi_dele' => $mi_dele,
-    'locale_us' => ConfigGlobal::is_locale_us(),
+    'locale_us' => OrbixRuntime::isLocaleUs(),
     'modo' => $Qmodo,
     'Qsfsv' => (int)$Qisfsv,
     'Qdl_org' => $Qdl_org,

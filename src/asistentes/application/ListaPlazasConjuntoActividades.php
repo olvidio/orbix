@@ -14,10 +14,10 @@ use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use web\Lista;
-use web\TiposActividades;
-use function core\is_true;
-use function core\strtoupper_dlb;
+use frontend\shared\web\Lista;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
+use function src\shared\domain\helpers\strtoupper_dlb;
 use function DI\get;
 
 /**

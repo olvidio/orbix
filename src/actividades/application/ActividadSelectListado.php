@@ -19,9 +19,9 @@ use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 use web\Hash;
-use web\Lista;
-use web\Periodo;
-use web\TiposActividades;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Periodo;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Construye el listado de actividades que cumplen los filtros fijados por

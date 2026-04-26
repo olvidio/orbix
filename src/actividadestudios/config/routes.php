@@ -3,7 +3,7 @@
 // Rutas del modulo `actividadestudios`. Las registra `public/index.php` via
 // glob sobre `src/*/config/routes.php`. Cada endpoint vive en
 // `src/actividadestudios/infrastructure/ui/http/controllers/` y responde JSON
-// estandar mediante `web\ContestarJson::enviar(...)`.
+// estandar mediante `frontend\shared\web\ContestarJson::enviar(...)`.
 return static function ($r) {
     $base = __DIR__ . '/../infrastructure/ui/http/controllers';
 
@@ -54,5 +54,9 @@ return static function ($r) {
     });
     $r->addRoute(['GET', 'POST'], '/src/actividadestudios/acta_notas_definitivas_grabar', function () use ($base) {
         require $base . '/acta_notas_definitivas_grabar.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/matriculas_lista_data', function () use ($base) {
+        require $base . '/matriculas_lista_data.php';
     });
 };

@@ -30,16 +30,16 @@
         if (err > 0) {
             if (err === 1) {
                 if (!f) {
-                    alert("<?= _("falta definir un periodo") ?>");
+                    alert(<?= json_encode(_("falta definir un periodo")) ?>);
                 } else {
-                    alert("<?= _("debe introducir las fechas inicio-fin del periodo") ?>");
+                    alert(<?= json_encode(_("debe introducir las fechas inicio-fin del periodo")) ?>);
                 }
             }
             if (err === 2) {
-                alert("<?= _("debe seleccionar un grupo de casas") ?>");
+                alert(<?= json_encode(_("debe seleccionar un grupo de casas")) ?>);
             }
             if (err === 3) {
-                alert("<?= _("debe seleccionar una casa") ?>");
+                alert(<?= json_encode(_("debe seleccionar una casa")) ?>);
             }
         } else {
             $('#modelo').val(n);

@@ -1,8 +1,8 @@
 <?php
 
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
-use web\ContestarJson;
-use function core\is_true;
+use frontend\shared\web\ContestarJson;
+use function src\shared\domain\helpers\is_true;
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 

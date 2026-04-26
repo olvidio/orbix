@@ -3,7 +3,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use function core\strtoupper_dlb;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 /**
  * Es un formulario para introducir las condiciones de búsqueda de los ubis.

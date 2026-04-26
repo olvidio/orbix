@@ -39,7 +39,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $Qs_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
-    $a_pkey = json_decode(core\urlsafe_b64decode($Qs_pkey));
+    $a_pkey = json_decode(src\shared\domain\helpers\urlsafe_b64decode($Qs_pkey));
     $aQuery['sel'] = $a_sel;
     // add stack:
     $stack = $oPosicion->getStack(1);
@@ -123,7 +123,7 @@ echo $oPosicion->mostrar_left_slide(1);
             });
             request.done(function (rta_txt) {
                 if (rta_txt !== '' && rta_txt !== '\\n') {
-                    alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
                 } else {
                     <?= $oPosicion->js_atras(1); ?>
                 }

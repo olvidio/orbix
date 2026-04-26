@@ -194,7 +194,7 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _('respuesta') ?>: " + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 fnjs_refresh_grid();
             }
@@ -213,7 +213,7 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _('respuesta') ?>: " + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 fnjs_refresh_grid();
             }
@@ -237,7 +237,7 @@
     function fnjs_nuevo() {
         $('#que').val('nuevo');
         reset_campos_modal();
-        $('#titulo_modal').html('<?= _('nuevo encargo') ?>');
+        $('#titulo_modal').html(<?= json_encode(_('nuevo encargo')) ?>);
         modal.show();
     }
 

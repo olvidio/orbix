@@ -12,12 +12,12 @@
  * @subpackage actividades
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use web\CasasQue;
+use frontend\shared\web\CasasQue;
+use frontend\shared\web\PeriodoQue;
 use web\Hash;
-use web\PeriodoQue;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -61,10 +61,9 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oForm = new CasasQue();
-$oForm->setTitulo(\core\strtoupper_dlb(_("ocupación de casas compartidas")));
-$donde = "WHERE active='t'";
+$oForm->setTitulo(\src\shared\domain\helpers\strtoupper_dlb(_("ocupación de casas compartidas")));
 $oForm->setCasas('casa');
-$oForm->setPosiblesCasas($donde);
+$oForm->setFiltroCasas(['active' => true]);
 $oForm->setSeleccionados($sel_ubis);
 
 $oHash = new Hash();
@@ -76,7 +75,7 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $titulo = _("selección de actividades de san rafael");
-$fullUrl = ConfigGlobal::getWeb() . '/frontend/actividades/controller/lista_sr_csv.php';
+$fullUrl = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/lista_sr_csv.php';
 
 $a_campos = [
     'oPosicion' => $oPosicion,

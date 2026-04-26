@@ -8,8 +8,8 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
 use web\Hash;
-use web\Lista;
-use function core\is_true_txt;
+use frontend\shared\web\Lista;
+use function src\shared\domain\helpers\is_true_txt;
 
 /**
  * Gestiona el dossier 3102: Cargos de una actividad
@@ -206,7 +206,7 @@ class SelectHabitacionesCdc
                     'id_pau' => $this->id_pau);
                 // el hppt_build_query no pasa los valores null
                 if (is_array($aQuery)) {
-                    array_walk($aQuery, 'core\poner_empty_on_null');
+                    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
                 }
                 $pagina = Hash::link('frontend/ubiscamas/controller/habitacion_form.php?' . http_build_query($aQuery));
                 $nom2 = sprintf(_("añadir %s"), $nom);

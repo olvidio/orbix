@@ -1,6 +1,6 @@
 <?php
 
 use src\procesos\application\ProcesosSelectData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', ProcesosSelectData::execute());

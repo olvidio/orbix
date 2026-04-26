@@ -7,8 +7,8 @@ use src\shared\config\ServerConf;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Password;
-use web\ContestarJson;
-use function core\is_true;
+use frontend\shared\web\ContestarJson;
+use function src\shared\domain\helpers\is_true;
 
 $error_txt = '';
 $data = [];

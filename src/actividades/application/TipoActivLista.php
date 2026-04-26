@@ -3,8 +3,8 @@
 namespace src\actividades\application;
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
-use web\Lista;
-use web\TiposActividades;
+use frontend\shared\web\Lista;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Devuelve la tabla HTML con los tipos de actividad existentes. Portado desde

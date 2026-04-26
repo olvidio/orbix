@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 
 // Este controlador se abre via `window.open` (GET). El incluido
 // `acta_imprimir_mpdf.php` solo usa la variable `$acta` de scope y
@@ -13,9 +13,9 @@ ob_start();
 include __DIR__ . '/acta_imprimir_mpdf.php';
 $content = ob_get_clean();
 
-require_once ConfigGlobal::$dir_libs . '/vendor/autoload.php';
+require_once OrbixRuntime::dirLibs() . '/vendor/autoload.php';
 
-$acta_nombre = web\QuitarAcentos::convert($acta);
+$acta_nombre = frontend\shared\web\QuitarAcentos::convert($acta);
 
 $config = [
     'mode' => 'utf-8',

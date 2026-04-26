@@ -10,18 +10,16 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>: " + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
-                alert("<?= _("preferencias guardadas")  ?>");
+                alert(<?= json_encode(_("preferencias guardadas")) ?>);
             }
         });
     }
 </script>
 <?php
 
-use src\shared\config\ConfigGlobal;
-
-if (ConfigGlobal::is_app_installed('cambios')) {
+if (!empty($cambios_installed)) {
     ?>
     <h2><?= ucfirst(_("gestión de avisos para cambios en actividades")) ?><br></h2>
     <table>

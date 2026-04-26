@@ -9,7 +9,7 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 fnjs_cerrar();
                 fnjs_ver_2();
@@ -32,7 +32,7 @@
     }
 
     fnjs_eliminar_equipaje = function () {
-        seguro = confirm("<?= _("¿Está seguro de borrar este equipaje?") ?>");
+        seguro = confirm(<?= json_encode(_("¿Está seguro de borrar este equipaje?")) ?>);
         if (seguro) {
             var url2 = 'frontend/inventario/controller/equipajes_ver.php';
             let parametros = $('#seleccion').serialize();
@@ -44,7 +44,7 @@
             });
             request.done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 } else {
                     fnjs_update_div('#main', url2 + '?' + parametros);
                 }
@@ -62,7 +62,7 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 fnjs_cerrar();
                 fnjs_lista_docs(id_grupo, 'docs');
@@ -95,7 +95,7 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 fnjs_cerrar();
                 fnjs_lista_docs(id_grupo, 'docs');
@@ -135,7 +135,7 @@
     }
 
     fnjs_eliminar_grupo = function (id_grupo) {
-        seguro = confirm("<?= _("¿Está seguro de borrar este grupo?") ?>");
+        seguro = confirm(<?= json_encode(_("¿Está seguro de borrar este grupo?")) ?>);
         if (seguro) {
             id_span = '#grupo_' + id_grupo;
             $('#id_grupo').val(id_grupo);
@@ -149,7 +149,7 @@
             });
             request.done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 } else {
                     $(id_span).remove();
                 }
@@ -168,7 +168,7 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 let dataAsObject = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
                 let id_item_egm = dataAsObject.id_item_egm;

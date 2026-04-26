@@ -10,7 +10,7 @@ use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaExRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 
 class InfoTelecoPersona extends DatosInfoRepo
 {

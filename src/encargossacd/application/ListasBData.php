@@ -30,8 +30,8 @@ final class ListasBData
         $oService = new EncargoAplicacionService();
 
         $any = $_SESSION['oConfig']->any_final_curs('crt');
-        $inicurs = \core\curso_est('inicio', $any, 'crt')->getFromLocal();
-        $fincurs = \core\curso_est('fin', $any, 'crt')->getFromLocal();
+        $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->getFromLocal();
+        $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->getFromLocal();
 
         $cabecera_left = sprintf(_('Curso:  %s - %s'), $inicurs, $fincurs);
         $cabecera_right = ConfigGlobal::mi_delef();

@@ -3,8 +3,8 @@
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
-use web\ContestarJson;
-use function core\is_true;
+use frontend\shared\web\ContestarJson;
+use function src\shared\domain\helpers\is_true;
 
 $Qdocumentos = (string)filter_input(INPUT_POST, 'documentos');
 $Qchk_f_recibido = (string)filter_input(INPUT_POST, 'chk_f_recibido');

@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
@@ -13,8 +12,7 @@ use web\Hash;
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oMiUsuario = ConfigGlobal::MiUsuario();
-$id_usuario = $oMiUsuario->getId_usuario();
+$id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
 $url_backend = '/src/usuarios/usuario_info';

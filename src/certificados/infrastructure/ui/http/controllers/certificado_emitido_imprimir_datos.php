@@ -1,7 +1,7 @@
 <?php
 
 use src\personas\domain\entity\Persona;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $id_nom = (string)filter_input(INPUT_POST, 'id_nom');
 

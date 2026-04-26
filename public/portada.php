@@ -4,14 +4,14 @@ namespace core;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\tablonanuncios\domain\TablonAnunciosParaGM;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
+require_once("src/shared/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+require_once("src/shared/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // si vengo de actualizar tengo el valor en POST,
@@ -58,7 +58,7 @@ $oHash->setArrayCamposHidden(['id_grupmenu' => $id_grupmenu]);
 
 <script>
     fnjs_borrar = function (formulario) {
-        if (confirm("<?= $txt_eliminar ?>")) {
+        if (confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
             $('#mod').val("eliminar");
             var request = $.ajax({
                 data: $(formulario).serialize(),
@@ -68,7 +68,7 @@ $oHash->setArrayCamposHidden(['id_grupmenu' => $id_grupmenu]);
             });
             request.done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= _("respuesta") ?>: " + json.mensaje);
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 } else {
                     //actualizar
                     fnjs_enviar_formulario("#seleccionados", "#main");

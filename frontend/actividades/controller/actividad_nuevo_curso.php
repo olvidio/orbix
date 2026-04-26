@@ -13,7 +13,7 @@
  * @subpackage actividades
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\AppInstalled;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
@@ -63,10 +63,10 @@ $txt = "<h1>" . _("atención") . ":</h1>";
 $txt .= "<p>$txt_borrar.";
 $txt .= "<p>$txt_crear.";
 $txt .= "<p>$txt_estado.";
-if (ConfigGlobal::is_app_installed('actividadescentro')) {
+if (AppInstalled::is('actividadescentro')) {
     $txt .= "<p>$txt_ctr.";
 }
-if (ConfigGlobal::is_app_installed('procesos')) {
+if (AppInstalled::is('procesos')) {
     $txt .= "<p>$txt_fases.";
 }
 

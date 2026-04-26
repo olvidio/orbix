@@ -8,7 +8,8 @@
  * @subpackage    actividades
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use web\Hash;
 
@@ -23,7 +24,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_pe
     $permiso_des = true;
 }
 
-$url_lista = ConfigGlobal::getWeb() . '/frontend/actividades/controller/lista_activ.php';
+$url_lista = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/lista_activ.php';
 
 $oHash = new Hash();
 $oHash->setCamposForm('seccion!status!empiezamin!empiezamax!asist!c_activ!tit_list_grupo');
@@ -60,7 +61,7 @@ $a_campos = [
     'sr_sg' => $sr_sg,
     'chk_sr_sf' => $chk_sr_sf,
     'chk_sr_sv' => $chk_sr_sv,
-    'locale_us' => ConfigGlobal::is_locale_us(),
+    'locale_us' => OrbixRuntime::isLocaleUs(),
     'url_lista' => $url_lista,
 ];
 

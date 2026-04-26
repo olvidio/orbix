@@ -10,7 +10,7 @@
  * desde el endpoint backend /src/actividades/actividad_select_ubi_desplegable.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 
@@ -32,14 +32,14 @@ $isfsv = (int)$isfsv;
 $dl_org = (string)($_REQUEST['dl_org'] ?? '');
 
 // URL + hash para cargar desplegables (freq/region) via AJAX.
-$url_desplegable = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_select_ubi_desplegable';
+$url_desplegable = AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_select_ubi_desplegable';
 $oHashDespl = new Hash();
 $oHashDespl->setUrl($url_desplegable);
 $oHashDespl->setCamposForm('tipo!dl_org!isfsv');
 $h_desplegable = $oHashDespl->linkSinValParams();
 
 $oHash = new Hash();
-$oHash->setUrl(rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get');
+$oHash->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_tipo_get');
 $oHash->setCamposForm('extendida!modo!salida!entrada!isfsv');
 $h = $oHash->linkSinValParams();
 

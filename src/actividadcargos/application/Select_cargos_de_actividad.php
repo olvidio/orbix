@@ -11,9 +11,9 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
 use web\Hash;
-use web\Lista;
-use web\TiposActividades;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Widget del dossier `3102` (codigo `cargos_de_actividad`): relacion de personas

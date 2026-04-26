@@ -18,7 +18,7 @@ use src\misas\domain\value_objects\EncargoDiaTstart;
 use src\misas\domain\value_objects\PlantillaConfig;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Use case del endpoint `cuadricula_update` (migracion de

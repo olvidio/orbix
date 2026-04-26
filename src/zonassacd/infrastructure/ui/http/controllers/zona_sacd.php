@@ -1,6 +1,6 @@
 <?php
 
 use src\zonassacd\application\ZonaSacdPage;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', ZonaSacdPage::getData());

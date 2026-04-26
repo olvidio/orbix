@@ -12,7 +12,7 @@ use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\entity\CentroEx;
 use src\utils_database\domain\GenerateIdGlobal;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla u_centros_ex a la interfaz del repositorio

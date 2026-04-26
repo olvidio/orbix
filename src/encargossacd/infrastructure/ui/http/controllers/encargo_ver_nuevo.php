@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\EncargoVerNuevo;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = $_POST;
 $result = EncargoVerNuevo::execute($input);

@@ -57,6 +57,9 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/usuarios/perm_menu_lista', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/perm_menu_lista.php';
     });
+    $r->addRoute(['GET','POST'], '/src/usuarios/preferencia_tabla_get', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/preferencia_tabla_get.php';
+    });
     $r->addRoute(['GET','POST'], '/src/usuarios/preferencias_guardar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/preferencias_guardar.php';
     });

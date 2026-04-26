@@ -7,7 +7,7 @@ use src\asignaturas\domain\entity\Asignatura;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Servicio de "tessera studiorum": dado un `id_nom` calcula las asignaturas

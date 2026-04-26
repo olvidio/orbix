@@ -2,11 +2,11 @@
 /**
  * Controlador AJAX HTML: listado económico de actividades por casa.
  * Delega en `/src/casas/casa_ingresos_lista_data` para obtener los
- * datos y los pinta con `web\Lista`.
+ * datos y los pinta con `frontend\shared\web\Lista`.
  */
 
 use frontend\shared\PostRequest;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once 'frontend/shared/global_header_front.inc';
 

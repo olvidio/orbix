@@ -9,7 +9,7 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Edicion de un `ActividadCargo` existente (o alta si `id_item` viene vacio,

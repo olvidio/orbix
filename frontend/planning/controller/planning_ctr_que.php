@@ -2,11 +2,11 @@
 
 namespace frontend\planning\controller;
 
-use src\shared\config\ConfigGlobal;
 use frontend\planning\support\PeriodoPlanningHelper;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 /**
  * Formulario de filtros para el planning por centros (personas de un
@@ -47,7 +47,7 @@ $Qtodos_n = (string)filter_input(INPUT_POST, 'todos_n');
 $Qtodos_agd = (string)filter_input(INPUT_POST, 'todos_agd');
 $Qtodos_s = (string)filter_input(INPUT_POST, 'todos_s');
 
-$locale_us = ConfigGlobal::is_locale_us();
+$locale_us = OrbixRuntime::isLocaleUs();
 
 $oHash1 = new Hash();
 $oHash1->setCamposForm('sacd!ctr!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');

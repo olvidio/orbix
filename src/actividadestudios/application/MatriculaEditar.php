@@ -3,7 +3,7 @@
 namespace src\actividadestudios\application;
 
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Edita una matricula existente (id_asignatura, id_nivel, id_situacion,

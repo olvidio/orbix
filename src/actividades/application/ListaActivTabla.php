@@ -10,18 +10,18 @@ use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
 use web\Hash;
-use web\Lista;
-use web\Periodo;
-use web\TiposActividades;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Periodo;
+use src\actividades\domain\entity\TiposActividades;
 
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: construye los datos (cabeceras + filas) de la pantalla
  * frontend/actividades/controller/lista_activ.php y devuelve tambien el
  * HTML ya renderizado de la tabla (`html_tabla`).
  *
- * La responsabilidad de leer el POST y gestionar `web\Posicion` queda en el
+ * La responsabilidad de leer el POST y gestionar `frontend\shared\web\Posicion` queda en el
  * controlador frontend. Aqui traducimos un set de filtros + opciones de
  * entorno (permisos, dmz, etc.) al array de datos y al HTML de la tabla.
  */

@@ -9,7 +9,7 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
             } else {
                 <?= $oPosicion->js_atras(1) ?>
             }
@@ -26,11 +26,11 @@
     fnjs_nueva_cama = function () {
         let id_habitacion = $('#frm2 [name="id_habitacion"]').val();
         if (!id_habitacion) {
-            alert('<?= _("Debe guardar primero la habitación antes de añadir camas") ?>');
+            alert(<?= json_encode(_("Debe guardar primero la habitación antes de añadir camas")) ?>);
             return;
         }
         let url = '<?= $url_cama_form ?>';
-        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + '<?= $oHashCamaForm->linkSinValParams() ?>';
+        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + '<?= $h_cama_form_params ?>';
         fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
 
@@ -49,12 +49,12 @@
     fnjs_editar_cama = function (id_cama) {
         let id_habitacion = $('#frm2 [name="id_habitacion"]').val();
         let url = '<?= $url_cama_form ?>';
-        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaForm->linkSinValParams() ?>';
+        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $h_cama_form_params ?>';
         fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
 
     fnjs_eliminar_cama = function (id_cama) {
-        if (confirm("<?= _("¿Seguro que desea borrar esta cama?") ?>")) {
+        if (confirm(<?= json_encode(_("¿Seguro que desea borrar esta cama?")) ?>)) {
             let url = '<?= $url_cama_delete ?>';
             let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaDelete->linkSinValParams() ?>';
             let request = $.ajax({
@@ -65,7 +65,7 @@
             });
             request.done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
                 } else {
                     fnjs_actualizar('#frm_actualizar');
                 }
@@ -78,11 +78,11 @@
 </script>
 <?= $oPosicion->mostrar_left_slide(1) ?>
 <form id='frm_actualizar'>
-    <?= $oHashActualizar->getCamposHtml() ?>
+    <?= $hash_actualizar_html ?>
 </form>
 <!-- ============================== Ficha ============================= -->
 <form id='frm2'>
-    <?= $oHash->getCamposHtml() ?>
+    <?= $hash_form_html ?>
 
     <h3><?= $id_habitacion ? _("Editar habitación") : _("Nueva habitación") ?></h3>
 
@@ -169,16 +169,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($a_camas as $oCama): ?>
+                <?php foreach ($a_camas as $rowCama): ?>
                     <tr>
-                        <td><?= $oCama->getDescripcion() ?></td>
-                        <td><?= $oCama->isLarga() ? _("Sí") : _("No") ?></td>
-                        <td><?= $oCama->isVip() ? _("Sí") : _("No") ?></td>
+                        <td><?= htmlspecialchars((string)($rowCama['descripcion'] ?? ''), ENT_QUOTES) ?></td>
+                        <td><?= !empty($rowCama['larga']) ? _("Sí") : _("No") ?></td>
+                        <td><?= !empty($rowCama['vip']) ? _("Sí") : _("No") ?></td>
                         <td>
-                            <button type="button" onclick="fnjs_editar_cama('<?= $oCama->getIdCama() ?>')">
+                            <button type="button" onclick="fnjs_editar_cama('<?= htmlspecialchars((string)($rowCama['id_cama'] ?? ''), ENT_QUOTES) ?>')">
                                 <?= _("Editar") ?>
                             </button>
-                            <button type="button" onclick="fnjs_eliminar_cama('<?= $oCama->getIdCama() ?>')">
+                            <button type="button" onclick="fnjs_eliminar_cama('<?= htmlspecialchars((string)($rowCama['id_cama'] ?? ''), ENT_QUOTES) ?>')">
                                 <?= _("Eliminar") ?>
                             </button>
                         </td>

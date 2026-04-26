@@ -5,9 +5,9 @@ use frontend\shared\model\ViewNewTwig;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");

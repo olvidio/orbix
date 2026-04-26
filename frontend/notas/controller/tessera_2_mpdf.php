@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 
 // Abierto via `window.open` (GET). El incluido `tessera_imprimir_mpdf.php`
 // ya lee `$_GET` directamente, asi que no hace falta reasignar `$_POST`.
@@ -11,9 +11,9 @@ ob_start();
 include __DIR__ . '/tessera_imprimir_mpdf.php';
 $content = ob_get_clean();
 
-require_once ConfigGlobal::$dir_libs . '/vendor/autoload.php';
+require_once OrbixRuntime::dirLibs() . '/vendor/autoload.php';
 
-$nom_archivo = isset($nom) ? web\QuitarAcentos::convert($nom) : (string)$id_nom;
+$nom_archivo = isset($nom) ? frontend\shared\web\QuitarAcentos::convert($nom) : (string)$id_nom;
 
 $config = [
     'mode' => 'utf-8',

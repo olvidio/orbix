@@ -9,19 +9,20 @@
  * siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\ubis\application\services\DelegacionDropdown;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 if (empty($Qid_tipo_activ)) {
     $Qssfsv = '';
-    $mi_sfsv = ConfigGlobal::mi_sfsv();
+    $mi_sfsv = OrbixRuntime::miSfsv();
     if ($mi_sfsv === 1) {
         $Qssfsv = 'sv';
     }
@@ -40,11 +41,10 @@ if (empty($Qid_tipo_activ)) {
 $desplDelegaciones = Desplegable::desdeOpciones(DelegacionDropdown::activasOrdenNombre(), 'dl');
 $desplDelegaciones->setAction('fnjs_comparativa()');
 
-$mi_dele = ConfigGlobal::mi_delef();
+$mi_dele = OrbixRuntime::miDelef();
 $txt = sprintf(_("comparar %s con:"), $mi_dele);
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
-$url_balance_dl = $web . '/frontend/actividadplazas/controller/plazas_balance_dl.php';
+$url_balance_dl = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadplazas/controller/plazas_balance_dl.php';
 $oHash = new Hash();
 $oHash->setUrl($url_balance_dl);
 $oHash->setCamposForm('dl!id_tipo_activ');

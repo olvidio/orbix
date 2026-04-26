@@ -1,9 +1,10 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use web\Hash;
-use web\PeriodoQue;
+use frontend\shared\web\PeriodoQue;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -21,7 +22,7 @@ $oPosicion->recordar();
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -58,7 +59,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('vcsd')
     $permiso_des = true;
     $Qssfsv = '';
 } else {
-    $mi_sfsv = ConfigGlobal::mi_sfsv();
+    $mi_sfsv = OrbixRuntime::miSfsv();
     if ($mi_sfsv == 1) {
         $Qssfsv = 'sv';
     }
@@ -95,10 +96,10 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 
 
-$webBase = rtrim(ConfigGlobal::getWeb(), '/');
+$apiBase = AppUrlConfig::getApiBaseUrl();
 $url_lista = 'frontend/procesos/controller/fases_activ_cambio_lista.php';
-$url_update = $webBase . '/src/procesos/fases_activ_cambio_update';
-$url_get = $webBase . '/src/procesos/fases_activ_cambio_get';
+$url_update = $apiBase . '/src/procesos/fases_activ_cambio_update';
+$url_get = $apiBase . '/src/procesos/fases_activ_cambio_get';
 
 $oHashLista = new Hash();
 $oHashLista->setUrl($url_lista);
@@ -110,7 +111,7 @@ $oHashAct->setUrl($url_get);
 $oHashAct->setCamposForm('dl_propia!id_tipo_activ!id_fase_sel');
 $h_actualizar = $oHashAct->linkSinValParams();
 
-$url_tipo = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get';
+$url_tipo = $apiBase . '/src/actividades/actividad_tipo_get';
 $oHash1 = new Hash();
 $oHash1->setUrl($url_tipo);
 $oHash1->setCamposForm('extendida!modo!salida!entrada');

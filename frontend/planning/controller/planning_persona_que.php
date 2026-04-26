@@ -2,11 +2,11 @@
 
 namespace frontend\planning\controller;
 
-use src\shared\config\ConfigGlobal;
 use frontend\planning\support\PeriodoPlanningHelper;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 /**
  * Formulario de filtros para el planning por persona (numerarios, agd,
@@ -16,7 +16,7 @@ use web\Posicion;
  * (slice 2 de la migracion del modulo planning).
  */
 require_once("frontend/shared/global_header_front.inc");
-require_once("apps/core/global_object.inc");
+
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -39,7 +39,7 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 
 $periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto((int)$_SESSION['oConfig']->getMesFinStgr());
-$locale_us = ConfigGlobal::is_locale_us();
+$locale_us = OrbixRuntime::isLocaleUs();
 
 $oHash = new Hash();
 $oHash->setCamposForm('nombre!apellido1!apellido2!centro!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');

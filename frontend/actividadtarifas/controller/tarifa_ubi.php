@@ -13,68 +13,79 @@
  * `tarifa_ajax.php` (dispatcher legacy) siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use web\CasasQue;
+use frontend\shared\web\CasasQue;
 use web\Hash;
-use web\PeriodoQue;
+use frontend\shared\web\PeriodoQue;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$miSfsv = ConfigGlobal::mi_sfsv();
+$miSfsv = OrbixRuntime::miSfsv();
 
 $oForm = new CasasQue();
+$filtro = ['active' => true];
 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
     $oForm->setCasas('all');
-    $donde = "WHERE active='t'";
 } elseif ($miSfsv === 1) {
     $oForm->setCasas('sv');
-    $donde = "WHERE active='t' AND sv='t'";
+    $filtro['sv'] = true;
 } elseif ($miSfsv === 2) {
     $oForm->setCasas('sf');
-    $donde = "WHERE active='t' AND sf='t'";
-} else {
-    $donde = "WHERE active='t'";
+    $filtro['sf'] = true;
 }
-$oForm->setPosiblesCasas($donde);
+$oForm->setFiltroCasas($filtro);
 $oForm->setAction('fnjs_ver()');
 
 $oFormAny = new PeriodoQue();
 $oFormAny->setAction('fnjs_ver()');
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$public = AppUrlConfig::getPublicAppBaseUrl();
+$api = AppUrlConfig::getApiBaseUrl();
 
 $oHashLista = new Hash();
-$oHashLista->setUrl($web . '/frontend/actividadtarifas/controller/tarifa_ubi_lista.php');
+$oHashLista->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_ubi_lista.php');
 $oHashLista->setCamposForm('id_ubi!year');
 $h_lista = $oHashLista->linkSinVal();
 
-$oHashForm = new Hash();
-$oHashForm->setUrl($web . '/frontend/actividadtarifas/controller/tarifa_ubi_form.php');
-$oHashForm->setCamposForm('id_item!id_ubi!year!letra');
-$h_form = $oHashForm->linkSinVal();
+// El form se pide via AJAX en dos escenarios distintos y cada uno
+// envia un subconjunto diferente de parametros. Como `validatePost`
+// espera que los campos firmados coincidan exactamente con los que
+// llegan, firmamos una URL por escenario (igual que hacia el legacy
+// `apps/actividadtarifas/controller/tarifa_ubi.php`).
+$oHashFormModificar = new Hash();
+$oHashFormModificar->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_ubi_form.php');
+$oHashFormModificar->setCamposForm('id_item!letra');
+$h_form_modificar = $oHashFormModificar->linkSinVal();
+
+$oHashFormNuevo = new Hash();
+$oHashFormNuevo->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_ubi_form.php');
+$oHashFormNuevo->setCamposForm('id_ubi!year');
+$h_form_nuevo = $oHashFormNuevo->linkSinVal();
 
 $oHashCopiar = new Hash();
-$oHashCopiar->setUrl($web . '/src/actividadtarifas/tarifa_ubi_copiar');
+$oHashCopiar->setUrl($api . '/src/actividadtarifas/tarifa_ubi_copiar');
 $oHashCopiar->setCamposForm('id_ubi!year');
-$url_copiar = $web . '/src/actividadtarifas/tarifa_ubi_copiar' . $oHashCopiar->linkSinVal();
+$url_copiar = $api . '/src/actividadtarifas/tarifa_ubi_copiar' . $oHashCopiar->linkSinVal();
 
 $oHashUpdate = new Hash();
-$oHashUpdate->setUrl($web . '/src/actividadtarifas/tarifa_ubi_update');
+$oHashUpdate->setUrl($api . '/src/actividadtarifas/tarifa_ubi_update');
 $oHashUpdate->setCamposForm('id_item!id_ubi!year!id_tarifa!id_serie!cantidad');
-$url_update = $web . '/src/actividadtarifas/tarifa_ubi_update' . $oHashUpdate->linkSinVal();
+$url_update = $api . '/src/actividadtarifas/tarifa_ubi_update' . $oHashUpdate->linkSinVal();
 
 $oHashEliminar = new Hash();
-$oHashEliminar->setUrl($web . '/src/actividadtarifas/tarifa_ubi_eliminar');
+$oHashEliminar->setUrl($api . '/src/actividadtarifas/tarifa_ubi_eliminar');
 $oHashEliminar->setCamposForm('id_item');
-$url_eliminar = $web . '/src/actividadtarifas/tarifa_ubi_eliminar' . $oHashEliminar->linkSinVal();
+$url_eliminar = $api . '/src/actividadtarifas/tarifa_ubi_eliminar' . $oHashEliminar->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oForm' => $oForm,
     'oFormAny' => $oFormAny,
-    'url_lista' => $web . '/frontend/actividadtarifas/controller/tarifa_ubi_lista.php' . $h_lista,
-    'url_form' => $web . '/frontend/actividadtarifas/controller/tarifa_ubi_form.php' . $h_form,
+    'url_lista' => $public . '/frontend/actividadtarifas/controller/tarifa_ubi_lista.php' . $h_lista,
+    'url_form_modificar' => $public . '/frontend/actividadtarifas/controller/tarifa_ubi_form.php' . $h_form_modificar,
+    'url_form_nuevo' => $public . '/frontend/actividadtarifas/controller/tarifa_ubi_form.php' . $h_form_nuevo,
     'url_copiar' => $url_copiar,
     'url_update' => $url_update,
     'url_eliminar' => $url_eliminar,

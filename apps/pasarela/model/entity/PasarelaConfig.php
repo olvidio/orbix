@@ -3,7 +3,7 @@
 namespace pasarela\model\entity;
 
 use core\ClasePropiedades;
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use stdClass;
 
@@ -131,7 +131,7 @@ class PasarelaConfig extends ClasePropiedades
         }
         $aDades = [];
         $aDades['json_valor'] = $this->json_valor;
-        array_walk($aDades, 'core\poner_null');
+        array_walk($aDades, 'src\shared\domain\helpers\poner_null');
 
         if ($bInsert === FALSE) {
             //UPDATE

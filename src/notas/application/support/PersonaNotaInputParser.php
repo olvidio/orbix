@@ -9,7 +9,7 @@ use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\TipoActa;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Convierte un array de entrada (`$_POST`) en un objeto `PersonaNota`

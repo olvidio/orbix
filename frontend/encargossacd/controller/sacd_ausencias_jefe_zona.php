@@ -3,7 +3,7 @@
 use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 /**

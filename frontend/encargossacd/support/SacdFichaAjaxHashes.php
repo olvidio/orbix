@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\encargossacd\support;
 
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 /**

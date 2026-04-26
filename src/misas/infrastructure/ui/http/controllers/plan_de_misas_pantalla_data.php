@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\PlanDeMisasPantallaData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $pantalla = (string)filter_input(INPUT_POST, 'pantalla');
 if ($pantalla === '') {

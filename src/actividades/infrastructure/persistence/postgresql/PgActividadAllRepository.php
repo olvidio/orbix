@@ -13,8 +13,8 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
-use web\TiposActividades;
-use function core\curso_est;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\curso_est;
 
 
 /**

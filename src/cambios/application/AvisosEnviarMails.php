@@ -12,7 +12,7 @@ use src\cambios\domain\value_objects\AvisoTipoId;
 use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 /**
  * Caso de uso para enviar por e-mail los avisos pendientes de cada usuario.
@@ -30,7 +30,7 @@ use web\Lista;
  *
  * Deuda conocida (fuera de scope de este refactor):
  *   - Sigue usando `mail()` directamente en vez de un `MailerInterface`.
- *   - La construccion del HTML del body usa `web\Lista` (componente UI);
+ *   - La construccion del HTML del body usa `frontend\shared\web\Lista` (componente UI);
  *     deberia moverse a una vista/template.
  *   - `sleep(60)` bloquea el proceso en tests; aceptable porque la unica
  *     via de invocacion es cron.

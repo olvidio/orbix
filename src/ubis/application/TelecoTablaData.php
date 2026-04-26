@@ -4,8 +4,8 @@ namespace src\ubis\application;
 
 use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\application\services\UbiPermisos;
-use function core\is_true;
-use function core\urlsafe_b64encode;
+use function src\shared\domain\helpers\is_true;
+use function src\shared\domain\helpers\urlsafe_b64encode;
 
 final class TelecoTablaData
 {

@@ -8,7 +8,7 @@
  */
 
 use src\actividadtarifas\application\TarifaUbiUpdateInc;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $inc_cantidad = filter_input(INPUT_POST, 'inc_cantidad', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 

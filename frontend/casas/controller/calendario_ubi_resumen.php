@@ -14,10 +14,11 @@
  * `calendario_ubi_resumen_ajax.php` siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\ubis\domain\contracts\CasaDlRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\PostRequest;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -28,26 +29,24 @@ $QG = (int)filter_input(INPUT_POST, 'G');
 $Qinc_t = (int)filter_input(INPUT_POST, 'inc_t');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 
-$CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
-    $donde = "WHERE active='t'";
-} else {
-    $miSfsv = ConfigGlobal::mi_sfsv();
+$filtro = ['active' => '1'];
+if (!($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
+    $miSfsv = OrbixRuntime::miSfsv();
     if ($miSfsv === 1) {
-        $donde = "WHERE active='t' AND sv='t'";
+        $filtro['sv'] = '1';
     } elseif ($miSfsv === 2) {
-        $donde = "WHERE active='t' AND sf='t'";
-    } else {
-        $donde = "WHERE active='t'";
+        $filtro['sf'] = '1';
     }
 }
-$aCasas = $CasaDlRepository->getArrayCasas($donde);
+$dataCasas = PostRequest::getDataFromUrl('/src/ubis/casas_opciones_data', $filtro);
+$aCasas = (is_array($dataCasas) && isset($dataCasas['opciones']) && is_array($dataCasas['opciones']))
+    ? $dataCasas['opciones'] : [];
 $oDesplCasas = new Desplegable();
 $oDesplCasas->setNombre('id_ubi');
 $oDesplCasas->setOpciones($aCasas);
 $oDesplCasas->setOpcion_sel($Qid_ubi);
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$web = AppUrlConfig::getPublicAppBaseUrl();
 
 $oHashBody = new Hash();
 $oHashBody->setUrl($web . '/frontend/casas/controller/calendario_ubi_resumen_body.php');

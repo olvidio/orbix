@@ -5,7 +5,7 @@
  */
 
 use src\cambios\application\UsuarioFormAvisosData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'id_usuario' => (int)filter_input(INPUT_POST, 'id_usuario'),

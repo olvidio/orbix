@@ -6,7 +6,7 @@ use src\actividades\application\ActividadLugar;
 use src\shared\config\ConfigGlobal;
 use src\ubis\application\services\DelegacionDropdown;
 use src\usuarios\domain\entity\Role;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 
 /**
  * Genera el HTML del bloque "filtros extra" (filtro_lugar + lugar + organiza

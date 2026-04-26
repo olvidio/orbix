@@ -4,7 +4,7 @@ use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\inventario\domain\entity\Egm;
 use src\inventario\domain\entity\Whereis;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_grupo = (integer)filter_input(INPUT_POST, 'id_grupo');
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');

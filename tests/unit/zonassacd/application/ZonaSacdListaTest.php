@@ -34,9 +34,9 @@ final class ZonaSacdListaTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        // `core\is_true` vive en func_tablas.php y lo usa `ZonaSacdLista`
+        // `src\shared\domain\helpers\is_true` vive en func_tablas.php y lo usa `ZonaSacdLista`
         // para decidir los marcadores de dias de la semana.
-        require_once __DIR__ . '/../../../../apps/core/func_tablas.php';
+        require_once __DIR__ . '/../../../../src/shared/domain/helpers/func_tablas.php';
     }
 
     protected function setUp(): void

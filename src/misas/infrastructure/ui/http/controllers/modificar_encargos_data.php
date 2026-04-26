@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\ModificarEncargosData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $result = ModificarEncargosData::getData();
 

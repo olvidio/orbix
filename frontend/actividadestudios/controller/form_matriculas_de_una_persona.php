@@ -13,7 +13,7 @@
  * @param array   $_POST['sel']            checkbox: id_activ#id_asignatura
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
@@ -23,7 +23,7 @@ use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\profesores\domain\services\ProfesorStgrService;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -163,7 +163,7 @@ if (!empty($id_asignatura_real)) {
 $oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$web = AppUrlConfig::getPublicAppBaseUrl();
 
 $url_posibles_opcionales = $web . '/src/notas/posibles_opcionales_data';
 $oHashOpcionales = new Hash();

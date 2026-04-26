@@ -10,7 +10,7 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividadcargos\domain\entity\Cargo;
 use src\actividadcargos\domain\value_objects\TipoCargoCode;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla xd_orden_cargo a la interfaz del repositorio

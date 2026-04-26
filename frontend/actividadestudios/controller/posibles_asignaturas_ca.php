@@ -22,11 +22,11 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\CursoStgr;
 use src\personas\domain\entity\Persona;
 
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 

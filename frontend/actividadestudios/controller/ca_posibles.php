@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
@@ -14,8 +14,8 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Hash;
-use web\Periodo;
-use function core\is_true;
+use frontend\shared\web\Periodo;
+use function frontend\shared\helpers\is_true;
 
 /**
  * Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
@@ -29,11 +29,11 @@ use function core\is_true;
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosiblesCa = new PosiblesCa();
@@ -43,7 +43,7 @@ $oPosicion->recordar();
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -99,7 +99,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     }
 
     // periodo.
-    $oPeriodo = new Periodo();
+    $oPeriodo = Periodo::conCalendarioDesdeBackend();
     $oPeriodo->setDefaultAny('next');
     $oPeriodo->setAny($Qyear);
     $oPeriodo->setEmpiezaMin($Qempiezamin);
@@ -126,7 +126,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->setParametros($aGoBack, 1);
 }
 
-$mi_sfsv = ConfigGlobal::mi_sfsv();
+$mi_sfsv = OrbixRuntime::miSfsv();
 switch ($Qna) {
     case "agd":
     case "a":

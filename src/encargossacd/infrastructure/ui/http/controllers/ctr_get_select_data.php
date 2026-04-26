@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\EncargoCtrSelectData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $id_ubi = filter_input(INPUT_POST, 'id_ubi');
 if ($id_ubi === null) {

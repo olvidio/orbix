@@ -1,10 +1,9 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -44,7 +43,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
 //9
-$url_guardar = ConfigGlobal::getWeb() . '/src/inventario/doc_asignar_dlb_guardar?';
+$url_guardar = AppUrlConfig::getApiBaseUrl() . '/src/inventario/doc_asignar_dlb_guardar?';
 
 $oHash = new Hash();
 $sCamposForm .= "!f_recibido!f_asignado";

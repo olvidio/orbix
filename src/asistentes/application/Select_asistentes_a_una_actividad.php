@@ -16,9 +16,9 @@ use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
-use web\Lista;
-use web\TiposActividades;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Widget del dossier `3101` (codigo `asistentes_a_una_actividad`):
@@ -438,7 +438,7 @@ class Select_asistentes_a_una_actividad
 
             $this->a_asistentes[$nom] = $a_val;
         }
-        uksort($this->a_asistentes, "core\strsinacentocmp");
+        uksort($this->a_asistentes, "src\shared\domain\helpers\strsinacentocmp");
     }
 
     public function getLeyenda(): void
@@ -741,6 +741,7 @@ class Select_asistentes_a_una_actividad
             'url_eliminar' => $web . '/src/asistentes/asistente_eliminar',
             'url_form_cargos_actividad' => DossierTipoPublicUrls::relativeFormController(3102),
             'url_cargo_eliminar' => $web . '/src/actividadcargos/cargo_eliminar',
+            'plazas_installed' => ConfigGlobal::is_app_installed('actividadplazas'),
         ];
 
         $oView = new ViewNewPhtml('frontend\\asistentes\\controller');

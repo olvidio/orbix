@@ -3,7 +3,7 @@
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ConfigMagik;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = '';
 

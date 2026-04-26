@@ -22,7 +22,7 @@ use src\ubis\domain\value_objects\{CentroId,
     TipoLaborId,
     UbiNombreText,
     ZonaId};
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 class CentroDl

@@ -1,9 +1,8 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");

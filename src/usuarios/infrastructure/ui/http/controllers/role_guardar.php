@@ -4,7 +4,7 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 use src\usuarios\domain\value_objects\RoleName;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qrole = (string)filter_input(INPUT_POST, 'role');
 $Qid_role = (integer)filter_input(INPUT_POST, 'id_role');

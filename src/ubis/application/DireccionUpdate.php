@@ -4,7 +4,7 @@ namespace src\ubis\application;
 
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\entity\Direccion;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 final class DireccionUpdate
 {

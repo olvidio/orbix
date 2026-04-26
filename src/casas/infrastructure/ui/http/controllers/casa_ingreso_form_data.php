@@ -5,7 +5,7 @@
  */
 
 use src\casas\application\CasaIngresoFormData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'id_activ' => (int)filter_input(INPUT_POST, 'id_activ'),

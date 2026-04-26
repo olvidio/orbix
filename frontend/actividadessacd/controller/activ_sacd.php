@@ -16,11 +16,11 @@
  * legacy) siguiendo el patron de `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\PeriodoQue;
-use function core\strtoupper_dlb;
+use frontend\shared\web\PeriodoQue;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -54,7 +54,7 @@ $perm_des = isset($_SESSION['oPerm'])
 
 // Por cada endpoint AJAX, construir la URL firmada (`url + linkSinVal()`):
 // la firma cubre URL + nombres de campos; los valores viajan en el body POST.
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
     $oHash = new Hash();
     $oHash->setUrl($url);
@@ -63,31 +63,31 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 };
 
 $url_lista = $buildHashedUrl(
-    $web . '/src/actividadessacd/lista_actividades_sacd_data',
+    $api . '/src/actividadessacd/lista_actividades_sacd_data',
     'tipo!year!periodo!empiezamin!empiezamax'
 );
 $url_solapes = $buildHashedUrl(
-    $web . '/src/actividadessacd/solapes_sacd_data',
+    $api . '/src/actividadessacd/solapes_sacd_data',
     'year!periodo!empiezamin!empiezamax'
 );
 $url_encargados = $buildHashedUrl(
-    $web . '/src/actividadessacd/sacds_encargados_data',
+    $api . '/src/actividadessacd/sacds_encargados_data',
     'id_activ!id_tipo_activ!dl_org'
 );
 $url_disponibles = $buildHashedUrl(
-    $web . '/src/actividadessacd/sacds_disponibles_data',
+    $api . '/src/actividadessacd/sacds_disponibles_data',
     'id_activ!seleccion'
 );
 $url_asignar = $buildHashedUrl(
-    $web . '/src/actividadessacd/sacd_asignar',
+    $api . '/src/actividadessacd/sacd_asignar',
     'id_activ!id_nom'
 );
 $url_reordenar = $buildHashedUrl(
-    $web . '/src/actividadessacd/sacd_reordenar',
+    $api . '/src/actividadessacd/sacd_reordenar',
     'id_activ!id_nom!num_orden'
 );
 $url_eliminar = $buildHashedUrl(
-    $web . '/src/actividadessacd/sacd_eliminar',
+    $api . '/src/actividadessacd/sacd_eliminar',
     'id_activ!id_nom!id_cargo'
 );
 

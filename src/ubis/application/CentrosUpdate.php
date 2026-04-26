@@ -3,7 +3,7 @@
 namespace src\ubis\application;
 
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 final class CentrosUpdate
 {

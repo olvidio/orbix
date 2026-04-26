@@ -2,7 +2,7 @@
 
 namespace core;
 
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 
 /**
  * Clase que implementa la entidad d_dossiers_abiertos

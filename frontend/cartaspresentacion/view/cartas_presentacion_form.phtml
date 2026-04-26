@@ -10,13 +10,13 @@
  * @var string $pres_mail
  * @var string $zona
  * @var string $observ
- * @var \web\Hash $oHashUpdate
+ * @var string $hash_update_html
  */
 ?>
 <form id="frm_pres">
 <?php if ($ok): ?>
     <h3><?= _("centro") ?>  <?= htmlspecialchars($nombre_ubi, ENT_QUOTES) ?></h3>
-    <?= $oHashUpdate->getCamposHtml() ?>
+    <?= $hash_update_html ?>
     <?= _("nombre") ?>
     <input type="text" size="30" name="pres_nom" value="<?= htmlspecialchars($pres_nom, ENT_QUOTES) ?>">
     <br>

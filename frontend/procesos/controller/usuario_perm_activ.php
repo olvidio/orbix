@@ -1,12 +1,12 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\TiposActividades;
-use function core\is_true;
+use src\actividades\domain\entity\TiposActividades;
+use function frontend\shared\helpers\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -91,7 +91,7 @@ $a_camposHidden = [
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_actualizar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/procesos/usuario_perm_activ_ajax';
+$url_actualizar = AppUrlConfig::getApiBaseUrl() . '/src/procesos/usuario_perm_activ_ajax';
 $oHash1 = new Hash();
 $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');

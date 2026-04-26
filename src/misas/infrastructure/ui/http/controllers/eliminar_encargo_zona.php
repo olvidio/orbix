@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\EliminarEncargoZona;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_enc = (int)filter_input(INPUT_POST, 'id_enc');
 

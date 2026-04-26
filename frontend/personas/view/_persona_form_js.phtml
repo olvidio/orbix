@@ -1,14 +1,12 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
-
 /**
  * Fragmento JS compartido por `persona_form.phtml`, `persona_sss_form.phtml`
  * y `persona_de_paso.phtml`: define `fnjs_guardar` / `fnjs_eliminar` llamando
  * a los endpoints JSON `/src/personas/persona_update` y `/src/personas/persona_eliminar`.
  *
  * Variables esperadas:
- *   - `$oPosicion` (web\Posicion)
+ *   - `$oPosicion` (frontend\shared\web\Posicion)
  *   - `$obj_txt` (string) nombre de clase para `fnjs_comprobar_campos`.
  */
 ?>
@@ -22,7 +20,7 @@ use src\shared\config\ConfigGlobal;
     fnjs_guardar = function (formulario) {
         var rr = fnjs_comprobar_campos('#frm2', '<?= addslashes($obj_txt) ?>');
         if (rr === 'ok') {
-            $(formulario).attr('action', "<?= ConfigGlobal::getWeb() ?>/src/personas/persona_update");
+            $(formulario).attr('action', "<?= AppUrlConfig::getApiBaseUrl() ?>/src/personas/persona_update");
             $(formulario).one("submit", function () {
                 $.ajax({
                     type: 'post',
@@ -31,7 +29,7 @@ use src\shared\config\ConfigGlobal;
                     dataType: 'json'
                 }).done(function (json) {
                     if (json.success !== true) {
-                        alert('<?= _("respuesta") ?>: ' + json.mensaje);
+                        alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
                     } else {
                         <?= $oPosicion->js_atras(1); ?>
                     }
@@ -44,8 +42,8 @@ use src\shared\config\ConfigGlobal;
     }
 
     fnjs_eliminar = function (formulario) {
-        if (confirm("<?= _("¿Está seguro que desea borrar esta persona?") ?>")) {
-            $(formulario).attr('action', "<?= ConfigGlobal::getWeb() ?>/src/personas/persona_eliminar");
+        if (confirm(<?= json_encode(_("¿Está seguro que desea borrar esta persona?")) ?>)) {
+            $(formulario).attr('action', "<?= AppUrlConfig::getApiBaseUrl() ?>/src/personas/persona_eliminar");
             $(formulario).one("submit", function () {
                 $.ajax({
                     url: $(this).attr('action'),
@@ -54,7 +52,7 @@ use src\shared\config\ConfigGlobal;
                     dataType: 'json'
                 }).done(function (json) {
                     if (json.success !== true) {
-                        alert('<?= _("respuesta") ?>: ' + json.mensaje);
+                        alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
                     } else {
                         <?= $oPosicion->js_atras(1); ?>
                     }

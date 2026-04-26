@@ -165,12 +165,103 @@ apps/personas/
 - `documentacion/Documentacion_Obix/menus.csv` y `proves/aux_metamenus.csv` ya apuntan a `frontend/personas/controller/...`.
 - `php -l` limpio en `frontend/personas`, `src/personas`, `apps/personas`.
 
+### Slice 4b — Completar separacion `personas_select` (seguimiento)
+
+El slice 4 original migro `personas_select.php` a `frontend/personas/` pero dejo
+en el controlador frontend llamadas directas a `src\*\domain\contracts\*RepositoryInterface`
+y al contenedor via `$GLOBALS['container']`, en contra del patron de
+`refactor.md` ("Separacion frontend <-> backend: nunca instanciar `src` desde
+`frontend/view/controller`"). Esta iteracion cierra ese hueco:
+
+- `src/personas/application/PersonasSelectData.php` encapsula la logica de
+  acceso a `src/` (resolucion de `tabla` segun `PauType::PAU_NOM`, filtros
+  construidos sobre `aWhere`/`aOperador`, busqueda de centros, consulta de
+  personas por tabla, preferencia `tabla_presentacion` y traduccion de
+  `nivel_stgr`). Devuelve un array neutro con las filas listas para la
+  `web\Lista`.
+- `src/personas/infrastructure/ui/http/controllers/personas_select_data.php` es
+  un endpoint JSON minimo que responde con `ContestarJson::enviar`; traduce el
+  caso especial `tabla = 'nada'` a `success: false` + mensaje localizado.
+- Ruta `/src/personas/personas_select_data` anadida a `src/personas/config/routes.php`.
+- `frontend/personas/controller/personas_select.php` queda delgado:
+  `PostRequest::getDataFromUrl('/src/personas/personas_select_data', $campos)`
+  + construccion de `web\Lista`, `web\Hash`, botones/scripts y render. Ya
+  **no** importa `use src\...` ni toca el contenedor.
+
+### Slice 4c — Completar separacion de los 4 controllers restantes
+
+Los controllers `stgr_cambio`, `traslado_form`, `personas_editar` y
+`home_persona` tambien arrastraban `use src\...` y `$GLOBALS['container']`
+directo en la capa frontend. Esta iteracion aplica el mismo patron que
+`personas_select` a los cuatro. Queda toda la capa `frontend/personas/`
+libre de imports `src\` y de acceso al contenedor.
+
+- **`stgr_cambio`**:
+  - `src/personas/application/StgrCambioData.php` resuelve el repositorio,
+    recupera la persona y devuelve `nom`, `nivel_stgr` actual y
+    `opciones_nivel_stgr` (mapa `value => etiqueta`).
+  - `src/personas/infrastructure/ui/http/controllers/stgr_cambio_data.php`
+    expone `/src/personas/stgr_cambio_data`.
+  - `frontend/personas/controller/stgr_cambio.php` construye el
+    `web\Desplegable` + `web\Hash` con lo recibido.
+- **`traslado_form`**:
+  - `src/personas/application/TrasladoFormData.php` localiza la persona con
+    `Persona::findPersonaEnGlobal`, bloquea `PersonaPub`, y devuelve
+    `titulo`, `id_ctr`, `nombre_ctr`, `dl`, `hoy` y las tres listas de
+    opciones (centros, delegaciones via `DelegacionDropdown::listaRegDele(false)`,
+    situaciones via `SituacionRepository::getArraySituaciones(traslado: true)`).
+  - `src/personas/infrastructure/ui/http/controllers/traslado_form_data.php`
+    expone `/src/personas/traslado_form_data`.
+  - `frontend/personas/controller/traslado_form.php` solo construye
+    `web\Desplegable` / `web\Hash` / links.
+- **`personas_editar`**:
+  - `src/personas/application/PersonasEditarData.php` gestiona los dos modos
+    (`nuevo=1` y edicion): en alta genera `id_nom` via
+    `getNewIdNom(getNewId())` y aplica defaults (`situacion='A'`,
+    `idioma_preferido = ConfigGlobal::mi_Idioma()`, `dl = ConfigGlobal::mi_dele()`);
+    en edicion lee todos los getters y resuelve `nom_ctr` con el repo segun
+    ambito. Calcula `id_tabla` canonico (`PersonaAgd => 'a'`, etc, con el
+    fallback `PersonaEx => 'pn'` cuando no viene) y devuelve las listas de
+    delegaciones (aplicando `DBPropiedades::array_posibles_dl_de_esquemas`
+    para el caso alta de `PersonaEx`), centros (solo si aun no se conoce
+    el centro), situacion, idioma, nivel_stgr e inc.
+  - `src/personas/infrastructure/ui/http/controllers/personas_editar_data.php`
+    expone `/src/personas/personas_editar_data`.
+  - `frontend/personas/controller/personas_editar.php` conserva unicamente
+    la logica dependiente del frontend: `Posicion`/`stack`, el
+    `switch($Qobj_pau)` que decide `presentacion` y `botones` segun
+    `$_SESSION['oPerm']`, construccion de `web\Desplegable` / `web\Hash` y
+    generacion de links con `AppUrlConfig` + `Hash::link`.
+- **`home_persona`**:
+  - `src/personas/application/HomePersonaData.php` resuelve el repositorio,
+    carga la persona, traduce `nivel_stgr` a su etiqueta, consulta los
+    telecos (`telf` / `movil` / `e-mail`) via `TelecoPersonaService`, y si
+    procede resuelve el nombre del centro. Tambien normaliza `Qobj_pau`
+    cuando la entidad es el alias `PersonaDl`.
+  - `src/personas/infrastructure/ui/http/controllers/home_persona_data.php`
+    expone `/src/personas/home_persona_data`.
+  - `frontend/personas/controller/home_persona.php` queda reducido a
+    `Posicion`, session `session_go_to`, `PostRequest` y construccion de
+    links (`gohome`, `go_ficha`, `godossiers`).
+
+Principios respetados en todos ellos:
+
+- El backend (`*Data`) devuelve arrays neutros; no construye
+  `web\Desplegable` ni `web\Lista`.
+- El frontend no importa nada de `src\` y no usa `$GLOBALS['container']`.
+- Los errores del backend viajan como `success=false` + `mensaje` a traves
+  de `ContestarJson::enviar($error)`, de modo que `PostRequest` los
+  propaga con el mismo trato que en el resto del modulo.
+- El `switch` de permisos y la seleccion de plantilla siguen en el
+  frontend porque dependen de `$_SESSION['oPerm']` y son decisiones de
+  capa UI.
+
 ### Estructura canonica resultante
 
-- `frontend/personas/controller/`: `home_persona.php`, `personas_editar.php`, `personas_que.php`, `personas_select.php`, `stgr_cambio.php`, `traslado_form.php`.
+- `frontend/personas/controller/`: `home_persona.php`, `personas_editar.php`, `personas_que.php`, `personas_select.php`, `stgr_cambio.php`, `traslado_form.php` — todos sin `use src\` ni `$GLOBALS['container']`.
 - `frontend/personas/view/`: vistas PHTML + partials (`_persona_form_js.phtml`, `_persona_header.phtml`, `_persona_form_botones.phtml`).
-- `src/personas/application/`: `PersonaUpdate`, `PersonaEliminar`, `StgrUpdate`, `TrasladoUpdate` + `support/PersonaRepositoryResolver`.
-- `src/personas/infrastructure/ui/http/controllers/`: `persona_update.php`, `persona_eliminar.php`, `stgr_update.php`, `traslado_update.php` (todos `ContestarJson::enviar`).
-- `src/personas/config/routes.php`: 4 rutas registradas.
+- `src/personas/application/`: `HomePersonaData`, `PersonaEliminar`, `PersonaUpdate`, `PersonasEditarData`, `PersonasSelectData`, `StgrCambioData`, `StgrUpdate`, `TrasladoFormData`, `TrasladoUpdate` + `support/PersonaRepositoryResolver`.
+- `src/personas/infrastructure/ui/http/controllers/`: `home_persona_data.php`, `persona_eliminar.php`, `persona_update.php`, `personas_editar_data.php`, `personas_select_data.php`, `stgr_cambio_data.php`, `stgr_update.php`, `traslado_form_data.php`, `traslado_update.php` (todos `ContestarJson::enviar`).
+- `src/personas/config/routes.php`: 9 rutas registradas.
 - `apps/personas/controller/`: 6 wrappers legacy delgados (`require` al `frontend`).
 - `apps/personas/model/`: intacto (`Info*` pendiente de decision posterior).

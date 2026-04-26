@@ -1,12 +1,12 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use web\Hash;
 
 require_once("frontend/shared/global_header_front.inc");
 
-$webBase = rtrim(ConfigGlobal::getWeb(), '/');
+$webBase = AppUrlConfig::getPublicAppBaseUrl();
 $url_lista = $webBase . '/src/actividades/tipo_activ_lista';
 $url_form_nuevo = $webBase . '/src/actividades/tipo_activ_form_nuevo';
 $url_form_modificar = $webBase . '/src/actividades/tipo_activ_form_modificar';

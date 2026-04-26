@@ -11,7 +11,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\PostRequest;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
 

@@ -1,11 +1,11 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\Lista;
-use web\Posicion;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
 
 /**
  * Página para realizar algunos listados standard de ubis
@@ -46,7 +46,7 @@ $Qque_lista = (string)filter_input(INPUT_POST, 'que_lista');
 $Qloc = (string)filter_input(INPUT_POST, 'loc');
 
 if (empty($Qloc)) {
-    $Qloc = ConfigGlobal::mi_region_dl();
+    $Qloc = OrbixRuntime::miRegionDl();
 }
 if (empty($Qque_lista)) {
     $Qque_lista = 'ctr_n';
@@ -91,7 +91,7 @@ $a_camposHidden1 = [
 $oHash1->setArraycamposHidden($a_camposHidden1);
 
 $oHash2 = new Hash();
-$oHash2->setUrl(ConfigGlobal::getWeb() . '/frontend/ubis/controller/delegacion_que.php');
+$oHash2->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/delegacion_que.php');
 $oHash2->setCamposForm('');
 $h2 = $oHash2->linkSinVal();
 

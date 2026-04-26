@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Hash;
@@ -49,7 +49,7 @@ $oHashSelect->setcamposNo('scroll_id');
 $oHashSelect->setArraycamposHidden(array('que' => 'eliminar_grupmenu'));
 
 $aQuery = ['nuevo' => 1];
-$url_nuevo = Hash::link(ConfigGlobal::getWeb()
+$url_nuevo = Hash::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/menus/controller/grupmenu_form.php?'
     . http_build_query($aQuery));
 

@@ -26,7 +26,6 @@
  * @subpackage    actividades
  */
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use src\actividades\domain\value_objects\StatusId;
@@ -78,7 +77,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
     if ($stack !== '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');

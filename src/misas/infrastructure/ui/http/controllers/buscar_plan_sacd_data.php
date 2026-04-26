@@ -1,6 +1,6 @@
 <?php
 
 use src\misas\application\BuscarPlanSacdData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', BuscarPlanSacdData::getData());

@@ -2,13 +2,14 @@
 
 namespace frontend\planning\controller;
 
-use src\shared\config\ConfigGlobal;
 use frontend\planning\support\PlanningRenderer;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\planning\application\ActividadesPorCasasService;
 use web\Hash;
-use web\Periodo;
-use function core\is_true;
+use frontend\shared\web\Periodo;
+use function frontend\shared\helpers\is_true;
 
 /**
  * Planning (calendario) de actividades de un grupo de casas en un
@@ -21,7 +22,7 @@ use function core\is_true;
  * en `$_POST` (antes venian en base64 desde `planning_casa_select`).
  */
 require_once("frontend/shared/global_header_front.inc");
-require_once("apps/core/global_object.inc");
+
 
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
 $Qcdc_sel = (int)filter_input(INPUT_POST, 'cdc_sel');
@@ -38,7 +39,7 @@ if ($Qcdc_sel === 9 && $QsSeleccionados !== '') {
     $aIdCdc = array_map('trim', explode(',', $QsSeleccionados));
 }
 
-$oPeriodo = new Periodo();
+$oPeriodo = Periodo::conCalendarioDesdeBackend();
 $oPeriodo->setDefaultAny('next');
 $oPeriodo->setAny($Qyear);
 $oPeriodo->setEmpiezaMin($Qempiezamin);
@@ -77,19 +78,19 @@ $cabecera = ucfirst(_("calendario de casas"));
     $aIdCdc
 );
 
-$goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+$goLeyenda = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 $css = '';
 switch ($Qmodelo) {
     case 2:
     case 1:
-        $css = file_get_contents(ConfigGlobal::$dir_estilos . '/calendario.css.php');
+        $css = file_get_contents(OrbixRuntime::dirEstilos() . '/calendario.css.php');
         break;
     case 3:
-        $css = file_get_contents(ConfigGlobal::$dir_estilos . '/calendario_grid.css.php');
+        $css = file_get_contents(OrbixRuntime::dirEstilos() . '/calendario_grid.css.php');
         break;
 }
-include_once(ConfigGlobal::$dir_estilos . '/calendario_color_cols.css.php');
+include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($colorColumnaUno);

@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
 use RuntimeException;
 use src\shared\domain\value_objects\DateTimeLocal;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * programa per generar les classes a partir de la taula
@@ -252,8 +252,8 @@ foreach ($oDbl->query($sql) as $row) {
         case '_int8':
         case '_int4':
         case '_int2':
-            $a_use_txt['array_pgInteger2php'] = "use function core\array_pgInteger2php";
-            $a_use_txt['array_php2pg'] = "use function core\array_php2pg";
+            $a_use_txt['array_pgInteger2php'] = "use function src\shared\domain\helpers\array_pgInteger2php";
+            $a_use_txt['array_php2pg'] = "use function src\shared\domain\helpers\array_php2pg";
             break;
         case 'int8':
         case 'int4':
@@ -279,7 +279,7 @@ foreach ($oDbl->query($sql) as $row) {
             $a_use_txt['ConverterDate'] = "use src\shared\infrastructure\persistence\ConverterDate";
             break;
         case 'bool':
-            $a_use_txt['is_true'] = "use function core\is_true";
+            $a_use_txt['is_true'] = "use function src\shared\domain\helpers\is_true";
             break;
         case 'json':
         case 'jsonb':
@@ -705,7 +705,7 @@ $txt_entidad = "<?php
 
 namespace src\\$grupo\\domain\\entity;";
 if (!empty($a_use_txt['is_true'])) {
-    $txt_entidad .= "\n\t" . 'use function core\is_true;';
+    $txt_entidad .= "\n\t" . 'use function src\shared\domain\helpers\is_true;';
 }
 if (!empty($a_use_txt['DateTimeLocal'])) {
     $txt_entidad .= "\n\t" . 'use src\shared\domain\value_objects\DateTimeLocal;';

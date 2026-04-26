@@ -31,7 +31,7 @@ if ($Qid_item !== 'nuevo') {
     $txt_eliminar = _("¿Está seguro que desea quitar esta id_tarifa?");
 
     $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-    $oTipoActiv = new web\TiposActividades($id_tipo_activ);
+    $oTipoActiv = new src\actividades\domain\entity\TiposActividades($id_tipo_activ);
     $isfsv = $oTipoActiv->getSfsvId();
 
     // NOTA: `nombre_form.php` esta muerto (solo referenciado por

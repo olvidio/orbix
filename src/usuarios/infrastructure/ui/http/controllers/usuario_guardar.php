@@ -9,7 +9,7 @@ use src\usuarios\domain\value_objects\Email;
 use src\usuarios\domain\value_objects\Password;
 use src\usuarios\domain\value_objects\IdPau;
 use src\usuarios\domain\value_objects\NombreUsuario;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
 

@@ -26,12 +26,12 @@
  * siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Hash;
-use web\PeriodoQue;
+use frontend\shared\web\PeriodoQue;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -67,7 +67,7 @@ $aOpciones = [
 
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('seleccion');
-$oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
+$oFormP->setTitulo(src\shared\domain\helpers\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $sBotonBuscar = "<input type=button name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">";
 $sBotonEnviar = "<input type=button name=\"enviar\" value=\"" . _("enviar mail") . "\" onclick=\"fnjs_enviar_mails();\">";
@@ -77,7 +77,7 @@ $oFormP->setBoton("$sBotonBuscar  $sBotonEnviar");
 // no puede modificar los textos.
 $perm_mod_txt = true;
 $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = $UsuarioRepository->findById((int)($_SESSION['session_auth']['id_usuario'] ?? 0));
 if ($oMiUsuario !== null) {
     $id_role = $oMiUsuario->getId_role();
     $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
@@ -97,7 +97,7 @@ $a_camposHidden = [
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
     $oHashUrl = new Hash();
     $oHashUrl->setUrl($url);
@@ -107,11 +107,11 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 
 $camposForm = 'que!id_nom!propuesta!periodo!year!empiezamin!empiezamax!sel';
 $url_data = $buildHashedUrl(
-    $web . '/src/actividadessacd/comunicacion_activ_sacd_data',
+    $api . '/src/actividadessacd/comunicacion_activ_sacd_data',
     $camposForm
 );
 $url_enviar = $buildHashedUrl(
-    $web . '/src/actividadessacd/comunicacion_activ_sacd_enviar',
+    $api . '/src/actividadessacd/comunicacion_activ_sacd_enviar',
     $camposForm
 );
 $url_com_txt = Hash::link('frontend/actividadessacd/controller/com_sacd_txt.php');

@@ -1,10 +1,11 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\AppInstalled;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Desplegable;
-use web\DesplegableArray;
+use frontend\shared\web\Desplegable;
+use frontend\shared\web\DesplegableArray;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************
@@ -25,13 +26,12 @@ if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== 0) {
         // No me sirve el de global_object, sino el de la session
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $a_sel = $oPosicion2->getParametro('id_sel');
             if (!empty($a_sel)) {
                 $Qid_usuario = (integer)strtok($a_sel[0], "#");
-            }
-            else {
+            } else {
                 $Qid_usuario = $oPosicion2->getParametro('id_usuario');
                 $Qquien = $oPosicion2->getParametro('quien');
             }
@@ -39,8 +39,7 @@ if (isset($_POST['stack'])) {
             $oPosicion2->olvidar($stack);
         }
     }
-}
-elseif (!empty($a_sel)) { //vengo de un checkbox
+} elseif (!empty($a_sel)) { //vengo de un checkbox
     $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque !== 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
         $Qid_usuario = (integer)strtok($a_sel[0], "#");
@@ -75,8 +74,7 @@ if (!empty($a_campos_src['aDataDespl'])) {
         $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
         $oDesplArrayCtrCasas->setOpcion_sel($a_campos_src['aDataDespl']['opcion_sel']);
         $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
-    }
-    else {
+    } else {
         $oDesplArrayCtrCasas = new DesplegableArray();
         $oDesplArrayCtrCasas->setAccionConjunto($a_campos_src['aDataDespl']['accionConjunto']);
         $oDesplArrayCtrCasas->setNomConjunto($a_campos_src['aDataDespl']['nom']);
@@ -84,8 +82,7 @@ if (!empty($a_campos_src['aDataDespl'])) {
         $oDesplArrayCtrCasas->setSeleccionados($a_campos_src['aDataDespl']['opcion_sel']);
         $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
     }
-}
-else {
+} else {
     $oDesplArrayCtrCasas = new DesplegableArray();
 }
 $a_campos['oDesplArrayCtrCasas'] = $oDesplArrayCtrCasas;
@@ -112,15 +109,15 @@ $a_campos['oHash'] = $oHash;
 $a_campos['oPosicion'] = $oPosicion;
 $a_campos['txt_guardar'] = $txt_guardar;
 $a_campos['txt_eliminar'] = $txt_eliminar;
-$a_campos['url_usuario_guardar'] = Hash::link(ConfigGlobal::getWeb()
+$a_campos['url_usuario_guardar'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/src/usuarios/usuario_guardar'
 );
 
 //$a_campos['url_usuario_ajax'] = '';
-//$url_usuario_ajax = ConfigGlobal::getWeb() . '/src/usuarios/usuario_ajax';
+//$url_usuario_ajax = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_ajax';
 
 
-$url = ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_grupo_lst.php';
+$url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_grupo_lst.php';
 $oHash1 = new Hash();
 $oHash1->setUrl($url);
 $oHash1->setCamposForm('id_usuario');
@@ -128,7 +125,7 @@ $oHash1->setCamposNo('scroll_id');
 $h_lst = $oHash1->linkSinValParams();
 $a_campos['h_lst'] = $h_lst;
 
-$url = ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_grupo_del_lst.php';
+$url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_grupo_del_lst.php';
 $oHash2 = new Hash();
 $oHash2->setUrl($url);
 $oHash2->setCamposForm('id_usuario');
@@ -136,7 +133,7 @@ $oHash2->setCamposNo('scroll_id');
 $h_del_lst = $oHash2->linkSinValParams();
 $a_campos['h_del_lst'] = $h_del_lst;
 
-$url_usuario_update = ConfigGlobal::getWeb() . '/src/usuarios/usuario_check_pwd';
+$url_usuario_update = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_check_pwd';
 $oHash3 = new Hash();
 $oHash3->setUrl($url_usuario_update);
 $oHash3->setCamposForm('id_usuario!usuario!password');
@@ -165,13 +162,14 @@ if (!empty($Qid_usuario)) {
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
     $a_campos['grupos_txt'] = $data['grupos_txt'];
 
+    $a_campos['procesos_installed'] = AppInstalled::is('procesos');
     $oView = new ViewNewPhtml('frontend\usuarios\controller');
     $oView->renderizar('usuario_grupo.phtml', $a_campos);
 
 
     //////////// Permisos en actividades ////////////
-    if (ConfigGlobal::is_app_installed('procesos')) {
-        $url = Hash::cmdSinParametros(ConfigGlobal::getWeb()
+    if (AppInstalled::is('procesos')) {
+        $url = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
         );
 
@@ -184,14 +182,14 @@ if (!empty($Qid_usuario)) {
     }
 
     //////////// Condiciones para los avisos de cambios ////////////
-    if (ConfigGlobal::is_app_installed('cambios')) {
-        $url_avisos = Hash::cmdSinParametros(ConfigGlobal::getWeb()
+    if (AppInstalled::is('cambios')) {
+        $url_avisos = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
             . '/frontend/cambios/controller/usuario_form_avisos.php?'
             . http_build_query(['quien' => 'usuario', 'id_usuario' => $Qid_usuario])
         );
 
         $oHash = new Hash();
-        $oHash->setUrl($url);
+        $oHash->setUrl($url_avisos);
         $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'quien' => 'usuario']);
         $hash_params = $oHash->getArrayCampos();
 

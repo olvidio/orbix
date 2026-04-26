@@ -1,7 +1,7 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
-use function core\is_true;
+use frontend\shared\config\OrbixRuntime;
+use function frontend\shared\helpers\is_true;
 
 /**
  * Ficha de "de paso" (PersonaEx). Las funciones JS `fnjs_guardar` y
@@ -25,7 +25,7 @@ $edad = $edad ?? '';
                 <select class="datos" name="id_tabla">
                     <option value="pn" <?= $id_tabla === "pn" ? 'selected' : '' ?>><?= _("numerario") ?></option>
                     <option value="pa" <?= $id_tabla === "pa" ? 'selected' : '' ?>><?= _("agregado") ?></option>
-                    <?php if (ConfigGlobal::mi_sfsv() === 2) : ?>
+                    <?php if (OrbixRuntime::miSfsv() === 2) : ?>
                         <option value="px" <?= $id_tabla === "px" ? 'selected' : '' ?>><?= _("numeraria auxiliar") ?></option>
                     <?php else : ?>
                         <option value="psssc" <?= $id_tabla === "psssc" ? 'selected' : '' ?>><?= _("sss+") ?></option>
@@ -91,7 +91,7 @@ $edad = $edad ?? '';
             <td colspan="2"><input class="contenido" size="30" id="profesion" name="profesion" value="<?= $profesion ?>"></td>
         </tr>
         <tr>
-            <?php if (ConfigGlobal::mi_sfsv() == 1) : ?>
+            <?php if (OrbixRuntime::miSfsv() == 1) : ?>
                 <td><span class="etiqueta"><?= _("sacd") ?></span></td>
                 <td><input class="contenido" id="sacd" name="sacd" type="checkbox" <?= is_true($sacd) ? 'checked' : '' ?>></td>
             <?php endif; ?>

@@ -4,7 +4,7 @@ use src\shared\config\ConfigGlobal;
 use core\ViewTwig;
 use pasarela\model\Nombre;
 use web\Hash;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");

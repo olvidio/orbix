@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\DesplegableSacdData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
 $Qid_sacd = (int)filter_input(INPUT_POST, 'id_sacd');

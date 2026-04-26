@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 use web\Hash;
 

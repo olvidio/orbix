@@ -3,7 +3,7 @@
 namespace src\procesos\application;
 
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: guarda el estado (completado/observaciones) de una tarea

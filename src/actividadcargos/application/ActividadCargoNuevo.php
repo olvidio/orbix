@@ -10,7 +10,7 @@ use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
 use src\personas\domain\entity\Persona;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Alta de un `ActividadCargo`. Si llega `asis=true` ademas da de alta

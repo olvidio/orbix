@@ -7,10 +7,11 @@
  * desde `tarifa_ubi_lista.php`; el form desde `tarifa_ubi_form.php`.
  * Las mutaciones llaman a `/src/actividadtarifas/tarifa_ubi_*`.
  *
- * @var web\CasasQue   $oForm
- * @var web\PeriodoQue $oFormAny
+ * @var frontend\shared\web\CasasQue   $oForm
+ * @var frontend\shared\web\PeriodoQue $oFormAny
  * @var string $url_lista
- * @var string $url_form
+ * @var string $url_form_modificar
+ * @var string $url_form_nuevo
  * @var string $url_copiar
  * @var string $url_update
  * @var string $url_eliminar
@@ -20,7 +21,8 @@
 ?>
 <script>
     var URL_LISTA = <?= json_encode($url_lista) ?>;
-    var URL_FORM = <?= json_encode($url_form) ?>;
+    var URL_FORM_MODIFICAR = <?= json_encode($url_form_modificar) ?>;
+    var URL_FORM_NUEVO = <?= json_encode($url_form_nuevo) ?>;
     var URL_COPIAR = <?= json_encode($url_copiar) ?>;
     var URL_UPDATE = <?= json_encode($url_update) ?>;
     var URL_ELIMINAR = <?= json_encode($url_eliminar) ?>;
@@ -56,26 +58,36 @@
         $('#div_modificar').height('auto');
         document.getElementById("overlay").style.display = "block";
 
-        var sep = URL_FORM.indexOf('?') === -1 ? '?' : '&';
-        var params;
+        // Usamos URLs firmadas distintas para "nuevo" y "modificar":
+        // validatePost exige que los parametros que llegan sean
+        // exactamente los que se firmaron.
+        var url, params;
         if (id_item === 'nuevo') {
             var id_ubi = $('#id_cdc').val();
             var year = $('#year').val();
+            url = URL_FORM_NUEVO;
             params = 'id_ubi=' + encodeURIComponent(id_ubi) + '&year=' + encodeURIComponent(year);
         } else {
+            url = URL_FORM_MODIFICAR;
             params = 'id_item=' + encodeURIComponent(id_item) + '&letra=' + encodeURIComponent(letra || '');
         }
-        fnjs_update_div('#div_modificar', URL_FORM + sep + params);
+        var sep = url.indexOf('?') === -1 ? '?' : '&';
+        fnjs_update_div('#div_modificar', url + sep + params);
     };
 
-    fnjs_copiar_tarifas = function () {
+    // ctx_copiar: cápsula HashB opaca emitida por el backend cuando
+    // sirvió el listado (token_copiar). El navegador no la inspecciona;
+    // solo la reenvía al endpoint /src/actividadtarifas/tarifa_ubi_copiar.
+    fnjs_copiar_tarifas = function (ctx_copiar) {
         if (!confirm(TXT_COPIAR)) { return; }
-        var id_ubi = $('#id_cdc').val();
-        var year = $('#year').val();
+        if (!ctx_copiar) {
+            alert(<?= json_encode(_("token de autorización no disponible, vuelva a cargar la pantalla")) ?>);
+            return;
+        }
         $.ajax({
             url: URL_COPIAR,
             type: 'post',
-            data: { id_ubi: id_ubi, year: year },
+            data: { ctx_copiar: ctx_copiar },
             dataType: 'json'
         }).done(function (rta) {
             if (!rta || rta.success !== true) {
@@ -83,7 +95,7 @@
             }
             fnjs_ver();
         }).fail(function () {
-            alert('<?= _("error de comunicación con el servidor") ?>');
+            alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
         });
     };
 
@@ -108,7 +120,7 @@
                 fnjs_cerrar();
                 fnjs_ver();
             }).fail(function () {
-                alert('<?= _("error de comunicación con el servidor") ?>');
+                alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
             });
             return false;
         });

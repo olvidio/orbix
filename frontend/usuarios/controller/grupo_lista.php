@@ -1,10 +1,11 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\AppInstalled;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -18,7 +19,7 @@ $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -64,11 +65,13 @@ $oHashSelect->setcamposNo('scroll_id');
 $oHashSelect->setArraycamposHidden(array('que' => 'eliminar_grupo'));
 
 $aQuery = ['nuevo' => 1, 'quien' => 'grupo'];
-$url_nuevo = Hash::link(ConfigGlobal::getWeb()
+$url_nuevo = Hash::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/usuarios/controller/grupo_form.php?'
     . http_build_query($aQuery));
 
 $a_campos = [
+    'procesos_installed' => AppInstalled::is('procesos'),
+    'txt_nuevo_grupo' => mb_strtoupper(_("nuevo grupo"), 'UTF-8'),
     'oHashBuscar' => $oHashBuscar,
     'username' => $Qusername,
     'oHashSelect' => $oHashSelect,

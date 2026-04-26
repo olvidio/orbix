@@ -2,7 +2,7 @@
 
 namespace src\zonassacd\domain\entity;
 
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\domain\traits\Hydratable;

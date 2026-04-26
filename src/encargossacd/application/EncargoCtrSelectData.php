@@ -12,7 +12,7 @@ use src\encargossacd\domain\value_objects\EncargoGrupo;
  * (o el modelo `frontend/encargossacd/model/DesplCentros`).
  *
  * Importante: esta clase vive en capa `application` y por tanto **no** puede
- * instanciar `web\Desplegable` (ver `refactor.md`).
+ * instanciar `frontend\shared\web\Desplegable` (ver `refactor.md`).
  */
 final class EncargoCtrSelectData
 {

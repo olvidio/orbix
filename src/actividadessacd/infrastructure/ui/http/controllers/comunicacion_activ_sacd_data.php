@@ -7,7 +7,7 @@
  */
 
 use src\actividadessacd\application\ComunicacionActividadesSacdData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $data = ComunicacionActividadesSacdData::execute($_POST);
 ContestarJson::enviar('', $data);

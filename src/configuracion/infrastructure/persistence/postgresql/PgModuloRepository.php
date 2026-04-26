@@ -10,8 +10,8 @@ use PDO;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\entity\Modulo;
 use src\shared\traits\HandlesPdoErrors;
-use function core\array_pgInteger2php;
-use function core\array_php2pg;
+use function src\shared\domain\helpers\array_pgInteger2php;
+use function src\shared\domain\helpers\array_php2pg;
 
 /**
  * Clase que adapta la tabla m0_modulos a la interfaz del repositorio
@@ -151,7 +151,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         // para los array
         $aDatos['mods_req'] = array_php2pg($Modulo->getModsReqVo()?->toArray());
         $aDatos['apps_req'] = array_php2pg($Modulo->getAppsReqVo()?->toArray());
-        array_walk($aDatos, 'core\poner_null');
+        array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
         */
 
         if ($bInsert === false) {

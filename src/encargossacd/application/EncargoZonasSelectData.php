@@ -7,7 +7,7 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 /**
  * Payload JSON para el desplegable de zonas (grupo «zonas misas»).
  * Devuelve el contrato estandar definido en `refactor.md`, sin instanciar
- * `web\Desplegable` (responsabilidad exclusiva del frontend).
+ * `frontend\shared\web\Desplegable` (responsabilidad exclusiva del frontend).
  */
 final class EncargoZonasSelectData
 {

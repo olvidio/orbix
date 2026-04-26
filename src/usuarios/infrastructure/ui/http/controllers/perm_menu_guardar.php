@@ -2,7 +2,7 @@
 
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\entity\PermMenu;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = '';
 

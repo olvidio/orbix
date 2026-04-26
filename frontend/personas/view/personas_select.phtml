@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 
 ?>
 <?= $oPosicion->mostrar_left_slide(1) ?>
@@ -8,7 +8,7 @@ use src\shared\config\ConfigGlobal;
     fnjs_home = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', '<?= ConfigGlobal::getWeb() ?>/frontend/personas/controller/home_persona.php');
+            $(formulario).attr('action', '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/personas/controller/home_persona.php');
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -16,7 +16,7 @@ use src\shared\config\ConfigGlobal;
     fnjs_modificar_ctr = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "<?= ConfigGlobal::getWeb() ?>/frontend/personas/controller/traslado_form.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/personas/controller/traslado_form.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -35,7 +35,7 @@ use src\shared\config\ConfigGlobal;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             $('#que').val("titulo");
-            $(formulario).attr('action', '<?= ConfigGlobal::getWeb() ?>/frontend/personas/controller/personas_editar.php');
+            $(formulario).attr('action', '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/personas/controller/personas_editar.php');
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -154,7 +154,7 @@ use src\shared\config\ConfigGlobal;
     fnjs_modificar = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "<?= ConfigGlobal::getWeb() ?>/frontend/personas/controller/stgr_cambio.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/personas/controller/stgr_cambio.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -163,7 +163,7 @@ use src\shared\config\ConfigGlobal;
     fnjs_copiar_tessera = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "<?= ConfigGlobal::getWeb() ?>/frontend/notas/controller/tessera_copiar_select.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/notas/controller/tessera_copiar_select.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -182,7 +182,7 @@ use src\shared\config\ConfigGlobal;
         <tr>
             <th class="no_print">
                 <span class="link_inv" onclick="fnjs_update_div('#main','<?= $pagina ?>');">
-                    <?= core\strtoupper_dlb(_("añadir persona")) ?>
+                    <?= src\shared\domain\helpers\strtoupper_dlb(_("añadir persona")) ?>
                 </span>
             </th>
         </tr>

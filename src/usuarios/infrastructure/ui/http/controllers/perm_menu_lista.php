@@ -2,7 +2,7 @@
 
 use src\permisos\domain\PermDl;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
 

@@ -15,7 +15,8 @@
  * Funciones más comunes de la aplicación
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use src\notas\application\Tesera;
 use src\personas\domain\entity\Persona;
 use web\Hash;
@@ -27,13 +28,13 @@ $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
 echo "<script>fnjs_left_side_hide()</script>";
-include_once(ConfigGlobal::$dir_estilos . '/tessera.css.php');
+include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack2 !== '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -63,7 +64,7 @@ $nom = $oPersona->getNombreApellidos();
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 
 // conversion 
-$replace = src\configuracion\domain\entity\Config::$replace;
+$replace = src\configuracion\domain\value_objects\ConfigSnapshot::$replace;
 
 function titulo($id_asignatura, $cara = "")
 {
@@ -180,7 +181,7 @@ $rowEmpty = [
 $caraA = Hash::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 $caraB = Hash::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 
-$url_pdf = ConfigGlobal::getWeb() . '/frontend/notas/controller/tessera_2_mpdf.php';
+$url_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/tessera_2_mpdf.php';
 $oHash = new Hash();
 $oHash->setUrl($url_pdf);
 $aCamposHidden = ['id_nom' => $id_nom,
@@ -210,191 +211,191 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
 </table>
 <table class="A4">
     <col style="width: 2%">
-    <col style="width: 46%">
-    <col style="width: 25%">
-    <col style="width: 1%">
-    <col style="width: 10%">
-    <col style="width: 1%">
-    <col style="width: 10%">
-    <col style="width: 1%">
-    <?php
-    if ($Qcara === "A") {
-        ?>
-        <tr>
-            <td class="space"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS:
-                <?= $region_latin ?>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI:
-                <?= $nom ?>
-            </td>
-        </tr>
-        <?php
-    }
-    $oTesera = new Tesera();
+        <col style="width: 46%">
+            <col style="width: 25%">
+                <col style="width: 1%">
+                    <col style="width: 10%">
+                        <col style="width: 1%">
+                            <col style="width: 10%">
+                                <col style="width: 1%">
+                                    <?php
+                                    if ($Qcara === "A") {
+                                    ?>
+                                    <tr>
+                                        <td class="space"></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td class="titulo" colspan="6">STUDIUM GENERALE REGIONIS:
+                                            <?= $region_latin ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI:
+                                            <?= $nom ?>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    }
+                                    $oTesera = new Tesera();
 
-    $plan = $oTesera->getPlan($id_nom);
-    $cAsignaturas = $oTesera->getAsignaturasPosibles($plan);
-    $aAprobadas = $oTesera->getAsignaturasAprobadas($id_nom, $plan);
+                                    $plan = $oTesera->getPlan($id_nom);
+                                    $cAsignaturas = $oTesera->getAsignaturasPosibles($plan);
+                                    $aAprobadas = $oTesera->getAsignaturasAprobadas($id_nom, $plan);
 
-    $num_asig = count($cAsignaturas);
-    $a = 0;
-    $j = 0;
-    $i = 0;
-    reset($aAprobadas);
-    $row = current($aAprobadas);
-    if (key($aAprobadas) === null) { // ha llegado al final
-        $row = $rowEmpty;
-    }
+                                    $num_asig = count($cAsignaturas);
+                                    $a = 0;
+                                    $j = 0;
+                                    $i = 0;
+                                    reset($aAprobadas);
+                                    $row = current($aAprobadas);
+                                    if (key($aAprobadas) === null) { // ha llegado al final
+                                        $row = $rowEmpty;
+                                    }
 
-    while ($a < count($cAsignaturas)) {
-        $oAsignatura = $cAsignaturas[$a++];
+                                    while ($a < count($cAsignaturas)) {
+                                    $oAsignatura = $cAsignaturas[$a++];
 
-        // para imprimir sólo una cara:
-        // cara A hasta la asignatura 2107
-        if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
-            $row = current($aAprobadas);
-            continue;
-        }
-        if ($Qcara === "B" && $oAsignatura->getId_nivel() < 2108) {
-            if (key($aAprobadas) === null) { // ha llegado al final
-                $row = $rowEmpty;
-            }
-            while (($row["id_nivel"] < 2107) && ($j < $num_asig)) {
-                if (key($aAprobadas) === null) { // ha llegado al final
-                    $row = $rowEmpty;
-                } else {
-                    $row = current($aAprobadas);
-                }
-                if (next($aAprobadas) === FALSE) {
-                    $row = $rowEmpty;
-                    break;
-                }
-                $j++;
-            }
-            continue;
-        }
-        while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
-            if (key($aAprobadas) === null) { // ha llegado al final
-                $row = $rowEmpty;
-                break;
-            }
-            $row = current($aAprobadas);
-            if (next($aAprobadas) === FALSE) {
-                break;
-            }
-            $j++;
-        }
-        while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
-            $clase = "impar";
-            $i % 2 ? 0 : $clase = "par";
-            $i++;
-            echo titulo($oAsignatura->getId_nivel(), $Qcara);
-            $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
-            ?>
-            <tr class="<?= $clase; ?>" valign="bottom">
-                <td></td>
-                <td>
-                    <?= $nombre_asignatura; ?>&nbsp;
-                </td>
-                <td class="dato">&nbsp;</td>
-                <td>&nbsp;</td>
-                <td class="dato">&nbsp;</td>
-                <td>&nbsp;</td>
-                <td class="dato">&nbsp;</td>
-                <td></td>
-            </tr>
-            <?php
-            $oAsignatura = $cAsignaturas[$a++];
-            if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
-                continue 2;
-            }
-        }
+                                    // para imprimir sólo una cara:
+                                    // cara A hasta la asignatura 2107
+                                    if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
+                                        $row = current($aAprobadas);
+                                        continue;
+                                    }
+                                    if ($Qcara === "B" && $oAsignatura->getId_nivel() < 2108) {
+                                        if (key($aAprobadas) === null) { // ha llegado al final
+                                            $row = $rowEmpty;
+                                        }
+                                        while (($row["id_nivel"] < 2107) && ($j < $num_asig)) {
+                                            if (key($aAprobadas) === null) { // ha llegado al final
+                                                $row = $rowEmpty;
+                                            } else {
+                                                $row = current($aAprobadas);
+                                            }
+                                            if (next($aAprobadas) === FALSE) {
+                                                $row = $rowEmpty;
+                                                break;
+                                            }
+                                            $j++;
+                                        }
+                                        continue;
+                                    }
+                                    while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
+                                        if (key($aAprobadas) === null) { // ha llegado al final
+                                            $row = $rowEmpty;
+                                            break;
+                                        }
+                                        $row = current($aAprobadas);
+                                        if (next($aAprobadas) === FALSE) {
+                                            break;
+                                        }
+                                        $j++;
+                                    }
+                                    while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
+                                    $clase = "impar";
+                                    $i % 2 ? 0 : $clase = "par";
+                                    $i++;
+                                    echo titulo($oAsignatura->getId_nivel(), $Qcara);
+                                    $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                                    ?>
+                                    <tr class="<?= $clase; ?>" valign="bottom">
+                                        <td></td>
+                                        <td>
+                                            <?= $nombre_asignatura; ?>&nbsp;
+                                        </td>
+                                        <td class="dato">&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td class="dato">&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td class="dato">&nbsp;</td>
+                                        <td></td>
+                                    </tr>
+                                    <?php
+                                    $oAsignatura = $cAsignaturas[$a++];
+                                    if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
+                                        continue 2;
+                                    }
+                                    }
 
-        if ($oAsignatura->getId_nivel() == $row["id_nivel_asig"]) {
-            $clase = "impar";
-            $i % 2 ? 0 : $clase = "par";
-            $i++;
-            echo titulo($oAsignatura->getId_nivel(), $Qcara);
-            // para las opcionales
-            if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
+                                    if ($oAsignatura->getId_nivel() == $row["id_nivel_asig"]) {
+                                    $clase = "impar";
+                                    $i % 2 ? 0 : $clase = "par";
+                                    $i++;
+                                    echo titulo($oAsignatura->getId_nivel(), $Qcara);
+                                    // para las opcionales
+                                    if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
 
-                $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
-                $algo = $oAsignatura->getNombre_asignatura() . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
-                ?>
-                <tr class="<?= $clase; ?>" valign="bottom">
-                    <td></td>
-                    <td>
-                        <?= $algo; ?>&nbsp;
-                    </td>
-                    <td class="dato">
-                        <?= $row["nota"]; ?>&nbsp;
-                    </td>
-                    <td>&nbsp;</td>
-                    <td class="dato">
-                        <?= $row["fecha"]->getFromLocal() ?>&nbsp;
-                    </td>
-                    <td>&nbsp;</td>
-                    <td class="dato">
-                        <?= $row["acta"]; ?>&nbsp;
-                    </td>
-                    <td></td>
-                </tr>
-                <?php
-            } else {
-                $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
-                ?>
-                <tr class="<?= $clase; ?>">
-                    <td></td>
-                    <td>
-                        <?= $nombre_asignatura; ?>&nbsp;
-                    </td>
-                    <td class="dato">
-                        <?= $row["nota"]; ?>&nbsp;
-                    </td>
-                    <td>&nbsp;</td>
-                    <td class="dato">
-                        <?= $row["fecha"]->getFromLocal() ?>&nbsp;
-                    </td>
-                    <td>&nbsp;</td>
-                    <td class="dato">
-                        <?= $row["acta"]; ?>&nbsp;
-                    </td>
-                    <td></td>
-                </tr>
-                <?php
-            }
-            $num_asig++;
-        } else {
-            if (!$row["id_nivel"] || ($j == $num_asig)) {
-                $clase = "impar";
-                $i % 2 ? 0 : $clase = "par";
-                $i++;
-                echo titulo($oAsignatura->getId_asignatura(), $Qcara);
-                $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
-                ?>
-                <tr class="<?= $clase; ?>">
-                    <td></td>
-                    <td>
-                        <?= $nombre_asignatura; ?>&nbsp;
-                    </td>
-                    <td class="dato">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="dato">&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td class="dato">&nbsp;</td>
-                    <td></td>
-                </tr>
-                <?php
-            }
-        }
-    }
-    ?>
-    </tr>
+                                    $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
+                                    $algo = $oAsignatura->getNombre_asignatura() . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
+                                    ?>
+                                    <tr class="<?= $clase; ?>" valign="bottom">
+                                        <td></td>
+                                        <td>
+                                            <?= $algo; ?>&nbsp;
+                                        </td>
+                                        <td class="dato">
+                                            <?= $row["nota"]; ?>&nbsp;
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td class="dato">
+                                            <?= $row["fecha"]->getFromLocal() ?>&nbsp;
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td class="dato">
+                                            <?= $row["acta"]; ?>&nbsp;
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <?php
+                                    } else {
+                                    $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                                    ?>
+                                    <tr class="<?= $clase; ?>">
+                                        <td></td>
+                                        <td>
+                                            <?= $nombre_asignatura; ?>&nbsp;
+                                        </td>
+                                        <td class="dato">
+                                            <?= $row["nota"]; ?>&nbsp;
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td class="dato">
+                                            <?= $row["fecha"]->getFromLocal() ?>&nbsp;
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td class="dato">
+                                            <?= $row["acta"]; ?>&nbsp;
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <?php
+                                    }
+                                    $num_asig++;
+                                    } else {
+                                    if (!$row["id_nivel"] || ($j == $num_asig)) {
+                                    $clase = "impar";
+                                    $i % 2 ? 0 : $clase = "par";
+                                    $i++;
+                                    echo titulo($oAsignatura->getId_asignatura(), $Qcara);
+                                    $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                                    ?>
+                                    <tr class="<?= $clase; ?>">
+                                        <td></td>
+                                        <td>
+                                            <?= $nombre_asignatura; ?>&nbsp;
+                                        </td>
+                                        <td class="dato">&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td class="dato">&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td class="dato">&nbsp;</td>
+                                        <td></td>
+                                    </tr>
+                                    <?php
+                                    }
+                                    }
+                                    }
+                                    ?>
+                                </tr>
 </table>

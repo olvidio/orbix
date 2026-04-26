@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\TesseraCopiarSelectData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error = '';
 $data = [];

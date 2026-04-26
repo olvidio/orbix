@@ -2,7 +2,7 @@
 // Front Controller con FastRoute + fallback legacy para /src
 
 use src\shared\config\ConfigGlobal;
-use core\GestorErrores;
+use src\shared\infrastructure\logging\GestorErrores;
 use DI\ContainerBuilder;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
@@ -82,11 +82,11 @@ $requestRoute = $requestRoute === '' ? '/' : $requestRoute;
 $isAnonymousSrcRoute = in_array($requestRoute, $anonymousSrcRoutes, true);
 
 // 2) Autoload y bootstrap global.
-require_once __DIR__ . '/../apps/core/global_header.inc';
+require_once __DIR__ . '/../src/shared/global_header.inc';
 if ($isAnonymousSrcRoute) {
     bootstrapAnonymousSrcRequest();
 } else {
-    require_once __DIR__ . '/../apps/core/global_object.inc';
+    require_once __DIR__ . '/../src/shared/global_object.inc';
 }
 $container = $GLOBALS['container'] ?? null;
 

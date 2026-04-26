@@ -18,7 +18,7 @@ use src\ubis\domain\value_objects\{BibliotecaText,
     RegionNameText,
     TipoCasaText,
     UbiNombreText};
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class Casa
 {

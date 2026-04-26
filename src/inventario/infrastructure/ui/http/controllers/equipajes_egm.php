@@ -3,7 +3,7 @@
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\ListaDocsGrupo;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 $error_txt = '';

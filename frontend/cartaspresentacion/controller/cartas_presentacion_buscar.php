@@ -3,19 +3,17 @@
  * Pantalla frontend: formulario de busqueda de cartas de presentacion.
  *
  * Sucesor de `apps/cartaspresentacion/controller/cartas_presentacion_buscar.php`.
- * Los datos (opciones de region, pais, delegacion) se obtienen del
+ * Los datos (opciones, `url_lista`, `hash_lista_html`) se obtienen del
  * endpoint `/src/cartaspresentacion/cartas_presentacion_buscar_data` y
- * los `<select>` se montan en la vista con `web\Desplegable`.
+ * los `<select>` se montan en la vista con `frontend\shared\web\Desplegable`.
  *
  * El form postea a `frontend/cartaspresentacion/controller/cartas_presentacion_lista.php`
  * con `que=get` y `poblacion/region/pais/dl` como filtros.
  */
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Desplegable;
-use web\Hash;
+use frontend\shared\web\Desplegable;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -32,18 +30,12 @@ $oDesplPais->setOpciones($opciones_pais);
 $oDesplPais->setNombre('pais');
 $oDesplDelegacion = Desplegable::desdeOpciones($opciones_delegacion, 'dl');
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
-$url_lista = $web . '/frontend/cartaspresentacion/controller/cartas_presentacion_lista.php';
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista);
-$oHash->setArrayCamposHidden(['que' => 'get']);
-$oHash->setCamposForm('que!poblacion!region!pais!dl');
-$oHash->setCamposNo('scroll_id!sel');
+$url_lista = (string)($payload['url_lista'] ?? '');
+$hash_lista_html = (string)($payload['hash_lista_html'] ?? '');
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'oHash' => $oHash,
+    'hash_lista_html' => $hash_lista_html,
     'url_lista' => $url_lista,
     'oDesplRegion' => $oDesplRegion,
     'oDesplPais' => $oDesplPais,

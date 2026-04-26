@@ -2,15 +2,14 @@
 
 namespace frontend\planning\controller;
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\PeriodoQue;
-use web\Posicion;
+use frontend\shared\web\PeriodoQue;
+use frontend\shared\web\Posicion;
 
 /**
  * Formulario de filtros para el planning por zonas (sacd). Calcula el
@@ -21,7 +20,7 @@ use web\Posicion;
  * reescrito como PHTML; ya no se usa Twig.
  */
 require_once("frontend/shared/global_header_front.inc");
-require_once("apps/core/global_object.inc");
+
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -69,7 +68,7 @@ if (empty($Qtrimestre)) {
 
 $id_nom_jefe = null;
 $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = $UsuarioRepository->findById((int)($_SESSION['session_auth']['id_usuario'] ?? 0));
 $id_role = $oMiUsuario->getId_role();
 
 $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);

@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\VerPlanCtrData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');

@@ -1,10 +1,11 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
+use frontend\shared\web\Desplegable;
+use frontend\shared\config\OrbixRuntime;
 use src\shared\domain\value_objects\DateTimeLocal;
-use web\Desplegable;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************
@@ -17,7 +18,7 @@ $oPosicion->recordar();
 if (isset($_POST['stack'])) {
     $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack2 !== '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -37,7 +38,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 /////////// Consulta al backend ///////////////////
 $url_backend = '/src/certificados/certificado_emitido_imprimir_datos';
-$a_campos_backend = [ 'id_nom' => $id_nom ];
+$a_campos_backend = ['id_nom' => $id_nom];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
 $nombreApellidos = $data['nombreApellidos'];
@@ -56,7 +57,7 @@ $contador = $data['contador'];
 //Idiomas
 /////////// Consulta al backend ///////////////////
 $url_backend = '/src/shared/locales_posibles';
-$a_campos_backend = [ 'id_nom' => $id_nom ];
+$a_campos_backend = ['id_nom' => $id_nom];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
 $a_locales = $data['a_locales'];
@@ -68,7 +69,7 @@ $f_certificado = $oHoy->getFromLocal();
 
 // número de protocolo
 $any = $oHoy->format('y');
-$sigla = ConfigGlobal::mi_region();
+$sigla = OrbixRuntime::miRegion();
 $certificado = "$sigla $contador/$any";
 
 // destino
@@ -79,13 +80,13 @@ $oHashCertificadoPdf->setCamposForm('certificado!firmado!f_certificado!idioma!de
 $oHashCertificadoPdf->setCamposNo('firmado');
 $oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $id_nom, 'nuevo' => 1]);
 
-$pag_certificado_2_pdf = ConfigGlobal::getWeb() . '/frontend/certificados/controller/certificado_emitido_2_mpdf.php';
+$pag_certificado_2_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/certificados/controller/certificado_emitido_2_mpdf.php';
 $oHash = new Hash();
 $oHash->setUrl($pag_certificado_2_pdf);
 $oHash->setCamposForm('id_item!guardar');
 $h = $oHash->linkSinVal();
 
-$pag_certificado_eliminar = ConfigGlobal::getWeb() . '/src/certificados/certificado_emitido_delete';
+$pag_certificado_eliminar = AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_emitido_delete';
 $oHash_e = new Hash();
 $oHash_e->setUrl($pag_certificado_eliminar);
 $oHash_e->setCamposForm('id_item');

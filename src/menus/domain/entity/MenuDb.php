@@ -5,7 +5,7 @@ namespace src\menus\domain\entity;
 use src\menus\domain\value_objects\MenuName;
 use src\menus\domain\value_objects\MenuParametros;
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class MenuDb
 {

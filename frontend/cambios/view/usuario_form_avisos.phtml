@@ -10,7 +10,7 @@
     fnjs_del_cambio = function (formulario, que_val) {
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
-            if (confirm("<?= _("¿Está seguro que desea borrar este aviso?");?>")) {
+            if (confirm(<?= json_encode(_("¿Está seguro que desea borrar este aviso?")) ?>)) {
                 $('#av_salida').val('eliminar');
                 $(formulario).attr('action', 'apps/cambios/controller/usuario_avisos_pref_ajax.php');
                 $(formulario).one("submit", function () {
@@ -21,7 +21,7 @@
                     })
                         .done(function (rta_txt) {
                             if (rta_txt !== '' && rta_txt !== '\\n') {
-                                alert('<?= _("respuesta") ?>: ' + rta_txt);
+                                alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
                             } else {
                                 <?= $oPosicion->js_atras(0); ?>
                             }

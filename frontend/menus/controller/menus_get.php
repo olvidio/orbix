@@ -1,13 +1,13 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\web\Desplegable;
+use frontend\shared\web\Hash;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use frontend\shared\web\Desplegable;
-use frontend\shared\web\Hash;
 
 
 // Crea los objetos de uso global **********************************************
@@ -87,7 +87,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     $txt_ok = '';
     $campos_chk = '';
 
-    $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+    $oMiUsuario = $UsuarioRepository->findById((int)($_SESSION['session_auth']['id_usuario'] ?? 0));
     $id_role = $oMiUsuario->getId_role();
 
     //if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
@@ -167,7 +167,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     }
 
     // para el script
-    $url = ConfigGlobal::getWeb() . '/frontend/menus/controller/menus_get.php';
+    $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/menus/controller/menus_get.php';
     $oHash2 = new Hash();
     $oHash2->setUrl($url);
     $oHash2->setCamposForm('filtro_grupo!id_menu');

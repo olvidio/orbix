@@ -1,6 +1,5 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use src\permisos\domain\PermDl;

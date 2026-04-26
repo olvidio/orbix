@@ -2,23 +2,24 @@
 
 namespace frontend\personas\controller;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\PostRequest;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use src\actividades\domain\value_objects\NivelStgrId;
-use src\personas\application\support\PersonaRepositoryResolver;
-use src\personas\domain\services\TelecoPersonaService;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 /**
  * Pantalla de cabecera de una persona (datos basicos + acceso a dossiers y ficha).
  *
  * Migrado desde `apps/personas/controller/home_persona.php` (slice 3 del
- * modulo `personas`).
+ * modulo `personas`). Refactor conforme a `refactor.md`: la resolucion de
+ * repositorios, el acceso a centros, telecos, traduccion del nivel_stgr y la
+ * normalizacion de `Qobj_pau` se han movido a
+ * `src/personas/application/HomePersonaData.php` tras el endpoint
+ * `/src/personas/home_persona_data`. Este controlador no importa clases `src\`.
  */
-require_once("apps/core/global_header.inc");
-require_once("apps/core/global_object.inc");
+require_once("frontend/shared/global_header_front.inc");
+
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -34,14 +35,6 @@ if (!empty($a_sel)) {
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-$resolver = new PersonaRepositoryResolver();
-try {
-    $repoPersona = $resolver->repositorio($Qobj_pau);
-} catch (\InvalidArgumentException) {
-    echo _("No existe la clase de la persona");
-    die();
-}
-
 // Si vengo de planning_select u otros, la tabla puede ser mas generica.
 if (isset($_SESSION['session_go_to']['sel']['tabla'])) {
     $_SESSION['session_go_to']['sel']['tabla'] = $Qobj_pau;
@@ -49,50 +42,31 @@ if (isset($_SESSION['session_go_to']['sel']['tabla'])) {
 
 $pau = "p";
 
-$oPersona = $repoPersona->findById($id_nom);
-$nom = $oPersona->getNombreApellidos();
-$dl = $oPersona->getDl();
-$f_nacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
-$situacion = $oPersona->getSituacion();
-$f_situacion = $oPersona->getF_situacion()?->getFromLocal();
-$profesion = $oPersona->getProfesion();
-$id_nivel_stgr = $oPersona->getNivel_stgr();
-$a_niveles_stgr = NivelStgrId::getArrayNivelStgr();
-$stgr = $a_niveles_stgr[$id_nivel_stgr] ?? '';
-$observ = $oPersona->getObserv();
+$campos = [
+    'id_nom' => $id_nom,
+    'id_tabla' => $id_tabla,
+    'obj_pau' => $Qobj_pau,
+];
 
-// PersonaDl (alias, sin tipar exactamente): normalizar `obj_pau` a la subclase real.
-if (get_class($oPersona) === 'src\\personas\\domain\\entity\\PersonaDl') {
-    $map = [
-        'n' => 'PersonaN',
-        'a' => 'PersonaAgd',
-        's' => 'PersonaS',
-        'sssc' => 'PersonaSSSC',
-    ];
-    $Qobj_pau = $map[$oPersona->getId_tabla()] ?? $Qobj_pau;
-}
+$data = PostRequest::getDataFromUrl('/src/personas/home_persona_data', $campos);
+$payload = is_array($data) ? $data : [];
 
-$ctr = '';
-if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {
-    $id_ctr = $oPersona->getId_ctr();
-    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-    $oCentroDl = $CentroDlRepository->findById($id_ctr);
-    $ctr = $oCentroDl?->getNombre_ubi() ?? '';
-}
-
-$telecoService = $GLOBALS['container']->get(TelecoPersonaService::class);
-$telfs_fijo = $telecoService->getTelecosPorTipo($id_nom, 'telf', " / ", "*");
-$telfs_movil = $telecoService->getTelecosPorTipo($id_nom, 'móvil', " / ", "*");
-if (!empty($telfs_fijo) && !empty($telfs_movil)) {
-    $telfs = $telfs_fijo . " / " . $telfs_movil;
-} else {
-    $telfs = ($telfs_fijo ?? '') . ($telfs_movil ?? '');
-}
-$mails = $telecoService->getTelecosPorTipo($id_nom, 'e-mail', " / ", "*");
+$Qobj_pau = (string)($payload['Qobj_pau'] ?? $Qobj_pau);
+$nom = (string)($payload['titulo'] ?? '');
+$dl = (string)($payload['dl'] ?? '');
+$f_nacimiento = (string)($payload['f_nacimiento'] ?? '');
+$situacion = (string)($payload['situacion'] ?? '');
+$f_situacion = (string)($payload['f_situacion'] ?? '');
+$profesion = (string)($payload['profesion'] ?? '');
+$stgr = (string)($payload['stgr'] ?? '');
+$observ = (string)($payload['observ'] ?? '');
+$ctr = (string)($payload['ctr'] ?? '');
+$telfs = (string)($payload['telfs'] ?? '');
+$mails = (string)($payload['mails'] ?? '');
 
 $a_parametros = ['pau' => $pau, 'id_nom' => $id_nom, 'obj_pau' => $Qobj_pau];
-$gohome = Hash::link(ConfigGlobal::getWeb() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
-$go_ficha = Hash::link(ConfigGlobal::getWeb() . '/frontend/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
+$gohome = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$go_ficha = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => $pau, 'id_pau' => $id_nom, 'obj_pau' => $Qobj_pau];
 $godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 

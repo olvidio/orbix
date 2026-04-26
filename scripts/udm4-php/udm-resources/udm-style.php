@@ -1,6 +1,14 @@
 <?php
 namespace core;
 // UDMv4.6 //
+
+// Enviar las cabeceras ANTES de incluir nada: global_object.inc puede emitir
+// output (echo validatePost, notices de sesión, mensajes de error) que impediría
+// que header() tenga efecto más abajo y el navegador recibiría text/html.
+header("Cache-Control: private");
+header("Content-Type: text/css");
+
+use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 
 /***************************************************************\
@@ -13,11 +21,11 @@ use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 \***************************************************************/
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
+require_once ("src/shared/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+require_once ("src/shared/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 
@@ -403,11 +411,8 @@ $umr[$j++]='* html .udm li.'.$umk.' a:active{'.(preg_match('/(gif|png|mng|jpg|jp
 
 
 
-//set private cache control 
-header("Cache-Control: private");
-
-//send CSS mime-type header
-header("Content-Type: text/css");
+// Las cabeceras (Cache-Control y Content-Type) se envían al inicio del fichero
+// para evitar problemas si global_object.inc emite output previo.
 
 //output copyright notice
 echo("/* UDMv4.6 */\n/***************************************************************\\\n\n  ULTIMATE DROP DOWN MENU Version 4.6 by Brothercake\n  http://www.udm4.com/\n\n  This script may not be used or distributed without license\n\n\\***************************************************************/\n\n/***************************************************************/\n/* Generated CSS - do not edit this directly                   */\n/***************************************************************/\n\n");

@@ -27,7 +27,7 @@ use src\shared\domain\value_objects\NullDateTimeLocal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\value_objects\DelegacionCode;
-use function core\strtoupper_dlb;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 
 class PersonaEx

@@ -1,10 +1,10 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use core\ViewTwig;
 use frontend\shared\model\ViewNewPhtml;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -14,7 +14,7 @@ $oPosicion->recordar();
 $Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qfiltro = (int)filter_input(INPUT_POST, 'filtro');
 
-$rstgr = ConfigGlobal::mi_ambito() === 'rstgr';
+$rstgr = OrbixRuntime::miAmbito() === 'rstgr';
 
 $a_comprobar_n = ['id_tabla' => 'n'];
 $a_comprobar_a = ['id_tabla' => 'a'];
@@ -27,7 +27,7 @@ $a_profesores_listado = ['lista' => 1];
 
 if ($rstgr && $Qfiltro === 1) {
     $aChecked = $Qdl;
-    $region_stgr = ConfigGlobal::mi_dele();
+    $region_stgr = OrbixRuntime::miDele();
     $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
 
@@ -53,16 +53,16 @@ if ($rstgr && $Qfiltro === 1) {
     }
 }
 
-$go['comprobar_n'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_n));
-$go['comprobar_a'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_a));
-$go['n_listado'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_listado));
-$go['n_numeros'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_numeros));
-$go['agd_listado'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_listado));
-$go['agd_numeros'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_numeros));
-$go['profesores_numeros'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_numeros));
-$go['profesores_listado'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_listado));
-$go['asig_faltan'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/asig_faltan_que.php');
-$go['filtro'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/notas/controller/resumen_anual.php?' . http_build_query(['filtro' => 1]));
+$go['comprobar_n'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_n));
+$go['comprobar_a'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_a));
+$go['n_listado'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_listado));
+$go['n_numeros'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_numeros));
+$go['agd_listado'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_listado));
+$go['agd_numeros'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_numeros));
+$go['profesores_numeros'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_numeros));
+$go['profesores_listado'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_listado));
+$go['asig_faltan'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/asig_faltan_que.php');
+$go['filtro'] = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/resumen_anual.php?' . http_build_query(['filtro' => 1]));
 
 if ($rstgr && $Qfiltro === 1) {
     $url = 'frontend/notas/controller/resumen_anual.php';

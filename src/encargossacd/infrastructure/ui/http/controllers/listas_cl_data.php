@@ -1,6 +1,6 @@
 <?php
 
 use src\encargossacd\application\ListasClData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', ListasClData::execute());

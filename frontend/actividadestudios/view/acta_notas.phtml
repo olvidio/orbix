@@ -2,7 +2,7 @@
 
 use src\notas\domain\entity\Nota;
 use src\notas\domain\value_objects\NotaSituacion;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 ?>
 <script>
@@ -22,7 +22,7 @@ use function core\is_true;
     fnjs_imprimir = function (form_acta) {
         mod = $('#mod').val();
         if (mod === 'nueva') {
-            alert("<?= $txt_alert_acta ?>");
+            alert(<?= json_encode((string)$txt_alert_acta) ?>);
         } else {
             fnjs_left_side_hide();
             $(form_acta).attr('action', "frontend/notas/controller/acta_imprimir.php");
@@ -34,7 +34,7 @@ use function core\is_true;
     fnjs_guardar_tessera = function (form_acta) {
         mod = $('#mod').val();
         if (mod == 'nueva') {
-            alert("<?= $txt_alert_acta ?>");
+            alert(<?= json_encode((string)$txt_alert_acta) ?>);
         } else {
             $('#que').val("3");
             $.ajax({
@@ -44,7 +44,7 @@ use function core\is_true;
                 dataType: 'json'
             }).done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= _("respuesta") ?>: " + json.mensaje);
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 }
             });
         }
@@ -54,7 +54,7 @@ use function core\is_true;
     fnjs_guardar_nota = function () {
         mod = $('#mod').val();
         if (mod === 'nueva') {
-            alert("<?= $txt_alert_acta ?>");
+            alert(<?= json_encode((string)$txt_alert_acta) ?>);
         } else {
             $('#que').val("1");
             $.ajax({
@@ -65,7 +65,7 @@ use function core\is_true;
                 global: false
             }).done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= _("respuesta") ?>: " + json.mensaje);
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 }
             });
         }

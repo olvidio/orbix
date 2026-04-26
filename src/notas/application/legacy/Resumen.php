@@ -14,7 +14,7 @@ use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class Resumen extends ClasePropiedades
 {

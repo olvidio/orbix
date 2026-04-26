@@ -9,7 +9,7 @@ use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\entity\DescTeleco;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla xd_desc_teleco a la interfaz del repositorio

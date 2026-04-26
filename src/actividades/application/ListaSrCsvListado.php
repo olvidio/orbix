@@ -10,10 +10,10 @@ use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
-use web\Lista;
-use web\Periodo;
-use web\TiposActividades;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Periodo;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso que prepara la lista de actividades de San Rafael.

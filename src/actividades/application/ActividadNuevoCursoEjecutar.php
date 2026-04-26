@@ -4,7 +4,7 @@ namespace src\actividades\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: crear actividades del nuevo curso tomando como base las del

@@ -11,7 +11,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
-use web\Periodo;
+use frontend\shared\web\Periodo;
 
 /**
  * Use case: resumen económico de casas (dias ocupados, asistentes

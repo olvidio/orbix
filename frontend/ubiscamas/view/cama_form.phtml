@@ -1,6 +1,6 @@
 <script>
     fnjs_guardar = function (formulario) {
-        let url = '<?= src\shared\config\ConfigGlobal::getWeb() ?>/src/ubiscamas/cama_update';
+        let url = '<?= htmlspecialchars($cama_update_url, ENT_QUOTES) ?>';
         $.ajax({
             url: url,
             type: 'post',
@@ -26,7 +26,7 @@
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <!-- ============================== Ficha ============================= -->
 <form id='frm2'>
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $hash_form_html ?>
 
     <h3><?= $id_cama ? _("Editar cama") : _("Nueva cama") ?></h3>
 

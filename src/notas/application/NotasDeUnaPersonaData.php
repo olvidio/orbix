@@ -8,13 +8,13 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\entity\Persona;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Agrega los datos de la tabla "select_notas_de_una_persona" (listado de
  * notas de una persona dentro del dossier 1011). Se usa desde
  * `src\notas\application\Select_notas_de_una_persona` que se ocupa solo
- * del pintado con `web\Lista` + `ViewNewPhtml`.
+ * del pintado con `frontend\shared\web\Lista` + `ViewNewPhtml`.
  */
 final class NotasDeUnaPersonaData
 {

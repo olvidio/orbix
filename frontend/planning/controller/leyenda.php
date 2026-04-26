@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 
 /**
@@ -11,11 +11,11 @@ use frontend\shared\model\ViewNewPhtml;
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-require_once("apps/core/global_object.inc");
+require_once("frontend/shared/global_header_front.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once(ConfigGlobal::$dir_estilos . '/calendario.css.php');
+include_once(OrbixRuntime::dirEstilos() . '/calendario.css.php');
 
 $oView = new ViewNewPhtml('frontend\\planning\\controller');
 $oView->renderizar('leyenda.phtml', []);

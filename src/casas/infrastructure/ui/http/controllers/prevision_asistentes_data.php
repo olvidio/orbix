@@ -4,7 +4,7 @@
  */
 
 use src\casas\application\PrevisionAsistentesData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'mi_of' => (string)filter_input(INPUT_POST, 'mi_of'),

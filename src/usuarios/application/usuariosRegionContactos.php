@@ -8,7 +8,7 @@ use src\permisos\domain\PermDl;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 class usuariosRegionContactos
 {

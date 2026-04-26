@@ -5,7 +5,7 @@
  */
 
 use src\actividadplazas\application\PeticionesGuardar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $a_actividades = (array)filter_input(INPUT_POST, 'actividades', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 

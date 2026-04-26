@@ -3,7 +3,7 @@
 namespace src\actividadestudios\application;
 
 use src\asistentes\application\services\AsistenteActividadService;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Marca el flag `est_ok` (plan de estudios confirmado) de un Asistente.

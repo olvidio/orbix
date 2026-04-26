@@ -2,7 +2,7 @@
 /**
  * Vista: formulario de busqueda de cartas de presentacion.
  *
- * @var \web\Hash $oHash
+ * @var string $hash_lista_html
  * @var string $url_lista
  * @var \web\Desplegable $oDesplRegion
  * @var \web\Desplegable $oDesplPais
@@ -19,7 +19,7 @@ fnjs_buscar = function (formulario) {
 </script>
 <div id="condiciones">
 <form id="frm_buscar_1" name="frm_buscar_1" action="" onkeydown="fnjs_enviar(event, this);">
-<?= $oHash->getCamposHtml() ?>
+<?= $hash_lista_html ?>
 <table border="1">
 <thead>
     <tr><th class="titulo_inv" colspan="4"><?= _("Cartas de presentación") ?></th></tr>

@@ -4,7 +4,7 @@
  * Llama a /src/procesos/actividad_proceso_get (JSON) y pinta la tabla.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -18,7 +18,7 @@ if ($error !== '') {
 }
 
 $aRows = (array)($data['a_rows'] ?? []);
-$webIcons = ConfigGlobal::getWeb_icons();
+$webIcons = OrbixRuntime::getWebIcons();
 
 echo '<table>';
 echo '<tr><th>' . _("ok") . '</th><th>' . _("fase (tarea)") . '</th><th>' . _("responsable") . '</th><th>' . _("observaciones") . '</th><th></th></tr>';

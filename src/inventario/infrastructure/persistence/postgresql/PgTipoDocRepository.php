@@ -9,7 +9,7 @@ use PDO;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\entity\TipoDoc;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla i_tipo_documento_dl a la interfaz del repositorio

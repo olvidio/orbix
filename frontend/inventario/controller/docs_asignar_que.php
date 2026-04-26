@@ -1,9 +1,9 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************
@@ -28,13 +28,13 @@ if (!empty($Qid_tipo_doc)) {
 }
 
 //11
-$url_asignados = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_asignado.php?';
+$url_asignados = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignado.php?';
 //14
-$url_no_asignados = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_no_asignado.php?';
+$url_no_asignados = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_no_asignado.php?';
 //2
-$url_ctr = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_de_ctr.php?';
+$url_ctr = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_de_ctr.php?';
 //5
-$url_dlb = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_de_dlb.php?';
+$url_dlb = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_de_dlb.php?';
 
 $oHash = new Hash();
 $oHash->setCamposForm('id_tipo_doc');

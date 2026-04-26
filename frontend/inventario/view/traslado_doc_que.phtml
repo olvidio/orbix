@@ -36,7 +36,7 @@
             campo = 'id_lugar_new';
             lst = '#lst_lugares_new';
         }
-        let desplegable = fnjs_crearSelectDesdeJson(data, campo, "<?= _("seleccione un lugar") ?>");
+        let desplegable = fnjs_crearSelectDesdeJson(data, campo, <?= json_encode(_("seleccione un lugar")) ?>);
         $(lst).html(desplegable);
     }
 
@@ -68,7 +68,7 @@
             const jsonResponse = await fnjs_busca_lugares('id_ubi_new');
 
             if (jsonResponse.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + jsonResponse.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + jsonResponse.mensaje);
                 // Throw an error to be caught by the catch block
                 throw new Error(jsonResponse.mensaje || "Error en la respuesta del servidor.");
             } else {
@@ -82,7 +82,7 @@
             }
         } catch (error) {
             console.error("Error en fnjs_busca_lugares_destino:", error);
-            alert("<?= _("Error al cargar lugares de destino") ?>");
+            alert(<?= json_encode(_("Error al cargar lugares de destino")) ?>);
             fnjs_put_desplegable_lugares('id_ubi_new', {});
         }
     }
@@ -94,7 +94,7 @@
             const jsonResponse = await fnjs_busca_lugares('id_ubi');
 
             if (jsonResponse.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + jsonResponse.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + jsonResponse.mensaje);
                 throw new Error(jsonResponse.mensaje || "Error en la respuesta del servidor.");
             } else {
                 let data = (typeof jsonResponse.data === 'string') ? JSON.parse(jsonResponse.data) : jsonResponse.data;
@@ -107,7 +107,7 @@
             }
         } catch (error) {
             console.error("Error en fnjs_busca_lugares_origen:", error);
-            alert("<?= _("Error al cargar lugares de origen") ?>");
+            alert(<?= json_encode(_("Error al cargar lugares de origen")) ?>);
             //fnjs_put_desplegable_lugares('id_ubi', {});
         }
     }
@@ -135,7 +135,7 @@
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 fnjs_busca_docs();
             }

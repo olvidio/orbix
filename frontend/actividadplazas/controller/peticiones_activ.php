@@ -4,7 +4,7 @@
  *
  * Obtiene la lista de actividades candidatas + peticiones actuales
  * de `/src/actividadplazas/peticiones_activ_data` y monta el
- * `web\DesplegableArray` para editar. Guardar/borrar se hacen via
+ * `frontend\shared\web\DesplegableArray` para editar. Guardar/borrar se hacen via
  * AJAX contra `/src/actividadplazas/peticiones_{guardar,eliminar}`.
  *
  * Migrada desde `apps/actividadplazas/controller/peticiones_activ.php` +
@@ -12,12 +12,12 @@
  * `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\DesplegableArray;
+use frontend\shared\web\DesplegableArray;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -81,7 +81,7 @@ $oHash->setArraycamposHidden([
     'stack' => $stack,
 ]);
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$apiBase = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
     $oHashLocal = new Hash();
     $oHashLocal->setUrl($url);
@@ -89,11 +89,11 @@ $buildHashedUrl = static function (string $url, string $campos): string {
     return $url . $oHashLocal->linkSinVal();
 };
 $url_guardar = $buildHashedUrl(
-    $web . '/src/actividadplazas/peticiones_guardar',
+    $apiBase . '/src/actividadplazas/peticiones_guardar',
     'id_nom!sactividad!actividades!actividades_mas!actividades_num'
 );
 $url_eliminar = $buildHashedUrl(
-    $web . '/src/actividadplazas/peticiones_eliminar',
+    $apiBase . '/src/actividadplazas/peticiones_eliminar',
     'id_nom!sactividad'
 );
 

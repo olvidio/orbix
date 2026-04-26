@@ -14,11 +14,11 @@
  * legacy con ramas `get_texto` y `update`) siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadessacd\application\TextoComunicacionData;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -51,7 +51,7 @@ $oDesplIdiomas->setAction('fnjs_get_texto()');
 $initial = TextoComunicacionData::execute(['clave' => 'com_sacd', 'idioma' => 'es']);
 $comunicacion = $initial['texto'] ?? '';
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
     $oHash = new Hash();
     $oHash->setUrl($url);
@@ -60,11 +60,11 @@ $buildHashedUrl = static function (string $url, string $campos): string {
 };
 
 $url_data = $buildHashedUrl(
-    $web . '/src/actividadessacd/texto_comunicacion_data',
+    $api . '/src/actividadessacd/texto_comunicacion_data',
     'clave!idioma'
 );
 $url_guardar = $buildHashedUrl(
-    $web . '/src/actividadessacd/texto_comunicacion_guardar',
+    $api . '/src/actividadessacd/texto_comunicacion_guardar',
     'clave!idioma!texto'
 );
 

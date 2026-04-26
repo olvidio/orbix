@@ -3,14 +3,21 @@
 namespace src\actividadtarifas\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\security\HashB;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\actividadtarifas\domain\value_objects\SerieId;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder: listado de `TarifaUbi` por `id_ubi` + `year`.
+ *
+ * Además del listado tabular, emite la **cápsula `HashB`** que autoriza
+ * la acción "copiar tarifas del año anterior" (`token_copiar`). Esa
+ * cápsula viaja hasta el navegador y vuelve al endpoint
+ * `tarifa_ubi_copiar`, que la abre para recuperar `id_ubi` y `year`.
+ * Ver `documentacion/hash_arquitectura.md`.
  *
  * Sucesor de la rama `get` del dispatcher legacy
  * `apps/actividadtarifas/controller/tarifa_ajax.php`.
@@ -25,7 +32,8 @@ final class TarifaUbiListaData
      *   any_actual: int,
      *   puede_anadir: bool,
      *   id_ubi: int,
-     *   year: int
+     *   year: int,
+     *   token_copiar: string
      * }
      */
     public static function execute(array $input): array
@@ -83,8 +91,15 @@ final class TarifaUbiListaData
 
                 $a_valores[$i][1] = $a_seccion[$seccion] ?? '';
                 if ($miSfsv === $seccion && $_SESSION['oPerm']->have_perm_oficina('adl')) {
+                    // `web\Lista::lista()` emite este script como
+                    // `onclick='<script>'` (comillas simples exteriores).
+                    // Codificamos la letra con `json_encode` para que el
+                    // argumento quede entre comillas dobles y no colisione
+                    // con las exteriores aunque la letra sea "I" o lleve
+                    // apóstrofe.
+                    $letraJs = json_encode($letra, JSON_UNESCAPED_SLASHES);
                     $a_valores[$i][2] = [
-                        'script' => "fnjs_modificar($id_item,'$letra')",
+                        'script' => "fnjs_modificar($id_item,$letraJs)",
                         'valor' => $letra_serie,
                     ];
                 } else {
@@ -122,6 +137,13 @@ final class TarifaUbiListaData
             || $_SESSION['oPerm']->have_perm_oficina('calendario')
         );
 
+        // Solo firmamos una cápsula para "copiar" cuando los parámetros
+        // necesarios están presentes y la acción es visible. En otros
+        // casos devolvemos cadena vacía y el frontend oculta el enlace.
+        $token_copiar = ($puede_anadir && $id_ubi !== 0 && $year !== 0)
+            ? HashB::sign('tarifa_ubi_copiar', ['id_ubi' => $id_ubi, 'year' => $year])
+            : '';
+
         return [
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
@@ -130,6 +152,7 @@ final class TarifaUbiListaData
             'puede_anadir' => (bool)$puede_anadir,
             'id_ubi' => $id_ubi,
             'year' => $year,
+            'token_copiar' => $token_copiar,
         ];
     }
 }

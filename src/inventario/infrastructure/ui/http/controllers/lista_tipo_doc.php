@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = '';
 

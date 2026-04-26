@@ -10,7 +10,7 @@ use PDO;
 use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
 use src\profesores\domain\entity\ProfesorPublicacion;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

@@ -1,6 +1,6 @@
 <?php
 // para que funcione bien la seguridad
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 
 $_POST = $_GET;
 
@@ -14,10 +14,10 @@ include(dirname(__FILE__) . '/e43_imprimir_mpdf.php');
 $content = ob_get_clean();
 
 // convert to PDF
-require_once(ConfigGlobal::$dir_libs . '/vendor/autoload.php');
+require_once OrbixRuntime::dirLibs() . '/vendor/autoload.php';
 
 // quitar los acentos , ñ etc. del nombre
-$nom =web\QuitarAcentos::convert($nom);
+$nom =frontend\shared\web\QuitarAcentos::convert($nom);
 
 //$mpdf = new \Mpdf\Mpdf(['','A4','','',10,10,10,10,6,3]);
 $config = ['mode' => 'utf-8',

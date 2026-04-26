@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 

@@ -122,7 +122,7 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
         $aDatos = [];
         $aDatos['id_grupo'] = $UsuarioGrupo->getId_grupo();
         $aDatos['id_usuario'] = $UsuarioGrupo->getId_usuario();
-        array_walk($aDatos, 'core\poner_null');
+        array_walk($aDatos, 'src\shared\domain\helpers\poner_null');
 
         //INSERT
         $campos = "(id_usuario,id_grupo)";

@@ -10,7 +10,7 @@
  * Sucesor de `apps/casas/controller/calendario_ubi_resumen_ajax.php`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
@@ -40,7 +40,7 @@ if (!$ok && $error === 'sin_gastos_anterior') {
         'year' => $any_anterior,
     ];
     array_walk($aQuery, 'core\\poner_empty_on_null');
-    $web = rtrim(ConfigGlobal::getWeb(), '/');
+    $web = AppUrlConfig::getPublicAppBaseUrl();
     $pagina = Hash::link($web . '/frontend/casas/controller/casa.php?' . http_build_query($aQuery));
     $link = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$pagina');\">$any_anterior</span>";
     echo sprintf(_("Falta introducir la información económica (total) del año anterior: %s"), $link);

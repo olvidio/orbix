@@ -5,12 +5,12 @@ namespace src\procesos\application;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Caso de uso: devuelve el listado estructurado de tipos de actividad
  * con el proceso propio / no-propio asignado. El frontend renderiza la
- * tabla con `web\Lista`.
+ * tabla con `frontend\shared\web\Lista`.
  */
 class TipoActivProcesoLista
 {

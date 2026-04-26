@@ -8,7 +8,7 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder del grid comparativo A vs B de plazas concedidas y
@@ -53,13 +53,13 @@ final class PlazasBalanceData
             case 'ca':
             case 'cv':
                 $any = $_SESSION['oConfig']->any_final_curs('est');
-                $inicurs = \core\curso_est('inicio', $any, 'est')->format('Y-m-d');
-                $fincurs = \core\curso_est('fin', $any, 'est')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'est')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
                 $any = $_SESSION['oConfig']->any_final_curs('crt');
-                $inicurs = \core\curso_est('inicio', $any, 'crt')->format('Y-m-d');
-                $fincurs = \core\curso_est('fin', $any, 'crt')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
 

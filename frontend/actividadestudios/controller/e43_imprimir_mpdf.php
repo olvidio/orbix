@@ -1,6 +1,6 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -8,11 +8,11 @@ use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\ubis\domain\entity\Ubi;
 
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
-include_once(ConfigGlobal::$dir_estilos . '/e43_mpdf.css.php');
+include_once(OrbixRuntime::dirEstilos() . '/e43_mpdf.css.php');
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $msg_err = '';
@@ -27,7 +27,7 @@ $lugar_nacimiento = $oPersona->getLugar_nacimiento();
 $f_nacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
 $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 
-$dl_origen = ConfigGlobal::mi_delef();
+$dl_origen = OrbixRuntime::miDelef();
 $dl_destino = $oPersona->getDl();
 
 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);

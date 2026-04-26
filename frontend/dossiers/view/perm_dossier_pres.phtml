@@ -1,6 +1,6 @@
 <script>
     fnjs_eliminar = function () {
-        if (!confirm("<?= $txt_eliminar ?>")) {
+        if (!confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
             return;
         }
         var url = "<?= $url_eliminar ?>";
@@ -18,7 +18,7 @@
                 fnjs_update_div('#main', "<?= $go_to ?>");
             })
             .fail(function () {
-                alert('<?= _("error de comunicacion con el servidor") ?>');
+                alert(<?= json_encode(_("error de comunicacion con el servidor")) ?>);
             });
     };
     fnjs_guardar = function () {
@@ -37,12 +37,12 @@
                 }
             })
             .fail(function () {
-                alert('<?= _("error de comunicacion con el servidor") ?>');
+                alert(<?= json_encode(_("error de comunicacion con el servidor")) ?>);
             });
     }
 </script>
 <form id='frm2'>
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $hash_campos_html ?>
     <input type="Hidden" id="que" name="que" value="">
 
     <table>
@@ -85,13 +85,13 @@
             <td colspan=2><?= _("permisos de lectura") . " ($permiso_lectura)" ?></td>
         </tr>
         <tr>
-            <td colspan=3><?= $oCuadros->cuadros_check('permiso_lectura', $permiso_lectura); ?></td>
+            <td colspan=3><?= $permiso_lectura_html ?></td>
         </tr>
         <tr>
             <td colspan=2><?= _("permisos de escritura") . " ($permiso_escritura)" ?></td>
         </tr>
         <tr>
-            <td colspan=3><?= $oCuadros->cuadros_check('permiso_escritura', $permiso_escritura); ?></td>
+            <td colspan=3><?= $permiso_escritura_html ?></td>
         </tr>
     </table>
     <?php

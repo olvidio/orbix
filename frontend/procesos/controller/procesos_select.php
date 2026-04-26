@@ -1,11 +1,11 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\procesos\support\ProcesosHashes;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
-use web\Desplegable;
-use web\Posicion;
+use frontend\shared\web\Desplegable;
+use frontend\shared\web\Posicion;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -34,15 +34,15 @@ $oDespl->setBlanco(true);
 
 // Endpoints por accion (slice 10: split de procesos_ajax). url_ver apunta
 // al frontend controller migrado en el slice 2.
-$webBase = rtrim(ConfigGlobal::getWeb(), '/');
-$url_regenerar = $webBase . '/src/procesos/procesos_regenerar';
-$url_clonar = $webBase . '/src/procesos/procesos_clonar';
+$apiBase = AppUrlConfig::getApiBaseUrl();
+$url_regenerar = $apiBase . '/src/procesos/procesos_regenerar';
+$url_clonar = $apiBase . '/src/procesos/procesos_clonar';
 // url_get / url_get_listado apuntan al renderer frontend que consume
 // los endpoints /src/procesos/procesos_get(_listado) y devuelve HTML.
 $url_get = 'frontend/procesos/controller/procesos_get.php';
 $url_get_listado = 'frontend/procesos/controller/procesos_get_listado.php';
-$url_update = $webBase . '/src/procesos/procesos_update';
-$url_eliminar = $webBase . '/src/procesos/procesos_eliminar';
+$url_update = $apiBase . '/src/procesos/procesos_update';
+$url_eliminar = $apiBase . '/src/procesos/procesos_eliminar';
 $url_ver = 'frontend/procesos/controller/procesos_ver.php';
 
 $h_regenerar = ProcesosHashes::formLink($url_regenerar, 'id_tipo_proceso');

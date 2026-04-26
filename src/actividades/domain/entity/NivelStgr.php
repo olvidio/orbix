@@ -2,7 +2,7 @@
 
 namespace src\actividades\domain\entity;
 
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\actividades\domain\value_objects\{NivelStgrId, NivelStgrDesc, NivelStgrBreve, NivelStgrOrden};
 use src\shared\domain\traits\Hydratable;

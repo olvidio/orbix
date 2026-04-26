@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\PersonaNotaEditar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Edita una `PersonaNota` existente. Responde JSON `{success, mensaje, data}`.

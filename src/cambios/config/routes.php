@@ -4,7 +4,7 @@
  * Rutas del modulo `cambios`. Las registra `public/index.php` via glob sobre
  * `src/*\/config/routes.php`. Cada endpoint vive en
  * `src/cambios/infrastructure/ui/http/controllers/` y responde JSON estandar
- * mediante `web\ContestarJson::enviar(...)`.
+ * mediante `frontend\shared\web\ContestarJson::enviar(...)`.
  */
 return static function ($r) {
     $base = __DIR__ . '/../infrastructure/ui/http/controllers';

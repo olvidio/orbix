@@ -10,7 +10,7 @@
  * @var string $url_ctr
  * @var string $h_ctr
  * @var string $url_lista
- * @var \web\Hash $oHashLista
+ * @var string $hash_lista_html
  * @var string $url_form
  * @var string $h_form
  * @var string $url_poblaciones
@@ -160,7 +160,7 @@
     fnjs_left_side_hide();
 </script>
 <form id="seleccion" name="seleccion" action="">
-<?= $oHashLista->getCamposHtml() ?>
+<?= $hash_lista_html ?>
     <table>
         <tr><th colspan="7" class="titulo_inv"><?= _("seleccionar centros con cartas de presentación") ?></th></tr>
         <tr>

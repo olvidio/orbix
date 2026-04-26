@@ -71,6 +71,9 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/inventario/inventario_dlb', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/inventario_dlb.php';
     });
+    $r->addRoute(['GET','POST'], '/src/inventario/inventario_css_inline_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/inventario_css_inline_data.php';
+    });
     $r->addRoute(['GET','POST'], '/src/inventario/lista_casas_posibles_periodo', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/lista_casas_posibles_periodo.php';
     });

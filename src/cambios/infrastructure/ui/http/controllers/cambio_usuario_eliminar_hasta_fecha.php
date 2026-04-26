@@ -4,7 +4,7 @@
  */
 
 use src\cambios\application\CambioUsuarioEliminarHastaFecha;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = ['f_fin' => (string)filter_input(INPUT_POST, 'f_fin')];
 $result = CambioUsuarioEliminarHastaFecha::execute($input);

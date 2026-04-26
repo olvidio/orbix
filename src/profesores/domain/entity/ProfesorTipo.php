@@ -2,7 +2,7 @@
 
 namespace src\profesores\domain\entity;
 
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\profesores\domain\value_objects\{ProfesorTipoId, ProfesorTipoName};
 use src\shared\domain\traits\Hydratable;

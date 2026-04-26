@@ -13,7 +13,7 @@ use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
  * editar / nuevo de una fase dentro de un tipo de proceso).
  *
  * Devuelve todos los arrays necesarios para que el controlador
- * frontend monte los `web\Desplegable` (fases, tareas, status,
+ * frontend monte los `frontend\shared\web\Desplegable` (fases, tareas, status,
  * oficinas responsables, fases previas y sus tareas) y el
  * formulario de edicion.
  */

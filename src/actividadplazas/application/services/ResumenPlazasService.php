@@ -8,8 +8,8 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use web\Desplegable;
-use function core\is_true;
+use frontend\shared\web\Desplegable;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Servicio de aplicación para gestionar el resumen de plazas de actividades.
@@ -132,7 +132,7 @@ class ResumenPlazasService
     }
 
     /**
-     * Wrapper legacy que devuelve un `web\Desplegable` envolviendo las
+     * Wrapper legacy que devuelve un `frontend\shared\web\Desplegable` envolviendo las
      * opciones de {@see getPosiblesPropietariosOpciones()}. Se mantiene
      * para compatibilidad con callers que aun renderizan el `<select>`
      * en servidor (ver `apps/asistentes/controller/form_{1301,3101}.php`).

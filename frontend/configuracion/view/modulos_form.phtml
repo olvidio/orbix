@@ -9,7 +9,7 @@
             })
                 .done(function (rta_txt) {
                     if (rta_txt !== '' && rta_txt !== '\\n') {
-                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
                     } else {
                         <?= $oPosicion->js_atras(1); ?>
                     }
@@ -29,7 +29,7 @@
             })
                 .done(function (rta_txt) {
                     if (rta_txt !== '' && rta_txt !== '\\n') {
-                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
                     } else {
                         // si es nuevo, vuelvo a la lista.
                         // TODO: introducir el id_mod creado en el formulario para poder actualizar
@@ -55,11 +55,11 @@
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <form id='frm_actualizar'>
-    <?= $oHashActualizar->getCamposHtml(); ?>
+    <?= $hash_actualizar_html ?>
 </form>
 <!-- ============================== Ficha ============================= -->
 <form id='frm2'>
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $hash_form_html ?>
 
     <h3><?= _("módulo") ?>: <?= $nom ?></h3>
 

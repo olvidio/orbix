@@ -11,7 +11,7 @@
  * Sucesor de `apps/casas/controller/casa_ec_ajax.php?que=getGastos`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
@@ -31,7 +31,7 @@ if (($payload['ok'] ?? false) === false) {
     return;
 }
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$web = AppUrlConfig::getPublicAppBaseUrl();
 $oHashGuardar = new Hash();
 $oHashGuardar->setUrl($web . '/src/casas/casa_ec_gastos_guardar');
 $sCamposForm = 'id_ubi!year';

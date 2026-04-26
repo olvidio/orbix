@@ -54,7 +54,7 @@ $h = $oHash->linkSinValParams();
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>: " + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 //tachar la fila
                 $("#fila" + fila).addClass('tachado');

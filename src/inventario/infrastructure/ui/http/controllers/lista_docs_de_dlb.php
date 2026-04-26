@@ -3,7 +3,7 @@
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 $Qinventario = (integer)filter_input(INPUT_POST, 'inventario');

@@ -9,7 +9,7 @@ use src\cambios\domain\contracts\CambioRepositoryInterface;
 use src\cambios\domain\entity\Cambio;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: registra un cambio en `av_cambios` / `av_cambios_dl`.

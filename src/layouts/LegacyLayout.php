@@ -24,6 +24,7 @@ class LegacyLayout implements LayoutInterface
     public function generateMenuHtml(array $params): array
     {
         $MenusDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
+        $MetaMenuRepository = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
 
         $htmlComponents = [];
         $li_submenus = "";
@@ -45,7 +46,6 @@ class LegacyLayout implements LayoutInterface
         $num_menu_1 = 0;
         $m = 0;
         $raiz_pral = '';
-        $MetaMenuReposiroty = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
 
         // Process MenuDb objects to generate menu data
         $menuData = [];
@@ -61,7 +61,7 @@ class LegacyLayout implements LayoutInterface
             //$ok = $oMenuDb->getOk ();
 
             if (!empty($id_metamenu)) {
-                $oMetamenu = $MetaMenuReposiroty->findById($id_metamenu);
+                $oMetamenu = $MetaMenuRepository->findById($id_metamenu);
                 if ($oMetamenu === null) {
                     echo sprintf(_("Este metamenu no existe (id): %s"), $id_metamenu);
                     echo "<br>";
@@ -117,11 +117,11 @@ class LegacyLayout implements LayoutInterface
             if ($indice == 1 && !$oPermisoMenu->visible($menu_perm)) {
                 $num_menu_1 = $orden[0];
                 continue;
-            } else {
-                $num_menu_1 = 0;
-                if (!$oPermisoMenu->visible($menu_perm)) {
-                    continue;
-                }
+            }
+
+            $num_menu_1 = 0;
+            if (!$oPermisoMenu->visible($menu_perm)) {
+                continue;
             }
 
             // Add menu item to the menu data array
@@ -156,7 +156,7 @@ class LegacyLayout implements LayoutInterface
 
             if ($indice == $indice_old) {
                 if (!empty($full_url)) {
-                    if (!is_null($url) && strstr($url, 'fnjs') !== false) {
+                    if (!is_null($url) && str_contains($url, 'fnjs')) {
                         $li_submenus .= "<li><a class=\"nohref dropdown\" onclick=\"$url;\"  >" . _($menu) . "</a>";
                     } else {
                         $li_submenus .= "<li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . "</a>";
@@ -165,7 +165,7 @@ class LegacyLayout implements LayoutInterface
                     $li_submenus .= "<li><a class=\"nohref dropdown\" >" . _($menu) . "</a>";
                 }
             } elseif ($indice > $indice_old) {
-                if (!is_null($url) && strstr($url, 'fnjs') !== false) {
+                if (!is_null($url) && str_contains($url, 'fnjs')) {
                     $li_submenus .= "<ul><li><a class=\"nohref dropdown\" onclick=\"$url;\"  >" . _($menu) . "</a>";
                 } else {
                     $li_submenus .= "<ul><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . "</a>";
@@ -174,7 +174,7 @@ class LegacyLayout implements LayoutInterface
                 for ($n = $indice; $n < $indice_old; $n++) {
                     $li_submenus .= "</li></ul>";
                 }
-                if (!is_null($url) && strstr($url, 'fnjs') !== false) {
+                if (!is_null($url) && str_contains($url, 'fnjs')) {
                     $li_submenus .= "</li><li><a class=\"nohref\" onclick=\"$url;\"  >" . _($menu) . "</a>";
                 } else {
                     $li_submenus .= "</li><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . "</a>";
@@ -239,10 +239,7 @@ class LegacyLayout implements LayoutInterface
         ob_start();
         ?>
         <!-- ULTIMATE DROP DOWN MENU Version 4.5 by Brothercake -->
-        <!-- http://www.udm4.com/
-               -->
-        <link rel="stylesheet" type="text/css"
-              //href="<?= ConfigGlobal::getWeb_scripts() ?>/udm4-php/udm-resources/udm-style.php?PHPSESSID=<?= session_id() ?>"
+        <link rel="stylesheet"
               href="<?= ConfigGlobal::getWeb_scripts() ?>/udm4-php/udm-resources/udm-style.php"
               media="screen, projection"/>
         <?php

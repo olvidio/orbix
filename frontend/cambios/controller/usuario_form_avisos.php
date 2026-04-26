@@ -1,16 +1,10 @@
 <?php
-
-
-// Crea los objetos de uso global **********************************************
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
@@ -46,7 +40,7 @@ $oTablaAvisos->setBotones($a_botones_avisos);
 $oTablaAvisos->setDatos($a_valores_avisos);
 
 
-$url_usuario_ajax = ConfigGlobal::getWeb() . '/apps/cambios/controller/usuario_avisos_pref.php';
+$url_usuario_ajax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_avisos_pref.php';
 $oHashAvisos = new web\Hash();
 $oHashAvisos->setUrl($url_usuario_ajax);
 $oHashAvisos->setCamposNo('sel!scroll_id!salida');

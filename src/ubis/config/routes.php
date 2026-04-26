@@ -113,5 +113,11 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/ubis/lista_ctrs_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/lista_ctrs_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/casas_opciones_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/casas_opciones_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/centros_opciones_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/centros_opciones_data.php';
+    });
 
 };

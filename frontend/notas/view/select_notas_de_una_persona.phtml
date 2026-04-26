@@ -10,7 +10,7 @@
     fnjs_borrar = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
-            if (confirm("<?= $txt_eliminar ?>")) {
+            if (confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
                 $('#mod').val("eliminar");
                 $(formulario).attr('action', '<?= $url_persona_nota_eliminar ?>');
                 $(formulario).one("submit", function () {
@@ -22,7 +22,7 @@
                     })
                         .done(function (json) {
                             if (!json || json.success !== true) {
-                                alert('<?= _("respuesta") ?>: ' + ((json && json.mensaje) ? json.mensaje : ''));
+                                alert(<?= json_encode(_("respuesta") . ": ") ?> + ((json && json.mensaje) ? json.mensaje : ''));
                             } else {
                                 fnjs_actualizar(formulario);
                             }

@@ -2,7 +2,7 @@
 
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 
 $ConfigRepository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);

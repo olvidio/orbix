@@ -4,7 +4,7 @@ namespace dbextern\model\entity;
 
 
 use core\ClasePropiedades;
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use DateTime;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -295,7 +295,7 @@ class PersonaBDU extends ClasePropiedades
         $aDades['camb_fic'] = $this->scamb_fic;
         $aDades['fecha_c_fic'] = $this->dfecha_c_fic;
         $aDades['compartida_con_r'] = $this->scompartida_con_r;
-        array_walk($aDades, 'core\poner_null');
+        array_walk($aDades, 'src\shared\domain\helpers\poner_null');
 
         if ($bInsert === false) {
             //UPDATE

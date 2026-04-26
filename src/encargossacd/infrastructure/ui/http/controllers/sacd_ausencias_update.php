@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\SacdAusenciasUpdate;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $resultado = SacdAusenciasUpdate::execute($_POST);
 

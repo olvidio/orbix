@@ -1,6 +1,6 @@
 <script>
     <?php
-    use src\shared\config\ConfigGlobal;if (ConfigGlobal::is_app_installed('actividadplazas')) {
+    if (!empty($plazas_installed)) {
     ?>
     fnjs_construir_desplegable_propietario = function (data) {
         if (!data) { return ''; }
@@ -46,7 +46,7 @@
     fnjs_guardar = function (formulario) {
         id_activ = $('#id_activ').val();
         if (!id_activ) {
-            alert("<?= _("debe indicar una actividad") ?>");
+            alert(<?= json_encode(_("debe indicar una actividad")) ?>);
             return;
         }
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
@@ -62,11 +62,11 @@
                     if (rta && rta.success) {
                         <?= $oPosicion->js_atras(1); ?>
                     } else {
-                        var msg = (rta && rta.mensaje) ? rta.mensaje : '<?= _("error desconocido") ?>';
-                        alert('<?= _("respuesta") ?>: ' + msg);
+                        var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
+                        alert(<?= json_encode(_("respuesta") . ": ") ?> + msg);
                     }
                 }).fail(function () {
-                    alert('<?= _("error de comunicación con el servidor") ?>');
+                    alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
                 });
                 return false;
             });
@@ -77,7 +77,7 @@
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <form id="frm_actividades_de_una_persona" name="frm_actividades_de_una_persona" action="" method="POST">
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $hash_campos_html ?? '' ?>
     <table>
         <tr class=tab>
             <th class=titulo_inv colspan=4><?= ucfirst(_("asistencia a una actividad")); ?></th>
@@ -88,9 +88,9 @@
             if (!empty($id_activ_real)) {
                 echo "<td class=contenido colspan=3 >$nom_activ</td>";
             } else {
-                echo "<td colspan=3>";
-                echo $oDesplActividades->desplegable();
-                echo "</td>";
+                echo '<td colspan=3>';
+                echo $despl_actividades_html ?? '';
+                echo '</td>';
             }
             ?>
         <tr>
@@ -111,17 +111,17 @@
                 <textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ ?? '') ?></textarea></td>
         </tr>
         <?php
-        if (ConfigGlobal::is_app_installed('actividadplazas')) {
+        if (!empty($plazas_installed)) {
             ?>
             <tr>
                 <td class=etiqueta><?= _("plaza") ?></td>
-                <td><?= $oDesplegablePlaza->desplegable(); ?></td>
+                <td><?= $desplegable_plaza_html ?? '' ?></td>
             </tr>
             <tr>
                 <td class=etiqueta><?= _("propiedad de") ?></td>
                 <td>
                     <div id='lst_propietarios'>
-                        <?= $oDesplPosiblesPropietarios->desplegable(); ?>
+                        <?= $desplegable_propietarios_html ?? '' ?>
                     </div>
                 </td>
             </tr>

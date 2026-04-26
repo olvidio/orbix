@@ -4,7 +4,7 @@
  *
  * Muestra el cuadro calendario de plazas (totales, concedidas y pedidas)
  * por dl del grupo de estudios. Obtiene los datos via
- * `/src/actividadplazas/gestion_plazas_data` y monta la `web\TablaEditable`
+ * `/src/actividadplazas/gestion_plazas_data` y monta la `frontend\shared\web\TablaEditable`
  * cuyas ediciones inline se envian a `/src/actividadplazas/gestion_plazas_update`
  * (text/plain, contrato de TablaEditable).
  *
@@ -13,13 +13,13 @@
  * `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\PeriodoQue;
-use web\TablaEditable;
-use function core\strtoupper_dlb;
+use frontend\shared\web\PeriodoQue;
+use frontend\shared\web\TablaEditable;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -47,11 +47,11 @@ $Qyear = (string)($payload['year'] ?? '');
 $Qperiodo = (string)($payload['periodo'] ?? '');
 $extendida = (bool)($payload['extendida'] ?? false);
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$apiBase = AppUrlConfig::getApiBaseUrl();
 $oHashUpdate = new Hash();
-$oHashUpdate->setUrl($web . '/src/actividadplazas/gestion_plazas_update');
+$oHashUpdate->setUrl($apiBase . '/src/actividadplazas/gestion_plazas_update');
 $oHashUpdate->setCamposForm('data!colName');
-$UpdateUrl = $web . '/src/actividadplazas/gestion_plazas_update' . $oHashUpdate->linkSinVal();
+$UpdateUrl = $apiBase . '/src/actividadplazas/gestion_plazas_update' . $oHashUpdate->linkSinVal();
 
 $oTabla = new TablaEditable();
 $oTabla->setId_tabla('gestion_plazas');

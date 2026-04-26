@@ -11,15 +11,15 @@
         request.done(function (json) {
             if (json.success !== true) {
                 if (json.mensaje === 'ya existe') {
-                    if (confirm("<?= _("Este nombre ya existe. ¿Desea reemplazarlo?") ?>")) {
+                    if (confirm(<?= json_encode(_("Este nombre ya existe. ¿Desea reemplazarlo?")) ?>)) {
                         $('#sobreescribir').val('true');
                         fnjs_guardar(formulario);
                     }
                 } else {
-                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 }
             } else {
-                alert("<?= _("menus exportados") ?>");
+                alert(<?= json_encode(_("menus exportados")) ?>);
             }
         });
     }

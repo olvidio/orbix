@@ -9,7 +9,7 @@ use PDO;
 use src\shared\traits\HandlesPdoErrors;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
 use src\zonassacd\domain\entity\ZonaSacd;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

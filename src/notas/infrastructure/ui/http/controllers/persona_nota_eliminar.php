@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\PersonaNotaEliminar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Elimina una `PersonaNota`. Responde JSON `{success, mensaje, data}`.

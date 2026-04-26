@@ -5,7 +5,7 @@ namespace src\notas\application;
 use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 /**
  * Widget "select_notas_de_una_persona": listado de notas (`PersonaNota`)

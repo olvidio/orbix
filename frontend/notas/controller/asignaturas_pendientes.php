@@ -1,12 +1,10 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use core\ViewTwig;
-use src\notas\application\TablaAlumnosAsignaturas;
-use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\PostRequest;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 /**
  * Cuadro "alumnos x asignaturas": genera una tabla con las asignaturas
@@ -21,17 +19,26 @@ use web\Lista;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-
 $Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$oService = new TablaAlumnosAsignaturas();
+$data = PostRequest::getDataFromUrl('/src/notas/asignaturas_pendientes_data', [
+    'dl' => $Qdl,
+]);
 
-if (ConfigGlobal::mi_ambito() === 'rstgr') {
+$datosTabla = [
+    'cabeceras' => $data['cabeceras'] ?? [],
+    'filas' => $data['filas'] ?? [],
+];
 
+$oTabla = new Lista();
+$oTabla->setId_tabla('pendientes');
+$oTabla->setCabeceras($datosTabla['cabeceras']);
+$oTabla->setDatos($datosTabla['filas']);
+
+
+if (!empty($data['ambito_rstgr'])) {
     $aChecked = $Qdl;
-    $region_stgr = ConfigGlobal::mi_dele();
-    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-    $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
+    $a_delegacionesStgr = $data['delegaciones'] ?? [];
 
     $oCuadros = new Desplegable();
     $oCuadros->setNombre('dl');
@@ -42,23 +49,6 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $oHash->setCamposForm('dl');
     $oHash->setcamposNo('dl');
 
-    if (!empty($Qdl)) {
-        $datosTabla = $oService->paraRegionStgr($Qdl, $a_delegacionesStgr);
-    } else {
-        $datosTabla = ['cabeceras' => [], 'filas' => []];
-    }
-
-} else {
-    $datosTabla = $oService->paraDelegacion();
-}
-
-$oTabla = new Lista();
-$oTabla->setId_tabla('pendientes');
-$oTabla->setCabeceras($datosTabla['cabeceras']);
-$oTabla->setDatos($datosTabla['filas']);
-
-
-if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $url = 'frontend/notas/controller/asignaturas_pendientes.php';
     $a_campos = [
         'oHash' => $oHash,

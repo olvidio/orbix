@@ -1,9 +1,9 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************
@@ -29,7 +29,7 @@ $oHash->setCamposForm('id_ubi!id_ubi_new!sel');
 $oHash->setCamposNo('sel!id_lugar!id_lugar_new');
 
 $oHashLugar = new Hash();
-$oHashLugar->setUrl(ConfigGlobal::getWeb(). '/src/inventario/lista_lugares_de_ubi');
+$oHashLugar->setUrl(rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/src/inventario/lista_lugares_de_ubi');
 $oHashLugar->setCamposForm('id_ubi');
 $h_lugar = $oHashLugar->linkSinValParams();
 

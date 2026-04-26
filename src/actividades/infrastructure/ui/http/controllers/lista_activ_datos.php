@@ -2,7 +2,7 @@
 /**
  * Endpoint backend: datos del listado de actividades (titulo + html_tabla).
  *
- * Responde JSON via web\ContestarJson para consumo desde el controlador
+ * Responde JSON via frontend\shared\web\ContestarJson para consumo desde el controlador
  * frontend/actividades/controller/lista_activ.php (patron refactor.md).
  *
  * @package    delegacion
@@ -11,7 +11,7 @@
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\application\ListaActivTabla;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'que' => (string)filter_input(INPUT_POST, 'que'),

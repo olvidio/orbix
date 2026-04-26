@@ -19,7 +19,7 @@ use src\ubis\domain\value_objects\{APText,
     PoblacionText,
     ProvinciaText,
     SedeNameText};
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class Direccion
 {

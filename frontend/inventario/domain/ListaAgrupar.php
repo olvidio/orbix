@@ -2,7 +2,7 @@
 
 namespace frontend\inventario\domain;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use web\Hash;
 
@@ -13,7 +13,7 @@ class ListaAgrupar
 
     public function listaAgrupar($a_valores, $id_grupo = 0)
     {
-        $pencil = ConfigGlobal::getWeb_icons() . '/pencil.png';
+        $pencil = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/images/pencil.png';
 
         // para el grupo == 0, no añado la opción de modificar el texto.
         if ($id_grupo > 0) {

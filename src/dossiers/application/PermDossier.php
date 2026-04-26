@@ -3,8 +3,8 @@ namespace src\dossiers\application;
 
 use src\shared\config\ConfigGlobal;
 use src\personas\domain\entity\Persona;
-use web\TiposActividades;
-use function core\is_true;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Classe per gestionar permisos de dossiers

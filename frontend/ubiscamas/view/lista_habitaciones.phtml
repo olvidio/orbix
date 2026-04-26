@@ -1,14 +1,17 @@
 <?php
-use src\shared\config\ConfigGlobal;
-
 /**
  * @var array $habitaciones_con_camas
  * @var array $camas_con_asistentes
  * @var array $asistentes_sin_cama
  * @var int $id_activ
  * @var int $id_ubi
- * @var string $url_update_cama
- * @var web\Hash $oHashUpdateCama
+ * @var string $reload_main_url
+ * @var string $url_update_cama_full
+ * @var string $hash_update_cama_ajax
+ * @var string $update_solo_vip_full_url
+ * @var string $hash_solo_vip_ajax
+ * @var string $distribucion_open_url
+ * @var string $nombres_open_url
  */
 
 ?>
@@ -134,11 +137,11 @@ endforeach; ?>
         });
 
         function updateSoloVip(solo_vip) {
-            let url = '<?= ConfigGlobal::getWeb() ?><?= $url_update_solo_vip ?>';
+            let url = '<?= htmlspecialchars($update_solo_vip_full_url, ENT_QUOTES) ?>';
             let parameters = {
                 id_activ: <?= $id_activ ?>,
                 solo_vip: solo_vip ? 'true' : 'false',
-                <?= $oHashSoloVip->getParamAjaxEnArray() ?>
+                <?= $hash_solo_vip_ajax ?>
             };
 
             $.ajax({
@@ -229,28 +232,24 @@ endforeach; ?>
         });
 
         window.fnjs_lista_distribucion = function () {
-            let url = '<?= ConfigGlobal::getWeb() ?>/<?= $url_distribucion ?>';
-            let parameters = '<?= $oHashDistribucion->linkConVal() ?>';
-            window.open(url + '?' + parameters, 'reporte');
+            window.open('<?= htmlspecialchars($distribucion_open_url, ENT_QUOTES) ?>', 'reporte');
         }
 
         window.fnjs_lista_nombres = function () {
-            let url = '<?= ConfigGlobal::getWeb() ?>/<?= $url_nombres ?>';
-            let parameters = '<?= $oHashNombres->linkConVal() ?>';
-            window.open(url + '?' + parameters, 'reporte_nombres');
+            window.open('<?= htmlspecialchars($nombres_open_url, ENT_QUOTES) ?>', 'reporte_nombres');
         }
 
         function fnjs_actualizar() {
-            fnjs_update_div('#main', '<?= ConfigGlobal::getWeb()?>/<?= $oHashActualizar->getUrl()?>?<?= $oHashActualizar->linkConVal()?>');
+            fnjs_update_div('#main', '<?= htmlspecialchars($reload_main_url, ENT_QUOTES) ?>');
         }
 
         function asignarCamaBD(id_cama, id_nom, callback) {
-            let url = '<?= ConfigGlobal::getWeb()?>/<?= $url_update_cama?>';
+            let url = '<?= htmlspecialchars($url_update_cama_full, ENT_QUOTES) ?>';
             let parameters = {
                 id_activ: <?= $id_activ ?>,
                 id_nom: id_nom,
                 id_cama: id_cama,
-            <?= $oHashUpdateCama->getParamAjaxEnArray() ?>
+            <?= $hash_update_cama_ajax ?>
         };
 
         $.ajax({

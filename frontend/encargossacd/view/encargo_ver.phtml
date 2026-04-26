@@ -127,7 +127,7 @@
             })
                 .done(function (json) {
                     if (!json || json.success !== true) {
-                        alert('<?= _("respuesta") ?>: ' + (json && json.mensaje ? json.mensaje : ''));
+                        alert(<?= json_encode(_("respuesta") . ": ") ?> + (json && json.mensaje ? json.mensaje : ''));
                         return;
                     }
                     <?= $oPosicion->js_atras(1) ?>

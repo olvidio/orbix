@@ -50,8 +50,8 @@ final class MatriculaAutomatica
         $mes = (int) date('m');
         $fin_m = $_SESSION['oConfig']->getMesFinStgr();
         $any = ($mes > $fin_m) ? (int) date('Y') + 1 : (int) date('Y');
-        $inicurs_ca = \core\curso_est('inicio', $any)->format('Y-m-d');
-        $fincurs_ca = \core\curso_est('fin', $any)->format('Y-m-d');
+        $inicurs_ca = \src\shared\domain\helpers\curso_est('inicio', $any)->format('Y-m-d');
+        $fincurs_ca = \src\shared\domain\helpers\curso_est('fin', $any)->format('Y-m-d');
 
         $aWhere = [];
         $aOperador = [];

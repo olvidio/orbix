@@ -3,7 +3,7 @@
 namespace dbextern\model\entity;
 
 use core\ClasePropiedades;
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 
 /**
@@ -131,7 +131,7 @@ class IdMatchPersona extends ClasePropiedades
         $aDades = [];
         $aDades['id_orbix'] = $this->iid_orbix;
         $aDades['id_tabla'] = $this->sid_tabla;
-        array_walk($aDades, 'core\poner_null');
+        array_walk($aDades, 'src\shared\domain\helpers\poner_null');
 
         if ($bInsert === false) {
             //UPDATE

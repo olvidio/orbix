@@ -1,0 +1,31 @@
+<?php
+/**
+ * @var string $hash_form_html
+ * @var string $form_action
+ * @var \frontend\shared\web\Desplegable $oDeplCentros
+ */
+?>
+<form id="lista" name="lista" action="<?= htmlspecialchars($form_action, ENT_QUOTES) ?>" method="post">
+    <?= $hash_form_html ?>
+    <table>
+        <thead>
+        <tr>
+            <th colspan=7><?php echo ucfirst(_("escoger un centro")); ?></th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr class=botones>
+            <td colspan="7"><input TYPE="button" onclick="fnjs_enviar_formulario('#lista');"
+                                   VALUE="<?= ucfirst(_("listar")) ?>"></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        <tr>
+            <td class="etiqueta"><?= ucfirst(_("nombre del centro")) ?>:</TD>
+            <td class="contenido">
+                <?= $oDeplCentros->desplegable(); ?>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>

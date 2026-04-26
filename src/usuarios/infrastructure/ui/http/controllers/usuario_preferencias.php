@@ -4,7 +4,7 @@ use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = '';
 

@@ -10,7 +10,7 @@
  */
 
 use src\usuarios\application\AppMobileLogin;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 header('Content-Type: application/json; charset=UTF-8');
 

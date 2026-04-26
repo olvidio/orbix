@@ -1,8 +1,8 @@
 <?php
 
 
+use frontend\shared\web\Posicion;
 use web\Hash;
-use web\Posicion;
 
 require __DIR__ . '/../../libs/vendor/autoload.php';
 

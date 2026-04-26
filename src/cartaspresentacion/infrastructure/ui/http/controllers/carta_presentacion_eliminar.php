@@ -4,7 +4,7 @@
  */
 
 use src\cartaspresentacion\application\CartaPresentacionEliminar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),

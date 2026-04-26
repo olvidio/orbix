@@ -2,12 +2,13 @@
 
 namespace frontend\planning\controller;
 
-use src\shared\config\ConfigGlobal;
 use frontend\planning\support\PlanningRenderer;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\planning\application\ActividadesPorZonasService;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 /**
  * Planning (calendario) por zonas sacd. El servicio
@@ -20,7 +21,7 @@ use web\Posicion;
  * ahora la presentacion vive en la vista PHTML.
  */
 require_once("frontend/shared/global_header_front.inc");
-require_once("apps/core/global_object.inc");
+
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -51,19 +52,19 @@ $data = ActividadesPorZonasService::execute(
     $id_nom_jefe
 );
 
-$goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+$goLeyenda = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 switch ($Qmodelo) {
     case 2:
     case 1:
-        include_once(ConfigGlobal::$dir_estilos . '/calendario.css.php');
+        include_once(OrbixRuntime::dirEstilos() . '/calendario.css.php');
         break;
     case 3:
-        include_once(ConfigGlobal::$dir_estilos . '/calendario_grid.css.php');
-        include_once('apps/web/calendario_grid.php');
+        include_once(OrbixRuntime::dirEstilos() . '/calendario_grid.css.php');
+        include_once('frontend/shared/web/calendario_grid.php');
         break;
 }
-include_once(ConfigGlobal::$dir_estilos . '/calendario_color_cols.css.php');
+include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($colorColumnaUno);

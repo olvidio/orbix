@@ -15,9 +15,9 @@
             if (json && json.success === true) {
                 var incorporadas = (json.data && json.data.incorporadas) || 0;
                 var mensaje_final = (json.data && json.data.mensaje_final) || '';
-                msg = '<?= _("incorporadas") ?>: ' + incorporadas + '<br>' + mensaje_final;
+                msg = <?= json_encode(_("incorporadas")) ?> + ': ' + incorporadas + '<br>' + mensaje_final;
             } else {
-                msg = (json && json.mensaje) ? json.mensaje : '<?= _("error") ?>';
+                msg = (json && json.mensaje) ? json.mensaje : <?= json_encode(_("error")) ?>;
             }
             $('#resultado').html(msg);
         }).always(function () {

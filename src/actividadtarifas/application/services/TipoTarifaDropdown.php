@@ -10,7 +10,7 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
  * en `frontend/actividadtarifas`.
  *
  * Sigue la convencion `refactor.md`: `src/` solo devuelve `array
- * value => label`. El componente `web\Desplegable` se instancia en la
+ * value => label`. El componente `frontend\shared\web\Desplegable` se instancia en la
  * vista / controlador frontend.
  */
 final class TipoTarifaDropdown

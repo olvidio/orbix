@@ -1,9 +1,9 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -72,9 +72,9 @@ foreach ($a_fases_previas as $fila) {
 }
 $dep_num = count($aDesplFasesPrevias);
 
-$webBase = rtrim(ConfigGlobal::getWeb(), '/');
-$url_update = $webBase . '/src/procesos/procesos_update';
-$url_depende = $webBase . '/src/procesos/procesos_depende';
+$apiBase = AppUrlConfig::getApiBaseUrl();
+$url_update = $apiBase . '/src/procesos/procesos_update';
+$url_depende = $apiBase . '/src/procesos/procesos_depende';
 
 $oHash = new Hash();
 $oHash->setUrl($url_update);

@@ -16,7 +16,7 @@
                 }
             });
             if (permiso === 'false') {
-                alert("<?= $txt_no_permiso ?>");
+                alert(<?= json_encode((string)$txt_no_permiso) ?>);
             } else {
                 $('#mod').val("editar");
                 $(formulario).attr('action', "<?= $url_form ?>");
@@ -34,9 +34,9 @@
                 }
             });
             if (permiso === 'false') {
-                alert("<?= $txt_no_permiso ?>");
+                alert(<?= json_encode((string)$txt_no_permiso) ?>);
             } else {
-                if (confirm("<?= $txt_eliminar ?>")) {
+                if (confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
                     $('#mod').val("eliminar");
                     var datos = $(formulario).serialize();
                     $.ajax({
@@ -46,7 +46,7 @@
                         dataType: 'json'
                     }).done(function (json) {
                         if (json.success !== true) {
-                            alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                            alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                         } else {
                             fnjs_actualizar(formulario);
                         }

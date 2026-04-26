@@ -1,7 +1,7 @@
 <?php
 
 use src\actividades\application\TipoActivLista;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $useCase = new TipoActivLista();
 $html = $useCase->execute($_POST);

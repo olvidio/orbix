@@ -1,7 +1,7 @@
 <?php
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $data = [

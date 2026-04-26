@@ -2,7 +2,7 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 /**

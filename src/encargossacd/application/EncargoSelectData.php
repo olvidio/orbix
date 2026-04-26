@@ -9,7 +9,7 @@ use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 /**
  * Datos para la lista de encargos (`encargo_select`). El frontend construye
- * la `web\Lista` y los enlaces; aqui devolvemos unicamente los datos planos
+ * la `frontend\shared\web\Lista` y los enlaces; aqui devolvemos unicamente los datos planos
  * de cada fila.
  */
 final class EncargoSelectData

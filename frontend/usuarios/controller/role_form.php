@@ -1,11 +1,10 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -25,7 +24,7 @@ if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $a_sel = $oPosicion2->getParametro('sel');
             $Qid_role = (integer)strtok($a_sel[0], "#");

@@ -3,6 +3,8 @@
 namespace core;
 
 
+use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 
 if (empty($estilo_color)) {

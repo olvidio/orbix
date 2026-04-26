@@ -300,7 +300,7 @@ class AsistenteActividadService
             $cAsistentesOk[$apellidos] = $oAsistente;
         }
 
-        uksort($cAsistentesOk, "core\strsinacentocmp");
+        uksort($cAsistentesOk, "src\shared\domain\helpers\strsinacentocmp");
 
         if (!empty($msg_err)) {
             echo $msg_err;

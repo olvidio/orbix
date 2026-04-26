@@ -12,7 +12,7 @@ fnjs_guardar=function(formulario){
     let datos = $(formulario).serialize();
     $.ajax({ url: '<?= $url_ajax_update ?>', type: 'post', data: datos })
         .done(function (rta_txt) {
-            if (rta_txt !== '' && rta_txt !== '\n') { alert ('<?= _("respuesta") ?>: '+rta_txt); }
+            if (rta_txt !== '' && rta_txt !== '\n') { alert (<?= json_encode(_("respuesta") . ": ") ?>+rta_txt); }
             fnjs_busca_ctrs();
         });
 }

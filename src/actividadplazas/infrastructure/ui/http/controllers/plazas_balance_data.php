@@ -6,7 +6,7 @@
  */
 
 use src\actividadplazas\application\PlazasBalanceData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'dl' => (string)filter_input(INPUT_POST, 'dl'),

@@ -3,7 +3,7 @@
 // Rutas del modulo `misas`. Las registra `public/index.php` via glob sobre
 // `src/*/config/routes.php`. Cada endpoint vive en
 // `src/misas/infrastructure/ui/http/controllers/` y responde JSON mediante
-// `web\ContestarJson::enviar(...)`.
+// `frontend\shared\web\ContestarJson::enviar(...)`.
 return static function ($r) {
     // Slice 3: Iniciales SACD por zona.
     $r->addRoute(['GET', 'POST'], '/src/misas/modificar_iniciales_sacd_zona_data', function () {

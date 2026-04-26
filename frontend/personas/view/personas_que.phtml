@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use web\Hash;
 
 ?>
@@ -29,7 +29,7 @@ use web\Hash;
                        onclick="fnjs_enviar_formulario('#frm_personas_que')"
                        value="<?= ucfirst(_("buscar")) ?>" class="btn_ok">
                 <input type="reset"
-                       onclick="fnjs_update_div('#main','<?= Hash::link(ConfigGlobal::getWeb() . '/frontend/personas/controller/personas_que.php?' . http_build_query(['tabla' => $tabla, 'tipo' => $tipo])) ?>')"
+                       onclick="fnjs_update_div('#main','<?= Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_que.php?' . http_build_query(['tabla' => $tabla, 'tipo' => $tipo])) ?>')"
                        value="<?= ucfirst(_("borrar")) ?>">
             </th>
         </tr>

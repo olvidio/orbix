@@ -3,12 +3,12 @@
  * Controlador AJAX HTML: listado de `GrupoCasa`.
  *
  * Obtiene los datos de `/src/casas/grupo_lista_data` y los pinta con
- * `web\Lista`. Sucesor de la lista que construía
+ * `frontend\shared\web\Lista`. Sucesor de la lista que construía
  * `apps/casas/controller/grupo_lista.php`.
  */
 
 use frontend\shared\PostRequest;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once 'frontend/shared/global_header_front.inc';
 

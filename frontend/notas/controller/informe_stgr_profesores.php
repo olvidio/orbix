@@ -22,7 +22,7 @@ $oInforme = new InformeStgrProfesores();
 $datos = $oInforme->calcular($lista);
 
 $a_campos = [
-    'titulo' => \core\strtoupper_dlb(_("profesores stgr")),
+    'titulo' => \src\shared\domain\helpers\strtoupper_dlb(_("profesores stgr")),
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],

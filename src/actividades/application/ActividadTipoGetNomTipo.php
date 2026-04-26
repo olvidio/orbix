@@ -2,9 +2,9 @@
 
 namespace src\actividades\application;
 
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Devuelve el payload (id, opciones, selected, blanco, val_blanco, action) del

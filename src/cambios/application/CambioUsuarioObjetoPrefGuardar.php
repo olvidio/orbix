@@ -5,7 +5,7 @@ namespace src\cambios\application;
 use src\shared\config\ConfigGlobal;
 use src\cambios\domain\contracts\CambioUsuarioObjetoPrefRepositoryInterface;
 use src\cambios\domain\entity\CambioUsuarioObjetoPref;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Mutacion: crea o actualiza un `CambioUsuarioObjetoPref` (la parte de la

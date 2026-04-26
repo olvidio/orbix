@@ -6,7 +6,7 @@ use src\cambios\domain\value_objects\OperadorPref;
 use src\cambios\domain\value_objects\PropiedadNombre;
 use src\shared\domain\traits\Hydratable;
 use src\ubis\domain\entity\Ubi;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class CambioUsuarioPropiedadPref
 {

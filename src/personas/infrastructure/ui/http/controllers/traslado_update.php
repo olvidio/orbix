@@ -12,7 +12,7 @@
  */
 
 use src\personas\application\TrasladoUpdate;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = TrasladoUpdate::execute($_POST);
 

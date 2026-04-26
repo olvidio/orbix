@@ -4,7 +4,7 @@
 // Crea los objetos de uso global **********************************************
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\PeriodoQue;
+use frontend\shared\web\PeriodoQue;
 
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************

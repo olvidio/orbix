@@ -2,20 +2,12 @@
 /**
  * Pantalla: listado de avisos (cambios anotados) del usuario conectado o,
  * para admins, del usuario seleccionado en el formulario superior.
- *
- * Migrada desde `apps/cambios/controller/avisos_generar.php` +
- * `avisos_generar_ajax.php` siguiendo `refactor.md`. Los endpoints backend
- * viven en `/src/cambios/...`. La eliminacion por seleccion o por fecha
- * son mutaciones JSON.
  */
-
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\cambios\domain\value_objects\AvisoTipoId;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -35,20 +27,21 @@ if ($is_admin) {
         $Qaviso_tipo = (int)filter_input(INPUT_POST, 'aviso_tipo');
     }
 } else {
-    $Qid_usuario = (int)ConfigGlobal::mi_id_usuario();
-    $Qaviso_tipo = AvisoTipoId::TIPO_LISTA;
+    $Qid_usuario = 0;
+    $Qaviso_tipo = 0;
 }
 
+$data = PostRequest::getDataFromUrl('/src/cambios/avisos_generar_lista_data', [
+    'id_usuario' => $Qid_usuario,
+    'aviso_tipo' => $Qaviso_tipo,
+    'is_admin' => $is_admin ? 1 : 0,
+]);
+$Qid_usuario = (int)($data['effective_id_usuario'] ?? $Qid_usuario);
+$Qaviso_tipo = (int)($data['effective_aviso_tipo'] ?? $Qaviso_tipo);
 $oPosicion->setParametros([
     'id_usuario' => $Qid_usuario,
     'aviso_tipo' => $Qaviso_tipo,
 ], 1);
-
-$a_campos_backend = [
-    'id_usuario' => $Qid_usuario,
-    'aviso_tipo' => $Qaviso_tipo,
-];
-$data = PostRequest::getDataFromUrl('/src/cambios/avisos_generar_lista_data', $a_campos_backend);
 $a_valores = $data['a_valores'] ?? [];
 $aOpcionesUsuarios = $data['aOpcionesUsuarios'] ?? [];
 $aOpcionesAvisoTipo = $data['aOpcionesAvisoTipo'] ?? [];
@@ -77,10 +70,10 @@ $oHashCond->setCamposForm("id_usuario!aviso_tipo");
 
 $oTabla = null;
 $oHash = null;
-$url_eliminar = '';
-$url_eliminar_fecha = '';
-$h_eliminar = '';
-$h_eliminar_fecha = '';
+$url_eliminar = (string)($data['url_eliminar'] ?? '');
+$url_eliminar_fecha = (string)($data['url_eliminar_fecha'] ?? '');
+$h_eliminar = (string)($data['h_eliminar'] ?? '');
+$h_eliminar_fecha = (string)($data['h_eliminar_fecha'] ?? '');
 if (!empty($Qid_usuario)) {
     $a_cabeceras = [
         ['name' => ucfirst(_("fecha cambio")), 'class' => 'fecha_hora'],
@@ -105,21 +98,6 @@ if (!empty($Qid_usuario)) {
         'Gstack' => $stack,
     ]);
     $oHash->setCamposNo('f_fin!scroll_id!sel!refresh');
-
-    // Hashes para las mutaciones (AJAX JSON).
-    $web = rtrim(ConfigGlobal::getWeb(), '/');
-    $url_eliminar = $web . '/src/cambios/cambio_usuario_eliminar';
-    $url_eliminar_fecha = $web . '/src/cambios/cambio_usuario_eliminar_hasta_fecha';
-
-    $oHashElim = new Hash();
-    $oHashElim->setUrl($url_eliminar);
-    $oHashElim->setCamposNo('sel');
-    $h_eliminar = $oHashElim->linkSinValParams();
-
-    $oHashElimF = new Hash();
-    $oHashElimF->setUrl($url_eliminar_fecha);
-    $oHashElimF->setCamposForm('f_fin');
-    $h_eliminar_fecha = $oHashElimF->linkSinValParams();
 }
 
 $a_campos_view = [

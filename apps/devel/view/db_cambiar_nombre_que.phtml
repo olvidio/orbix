@@ -24,11 +24,11 @@ use src\shared\config\ConfigGlobal;
         esquema = $('#esquema').val();
 
         if (!dl) {
-            alert("<?= $msg_falta_dl ?>");
+            alert(<?= json_encode((string)$msg_falta_dl) ?>);
             err = 1;
         }
         if (!esquema) {
-            alert("<?= $msg_falta_esquema ?>");
+            alert(<?= json_encode((string)$msg_falta_esquema) ?>);
             err = 1;
         }
 
@@ -43,11 +43,11 @@ use src\shared\config\ConfigGlobal;
         esquema_d = $('#esquema_del').val();
 
         if (!esquema_m) {
-            alert("<?= $msg_falta_esquema ?>");
+            alert(<?= json_encode((string)$msg_falta_esquema) ?>);
             err = 1;
         }
         if (!esquema_d) {
-            alert("<?= $msg_falta_esquema ?>");
+            alert(<?= json_encode((string)$msg_falta_esquema) ?>);
             err = 1;
         }
 

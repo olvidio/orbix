@@ -4,7 +4,7 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use core\ViewPhtml;
 use src\ubis\application\services\RegionDropdown;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************

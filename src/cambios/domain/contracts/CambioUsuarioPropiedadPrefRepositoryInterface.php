@@ -5,7 +5,7 @@ namespace src\cambios\domain\contracts;
 use src\cambios\domain\entity\CambioUsuarioPropiedadPref;
 
 
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase CambioUsuarioPropiedadPref y su Repositorio
  *

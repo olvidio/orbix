@@ -4,7 +4,7 @@ namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\Region;
 
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase Region y su Repositorio
  *

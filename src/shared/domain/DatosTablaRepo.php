@@ -2,8 +2,8 @@
 
 namespace src\shared\domain;
 
-use function core\is_true;
-use function core\urlsafe_b64encode;
+use function src\shared\domain\helpers\is_true;
+use function src\shared\domain\helpers\urlsafe_b64encode;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_dossiers_abiertos

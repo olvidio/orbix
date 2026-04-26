@@ -10,15 +10,15 @@ use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
-use web\Periodo;
-use web\TiposActividades;
+use frontend\shared\web\Periodo;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder: listado económico de actividades por casa (pantalla
  * `casa_que` con `que=get`).
  *
  * Devuelve las cabeceras y filas listas para renderizar con
- * `web\Lista`. El filtrado por permisos de actividad se sigue haciendo
+ * `frontend\shared\web\Lista`. El filtrado por permisos de actividad se sigue haciendo
  * aquí porque depende del usuario de la sesión.
  */
 final class CasaIngresosListaData

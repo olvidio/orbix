@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Data builder de la pantalla resumen de plazas por actividad.

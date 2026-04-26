@@ -2,7 +2,7 @@
 
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\CamaId;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_cama = (string)filter_input(INPUT_POST, 'id_cama');
 

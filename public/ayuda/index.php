@@ -2,13 +2,14 @@
 namespace core;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use src\shared\config\ConfigGlobal;
 use web\Hash;
 
-require_once ("apps/core/global_header.inc");
+require_once ("src/shared/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+require_once ("src/shared/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $pruebas = 0;
@@ -22,7 +23,7 @@ include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
 $aQuery = [ 'pau' => 'a' ];
 // el hppt_build_query no pasa los valores null
 if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\poner_empty_on_null');
+    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 }
 $goMisas = Hash::link('frontend/misas/controller/misas_index.php?' . http_build_query($aQuery));
 ?>

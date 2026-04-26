@@ -12,7 +12,7 @@ use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\entity\ActividadFase;
 use src\procesos\domain\entity\ActividadProcesoTarea;
 use src\procesos\domain\value_objects\FaseId;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Servicio de aplicación para gestionar los procesos de actividades

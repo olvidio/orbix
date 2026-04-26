@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace frontend\misas\support;
 
-use function core\strtoupper_dlb;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 use src\shared\domain\value_objects\DateTimeLocal;
-use web\PeriodoQue;
+use frontend\shared\web\PeriodoQue;
 
 /**
  * Helper para construir el `<td>` HTML del desplegable "Período" usado en las

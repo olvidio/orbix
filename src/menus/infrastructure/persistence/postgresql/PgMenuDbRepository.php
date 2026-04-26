@@ -9,9 +9,9 @@ use PDO;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
 use src\shared\traits\HandlesPdoErrors;
-use function core\array_pgInteger2php;
-use function core\array_php2pg;
-use function core\is_true;
+use function src\shared\domain\helpers\array_pgInteger2php;
+use function src\shared\domain\helpers\array_php2pg;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla aux_menus a la interfaz del repositorio

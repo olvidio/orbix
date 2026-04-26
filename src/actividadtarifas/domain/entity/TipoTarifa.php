@@ -93,7 +93,7 @@ class TipoTarifa
     {
         $a_modos = TarifaModoId::getArrayModo();
 
-        return $a_modos($this->modo);
+        return $a_modos[$this->modo->value()];
     }
 
 

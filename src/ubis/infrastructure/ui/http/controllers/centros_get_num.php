@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\CentrosGetNumData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', CentrosGetNumData::execute());
 

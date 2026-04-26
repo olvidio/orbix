@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 
 ?>
 <?= $oPosicion->mostrar_left_slide(1); ?>
@@ -9,7 +9,7 @@ use src\shared\config\ConfigGlobal;
         <tr>
             <td>
                 <span class=link onclick=fnjs_update_div('#main','<?= $godossiers ?>')><img
-                            src=<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif border=0 width=40 height=40
+                            src=<?= OrbixRuntime::getWebIcons() ?>/dossiers.gif border=0 width=40 height=40
                             alt='<?= $alt ?>'>(<?= $dos ?>)</span>
             </td>
             <td class=titulo>

@@ -282,7 +282,7 @@ trait Hydratable
             }
             // Para arrays PHP, convertir a formato PostgreSQL
             elseif (is_array($value)) {
-                $value = \core\array_php2pg($value);
+                $value = \src\shared\domain\helpers\array_php2pg($value);
             }
             // Para booleanos que no vengan de isXxx() (detectados por tipo)
             elseif (is_bool($value)) {
@@ -292,8 +292,8 @@ trait Hydratable
             $data[$name] = $value;
         }
 
-        // Aplicar core\poner_null para convertir strings vacíos a NULL
-        array_walk($data, 'core\poner_null');
+        // Aplicar src\shared\domain\helpers\poner_null para convertir strings vacíos a NULL
+        array_walk($data, 'src\shared\domain\helpers\poner_null');
 
         return $data;
     }

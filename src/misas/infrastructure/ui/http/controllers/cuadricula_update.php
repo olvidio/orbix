@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\CuadriculaUpdate;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Quuid_item = (string)filter_input(INPUT_POST, 'uuid_item');
 $Qkey = (string)filter_input(INPUT_POST, 'key');

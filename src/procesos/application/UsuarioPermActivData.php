@@ -9,7 +9,7 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\PermAccion;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: datos para la pantalla usuario_perm_activ (alta/edicion
@@ -17,7 +17,7 @@ use function core\is_true;
  *
  * Agrupa la resolucion de repositorios para que el controlador frontend
  * no acceda directamente al contenedor ni a `use src\...`. El frontend
- * recibe arrays serializables y construye los `web\Desplegable`.
+ * recibe arrays serializables y construye los `frontend\shared\web\Desplegable`.
  */
 class UsuarioPermActivData
 {

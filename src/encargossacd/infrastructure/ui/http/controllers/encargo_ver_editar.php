@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\EncargoVerEditar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = $_POST;
 $result = EncargoVerEditar::execute($input);

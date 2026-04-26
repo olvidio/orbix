@@ -5,7 +5,7 @@ namespace src\shared\domain;
 use src\configuracion\domain\entity\ModuloInstalado;
 use src\profesores\domain\entity\ProfesorLatin;
 use src\shared\domain\value_objects\DateTimeLocal;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class DatosUpdateRepo
 {

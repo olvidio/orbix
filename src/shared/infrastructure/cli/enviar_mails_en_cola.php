@@ -41,8 +41,8 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 use src\shared\application\EnviarMailsEnCola;
 
 // No entra por public/index.php: hace falta el mismo arranque que el front (autoload, sesión, contenedor).
-require_once("apps/core/global_header.inc");
-require_once("apps/core/global_object.inc");
+require_once("src/shared/global_header.inc");
+require_once("src/shared/global_object.inc");
 
 $resumen = (new EnviarMailsEnCola())->execute();
 

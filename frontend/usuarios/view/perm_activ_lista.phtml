@@ -15,7 +15,7 @@
     fnjs_del_perm_activ = function (formulario, que_val) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            if (confirm("<?= _("¿Esta seguro que desea borrar este permiso?") ?>")) {
+            if (confirm(<?= json_encode(_("¿Esta seguro que desea borrar este permiso?")) ?>)) {
                 let datos = $(formulario).serialize();
                 let request = $.ajax({
                     data: datos,
@@ -25,7 +25,7 @@
                 });
                 request.done(function (json) {
                     if (json.success !== true) {
-                        alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                        alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                     } else {
                         <?= $oPosicion->js_atras(1) ?>
                     }

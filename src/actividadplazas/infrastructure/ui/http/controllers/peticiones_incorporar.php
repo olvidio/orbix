@@ -6,7 +6,7 @@
  */
 
 use src\actividadplazas\application\PeticionesIncorporar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),

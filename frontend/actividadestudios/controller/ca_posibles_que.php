@@ -1,21 +1,21 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
@@ -25,7 +25,7 @@ if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -53,7 +53,7 @@ $Qca_todos = (string)filter_input(INPUT_POST, 'ca_todos');
 
 
 // Grupo de estudios
-$mi_dele = ConfigGlobal::mi_delef();
+$mi_dele = OrbixRuntime::miDelef();
 $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cMiDl = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
 if (is_array($cMiDl) && !empty($cMiDl)) {
@@ -82,7 +82,7 @@ foreach ($aListaCtr as $id_ubi) {
     $nombre_ubi = $oCentroDl->getNombre_ubi();
     $aCentrosOrden[$nombre_ubi] = array($id_ubi => $nombre_ubi);
 }
-uksort($aCentrosOrden, "core\strsinacentocmp");
+uksort($aCentrosOrden, "src\shared\domain\helpers\strsinacentocmp");
 // No encuentro la manera de añadir las opciones sin desordenar el array de indice numérico
 $aCentrsoNExt = [];
 $aCentrosNExt[1] = _("todos los ctr");
@@ -110,7 +110,7 @@ foreach ($aListaCtr as $id_ubi) {
     $nombre_ubi = $oCentroDl->getNombre_ubi();
     $aCentrosOrden[$nombre_ubi] = array($id_ubi => $nombre_ubi);
 }
-uksort($aCentrosOrden, "core\strsinacentocmp");
+uksort($aCentrosOrden, "src\shared\domain\helpers\strsinacentocmp");
 // No encuentro la manera de añadir las opciones sin desordenar el array de indice numérico
 $aCentrsoAgdExt = [];
 $aCentrosAgdExt[1] = _("todos los ctr");
@@ -142,9 +142,9 @@ $aOpciones = array(
     'separador1' => '---------',
     'otro' => _("otro")
 );
-$oFormP = new web\PeriodoQue();
+$oFormP = new frontend\shared\web\PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(core\strtoupper_dlb(_("periodo de las actividades")));
+$oFormP->setTitulo(src\shared\domain\helpers\strtoupper_dlb(_("periodo de las actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($any);
@@ -194,7 +194,7 @@ $a_campos = [
     'chk_estudios' => $chk_estudios,
     'chk_repaso' => $chk_repaso,
     'chk_ca_todos' => $chk_ca_todos,
-    'locale_us' => ConfigGlobal::is_locale_us(),
+    'locale_us' => OrbixRuntime::isLocaleUs(),
 ];
 
 $oView = new ViewNewPhtml('frontend\\actividadestudios\\controller');

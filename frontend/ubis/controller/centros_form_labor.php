@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use src\ubis\domain\CuadrosLabor;
 use web\Hash;
@@ -15,7 +15,7 @@ $nombre_ubi = $data['nombre_ubi'] ?? '';
 $tipo_ctr = $data['tipo_ctr'] ?? '';
 $tipo_labor = (int)($data['tipo_labor'] ?? 0);
 
-$url_update = rtrim(ConfigGlobal::getWeb(), '/') . '/src/ubis/centros_update';
+$url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 
 $oHash = new Hash();
 $oHash->setUrl($url_update);

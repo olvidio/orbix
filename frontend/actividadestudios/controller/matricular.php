@@ -11,7 +11,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadestudios\application\MatriculaAutomatica;
 
-require_once 'apps/core/global_header.inc';
+require_once("frontend/shared/global_header_front.inc");
 require_once 'apps/core/global_object.inc';
 
 $msg = MatriculaAutomatica::execute($_POST);

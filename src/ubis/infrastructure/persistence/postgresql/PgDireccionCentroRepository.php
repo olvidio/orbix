@@ -10,7 +10,7 @@ use PDO;
 use PDOException;
 use src\ubis\domain\contracts\DireccionRepositoryInterface;
 use src\ubis\domain\entity\Direccion;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla u_dir_ctr a la interfaz del repositorio

@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 
 /**
  * Cabecera comun de la ficha de persona (icono dossiers + titulo).
@@ -20,7 +20,7 @@ use src\shared\config\ConfigGlobal;
         <td class="esquerra" nowrap></td>
         <td>
             <span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')">
-                <img src="<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif" border="0" width="40" height="40"
+                <img src="<?= htmlspecialchars(OrbixRuntime::getWebIcons(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>/dossiers.gif" border="0" width="40" height="40"
                      alt="<?= _("ver dossiers") ?>">(<?= _("dossiers") ?>)
             </span>
         <td class="titulo"><span class="link" onclick="fnjs_update_div('#main','<?= $gohome ?>')"><?= $titulo ?></span></td>

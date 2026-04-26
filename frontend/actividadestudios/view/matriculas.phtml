@@ -1,10 +1,16 @@
 <?php
-use src\shared\config\ConfigGlobal;
+
+use frontend\shared\config\AppUrlConfig;
 use web\Hash;
+
+$jsUrlMatriculaEliminar = AppUrlConfig::getApiBaseUrl() . '/src/actividadestudios/matricula_eliminar';
+$jsUrlMatriculasListaRefresh = Hash::link(
+    AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/matriculas_lista.php',
+);
 ?>
 <script>
     fnjs_buscar = function () {
-        var campo = '<input type="hidden" name="refresh" value=1>';
+        var campo = '<input type="hidden" name="refresh" value="1">';
         $('#periodo_form').attr('action', "frontend/actividadestudios/controller/matriculas_lista.php");
         $('#periodo_form').append(campo);
         fnjs_enviar_formulario('#periodo_form', '#main');
@@ -22,11 +28,11 @@ use web\Hash;
     }
 
     fnjs_borrar = function (formulario) {
-        let mensaje = "<?= $txt_eliminar ?>";
+        let mensaje = <?= json_encode($txt_eliminar, JSON_UNESCAPED_UNICODE) ?>;
 
         if (confirm(mensaje)) {
-            $(mod).val("eliminar");
-            let url = '<?= ConfigGlobal::getWeb() ?>/src/actividadestudios/matricula_eliminar';
+            $("#mod").val("eliminar");
+            let url = <?= json_encode($jsUrlMatriculaEliminar, JSON_UNESCAPED_UNICODE) ?>;
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
@@ -36,7 +42,7 @@ use web\Hash;
             });
             request.done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    alert(<?= json_encode(_("respuesta"), JSON_UNESCAPED_UNICODE) ?> + ': ' + (json.mensaje || ''));
                 } else {
                     fnjs_actualizar();
                 }
@@ -44,7 +50,7 @@ use web\Hash;
         }
     }
     fnjs_actualizar = function () {
-        var url = '<?= Hash::link(ConfigGlobal::getWeb() . '/frontend/actividadestudios/controller/matriculas_lista.php') ?>';
+        var url = <?= json_encode($jsUrlMatriculasListaRefresh, JSON_UNESCAPED_UNICODE) ?>;
         fnjs_update_div('#main', url);
     }
     fnjs_left_side_hide();

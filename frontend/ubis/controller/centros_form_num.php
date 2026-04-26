@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use web\Hash;
 
@@ -14,7 +14,7 @@ $n_buzon = $data['n_buzon'] ?? '';
 $num_pi = $data['num_pi'] ?? '';
 $num_cartas = $data['num_cartas'] ?? '';
 
-$url_update = rtrim(ConfigGlobal::getWeb(), '/') . '/src/ubis/centros_update';
+$url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 
 $oHash = new Hash();
 $oHash->setUrl($url_update);

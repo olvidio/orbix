@@ -48,18 +48,18 @@ fnjs_grabar_todo = function () {
 
     var obj = $('#objeto').val();
     if (!obj) {
-        alert("<?= _("debe indicar dónde mirar los cambios") ?>");
+        alert(<?= json_encode(_("debe indicar dónde mirar los cambios")) ?>);
         $('#objeto').trigger("focus");
         err = 1;
     }
     var id_fase_ref = $('#id_fase_ref').val();
     if (!id_fase_ref) {
-        alert("<?= _("debe indicar la fase de referencia") ?>");
+        alert(<?= json_encode(_("debe indicar la fase de referencia")) ?>);
         err = 1;
     }
     var tipo = $('#aviso_tipo').val();
     if (!tipo) {
-        alert("<?= _("debe indicar por dónde avisar") ?>");
+        alert(<?= json_encode(_("debe indicar por dónde avisar")) ?>);
         $('#aviso_tipo').trigger("focus");
         err = 1;
     }
@@ -124,7 +124,7 @@ fnjs_guardar_cond = function (que) {
     var err = 0;
     $('#salida_cond').val(que);
     if (que === 'eliminar_cond') {
-        var seguro = confirm("<?= _("¿Está seguro de borrar esta condición?") ?>");
+        var seguro = confirm(<?= json_encode(_("¿Está seguro de borrar esta condición?")) ?>);
         err = seguro ? 0 : 1;
     }
     if (err === 1) {
@@ -180,7 +180,7 @@ fnjs_mas_casas = function (e) {
 <?= $oPosicion->mostrar_left_slide(1) ?>
 <div id='div_buscar'>
     <form id="usuario_pref" name="usuario_pref" action="" method="post">
-        <?= $oHash->getCamposHtml() ?>
+        <?= $hash_form_html ?>
         <input type='hidden' id='id_tipo_activ' name='id_tipo_activ' value='<?= htmlspecialchars($id_tipo_activ, ENT_QUOTES, 'UTF-8') ?>'>
         <input type='hidden' id='salida' name='salida'>
 
@@ -201,7 +201,7 @@ fnjs_mas_casas = function (e) {
         <table>
             <tr><td class="subtitulo"><?= ucfirst(_("escoger el tipo de actividad")) ?></td></tr>
             <tr>
-                <?= $oActividadTipo->getHtml() ?>
+                <?= $actividad_tipo_html ?>
             </tr>
         </table>
         <br>

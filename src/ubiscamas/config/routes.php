@@ -30,4 +30,11 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/ubiscamas/update_solo_vip', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/update_solo_vip.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/ubiscamas/habitacion_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/habitacion_form_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubiscamas/cama_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/cama_form_data.php';
+    });
 };

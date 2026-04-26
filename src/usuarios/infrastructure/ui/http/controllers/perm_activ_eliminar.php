@@ -1,7 +1,7 @@
 <?php
 
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = '';
 

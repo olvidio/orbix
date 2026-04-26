@@ -10,7 +10,7 @@ use src\encargossacd\domain\services\EncargoDominioService;
  * Datos para la lista de horarios de un encargo (`encargo_horario_select`).
  *
  * Se devuelven ya precalculados el texto descriptivo del horario y las fechas
- * formateadas para que el frontend solo arme `web\Lista`.
+ * formateadas para que el frontend solo arme `frontend\shared\web\Lista`.
  */
 final class EncargoHorarioSelectData
 {

@@ -13,8 +13,8 @@ use src\personas\domain\entity\Persona;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\value_objects\FaseId;
-use web\Periodo;
-use function core\is_true;
+use frontend\shared\web\Periodo;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: construye la tabla principal de la pantalla

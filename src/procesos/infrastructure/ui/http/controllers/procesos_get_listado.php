@@ -1,7 +1,7 @@
 <?php
 
 use src\procesos\application\ProcesosGetListado;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $useCase = new ProcesosGetListado();
 ContestarJson::enviar('', $useCase->execute($_POST));

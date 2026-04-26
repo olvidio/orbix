@@ -10,7 +10,7 @@ use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder: listado de `CambioUsuarioObjetoPref` de un usuario para

@@ -3,7 +3,7 @@
 use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\entity\UsuarioGrupo;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $sfsv = ConfigGlobal::mi_sfsv();
 $error_txt = '';

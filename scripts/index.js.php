@@ -21,9 +21,9 @@ if (!isset($h)) {
         $(document).ajaxStop(function () {
             $('#cargando').hide();
         });
-    });
+    })
 
-    /* Normaliza una URL para usarla como clave consistente. */
+    // Normaliza una URL para usarla como clave consistente.
     function fnjs_normalizar_url(url) {
         if (!url) return url;
         try {
@@ -45,7 +45,7 @@ if (!isset($h)) {
         }
     }
 
-    /* Guarda el estado de la UI scroll y seleccion en sessionStorage. */
+    // Guarda el estado de la UI scroll y seleccion en sessionStorage.
     function fnjs_guardar_estado() {
         var base = $('#main').attr('refe');
         if (!base) {
@@ -95,9 +95,7 @@ if (!isset($h)) {
         });
     }
 
-    /**
-     * Recupera el estado de la UI para una URL dada.
-     */
+    // Recupera el estado de la UI para una URL dada.
     function fnjs_recuperar_estado(url, tabla) {
         url = fnjs_normalizar_url(url);
         var key = 'state_' + url + (tabla ? '_' + tabla : '');
@@ -203,7 +201,7 @@ if (!isset($h)) {
     function fnjs_def_tabla(tabla) {
         // si es la tabla por defecto, no puedo guardar las preferencias.
         if (tabla === 'uno') {
-            alert("<?= _("no puedo grabar las preferencias de la tabla. No puede tener el nombre por defecto") ?>: " + tabla);
+            alert(<?= json_encode(_("no puedo grabar las preferencias de la tabla. No puede tener el nombre por defecto")) ?> + ': ' + tabla);
             return;
         }
 
@@ -282,7 +280,7 @@ if (!isset($h)) {
     }
 
     function fnjs_procesarError() {
-        alert("<?= _("Error de página devuelta") ?>");
+        alert(<?= json_encode(_("Error de página devuelta")) ?>);
     }
 
     function fnjs_mostrar_atras(id_div, htmlForm) {
@@ -571,7 +569,7 @@ if (!isset($h)) {
             dataType: 'html',
             success: function (rta_txt) {
                 if (rta_txt.length > 3) {
-                    alert("<?= _("error") ?>:\n" + rta_txt);
+                    alert(<?= json_encode(_("error")) ?> + ':\n' + rta_txt);
                     s = 1;
                 } else {
                     s = 0;
@@ -599,7 +597,7 @@ if (!isset($h)) {
         console.log(serializer.toString());
     }
 
-    /* Estas variables han de ser globales, y las utiliza el dhtmlxScheduler (dibujar calendarios). */
+    // Estas variables han de ser globales, y las utiliza el dhtmlxScheduler (dibujar calendarios).
     var _isFF = false;
     var _isIE = false;
     var _isOpera = false;

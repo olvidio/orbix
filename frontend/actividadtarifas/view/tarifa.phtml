@@ -76,7 +76,7 @@
                 fnjs_cerrar();
                 fnjs_ver();
             }).fail(function () {
-                alert('<?= _("error de comunicación con el servidor") ?>');
+                alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
             });
             return false;
         });

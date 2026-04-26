@@ -1,6 +1,6 @@
 <?php
 
 use src\profesores\application\CongresosLista;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', CongresosLista::getTablaData());

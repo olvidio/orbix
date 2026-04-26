@@ -5,12 +5,12 @@
  * `actividad_que`. Incluye la comprobacion de permiso `perm_ctr`:
  * si el usuario no tiene el permiso, devuelve cadena vacia.
  *
- * Responde JSON via web\ContestarJson::enviar con la clave `html`.
+ * Responde JSON via frontend\shared\web\ContestarJson::enviar con la clave `html`.
  */
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\application\ActividadQueFiltrosBloque;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $sfsv = (int)filter_input(INPUT_POST, 'sfsv');
 if ($sfsv === 0) {

@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\ListasBData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $sf = (int)(filter_input(INPUT_POST, 'sf') ?? filter_input(INPUT_GET, 'sf') ?? 0);
 

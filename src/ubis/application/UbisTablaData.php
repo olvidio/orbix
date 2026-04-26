@@ -19,9 +19,9 @@ use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
 use src\ubis\domain\contracts\RelacionUbiDireccionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
-use function core\is_true;
-use function core\urlsafe_b64decode;
-use function core\urlsafe_b64encode;
+use function src\shared\domain\helpers\is_true;
+use function src\shared\domain\helpers\urlsafe_b64decode;
+use function src\shared\domain\helpers\urlsafe_b64encode;
 
 final class UbisTablaData
 {

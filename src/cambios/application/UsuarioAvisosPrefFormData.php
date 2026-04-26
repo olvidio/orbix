@@ -14,7 +14,10 @@ use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
-use function core\is_true;
+use src\actividades\application\ActividadTipo;
+use src\actividades\domain\entity\TiposActividades;
+use web\Hash;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Data builder: todas las opciones y preseleccion necesarias para pintar la
@@ -211,6 +214,59 @@ final class UsuarioAvisosPrefFormData
             $perm_jefe = true;
         }
         $result['perm_jefe'] = $perm_jefe;
+
+        $id_tipo_res = (string)$result['id_tipo_activ'];
+        $oActividadTipo = new ActividadTipo();
+        $oActividadTipo->setSfsvAll(false);
+        if ($id_tipo_res !== '') {
+            $oActividadTipo->setId_tipo_activ($id_tipo_res);
+        } else {
+            $oTipoActiv = new TiposActividades();
+            $oTipoActiv->setSfsvText((string)$result['sfsv_text']);
+            $oActividadTipo->setSfsv($oTipoActiv->getSfsvText());
+            $oActividadTipo->setAsistentes($oTipoActiv->getAsistentesText());
+            $oActividadTipo->setActividad($oTipoActiv->getActividadText());
+            $oActividadTipo->setNom_tipo($oTipoActiv->getNom_tipoText());
+        }
+        $oActividadTipo->setPara('cambios');
+        $oActividadTipo->setQue('buscar');
+        $oActividadTipo->setPerm_jefe($perm_jefe);
+        $result['actividad_tipo_html'] = $oActividadTipo->getHtml();
+
+        $quien = (string)($input['quien'] ?? '');
+        $oHash = new Hash();
+        $oHash->setCamposForm('id_fase_ref!salida!aviso_tipo!objeto!dl_propia!extendida!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
+        $oHash->setCamposNo('casas!casas_mas!casas_num!id_tipo_activ!inom_tipo_val');
+        $oHash->setCamposChk('aviso_off!aviso_on!aviso_outdate');
+        $oHash->setArrayCamposHidden([
+            'id_usuario' => $id_usuario,
+            'id_item_usuario_objeto' => $id_item_usuario_objeto,
+            'quien' => $quien,
+        ]);
+        $result['hash_form_html'] = $oHash->getCamposHtml();
+
+        $web = rtrim(ConfigGlobal::getWeb(), '/');
+        $result['url_guardar_objeto'] = $web . '/src/cambios/cambio_usuario_objeto_pref_guardar';
+        $result['url_guardar_propiedades'] = $web . '/src/cambios/cambio_usuario_propiedad_pref_guardar_todas';
+        $result['url_preview_cond'] = $web . '/src/cambios/cambio_usuario_propiedad_pref_preview';
+        $result['url_get_propiedades'] = $web . '/frontend/cambios/controller/usuario_avisos_pref_propiedades.php';
+        $result['url_get_condicion'] = $web . '/frontend/cambios/controller/usuario_avisos_pref_condicion.php';
+        $result['url_get_fases'] = $web . '/frontend/cambios/controller/usuario_avisos_pref_fases.php';
+
+        $oHashFases = new Hash();
+        $oHashFases->setUrl($result['url_get_fases']);
+        $oHashFases->setCamposForm('salida!dl_propia!id_tipo_activ!id_usuario!objeto');
+        $result['h_actualizar'] = $oHashFases->linkSinValParams();
+
+        $oHashProp = new Hash();
+        $oHashProp->setUrl($result['url_get_propiedades']);
+        $oHashProp->setCamposForm('salida!objeto!id_item_usuario_objeto');
+        $result['h_propiedades'] = $oHashProp->linkSinValParams();
+
+        $oHashMod = new Hash();
+        $oHashMod->setUrl($result['url_get_condicion']);
+        $oHashMod->setCamposForm('salida!objeto!propiedad!id_item');
+        $result['h_mod'] = $oHashMod->linkSinValParams();
 
         return $result;
     }

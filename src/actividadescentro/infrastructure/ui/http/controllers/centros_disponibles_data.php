@@ -9,7 +9,7 @@
  */
 
 use src\actividadescentro\application\CentrosDisponiblesData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'tipo' => (string)filter_input(INPUT_POST, 'tipo'),

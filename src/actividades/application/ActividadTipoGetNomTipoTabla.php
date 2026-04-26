@@ -2,8 +2,8 @@
 
 namespace src\actividades\application;
 
-use web\Lista;
-use web\TiposActividades;
+use frontend\shared\web\Lista;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Devuelve la tabla HTML de nombres de tipo de actividad (id, nombre). Portado

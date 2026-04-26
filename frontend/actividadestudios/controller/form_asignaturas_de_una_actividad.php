@@ -7,7 +7,8 @@
  * Sucesor de `apps/actividadestudios/controller/form_3005.php`. URL canonica.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -15,7 +16,7 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\profesores\domain\services\ProfesorAsignaturaService;
 use src\profesores\domain\services\ProfesorStgrService;
 use src\profesores\domain\ProfesorActividad;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -117,7 +118,7 @@ if (!empty($Qid_asignatura)) {
 $oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$web = AppUrlConfig::getPublicAppBaseUrl();
 $url_profesores = $web . '/src/actividadestudios/profesores_desplegable_data';
 
 $oHashTipo = new Hash();
@@ -153,7 +154,7 @@ $a_campos = [
     'chk_confirmado' => $chk_confirmado,
     'f_ini' => $f_ini,
     'f_fin' => $f_fin,
-    'locale_us' => ConfigGlobal::is_locale_us(),
+    'locale_us' => OrbixRuntime::isLocaleUs(),
     'url_actividad_asignatura_nueva' => $url_actividad_asignatura_nueva,
     'url_actividad_asignatura_editar' => $url_actividad_asignatura_editar,
 ];

@@ -12,9 +12,9 @@
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadestudios\application\DocenciaActualizar;
 use web\Hash;
-use web\PeriodoQue;
+use frontend\shared\web\PeriodoQue;
 
-require_once 'apps/core/global_header.inc';
+require_once("frontend/shared/global_header_front.inc");
 require_once 'apps/core/global_object.inc';
 
 $Qyear = (string) filter_input(INPUT_POST, 'year');
@@ -38,7 +38,7 @@ if (empty($continuar)) {
     ];
     $oFormP = new PeriodoQue();
     $oFormP->setFormName('que');
-    $oFormP->setTitulo(\core\strtoupper_dlb(_('periodo de selección de actividades')));
+    $oFormP->setTitulo(\src\shared\domain\helpers\strtoupper_dlb(_('periodo de selección de actividades')));
     $oFormP->setPosiblesPeriodos($aOpciones);
     $oFormP->setDesplAnysOpcion_sel($Qyear);
     $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);

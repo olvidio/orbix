@@ -4,7 +4,7 @@ namespace src\ubis\application;
 
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 final class CalendarioPeriodosGet2Data
 {

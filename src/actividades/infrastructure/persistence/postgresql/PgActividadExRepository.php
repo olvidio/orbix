@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadExRepositoryInterface;
 use src\shared\traits\HandlesPdoErrors;
 use src\utils_database\domain\GenerateIdGlobal;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 
 /**

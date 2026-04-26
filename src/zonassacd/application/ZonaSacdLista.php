@@ -7,7 +7,7 @@ use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class ZonaSacdLista
 {

@@ -1,6 +1,6 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
@@ -10,11 +10,11 @@ use src\personas\domain\entity\Persona;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
 
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
@@ -41,7 +41,7 @@ $lugar_nacimiento = $oPersona->getLugar_nacimiento();
 $f_nacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
 $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 
-$dl_origen = ConfigGlobal::mi_delef();
+$dl_origen = OrbixRuntime::miDelef();
 $dl_destino = $oPersona->getDl();
 
 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
@@ -90,7 +90,7 @@ if ($matriculas > 0) {
 }
 
 $oHash = new Hash();
-$oHash->setUrl(ConfigGlobal::getWeb() . '/frontend/actividadestudios/controller/e43_2_mpdf.php');
+$oHash->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/e43_2_mpdf.php');
 $oHash->setCamposForm('id_nom!id_activ');
 $h = $oHash->linkSinVal();
 

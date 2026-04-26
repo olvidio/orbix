@@ -1,8 +1,8 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 
-include_once(ConfigGlobal::$dir_estilos . '/actas.css.php');
+include_once(OrbixRuntime::dirEstilos() . '/actas.css.php');
 ?>
 <table class="no_print">
     <tr>
@@ -18,7 +18,7 @@ include_once(ConfigGlobal::$dir_estilos . '/actas.css.php');
                   onclick='window.open("<?= $go_pdf ?>", "sele");'>
             <!--
         	<span class=link
-              onclick='window.open("<?= ConfigGlobal::getWeb() ?>/frontend/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
+              onclick='window.open("<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
               -->
     		<?= _("PDF"); ?></span></td>
     </tr>

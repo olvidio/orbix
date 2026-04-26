@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\DireccionesQuitar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', DireccionesQuitar::execute(
     (int)filter_input(INPUT_POST, 'id_ubi'),

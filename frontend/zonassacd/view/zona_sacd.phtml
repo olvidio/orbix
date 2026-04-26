@@ -71,7 +71,7 @@
         $('#acumular').val(n);
         let datos = $(formulario).serialize();
         $.ajax({ url: '<?= $url_ajax_update ?>', type: 'post', data: datos }).done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\n') { alert('<?= _("respuesta") ?>: ' + rta_txt); }
+                if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
                 fnjs_busca_sacds();
         });
     }
@@ -97,7 +97,7 @@
         let id_zona = $('#lst_zonas').val();
         let parametros = 'id_zona=' + id_zona + '&id_sacd=' + id_sacd + '<?= $h_url_get ?>';
         $.ajax({ url: '<?= $url_zona_sacd_get ?>', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
-            if (!json || json.success !== true) { alert("<?= _("respuesta") ?>: " + (json ? json.mensaje : '')); return; }
+            if (!json || json.success !== true) { alert(<?= json_encode(_("respuesta") . ": ") ?> + (json ? json.mensaje : '')); return; }
             var payload = (typeof json.data === 'string') ? JSON.parse(json.data) : (json.data || {});
             $('#id_sacd').val(id_sacd); $('#id_zona').val(id_zona); $('#titulo_modal').html(payload.nombre_sacd);
             $('#dw1').prop('checked', payload.dw1 === true); $('#dw2').prop('checked', payload.dw2 === true); $('#dw3').prop('checked', payload.dw3 === true);
@@ -112,7 +112,7 @@
         parametros += '&dw4=' + $('#dw4').is(":checked") + '&dw5=' + $('#dw5').is(":checked") + '&dw6=' + $('#dw6').is(":checked") + '&dw7=' + $('#dw7').is(":checked");
         parametros += '<?= $h_url_put ?>';
         $.ajax({ url: '<?= $url_zona_sacd_put ?>', method: 'POST', data: parametros, dataType: 'json' }).done(function (json) {
-            if (json.success !== true) { alert("<?= _("respuesta") ?>: " + json.mensaje); }
+            if (json.success !== true) { alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje); }
             else { modal.hide(); fnjs_busca_sacds(); }
         });
     }

@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\UpdateIniciales;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_sacd = (int)filter_input(INPUT_POST, 'id_sacd');
 $Qiniciales = (string)filter_input(INPUT_POST, 'iniciales');

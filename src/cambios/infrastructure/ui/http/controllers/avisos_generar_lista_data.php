@@ -6,18 +6,15 @@
  */
 
 use src\cambios\application\AvisosGenerarListaData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'id_usuario' => (int)filter_input(INPUT_POST, 'id_usuario'),
     'aviso_tipo' => (int)filter_input(INPUT_POST, 'aviso_tipo'),
+    'is_admin' => (int)filter_input(INPUT_POST, 'is_admin') === 1,
 ];
 $result = AvisosGenerarListaData::execute($input);
 
 $error = $result['error'];
-$data = [
-    'a_valores' => $result['a_valores'],
-    'aOpcionesUsuarios' => $result['aOpcionesUsuarios'],
-    'aOpcionesAvisoTipo' => $result['aOpcionesAvisoTipo'],
-];
-ContestarJson::enviar($error, $data);
+unset($result['error']);
+ContestarJson::enviar($error, $result);

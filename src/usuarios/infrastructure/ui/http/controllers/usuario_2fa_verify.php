@@ -1,7 +1,7 @@
 <?php
 
 use src\usuarios\domain\Verify2fa;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 // Obtener los parámetros
 $verification_code = filter_input(INPUT_POST, 'verification_code');

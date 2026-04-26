@@ -1,6 +1,6 @@
 <?php
 
 use src\procesos\application\TipoActivProcesoLista;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', TipoActivProcesoLista::execute());

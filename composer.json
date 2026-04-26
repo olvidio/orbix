@@ -35,7 +35,11 @@
           "frontend\\": "frontend/",
           "src\\": "src/",
           "": "apps/"
-        }
+        },
+        "files": [
+          "frontend/shared/helpers/func_tablas.php",
+          "src/shared/domain/helpers/func_tablas.php"
+        ]
    },
   "autoload-dev": {
        "psr-4": { "Tests\\": "tests/" }

@@ -13,7 +13,7 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -36,6 +36,10 @@ $cantidad = (string)($payload['cantidad'] ?? '');
 $opciones_tarifa = $payload['opciones_tarifa'] ?? [];
 $opciones_serie = $payload['opciones_serie'] ?? [];
 $id_serie_sel = (int)($payload['id_serie_sel'] ?? 1);
+// Tokens HashB autorizados por el backend. Se transportan opacamente
+// hasta la vista y vuelven al backend en los endpoints de mutación.
+$token_update = (string)($payload['token_update'] ?? '');
+$token_eliminar = (string)($payload['token_eliminar'] ?? '');
 
 $oDesplSeries = new Desplegable();
 $oDesplSeries->setNombre('id_serie');
@@ -58,6 +62,8 @@ $a_campos = [
     'cantidad' => $cantidad,
     'oDesplSeries' => $oDesplSeries,
     'oDesplTarifas' => $oDesplTarifas,
+    'token_update' => $token_update,
+    'token_eliminar' => $token_eliminar,
 ];
 
 $oView = new ViewNewPhtml('frontend\\actividadtarifas\\controller');

@@ -1,10 +1,10 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\web\Lista;
 use web\Hash;
-use web\Lista;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -21,16 +21,16 @@ $oPosicion->setParametros($aGoBack, 1);
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/lista_de_ctr_con_docs';
-$a_campos_backend = [ 'id_tipo_doc' => $Qid_tipo_doc, 'inventario' => $Qinventario];
+$a_campos_backend = ['id_tipo_doc' => $Qid_tipo_doc, 'inventario' => $Qinventario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
 $a_valores = $data['a_valores'];
 $nombreDoc = $data['nombreDoc'];
 
 //3
-$url_doc_mod = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_asignar_ctr.php?';
+$url_doc_mod = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_asignar_ctr.php?';
 //12
-$url_imprimir_ctr = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_imprimir_ctr.php?';
+$url_imprimir_ctr = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_imprimir_ctr.php?';
 
 if (empty($Qinventario)) {
     $a_botones[] = array('txt' => _("Asignar"), 'click' => "fnjs_go(\"$url_doc_mod\")");

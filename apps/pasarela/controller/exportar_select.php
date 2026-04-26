@@ -11,9 +11,9 @@ use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use web\Lista;
-use web\Periodo;
-use web\TiposActividades;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Periodo;
+use src\actividades\domain\entity\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");

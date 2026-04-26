@@ -3,7 +3,7 @@
 namespace src\actividades\application;
 
 use web\Hash;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Devuelve el HTML del formulario para modificar/eliminar un tipo de actividad

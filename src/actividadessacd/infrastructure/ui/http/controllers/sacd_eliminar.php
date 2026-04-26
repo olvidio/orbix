@@ -6,7 +6,7 @@
  */
 
 use src\actividadessacd\application\SacdEliminar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = SacdEliminar::execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

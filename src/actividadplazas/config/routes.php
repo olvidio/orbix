@@ -4,9 +4,9 @@
  * Rutas del modulo `actividadplazas`. Las registra `public/index.php`
  * via glob sobre `src/*\/config/routes.php`. Cada endpoint vive en
  * `src/actividadplazas/infrastructure/ui/http/controllers/` y
- * responde JSON mediante `web\ContestarJson::enviar(...)`, excepto
+ * responde JSON mediante `frontend\shared\web\ContestarJson::enviar(...)`, excepto
  * `gestion_plazas_update` que devuelve text/plain para mantener
- * compatibilidad con `web\TablaEditable`.
+ * compatibilidad con `frontend\shared\web\TablaEditable`.
  */
 return static function ($r) {
     // Lecturas (data builders).

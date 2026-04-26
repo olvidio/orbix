@@ -7,7 +7,7 @@
  */
 
 use src\cambios\application\CambioUsuarioPropiedadPrefGuardarTodas;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 

@@ -19,7 +19,7 @@ use Tests\myTest;
 /**
  * Smoke / contrato de salida para los casos de uso pesados del modulo
  * `actividadessacd` que estan fuertemente acoplados a `$GLOBALS`, sesion,
- * {@see ConfigGlobal}, repos y `web\Periodo`. Complementa los unitarios
+ * {@see ConfigGlobal}, repos y `frontend\shared\web\Periodo`. Complementa los unitarios
  * con mocks (SacdAsignar, SacdEliminar, SacdReordenar, TextoComunicacion*)
  * cubriendo que las llamadas no rompen y la estructura es la esperada.
  *

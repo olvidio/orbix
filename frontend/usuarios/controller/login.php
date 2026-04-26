@@ -2,7 +2,8 @@
 
 namespace frontend\usuarios\controller;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\application\LoginProcesar;
@@ -70,7 +71,7 @@ function cambiar_idioma($idioma = '')
     putenv("LC_ALL={$idioma}");
     putenv("LANG={$idioma}");
 
-    bindtextdomain($domain, ConfigGlobal::$dir_languages);
+    bindtextdomain($domain, OrbixRuntime::gettextLanguagesDir());
     textdomain($domain);
     bind_textdomain_codeset($domain, 'UTF-8');
 }
@@ -88,7 +89,7 @@ function render_login_form($username, $ubicacion, $idioma, $esquema, $error, $es
         'DesplRegiones' => $oDBPropiedades->posibles_esquemas($esquema),
         'idioma' => $idioma,
         'username' => $username,
-        'url' => ConfigGlobal::getWeb(),
+        'url' => AppUrlConfig::getPublicAppBaseUrl(),
     ];
     $oView = new ViewNewPhtml(__NAMESPACE__);
     $oView->renderizar('login_form.phtml', $a_campos);
@@ -129,7 +130,7 @@ if (!isset($_SESSION['session_auth'])) {
 
         // 2FA pendiente de configuracion -> redirigir a pagina de ayuda.
         if (!$result['ok'] && isset($result['redirect_ayuda_2fa'])) {
-            $url_base = ConfigGlobal::getWeb() . '/';
+            $url_base = AppUrlConfig::getPublicAppBaseUrl() . '/';
             $a_params = $result['redirect_ayuda_2fa'];
             $a_params['url_base'] = $url_base;
             $url_ayuda = $url_base . 'frontend/usuarios/controller/ayuda_2fa_reset.php?'

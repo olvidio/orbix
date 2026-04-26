@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qf_ini_iso = (string)filter_input(INPUT_POST, 'f_ini_iso');
 

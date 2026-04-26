@@ -6,7 +6,7 @@
  */
 
 use src\actividadessacd\application\ComunicacionActividadesSacdEnviar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = ComunicacionActividadesSacdEnviar::execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

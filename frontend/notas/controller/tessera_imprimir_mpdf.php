@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use src\notas\application\Tesera;
 use src\personas\domain\entity\Persona;
 
@@ -43,7 +43,7 @@ $nom=$trato.$nom_vernacula.$apellidos;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 
 // conversion 
-$replace = src\configuracion\domain\entity\Config::$replace;
+$replace = src\configuracion\domain\value_objects\ConfigSnapshot::$replace;
 
 function titulo($id_asignatura){
 $cabecera = '<tr><td></td><td  colspan="7" class="space"></td></tr>
@@ -196,7 +196,7 @@ case 2108:
         // -----------------------------  cabecera ---------------------------------
         ?>
         <head>
-            <?php include_once(ConfigGlobal::$dir_estilos . '/tessera_mpdf.css.php'); ?>
+            <?php include_once(OrbixRuntime::dirEstilos() . '/tessera_mpdf.css.php'); ?>
             <title></title>
         </head>
         <div class="A4">

@@ -14,7 +14,7 @@ use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 /**
  * Datos para la pantalla `encargo_ver` (nuevo / editar encargo).
  *
- * El frontend arma los `web\Desplegable` a partir de los arrays devueltos.
+ * El frontend arma los `frontend\shared\web\Desplegable` a partir de los arrays devueltos.
  */
 final class EncargoVerData
 {

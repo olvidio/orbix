@@ -6,7 +6,7 @@
  */
 
 use src\actividadplazas\application\PlazasCeder;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'id_activ' => (int)filter_input(INPUT_POST, 'id_activ'),

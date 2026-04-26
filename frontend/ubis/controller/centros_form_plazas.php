@@ -1,9 +1,9 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use web\Hash;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -17,7 +17,7 @@ $sede = $data['sede'] ?? false;
 
 $chk_sede = is_true($sede) ? 'checked' : '';
 
-$url_update = rtrim(ConfigGlobal::getWeb(), '/') . '/src/ubis/centros_update';
+$url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 
 $oHash = new Hash();
 $oHash->setUrl($url_update);

@@ -6,7 +6,7 @@
     fnjs_eliminar = function () {
         rta = fnjs_solo_uno('#seleccionados');
         if (rta === 1) {
-            if (confirm("<?= _("¿Está seguro que desea borrar este usuario?") ?>")) {
+            if (confirm(<?= json_encode(_("¿Está seguro que desea borrar este usuario?")) ?>)) {
                 let url = '<?= $url_eliminar ?>';
                 datos = $('#seleccionados').serialize();
 
@@ -55,7 +55,7 @@
     <tr>
         <th class="no_print">
             <span class="link_inv" onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');">
-                <?= core\strtoupper_dlb(_("nuevo usuario")) ?>
+                <?= src\shared\domain\helpers\strtoupper_dlb(_("nuevo usuario")) ?>
             </span>
         </th>
     </tr>

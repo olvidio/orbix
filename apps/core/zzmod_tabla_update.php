@@ -25,7 +25,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
 }
 
-$a_pkey = json_decode(core\urlsafe_b64decode($Qs_pkey));
+$a_pkey = json_decode(src\shared\domain\helpers\urlsafe_b64decode($Qs_pkey));
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info_encoded);

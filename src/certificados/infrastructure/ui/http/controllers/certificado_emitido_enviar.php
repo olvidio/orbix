@@ -1,7 +1,7 @@
 <?php
 
 use src\certificados\domain\CertificadoEmitidoEnviar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 // FIN de  Cabecera global de URL de controlador ****************
 

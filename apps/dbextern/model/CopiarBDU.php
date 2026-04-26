@@ -74,7 +74,7 @@ class CopiarBDU
         $stmt = $this->oDbU->query($sQuery);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         foreach ($stmt as $aDades) {
-            array_walk($aDades, 'core\poner_null');
+            array_walk($aDades, 'src\shared\domain\helpers\poner_null');
             $oDblSt->execute($aDades);
         }
 

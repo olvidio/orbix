@@ -11,14 +11,14 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\Periodo;
-use web\TiposActividades;
+use frontend\shared\web\Periodo;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder: listado de actividades por casa y periodo (pantalla
  * `casa_que` con `tipo_lista=lista_activ` y `que=lista_activ`).
  *
- * Devuelve cabeceras y filas listas para `web\Lista`, aplicando los
+ * Devuelve cabeceras y filas listas para `frontend\shared\web\Lista`, aplicando los
  * permisos de la sesión.
  */
 final class CasaActividadesListaData

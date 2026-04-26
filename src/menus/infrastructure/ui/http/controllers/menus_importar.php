@@ -1,6 +1,6 @@
 <?php
 
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_template_menu = (integer)filter_input(INPUT_POST, 'id_template_menu');
 

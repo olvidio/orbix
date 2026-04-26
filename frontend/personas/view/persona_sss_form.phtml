@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 
 /**
  * Ficha de PersonaSSSC. Las funciones JS `fnjs_guardar` y `fnjs_eliminar`
@@ -33,35 +33,35 @@ include __DIR__ . '/_persona_header.phtml';
         </tr>
         <tr>
             <?php
-            echo web\dibujar_campo($obj, "trato", 7, 1, 0);
-            echo web\dibujar_campo($obj, "nom", 20, 1, 2);
+            echo frontend\shared\web\dibujar_campo($obj, "trato", 7, 1, 0);
+            echo frontend\shared\web\dibujar_campo($obj, "nom", 20, 1, 2);
             echo "</tr><tr><td></td>";
-            echo web\dibujar_campo($obj, "apel_fam", 20, 1, 2);
+            echo frontend\shared\web\dibujar_campo($obj, "apel_fam", 20, 1, 2);
             echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "nx1", 7, 1, 0);
-            echo web\dibujar_campo($obj, "apellido1", 25, 1, 2);
+            echo frontend\shared\web\dibujar_campo($obj, "nx1", 7, 1, 0);
+            echo frontend\shared\web\dibujar_campo($obj, "apellido1", 25, 1, 2);
             echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "nx2", 7, 1, 0);
-            echo web\dibujar_campo($obj, "apellido2", 25, 1, 2);
+            echo frontend\shared\web\dibujar_campo($obj, "nx2", 7, 1, 0);
+            echo frontend\shared\web\dibujar_campo($obj, "apellido2", 25, 1, 2);
             echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "lugar_nacimiento", 15, 1, 1);
-            echo web\dibujar_campo($obj, "f_nacimiento", 11, 1, 0);
+            echo frontend\shared\web\dibujar_campo($obj, "lugar_nacimiento", 15, 1, 1);
+            echo frontend\shared\web\dibujar_campo($obj, "f_nacimiento", 11, 1, 0);
             echo "</tr><tr>";
             ?>
             <td><span class="etiqueta"><?= ucfirst('situacion') ?></span></td>
             <td colspan="2"><?= $oDesplSituacion->desplegable() ?></td>
             <?php
-            echo web\dibujar_campo($obj, "f_situacion", 11, 1, 0);
+            echo frontend\shared\web\dibujar_campo($obj, "f_situacion", 11, 1, 0);
             echo "</tr><tr>";
             ?>
             <td><span class="etiqueta"><?= ucfirst('lengua') ?></span></td>
             <td colspan="2"><?= $oDesplLengua->desplegable() ?></td>
             <?php
             echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "profesion", 30, 1, 2);
+            echo frontend\shared\web\dibujar_campo($obj, "profesion", 30, 1, 2);
             echo "</tr><tr>";
-            if (ConfigGlobal::mi_sfsv() == 1) {
-                echo web\dibujar_campo($obj, "sacd", 9, 1, 1);
+            if (OrbixRuntime::miSfsv() == 1) {
+                echo frontend\shared\web\dibujar_campo($obj, "sacd", 9, 1, 1);
             }
             ?>
             <td>
@@ -69,12 +69,12 @@ include __DIR__ . '/_persona_header.phtml';
                 <?= $oDesplStgr->desplegable() ?>
             </td>
             <?php
-            echo web\dibujar_campo($obj, "eap", 20, 2, 0);
+            echo frontend\shared\web\dibujar_campo($obj, "eap", 20, 2, 0);
             echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "inc", 5, 1, 0);
-            echo web\dibujar_campo($obj, "f_inc", 11, 1, 1);
+            echo frontend\shared\web\dibujar_campo($obj, "inc", 5, 1, 0);
+            echo frontend\shared\web\dibujar_campo($obj, "f_inc", 11, 1, 1);
             echo "</tr><tr>";
-            echo web\dibujar_campo($obj, "observ", 60, 1, 4);
+            echo frontend\shared\web\dibujar_campo($obj, "observ", 60, 1, 4);
             ?>
         </tr>
     </table>

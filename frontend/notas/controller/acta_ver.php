@@ -1,6 +1,7 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -9,7 +10,7 @@ use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use web\Hash;
-use function core\urlsafe_b64encode;
+use function src\shared\domain\helpers\urlsafe_b64encode;
 
 /**
  * Esta página muestra un formulario para modificar los datos de un acta.
@@ -36,7 +37,7 @@ $notas = empty($notas) ? '' : $notas;
 $permiso = empty($permiso) ? 3 : $permiso;
 
 // Si soy region del stgr, no puedo modificar actas (que lo hagan las dl).
-if (ConfigGlobal::mi_ambito() === 'rstgr') {
+if (OrbixRuntime::miAmbito() === 'rstgr') {
     $permiso = 0;
 }
 
@@ -44,7 +45,7 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 
 $Qsa_actas = (string)filter_input(INPUT_POST, 'sa_actas');
-$Qa_actas = json_decode(core\urlsafe_b64decode($Qsa_actas));
+$Qa_actas = json_decode(src\shared\domain\helpers\urlsafe_b64decode($Qsa_actas));
 $Qacta = (string)filter_input(INPUT_POST, 'acta');
 $Qnotas = (string)filter_input(INPUT_POST, 'notas');
 
@@ -55,13 +56,13 @@ if (empty($notas) && empty($Qnotas)) {
 //$acta=urldecode($acta);
 //últimos
 $any = date('y');
-$mi_dele = ConfigGlobal::mi_delef();
+$mi_dele = OrbixRuntime::miDelef();
 
 /* TODO Aclararse. Ahora pongo crAcse...
 // para las regiones no es 'crA', sino 'A'.
 $a_reg = explode('-',$_SESSION['session_auth']['esquema']);
 $dlEsquema = substr($a_reg[1],0,-1); // quito la v o la f.
-$dl = ($dlEsquema=='cr')? ConfigGlobal::mi_region() : $mi_dele;
+$dl = ($dlEsquema=='cr')? OrbixRuntime::miRegion() : $mi_dele;
 */
 $dl = $mi_dele;
 
@@ -187,7 +188,7 @@ if (!empty($ult_acta)) {
 
 if (!empty($acta_actual)) {
     // Si es cr, se mira en todas:
-    if (ConfigGlobal::mi_ambito() === 'rstgr') {
+    if (OrbixRuntime::miAmbito() === 'rstgr') {
         $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalRepositoryInterface::class);
     } else {
         $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
@@ -255,20 +256,20 @@ if (!empty($cTribunal)) {
     $examinadores[] = $examinador_pral;
 }
 
-$url_examinadores = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/examinadores_search';
+$url_examinadores = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/examinadores_search';
 $oHashExaminadores = new Hash();
 $oHashExaminadores->setUrl($url_examinadores);
 $oHashExaminadores->setCamposForm('search');
 $h_examinadores = $oHashExaminadores->getParamAjaxEnArray();
 
-$url_asignaturas = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/asignaturas_search';
+$url_asignaturas = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/asignaturas_search';
 $oHashAsignaturas = new Hash();
 $oHashAsignaturas->setUrl($url_asignaturas);
 $oHashAsignaturas->setCamposForm('search');
 $h_asignaturas = $oHashAsignaturas->getParamAjaxEnArray();
 
-$url_acta_nueva = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/acta_nueva';
-$url_acta_modificar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/notas/acta_modificar';
+$url_acta_nueva = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_nueva';
+$url_acta_modificar = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_modificar';
 
 if (empty($pdf)) {
     $readonly = '';
@@ -285,7 +286,7 @@ $oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
 $h_delete = $oHashActaDelete->getParamAjax();
 
 // Solo cr, puede eliminar un acta firmada:
-if (ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r') {
+if (OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r') {
     $soy_rstgr = TRUE;
 } else {
     $soy_rstgr = FALSE;

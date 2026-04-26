@@ -2,25 +2,25 @@
 
 namespace frontend\personas\controller;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\PostRequest;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use src\personas\domain\contracts\SituacionRepositoryInterface;
-use src\personas\domain\entity\Persona;
-use src\personas\domain\entity\PersonaPub;
-use src\shared\domain\value_objects\DateTimeLocal;
-use src\ubis\application\services\DelegacionDropdown;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 /**
  * Formulario para trasladar una persona de centro y/o delegacion.
  *
- * Migrado desde `apps/personas/controller/traslado_form.php` (slice 5).
+ * Migrado desde `apps/personas/controller/traslado_form.php` (slice 5) y
+ * refactorizado conforme a `refactor.md`: la localizacion de la persona, la
+ * construccion de listas de centros, delegaciones y situaciones, y el calculo
+ * del centro/dl actuales viven ahora en
+ * `src/personas/application/TrasladoFormData.php` tras el endpoint
+ * `/src/personas/traslado_form_data`. Este controlador no importa clases `src\`.
  */
-require_once("apps/core/global_header.inc");
-require_once("apps/core/global_object.inc");
+require_once("frontend/shared/global_header_front.inc");
+
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -35,33 +35,32 @@ if (!empty($a_sel)) {
     $id_pau = (int)filter_input(INPUT_POST, 'id_pau');
 }
 
-$oPersona = Persona::findPersonaEnGlobal($id_pau);
-if (!is_object($oPersona)) {
-    exit(sprintf(_("No encuentro a nadie con id_nom: %d"), $id_pau));
-}
-if (get_class($oPersona) === PersonaPub::class) {
-    exit(_("con las personas de paso no tiene sentido."));
-}
+$campos = [
+    'id_pau' => $id_pau,
+];
 
-$gesCentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+$data = PostRequest::getDataFromUrl('/src/personas/traslado_form_data', $campos);
+$payload = is_array($data) ? $data : [];
+
+$titulo = (string)($payload['titulo'] ?? '');
+$id_ctr = $payload['id_ctr'] ?? '';
+$nombre_ctr = (string)($payload['nombre_ctr'] ?? '');
+$dl = (string)($payload['dl'] ?? '');
+$hoy = (string)($payload['hoy'] ?? '');
+$opciones_centros = (array)($payload['opciones_centros'] ?? []);
+$opciones_dl = (array)($payload['opciones_dl'] ?? []);
+$opciones_situacion = (array)($payload['opciones_situacion'] ?? []);
+
 $oDesplCentroDl = new Desplegable();
 $oDesplCentroDl->setNombre('new_ctr');
-$oDesplCentroDl->setOpciones($gesCentroDl->getArrayCentros("WHERE tipo_ctr !~ '^[(cgi)|(igl)]'"));
+$oDesplCentroDl->setOpciones($opciones_centros);
 $oDesplCentroDl->setBlanco(true);
 
-// False para no incluir la propia dl en la lista.
-$oDesplDlyR = Desplegable::desdeOpciones(DelegacionDropdown::listaRegDele(false), 'new_dl');
+$oDesplDlyR = Desplegable::desdeOpciones($opciones_dl, 'new_dl');
 
-$SituacionRepository = $GLOBALS['container']->get(SituacionRepositoryInterface::class);
 $oDesplSituacion = new Desplegable();
-$oDesplSituacion->setOpciones($SituacionRepository->getArraySituaciones(traslado: true));
+$oDesplSituacion->setOpciones($opciones_situacion);
 $oDesplSituacion->setNombre('situacion');
-
-$id_ctr = $oPersona->getId_ctr();
-$oCentroDl = $gesCentroDl->findById($id_ctr);
-$nombre_ctr = $oCentroDl?->getNombre_ubi() ?? '';
-$dl = $oPersona->getDl();
-$hoy = (new DateTimeLocal())->getFromLocal();
 
 $oHash = new Hash();
 $oHash->setCamposForm('new_ctr!f_ctr!new_dl!f_dl!situacion');
@@ -74,7 +73,7 @@ $oHash->setArraycamposHidden([
 ]);
 
 $a_parametros = ['pau' => 'p', 'id_nom' => $id_pau, 'obj_pau' => $Qobj_pau];
-$gohome = Hash::link(ConfigGlobal::getWeb() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$gohome = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => 'p', 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau];
 $godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
@@ -83,7 +82,7 @@ $a_campos = [
     'oHash' => $oHash,
     'gohome' => $gohome,
     'godossiers' => $godossiers,
-    'titulo' => $oPersona->getNombreApellidos(),
+    'titulo' => $titulo,
     'nombre_ctr' => $nombre_ctr,
     'hoy' => $hoy,
     'dl' => $dl,

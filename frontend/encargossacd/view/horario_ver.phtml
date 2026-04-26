@@ -45,7 +45,7 @@ fnjs_guardar=function(formulario){
                 })
                     .done(function (rta_txt) {
                         if (rta_txt !== '' && rta_txt !== '\n') {
-                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                            alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
                         } else {
                             <?= $oPosicion->js_atras(1) ?>
                         }

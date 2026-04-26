@@ -2,7 +2,7 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 /**
@@ -57,7 +57,7 @@ switch ($Qque) {
 
         foreach ($encargos as $idx => $e) {
             $aQuery = ['id_ubi' => (int)($e['id_ubi'] ?? 0)];
-            array_walk($aQuery, 'core\poner_empty_on_null');
+            array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
             $encargos[$idx]['pagina_ctr'] = Hash::link(
                 'frontend/encargossacd/controller/ctr_ficha.php?' . http_build_query($aQuery),
             );

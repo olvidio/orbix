@@ -10,7 +10,7 @@ use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 use src\ubis\domain\contracts\TarifaUbiRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder: estudio económico y de ocupación de una casa.

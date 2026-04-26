@@ -12,7 +12,7 @@
     }
     fnjs_borrar = function (formulario) {
         var seguro;
-        seguro = confirm("<?= _("¿Está seguro que desea borrar este ubi?");?>");
+        seguro = confirm(<?= json_encode(_("¿Está seguro que desea borrar este ubi?")) ?>);
         if (seguro) {
             $(formulario).one("submit", function () {
                 $.ajax({

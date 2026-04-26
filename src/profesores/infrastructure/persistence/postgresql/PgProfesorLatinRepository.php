@@ -9,7 +9,7 @@ use PDO;
 use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
 use src\profesores\domain\entity\ProfesorLatin;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

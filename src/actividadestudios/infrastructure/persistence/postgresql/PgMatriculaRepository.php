@@ -10,7 +10,7 @@ use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\actividadestudios\domain\entity\Matricula;
 use src\actividadestudios\domain\value_objects\ActividadMatriculaPk;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**

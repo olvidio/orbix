@@ -8,18 +8,18 @@ use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
-use web\Lista;
-use web\Posicion;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //Si vengo por medio de Posicion, borro la última

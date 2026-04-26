@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use web\Hash;
 
@@ -14,7 +14,7 @@ if ($Qregion === '') {
     $Qregion = (string)(filter_input(INPUT_POST, 'region') ?? '');
 }
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
     . '/src/usuarios/mails_contactos_region'
 );
 $oHash = new Hash();

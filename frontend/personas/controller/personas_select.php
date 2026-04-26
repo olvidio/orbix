@@ -2,37 +2,28 @@
 
 namespace frontend\personas\controller;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\AppInstalled;
+use frontend\shared\PostRequest;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\actividades\domain\value_objects\NivelStgrId;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\personas\domain\contracts\PersonaNaxRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\personas\domain\contracts\PersonaPubRepositoryInterface;
-use src\personas\domain\contracts\PersonaSRepositoryInterface;
-use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\contracts\CentroRepositoryInterface;
-use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
-use src\usuarios\domain\value_objects\PauType;
 use web\Hash;
-use web\Lista;
-use web\Posicion;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
 
 /**
  * Tabla de personas que cumplen la condicion introducida en `personas_que`.
  *
- * Migrado desde `apps/personas/controller/personas_select.php` (slice 4).
- *
- * Cambios respecto al legacy:
- *  - eliminado el roundtrip base64 de `sWhere` / `sOperador` / `sWhereCtr` /
- *    `sOperadorCtr` (los filtros se reconstruyen siempre desde los campos
- *    originales de `personas_que`, preservados en `oPosicion`).
- *  - enlaces actualizados a `frontend/personas/controller/...`.
+ * Migrado desde `apps/personas/controller/personas_select.php` (slice 4) y
+ * refactorizado para cumplir `refactor.md`: toda la obtencion de datos
+ * (filtros contra repositorios, busqueda de centros, preferencia de usuario,
+ * traduccion de `nivel_stgr`) vive ahora en
+ * `src/personas/application/PersonasSelectData.php` tras el endpoint
+ * `/src/personas/personas_select_data`. Este controlador frontend no importa
+ * clases de `src\...`; construye la UI (`web\Lista`, `web\Hash`, botones JS)
+ * con el array que devuelve el backend.
  */
-require_once("apps/core/global_header.inc");
-require_once("apps/core/global_object.inc");
+require_once("frontend/shared/global_header_front.inc");
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -92,141 +83,32 @@ $oPosicion->setParametros([
     'es_sacd' => $Qes_sacd,
 ], 1);
 
-// Si soy una persona la que consulta, limitar a mi ficha.
-$oMiUsuario = ConfigGlobal::MiUsuario();
-if (ConfigGlobal::mi_role_pau() === PauType::PAU_NOM) {
-    $id_nom = $oMiUsuario->getCsv_id_pau();
-    $aWhere = ['id_nom' => $id_nom];
-    $aOperador = [];
-    $aWhereCtr = [];
-    $aOperadorCtr = [];
-    $PersonaDlrepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-    $oPersona = $PersonaDlrepository->findById($id_nom);
-    $tabla = match ($oPersona->getId_tabla()) {
-        'n' => 'p_numerarios',
-        's' => 'p_supernumerarios',
-        'x' => 'p_nax',
-        'a' => 'p_agregados',
-        'pa', 'pn' => 'p_de_paso_ex',
-        default => 'nada',
-    };
-} else {
-    $aWhere = [];
-    $aOperador = [];
-    $aWhereCtr = [];
-    $aOperadorCtr = [];
+$campos = [
+    'tabla' => $tabla,
+    'na' => $Qna,
+    'tipo' => $tipo,
+    'es_sacd' => $Qes_sacd,
+    'exacto' => $Qexacto,
+    'cmb' => $Qcmb,
+    'nombre' => $Qnombre,
+    'apellido1' => $Qapellido1,
+    'apellido2' => $Qapellido2,
+    'centro' => $Qcentro,
+];
 
-    if (!empty($Qapellido1)) {
-        $aWhere['apellido1'] = $Qapellido1;
-        if (empty($Qexacto)) {
-            $aWhere['apellido1'] = '^' . $aWhere['apellido1'];
-            $aOperador['apellido1'] = 'sin_acentos';
-        }
-    }
-    if (!empty($Qapellido2)) {
-        $aWhere['apellido2'] = $Qapellido2;
-        if (empty($Qexacto)) {
-            $aWhere['apellido2'] = '^' . $aWhere['apellido2'];
-            $aOperador['apellido2'] = 'sin_acentos';
-        }
-    }
-    if (!empty($Qnombre)) {
-        $aWhere['nom'] = $Qnombre;
-        if (empty($Qexacto)) {
-            $aWhere['nom'] = '^' . $aWhere['nom'];
-            $aOperador['nom'] = 'sin_acentos';
-        }
-    }
-    if (!empty($Qcentro)) {
-        if (!empty($Qexacto)) {
-            $aWhereCtr['nombre_ubi'] = addslashes(strtr($Qcentro, "+", "."));
-        } else {
-            $nom_ubi = addslashes($Qcentro);
-            $nom_ubi = str_replace("+", "\+", $nom_ubi);
-            $aWhereCtr['nombre_ubi'] = '^' . $nom_ubi;
-            $aOperadorCtr['nombre_ubi'] = 'sin_acentos';
-        }
-    }
-    if (empty($Qcmb)) {
-        $aWhere['situacion'] = 'A';
-    } elseif (!$_SESSION['oPerm']->have_perm_oficina('dtor')) {
-        $aWhere['situacion'] = 'B';
-        $aOperador['situacion'] = '!=';
-    }
-    if ($Qes_sacd === 1) {
-        $aWhere['sacd'] = 't';
-    }
+$data = PostRequest::getDataFromUrl('/src/personas/personas_select_data', $campos);
+$payload = is_array($data) ? $data : [];
 
-    if (!empty($aWhereCtr)) {
-        $gesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-        $cCentros = $gesCentros->getCentros($aWhereCtr, $aOperadorCtr);
-        $aId_ctrs = [];
-        foreach ($cCentros as $oCentro) {
-            $aId_ctrs[] = $oCentro->getId_ubi();
-        }
-        if (!empty($aId_ctrs)) {
-            $aWhere['id_ctr'] = "{" . implode(', ', $aId_ctrs) . "}";
-            $aOperador['id_ctr'] = 'ANY';
-        } else {
-            $tabla = 'nada';
-        }
-    }
-}
+$tabla = (string)($payload['tabla'] ?? $tabla);
+$obj_pau = (string)($payload['obj_pau'] ?? '');
+$id_tabla = (string)($payload['id_tabla'] ?? '');
+$permiso = (int)($payload['permiso'] ?? 1);
+$sPrefs = (string)($payload['sPrefs'] ?? '');
+$total = (int)($payload['total'] ?? 0);
+$a_filas = (array)($payload['personas'] ?? []);
 
-$id_tabla = '';
-$permiso = 1;
-$obj_pau = '';
-$cPersonas = [];
-switch ($tabla) {
-    case 'p_sssc':
-        $obj_pau = 'PersonaSSSC';
-        $cPersonas = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
-        if ($_SESSION['oPerm']->have_perm_oficina('des')) $permiso = 3;
-        break;
-    case 'p_supernumerarios':
-        $obj_pau = 'PersonaS';
-        $cPersonas = $GLOBALS['container']->get(PersonaSRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
-        if ($_SESSION['oPerm']->have_perm_oficina('sg')) $permiso = 3;
-        break;
-    case 'p_numerarios':
-        $obj_pau = 'PersonaN';
-        $cPersonas = $GLOBALS['container']->get(PersonaNRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
-        if ($_SESSION['oPerm']->have_perm_oficina('sm')) $permiso = 3;
-        break;
-    case 'p_nax':
-        $obj_pau = 'PersonaNax';
-        $repoNax = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class);
-        $cPersonas = $repoNax->getPersonas($aWhere, $aOperador);
-        if ($cPersonas === false) $cPersonas = [];
-        if ($_SESSION['oPerm']->have_perm_oficina('nax')) $permiso = 3;
-        break;
-    case 'p_agregados':
-        $obj_pau = 'PersonaAgd';
-        $cPersonas = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
-        if ($_SESSION['oPerm']->have_perm_oficina('agd')) $permiso = 3;
-        break;
-    case 'p_de_paso':
-    case 'p_de_paso_ex':
-        if (!empty($Qna)) {
-            $aWhere['id_tabla'] = 'p' . $Qna;
-            $id_tabla = 'p' . $Qna;
-        }
-        $obj_pau = 'PersonaEx';
-        $cPersonas = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
-        if (
-            $_SESSION['oPerm']->have_perm_oficina('sm')
-            || $_SESSION['oPerm']->have_perm_oficina('agd')
-            || $_SESSION['oPerm']->have_perm_oficina('des')
-            || $_SESSION['oPerm']->have_perm_oficina('sg')
-            || $_SESSION['oPerm']->have_perm_oficina('est')
-        ) {
-            $permiso = 3;
-        }
-        break;
-    case 'nada':
-        exit(_("No se encuentra ningún centro con esta condición"));
-}
-
+// Botones y scripts: son UI (dependen de `$_SESSION['oPerm']`, apps instaladas
+// y ambito) y se construyen en el frontend.
 $a_botones = [];
 $script = [];
 
@@ -239,11 +121,11 @@ $script['fnjs_dossiers'] = 1;
 $a_botones[] = ['txt' => _("ficha"), 'click' => 'fnjs_ficha("#seleccionados")'];
 $script['fnjs_ficha'] = 1;
 
-if (ConfigGlobal::is_app_installed('asistentes')) {
+if (AppInstalled::is('asistentes')) {
     $a_botones[] = ['txt' => _("ver actividades"), 'click' => 'fnjs_actividades("#seleccionados")'];
     $script['fnjs_actividades'] = 1;
 }
-if (ConfigGlobal::is_app_installed('notas')) {
+if (AppInstalled::is('notas')) {
     if ($tabla === "p_numerarios" || $tabla === "p_agregados" || $tabla === "p_de_paso_ex") {
         $a_botones[] = ['txt' => _("ver tessera"), 'click' => 'fnjs_tessera("#seleccionados")'];
         $script['fnjs_tessera'] = 1;
@@ -258,14 +140,14 @@ if (ConfigGlobal::is_app_installed('notas')) {
     }
 }
 if (
-    ConfigGlobal::is_app_installed('actividadestudios')
+    AppInstalled::is('actividadestudios')
     && ($_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('est'))
     && ($tabla === "p_numerarios" || $tabla === "p_agregados" || $tabla === "p_de_paso_ex")
 ) {
     $a_botones[] = ['txt' => _("posibles ca"), 'click' => 'fnjs_posibles_ca("#seleccionados")'];
     $script['fnjs_posibles_ca'] = 1;
 }
-if (ConfigGlobal::is_app_installed('actividadplazas')) {
+if (AppInstalled::is('actividadplazas')) {
     if ($tabla === "p_numerarios" || $tabla === "p_agregados" || $tabla === "p_de_paso_ex") {
         $a_botones[] = ['txt' => _("petición ca"), 'click' => 'fnjs_peticion_activ("#seleccionados","ca")'];
         $a_botones[] = ['txt' => _("petición crt"), 'click' => 'fnjs_peticion_activ("#seleccionados","crt")'];
@@ -273,18 +155,18 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
     }
 }
 if ($_SESSION['oPerm']->have_perm_oficina('est')) {
-    if (ConfigGlobal::is_app_installed('actividadestudios')) {
+    if (AppInstalled::is('actividadestudios')) {
         $a_botones[] = ['txt' => _("plan estudios"), 'click' => 'fnjs_matriculas("#seleccionados")'];
         $script['fnjs_matriculas'] = 1;
     }
-    if (ConfigGlobal::is_app_installed('profesores')) {
+    if (AppInstalled::is('profesores')) {
         $a_botones[] = ['txt' => _("ficha profesor stgr"), 'click' => 'fnjs_ficha_profe("#seleccionados")'];
         $script['fnjs_ficha_profe'] = 1;
     }
     $a_botones[] = ['txt' => _("copiar tessera"), 'click' => 'fnjs_copiar_tessera("#seleccionados")'];
     $script['fnjs_copiar_tessera'] = 1;
 
-    if (ConfigGlobal::mi_ambito() === 'r') {
+    if (OrbixRuntime::miAmbito() === 'r') {
         $a_botones[] = ['txt' => _("imprimir certificado"), 'click' => 'fnjs_imp_certificado("#seleccionados")'];
         $script['fnjs_imp_certificado'] = 1;
         $a_botones[] = ['txt' => _("adjuntar certificado"), 'click' => 'fnjs_upload_certificado("#seleccionados")'];
@@ -293,7 +175,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 }
 
 // Para rstgr, sobreescribe los botones.
-if (ConfigGlobal::mi_ambito() === 'rstgr') {
+if (OrbixRuntime::miAmbito() === 'rstgr') {
     $a_botones = [
         ['txt' => _("ver tessera"), 'click' => 'fnjs_tessera("#seleccionados")'],
         ['txt' => _("imprimir tessera"), 'click' => 'fnjs_imp_tessera("#seleccionados")'],
@@ -310,7 +192,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     ];
 }
 
-if (ConfigGlobal::is_app_installed('actividadessacd') && $_SESSION['oPerm']->have_perm_oficina('des')) {
+if (AppInstalled::is('actividadessacd') && $_SESSION['oPerm']->have_perm_oficina('des')) {
     $a_botones[] = ['txt' => _("atención actividades"), 'click' => 'fnjs_lista_activ("#seleccionados")'];
     $script['fnjs_lista_activ'] = 1;
 }
@@ -331,65 +213,36 @@ if (!empty($Qcmb)) {
     $a_cabeceras[] = ['name' => ucfirst(_("fecha cambio situación")), 'class' => 'fecha'];
 }
 
-$sPrefs = '';
-$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
-$oPreferencia = $PreferenciaRepository->findById(ConfigGlobal::mi_id_usuario(), 'tabla_presentacion');
-if ($oPreferencia !== null) {
-    $sPrefs = $oPreferencia->getPreferencia();
-}
-
-$aNivelStgr = NivelStgrId::getArrayNivelStgr();
-$a_personas = [];
-$i = 0;
-foreach ($cPersonas as $oPersona) {
-    $i++;
-    $id_tabla_persona = $oPersona->getId_tabla();
-    $id_nom = $oPersona->getId_nom();
-    $nom = $oPersona->getPrefApellidosNombre();
-
-    if ($obj_pau !== 'PersonaEx') {
-        $id_ctr = $oPersona->getId_ctr();
-        $nombre_ubi = '';
-        if ($id_ctr !== null) {
-            $centroRepoIface = ConfigGlobal::mi_ambito() === 'rstgr'
-                ? CentroRepositoryInterface::class
-                : CentroDlRepositoryInterface::class;
-            $oCentroDl = $GLOBALS['container']->get($centroRepoIface)->findById($id_ctr);
-            $nombre_ubi = $oCentroDl?->getNombre_ubi() ?? '';
-        }
-    } else {
-        $nombre_ubi = $oPersona->getDl();
-    }
+$a_valores = [];
+$c = 0;
+foreach ($a_filas as $fila) {
+    $c++;
+    $id_nom = (int)($fila['id_nom'] ?? 0);
+    $id_tabla_persona = (string)($fila['id_tabla'] ?? '');
+    $nom = (string)($fila['nom'] ?? '');
+    $nombre_ubi = (string)($fila['nombre_ubi'] ?? '');
 
     $a_val = [];
     $a_val['sel'] = "$id_nom#$id_tabla_persona";
     $a_val[1] = $id_tabla_persona;
     if ($sPrefs === 'html') {
-        $pagina = Hash::link(
-            ConfigGlobal::getWeb() . '/frontend/personas/controller/home_persona.php?'
+        $pagina_persona = Hash::link(
+            AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?'
             . http_build_query(['id_nom' => $id_nom, 'id_tabla' => $id_tabla_persona, 'obj_pau' => $obj_pau])
         );
-        $a_val[2] = ['ira' => $pagina, 'valor' => $nom];
+        $a_val[2] = ['ira' => $pagina_persona, 'valor' => $nom];
     } else {
         $a_val[2] = ['script' => 'fnjs_home("#seleccionados")', 'valor' => $nom];
     }
     $a_val[4] = $nombre_ubi;
     if (($tabla === 'p_numerarios' || $tabla === 'p_agregados') && $tipo !== 'planning') {
-        $a_val[5] = $aNivelStgr[$oPersona->getNivel_stgr()] ?? '';
+        $a_val[5] = (string)($fila['nivel_stgr'] ?? '');
     }
     if (!empty($Qcmb)) {
-        $a_val[6] = $oPersona->getSituacion();
-        $a_val[7] = $oPersona->getF_situacion()?->getFromLocal();
+        $a_val[6] = (string)($fila['situacion'] ?? '');
+        $a_val[7] = (string)($fila['f_situacion'] ?? '');
     }
-    $a_personas[$nom . '_' . $id_nom] = $a_val;
-}
-uksort($a_personas, 'core\strsinacentocmp');
-
-$a_valores = [];
-$c = 0;
-foreach ($a_personas as $val) {
-    $c++;
-    $a_valores[$c] = $val;
+    $a_valores[$c] = $a_val;
 }
 if (!empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
@@ -405,7 +258,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $pagina = Hash::link(
-    ConfigGlobal::getWeb() . '/frontend/personas/controller/personas_editar.php?'
+    AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_editar.php?'
     . http_build_query(['obj_pau' => $obj_pau, 'id_tabla' => $id_tabla, 'nuevo' => 1, 'apellido1' => $Qapellido1])
 );
 
@@ -424,7 +277,7 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'script' => $script,
-    'resultado' => sprintf(_("%s personas encontradas"), $i),
+    'resultado' => sprintf(_("%s personas encontradas"), $total),
     'oTabla' => $oTabla,
     'pagina' => $pagina,
     'permiso' => $permiso,

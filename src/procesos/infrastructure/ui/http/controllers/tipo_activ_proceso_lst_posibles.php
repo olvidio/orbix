@@ -1,7 +1,7 @@
 <?php
 
 use src\procesos\application\TipoActivProcesoLstPosibles;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $useCase = new TipoActivProcesoLstPosibles();
 ContestarJson::enviar('', $useCase->execute($_POST));

@@ -6,7 +6,7 @@
  */
 
 use src\actividades\application\ActividadNuevoCursoEjecutar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'year_ref' => (int)filter_input(INPUT_POST, 'year_ref'),

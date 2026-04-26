@@ -14,4 +14,18 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/configuracion/parametros_update', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/parametros_update.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/configuracion/periodo_calendario_escolar_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/periodo_calendario_escolar_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/configuracion/modulos_select_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/modulos_select_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/configuracion/modulos_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/modulos_form_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/configuracion/modulos_update', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/modulos_update.php';
+    });
 };

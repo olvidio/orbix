@@ -6,7 +6,7 @@ use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_role = (string)filter_input(INPUT_POST, 'id_role');
 

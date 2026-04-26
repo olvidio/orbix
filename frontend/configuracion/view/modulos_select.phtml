@@ -7,7 +7,7 @@
     fnjs_eliminar = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
-            if (confirm("<?= $txt_eliminar ?>")) {
+            if (confirm(<?= json_encode((string)$txt_eliminar) ?>)) {
                 $('#mod').val("eliminar");
                 $(formulario).attr('action', "frontend/configuracion/controller/modulos_update.php");
                 $(formulario).one("submit", function () {
@@ -18,7 +18,7 @@
                     })
                         .done(function (rta_txt) {
                             if (rta_txt !== '' && rta_txt !== '\\n') {
-                                alert('<?= _("respuesta") ?>: ' + rta_txt);
+                                alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
                             } else {
                                 fnjs_actualizar(formulario);
                             }
@@ -46,7 +46,7 @@
 </script>
 <h3>Modulos</h3>
 <form id='seleccionados' name='seleccionados' action='' method='post'>
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $hash_lista_html ?>
     <input type='hidden' id='mod' name='mod' value=''>
     <?= $oTabla->mostrar_tabla(); ?>
 </form>
@@ -55,7 +55,7 @@
     <tr>
         <th class="no_print">
             <span class="link_inv"
-                  onclick="fnjs_nuevo('#seleccionados');"><?= core\strtoupper_dlb(_("añadir módulo")) ?></span>
+                  onclick="fnjs_nuevo('#seleccionados');"><?= htmlspecialchars($txt_anadir_modulo, ENT_QUOTES) ?></span>
         </th>
     </tr>
 </table>

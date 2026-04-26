@@ -7,7 +7,7 @@ use src\asistentes\application\services\AsistenteApplicationService;
 use src\asistentes\domain\entity\Asistente;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Crea, edita o mueve un `Asistente`.

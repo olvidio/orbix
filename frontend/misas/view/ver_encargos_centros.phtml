@@ -181,7 +181,7 @@
         var id_ctr = $('#id_ubi').val();
 
         if (!id_enc || !id_ctr) {
-            alert('<?= _('Falta encargo o centro') ?>');
+            alert(<?= json_encode(_('Falta encargo o centro')) ?>);
             return;
         }
 
@@ -198,7 +198,7 @@
             dataType: 'json'
         }).done(function (json) {
             if (!json || json.success !== true) {
-                alert('<?= _('respuesta') ?>: ' + (json && json.mensaje ? json.mensaje : ''));
+                alert(<?= json_encode(_('respuesta') . ": ") ?> + (json && json.mensaje ? json.mensaje : ''));
                 return;
             }
             modal.hide();
@@ -224,7 +224,7 @@
             dataType: 'json'
         }).done(function (json) {
             if (!json || json.success !== true) {
-                alert('<?= _('respuesta') ?>: ' + (json && json.mensaje ? json.mensaje : ''));
+                alert(<?= json_encode(_('respuesta') . ": ") ?> + (json && json.mensaje ? json.mensaje : ''));
                 return;
             }
             modal.hide();
@@ -273,7 +273,7 @@
     function fnjs_nuevo() {
         reset_campos_modal();
         $('#que').val('nuevo');
-        $('#titulo_modal').html('<?= _('nuevo encargo visible para un centro') ?>');
+        $('#titulo_modal').html(<?= json_encode(_('nuevo encargo visible para un centro')) ?>);
         fnjs_prepara_select_encargo();
         modal.show();
     }
@@ -293,7 +293,7 @@
         var id_encargo = data[cell.row].id_encargo;
         var id_centro = data[cell.row].id_centro;
 
-        $('#titulo_modal').html('<?= _('modificar encargo visible para un centro') ?>');
+        $('#titulo_modal').html(<?= json_encode(_('modificar encargo visible para un centro')) ?>);
         $('#que').val('modificar');
         $('#id_item').val(id_item);
         $('#id_enc_selected').val(id_encargo);

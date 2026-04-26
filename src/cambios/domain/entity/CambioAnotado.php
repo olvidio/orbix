@@ -3,7 +3,7 @@
 namespace src\cambios\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class CambioAnotado
 {

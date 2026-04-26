@@ -6,7 +6,7 @@
  * Este controlador recibe el POST, pide los datos al backend via PostRequest
  * y, segun `Qque`, devuelve:
  *   - que=lista: vista HTML con la tabla.
- *   - que=file : descarga directa como CSV usando `web\Lista::getCsv()`.
+ *   - que=file : descarga directa como CSV usando `frontend\shared\web\Lista::getCsv()`.
  *
  * Migrado desde frontend/actividades/controller/lista_sr_csv.php.
  *
@@ -16,7 +16,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
 

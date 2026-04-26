@@ -222,7 +222,7 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
         })
             .done(function (rta_txt) {
                 if (rta_txt !== '' && rta_txt !== '\\n') {
-                    alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
                 } else {
                     fnjs_update_div('#main', '<?= $url_actualizar ?>');
                 }
@@ -239,7 +239,7 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
         })
             .done(function (rta_txt) {
                 if (rta_txt !== '' && rta_txt !== '\\n') {
-                    alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt);
                 }
             });
     }

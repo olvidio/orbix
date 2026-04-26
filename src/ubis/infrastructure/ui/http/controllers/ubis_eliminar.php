@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\UbisEliminar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $service = new UbisEliminar();
 $errorTxt = $service->execute(

@@ -4,7 +4,7 @@ use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_ubi_activ = (integer)filter_input(INPUT_POST, 'id_ubi_activ');
 $Qnom_equipaje = (string)filter_input(INPUT_POST, 'nom_equipaje');

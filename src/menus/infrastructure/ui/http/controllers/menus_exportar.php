@@ -6,8 +6,8 @@
 
 use src\menus\domain\contracts\TemplateMenuRepositoryInterface;
 use src\menus\domain\entity\TemplateMenu;
-use web\ContestarJson;
-use function core\is_true;
+use frontend\shared\web\ContestarJson;
+use function src\shared\domain\helpers\is_true;
 
 $Qnombre = (string)filter_input(INPUT_POST, 'nombre');
 $Qsobreescribir = (string)filter_input(INPUT_POST, 'sobreescribir');

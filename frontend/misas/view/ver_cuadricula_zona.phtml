@@ -256,7 +256,7 @@
             dataType: 'json'
         }).done(function (respuesta) {
             if (respuesta.success !== true) {
-                alert("<?= _("respuesta") ?>: " + (respuesta.mensaje || ''));
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + (respuesta.mensaje || ''));
                 return;
             }
             var inner = (typeof respuesta.data === 'string') ? JSON.parse(respuesta.data) : respuesta.data;

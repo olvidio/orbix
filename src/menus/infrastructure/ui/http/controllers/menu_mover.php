@@ -1,7 +1,7 @@
 <?php
 
 use src\menus\application\MenuMover;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_menu = (integer)filter_input(INPUT_POST, 'id_menu');
 $Qgm_new = (string)filter_input(INPUT_POST, 'gm_new');

@@ -1,7 +1,7 @@
 <?php
 
 namespace src\encargossacd\domain\entity;
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\encargossacd\domain\value_objects\EncargoTipoId;
 use src\encargossacd\domain\value_objects\EncargoTipoText;

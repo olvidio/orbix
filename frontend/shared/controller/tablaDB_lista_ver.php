@@ -7,8 +7,8 @@ use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
-use web\Lista;
-use web\Posicion;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
 
 // Archivos requeridos por esta url **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -100,7 +100,7 @@ if ($QaSerieBuscar === null && $Qk_buscar === null) {
     $oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
     $a_campos_buscar['oHashBuscar'] = $oHashBuscar;
     $a_campos_buscar['oPosicion'] = $oPosicion;
-    $a_campos_buscar['url'] = ConfigGlobal::getWeb() . "/frontend/shared/controller/tablaDB_lista_ver.php";
+    $a_campos_buscar['url'] = AppUrlConfig::getPublicAppBaseUrl() . "/frontend/shared/controller/tablaDB_lista_ver.php";
 
     if (!empty($datos_buscar)) {
         $oView = new ViewNewPhtml($namespace);

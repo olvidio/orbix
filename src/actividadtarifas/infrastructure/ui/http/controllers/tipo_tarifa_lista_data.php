@@ -4,7 +4,7 @@
  */
 
 use src\actividadtarifas\application\TipoTarifaListaData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $data = TipoTarifaListaData::execute();
 ContestarJson::enviar('', $data);

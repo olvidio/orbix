@@ -1,24 +1,23 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\personas\application\services\PersonaFinderService;
 use web\Hash;
-use web\Lista;
-use web\Posicion;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
+use function frontend\shared\helpers\is_true;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //Si vengo por medio de Posicion, borro la última
@@ -131,7 +130,7 @@ echo $oPosicion->mostrar_left_slide(1);
         let mensaje = "<?= _("¿Está seguro que desea borrar todas las matrículas seleccionadas?");?>";
         if (confirm(mensaje)) {
             $(mod).val("eliminar");
-            let url = '<?= ConfigGlobal::getWeb() ?>/src/actividadestudios/matricula_eliminar';
+            let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/actividadestudios/matricula_eliminar';
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
@@ -141,7 +140,7 @@ echo $oPosicion->mostrar_left_slide(1);
             });
             request.done(function (json) {
                 if (json.success !== true) {
-                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                 } else {
                     fnjs_actualizar();
                 }
@@ -149,7 +148,7 @@ echo $oPosicion->mostrar_left_slide(1);
         }
     }
     fnjs_actualizar = function () {
-        var url = '<?= Hash::link(ConfigGlobal::getWeb() . '/frontend/actividadestudios/controller/matriculas_pendientes.php') ?>';
+        var url = '<?= Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/matriculas_pendientes.php') ?>';
         fnjs_update_div('#main', url);
     }
 </script>

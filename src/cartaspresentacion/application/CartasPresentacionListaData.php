@@ -12,8 +12,8 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
 
-use function core\strsinacentocmp;
-use function core\strtoupper_dlb;
+use function src\shared\domain\helpers\strsinacentocmp;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 /**
  * Data builder: agrupa las cartas de presentacion por tipo de labor,

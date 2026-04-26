@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 
@@ -11,9 +11,9 @@ require_once("frontend/shared/global_header_front.inc");
 $oPosicion->recordar();
 
 // 12
-$url_ctr = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_de_ctr.php?';
+$url_ctr = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_de_ctr.php?';
 // 13
-$url_dlb = ConfigGlobal::getWeb() . '/frontend/inventario/controller/doc_de_dlb.php?';
+$url_dlb = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_de_dlb.php?';
 
 $oHash = new Hash();
 $oHash->setArrayCamposHidden(['inventario' => 1]);

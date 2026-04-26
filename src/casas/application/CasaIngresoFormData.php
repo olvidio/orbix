@@ -5,7 +5,7 @@ namespace src\casas\application;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder: datos para el formulario de ingreso de una actividad

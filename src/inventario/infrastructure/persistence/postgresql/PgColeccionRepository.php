@@ -10,7 +10,7 @@ use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\entity\Coleccion;
 use src\inventario\domain\value_objects\ColeccionId;
 use src\shared\traits\HandlesPdoErrors;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla i_colecciones_dl a la interfaz del repositorio

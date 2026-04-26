@@ -11,12 +11,12 @@
  * `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\Posicion;
+use frontend\shared\web\Posicion;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -70,11 +70,11 @@ $oHashActualizar->setArraycamposHidden([
     'nom_activ' => $nom_activ,
 ]);
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$apiBase = AppUrlConfig::getApiBaseUrl();
 $oHashCeder = new Hash();
-$oHashCeder->setUrl($web . '/src/actividadplazas/plazas_ceder');
+$oHashCeder->setUrl($apiBase . '/src/actividadplazas/plazas_ceder');
 $oHashCeder->setCamposForm('id_activ!num_plazas!region_dl');
-$url_ceder = $web . '/src/actividadplazas/plazas_ceder' . $oHashCeder->linkSinVal();
+$url_ceder = $apiBase . '/src/actividadplazas/plazas_ceder' . $oHashCeder->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,

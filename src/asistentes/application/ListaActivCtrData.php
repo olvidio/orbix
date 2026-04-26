@@ -1,0 +1,196 @@
+<?php
+
+namespace src\asistentes\application;
+
+use frontend\shared\web\Periodo;
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadplazas\domain\value_objects\PlazaId;
+use src\asistentes\application\services\AsistenteActividadService;
+use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
+use src\shared\config\ConfigGlobal;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+
+/**
+ * Asistentes a actividades por centro (`lista_activ_ctr.php`).
+ *
+ * @return array{aCentros: array<int|string, array{nombre_ubi: string, personas: array<int, array{ap_nom: string, actividades: list<string>}>}>}
+ */
+final class ListaActivCtrData
+{
+    public static function build(array $input): array
+    {
+        $Qssfsv = (string)($input['ssfsv'] ?? '');
+
+        if (ConfigGlobal::mi_sfsv() === 1) {
+            if ($Qssfsv === 'sf'
+                && (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des')))) {
+                $ssfsv = 'sf';
+            } else {
+                $ssfsv = 'sv';
+            }
+        }
+        if (ConfigGlobal::mi_sfsv() === 2) {
+            $ssfsv = 'sf';
+        }
+        if (!isset($ssfsv)) {
+            $ssfsv = 'sv';
+        }
+
+        $Qsasistentes = (string)($input['sasistentes'] ?? '');
+        $Qsactividad = (string)($input['sactividad'] ?? '');
+        $Qn_agd = (string)($input['n_agd'] ?? '');
+        $Qyear = (int)($input['year'] ?? 0);
+        $Qperiodo = (string)($input['periodo'] ?? '');
+        $Qempiezamin = (string)($input['empiezamin'] ?? '');
+        $Qempiezamax = (string)($input['empiezamax'] ?? '');
+
+        if ($Qn_agd === 'sss') {
+            $Qsasistentes = 'sss+';
+        }
+
+        $oTipoActiv = new \src\actividades\domain\entity\TiposActividades();
+        $oTipoActiv->setSfsvText($ssfsv);
+        $oTipoActiv->setAsistentesText($Qsasistentes);
+        $oTipoActiv->setActividadText($Qsactividad);
+        $condta = $oTipoActiv->getId_tipo_activ();
+
+        $condta_plus = '';
+        if ($Qsasistentes === 'n' && ($Qsactividad === 'ca' || $Qsactividad === 'crt')) {
+            $activ = $Qsactividad === 'ca' ? 'cv' : $Qsactividad;
+            $oTipoActiv = new \src\actividades\domain\entity\TiposActividades();
+            $oTipoActiv->setSfsvText($ssfsv);
+            $oTipoActiv->setAsistentesText('agd');
+            $oTipoActiv->setActividadText($activ);
+            $condta_plus = $oTipoActiv->getId_tipo_activ();
+        }
+
+        $condta_sr = '';
+        if ($Qsactividad === 'crt') {
+            $oTipoActiv = new \src\actividades\domain\entity\TiposActividades();
+            $oTipoActiv->setSfsvText($ssfsv);
+            $oTipoActiv->setAsistentesText('sr');
+            $oTipoActiv->setActividadText('crt');
+            $condta_sr = $oTipoActiv->getId_tipo_activ();
+        }
+
+        $condicion = '';
+        $condicion .= $condta === '' ? '' : '^' . $condta;
+        $condicion .= $condta_plus === '' ? '' : '|^' . $condta_plus;
+        $condicion .= $condta_sr === '' ? '' : '|^' . $condta_sr;
+
+        $aWhereAct = [];
+        $aOperadorAct = [];
+        $aWhereAct['id_tipo_activ'] = $condicion;
+        $aOperadorAct['id_tipo_activ'] = '~';
+
+        $oPeriodo = Periodo::conCalendarioDesdeBackend();
+        $oPeriodo->setDefaultAny('next');
+        $oPeriodo->setAny($Qyear);
+        $oPeriodo->setEmpiezaMin($Qempiezamin);
+        $oPeriodo->setEmpiezaMax($Qempiezamax);
+        $oPeriodo->setPeriodo($Qperiodo);
+
+        $inicioIso = $oPeriodo->getF_ini_iso();
+        $finIso = $oPeriodo->getF_fin_iso();
+
+        $aWhere = [];
+        $aOperador = [];
+        $tabla = 'p_n_agd';
+        switch ($Qn_agd) {
+            case 'a':
+                $tabla = 'p_agregados';
+                $aWhere['tipo_ctr'] = '^a';
+                $aOperador['tipo_ctr'] = '~';
+                break;
+            case 'n':
+                $tabla = 'p_numerarios';
+                $aWhere['tipo_ctr'] = '^n';
+                $aOperador['tipo_ctr'] = '~';
+                break;
+            case 'nm':
+                $tabla = 'p_n_agd';
+                $aWhere['tipo_ctr'] = '^nm';
+                $aOperador['tipo_ctr'] = '~';
+                break;
+            case 'nj':
+                $tabla = 'p_n_agd';
+                $aWhere['tipo_ctr'] = '^nj(ce)*';
+                $aOperador['tipo_ctr'] = '~';
+                break;
+            case 'sssc':
+                $tabla = 'p_sssc';
+                $aWhere['tipo_ctr'] = '^ss';
+                $aOperador['tipo_ctr'] = '~';
+                break;
+            case 'c':
+                $tabla = 'p_n_agd';
+                $aWhere['id_ubi'] = (int)($input['id_ubi'] ?? 0);
+                $aOperador['tipo_ctr'] = [];
+                break;
+            default:
+                $tabla = 'p_n_agd';
+        }
+        $aWhere['active'] = 't';
+        $aWhere['_ordre'] = 'nombre_ubi';
+
+        $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
+
+        $aCentros = [];
+        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $PersonaSSSCRepository = $GLOBALS['container']->get(PersonaSSSCRepositoryInterface::class);
+        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        foreach ($cCentros as $oCentro) {
+            $id_ubi = $oCentro->getId_ubi();
+            $nombre_ubi = $oCentro->getNombre_ubi();
+            if ($tabla === 'p_sssc') {
+                $cPersonas = $PersonaSSSCRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1']);
+            } else {
+                $cPersonas = $PersonaDlRepository->getPersonas(['id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom']);
+            }
+
+            $aCentros[$id_ubi]['nombre_ubi'] = $nombre_ubi;
+
+            $i = 0;
+            $aPersonasCtr = [];
+            $aWhereNom = [];
+            $service = $GLOBALS['container']->get(AsistenteActividadService::class);
+            $aPlazas = PlazaId::getArrayPosiblesPlazas();
+            foreach ($cPersonas as $oPersona) {
+                $i++;
+                $id_nom = $oPersona->getId_nom();
+                $ap_nom = $oPersona->getPrefApellidosNombre();
+                $aWhereNom['id_nom'] = $id_nom;
+                $aWhereNom['propio'] = 't';
+                $aOperadorNom = [];
+                $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
+                $aOperadorAct['f_ini'] = 'BETWEEN';
+
+                $cAsistencias = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
+                $aActividades = [];
+                if (is_array($cAsistencias) && count($cAsistencias) === 0) {
+                    $aActividades = [];
+                } else {
+                    foreach ($cAsistencias as $oAsistente) {
+                        $id_activ = $oAsistente->getId_activ();
+                        $oActividad = $ActividadAllRepository->findById($id_activ);
+                        $nom_activ = $oActividad->getNom_activ();
+                        $plaza = $oAsistente->getPlazaVo()?->value() ?? '';
+                        $nom_plaza = '';
+                        if ($plaza < PlazaId::ASIGNADA) {
+                            $plaza_txt = $aPlazas[$plaza] ?? '';
+                            $nom_plaza = '<span class=alert> [' . $plaza_txt . ']</span>';
+                        }
+                        $aActividades[] = $nom_activ . $nom_plaza;
+                    }
+                }
+                $aPersonasCtr[$i]['ap_nom'] = $ap_nom;
+                $aPersonasCtr[$i]['actividades'] = $aActividades;
+            }
+            $aCentros[$id_ubi]['personas'] = $aPersonasCtr;
+        }
+
+        return ['aCentros' => $aCentros];
+    }
+}

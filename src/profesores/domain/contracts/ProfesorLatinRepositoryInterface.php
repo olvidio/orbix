@@ -5,7 +5,7 @@ namespace src\profesores\domain\contracts;
 use src\profesores\domain\entity\ProfesorLatin;
 
 
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase ProfesorLatin y su Repositorio
  *

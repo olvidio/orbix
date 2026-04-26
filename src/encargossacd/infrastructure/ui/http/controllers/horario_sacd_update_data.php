@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\EncargoSacdHorarioUpdate;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $result = EncargoSacdHorarioUpdate::ejecutar($_POST);
 if (isset($result['_error'])) {

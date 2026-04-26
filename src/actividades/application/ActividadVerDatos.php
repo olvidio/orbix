@@ -10,8 +10,8 @@ use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
-use web\Desplegable;
-use web\TiposActividades;
+use frontend\shared\web\Desplegable;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Devuelve todos los datos y fragmentos HTML que el formulario

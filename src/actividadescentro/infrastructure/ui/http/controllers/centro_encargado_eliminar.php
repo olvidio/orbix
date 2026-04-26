@@ -5,7 +5,7 @@
  */
 
 use src\actividadescentro\application\CentroEncargadoEliminar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = CentroEncargadoEliminar::execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

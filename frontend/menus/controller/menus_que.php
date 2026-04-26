@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -25,7 +25,7 @@ $oDesplGM->setOpcion_sel($Qfiltro_grupo);
 $oDesplGM->setAction('fnjs_lista_menus()');
 $oDesplGM->setNombre('filtro_grupo');
 
-$url = ConfigGlobal::getWeb() . '/frontend/menus/controller/menus_get.php';
+$url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/menus/controller/menus_get.php';
 $oHash1 = new Hash();
 $oHash1->setUrl($url);
 $oHash1->setCamposForm('filtro_grupo');

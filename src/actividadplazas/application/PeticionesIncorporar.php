@@ -12,7 +12,7 @@ use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteDlRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteOutRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Incorpora la primera peticion de plaza de cada numerario/agregado
@@ -53,13 +53,13 @@ final class PeticionesIncorporar
             case 'ca':
             case 'cv':
                 $any = $_SESSION['oConfig']->any_final_curs('est');
-                $inicurs = \core\curso_est('inicio', $any, 'est')->format('Y-m-d');
-                $fincurs = \core\curso_est('fin', $any, 'est')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'est')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'est')->format('Y-m-d');
                 break;
             case 'crt':
                 $any = $_SESSION['oConfig']->any_final_curs('crt');
-                $inicurs = \core\curso_est('inicio', $any, 'crt')->format('Y-m-d');
-                $fincurs = \core\curso_est('fin', $any, 'crt')->format('Y-m-d');
+                $inicurs = \src\shared\domain\helpers\curso_est('inicio', $any, 'crt')->format('Y-m-d');
+                $fincurs = \src\shared\domain\helpers\curso_est('fin', $any, 'crt')->format('Y-m-d');
                 break;
         }
 

@@ -1,9 +1,7 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
-use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -37,8 +35,8 @@ if ($dl) {
 
 $a_botones[] = array('txt' => _('seleccionar'), 'click' => "fnjs_ver_equipaje()");
 
-
-$css = file_get_contents(ConfigGlobal::$dir_estilos . '/inventario.css.php');
+$data_css = PostRequest::getDataFromUrl('/src/inventario/inventario_css_inline_data', []);
+$css = is_array($data_css) ? (string)($data_css['css'] ?? '') : '';
 $html_total = $css;
 foreach ($a_ubi_valores as $lugar => $a_valores) {
     $html = '';

@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\BuscarActaData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Busca un acta por su numero abreviado. Consumido por

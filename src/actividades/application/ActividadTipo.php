@@ -5,9 +5,9 @@ namespace src\actividades\application;
 use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewTwig;
 use src\actividades\domain\value_objects\StatusId;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Description of actividadtipo

@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\CentrosGetPlazasData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', CentrosGetPlazasData::execute());
 

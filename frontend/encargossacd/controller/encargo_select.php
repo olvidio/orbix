@@ -1,15 +1,15 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 /**
  * Listado de encargos. Los datos de cada fila vienen del backend
  * ({@see \src\encargossacd\application\EncargoSelectData}) via
- * `/src/encargossacd/encargo_select_data`; aqui solo armamos la `web\Lista`.
+ * `/src/encargossacd/encargo_select_data`; aqui solo armamos la `frontend\shared\web\Lista`.
  *
  * @package    delegacion
  * @subpackage    des
@@ -24,7 +24,7 @@ $oPosicion->recordar();
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -73,7 +73,7 @@ foreach ($filas as $fila) {
     $desc_enc = (string)($fila['desc_enc'] ?? '');
 
     $aQuery = ['que' => 'editar', 'id_enc' => $id_enc];
-    array_walk($aQuery, 'core\poner_empty_on_null');
+    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
     $pagina = Hash::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
     if ($sf_sv === 2) {
@@ -88,7 +88,7 @@ foreach ($filas as $fila) {
 }
 
 $aQuery = ['que' => 'nuevo', 'id_tipo_enc' => $Qid_tipo_enc];
-array_walk($aQuery, 'core\poner_empty_on_null');
+array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 $pagina_nuevo = Hash::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
 $txt_eliminar = _("¿Esta Seguro que desea borrar este encargo?");
@@ -113,7 +113,7 @@ $oHashMod->setUrl($url_modificar);
 $oHashMod->setCamposForm('que!scroll_id!sel');
 $h_modificar = $oHashMod->linkSinValParams();
 
-$url_borrar = rtrim(ConfigGlobal::getWeb(), '/') . '/src/encargossacd/encargo_ver_eliminar';
+$url_borrar = AppUrlConfig::getApiBaseUrl() . '/src/encargossacd/encargo_ver_eliminar';
 $oHashBorrar = new Hash();
 $oHashBorrar->setUrl($url_borrar);
 $oHashBorrar->setCamposForm('que!sel');

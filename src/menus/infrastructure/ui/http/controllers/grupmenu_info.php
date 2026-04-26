@@ -1,7 +1,7 @@
 <?php
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_grupmenu = (string)filter_input(INPUT_POST, 'id_grupmenu');
 

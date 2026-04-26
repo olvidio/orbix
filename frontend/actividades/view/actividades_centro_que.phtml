@@ -61,7 +61,7 @@
     fnjs_guardar = function (formulario, que) {
         var err = 0;
         if (que == "eliminar") {
-            seguro = confirm("<?= _("¿Está seguro de borrar los datos económicos de esta actividad?") ?>");
+            seguro = confirm(<?= json_encode(_("¿Está seguro de borrar los datos económicos de esta actividad?")) ?>);
             if (!seguro) {
                 err = 1;
             }

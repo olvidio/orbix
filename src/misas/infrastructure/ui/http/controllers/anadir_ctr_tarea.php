@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\AnadirCtrTarea;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $result = AnadirCtrTarea::execute([
     'que' => filter_input(INPUT_POST, 'que'),

@@ -3,7 +3,7 @@
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_role = (string)filter_input(INPUT_POST, 'id_role');
 

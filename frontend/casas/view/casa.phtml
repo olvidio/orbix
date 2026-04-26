@@ -56,7 +56,7 @@ fnjs_ver = function () {
 fnjs_guardar = function (formulario, que) {
     var err = 0;
     if (que === 'eliminar') {
-        var seguro = confirm('<?= addslashes((string)$txt_eliminar) ?>');
+        var seguro = confirm(<?= json_encode((string)$txt_eliminar) ?>);
         err = seguro ? 0 : 1;
     }
     if (err === 1) { return; }

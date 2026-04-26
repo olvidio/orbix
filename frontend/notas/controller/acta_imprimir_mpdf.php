@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use src\notas\application\DatosActa;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
@@ -19,16 +19,16 @@ use src\personas\domain\entity\Persona;
 *		
 */
 
-	require_once ("apps/core/global_header.inc");
-	include_once(ConfigGlobal::$dir_estilos.'/actas_mpdf.css.php'); 
+require_once ("frontend/shared/global_header_front.inc");
+include_once(OrbixRuntime::dirEstilos() . '/actas_mpdf.css.php');
 
-	require_once ("apps/core/global_object.inc");
+require_once ("apps/core/global_object.inc");
 
 // conversion
-$replace = src\configuracion\domain\entity\Config::$replace;
+$replace = src\configuracion\domain\value_objects\ConfigSnapshot::$replace;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
-$reg_stgr = "Stgr".ConfigGlobal::mi_region();
+$reg_stgr = "Stgr" . OrbixRuntime::miRegion();
 
 // acta
 $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
@@ -97,7 +97,7 @@ foreach($cPersonaNotas as $oPersonaNota) {
 	$nota = $oPersonaNota->getNota_txt();
 	$aPersonasNotas[$nom] = $nota;
 }
-uksort($aPersonasNotas, "core\strsinacentocmp"); // compara sin contar los acentos i insensitive.
+uksort($aPersonasNotas, "src\shared\domain\helpers\strsinacentocmp"); // compara sin contar los acentos i insensitive.
 
 $num_alumnos=count($aPersonasNotas);
 

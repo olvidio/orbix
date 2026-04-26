@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadestudios\application\AsistenteObserv;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = AsistenteObserv::execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

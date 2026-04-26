@@ -10,6 +10,7 @@ use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
+use web\Hash;
 
 /**
  * Data builder: lista de `CambioUsuario` del usuario solicitado (con
@@ -30,8 +31,14 @@ final class AvisosGenerarListaData
      */
     public static function execute(array $input): array
     {
-        $id_usuario = (int)($input['id_usuario'] ?? 0);
-        $aviso_tipo = (int)($input['aviso_tipo'] ?? 0);
+        $is_admin = (bool)($input['is_admin'] ?? false);
+        if ($is_admin) {
+            $id_usuario = (int)($input['id_usuario'] ?? 0);
+            $aviso_tipo = (int)($input['aviso_tipo'] ?? 0);
+        } else {
+            $id_usuario = (int)ConfigGlobal::mi_id_usuario();
+            $aviso_tipo = AvisoTipoId::TIPO_LISTA;
+        }
 
         $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $aOpcionesUsuarios = $UsuarioRepository->getArrayUsuarios();
@@ -39,13 +46,48 @@ final class AvisosGenerarListaData
 
         $a_valores = [];
 
+        $web = rtrim(ConfigGlobal::getWeb(), '/');
+        $baseOut = static function (array $extra) use ($web, $aOpcionesUsuarios, $aOpcionesAvisoTipo, $id_usuario, $aviso_tipo): array {
+            $out = array_merge(
+                [
+                    'error' => '',
+                    'a_valores' => [],
+                    'aOpcionesUsuarios' => $aOpcionesUsuarios,
+                    'aOpcionesAvisoTipo' => $aOpcionesAvisoTipo,
+                    'effective_id_usuario' => $id_usuario,
+                    'effective_aviso_tipo' => $aviso_tipo,
+                    'web' => $web,
+                    'url_eliminar' => '',
+                    'url_eliminar_fecha' => '',
+                    'h_eliminar' => '',
+                    'h_eliminar_fecha' => '',
+                ],
+                $extra
+            );
+            if (empty($id_usuario)) {
+                return $out;
+            }
+            $url_eliminar = $web . '/src/cambios/cambio_usuario_eliminar';
+            $url_eliminar_fecha = $web . '/src/cambios/cambio_usuario_eliminar_hasta_fecha';
+            $oHashElim = new Hash();
+            $oHashElim->setUrl($url_eliminar);
+            $oHashElim->setCamposNo('sel');
+            $h_eliminar = $oHashElim->linkSinValParams();
+            $oHashElimF = new Hash();
+            $oHashElimF->setUrl($url_eliminar_fecha);
+            $oHashElimF->setCamposForm('f_fin');
+            $h_eliminar_fecha = $oHashElimF->linkSinValParams();
+
+            $out['url_eliminar'] = $url_eliminar;
+            $out['url_eliminar_fecha'] = $url_eliminar_fecha;
+            $out['h_eliminar'] = $h_eliminar;
+            $out['h_eliminar_fecha'] = $h_eliminar_fecha;
+
+            return $out;
+        };
+
         if (empty($id_usuario)) {
-            return [
-                'error' => '',
-                'a_valores' => $a_valores,
-                'aOpcionesUsuarios' => $aOpcionesUsuarios,
-                'aOpcionesAvisoTipo' => $aOpcionesAvisoTipo,
-            ];
+            return $baseOut([]);
         }
 
         $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
@@ -115,11 +157,8 @@ final class AvisosGenerarListaData
         }
         ksort($a_valores, SORT_STRING);
 
-        return [
-            'error' => '',
+        return $baseOut([
             'a_valores' => $a_valores,
-            'aOpcionesUsuarios' => $aOpcionesUsuarios,
-            'aOpcionesAvisoTipo' => $aOpcionesAvisoTipo,
-        ];
+        ]);
     }
 }

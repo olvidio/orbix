@@ -1,7 +1,7 @@
 <?php
 
 use src\asistentes\application\AsistenteEliminar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Elimina un `Asistente` y sus matriculas.

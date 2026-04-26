@@ -2,10 +2,10 @@
 
 namespace frontend\personas\controller;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\web\Posicion;
 use web\Hash;
-use web\Posicion;
 
 /**
  * Formulario de busqueda de personas.
@@ -15,8 +15,7 @@ use web\Posicion;
  * La rama `$Qque === 'telf'` (que apuntaba a un inexistente
  * `personas_select_telf.php`) se ha eliminado por enlace muerto.
  */
-require_once("apps/core/global_header.inc");
-require_once("apps/core/global_object.inc");
+require_once("frontend/shared/global_header_front.inc");
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -53,7 +52,7 @@ if (!empty($Qtabla)) {
     $nom_tabla = ucfirst(_("todos"));
 }
 
-$action = ConfigGlobal::getWeb() . '/frontend/personas/controller/personas_select.php';
+$action = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_select.php';
 
 $oHash = new Hash();
 $oHash->setCamposForm('nombre!apellido1!apellido2!centro!exacto!cmb');

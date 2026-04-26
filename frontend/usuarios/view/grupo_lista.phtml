@@ -1,12 +1,12 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use web\Hash;
 
 ?>
 <script>
     fnjs_buscar = function () {
-        var url = '<?= ConfigGlobal::getWeb() ?>/frontend/usuarios/controller/grupo_lista.php';
+        var url = '<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/usuarios/controller/grupo_lista.php';
         $('#frm_buscar').attr('action', url);
         fnjs_enviar_formulario('#frm_buscar');
     }
@@ -25,8 +25,8 @@ use web\Hash;
     fnjs_eliminar = function (formulario) {
         rta = fnjs_solo_uno('#seleccionados');
         if (rta === 1) {
-            if (confirm("<?= _("¿Está seguro que desea borrar este grupo?") ?>")) {
-                var url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/grupo_eliminar';
+            if (confirm(<?= json_encode(_("¿Está seguro que desea borrar este grupo?")) ?>)) {
+                var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/grupo_eliminar';
                 let datos = $(formulario).serialize();
                 let request = $.ajax({
                     data: datos,
@@ -36,7 +36,7 @@ use web\Hash;
                 });
                 request.done(function (json) {
                     if (json.success !== true) {
-                        alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                        alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
                     } else {
                         fnjs_actualizar();
                     }
@@ -45,7 +45,7 @@ use web\Hash;
         }
     }
     fnjs_actualizar = function () {
-        var url = '<?= Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/grupo_lista.php') ?>';
+        var url = '<?= Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/grupo_lista.php') ?>';
         fnjs_update_div('#main', url);
     }
     fnjs_left_side_hide();
@@ -58,7 +58,7 @@ use web\Hash;
            class="btn_ok">
 </form>
 <br>
-<?php if (ConfigGlobal::is_app_installed('procesos')) { ?>
+<?php if (!empty($procesos_installed)) { ?>
     <?= _("Poner entre paréntesis si hace referencia a menus (m), permisos (p) o ambos (m+p)") ?>
     <br>
 <?php } ?>
@@ -72,7 +72,7 @@ use web\Hash;
         <th class="no_print">
             <span class="link_inv"
                   onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');">
-                <?= core\strtoupper_dlb(_("nuevo grupo")) ?>
+                <?= htmlspecialchars((string)($txt_nuevo_grupo ?? ''), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>
             </span>
         </th>
     </tr>

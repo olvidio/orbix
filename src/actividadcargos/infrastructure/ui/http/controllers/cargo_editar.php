@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadcargos\application\ActividadCargoEditar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Edita un `ActividadCargo` existente. Responde JSON `{success, mensaje, data}`.

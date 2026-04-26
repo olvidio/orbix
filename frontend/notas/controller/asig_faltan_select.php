@@ -1,6 +1,7 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\notas\application\AsignaturasPendientes;
@@ -10,8 +11,8 @@ use src\personas\domain\services\TelecoPersonaService;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
-use web\Lista;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use function frontend\shared\helpers\is_true;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -28,7 +29,7 @@ $Qlista = (string)filter_input(INPUT_POST, 'lista');
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $oPosicion2->olvidar($stack);
@@ -139,7 +140,7 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
     $nivel_stgr = $oPersona->getNivelStgrVo()->value();
     $stgr = $a_NivelStgr[$nivel_stgr];
 
-    if (ConfigGlobal::mi_ambito() === 'rstgr') {
+    if (OrbixRuntime::miAmbito() === 'rstgr') {
         $nombre_ubi = $oPersona->getDl();
     } else {
         $id_ctr = $oPersona->getId_ctr();
@@ -156,7 +157,7 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
     }
     $mails = $telecoService->getTelecosPorTipo($id_nom, "e-mail", " / ", "*", false);
 
-    $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(['id_nom' => $id_nom, 'obj_pau' => $obj_pau]));
+    $pagina = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query(['id_nom' => $id_nom, 'obj_pau' => $obj_pau]));
 
     if ($lista) {
         $as = '';

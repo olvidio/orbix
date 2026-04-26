@@ -15,7 +15,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
  * Lectura de la ficha de atencion sacerdotal de un centro.
  *
  * Puerto del antiguo `frontend/encargossacd/controller/ctr_get_ficha.php`. Devuelve
- * arrays planos/estructurados para que el controlador frontend arme `web\Desplegable`
+ * arrays planos/estructurados para que el controlador frontend arme `frontend\shared\web\Desplegable`
  * y la HTML sin instanciar nada de `src\`.
  */
 final class CtrGetFichaData

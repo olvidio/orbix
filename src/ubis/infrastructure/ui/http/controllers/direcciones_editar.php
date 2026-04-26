@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\DireccionesEditarData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', DireccionesEditarData::execute(
     (int)filter_input(INPUT_POST, 'id_ubi'),

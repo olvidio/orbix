@@ -2,7 +2,7 @@
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 

@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use web\Hash;
 
@@ -193,7 +193,7 @@ case 2201:
         // -----------------------------  cabecera ---------------------------------
         ?>
         <head>
-            <?php include_once(ConfigGlobal::$dir_estilos . '/certificado_mpdf.css.php'); ?>
+            <?php include_once(OrbixRuntime::dirEstilos() . '/certificado_mpdf.css.php'); ?>
         </head>
         <body>
         <div class="A4">

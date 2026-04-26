@@ -1,8 +1,7 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\PostRequest;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************

@@ -3,7 +3,7 @@
 namespace src\ubis\application;
 
 use src\ubis\application\services\UbiPermisos;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 final class DireccionesEditarData
 {

@@ -10,19 +10,16 @@
  *
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
-use web\Lista;
-use function core\curso_est;
+use frontend\shared\web\Lista;
+use function src\shared\domain\helpers\curso_est;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-$mi_dele = ConfigGlobal::mi_delef();
-$mi_region = ConfigGlobal::mi_region();
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
@@ -33,7 +30,7 @@ $Qscroll_id = '';
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -72,7 +69,7 @@ $aGoBack = array(
 $oPosicion->setParametros($aGoBack, 1);
 
 // comprobar que sou un región del stgr
-if (!(ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r')) {
+if (!(OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r')) {
     exit(_("Solamente lo pueden ver las regiones del stgr"));
 }
 

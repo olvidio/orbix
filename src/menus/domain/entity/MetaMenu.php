@@ -2,7 +2,7 @@
 
 namespace src\menus\domain\entity;
 
-use core\DatosCampo;
+use src\shared\domain\DatosCampo;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\menus\domain\value_objects\MetaMenuUrl;

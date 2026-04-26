@@ -15,7 +15,7 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 use web\Hash;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');

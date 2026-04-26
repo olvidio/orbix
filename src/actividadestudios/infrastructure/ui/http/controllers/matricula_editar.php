@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadestudios\application\MatriculaEditar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Edita una matricula. Responde JSON `{success, mensaje, data}`.

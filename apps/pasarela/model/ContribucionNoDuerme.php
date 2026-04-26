@@ -3,7 +3,7 @@
 namespace pasarela\model;
 
 use pasarela\model\entity\PasarelaConfig;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 use stdClass;
 
 class ContribucionNoDuerme

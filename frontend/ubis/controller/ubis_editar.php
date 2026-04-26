@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use src\shared\infrastructure\ProvidesRepositories;
@@ -8,7 +8,7 @@ use src\ubis\domain\CuadrosLabor;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 /**
  * Es el frame inferior. Muestra la ficha de los ubis
@@ -78,15 +78,15 @@ if (!empty($Qnuevo)) {
 
     if (empty($dl) && strstr($Qobj_pau, 'Dl')) {
         if (strstr($tipo_ubi, 'ctr')) {
-            $dl = ConfigGlobal::mi_delef();
+            $dl = OrbixRuntime::miDelef();
         }
         if (strstr($tipo_ubi, 'cdc')) {
-            $dl = ConfigGlobal::mi_dele();
+            $dl = OrbixRuntime::miDele();
         }
     }
 
     if (empty($region) && strstr($Qobj_pau, 'Dl')) {
-        $region = ConfigGlobal::mi_region();
+        $region = OrbixRuntime::miRegion();
     }
 
     $newIdAuto = $UbiRepository->getNewId();
@@ -102,10 +102,10 @@ if (!empty($Qnuevo)) {
     $oUbi->setActive(true);
 
     if (strstr($tipo_ubi, 'cdc')) {
-        if (ConfigGlobal::mi_sfsv() === 1) {
+        if (OrbixRuntime::miSfsv() === 1) {
             $oUbi->setSv(TRUE);
         }
-        if (ConfigGlobal::mi_sfsv() === 2) {
+        if (OrbixRuntime::miSfsv() === 2) {
             $oUbi->setSf(TRUE);
         }
     }
@@ -128,7 +128,7 @@ if (!empty($Qnuevo)) {
 
     // para saber si es de la dl o no, diferente para ctr o cdc.
     if (strstr($tipo_ubi, 'ctr')) {
-        if ($dl == ConfigGlobal::mi_delef()) {
+        if ($dl == OrbixRuntime::miDelef()) {
             $es_de_dl = TRUE;
         } else {
             // Aunque el tipo sea ctrdl, si es diferente a la mia, lo trato como ctrex.
@@ -136,7 +136,7 @@ if (!empty($Qnuevo)) {
         }
     }
     if (strstr($tipo_ubi, 'cdc')) {
-        if ($dl == ConfigGlobal::mi_dele()) {
+        if ($dl == OrbixRuntime::miDele()) {
             $es_de_dl = TRUE;
         } else {
             // Aunque el tipo sea cdcdl, si es diferente a la mia, lo trato como cdcex.
@@ -215,11 +215,11 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $dlOpc = $dl;
 $regionOpc = $region;
 if ($tipo_ubi === 'ctrdl' || $tipo_ubi === 'ctrsf') {
-    $dlOpc = empty($dl) ? ConfigGlobal::mi_delef() : $dl;
-    $regionOpc = empty($region) ? ConfigGlobal::mi_region() : $region;
+    $dlOpc = empty($dl) ? OrbixRuntime::miDelef() : $dl;
+    $regionOpc = empty($region) ? OrbixRuntime::miRegion() : $region;
 } elseif ($tipo_ubi === 'cdcdl') {
-    $dlOpc = empty($dl) ? ConfigGlobal::mi_dele() : $dl;
-    $regionOpc = empty($region) ? ConfigGlobal::mi_region() : $region;
+    $dlOpc = empty($dl) ? OrbixRuntime::miDele() : $dl;
+    $regionOpc = empty($region) ? OrbixRuntime::miRegion() : $region;
 }
 
 $dataOpciones = PostRequest::getDataFromUrl('/src/ubis/ubis_editar_data', [
@@ -250,8 +250,8 @@ switch ($tipo_ubi) {
         $n_buzon = $oUbi->getN_buzon();
         $observ = $oUbi->getObserv();
 
-        $dl = empty($dl) ? ConfigGlobal::mi_delef() : $dl;
-        $region = empty($region) ? ConfigGlobal::mi_region() : $region;
+        $dl = empty($dl) ? OrbixRuntime::miDelef() : $dl;
+        $region = empty($region) ? OrbixRuntime::miRegion() : $region;
 
         $a_campos = ['botones' => $botones,
             'oPosicion' => $oPosicion,
@@ -315,8 +315,8 @@ switch ($tipo_ubi) {
     case "cdcex":
         // OJO LAS CASAS pueden ser comunes. la dl es sin 'f'.
         if ($tipo_ubi === "cdcdl") {
-            $dl = empty($dl) ? ConfigGlobal::mi_dele() : $dl;
-            $region = empty($region) ? ConfigGlobal::mi_region() : $region;
+            $dl = empty($dl) ? OrbixRuntime::miDele() : $dl;
+            $region = empty($region) ? OrbixRuntime::miRegion() : $region;
         }
 
         $tipo_casa = $oUbi->getTipo_casa();

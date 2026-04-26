@@ -6,9 +6,9 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\PermAccion;
 use src\procesos\domain\PermAfectados;
-use web\ContestarJson;
-use web\TiposActividades;
-use function core\is_true;
+use frontend\shared\web\ContestarJson;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 $oCuadrosAfecta = new PermAfectados();
 

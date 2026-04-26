@@ -10,7 +10,7 @@ use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
 use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 
 // necesario para los desplegables de 'depende'
 /* No vale el underscore en el nombre */

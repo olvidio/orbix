@@ -227,4 +227,57 @@ class PostRequest
 
         return $response2->getBody()->getContents();
     }
+
+    /**
+     * POST interno con cookies de sesión (misma lógica de URL/host que {@see getData});
+     * devuelve el cuerpo tal cual (p. ej. respuestas AJAX text/plain).
+     */
+    public static function sendRawPost(string $relativeUrl, array $formParams): string
+    {
+        $url = preg_match('#^https?://#i', $relativeUrl)
+            ? $relativeUrl
+            : rtrim(ConfigGlobal::getWeb(), '/') . '/' . ltrim($relativeUrl, '/');
+
+        $cookies = $_COOKIE;
+        $parts = parse_url($url);
+        $host_original = $parts['host'] ?? '';
+        $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
+
+        $path_final = $parts['path'] ?? '';
+        if ($path_final !== '') {
+            $segments = explode('/', $path_final);
+            if (isset($segments[2]) && strpos($segments[2], '-') !== false) {
+                unset($segments[2]);
+                $path_final = implode('/', $segments);
+            }
+        }
+
+        $url_limpia = '';
+        if (isset($parts['scheme'])) {
+            $url_limpia .= $parts['scheme'] . '://';
+        }
+        $url_limpia .= $host_nuevo;
+        if (isset($parts['port'])) {
+            $url_limpia .= ':' . $parts['port'];
+        }
+        $url_limpia .= $path_final;
+        if (isset($parts['query'])) {
+            $url_limpia .= '?' . $parts['query'];
+        }
+        if (isset($parts['fragment'])) {
+            $url_limpia .= '#' . $parts['fragment'];
+        }
+
+        $domain_org = parse_url($url_limpia, PHP_URL_HOST);
+        $domain = strtolower((string)$domain_org);
+        $jar = CookieJar::fromArray($cookies, $domain);
+
+        $client = new Client();
+        $response = $client->request('POST', $url_limpia, [
+            'cookies' => $jar,
+            'form_params' => $formParams,
+        ]);
+
+        return (string)$response->getBody()->getContents();
+    }
 }

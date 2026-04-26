@@ -1,7 +1,7 @@
 <?php
 
 use src\asistentes\application\AsistentePlazaAsignar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 /**
  * Cambia la plaza de un lote de asistentes.

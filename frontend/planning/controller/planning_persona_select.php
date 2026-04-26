@@ -7,10 +7,10 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
-use web\Lista;
-use web\Posicion;
-use function core\urlsafe_b64decode;
-use function core\urlsafe_b64encode;
+use frontend\shared\web\Lista;
+use frontend\shared\web\Posicion;
+use function src\shared\domain\helpers\urlsafe_b64decode;
+use function src\shared\domain\helpers\urlsafe_b64encode;
 
 /**
  * Lista de personas que cumplen los filtros del formulario anterior
@@ -20,7 +20,7 @@ use function core\urlsafe_b64encode;
  * (slice 2 de la migracion del modulo planning).
  */
 require_once("frontend/shared/global_header_front.inc");
-require_once("apps/core/global_object.inc");
+
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();

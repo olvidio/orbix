@@ -7,7 +7,7 @@ use src\cambios\domain\AvisoObjetoCatalog;
 use src\cambios\domain\contracts\CambioUsuarioPropiedadPrefRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Data builder: listado de campos configurables del objeto seleccionado,

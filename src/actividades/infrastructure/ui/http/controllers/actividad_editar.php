@@ -21,8 +21,8 @@ use src\shared\domain\value_objects\Dinero;
 use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\usuarios\domain\value_objects\IdLocale;
-use web\ContestarJson;
-use function core\is_true;
+use frontend\shared\web\ContestarJson;
+use function src\shared\domain\helpers\is_true;
 
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 $error_txt = '';

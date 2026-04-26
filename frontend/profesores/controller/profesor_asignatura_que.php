@@ -1,9 +1,9 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -23,7 +23,7 @@ $oHash->setCamposForm('id_asignatura');
 $a_campos = [
     'oDesplAsignaturas' => $oDesplAsignaturas,
     'h' => $oHash->linkSinValParams(),
-    'url_ajax' => ConfigGlobal::getWeb() . '/frontend/profesores/controller/profesor_asignatura_ajax.php',
+    'url_ajax' => AppUrlConfig::getPublicAppBaseUrl() . '/frontend/profesores/controller/profesor_asignatura_ajax.php',
 ];
 
 $oView = new ViewNewPhtml('frontend\profesores\controller');

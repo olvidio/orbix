@@ -7,7 +7,7 @@
  */
 
 use src\cambios\application\CambioUsuarioObjetoPrefPropiedadesData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 

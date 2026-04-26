@@ -16,7 +16,7 @@ use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Legacy: anota los avisos de cambio para cada usuario.

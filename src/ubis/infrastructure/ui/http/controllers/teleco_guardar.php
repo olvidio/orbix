@@ -1,8 +1,8 @@
 <?php
 
 use src\ubis\application\TelecoGuardar;
-use web\ContestarJson;
-use function core\urlsafe_b64decode;
+use frontend\shared\web\ContestarJson;
+use function src\shared\domain\helpers\urlsafe_b64decode;
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');

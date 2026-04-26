@@ -10,14 +10,14 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();

@@ -9,7 +9,7 @@
  */
 
 use frontend\shared\PostRequest;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 
 require_once 'frontend/shared/global_header_front.inc';
 

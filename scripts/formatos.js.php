@@ -171,14 +171,14 @@ function fnjs_comprobar_hora(id) {
     var v_fecha = $(id).val().split(":");
     if (v_fecha.length === 2 || v_fecha.length === 3) {
         if (parseInt(v_fecha[0], 10) > 24 || (parseInt(v_fecha[0], 10) < 1)) {
-            alert("<?= _("la hora no es correcta"); ?>");
+            alert(<?= json_encode(_("la hora no es correcta")) ?>);
             $(id).focus();
             return false;
         }
 
         var M = parseInt(v_fecha[1], 10);
         if ((M > 60) || (M < 0)) {
-            alert("<?= _("los minutos no son correctos") ?>" + M);
+            alert(<?= json_encode(_("los minutos no son correctos")) ?> + M);
             $(id).focus();
             return false;
         }
@@ -187,7 +187,7 @@ function fnjs_comprobar_hora(id) {
         // pruebo de poner los minutos a 0
         if (v_fecha.length === 1 && v_fecha[0]) {
             if (parseInt(v_fecha[0], 10) > 24 || (parseInt(v_fecha[0], 10) < 1)) {
-                alert("<?= _("El formato debe ser hh:mm") ?>");
+                alert(<?= json_encode(_("El formato debe ser hh:mm")) ?>);
                 $(id).focus();
                 return false;
             }
@@ -195,7 +195,7 @@ function fnjs_comprobar_hora(id) {
             $(id).val(rta);
             return true;
         } else {
-            alert("<?= _("El formato debe ser hh:mm") ?>");
+            alert(<?= json_encode(_("El formato debe ser hh:mm")) ?>);
             $(id).focus();
             return false;
         }

@@ -7,7 +7,7 @@ namespace src\actividades\application;
  * lugar para una actividad" (frontend/actividades/controller/actividad_select_ubi).
  *
  * Devuelve arrays value => label listos para que la vista los monte con
- * web\Desplegable::desdeOpciones(...).
+ * frontend\shared\web\Desplegable::desdeOpciones(...).
  */
 class ActividadSelectUbiData
 {

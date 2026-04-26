@@ -1,6 +1,7 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use web\Hash;
@@ -39,8 +40,8 @@ if (($_SESSION['oPerm']->have_perm_oficina('calendario')) || ($_SESSION['oPerm']
     $permiso_calendario = true;
 }
 
-$webBase = rtrim(ConfigGlobal::getWeb(), '/');
-$url_generar = $webBase . '/src/procesos/actividad_proceso_generar';
+$apiBase = AppUrlConfig::getApiBaseUrl();
+$url_generar = $apiBase . '/src/procesos/actividad_proceso_generar';
 // Renderer frontend que consume /src/procesos/actividad_proceso_get y
 // devuelve HTML.
 $url_get = 'frontend/procesos/controller/actividad_proceso_get.php';
@@ -74,7 +75,7 @@ $a_campos = [
     'dos' => $dos,
     'nom_activ' => $nom_activ,
     'permiso_calendario' => $permiso_calendario,
-    'web_icons' => ConfigGlobal::getWeb_icons(),
+    'web_icons' => OrbixRuntime::getWebIcons(),
     'url_generar' => $url_generar,
     'url_get' => $url_get,
     'url_update' => $url_update,

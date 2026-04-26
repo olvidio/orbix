@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 
 ?>
 <script>
@@ -31,7 +31,7 @@ use src\shared\config\ConfigGlobal;
             });
     }
     fnjs_add_grup = function (param) {
-        let url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/usuario_grupo_add';
+        let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/usuario_grupo_add';
         let request = $.ajax({
             data: param,
             url: url,
@@ -40,14 +40,14 @@ use src\shared\config\ConfigGlobal;
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 <?= $oPosicion->js_atras(0) ?>
             }
         });
     }
     fnjs_del_grup = function (param) {
-        let url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/usuario_grupo_del';
+        let url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/usuario_grupo_del';
         let request = $.ajax({
             data: param,
             url: url,
@@ -56,7 +56,7 @@ use src\shared\config\ConfigGlobal;
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
             } else {
                 <?= $oPosicion->js_atras(0) ?>
             }
@@ -67,7 +67,7 @@ use src\shared\config\ConfigGlobal;
 <b><?= _("grupos") ?>: </b>
 <?php
 //////////// Aclaración permisos ////////////
-if (ConfigGlobal::is_app_installed('procesos')) {
+if (!empty($procesos_installed)) {
     ?>
     <p class="comentario"><?= _("OJO: los permisos en los grupos no tienen una preferencia definida.") ?></p>
     <p class="comentario"><?= _("Si hay más de uno, deberían ser independientes, sino no se sabe cual sobreescribirá a cual.") ?></p>

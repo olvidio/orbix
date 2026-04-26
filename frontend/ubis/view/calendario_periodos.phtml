@@ -1,8 +1,3 @@
-<?php
-
-use src\shared\config\ConfigGlobal;
-
-?>
 <script>
     fnjs_cerrar = function () {
         $('#div_modificar').html('');
@@ -15,7 +10,7 @@ use src\shared\config\ConfigGlobal;
     fnjs_guardar = function (formulario, que) {
         var err = 0;
         if (que == "eliminar") {
-            seguro = confirm("<?= _("¿Está seguro de borrar este periodo?") ?>");
+            seguro = confirm(<?= json_encode(_("¿Está seguro de borrar este periodo?")) ?>);
             if (seguro) {
                 err = 0;
             } else {

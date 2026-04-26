@@ -1,8 +1,8 @@
 <?php
 
 use src\ubis\application\TelecoEditarData;
-use web\ContestarJson;
-use function core\urlsafe_b64decode;
+use frontend\shared\web\ContestarJson;
+use function src\shared\domain\helpers\urlsafe_b64decode;
 
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');

@@ -37,7 +37,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $Qs_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
-    $a_pkey = json_decode(core\urlsafe_b64decode($Qs_pkey));
+    $a_pkey = json_decode(src\shared\domain\helpers\urlsafe_b64decode($Qs_pkey));
     $aQuery['sel'] = $a_sel;
     // add stack:
     $stack = $oPosicion->getStack(1);
@@ -47,7 +47,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $a_pkey = '';
 }
 
-$web_depende = ConfigGlobal::getWeb() . "/src/shared/tablaDB_depende_datos";
+$web_depende = AppUrlConfig::getApiBaseUrl() . "/src/shared/tablaDB_depende_datos";
 $oHashDepende = new Hash();
 $oHashDepende->setUrl($web_depende);
 $oHashDepende->setCamposForm('clase_info!accion!valor_depende');
@@ -59,10 +59,10 @@ $aQuery['s_pkey'] = $Qs_pkey;
 if (!empty($Qobj_pau)) {
     $aQuery['obj_pau'] = $Qobj_pau;
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/frontend/dossiers/controller/dossiers_ver.php?$sQuery");
+    $Qgo_to = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . "/frontend/dossiers/controller/dossiers_ver.php?$sQuery");
 } else {
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/src/shared/tablaDB_lista_datos?$sQuery");
+    $Qgo_to = Hash::link(AppUrlConfig::getApiBaseUrl() . "/src/shared/tablaDB_lista_datos?$sQuery");
 }
 
 $url_backend = '/src/shared/tablaDB_formulario_datos';

@@ -13,38 +13,39 @@
  * `tarifa_tipo_actividad_ajax.php` siguiendo `refactor.md`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$public = AppUrlConfig::getPublicAppBaseUrl();
+$api = AppUrlConfig::getApiBaseUrl();
 
 $oHashLista = new Hash();
-$oHashLista->setUrl($web . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php');
+$oHashLista->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php');
 $oHashLista->setCamposForm('');
 $h_lista = $oHashLista->linkSinVal();
 
 $oHashForm = new Hash();
-$oHashForm->setUrl($web . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php');
+$oHashForm->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php');
 $oHashForm->setCamposForm('id_item');
 $h_form = $oHashForm->linkSinVal();
 
 $oHashUpdate = new Hash();
-$oHashUpdate->setUrl($web . '/src/actividadtarifas/relacion_tarifa_update');
+$oHashUpdate->setUrl($api . '/src/actividadtarifas/relacion_tarifa_update');
 $oHashUpdate->setCamposForm('id_item!id_tarifa!id_tipo_activ');
-$url_update = $web . '/src/actividadtarifas/relacion_tarifa_update' . $oHashUpdate->linkSinVal();
+$url_update = $api . '/src/actividadtarifas/relacion_tarifa_update' . $oHashUpdate->linkSinVal();
 
 $oHashEliminar = new Hash();
-$oHashEliminar->setUrl($web . '/src/actividadtarifas/relacion_tarifa_eliminar');
+$oHashEliminar->setUrl($api . '/src/actividadtarifas/relacion_tarifa_eliminar');
 $oHashEliminar->setCamposForm('id_item');
-$url_eliminar = $web . '/src/actividadtarifas/relacion_tarifa_eliminar' . $oHashEliminar->linkSinVal();
+$url_eliminar = $api . '/src/actividadtarifas/relacion_tarifa_eliminar' . $oHashEliminar->linkSinVal();
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'url_lista' => $web . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php' . $h_lista,
-    'url_form' => $web . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php' . $h_form,
+    'url_lista' => $public . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_lista.php' . $h_lista,
+    'url_form' => $public . '/frontend/actividadtarifas/controller/tarifa_tipo_actividad_form.php' . $h_form,
     'url_update' => $url_update,
     'url_eliminar' => $url_eliminar,
     'txt_eliminar' => _("¿Está seguro que desea quitar esta id_tarifa?"),

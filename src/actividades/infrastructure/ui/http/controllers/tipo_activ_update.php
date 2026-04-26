@@ -1,7 +1,7 @@
 <?php
 
 use src\actividades\application\TipoActivUpdate;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $useCase = new TipoActivUpdate();
 $mensaje = $useCase->execute($_POST);

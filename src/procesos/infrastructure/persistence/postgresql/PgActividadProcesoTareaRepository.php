@@ -18,7 +18,7 @@ use src\procesos\domain\value_objects\FaseId;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 
 /**
@@ -514,7 +514,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $aDades['id_tarea'] = $ActividadProcesoTarea->getIdTareaVo()?->value();
         $aDades['completado'] = $ActividadProcesoTarea->isCompletado();
         $aDades['observ'] = $ActividadProcesoTarea->getObservVo()?->value();
-        array_walk($aDades, 'core\poner_null');
+        array_walk($aDades, 'src\shared\domain\helpers\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDades['completado'])) {
             $aDades['completado'] = 'true';

@@ -4,12 +4,12 @@
  * de presentacion (modal de seleccion de la pantalla principal).
  *
  * Delega en `/src/cartaspresentacion/ubis_lista_data` y pinta los datos
- * con `web\Lista`. Sucesor de las ramas `get_dl` y `get_r` del
+ * con `frontend\shared\web\Lista`. Sucesor de las ramas `get_dl` y `get_r` del
  * dispatcher legacy `cartas_presentacion_ajax.php`.
  */
 
 use frontend\shared\PostRequest;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once 'frontend/shared/global_header_front.inc';
 

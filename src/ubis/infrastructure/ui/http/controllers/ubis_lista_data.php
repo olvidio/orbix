@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\UbisListaData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qnombre_ubi = (string)filter_input(INPUT_POST, 'nombre_ubi');
 $data = UbisListaData::execute($Qnombre_ubi);

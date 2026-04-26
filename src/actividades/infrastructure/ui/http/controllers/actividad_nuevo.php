@@ -10,7 +10,7 @@
  */
 
 use src\actividades\application\ActividadNueva;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qinom_tipo_val = (string)filter_input(INPUT_POST, 'inom_tipo_val');
 // Puede ser '000' > sin especificar

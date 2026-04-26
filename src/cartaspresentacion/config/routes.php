@@ -4,10 +4,14 @@
  * Rutas del modulo `cartaspresentacion`. Las registra `public/index.php`
  * via glob sobre `src/*\/config/routes.php`. Cada endpoint vive en
  * `src/cartaspresentacion/infrastructure/ui/http/controllers/` y responde
- * JSON estandar mediante `web\ContestarJson::enviar(...)`.
+ * JSON estandar mediante `frontend\shared\web\ContestarJson::enviar(...)`.
  */
 return static function ($r) {
     $base = __DIR__ . '/../infrastructure/ui/http/controllers';
+
+    $r->addRoute(['GET', 'POST'], '/src/cartaspresentacion/cartas_presentacion_shell_data', static function () use ($base) {
+        require $base . '/cartas_presentacion_shell_data.php';
+    });
 
     // Pantalla de busqueda: opciones de region/pais/delegacion.
     $r->addRoute(['GET', 'POST'], '/src/cartaspresentacion/cartas_presentacion_buscar_data', static function () use ($base) {

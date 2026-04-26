@@ -32,7 +32,7 @@ if (empty($ce_lugar)) {
 $datos = $oInforme->calcular($Qdl, $lista, (string)$ce_lugar);
 
 $a_campos = [
-    'titulo' => \core\strtoupper_dlb(_("alumnos numerarios")),
+    'titulo' => \src\shared\domain\helpers\strtoupper_dlb(_("alumnos numerarios")),
     'curso_txt' => $datos['curso_txt'],
     'res' => $datos['res'],
     'textos' => $datos['textos'],

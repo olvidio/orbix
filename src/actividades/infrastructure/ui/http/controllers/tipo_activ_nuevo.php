@@ -1,7 +1,7 @@
 <?php
 
 use src\actividades\application\TipoActivNuevo;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $useCase = new TipoActivNuevo();
 $mensaje = $useCase->execute($_POST);

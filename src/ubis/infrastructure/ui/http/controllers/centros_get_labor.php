@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\CentrosGetLaborData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', CentrosGetLaborData::execute());
 

@@ -2,7 +2,7 @@
 
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\inventario\domain\entity\Whereis;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_item_egm = (integer)filter_input(INPUT_POST, 'id_item_egm');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

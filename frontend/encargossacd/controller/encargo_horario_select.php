@@ -3,7 +3,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 /**
  * Listado de horarios de un encargo. Los datos vienen de
@@ -73,7 +73,7 @@ foreach ($filas as $fila) {
         'id_item_h' => $id_item_h,
         'desc_enc' => $desc_enc,
     ];
-    array_walk($aQuery, 'core\poner_empty_on_null');
+    array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
     $pagina = Hash::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
     $a_valores[$i]['sel'] = $id_item_h;
@@ -98,7 +98,7 @@ $aQuery = [
     'desc_enc' => $desc_enc,
     'origen' => $Qorigen,
 ];
-array_walk($aQuery, 'core\poner_empty_on_null');
+array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 $pagina_nuevo = Hash::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
 $oTabla = new Lista();

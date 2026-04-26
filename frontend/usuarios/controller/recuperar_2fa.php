@@ -10,7 +10,7 @@ use frontend\shared\PostRequest;
  * y envia un mail con un link.
  */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 

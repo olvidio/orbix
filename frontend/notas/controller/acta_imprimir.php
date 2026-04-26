@@ -1,14 +1,15 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use src\notas\application\DatosActa;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
+use src\notas\application\DatosActa;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use frontend\shared\config\OrbixRuntime;
 use web\Hash;
 
 /**
@@ -39,10 +40,10 @@ $Qcara = (string)filter_input(INPUT_POST, 'cara');
 $cara = empty($Qcara) ? 'A' : $Qcara;
 
 // conversion
-$replace = src\configuracion\domain\entity\Config::$replace;
+$replace = src\configuracion\domain\value_objects\ConfigSnapshot::$replace;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
-$reg_stgr = "Stgr" . ConfigGlobal::mi_region();
+$reg_stgr = "Stgr" . OrbixRuntime::miRegion();
 
 // acta
 $ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
@@ -108,13 +109,13 @@ foreach ($cPersonaNotas as $oPersonaNota) {
     $nota = $oPersonaNota->getNota_txt();
     $aPersonasNotas[$nom] = $nota;
 }
-uksort($aPersonasNotas, "core\strsinacentocmp"); // compara sin contar los acentos i insensitive.
+uksort($aPersonasNotas, "src\shared\domain\helpers\strsinacentocmp"); // compara sin contar los acentos i insensitive.
 
 $num_alumnos = count($aPersonasNotas);
 
 // tribunal:
 // Si es cr, se mira en todas:
-if (ConfigGlobal::mi_ambito() === 'rstgr') {
+if (OrbixRuntime::miAmbito() === 'rstgr') {
     $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalRepositoryInterface::class);
 } else {
     $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
@@ -140,7 +141,7 @@ $alum_cara_B = $num_alumnos - $alum_cara_A;
 $caraA = Hash::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'A', 'acta' => $acta, 'refresh' => 1)));
 $caraB = Hash::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'B', 'acta' => $acta, 'refresh' => 1)));
 
-$url_pdf = ConfigGlobal::getWeb() . '/frontend/notas/controller/acta_2_mpdf.php';
+$url_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/acta_2_mpdf.php';
 $oHash = new Hash();
 $oHash->setUrl($url_pdf);
 $oHash->setCamposForm('acta');

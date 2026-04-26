@@ -7,7 +7,7 @@
  */
 
 use src\cambios\application\UsuarioAvisosPrefFormData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -24,6 +24,7 @@ $input = [
     'id_usuario' => $id_usuario,
     'id_item_usuario_objeto' => $id_item_usuario_objeto,
     'salida' => (string)filter_input(INPUT_POST, 'salida'),
+    'quien' => (string)filter_input(INPUT_POST, 'quien'),
 ];
 
 $result = UsuarioAvisosPrefFormData::execute($input);

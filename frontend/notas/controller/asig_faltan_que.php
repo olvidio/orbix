@@ -2,9 +2,9 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use function core\is_true;
+use function frontend\shared\helpers\is_true;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -13,7 +13,7 @@ $oPosicion->recordar();
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $oPosicion2->olvidar($stack);

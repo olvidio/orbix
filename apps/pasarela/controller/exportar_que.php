@@ -3,11 +3,10 @@
 use actividades\model\ActividadTipo;
 use src\shared\config\ConfigGlobal;
 use core\ViewTwig;
-use src\ubis\domain\contracts\CasaDlRepositoryInterface;
-use web\CasasQue;
+use frontend\shared\web\CasasQue;
 use web\Hash;
-use web\PeriodoQue;
-use web\Posicion;
+use frontend\shared\web\PeriodoQue;
+use frontend\shared\web\Posicion;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -115,14 +114,9 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oForm = new CasasQue();
 $oForm->setTitulo('');
 
-// posible selección múltiple de casas
-$CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
-$aCasas = $CasaDlRepository->getArrayCasas();
-$a_id_ubi = array_keys($aCasas);
-$csv_id_ubi = implode(',', $a_id_ubi);
-$condicion = "WHERE active='t' AND id_ubi IN($csv_id_ubi)";
+// posible selección múltiple de casas (todas las activas)
 $oForm->setCasas('casa');
-$oForm->setPosiblesCasas($condicion);
+$oForm->setFiltroCasas(['active' => true]);
 
 
 $url_ajax = "apps/pasarela/controller/exportar_select.php";

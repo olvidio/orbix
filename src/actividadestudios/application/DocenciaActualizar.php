@@ -10,7 +10,7 @@ use src\actividadestudios\domain\value_objects\TipoActividadAsignatura;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorDocenciaStgr;
-use web\Periodo;
+use frontend\shared\web\Periodo;
 
 /**
  * Actualiza el dossier `d_docencia_stgr` con la informacion docente derivada

@@ -7,7 +7,7 @@ use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
 use src\menus\domain\PermisoMenu;
 use src\usuarios\domain\entity\Role;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 class MenuGuardar
 {

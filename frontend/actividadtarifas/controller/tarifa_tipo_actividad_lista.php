@@ -4,14 +4,14 @@
  * `TipoTarifa` ↔ tipo de actividad.
  *
  * Obtiene los datos de `/src/actividadtarifas/relacion_tarifa_lista_data`
- * y los pinta con `web\Lista`.
+ * y los pinta con `frontend\shared\web\Lista`.
  *
  * Sucesor de la rama `get` de
  * `apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php`.
  */
 
 use frontend\shared\PostRequest;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once 'frontend/shared/global_header_front.inc';
 

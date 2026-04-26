@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\CuadriculaZonaGridData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $in = [
     'id_zona' => (int)filter_input(INPUT_POST, 'id_zona'),

@@ -7,8 +7,8 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use web\TiposActividades;
-use function core\is_true;
+use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Elimina un `ActividadCargo` y, si `elim_asis === 2` y el tipo de actividad

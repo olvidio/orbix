@@ -1,8 +1,8 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use web\DesplegableArray;
+use frontend\shared\web\DesplegableArray;
 use web\Hash;
 
 /**
@@ -30,7 +30,7 @@ $oDesplOpciones->setNombre('que');
 $url_form_labor = 'frontend/ubis/controller/centros_form_labor.php';
 $url_form_num = 'frontend/ubis/controller/centros_form_num.php';
 $url_form_plazas = 'frontend/ubis/controller/centros_form_plazas.php';
-$url_update = rtrim(ConfigGlobal::getWeb(), '/') . '/src/ubis/centros_update';
+$url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 $url_get_labor = 'frontend/ubis/controller/centros_get_labor.php';
 $url_get_num = 'frontend/ubis/controller/centros_get_num.php';
 $url_get_plazas = 'frontend/ubis/controller/centros_get_plazas.php';

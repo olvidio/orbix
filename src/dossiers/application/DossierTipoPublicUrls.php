@@ -61,7 +61,7 @@ final class DossierTipoPublicUrls
     {
         $base = self::relativeFormController($idTipoDossier);
         if (is_array($aQuery)) {
-            array_walk($aQuery, 'core\poner_empty_on_null');
+            array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
         }
         return Hash::link($base . '?' . http_build_query($aQuery));
     }

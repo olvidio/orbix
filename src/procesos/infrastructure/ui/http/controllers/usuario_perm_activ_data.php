@@ -1,6 +1,6 @@
 <?php
 
 use src\procesos\application\UsuarioPermActivData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', UsuarioPermActivData::execute($_POST));

@@ -11,7 +11,7 @@ use RuntimeException;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Delegacion;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla xu_dl a la interfaz del repositorio

@@ -1,157 +1,39 @@
 <?php
 
 use frontend\shared\model\ViewNewPhtml;
-use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
-use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
-use src\ubiscamas\domain\value_objects\HabitacionId;
-use src\ubiscamas\domain\value_objects\TipoLavabo;
-use web\Hash;
+use frontend\shared\PostRequest;
 
-// Crea los objetos de uso global **********************************************
-require_once("frontend/shared/global_header_front.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
+require_once 'frontend/shared/global_header_front.inc';
 
-$Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
-
+$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$Qid_habitacion = '';
-$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
-$orden = '';
-$nombre = '';
-$numero_camas = '';
-$numero_camas_vip = '';
-$planta = '';
-$sillon = false;
-$adaptada = false;
-$observaciones = '';
-$despacho = false;
-$tipoLavabo = null;
-$a_camas = [];
-
-if (empty($Qnuevo)) {
-    $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    if (!empty($a_sel)) { //vengo de un checkbox
-        $Qid_habitacion = strtok($a_sel[0], "#");
-    } else {
-        $Qid_habitacion = (string)filter_input(INPUT_POST, 'id_habitacion');
-    }
-
-    // Sobre-escribe el scroll_id que se pueda tener
-    if (isset($_POST['stack'])) {
-        $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    } else {
-        $stack = '';
-    }
-
-    //Si vengo por medio de Posicion, borro la última
-    if ($stack !== '') {
-        // No me sirve el de global_object, sino el de la session
-        $oPosicion2 = new web\Posicion();
-        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-            $Qid_sel = $oPosicion2->getParametro('id_sel');
-            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-            $oPosicion2->olvidar($stack);
-        }
-    }
-
-    $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
-    $uuid_habitacion = HabitacionId::fromNullableString($Qid_habitacion);
-    $oHabitacion = $HabitacionRepository->findById($uuid_habitacion);
-    if (!empty($oHabitacion)) {
-        $Qid_ubi = $oHabitacion->getIdUbiVo();
-        $orden = $oHabitacion->getOrdenVo()?->value() ?? 0;
-        $nombre = $oHabitacion->getNombreVo()?->value() ?? '';
-        $numero_camas = $oHabitacion->getNumeroCamasVo()?->value();
-        $numero_camas_vip = $oHabitacion->getNumeroCamasVipVo()?->value();
-        $planta = $oHabitacion->getPlantaVo()?->value() ?? '';
-        $sillon = $oHabitacion->isSillon() ?? false;
-        $adaptada = $oHabitacion->isAdaptada() ?? false;
-        $observaciones = $oHabitacion->getObservacionesVo()?->value() ?? '';
-        $despacho = $oHabitacion->isDespacho() ?? false;
-        $tipoLavabo = $oHabitacion->getTipoLavaboVo()?->value();
-
-        // Obtener las camas de esta habitación
-        $CamaRepository = $GLOBALS['container']->get(CamaDlRepositoryInterface::class);
-        $a_camas = $CamaRepository->getCamasByHabitacion($uuid_habitacion);
-    }
-}
-
-if (empty($Qid_habitacion)) {
-    // Nueva habitación: valores por defecto
-    $numero_camas = 1;
-    $numero_camas_vip = 1;
-
-    $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
-    // buscar el ultimo de esta habitacion (recinto) y sumarle 10
-    $aLastHabitacion = $HabitacionRepository->getHabitaciones(['id_ubi' => $Qid_ubi, '_ordre' => 'orden DESC', '_limit' => 1]);
-    if (!empty($aLastHabitacion)) {
-        $oLastHabitacion = current($aLastHabitacion);
-        $orden = (int)($oLastHabitacion->getOrdenVo()?->value()?? 0) + 10;
-    } else {
-        $orden = 10;
-    }
-}
-
-// Array de tipos de tipoLavabo
-$a_tipos_tipoLavabo = TipoLavabo::getArrayTipoLavabo();
-
-$oHash = new Hash();
-$camposForm = 'orden!nombre!numero_camas!numero_camas_vip!planta!sillon!adaptada!observaciones!despacho!tipoLavabo';
-$camposChk = 'sillon!adaptada!despacho';
-$camposNo = 'new_camas_desc!new_camas_larga!new_camas_vip';
-
-$oHash->setCamposForm($camposForm);
-$oHash->setCamposChk($camposChk);
-$oHash->setCamposNo($camposNo);
-$a_camposHidden = array(
-    'id_habitacion' => $Qid_habitacion,
-    'id_ubi' => $Qid_ubi,
-    'nuevo' => $Qnuevo,
-);
-$oHash->setArraycamposHidden($a_camposHidden);
-
-$oHashActualizar = new Hash();
-$oHashActualizar->setCamposNo('refresh');
-$a_camposHiddenActualizar = array(
-    'id_habitacion' => $Qid_habitacion,
-    'id_ubi' => $Qid_ubi,
-);
-$oHashActualizar->setArraycamposHidden($a_camposHiddenActualizar);
-
-$url_cama_form = 'frontend/ubiscamas/controller/cama_form.php';
-$oHashCamaForm = new Hash();
-$oHashCamaForm->setUrl($url_cama_form);
-$oHashCamaForm->setCamposForm('id_ubi!id_cama!id_habitacion');
-
-$url_cama_delete = 'src/ubiscamas/cama_delete';
-$oHashCamaDelete = new Hash();
-$oHashCamaDelete->setUrl($url_cama_delete);
-$oHashCamaDelete->setCamposForm('id_ubi!id_cama!id_habitacion');
+$campos = array_merge($_GET, $_POST);
+$data = PostRequest::getDataFromUrl('/src/ubiscamas/habitacion_form_data', $campos);
+$payload = is_array($data) ? $data : [];
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'oHashActualizar' => $oHashActualizar,
-    'oHash' => $oHash,
-    'id_habitacion' => $Qid_habitacion,
-    'id_ubi' => $Qid_ubi,
-    'orden' => $orden,
-    'nombre' => $nombre,
-    'numero_camas' => $numero_camas,
-    'numero_camas_vip' => $numero_camas_vip,
-    'planta' => $planta,
-    'sillon' => $sillon,
-    'adaptada' => $adaptada,
-    'observaciones' => $observaciones,
-    'despacho' => $despacho,
-    'tipoLavabo' => $tipoLavabo,
-    'a_tipos_tipoLavabo' => $a_tipos_tipoLavabo,
-    'a_camas' => $a_camas,
-    'url_cama_form' => $url_cama_form,
-    'oHashCamaForm' => $oHashCamaForm,
-    'url_cama_delete' => $url_cama_delete,
-    'oHashCamaDelete' => $oHashCamaDelete,
+    'hash_form_html' => (string)($payload['hash_form_html'] ?? ''),
+    'hash_actualizar_html' => (string)($payload['hash_actualizar_html'] ?? ''),
+    'id_habitacion' => (string)($payload['id_habitacion'] ?? ''),
+    'id_ubi' => (int)($payload['id_ubi'] ?? 0),
+    'orden' => $payload['orden'] ?? '',
+    'nombre' => (string)($payload['nombre'] ?? ''),
+    'numero_camas' => $payload['numero_camas'] ?? '',
+    'numero_camas_vip' => $payload['numero_camas_vip'] ?? '',
+    'planta' => (string)($payload['planta'] ?? ''),
+    'sillon' => (bool)($payload['sillon'] ?? false),
+    'adaptada' => (bool)($payload['adaptada'] ?? false),
+    'observaciones' => (string)($payload['observaciones'] ?? ''),
+    'despacho' => (bool)($payload['despacho'] ?? false),
+    'tipoLavabo' => $payload['tipoLavabo'] ?? null,
+    'a_tipos_tipoLavabo' => (array)($payload['a_tipos_tipoLavabo'] ?? []),
+    'a_camas' => (array)($payload['a_camas'] ?? []),
+    'url_cama_form' => (string)($payload['url_cama_form'] ?? ''),
+    'h_cama_form_params' => (string)($payload['h_cama_form_params'] ?? ''),
+    'url_cama_delete' => (string)($payload['url_cama_delete'] ?? ''),
+    'h_cama_delete_params' => (string)($payload['h_cama_delete_params'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\\ubiscamas\\controller');

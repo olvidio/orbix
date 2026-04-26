@@ -4,7 +4,7 @@ namespace pasarela\model;
 
 
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Classe

@@ -13,13 +13,14 @@
  * `apps/actividadtarifas/controller/tarifa_tipo_actividad_form.php`.
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use src\actividades\application\ActividadTipo;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -43,20 +44,20 @@ if (!$es_nuevo) {
     $oDesplPosiblesTipoTarifas->setOpcion_sel($id_tarifa_sel);
 }
 
-$web = rtrim(ConfigGlobal::getWeb(), '/');
+$api = AppUrlConfig::getApiBaseUrl();
 
 // Hash para el form (campos que se serializan en el submit):
 $oHash = new Hash();
 $a_camposHidden = [];
 if ($es_nuevo) {
-    $oHash->setUrl($web . '/src/actividadtarifas/relacion_tarifa_update');
+    $oHash->setUrl($api . '/src/actividadtarifas/relacion_tarifa_update');
     $oHash->setCamposForm('id_item!id_tarifa!id_tipo_activ!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
     $a_camposHidden = [
         'id_item' => 'nuevo',
         'id_tipo_activ' => '',
     ];
 } else {
-    $oHash->setUrl($web . '/src/actividadtarifas/relacion_tarifa_update');
+    $oHash->setUrl($api . '/src/actividadtarifas/relacion_tarifa_update');
     $oHash->setCamposForm('id_item!id_tarifa!id_tipo_activ');
     $a_camposHidden = [
         'id_item' => $id_item,
@@ -73,7 +74,7 @@ if (!$es_nuevo) {
         'oTipoActiv' => $oTipoActiv,
         'extendida' => false,
         'oDesplPosiblesTipoTarifas' => $oDesplPosiblesTipoTarifas,
-        'locale_us' => ConfigGlobal::is_locale_us(),
+        'locale_us' => OrbixRuntime::isLocaleUs(),
     ];
 
     $oView = new ViewNewTwig('actividadtarifas/controller');

@@ -1,7 +1,7 @@
 <?php
 
 use src\casas\application\CasasResumenData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'que' => (string)filter_input(INPUT_POST, 'que'),

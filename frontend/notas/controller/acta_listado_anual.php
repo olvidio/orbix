@@ -3,8 +3,8 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
-use web\Periodo;
-use web\PeriodoQue;
+use frontend\shared\web\Periodo;
+use frontend\shared\web\PeriodoQue;
 use src\shared\domain\value_objects\DateTimeLocal;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -18,7 +18,7 @@ if (empty($Qperiodo)) {
     $Qperiodo = 'curso_ca';
 }
 
-$oPeriodo = new Periodo();
+$oPeriodo = Periodo::conCalendarioDesdeBackend();
 $oPeriodo->setDefaultAny('next');
 $oPeriodo->setAny($Qyear);
 $oPeriodo->setEmpiezaMin($Qempiezamin);
@@ -48,7 +48,7 @@ $aOpciones = [
 $boton = "<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >";
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(core\strtoupper_dlb(_("periodo de selección")));
+$oFormP->setTitulo(src\shared\domain\helpers\strtoupper_dlb(_("periodo de selección")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);

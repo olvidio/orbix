@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -17,7 +17,7 @@ $data = PostRequest::getDataFromUrl($url_backend);
 $a_opciones = $data['a_opciones'];
 $oDesplTemplates = new Desplegable('id_template_menu', $a_opciones, '', true);
 
-$url = ConfigGlobal::getWeb() . '/src/menus/menus_importar';
+$url = AppUrlConfig::getApiBaseUrl() . '/src/menus/menus_importar';
 $oHash = new Hash();
 $oHash->setUrl($url);
 $oHash->setCamposForm('id_template_menu');

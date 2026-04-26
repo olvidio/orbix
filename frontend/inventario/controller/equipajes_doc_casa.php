@@ -1,11 +1,10 @@
 <?php
 
 // Crea los objetos de uso global **********************************************
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************

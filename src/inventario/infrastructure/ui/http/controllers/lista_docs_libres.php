@@ -5,7 +5,7 @@ use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 $Qid_tipo_doc = (int)filter_input(INPUT_POST, 'id_tipo_doc');

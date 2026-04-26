@@ -5,7 +5,7 @@ namespace src\actividadtarifas\application;
 use src\shared\config\ConfigGlobal;
 use src\actividadtarifas\application\services\TipoTarifaDropdown;
 use src\actividadtarifas\domain\contracts\RelacionTarifaTipoActividadRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Data builder para el formulario modificar/nuevo de

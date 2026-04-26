@@ -25,7 +25,7 @@ use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
 use src\zonassacd\domain\contracts\ZonaSacdRepositoryInterface;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 /**
  * @see \src\misas\application\CuadriculaZonaGridData::build()

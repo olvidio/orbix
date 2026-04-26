@@ -10,7 +10,7 @@ use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\Periodo;
+use frontend\shared\web\Periodo;
 
 /**
  * Data builder para la pantalla "comunicacion de actividades a los sacd".

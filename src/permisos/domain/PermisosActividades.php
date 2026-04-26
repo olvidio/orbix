@@ -10,7 +10,7 @@ use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\procesos\domain\PermAccion;
 use src\procesos\domain\value_objects\FaseId;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:

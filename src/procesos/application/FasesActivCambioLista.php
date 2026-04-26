@@ -8,16 +8,16 @@ use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
-use web\Periodo;
-use web\Posicion;
-use function core\is_true;
+use frontend\shared\web\Periodo;
+use frontend\shared\web\Posicion;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: devuelve los datos estructurados para la tabla de
  * actividades candidatas a cambiar de fase, segun filtros de tipo de
  * actividad, dl_propia, periodo y accion (marcar/desmarcar).
  *
- * El frontend renderiza el formulario con `web\Lista` + `web\Hash`.
+ * El frontend renderiza el formulario con `frontend\shared\web\Lista` + `web\Hash`.
  */
 class FasesActivCambioLista
 {

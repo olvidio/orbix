@@ -6,7 +6,7 @@
  */
 
 use src\actividades\application\CalendarioListasDatos;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'que' => (string)filter_input(INPUT_POST, 'que'),

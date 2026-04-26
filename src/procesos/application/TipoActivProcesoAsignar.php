@@ -4,7 +4,7 @@ namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: asigna un id_tipo_proceso al tipo de actividad indicado,

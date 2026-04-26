@@ -22,12 +22,32 @@ use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
 use src\profesores\domain\value_objects\CongresoTipo;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
-use function core\is_true;
+use frontend\shared\config\AppUrlConfig;
+use src\profesores\domain\InfoProfesorAmpliacion;
+use src\profesores\domain\InfoProfesorCongreso;
+use src\profesores\domain\InfoProfesorDirector;
+use src\profesores\domain\InfoProfesorDocenciaStgr;
+use src\profesores\domain\InfoProfesorJuramento;
+use src\profesores\domain\InfoProfesorLatin;
+use src\profesores\domain\InfoProfesorPublicacion;
+use src\profesores\domain\InfoProfesorStgr;
+use src\profesores\domain\InfoProfesorTituloEst;
+use web\Hash;
+use function src\shared\domain\helpers\is_true;
 
 class FichaProfesorStgr
 {
-    public static function getFichaData(int $id_nom, string $id_tabla, bool $print = false): array
-    {
+    /**
+     * @param string $obj_pau p.ej. clase Persona*; se usa en enlaces a tablaDB_lista_ver
+     */
+    public static function getFichaData(
+        int $id_nom,
+        string $id_tabla,
+        bool $print = false,
+        string $obj_pau = '',
+        string $permiso = '',
+        string $depende = ''
+    ): array {
         $a_tipos_dossier = [
             1012 => 'publicaciones',
             1017 => 'curriculum',
@@ -230,6 +250,53 @@ class FichaProfesorStgr
             }
         }
 
+        $base = AppUrlConfig::getPublicAppBaseUrl();
+        $go_to = Hash::link(
+            $base . '/frontend/profesores/controller/ficha_profesor_stgr.php?' . http_build_query(
+                [
+                    'id_nom' => $id_nom,
+                    'id_tabla' => $id_tabla,
+                    'permiso' => $permiso,
+                    'depende' => $depende,
+                ]
+            )
+        );
+        $go_cosas = [
+            'print' => Hash::link(
+                $base . '/frontend/profesores/controller/ficha_profesor_stgr.php?' . http_build_query(
+                    [
+                        'id_nom' => $id_nom,
+                        'id_tabla' => $id_tabla,
+                        'print' => '1',
+                    ]
+                )
+            ),
+        ];
+        $a_base = [
+            'pau' => 'p',
+            'id_pau' => $id_nom,
+            'obj_pau' => $obj_pau,
+            'permiso' => $permiso,
+            'depende' => $depende,
+            'go_to' => $go_to,
+        ];
+        $tablaDbLink = static function (string $clase_info) use ($base, $a_base): string {
+            $a_cosas = array_merge($a_base, ['clase_info' => $clase_info]);
+
+            return Hash::link(
+                $base . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas)
+            );
+        };
+        $go_cosas['latin'] = $tablaDbLink(InfoProfesorLatin::class);
+        $go_cosas['curriculum'] = $tablaDbLink(InfoProfesorTituloEst::class);
+        $go_cosas['nombramientos'] = $tablaDbLink(InfoProfesorStgr::class);
+        $go_cosas['ampliacion'] = $tablaDbLink(InfoProfesorAmpliacion::class);
+        $go_cosas['congresos'] = $tablaDbLink(InfoProfesorCongreso::class);
+        $go_cosas['docencia'] = $tablaDbLink(InfoProfesorDocenciaStgr::class);
+        $go_cosas['director'] = $tablaDbLink(InfoProfesorDirector::class);
+        $go_cosas['juramento'] = $tablaDbLink(InfoProfesorJuramento::class);
+        $go_cosas['publicaciones'] = $tablaDbLink(InfoProfesorPublicacion::class);
+
         return [
             'error' => '',
             'aPerm' => $aPerm,
@@ -248,6 +315,8 @@ class FichaProfesorStgr
             'a_publicaciones' => $a_publicaciones,
             'a_congresos' => $a_congresos,
             'a_docencias' => $a_docencias,
+            'go_cosas' => $go_cosas,
+            'use_print_phtml' => $print,
         ];
     }
 }

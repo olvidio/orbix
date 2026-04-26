@@ -1,6 +1,6 @@
 <?php
 
 use src\ubis\application\DelegacionQueData;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 ContestarJson::enviar('', DelegacionQueData::execute());

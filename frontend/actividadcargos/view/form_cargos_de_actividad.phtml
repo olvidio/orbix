@@ -44,11 +44,11 @@
             if (rta && rta.success) {
                 <?= $oPosicion->js_atras(1); ?>
             } else {
-                var msg = (rta && rta.mensaje) ? rta.mensaje : '<?= _("error desconocido") ?>';
-                alert('<?= _("respuesta") ?>: ' + msg);
+                var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
+                alert(<?= json_encode(_("respuesta") . ": ") ?> + msg);
             }
         }).fail(function () {
-            alert('<?= _("error de comunicación con el servidor") ?>');
+            alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
         });
     };
     fnjs_cancelar = function() {
@@ -57,7 +57,7 @@
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <form id="frm_cargo_de_actividad" name="frm_cargo_de_actividad" action="" method="POST">
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $hash_campos_html ?>
     <table>
         <tr class="tab">
             <th class="titulo_inv" colspan="2"><?= ucfirst(_("cargo de una actividad")) ?></th>
@@ -67,7 +67,7 @@
             <?php if (!empty($id_nom_real)) { ?>
                 <td class="contenido"><?= $ape_nom ?></td>
             <?php } else { ?>
-                <td><?= $oDesplegablePersonas->desplegable() ?></td>
+                <td><?= $desplegable_personas_html ?></td>
             <?php } ?>
         </tr>
         <tr>
@@ -84,7 +84,7 @@
                 <textarea class="contenido" id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ ?? '') ?></textarea>
             </td>
         </tr>
-        <?php if ($Qmod === 'nuevo' && empty($id_nom_real)) { ?>
+        <?php if (!empty($show_asis)) { ?>
             <tr>
                 <td class="etiqueta"><?= _("¿asiste?") ?></td>
                 <td><input type="Checkbox" id="asis" name="asis" value="true" checked></td>

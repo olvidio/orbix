@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qid_ubi_new = (int)filter_input(INPUT_POST, 'id_ubi_new');

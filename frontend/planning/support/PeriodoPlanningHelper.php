@@ -2,11 +2,11 @@
 
 namespace frontend\planning\support;
 
-use web\PeriodoQue;
-use function core\strtoupper_dlb;
+use frontend\shared\web\PeriodoQue;
+use function src\shared\domain\helpers\strtoupper_dlb;
 
 /**
- * Helper para construir los `web\PeriodoQue` usados en los distintos
+ * Helper para construir los `frontend\shared\web\PeriodoQue` usados en los distintos
  * `planning_*_que.php`. Centraliza el catalogo de opciones de periodo
  * (todo el anyo + trimestres) y los valores por defecto.
  *

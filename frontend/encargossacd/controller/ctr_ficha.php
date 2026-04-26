@@ -1,10 +1,10 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\encargossacd\model\DesplCentros;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 use web\Hash;
 
 /**
@@ -45,8 +45,8 @@ $oDesplGrupoCtrs->setAction("fnjs_lista_ctrs();");
 $oDesplCtrs = DesplCentros::build($Qfiltro_ctr, $Qid_ubi);
 
 
-$webBase = rtrim(ConfigGlobal::getWeb(), '/');
-$url_ctr = $webBase . '/src/encargossacd/ctr_get_select_data';
+$apiBase = AppUrlConfig::getApiBaseUrl();
+$url_ctr = $apiBase . '/src/encargossacd/ctr_get_select_data';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('filtro_ctr!id_ubi');

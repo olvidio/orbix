@@ -3,7 +3,7 @@
  * Controlador AJAX HTML: listado del catalogo `TipoTarifa`.
  *
  * Obtiene los datos de `/src/actividadtarifas/tipo_tarifa_lista_data`
- * y los pinta con `web\Lista`. El HTML resultante se inyecta en
+ * y los pinta con `frontend\shared\web\Lista`. El HTML resultante se inyecta en
  * `#ficha` por el JS de `tarifa.phtml`.
  *
  * Sucesor de la rama `tarifas` del dispatcher legacy
@@ -11,7 +11,7 @@
  */
 
 use frontend\shared\PostRequest;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 require_once 'frontend/shared/global_header_front.inc';
 

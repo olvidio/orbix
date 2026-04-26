@@ -3,7 +3,7 @@
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\PasswordHasher;
 use src\usuarios\domain\value_objects\Password;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $error_txt = '';
 

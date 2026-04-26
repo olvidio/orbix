@@ -65,7 +65,7 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 
 ## `is_true()` y valores aceptados
 
-- **`core\is_true($val)`** usa `filter_var(..., FILTER_VALIDATE_BOOLEAN)`. **Reconoce** `'t'`, `'true'`, `'1'`, `'yes'`, `'on'`; **no reconoce** `'si'` (devuelve `null`, que es *falsy*). Si un test necesita forzar la rama "propuesta" o similar pasando un flag tipo `Qpropuesta`, usar **`'true'`** (o `true`), no `'si'`. Pasar `'si'` a una rama controlada por `is_true()` manda el flujo al *else* silenciosamente y el test acaba fallando por una dependencia aguas abajo que parecía no relacionada.
+- **`src\shared\domain\helpers\is_true($val)`** usa `filter_var(..., FILTER_VALIDATE_BOOLEAN)`. **Reconoce** `'t'`, `'true'`, `'1'`, `'yes'`, `'on'`; **no reconoce** `'si'` (devuelve `null`, que es *falsy*). Si un test necesita forzar la rama "propuesta" o similar pasando un flag tipo `Qpropuesta`, usar **`'true'`** (o `true`), no `'si'`. Pasar `'si'` a una rama controlada por `is_true()` manda el flujo al *else* silenciosamente y el test acaba fallando por una dependencia aguas abajo que parecía no relacionada.
 
 ## Limpieza y aislamiento
 

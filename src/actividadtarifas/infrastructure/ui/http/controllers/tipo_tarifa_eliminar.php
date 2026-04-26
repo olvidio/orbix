@@ -4,7 +4,7 @@
  */
 
 use src\actividadtarifas\application\TipoTarifaEliminar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $input = [
     'id_tarifa' => (int)filter_input(INPUT_POST, 'id_tarifa'),

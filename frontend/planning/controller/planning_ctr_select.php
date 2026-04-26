@@ -2,15 +2,16 @@
 
 namespace frontend\planning\controller;
 
-use src\shared\config\ConfigGlobal;
 use frontend\planning\support\PlanningRenderer;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\planning\application\ActividadesDePersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
-use web\Periodo;
-use web\Posicion;
+use frontend\shared\web\Periodo;
+use frontend\shared\web\Posicion;
 
 /**
  * Planning (calendario) de las personas de un centro (o grupo de
@@ -20,7 +21,7 @@ use web\Posicion;
  * (slice 2 de la migracion del modulo planning).
  */
 require_once("frontend/shared/global_header_front.inc");
-require_once("apps/core/global_object.inc");
+
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -32,7 +33,7 @@ $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-$oPeriodo = new Periodo();
+$oPeriodo = Periodo::conCalendarioDesdeBackend();
 $oPeriodo->setDefaultAny('next');
 $oPeriodo->setAny($Qyear);
 $oPeriodo->setEmpiezaMin($Qempiezamin);
@@ -136,19 +137,19 @@ $a_actividades2 = ActividadesDePersonaService::actividadesPorPersona(
     agruparPorCentro: true
 );
 
-$goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+$goLeyenda = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 switch ($Qmodelo) {
     case 2:
     case 1:
-        include_once(ConfigGlobal::$dir_estilos . '/calendario.css.php');
+        include_once(OrbixRuntime::dirEstilos() . '/calendario.css.php');
         break;
     case 3:
-        include_once(ConfigGlobal::$dir_estilos . '/calendario_grid.css.php');
-        include_once('apps/web/calendario_grid.php');
+        include_once(OrbixRuntime::dirEstilos() . '/calendario_grid.css.php');
+        include_once('frontend/shared/web/calendario_grid.php');
         break;
 }
-include_once(ConfigGlobal::$dir_estilos . '/calendario_color_cols.css.php');
+include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($colorColumnaUno);

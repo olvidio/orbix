@@ -12,13 +12,15 @@
  * @subpackage actividades
  */
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\AppInstalled;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use src\actividades\application\ActividadTipo;
 use src\actividades\domain\value_objects\StatusId;
 use web\Hash;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -92,7 +94,7 @@ $oHash->setCamposForm($camposForm);
 $oHash->setCamposNo($camposNo);
 
 $oHash1 = new Hash();
-$oHash1->setUrl(ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_select_ubi.php');
+$oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!isfsv!ssfsv');
 $h = $oHash1->linkSinValParams();
 
@@ -102,7 +104,7 @@ $oActividadTipo->setAsistentes($sasistentes);
 $oActividadTipo->setActividad($sactividad);
 $oActividadTipo->setNom_tipo($snom_tipo);
 
-$procesos_installed = ConfigGlobal::is_app_installed('procesos');
+$procesos_installed = AppInstalled::is('procesos');
 
 $a_status = StatusId::getArrayStatus();
 $status_txt = $a_status[$status] ?? '';
@@ -145,10 +147,10 @@ $a_campos = [
     'html_despl_nivel_stgr' => $html_despl_nivel_stgr,
     'html_despl_idioma' => $html_despl_idioma,
     'html_despl_repeticion' => $html_despl_repeticion,
-    'web' => ConfigGlobal::getWeb(),
-    'web_icons' => ConfigGlobal::getWeb_icons(),
+    'web' => AppUrlConfig::getPublicAppBaseUrl(),
+    'web_icons' => OrbixRuntime::getWebIcons(),
     'procesos_installed' => $procesos_installed,
-    'locale_us' => ConfigGlobal::is_locale_us(),
+    'locale_us' => OrbixRuntime::isLocaleUs(),
 ];
 
 $oView = new ViewNewTwig('actividades/controller');

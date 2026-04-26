@@ -4,7 +4,7 @@ namespace src\actividades\infrastructure\persistence\postgresql;
 
 use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
 use src\shared\traits\HandlesPdoErrors;
-use web\TiposActividades;
+use src\actividades\domain\entity\TiposActividades;
 
 
 /**

@@ -6,7 +6,7 @@
  *
  * Los datos y el HTML de la tabla se obtienen via PostRequest al endpoint
  * backend /src/actividades/lista_activ_datos (JSON). Este controlador solo
- * parsea el POST, gestiona `web\Posicion` y renderiza la pagina.
+ * parsea el POST, gestiona `frontend\shared\web\Posicion` y renderiza la pagina.
  *
  * Migrado desde src/actividades/infrastructure/ui/http/controllers/lista_activ.php
  * (que servia HTML directamente, violando la separacion de capas).
@@ -57,7 +57,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
 } else {
     // Si vengo por medio de Posicion, borro la ultima.
     if ($stack !== '') {
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
             $oPosicion2->olvidar($stack);
         }

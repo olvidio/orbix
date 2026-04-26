@@ -5,7 +5,7 @@ namespace Tests\unit\planning\support;
 use frontend\planning\support\PeriodoPlanningHelper;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
-use web\PeriodoQue;
+use frontend\shared\web\PeriodoQue;
 
 /**
  * Unitarios de {@see PeriodoPlanningHelper}: cubre el catalogo de
@@ -18,7 +18,7 @@ final class PeriodoPlanningHelperTest extends TestCase
     {
         // `PeriodoPlanningHelper::formPeriodo` usa `strtoupper_dlb` cuando el
         // llamador no proporciona titulo; la cargamos una sola vez.
-        require_once __DIR__ . '/../../../../apps/core/func_tablas.php';
+        require_once __DIR__ . '/../../../../src/shared/domain/helpers/func_tablas.php';
     }
 
     public function test_opciones_trimestrales_contiene_todas_las_claves_esperadas(): void

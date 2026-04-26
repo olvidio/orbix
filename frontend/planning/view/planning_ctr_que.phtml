@@ -16,9 +16,9 @@
 
         if (err == 1) {
             if (!f) {
-                alert("<?= _("falta definir un periodo") ?>");
+                alert(<?= json_encode(_("falta definir un periodo")) ?>);
             } else {
-                alert("<?= _("debe introducir las fechas inicio-fin del periodo") ?>");
+                alert(<?= json_encode(_("debe introducir las fechas inicio-fin del periodo")) ?>);
             }
         } else {
             $('#modelo').val(n);

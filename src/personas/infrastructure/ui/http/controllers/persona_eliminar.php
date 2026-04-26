@@ -12,7 +12,7 @@
  */
 
 use src\personas\application\PersonaEliminar;
-use web\ContestarJson;
+use frontend\shared\web\ContestarJson;
 
 $Qid_nom = (int)filter_input(INPUT_POST, 'id_nom');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');

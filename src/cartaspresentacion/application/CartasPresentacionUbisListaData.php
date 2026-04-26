@@ -13,12 +13,12 @@ use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
 
 /**
  * Data builder: listado de centros con el estado (si/no) de su carta de
- * presentacion, datos para pintar con `web\Lista` en el frontend.
+ * presentacion, datos para pintar con `frontend\shared\web\Lista` en el frontend.
  *
  * Sucesor de las ramas `get_dl` y `get_r` del dispatcher
  * `apps/cartaspresentacion/controller/cartas_presentacion_ajax.php`.
  *
- * `a_cabeceras` se devuelve ya en el formato esperado por `web\Lista`.
+ * `a_cabeceras` se devuelve ya en el formato esperado por `frontend\shared\web\Lista`.
  * `a_valores` contiene filas con columnas 1..4 donde las columnas
  * interactivas usan `['script' => ..., 'valor' => ...]` para que las
  * funciones JS (fnjs_modificar, fnjs_ver_ubi, fnjs_eliminar_cp) se

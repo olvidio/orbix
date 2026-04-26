@@ -7,7 +7,7 @@ use src\shared\infrastructure\ProvidesRepositories;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\Centro;
 use src\ubis\domain\entity\CentroDl;
-use function core\is_true;
+use function src\shared\domain\helpers\is_true;
 
 final class UbisGuardar
 {

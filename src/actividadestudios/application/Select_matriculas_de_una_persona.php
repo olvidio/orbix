@@ -13,9 +13,9 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use web\Hash;
-use web\Lista;
-use function core\curso_est;
-use function core\is_true;
+use frontend\shared\web\Lista;
+use function src\shared\domain\helpers\curso_est;
+use function src\shared\domain\helpers\is_true;
 
 /**
  * Widget del dossier `1303` (codigo `matriculas_de_una_persona`):

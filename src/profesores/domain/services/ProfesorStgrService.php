@@ -129,7 +129,7 @@ class ProfesorStgrService
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
             $aProfesores[$id_nom] = $ap_nom;
         }
-        uasort($aProfesores, 'core\strsinacentocmp');
+        uasort($aProfesores, 'src\shared\domain\helpers\strsinacentocmp');
 
         return $aProfesores;
     }

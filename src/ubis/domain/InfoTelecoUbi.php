@@ -8,7 +8,7 @@ use src\shared\infrastructure\ProvidesRepositories;
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use src\ubis\domain\contracts\RegionRepositoryInterface;
-use web\Desplegable;
+use frontend\shared\web\Desplegable;
 
 class InfoTelecoUbi extends DatosInfoRepo
 {

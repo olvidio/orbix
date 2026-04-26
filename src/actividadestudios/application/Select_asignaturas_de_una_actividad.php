@@ -11,7 +11,7 @@ use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use web\Hash;
-use web\Lista;
+use frontend\shared\web\Lista;
 
 /**
  * Widget del dossier `3005` (codigo `asignaturas_de_una_actividad`):

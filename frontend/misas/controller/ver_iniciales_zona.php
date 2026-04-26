@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
@@ -19,7 +19,7 @@ $id_zona = (int)($data['id_zona'] ?? $Qid_zona);
 
 // URL absoluta del endpoint backend: web\Hash genera el hash a partir de la
 // URL; el JS posteara contra la misma ruta para que el hash coincida.
-$url_update_iniciales = rtrim(ConfigGlobal::getWeb(), '/') . '/src/misas/update_iniciales';
+$url_update_iniciales = AppUrlConfig::getApiBaseUrl() . '/src/misas/update_iniciales';
 $oHashIniciales = new Hash();
 $oHashIniciales->setUrl($url_update_iniciales);
 $oHashIniciales->setCamposForm('id_sacd!iniciales!color');
