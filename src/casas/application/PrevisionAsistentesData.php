@@ -3,6 +3,7 @@
 namespace src\casas\application;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
 use src\casas\domain\contracts\IngresoRepositoryInterface;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
@@ -22,6 +23,8 @@ final class PrevisionAsistentesData
      *   a_valores: array<int,array<string,mixed>>,
      *   inicio_iso: string,
      *   fin_iso: string,
+     *   inicio_local: string,
+     *   fin_local: string,
      *   mi_of: string,
      *   mi_sfsv: int,
      *   permitido: bool
@@ -129,11 +132,20 @@ final class PrevisionAsistentesData
             }
         }
 
+        $inicio_local = '';
+        $fin_local = '';
+        if ($inicio_iso !== '' && $fin_iso !== '') {
+            $inicio_local = (new DateTimeLocal($inicio_iso))->getFromLocal();
+            $fin_local = (new DateTimeLocal($fin_iso))->getFromLocal();
+        }
+
         return [
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
             'inicio_iso' => $inicio_iso,
             'fin_iso' => $fin_iso,
+            'inicio_local' => $inicio_local,
+            'fin_local' => $fin_local,
             'mi_of' => $mi_of,
             'mi_sfsv' => $mi_sfsv,
             'permitido' => $permitido,

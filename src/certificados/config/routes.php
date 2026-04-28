@@ -56,4 +56,16 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/certificados/certificado_emitido_upload_firmado_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/certificado_emitido_upload_firmado_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/certificados/certificado_emitido_adjuntar_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/certificado_emitido_adjuntar_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/certificados/certificado_recibido_adjuntar_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/certificado_recibido_adjuntar_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/certificados/certificado_emitido_pdf_upload', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/certificado_emitido_pdf_upload.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/certificados/certificado_recibido_pdf_upload', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/certificado_recibido_pdf_upload.php';
+    });
 };

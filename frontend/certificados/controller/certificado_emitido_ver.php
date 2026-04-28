@@ -2,7 +2,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\config\AppUrlConfig;
-use src\shared\config\ServerConf;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -67,14 +67,14 @@ $oHashCertificadoPdf->setArrayCamposHidden(
     ]);
 
 // borrar los posibles fichero antiguos de /tmp
-$dir_tmp = ServerConf::DIR . '/log/tmp/';
+$dir_tmp = OrbixRuntime::dir() . '/log/tmp/';
 $cmd_shell = "find $dir_tmp -mtime +1 -delete";
 shell_exec($cmd_shell);
 
 // Descargar el pdf en un file en log/
 $filename_sin_barra = str_replace('/', '_', $certificado);
 $filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
-$filename_pdf = ServerConf::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';
+$filename_pdf = OrbixRuntime::dir() . '/log/tmp/' . $filename_sin_espacio . '.pdf';
 if (($file_handle = @fopen($filename_pdf, 'wb')) !== false) {
     fwrite($file_handle, $content_pdf);
     fclose($file_handle);

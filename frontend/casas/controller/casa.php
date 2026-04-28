@@ -15,12 +15,11 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\CasasQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -39,7 +38,8 @@ $oForm = new CasasQue();
 $oMiUsuario = $_SESSION['session_auth']['MiUsuario'];
 $miRolePau = OrbixRuntime::miRolePau();
 $filtro = ['active' => true];
-if ($miRolePau === PauType::PAU_CDC) {
+// PauType::PAU_CDC (literal 'cdc').
+if ($miRolePau === 'cdc') {
     $id_pau = $oMiUsuario->getCsv_id_pau();
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', (string)$id_pau)), static fn ($v) => $v > 0));
     $oForm->setCasas('casa');

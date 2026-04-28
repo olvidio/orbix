@@ -13,14 +13,13 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\TablaEditable;
 
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -59,6 +58,8 @@ if (!$permitido) {
 $a_cabeceras = $payload['a_cabeceras'] ?? [];
 $a_valores = $payload['a_valores'] ?? [];
 $mi_of = (string)($payload['mi_of'] ?? '');
+$inicio_local = (string)($payload['inicio_local'] ?? '');
+$fin_local = (string)($payload['fin_local'] ?? '');
 
 $aOpciones = [
     'tot_any' => _('todo el año'),
@@ -117,9 +118,7 @@ if (empty($mi_of)) {
     $titulo = ucfirst(sprintf((string)_("listado de actividades de %s"), $mi_of));
 }
 
-$oFini = new DateTimeLocal($inicioIso);
-$oFfin = new DateTimeLocal($finIso);
-$titulo .= ' ' . sprintf((string)_("entre %s y %s"), $oFini->getFromLocal(), $oFfin->getFromLocal());
+$titulo .= ' ' . sprintf((string)_("entre %s y %s"), $inicio_local, $fin_local);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

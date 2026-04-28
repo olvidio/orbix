@@ -16,7 +16,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
-use function src\shared\domain\helpers\curso_est;
+use function frontend\shared\helpers\curso_est;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");

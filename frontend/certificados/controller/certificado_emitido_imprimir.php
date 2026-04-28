@@ -5,7 +5,6 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\config\OrbixRuntime;
-use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
@@ -39,18 +38,21 @@ if (!empty($a_sel)) { //vengo de un checkbox
 /////////// Consulta al backend ///////////////////
 $url_backend = '/src/certificados/certificado_emitido_imprimir_datos';
 $a_campos_backend = ['id_nom' => $id_nom];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$datosPersona = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
-$nombreApellidos = $data['nombreApellidos'];
-$lugar_nacimiento = $data['lugar_nacimiento'];
-$f_nacimiento = $data['f_nacimiento'];
-$nivel_stgr = $data['nivel_stgr'];
+$nombreApellidos = $datosPersona['nombreApellidos'];
+$lugar_nacimiento = $datosPersona['lugar_nacimiento'];
+$f_nacimiento = $datosPersona['f_nacimiento'];
+$nivel_stgr = $datosPersona['nivel_stgr'];
 
-$region_latin = $data['region_latin'];
-$vstgr = $data['vstgr'];
-$dir_stgr = $data['dir_stgr'];
-$lugar_firma = $data['lugar_firma'];
-$contador = $data['contador'];
+$region_latin = $datosPersona['region_latin'];
+$vstgr = $datosPersona['vstgr'];
+$dir_stgr = $datosPersona['dir_stgr'];
+$lugar_firma = $datosPersona['lugar_firma'];
+$contador = $datosPersona['contador'];
+
+$f_certificado = (string)($datosPersona['f_certificado'] ?? '');
+$any = (string)($datosPersona['any_2digit'] ?? '');
 
 // preguntar: nº, destino, idioma
 
@@ -58,17 +60,13 @@ $contador = $data['contador'];
 /////////// Consulta al backend ///////////////////
 $url_backend = '/src/shared/locales_posibles';
 $a_campos_backend = ['id_nom' => $id_nom];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$dataLocales = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
-$a_locales = $data['a_locales'];
+$a_locales = $dataLocales['a_locales'];
 
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, '', true);
 
-$oHoy = new DateTimeLocal();
-$f_certificado = $oHoy->getFromLocal();
-
-// número de protocolo
-$any = $oHoy->format('y');
+// número de protocolo (sigla regional en el frontend; año en 2 cifras desde el backend)
 $sigla = OrbixRuntime::miRegion();
 $certificado = "$sigla $contador/$any";
 

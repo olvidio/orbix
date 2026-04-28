@@ -3,8 +3,6 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use src\personas\domain\entity\Persona;
-use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
@@ -17,16 +15,17 @@ $oPosicion->recordar();
 
 $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 $Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');
-$oPersona = Persona::findPersonaEnGlobal($id_nom);
-$nom = $oPersona->getApellidosNombre();
+$formData = PostRequest::getDataFromUrl('/src/certificados/certificado_recibido_adjuntar_data', [
+    'id_nom' => $id_nom,
+]);
+$form = is_array($formData) ? $formData : [];
+$nom = (string)($form['nom'] ?? '');
 $idioma = '';
 $destino = '';
 $certificado = '';
 $f_certificado = '';
-$f_recibido = '';
+$f_recibido = (string)($form['f_recibido'] ?? '');
 $firmado = '';
-
-$f_recibido = (new DateTimeLocal())->getFromLocal();
 if (is_true($firmado)) {
     $chk_firmado = 'checked';
 } else {

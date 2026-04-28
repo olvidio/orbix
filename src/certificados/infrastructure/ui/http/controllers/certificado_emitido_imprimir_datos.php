@@ -1,6 +1,7 @@
 <?php
 
 use src\personas\domain\entity\Persona;
+use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\web\ContestarJson;
 
 $id_nom = (string)filter_input(INPUT_POST, 'id_nom');
@@ -22,6 +23,10 @@ if ($oPersona === null) {
     $data['dir_stgr'] = $_SESSION['oConfig']->getDirStgr();
     $data['lugar_firma'] = $_SESSION['oConfig']->getLugarFirma();
     $data['contador'] = $_SESSION['oConfig']->getContador_certificados();
+
+    $oHoy = new DateTimeLocal();
+    $data['f_certificado'] = $oHoy->getFromLocal();
+    $data['any_2digit'] = $oHoy->format('y');
 }
 
 ContestarJson::enviar($error_txt, $data);
