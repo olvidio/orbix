@@ -13,14 +13,14 @@
  *
  * Migrada desde `apps/actividadessacd/controller/activ_sacd.php` +
  * `apps/actividadessacd/controller/activ_sacd_ajax.php` (dispatcher
- * legacy) siguiendo el patron de `refactor.md`.
+ * legacy) siguiendo el patron de `refactor.md`. Sin `use src\...`.
  */
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 

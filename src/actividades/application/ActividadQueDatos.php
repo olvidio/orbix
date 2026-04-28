@@ -20,6 +20,8 @@ final class ActividadQueDatos
      *   snom_tipo?: string,
      *   extendida?: bool,
      *   que?: string,
+     *   para?: string,
+     *   sfsv_all?: bool,
      * } $input
      * @return array{actividad_tipo_html: string}
      */
@@ -40,6 +42,9 @@ final class ActividadQueDatos
         if (!empty($input['que'])) {
             $oActividadTipo->setQue((string)$input['que']);
         }
+        if (!empty($input['para'])) {
+            $oActividadTipo->setPara((string)$input['para']);
+        }
         $oActividadTipo->setSfsv((string)($input['sfsv'] ?? ''));
         $oActividadTipo->setAsistentes((string)($input['sasistentes'] ?? ''));
         if ($extendida) {
@@ -48,7 +53,8 @@ final class ActividadQueDatos
             $oActividadTipo->setActividad((string)($input['sactividad'] ?? ''));
         }
         $oActividadTipo->setNom_tipo((string)($input['snom_tipo'] ?? ''));
-        $oActividadTipo->setSfsvAll(true);
+        $sfsvAll = array_key_exists('sfsv_all', $input) ? !empty($input['sfsv_all']) : true;
+        $oActividadTipo->setSfsvAll($sfsvAll);
 
         ob_start();
         $oActividadTipo->getHtml($extendida);

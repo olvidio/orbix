@@ -10,7 +10,7 @@
  *
  * Migrada desde `apps/actividadplazas/controller/gestion_plazas.php` +
  * `apps/actividadplazas/controller/gestion_plazas_ajax.php` siguiendo
- * `refactor.md`.
+ * `refactor.md`. Sin `use src\...`.
  */
 
 use frontend\shared\config\AppUrlConfig;
@@ -19,7 +19,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\TablaEditable;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 

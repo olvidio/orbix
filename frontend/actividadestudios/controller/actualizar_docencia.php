@@ -7,15 +7,18 @@
  * terminadas del rango.
  *
  * Sucesor de `apps/actividadestudios/controller/actualizar_docencia.php`.
+ *
+ * La mutación pasa por `/src/actividadestudios/docencia_actualizar` (PostRequest).
+ * Sin `use src\...` en el controlador frontend.
  */
 
 use frontend\shared\model\ViewNewPhtml;
-use src\actividadestudios\application\DocenciaActualizar;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 require_once("frontend/shared/global_header_front.inc");
-require_once 'apps/core/global_object.inc';
 
 $Qyear = (string) filter_input(INPUT_POST, 'year');
 $Qperiodo = (string) filter_input(INPUT_POST, 'periodo');
@@ -38,7 +41,7 @@ if (empty($continuar)) {
     ];
     $oFormP = new PeriodoQue();
     $oFormP->setFormName('que');
-    $oFormP->setTitulo(\src\shared\domain\helpers\strtoupper_dlb(_('periodo de selección de actividades')));
+    $oFormP->setTitulo(strtoupper_dlb(_('periodo de selección de actividades')));
     $oFormP->setPosiblesPeriodos($aOpciones);
     $oFormP->setDesplAnysOpcion_sel($Qyear);
     $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
@@ -56,7 +59,14 @@ if (empty($continuar)) {
         'oHashPeriodo' => $oHashPeriodo,
     ];
 } else {
-    $txt_rta = DocenciaActualizar::execute($_POST);
+    $data = PostRequest::getDataFromUrl('/src/actividadestudios/docencia_actualizar', [
+        'continuar' => $continuar,
+        'year' => $Qyear,
+        'periodo' => $Qperiodo,
+        'empiezamin' => $Qempiezamin,
+        'empiezamax' => $Qempiezamax,
+    ]);
+    $txt_rta = (string)($data['txt_rta'] ?? '');
     $a_campos = [
         'mod' => 'fin',
         'txt_rta' => $txt_rta,

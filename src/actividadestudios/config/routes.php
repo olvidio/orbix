@@ -47,6 +47,9 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/actividadestudios/matricula_automatica', function () use ($base) {
         require $base . '/matricula_automatica.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/docencia_actualizar', function () use ($base) {
+        require $base . '/docencia_actualizar.php';
+    });
 
     // ----- Acta de notas (guardar borrador / grabar definitivas) -----------
     $r->addRoute(['GET', 'POST'], '/src/actividadestudios/acta_notas_matricula_guardar', function () use ($base) {

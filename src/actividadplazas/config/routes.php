@@ -26,6 +26,10 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/plazas_balance_data.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/actividadplazas/plazas_balance_que_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/plazas_balance_que_data.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/actividadplazas/resumen_plazas_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/resumen_plazas_data.php';
     });

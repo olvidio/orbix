@@ -17,17 +17,28 @@ $sactividad = (string)filter_input(INPUT_POST, 'sactividad');
 $sactividad2 = (string)filter_input(INPUT_POST, 'sactividad2');
 $snom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
 $extendida = filter_input(INPUT_POST, 'extendida') === 't';
+$para = (string)filter_input(INPUT_POST, 'para');
+$sfsv_all_raw = filter_input(INPUT_POST, 'sfsv_all');
+$sfsv_all = ($sfsv_all_raw === null || $sfsv_all_raw === false || $sfsv_all_raw === '')
+    ? null
+    : ($sfsv_all_raw === 't');
 
-$data = (new ActividadQueDatos())->execute([
+$payloadIn = [
     'perm_jefe' => $perm_jefe,
     'id_tipo_activ' => $id_tipo_activ,
     'que' => $que,
+    'para' => $para,
     'sfsv' => $sfsv,
     'sasistentes' => $sasistentes,
     'sactividad' => $sactividad,
     'sactividad2' => $sactividad2,
     'snom_tipo' => $snom_tipo,
     'extendida' => $extendida,
-]);
+];
+if ($sfsv_all !== null) {
+    $payloadIn['sfsv_all'] = $sfsv_all;
+}
+
+$data = (new ActividadQueDatos())->execute($payloadIn);
 
 ContestarJson::enviar('', $data);

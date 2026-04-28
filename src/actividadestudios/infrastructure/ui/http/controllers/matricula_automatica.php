@@ -10,4 +10,5 @@ use frontend\shared\web\ContestarJson;
  * Sucesor de `apps/actividadestudios/controller/matricular.php`.
  */
 $msg = MatriculaAutomatica::execute($_POST);
-ContestarJson::enviar('', 'ok', ['msg' => $msg]);
+
+ContestarJson::enviar('', ['msg' => $msg]);

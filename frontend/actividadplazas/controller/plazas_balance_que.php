@@ -6,39 +6,32 @@
  * devuelve HTML) al cambiar el valor del select.
  *
  * Migrada desde `apps/actividadplazas/controller/plazas_balance_que.php`
- * siguiendo `refactor.md`.
+ * siguiendo `refactor.md`. Datos desde `/src/actividadplazas/plazas_balance_que_data`
+ * (PostRequest). Sin `use src\...`.
  */
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\ubis\application\services\DelegacionDropdown;
+use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
-use src\actividades\domain\entity\TiposActividades;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-if (empty($Qid_tipo_activ)) {
-    $Qssfsv = '';
-    $mi_sfsv = OrbixRuntime::miSfsv();
-    if ($mi_sfsv === 1) {
-        $Qssfsv = 'sv';
-    }
-    if ($mi_sfsv === 2) {
-        $Qssfsv = 'sf';
-    }
-    $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
-    $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
-    $oTipoActiv = new TiposActividades();
-    $oTipoActiv->setSfsvText($Qssfsv);
-    $oTipoActiv->setAsistentesText($Qsasistentes);
-    $oTipoActiv->setActividadText($Qsactividad);
-    $Qid_tipo_activ = (string)$oTipoActiv->getId_tipo_activ();
+$post = [
+    'id_tipo_activ' => (string)filter_input(INPUT_POST, 'id_tipo_activ'),
+    'sasistentes' => (string)filter_input(INPUT_POST, 'sasistentes'),
+    'sactividad' => (string)filter_input(INPUT_POST, 'sactividad'),
+];
+$dataShell = PostRequest::getDataFromUrl('/src/actividadplazas/plazas_balance_que_data', $post);
+$delegacionesOpc = $dataShell['delegaciones_opciones'] ?? [];
+if (!is_array($delegacionesOpc)) {
+    $delegacionesOpc = [];
 }
+$Qid_tipo_activ = (string)($dataShell['id_tipo_activ'] ?? '');
 
-$desplDelegaciones = Desplegable::desdeOpciones(DelegacionDropdown::activasOrdenNombre(), 'dl');
+$desplDelegaciones = Desplegable::desdeOpciones($delegacionesOpc, 'dl');
 $desplDelegaciones->setAction('fnjs_comparativa()');
 
 $mi_dele = OrbixRuntime::miDelef();

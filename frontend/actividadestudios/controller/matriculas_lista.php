@@ -1,8 +1,12 @@
 <?php
+/**
+ * Listado de matrículas (dossier). Datos vía PostRequest a matriculas_lista_data.
+ * Sin `use src\...`.
+ */
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;

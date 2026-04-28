@@ -5,9 +5,9 @@
  *
  * Obtiene los datos de `/src/actividadtarifas/relacion_tarifa_form_data`
  * y renderiza `tarifa_tipo_actividad_form.html.twig` (modificar) o
- * `tarifa_tipo_actividad_form_nuevo.html.twig` (nuevo). Ambos reusan
- * `ActividadTipo::getHtml()` para los desplegables de tipo de
- * actividad.
+ * `tarifa_tipo_actividad_form_nuevo.html.twig` (nuevo). El bloque de
+ * desplegables del modo «nuevo» viene de `/src/actividades/actividad_que_datos`
+ * (PostRequest). Sin `use src\...` en el controlador frontend.
  *
  * Sucesor de
  * `apps/actividadtarifas/controller/tarifa_tipo_actividad_form.php`.
@@ -17,10 +17,8 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
-use src\actividades\application\ActividadTipo;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
-use src\actividades\domain\entity\TiposActividades;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -35,6 +33,7 @@ $id_item = (string)($payload['id_item'] ?? 'nuevo');
 $id_tipo_activ = (int)($payload['id_tipo_activ'] ?? 0);
 $id_tarifa_sel = (int)($payload['id_tarifa_sel'] ?? 0);
 $isfsv = (int)($payload['isfsv'] ?? 0);
+$nom_tipo_activ = (string)($payload['nom_tipo_activ'] ?? '');
 $opciones_tarifa = $payload['opciones_tarifa'] ?? [];
 
 $oDesplPosiblesTipoTarifas = new Desplegable();
@@ -67,11 +66,10 @@ if ($es_nuevo) {
 $oHash->setArraycamposHidden($a_camposHidden);
 
 if (!$es_nuevo) {
-    $oTipoActiv = new TiposActividades($id_tipo_activ);
     $a_campos = [
         'oPosicion' => $oPosicion,
         'oHash' => $oHash,
-        'oTipoActiv' => $oTipoActiv,
+        'nom_tipo_activ' => $nom_tipo_activ,
         'extendida' => false,
         'oDesplPosiblesTipoTarifas' => $oDesplPosiblesTipoTarifas,
         'locale_us' => OrbixRuntime::isLocaleUs(),
@@ -80,15 +78,33 @@ if (!$es_nuevo) {
     $oView = new ViewNewTwig('actividadtarifas/controller');
     $oView->renderizar('tarifa_tipo_actividad_form.html.twig', $a_campos);
 } else {
-    $oActividadTipo = new ActividadTipo();
-    $oActividadTipo->setSfsv((string)$isfsv);
-    $oActividadTipo->setPara('tipoactiv-tarifas');
+    $ssfsv = '';
+    if ($isfsv === 1) {
+        $ssfsv = 'sv';
+    }
+    if ($isfsv === 2) {
+        $ssfsv = 'sf';
+    }
+    $dataTipo = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+        'perm_jefe' => 'f',
+        'id_tipo_activ' => '',
+        'que' => '',
+        'para' => 'tipoactiv-tarifas',
+        'sfsv' => $ssfsv,
+        'sasistentes' => '',
+        'sactividad' => '',
+        'sactividad2' => '',
+        'snom_tipo' => '',
+        'extendida' => '',
+        'sfsv_all' => 'f',
+    ]);
+    $actividad_tipo_html = (string)($dataTipo['actividad_tipo_html'] ?? '');
 
     $a_campos = [
         'oPosicion' => $oPosicion,
         'oHash' => $oHash,
         'oDesplPosiblesTipoTarifas' => $oDesplPosiblesTipoTarifas,
-        'oActividadTipo' => $oActividadTipo,
+        'actividad_tipo_html' => $actividad_tipo_html,
     ];
 
     $oView = new ViewNewTwig('actividadtarifas/controller');

@@ -11,18 +11,29 @@
  *
  * Migrada desde `apps/actividadessacd/controller/asignar_sacd_auto.php`
  * + `apps/actividadessacd/model/AsignarSacd.php` siguiendo `refactor.md`.
+ * Sin `use src\...`.
  */
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $any_final_curs = $_SESSION['oConfig']->any_final_curs();
-$oF_inicurs_des = new DateTimeLocal('@' . mktime(0, 0, 0, 9, 2, $any_final_curs));
-$inicurs_des = $oF_inicurs_des->getFromLocal();
+$oF_inicurs_des = new \DateTime('@' . mktime(0, 0, 0, 9, 2, $any_final_curs));
+
+$idioma = $_SESSION['session_auth']['idioma'];
+if (!isset($idioma)) {
+    $idioma = $_SESSION['oConfig']->getIdioma_default();
+}
+$a_idioma = explode('.', (string)$idioma);
+$code_lng = $a_idioma[0];
+$sep = '/';
+$fmtLocal = ($code_lng === 'en_US')
+    ? 'n' . $sep . 'j' . $sep . 'Y'
+    : 'j' . $sep . 'n' . $sep . 'Y';
+$inicurs_des = $oF_inicurs_des->format($fmtLocal);
 $inicurs_des_iso = $oF_inicurs_des->format('Y-m-d');
 
 $api = AppUrlConfig::getApiBaseUrl();
