@@ -10,7 +10,7 @@
  */
 
 use frontend\shared\model\ViewNewPhtml;
-use src\notas\application\Tesera;
+use frontend\shared\PostRequest;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -21,11 +21,13 @@ if (empty($a_sel)) {
     exit('no sé de que va');
 }
 
-$oService = new Tesera();
 $oView = new ViewNewPhtml('frontend\\notas\\controller');
 foreach ($a_sel as $PersonaSel) {
     $id_nom = (integer)strtok($PersonaSel, "#");
-    $a_campos = $oService->datosParaVistaTesera($id_nom);
+    $payload = PostRequest::getDataFromUrl('/src/notas/tessera_ver_data', [
+        'id_nom' => $id_nom,
+    ]);
+    $a_campos = is_array($payload) ? $payload : [];
     $a_campos['oPosicion'] = $oPosicion;
     $oView->renderizar('tesera_ver.phtml', $a_campos);
 }

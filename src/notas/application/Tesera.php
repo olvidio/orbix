@@ -13,9 +13,10 @@ use function src\shared\domain\helpers\is_true;
  * Servicio de "tessera studiorum": dado un `id_nom` calcula las asignaturas
  * posibles, las aprobadas y compone el dataset que consumen las tres pantallas:
  *
- *   - `frontend/notas/controller/tessera_ver.php`        (vista HTML).
- *   - `frontend/notas/controller/tessera_imprimir.php`   (tessera imprimible).
- *   - `frontend/notas/controller/tessera_imprimir_mpdf.php` (PDF).
+ *   - Tessera vista HTML (`tessera_ver.php`): dataset vía `TesseraVerData`
+ *     (`/src/notas/tessera_ver_data`), que delega en `datosParaVistaTesera`.
+ *   - Tessera imprimible / PDF: `tessera_imprimir.php` / `tessera_imprimir_mpdf.php`
+ *     cargan vía `TesseraImprimirData` (`/src/notas/tessera_imprimir_data`).
  *
  * Sucesor de `apps/notas/model/Tesera.php` (eliminado).
  * Mejoras respecto al legacy:

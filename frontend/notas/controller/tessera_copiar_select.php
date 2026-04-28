@@ -7,7 +7,6 @@ use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-echo "<script>fnjs_left_side_hide()</script>";
 
 if (isset($_POST['stack'])) {
     $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);

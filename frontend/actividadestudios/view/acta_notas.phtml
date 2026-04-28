@@ -1,7 +1,5 @@
 <?php
 
-use src\notas\domain\entity\Nota;
-use src\notas\domain\value_objects\NotaSituacion;
 use function frontend\shared\helpers\is_true;
 
 ?>
@@ -113,8 +111,8 @@ use function frontend\shared\helpers\is_true;
                 } else {
                     $oDesplActas->setOpcion_sel(0);
                 }
-            } else if ($acta == NotaSituacion::CURSADA) {
-                $acta_txt = Nota::getStatusTxt(NotaSituacion::CURSADA);
+            } else if ($acta == 2) { // 2 = NotaSituacion::CURSADA
+                $acta_txt = $acta_txt_cursada;
                 $oDesplActas->setOpcion_sel((int)$acta);
             } else {
                 $acta_txt = $acta;

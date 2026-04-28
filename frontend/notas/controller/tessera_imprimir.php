@@ -17,8 +17,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
-use src\notas\application\Tesera;
-use src\personas\domain\entity\Persona;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -55,16 +54,17 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qcara = (string)filter_input(INPUT_POST, 'cara');
 $Qcara = empty($Qcara) ? "A" : $Qcara;
 
-$oPersona = Persona::findPersonaEnGlobal($id_nom);
-if ($oPersona === null) {
-    $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
-    exit($msg_err);
-}
-$nom = $oPersona->getNombreApellidos();
+$payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
+    'id_nom' => $id_nom,
+]);
+$payload = is_array($payload) ? $payload : [];
+$nom = (string)($payload['nom'] ?? '');
+$cAsignaturas = (array)($payload['c_asignaturas'] ?? []);
+$aAprobadas = (array)($payload['a_aprobadas'] ?? []);
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 
-// conversion 
-$replace = src\configuracion\domain\value_objects\ConfigSnapshot::$replace;
+// conversion
+$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 
 function titulo($id_asignatura, $cara = "")
 {
@@ -174,7 +174,7 @@ $rowEmpty = [
     'id_asignatura' => '',
     'nombre_asignatura' => '',
     'acta' => '',
-    'fecha' => '',
+    'fecha_local' => '',
     'nota' => '',
 ];
 // -----------------------------  cabecera ---------------------------------
@@ -238,12 +238,6 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     </tr>
                                     <?php
                                     }
-                                    $oTesera = new Tesera();
-
-                                    $plan = $oTesera->getPlan($id_nom);
-                                    $cAsignaturas = $oTesera->getAsignaturasPosibles($plan);
-                                    $aAprobadas = $oTesera->getAsignaturasAprobadas($id_nom, $plan);
-
                                     $num_asig = count($cAsignaturas);
                                     $a = 0;
                                     $j = 0;
@@ -259,11 +253,11 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
 
                                     // para imprimir sólo una cara:
                                     // cara A hasta la asignatura 2107
-                                    if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
+                                    if ($Qcara === "A" && $oAsignatura['id_nivel'] > 2107) {
                                         $row = current($aAprobadas);
                                         continue;
                                     }
-                                    if ($Qcara === "B" && $oAsignatura->getId_nivel() < 2108) {
+                                    if ($Qcara === "B" && $oAsignatura['id_nivel'] < 2108) {
                                         if (key($aAprobadas) === null) { // ha llegado al final
                                             $row = $rowEmpty;
                                         }
@@ -281,7 +275,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                         }
                                         continue;
                                     }
-                                    while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
+                                    while (($row['id_nivel_asig'] < $oAsignatura['id_nivel']) && ($j < $num_asig)) {
                                         if (key($aAprobadas) === null) { // ha llegado al final
                                             $row = $rowEmpty;
                                             break;
@@ -292,12 +286,12 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                         }
                                         $j++;
                                     }
-                                    while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
+                                    while (($oAsignatura['id_nivel'] < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
                                     $clase = "impar";
                                     $i % 2 ? 0 : $clase = "par";
                                     $i++;
-                                    echo titulo($oAsignatura->getId_nivel(), $Qcara);
-                                    $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                                    echo titulo($oAsignatura['id_nivel'], $Qcara);
+                                    $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                                     ?>
                                     <tr class="<?= $clase; ?>" valign="bottom">
                                         <td></td>
@@ -313,21 +307,21 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     </tr>
                                     <?php
                                     $oAsignatura = $cAsignaturas[$a++];
-                                    if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
+                                    if ($Qcara === "A" && $oAsignatura['id_nivel'] > 2107) {
                                         continue 2;
                                     }
                                     }
 
-                                    if ($oAsignatura->getId_nivel() == $row["id_nivel_asig"]) {
+                                    if ($oAsignatura['id_nivel'] == $row["id_nivel_asig"]) {
                                     $clase = "impar";
                                     $i % 2 ? 0 : $clase = "par";
                                     $i++;
-                                    echo titulo($oAsignatura->getId_nivel(), $Qcara);
+                                    echo titulo($oAsignatura['id_nivel'], $Qcara);
                                     // para las opcionales
                                     if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
 
                                     $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
-                                    $algo = $oAsignatura->getNombre_asignatura() . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
+                                    $algo = $oAsignatura['nombre_asignatura'] . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
                                     ?>
                                     <tr class="<?= $clase; ?>" valign="bottom">
                                         <td></td>
@@ -339,7 +333,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                         </td>
                                         <td>&nbsp;</td>
                                         <td class="dato">
-                                            <?= $row["fecha"]->getFromLocal() ?>&nbsp;
+                                            <?= $row["fecha_local"] ?>&nbsp;
                                         </td>
                                         <td>&nbsp;</td>
                                         <td class="dato">
@@ -349,7 +343,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     </tr>
                                     <?php
                                     } else {
-                                    $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                                    $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                                     ?>
                                     <tr class="<?= $clase; ?>">
                                         <td></td>
@@ -361,7 +355,7 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                         </td>
                                         <td>&nbsp;</td>
                                         <td class="dato">
-                                            <?= $row["fecha"]->getFromLocal() ?>&nbsp;
+                                            <?= $row["fecha_local"] ?>&nbsp;
                                         </td>
                                         <td>&nbsp;</td>
                                         <td class="dato">
@@ -377,8 +371,8 @@ $go_pdf = $url_pdf . '?' . $oHash->linkConVal();
                                     $clase = "impar";
                                     $i % 2 ? 0 : $clase = "par";
                                     $i++;
-                                    echo titulo($oAsignatura->getId_asignatura(), $Qcara);
-                                    $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                                    echo titulo($oAsignatura['id_asignatura'], $Qcara);
+                                    $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                                     ?>
                                     <tr class="<?= $clase; ?>">
                                         <td></td>

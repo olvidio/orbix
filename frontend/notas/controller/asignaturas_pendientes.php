@@ -1,6 +1,6 @@
 <?php
 
-use core\ViewTwig;
+use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
@@ -57,7 +57,7 @@ if (!empty($data['ambito_rstgr'])) {
         'oCuadros' => $oCuadros,
     ];
 
-    $oView = new ViewTwig('ubis/controller');
+    $oView = new ViewNewTwig('ubis/controller');
     $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
 }
 ?>

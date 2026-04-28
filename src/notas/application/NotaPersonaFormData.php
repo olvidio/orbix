@@ -189,6 +189,61 @@ final class NotaPersonaFormData
     }
 
     /**
+     * Constantes y listas derivadas de value objects para el formulario (sin `use src`
+     * en el controlador frontend). Incluye etiquetas traducidas y `lista_situacion_no_acta`.
+     *
+     * @return array{
+     *   aOpcionesSituacion: array<int, string>,
+     *   lista_situacion_no_acta: string,
+     *   vo: array{
+     *     NotaSituacion: array<string, int>,
+     *     TipoActa: array<string, int>,
+     *     NotaEpoca: array<string, int>,
+     *   }
+     * }
+     */
+    public static function formNotasVoPack(): array
+    {
+        $cNotasNoSup = NotaSituacion::getArrayNoSuperadas();
+        $lista_situacion_no_acta = '"11"';
+        foreach ($cNotasNoSup as $id_sit) {
+            $lista_situacion_no_acta .= ',"' . $id_sit . '"';
+        }
+
+        return [
+            'aOpcionesSituacion' => NotaSituacion::getArraySituacionTxt(),
+            'lista_situacion_no_acta' => $lista_situacion_no_acta,
+            'vo' => [
+                'NotaSituacion' => [
+                    'DESCONOCIDO' => NotaSituacion::DESCONOCIDO,
+                    'SUPERADA' => NotaSituacion::SUPERADA,
+                    'CURSADA' => NotaSituacion::CURSADA,
+                    'MAGNA' => NotaSituacion::MAGNA,
+                    'SUMMA' => NotaSituacion::SUMMA,
+                    'CONVALIDADA' => NotaSituacion::CONVALIDADA,
+                    'PREVISTA_CA' => NotaSituacion::PREVISTA_CA,
+                    'PREVISTA_INV' => NotaSituacion::PREVISTA_INV,
+                    'NO_HECHA_CA' => NotaSituacion::NO_HECHA_CA,
+                    'NO_HECHA_INV' => NotaSituacion::NO_HECHA_INV,
+                    'NUMERICA' => NotaSituacion::NUMERICA,
+                    'EXENTO' => NotaSituacion::EXENTO,
+                    'EXAMINADO' => NotaSituacion::EXAMINADO,
+                    'FALTA_CERTIFICADO' => NotaSituacion::FALTA_CERTIFICADO,
+                ],
+                'TipoActa' => [
+                    'FORMATO_ACTA' => TipoActa::FORMATO_ACTA,
+                    'FORMATO_CERTIFICADO' => TipoActa::FORMATO_CERTIFICADO,
+                ],
+                'NotaEpoca' => [
+                    'EPOCA_CA' => NotaEpoca::EPOCA_CA,
+                    'EPOCA_INVIERNO' => NotaEpoca::EPOCA_INVIERNO,
+                    'EPOCA_OTRO' => NotaEpoca::EPOCA_OTRO,
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Devuelve los niveles de las opcionales genericas (id_sector = 1)
      * para la condicion JS `fnjs_cmb_opcional`.
      * @return array{condicion_js:string, op_genericas_json:string}

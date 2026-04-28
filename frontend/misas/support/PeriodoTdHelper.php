@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\misas\support;
 
-use function src\shared\domain\helpers\strtoupper_dlb;
-
-use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\web\PeriodoQue;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 /**
  * Helper para construir el `<td>` HTML del desplegable "Período" usado en las
@@ -33,8 +31,7 @@ class PeriodoTdHelper
         $oFormP->setDesplPeriodosOpcion_sel($selected);
         $oFormP->setisDesplAnysVisible(false);
 
-        $ohoy = new DateTimeLocal(date('Y-m-d'));
-        $shoy = $ohoy->format('d/m/Y');
+        $shoy = date('d/m/Y');
         $oFormP->setEmpiezaMin($shoy);
         $oFormP->setEmpiezaMax($shoy);
 

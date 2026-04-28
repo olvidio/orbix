@@ -5,7 +5,6 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
 
 /**
  * Esta página sirve para las actas.
@@ -34,7 +33,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qcara = (string)filter_input(INPUT_POST, 'cara');
 $cara = empty($Qcara) ? 'A' : $Qcara;
 
-$replace = ConfigSnapshot::$replace;
+$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $nombre_prelatura = strtr('PRAELATURA SANCTAE CRUCIS ET OPERIS DEI', $replace);
 $reg_stgr = 'Stgr' . OrbixRuntime::miRegion();

@@ -19,7 +19,9 @@ use frontend\shared\web\ContestarJson;
  *   - mod                  string ('nuevo' | 'editar' | '')
  *
  * Salida: array con todas las claves necesarias para la vista
- * (campos del PersonaNota + desplegables + helpers de opcionales genericas).
+ * (campos del PersonaNota + desplegables + helpers de opcionales genericas),
+ * más `aOpcionesSituacion`, `lista_situacion_no_acta` y `vo` (constantes
+ * NotaSituacion/TipoActa/NotaEpoca desde el dominio).
  */
 $input = [
     'id_pau' => (int)filter_input(INPUT_POST, 'id_pau'),
@@ -31,5 +33,6 @@ $input = [
 
 $data = NotaPersonaFormData::execute($input);
 $data['helpers'] = NotaPersonaFormData::opcionalesGenericasHelpers();
+$data = array_merge($data, NotaPersonaFormData::formNotasVoPack());
 
 ContestarJson::enviar('', $data);

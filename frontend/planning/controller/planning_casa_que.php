@@ -3,10 +3,9 @@
 namespace frontend\planning\controller;
 
 use frontend\planning\support\PeriodoPlanningHelper;
+use frontend\shared\PostRequest;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\usuarios\domain\entity\Role;
-use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\CasasQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
@@ -35,12 +34,12 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$oMiUsuario = $_SESSION['session_auth']['MiUsuario'];
-$oRole = new Role();
-$oRole->setId_role($oMiUsuario->getId_role());
-$miSfsv = OrbixRuntime::miSfsv();
-
 $periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto((int)$_SESSION['oConfig']->getMesFinStgr());
+
+$queCasasPayload = PostRequest::getDataFromUrl('/src/planning/planning_casa_que_data', []);
+$queCasasPayload = is_array($queCasasPayload) ? $queCasasPayload : [];
+$filtroCasasQue = (array)($queCasasPayload['filtro'] ?? ['active' => true]);
+$modoCasasQue = array_key_exists('modo_casas', $queCasasPayload) ? $queCasasPayload['modo_casas'] : null;
 
 $Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
 $Qsin_activ = (int)filter_input(INPUT_POST, 'sin_activ');
@@ -66,21 +65,10 @@ $oFormP = PeriodoPlanningHelper::formPeriodo($Qperiodo, $Qyear, $Qempiezamin, $Q
 $oForm = new CasasQue();
 $oForm->setTitulo(strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
 
-$filtro = ['active' => true];
-if ($oRole->isRolePau(PauType::PAU_CDC)) {
-    $id_pau = $oMiUsuario->getCsv_id_pau();
-    $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', (string)$id_pau)), static fn ($v) => $v > 0));
-    $oForm->setCasas('casa');
-} elseif ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
-    $oForm->setCasas('all');
-} elseif ($miSfsv === 1) {
-    $oForm->setCasas('sv');
-    $filtro['sv'] = true;
-} elseif ($miSfsv === 2) {
-    $oForm->setCasas('sf');
-    $filtro['sf'] = true;
+$oForm->setFiltroCasas($filtroCasasQue);
+if ($modoCasasQue !== null && $modoCasasQue !== '') {
+    $oForm->setCasas((string)$modoCasasQue);
 }
-$oForm->setFiltroCasas($filtro);
 $oForm->setCdcSel($Qcdc_sel);
 $oForm->setSeleccionados($QsSeleccionados);
 

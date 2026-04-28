@@ -23,7 +23,8 @@ use function frontend\shared\helpers\is_true;
  *   notas: string,
  *   despl_actas_opciones: array<int|string, string>,
  *   acta_principal: string,
- *   acta_notas_a_actas: list<string>
+ *   acta_notas_a_actas: list<string>,
+ *   acta_txt_cursada: string,
  * }
  */
 final class ActaNotasData
@@ -119,6 +120,7 @@ final class ActaNotasData
             'despl_actas_opciones' => $desplActasOpciones,
             'acta_principal' => $actaPrincipal,
             'acta_notas_a_actas' => $aActasList,
+            'acta_txt_cursada' => Nota::getStatusTxt(NotaSituacion::CURSADA),
         ];
     }
 }

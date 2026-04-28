@@ -22,9 +22,6 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\notas\domain\value_objects\NotaEpoca;
-use src\notas\domain\value_objects\NotaSituacion;
-use src\notas\domain\value_objects\TipoActa;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 
@@ -49,18 +46,15 @@ $datos = PostRequest::getDataFromUrl('/src/notas/nota_persona_form_data', [
 $mod = $datos['mod'];
 $id_asignatura_real = $datos['id_asignatura_real'];
 
-$aOpcionesSituacion = NotaSituacion::getArraySituacionTxt();
+$vo = $datos['vo'] ?? [];
 $oDesplNotas = new Desplegable();
-$oDesplNotas->setOpciones($aOpcionesSituacion);
+$oDesplNotas->setOpciones((array)($datos['aOpcionesSituacion'] ?? []));
 $oDesplNotas->setNombre('id_situacion');
-$id_situacion = empty($datos['id_situacion']) ? NotaSituacion::NUMERICA : $datos['id_situacion'];
+$ns = (array)($vo['NotaSituacion'] ?? []);
+$id_situacion = empty($datos['id_situacion']) ? (int)($ns['NUMERICA'] ?? 10) : $datos['id_situacion'];
 $oDesplNotas->setOpcion_sel($id_situacion);
 
-$cNotasNoSup = NotaSituacion::getArrayNoSuperadas();
-$lista_situacion_no_acta = '"11"';
-foreach ($cNotasNoSup as $id_sit) {
-    $lista_situacion_no_acta .= ',"' . $id_sit . '"';
-}
+$lista_situacion_no_acta = (string)($datos['lista_situacion_no_acta'] ?? '"11"');
 
 $oDesplProfesores = [];
 $oDesplNiveles = [];
@@ -81,19 +75,21 @@ if ($mod === 'editar') {
 $chk_preceptor = !empty($datos['preceptor']) ? 'checked' : '';
 
 $tipo_acta = $datos['tipo_acta'];
+$ta = (array)($vo['TipoActa'] ?? []);
 if (!empty($tipo_acta)) {
-    $chk_acta = $tipo_acta === TipoActa::FORMATO_ACTA ? 'checked' : '';
-    $chk_certificado = $tipo_acta === TipoActa::FORMATO_CERTIFICADO ? 'checked' : '';
+    $chk_acta = (int)$tipo_acta === (int)($ta['FORMATO_ACTA'] ?? 0) ? 'checked' : '';
+    $chk_certificado = (int)$tipo_acta === (int)($ta['FORMATO_CERTIFICADO'] ?? 0) ? 'checked' : '';
 } else {
     $chk_acta = 'checked';
     $chk_certificado = '';
 }
 
 $epoca = $datos['epoca'];
+$ne = (array)($vo['NotaEpoca'] ?? []);
 if (!empty($epoca)) {
-    $chk_epoca_ca = $epoca === NotaEpoca::EPOCA_CA ? 'checked' : '';
-    $chk_epoca_inv = $epoca === NotaEpoca::EPOCA_INVIERNO ? 'checked' : '';
-    $chk_epoca_otro = $epoca === NotaEpoca::EPOCA_OTRO ? 'checked' : '';
+    $chk_epoca_ca = (int)$epoca === (int)($ne['EPOCA_CA'] ?? 0) ? 'checked' : '';
+    $chk_epoca_inv = (int)$epoca === (int)($ne['EPOCA_INVIERNO'] ?? 0) ? 'checked' : '';
+    $chk_epoca_otro = (int)$epoca === (int)($ne['EPOCA_OTRO'] ?? 0) ? 'checked' : '';
 } else {
     $chk_epoca_ca = 'checked';
     $chk_epoca_inv = '';
@@ -160,6 +156,7 @@ $nota_max = empty($datos['nota_max']) ? $nota_max_default : $datos['nota_max'];
 
 $a_campos = [
     'obj' => $obj,
+    'vo' => $vo,
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'url_posibles_opcionales' => $url_posibles_opcionales,

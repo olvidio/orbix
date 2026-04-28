@@ -1,7 +1,7 @@
 <?php
 
-use core\ViewTwig;
 use frontend\shared\config\OrbixRuntime;
+use frontend\shared\model\ViewNewTwig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
@@ -75,7 +75,7 @@ if ($rstgr && $Qfiltro === 1) {
         'oCuadros' => $oCuadros,
     ];
 
-    $oView = new ViewTwig('ubis/controller');
+    $oView = new ViewNewTwig('ubis/controller');
     $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
 }
 

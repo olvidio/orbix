@@ -114,4 +114,28 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/notas/asignaturas_pendientes_resumen_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/asignaturas_pendientes_resumen_data.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/informe_stgr_agd_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/informe_stgr_agd_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/informe_stgr_n_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/informe_stgr_n_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/informe_stgr_profesores_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/informe_stgr_profesores_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/tessera_imprimir_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tessera_imprimir_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/tessera_ver_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tessera_ver_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/comprobar_notas_constants_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/comprobar_notas_constants_data.php';
+    });
 };

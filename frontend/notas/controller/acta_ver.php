@@ -3,6 +3,8 @@
 /**
  * Esta página muestra un formulario para modificar los datos de un acta.
  *
+ * Payload vía `PostRequest` → `/src/notas/acta_ver_form_data` (`ActaVerFormData`);
+ * el controlador arma HashFront y la vista.
  *
  * @package    delegacion
  * @subpackage    est
@@ -16,7 +18,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use function src\shared\domain\helpers\urlsafe_b64encode;
+use function frontend\shared\helpers\urlsafe_b64encode;
 
 require_once 'frontend/shared/global_header_front.inc';
 

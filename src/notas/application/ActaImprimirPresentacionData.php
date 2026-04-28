@@ -6,7 +6,7 @@ namespace src\notas\application;
 
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
+use frontend\shared\config\OrbixRuntime;
 use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
 use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
@@ -28,7 +28,7 @@ final class ActaImprimirPresentacionData
             throw new \InvalidArgumentException(_('Falta el acta'));
         }
 
-        $replace = ConfigSnapshot::$replace;
+        $replace = OrbixRuntime::latinHtmlEntityReplaceMap();
         $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
         $nombre_prelatura = strtr('PRAELATURA SANCTAE CRUCIS ET OPERIS DEI', $replace);
         $reg_stgr = 'Stgr' . ConfigGlobal::mi_region();

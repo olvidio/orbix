@@ -5,7 +5,8 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\PeriodoQue;
-use src\shared\domain\value_objects\DateTimeLocal;
+
+use function frontend\shared\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -33,6 +34,8 @@ $data = PostRequest::getDataFromUrl('/src/notas/acta_listado_anual_data', [
 ]);
 
 $aActas = $data['aActas'] ?? [];
+$QinicioLocal = (string)($data['inicio_local'] ?? '');
+$QfinLocal = (string)($data['fin_local'] ?? '');
 
 $aOpciones = [
     'tot_any' => _("todo el año"),
@@ -48,7 +51,7 @@ $aOpciones = [
 $boton = "<input type='button' value='" . _("buscar") . "' onclick='fnjs_buscar()' >";
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(src\shared\domain\helpers\strtoupper_dlb(_("periodo de selección")));
+$oFormP->setTitulo(strtoupper_dlb(_("periodo de selección")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
@@ -59,8 +62,6 @@ $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!
 $oHashPeriodo->setCamposNo('!refresh');
 $oHashPeriodo->setArraycamposHidden([]);
 
-$QinicioLocal = (new DateTimeLocal($inicioIso))->getFromLocal();
-$QfinLocal = (new DateTimeLocal($finIso))->getFromLocal();
 $titulo = sprintf(_("Lista de actas en el periodo: %s - %s."), $QinicioLocal, $QfinLocal);
 
 $a_campos = [

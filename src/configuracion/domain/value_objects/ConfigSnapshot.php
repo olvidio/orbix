@@ -18,28 +18,13 @@ use src\shared\config\ConfigGlobal;
  * Se construye una vez por request/login mediante
  * `src\configuracion\application\ObtenerConfigSnapshot`.
  *
+ * El mapa histórico de digrafos Latin → entidades HTML para impresión/PDF ya no forma
+ * parte de esta clase; está en {@see \frontend\shared\config\OrbixRuntime::latinHtmlEntityReplaceMap()}.
+ *
  * @package orbix
  */
 final class ConfigSnapshot
 {
-    /**
-     * Tabla de sustitución para imprimir caracteres latinos con entidades HTML.
-     * Se mantiene aquí por compatibilidad con los controladores de impresión que
-     * históricamente accedían a `Config::$replace`.
-     *
-     * @var array<string,string>
-     */
-    public static array $replace = [
-        'AE' => '&#0198;',
-        'Ae' => '&#0198;',
-        'ae' => '&#0230;',
-        'aE' => '&#0230;',
-        'OE' => '&#0338;',
-        'Oe' => '&#0338;',
-        'oe' => '&#0339;',
-        'oE' => '&#0339;',
-    ];
-
     private string $msg;
 
     public function __construct(

@@ -2,7 +2,6 @@
 
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
-use src\configuracion\domain\value_objects\ConfigSnapshot;
 
 /**
 * Esta página está como include de acta_2_mpdf.php
@@ -20,7 +19,7 @@ include_once(OrbixRuntime::dirEstilos() . '/actas_mpdf.css.php');
 
 require_once ("apps/core/global_object.inc");
 
-$replace = ConfigSnapshot::$replace;
+$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $nombre_prelatura = strtr('PRAELATURA SANCTAE CRUCIS ET OPERIS DEI', $replace);
 $reg_stgr = 'Stgr' . OrbixRuntime::miRegion();

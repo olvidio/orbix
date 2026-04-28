@@ -1,8 +1,7 @@
 <?php
 
 use frontend\shared\config\OrbixRuntime;
-use src\notas\application\Tesera;
-use src\personas\domain\entity\Persona;
+use frontend\shared\PostRequest;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -21,15 +20,16 @@ use src\personas\domain\entity\Persona;
  */
 require_once 'frontend/shared/global_header_front.inc';
 
-$id_nom = empty($_GET['id_nom']) ? '' : $_GET['id_nom'];
+$id_nom = (int)(empty($_GET['id_nom']) ? 0 : $_GET['id_nom']);
 $id_tabla = empty($_GET['id_tabla']) ? '' : $_GET['id_tabla'];
 
-$oPersona = Persona::findPersonaEnGlobal($id_nom);
-if ($oPersona === null) {
-    $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
-    exit($msg_err);
-}
-$nom = $oPersona->getNombreApellidos();
+$payload = PostRequest::getDataFromUrl('/src/notas/tessera_imprimir_data', [
+    'id_nom' => $id_nom,
+]);
+$payload = is_array($payload) ? $payload : [];
+$nom = (string)($payload['nom'] ?? '');
+$cAsignaturas = (array)($payload['c_asignaturas'] ?? []);
+$aAprobadas = (array)($payload['a_aprobadas'] ?? []);
 /* Ahora no hace falta que sea en latín
 $nom_vernacula = $oPersona->getNom();
 $apellidos = $oPersona->getApellidos();
@@ -42,8 +42,8 @@ $nom=$trato.$nom_vernacula.$apellidos;
 
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 
-// conversion 
-$replace = src\configuracion\domain\value_objects\ConfigSnapshot::$replace;
+// conversion
+$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 
 function titulo($id_asignatura){
 $cabecera = '<tr><td></td><td  colspan="7" class="space"></td></tr>
@@ -190,7 +190,7 @@ case 2108:
             'id_asignatura' => '',
             'nombre_asignatura' => '',
             'acta' => '',
-            'fecha' => '',
+            'fecha_local' => '',
             'nota' => '',
         ];
         // -----------------------------  cabecera ---------------------------------
@@ -213,12 +213,6 @@ case 2108:
                     <td class="subtitulo" colspan="6">TESSERA STUDIORUM DOMINI: <?= $nom ?></td>
                 </tr>
                 <?php
-                $oTesera = new Tesera();
-
-                $plan = $oTesera->getPlan($id_nom);
-                $cAsignaturas = $oTesera->getAsignaturasPosibles($plan);
-                $aAprobadas = $oTesera->getAsignaturasAprobadas($id_nom, $plan);
-
                 $num_asig = count($cAsignaturas);
                 $a = 0;
                 $j = 0;
@@ -229,7 +223,7 @@ case 2108:
                     if (key($aAprobadas) === null) { // ha llegado al final
                         $row = $rowEmpty;
                     }
-                    while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
+                    while (($row['id_nivel_asig'] < $oAsignatura['id_nivel']) && ($j < $num_asig)) {
                         if (key($aAprobadas) === null) { // ha llegado al final
                             $row = $rowEmpty;
                             break;
@@ -242,9 +236,9 @@ case 2108:
                         }
                         $j++;
                     }
-                    while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
-                        titulo($oAsignatura->getId_nivel());
-                        $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                    while (($oAsignatura['id_nivel'] < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
+                        titulo($oAsignatura['id_nivel']);
+                        $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                         ?>
                         <tr>
                             <td></td>
@@ -260,19 +254,19 @@ case 2108:
                         $oAsignatura = $cAsignaturas[$a++];
                     }
 
-                    if ($oAsignatura->getId_nivel() === $row["id_nivel_asig"]) {
-                        titulo($oAsignatura->getId_nivel());
+                    if ($oAsignatura['id_nivel'] == $row["id_nivel_asig"]) {
+                        titulo($oAsignatura['id_nivel']);
                         // para las opcionales
                         if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
                             $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
-                            $algo = $oAsignatura->getNombre_asignatura() . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
+                            $algo = $oAsignatura['nombre_asignatura'] . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
                             ?>
                             <tr>
                                 <td></td>
                                 <td class="opcional"><?= $algo ?>&nbsp;</td>
                                 <td class="dato opcional"><?= $row["nota"] ?>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="dato opcional"><?= $row["fecha"]->getFromLocal() ?>&nbsp;</td>
+                                <td class="dato opcional"><?= $row["fecha_local"] ?>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td class="dato opcional"><?= $row["acta"] ?>&nbsp;</td>
                                 <td></td>
@@ -282,14 +276,14 @@ case 2108:
                             </tr>
                             <?php
                         } else {
-                            $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                            $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                             ?>
                             <tr>
                                 <td></td>
                                 <td><?= $nombre_asignatura ?>&nbsp;</td>
                                 <td class="dato"><?= $row["nota"] ?>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="dato"><?= $row["fecha"]->getFromLocal() ?>&nbsp;</td>
+                                <td class="dato"><?= $row["fecha_local"] ?>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td class="dato"><?= $row["acta"] ?>&nbsp;</td>
                                 <td></td>
@@ -299,8 +293,8 @@ case 2108:
                         $num_asig++;
                     } else {
                         if (empty($row["id_nivel"]) || ($j === $num_asig)) {
-                            titulo($oAsignatura->getId_asignatura());
-                            $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+                            titulo($oAsignatura['id_asignatura']);
+                            $nombre_asignatura = strtr($oAsignatura['nombre_asignatura'], $replace);
                             ?>
                             <tr>
                                 <td></td>

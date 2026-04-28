@@ -6,6 +6,7 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\TipoActa;
 use src\personas\domain\entity\Persona;
+use frontend\shared\config\OrbixRuntime;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use frontend\shared\web\ContestarJson;
@@ -53,7 +54,7 @@ $lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
 $region = $region_latin;
 
 // conversion
-$replace = src\configuracion\domain\value_objects\ConfigSnapshot::$replace;
+$replace = OrbixRuntime::latinHtmlEntityReplaceMap();
 
 // para los distintos idiomas. Cargar el fichero:
 $filename_textos = __DIR__ . '/' . "textos_certificados.php";

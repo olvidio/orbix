@@ -6,7 +6,6 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
-use src\notas\domain\value_objects\CursoStgr;
 use function frontend\shared\helpers\is_true;
 
 require_once 'frontend/shared/global_header_front.inc';

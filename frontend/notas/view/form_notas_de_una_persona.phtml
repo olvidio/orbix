@@ -1,7 +1,15 @@
 <?php
-
-use src\notas\domain\value_objects\NotaEpoca;
-use src\notas\domain\value_objects\TipoActa;
+/**
+ * Constantes de `TipoActa` / `NotaEpoca` llegan en `$vo` (NotaPersonaFormData::formNotasVoPack),
+ * igual que para el PHP del controlador: la vista frontend no debe `use src` sobre VOs del dominio.
+ */
+$taVo = (array)($vo['TipoActa'] ?? []);
+$neVo = (array)($vo['NotaEpoca'] ?? []);
+$formato_acta = (int)($taVo['FORMATO_ACTA'] ?? 0);
+$formato_certificado = (int)($taVo['FORMATO_CERTIFICADO'] ?? 0);
+$epoca_otro = (int)($neVo['EPOCA_OTRO'] ?? 0);
+$epoca_ca = (int)($neVo['EPOCA_CA'] ?? 0);
+$epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
 
 ?>
 <script>
@@ -36,7 +44,7 @@ use src\notas\domain\value_objects\TipoActa;
     fnjs_buscar_acta = function () {
         var tipo_acta = $('input[name=tipo_acta]:checked').val();
         var mod = $('#mod').val();
-        if (mod == 'nuevo' && tipo_acta == <?= TipoActa::FORMATO_ACTA ?>) {
+        if (mod == 'nuevo' && tipo_acta == <?= $formato_acta ?>) {
             var acta = $('#acta').val();
 
             $.ajax({
@@ -280,10 +288,10 @@ use src\notas\domain\value_objects\TipoActa;
             <tr>
                 <td>
                     <input type="radio" id="tipo_acta_a" name="tipo_acta"
-                           value="<?= TipoActa::FORMATO_ACTA ?>" <?= $chk_acta ?> >
+                           value="<?= (int)$formato_acta ?>" <?= $chk_acta ?> >
                     <?= _("acta") ?>
                     <input type="radio" id="tipo_acta_c" name="tipo_acta"
-                           value="<?= TipoActa::FORMATO_CERTIFICADO ?>" <?= $chk_certificado ?> >
+                           value="<?= (int)$formato_certificado ?>" <?= $chk_certificado ?> >
                     <?= _("certificado") ?>
                 </td>
                 <td colspan=1><input type="text" id="acta" name="acta" value="<?= $acta ?>" size="20"
@@ -346,13 +354,13 @@ use src\notas\domain\value_objects\TipoActa;
             <tr>
                 <td><?= _("época") ?></td>
                 <td colspan="2"><input type="radio" id="epoca3" name="epoca"
-                                       value="<?= NotaEpoca::EPOCA_OTRO ?>" <?= $chk_epoca_otro ?> >
+                                       value="<?= (int)$epoca_otro ?>" <?= $chk_epoca_otro ?> >
                     <?= _("sin especificar") ?>
                     <input type="radio" id="epoca1" name="epoca"
-                           value="<?= NotaEpoca::EPOCA_CA ?>" <?= $chk_epoca_ca ?> >
+                           value="<?= (int)$epoca_ca ?>" <?= $chk_epoca_ca ?> >
                     <?= _("ca") ?>
                     <input type="radio" id="epoca2" name="epoca"
-                           value="<?= NotaEpoca::EPOCA_INVIERNO ?>" <?= $chk_epoca_inv ?> >
+                           value="<?= (int)$epoca_invierno ?>" <?= $chk_epoca_inv ?> >
                     <?= _("semestre invierno") ?>
                 </td>
             </tr>

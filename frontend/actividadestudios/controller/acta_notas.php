@@ -10,25 +10,25 @@
  * `src/actividadestudios/`.
  */
 
-use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\web\Desplegable;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
+use frontend\shared\web\Desplegable;
 use frontend\shared\web\Posicion;
 
 require_once("frontend/shared/global_header_front.inc");
 require_once 'apps/core/global_object.inc';
 
-$Qrefresh = (int) filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
 $notas = 1;
 
-$a_sel = (array) filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $Qid_sel = '';
-$Qscroll_id = (string) filter_input(INPUT_POST, 'scroll_id');
+$Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack !== '') {
@@ -46,8 +46,8 @@ if (!empty($a_sel)) {
     $id_activ = (int)($parts[0] ?? 0);
     $id_asignatura = (int)($parts[1] ?? 0);
 } else {
-    $id_asignatura = (int) filter_input(INPUT_POST, 'id_asignatura');
-    $id_activ = (int) filter_input(INPUT_POST, 'id_activ');
+    $id_asignatura = (int)filter_input(INPUT_POST, 'id_asignatura');
+    $id_activ = (int)filter_input(INPUT_POST, 'id_activ');
 }
 
 $d = PostRequest::getDataFromUrl('/src/actividadestudios/acta_notas_data', [
@@ -62,6 +62,7 @@ $matriculas_rows = $d['matriculas_rows'] ?? [];
 $notas = $d['notas'] ?? 'nuevo';
 $acta_principal = $d['acta_principal'] ?? '';
 $acta_notas_a_actas = $d['acta_notas_a_actas'] ?? [];
+$acta_txt_cursada = (string)($d['acta_txt_cursada'] ?? '');
 
 $aOpciones = $d['despl_actas_opciones'] ?? [];
 $oDesplActas = new Desplegable();
@@ -76,12 +77,12 @@ $oHashNotas = new HashFront();
 $oHashNotas->setCamposForm('id_nom!nota_num!nota_max!form_preceptor!acta_nota');
 $oHashNotas->setCamposNo('que');
 $oHashNotas->setArraycamposHidden([
-    'id_pau' => (int) filter_input(INPUT_POST, 'id_pau'),
+    'id_pau' => (int)filter_input(INPUT_POST, 'id_pau'),
     'id_activ' => $id_activ,
-    'opcional' => (string) filter_input(INPUT_POST, 'opcional'),
-    'primary_key_s' => (string) filter_input(INPUT_POST, 'primary_key_s'),
+    'opcional' => (string)filter_input(INPUT_POST, 'opcional'),
+    'primary_key_s' => (string)filter_input(INPUT_POST, 'primary_key_s'),
     'id_asignatura' => $id_asignatura,
-    'id_nivel' => (int) filter_input(INPUT_POST, 'id_nivel'),
+    'id_nivel' => (int)filter_input(INPUT_POST, 'id_nivel'),
     'matriculados' => $matriculados,
 ]);
 
@@ -106,7 +107,7 @@ $a_campos = [
     'oPosicion' => $oPosicion,
     'oHashNotas' => $oHashNotas,
     'permiso' => $permiso,
-    'Qque' => (string) filter_input(INPUT_POST, 'que'),
+    'Qque' => (string)filter_input(INPUT_POST, 'que'),
     'matriculas_rows' => $matriculas_rows,
     'oDesplActas' => $oDesplActas,
     'acta_principal' => $acta_principal,
@@ -114,6 +115,7 @@ $a_campos = [
     'nota_max_default' => $nota_max_default,
     'url_matricula_guardar' => $url_matricula_guardar,
     'url_notas_definitivas' => $url_notas_definitivas,
+    'acta_txt_cursada' => $acta_txt_cursada,
 ];
 
 $oView = new ViewNewPhtml('frontend\\actividadestudios\\controller');
