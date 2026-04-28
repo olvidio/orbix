@@ -6,14 +6,14 @@ use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\planning\application\ActividadesPorZonasService;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
- * Planning (calendario) por zonas sacd. El servicio
- * `ActividadesPorZonasService` devuelve los datos por zona; el frontend
- * solo arma el renderer y pasa los arrays a la vista.
+ * Planning (calendario) por zonas sacd. Datos vía `PostRequest` → `/src/planning/planning_zones_select_data`
+ * (`PlanningZonesSelectData` / `ActividadesPorZonasService` en backend); solo se reconstruyen fechas para `PlanningRenderer`.
  *
  * Migrado desde `apps/planning/controller/planning_zones_select.php`
  * (slice 3 de la migracion del modulo planning). La version legacy
@@ -42,15 +42,12 @@ $oPosicion->setParametros([
     'propuesta' => $Qpropuesta,
 ], 1);
 
-$id_nom_jefe = null;
-$data = ActividadesPorZonasService::execute(
-    $Qid_zona,
-    $Qtrimestre,
-    $Qyear,
-    $Qactividad,
-    $Qpropuesta,
-    $id_nom_jefe
-);
+$data = PostRequest::getDataFromUrl('/src/planning/planning_zones_select_data', $_POST);
+$data = is_array($data) ? $data : [];
+$isoIni = (string)($data['planning_ini_iso'] ?? '');
+$isoFin = (string)($data['planning_fin_iso'] ?? '');
+$oIniPlanning = DateTimeLocal::createFromFormat('Y-m-d', $isoIni) ?: new DateTimeLocal($isoIni);
+$oFinPlanning = DateTimeLocal::createFromFormat('Y-m-d', $isoFin) ?: new DateTimeLocal($isoFin);
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
@@ -71,17 +68,17 @@ $oPlanning->setColorColumnaUno($colorColumnaUno);
 $oPlanning->setColorColumnaDos($colorColumnaDos);
 $oPlanning->setTable_border($table_border);
 $oPlanning->setDd(3);
-$oPlanning->setInicio($data['oIniPlanning']);
-$oPlanning->setFin($data['oFinPlanning']);
+$oPlanning->setInicio($oIniPlanning);
+$oPlanning->setFin($oFinPlanning);
 
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oPlanning' => $oPlanning,
     'goLeyenda' => $goLeyenda,
-    'titulo' => $data['titulo'],
-    'zonas' => $data['zonas'],
-    'actividades_por_zona' => $data['actividades_por_zona'],
-    'cabeceras_por_zona' => $data['cabeceras_por_zona'],
+    'titulo' => $data['titulo'] ?? '',
+    'zonas' => (int)($data['zonas'] ?? 0),
+    'actividades_por_zona' => (array)($data['actividades_por_zona'] ?? []),
+    'cabeceras_por_zona' => (array)($data['cabeceras_por_zona'] ?? []),
 ];
 
 $oView = new ViewNewPhtml('frontend\planning\controller');

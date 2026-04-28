@@ -16,7 +16,13 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/planning/planning_zones_que_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/planning_zones_que_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/planning/planning_zones_select_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/planning_zones_select_data.php';
+    });
     $r->addRoute(['GET', 'POST'], '/src/planning/planning_casa_que_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/planning_casa_que_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/planning/planning_casa_ver_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/planning_casa_ver_data.php';
     });
 };

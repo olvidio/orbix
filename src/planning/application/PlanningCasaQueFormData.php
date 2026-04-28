@@ -15,7 +15,7 @@ use src\usuarios\domain\value_objects\PauType;
 final class PlanningCasaQueFormData
 {
     /**
-     * @return array{filtro: array<string, mixed>, modo_casas: ?string}
+     * @return array{filtro: array<string, mixed>, modo_casas: string}
      */
     public static function execute(): array
     {
@@ -49,6 +49,6 @@ final class PlanningCasaQueFormData
             return ['filtro' => $filtro, 'modo_casas' => 'sf'];
         }
 
-        return ['filtro' => $filtro, 'modo_casas' => null];
+        return ['filtro' => $filtro, 'modo_casas' => 'all'];
     }
 }

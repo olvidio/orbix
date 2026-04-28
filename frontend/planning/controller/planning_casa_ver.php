@@ -6,8 +6,7 @@ use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\planning\application\ActividadesPorCasasService;
-use src\planning\application\CasaPeriodosForPlanning;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use function frontend\shared\helpers\is_true;
@@ -19,26 +18,19 @@ use function frontend\shared\helpers\is_true;
  * Migrado desde `apps/planning/controller/planning_casa_ver.php`
  * (slice 2 de la migracion del modulo planning).
  *
- * El controlador recalcula `$a_actividades` a partir de los filtros
- * en `$_POST` (antes venian en base64 desde `planning_casa_select`).
+ * Actividades y periodos por casa vía `PostRequest` → `/src/planning/planning_casa_ver_data`
+ * (`PlanningCasaVerData`: `ActividadesPorCasasService` + `CasaPeriodosForPlanning`).
+ * Las fechas del periodo se envían como `f_ini_iso` / `f_fin_iso` junto al POST del formulario.
  */
 require_once("frontend/shared/global_header_front.inc");
 
 
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
-$Qcdc_sel = (int)filter_input(INPUT_POST, 'cdc_sel');
 $Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
 $Qyear = (int)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-$Qsin_activ = (int)filter_input(INPUT_POST, 'sin_activ');
-$QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
-
-$aIdCdc = null;
-if ($Qcdc_sel === 9 && $QsSeleccionados !== '') {
-    $aIdCdc = array_map('trim', explode(',', $QsSeleccionados));
-}
 
 $oPeriodo = Periodo::conCalendarioDesdeBackend();
 $oPeriodo->setDefaultAny('next');
@@ -47,8 +39,6 @@ $oPeriodo->setEmpiezaMin($Qempiezamin);
 $oPeriodo->setEmpiezaMax($Qempiezamax);
 $oPeriodo->setPeriodo($Qperiodo);
 
-$oInicio_iso = $oPeriodo->getF_ini();
-$oFin_iso = $oPeriodo->getF_fin();
 $oIniPlanning = $oPeriodo->getF_ini();
 $oFinPlanning = $oPeriodo->getF_fin();
 
@@ -69,15 +59,14 @@ if ($interval < 2) {
 $cabecera_title = ucfirst(_("casas"));
 $cabecera = ucfirst(_("calendario de casas"));
 
-[, $a_actividades] = ActividadesPorCasasService::actividadesPorCasas(
-    $Qcdc_sel,
-    $oIniPlanning,
-    $oFinPlanning,
-    $Qsin_activ,
-    $oFin_iso,
-    $oInicio_iso,
-    $aIdCdc
-);
+$payloadVer = $_POST;
+$payloadVer['f_ini_iso'] = (string)$oPeriodo->getF_ini_iso();
+$payloadVer['f_fin_iso'] = (string)$oPeriodo->getF_fin_iso();
+
+$d = PostRequest::getDataFromUrl('/src/planning/planning_casa_ver_data', $payloadVer);
+$d = is_array($d) ? $d : [];
+$a_actividades = $d['a_actividades'] ?? [];
+$casa_periodos_por_ubi = $d['casa_periodos_por_ubi'] ?? [];
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
@@ -105,7 +94,7 @@ $oPlanning->setActividades($a_actividades);
 $oPlanning->setMod($mod);
 $oPlanning->setNueva($nueva);
 $oPlanning->setDoble($doble);
-$oPlanning->setCasaPeriodosPorUbi(CasaPeriodosForPlanning::collect($a_actividades, $oIniPlanning, $oFinPlanning));
+$oPlanning->setCasaPeriodosPorUbi(is_array($casa_periodos_por_ubi) ? $casa_periodos_por_ubi : []);
 
 $a_campos = [
     'oPlanning' => $oPlanning,

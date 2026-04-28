@@ -16,7 +16,6 @@ use frontend\shared\web\Posicion;
  * (slice 2 de la migracion del modulo planning).
  */
 require_once('frontend/shared/global_header_front.inc');
-require_once('apps/core/global_object.inc');
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();

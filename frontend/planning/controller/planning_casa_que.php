@@ -9,17 +9,19 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\CasasQue;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 /**
  * Formulario de filtros para el planning por casas (se selecciona el
  * grupo de casas y el periodo).
  *
+ * Filtro/modo de `CasasQue` vía `PostRequest` → `/src/planning/planning_casa_que_data`
+ * (`PlanningCasaQueFormData`), sin `Role`/`PauType` en este controlador.
+ *
  * Migrado desde `apps/planning/controller/planning_casa_que.php`
  * (slice 2 de la migracion del modulo planning).
  */
 require_once('frontend/shared/global_header_front.inc');
-require_once('apps/core/global_object.inc');
 
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
@@ -34,12 +36,13 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto((int)$_SESSION['oConfig']->getMesFinStgr());
-
 $queCasasPayload = PostRequest::getDataFromUrl('/src/planning/planning_casa_que_data', []);
 $queCasasPayload = is_array($queCasasPayload) ? $queCasasPayload : [];
 $filtroCasasQue = (array)($queCasasPayload['filtro'] ?? ['active' => true]);
-$modoCasasQue = array_key_exists('modo_casas', $queCasasPayload) ? $queCasasPayload['modo_casas'] : null;
+$modoCasasQue = (string)($queCasasPayload['modo_casas'] ?? 'all');
+if ($modoCasasQue === '') {
+    $modoCasasQue = 'all';
+}
 
 $Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
 $Qsin_activ = (int)filter_input(INPUT_POST, 'sin_activ');
@@ -66,9 +69,7 @@ $oForm = new CasasQue();
 $oForm->setTitulo(strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
 
 $oForm->setFiltroCasas($filtroCasasQue);
-if ($modoCasasQue !== null && $modoCasasQue !== '') {
-    $oForm->setCasas((string)$modoCasasQue);
-}
+$oForm->setCasas($modoCasasQue);
 $oForm->setCdcSel($Qcdc_sel);
 $oForm->setSeleccionados($QsSeleccionados);
 

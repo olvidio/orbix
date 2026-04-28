@@ -7,8 +7,8 @@ use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
-use function src\shared\domain\helpers\urlsafe_b64decode;
-use function src\shared\domain\helpers\urlsafe_b64encode;
+use function frontend\shared\helpers\urlsafe_b64decode;
+use function frontend\shared\helpers\urlsafe_b64encode;
 
 /**
  * Lista de personas que cumplen los filtros del formulario anterior
