@@ -97,10 +97,8 @@ include_once(OrbixRuntime::dirEstilos() . '/actas.css.php');
             <tribunal>TRIBUNAL:</tribunal>
             <?php
             $i = 0;
-            foreach ($cTribunal as $oTribunal) {
+            foreach (($examinadores ?? []) as $examinador) {
                 $i++;
-
-                $examinador = $oTribunal->getExaminador();
                 echo "<examinador>$examinador</examinador>";
             }
             echo "<fecha>$lugar_fecha</fecha>";

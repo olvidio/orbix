@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
@@ -45,7 +45,7 @@ $oTabla->setDatos($a_valores);
 //9
 $url_guardar = AppUrlConfig::getApiBaseUrl() . '/src/inventario/doc_asignar_dlb_guardar?';
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $sCamposForm .= "!f_recibido!f_asignado";
 $oHash->setCamposForm($sCamposForm);
 $oHash->setCamposNo('numerado');

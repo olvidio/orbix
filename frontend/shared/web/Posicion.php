@@ -3,7 +3,7 @@
 namespace frontend\shared\web;
 
 use src\shared\config\ConfigGlobal;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 class Posicion
 {
@@ -186,7 +186,7 @@ class Posicion
         if (!empty($aParam['bloque'])) {
             $this->sbloque = '#' . $aParam['bloque'];
         }
-        $sparametros = Hash::add_hash($aParam, $url);
+        $sparametros = HashFront::add_hash($aParam, $url);
         $bloque = $this->sbloque;
 
         $html = '<div id="' . $id_div . '" style="display: none;">';
@@ -211,7 +211,7 @@ class Posicion
 
         $url = $this->surl;
         $aParam = $this->aParametros;
-        $sparametros = Hash::add_hash($aParam, $url);
+        $sparametros = HashFront::add_hash($aParam, $url);
         $bloque = $this->sbloque;
 
         $html = '<form id="go">';
@@ -241,7 +241,7 @@ class Posicion
         if (!empty($aParam['bloque'])) {
             $this->sbloque = '#' . $aParam['bloque'];
         }
-        $sparametros = Hash::add_hash($aParam, $url);
+        $sparametros = HashFront::add_hash($aParam, $url);
         $bloque = $this->sbloque;
 
         $html = '<div id="' . $id_div . '" style="display: none;">';
@@ -271,7 +271,7 @@ class Posicion
 
         $url = $this->surl;
         $aParam = $this->aParametros;
-        $sparametros = Hash::add_hash($aParam, $url);
+        $sparametros = HashFront::add_hash($aParam, $url);
         $bloque = $this->sbloque;
 
         $html = '<div id="' . $id_div . '" style="display: none;">';

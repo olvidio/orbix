@@ -19,7 +19,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -48,17 +48,17 @@ $oDesplCasas->setOpcion_sel($Qid_ubi);
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
-$oHashBody = new Hash();
+$oHashBody = new HashFront();
 $oHashBody->setUrl($web . '/frontend/casas/controller/calendario_ubi_resumen_body.php');
 $oHashBody->setCamposForm('id_ubi!G!inc_t!seccion');
 $url_body = $web . '/frontend/casas/controller/calendario_ubi_resumen_body.php' . $oHashBody->linkSinVal();
 
-$oHashTarifas = new Hash();
+$oHashTarifas = new HashFront();
 $oHashTarifas->setUrl($web . '/src/actividadtarifas/tarifa_ubi_update_inc');
 $oHashTarifas->setCamposForm('id_ubi!year!inc_cantidad');
 $url_tarifas = $web . '/src/actividadtarifas/tarifa_ubi_update_inc' . $oHashTarifas->linkSinVal();
 
-$oHashForm = new Hash();
+$oHashForm = new HashFront();
 $oHashForm->setCamposForm('id_ubi!G!inc_t!seccion');
 
 $a_campos = [

@@ -2,7 +2,7 @@
 
 use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Ficha de ausencias de un sacd.
@@ -25,7 +25,7 @@ $hashes = SacdFichaAjaxHashes::hashesComunes();
 $oDesplFiltroSacd = SacdFichaAjaxHashes::desplegableFiltroSacd($Qfiltro_sacd);
 
 $url_get = 'frontend/encargossacd/controller/sacd_ausencias_get.php';
-$oHashGet = new Hash();
+$oHashGet = new HashFront();
 $oHashGet->setUrl($url_get);
 $oHashGet->setCamposForm('filtro_sacd!id_nom!historial');
 $h_get = $oHashGet->linkSinValParams();

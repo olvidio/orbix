@@ -13,7 +13,7 @@ use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -133,7 +133,7 @@ final class FormCargosDeActividadData
 
         $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $camposForm = 'id_cargo!observ';
         $camposNo = 'puede_agd';
         $a_camposHidden = [

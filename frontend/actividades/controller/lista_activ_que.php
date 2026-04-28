@@ -11,7 +11,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -26,7 +26,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_pe
 
 $url_lista = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/lista_activ.php';
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('seccion!status!empiezamin!empiezamax!asist!c_activ!tit_list_grupo');
 $oHash->setArraycamposHidden([
     'que' => $Qque,

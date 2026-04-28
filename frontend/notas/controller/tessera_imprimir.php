@@ -19,7 +19,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use src\notas\application\Tesera;
 use src\personas\domain\entity\Persona;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -178,11 +178,11 @@ $rowEmpty = [
     'nota' => '',
 ];
 // -----------------------------  cabecera ---------------------------------
-$caraA = Hash::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
-$caraB = Hash::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
+$caraA = HashFront::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
+$caraB = HashFront::link('frontend/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 
 $url_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/tessera_2_mpdf.php';
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url_pdf);
 $aCamposHidden = ['id_nom' => $id_nom,
     'id_tabla' => $id_tabla,

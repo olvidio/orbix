@@ -8,14 +8,14 @@
  * La pantalla se limita a renderizar la barra de filtros (periodo) y los
  * contenedores vacios. El listado + todas las mutaciones se cargan via AJAX
  * contra los endpoints `/src/actividadescentro/*` definidos en
- * `src/actividadescentro/config/routes.php`.
+ * `src/actividadescentro/config/routes.php`. Sin `use src\...`.
  */
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -48,7 +48,7 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setBoton("<input type=\"button\" name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('empiezamax!empiezamin!periodo!year!tipo');
 $oHash->setCamposNo('iactividad_val!iasistentes_val');
 $oHash->setArraycamposHidden([

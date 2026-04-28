@@ -3,10 +3,9 @@
 namespace src\shared;
 
 // INICIO Cabecera global de URL de controlador *********************************
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 
@@ -90,7 +89,7 @@ if ($QaSerieBuscar === null && $Qk_buscar === null) {
 
     $camposFormBuscar = 'k_buscar';
     $camposFormBuscar .= empty($a_campos_buscar['camposForm']) ? '' : $a_campos_buscar['camposForm'];
-    $oHashBuscar = new Hash();
+    $oHashBuscar = new HashFront();
     $oHashBuscar->setCamposForm($camposFormBuscar);
     $a_camposHiddenBuscar = array(
         'clase_info' => $Qclase_info_encoded,
@@ -134,7 +133,7 @@ $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];
 $a_valores = $data['a_valores'];
 
-$oHashSelect = new Hash();
+$oHashSelect = new HashFront();
 $oHashSelect->setCamposForm('sel');
 $oHashSelect->setCamposNo('mod!sel!scroll_id!refresh');
 $a_camposHiddenSelect = array(

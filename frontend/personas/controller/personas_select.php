@@ -7,7 +7,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 
@@ -226,7 +226,7 @@ foreach ($a_filas as $fila) {
     $a_val['sel'] = "$id_nom#$id_tabla_persona";
     $a_val[1] = $id_tabla_persona;
     if ($sPrefs === 'html') {
-        $pagina_persona = Hash::link(
+        $pagina_persona = HashFront::link(
             AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?'
             . http_build_query(['id_nom' => $id_nom, 'id_tabla' => $id_tabla_persona, 'obj_pau' => $obj_pau])
         );
@@ -257,12 +257,12 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$pagina = Hash::link(
+$pagina = HashFront::link(
     AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_editar.php?'
     . http_build_query(['obj_pau' => $obj_pau, 'id_tabla' => $id_tabla, 'nuevo' => 1, 'apellido1' => $Qapellido1])
 );
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('sel!que!id_dossier');
 $oHash->setcamposNo('que!id_dossier!scroll_id');
 $oHash->setArraycamposHidden([

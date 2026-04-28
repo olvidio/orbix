@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Pantalla para editar los textos de comunicacion de los encargos a los SACD.
@@ -53,12 +53,12 @@ $oDesplIdiomas = new Desplegable('idioma', $a_locales, 'es', true);
 $oDesplIdiomas->setAction('fnjs_get_texto()');
 
 $url_update = 'frontend/encargossacd/controller/listas_com_txt_update.php';
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url_update);
 $oHash->setCamposForm('comunicacion!clave!idioma');
 
 $url_get = 'frontend/encargossacd/controller/listas_com_txt_get.php';
-$oHashGet = new Hash();
+$oHashGet = new HashFront();
 $oHashGet->setUrl($url_get);
 $oHashGet->setCamposForm('clave!idioma');
 $h_get = $oHashGet->linkSinValParams();

@@ -7,7 +7,8 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\planning\application\ActividadesPorCasasService;
-use web\Hash;
+use src\planning\application\CasaPeriodosForPlanning;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use function frontend\shared\helpers\is_true;
 
@@ -78,7 +79,7 @@ $cabecera = ucfirst(_("calendario de casas"));
     $aIdCdc
 );
 
-$goLeyenda = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+$goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 $css = '';
 switch ($Qmodelo) {
@@ -104,6 +105,7 @@ $oPlanning->setActividades($a_actividades);
 $oPlanning->setMod($mod);
 $oPlanning->setNueva($nueva);
 $oPlanning->setDoble($doble);
+$oPlanning->setCasaPeriodosPorUbi(CasaPeriodosForPlanning::collect($a_actividades, $oIniPlanning, $oFinPlanning));
 
 $a_campos = [
     'oPlanning' => $oPlanning,

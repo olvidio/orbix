@@ -2,26 +2,29 @@
 
 namespace src\dossiers\application;
 
-use frontend\shared\config\AppUrlConfig;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use function src\shared\domain\helpers\is_true;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Formulario "permisos de acceso" para un tipo de dossier.
+ * `$signedGoTo` debe ser la URL firmada hacia `perm_dossiers.php` (la firma en `perm_dossier_ver_data.php`).
  *
  * @return array<string, mixed>
  */
 class PermDossierVerFormData
 {
-    public static function build(int $Qid_tipo_dossier, string $Qtipo): array
+    public static function listaPermLinkSpec(string $tipo): array
     {
-        $a_dataUrl = ['tipo' => $Qtipo];
-        $go_to = Hash::link(
-            AppUrlConfig::getPublicAppBaseUrl() . '/frontend/dossiers/controller/perm_dossiers.php?' . http_build_query(
-                $a_dataUrl
-            )
-        );
+        return [
+            'path' => 'frontend/dossiers/controller/perm_dossiers.php',
+            'query' => ['tipo' => $tipo],
+        ];
+    }
+
+    public static function build(int $Qid_tipo_dossier, string $Qtipo, string $signedGoTo): array
+    {
+        $go_to = $signedGoTo;
         $url_guardar = '/src/dossiers/tipo_dossier_guardar';
         $url_eliminar = '/src/dossiers/tipo_dossier_eliminar';
 
@@ -47,7 +50,7 @@ class PermDossierVerFormData
 
         $chk = (is_true($depende_modificar)) ? 'checked' : '';
         $campos_chk = 'depende_modificar!permiso_lectura!permiso_escritura';
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!app!class!codigo');
         $oHash->setCamposNo('que!' . $campos_chk);
         $a_camposHidden = [

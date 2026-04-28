@@ -6,9 +6,11 @@
  * Migrado desde frontend/actividades/controller/actividad_ver.php.
  *
  * Los bloques que dependen del dominio (entidad actividad, desplegables,
- * nombre_ubi, tarifa por defecto) se obtienen via PostRequest al endpoint
- * backend /src/actividades/actividad_ver_datos. El controlador frontend
- * no accede directamente a `src/`.
+ * nombre_ubi, tarifa por defecto, textos del tipo, etiquetas de status,
+ * nivel STGR por defecto, HTML del bloque tipo) se obtienen via PostRequest
+ * a `/src/actividades/actividad_ver_datos`, `actividad_status_labels_datos`,
+ * `actividad_nivel_stgr_default_datos` y `actividad_que_datos`. El controlador
+ * frontend no hace `use src\...`.
  *
  * @package    delegacion
  * @subpackage    actividades
@@ -19,12 +21,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use src\actividades\application\ActividadTipo;
-use src\actividades\application\ActividadVerDatos;
-use src\actividades\domain\value_objects\NivelStgrId;
-use src\actividades\domain\value_objects\StatusId;
-use web\Hash;
-use src\actividades\domain\entity\TiposActividades;
+use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -54,7 +51,7 @@ $aQuery = array(
 if (is_array($aQuery)) {
     array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 }
-$godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
+$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $permiso_des = FALSE;
 if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
@@ -81,7 +78,7 @@ $publicado = '';
 $lugar_esp = '';
 $tarifa = '';
 $id_repeticion = 0;
-$nivel_stgr = NivelStgrId::N;
+$nivel_stgr = 9; // NivelStgrId::N
 $id_ubi = 0;
 $dl_org = '';
 $status = 0;
@@ -96,7 +93,10 @@ if (!empty($Qid_activ)) { // caso de modificar
         $Qmod = 'editar';
     }
 
-    $a_status = StatusId::getArrayStatus(true);
+    $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
+        'with_all' => 't',
+    ]);
+    $a_status = $labelsRow['id_to_label'] ?? [];
 
     // Primera pasada: leemos solo la entidad para resolver permisos e isfsv.
     $dataEntidad = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
@@ -118,7 +118,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $precio = $entidad['precio'];
     $status = (int)$entidad['status'];
     $observ = (string)$entidad['observ'];
-    $nivel_stgr = $entidad['nivel_stgr'] ?? NivelStgrId::N;
+    $nivel_stgr = $entidad['nivel_stgr'] ?? 9;
     $lugar_esp = (string)$entidad['lugar_esp'];
     $tarifa = $entidad['tarifa'];
     $id_repeticion = (int)$entidad['id_repeticion'];
@@ -133,12 +133,11 @@ if (!empty($Qid_activ)) { // caso de modificar
         die();
     }
 
-    $oTipoActiv = new TiposActividades($id_tipo_activ);
-    $ssfsv = $oTipoActiv->getSfsvText();
-    $sasistentes = $oTipoActiv->getAsistentesText();
-    $sactividad = $oTipoActiv->getActividadText();
-    $snom_tipo = $oTipoActiv->getNom_tipoText();
-    $isfsv = $oTipoActiv->getSfsvId();
+    $ssfsv = (string)($dataEntidad['ssfsv'] ?? '');
+    $sasistentes = (string)($dataEntidad['sasistentes'] ?? '');
+    $sactividad = (string)($dataEntidad['sactividad'] ?? '');
+    $snom_tipo = (string)($dataEntidad['snom_tipo'] ?? '');
+    $isfsv = (int)($dataEntidad['isfsv'] ?? 0);
 
     if (AppInstalled::is('procesos')) {
         $Bdl = $oPermActiv->have_perm_activ('ver') ? 't' : 'f';
@@ -151,9 +150,12 @@ if (!empty($Qid_activ)) { // caso de modificar
     $Qmod = 'nuevo';
     $isfsv = OrbixRuntime::miSfsv();
 
-    $a_status = StatusId::getArrayStatus();
+    $labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
+        'with_all' => 'f',
+    ]);
+    $a_status = $labelsRow['id_to_label'] ?? [];
     $dl_org = OrbixRuntime::miDelef();
-    $status = StatusId::PROYECTO;
+    $status = 1; // StatusId::PROYECTO
     $id_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
     $id_tipo_activ = urldecode($id_tipo_activ); // En el caso de sr, sg, se pasa la cadena tipo 2[789]... (con [, que se encodan).
 
@@ -226,7 +228,10 @@ if (!empty($Qid_activ)) { // caso de modificar
     $oPermActiv = [];
 
     if (!empty($id_tipo_activ)) {
-        $nivel_stgr = ActividadVerDatos::nivelStgrPorDefectoParaIdTipoActividad($id_tipo_activ);
+        $dataNivelDef = PostRequest::getDataFromUrl('/src/actividades/actividad_nivel_stgr_default_datos', [
+            'id_tipo_activ' => $id_tipo_activ,
+        ]);
+        $nivel_stgr = (int)($dataNivelDef['nivel_stgr_default'] ?? 9);
     }
 
     // Pedir desplegables + tarifa inicial para el caso 'nuevo'.
@@ -274,7 +279,7 @@ if (!empty($tarifa) && !empty($calc_tarifa_inicial)) {
     $html_despl_tarifa = (string)($dataTarifa['html_despl_tarifa'] ?? $html_despl_tarifa);
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $camposForm = 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!id_tarifa!publicado!plazas!idioma';
 $camposNo = 'mod!id_tarifa';
 if ($Qmod === 'nuevo' || $Qmod === 'cambiar_tipo') {
@@ -292,21 +297,24 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinVal();
 
-$oActividadTipo = new ActividadTipo();
-$oActividadTipo->setPerm_jefe($permiso_des);
-$oActividadTipo->setSfsvAll(TRUE);
-$oActividadTipo->setQue('buscar');
-$oActividadTipo->setId_tipo_activ($id_tipo_activ);
-$oActividadTipo->setSfsv($ssfsv);
-$oActividadTipo->setAsistentes($sasistentes);
-$oActividadTipo->setActividad($sactividad);
-$oActividadTipo->setNom_tipo($snom_tipo);
-$extendida = (($Qmod !== 'cambiar_tipo') && (strlen($id_tipo_activ) > 3));
+$extendida = ($Qmod !== 'cambiar_tipo') && (strlen((string)$id_tipo_activ) > 3);
+$dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+    'perm_jefe' => $permiso_des ? 't' : 'f',
+    'id_tipo_activ' => (string)$id_tipo_activ,
+    'que' => 'buscar',
+    'sfsv' => $ssfsv,
+    'sasistentes' => $sasistentes,
+    'sactividad' => $sactividad,
+    'sactividad2' => '',
+    'snom_tipo' => $snom_tipo,
+    'extendida' => $extendida ? 't' : '',
+]);
+$actividad_tipo_html = (string)($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 
@@ -346,7 +354,7 @@ $a_campos = [
     'observ' => $observ,
     'publicado' => $publicado,
     'mod' => $Qmod,
-    'oActividadTipo' => $oActividadTipo,
+    'actividad_tipo_html' => $actividad_tipo_html,
     'extendida' => $extendida,
     'id_tipo_activ' => $id_tipo_activ,
     'web' => AppUrlConfig::getPublicAppBaseUrl(),

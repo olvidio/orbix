@@ -1,16 +1,11 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\model\ViewNewPhtml;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
-use src\notas\application\DatosActa;
-use src\notas\domain\contracts\ActaRepositoryInterface;
-use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
-use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
-use src\personas\domain\entity\Persona;
 use frontend\shared\config\OrbixRuntime;
-use web\Hash;
+use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 
 /**
  * Esta página sirve para las actas.
@@ -39,115 +34,43 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qcara = (string)filter_input(INPUT_POST, 'cara');
 $cara = empty($Qcara) ? 'A' : $Qcara;
 
-// conversion
-$replace = src\configuracion\domain\value_objects\ConfigSnapshot::$replace;
+$replace = ConfigSnapshot::$replace;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
-$nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
-$reg_stgr = "Stgr" . OrbixRuntime::miRegion();
+$nombre_prelatura = strtr('PRAELATURA SANCTAE CRUCIS ET OPERIS DEI', $replace);
+$reg_stgr = 'Stgr' . OrbixRuntime::miRegion();
 
-// acta
-$ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-$oActa = $ActaRepository->findById($acta);
-$id_asignatura = $oActa->getId_asignatura();
-$id_activ = $oActa->getId_activ();
-$oF_acta = $oActa->getF_acta();
-$libro = $oActa->getLibro();
-$pagina = $oActa->getPagina();
-$linea = $oActa->getLinea();
-$lugar = $oActa->getLugar();
-$observ = $oActa->getObserv();
-
-$oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($id_asignatura);
-if ($oAsignatura === null) {
-    throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
-}
-$nombre_corto = $oAsignatura->getNombre_corto();
-$nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
-$any = $oAsignatura->getYear();
-
-$id_tipo = $oAsignatura->getId_tipo();
-$oAsignaturaTipo = $GLOBALS['container']->get(AsignaturaTipoRepositoryInterface::class)->findById($id_tipo);
-if ($oAsignatura === null) {
-    throw new \Exception(sprintf(_("No se ha encontrado el tipo de asignatura con id: %s"), $id_tipo));
-}
-$curso = strtr($oAsignaturaTipo->getTipoLatinVo()?->value() ?? '', $replace);
-
-switch ($any) {
-    case 1:
-        $any = "I";
-        break;
-    case 2:
-        $any = "II";
-        break;
-    case 3:
-        $any = "III";
-        break;
-    case 4:
-        $any = "IV";
-        break;
-    default:
-        $any = '';
-}
-
-// -----------------------------
-
-$cPersonaNotas = DatosActa::getNotasActa($acta);
-
-// para ordenar
-$errores = '';
+$d = PostRequest::getDataFromUrl('/src/notas/acta_imprimir_presentacion_data', [
+    'acta' => $acta,
+    'mode' => 'imprimir',
+]);
+$errores = (string)($d['errores'] ?? '');
 $aPersonasNotas = [];
-foreach ($cPersonaNotas as $oPersonaNota) {
-    $id_situacion = $oPersonaNota->getId_situacion();
-    $id_nom = $oPersonaNota->getId_nom();
-    $oPersona = Persona::findPersonaEnGlobal($id_nom);
-    if ($oPersona === null) {
-        $errores .= "<br>" . sprintf(_("existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de otra dl o 'de paso' borrado."), $id_nom);
-        $errores .= " " . _("no aparece en la lista");
-        continue;
-    }
-    $nom = $oPersona->getApellidosUpperNombre();
-    $nota = $oPersonaNota->getNota_txt();
-    $aPersonasNotas[$nom] = $nota;
+foreach ($d['aPersonasNotas_list'] ?? [] as $row) {
+    $aPersonasNotas[$row['nom']] = $row['nota'];
 }
-uksort($aPersonasNotas, "src\shared\domain\helpers\strsinacentocmp"); // compara sin contar los acentos i insensitive.
+$num_alumnos = (int)($d['num_alumnos'] ?? 0);
+$lin_max_cara_A = (int)($d['lin_max_cara_A'] ?? 0);
+$lin_tribunal = (int)($d['lin_tribunal'] ?? 0);
+$alum_cara_A = (int)($d['alum_cara_A'] ?? 0);
+$alum_cara_B = (int)($d['alum_cara_B'] ?? 0);
+$curso = (string)($d['curso'] ?? '');
+$any = (string)($d['any'] ?? '');
+$nombre_asignatura = (string)($d['nombre_asignatura'] ?? '');
+$libro = (string)($d['libro'] ?? '');
+$pagina = (string)($d['pagina'] ?? '');
+$linea = (string)($d['linea'] ?? '');
+$lugar = (string)($d['lugar'] ?? '');
+$lugar_fecha = (string)($d['lugar_fecha'] ?? '');
+$examinadores = $d['examinadores'] ?? [];
 
-$num_alumnos = count($aPersonasNotas);
-
-// tribunal:
-// Si es cr, se mira en todas:
-if (OrbixRuntime::miAmbito() === 'rstgr') {
-    $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalRepositoryInterface::class);
-} else {
-    $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
-}
-$cTribunal = $repoActaTribunal->getActasTribunales(array('acta' => $acta, '_ordre' => 'orden'));
-$num_examinadores = count($cTribunal);
-
-// Definición del número de lineas de las páginas y los numeros de alumnos----------------
-$lin_A4 = 45;                                        // número máximo de lineas en un A4
-$lin_encabezado = 16;                                // número de lineas del encabezado asignatura + pie
-$lin_encabezado_tribunal = 4;                        // número de lineas del encabezado tribunal
-$lin_tribunal = $lin_encabezado_tribunal + 2 * $num_examinadores;  // número de lineas del tribunal
-
-$lin_max_cara_A = $lin_A4 - $lin_encabezado - 2;    // número máximo de lineas en la cara A
-
-if ($num_alumnos > $lin_max_cara_A) {
-    $alum_cara_A = $lin_max_cara_A;
-} else {
-    $alum_cara_A = $num_alumnos;
-}
-$alum_cara_B = $num_alumnos - $alum_cara_A;
-
-$caraA = Hash::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'A', 'acta' => $acta, 'refresh' => 1)));
-$caraB = Hash::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'B', 'acta' => $acta, 'refresh' => 1)));
+$caraA = HashFront::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'A', 'acta' => $acta, 'refresh' => 1)));
+$caraB = HashFront::link('frontend/notas/controller/acta_imprimir.php?' . http_build_query(array('cara' => 'B', 'acta' => $acta, 'refresh' => 1)));
 
 $url_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/acta_2_mpdf.php';
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url_pdf);
 $oHash->setCamposForm('acta');
 $go_pdf = $url_pdf . "?acta=$acta&" . $oHash->linkConVal();
-
-$lugar_fecha = $lugar . ",  " . $oF_acta->getFechaLatin();
 
 $a_campos = [
     'oPosicion' => $oPosicion,
@@ -169,7 +92,7 @@ $a_campos = [
     'num_alumnos' => $num_alumnos,
     'lin_max_cara_A' => $lin_max_cara_A,
     'lin_tribunal' => $lin_tribunal,
-    'cTribunal' => $cTribunal,
+    'examinadores' => $examinadores,
     'lugar' => $lugar,
     'lugar_fecha' => $lugar_fecha,
     'libro' => $libro,

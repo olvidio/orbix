@@ -5,7 +5,7 @@ use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use frontend\shared\web\ContestarJson;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 $sfsv = ConfigGlobal::mi_sfsv();
 
@@ -51,9 +51,9 @@ foreach ($cGrupos as $oGrupo) {
     $seccion = $asfsv[$sfsv];
 
     //$a_parametros = array('id_grupo' => $id_grupo, 'id_usuario' => $Qid_usuario);
-    //$pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_grupo_add.php?' . http_build_query($a_parametros));
+    //$pagina = HashFront::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_grupo_add.php?' . http_build_query($a_parametros));
 
-    $oHash = new Hash();
+    $oHash = new HashFront();
     $a_camposHidden = array(
         'id_grupo' => $id_grupo,
         'id_usuario' => $Qid_usuario,

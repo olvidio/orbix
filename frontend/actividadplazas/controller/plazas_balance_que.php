@@ -14,7 +14,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\ubis\application\services\DelegacionDropdown;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use src\actividades\domain\entity\TiposActividades;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -45,7 +45,7 @@ $mi_dele = OrbixRuntime::miDelef();
 $txt = sprintf(_("comparar %s con:"), $mi_dele);
 
 $url_balance_dl = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadplazas/controller/plazas_balance_dl.php';
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url_balance_dl);
 $oHash->setCamposForm('dl!id_tipo_activ');
 $h = $oHash->linkSinValParams();

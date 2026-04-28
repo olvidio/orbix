@@ -13,14 +13,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
-use src\actividades\domain\value_objects\NivelStgrId;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
-use src\notas\application\AsignaturasPendientes;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\notas\domain\value_objects\CursoStgr;
-use src\personas\domain\entity\Persona;
 
 require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
@@ -34,98 +28,20 @@ $oPosicion->recordar();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    $id_activ = (integer)strtok($a_sel[0], "#");
-    $nom_activ = strtok("#");
+    $parts = explode('#', $a_sel[0]);
+    $id_activ = (int)($parts[0] ?? 0);
+    $nom_activ = (string)($parts[1] ?? '');
 }
 
-//posibles valores de stgr
-$aTipos_stgr = NivelStgrId::getArrayNivelStgrOn();
-
-// ----------------------- Selección de Alumnos -----------------
-$a_alumnos_fin_c = [];
-$a_alumnos = [];
-$AsistenteRepository = $GLOBALS['container']->get(AsistenteRepositoryInterface::class);
-$PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-$Pendientes = new AsignaturasPendientes();
-foreach ($AsistenteRepository->getAsistentes(array('id_activ' => $id_activ)) as $oAsistente) {
-    $id_nom = $oAsistente->getId_nom();
-    $oPersona = Persona::findPersonaEnGlobal($id_nom);
-    if (is_string($oPersona)) {
-        // no se encuentra esta persona...
-        continue;
-    }
-    $stgr = $oPersona->getNivel_stgr();
-    // sólo los que hacen estudios:
-    if (!array_key_exists($stgr, $aTipos_stgr)) {
-        continue;
-    }
-    $ap_nom = $oPersona->getPrefApellidosNombre();
-    // miro si son de los qeu sólo les faltan 4 para terminar el cuadrienio.
-    $aNomAsignaturasFaltan = $Pendientes->asignaturasQueFaltanPersona($id_nom, CursoStgr::CUADRIENIO);
-    if (count($aNomAsignaturasFaltan) < 5) {
-        $a_alumnos_fin_c[] = ['apellidos_nombre' => $ap_nom, 'asignaturas' => $aNomAsignaturasFaltan];
-    }
-    // busco las asignaturas aprobadas
-    $aWhere = [];
-    $aOperador = [];
-    $aWhere['id_nom'] = $id_nom;
-    $aWhere['id_nivel'] = '1100,2500';
-    $aOperador['id_nivel'] = 'BETWEEN';
-    $cNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
-    $aAprobadas = [];
-    foreach ($cNotas as $oPersonaNota) {
-        $id_asignatura = $oPersonaNota->getId_asignatura();
-        $id_nivel = $oPersonaNota->getIdNivelVo()->value();
-        $oF_acta = $oPersonaNota->getF_acta();
-        $id_situacion = $oPersonaNota->getId_situacion();
-
-        $aAprobadas[$id_asignatura] = $id_situacion;
-    }
-    $datos = ['id_nom' => $id_nom, 'oPersona' => $oPersona, 'aprobadas' => $aAprobadas];
-    $a_alumnos[] = ['apellidos_nombre' => $ap_nom, 'datos' => $datos];
-
-}
-// por orden alfabético.
-sort($a_alumnos);
-
-// ----------------------- Selección Asignaturas -----------------
-
-$aWhereAsig = ['id_tipo' => 8,
-    '_ordre' => 'id_nivel',
-];
-$aOperadorAsig = ['id_tipo' => '!='];
-$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-$cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhereAsig, $aOperadorAsig);
-
-$aAsignaturas_alumnos = [];
-foreach ($cAsignaturas as $oAsignatura) {
-    $nom_asignatura = $oAsignatura->getNombre_asignatura();
-    $id_asignatura = $oAsignatura->getId_asignatura();
-    $posibles_alumnos = 0;
-    $aNombresAlumnos = [];
-    foreach ($a_alumnos as $aAlumno) {
-        $datos = $aAlumno['datos'];
-        $id_nom = $datos['id_nom'];
-        $aprobadas = $datos['aprobadas'];
-        if (!array_key_exists($id_asignatura, $aprobadas)) {
-            $posibles_alumnos++;
-            $aNombresAlumnos[] = $datos['oPersona']->getPrefApellidosNombre();
-        }
-    }
-    if ($posibles_alumnos === 0) {
-        continue;
-    }
-    $aAsignaturas_alumnos[] = ['nom_asignatura' => $nom_asignatura,
-        'id_asignatura' => $id_asignatura,
-        'posibles_alumnos' => $posibles_alumnos,
-        'aNombresAlumnos' => $aNombresAlumnos,
-    ];
-}
+$d = PostRequest::getDataFromUrl('/src/actividadestudios/posibles_asignaturas_ca_data', [
+    'id_activ' => $id_activ,
+    'nom_activ' => $nom_activ,
+]);
 
 $a_campos = ['oPosicion' => $oPosicion,
-    'nom_activ' => $nom_activ,
-    'aAsignaturas_alumnos' => $aAsignaturas_alumnos,
-    'a_alumnos_fin_c' => $a_alumnos_fin_c,
+    'nom_activ' => $d['nom_activ'] ?? '',
+    'aAsignaturas_alumnos' => $d['aAsignaturas_alumnos'] ?? [],
+    'a_alumnos_fin_c' => $d['a_alumnos_fin_c'] ?? [],
 ];
 
 $oView = new ViewNewTwig('actividadestudios/controller');

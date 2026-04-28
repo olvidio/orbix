@@ -17,7 +17,7 @@ require_once 'frontend/shared/global_header_front.inc';
 
 $oPosicion->recordar();
 
-$data = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_de_actividad_data', $_POST);
+$data = PostRequest::getDataFromUrl('/src/actividadcargos/form_cargos_de_actividad_data', PostRequest::requestPayloadForHash());
 if (!empty($data['error'])) {
     exit($data['error']);
 }

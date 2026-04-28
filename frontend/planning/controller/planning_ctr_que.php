@@ -5,7 +5,7 @@ namespace frontend\planning\controller;
 use frontend\planning\support\PeriodoPlanningHelper;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 
 /**
@@ -49,7 +49,7 @@ $Qtodos_s = (string)filter_input(INPUT_POST, 'todos_s');
 
 $locale_us = OrbixRuntime::isLocaleUs();
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setCamposForm('sacd!ctr!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash1->setcamposNo('todos_n!todos_agd!todos_s!modelo');
 $oHash1->setArraycamposHidden([

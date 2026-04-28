@@ -6,10 +6,8 @@ use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\planning\application\ActividadesDePersonaService;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\Hash;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
 
@@ -57,61 +55,27 @@ if ($interval < 2) {
 
 $Qsacd = (string)filter_input(INPUT_POST, 'sacd');
 $Qctr = (string)filter_input(INPUT_POST, 'ctr');
-$Qtodos_n = '';
-$Qtodos_agd = '';
-$Qtodos_s = '';
+$Qtodos_n = (string)filter_input(INPUT_POST, 'todos_n');
+$Qtodos_agd = (string)filter_input(INPUT_POST, 'todos_agd');
+$Qtodos_s = (string)filter_input(INPUT_POST, 'todos_s');
 
-$aWhereP = ['situacion' => 'A'];
-if (empty($Qsacd)) {
-    $aWhereP['sacd'] = 'f';
-}
-
-$msg_txt = '';
-$cabecera_title = '';
-$PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-$cPersonas = [];
-if ($Qctr !== '') {
-    $nom_ubi = str_replace("+", "\\+", $Qctr);
-    $aWhere = ['nombre_ubi' => '^' . $nom_ubi];
-    $aOperador = ['nombre_ubi' => 'sin_acentos'];
-    $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-    $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
-    if (!empty($cCentros)) {
-        foreach ($cCentros as $oCentro) {
-            $id_ubi = $oCentro->getId_ubi();
-            $nombre_ubi = $oCentro->getNombre_ubi();
-            $cabecera_title = ucfirst(sprintf(_("personas de: %s"), $nombre_ubi));
-            $aWhereP['id_ctr'] = $id_ubi;
-            $aWhereP['_ordre'] = 'apellido1';
-            $cPersonas2 = $PersonaDlRepository->getPersonas($aWhereP);
-            if (is_array($cPersonas2) && count($cPersonas2) >= 1) {
-                $cPersonas = array_merge($cPersonas, $cPersonas2);
-            } else {
-                $msg_txt .= sprintf(_("No encuentro personas para %s"), $nombre_ubi);
-                $msg_txt .= '<br>';
-            }
-        }
-    } else {
-        $msg_txt = _("No encuentro este ctr");
-    }
-} else {
-    $cabecera_title = ucfirst(_("centros"));
-    $Qtodos_n = (string)filter_input(INPUT_POST, 'todos_n');
-    $Qtodos_agd = (string)filter_input(INPUT_POST, 'todos_agd');
-    $Qtodos_s = (string)filter_input(INPUT_POST, 'todos_s');
-    $aWhereP['id_tabla'] = 'n';
-    if (!empty($Qtodos_n)) {
-        $aWhereP['id_tabla'] = 'n';
-    }
-    if (!empty($Qtodos_agd)) {
-        $aWhereP['id_tabla'] = 'a';
-    }
-    if (!empty($Qtodos_s)) {
-        $aWhereP['id_tabla'] = 's';
-    }
-    $aWhereP['_ordre'] = 'id_ctr, apellido1';
-    $cPersonas = $PersonaDlRepository->getPersonas($aWhereP);
-}
+$payload = [
+    'modelo' => $Qmodelo,
+    'tipo' => $Qtipo,
+    'year' => $Qyear,
+    'periodo' => $Qperiodo,
+    'empiezamin' => $Qempiezamin,
+    'empiezamax' => $Qempiezamax,
+    'sacd' => $Qsacd,
+    'ctr' => $Qctr,
+    'todos_n' => $Qtodos_n,
+    'todos_agd' => $Qtodos_agd,
+    'todos_s' => $Qtodos_s,
+];
+$apiData = PostRequest::getDataFromUrl('/src/planning/planning_ctr_select_data', $payload);
+$msg_txt = (string)($apiData['msg_txt'] ?? '');
+$cabecera_title = (string)($apiData['cabecera_title'] ?? '');
+$a_actividades2 = (array)($apiData['a_actividades2'] ?? []);
 
 $aGoBack = [
     'modelo' => $Qmodelo,
@@ -128,16 +92,7 @@ $aGoBack = [
 ];
 $oPosicion->setParametros($aGoBack, 1);
 
-$a_actividades2 = ActividadesDePersonaService::actividadesPorPersona(
-    $cPersonas,
-    $fin_iso,
-    $inicio_iso,
-    $oIniPlanning,
-    $inicio_local,
-    agruparPorCentro: true
-);
-
-$goLeyenda = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+$goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 switch ($Qmodelo) {
     case 2:

@@ -11,7 +11,6 @@ use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
-use web\Hash;
 
 class ListCtrData
 {
@@ -227,7 +226,6 @@ class ListCtrData
             $i++;
             $region = $oCentro->getRegion();
             $id_ubi = $oCentro->getId_ubi();
-            $pagina = Hash::link(ConfigGlobal::getWeb() . '/frontend/ubis/controller/home_ubis.php?' . http_build_query(['pau' => 'u', 'id_ubi' => $id_ubi]));
             $ctr = $oCentro->getNombre_ubi();
 
             if (str_contains($obj, 'Centro')) {
@@ -260,7 +258,13 @@ class ListCtrData
             }
 
             $a_valores[$i]['sel'] = "$id_ubi";
-            $a_valores[$i][1] = ['ira' => $pagina, 'valor' => $ctr];
+            $a_valores[$i][1] = [
+                'link_spec' => [
+                    'path' => 'frontend/ubis/controller/home_ubis.php',
+                    'query' => ['pau' => 'u', 'id_ubi' => $id_ubi],
+                ],
+                'valor' => $ctr,
+            ];
             $a_valores[$i][2] = $region;
             $a_valores[$i][3] = $tipo;
             $a_valores[$i][4] = $direccion;

@@ -16,7 +16,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use src\shared\domain\value_objects\DateTimeLocal;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -27,7 +27,7 @@ $inicurs_des_iso = $oF_inicurs_des->format('Y-m-d');
 
 $api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
-    $oHash = new Hash();
+    $oHash = new HashFront();
     $oHash->setUrl($url);
     $oHash->setCamposForm($campos);
     return $url . $oHash->linkSinVal();

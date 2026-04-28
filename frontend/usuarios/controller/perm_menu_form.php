@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use src\permisos\domain\PermDl;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -26,7 +26,7 @@ $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $nombre = $data['nombre'];
 $menu_perm = $data['menu_perm'];
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('menu_perm');
 $aCamposHidden = array(
     'id_usuario' => $Qid_usuario,

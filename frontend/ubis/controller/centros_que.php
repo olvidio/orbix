@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\DesplegableArray;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Esta página sirve para asignar una dirección a un determinado ubi.
@@ -35,32 +35,32 @@ $url_get_labor = 'frontend/ubis/controller/centros_get_labor.php';
 $url_get_num = 'frontend/ubis/controller/centros_get_num.php';
 $url_get_plazas = 'frontend/ubis/controller/centros_get_plazas.php';
 
-$oHashMod = new Hash();
+$oHashMod = new HashFront();
 $oHashMod->setUrl($url_form_labor);
 $oHashMod->setCamposForm('id_ubi');
 $h_form_labor = $oHashMod->linkSinValParams();
 
-$oHashMod = new Hash();
+$oHashMod = new HashFront();
 $oHashMod->setUrl($url_form_num);
 $oHashMod->setCamposForm('id_ubi');
 $h_form_num = $oHashMod->linkSinValParams();
 
-$oHashMod = new Hash();
+$oHashMod = new HashFront();
 $oHashMod->setUrl($url_form_plazas);
 $oHashMod->setCamposForm('id_ubi');
 $h_form_plazas = $oHashMod->linkSinValParams();
 
-$oHashLabor = new Hash();
+$oHashLabor = new HashFront();
 $oHashLabor->setUrl($url_get_labor);
 $oHashLabor->setCamposForm('que');
 $param_ajax_labor = $oHashLabor->getParamAjax();
 
-$oHashNum = new Hash();
+$oHashNum = new HashFront();
 $oHashNum->setUrl($url_get_num);
 $oHashNum->setCamposForm('que');
 $param_ajax_num = $oHashNum->getParamAjax();
 
-$oHashPlazas = new Hash();
+$oHashPlazas = new HashFront();
 $oHashPlazas->setUrl($url_get_plazas);
 $oHashPlazas->setCamposForm('que');
 $param_ajax_plazas = $oHashPlazas->getParamAjax();

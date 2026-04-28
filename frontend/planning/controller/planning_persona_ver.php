@@ -6,10 +6,8 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\planning\support\PlanningRenderer;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\planning\application\ActividadesDePersonaService;
-use src\shared\infrastructure\ProvidesRepositories;
-use web\Hash;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
 
@@ -25,18 +23,6 @@ require_once("frontend/shared/global_header_front.inc");
 
 /** @var Posicion $oPosicion */
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$aid_nom = [];
-if (!empty($a_sel)) {
-    if (count($a_sel) > 1) {
-        foreach ($a_sel as $nom_sel) {
-            $aid_nom[] = $nom_sel;
-        }
-    } else {
-        $aid_nom[] = $a_sel[0];
-    }
-}
-
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qmodelo = (int)filter_input(INPUT_POST, 'modelo');
 $Qyear = (int)filter_input(INPUT_POST, 'year');
@@ -44,7 +30,7 @@ $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-$goLeyenda = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
+$goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
 $oPeriodo = Periodo::conCalendarioDesdeBackend();
 $oPeriodo->setDefaultAny('next');
@@ -53,11 +39,8 @@ $oPeriodo->setEmpiezaMin($Qempiezamin);
 $oPeriodo->setEmpiezaMax($Qempiezamax);
 $oPeriodo->setPeriodo($Qperiodo);
 
-$inicio_iso = $oPeriodo->getF_ini_iso();
-$fin_iso = $oPeriodo->getF_fin_iso();
 $oIniPlanning = $oPeriodo->getF_ini();
 $oFinPlanning = $oPeriodo->getF_fin();
-$inicio_local = $oIniPlanning->getFromLocal();
 
 $Qdd = 3;
 $mod = 0;
@@ -75,32 +58,9 @@ if ((int)$interval < 2) {
 
 $cabecera_title = ucfirst(_("persona seleccionada"));
 
-$aWhere = [
-    'id_nom' => implode(',', $aid_nom),
-];
-$aOperador = [
-    'id_nom' => 'OR',
-];
-
-$repositoryProvider = new class {
-    use ProvidesRepositories;
-
-    public function get(string $entityType): object
-    {
-        return $this->getRepository($entityType);
-    }
-};
-
-try {
-    if ($Qobj_pau === '' || $Qobj_pau === 'PersonaDl') {
-        $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-    } else {
-        $PersonaRepository = $repositoryProvider->get($Qobj_pau);
-    }
-} catch (\InvalidArgumentException) {
-    $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-}
-$cPersonas = $PersonaRepository->getPersonas($aWhere, $aOperador);
+$payload = $_POST;
+$apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_ver_data', $payload);
+$a_actividades = (array)($apiData['a_actividades'] ?? []);
 
 $aGoBack = [
     'modelo' => $Qmodelo,
@@ -116,15 +76,6 @@ $aGoBack = [
     'id_ubi' => '',
 ];
 $oPosicion->setParametros($aGoBack, 1);
-
-$a_actividades = ActividadesDePersonaService::actividadesPorPersona(
-    $cPersonas,
-    $fin_iso,
-    $inicio_iso,
-    $oIniPlanning,
-    $inicio_local,
-    agruparPorCentro: false
-);
 
 switch ($Qmodelo) {
     case 2:

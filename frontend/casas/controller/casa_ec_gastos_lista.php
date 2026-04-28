@@ -14,7 +14,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -32,7 +32,7 @@ if (($payload['ok'] ?? false) === false) {
 }
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
-$oHashGuardar = new Hash();
+$oHashGuardar = new HashFront();
 $oHashGuardar->setUrl($web . '/src/casas/casa_ec_gastos_guardar');
 $sCamposForm = 'id_ubi!year';
 for ($m = 1; $m < 13; $m++) {

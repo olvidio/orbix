@@ -26,7 +26,7 @@ class PasswordHasher
         } else {
             $salt = substr($hashed, 0, $salt_len * 2);
         }
-        return $salt . hash('whirlpool', $salt . $clear);
+        return $salt . \hash('whirlpool', $salt . $clear);
     }
 
     /**

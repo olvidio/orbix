@@ -32,7 +32,7 @@ use src\profesores\domain\InfoProfesorLatin;
 use src\profesores\domain\InfoProfesorPublicacion;
 use src\profesores\domain\InfoProfesorStgr;
 use src\profesores\domain\InfoProfesorTituloEst;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\is_true;
 
 class FichaProfesorStgr
@@ -251,7 +251,7 @@ class FichaProfesorStgr
         }
 
         $base = AppUrlConfig::getPublicAppBaseUrl();
-        $go_to = Hash::link(
+        $go_to = HashFront::link(
             $base . '/frontend/profesores/controller/ficha_profesor_stgr.php?' . http_build_query(
                 [
                     'id_nom' => $id_nom,
@@ -262,7 +262,7 @@ class FichaProfesorStgr
             )
         );
         $go_cosas = [
-            'print' => Hash::link(
+            'print' => HashFront::link(
                 $base . '/frontend/profesores/controller/ficha_profesor_stgr.php?' . http_build_query(
                     [
                         'id_nom' => $id_nom,
@@ -283,7 +283,7 @@ class FichaProfesorStgr
         $tablaDbLink = static function (string $clase_info) use ($base, $a_base): string {
             $a_cosas = array_merge($a_base, ['clase_info' => $clase_info]);
 
-            return Hash::link(
+            return HashFront::link(
                 $base . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas)
             );
         };

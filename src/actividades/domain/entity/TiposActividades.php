@@ -82,19 +82,57 @@ class TiposActividades
     private bool $extendida = false;
     private array $afNom_tipo;
     private array $aNom_tipo;
-    private TipoDeActividadRepositoryInterface $TipoDeActividadRepository;
+    private ?TipoDeActividadRepositoryInterface $TipoDeActividadRepository = null;
 
-    public function __construct(int|string $id = '', bool $extendida = false)
-    {
+    /**
+     * @param int|string $id id_tipo_activ (parseable). Puede omitirse y fijarse luego con los setters.
+     * @param bool $extendida true para IDs con parte "actividad" de 2 dígitos (total 7 dígitos).
+     * @param TipoDeActividadRepositoryInterface|null $repository Repositorio para los lookups de "posibles".
+     *        Se puede omitir: en ese caso se resuelve perezosamente desde el contenedor la primera vez
+     *        que se necesita (ver {@see resolveRepository()}). Preferir inyección explícita.
+     */
+    public function __construct(
+        int|string $id = '',
+        bool $extendida = false,
+        ?TipoDeActividadRepositoryInterface $repository = null
+    ) {
         $this->setExtendida($extendida);
         if (isset($id) && $id !== '') {
             $this->separarId((string)$id);
         }
-        $this->TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        $this->TipoDeActividadRepository = $repository;
         $this->getFlipAsistentes();
         $this->getFlipActividad1Digito();
         $this->getFlipActividad2Digitos();
         $this->getFlipSfsv();
+    }
+
+    /**
+     * Inyecta el repositorio después de la construcción (útil cuando la clase se
+     * crea con `new TiposActividades($id)` desde código legacy y se quiere
+     * forzar la dependencia desde un test o servicio).
+     */
+    public function setTipoDeActividadRepository(TipoDeActividadRepositoryInterface $repository): void
+    {
+        $this->TipoDeActividadRepository = $repository;
+    }
+
+    /**
+     * Devuelve el repositorio inyectado, o lo obtiene del contenedor global
+     * como fallback perezoso.
+     *
+     * @deprecated El fallback al contenedor global (service locator) se
+     *             mantiene solo para no romper los ~65 sitios legacy que
+     *             instancian esta clase con `new TiposActividades($id)`. Los
+     *             sitios nuevos deben inyectar el repositorio explícitamente
+     *             por constructor o vía {@see setTipoDeActividadRepository()}.
+     */
+    private function resolveRepository(): TipoDeActividadRepositoryInterface
+    {
+        if ($this->TipoDeActividadRepository === null) {
+            $this->TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
+        }
+        return $this->TipoDeActividadRepository;
     }
 
     private function getFlipSfsv(): array
@@ -266,7 +304,7 @@ class TiposActividades
     public function getSfsvPosibles(): array
     {
         $aText = $this->getFlipSfsv();
-        return $this->TipoDeActividadRepository->getSfsvPosibles($aText);
+        return $this->resolveRepository()->getSfsvPosibles($aText);
     }
 
     public function getAsistentesText(): string
@@ -317,7 +355,7 @@ class TiposActividades
     {
         $aText = $this->getFlipAsistentes();
         $regexp = !empty($this->sasistentes) ? $this->getAsistentesRegexp() : $this->getSfsvRegexp();
-        return $this->TipoDeActividadRepository->getAsistentesPosibles($aText, $regexp);
+        return $this->resolveRepository()->getAsistentesPosibles($aText, $regexp);
     }
 
     public function getActividadText(): string
@@ -385,13 +423,13 @@ class TiposActividades
     public function getActividadesPosibles1Digito(): array
     {
         $aText = $this->getFlipActividad1Digito();
-        return $this->TipoDeActividadRepository->getActividadesPosibles(1, $aText, $this->getAsistentesRegexp());
+        return $this->resolveRepository()->getActividadesPosibles(1, $aText, $this->getAsistentesRegexp());
     }
 
     public function getActividadesPosibles2Digitos(): array
     {
         $aText = $this->getFlipActividad2Digitos();
-        return $this->TipoDeActividadRepository->getActividadesPosibles(2, $aText, $this->getAsistentesRegexp());
+        return $this->resolveRepository()->getActividadesPosibles(2, $aText, $this->getAsistentesRegexp());
     }
 
     public function getNom_tipoText(): string
@@ -428,7 +466,7 @@ class TiposActividades
 
     public function getNom_tipoPosibles3Digitos(): array
     {
-        $rta = $this->TipoDeActividadRepository->getNom_tipoPosibles(3, $this->getActividadRegexp());
+        $rta = $this->resolveRepository()->getNom_tipoPosibles(3, $this->getActividadRegexp());
         $this->afNom_tipo = $rta['tipo_nom'];
         $this->aNom_tipo = $rta['nom_tipo'];
         return $rta['tipo_nom'];
@@ -436,7 +474,7 @@ class TiposActividades
 
     public function getNom_tipoPosibles2Digitos(): array
     {
-        $rta = $this->TipoDeActividadRepository->getNom_tipoPosibles(2, $this->getActividadRegexp());
+        $rta = $this->resolveRepository()->getNom_tipoPosibles(2, $this->getActividadRegexp());
         $this->afNom_tipo = $rta['tipo_nom'];
         $this->aNom_tipo = $rta['nom_tipo'];
         return $rta['tipo_nom'];
@@ -449,7 +487,7 @@ class TiposActividades
      */
     public function getId_tipoPosibles(string $regexp = '.*'): array
     {
-        return $this->TipoDeActividadRepository->getId_tipoPosibles($regexp, $this->getActividadRegexp());
+        return $this->resolveRepository()->getId_tipoPosibles($regexp, $this->getActividadRegexp());
     }
 
     public function getExtendida(): bool

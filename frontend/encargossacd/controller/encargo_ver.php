@@ -5,7 +5,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Ficha de alta/edicion de un encargo. Los datos iniciales (resolucion del
@@ -105,7 +105,7 @@ $oDesplIdiomas = new Desplegable('idioma_enc', $opciones_locales, $idioma_enc, t
 $url_actualizar = 'frontend/encargossacd/controller/encargo_ver.php';
 $apiBase = AppUrlConfig::getApiBaseUrl();
 
-$oHashAct = new Hash();
+$oHashAct = new HashFront();
 $oHashAct->setUrl($url_actualizar);
 $oHashAct->setCamposForm('desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!id_zona!idioma_enc');
 $oHashAct->setcamposNo('id_zona!id_zona_sel!lst_ctrs!refresh');
@@ -116,13 +116,13 @@ $oHashAct->setArrayCamposHidden([
 ]);
 
 $url_zona = $apiBase . '/src/encargossacd/zonas_get_select_data';
-$oHashZona = new Hash();
+$oHashZona = new HashFront();
 $oHashZona->setUrl($url_zona);
 $oHashZona->setCamposForm('id_zona');
 $h_zona = $oHashZona->linkSinValParams();
 
 $url_ctr = $webBase . '/src/encargossacd/ctr_get_select_data';
-$oHashCtr = new Hash();
+$oHashCtr = new HashFront();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('filtro_ctr');
 $h_ctr = $oHashCtr->linkSinValParams();
@@ -130,19 +130,19 @@ $oHashCtr->setCamposForm('id_zona');
 $h_ctr_zona = $oHashCtr->linkSinValParams();
 
 $url_lst_tipo_data = $apiBase . '/src/encargossacd/encargo_lst_tipo_enc_data';
-$oHashLstTipo = new Hash();
+$oHashLstTipo = new HashFront();
 $oHashLstTipo->setUrl($url_lst_tipo_data);
 $oHashLstTipo->setCamposForm('grupo!id_tipo_enc');
 $h_lst_tipo = $oHashLstTipo->linkSinValParams();
 
 $url_encargo_ver_nuevo = $apiBase . '/src/encargossacd/encargo_ver_nuevo';
-$oHashEncNuevo = new Hash();
+$oHashEncNuevo = new HashFront();
 $oHashEncNuevo->setUrl($url_encargo_ver_nuevo);
 $oHashEncNuevo->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!observ!nom_tipo!que');
 $h_encargo_ver_nuevo = $oHashEncNuevo->linkSinValParams();
 
 $url_encargo_ver_editar = $apiBase . '/src/encargossacd/encargo_ver_editar';
-$oHashEncEditar = new Hash();
+$oHashEncEditar = new HashFront();
 $oHashEncEditar->setUrl($url_encargo_ver_editar);
 $oHashEncEditar->setCamposForm('desc_enc!desc_lugar!idioma_enc!filtro_ctr!grupo!id_tipo_enc!id_zona!lst_ctrs!observ!nom_tipo!que!id_enc');
 $h_encargo_ver_editar = $oHashEncEditar->linkSinValParams();

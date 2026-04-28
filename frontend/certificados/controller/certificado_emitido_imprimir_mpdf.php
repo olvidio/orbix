@@ -2,7 +2,7 @@
 
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Esta página sirve para la certificado para una persona.

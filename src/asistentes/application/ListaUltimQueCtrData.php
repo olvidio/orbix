@@ -4,7 +4,7 @@ namespace src\asistentes\application;
 
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Selector de centro para actividades pendientes (`lista_ultim_que_ctr.php`).
@@ -33,7 +33,7 @@ final class ListaUltimQueCtrData
         natcasesort($aOpciones);
         $aOpciones['999'] = _("todos");
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('id_ubi');
         $oHash->setArraycamposHidden([
             'que' => $Qque,

@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -42,7 +42,7 @@ $oDesplPersonas->setNombre('id_nom_dst');
 $oDesplPersonas->setBlanco('true');
 $oDesplPersonas->setOpciones($aPosibles);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('id_nom_dst');
 $oHash->setArraycamposHidden(['id_nom_org' => $id_nom]);
 

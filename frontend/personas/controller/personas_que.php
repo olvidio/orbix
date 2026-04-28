@@ -5,7 +5,7 @@ namespace frontend\personas\controller;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Posicion;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Formulario de busqueda de personas.
@@ -54,7 +54,7 @@ if (!empty($Qtabla)) {
 
 $action = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_select.php';
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('nombre!apellido1!apellido2!centro!exacto!cmb');
 $oHash->setcamposNo('exacto!cmb');
 $oHash->setArraycamposHidden([

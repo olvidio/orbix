@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -24,11 +24,11 @@ $oDesplUbis->setAction('fnjs_busca_lugares_origen()');
 $oDesplUbisNew = new Desplegable('id_ubi_new', $a_opciones, '', true);
 $oDesplUbisNew->setAction('fnjs_busca_lugares_destino()');
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('id_ubi!id_ubi_new!sel');
 $oHash->setCamposNo('sel!id_lugar!id_lugar_new');
 
-$oHashLugar = new Hash();
+$oHashLugar = new HashFront();
 $oHashLugar->setUrl(rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/src/inventario/lista_lugares_de_ubi');
 $oHashLugar->setCamposForm('id_ubi');
 $h_lugar = $oHashLugar->linkSinValParams();

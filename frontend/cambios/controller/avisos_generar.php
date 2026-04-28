@@ -6,7 +6,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -64,7 +64,7 @@ if (!empty($Qaviso_tipo)) {
 
 $stack = $oPosicion->getStack();
 
-$oHashCond = new Hash();
+$oHashCond = new HashFront();
 $oHashCond->setArrayCamposHidden(['Gstack' => $stack]);
 $oHashCond->setCamposForm("id_usuario!aviso_tipo");
 
@@ -91,7 +91,7 @@ if (!empty($Qid_usuario)) {
     $oTabla->setBotones($a_botones);
     $oTabla->setDatos($a_valores);
 
-    $oHash = new Hash();
+    $oHash = new HashFront();
     $oHash->setArrayCamposHidden([
         'id_usuario' => $Qid_usuario,
         'aviso_tipo' => $Qaviso_tipo,

@@ -10,10 +10,11 @@
  *
  */
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use function src\shared\domain\helpers\curso_est;
 
@@ -98,15 +99,15 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('certificado');
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
-$oHashDown = new Hash();
-$oHashDown->setUrl('frontend/certificados/controller/certificado_emitido_pdf_download.php');
+$oHashDown = new HashFront();
+$oHashDown->setUrl(AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_emitido_pdf_download');
 $oHashDown->setCamposForm('key');
 $h_download = $oHashDown->linkConVal();
 

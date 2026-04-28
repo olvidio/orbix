@@ -59,4 +59,41 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/actividadestudios/matriculas_lista_data', function () use ($base) {
         require $base . '/matriculas_lista_data.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/matriculas_pendientes_data', function () use ($base) {
+        require $base . '/matriculas_pendientes_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/ca_posibles_que_data', function () use ($base) {
+        require $base . '/ca_posibles_que_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/plan_estudios_ca_data', function () use ($base) {
+        require $base . '/plan_estudios_ca_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/matriculas_lista_otras_r_data', function () use ($base) {
+        require $base . '/matriculas_lista_otras_r_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/ca_posibles_data', function () use ($base) {
+        require $base . '/ca_posibles_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/e43_imprimir_mpdf_data', function () use ($base) {
+        require $base . '/e43_imprimir_mpdf_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/acta_notas_data', function () use ($base) {
+        require $base . '/acta_notas_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/form_matriculas_de_una_persona_data', function () use ($base) {
+        require $base . '/form_matriculas_de_una_persona_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/e43_data', function () use ($base) {
+        require $base . '/e43_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/form_asignaturas_de_una_actividad_data', function () use ($base) {
+        require $base . '/form_asignaturas_de_una_actividad_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/lista_clases_ca_data', function () use ($base) {
+        require $base . '/lista_clases_ca_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadestudios/posibles_asignaturas_ca_data', function () use ($base) {
+        require $base . '/posibles_asignaturas_ca_data.php';
+    });
 };

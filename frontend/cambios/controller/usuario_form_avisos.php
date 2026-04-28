@@ -2,6 +2,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -41,7 +42,7 @@ $oTablaAvisos->setDatos($a_valores_avisos);
 
 
 $url_usuario_ajax = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_avisos_pref.php';
-$oHashAvisos = new web\Hash();
+$oHashAvisos = new HashFront();
 $oHashAvisos->setUrl($url_usuario_ajax);
 $oHashAvisos->setCamposNo('sel!scroll_id!salida');
 $a_camposHidden = array(

@@ -11,7 +11,7 @@ use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 /**
@@ -161,7 +161,7 @@ class Select_matriculas_de_una_actividad
     {
         $this->txt_eliminar = _("¿Está seguro que desea quitar esta matrícula?");
 
-        $oHashSelect = new Hash();
+        $oHashSelect = new HashFront();
         $oHashSelect->setCamposForm('');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $oHashSelect->setArraycamposHidden([

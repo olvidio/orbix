@@ -6,7 +6,7 @@ use Ramsey\Uuid\Uuid;
 use src\shared\config\ConfigGlobal;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\CamaId;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Datos para `frontend/ubiscamas/controller/cama_form.php`.
@@ -40,7 +40,7 @@ final class CamaFormData
             $vip = $oCama->isVip() ?? false;
         }
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('descripcion!larga!vip');
         $oHash->setCamposChk('larga!vip');
         $oHash->setArraycamposHidden([

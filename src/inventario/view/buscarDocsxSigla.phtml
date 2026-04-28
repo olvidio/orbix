@@ -117,7 +117,7 @@
                     $('#div_modificar').html('');
                     $('#div_modificar').removeClass('ventana');
                     $('#resto').removeClass('sombra');
-                    <?= $oPosicion->js_atras() ?>
+                    <?= isset($oPosicion) ? $oPosicion->js_atras(0) : '' ?>
                 }
             });
 

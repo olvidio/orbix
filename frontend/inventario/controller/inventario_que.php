@@ -2,7 +2,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -15,7 +15,7 @@ $url_ctr = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controlle
 // 13
 $url_dlb = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_de_dlb.php?';
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setArrayCamposHidden(['inventario' => 1]);
 
 $a_campos = [

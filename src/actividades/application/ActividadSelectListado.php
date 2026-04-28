@@ -18,8 +18,6 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
-use web\Hash;
-use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
 
@@ -31,15 +29,17 @@ use src\actividades\domain\entity\TiposActividades;
  * pintar el HTML resultante.
  *
  * Devuelve un array con:
- *   - html_tabla (string)      HTML de la tabla de resultados (Lista).
  *   - resultado (string)       Texto resumen ("X actividades encontradas ...").
  *   - perm_nueva (bool)        Si el usuario puede crear actividad nueva.
  *   - mod (string)             '' o 'importar'.
  *   - obj_pau (string)         'Actividad' o 'ActividadPub'.
  *   - aTiposActiv (array)      Lista de "nueva actividad ..." (txt => id).
- *   - html_advertencia (string) Bloque HTML de "demasiadas actividades ..." si procede.
- *   - a_cabeceras (array)      Cabeceras usadas (para debug / tests).
+ *   - html_advertencia (string) Vacío aquí; si hay demasiadas filas, `advertencia_demasiadas`.
+ *   - advertencia_demasiadas (array|null) Specs para armar el HTML en `actividad_select_datos.php`.
+ *   - a_cabeceras, a_botones, a_valores  Para `Lista::mostrar_tabla` en el endpoint.
  *   - aRolesPau (array)        Roles PAU (usado para hashes en frontend).
+ *
+ * El HTML de la tabla y la advertencia firmada se construyen en `actividad_select_datos.php`.
  */
 final class ActividadSelectListado
 {
@@ -247,23 +247,31 @@ final class ActividadSelectListado
         $cActividades = $ActividadRepository->getActividades($aWhere, $aOperador);
         $num_activ = count($cActividades);
         if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
-            $go_avant = Hash::link(ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_select.php?' . http_build_query(['continuar' => 'si', 'Gstack' => $stackGo]));
-            $go_atras = Hash::link(ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_que.php?' . http_build_query(['stack' => $stackGo]));
-            $html_advertencia = "<h2>" . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $num_activ) . '</h2>';
-            $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
-            $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
             return [
-                'html_tabla' => '',
                 'resultado' => '',
                 'perm_nueva' => false,
                 'mod' => $mod,
                 'obj_pau' => $obj_pau,
                 'aTiposActiv' => [],
-                'html_advertencia' => $html_advertencia,
+                'html_advertencia' => '',
+                'advertencia_demasiadas' => [
+                    'num_actividades' => $num_activ,
+                    'continuar_link_spec' => [
+                        'path' => 'frontend/actividades/controller/actividad_select.php',
+                        'query' => ['continuar' => 'si', 'Gstack' => $stackGo],
+                    ],
+                    'volver_link_spec' => [
+                        'path' => 'frontend/actividades/controller/actividad_que.php',
+                        'query' => ['stack' => $stackGo],
+                    ],
+                ],
                 'extendida' => $extendida,
                 'id_tipo_activ_efectivo' => $Qid_tipo_activ,
                 'aRolesPau' => $aRolesPau,
                 'id_role' => $id_role,
+                'a_cabeceras' => $a_cabeceras,
+                'a_botones' => $a_botones,
+                'a_valores' => [],
             ];
         }
 
@@ -422,8 +430,13 @@ final class ActividadSelectListado
 
                 if ($Qmodo !== 'importar') {
                     if ($sPrefs === 'html') {
-                        $pagina = Hash::link(ConfigGlobal::getWeb() . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(['pau' => 'a', 'id_pau' => $id_activ, 'obj_pau' => $obj_pau]));
-                        $a_valores[$i][3] = ['ira' => $pagina, 'valor' => $nom_activ . $con];
+                        $a_valores[$i][3] = [
+                            'link_spec' => [
+                                'path' => 'frontend/dossiers/controller/dossiers_ver.php',
+                                'query' => ['pau' => 'a', 'id_pau' => $id_activ, 'obj_pau' => $obj_pau],
+                            ],
+                            'valor' => $nom_activ . $con,
+                        ];
                     } else {
                         $pagina = 'jsForm.mandar("#seleccionados","dossiers")';
                         $a_valores[$i][3] = ['script' => $pagina, 'valor' => $nom_activ . $con];
@@ -494,13 +507,6 @@ final class ActividadSelectListado
         $QfinLocal = $oF_qfin->getFromLocal();
         $resultado .= ' ' . sprintf(_("entre %s y %s"), $QinicioLocal, $QfinLocal);
 
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('actividad_select');
-        $oTabla->setCabeceras($a_cabeceras);
-        $oTabla->setBotones($a_botones);
-        $oTabla->setDatos($a_valores);
-        $html_tabla = $oTabla->mostrar_tabla();
-
         $perm_nueva = FALSE;
         if (empty($aRolesPau[$id_role]) || ($aRolesPau[$id_role] !== PauType::PAU_CTR && $aRolesPau[$id_role] !== PauType::PAU_CDC)) {
             $perm_nueva = TRUE;
@@ -516,7 +522,6 @@ final class ActividadSelectListado
         $aTiposActiv = $aTiposActual + $aTiposActiv;
 
         return [
-            'html_tabla' => $html_tabla,
             'resultado' => $resultado,
             'perm_nueva' => $perm_nueva,
             'mod' => $mod,
@@ -527,6 +532,9 @@ final class ActividadSelectListado
             'id_tipo_activ_efectivo' => $Qid_tipo_activ,
             'aRolesPau' => $aRolesPau,
             'id_role' => $id_role,
+            'a_cabeceras' => $a_cabeceras,
+            'a_botones' => $a_botones,
+            'a_valores' => $a_valores,
         ];
     }
 }

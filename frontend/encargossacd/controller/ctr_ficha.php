@@ -5,7 +5,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Ficha de atencion sacerdotal de un centro. Los datos dependientes del centro
@@ -47,13 +47,13 @@ $oDesplCtrs = DesplCentros::build($Qfiltro_ctr, $Qid_ubi);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
 $url_ctr = $apiBase . '/src/encargossacd/ctr_get_select_data';
-$oHashCtr = new Hash();
+$oHashCtr = new HashFront();
 $oHashCtr->setUrl($url_ctr);
 $oHashCtr->setCamposForm('filtro_ctr!id_ubi');
 $h_ctr = $oHashCtr->linkSinValParams();
 
 $url_ficha = 'frontend/encargossacd/controller/ctr_get_ficha.php';
-$oHashFicha = new Hash();
+$oHashFicha = new HashFront();
 $oHashFicha->setUrl($url_ficha);
 $oHashFicha->setCamposForm('id_ubi');
 $h_ficha = $oHashFicha->linkSinValParams();

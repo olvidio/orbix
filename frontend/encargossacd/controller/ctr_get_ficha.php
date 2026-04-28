@@ -3,7 +3,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Ficha de atencion sacerdotal de un centro. Datos de negocio obtenidos del
@@ -81,7 +81,7 @@ foreach ($encargos as $idx => $enc) {
     $dedic_ctr_t[$e] = (string)($enc['dedic_ctr_t'] ?? '');
     $dedic_ctr_v[$e] = (string)($enc['dedic_ctr_v'] ?? '');
 
-    $oHash = new Hash();
+    $oHash = new HashFront();
     $oHash->setArrayCamposHidden([
         'e' => $e,
         "mod_$e" => $mod,
@@ -131,7 +131,7 @@ if ($num_enc === 0) {
 }
 
 $url_ficha = 'frontend/encargossacd/controller/ctr_get_ficha.php';
-$oHashFicha = new Hash();
+$oHashFicha = new HashFront();
 $oHashFicha->setUrl($url_ficha);
 $oHashFicha->setCamposForm('id_ubi!seleccion_sacd');
 $h_ficha = $oHashFicha->linkSinValParams();

@@ -47,7 +47,7 @@ final class HashB
      * (`"a+a+"`), para que compartir el `session_id()` no implique
      * compartir firmas entre capas.
      */
-    private const SALT = 'b+b+b+';
+    private const SALT = 'b+b+back+';
 
     /** Segundos de validez por defecto si no se especifica TTL. */
     public const DEFAULT_TTL = 3600;

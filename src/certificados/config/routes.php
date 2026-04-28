@@ -41,4 +41,19 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/certificados/textos_certificados', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/textos_certificados.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/certificados/certificado_emitido_pdf_download', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/certificado_emitido_pdf_download.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/certificados/certificado_recibido_pdf_download', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/certificado_recibido_pdf_download.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/certificados/certificados_locales_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/certificados_locales_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/certificados/certificado_recibido_modificar_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/certificado_recibido_modificar_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/certificados/certificado_emitido_upload_firmado_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/certificado_emitido_upload_firmado_data.php';
+    });
 };

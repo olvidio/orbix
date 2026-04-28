@@ -3,7 +3,6 @@
 namespace core;
 
 use DI\ContainerBuilder;
-use frontend\shared\web\Posicion;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
@@ -20,7 +19,7 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     // Para detectar el error: "Headers already sent"
@@ -423,9 +422,7 @@ if (empty($_SESSION['oPermActividades'])) {
 
 session_write_close();
 // Para validar los parámetros enviados via POST o GET (si hay hash)
-$oValidator = new Hash();
+$oValidator = new HashFront();
 $a_data = (!empty($_POST)) ? $_POST : ((isset($_GET['h'])) ? $_GET : []);
 echo $oValidator->validatePost($a_data);
-
-$oPosicion = new Posicion($_SERVER['PHP_SELF'], $_POST);
 

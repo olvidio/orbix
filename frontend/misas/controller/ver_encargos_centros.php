@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -39,25 +39,25 @@ $oDesplCentros->setOpciones($a_centros_zona);
 // `linkSinValParams()` porque en el phtml el hash se concatena SIEMPRE tras
 // otros parametros en el body POST (p.e. 'id_zona=' + id_zona + $h).
 $url_guardar_encargo_centro = AppUrlConfig::getApiBaseUrl() . '/src/misas/guardar_encargo_centro';
-$oHashGuardar = new Hash();
+$oHashGuardar = new HashFront();
 $oHashGuardar->setUrl($url_guardar_encargo_centro);
 $oHashGuardar->setCamposForm('id_item!id_enc!id_ctr');
 $h_guardar_encargo_centro = $oHashGuardar->linkSinValParams();
 
 $url_eliminar_encargo_centro = AppUrlConfig::getApiBaseUrl() . '/src/misas/eliminar_encargo_centro';
-$oHashEliminar = new Hash();
+$oHashEliminar = new HashFront();
 $oHashEliminar->setUrl($url_eliminar_encargo_centro);
 $oHashEliminar->setCamposForm('id_item');
 $h_eliminar_encargo_centro = $oHashEliminar->linkSinValParams();
 
 $url_desplegable_encargos = AppUrlConfig::getApiBaseUrl() . '/src/misas/desplegable_encargos';
-$oHashDespl = new Hash();
+$oHashDespl = new HashFront();
 $oHashDespl->setUrl($url_desplegable_encargos);
 $oHashDespl->setCamposForm('id_zona!id_enc');
 $h_desplegable_encargos = $oHashDespl->linkSinValParams();
 
 $url_ver_encargos_centros = 'frontend/misas/controller/ver_encargos_centros.php';
-$oHashVer = new Hash();
+$oHashVer = new HashFront();
 $oHashVer->setUrl($url_ver_encargos_centros);
 $oHashVer->setCamposForm('id_zona');
 $h_ver_encargos_centros = $oHashVer->linkSinValParams();

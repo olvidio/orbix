@@ -10,7 +10,7 @@ use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Data builder: lista de `CambioUsuario` del usuario solicitado (con
@@ -69,11 +69,11 @@ final class AvisosGenerarListaData
             }
             $url_eliminar = $web . '/src/cambios/cambio_usuario_eliminar';
             $url_eliminar_fecha = $web . '/src/cambios/cambio_usuario_eliminar_hasta_fecha';
-            $oHashElim = new Hash();
+            $oHashElim = new HashFront();
             $oHashElim->setUrl($url_eliminar);
             $oHashElim->setCamposNo('sel');
             $h_eliminar = $oHashElim->linkSinValParams();
-            $oHashElimF = new Hash();
+            $oHashElimF = new HashFront();
             $oHashElimF->setUrl($url_eliminar_fecha);
             $oHashElimF->setCamposForm('f_fin');
             $h_eliminar_fecha = $oHashElimF->linkSinValParams();

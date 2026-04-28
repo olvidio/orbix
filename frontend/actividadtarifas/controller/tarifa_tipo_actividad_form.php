@@ -19,7 +19,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use src\actividades\application\ActividadTipo;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use src\actividades\domain\entity\TiposActividades;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -47,7 +47,7 @@ if (!$es_nuevo) {
 $api = AppUrlConfig::getApiBaseUrl();
 
 // Hash para el form (campos que se serializan en el submit):
-$oHash = new Hash();
+$oHash = new HashFront();
 $a_camposHidden = [];
 if ($es_nuevo) {
     $oHash->setUrl($api . '/src/actividadtarifas/relacion_tarifa_update');

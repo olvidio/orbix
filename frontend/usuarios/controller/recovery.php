@@ -13,7 +13,7 @@ $Qid_usuario = (integer)filter_input(INPUT_GET, 'id_usuario');
 $Qesquema = (string)filter_input(INPUT_GET, 'esquema');
 
 
-$hash_recibido = hash('sha256', $Qtoken);
+$hash_recibido = HashFront('sha256', $Qtoken);
 
 // Buscas en la DB un usuario donde:
 // token_recuperacion_2fa == $hash_recibido

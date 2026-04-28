@@ -1,9 +1,8 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("frontend/shared/global_header_front.inc");
@@ -48,7 +47,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
 }
 
 $web_depende = AppUrlConfig::getApiBaseUrl() . "/src/shared/tablaDB_depende_datos";
-$oHashDepende = new Hash();
+$oHashDepende = new HashFront();
 $oHashDepende->setUrl($web_depende);
 $oHashDepende->setCamposForm('clase_info!accion!valor_depende');
 $h_depende = $oHashDepende->linkSinValParams();
@@ -59,10 +58,10 @@ $aQuery['s_pkey'] = $Qs_pkey;
 if (!empty($Qobj_pau)) {
     $aQuery['obj_pau'] = $Qobj_pau;
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . "/frontend/dossiers/controller/dossiers_ver.php?$sQuery");
+    $Qgo_to = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . "/frontend/dossiers/controller/dossiers_ver.php?$sQuery");
 } else {
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = Hash::link(AppUrlConfig::getApiBaseUrl() . "/src/shared/tablaDB_lista_datos?$sQuery");
+    $Qgo_to = HashFront::link(AppUrlConfig::getApiBaseUrl() . "/src/shared/tablaDB_lista_datos?$sQuery");
 }
 
 $url_backend = '/src/shared/tablaDB_formulario_datos';
@@ -80,7 +79,7 @@ $explicacion_txt = $data['explicacion_txt'];
 $camposForm = $data['camposForm'];
 $camposNo = $data['camposNo'];
 
-$oHashSelect = new Hash();
+$oHashSelect = new HashFront();
 $oHashSelect->setCamposForm($camposForm);
 $oHashSelect->setCamposNo('sel!' . $camposNo);
 $a_camposHidden = array(

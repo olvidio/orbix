@@ -4,7 +4,7 @@ namespace frontend\inventario\domain;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 class ListaAgrupar
 {

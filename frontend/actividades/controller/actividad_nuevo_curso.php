@@ -16,7 +16,7 @@
 use frontend\shared\AppInstalled;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -37,7 +37,7 @@ if ($Qok === 1) {
     return;
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $a_camposHidden = [
     'ok' => 1,
 ];

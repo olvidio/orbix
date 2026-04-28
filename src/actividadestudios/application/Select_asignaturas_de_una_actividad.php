@@ -7,10 +7,11 @@ use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 /**
@@ -40,7 +41,8 @@ class Select_asignaturas_de_una_actividad
 
     private $Qid_sel;
     private $Qscroll_id;
-    private string $LinkInsert = '';
+    /** @var array{path: string, query: array<string, mixed>}|null */
+    private ?array $linkInsertSpec = null;
 
     public function getBotones(): array
     {
@@ -157,7 +159,7 @@ class Select_asignaturas_de_una_actividad
         $this->dl_org = $oActividad->getDl_org();
         $this->permiso = 3;
 
-        $oHashSelect = new Hash();
+        $oHashSelect = new HashFront();
         $oHashSelect->setCamposForm('');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $oHashSelect->setArraycamposHidden([
@@ -181,7 +183,9 @@ class Select_asignaturas_de_una_actividad
         $a_campos = [
             'oTabla' => $oTabla,
             'oHashSelect' => $oHashSelect,
-            'link_insert' => $this->LinkInsert,
+            'link_insert' => $this->linkInsertSpec !== null
+                ? DossierTipoFormLinkSpecsSigning::fromSpec($this->linkInsertSpec)
+                : '',
             'txt_eliminar' => $this->txt_eliminar,
             'txt_no_permiso' => $this->txt_no_permiso,
             'bloque' => $this->bloque,
@@ -195,14 +199,14 @@ class Select_asignaturas_de_una_actividad
 
     public function setLinksInsert(): void
     {
-        $this->LinkInsert = '';
+        $this->linkInsertSpec = null;
         if ($this->permiso === 3) {
             $a_dataUrl = [
                 'pau' => $this->pau,
                 'id_pau' => $this->id_pau,
             ];
             array_walk($a_dataUrl, 'core\\poner_empty_on_null');
-            $this->LinkInsert = DossierTipoPublicUrls::hashedFormControllerQuery($this->id_dossier, $a_dataUrl);
+            $this->linkInsertSpec = DossierTipoPublicUrls::formControllerLinkSpec($this->id_dossier, $a_dataUrl);
         }
     }
 

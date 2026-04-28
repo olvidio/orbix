@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use src\actividades\domain\entity\TiposActividades;
 use function frontend\shared\helpers\is_true;
 
@@ -81,7 +81,7 @@ foreach ($aPermData as $i => $fila) {
     ];
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('dl_propia!fase_ref!extendida!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val!perm_on!perm_off');
 $oHash->setCamposNo('afecta_a!id_tipo_activ');
 $a_camposHidden = [
@@ -92,7 +92,7 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $url_actualizar = AppUrlConfig::getApiBaseUrl() . '/src/procesos/usuario_perm_activ_ajax';
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');
 $h_actualizar = $oHash1->linkSinValParams();

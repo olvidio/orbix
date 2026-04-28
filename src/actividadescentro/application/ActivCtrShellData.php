@@ -3,7 +3,7 @@
 namespace src\actividadescentro\application;
 
 use src\shared\config\ConfigGlobal;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * URLs firmadas y tipo resuelto para la shell de `activ_ctr` (sin ConfigGlobal en el front).
@@ -33,7 +33,7 @@ class ActivCtrShellData
 
         $web = rtrim(ConfigGlobal::getWeb(), '/');
         $buildHashedUrl = static function (string $url, string $campos): string {
-            $oHash = new Hash();
+            $oHash = new HashFront();
             $oHash->setUrl($url);
             $oHash->setCamposForm($campos);
             return $url . $oHash->linkSinVal();

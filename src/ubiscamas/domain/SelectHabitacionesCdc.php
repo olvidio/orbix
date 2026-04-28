@@ -5,9 +5,10 @@ namespace src\ubiscamas\domain;
 use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use frontend\ubiscamas\helpers\SelectHabitacionesCdcUrlSigning;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use function src\shared\domain\helpers\is_true_txt;
 
@@ -65,9 +66,9 @@ class SelectHabitacionesCdc
     private $Qid_sel;
     private $Qscroll_id;
     /**
-     * @var array|mixed
+     * @var list<array{label: string, spec: array{path: string, query: array<string, mixed>}}>
      */
-    private mixed $aLinks_dl;
+    private array $a_links_dl_specs = [];
 
 
     private function getBotones()
@@ -149,7 +150,7 @@ class SelectHabitacionesCdc
 
     public function getHtml()
     {
-        $oHashSelect = new Hash();
+        $oHashSelect = new HashFront();
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
             'pau' => $this->pau,
@@ -171,15 +172,21 @@ class SelectHabitacionesCdc
         // para que genere las variables $aLink
         $this->setLinksInsert();
 
-        $aQuery = ['nuevo' => 1, 'id_ubi' => $this->id_pau];
-        $url_nuevo = Hash::link(ConfigGlobal::getWeb() . '/frontend/ubiscamas/controller/habitacion_form.php?' . http_build_query($aQuery));
+        $aQueryNuevo = ['nuevo' => 1, 'id_ubi' => $this->id_pau];
+        $signed = SelectHabitacionesCdcUrlSigning::sign([
+            'url_nuevo_spec' => [
+                'path' => 'frontend/ubiscamas/controller/habitacion_form.php',
+                'query' => $aQueryNuevo,
+            ],
+            'a_links_dl_specs' => $this->a_links_dl_specs,
+        ]);
 
         $a_campos = ['oTabla' => $oTabla,
             'oHashSelect' => $oHashSelect,
-            'aLinks_dl' => $this->aLinks_dl,
+            'aLinks_dl' => $signed['aLinks_dl'],
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
-            'url_nuevo' => $url_nuevo,
+            'url_nuevo' => $signed['url_nuevo'],
         ];
 
         $oView = new ViewNewPhtml('frontend\ubiscamas\view');
@@ -188,7 +195,7 @@ class SelectHabitacionesCdc
 
     private function setLinksInsert()
     {
-        $this->aLinks_dl = [];
+        $this->a_links_dl_specs = [];
         $a_ref_perm = $this->a_ref_perm;
         if (empty($a_ref_perm) || ConfigGlobal::mi_ambito() === 'rstgr') { // si es nulo, no tengo permisos de ningún tipo
             return '';
@@ -208,9 +215,14 @@ class SelectHabitacionesCdc
                 if (is_array($aQuery)) {
                     array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
                 }
-                $pagina = Hash::link('frontend/ubiscamas/controller/habitacion_form.php?' . http_build_query($aQuery));
                 $nom2 = sprintf(_("añadir %s"), $nom);
-                $this->aLinks_dl[$nom2] = $pagina;
+                $this->a_links_dl_specs[] = [
+                    'label' => $nom2,
+                    'spec' => [
+                        'path' => 'frontend/ubiscamas/controller/habitacion_form.php',
+                        'query' => $aQuery,
+                    ],
+                ];
             }
         }
     }

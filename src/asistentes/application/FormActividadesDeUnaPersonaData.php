@@ -11,7 +11,7 @@ use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\shared\config\ConfigGlobal;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -140,13 +140,13 @@ final class FormActividadesDeUnaPersonaData
             }
 
             $url_ajax = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividadplazas/posibles_propietarios_data';
-            $oHash1 = new Hash();
+            $oHash1 = new HashFront();
             $oHash1->setUrl($url_ajax);
             $oHash1->setCamposForm('id_activ!id_nom');
             $h1 = $oHash1->linkSinValParams();
         }
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $camposForm = 'observ';
         if ($plazas_installed) {
             $camposForm .= '!plaza!propietario';

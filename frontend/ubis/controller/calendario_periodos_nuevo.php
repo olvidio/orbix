@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -15,7 +15,7 @@ $f_next = $data['f_next'];
 $sf_chk = $data['sf_chk'];
 $sv_chk = $data['sv_chk'];
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setArrayCamposHidden([
     'id_ubi' => $Qid_ubi,
 ]);

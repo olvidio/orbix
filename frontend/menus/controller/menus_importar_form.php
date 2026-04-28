@@ -3,8 +3,8 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
-use frontend\shared\web\Hash;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -18,7 +18,7 @@ $a_opciones = $data['a_opciones'];
 $oDesplTemplates = new Desplegable('id_template_menu', $a_opciones, '', true);
 
 $url = AppUrlConfig::getApiBaseUrl() . '/src/menus/menus_importar';
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url);
 $oHash->setCamposForm('id_template_menu');
 

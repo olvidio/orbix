@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -39,19 +39,19 @@ $oDesplIdiomas = new Desplegable('idioma_enc', $idiomas, '', true);
 // URL absoluta del endpoint backend: web\Hash genera el hash a partir de la
 // URL; el JS posteara contra la misma ruta para que el hash coincida.
 $url_guardar_encargo_zona = AppUrlConfig::getApiBaseUrl() . '/src/misas/guardar_encargo_zona';
-$oHashGuardar = new Hash();
+$oHashGuardar = new HashFront();
 $oHashGuardar->setUrl($url_guardar_encargo_zona);
 $oHashGuardar->setCamposForm('id_enc!id_tipo_enc!id_ubi!id_zona!descripcion_lugar!encargo!idioma_enc!observ!orden!prioridad');
 $h_guardar_encargo_zona = $oHashGuardar->linkSinValParams();
 
 $url_eliminar_encargo_zona = AppUrlConfig::getApiBaseUrl() . '/src/misas/eliminar_encargo_zona';
-$oHashEliminar = new Hash();
+$oHashEliminar = new HashFront();
 $oHashEliminar->setUrl($url_eliminar_encargo_zona);
 $oHashEliminar->setCamposForm('id_enc');
 $h_eliminar_encargo_zona = $oHashEliminar->linkSinValParams();
 
 $url_ver_encargos_zona = 'frontend/misas/controller/ver_encargos_zona.php';
-$oHashVer = new Hash();
+$oHashVer = new HashFront();
 $oHashVer->setUrl($url_ver_encargos_zona);
 $oHashVer->setCamposForm('id_zona!orden');
 $h_ver_encargos_zona = $oHashVer->linkSinValParams();

@@ -18,7 +18,6 @@ use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
 use src\ubis\domain\contracts\RelacionUbiDireccionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use web\Hash;
 use function src\shared\domain\helpers\is_true;
 use function src\shared\domain\helpers\urlsafe_b64decode;
 use function src\shared\domain\helpers\urlsafe_b64encode;
@@ -74,7 +73,7 @@ final class UbisTablaData
         $sWhereD = urlsafe_b64encode(json_encode($aWhereD), JSON_THROW_ON_ERROR);
         $sOperadorD = urlsafe_b64encode(json_encode($aOperadorD), JSON_THROW_ON_ERROR);
 
-        [$nueva_ficha, $pagina_link] = $this->calcularNuevaFicha(
+        [$nueva_ficha, $pagina_link_spec] = $this->calcularNuevaFicha(
             $in['Qtipo'],
             $in['Qloc'],
             $cUbisTot,
@@ -117,7 +116,7 @@ final class UbisTablaData
         return [
             'titulo' => $titulo,
             'nueva_ficha' => $nueva_ficha,
-            'pagina_link' => $pagina_link,
+            'pagina_link_spec' => $pagina_link_spec,
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
             'a_botones' => $a_botones,
@@ -517,7 +516,7 @@ final class UbisTablaData
     /**
      * Calcula (nueva_ficha, pagina_link) según haya o no resultados y el tipo de búsqueda.
      *
-     * @return array{0: string, 1: string}
+     * @return array{0: string, 1: array<string, mixed>|null}
      */
     private function calcularNuevaFicha(
         string $Qtipo,
@@ -530,15 +529,18 @@ final class UbisTablaData
         string $Qregion
     ): array {
         $nueva_ficha = '';
-        $pagina_link = '';
+        $pagina_link_spec = null;
         $sinResultados = count($cUbisTot) === 0;
 
         if ($Qtipo === 'tot' || $Qloc === 'tot') {
             if ($sinResultados) {
                 $nueva_ficha = 'especificar';
-                $pagina_link = Hash::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(['simple' => '2']));
+                $pagina_link_spec = [
+                    'path' => 'frontend/ubis/controller/ubis_buscar.php',
+                    'query' => ['simple' => '2'],
+                ];
             }
-            return [$nueva_ficha, $pagina_link];
+            return [$nueva_ficha, $pagina_link_spec];
         }
 
         $nueva_ficha = 'nueva';
@@ -550,11 +552,14 @@ final class UbisTablaData
             'dl' => $Qdl,
             'region' => $Qregion,
         ];
-        $pagina_link = Hash::link(ConfigGlobal::getWeb() . '/frontend/ubis/controller/ubis_editar.php?' . http_build_query($a_link));
+        $pagina_link_spec = [
+            'path' => 'frontend/ubis/controller/ubis_editar.php',
+            'query' => $a_link,
+        ];
         if ($sinResultados) {
             $nueva_ficha = 'aviso';
         }
-        return [$nueva_ficha, $pagina_link];
+        return [$nueva_ficha, $pagina_link_spec];
     }
 
     /**
@@ -591,10 +596,14 @@ final class UbisTablaData
                 }
             }
 
-            $pagina = Hash::link('frontend/ubis/controller/home_ubis.php?' . http_build_query(['pau' => 'u', 'id_ubi' => $id_ubi]));
-
             $a_valores[$i]['sel'] = $id_ubi;
-            $a_valores[$i][1] = ['ira' => $pagina, 'valor' => $nombre_ubi];
+            $a_valores[$i][1] = [
+                'link_spec' => [
+                    'path' => 'frontend/ubis/controller/home_ubis.php',
+                    'query' => ['pau' => 'u', 'id_ubi' => $id_ubi],
+                ],
+                'valor' => $nombre_ubi,
+            ];
             $a_valores[$i][2] = $oUbi->getTipo_ubi();
             $a_valores[$i][3] = $oUbi->getDl();
             $a_valores[$i][4] = $oUbi->getRegion();

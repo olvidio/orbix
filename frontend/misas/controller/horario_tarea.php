@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -17,7 +17,7 @@ $t_start = (string)($data['t_start'] ?? '');
 $t_end = (string)($data['t_end'] ?? '');
 
 $url_guardar = AppUrlConfig::getApiBaseUrl() . '/src/misas/guardar_horario';
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setArrayCamposHidden(['id_item_h' => $Qid_item_h]);
 $oHash->setUrl($url_guardar);
 $oHash->setCamposForm('t_start!t_end');

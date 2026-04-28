@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Data builder: datos del formulario de modificacion de una
@@ -84,7 +84,7 @@ final class CartaPresentacionFormData
         $oCarta = $repoCarta->findById($id_ubi, $id_direccion);
 
         $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $oHashUpdate = new Hash();
+        $oHashUpdate = new HashFront();
         $oHashUpdate->setUrl($web . '/src/cartaspresentacion/carta_presentacion_update');
         $oHashUpdate->setArrayCamposHidden([
             'id_ubi' => $id_ubi,

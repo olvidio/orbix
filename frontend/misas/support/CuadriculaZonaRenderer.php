@@ -6,7 +6,7 @@ namespace frontend\misas\support;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Renderiza `ver_cuadricula_zona.phtml` a partir de los datos devueltos por
@@ -39,18 +39,18 @@ class CuadriculaZonaRenderer
         $json_data_cuadricula = $data['data_cuadricula'] ?? [];
 
         $url_cuadricula_update = AppUrlConfig::getApiBaseUrl() . '/src/misas/cuadricula_update';
-        $oHashUpd = new Hash();
+        $oHashUpd = new HashFront();
         $oHashUpd->setUrl($url_cuadricula_update);
         $oHashUpd->setCamposForm('dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona');
         $h_cuadricula_update = $oHashUpd->linkSinValParams();
 
         $url_desplegable_sacd = AppUrlConfig::getApiBaseUrl() . '/src/misas/desplegable_sacd';
-        $oHashDs = new Hash();
+        $oHashDs = new HashFront();
         $oHashDs->setUrl($url_desplegable_sacd);
         $oHashDs->setCamposForm('id_zona!id_sacd!seleccion!dia');
         $h_desplegable_sacd = $oHashDs->linkSinValParams();
 
-        $oHashSelf = new Hash();
+        $oHashSelf = new HashFront();
         $oHashSelf->setUrl($url_self);
         $oHashSelf->setCamposForm($camposSelf);
         $h_ver_cuadricula_zona = $oHashSelf->linkSinValParams();

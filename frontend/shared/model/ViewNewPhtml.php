@@ -3,7 +3,7 @@
 namespace frontend\shared\model;
 
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 
 /**
  * Set
@@ -48,7 +48,7 @@ class ViewNewPhtml
         extract($variables);
 
         ob_start();
-        $dir_apps = ConfigGlobal::$web_path;
+        $dir_apps = OrbixRuntime::webPath();
         $base_dir = $_SERVER['DOCUMENT_ROOT'] . $dir_apps;
 
         // reemplazo controller o model por view
@@ -66,9 +66,7 @@ class ViewNewPhtml
 
         require $fileName;
 
-        $out2 = ob_get_contents();
-
-        ob_end_clean();
+        $out2 = ob_get_clean();
 
         echo $out2;
     }

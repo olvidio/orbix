@@ -56,5 +56,8 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/menus/menus_importar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_importar.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/menus/menus_get_page_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/menus_get_page_data.php';
+    });
 
 };

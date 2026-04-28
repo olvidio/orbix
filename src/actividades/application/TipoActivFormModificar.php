@@ -2,7 +2,7 @@
 
 namespace src\actividades\application;
 
-use web\Hash;
+use frontend\shared\security\HashFront;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
@@ -22,7 +22,7 @@ class TipoActivFormModificar
 
         $nom_tipo = $oTiposActividades->getNom_tipoText();
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('nom_tipo_activ');
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => $Qid_tipo_activ,

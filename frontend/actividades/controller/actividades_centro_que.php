@@ -7,12 +7,11 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\CentrosQue;
 use frontend\shared\web\DesplegableArray;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -30,7 +29,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $oForm = new CentrosQue();
 $miRolePau = OrbixRuntime::miRolePau();
 $filtro = ['active' => true];
-if ($miRolePau === PauType::PAU_CTR) {
+if ($miRolePau === 'ctr') { // PauType::PAU_CTR
     $id_pau = (string)$_SESSION['session_auth']['MiUsuario']->getCsv_id_pau();
     $filtro['id_ubi_in'] = array_values(array_filter(array_map('intval', explode(',', $id_pau)), static fn ($v) => $v > 0));
     $oForm->setCentros('centro');
@@ -128,7 +127,7 @@ if ($Qperiodo === 'no') {
 $url_ajax = AppUrlConfig::getPublicAppBaseUrl() . '/programas/centro_ajax.php';
 
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url);
 $oHash->setCamposForm('empiezamin!empiezamax!iactividad_val!iasistentes_val!id_ctr!id_ctr_mas!id_ctr_num!periodo!year');
 $oHash->setCamposNo('id_ctr');

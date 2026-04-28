@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -55,7 +55,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 $oTabla->setGrupos($aGrupos);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('sel');
 $oHash->setArrayCamposHidden([
     'dl' => false,

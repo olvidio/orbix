@@ -2,7 +2,7 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\strtoupper_dlb;
 
 /**
@@ -80,7 +80,7 @@ switch ($tipo) {
         break;
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 
 $s_camposForm = 'simple!nombre_ubi!opcion!ciudad';
 $oHash->setcamposNo('cmb!simple!tipo_ctr!tipo_casa');
@@ -98,9 +98,9 @@ $oHash->setCamposForm($s_camposForm);
 
 
 if ($simple === 1) {
-    $pagina = Hash::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '2')));
+    $pagina = HashFront::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '2')));
 } else {
-    $pagina = Hash::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '1')));
+    $pagina = HashFront::link('frontend/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '1')));
 }
 
 $a_campos = [

@@ -2,8 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\web\Hash;
-use frontend\shared\web\Lista;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -51,7 +50,7 @@ if (!empty($Qid_grupmenu)) {
     $grupmenu = $data['grupmenu'];
     $orden = $data['orden'];
 
-    $oHashG = new Hash();
+    $oHashG = new HashFront();
     $oHashG->setCamposForm('que!grupmenu!orden');
     $oHashG->setcamposNo('refresh');
     $a_camposHidden = array(
@@ -72,7 +71,7 @@ if (!empty($Qid_grupmenu)) {
     $oView->renderizar('grupmenu_form.phtml', $a_camposG);
 
 } else {
-    $oHashG = new Hash();
+    $oHashG = new HashFront();
     $oHashG->setCamposForm('que!grupmenu!orden');
     $oHashG->setcamposNo('refresh');
     $a_camposHidden = array(

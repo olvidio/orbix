@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 
 /**
@@ -101,18 +101,18 @@ $url_lista = 'frontend/procesos/controller/fases_activ_cambio_lista.php';
 $url_update = $apiBase . '/src/procesos/fases_activ_cambio_update';
 $url_get = $apiBase . '/src/procesos/fases_activ_cambio_get';
 
-$oHashLista = new Hash();
+$oHashLista = new HashFront();
 $oHashLista->setUrl($url_lista);
 $oHashLista->setCamposForm('dl_propia!id_tipo_activ!id_fase_nueva!periodo!year!empiezamax!empiezamin!accion');
 $h_lista = $oHashLista->linkSinValParams();
 
-$oHashAct = new Hash();
+$oHashAct = new HashFront();
 $oHashAct->setUrl($url_get);
 $oHashAct->setCamposForm('dl_propia!id_tipo_activ!id_fase_sel');
 $h_actualizar = $oHashAct->linkSinValParams();
 
 $url_tipo = $apiBase . '/src/actividades/actividad_tipo_get';
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setUrl($url_tipo);
 $oHash1->setCamposForm('extendida!modo!salida!entrada');
 $h_tipo = $oHash1->linkSinVal();

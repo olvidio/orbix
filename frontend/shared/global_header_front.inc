@@ -2,7 +2,7 @@
 
 
 use frontend\shared\web\Posicion;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require __DIR__ . '/../../libs/vendor/autoload.php';
 
@@ -42,7 +42,7 @@ require_once('frontend/usuarios/controller/login.php');
 
 session_write_close();
 // Para validar los parámetros enviados via POST o GET (si hay hash)
-$oValidator = new Hash();
+$oValidator = new HashFront();
 $a_data = (!empty($_POST)) ? $_POST : ((isset($_GET['h'])) ? $_GET : []);
 echo $oValidator->validatePost($a_data);
 

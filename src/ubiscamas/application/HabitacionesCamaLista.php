@@ -4,12 +4,11 @@ namespace src\ubiscamas\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
-use src\shared\config\ConfigGlobal;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-use web\Hash;
 use function src\shared\domain\helpers\is_true;
+use frontend\shared\security\HashFront;
 
 class HabitacionesCamaLista
 {
@@ -152,7 +151,7 @@ class HabitacionesCamaLista
 
                 $aRow[11] = $oHabitacion->getObservacionesVo()?->value() ?? '';
                 /*
-                $pagina = Hash::link(ConfigGlobal::getWeb() . '/frontend/ubiscamas/controller/cama_form.php?'
+                $pagina = HashFront::link(ConfigGlobal::getWeb() . '/frontend/ubiscamas/controller/cama_form.php?'
                     . http_build_query(array('id_habitacion' => $id_habitacion, 'id_cama' => $id_cama))
                 );
                 $aRow[7] = array('ira' => $pagina, 'valor' => _('editar'));
@@ -183,55 +182,6 @@ class HabitacionesCamaLista
             'a_botones' => $a_botones,
             'a_valores' => $a_valores,
         ];
-
-        return self::withListaHabitacionesUi($result, $id_activ);
-    }
-
-    /**
-     * @param array<string, mixed> $result
-     * @return array<string, mixed>
-     */
-    private static function withListaHabitacionesUi(array $result, int $id_activ): array
-    {
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-
-        $url_actualizar = 'frontend/ubiscamas/controller/lista_habitaciones.php';
-        $oHashActualizar = new Hash();
-        $oHashActualizar->setUrl($url_actualizar);
-        $oHashActualizar->setCamposNo('refresh');
-        $oHashActualizar->setArraycamposHidden([
-            'id_activ' => $id_activ,
-            'refresh' => 1,
-        ]);
-        $result['reload_main_url'] = $web . '/' . $oHashActualizar->getUrl() . '?' . $oHashActualizar->linkConVal();
-
-        $url_update_cama = 'src/ubiscamas/update_cama_asistente';
-        $oHashUpdateCama = new Hash();
-        $oHashUpdateCama->setUrl($url_update_cama);
-        $oHashUpdateCama->setCamposForm('id_activ!id_nom!id_cama');
-        $result['url_update_cama_full'] = $web . '/' . $url_update_cama;
-        $result['hash_update_cama_ajax'] = $oHashUpdateCama->getParamAjaxEnArray();
-
-        $url_update_solo_vip = '/src/ubiscamas/update_solo_vip';
-        $oHashSoloVip = new Hash();
-        $oHashSoloVip->setUrl($url_update_solo_vip);
-        $oHashSoloVip->setArraycamposHidden(['id_activ' => $id_activ]);
-        $oHashSoloVip->setCamposChk('solo_vip');
-        $result['url_update_solo_vip'] = $url_update_solo_vip;
-        $result['update_solo_vip_full_url'] = $web . $url_update_solo_vip;
-        $result['hash_solo_vip_ajax'] = $oHashSoloVip->getParamAjaxEnArray();
-
-        $url_distribucion = 'frontend/ubiscamas/controller/lista_habitaciones_distribucion.php';
-        $oHashDistribucion = new Hash();
-        $oHashDistribucion->setUrl($url_distribucion);
-        $oHashDistribucion->setArraycamposHidden(['id_activ' => $id_activ]);
-        $result['distribucion_open_url'] = $web . '/' . $url_distribucion . '?' . $oHashDistribucion->linkConVal();
-
-        $url_nombres = 'frontend/ubiscamas/controller/lista_habitaciones_nombres.php';
-        $oHashNombres = new Hash();
-        $oHashNombres->setUrl($url_nombres);
-        $oHashNombres->setArraycamposHidden(['id_activ' => $id_activ]);
-        $result['nombres_open_url'] = $web . '/' . $url_nombres . '?' . $oHashNombres->linkConVal();
 
         return $result;
     }

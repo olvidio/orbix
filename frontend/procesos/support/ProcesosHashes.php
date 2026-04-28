@@ -2,7 +2,7 @@
 
 namespace frontend\procesos\support;
 
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Helper para construir los `Hash` repetitivos de las pantallas de procesos
@@ -19,7 +19,7 @@ final class ProcesosHashes
      */
     public static function formLink(string $url, string $camposForm = ''): string
     {
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setUrl($url);
         $oHash->setCamposForm($camposForm);
         return $oHash->linkSinValParams();

@@ -6,7 +6,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\config\OrbixRuntime;
 use src\shared\domain\value_objects\DateTimeLocal;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -75,19 +75,19 @@ $certificado = "$sigla $contador/$any";
 // destino
 $destino = '';
 
-$oHashCertificadoPdf = new Hash();
+$oHashCertificadoPdf = new HashFront();
 $oHashCertificadoPdf->setCamposForm('certificado!firmado!f_certificado!idioma!destino');
 $oHashCertificadoPdf->setCamposNo('firmado');
 $oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $id_nom, 'nuevo' => 1]);
 
 $pag_certificado_2_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/certificados/controller/certificado_emitido_2_mpdf.php';
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($pag_certificado_2_pdf);
 $oHash->setCamposForm('id_item!guardar');
 $h = $oHash->linkSinVal();
 
 $pag_certificado_eliminar = AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_emitido_delete';
-$oHash_e = new Hash();
+$oHash_e = new HashFront();
 $oHash_e->setUrl($pag_certificado_eliminar);
 $oHash_e->setCamposForm('id_item');
 $h_eliminar = $oHash_e->linkSinVal();

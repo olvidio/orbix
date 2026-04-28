@@ -4,7 +4,7 @@ use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
@@ -41,6 +41,27 @@ $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];
 $a_valores = $data['a_valores'];
 
+$baseUrl = AppUrlConfig::getPublicAppBaseUrl();
+foreach ($a_valores as $idx => $fila) {
+    if (!is_array($fila)) {
+        continue;
+    }
+    foreach ($fila as $colKey => $cell) {
+        if (!is_array($cell) || !isset($cell['link_spec'])) {
+            continue;
+        }
+        $spec = $cell['link_spec'];
+        $path = (string)($spec['path'] ?? '');
+        $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
+        if ($path === '') {
+            continue;
+        }
+        $url = $baseUrl . '/' . ltrim($path, '/') . '?' . http_build_query($query);
+        $a_valores[$idx][$colKey]['ira'] = HashFront::link($url);
+        unset($a_valores[$idx][$colKey]['link_spec']);
+    }
+}
+
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
@@ -54,18 +75,18 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHashBuscar = new Hash();
+$oHashBuscar = new HashFront();
 $oHashBuscar->setCamposForm('username');
 $oHashBuscar->setcamposNo('scroll_id');
 $oHashBuscar->setArraycamposHidden(array('quien' => 'grupo'));
 
-$oHashSelect = new Hash();
+$oHashSelect = new HashFront();
 $oHashSelect->setCamposForm('sel');
 $oHashSelect->setcamposNo('scroll_id');
 $oHashSelect->setArraycamposHidden(array('que' => 'eliminar_grupo'));
 
 $aQuery = ['nuevo' => 1, 'quien' => 'grupo'];
-$url_nuevo = Hash::link(AppUrlConfig::getPublicAppBaseUrl()
+$url_nuevo = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/usuarios/controller/grupo_form.php?'
     . http_build_query($aQuery));
 

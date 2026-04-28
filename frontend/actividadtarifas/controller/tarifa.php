@@ -17,29 +17,29 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $public = AppUrlConfig::getPublicAppBaseUrl();
 $api = AppUrlConfig::getApiBaseUrl();
 
-$oHashLista = new Hash();
+$oHashLista = new HashFront();
 $oHashLista->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_lista.php');
 $oHashLista->setCamposForm('');
 $h_lista = $oHashLista->linkSinVal();
 
-$oHashForm = new Hash();
+$oHashForm = new HashFront();
 $oHashForm->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_form.php');
 $oHashForm->setCamposForm('id_tarifa');
 $h_form = $oHashForm->linkSinVal();
 
-$oHashUpdate = new Hash();
+$oHashUpdate = new HashFront();
 $oHashUpdate->setUrl($api . '/src/actividadtarifas/tipo_tarifa_update');
 $oHashUpdate->setCamposForm('id_tarifa!letra!modo!observ');
 $url_update = $api . '/src/actividadtarifas/tipo_tarifa_update' . $oHashUpdate->linkSinVal();
 
-$oHashEliminar = new Hash();
+$oHashEliminar = new HashFront();
 $oHashEliminar->setUrl($api . '/src/actividadtarifas/tipo_tarifa_eliminar');
 $oHashEliminar->setCamposForm('id_tarifa');
 $url_eliminar = $api . '/src/actividadtarifas/tipo_tarifa_eliminar' . $oHashEliminar->linkSinVal();

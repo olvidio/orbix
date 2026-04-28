@@ -1,21 +1,8 @@
 <?php
 
-use frontend\shared\config\OrbixRuntime;
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
-use src\actividades\domain\contracts\ActividadPubRepositoryInterface;
-use src\actividades\domain\value_objects\NivelStgrId;
-use src\actividades\domain\value_objects\StatusId;
-use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
-use src\actividadestudios\domain\PosiblesCa;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\Hash;
 use frontend\shared\web\Periodo;
-use function frontend\shared\helpers\is_true;
 
 /**
  * Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
@@ -35,8 +22,6 @@ require_once("frontend/shared/global_header_front.inc");
 // Crea los objetos de uso global **********************************************
 
 // FIN de  Cabecera global de URL de controlador ********************************
-
-$oPosiblesCa = new PosiblesCa();
 
 $oPosicion->recordar();
 //Si vengo por medio de Posicion, borro la última
@@ -62,24 +47,8 @@ $Qca_repaso = (string)filter_input(INPUT_POST, 'ca_repaso');
 $Qca_todos = (string)filter_input(INPUT_POST, 'ca_todos');
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-// vengo directamente con un id:
-if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_nom = (integer)strtok($a_sel[0], "#");
-    $Qna = strtok("#"); // id_tabla
-    $Qgrupo_estudios = 'todos';
-    $oHoy = new \src\shared\domain\value_objects\DateTimeLocal();
-    $inicioIso = $oHoy->format("Y-m-d");
-    $ini_m = $_SESSION['oConfig']->getMesIniStgr();
-    $year = date("Y");
-    if (date("m") < $ini_m) {
-        $finIso = date("Y-m-t", strtotime("$year-$ini_m-01"));
-    } else {
-        $next_year = (int)$year + 1;
-        $finIso = date("Y-m-t", strtotime("$next_year-$ini_m-01"));
-    }
-    $Qid_ctr_agd = 0;
-    $Qid_ctr_n = 0;
-} else {
+
+if (empty($a_sel)) {
     $Qid_ctr_agd = (integer)filter_input(INPUT_POST, 'id_ctr_agd');
     $Qid_ctr_n = (integer)filter_input(INPUT_POST, 'id_ctr_n');
     $Qna = (string)filter_input(INPUT_POST, 'na');
@@ -93,21 +62,16 @@ if (!empty($a_sel)) { //vengo de un checkbox
         exit($msg_txt);
     }
 
-    // valores por defeccto
     if (empty($Qperiodo)) {
         $Qperiodo = 'curso_ca';
     }
 
-    // periodo.
     $oPeriodo = Periodo::conCalendarioDesdeBackend();
     $oPeriodo->setDefaultAny('next');
     $oPeriodo->setAny($Qyear);
     $oPeriodo->setEmpiezaMin($Qempiezamin);
     $oPeriodo->setEmpiezaMax($Qempiezamax);
     $oPeriodo->setPeriodo($Qperiodo);
-
-    $inicioIso = $oPeriodo->getF_ini_iso();
-    $finIso = $oPeriodo->getF_fin_iso();
 
     $aGoBack = array(
         'id_ctr_agd' => $Qid_ctr_agd,
@@ -126,408 +90,40 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->setParametros($aGoBack, 1);
 }
 
-$mi_sfsv = OrbixRuntime::miSfsv();
-switch ($Qna) {
-    case "agd":
-    case "a":
-        //caso de agd
-        $id_ctr = ($Qid_ctr_agd == 1) ? '' : $Qid_ctr_agd; //si es 1 es todos los ctr.
-        $id_tabla_persona = 'a'; //el id_tabla (persona) entra en conflicto con el id_tabla de actividad
+$data = PostRequest::getDataFromUrl('/src/actividadestudios/ca_posibles_data', PostRequest::requestPayloadForHash());
 
-        if (is_true($Qca_todos)) {
-            $id_tipo_activ = '^' . $mi_sfsv . '33';
-        } else {
-            // por defecto, todos los ca. Sobreescribo.
-            $id_tipo_activ = '^' . $mi_sfsv . '33';
-            if (is_true($Qca_estudios)) {
-                $id_tipo_activ = '^' . $mi_sfsv . '332';
-            }
-            if (is_true($Qca_repaso)) {
-                $id_tipo_activ = '^1' . $mi_sfsv . '334';
-            }
-        }
-        $aWhereActividad['id_tipo_activ'] = $id_tipo_activ;
-        $aOperadorActividad['id_tipo_activ'] = '~';
-        break;
-    case "n":
-        // caso de n
-        $id_ctr = ($Qid_ctr_n == 1) ? '' : $Qid_ctr_n; //si es 1 es todos los ctr.
-        $id_tabla_persona = 'n';
-
-        if (is_true($Qca_todos)) {
-            $id_tipo_activ = '^' . $mi_sfsv . '12';
-        } else {
-            // por defecto, todos los ca. Sobreescribo.
-            $id_tipo_activ = '^' . $mi_sfsv . '12';
-            if (is_true($Qca_estudios)) {
-                $id_tipo_activ = '^' . $mi_sfsv . '122';
-            }
-            if (is_true($Qca_repaso)) {
-                $id_tipo_activ = '^' . $mi_sfsv . '124';
-            }
-        }
-        $aWhereActividad['id_tipo_activ'] = $id_tipo_activ;
-        $aOperadorActividad['id_tipo_activ'] = '~';
-        break;
-}
-
-// ----------------------- Selección de personas -----------------
-
-/* Según si selecciono por centros, o por personas individuales */
-$aWhere = [];
-$aOperador = [];
-$alum = 0;
-if (!empty($a_sel)) { //vengo de un checkbox
-    $id_nom_lst = '';
-    foreach ($a_sel as $selBox) {
-        $id_nom = (integer)strtok($selBox, "#");
-        if ($alum > 0)
-            $id_nom_lst .= "|";
-        if (!empty($id_nom))
-            $id_nom_lst .= '^' . $id_nom . '$';
-        $alum++;
+if (($data['modo'] ?? '') === 'lista') {
+    if (!empty($data['msg_txt'])) {
+        echo "<div class='no_print'>" . $data['msg_txt'] . "</div>";
     }
-
-    $aWhere['id_nom'] = $id_nom_lst;
-    $aOperador['id_nom'] = '~';
-    $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-
-    $Qtexto = "image";
-    $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-} else {
-    switch ($id_tabla_persona) {
-        case 'n':
-            $niveles_stgr_con_estudios = NivelStgrId::getArrayNivelStgrOn();
-            $aWhere['nivel_stgr'] = $niveles_stgr_con_estudios;
-            $aOperador['nivel_stgr'] = 'IN';
-            $PersonaRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-            break;
-        case 'a':
-            $PersonaRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-            break;
-    }
-    $aWhere['situacion'] = 'A';
-    $aWhere['sacd'] = 'f'; // que no salgan los sacd
-    $aWhere['id_tabla'] = $id_tabla_persona;
-    $aWhere['_ordre'] = 'id_ctr,apellido1,apellido2,nom';
-    if (!empty($id_ctr))
-        $aWhere['id_ctr'] = $id_ctr;
-}
-
-$cPersonas = $PersonaRepository->getPersonas($aWhere, $aOperador);
-
-//------------- Selección de Actividades ---------------------------------
-$aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
-$aOperadorActividad['f_ini'] = 'BETWEEN';
-
-if ($Qgrupo_estudios !== 'todos') {
-    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-    $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $Qgrupo_estudios]);
-    if (is_array($cDelegaciones) && count($cDelegaciones) > 1) {
-        $aOperadorActividad['dl_org'] = 'OR';
-    }
-    $mi_grupo = '';
-    foreach ($cDelegaciones as $oDelegacion) {
-        $mi_grupo .= empty($mi_grupo) ? '' : ',';
-        $mi_grupo .= "'" . $oDelegacion->getDlVo()->value() . "'";
-    }
-    $aWhereActividad['dl_org'] = $mi_grupo;
-}
-
-$aWhereActividad['status'] = StatusId::ACTUAL;
-$aWhereActividad['_ordre'] = 'nivel_stgr,f_ini';
-
-$cActividades = [];
-$ActividadPubRepository = $GLOBALS['container']->get(ActividadPubRepositoryInterface::class);
-$cActividades1 = $ActividadPubRepository->getActividades($aWhereActividad, $aOperadorActividad);
-// añadir las actividades de la dl aunque no estén publicadas
-$ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
-$aWhereActividad['publicado'] = 'f';
-$cActividades2 = $ActividadDlRepository->getActividades($aWhereActividad, $aOperadorActividad);
-$cActividades = $cActividades1 + $cActividades2;
-
-
-// para las letras verticales
-$gruix = 20;
-
-// lista de ca con sus asignaturas
-//Si accedo via formulario, debo poner los ca escogidos; y sino los de las dlb, dlz, dlva
-$sql_where = '';
-$msg_txt = '';
-if (!empty($Qidca)) {
-
-} else { //no vengo del formulario: es para todos los ca de la zona.
-    $a_datos_ca = [];
-    $i = 0;
-    $max_len_activ = 1;
-    $nc_bienio = 0;
-    $nc_cuadrienio1 = 0;
-    $nc_cuadrienio2 = 0;
-    $nc_repaso = 0;
-    $nc_ce = 0;
-    $nc_otros = 0;
-    foreach ($cActividades as $oActividad) {
-        $aAsignaturasCa = [];
-        $i++;
-        $id_activ = $oActividad->getId_activ();
-        $id_tipo_activ = $oActividad->getId_tipo_activ();
-        $nom_activ = $oActividad->getNom_activ();
-        $nivel_stgr = $oActividad->getNivel_stgr();
-        // si es sólo un alumno pongo el nombre entero, porque saldrá en formato lista.
-        // sino, cambio el nombre de la actividad: borro cosas:
-        if ($alum > 1) {
-            $nom_activ = str_replace("ca n", "", $nom_activ);
-            $nom_activ = str_replace("bienio", "", $nom_activ);
-            $nom_activ = str_replace("cuadrienio", "", $nom_activ);
-            $nom_activ = str_replace("repaso", "", $nom_activ);
-            $nom_activ = str_replace("semestre", "", $nom_activ);
-            $nom_activ = trim($nom_activ);
-        }
-        if (empty($nivel_stgr)) {
-            $msg_txt .= sprintf(_("el ca: %s no tiene puesto el nivel de stgr.") . "<br>", $nom_activ);
-            $nivel_stgr = NivelStgrId::generarNivelStgr($id_tipo_activ);
-        }
-        // repaso, mayores 30, menores 30, pa-ad
-        if ($nivel_stgr === 4 || $nivel_stgr === 9 || $nivel_stgr === 8 || $nivel_stgr === 7) {
-            $aAsignaturasCa = array("dd");
-        } else {
-            // por cada ca creo un array con las asignaturas y los créditos.
-            $ActividadAsignaturaRepository = $GLOBALS['container']->get(ActividadAsignaturaRepositoryInterface::class);
-            $aAsignaturasCa = $ActividadAsignaturaRepository->getAsignaturasCa($id_activ);
-            if (count($aAsignaturasCa) === 0 && $nivel_stgr) {
-                $msg_txt .= sprintf(_("el ca: %s no tiene puesta ninguna asignatura.") . "<br>", $nom_activ);
-                continue;
-            }
-        }
-        switch ($nivel_stgr) {
-            case 1: // bienio
-                $nc_bienio++;
-                break;
-            case 2: // cuadrienio-I
-                $nc_cuadrienio1++;
-                break;
-            case 3: //cuadrienio-II-IV
-                $nc_cuadrienio2++;
-                break;
-            case 4: // repaso
-                $nc_repaso++;
-                break;
-            case 5: // ce
-                $nc_ce++;
-                break;
-            default:
-                $nc_otros++;
-                break;
-        }
-
-        $a_datos_ca[$id_activ] = array(
-            'nom_activ' => $nom_activ,
-            'nivel_stgr' => $nivel_stgr,
-            'aAsignaturas' => $aAsignaturasCa
-        );
-
-        $len = strlen($nom_activ);
-        $max_len_activ = ($max_len_activ < $len) ? $len : $max_len_activ;
-    }
-    $nc_cuadrienio = $nc_cuadrienio1 + $nc_cuadrienio2;
-}
-
-// ------------  El bucle: para cada alumno miro los créditos posibles para cada ca
-$a = 0;
-$cuadro = [];
-if (!empty($a_sel)) { //vengo de un checkbox
-    /* para hacerlo compatible con el caso de los centros. miro ahora el nombre del ctr */
-    $cOrdPersonas = [];
-    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-    foreach ($cPersonas as $oPersonaDl) {
-        $id_ubi = $oPersonaDl->getId_ctr();
-        $oCentroDl = $CentroDlRepository->findById($id_ubi);
-        $Ctr = $oCentroDl->getNombre_ubi();
-        // para ordenar paso a minúsculas.
-        $ctr = strtolower($Ctr ?? '');
-        $cOrdPersonas[$ctr][] = array('Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl);
-    }
-} else {
-    /* para ordenar por orden alfabético de ctr */
-    $cOrdPersonas = [];
-    $id_ubi_old = '';
-    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-    foreach ($cPersonas as $oPersonaDl) {
-        $id_ubi = $oPersonaDl->getId_ctr();
-        if ($id_ubi != $id_ubi_old) {
-            $oCentroDl = $CentroDlRepository->findById($id_ubi);
-            $Ctr = $oCentroDl->getNombre_ubi();
-            // para ordenar paso a minúsculas.
-            $ctr = strtolower($Ctr ?? '');
-        }
-        $cOrdPersonas[$ctr][] = array('Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl);
-    }
-}
-ksort($cOrdPersonas);
-foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
-    foreach ($ctrPersonas as $row) {
-        $a++;
-        $Ctr = $row['Ctr'];
-        $oPersonaDl = $row['oPersonaDl'];
-        $id_nom = $oPersonaDl->getId_nom();
-        $id_tabla_persona = $oPersonaDl->getId_tabla();
-        $nom_persona = $oPersonaDl->getPrefApellidosNombre();
-        $stgr = $oPersonaDl->getNivel_stgr(); //posibles: n,s,t,b,c1,c2,r
-
-        if (method_exists($oPersonaDl, 'getCe')) {
-            $ce = $oPersonaDl->getCe(); //está en el ce? 1,2,3
-        } else {
-            $ce = '';
-        }
-        //echo "persona: $id_nom,$nom,$ctr,$stgr<br>";
-        $creditos = 0;
-        // por cada ca:
-        $aActividades = [];
-        foreach ($a_datos_ca as $id_activ => $datos_ca) {
-            $aLista = [];
-            $nom_activ = $datos_ca["nom_activ"];
-            $nivel_stgr = $datos_ca["nivel_stgr"];
-            $aAsignaturas = $datos_ca["aAsignaturas"];
-
-            // para el caso especial de agd en el ceagd
-            if ($ce && $Qna === "agd") {
-                $stgr = "ce";
-            }
-
-            // Contar creditos:
-            switch ($stgr) {
-                case "n":
-                    if (in_array($nivel_stgr, [9, 8, 7])) {
-                        $creditos = 'x';
-                    } else {
-                        $creditos = "-";
-                    }
-                    break;
-                case "b":
-                    if ($nivel_stgr == 1) {
-                        $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
-                        $creditos = $result['suma'];
-                        $aLista = $result['lista'];
-                    } else {
-                        $creditos = "-";
-                    }
-                    break;
-                case "c1":
-                    if ($nivel_stgr == 2) {
-                        $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
-                        $creditos = $result['suma'];
-                        $aLista = $result['lista'];
-                    } elseif ($nivel_stgr == 3) {
-                        $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
-                        $creditos = $result['suma'];
-                        $aLista = $result['lista'];
-                    } else {
-                        $creditos = "-";
-                    }
-                    break;
-                case "c2":
-                    if ($nivel_stgr == 3) {
-                        $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
-                        $creditos = $result['suma'];
-                        $aLista = $result['lista'];
-                    } else {
-                        $creditos = "-";
-                    }
-                    break;
-                case "r":
-                    if ($id_tabla_persona === 'n') {
-                        if ($nivel_stgr == 4) {
-                            $creditos = "x";
-                        } else {
-                            $creditos = "-";
-                        }
-                    } else {
-                        if (in_array($nivel_stgr, [4, 9, 8, 7])) {
-                            $creditos = 'x';
-                        } else {
-                            $creditos = "-";
-                        }
-                    }
-                    break;
-                case "ce":
-                    if ($nivel_stgr == 5) {
-                        $result = $oPosiblesCa->contar_creditos($id_nom, $aAsignaturas);
-                        $creditos = $result['suma'];
-                        $aLista = $result['lista'];
-                    } else {
-                        $creditos = "-";
-                    }
-                    break;
-            }
-
-            $aActividades[$id_activ] = array(
-                'nom_activ' => $nom_activ,
-                'creditos' => $creditos,
-                'aLista' => $aLista,
-            );
-        }
-
-        $cuadro[$Ctr][$nom_persona] = array(
-            'stgr' => $stgr,
-            'aActividades' => $aActividades
-        );
-    }
-}
-
-// -------------------------- si es una persona, saco una lista. -----------------------
-if (!empty($a_sel) && $alum == 1) { //vengo de un 'checkbox' => sólo una persona
-    $aParamGo = array('que' => 'activ', 'pau' => 'p', 'id_pau' => $id_nom, 'obj_pau' => $obj_pau, 'id_dossier' => '1301y1302');
-    $pagina = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aParamGo));
-
-    // Errores y falta de información
-    if (count($cuadro) > 1) {
-        exit(_("sólo debebería haber uno"));
-    }
-    if (!empty($msg_txt)) {
-        echo "<div class='no_print'>$msg_txt</div>";
-    }
-
-    foreach ($cuadro as $ctr => $datos_persona) {
-        $nom = key($datos_persona);
-        $datos = current($datos_persona);
-
-        $titulo = sprintf(_("posibles ca de %s (%s)"), $nom, $ctr);
-        $stgr = $datos['stgr'];
-        $aActividades = $datos['aActividades'];
-    }
-
     $a_campos = ['oPosicion' => $oPosicion,
-        'msg_txt' => $msg_txt,
-        'titulo' => $titulo,
-        'stgr' => $stgr,
-        'aActividades' => $aActividades,
-        'pagina' => $pagina
+        'msg_txt' => $data['msg_txt'] ?? '',
+        'titulo' => $data['titulo'] ?? '',
+        'stgr' => $data['stgr'] ?? '',
+        'aActividades' => $data['aActividades'] ?? [],
+        'pagina' => $data['pagina'] ?? '',
     ];
-
     $oView = new ViewNewPhtml('frontend\\actividadestudios\\controller');
     $oView->renderizar('ca_posibles_lista.phtml', $a_campos);
 } else {
-    // -------------------------- si es para el centro/s saco una tabla -------------------------
-    foreach ($cuadro as $ctr => $datos_persona) {
-
+    foreach ($data['tabla_filas'] ?? [] as $fila) {
         $a_campos = ['oPosicion' => $oPosicion,
-            'msg_txt' => $msg_txt,
-            'texto' => $Qtexto,
-            'nc_bienio' => $nc_bienio,
-            'nc_cuadrienio1' => $nc_cuadrienio1,
-            'nc_cuadrienio2' => $nc_cuadrienio2,
-            'nc_cuadrienio' => $nc_cuadrienio,
-            'nc_repaso' => $nc_repaso,
-            'nc_ce' => $nc_ce,
-            'nc_otros' => $nc_otros,
-            'stgr' => $stgr,
-            'ctr' => $ctr,
-            'ref' => $Qref,
-            'height' => $max_len_activ,
-            'cPersonas' => $datos_persona,
-            'aActividades' => $aActividades,
+            'msg_txt' => $fila['msg_txt'] ?? '',
+            'texto' => $fila['texto'] ?? '',
+            'nc_bienio' => $fila['nc_bienio'] ?? 0,
+            'nc_cuadrienio1' => $fila['nc_cuadrienio1'] ?? 0,
+            'nc_cuadrienio2' => $fila['nc_cuadrienio2'] ?? 0,
+            'nc_cuadrienio' => $fila['nc_cuadrienio'] ?? 0,
+            'nc_repaso' => $fila['nc_repaso'] ?? 0,
+            'nc_ce' => $fila['nc_ce'] ?? 0,
+            'nc_otros' => $fila['nc_otros'] ?? 0,
+            'stgr' => $fila['stgr'] ?? '',
+            'ctr' => $fila['ctr'] ?? '',
+            'ref' => $fila['ref'] ?? '',
+            'height' => $fila['height'] ?? 1,
+            'cPersonas' => $fila['cPersonas'] ?? [],
+            'aActividades' => $fila['aActividades'] ?? [],
         ];
-
         $oView = new ViewNewPhtml('frontend\\actividadestudios\\controller');
         $oView->renderizar('ca_posibles_cuadro.phtml', $a_campos);
     }

@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -36,7 +36,7 @@ $url_ctr = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controlle
 //5
 $url_dlb = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/inventario/controller/doc_de_dlb.php?';
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('id_tipo_doc');
 $oHash->setArrayCamposHidden(['inventario' => $Qinventario]);
 

@@ -6,7 +6,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\UrlBaseProject;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Formulario para cambiar el password por parte del usuario.
@@ -24,7 +24,7 @@ $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
 $usuario = $data['usuario'];
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('password!password1');
 $a_camposHidden = array(
 //    'pass' => $pass,
@@ -34,7 +34,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $url_usuario_guardar = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_guardar_pwd';
 $url_usuario_chk = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_check_pwd';
-$oHash2 = new Hash();
+$oHash2 = new HashFront();
 $oHash2->setUrl($url_usuario_chk);
 $oHash2->setCamposForm('id_usuario!password');
 $h2 = $oHash2->linkSinValParams();

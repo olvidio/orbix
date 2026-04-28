@@ -3,7 +3,7 @@
 namespace src\cartaspresentacion\application;
 
 use src\shared\config\ConfigGlobal;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * URLs y fragmentos Hash para la shell `cartas_presentacion.php`.
@@ -19,31 +19,31 @@ final class CartasPresentacionShellData
         $mi_dele = ConfigGlobal::mi_delef();
 
         $url_ctr = $web . '/frontend/ubis/controller/home_ubis.php';
-        $oHashCtr = new Hash();
+        $oHashCtr = new HashFront();
         $oHashCtr->setUrl($url_ctr);
         $oHashCtr->setCamposForm('bloque!pau!id_ubi');
         $h_ctr = $oHashCtr->linkSinValParams();
 
         $url_lista = $web . '/frontend/cartaspresentacion/controller/cartas_presentacion_ubis_lista.php';
-        $oHashLista = new Hash();
+        $oHashLista = new HashFront();
         $oHashLista->setUrl($url_lista);
         $oHashLista->setCamposForm('tipo_lista');
         $oHashLista->setCamposNo('scroll_id!sel!poblacion_sel');
         $hash_lista_html = $oHashLista->getCamposHtml();
 
         $url_form = $web . '/frontend/cartaspresentacion/controller/cartas_presentacion_form.php';
-        $oHashForm = new Hash();
+        $oHashForm = new HashFront();
         $oHashForm->setUrl($url_form);
         $oHashForm->setCamposForm('id_direccion!id_ubi');
         $h_form = $oHashForm->linkSinVal();
 
         $url_poblaciones = $web . '/src/cartaspresentacion/poblaciones_data';
-        $oHashPob = new Hash();
+        $oHashPob = new HashFront();
         $oHashPob->setUrl($url_poblaciones);
         $oHashPob->setCamposForm('filtro');
         $h_poblaciones = $oHashPob->linkSinValParams();
 
-        $oHashEliminar = new Hash();
+        $oHashEliminar = new HashFront();
         $oHashEliminar->setUrl($web . '/src/cartaspresentacion/carta_presentacion_eliminar');
         $oHashEliminar->setCamposForm('id_ubi!id_direccion');
         $h_eliminar = $oHashEliminar->linkSinValParams();

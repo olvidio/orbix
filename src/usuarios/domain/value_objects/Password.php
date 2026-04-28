@@ -57,7 +57,7 @@ final class Password
      *
      * @return string
      */
-    public function hash(): string
+    public function HashB(): string
     {
         return password_hash($this->value, PASSWORD_DEFAULT);
     }

@@ -4,7 +4,7 @@ use core\ViewTwig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -23,7 +23,7 @@ if (($data['modo'] ?? '') === 'filtro') {
     $oCuadros->setChecked($data['a_checked'] ?? []);
     $oCuadros->setOpciones($data['a_delegaciones'] ?? []);
 
-    $oHash = new Hash();
+    $oHash = new HashFront();
     $oHash->setCamposForm('dl');
     $oHash->setcamposNo('dl');
     $oHash->setArrayCamposHidden(['filtro' => 1]);

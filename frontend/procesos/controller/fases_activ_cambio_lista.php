@@ -1,14 +1,33 @@
 <?php
 
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
 
 header('Content-Type: text/html; charset=UTF-8');
 
-$data = PostRequest::getDataFromUrl('/src/procesos/fases_activ_cambio_lista', $_POST);
+$requestPayload = PostRequest::requestPayloadForHash();
+
+// Estado de navegación: el frame de la página padre (fases_activ_cambio.php) ya está en la pila
+// (lo añadió su propio controller vía $oPosicion->recordar()). Aquí sólo persistimos los filtros
+// actuales en ese frame para que al volver se muestre la misma vista filtrada.
+$aGoBack = [
+    'refresh' => 1,
+    'hnov' => 0,
+    'dl_propia' => (string)($requestPayload['dl_propia'] ?? ''),
+    'id_fase_nueva' => (string)($requestPayload['id_fase_nueva'] ?? ''),
+    'id_tipo_activ' => (string)($requestPayload['id_tipo_activ'] ?? ''),
+    'periodo' => (string)($requestPayload['periodo'] ?? ''),
+    'year' => (string)($requestPayload['year'] ?? ''),
+    'empiezamin' => (string)($requestPayload['empiezamin'] ?? ''),
+    'empiezamax' => (string)($requestPayload['empiezamax'] ?? ''),
+    'accion' => (string)($requestPayload['accion'] ?? ''),
+];
+$oPosicion->setParametros($aGoBack, 0);
+
+$data = PostRequest::getDataFromUrl('/src/procesos/fases_activ_cambio_lista', $requestPayload);
 
 $error = (string)($data['error'] ?? '');
 if ($error !== '') {
@@ -38,7 +57,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 $oTabla->setFormatoTabla('html');
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('sel');
 $oHash->setcamposNo('scroll_id');
 $oHash->setArraycamposHidden([

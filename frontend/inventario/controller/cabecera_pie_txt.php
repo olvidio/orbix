@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -16,7 +16,7 @@ $cabeceraB = $data['cabeceraB'];
 $firma = $data['firma'];
 $pie = $data['pie'];
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('cabecera!cabeceraB!firma!pie');
 
 $a_campos = [

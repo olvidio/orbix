@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use function src\shared\domain\helpers\strtoupper_dlb;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\Posicion;
@@ -78,7 +78,7 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposNo('sel!mod!pau!scroll_id');
 $a_camposHidden = [
     'id_dossier' => 3005,
@@ -122,7 +122,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
-$oHashPeriodo = new Hash();
+$oHashPeriodo = new HashFront();
 $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
 $oHashPeriodo->setCamposNo('!refresh');
 $oHashPeriodo->setArraycamposHidden([]);

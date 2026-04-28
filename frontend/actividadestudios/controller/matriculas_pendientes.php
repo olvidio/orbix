@@ -1,13 +1,9 @@
 <?php
 
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\personas\application\services\PersonaFinderService;
-use web\Hash;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
-use function frontend\shared\helpers\is_true;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
@@ -39,12 +35,10 @@ $aviso = '';
 $form = '';
 $traslados = '';
 if (!empty($traslados)) {
-    // personas trasladadas con matriculas pendientes
-    // Periodo??
-
 } else {
-    $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-    $cMatriculasPendientes = $MatriculaDlRepository->getMatriculasPendientes();
+    $data = PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_pendientes_data', []);
+    $msg_err = $data['msg_err'] ?? '';
+    $a_valores = $data['a_valores'] ?? [];
 }
 
 $titulo = _("lista de matrículas pendientes de poner nota");
@@ -56,51 +50,20 @@ $a_botones = array(
 $a_cabeceras = array(_("actividad"), _("asignatura"), _("alumno"), _("p"));
 
 $i = 0;
-$a_valores = [];
+if (!isset($a_valores)) {
+    $a_valores = [];
+}
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
 if (isset($Qscroll_id) && !empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
-$msg_err = '';
-$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-$PersonaFinderService = $GLOBALS['container']->get(PersonaFinderService::class);
-foreach ($cMatriculasPendientes as $oMatricula) {
-    $i++;
-    $id_nom = $oMatricula->getId_nom();
-    $id_activ = $oMatricula->getId_activ();
-    $id_asignatura = $oMatricula->getId_asignatura();
-    $preceptor = $oMatricula->isPreceptor();
-    $preceptor = is_true($preceptor) ? 'x' : '';
-    $oActividad = $ActividadAllRepository->findById($id_activ);
-    if ($oActividad === null) {
-        $msg_err .= "<br>No encuentro ninguna actividad con id: $id_activ en  " . __FILE__ . ": line " . __LINE__;
-        continue;
-    }
-    $nom_activ = $oActividad->getNom_activ();
-    $oPersona = $PersonaFinderService->findPersonaEnGlobal($id_nom);
-    if ($oPersona === null) {
-        $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
-        continue;
-    }
-    $apellidos_nombre = $oPersona->getPrefApellidosNombre();
-    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
-    if ($oAsignatura === null) {
-        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
-    }
-    $nombre_corto = $oAsignatura->getNombre_corto();
-
-    $a_valores[$i]['sel'] = "$id_activ#$id_asignatura#$id_nom";
-    $a_valores[$i][1] = $nom_activ;
-    $a_valores[$i][2] = $nombre_corto;
-    $a_valores[$i][3] = $apellidos_nombre;
-    $a_valores[$i][4] = $preceptor;
+if (!isset($msg_err)) {
+    $msg_err = '';
 }
 
-
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposNo('sel!mod!pau!scroll_id');
 $a_camposHidden = array(
     'id_dossier' => 3005,
@@ -148,7 +111,7 @@ echo $oPosicion->mostrar_left_slide(1);
         }
     }
     fnjs_actualizar = function () {
-        var url = '<?= Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/matriculas_pendientes.php') ?>';
+        var url = '<?= HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/matriculas_pendientes.php') ?>';
         fnjs_update_div('#main', url);
     }
 </script>

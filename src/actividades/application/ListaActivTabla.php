@@ -9,8 +9,6 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
-use web\Hash;
-use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
 
@@ -18,10 +16,10 @@ use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: construye los datos (cabeceras + filas) de la pantalla
- * frontend/actividades/controller/lista_activ.php y devuelve tambien el
- * HTML ya renderizado de la tabla (`html_tabla`).
+ * frontend/actividades/controller/lista_activ.php. El HTML de la tabla se
+ * construye en `lista_activ_datos.php` tras resolver `link_spec` y firmar.
  *
- * La responsabilidad de leer el POST y gestionar `frontend\shared\web\Posicion` queda en el
+ * La responsabilidad de leer el POST y la pila de navegación (`$oPosicion`) queda en el
  * controlador frontend. Aqui traducimos un set de filtros + opciones de
  * entorno (permisos, dmz, etc.) al array de datos y al HTML de la tabla.
  */
@@ -41,8 +39,7 @@ class ListaActivTabla
      *   ver_tarifa: int,
      *   ver_sacd: int,
      *   a_cabeceras: array,
-     *   a_valores: array,
-     *   html_tabla: string
+     *   a_valores: array
      * }
      */
     public function execute(array $input, array $opts): array
@@ -294,17 +291,15 @@ class ListaActivTabla
                 $a_valores[$i][14] = $observ;
             }
             if ($is_dmz === false) {
-                $pagina = Hash::link(ConfigGlobal::getWeb() . '/frontend/asistentes/controller/lista_asistentes.php?' . "id_pau=$id_activ&que=$Qque");
-                $a_valores[$i][15] = ['ira' => $pagina, 'valor' => _("ver asistentes")];
+                $a_valores[$i][15] = [
+                    'link_spec' => [
+                        'path' => 'frontend/asistentes/controller/lista_asistentes.php',
+                        'query' => ['id_pau' => $id_activ, 'que' => $Qque],
+                    ],
+                    'valor' => _("ver asistentes"),
+                ];
             }
         }
-
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('lista_activ');
-        $oTabla->setCabeceras($a_cabeceras);
-        $oTabla->setBotones([]);
-        $oTabla->setDatos($a_valores);
-        $html_tabla = $oTabla->mostrar_tabla();
 
         return [
             'titulo' => $titulo,
@@ -313,7 +308,6 @@ class ListaActivTabla
             'ver_sacd' => $ver_sacd,
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
-            'html_tabla' => $html_tabla,
         ];
     }
 }

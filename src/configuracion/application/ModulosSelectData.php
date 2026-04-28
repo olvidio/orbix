@@ -2,19 +2,16 @@
 
 namespace src\configuracion\application;
 
-use frontend\shared\web\Posicion;
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use function src\shared\domain\helpers\strtoupper_dlb;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Listado de módulos (`frontend/configuracion/controller/modulos_select.php`).
  */
 final class ModulosSelectData
 {
-    private const POSICION_SCRIPT = '/frontend/configuracion/controller/modulos_select.php';
-
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
@@ -29,11 +26,12 @@ final class ModulosSelectData
         if (isset($input['stack']) && (string)$input['stack'] !== '') {
             $stack = (string)filter_var($input['stack'], FILTER_SANITIZE_NUMBER_INT);
             if ($stack !== '') {
-                $oPosicion2 = new Posicion(self::POSICION_SCRIPT, $input);
-                if ($oPosicion2->goStack($stack)) {
-                    $Qid_sel = (string)$oPosicion2->getParametro('id_sel');
-                    $Qscroll_id = (string)$oPosicion2->getParametro('scroll_id');
-                    $oPosicion2->olvidar($stack);
+                // Parámetros restaurados por el controller frontend vía $oPosicion.
+                if (array_key_exists('restored_id_sel', $input)) {
+                    $Qid_sel = (string) $input['restored_id_sel'];
+                }
+                if (array_key_exists('restored_scroll_id', $input)) {
+                    $Qscroll_id = (string) $input['restored_scroll_id'];
                 }
             }
         }
@@ -118,7 +116,7 @@ final class ModulosSelectData
             $a_valores['scroll_id'] = $Qscroll_id;
         }
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('sel!mod');
         $oHash->setcamposNo('scroll_id!sel!refresh');
 

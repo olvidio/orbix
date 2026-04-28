@@ -2,7 +2,7 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -55,12 +55,12 @@ $obj_pau = $data['obj_pau'];
 $obj_dir = $data['obj_dir'];
 $ubi = $data['ubi'];
 
-$gohome = Hash::link('frontend/ubis/controller/home_ubis.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau)));
-$godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $obj_pau)));
+$gohome = HashFront::link('frontend/ubis/controller/home_ubis.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau)));
+$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $obj_pau)));
 
-$go_ubi = Hash::link('frontend/ubis/controller/ubis_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
-$go_dir = Hash::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $obj_dir, 'bloque' => $bloque)));
-$go_tel = Hash::link('frontend/ubis/controller/teleco_tabla.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
+$go_ubi = HashFront::link('frontend/ubis/controller/ubis_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
+$go_dir = HashFront::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query(array('id_ubi' => $id_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $obj_dir, 'bloque' => $bloque)));
+$go_tel = HashFront::link('frontend/ubis/controller/teleco_tabla.php?' . http_build_query(array('id_ubi' => $id_ubi, 'obj_pau' => $obj_pau, 'bloque' => $bloque)));
 
 $alt = _("ver dossiers");
 $dos = _("dossiers");

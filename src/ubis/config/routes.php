@@ -107,6 +107,12 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/ubis/ubis_editar_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/ubis_editar_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/ubis_editar_normalize_dl_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ubis_editar_normalize_dl_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/ubis_editar_load_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/ubis_editar_load_data.php';
+    });
     $r->addRoute(['GET', 'POST'], '/src/ubis/list_ctr_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/list_ctr_data.php';
     });
@@ -118,6 +124,9 @@ return static function ($r) {
     });
     $r->addRoute(['GET', 'POST'], '/src/ubis/centros_opciones_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/centros_opciones_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/ubis/delegaciones_region_stgr_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/delegaciones_region_stgr_data.php';
     });
 
 };

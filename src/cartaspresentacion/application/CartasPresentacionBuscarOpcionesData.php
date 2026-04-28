@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\application\services\RegionDropdown;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Data builder: opciones de formulario para la pantalla de busqueda de
@@ -32,7 +32,7 @@ final class CartasPresentacionBuscarOpcionesData
 
         $web = rtrim(ConfigGlobal::getWeb(), '/');
         $url_lista = $web . '/frontend/cartaspresentacion/controller/cartas_presentacion_lista.php';
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setUrl($url_lista);
         $oHash->setArrayCamposHidden(['que' => 'get']);
         $oHash->setCamposForm('que!poblacion!region!pais!dl');

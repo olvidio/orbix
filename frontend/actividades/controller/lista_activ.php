@@ -17,7 +17,6 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\actividades\domain\value_objects\StatusId;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -82,7 +81,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qseccion = (array)filter_input(INPUT_POST, 'seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (empty($Qstatus)) {
         $Qa_status = (array)filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $Qstatus = empty($Qa_status) ? StatusId::ACTUAL : $Qa_status;
+        $Qstatus = empty($Qa_status) ? 2 : $Qa_status; // 2 = StatusId::ACTUAL
     }
 
     $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');

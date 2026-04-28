@@ -15,9 +15,8 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
-use src\actividades\application\ActividadTipo;
-use src\actividades\domain\value_objects\StatusId;
-use web\Hash;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -56,11 +55,8 @@ $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
 $isfsv = OrbixRuntime::miSfsv();
-$permiso_des = FALSE;
 $ssfsv = '';
-if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
-    $permiso_des = TRUE;
-} else {
+if (!($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des'))) {
     if ($isfsv === 1) {
         $ssfsv = 'sv';
     }
@@ -80,21 +76,10 @@ if (!empty($Qsactividad2)) {
 }
 $extendida = is_true($Qextendida) ? TRUE : FALSE;
 
-$oActividadTipo = new ActividadTipo();
-$oActividadTipo->setPerm_jefe($permiso_des);
-$oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
-$oActividadTipo->setSfsv($ssfsv);
-$oActividadTipo->setAsistentes($Qsasistentes);
-if ($extendida) {
-    $oActividadTipo->setActividad2Digitos($Qsactividad2);
-} else {
-    $oActividadTipo->setActividad($Qsactividad);
-}
-$oActividadTipo->setNom_tipo($Qsnom_tipo);
-
 
 if (empty($Qstatus)) {
-    $Qstatus = StatusId::ACTUAL;
+    // Valor por defecto alineado con StatusId::ACTUAL (domain).
+    $Qstatus = 2;
 }
 
 $Qisfsv = substr($Qid_tipo_activ, 0, 1);
@@ -105,7 +90,7 @@ $mi_dele = OrbixRuntime::miDelef((string)$Qisfsv);
 // que se encarga de comprobar perm_ctr y resolver desplegables de delegaciones
 // y de lugares.
 $url_filtros = AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_que_filtros';
-$oHashFiltros = new Hash();
+$oHashFiltros = new HashFront();
 $oHashFiltros->setUrl($url_filtros);
 $oHashFiltros->setCamposForm('sfsv!modo!dl_org!filtro_lugar!id_ubi!publicado');
 $h_filtros = $oHashFiltros->linkSinValParams();
@@ -131,7 +116,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $sCamposForm = 'dl_org!empiezamax!empiezamin!filtro_lugar!extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year';
 if ($Qmodo !== 'importar') {
     $sCamposForm .= '!publicado';
@@ -149,7 +134,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/src/actividades/actividad_tipo_get');
 $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinValParams();
@@ -158,7 +143,7 @@ $aQuery = array('que' => $Qque, 'sactividad' => $Qsactividad, 'sasistentes' => $
 if (is_array($aQuery)) {
     array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 }
-$Link_borrar = Hash::link('frontend/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
+$Link_borrar = HashFront::link('frontend/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
 
 switch ($Qmodo) {
     case 'importar':
@@ -185,7 +170,7 @@ switch ($Qque) {
     case "list_cjto_sacd" :
         $accion = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/asistentes/controller/lista_asis_conjunto_activ.php';
         break;
-    default;
+    default:
         $accion = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select.php';
         break;
 }
@@ -197,19 +182,30 @@ if ($_SESSION['oConfig']->is_jefeCalendario()
 ) {
     $perm_jefe = TRUE;
 }
-$oActividadTipo->setPerm_jefe($perm_jefe);
-$oActividadTipo->setSfsvAll(TRUE);
 
+$data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+    'perm_jefe' => $perm_jefe ? 't' : 'f',
+    'id_tipo_activ' => $Qid_tipo_activ,
+    'sfsv' => $ssfsv,
+    'sasistentes' => $Qsasistentes,
+    'sactividad' => $Qsactividad,
+    'sactividad2' => $Qsactividad2,
+    'snom_tipo' => $Qsnom_tipo,
+    'extendida' => $extendida ? 't' : '',
+]);
 
-$val_status_1 = StatusId::PROYECTO;
+$actividad_tipo_html = $data_que['actividad_tipo_html'] ?? '';
+
+// Valores alineados con src\actividades\domain\value_objects\StatusId
+$val_status_1 = 1;
 $chk_status_1 = ($Qstatus === $val_status_1) ? "checked='true'" : '';
-$val_status_2 = StatusId::ACTUAL;
+$val_status_2 = 2;
 $chk_status_2 = ($Qstatus === $val_status_2) ? "checked='true'" : '';
-$val_status_3 = StatusId::TERMINADA;
+$val_status_3 = 3;
 $chk_status_3 = ($Qstatus === $val_status_3) ? "checked='true'" : '';
-$val_status_4 = StatusId::BORRABLE;
+$val_status_4 = 4;
 $chk_status_4 = ($Qstatus === $val_status_4) ? "checked='true'" : '';
-$val_status_9 = StatusId::ALL;
+$val_status_9 = 9;
 $chk_status_9 = ($Qstatus === $val_status_9) ? "checked='true'" : '';
 
 //////////// PROCESOS /////////////////
@@ -224,7 +220,7 @@ $fases_off_csv = '';
 if (AppInstalled::is('procesos')) {
     $proceso_installed = TRUE;
     $url_actualizar_fases = AppUrlConfig::getPublicAppBaseUrl() . '/src/procesos/actividad_que_fases_ajax';
-    $oHash1 = new Hash();
+    $oHash1 = new HashFront();
     $oHash1->setUrl($url_actualizar_fases);
     $oHash1->setCamposForm('dl_propia!id_tipo_activ!selected');
     $h_actualizar_fases = $oHash1->linkSinValParams();
@@ -244,7 +240,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h' => $h,
     'titulo' => $titulo,
     'oFormP' => $oFormP,
-    'oActividadTipo' => $oActividadTipo,
+    'actividad_tipo_html' => $actividad_tipo_html,
     'extendida' => $extendida,
     'Link_borrar' => $Link_borrar,
     'val_status_1' => $val_status_1,

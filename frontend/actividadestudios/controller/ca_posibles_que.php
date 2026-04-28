@@ -1,13 +1,10 @@
 <?php
 
+use frontend\shared\PostRequest;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
-use src\personas\domain\contracts\PersonaNRepositoryInterface;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -51,47 +48,11 @@ $Qca_estudios = (string)filter_input(INPUT_POST, 'ca_estudios');
 $Qca_repaso = (string)filter_input(INPUT_POST, 'ca_repaso');
 $Qca_todos = (string)filter_input(INPUT_POST, 'ca_todos');
 
-
-// Grupo de estudios
-$mi_dele = OrbixRuntime::miDelef();
-$repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-$cMiDl = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
-if (is_array($cMiDl) && !empty($cMiDl)) {
-    $grupo_estudios = $cMiDl[0]->getGrupoEstudiosVo()?->value();
-    if ($grupo_estudios !== null) {
-        $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $grupo_estudios]);
-        $mi_grupo = '';
-        foreach ($cDelegaciones as $oDelegacion) {
-            $mi_grupo .= empty($mi_grupo) ? '' : ',';
-            $mi_grupo .= $oDelegacion->getDlVo()->value();
-        }
-    }
-} else {
-    $mi_grupo = _("no encuentro el grupo de estudios al que pertenece la dl");
-}
-
-// centros donde hay numerarios, aunque sean de agd
-$PersonaNRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
-$aListaCtr = $PersonaNRepository->getArrayIdCentros();
-$aCentrosN = [];
-$aCentrosOrden = [];
-$CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-foreach ($aListaCtr as $id_ubi) {
-    if ($id_ubi === null) continue;
-    $oCentroDl = $CentroDlRepository->findById($id_ubi);
-    $nombre_ubi = $oCentroDl->getNombre_ubi();
-    $aCentrosOrden[$nombre_ubi] = array($id_ubi => $nombre_ubi);
-}
-uksort($aCentrosOrden, "src\shared\domain\helpers\strsinacentocmp");
-// No encuentro la manera de añadir las opciones sin desordenar el array de indice numérico
-$aCentrsoNExt = [];
-$aCentrosNExt[1] = _("todos los ctr");
-$aCentrosNExt[2] = "----------";
-foreach ($aCentrosOrden as $aCentro) {
-    $key = key($aCentro);
-    $value = current($aCentro);
-    $aCentrosNExt[$key] = $value;
-}
+$dq = PostRequest::getDataFromUrl('/src/actividadestudios/ca_posibles_que_data', []);
+$grupo_estudios = $dq['grupo_estudios'] ?? '';
+$mi_grupo = $dq['mi_grupo'];
+$aCentrosNExt = $dq['aCentrosNExt'];
+$aCentrosAgdExt = $dq['aCentrosAgdExt'];
 
 $oDesplCtrN = new Desplegable();
 $oDesplCtrN->setNombre('id_ctr_n');
@@ -99,27 +60,6 @@ $oDesplCtrN->setOpciones($aCentrosNExt);
 $oDesplCtrN->setOpcion_sel($Qid_ctr_n);
 $oDesplCtrN->setBlanco(1);
 $oDesplCtrN->setAction("fnjs_n_a('n')");
-
-// centros donde hay agregados, aunque sean de n
-$PersonaAgdRepository = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class);
-$aListaCtr = $PersonaAgdRepository->getArrayIdCentros();
-$aCentrosAgd = [];
-$aCentrosOrden = [];
-foreach ($aListaCtr as $id_ubi) {
-    $oCentroDl = $CentroDlRepository->findById($id_ubi);
-    $nombre_ubi = $oCentroDl->getNombre_ubi();
-    $aCentrosOrden[$nombre_ubi] = array($id_ubi => $nombre_ubi);
-}
-uksort($aCentrosOrden, "src\shared\domain\helpers\strsinacentocmp");
-// No encuentro la manera de añadir las opciones sin desordenar el array de indice numérico
-$aCentrsoAgdExt = [];
-$aCentrosAgdExt[1] = _("todos los ctr");
-$aCentrosAgdExt[2] = "----------";
-foreach ($aCentrosOrden as $aCentro) {
-    $key = key($aCentro);
-    $value = current($aCentro);
-    $aCentrosAgdExt[$key] = $value;
-}
 
 $oDesplCtrAgd = new Desplegable();
 $oDesplCtrAgd->setNombre('id_ctr_agd');
@@ -151,7 +91,7 @@ $oFormP->setDesplAnysOpcion_sel($any);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('id_ctr_agd!id_ctr_n!texto!empiezamax!empiezamin!periodo!ref!iactividad_val!iasistentes_val!year');
 $oHash->setCamposNo('na!grupo_estudios!ca_estudios!ca_repaso!ca_todos');
 $a_camposHidden = array(
@@ -168,9 +108,6 @@ if ($Qgrupo_estudios === 'todos') {
     $chk_grupo = 'checked';
 }
 
-// valor por defecto (si no vengo de vuelta: stack='')
-//if (empty($stack) && empty($Qca_estudios)) { $Qca_estudios = TRUE; }
-//if (empty($stack) && empty($Qca_repaso)) { $Qca_repaso = TRUE; }
 if (empty($stack) && empty($Qca_todos)) {
     $Qca_todos = TRUE;
 }

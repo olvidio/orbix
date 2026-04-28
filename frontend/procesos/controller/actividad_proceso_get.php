@@ -9,7 +9,7 @@ use frontend\shared\PostRequest;
 
 require_once("frontend/shared/global_header_front.inc");
 
-$data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_get', $_POST);
+$data = PostRequest::getDataFromUrl('/src/procesos/actividad_proceso_get', PostRequest::requestPayloadForHash());
 
 $error = (string)($data['error'] ?? '');
 if ($error !== '') {

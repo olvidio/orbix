@@ -2,7 +2,7 @@
 
 namespace frontend\shared\model;
 
-use src\shared\config\ServerConf;
+use frontend\shared\config\OrbixRuntime;
 use Exception;
 use jblond\TwigTrans\Translation;
 use Twig\Environment;
@@ -38,8 +38,8 @@ class ViewNewTwig extends Environment
 
         $options = [
             'cache' => false,
-            'debug' => true,
-            'auto_reload' => true,
+            'debug' => OrbixRuntime::isDebug(),
+            'auto_reload' => OrbixRuntime::isDebug(),
         ];
 
         $filter = new TwigFilter('trans', function (Environment $env, $context, $string) {
@@ -68,17 +68,17 @@ class ViewNewTwig extends Environment
         // raiz del proyecto (permite compartir plantillas con ViewTwig durante
         // la migracion).
         if (str_starts_with($new_dir, 'apps' . DIRECTORY_SEPARATOR)) {
-            return ServerConf::DIR . DIRECTORY_SEPARATOR . $new_dir;
+            return OrbixRuntime::dir() . DIRECTORY_SEPARATOR . $new_dir;
         }
 
-        $base_dir = ServerConf::DIR . DIRECTORY_SEPARATOR . 'frontend';
+        $base_dir = OrbixRuntime::dir() . DIRECTORY_SEPARATOR . 'frontend';
         return $base_dir . DIRECTORY_SEPARATOR . $new_dir;
     }
 
     private function getJsPath(): string
     {
         // scripts están en la raíz del proyecto
-        return ServerConf::DIR . DIRECTORY_SEPARATOR . 'scripts';
+        return OrbixRuntime::dir() . DIRECTORY_SEPARATOR . 'scripts';
     }
 
     public function renderizar($name, $context): void

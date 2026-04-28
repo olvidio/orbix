@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // INICIO Cabecera global de URL de controlador (frontend) *********************************
 require_once("frontend/shared/global_header_front.inc");
@@ -20,11 +20,11 @@ $lnk = static function (string $script, array $params = []): string {
         $url .= '?' . http_build_query($params);
     }
 
-    return Hash::link($url);
+    return HashFront::link($url);
 };
 
 $url = 'frontend/encargossacd/controller/comprobaciones.php';
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url);
 $oHash->setCamposForm('que');
 $h = $oHash->linkSinValParams();

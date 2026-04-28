@@ -2,7 +2,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -14,17 +14,17 @@ $url_nuevo = $webBase . '/src/actividades/tipo_activ_nuevo';
 $url_update = $webBase . '/src/actividades/tipo_activ_update';
 $url_eliminar = $webBase . '/src/actividades/tipo_activ_eliminar';
 
-$oHashLista = new Hash();
+$oHashLista = new HashFront();
 $oHashLista->setUrl($url_lista);
 $oHashLista->setCamposForm('');
 $h_lista = $oHashLista->linkSinValParams();
 
-$oHashFormNuevo = new Hash();
+$oHashFormNuevo = new HashFront();
 $oHashFormNuevo->setUrl($url_form_nuevo);
 $oHashFormNuevo->setCamposForm('');
 $h_form_nuevo = $oHashFormNuevo->linkSinValParams();
 
-$oHashFormMod = new Hash();
+$oHashFormMod = new HashFront();
 $oHashFormMod->setUrl($url_form_modificar);
 $oHashFormMod->setCamposForm('id_tipo_activ');
 $h_form_modificar = $oHashFormMod->linkSinValParams();

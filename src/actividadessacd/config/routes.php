@@ -58,4 +58,11 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/actividadessacd/comunicacion_activ_sacd_enviar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/comunicacion_activ_sacd_enviar.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividadessacd/com_sacd_activ_periodo_page_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/com_sacd_activ_periodo_page_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/actividadessacd/locales_desplegable_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/locales_desplegable_data.php';
+    });
 };

@@ -2,15 +2,13 @@
 
 namespace src\dossiers\application;
 
-use frontend\shared\config\AppUrlConfig;
 use src\shared\config\ConfigGlobal;
 use src\dossiers\domain\contracts\DossierRepositoryInterface;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use src\dossiers\domain\value_objects\DossierPk;
-use web\Hash;
-
 /**
  * Filas de la tabla de relación de dossiers (modo lista en dossiers_ver).
+ * `href_ver` / `href_abrir` se firman en el borde HTTP (ver `dossiers_lista_fichas_data.php`).
  */
 class DossiersListaFichasData
 {
@@ -28,7 +26,6 @@ class DossiersListaFichasData
         $DossierRepository = $GLOBALS['container']->get(DossierRepositoryInterface::class);
         $i = 0;
         $a_filas = [];
-        $base = AppUrlConfig::getPublicAppBaseUrl();
 
         foreach ($cTipoDossier as $oTipoDossier) {
             $id_tipo_dossier = $oTipoDossier->getId_tipo_dossier();
@@ -67,30 +64,28 @@ class DossiersListaFichasData
             $a_filas[$i]['descripcion'] = $descripcion;
             $perm_a = 3;
 
-            $a_filas[$i]['href_ver'] = Hash::link(
-                $base . '/frontend/dossiers/controller/dossiers_ver.php?' . http_build_query(
-                    [
-                        'pau' => $pau,
-                        'id_pau' => $id_pau,
-                        'obj_pau' => $Qobj_pau,
-                        'id_dossier' => $id_dossier,
-                        'permiso' => $perm_a,
-                        'depende' => $depende_modificar,
-                    ]
-                )
-            );
-            $a_filas[$i]['href_abrir'] = Hash::link(
-                $base . '/frontend/dossiers/controller/dossier_abrir.php?' . http_build_query(
-                    [
-                        'pau' => $pau,
-                        'id_pau' => $id_pau,
-                        'obj_pau' => $Qobj_pau,
-                        'id_dossier' => $id_dossier,
-                        'tabla_to' => $tabla_to,
-                        'permiso' => $perm_a,
-                    ]
-                )
-            );
+            $a_filas[$i]['href_ver_link_spec'] = [
+                'path' => 'frontend/dossiers/controller/dossiers_ver.php',
+                'query' => [
+                    'pau' => $pau,
+                    'id_pau' => $id_pau,
+                    'obj_pau' => $Qobj_pau,
+                    'id_dossier' => $id_dossier,
+                    'permiso' => $perm_a,
+                    'depende' => $depende_modificar,
+                ],
+            ];
+            $a_filas[$i]['href_abrir_link_spec'] = [
+                'path' => 'frontend/dossiers/controller/dossier_abrir.php',
+                'query' => [
+                    'pau' => $pau,
+                    'id_pau' => $id_pau,
+                    'obj_pau' => $Qobj_pau,
+                    'id_dossier' => $id_dossier,
+                    'tabla_to' => $tabla_to,
+                    'permiso' => $perm_a,
+                ],
+            ];
             $a_filas[$i]['perm_a'] = $perm_a;
             $i++;
         }

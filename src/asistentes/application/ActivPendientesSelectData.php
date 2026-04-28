@@ -3,7 +3,6 @@
 namespace src\asistentes\application;
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\web\Lista;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
@@ -11,7 +10,7 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Actividades pendientes por curso (`activ_pendientes_select.php`).
@@ -182,10 +181,14 @@ final class ActivPendientesSelectData
             $nombre_ubi = $oCentroDl->getNombre_ubi();
 
             $aQuery = ['obj_pau' => $obj_pau, 'id_nom' => $id_nom];
-            $pagina = Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($aQuery));
-
             $a_valores[$i][1] = $i;
-            $a_valores[$i][2] = ['ira' => $pagina, 'valor' => $ap_nom];
+            $a_valores[$i][2] = [
+                'link_spec' => [
+                    'path' => 'frontend/personas/controller/home_persona.php',
+                    'query' => $aQuery,
+                ],
+                'valor' => $ap_nom,
+            ];
             $a_valores[$i][3] = $nombre_ubi;
             $a_valores[$i][4] = $nivel_stgr;
         }
@@ -237,26 +240,20 @@ final class ActivPendientesSelectData
             $nombre_ubi = $oCentroDl->getNombre_ubi();
 
             $aQuery = ['obj_pau' => $obj_pau, 'id_nom' => $id_nom];
-            $pagina = Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($aQuery));
-
             $a_valores_2[$i][1] = $i;
-            $a_valores_2[$i][2] = ['ira' => $pagina, 'valor' => $ap_nom];
+            $a_valores_2[$i][2] = [
+                'link_spec' => [
+                    'path' => 'frontend/personas/controller/home_persona.php',
+                    'query' => $aQuery,
+                ],
+                'valor' => $ap_nom,
+            ];
             $a_valores_2[$i][3] = $nombre_ubi;
             $a_valores_2[$i][4] = $nivel_stgr;
         }
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('tipo_personas!sactividad!any');
-
-        $oTablaDl = new Lista();
-        $oTablaDl->setId_tabla('activ_pendientes_select');
-        $oTablaDl->setCabeceras($a_cabeceras);
-        $oTablaDl->setDatos($a_valores);
-
-        $oTablaOtrasDl = new Lista();
-        $oTablaOtrasDl->setId_tabla('activ_pendientes_select_otras');
-        $oTablaOtrasDl->setCabeceras($a_cabeceras);
-        $oTablaOtrasDl->setDatos($a_valores_2);
 
         $form_action = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/asistentes/controller/activ_pendientes_select.php';
 
@@ -274,8 +271,9 @@ final class ActivPendientesSelectData
             'chk_any_2' => $chk_any_2,
             'txt_curso_2' => $txt_curso_2,
             'titulo' => $titulo,
-            'tabla_dl_html' => $oTablaDl->mostrar_tabla(),
-            'tabla_otras_html' => $oTablaOtrasDl->mostrar_tabla(),
+            'a_cabeceras_activ_pendientes' => $a_cabeceras,
+            'a_valores_activ_pendientes_dl' => $a_valores,
+            'a_valores_activ_pendientes_otras' => $a_valores_2,
         ];
     }
 }

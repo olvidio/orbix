@@ -9,6 +9,15 @@ $Qrefresh = (int)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
 $campos = array_merge($_GET, $_POST);
+
+// Resolver estado de navegación aquí (frontend): recortar hacia delante desde $stack.
+// Sólo tiene sentido si no se está creando una habitación nueva.
+$Qnuevo = (string)($campos['nuevo'] ?? '');
+$stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
+if ($Qnuevo === '' && $stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
+    $oPosicion->olvidar($stackFromPost);
+}
+
 $data = PostRequest::getDataFromUrl('/src/ubiscamas/habitacion_form_data', $campos);
 $payload = is_array($data) ? $data : [];
 

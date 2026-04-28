@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
@@ -37,7 +37,7 @@ $oLista->setId_tabla('docs_' . $Qid_grupo);
 $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
 
-$oHashGrupo = new Hash();
+$oHashGrupo = new HashFront();
 $oHashGrupo->setArrayCamposHidden([
     'id_grupo' => $Qid_grupo,
     'id_equipaje' => $Qid_equipaje,

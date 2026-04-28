@@ -15,16 +15,19 @@ final class FasesActivCambioListaTest extends TestCase
 {
     public function test_sin_id_fase_nueva_devuelve_mensaje_error(): void
     {
-        $msg = (new FasesActivCambioLista())->execute([]);
-        $this->assertSame('<h2>' . _('Debe poner la fase nueva') . '</h2>', $msg);
+        $data = (new FasesActivCambioLista())->execute([]);
+        $this->assertIsArray($data);
+        $this->assertSame(_('Debe poner la fase nueva'), $data['error']);
     }
 
     public function test_id_fase_nueva_vacia_devuelve_mensaje_error(): void
     {
-        $msg = (new FasesActivCambioLista())->execute([
+        $data = (new FasesActivCambioLista())->execute([
             'id_fase_nueva' => '',
             'accion' => 'marcar',
         ]);
-        $this->assertSame('<h2>' . _('Debe poner la fase nueva') . '</h2>', $msg);
+        $this->assertIsArray($data);
+        $this->assertSame(_('Debe poner la fase nueva'), $data['error']);
+        $this->assertSame('marcar', $data['accion']);
     }
 }

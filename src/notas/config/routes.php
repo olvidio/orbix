@@ -56,6 +56,30 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/acta_listado_anual_data.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/notas/acta_select_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/acta_select_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/acta_pdf_download', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/acta_pdf_download.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/acta_imprimir_presentacion_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/acta_imprimir_presentacion_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/asig_faltan_select_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/asig_faltan_select_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/asig_faltan_personas_select_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/asig_faltan_personas_select_data.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/acta_ver_form_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/acta_ver_form_data.php';
+    });
+
     // Slice 5: Seleccion destino para copiar tessera.
     $r->addRoute(['GET', 'POST'], '/src/notas/tessera_copiar_select_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/tessera_copiar_select_data.php';

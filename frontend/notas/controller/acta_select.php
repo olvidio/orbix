@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Esta página muestra una tabla con las actas.
  *
@@ -11,16 +12,11 @@
  */
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\web\Lista;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\ActaDlRepositoryInterface;
-use src\notas\domain\contracts\ActaExRepositoryInterface;
-use src\notas\domain\contracts\ActaRepositoryInterface;
 use frontend\shared\config\OrbixRuntime;
-use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\Hash;
-use function src\shared\domain\helpers\curso_est;
+use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
+use frontend\shared\web\Lista;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -54,86 +50,14 @@ $aGoBack = array(
     'acta' => $Qacta);
 $oPosicion->setParametros($aGoBack, 1);
 
-/*miro las condiciones. Si es la primera vez muestro las de este año */
-$aWhere = [];
-$aOperador = [];
-if (!empty($Qacta)) {
-    /* se cambia la lógica, por el cambio de nombre de la dl, no de las actas */
-    $aWhere['acta'] = $Qacta;
-    $aOperador['acta'] = '~';
-    $aWhere['_ordre'] = 'f_acta DESC, acta DESC';
-
-    // si es número busca en la dl.
-    $matches = [];
-    preg_match("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
-    if (!empty($matches[1])) {
-        // Si es cr, se mira en todas (las suyas):
-        if (OrbixRuntime::miAmbito() === 'rstgr') {
-            $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-            $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]); // [id_dl => dl]
-            $aDl = array_values($aDlMap);
-            $Qacta_dl = '';
-            foreach ($aDl as $dl) {
-                $Qacta_dl .= empty($Qacta_dl) ? '' : "|";
-                $Qacta_dl .= empty($matches[3]) ? "$dl " . $matches[1] . '/' . date("y") : "$dl $Qacta";
-            }
-            $aWhere['acta'] = $Qacta_dl;
-            $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-        } else {
-            $aWhere['acta'] = empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date("y") : "$mi_dele $Qacta";
-            $repoActas = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
-        }
-        $cActas = $repoActas->getActas($aWhere, $aOperador);
-    } else {
-        // busca en la tabla de la dl, sin mirar el nombre:
-        if (OrbixRuntime::miAmbito() === 'rstgr') {
-            $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-            $cActas = $repoActas->getActas($aWhere, $aOperador);
-        } else {
-            $repoActas = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
-            $cActas = $repoActas->getActas($aWhere, $aOperador);
-            if (empty($cActas)) {
-                $repoActas = $GLOBALS['container']->get(ActaExRepositoryInterface::class);
-                $cActas = $repoActas->getActas($aWhere, $aOperador);
-            }
-        }
-    }
-    $titulo = $Qtitulo;
-} else {
-    // hay que limitar, porque en alguna región puede haber muchas actas.
-    // y agota la memoria del php.
-    $mes = date('m');
-    $fin_m = $_SESSION['oConfig']->getMesFinStgr();
-    if ($mes > $fin_m) {
-        $any = (int)date('Y') + 1;
-    } else {
-        $any = (int)date('Y');
-    }
-    $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
-    $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
-    $txt_curso = "$inicurs_ca - $fincurs_ca";
-
-    $aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
-    $aOperador['f_acta'] = 'BETWEEN';
-    $aWhere['_ordre'] = 'f_acta DESC, acta DESC';
-    $aWhere['_limit'] = 20;
-
-    $titulo = ucfirst(sprintf(_("lista de actas del curso %s. Máximo %s"), $txt_curso, $aWhere['_limit']));
-    // Si es cr, se mira en todas:
-    if (OrbixRuntime::miAmbito() === 'rstgr') {
-        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
-        $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]);
-        $aDl = array_values($aDlMap);
-        $sReg = implode(" |", $aDl);
-        $Qacta = "^($sReg )";
-        $aWhere['acta'] = $Qacta;
-        $aOperador['acta'] = '~';
-        $repoActas = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-    } else {
-        $repoActas = $GLOBALS['container']->get(ActaDlRepositoryInterface::class);
-    }
-    $cActas = $repoActas->getActas($aWhere, $aOperador);
-}
+$d = PostRequest::getDataFromUrl('/src/notas/acta_select_data', [
+    'titulo' => $Qtitulo,
+    'acta' => $Qacta,
+    'mes_fin_stgr' => (int)$_SESSION['oConfig']->getMesFinStgr(),
+]);
+$titulo = (string)($d['titulo'] ?? '');
+$a_asignaturas = $d['a_asignaturas'] ?? [];
+$cActasData = $d['actas'] ?? [];
 
 $botones = 0; // para 'añadir acta'
 $a_botones = [];
@@ -158,19 +82,14 @@ $a_cabeceras = [['name' => ucfirst(_("acta")), 'formatter' => 'clickFormatter'],
     _("firmada"),
 ];
 
-$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-$a_asignaturas = $AsignaturaRepository->getArrayAsignaturas();
-
 $i = 0;
 $a_valores = [];
-foreach ($cActas as $oActa) {
+foreach ($cActasData as $oActa) {
     $i++;
-    $acta = $oActa->getActa();
-    $f_acta = $oActa->getF_acta()?->getFromLocal();
-    $id_asignatura = $oActa->getId_asignatura();
-    // TODO
-    $pdf = $oActa->getPdf();
-    $hasPdf = ($pdf === null) ? '' : _("Sí");
+    $acta = (string)($oActa['acta'] ?? '');
+    $f_acta = $oActa['f_acta'] ?? null;
+    $id_asignatura = (int)($oActa['id_asignatura'] ?? 0);
+    $hasPdf = empty($oActa['has_pdf']) ? '' : _("Sí");
 
     if (empty($a_asignaturas[$id_asignatura])) {
         $nombre_corto = sprintf(_("nombre corto no definido para id asignatura: %s"), $id_asignatura);
@@ -178,7 +97,7 @@ foreach ($cActas as $oActa) {
         $nombre_corto = $a_asignaturas[$id_asignatura];
     }
     $acta_2 = urlencode($acta);
-    $pagina = Hash::link('frontend/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
+    $pagina = HashFront::link('frontend/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
     $a_valores[$i]['sel'] = $acta_2;
     if ($_SESSION['oPerm']->have_perm_oficina('est')) {
         $a_valores[$i][1] = array('ira' => $pagina, 'valor' => $acta);
@@ -196,15 +115,15 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('acta');
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
-$url_download = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/acta_pdf_download.php';
-$oHashDown = new Hash();
+$url_download = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_pdf_download';
+$oHashDown = new HashFront();
 $oHashDown->setUrl($url_download);
 $oHashDown->setCamposForm('key!otro');
 $oHashDown->setCamposNo('otro!acta');

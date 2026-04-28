@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Muestra las ausencias de un SACD.
@@ -51,11 +51,11 @@ $a_cosas = [
     'filtro_sacd' => $Qfiltro_sacd,
     'historial' => 1,
 ];
-$go_to = Hash::link('frontend/encargossacd/controller/sacd_ausencias_get.php?' . http_build_query($a_cosas));
+$go_to = HashFront::link('frontend/encargossacd/controller/sacd_ausencias_get.php?' . http_build_query($a_cosas));
 $lnk_historia = "<span class='link' onclick=\"fnjs_update_div('#ficha','$go_to');\">" . _("ver anteriores") . "</span>";
 
 $url_update = "frontend/encargossacd/controller/sacd_ausencias_update.php";
-$oHash = new Hash();
+$oHash = new HashFront();
 $aCamposHidden = [
     "enc_num" => $enc_num,
     "id_nom" => $Qid_nom,

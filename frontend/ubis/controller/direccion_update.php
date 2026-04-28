@@ -7,7 +7,7 @@ use frontend\shared\PostRequest;
  */
 require_once("frontend/shared/global_header_front.inc");
 
-$data = PostRequest::getDataFromUrl('/src/ubis/direccion_update', $_POST);
+$data = PostRequest::getDataFromUrl('/src/ubis/direccion_update', PostRequest::requestPayloadForHash());
 if (!empty($data['error'])) {
     echo (string)$data['error'];
 }

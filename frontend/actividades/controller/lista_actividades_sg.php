@@ -16,10 +16,9 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\actividades\domain\value_objects\StatusId;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -83,7 +82,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
         }
     }
 
-    $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
+    $Qstatus = empty($Qstatus) ? 2 : $Qstatus; // 2 = StatusId::ACTUAL
 
     $aGoBack = [
         'que' => $Qque,
@@ -146,7 +145,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl('frontend/actividades/controller/lista_actividades_sg.php');
 $a_camposHidden = [
     'que' => $Qque,
@@ -160,7 +159,7 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposNo('modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar');
 
-$oHashSel = new Hash();
+$oHashSel = new HashFront();
 $oHashSel->setCamposForm('!sel!mod!queSel');
 $oHashSel->setcamposNo('continuar!scroll_id');
 $a_camposHiddenSel = [

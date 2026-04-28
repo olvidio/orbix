@@ -8,7 +8,7 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -114,7 +114,7 @@ final class FormCargosPersonasEnActividadData
 
         $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $camposForm = 'id_cargo!observ';
         $camposNo = 'puede_agd';
         $a_camposHidden = [

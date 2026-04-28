@@ -1,3 +1,8 @@
+<?php
+
+use frontend\shared\config\AppUrlConfig;
+
+?>
 <script>
     fnjs_enviar_certificado = function (formulario) {
         rta = fnjs_solo_uno(formulario);
@@ -36,7 +41,7 @@
                 let url;
                 if ($(this).prop('checked') === true) {
                     key = $(this).prop('value');
-                    url = 'frontend/certificados/controller/certificado_emitido_pdf_download.php';
+                    url = <?= json_encode(AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_emitido_pdf_download', JSON_THROW_ON_ERROR) ?>;
                     url_download = url + '?key=' + key + '&<?= $h_download ?>';
                     window.open(url_download);
                 }

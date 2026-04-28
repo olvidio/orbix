@@ -2,8 +2,6 @@
 
 namespace src\dossiers\application;
 
-use frontend\shared\config\AppUrlConfig;
-use frontend\shared\web\Posicion;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\shared\domain\DatosTablaRepo;
@@ -11,16 +9,27 @@ use src\shared\infrastructure\ProvidesRepositories;
 use src\personas\domain\entity\Persona;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use frontend\shared\web\Lista;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Cuerpo de dossiers_ver: cabecera (campos) + lista o ficha (HTML).
+ * Las URLs van como placeholders `__ORBIX_DSG_*__`; `url_specs` mapea cada placeholder
+ * a `{path, query}` y se firma en `dossiers_ver_pantalla_data.php`.
  *
- * @return array{error?: string, top_html: string, web_icons: string, modo: 'lista'|'ficha', cuerpo_html: string, lista_a_filas?: list<array<string, mixed>>}
+ * @return array{error?: string, top_html: string, web_icons: string, modo: 'lista'|'ficha', cuerpo_html: string, lista_a_filas?: list<array<string, mixed>>, url_specs: array<string, array{path: string, query: array<string, mixed>}>}
  */
 class DossiersVerPantallaData
 {
-    private const POSICION_SCRIPT = '/frontend/dossiers/controller/dossiers_ver.php';
+    private const PH_GODOSSIERS = '__ORBIX_DSG_godossiers__';
+
+    private const PH_GO_HOME = '__ORBIX_DSG_go_home__';
+
+    private static function phActionDatos(int $idDossier): string
+    {
+        return '__ORBIX_DSG_action_datos_' . $idDossier . '__';
+    }
+
+    private const PH_INS_TRASLADO = '__ORBIX_DSG_ins_traslado__';
 
     public static function build(array $post): array
     {
@@ -40,11 +49,12 @@ class DossiersVerPantallaData
         if (isset($post['stack']) && (string)$post['stack'] !== '') {
             $stack = (string)filter_var($post['stack'], FILTER_SANITIZE_NUMBER_INT);
             if ($stack !== '') {
-                $oPosicion2 = new Posicion(self::POSICION_SCRIPT, $post);
-                if ($oPosicion2->goStack($stack)) {
-                    $Qid_sel = $oPosicion2->getParametro('id_sel');
-                    $Qscroll_id = (int)$oPosicion2->getParametro('scroll_id');
-                    $oPosicion2->olvidar($stack);
+                // Parámetros restaurados por el controller frontend vía $oPosicion.
+                if (array_key_exists('restored_id_sel', $post)) {
+                    $Qid_sel = $post['restored_id_sel'];
+                }
+                if (array_key_exists('restored_scroll_id', $post)) {
+                    $Qscroll_id = (int) $post['restored_scroll_id'];
                 }
             }
         } elseif (!empty($a_sel)) {
@@ -124,9 +134,12 @@ class DossiersVerPantallaData
             return $repositoryProvider->get($obj_pau);
         };
 
-        $sQuery = http_build_query(['pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau]);
-        $base = AppUrlConfig::getPublicAppBaseUrl();
-        $godossiers = Hash::link($base . "/frontend/dossiers/controller/dossiers_ver.php?$sQuery");
+        $urlSpecs = [];
+        $urlSpecs[self::PH_GODOSSIERS] = [
+            'path' => 'frontend/dossiers/controller/dossiers_ver.php',
+            'query' => ['pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau],
+        ];
+        $godossiersPh = self::PH_GODOSSIERS;
 
         switch ($pau) {
             case 'p':
@@ -135,6 +148,7 @@ class DossiersVerPantallaData
                     if (!is_object($oPersona)) {
                         return [
                             'error' => "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ': line (Persona lookup)',
+                            'url_specs' => [],
                         ];
                     }
                     $clase = get_class($oPersona);
@@ -144,35 +158,43 @@ class DossiersVerPantallaData
                     $oPersona = $repo->findById($id_pau);
                 }
                 $nom_cabecera = $oPersona->getNombreApellidos();
-                $sQuery = http_build_query(['id_nom' => $id_pau, 'obj_pau' => $Qobj_pau]);
-                $goHome = Hash::link($base . "/frontend/personas/controller/home_persona.php?$sQuery");
+                $urlSpecs[self::PH_GO_HOME] = [
+                    'path' => 'frontend/personas/controller/home_persona.php',
+                    'query' => ['id_nom' => $id_pau, 'obj_pau' => $Qobj_pau],
+                ];
                 break;
             case 'u':
                 $repo = $getRepository($Qobj_pau);
                 $oUbi = $repo->findById($id_pau);
                 $nom_cabecera = $oUbi->getNombre_ubi();
-                $sQuery = http_build_query(['id_ubi' => $id_pau, 'obj_pau' => $Qobj_pau]);
-                $goHome = Hash::link($base . "/frontend/ubis/controller/home_ubis.php?$sQuery");
+                $urlSpecs[self::PH_GO_HOME] = [
+                    'path' => 'frontend/ubis/controller/home_ubis.php',
+                    'query' => ['id_ubi' => $id_pau, 'obj_pau' => $Qobj_pau],
+                ];
                 break;
             case 'a':
                 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
                 $oActividad = $ActividadAllRepository->findById($id_pau);
                 $nom_cabecera = $oActividad->getNom_activ();
-                $sQuery = http_build_query(['id_activ' => $id_pau, 'obj_pau' => $Qobj_pau]);
-                $goHome = Hash::link($base . "/frontend/actividades/controller/actividad_ver.php?$sQuery");
+                $urlSpecs[self::PH_GO_HOME] = [
+                    'path' => 'frontend/actividades/controller/actividad_ver.php',
+                    'query' => ['id_activ' => $id_pau, 'obj_pau' => $Qobj_pau],
+                ];
                 break;
             default:
-                return ['error' => 'pau desconocido'];
+                return ['error' => 'pau desconocido', 'url_specs' => []];
         }
+
+        $goHomePh = self::PH_GO_HOME;
 
         $alt = _("ver dossiers");
         $dos = _("dossiers");
         $web_icons = ConfigGlobal::getWeb_icons();
-        $titulo = "<span class=link onclick=fnjs_update_div('#main','$goHome')>$nom_cabecera</span>";
+        $titulo = "<span class=link onclick=fnjs_update_div('#main','$goHomePh')>$nom_cabecera</span>";
 
         $top_html = '<div id="top">'
             . '<table><tr>'
-            . '<td><span class="link" onclick="fnjs_update_div(\'#main\',\'' . $godossiers . '\')">'
+            . '<td><span class="link" onclick="fnjs_update_div(\'#main\',\'' . $godossiersPh . '\')">'
             . '<img src="' . $web_icons . '/dossiers.gif" width="40" height="40" alt="' . htmlspecialchars($alt) . '">( ' . $dos . ' )</span></td>'
             . '<td class="titulo">' . $titulo . '</td>'
             . '</tr></table></div>';
@@ -185,6 +207,7 @@ class DossiersVerPantallaData
                 'modo' => 'lista',
                 'cuerpo_html' => '',
                 'lista_a_filas' => $lista['a_filas'],
+                'url_specs' => $urlSpecs,
             ];
         }
 
@@ -208,6 +231,9 @@ class DossiersVerPantallaData
                 $claseSelect->setPermiso($Qpermiso);
                 $claseSelect->setBloque($bloque);
                 $claseSelect->setQueSel($QqueSel);
+                if (method_exists($claseSelect, 'setStackActual')) {
+                    $claseSelect->setStackActual((int)($post['stack_actual'] ?? 0));
+                }
 
                 if (isset($post['stack']) && (string)$stack !== '') {
                     $claseSelect->setQId_sel($Qid_sel);
@@ -252,11 +278,14 @@ class DossiersVerPantallaData
                     'permiso' => $Qpermiso,
                     'obj_pau' => $Qobj_pau,
                 ];
-                $sQ = http_build_query($aQuery);
-                $Qgo_to = Hash::link($base . "/frontend/dossiers/controller/dossiers_ver.php?$sQ");
-                $oDatosTabla->setAction_tabla($Qgo_to);
+                $phAction = self::phActionDatos((int) $id_dossier);
+                $urlSpecs[$phAction] = [
+                    'path' => 'frontend/dossiers/controller/dossiers_ver.php',
+                    'query' => $aQuery,
+                ];
+                $oDatosTabla->setAction_tabla($phAction);
 
-                $oHashSelect = new Hash();
+                $oHashSelect = new HashFront();
                 $oHashSelect->setCamposForm('mod');
                 $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
                 $a_camposHidden = [
@@ -290,17 +319,16 @@ class DossiersVerPantallaData
                         . "\t\t\t\t\t<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
                     $html .= _("nuevo");
                     if ((int)$id_dossier === 1004) {
-                        $insert = Hash::link(
-                            $base . '/frontend/personas/controller/traslado_form.php?' . http_build_query(
-                                [
-                                    'cabecera' => 'no',
-                                    'id_pau' => $id_pau,
-                                    'id_dossier' => $id_dossier,
-                                    'obj_pau' => $Qobj_pau,
-                                ]
-                            )
-                        );
-                        $html .= "\" onclick=\"fnjs_update_div('#main','$insert');\"></td></tr></table>";
+                        $urlSpecs[self::PH_INS_TRASLADO] = [
+                            'path' => 'frontend/personas/controller/traslado_form.php',
+                            'query' => [
+                                'cabecera' => 'no',
+                                'id_pau' => $id_pau,
+                                'id_dossier' => $id_dossier,
+                                'obj_pau' => $Qobj_pau,
+                            ],
+                        ];
+                        $html .= '" onclick="fnjs_update_div(\'#main\',\'' . self::PH_INS_TRASLADO . '\');"></td></tr></table>';
                     } else {
                         $html .= "\" onclick=\"fnjs_nuevo('#seleccionados');\"></td></tr></table>";
                     }
@@ -316,6 +344,7 @@ class DossiersVerPantallaData
             'web_icons' => $web_icons,
             'modo' => 'ficha',
             'cuerpo_html' => $cuerpo,
+            'url_specs' => $urlSpecs,
         ];
     }
 }

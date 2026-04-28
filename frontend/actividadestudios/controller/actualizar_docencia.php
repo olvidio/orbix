@@ -11,7 +11,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use src\actividadestudios\application\DocenciaActualizar;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -45,7 +45,7 @@ if (empty($continuar)) {
     $oFormP->setEmpiezaMax($Qempiezamax);
     $oFormP->setEmpiezaMin($Qempiezamin);
     $oFormP->setBoton($boton);
-    $oHashPeriodo = new Hash();
+    $oHashPeriodo = new HashFront();
     $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
     $oHashPeriodo->setCamposNo('!refresh');
     $oHashPeriodo->setArraycamposHidden(['continuar' => 1]);

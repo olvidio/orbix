@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -42,7 +42,7 @@ $oDesplegableDescTeleco->setNombre('id_desc_teleco');
 $oDesplegableDescTeleco->setOpcion_sel($data['id_desc_teleco']);
 $oDesplegableDescTeleco->setBlanco(true);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('mod!id_tipo_teleco!id_desc_teleco!num_teleco!observ');
 $oHash->setcamposNo('mod!');
 $oHash->setArraycamposHidden([

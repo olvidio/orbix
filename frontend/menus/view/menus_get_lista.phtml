@@ -1,8 +1,3 @@
-<?php
-
-use frontend\shared\config\AppUrlConfig;
-
-?>
 <script>
     fnjs_ver_ficha = function (id_menu) {
         var filtro_grupo = $('#filtro_grupo').val();
@@ -25,24 +20,18 @@ use frontend\shared\config\AppUrlConfig;
     $indice = 1;
     $indice_old = 1;
     $m = 0;
-    foreach ($oMenuDbs as $oMenuDb) {
+    foreach ($menuRows as $row) {
         $m++;
-        $id_menu = $oMenuDb->getId_menu();
-        $orden = $oMenuDb->getOrden();
-        $menu = $oMenuDb->getMenu();
-        $parametros = $oMenuDb->getParametros();
-        $id_metamenu = $oMenuDb->getId_metamenu();
-        $menu_perm = $oMenuDb->getMenu_perm();
-        $id_grupmenu = $oMenuDb->getId_grupmenu();
-        $ok = $oMenuDb->isOk();
+        $id_menu = (int)($row['id_menu'] ?? 0);
+        $orden = $row['orden'] ?? [];
+        $menu = (string)($row['menu'] ?? '');
+        $menu_perm = (int)($row['menu_perm'] ?? 0);
+        $ok = $row['ok'] ?? null;
 
         $txt_ok = empty($ok) ? '' : '[ok]';
-        //echo "m: $perm_menu,l: $perm_login, ";
         $perm_menu = $oCuadros->lista_txt2($menu_perm);
-        // hago las rutas absolutas, en vez de relativas:
-        if (!empty($url)) $url = AppUrlConfig::getPublicAppBaseUrl() . '/$url';
-        $indice = count($orden);
-        $orden_txt = implode(',',$orden);
+        $indice = is_array($orden) ? count($orden) : 0;
+        $orden_txt = is_array($orden) ? implode(',', $orden) : '';
         // para poder hacer click si he borrado el nombre
         $menu = empty($menu) ? '???' . strtoupper(_("borrado")) . '???' : $menu;
         if ($indice == $indice_old) {

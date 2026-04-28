@@ -3,11 +3,9 @@
 namespace frontend\planning\controller;
 
 use frontend\shared\model\ViewNewPhtml;
-use src\usuarios\domain\contracts\RoleRepositoryInterface;
-use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
+use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
 
@@ -66,32 +64,12 @@ if (empty($Qtrimestre)) {
     $checksTrim[$Qtrimestre] = 'checked';
 }
 
-$id_nom_jefe = null;
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-$oMiUsuario = $UsuarioRepository->findById((int)($_SESSION['session_auth']['id_usuario'] ?? 0));
-$id_role = $oMiUsuario->getId_role();
-
-$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-$aRoles = $RoleRepository->getArrayRoles();
-if (!empty($aRoles[$id_role]) && $aRoles[$id_role] === 'p-sacd') {
-    if (!$_SESSION['oConfig']->is_jefeCalendario()) {
-        $id_nom_jefe = (int)$oMiUsuario->getCsvIdPauAsString();
-        if (empty($id_nom_jefe)) {
-            exit(_("No tiene permiso para ver esta página"));
-        }
-    }
-}
-
-$ZonaRepository = $GLOBALS['container']->get(ZonaRepositoryInterface::class);
-$aOpciones = $ZonaRepository->getArrayZonas($id_nom_jefe);
+$zonesData = PostRequest::getDataFromUrl('/src/planning/planning_zones_que_data', []);
+$aOpciones = (array)($zonesData['opciones_zonas'] ?? []);
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
 $oDesplZonas->setBlanco(false);
 $oDesplZonas->setBlanco(0);
-$algo = $oDesplZonas->options();
-if (strlen($algo) < 1) {
-    exit(_("No tiene permiso para ver esta página"));
-}
 if (!empty($Qid_zona)) {
     $oDesplZonas->setOpcion_sel($Qid_zona);
 }
@@ -99,7 +77,7 @@ if (!empty($Qid_zona)) {
 $is_jefeCalendario = $_SESSION['oConfig']->is_jefeCalendario();
 $url = 'frontend/planning/controller/planning_zones_select.php';
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url);
 $oHash->setArraycamposHidden([
     'modelo' => $Qmodelo,

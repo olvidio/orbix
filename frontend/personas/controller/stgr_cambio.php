@@ -5,7 +5,7 @@ namespace frontend\personas\controller;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 
 /**
@@ -50,7 +50,7 @@ $oDespl->setOpciones($opciones);
 $oDespl->setOpcion_sel($stgr);
 $oDespl->setBlanco(true);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('nivel_stgr');
 $oHash->setArraycamposHidden([
     'id_tabla' => $id_tabla,

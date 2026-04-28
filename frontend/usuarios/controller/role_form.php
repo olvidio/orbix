@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
@@ -74,7 +74,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('que!role!sf!sv!pau!dmz');
 $oHash->setcamposNo('sf!sv!dmz!refresh');
 $a_camposHidden = array(
@@ -82,7 +82,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setCamposForm('que!sel');
 $oHash1->setcamposNo('scroll_id!refresh');
 $a_camposHidden = array(

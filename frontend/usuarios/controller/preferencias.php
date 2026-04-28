@@ -5,7 +5,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -81,14 +81,14 @@ $oDesplZonaGMT->setOpcion_sel($id_zona_sel);
 
 
 $id_usuario = (int)($_SESSION['session_auth']['id_usuario'] ?? 0);
-$url_avisos = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
-$url_avisos_lista = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => 1)));
-$url_avisos_mails = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => 2)));
-$url_cambio_password = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_form_pwd.php');
-$url_cambio_mail = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_form_mail.php');
-$url_2fa_settings = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_form_2fa.php');
+$url_avisos = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
+$url_avisos_lista = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => 1)));
+$url_avisos_mails = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => 2)));
+$url_cambio_password = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_form_pwd.php');
+$url_cambio_mail = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_form_mail.php');
+$url_2fa_settings = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/usuarios/controller/usuario_form_2fa.php');
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('layout!inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou!zona_horaria_nou');
 
 $a_campos = [

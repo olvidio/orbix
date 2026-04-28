@@ -2,7 +2,7 @@
 
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 $oDB = $GLOBALS['oDBE'];
@@ -19,7 +19,7 @@ if ($Qseguro === 2) {
         echo _("casi seguro que no quieres hacerlo");
         echo "<br>";
 
-        $go1 = Hash::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
+        $go1 = HashFront::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
         $html = "Esto pondrá los menus por defecto. Para todas las dl";
         $html .= "tarda mucho (3min para 10 dl), pero acaba bien (creo)";
         $html .= "<br>";
@@ -28,7 +28,7 @@ if ($Qseguro === 2) {
         echo $html;
     }
 
-    $go = Hash::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1)));
+    $go = HashFront::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1)));
     $html = "Esto pondrá los menus por defecto. Se eliminaran todas las modificaciones que se hayan hecho en los menus y grupos de menu";
     $html .= "<br>";
     $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("continuar") . "</span>";

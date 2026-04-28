@@ -3,7 +3,7 @@
 // Crea los objetos de uso global **********************************************
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -47,7 +47,7 @@ $a_campos = [
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_egm = $data['a_egm'];
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposNo('id_grupo');
 $id_grupo = 33;
 $oHash->setArrayCamposHidden(['id_grupo' => $id_grupo, 'id_equipaje' => $Qid_equipaje]);
@@ -79,7 +79,7 @@ foreach ($a_egm as $aEgm) {
     $oLista->setCabeceras($a_cabeceras);
     $oLista->setDatos($a_valores);
 
-    $oHashGrupo = new Hash();
+    $oHashGrupo = new HashFront();
     $oHashGrupo->setArrayCamposHidden([
         'id_grupo' => $id_grupo,
         'id_equipaje' => $Qid_equipaje,

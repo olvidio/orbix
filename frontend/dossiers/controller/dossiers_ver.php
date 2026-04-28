@@ -10,10 +10,21 @@ use frontend\shared\model\ViewNewPhtml;
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
+$requestPayload = PostRequest::requestPayloadForHash();
+$Qrefresh = (int)($requestPayload['refresh'] ?? 0);
 $oPosicion->recordar($Qrefresh);
 
-$data = PostRequest::getDataFromUrl('/src/dossiers/dossiers_ver_pantalla_data', $_POST);
+// Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
+$requestPayload['stack_actual'] = $oPosicion->getStack(0);
+
+$stackFromPost = isset($requestPayload['stack']) ? (string) filter_var($requestPayload['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
+if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
+    $requestPayload['restored_id_sel']    = $oPosicion->getParametro('id_sel');
+    $requestPayload['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
+    $oPosicion->olvidar($stackFromPost);
+}
+
+$data = PostRequest::getDataFromUrl('/src/dossiers/dossiers_ver_pantalla_data', $requestPayload);
 if (!is_array($data)) {
     exit;
 }

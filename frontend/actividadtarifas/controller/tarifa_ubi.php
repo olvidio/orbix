@@ -17,7 +17,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\CasasQue;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -44,7 +44,7 @@ $oFormAny->setAction('fnjs_ver()');
 $public = AppUrlConfig::getPublicAppBaseUrl();
 $api = AppUrlConfig::getApiBaseUrl();
 
-$oHashLista = new Hash();
+$oHashLista = new HashFront();
 $oHashLista->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_ubi_lista.php');
 $oHashLista->setCamposForm('id_ubi!year');
 $h_lista = $oHashLista->linkSinVal();
@@ -54,27 +54,27 @@ $h_lista = $oHashLista->linkSinVal();
 // espera que los campos firmados coincidan exactamente con los que
 // llegan, firmamos una URL por escenario (igual que hacia el legacy
 // `apps/actividadtarifas/controller/tarifa_ubi.php`).
-$oHashFormModificar = new Hash();
+$oHashFormModificar = new HashFront();
 $oHashFormModificar->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_ubi_form.php');
 $oHashFormModificar->setCamposForm('id_item!letra');
 $h_form_modificar = $oHashFormModificar->linkSinVal();
 
-$oHashFormNuevo = new Hash();
+$oHashFormNuevo = new HashFront();
 $oHashFormNuevo->setUrl($public . '/frontend/actividadtarifas/controller/tarifa_ubi_form.php');
 $oHashFormNuevo->setCamposForm('id_ubi!year');
 $h_form_nuevo = $oHashFormNuevo->linkSinVal();
 
-$oHashCopiar = new Hash();
+$oHashCopiar = new HashFront();
 $oHashCopiar->setUrl($api . '/src/actividadtarifas/tarifa_ubi_copiar');
 $oHashCopiar->setCamposForm('id_ubi!year');
 $url_copiar = $api . '/src/actividadtarifas/tarifa_ubi_copiar' . $oHashCopiar->linkSinVal();
 
-$oHashUpdate = new Hash();
+$oHashUpdate = new HashFront();
 $oHashUpdate->setUrl($api . '/src/actividadtarifas/tarifa_ubi_update');
 $oHashUpdate->setCamposForm('id_item!id_ubi!year!id_tarifa!id_serie!cantidad');
 $url_update = $api . '/src/actividadtarifas/tarifa_ubi_update' . $oHashUpdate->linkSinVal();
 
-$oHashEliminar = new Hash();
+$oHashEliminar = new HashFront();
 $oHashEliminar->setUrl($api . '/src/actividadtarifas/tarifa_ubi_eliminar');
 $oHashEliminar->setCamposForm('id_item');
 $url_eliminar = $api . '/src/actividadtarifas/tarifa_ubi_eliminar' . $oHashEliminar->linkSinVal();

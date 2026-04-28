@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
@@ -40,7 +40,7 @@ $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);
 $oLista->setBotones($a_botones);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('sel');
 $oHash->setArrayCamposHidden([
     'id_equipaje' => '',

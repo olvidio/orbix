@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 ?>
     <script>
@@ -24,7 +24,7 @@ use web\Hash;
     }
 
     fnjs_add_grupmenu = function (que) {
-        go = '<?= Hash::link('frontend/usuarios/controller/role_grupmenu.php?' . http_build_query(array('id_role' => $Qid_role))) ?>';
+        go = '<?= HashFront::link('frontend/usuarios/controller/role_grupmenu.php?' . http_build_query(array('id_role' => $Qid_role))) ?>';
         fnjs_update_div('#main', go);
     }
 

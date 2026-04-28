@@ -5,7 +5,7 @@ namespace src\layouts;
 use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Legacy layout implementation
@@ -107,8 +107,8 @@ class LegacyLayout implements LayoutInterface
             // hago las rutas absolutas, en vez de relativas:
             $full_url = '';
             if (!empty($url)) $full_url = ConfigGlobal::getWeb() . '/' . $url;
-            //$parametros = Hash::param($full_url,$parametros);
-            $parametros = Hash::add_hash($parametros, $full_url);
+            //$parametros = HashB::param($full_url,$parametros);
+            $parametros = HashFront::add_hash($parametros, $full_url);
             // quito las llaves "{}"
             $indice = count($orden);
             if ($orden[0] === $num_menu_1) {

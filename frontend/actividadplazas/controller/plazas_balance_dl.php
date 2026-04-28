@@ -13,7 +13,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\TablaEditable;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -38,7 +38,7 @@ if ($dlB === '') {
 }
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$oHashUpdate = new Hash();
+$oHashUpdate = new HashFront();
 $oHashUpdate->setUrl($apiBase . '/src/actividadplazas/gestion_plazas_update');
 $oHashUpdate->setCamposForm('data!colName');
 $UpdateUrl = $apiBase . '/src/actividadplazas/gestion_plazas_update' . $oHashUpdate->linkSinVal();

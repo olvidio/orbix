@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -27,7 +27,7 @@ $ids_activ = $data['ids_activ'];
 
 $nom_equipaje = htmlspecialchars($nombre_ubi) . " ($ini - $fin)";
 
-$oHashForm = new Hash();
+$oHashForm = new HashFront();
 $oHashForm->setCamposForm('nom_equipaje');
 $oHashForm->setArrayCamposHidden([
     'lugar' => $nombre_ubi,

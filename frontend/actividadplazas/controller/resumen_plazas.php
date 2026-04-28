@@ -15,7 +15,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -57,13 +57,13 @@ $oDesplDelegaciones = new Desplegable();
 $oDesplDelegaciones->setNombre('region_dl');
 $oDesplDelegaciones->setOpciones($dl_opciones);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('num_plazas!region_dl');
 $oHash->setArraycamposHidden([
     'id_activ' => $id_activ,
 ]);
 
-$oHashActualizar = new Hash();
+$oHashActualizar = new HashFront();
 $oHashActualizar->setCamposNo('refresh');
 $oHashActualizar->setArraycamposHidden([
     'id_activ' => $id_activ,
@@ -71,7 +71,7 @@ $oHashActualizar->setArraycamposHidden([
 ]);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$oHashCeder = new Hash();
+$oHashCeder = new HashFront();
 $oHashCeder->setUrl($apiBase . '/src/actividadplazas/plazas_ceder');
 $oHashCeder->setCamposForm('id_activ!num_plazas!region_dl');
 $url_ceder = $apiBase . '/src/actividadplazas/plazas_ceder' . $oHashCeder->linkSinVal();

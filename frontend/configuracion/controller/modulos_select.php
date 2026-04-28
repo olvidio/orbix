@@ -12,6 +12,15 @@ $aGoBack = ['mod' => ''];
 $oPosicion->setParametros($aGoBack, 1);
 
 $campos = array_merge($_GET, $_POST);
+
+// Resolver estado de navegación aquí (frontend) y pasárselo al builder como input plano.
+$stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
+if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
+    $campos['restored_id_sel']    = $oPosicion->getParametro('id_sel');
+    $campos['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
+    $oPosicion->olvidar($stackFromPost);
+}
+
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_select_data', $campos);
 $payload = is_array($data) ? $data : [];
 

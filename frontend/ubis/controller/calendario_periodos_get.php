@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -11,7 +11,7 @@ $data = PostRequest::getDataFromUrl('/src/ubis/calendario_periodos_get_data', [
     'id_ubi' => $Qid_ubi,
 ]);
 $rows = $data['rows'];
-$oHash = new Hash();
+$oHash = new HashFront();
 $i = 0;
 $txt = '';
 foreach ($rows as $row) {

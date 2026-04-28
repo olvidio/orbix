@@ -3,7 +3,7 @@
 
 // Crea los objetos de uso global **********************************************
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -36,12 +36,12 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 $oFormP->setTitulo(_("periodo de selección de actividades"));
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $sCamposForm = 'empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val!id_cdc';
 $oHash->setCamposForm($sCamposForm);
 $oHash->setCamposNo('id_cdc');
 
-$url_ver_equipajes = Hash::link('frontend/inventario/controller/equipajes_ver.php');
+$url_ver_equipajes = HashFront::link('frontend/inventario/controller/equipajes_ver.php');
 
 $a_campos = [
     'oHash' => $oHash,

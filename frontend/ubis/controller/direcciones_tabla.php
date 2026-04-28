@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -27,7 +27,7 @@ $oTabla->setCabeceras($data['a_cabeceras']);
 $oTabla->setBotones([]);
 $oTabla->setDatos($data['a_valores']);
 
-$url_nueva = Hash::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query([
+$url_nueva = HashFront::link('frontend/ubis/controller/direcciones_editar.php?' . http_build_query([
     'mod' => 'nuevo',
     'id_ubi' => $Qid_ubi,
     'obj_dir' => $Qobj_dir,

@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use src\ubis\domain\CuadrosLabor;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -17,7 +17,7 @@ $tipo_labor = (int)($data['tipo_labor'] ?? 0);
 
 $url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url_update);
 $oHash->setArrayCamposHidden([
     'labor' => 'si', // para saber que si el array tipo_labor está en blanco hay que borrar.

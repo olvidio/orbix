@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace frontend\encargossacd\support;
 
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Agrupa las piezas UI repetidas en los controllers `sacd_ficha`,
@@ -67,16 +67,16 @@ final class SacdFichaAjaxHashes
     {
         $url_ajax = 'frontend/encargossacd/controller/sacd_ficha_ajax.php';
 
-        $oHashFicha = new Hash();
+        $oHashFicha = new HashFront();
         $oHashFicha->setUrl($url_ajax);
         $oHashFicha->setCamposForm('que!id_nom');
 
-        $oHashLst = new Hash();
+        $oHashLst = new HashFront();
         $oHashLst->setUrl($url_ajax);
         $oHashLst->setCamposForm('que!id_nom!filtro_sacd');
 
         $url_horario = 'frontend/encargossacd/controller/horario_sacd_ver.php';
-        $oHashHorario = new Hash();
+        $oHashHorario = new HashFront();
         $oHashHorario->setUrl($url_horario);
         $oHashHorario->setCamposForm('filtro_sacd!id_enc!id_nom');
 

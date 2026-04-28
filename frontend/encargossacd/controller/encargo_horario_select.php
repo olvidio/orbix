@@ -2,7 +2,7 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 /**
@@ -74,7 +74,7 @@ foreach ($filas as $fila) {
         'desc_enc' => $desc_enc,
     ];
     array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
-    $pagina = Hash::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
+    $pagina = HashFront::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
     $a_valores[$i]['sel'] = $id_item_h;
     $a_valores[$i][1] = ['ira' => $pagina, 'valor' => $id_enc_fila];
@@ -99,7 +99,7 @@ $aQuery = [
     'origen' => $Qorigen,
 ];
 array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
-$pagina_nuevo = Hash::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
+$pagina_nuevo = HashFront::link('frontend/encargossacd/controller/horario_ver.php?' . http_build_query($aQuery));
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('encargo_horario_select');
@@ -108,7 +108,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $url_actualizar = 'frontend/encargossacd/controller/horario_ver.php';
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url_actualizar);
 $oHash->setArrayCamposHidden([
     'mod' => $Qmod,

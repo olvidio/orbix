@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -23,7 +23,7 @@ $a_opciones = $data['a_opciones'];
 $oDesplTiposDoc = new Desplegable('id_tipo_doc', $a_opciones, '', true);
 $oDesplTiposDoc->setAction('fnjs_docs_libres()');
 
-$oHashForm = new Hash();
+$oHashForm = new HashFront();
 $oHashForm->setCamposForm('id_tipo_doc!sel');
 $oHashForm->setCamposNo('sel');
 $oHashForm->setArrayCamposHidden([

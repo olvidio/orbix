@@ -11,11 +11,12 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
+use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\entity\Ubi;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
@@ -680,7 +681,7 @@ class Select_asistentes_a_una_actividad
         $oTabla->setBotones($this->getBotones());
         $oTabla->setDatos($this->getValores());
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('');
         $oHash->setCamposNo('sel!scroll_id!mod!que!refresh');
         $oHash->setArraycamposHidden([
@@ -692,7 +693,7 @@ class Select_asistentes_a_una_actividad
             'permiso' => 3,
         ]);
 
-        $oHash1 = new Hash();
+        $oHash1 = new HashFront();
         $oHash1->setCamposForm('');
         $oHash1->setCamposNo('sel!scroll_id!mod');
         $oHash1->setArraycamposHidden([
@@ -707,13 +708,13 @@ class Select_asistentes_a_una_actividad
         $web = rtrim(ConfigGlobal::getWeb(), '/');
 
         $url_mover = $web . '/frontend/asistentes/controller/asistente_mover.php';
-        $oHash3 = new Hash();
+        $oHash3 = new HashFront();
         $oHash3->setUrl($url_mover);
         $oHash3->setCamposForm('id_pau!id_activ');
         $h3 = $oHash3->linkSinValParams();
 
         $url_plaza_asignar = $web . '/src/asistentes/asistente_plaza_asignar';
-        $oHash4 = new Hash();
+        $oHash4 = new HashFront();
         $oHash4->setUrl($url_plaza_asignar);
         $oHash4->setCamposForm('plaza!lista_json!id_activ');
         $h4 = $oHash4->linkSinValParams();
@@ -731,7 +732,7 @@ class Select_asistentes_a_una_actividad
             'resumen_plazas' => $this->resumen_plazas,
             'resumen_plazas2' => $this->resumen_plazas2,
             'leyenda_html' => $this->leyenda_html,
-            'aLinks_dl' => $this->aLinks_dl,
+            'aLinks_dl' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_dl),
             'msg_err' => $this->msg_err,
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
@@ -771,7 +772,7 @@ class Select_asistentes_a_una_actividad
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
-            $this->aLinks_dl[$nom] = DossierTipoPublicUrls::hashedFormControllerQuery(self::ID_TIPO_DOSSIER, $aQuery);
+            $this->aLinks_dl[$nom] = DossierTipoPublicUrls::formControllerLinkSpec(self::ID_TIPO_DOSSIER, $aQuery);
         }
     }
 

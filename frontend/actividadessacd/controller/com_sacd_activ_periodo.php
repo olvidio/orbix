@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pantalla unificada para la comunicacion de actividades a los sacd.
  *
@@ -28,9 +29,8 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use src\usuarios\domain\contracts\RoleRepositoryInterface;
-use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\Hash;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -73,21 +73,10 @@ $sBotonBuscar = "<input type=button name=\"buscar\" value=\"" . _("buscar") . "\
 $sBotonEnviar = "<input type=button name=\"enviar\" value=\"" . _("enviar mail") . "\" onclick=\"fnjs_enviar_mails();\">";
 $oFormP->setBoton("$sBotonBuscar  $sBotonEnviar");
 
-// Regla del legacy: `p-sacd` solo puede ver sus propias comunicaciones y
-// no puede modificar los textos.
-$perm_mod_txt = true;
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
-$oMiUsuario = $UsuarioRepository->findById((int)($_SESSION['session_auth']['id_usuario'] ?? 0));
-if ($oMiUsuario !== null) {
-    $id_role = $oMiUsuario->getId_role();
-    $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-    $aRoles = $RoleRepository->getArrayRoles();
-    if (!empty($aRoles[$id_role]) && $aRoles[$id_role] === 'p-sacd') {
-        $perm_mod_txt = false;
-    }
-}
+$pageData = PostRequest::getDataFromUrl('/src/actividadessacd/com_sacd_activ_periodo_page_data', []);
+$perm_mod_txt = (bool)($pageData['perm_mod_txt'] ?? true);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $a_camposHidden = [
     'sacd' => 'uno',
@@ -99,7 +88,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
-    $oHashUrl = new Hash();
+    $oHashUrl = new HashFront();
     $oHashUrl->setUrl($url);
     $oHashUrl->setCamposForm($campos);
     return $url . $oHashUrl->linkSinVal();
@@ -114,7 +103,7 @@ $url_enviar = $buildHashedUrl(
     $api . '/src/actividadessacd/comunicacion_activ_sacd_enviar',
     $camposForm
 );
-$url_com_txt = Hash::link('frontend/actividadessacd/controller/com_sacd_txt.php');
+$url_com_txt = HashFront::link('frontend/actividadessacd/controller/com_sacd_txt.php');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

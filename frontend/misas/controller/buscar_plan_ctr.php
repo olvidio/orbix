@@ -4,7 +4,7 @@ use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -40,13 +40,13 @@ if ($cs !== '') {
 }
 
 $url_buscar_plan_ctr = 'frontend/misas/controller/buscar_plan_ctr.php';
-$oHashBuscarPlanCtr = new Hash();
+$oHashBuscarPlanCtr = new HashFront();
 $oHashBuscarPlanCtr->setUrl($url_buscar_plan_ctr);
 $oHashBuscarPlanCtr->setCamposForm('id_zona');
 $h_buscar_plan_ctr = $oHashBuscarPlanCtr->linkSinValParams();
 
 $url_ver_plan_ctr = 'frontend/misas/controller/ver_plan_ctr.php';
-$oHashPlanCtr = new Hash();
+$oHashPlanCtr = new HashFront();
 $oHashPlanCtr->setUrl($url_ver_plan_ctr);
 $oHashPlanCtr->setCamposForm('id_zona!id_ubi!periodo!empiezamin!empiezamax');
 $h_plan_ctr = $oHashPlanCtr->linkSinValParams();

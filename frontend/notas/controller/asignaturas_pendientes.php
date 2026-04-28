@@ -3,7 +3,7 @@
 use core\ViewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 /**
@@ -45,7 +45,7 @@ if (!empty($data['ambito_rstgr'])) {
     $oCuadros->setChecked($aChecked);
     $oCuadros->setOpciones($a_delegacionesStgr);
 
-    $oHash = new Hash();
+    $oHash = new HashFront();
     $oHash->setCamposForm('dl');
     $oHash->setcamposNo('dl');
 

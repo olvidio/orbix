@@ -7,12 +7,12 @@ use src\dossiers\application\PermDossier;
 use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
+use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
 use frontend\shared\web\BotonesCurso;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
-use frontend\shared\web\Posicion;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
 
@@ -43,6 +43,8 @@ class Select_actividades_de_una_persona
 
     private $Qid_sel;
     private $Qscroll_id;
+    // Clave actual de la pila de navegación, inyectada desde el controller frontend.
+    private int $stackActual = 0;
     private BotonesCurso $oBotonesCurso;
     private mixed $aLinks_dl;
     private mixed $aLinks_otros;
@@ -153,10 +155,10 @@ class Select_actividades_de_una_persona
     public function getHtml()
     {
         $this->txt_eliminar = _("¿Está seguro que desea borrar a esta persona de esta actividad?");
-        $oPosicion = new Posicion();
-        $stack = $oPosicion->getStack(0);
+        // El valor llega ya resuelto desde el frontend vía setStackActual().
+        $stack = $this->stackActual;
 
-        $oHashSelect = new Hash();
+        $oHashSelect = new HashFront();
         $oHashSelect->setCamposForm('modo_curso');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $oHashSelect->setArraycamposHidden([
@@ -185,8 +187,8 @@ class Select_actividades_de_una_persona
             'oTabla' => $oTabla,
             'oBotonesCurso' => $this->oBotonesCurso,
             'oHashSelect' => $oHashSelect,
-            'aLinks_dl' => $this->aLinks_dl,
-            'aLinks_otros' => $this->aLinks_otros,
+            'aLinks_dl' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_dl),
+            'aLinks_otros' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_otros),
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
             'url_form' => $url_form,
@@ -221,7 +223,7 @@ class Select_actividades_de_una_persona
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
-            $this->aLinks_dl[$nom] = DossierTipoPublicUrls::hashedFormControllerQuery(self::ID_TIPO_DOSSIER, $aQuery);
+            $this->aLinks_dl[$nom] = DossierTipoPublicUrls::formControllerLinkSpec(self::ID_TIPO_DOSSIER, $aQuery);
         }
         reset($ref_perm);
         foreach ($ref_perm as $clave => $val) {
@@ -237,7 +239,7 @@ class Select_actividades_de_una_persona
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
-            $this->aLinks_otros[$nom] = DossierTipoPublicUrls::hashedFormControllerQuery(self::ID_TIPO_DOSSIER, $aQuery);
+            $this->aLinks_otros[$nom] = DossierTipoPublicUrls::formControllerLinkSpec(self::ID_TIPO_DOSSIER, $aQuery);
         }
     }
 
@@ -266,4 +268,5 @@ class Select_actividades_de_una_persona
     public function setQscroll_id($Qscroll_id): void { $this->Qscroll_id = $Qscroll_id; }
     public function setBloque($bloque): void { $this->bloque = $bloque; }
     public function setQueSel($queSel): void { $this->queSel = (string) $queSel; }
+    public function setStackActual(int $stack): void { $this->stackActual = $stack; }
 }

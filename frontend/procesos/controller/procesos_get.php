@@ -9,7 +9,7 @@ use frontend\shared\PostRequest;
 
 require_once("frontend/shared/global_header_front.inc");
 
-$data = PostRequest::getDataFromUrl('/src/procesos/procesos_get', $_POST);
+$data = PostRequest::getDataFromUrl('/src/procesos/procesos_get', PostRequest::requestPayloadForHash());
 $aPadres = $data['aPadres'] ?? [];
 
 if (empty($aPadres)) {

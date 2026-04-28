@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -24,7 +24,7 @@ $oTabla->setCabeceras($data['a_cabeceras']);
 $oTabla->setBotones($data['a_botones']);
 $oTabla->setDatos($data['a_valores']);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('mod!sel');
 $oHash->setcamposNo('mod!sel!scroll_id!refresh');
 $oHash->setArraycamposHidden([

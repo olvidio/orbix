@@ -1,10 +1,10 @@
 <?php
 
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use src\actividades\domain\value_objects\NivelStgrId;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\shared\domain\value_objects\DateTimeLocal;
-use web\Hash;
 
 /**
  * Esta página sirve para comprobar las notas de la tabla e_notas.
@@ -259,7 +259,7 @@ if (!empty($nf)) {
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
     /* end lista
-    $go=Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
+    $go=HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?'.http_build_query(array('id_tabla'=>$Qid_tabla,'actualizar'=>9999)));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">". _("clic aquí") ."</span>";
     echo "<p class=action>";
     printf (_("para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."),$pag);
@@ -294,7 +294,7 @@ if (!empty($nf)) {
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
     /* end lista */
-    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 9999)));
+    $go = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 9999)));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
     echo "<p class=action>";
     printf(_("para poner c1 y bienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."), $pag);
@@ -327,7 +327,7 @@ if (!empty($nf)) {
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
     /* end lista */
-    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 9998)));
+    $go = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 9998)));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
     echo "<p class=action>";
     printf(_("para poner r y cuadrienio finalizado a todos los de la lista, hacer %s. Esto pondrá la fecha de acta última."), $pag);
@@ -337,6 +337,9 @@ if (!empty($nf)) {
 /*3. Gente con opcionales genéricas sin fecha o ref. a la opcional que es (no cuento las de la Ratio 89)*/
 
 /*4. Gente sin fecha en acta (no cuento las de la Ratio 89)*/
+
+$dAsigMap = PostRequest::getDataFromUrl('/src/asignaturas/asignaturas_map_data', []);
+$a_asignaturas_map = $dAsigMap['a_asignaturas'] ?? [];
 
 $sqlF = "SELECT  p.id_nom,p.nom, p.apellido1, p.apellido2, n.f_acta, n.id_asignatura
 FROM $tabla p,e_notas_dl n
@@ -349,16 +352,14 @@ echo "<br><p>4. $tabla_txt con asignaturas sin fecha de acta: $nf</p>";
 
 /* Para sacar una lista*/
 echo "<table>";
-$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($oDBSt_sql->fetchAll() as $algo) {
     $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
     $fecha = $algo['f_acta'];
     $id_asignatura = $algo['id_asignatura'];
-    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
-    if ($oAsignatura === null) {
+    if (empty($a_asignaturas_map[$id_asignatura])) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }
-    $asig = $oAsignatura->getNombre_corto();
+    $asig = $a_asignaturas_map[$id_asignatura];
     echo "<tr><td width=20></td>";
     echo "<td>$nom</td><td>$fecha</td><td>$asig</td></tr>";
 }
@@ -390,7 +391,7 @@ if (!empty($nf)) {
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
-    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'c1')));
+    $go = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'c1')));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
     echo "<p class=action>";
     printf(_("para poner c1 a todos los de la lista, hacer %s"), $pag);
@@ -422,7 +423,7 @@ if (!empty($nf)) {
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
-    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'c2')));
+    $go = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'c2')));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
 
     echo "<p class=action>";
@@ -451,7 +452,7 @@ if (!empty($nf)) {
     }
     echo "<tr><td colspan=7><hr>";
     echo "</table>";
-    $go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'r')));
+    $go = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'r')));
     $pag = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("clic aquí") . "</span>";
 
     echo "<p class=action>";
@@ -471,27 +472,25 @@ $nf = $oDBSt_sql->rowCount();
 echo "<br><p>8. $tabla_txt con asignaturas cursadas sin examinar: $nf</p>";
 
 /* Para sacar una lista*/
-$go = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'caduca_cursada')));
+$go = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query(array('id_tabla' => $Qid_tabla, 'actualizar' => 'caduca_cursada')));
 $caduca_cursada = $_SESSION['oConfig']->getCaducaCursada();
 
 echo "<table>";
-$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($oDBSt_sql->fetchAll() as $algo) {
     $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
     $fecha = $algo['f_acta'];
     $id_asignatura = $algo['id_asignatura'];
-    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
-    if ($oAsignatura === null) {
+    if (empty($a_asignaturas_map[$id_asignatura])) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }
-    $asig = $oAsignatura->getNombre_corto();
+    $asig = $a_asignaturas_map[$id_asignatura];
     $id_nom = $algo['id_nom'];
 
     $aParam = ['id_nom' => $id_nom,
             'id_asignatura' => $id_asignatura,
             'id_tabla' => $Qid_tabla,
             'actualizar' => 'borrar_cursada'];
-    $go_borrar = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($aParam));
+    $go_borrar = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/notas/controller/comprobar_notas.php?' . http_build_query($aParam));
     $pag_borrar = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go_borrar');\">" . _("borrar") . "</span>";
     echo "<tr><td width=20></td>";
     echo "<td>$nom</td><td>$fecha</td><td>$asig</td><td>$pag_borrar</td></tr>";

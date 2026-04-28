@@ -1,11 +1,11 @@
 <?php
 
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 $Qdocumentos = (string)filter_input(INPUT_POST, 'documentos');
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $sCamposFrom = 'f_recibido!f_asignado!eliminado!f_eliminado!num_ini!num_fin';
 $oHash->setCamposForm($sCamposFrom);
 $sCamposNo = 'chk_f_recibido!chk_f_asignado!chk_eliminado!chk_f_eliminado!chk_num_ini!chk_num_fin';

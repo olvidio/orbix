@@ -2,18 +2,15 @@
 
 namespace src\configuracion\application;
 
-use frontend\shared\web\Posicion;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\ModulosConfig;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Formulario de módulo (`frontend/configuracion/controller/modulos_form.php`).
  */
 final class ModulosFormData
 {
-    private const POSICION_SCRIPT = '/frontend/configuracion/controller/modulos_form.php';
-
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
@@ -34,16 +31,6 @@ final class ModulosFormData
                 $Qid_mod = (int)strtok((string)($a_sel[0] ?? ''), '#');
             } else {
                 $Qid_mod = (int)($input['id_mod'] ?? 0);
-            }
-
-            if (isset($input['stack']) && (string)$input['stack'] !== '') {
-                $stack = (string)filter_var($input['stack'], FILTER_SANITIZE_NUMBER_INT);
-                if ($stack !== '') {
-                    $oPosicion2 = new Posicion(self::POSICION_SCRIPT, $input);
-                    if ($oPosicion2->goStack($stack)) {
-                        $oPosicion2->olvidar($stack);
-                    }
-                }
             }
 
             $ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
@@ -74,7 +61,7 @@ final class ModulosFormData
         $campos_chk = 'sel_mods!sel_apps';
         $camposForm = 'nom!descripcion!';
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm($camposForm);
         $oHash->setcamposNo($campos_chk);
         $oHash->setArraycamposHidden([
@@ -83,7 +70,7 @@ final class ModulosFormData
             'mod' => $Qmod,
         ]);
 
-        $oHashActualizar = new Hash();
+        $oHashActualizar = new HashFront();
         $oHashActualizar->setCamposNo('refresh');
         $oHashActualizar->setArraycamposHidden([
             'id_mod' => $Qid_mod,

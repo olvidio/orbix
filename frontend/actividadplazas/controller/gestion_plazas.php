@@ -16,7 +16,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\TablaEditable;
 use function src\shared\domain\helpers\strtoupper_dlb;
@@ -48,7 +48,7 @@ $Qperiodo = (string)($payload['periodo'] ?? '');
 $extendida = (bool)($payload['extendida'] ?? false);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
-$oHashUpdate = new Hash();
+$oHashUpdate = new HashFront();
 $oHashUpdate->setUrl($apiBase . '/src/actividadplazas/gestion_plazas_update');
 $oHashUpdate->setCamposForm('data!colName');
 $UpdateUrl = $apiBase . '/src/actividadplazas/gestion_plazas_update' . $oHashUpdate->linkSinVal();
@@ -83,7 +83,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $CamposForm = 'empiezamax!empiezamin!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year';
 if ($extendida) {
     $CamposForm .= '!extendida';

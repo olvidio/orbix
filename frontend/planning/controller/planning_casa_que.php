@@ -8,7 +8,7 @@ use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\CasasQue;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 use function src\shared\domain\helpers\strtoupper_dlb;
 
@@ -54,7 +54,7 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!modelo!periodo!sin_activ!year');
 $oHash->setcamposNo('id_cdc');
 $oHash->setArraycamposHidden([

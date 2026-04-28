@@ -37,6 +37,18 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_que_filtros.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_que_datos', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_que_datos.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_status_labels_datos', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_status_labels_datos.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_nivel_stgr_default_datos', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_nivel_stgr_default_datos.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/actividades/lista_activ_datos', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/lista_activ_datos.php';
     });

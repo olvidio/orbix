@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewTwig;
 use src\actividades\domain\value_objects\StatusId;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
@@ -182,13 +182,13 @@ class ActividadTipo
         }
 
         $url = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get';
-        $oHashTipo = new Hash();
+        $oHashTipo = new HashFront();
         $oHashTipo->setUrl($url);
         $oHashTipo->setCamposForm('extendida!modo!salida!entrada');
         $h = $oHashTipo->linkSinValParams();
 
         $url_act = ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_ver.php';
-        $oHashAct = new Hash();
+        $oHashAct = new HashFront();
         $oHashAct->setUrl('frontend/actividades/controller/actividad_ver.php');
         $oHashAct->setCamposForm('id_tipo_activ!refresh');
         $h_act = $oHashAct->linkSinValParams();

@@ -4,7 +4,7 @@ use frontend\encargossacd\support\SacdFichaAjaxHashes;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Muestra la ficha de ausencias para un jefe de zona / oficial.
@@ -30,7 +30,7 @@ $oDesplSacd->setBlanco(false);
 $oDesplSacd->setAction('fnjs_ver_ficha()');
 
 $url_get = 'frontend/encargossacd/controller/sacd_ausencias_get.php';
-$oHashGet = new Hash();
+$oHashGet = new HashFront();
 $oHashGet->setUrl($url_get);
 $oHashGet->setCamposForm('filtro_sacd!id_nom!historial');
 $h_get = $oHashGet->linkSinValParams();

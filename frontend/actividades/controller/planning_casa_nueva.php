@@ -2,10 +2,9 @@
 /**
  * Formulario para crear una actividad nueva desde el planning de casas.
  *
- * Los desplegables se montan en
- * `src\actividades\application\ActividadVerDatos` (llamado con id_activ=0)
- * y se consumen via PostRequest, de modo que este controlador no toca
- * repositorios ni entidades.
+ * Desplegables desde `/src/actividades/actividad_ver_datos`; etiquetas de status
+ * desde `actividad_status_labels_datos`; HTML del bloque tipo desde
+ * `actividad_que_datos`. Sin `use src\...`.
  *
  * Migrado desde frontend/actividades/controller/planning_casa_nueva.php.
  *
@@ -18,9 +17,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use src\actividades\application\ActividadTipo;
-use src\actividades\domain\value_objects\StatusId;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -35,7 +32,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
 $id_tipo_activ = '';
 $isfsv_input = OrbixRuntime::miSfsv();
 $dl_org = OrbixRuntime::miDelef();
-$status = StatusId::PROYECTO;
+$status = 1; // StatusId::PROYECTO
 
 $data = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
     'id_activ' => 0,
@@ -69,7 +66,7 @@ $sasistentes = '';
 $sactividad = '';
 $snom_tipo = '';
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!extendida!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
 $camposNo = 'id_tipo_activ!mod';
 $a_camposHidden = [
@@ -81,20 +78,31 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposForm($camposForm);
 $oHash->setCamposNo($camposNo);
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinValParams();
 
-$oActividadTipo = new ActividadTipo();
-$oActividadTipo->setId_tipo_activ($id_tipo_activ);
-$oActividadTipo->setAsistentes($sasistentes);
-$oActividadTipo->setActividad($sactividad);
-$oActividadTipo->setNom_tipo($snom_tipo);
+$labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
+    'with_all' => 'f',
+]);
+$a_status = $labelsRow['id_to_label'] ?? [];
+
+$dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+    'perm_jefe' => 'f',
+    'id_tipo_activ' => $id_tipo_activ,
+    'que' => '',
+    'sfsv' => $ssfsv,
+    'sasistentes' => $sasistentes,
+    'sactividad' => $sactividad,
+    'sactividad2' => '',
+    'snom_tipo' => $snom_tipo,
+    'extendida' => '',
+]);
+$actividad_tipo_html = (string)($dataTipoBloque['actividad_tipo_html'] ?? '');
 
 $procesos_installed = AppInstalled::is('procesos');
 
-$a_status = StatusId::getArrayStatus();
 $status_txt = $a_status[$status] ?? '';
 
 $titulo = _("nueva actividad");
@@ -126,7 +134,7 @@ $a_campos = [
     'precio' => $precio,
     'observ' => $observ,
     'publicado' => $publicado,
-    'oActividadTipo' => $oActividadTipo,
+    'actividad_tipo_html' => $actividad_tipo_html,
     'id_tipo_activ' => $id_tipo_activ,
     'html_despl_dl_org' => $html_despl_dl_org,
     'html_despl_tarifa' => $html_despl_tarifa,

@@ -2,7 +2,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -14,10 +14,10 @@ if ($Qregion === '') {
     $Qregion = (string)(filter_input(INPUT_POST, 'region') ?? '');
 }
 
-$url_lista_backend = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
+$url_lista_backend = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
     . '/src/usuarios/mails_contactos_region'
 );
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url_lista_backend);
 $oHash->setArrayCamposHidden(['region' => $Qregion]);
 $hash_params = $oHash->getArrayCampos();

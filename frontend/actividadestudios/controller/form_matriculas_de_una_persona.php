@@ -13,18 +13,11 @@
  * @param array   $_POST['sel']            checkbox: id_activ#id_asignatura
  */
 
+use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
-use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\NotaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\notas\domain\value_objects\NotaSituacion;
-use src\profesores\domain\services\ProfesorStgrService;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -32,147 +25,61 @@ $oPosicion->recordar();
 
 $obj = 'actividadestudios\\model\\entity\\Matricula';
 
-$id_asignatura_real = '';
-
 $Qid_nom = (int) filter_input(INPUT_POST, 'id_pau');
 $Qid_activ = (int) filter_input(INPUT_POST, 'id_activ');
 $Qid_nivel = (int) filter_input(INPUT_POST, 'id_nivel');
 $Qid_asignatura = (int) filter_input(INPUT_POST, 'id_asignatura');
 
 $a_sel = (array) filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_activ = (int) strtok($a_sel[0], "#");
-    $id_asignatura_real = (int) strtok("#");
-}
-
-$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-$oActividad = $ActividadAllRepository->findById($Qid_activ);
-$nom_activ = $oActividad->getNom_activ();
-
-$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-
-$oDesplProfesores = [];
-$oDesplNiveles = [];
-$chk_preceptor = '';
-$id_preceptor = '';
-$nombre_corto = '';
-$id_nivel = 0;
-$id_asignatura = 0;
-
-$MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
-if (!empty($id_asignatura_real)) { // caso de modificar
-    $mod = "editar";
-    $oMatricula = $MatriculaRepository->findById($Qid_activ, $id_asignatura_real, $Qid_nom);
-    $id_situacion = $oMatricula->getId_situacion();
-    $preceptor = $oMatricula->isPreceptor();
-    $id_preceptor = $oMatricula->getId_preceptor();
-    $oAsignatura = $AsignaturaRepository->findById($id_asignatura_real);
-    if ($oAsignatura === null) {
-        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura_real));
-    }
-    $nombre_corto = $oAsignatura->getNombre_corto();
-    $id_nivel = $id_asignatura_real;
-    $id_asignatura = $id_asignatura_real;
-
-    $chk_preceptor = ($preceptor === true) ? 'checked' : '';
-    if (!empty($id_preceptor)) {
-        $ProfesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
-        $aOpciones = $ProfesorStgrService->getArrayProfesoresDl();
-        $oDesplProfesores = new Desplegable();
-        $oDesplProfesores->setOpciones($aOpciones);
-        $oDesplProfesores->setBlanco(1);
-        $oDesplProfesores->setNombre('id_preceptor');
-        $oDesplProfesores->setOpcion_sel($id_preceptor);
-    }
-} else { // caso de nueva asignatura
-    $mod = "nuevo";
-    // todas las asignaturas < nivel 3000
-    $cAsignaturas = $AsignaturaRepository->getAsignaturas(
-        ['active' => 't', 'id_nivel' => 3000, '_ordre' => 'id_nivel'],
-        ['id_nivel' => '<']
-    );
-    // Asignaturas superadas
-    $aSuperadas = NotaSituacion::getArraySuperadas();
-    $cond = implode('|', $aSuperadas);
-    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-    $cAsignaturasSuperadas = $PersonaNotaDBRepository->getPersonaNotas(
-        [
-            'id_situacion' => $cond,
-            'id_nom' => $Qid_nom,
-            'id_nivel' => 3000,
-            '_ordre' => 'id_nivel',
-        ],
-        ['id_situacion' => '~', 'id_nivel' => '<']
-    );
-    $aSuperadas = [];
-    foreach ($cAsignaturasSuperadas as $oAsignatura) {
-        $aSuperadas[$oAsignatura->getId_nivel()] = $oAsignatura->getId_asignatura();
-    }
-    // También quito las ya matriculadas
-    $MatriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
-    $cMatriculas = $MatriculaDlRepository->getMatriculas(['id_nom' => $Qid_nom, 'id_activ' => $Qid_activ]);
-    $aMatriculadas = [];
-    foreach ($cMatriculas as $oMatricula) {
-        $aMatriculadas[$oMatricula->getId_nivel()] = $oMatricula->getId_asignatura();
-    }
-    // asignaturas posibles
-    $aFaltan = [];
-    foreach ($cAsignaturas as $oAsignatura) {
-        $id_nivel = $oAsignatura->getId_nivel();
-        if (array_key_exists($id_nivel, $aSuperadas)) {
-            continue;
-        }
-        if (array_key_exists($id_nivel, $aMatriculadas)) {
-            continue;
-        }
-        $aFaltan[$id_nivel] = $oAsignatura->getNombre_corto();
-    }
-
-    $oDesplNiveles = new Desplegable();
-    $oDesplNiveles->setNombre('id_nivel');
-    $oDesplNiveles->setOpciones($aFaltan);
-    $oDesplNiveles->setBlanco(1);
-    $oDesplNiveles->setAction('fnjs_cmb_opcional()');
-}
-
-// Calcular opcionales genericas para fnjs_cmb_opcional.
-$cOpcionalesGenericas = $AsignaturaRepository->getAsignaturas(
-    ['active' => 't', 'id_sector' => 1, 'id_nivel' => 3000, '_ordre' => 'nombre_corto'],
-    ['id_nivel' => '<']
-);
-$condicion = '';
-foreach ($cOpcionalesGenericas as $oOpcional) {
-    $condicion .= 'id==' . $oOpcional->getId_nivel() . ' || ';
-}
-$condicion_js = substr($condicion, 0, -4);
-
-$oHash = new Hash();
-$camposForm = '';
-$oHash->setCamposNo('preceptor!id_preceptor');
-$a_camposHidden = [
+$camposMatricula = [
     'id_pau' => $Qid_nom,
     'id_activ' => $Qid_activ,
-    'mod' => $mod,
+    'id_nivel' => $Qid_nivel,
+    'id_asignatura' => $Qid_asignatura,
 ];
-if (!empty($id_asignatura_real)) {
-    $a_camposHidden['id_asignatura'] = $id_asignatura;
-    $a_camposHidden['id_nivel'] = $id_nivel;
-} else {
-    $camposForm .= 'id_asignatura!id_nivel';
+if (!empty($a_sel)) {
+    $camposMatricula['sel'] = $a_sel;
 }
-$oHash->setCamposForm($camposForm);
-$oHash->setArraycamposHidden($a_camposHidden);
+
+$d = PostRequest::getDataFromUrl('/src/actividadestudios/form_matriculas_de_una_persona_data', $camposMatricula);
+
+$nom_activ = $d['nom_activ'] ?? '';
+$mod = $d['mod'] ?? 'nuevo';
+$id_asignatura_real = $d['id_asignatura_real'] ?? 0;
+$nombre_corto = $d['nombre_corto'] ?? '';
+$chk_preceptor = $d['chk_preceptor'] ?? '';
+$id_preceptor = $d['id_preceptor'] ?? '';
+$condicion_js = $d['condicion_js'] ?? '';
+
+$oDesplNiveles = new Desplegable();
+$oDesplNiveles->setNombre('id_nivel');
+$oDesplNiveles->setOpciones($d['oDesplNiveles_opciones'] ?? []);
+$oDesplNiveles->setBlanco(1);
+$oDesplNiveles->setAction('fnjs_cmb_opcional()');
+
+$oDesplProfesores = new Desplegable();
+if (!empty($d['oDesplProfesores_opciones'])) {
+    $oDesplProfesores->setOpciones($d['oDesplProfesores_opciones']);
+    $oDesplProfesores->setBlanco(1);
+    $oDesplProfesores->setNombre('id_preceptor');
+    $oDesplProfesores->setOpcion_sel($id_preceptor);
+}
+
+$oHash = new HashFront();
+$oHash->setCamposNo('preceptor!id_preceptor');
+$oHash->setCamposForm($d['camposForm'] ?? '');
+$oHash->setArraycamposHidden($d['a_camposHidden'] ?? []);
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
 $url_posibles_opcionales = $web . '/src/notas/posibles_opcionales_data';
-$oHashOpcionales = new Hash();
+$oHashOpcionales = new HashFront();
 $oHashOpcionales->setUrl($url_posibles_opcionales);
 $oHashOpcionales->setCamposForm('id_nom');
 $h_posibles_opcionales = $oHashOpcionales->linkSinValParams();
 
 $url_posibles_preceptores = $web . '/src/notas/posibles_preceptores_data';
-$oHashPreceptores = new Hash();
+$oHashPreceptores = new HashFront();
 $oHashPreceptores->setUrl($url_posibles_preceptores);
 $h_posibles_preceptores = $oHashPreceptores->linkSinVal();
 

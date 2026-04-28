@@ -84,6 +84,8 @@ Reglas:
 - [ ] ¿Se añadieron pruebas (unitarias o integración) para comportamiento nuevo?
 - [ ] ¿Se han ejecutado y pasado los tests existentes al modificar código?
 - [ ] ¿Se mantiene la separación estricta: nada de HTML/UI en `src/`, nada de lógica de dominio en `frontend/`?
+- [ ] Si el caso de uso devuelve enlaces a `frontend/` o `apps/`, ¿van como `link_spec` (path + query) y la firma `Hash::link` / `HashF` ocurre solo en `frontend/`?
+- [ ] ¿Ningún archivo nuevo en `src/application/` o `src/domain/` importa `web\Hash` para navegación UI?
 
 ## Tests: Convenciones y estructura
 
@@ -206,6 +208,30 @@ Los nuevos módulos deben separar claramente la presentación (frontend) de la l
   - Usan casos de uso y repositorios
   - Devuelven respuestas puras (texto, JSON, etc.)
   - **Prohibido:** Generar HTML, usar `frontend/...`, o interactuar directamente con la UI.
+
+### Enlaces firmados hacia la UI (`Hash::link` / `HashF`) — directiva
+
+El hash de presentación (**`web\Hash`**, futuro **`frontend\shared\security\HashF`**) es responsabilidad **solo de la capa que sirve HTML al navegador** (`frontend/`, y mientras exista, `apps/` legacy). El backend de dominio/aplicación **no** debe saber cómo se construye esa firma.
+
+**Reglas:**
+
+1. **`src/domain/`** y **`src/application/`**: prohibido `use web\Hash`, `Hash::link`, `Hash::cmdConParametros`, etc. para URLs hacia `frontend/...` o `apps/...`.
+2. **Patrón `link_spec`**: los listados / DTOs que hoy ponen `'ira' => Hash::link(...)` deben evolucionar a datos neutros, por ejemplo:
+   - `'link_spec' => ['path' => 'frontend/modulo/controller/foo.php', 'query' => ['id' => 123]]`
+   El **controlador `frontend/<modulo>/controller/*.php`** (tras `PostRequest` o al montar la vista) convierte cada `link_spec` en URL firmada con `Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/' . ltrim($path, '/') . '?' . http_build_query($query))` y rellena `ira` / `href` como espera `Lista` o la plantilla.
+3. **`src/.../infrastructure/ui/http/controllers/`**: preferible devolver JSON con `link_spec` y firmar en `frontend/`; si un controlador `src` aún emite HTML legacy, documentar excepción y plan de migración.
+4. **Documentación de arquitectura**: `documentacion/hash_arquitectura.md` (§7.4) y pilotos de referencia: `GruposLista` + `grupo_lista.php`, `usuariosLista` + `usuario_lista.php`, `UbisTablaData` + `ubis_tabla.php` (celdas con `link_spec`; además `pagina_link_spec` → `pagina_link` firmado en el controlador), `ListCtrData` + `list_ctr.php`, `ListaActivTabla` + `lista_activ_datos.php` (firma y `Lista::mostrar_tabla` en el endpoint), `ActividadSelectListado` + `actividad_select_datos.php` (incl. `advertencia_demasiadas` → `html_advertencia`), `ListaActividadesSgListado` + `lista_actividades_sg_datos.php`, `HabitacionesCamaLista` + `actividad_habitaciones_lista.php` (URLs firmadas con `AppUrlConfig` + `web\Hash` en el endpoint), `SelectHabitacionesCdc` + `frontend/ubiscamas/helpers/SelectHabitacionesCdcUrlSigning.php` (specs → firmas fuera de `src/`), `Select1010` + `frontend/certificados/helpers/Select1010UrlSigning.php`, `Select_notas_de_una_persona` + `frontend/notas/helpers/SelectNotasDeUnaPersonaUrlSigning.php`, `ActivPendientesSelectData` + `activ_pendientes_select_data.php` (`link_spec` → `home_persona` en `frontend/personas/...`), módulo dossiers: `DossiersListaFichasData` (`href_*_link_spec`) + `SignPublicFrontendLink` en `dossiers_lista_fichas_data.php` y `dossiers_ver_pantalla_data.php`; `DossiersVerPantallaData` (placeholders `__ORBIX_DSG_*__` + `url_specs`); `PermDossiersListaData` (`pagina_link_spec`) + `perm_dossiers_data.php`; `PermDossierVerFormData::listaPermLinkSpec` + firma en `perm_dossier_ver_data.php`; `DossierTipoPublicUrls::formControllerLinkSpec` en los `Select_*` que enlazan al form dossier + `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning.php` (`HashFront::link` al renderizar `getHtml()`).
+
+**Inventario — `Hash::link` aún presente en `src/` (pendiente de alinear con esta directiva):**
+
+| Área | Archivo |
+|------|-----------|
+| profesores | `src/profesores/application/FichaProfesorStgr.php` |
+| usuarios | `src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del_lst.php` |
+| usuarios | `src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php` (comentado; revisar si se borra) |
+| menus | `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php` (`apps/menus/...`) |
+
+Actualizar esta tabla conforme se migre cada módulo (o sustituir por enlace a `rg` en el PR si se prefiere no duplicar).
 
 ### Ejemplo práctico: módulo ubiscamas
 
@@ -338,19 +364,50 @@ final class BañoTipo {
 ## Manejo de Navegación y Estado ($oPosicion)
 
 ### Conceptos Clave
-- **$oPosicion**: Es el objeto principal para gestionar el historial de navegación y la persistencia de parámetros entre controladores backend. Se define en `web\Posicion`.
+- **$oPosicion**: Objeto principal para gestionar el historial de navegación y la persistencia de parámetros entre páginas. Se define en `frontend\shared\web\Posicion` y se instancia en `frontend/shared/global_header_front.inc`. Usa `$_SESSION['position']` como backing store.
 - **js_atras(n)**: Método fundamental para retornar `n` pasos en el historial. Genera el código JS necesario para la navegación.
-- **addParametro($key, $valor, $fila)**: Permite persistir datos. Si `$fila = 1`, el parámetro se guarda para la posición actual, facilitando su recuperación al volver atrás.
+- **addParametro($key, $valor, $fila)** / **setParametros($aVars, $fila)**: Permiten persistir datos en una fila concreta de la pila. Si `$fila = 1`, el parámetro se guarda en la posición anterior, facilitando su recuperación al volver atrás. `setParametros` además persiste en sesión (`guardar()`).
+
+### Responsabilidad exclusiva del frontend
+`$oPosicion` y `$_SESSION['position']` son responsabilidad exclusiva de `frontend/`:
+
+- `src/domain/` y `src/application/` **no pueden** importar `frontend\shared\web\Posicion` ni tocar `$_SESSION['position']` (ni directa ni indirectamente).
+- La única ubicación autorizada que accede a `$_SESSION['position']` es `frontend/shared/web/Posicion.php`.
+- Si un builder/caso de uso en `src/` necesita un valor derivado del historial (clave de stack, parámetros restaurados, etc.), el controller frontend lo resuelve con `$oPosicion` y lo pasa como `$input` al builder (p. ej. `stack_actual`, `restored_id_sel`, `restored_scroll_id`).
+- El HTML de navegación (`js_atras`, `mostrar_left_slide`, `mostrar_back_arrow`) se emite desde vistas `.phtml`/`.twig` en `frontend/` o desde `src/.../view/*.phtml` **recibiendo `$oPosicion` como parámetro de vista**, nunca generado desde `domain/`/`application/`.
+
+### Patrón canónico en controllers frontend
+```php
+// frontend/<modulo>/controller/<pagina>.php
+require_once 'frontend/shared/global_header_front.inc';
+
+$oPosicion->recordar((int)filter_input(INPUT_POST, 'refresh'));
+
+$campos = array_merge($_GET, $_POST);
+
+// Resolver aquí cualquier estado de navegación que el builder necesite:
+$stackFromPost = isset($campos['stack']) ? (string) filter_var($campos['stack'], FILTER_SANITIZE_NUMBER_INT) : '';
+if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
+    $campos['restored_id_sel']    = $oPosicion->getParametro('id_sel');
+    $campos['restored_scroll_id'] = $oPosicion->getParametro('scroll_id');
+    $oPosicion->olvidar($stackFromPost);
+}
+$campos['stack_actual'] = $oPosicion->getStack(0);
+
+// El builder en src/ recibe datos planos; no toca sesión.
+$data = PostRequest::getDataFromUrl('/src/<modulo>/<endpoint>', $campos);
+```
 
 ### Estrategia de Persistencia Híbrida
 Para una experiencia de usuario fluida, combinamos el estado del backend con el estado del frontend:
 
-1.  **Estado Backend ($oPosicion)**: Gestiona la jerarquía de páginas, IDs principales (como `id_activ`) y la lógica de "volver".
-2.  **Estado Frontend (SessionStorage)**: Gestiona el estado volátil de la UI (scroll, selección). **Ver detalles en [frontend/agents.md](file:///home/dani/orbix_local/orbix/frontend/agents.md)**.
+1.  **Estado de navegación ($oPosicion en frontend)**: Gestiona la jerarquía de páginas, IDs principales (como `id_activ`) y la lógica de "volver". Vive sólo en `frontend/`.
+2.  **Estado Frontend (SessionStorage)**: Gestiona el estado volátil de la UI (scroll, selección). **Ver detalles en** `frontend/agents.md`.
 
 ### Seguridad (Hash.php)
 Cuando se añaden campos de estado en el frontend (ej: `<input type="hidden" name="scroll_id_...">`), estos campos deben excluirse de la validación del hash para evitar errores de "Hash mismatch".
 - Modificar `web\Hash::isValid()` para ignorar prefijos específicos (como `scroll_id_`).
+- Quién **firma** URLs hacia `frontend/` no debe ser `src/application` ni `src/domain`: ver la directiva **Enlaces firmados hacia la UI** en esta misma sección.
 
 
 ## Comunicación Frontend-Backend (AJAX y JSON)

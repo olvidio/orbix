@@ -4,7 +4,6 @@ namespace src\asistentes\application;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\web\Lista;
-use frontend\shared\web\Posicion;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -14,7 +13,7 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Tabla de peticiones de plaza por actividad (`tabla_peticiones.php`).
@@ -43,11 +42,12 @@ final class TablaPeticionesData
         if (isset($input['stack'])) {
             $stack = filter_var($input['stack'], FILTER_SANITIZE_NUMBER_INT);
             if ($stack !== '' && $stack !== false) {
-                $oPosicion2 = new Posicion();
-                if ($oPosicion2->goStack((int)$stack)) {
-                    $Qid_sel = $oPosicion2->getParametro('id_sel');
-                    $Qscroll_id = $oPosicion2->getParametro('scroll_id');
-                    $oPosicion2->olvidar((int)$stack);
+                // Parámetros restaurados por el controller frontend vía $oPosicion.
+                if (array_key_exists('restored_id_sel', $input)) {
+                    $Qid_sel = $input['restored_id_sel'];
+                }
+                if (array_key_exists('restored_scroll_id', $input)) {
+                    $Qscroll_id = $input['restored_scroll_id'];
                 }
             }
         }
@@ -123,7 +123,7 @@ final class TablaPeticionesData
                             'plaza' => PlazaId::ASIGNADA,
                         ];
 
-                        $oHash = new Hash();
+                        $oHash = new HashFront();
                         $oHash->setUrl(AppUrlConfig::getApiBaseUrl() . '/src/asistentes/asistente_guardar');
                         $oHash->setArrayCamposHidden($aCamposHidden);
                         $param_mover = $oHash->getParamAjax();

@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -20,7 +20,7 @@ $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_encargos_centros()');
 
 $url_ver_encargos_centros = 'frontend/misas/controller/ver_encargos_centros.php';
-$oHashZona = new Hash();
+$oHashZona = new HashFront();
 $oHashZona->setUrl($url_ver_encargos_centros);
 $oHashZona->setCamposForm('id_zona');
 $h_zona = $oHashZona->linkSinValParams();

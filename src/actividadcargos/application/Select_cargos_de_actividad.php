@@ -8,9 +8,10 @@ use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
@@ -59,7 +60,7 @@ class Select_cargos_de_actividad
     /** @var int|string|null */
     private $Qscroll_id;
 
-    /** @var array<string, string> */
+    /** @var array<string, array{path: string, query: array<string, mixed>}> */
     private array $aLinks_dl = [];
 
     /** @return array<int, array{txt: string, click: string}> */
@@ -183,7 +184,7 @@ class Select_cargos_de_actividad
     {
         $this->loadValores();
 
-        $oHashSelect = new Hash();
+        $oHashSelect = new HashFront();
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $oHashSelect->setArraycamposHidden([
             'pau' => $this->pau,
@@ -208,7 +209,7 @@ class Select_cargos_de_actividad
         $a_campos = [
             'oTabla' => $oTabla,
             'oHashSelect' => $oHashSelect,
-            'aLinks_dl' => $this->aLinks_dl,
+            'aLinks_dl' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_dl),
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
             'url_form' => DossierTipoPublicUrls::relativeFormController((int) $this->id_dossier),
@@ -237,9 +238,8 @@ class Select_cargos_de_actividad
                 'id_pau' => $this->id_pau,
             ];
             array_walk($aQuery, 'core\\poner_empty_on_null');
-            $pagina = DossierTipoPublicUrls::hashedFormControllerQuery((int) $this->id_dossier, $aQuery);
             $nom = sprintf(_("añadir %s"), $val['nom']);
-            $this->aLinks_dl[$nom] = $pagina;
+            $this->aLinks_dl[$nom] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
         }
     }
 

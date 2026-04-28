@@ -6,7 +6,7 @@ use src\shared\config\ConfigGlobal;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 class PostRequest
 {
@@ -63,15 +63,25 @@ class PostRequest
         return json_decode($rta_json['data'], true);
     }
 
+    /**
+     * Parámetros de la petición HTTP actual para repetir el hash en llamadas server-to-server.
+     * Debe coincidir con validatePost en global_header_front.inc / global_object.inc:
+     * POST si el cuerpo no está vacío; si no, GET cuando existe el parámetro `h` (p. ej. HashFront::link).
+     */
+    public static function requestPayloadForHash(): array
+    {
+        return (!empty($_POST)) ? $_POST : ((isset($_GET['h'])) ? $_GET : []);
+    }
+
     public static function getDataFromUrl(string $url, array $campos = []): mixed
     {
         // Compatibilidad: aceptar URL absoluta o relativa.
         if (!preg_match('#^https?://#i', $url)) {
             $url = rtrim(ConfigGlobal::getWeb(), '/') . '/' . ltrim($url, '/');
         }
-        $url_hased = Hash::cmdSinParametros($url);
+        $url_hased = HashFront::cmdSinParametros($url);
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setUrl($url_hased);
         if (!empty($campos)) {
             $campos = self::normalizeCamposParaHash($campos);
@@ -87,7 +97,7 @@ class PostRequest
     }
 
     /**
-     * Un array vacío no genera inputs hidden en web\Hash::getCamposHiddenHtml;
+     * Un array vacío no genera inputs hidden en web\HashFront::getCamposHiddenHtml;
      * validatePost trata el campo ausente como ''.
      * Firmar con [] hace que http_build_query difiera de '' y falle el hash hh.
      *

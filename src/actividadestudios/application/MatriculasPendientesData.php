@@ -1,0 +1,70 @@
+<?php
+
+namespace src\actividadestudios\application;
+
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\personas\application\services\PersonaFinderService;
+use function frontend\shared\helpers\is_true;
+
+/**
+ * Filas para `frontend/actividadestudios/controller/matriculas_pendientes.php`.
+ *
+ * @return array{msg_err: string, a_valores: array<int|string, array<string|int, mixed>>}
+ */
+final class MatriculasPendientesData
+{
+    public static function execute(): array
+    {
+        $matriculaDlRepository = $GLOBALS['container']->get(MatriculaDlRepositoryInterface::class);
+        $cMatriculasPendientes = $matriculaDlRepository->getMatriculasPendientes();
+
+        $msgErr = '';
+        $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+        $actividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
+        $personaFinderService = $GLOBALS['container']->get(PersonaFinderService::class);
+
+        $i = 0;
+        $aValores = [];
+        foreach ($cMatriculasPendientes as $oMatricula) {
+            $i++;
+            $idNom = $oMatricula->getId_nom();
+            $idActiv = $oMatricula->getId_activ();
+            $idAsignatura = $oMatricula->getId_asignatura();
+            $preceptor = $oMatricula->isPreceptor();
+            $preceptorTxt = is_true($preceptor) ? 'x' : '';
+
+            $oActividad = $actividadAllRepository->findById($idActiv);
+            if ($oActividad === null) {
+                $msgErr .= "<br>No encuentro ninguna actividad con id: $idActiv en  " . __FILE__ . ': line ' . __LINE__;
+                continue;
+            }
+            $nomActiv = $oActividad->getNom_activ();
+
+            $oPersona = $personaFinderService->findPersonaEnGlobal($idNom);
+            if ($oPersona === null) {
+                $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  " . __FILE__ . ': line ' . __LINE__;
+                continue;
+            }
+            $apellidosNombre = $oPersona->getPrefApellidosNombre();
+
+            $oAsignatura = $asignaturaRepository->findById($idAsignatura);
+            if ($oAsignatura === null) {
+                throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
+            }
+            $nombreCorto = $oAsignatura->getNombre_corto();
+
+            $aValores[$i]['sel'] = "$idActiv#$idAsignatura#$idNom";
+            $aValores[$i][1] = $nomActiv;
+            $aValores[$i][2] = $nombreCorto;
+            $aValores[$i][3] = $apellidosNombre;
+            $aValores[$i][4] = $preceptorTxt;
+        }
+
+        return [
+            'msg_err' => $msgErr,
+            'a_valores' => $aValores,
+        ];
+    }
+}

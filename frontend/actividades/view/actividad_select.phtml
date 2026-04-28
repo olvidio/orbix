@@ -1,6 +1,6 @@
 <?php
 
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 ?>
 <script type="text/javascript" src="<?= 'frontend/actividades/view/actividades.js?' . rand(); ?>"></script>
@@ -77,7 +77,7 @@ use web\Hash;
             foreach ($aTiposActiv as $txt_id => $idTipoActiv) {
                 ?>
                 <td><span class="link titulo"
-                          onclick="fnjs_update_div('#main','<?= Hash::link('frontend/actividades/controller/actividad_ver.php?' . http_build_query(['id_tipo_activ' => $idTipoActiv])) ?>')">
+                          onclick="fnjs_update_div('#main','<?= HashFront::link('frontend/actividades/controller/actividad_ver.php?' . http_build_query(['id_tipo_activ' => $idTipoActiv])) ?>')">
 		<?= _("nueva actividad $txt_id") ?></span></td>
             <?php }
             echo '</tr></table>';

@@ -2,20 +2,17 @@
 
 namespace src\ubiscamas\application;
 
-use frontend\shared\web\Posicion;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\HabitacionId;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Datos para `frontend/ubiscamas/controller/habitacion_form.php`.
  */
 final class HabitacionFormData
 {
-    private const POSICION_SCRIPT = '/frontend/ubiscamas/controller/habitacion_form.php';
-
     /**
      * @param array<string, mixed> $input
      * @return array<string, mixed>
@@ -43,17 +40,6 @@ final class HabitacionFormData
                 $Qid_habitacion = strtok((string)($a_sel[0] ?? ''), '#');
             } else {
                 $Qid_habitacion = (string)($input['id_habitacion'] ?? '');
-            }
-
-            $stack = '';
-            if (isset($input['stack']) && (string)$input['stack'] !== '') {
-                $stack = (string)filter_var($input['stack'], FILTER_SANITIZE_NUMBER_INT);
-            }
-            if ($stack !== '') {
-                $oPosicion2 = new Posicion(self::POSICION_SCRIPT, $input);
-                if ($oPosicion2->goStack($stack)) {
-                    $oPosicion2->olvidar($stack);
-                }
             }
 
             $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
@@ -105,7 +91,7 @@ final class HabitacionFormData
         $camposChk = 'sillon!adaptada!despacho';
         $camposNo = 'new_camas_desc!new_camas_larga!new_camas_vip';
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm($camposForm);
         $oHash->setCamposChk($camposChk);
         $oHash->setCamposNo($camposNo);
@@ -115,7 +101,7 @@ final class HabitacionFormData
             'nuevo' => $Qnuevo,
         ]);
 
-        $oHashActualizar = new Hash();
+        $oHashActualizar = new HashFront();
         $oHashActualizar->setCamposNo('refresh');
         $oHashActualizar->setArraycamposHidden([
             'id_habitacion' => $Qid_habitacion,
@@ -123,12 +109,12 @@ final class HabitacionFormData
         ]);
 
         $url_cama_form = 'frontend/ubiscamas/controller/cama_form.php';
-        $oHashCamaForm = new Hash();
+        $oHashCamaForm = new HashFront();
         $oHashCamaForm->setUrl($url_cama_form);
         $oHashCamaForm->setCamposForm('id_ubi!id_cama!id_habitacion');
 
         $url_cama_delete = 'src/ubiscamas/cama_delete';
-        $oHashCamaDelete = new Hash();
+        $oHashCamaDelete = new HashFront();
         $oHashCamaDelete->setUrl($url_cama_delete);
         $oHashCamaDelete->setCamposForm('id_ubi!id_cama!id_habitacion');
 

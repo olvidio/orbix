@@ -2,11 +2,11 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
+use frontend\shared\PostRequest;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 
 // Crea los objetos de uso global **********************************************
@@ -33,7 +33,7 @@ if (is_true($firmado)) {
     $chk_firmado = '';
 }
 
-$oHashCertificadoPdf = new Hash();
+$oHashCertificadoPdf = new HashFront();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!f_certificado!idioma!f_recibido');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado!stack');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
@@ -43,9 +43,8 @@ $oHashCertificadoPdf->setArrayCamposHidden([
     'refresh' => 1,
 ]);
 
-//Idiomas
-$LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
-$a_locales = $LocalRepository->getArrayLocales();
+$locData = PostRequest::getDataFromUrl('/src/certificados/certificados_locales_data', []);
+$a_locales = (array)($locData['a_locales'] ?? []);
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, '', true);
 
 $a_campos = [

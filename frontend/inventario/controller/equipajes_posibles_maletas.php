@@ -2,7 +2,7 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -28,7 +28,7 @@ $oDespl->setNombre($nom_grupo);
 $oDespl->setBlanco(true);
 $oDespl->setAction("fnjs_ver_docs('$new_id_grupo')");
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm($nom_grupo);
 $oHash->setArrayCamposHidden([
     'id_grupo' => $new_id_grupo,

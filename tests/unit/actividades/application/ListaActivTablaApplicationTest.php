@@ -31,7 +31,7 @@ final class ListaActivTablaApplicationTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_sin_actividades_devuelve_estructura_y_html(): void
+    public function test_sin_actividades_devuelve_estructura_sin_html(): void
     {
         $actRepo = $this->createMock(ActividadRepositoryInterface::class);
         $actRepo->method('getActividades')->willReturn([]);
@@ -129,9 +129,8 @@ final class ListaActivTablaApplicationTest extends TestCase
             ]
         );
 
-        $this->assertArrayHasKey('html_tabla', $out);
         $this->assertArrayHasKey('a_valores', $out);
         $this->assertSame([], $out['a_valores']);
-        $this->assertIsString($out['html_tabla']);
+        $this->assertArrayNotHasKey('html_tabla', $out);
     }
 }

@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 
 // Crea los objetos de uso global **********************************************
@@ -54,11 +54,11 @@ if (!empty($Qeliminar)) {
     $oDesplEquipajes->setAction('');
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('filtro!id_equipaje');
 $oHash->setArrayCamposHidden(['eliminar' => $Qeliminar, 'imprimir' => $Qimprimir]);
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setUrl('frontend/inventario/controller/equipajes_form_texto_listado.php');
 $oHash1->setCamposForm('loc!id_equipaje!texto');
 $h_mod_txt = $oHash1->linkSinValParams();

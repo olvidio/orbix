@@ -4,7 +4,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -16,7 +16,7 @@ $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setAction("fnjs_profes()");
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl('frontend/profesores/controller/profesor_asignatura_ajax.php');
 $oHash->setCamposForm('id_asignatura');
 

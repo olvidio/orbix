@@ -17,7 +17,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\domain\value_objects\PauType;
 use frontend\shared\web\CasasQue;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
 
 use function src\shared\domain\helpers\strtoupper_dlb;
@@ -112,20 +112,20 @@ switch ($Qtipo_lista) {
         $sCamposForm .= '!periodo';
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm($sCamposForm);
 
-$oHashForm = new Hash();
+$oHashForm = new HashFront();
 $oHashForm->setUrl($web . '/frontend/casas/controller/casa_ingreso_form.php');
 $oHashForm->setCamposForm('id_activ');
 $url_form = $web . '/frontend/casas/controller/casa_ingreso_form.php' . $oHashForm->linkSinVal();
 
-$oHashUpdate = new Hash();
+$oHashUpdate = new HashFront();
 $oHashUpdate->setUrl($web . '/src/casas/casa_ingreso_update');
 $oHashUpdate->setCamposForm('id_activ!id_tarifa!precio!ingresos!num_asistentes!observ');
 $url_update = $web . '/src/casas/casa_ingreso_update' . $oHashUpdate->linkSinVal();
 
-$oHashEliminar = new Hash();
+$oHashEliminar = new HashFront();
 $oHashEliminar->setUrl($web . '/src/casas/casa_ingreso_eliminar');
 $oHashEliminar->setCamposForm('id_activ');
 $url_eliminar = $web . '/src/casas/casa_ingreso_eliminar' . $oHashEliminar->linkSinVal();

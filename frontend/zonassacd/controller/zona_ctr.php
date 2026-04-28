@@ -3,7 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -16,12 +16,12 @@ $oDesplZonas->setBlanco(0);
 
 $url_ajax_lista = 'frontend/zonassacd/controller/zona_ctr_lista_ajax.php';
 $url_ajax_update = 'frontend/zonassacd/controller/zona_ctr_update_ajax.php';
-$oHashCtr = new Hash();
+$oHashCtr = new HashFront();
 $oHashCtr->setUrl($url_ajax_lista);
 $oHashCtr->setCamposForm('id_zona');
 $h_ctr = $oHashCtr->linkSinValParams();
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url_ajax_update);
 $oHash->setCamposForm('id_zona_new');
 $oHash->setCamposNo('scroll_id!sel');

@@ -5,7 +5,7 @@ namespace src\layouts;
 use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * New layout implementation
@@ -69,7 +69,7 @@ class BurgerLayout implements LayoutInterface
             $onClick = '';
             if (!empty($url)) $full_url = ConfigGlobal::getWeb() . '/' . $url;
             $parametros = $itemObject->getParametros();
-            $parametros = Hash::add_hash($parametros, $full_url);
+            $parametros = HashFront::add_hash($parametros, $full_url);
             if (!empty($full_url)) {
                 if (!is_null($url) && strstr($url, 'fnjs') !== false) {
                     $onClick = "\"$url;\"";
@@ -347,7 +347,7 @@ class BurgerLayout implements LayoutInterface
             $onClick = '';
             if (!empty($url)) $full_url = ConfigGlobal::getWeb() . '/' . $url;
             $parametros = $itemObject->getParametros();
-            $parametros = Hash::add_hash($parametros, $full_url);
+            $parametros = HashFront::add_hash($parametros, $full_url);
             if (!empty($full_url)) {
                 if (!is_null($url) && strstr($url, 'fnjs') !== false) {
                     $onClick = "$url;";

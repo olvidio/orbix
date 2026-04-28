@@ -12,7 +12,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -41,7 +41,7 @@ $oDesplActividades->setBlanco(1);
 $oDesplActividades->setNombre('id_activ_sel');
 $oDesplActividades->setOpcion_sel($id_activ_sel);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('pres_nom!pres_telf!pres_mail!zona!observ');
 $oHash->setCamposNo('scroll_id!sel');
 

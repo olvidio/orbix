@@ -12,7 +12,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\DesplegableArray;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -47,7 +47,7 @@ if ($Qpropiedad === 'id_ubi') {
     $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('salida!objeto!propiedad!operador!valor');
 $oHash->setCamposChk('valor_old!valor_new');
 $oHash->setCamposNo('id_ubi!id_ubi_mas!id_ubi_num');

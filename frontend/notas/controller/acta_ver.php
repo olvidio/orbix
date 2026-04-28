@@ -1,17 +1,5 @@
 <?php
 
-use frontend\shared\config\AppUrlConfig;
-use frontend\shared\config\OrbixRuntime;
-use frontend\shared\model\ViewNewPhtml;
-use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\ActaRepositoryInterface;
-use src\notas\domain\contracts\ActaTribunalDlRepositoryInterface;
-use src\notas\domain\contracts\ActaTribunalRepositoryInterface;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use web\Hash;
-use function src\shared\domain\helpers\urlsafe_b64encode;
-
 /**
  * Esta página muestra un formulario para modificar los datos de un acta.
  *
@@ -22,6 +10,13 @@ use function src\shared\domain\helpers\urlsafe_b64encode;
  * @since        14/10/03.
  *
  */
+
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\config\OrbixRuntime;
+use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
+use function src\shared\domain\helpers\urlsafe_b64encode;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -45,7 +40,6 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 
 $Qsa_actas = (string)filter_input(INPUT_POST, 'sa_actas');
-$Qa_actas = json_decode(src\shared\domain\helpers\urlsafe_b64decode($Qsa_actas));
 $Qacta = (string)filter_input(INPUT_POST, 'acta');
 $Qnotas = (string)filter_input(INPUT_POST, 'notas');
 
@@ -53,217 +47,88 @@ if (empty($notas) && empty($Qnotas)) {
     $oPosicion->recordar();
 }
 
-//$acta=urldecode($acta);
-//últimos
-$any = date('y');
-$mi_dele = OrbixRuntime::miDelef();
+$payload = $_POST;
+$payload['scope_notas'] = $notas;
+$payload['scope_permiso'] = $permiso;
+if (isset($acta_notas_a_actas)) {
+    $payload['acta_notas_a_actas_json'] = json_encode($acta_notas_a_actas, JSON_THROW_ON_ERROR);
+}
+if (isset($id_activ)) {
+    $payload['id_activ_scope'] = $id_activ;
+}
+if (isset($id_asignatura)) {
+    $payload['id_asignatura_scope'] = (string)$id_asignatura;
+}
 
-/* TODO Aclararse. Ahora pongo crAcse...
-// para las regiones no es 'crA', sino 'A'.
-$a_reg = explode('-',$_SESSION['session_auth']['esquema']);
-$dlEsquema = substr($a_reg[1],0,-1); // quito la v o la f.
-$dl = ($dlEsquema=='cr')? OrbixRuntime::miRegion() : $mi_dele;
-*/
-$dl = $mi_dele;
+$d = PostRequest::getDataFromUrl('/src/notas/acta_ver_form_data', $payload);
 
-$ActaRepository = $GLOBALS['container']->get(ActaRepositoryInterface::class);
-$ult_lib = ''; //$GesActas->getUltimoLibro();
-$ult_pag = ''; // $GesActas->getUltimaPagina($ult_lib);
-$ult_lin =  ''; //$GesActas->getUltimaLinea($ult_lib);
-$ult_acta =  $ActaRepository->getUltimaActa($any, $dl);
-$acta_new = '';
-$pdf = '';
+$notas = (string)($d['notas'] ?? $notas);
+$permiso = (int)($d['permiso'] ?? $permiso);
+$Qmod = (string)($d['mod'] ?? $Qmod);
+$acta_actual = (string)($d['acta_actual'] ?? '');
+$acta_new = (string)($d['acta_new'] ?? '');
+$ult_acta = $d['ult_acta'] ?? '';
+$f_acta = (string)($d['f_acta'] ?? '');
+$libro = (string)($d['libro'] ?? '');
+$ult_lib = (string)($d['ult_lib'] ?? '');
+$pagina = (string)($d['pagina'] ?? '');
+$ult_pag = (string)($d['ult_pag'] ?? '');
+$linea = (string)($d['linea'] ?? '');
+$ult_lin = (string)($d['ult_lin'] ?? '');
+$lugar = (string)($d['lugar'] ?? '');
+$observ = (string)($d['observ'] ?? '');
+$id_activ = (int)($d['id_activ'] ?? 0);
+$id_asignatura_actual = (string)($d['id_asignatura_actual'] ?? '');
+$nombre_asignatura = (string)($d['nombre_asignatura'] ?? '');
+$examinadores = $d['examinadores'] ?? [];
+$a_actas = $d['a_actas'] ?? [];
+$has_pdf = !empty($d['has_pdf']);
+if (!empty($d['warn_no_id_activ'])) {
+    echo _('no se guardará el ca/cv donde se cursó la asignatura');
+}
 
 $obj = 'notas\\model\\entity\\ActaDl';
 
-//Distingo la procedencia.
-if (empty($notas) && empty($Qnotas)) {
-    // No estoy dentro de la pagina de acta_notas
-    if (!empty($a_sel)) {
-        //vengo de un checkbox y no estoy en la página de acta_notas ($notas).
-        $acta_actual = urldecode(strtok($a_sel[0], "#"));
-    } else {
-        // si vengo por un link en el nombre del acta, sólo tengo el acta encoded
-        $acta_actual = urldecode($Qacta);
-    }
-    $a_actas = array($acta_actual);
-} else {
-    // Dentro de la página acta_notas.
-    if (isset($cActas) && is_array($cActas)) {
-        $a_actas = [];
-        foreach ($cActas as $oActa) {
-            $a_actas[] = $oActa->getActa();
-        }
-        //por defecto la primera
-        $acta_actual = empty($a_actas[0]) ? '' : $a_actas[0];
-    } elseif (!empty ($Qa_actas)) {  // Estoy en la pagina notas y cambio el div de actas
-        $a_actas = $Qa_actas;
-        $acta_actual = $Qacta;
-        $notas = $Qnotas;
-    }
-}
-
-if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //significa que no es nuevo
-    if (!empty($Qacta) && !empty($notas)) { // vengo de actualizar esta pág.
-        // estoy actualizando la página
-        $id_asignatura_actual = (integer)filter_input(INPUT_POST, 'id_asignatura_actual');
-        $id_activ = (integer)filter_input(INPUT_POST, 'id_activ');
-        $f_acta = (string)filter_input(INPUT_POST, 'f_acta');
-        $libro = (string)filter_input(INPUT_POST, 'libro');
-        $pagina = (integer)filter_input(INPUT_POST, 'pagina');
-        $linea = (integer)filter_input(INPUT_POST, 'linea');
-        $lugar = (string)filter_input(INPUT_POST, 'lugar');
-        $observ = (string)filter_input(INPUT_POST, 'observ');
-        $permiso = (integer)filter_input(INPUT_POST, 'permiso');
-    } else {
-        $oActa = $ActaRepository->findById($acta_actual);
-        $id_asignatura = $oActa->getId_asignatura();
-        $id_activ = $oActa->getId_activ();
-        $f_acta = $oActa->getF_acta()?->getFromLocal();
-        $libro = $oActa->getLibro();
-        $pagina = $oActa->getPagina();
-        $linea = $oActa->getLinea();
-        $lugar = $oActa->getLugar();
-        $observ = $oActa->getObserv();
-        $id_asignatura_actual = $id_asignatura;
-        $pdf = $oActa->getpdf();
-    }
-} else {
-    //busco la última acta (para ayudar)
-    //
-    //echo "aa: $query_acta<br>";
-    $num_acta = $ult_acta + 1;
-    $ult_acta = "$dl {$ult_acta}/{$any}";
-    $acta_new = "$dl {$num_acta}/{$any}";
-
-    if ($notas === "nuevo") { //vengo de un ca
-        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
-        $id_activ = empty($id_activ) ? $Qid_activ : $id_activ;
-        $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
-        $id_asignatura_actual = empty($id_asignatura) ? $Qid_asignatura : $id_asignatura;
-        // Busco al profesor como examinador principal.
-        $ActividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
-        $oActividadAsignatura = $ActividadAsignaturaDlRepository->findById($id_activ, $id_asignatura_actual);
-        $id_profesor = $oActividadAsignatura->getId_profesor();
-        $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        $oPersonaDl = $PersonaDlRepository->findById($id_profesor);
-        if ($oPersonaDl === null) {
-            $examinador_pral = _("No encuentro el profesor.");
-        } else {
-            $examinador_pral =  $oPersonaDl->getTituloNombre();
-        }
-    } else { // estoy actualizando la página
-        if (!empty($a_sel) && !empty($notas)) { //vengo de un checkbox y estoy en la página de acta_notas ($notas).
-            $id_activ = (integer)strtok($a_sel[0], '#');
-            $id_asignatura = (integer)strtok('#');
-            $cActas = $ActaRepository->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
-            $oActa = $cActas[0];
-            $id_asignatura = $oActa->getId_asignatura();
-            $id_activ = $oActa->getId_activ();
-            $f_acta = $oActa->getF_acta()?->getFromLocal();
-            $libro = $oActa->getLibro();
-            $pagina = $oActa->getPagina();
-            $linea = $oActa->getLinea();
-            $lugar = $oActa->getLugar();
-            $observ = $oActa->getObserv();
-            $id_asignatura_actual = $id_asignatura;
-        } else {
-            $id_asignatura_actual = '';
-        }
-    }
-}
-
-if (!empty($ult_lib)) {
-    $ult_lib = sprintf(_("(último= %s)"), $ult_lib);
-}
-if (!empty($ult_pag)) {
-    $ult_pag = sprintf(_("(última= %s)"), $ult_pag);
-}
-if (!empty($ult_lin)) {
-    $ult_lin = sprintf(_("(última= %s)"), $ult_lin);
-}
-if (!empty($ult_acta)) {
-    $ult_acta = sprintf(_("(última= %s)"), $ult_acta);
-}
-
-if (!empty($acta_actual)) {
-    // Si es cr, se mira en todas:
-    if (OrbixRuntime::miAmbito() === 'rstgr') {
-        $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalRepositoryInterface::class);
-    } else {
-        $repoActaTribunal = $GLOBALS['container']->get(ActaTribunalDlRepositoryInterface::class);
-    }
-    $cTribunal = $repoActaTribunal->getActasTribunales(array('acta' => $acta_actual, '_ordre' => 'orden'));
-} else {
-    $cTribunal = [];
-}
-
-$nombre_asignatura = '';
-if (!empty($id_asignatura_actual)) {
-    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-    $cAsignatura = $AsignaturaRepository->getAsignaturas(['id_asignatura' => $id_asignatura_actual]);
-    if (!empty($cAsignatura)) {
-        $oAsignatura = $cAsignatura[0];
-        $nombre_asignatura = $oAsignatura->getNombre_asignatura();
-    }
-}
-
-$oHashActa = new Hash();
+$oHashActa = new HashFront();
 $sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta!acta!name_asignatura';
-if ($Qmod === 'nueva' || $notas === "nuevo") {
+if ($Qmod === 'nueva' || $notas === 'nuevo') {
     $sCamposForm .= '!acta';
     $sCamposForm .= '!f_acta';
 }
-if (!empty($cTribunal)) {
-    //$sCamposForm .= '!item';
+if ($examinadores !== [] && ($examinadores[0] ?? '') !== '') {
     $sCamposForm .= '!examinadores';
 }
 $oHashActa->setCamposForm($sCamposForm);
 $oHashActa->setCamposNo('go_to!examinadores!notas!refresh');
 $a_camposHidden = [];
-if ($Qmod === 'nueva' || $notas === "nuevo") {
+if ($Qmod === 'nueva' || $notas === 'nuevo') {
     $a_camposHidden['mod'] = 'nueva';
-    if (empty($id_activ)) {
-        echo _("no se guardará el ca/cv donde se cursó la asignatura");
-    } else {
+    if (!empty($id_activ)) {
         $a_camposHidden['id_activ'] = $id_activ;
     }
 } else {
-//	$a_camposHidden['acta'] = $acta;
     $a_camposHidden['mod'] = '';
     $a_camposHidden['id_activ'] = $id_activ;
-    $a_camposHidden['sa_actas'] = urlsafe_b64encode(json_encode($a_actas), JSON_THROW_ON_ERROR);
+    $a_camposHidden['sa_actas'] = urlsafe_b64encode(json_encode($a_actas, JSON_THROW_ON_ERROR));
     $a_camposHidden['notas'] = $notas;
 }
-$oHashActa->setArraycamposHidden($a_camposHidden);
+$oHashActa->setArrayCamposHidden($a_camposHidden);
 
-$oHashActaPdf = new Hash();
+$oHashActaPdf = new HashFront();
 $oHashActaPdf->setCamposForm('acta_pdf');
 $oHashActaPdf->setCamposNo('acta_pdf');
-//cambio el nombre, porque tiene el mismo id en el otro formnulario
 $oHashActaPdf->setArrayCamposHidden(['acta_num' => $acta_actual]);
 
-$titulo = strtoupper(_("datos del acta"));
-
-$examinadores = [];
-if (!empty($cTribunal)) {
-    foreach ($cTribunal as $oActaTribunal) {
-        $examinador = $oActaTribunal->getExaminador();
-        $examinadores[] = $examinador;
-    }
-} else {
-    // por defecto pongo al profesor como examinador principal.
-    $examinadores[] = $examinador_pral;
-}
+$titulo = strtoupper(_('datos del acta'));
 
 $url_examinadores = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/examinadores_search';
-$oHashExaminadores = new Hash();
+$oHashExaminadores = new HashFront();
 $oHashExaminadores->setUrl($url_examinadores);
 $oHashExaminadores->setCamposForm('search');
 $h_examinadores = $oHashExaminadores->getParamAjaxEnArray();
 
 $url_asignaturas = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/asignaturas_search';
-$oHashAsignaturas = new Hash();
+$oHashAsignaturas = new HashFront();
 $oHashAsignaturas->setUrl($url_asignaturas);
 $oHashAsignaturas->setCamposForm('search');
 $h_asignaturas = $oHashAsignaturas->getParamAjaxEnArray();
@@ -271,25 +136,23 @@ $h_asignaturas = $oHashAsignaturas->getParamAjaxEnArray();
 $url_acta_nueva = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_nueva';
 $url_acta_modificar = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_modificar';
 
-if (empty($pdf)) {
+if (!$has_pdf) {
     $readonly = '';
     $url_download = '';
     $url_delete = '';
 } else {
     $readonly = 'readonly';
-    $url_download = Hash::link('frontend/notas/controller/acta_pdf_download.php?' . http_build_query(['key' => $acta_actual]));
+    $url_download = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_pdf_download?' . http_build_query(['key' => $acta_actual]));
     $url_delete = 'apps/notas/controller/acta_pdf_delete.php';
 }
-$oHashActaDelete = new Hash();
-//cambio el nombre, porque tiene el mismo id en el otro formulario
+$oHashActaDelete = new HashFront();
 $oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
 $h_delete = $oHashActaDelete->getParamAjax();
 
-// Solo cr, puede eliminar un acta firmada:
 if (OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r') {
-    $soy_rstgr = TRUE;
+    $soy_rstgr = true;
 } else {
-    $soy_rstgr = FALSE;
+    $soy_rstgr = false;
 }
 
 $a_campos = ['obj' => $obj,

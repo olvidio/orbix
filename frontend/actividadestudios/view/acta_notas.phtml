@@ -89,14 +89,15 @@ use function frontend\shared\helpers\is_true;
         <tbody>
         <?php
         $i = 0;
-        foreach ($aPersonasMatriculadas as $nom => $oMatricula) {
+        foreach ($matriculas_rows as $row) {
             $i++;
-            $id_nom = $oMatricula->getId_nom();
-            $nota_num = $oMatricula->getNota_num();
+            $nom = $row['nom'];
+            $id_nom = $row['id_nom'];
+            $nota_num = $row['nota_num'];
             $nota_num_txt = empty($nota_num) ? '?' : $nota_num;
-            $nota_max = $oMatricula->getNota_max();
+            $nota_max = $row['nota_max'];
             $nota_max_txt = empty($nota_max) ? '?' : $nota_max;
-            $preceptor = $oMatricula->isPreceptor();
+            $preceptor = $row['preceptor'];
             if (is_true($preceptor)) {
                 $chk_tipo = "selected";
                 $tipo_txt = _("preceptor");
@@ -104,7 +105,7 @@ use function frontend\shared\helpers\is_true;
                 $chk_tipo = '';
                 $tipo_txt = '';
             }
-            $acta = $oMatricula->getActa();
+            $acta = $row['acta'];
             if (empty($acta)) {
                 $acta_txt = '-';
                 if (empty($nota_num)) {

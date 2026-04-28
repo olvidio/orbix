@@ -6,7 +6,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 
 /**
@@ -18,7 +18,7 @@ use frontend\shared\web\Posicion;
  * la lectura de centros/delegaciones/situaciones/lenguas y la resolucion del
  * `id_tabla` viven ahora en `src/personas/application/PersonasEditarData.php`
  * tras el endpoint `/src/personas/personas_editar_data`. Aqui no se importan
- * clases `src\` ni se accede a `$GLOBALS['container']`.
+ * clases de dominio de `src\` ni se resuelve el contenedor de dependencias.
  *
  * La seleccion de plantilla y la habilitacion de botones siguen aqui porque
  * dependen de `$_SESSION['oPerm']` y de la vista a renderizar.
@@ -178,7 +178,7 @@ switch ($Qobj_pau) {
 
 $ir_a_traslado = '';
 if (empty($Qnuevo)) {
-    $ir_a_traslado = Hash::link(
+    $ir_a_traslado = HashFront::link(
         AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/traslado_form.php?'
         . http_build_query(['pau' => 'p', 'id_pau' => $Qid_nom, 'obj_pau' => $Qobj_pau])
     );
@@ -220,7 +220,7 @@ $oDesplInc->setOpciones($opciones_inc);
 $oDesplInc->setOpcion_sel($inc);
 $oDesplInc->setBlanco(true);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $campos_chk = 'sacd';
 $camposForm = 'id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!idioma_preferido!nom!nx1!nx2!observ!profesion!situacion!nivel_stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin';
 if ($Qobj_pau === 'PersonaSSSC') {
@@ -239,9 +239,9 @@ $oHash->setArraycamposHidden([
 ]);
 
 $a_parametros = ['pau' => 'p', 'id_nom' => $Qid_nom, 'obj_pau' => $Qobj_pau];
-$gohome = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$gohome = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => 'p', 'id_pau' => $Qid_nom, 'obj_pau' => $Qobj_pau];
-$godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
+$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
 $a_campos = [
     'obj_txt' => $obj,

@@ -6,7 +6,7 @@ use src\shared\config\ServerConf;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 
 // Crea los objetos de uso global **********************************************
@@ -55,7 +55,7 @@ $a_locales = $data['a_locales'];
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, $idioma, true);
 
 
-$oHashCertificadoPdf = new Hash();
+$oHashCertificadoPdf = new HashFront();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!destino!f_certificado!idioma!nom!f_enviado');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado');
 //cambio el nombre, porque tiene el mismo id en el otro formulario

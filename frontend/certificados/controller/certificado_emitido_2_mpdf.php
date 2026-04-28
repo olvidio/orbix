@@ -4,7 +4,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 $Qguardar = empty($_GET['guardar']) ? '' : $_GET['guardar'];
 

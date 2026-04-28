@@ -4,7 +4,7 @@ use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
@@ -51,7 +51,7 @@ if (!empty($Qid_usuario)) {
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
     $usuario = $data['nombre'];
 
-    $oHashG = new Hash();
+    $oHashG = new HashFront();
     $oHashG->setCamposForm('que!usuario');
     $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
     $a_camposHidden = array(
@@ -84,7 +84,7 @@ if (!empty($Qid_usuario)) {
     $oTablaPermMenu->setBotones($a_botones);
     $oTablaPermMenu->setDatos($a_valores);
 
-    $oHashPermisos = new Hash();
+    $oHashPermisos = new HashFront();
     $oHashPermisos->setCamposForm('que!sel');
     $oHashPermisos->setcamposNo('scroll_id!refresh');
     $a_camposHidden = array(
@@ -105,11 +105,11 @@ if (!empty($Qid_usuario)) {
 
     //////////// Permisos en actividades ////////////////////////////////////////////////
     if (AppInstalled::is('procesos')) {
-        $url = Hash::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
+        $url = HashFront::cmdSinParametros(AppUrlConfig::getPublicAppBaseUrl()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
         );
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setUrl($url);
         $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario]);
         $hash_params = $oHash->getArrayCampos();
@@ -117,7 +117,7 @@ if (!empty($Qid_usuario)) {
         echo PostRequest::getContent($url, $hash_params);
     }
 } else {
-    $oHashG = new Hash();
+    $oHashG = new HashFront();
     $oHashG->setCamposForm('que!usuario');
     $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
     $a_camposHidden = array(

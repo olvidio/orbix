@@ -97,7 +97,9 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
                 'scroll_id' => '',
             ], 0);
 
-            $this->assertArrayHasKey('html_tabla', $out);
+            $this->assertArrayNotHasKey('html_tabla', $out);
+            $this->assertArrayHasKey('a_cabeceras', $out);
+            $this->assertArrayHasKey('a_valores', $out);
             $this->assertArrayHasKey('result_busqueda', $out);
             $this->assertArrayHasKey('id_tipo_activ', $out);
             $this->assertArrayHasKey('html_advertencia', $out);
@@ -144,7 +146,9 @@ class ActividadesHeavyUseCasesIntegrationTest extends myTest
                 'scroll_id' => '',
             ], 0);
 
-            $this->assertArrayHasKey('html_tabla', $out);
+            $this->assertArrayNotHasKey('html_tabla', $out);
+            $this->assertArrayHasKey('a_cabeceras', $out);
+            $this->assertArrayHasKey('a_valores', $out);
             $this->assertArrayHasKey('resultado', $out);
             $this->assertArrayHasKey('perm_nueva', $out);
             $this->assertArrayHasKey('mod', $out);

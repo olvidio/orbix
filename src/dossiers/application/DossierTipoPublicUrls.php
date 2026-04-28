@@ -3,7 +3,6 @@
 namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
-use web\Hash;
 
 /**
  * Rutas publicas (frontend/ o apps/) para form/update segun id_tipo_dossier.
@@ -55,15 +54,22 @@ final class DossierTipoPublicUrls
     }
 
     /**
-     * Igual que en Select*_ setLinksInsert (Hash + query).
+     * Spec de URL (path relativo + query) para formulario; la firma va en el borde
+     * (p. ej. `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning` en widgets Select_*).
+     *
+     * @return array{path: string, query: array<string, mixed>}
      */
-    public static function hashedFormControllerQuery(int $idTipoDossier, array $aQuery): string
+    public static function formControllerLinkSpec(int $idTipoDossier, array $aQuery): array
     {
-        $base = self::relativeFormController($idTipoDossier);
+        $path = self::relativeFormController($idTipoDossier);
         if (is_array($aQuery)) {
             array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
         }
-        return Hash::link($base . '?' . http_build_query($aQuery));
+
+        return [
+            'path' => $path,
+            'query' => $aQuery,
+        ];
     }
 
     private static function requireTipo(int $idTipoDossier): \src\dossiers\domain\entity\TipoDossier

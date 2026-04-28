@@ -14,7 +14,7 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\is_true;
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
@@ -172,7 +172,7 @@ if ($miRole < 4) { // es administrador
 
     $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
     $camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
-    $oHash = new Hash();
+    $oHash = new HashFront();
     $oHash->setCamposForm($camposForm);
     $oHash->setcamposNo('password!id_ctr!id_nom!casas');
     $a_camposHidden = array(

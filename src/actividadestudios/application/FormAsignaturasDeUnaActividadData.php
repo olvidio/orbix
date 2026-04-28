@@ -1,0 +1,121 @@
+<?php
+
+namespace src\actividadestudios\application;
+
+use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\profesores\domain\ProfesorActividad;
+use src\profesores\domain\services\ProfesorAsignaturaService;
+use src\profesores\domain\services\ProfesorStgrService;
+
+/**
+ * @return array{
+ *   mod: string,
+ *   id_activ: int,
+ *   id_asignatura: int,
+ *   nombre_corto: string,
+ *   chk_avisado: string,
+ *   chk_confirmado: string,
+ *   chk_preceptor: string,
+ *   f_ini: string,
+ *   f_fin: string,
+ *   oDesplProfesores_opciones: array<int|string, string>,
+ *   id_profesor_sel: int|string,
+ *   oDesplAsignaturas_opciones: array<int|string, string>,
+ *   primary_key_s: string,
+ *   camposForm: string,
+ *   a_camposHidden: array<string, int|string>
+ * }
+ */
+final class FormAsignaturasDeUnaActividadData
+{
+    /**
+     * @param array<int, string>|null $sel
+     */
+    public static function execute(string $pau, int $idPau, int $idActivPost, int $idAsignaturaPost, ?array $sel): array
+    {
+        if (!empty($sel)) {
+            $parts = explode('#', $sel[0]);
+            $idActiv = (int)($parts[0] ?? 0);
+            $idAsignatura = (int)($parts[1] ?? 0);
+        } else {
+            $idActiv = ($pau === 'a') ? $idPau : $idActivPost;
+            $idAsignatura = $idAsignaturaPost;
+        }
+
+        $chkAvisado = '';
+        $chkConfirmado = '';
+        $chkPreceptor = '';
+        $oDesplAsignaturasOpciones = [];
+        $primaryKeyS = '';
+        $camposForm = 'f_ini!f_fin!tipo!id_profesor';
+        $aCamposHidden = ['id_activ' => $idActiv];
+
+        if ($idAsignatura > 0) {
+            $mod = 'editar';
+            $actividadAsignaturaDlRepository = $GLOBALS['container']->get(ActividadAsignaturaDlRepositoryInterface::class);
+            $oActividadAsignatura = $actividadAsignaturaDlRepository->findById($idActiv, $idAsignatura);
+
+            $profesorAsignaturaService = $GLOBALS['container']->get(ProfesorAsignaturaService::class);
+            $aOpciones = $profesorAsignaturaService->getArrayTodosProfesoresAsignatura(new AsignaturaId($idAsignatura));
+            $idProfesor = $oActividadAsignatura->getId_profesor();
+            $idProfesorSel = '';
+            if (!empty($idProfesor)) {
+                $profesorStgrService = $GLOBALS['container']->get(ProfesorStgrService::class);
+                $aOpciones = $profesorStgrService->getArrayProfesoresPub();
+                $idProfesorSel = $idProfesor;
+            }
+
+            $aviso = $oActividadAsignatura->getAvis_profesor();
+            $chkAvisado = ($aviso === 'a') ? 'selected' : '';
+            $chkConfirmado = ($aviso === 'c') ? 'selected' : '';
+            $tipo = $oActividadAsignatura->getTipo();
+            $chkPreceptor = ($tipo === 'p') ? 'selected' : '';
+            $fIni = $oActividadAsignatura->getF_ini()?->getFromLocal();
+            $fFin = $oActividadAsignatura->getF_fin()?->getFromLocal();
+
+            $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+            $oAsignatura = $asignaturaRepository->findById($idAsignatura);
+            if ($oAsignatura === null) {
+                throw new \RuntimeException(sprintf(_('No se ha encontrado la asignatura con id: %s'), (string)$idAsignatura));
+            }
+            $nombreCorto = $oAsignatura->getNombre_corto();
+            $primaryKeyS = "id_activ=$idActiv AND id_asignatura=$idAsignatura";
+            $aCamposHidden['id_asignatura'] = $idAsignatura;
+            $aCamposHidden['primary_key_s'] = $primaryKeyS;
+        } else {
+            $mod = 'nuevo';
+            $nombreCorto = '';
+            $idProfesorSel = -1;
+            $profesorActividad = new ProfesorActividad();
+            $aOpciones = $profesorActividad->getArrayProfesoresActividad([$idActiv]);
+            $fIni = '';
+            $fFin = '';
+            if (empty($idActiv)) {
+                throw new \InvalidArgumentException(_('debería haber un nombre de asignatura'));
+            }
+            $asignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+            $oDesplAsignaturasOpciones = $asignaturaRepository->getArrayAsignaturasConSeparador(false);
+            $camposForm .= '!id_asignatura';
+        }
+
+        return [
+            'mod' => $mod,
+            'id_activ' => $idActiv,
+            'id_asignatura' => $idAsignatura,
+            'nombre_corto' => $nombreCorto,
+            'chk_avisado' => $chkAvisado,
+            'chk_confirmado' => $chkConfirmado,
+            'chk_preceptor' => $chkPreceptor,
+            'f_ini' => $fIni,
+            'f_fin' => $fFin,
+            'oDesplProfesores_opciones' => $aOpciones,
+            'id_profesor_sel' => $idProfesorSel,
+            'oDesplAsignaturas_opciones' => $oDesplAsignaturasOpciones,
+            'primary_key_s' => $primaryKeyS,
+            'camposForm' => $camposForm,
+            'a_camposHidden' => $aCamposHidden,
+        ];
+    }
+}

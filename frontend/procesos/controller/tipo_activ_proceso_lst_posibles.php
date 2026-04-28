@@ -9,7 +9,7 @@ use frontend\shared\PostRequest;
 
 require_once("frontend/shared/global_header_front.inc");
 
-$data = PostRequest::getDataFromUrl('/src/procesos/tipo_activ_proceso_lst_posibles', $_POST);
+$data = PostRequest::getDataFromUrl('/src/procesos/tipo_activ_proceso_lst_posibles', PostRequest::requestPayloadForHash());
 $aProcesos = (array)($data['a_procesos'] ?? []);
 $id_tipo_activ = (int)($data['id_tipo_activ'] ?? 0);
 $propio = (string)($data['propio'] ?? '');

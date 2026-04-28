@@ -4,7 +4,7 @@ use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -31,12 +31,12 @@ $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_modificar_cuadricula_zona()');
 
 $url_modificar_cuadricula_zona = 'frontend/misas/controller/modificar_cuadricula_zona.php';
-$oHashZonaPeriodo = new Hash();
+$oHashZonaPeriodo = new HashFront();
 $oHashZonaPeriodo->setUrl($url_modificar_cuadricula_zona);
 $oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
 $h_zona_periodo = $oHashZonaPeriodo->linkSinValParams();
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl('frontend/misas/controller/modificar_plan_de_misas.php');
 $oHash->setCamposForm('id_zona!orden!periodo!empiezamin!empiezamax');
 

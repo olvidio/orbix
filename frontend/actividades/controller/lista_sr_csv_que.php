@@ -17,7 +17,7 @@ use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\CasasQue;
 use frontend\shared\web\PeriodoQue;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -66,7 +66,7 @@ $oForm->setCasas('casa');
 $oForm->setFiltroCasas(['active' => true]);
 $oForm->setSeleccionados($sel_ubis);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('empiezamin!empiezamax!c_activ!id_cdc_mas!id_cdc_num!periodo!status!year');
 $oHash->setcamposNo('que!id_cdc!cdc_sel');
 $a_camposHidden = [

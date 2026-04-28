@@ -3,7 +3,7 @@
 namespace src\actividades\application;
 
 use actividades\model\ActividadTipo;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Devuelve el HTML del formulario para crear un nuevo tipo de actividad.
@@ -13,7 +13,7 @@ class TipoActivFormNuevo
 {
     public function execute(array $input = []): string
     {
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('iactividad_val!iasistentes_val!id_nom_tipo_activ!isfsv_val!nom_tipo_activ');
 
         $oActividadTipo = new ActividadTipo();

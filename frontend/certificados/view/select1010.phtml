@@ -1,3 +1,8 @@
+<?php
+
+use frontend\shared\config\AppUrlConfig;
+
+?>
 <script>
     fnjs_eliminar_certificado = function (formulario) {
         rta = fnjs_solo_uno(formulario);
@@ -45,7 +50,7 @@
             $(formulario + ' input.sel').each(function () {
                 if ($(this).prop('checked') === true) {
                     let key = $(this).prop('value');
-                    let url = "frontend/certificados/controller/certificado_recibido_pdf_download.php";
+                    let url = <?= json_encode(AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_recibido_pdf_download', JSON_THROW_ON_ERROR) ?>;
                     let url_download = url + '?key=' + key + '<?= $h_download ?>';
                     window.open(url_download);
                 }

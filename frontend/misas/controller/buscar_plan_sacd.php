@@ -4,7 +4,7 @@ use frontend\misas\support\PeriodoTdHelper;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -32,7 +32,7 @@ if ($sacd_selected !== '') {
 }
 
 $url_ver_plan_sacd = 'frontend/misas/controller/ver_plan_sacd.php';
-$oHashPlanSacd = new Hash();
+$oHashPlanSacd = new HashFront();
 $oHashPlanSacd->setUrl($url_ver_plan_sacd);
 $oHashPlanSacd->setCamposForm('id_sacd!periodo!empiezamin!empiezamax');
 $h_plan_sacd = $oHashPlanSacd->linkSinValParams();

@@ -2,35 +2,21 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
-use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
-use src\personas\domain\entity\Persona;
-use web\Hash;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$formData = PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_upload_firmado_data', $_POST);
 
-if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_item = (integer)strtok($a_sel[0], "#");
-} else {
-    // desde dossiers es uno nuevo
-    $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
-}
+$Qid_item = (int)($formData['id_item'] ?? 0);
+$id_nom = (int)($formData['id_nom'] ?? 0);
+$nom = (string)($formData['nom'] ?? '');
+$apellidos_nombre = (string)($formData['apellidos_nombre'] ?? '');
 
-$certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
-$oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
-
-$id_nom = $oCertificadoEmitido->getId_nom();
-$nom = $oCertificadoEmitido->getNom();
-
-$oPersona = Persona::findPersonaEnGlobal($id_nom);
-$apellidos_nombre = $oPersona->getApellidosNombre();
-$nom = empty($nom) ? $apellidos_nombre : $nom;
-
-$oHashCertificadoPdf = new Hash();
+$oHashCertificadoPdf = new HashFront();
 $oHashCertificadoPdf->setCamposNo('certificado_pdf');
 $oHashCertificadoPdf->setArrayCamposHidden(
     [

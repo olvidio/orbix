@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\PeriodoQue;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -54,7 +54,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
-$oHashPeriodo = new Hash();
+$oHashPeriodo = new HashFront();
 $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
 $oHashPeriodo->setCamposNo('!refresh');
 $oHashPeriodo->setArraycamposHidden([]);

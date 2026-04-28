@@ -2,46 +2,32 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
-use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
-use src\shared\domain\value_objects\DateTimeLocal;
-use src\usuarios\domain\contracts\LocalRepositoryInterface;
+use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
-use function frontend\shared\helpers\is_true;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
 $oPosicion->recordar();
 
-$Qid_item = (integer)strtok($a_sel[0], "#");
+$formData = PostRequest::getDataFromUrl('/src/certificados/certificado_recibido_modificar_data', $_POST);
 
-$certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
-$oCertificadoRecibido = $certificadoRecibidoRepository->findById($Qid_item);
+$id_nom = (int)($formData['id_nom'] ?? 0);
+$Qid_item = (int)($formData['id_item'] ?? 0);
+$nom = (string)($formData['nom'] ?? '');
+$idioma = (string)($formData['idioma'] ?? '');
+$destino = (string)($formData['destino'] ?? '');
+$certificado = (string)($formData['certificado'] ?? '');
+$f_certificado = (string)($formData['f_certificado'] ?? '');
+$f_recibido = (string)($formData['f_recibido'] ?? '');
+$chk_firmado = (string)($formData['chk_firmado'] ?? '');
 
-$id_nom = $oCertificadoRecibido->getId_nom();
-$nom = $oCertificadoRecibido->getNom();
-$idioma = $oCertificadoRecibido->getIdioma();
-$destino = $oCertificadoRecibido->getDestino();
-$certificado = $oCertificadoRecibido->getCertificado();
-$f_certificado = $oCertificadoRecibido->getF_certificado()?->getFromLocal();
-$f_recibido = $oCertificadoRecibido->getF_recibido()?->getFromLocal();
-$firmado = $oCertificadoRecibido->isFirmado();
+$a_locales = (array)($formData['a_locales'] ?? []);
+$oDesplIdiomas = new Desplegable('idioma', $a_locales, $idioma, true);
 
-
-if (empty($f_recibido)) {
-    $f_recibido = (new DateTimeLocal())->getFromLocal();
-}
-if (is_true($firmado)) {
-    $chk_firmado = 'checked';
-} else {
-    $chk_firmado = '';
-}
-
-$oHashCertificadoPdf = new Hash();
+$oHashCertificadoPdf = new HashFront();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!f_certificado!idioma!f_recibido');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado!stack');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
@@ -50,11 +36,6 @@ $oHashCertificadoPdf->setArrayCamposHidden([
     'id_item' => $Qid_item,
     'refresh' => 1,
 ]);
-
-//Idiomas
-$LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
-$a_locales = $LocalRepository->getArrayLocales();
-$oDesplIdiomas = new Desplegable('idioma', $a_locales, $idioma, true);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

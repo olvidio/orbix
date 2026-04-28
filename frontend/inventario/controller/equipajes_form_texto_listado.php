@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -40,7 +40,7 @@ switch ($Qloc) {
         break;
 }
 
-$oHashForm = new Hash();
+$oHashForm = new HashFront();
 $oHashForm->setCamposForm('texto');
 $oHashForm->setArrayCamposHidden([
     'id_equipaje' => $Qid_equipaje,

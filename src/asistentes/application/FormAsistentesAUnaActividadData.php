@@ -14,7 +14,7 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -179,13 +179,13 @@ final class FormAsistentesAUnaActividadData
             $desplegable_propietarios_html = $oDesplPosiblesPropietarios->desplegable();
 
             $url_ajax = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividadplazas/posibles_propietarios_data';
-            $oHash1 = new Hash();
+            $oHash1 = new HashFront();
             $oHash1->setUrl($url_ajax);
             $oHash1->setCamposForm('id_activ!id_nom');
             $h1 = $oHash1->linkSinValParams();
         }
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $camposForm = 'observ!observ_est';
         if ($plazas_installed) {
             $camposForm .= '!plaza!propietario';

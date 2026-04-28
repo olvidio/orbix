@@ -2,9 +2,7 @@
 
 namespace src\usuarios\application;
 
-use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
-use web\Hash;
 
 class GruposLista
 {
@@ -38,13 +36,16 @@ class GruposLista
             $id_usuario = $oGrupo->getId_usuario();
             $usuario = $oGrupo->getUsuarioAsString();
 
-            $pagina = Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/grupo_form.php?'
-                . http_build_query(array('quien' => 'grupo', 'id_usuario' => $id_usuario))
-            );
-
+            // Enlace hacia frontend: solo datos; la firma HashF se hace en grupo_lista.php (capa UI).
             $a_valores[$i]['sel'] = "$id_usuario#";
             $a_valores[$i][1] = $usuario;
-            $a_valores[$i][2] = array('ira' => $pagina, 'valor' => 'editar');
+            $a_valores[$i][2] = [
+                'link_spec' => [
+                    'path' => 'frontend/usuarios/controller/grupo_form.php',
+                    'query' => ['quien' => 'grupo', 'id_usuario' => $id_usuario],
+                ],
+                'valor' => 'editar',
+            ];
         }
 
         $data = ['a_cabeceras' => $a_cabeceras,

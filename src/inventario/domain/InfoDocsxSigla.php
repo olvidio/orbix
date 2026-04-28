@@ -7,7 +7,7 @@ use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /* No vale el underscore en el nombre */
 
@@ -50,7 +50,7 @@ class InfoDocsxSigla extends DatosInfoRepo
         $a_campos['aOpcionesTiposDoc'] = $aOpciones;
 
         $url_bloque = ConfigGlobal::getWeb().'/src/inventario/documentos_form';
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $sCamposForm = 'id_tipo_doc!documentos';
         $oHash->setUrl($url_bloque);
         $oHash->setCamposForm($sCamposForm);

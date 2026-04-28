@@ -15,7 +15,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Periodo;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\TablaEditable;
@@ -100,14 +100,14 @@ $web = AppUrlConfig::getPublicAppBaseUrl();
 $oTabla = new TablaEditable();
 $oTabla->setId_tabla('prevision_asistentes');
 
-$oHashUpdate = new Hash();
+$oHashUpdate = new HashFront();
 $oHashUpdate->setUrl($web . '/src/casas/ingreso_plazas_previstas_update');
 $oHashUpdate->setCamposForm('');
 $oTabla->setUpdateUrl($web . '/src/casas/ingreso_plazas_previstas_update' . $oHashUpdate->linkSinVal());
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
-$oHashFiltro = new Hash();
+$oHashFiltro = new HashFront();
 $oHashFiltro->setCamposForm('empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!mi_of!periodo!year');
 $oHashFiltro->setCamposNo('!refresh');
 

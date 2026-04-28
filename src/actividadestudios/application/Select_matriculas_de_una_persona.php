@@ -8,11 +8,12 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
+use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use function src\shared\domain\helpers\curso_est;
 use function src\shared\domain\helpers\is_true;
@@ -50,7 +51,8 @@ class Select_matriculas_de_una_persona
     private $status;
     private string $aviso = '';
     private mixed $id_activ;
-    private string $link_add = '';
+    /** @var array{path: string, query: array<string, mixed>}|null */
+    private ?array $linkAddSpec = null;
 
     public function getBotones($ca_num = 1)
     {
@@ -157,7 +159,7 @@ class Select_matriculas_de_una_persona
         $oTabla->setBotones($this->getBotones($ca_num));
         $oTabla->setDatos($a_valores);
 
-        $oHashCa = new Hash();
+        $oHashCa = new HashFront();
         $oHashCa->setCamposForm('est_ok!observ_est');
         $oHashCa->setCamposNo('sel!mod!scroll_id!refresh');
         $oHashCa->setArraycamposHidden([
@@ -187,7 +189,9 @@ class Select_matriculas_de_una_persona
             'ca_num' => $ca_num,
             'chk_1' => $chk_1,
             'chk_2' => $chk_2,
-            'link_add' => $this->link_add,
+            'link_add' => $this->linkAddSpec !== null
+                ? DossierTipoFormLinkSpecsSigning::fromSpec($this->linkAddSpec)
+                : '',
             'bloque' => $this->bloque,
             'observ_est' => $observ_est,
             'permiso' => $this->permiso,
@@ -214,7 +218,7 @@ class Select_matriculas_de_una_persona
             'id_activ' => $this->id_activ,
         ];
         array_walk($a_dataUrl, 'core\\poner_empty_on_null');
-        $this->link_add = DossierTipoPublicUrls::hashedFormControllerQuery($this->id_dossier, $a_dataUrl);
+        $this->linkAddSpec = DossierTipoPublicUrls::formControllerLinkSpec($this->id_dossier, $a_dataUrl);
     }
 
     public function getAsistencias()
@@ -266,7 +270,7 @@ class Select_matriculas_de_una_persona
         if (is_array($cAsistencias)) {
             $n = count($cAsistencias);
             if ($n === 0 && empty($this->todos)) {
-                $oHashA = new Hash();
+                $oHashA = new HashFront();
                 $oHashA->setcamposNo('scroll_id');
                 $oHashA->setArraycamposHidden([
                     'pau' => 'p',

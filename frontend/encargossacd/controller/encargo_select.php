@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 /**
@@ -74,7 +74,7 @@ foreach ($filas as $fila) {
 
     $aQuery = ['que' => 'editar', 'id_enc' => $id_enc];
     array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
-    $pagina = Hash::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
+    $pagina = HashFront::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
     if ($sf_sv === 2) {
         $a_valores[$i]['clase'] = 'tono2';
@@ -89,7 +89,7 @@ foreach ($filas as $fila) {
 
 $aQuery = ['que' => 'nuevo', 'id_tipo_enc' => $Qid_tipo_enc];
 array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
-$pagina_nuevo = Hash::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
+$pagina_nuevo = HashFront::link('frontend/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
 $txt_eliminar = _("¿Esta Seguro que desea borrar este encargo?");
 
@@ -102,24 +102,24 @@ $oTabla->setDatos($a_valores);
 $no_tipo_enc = empty($Qid_tipo_enc);
 
 $url_horario = "frontend/encargossacd/controller/encargo_horario_select.php";
-$oHashHorario = new Hash();
+$oHashHorario = new HashFront();
 $oHashHorario->setUrl($url_horario);
 $oHashHorario->setCamposForm('que!id_activ!id_nom');
 $h_horario = $oHashHorario->linkSinValParams();
 
 $url_modificar = "frontend/encargossacd/controller/encargo_ver.php";
-$oHashMod = new Hash();
+$oHashMod = new HashFront();
 $oHashMod->setUrl($url_modificar);
 $oHashMod->setCamposForm('que!scroll_id!sel');
 $h_modificar = $oHashMod->linkSinValParams();
 
 $url_borrar = AppUrlConfig::getApiBaseUrl() . '/src/encargossacd/encargo_ver_eliminar';
-$oHashBorrar = new Hash();
+$oHashBorrar = new HashFront();
 $oHashBorrar->setUrl($url_borrar);
 $oHashBorrar->setCamposForm('que!sel');
 $h_borrar = $oHashBorrar->linkSinValParams();
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('que');
 $oHash->setcamposNo('scroll_id!sel');
 

@@ -11,7 +11,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -32,7 +32,7 @@ foreach ($propiedades as $p) {
     $scamposForm .= $id_cond . '!' . $td_item . '!';
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm($scamposForm . '!salida!id_item_usuario_objeto_prop');
 $oHash->setArrayCamposHidden(['objeto_prop' => $Qobjeto]);
 $oHash->setCamposChk($Qobjeto);

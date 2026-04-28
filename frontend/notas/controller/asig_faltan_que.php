@@ -1,9 +1,9 @@
 <?php
 
 use frontend\shared\model\ViewNewPhtml;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use function frontend\shared\helpers\is_true;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -44,17 +44,17 @@ $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 $chk_lista = is_true($Qlista) ? 'checked' : '';
 
-$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-$aOpciones = $AsignaturaRepository->getArrayAsignaturasConSeparador();
+$dAsig = PostRequest::getDataFromUrl('/src/asignaturas/asignaturas_con_separador_data', []);
+$aOpciones = $dAsig['a_opciones'] ?? [];
 $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setOpcion_sel($Qid_asignatura);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setcamposChk('personas_n!personas_agd!c1!c2!lista');
 $oHash->setCamposForm('numero!b_c');
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setcamposChk('personas_n!personas_agd!c1!c2!lista');
 $oHash1->setCamposForm('id_asignatura!b_c');
 

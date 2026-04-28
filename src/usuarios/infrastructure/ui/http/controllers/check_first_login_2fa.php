@@ -2,7 +2,7 @@
 
 use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Obtener el usuario actual
 $oMiUsuario = ConfigGlobal::MiUsuario();
@@ -16,7 +16,7 @@ $has_2fa = $oUsuario->isHas_2fa();
 // Si el usuario no tiene 2FA habilitado, redirigir a la página de configuración de 2FA
 if (!$has_2fa) {
     // Generar la URL para la página de configuración de 2FA
-    $url_2fa_settings = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_2fa.php');
+    $url_2fa_settings = HashFront::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_2fa.php');
     
     // Establecer un mensaje para informar al usuario
     session_start();

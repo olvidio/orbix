@@ -13,7 +13,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -41,7 +41,7 @@ if (!$ok && $error === 'sin_gastos_anterior') {
     ];
     array_walk($aQuery, 'core\\poner_empty_on_null');
     $web = AppUrlConfig::getPublicAppBaseUrl();
-    $pagina = Hash::link($web . '/frontend/casas/controller/casa.php?' . http_build_query($aQuery));
+    $pagina = HashFront::link($web . '/frontend/casas/controller/casa.php?' . http_build_query($aQuery));
     $link = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$pagina');\">$any_anterior</span>";
     echo sprintf(_("Falta introducir la información económica (total) del año anterior: %s"), $link);
     echo "<br><br>";

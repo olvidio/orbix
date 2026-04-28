@@ -8,10 +8,11 @@ use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
 use frontend\shared\web\BotonesCurso;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use function src\shared\domain\helpers\is_true;
 
@@ -61,10 +62,10 @@ class Select_cargos_personas_en_actividad
 
     private BotonesCurso $oBotonesCurso;
 
-    /** @var array<string, string> */
+    /** @var array<string, array{path: string, query: array<string, mixed>}> */
     private array $aLinks_dl = [];
 
-    /** @var array<string, string> */
+    /** @var array<string, array{path: string, query: array<string, mixed>}> */
     private array $aLinks_otros = [];
 
     /** @return array<int, array{txt: string, click: string}> */
@@ -174,7 +175,7 @@ class Select_cargos_personas_en_actividad
     {
         $this->loadValores();
 
-        $oHashSelect = new Hash();
+        $oHashSelect = new HashFront();
         $oHashSelect->setCamposForm('modo_curso');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $oHashSelect->setArraycamposHidden([
@@ -201,8 +202,8 @@ class Select_cargos_personas_en_actividad
             'oTabla' => $oTabla,
             'oBotonesCurso' => $this->oBotonesCurso,
             'oHashSelect' => $oHashSelect,
-            'aLinks_dl' => $this->aLinks_dl,
-            'aLinks_otros' => $this->aLinks_otros,
+            'aLinks_dl' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_dl),
+            'aLinks_otros' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_otros),
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
             'url_form' => DossierTipoPublicUrls::relativeFormController((int) $this->id_dossier),
@@ -236,7 +237,7 @@ class Select_cargos_personas_en_actividad
                 'id_pau' => $this->id_pau,
             ];
             array_walk($aQuery, 'core\\poner_empty_on_null');
-            $this->aLinks_dl[$val['nom']] = DossierTipoPublicUrls::hashedFormControllerQuery((int) $this->id_dossier, $aQuery);
+            $this->aLinks_dl[$val['nom']] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
         }
         foreach ($this->ref_perm as $clave => $val) {
             if (empty($val['perm'])) {
@@ -251,7 +252,7 @@ class Select_cargos_personas_en_actividad
                 'id_pau' => $this->id_pau,
             ];
             array_walk($aQuery, 'core\\poner_empty_on_null');
-            $this->aLinks_otros[$val['nom']] = DossierTipoPublicUrls::hashedFormControllerQuery((int) $this->id_dossier, $aQuery);
+            $this->aLinks_otros[$val['nom']] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
         }
     }
 

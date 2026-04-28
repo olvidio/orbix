@@ -6,7 +6,11 @@
 <tr><td class=subtitulo>{{ "escoger el tipo de actividad"|trans|capitalize }}
 </td></tr>
 <tr>
+{% if actividad_tipo_html is defined %}
+    {{ actividad_tipo_html|raw }}
+{% else %}
     {{ oActividadTipo.getHtml|raw }}
+{% endif %}
 </tr>
 </table>
 <table><tr>

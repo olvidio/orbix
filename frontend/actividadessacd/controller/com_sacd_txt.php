@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pantalla de edicion de textos de comunicacion a los sacd.
  *
@@ -16,10 +17,9 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use src\actividadessacd\application\TextoComunicacionData;
-use src\usuarios\domain\contracts\LocalRepositoryInterface;
+use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -42,18 +42,21 @@ $oDesplClaves->setOpciones($a_Claves);
 $oDesplClaves->setOpcion_sel('com_sacd');
 $oDesplClaves->setAction('fnjs_get_texto()');
 
-$LocaleRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
-$a_locales = $LocaleRepository->getArrayLocales();
+$locData = PostRequest::getDataFromUrl('/src/actividadessacd/locales_desplegable_data', []);
+$a_locales = (array)($locData['a_locales'] ?? []);
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, 'es', true);
 $oDesplIdiomas->setAction('fnjs_get_texto()');
 
 // texto inicial (com_sacd / es).
-$initial = TextoComunicacionData::execute(['clave' => 'com_sacd', 'idioma' => 'es']);
-$comunicacion = $initial['texto'] ?? '';
+$initial = PostRequest::getDataFromUrl('/src/actividadessacd/texto_comunicacion_data', [
+    'clave' => 'com_sacd',
+    'idioma' => 'es',
+]);
+$comunicacion = (string)($initial['texto'] ?? '');
 
 $api = AppUrlConfig::getApiBaseUrl();
 $buildHashedUrl = static function (string $url, string $campos): string {
-    $oHash = new Hash();
+    $oHash = new HashFront();
     $oHash->setUrl($url);
     $oHash->setCamposForm($campos);
     return $url . $oHash->linkSinVal();

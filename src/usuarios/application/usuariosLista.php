@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use frontend\shared\web\ContestarJson;
-use web\Hash;
 
 class usuariosLista
 {
@@ -87,17 +86,19 @@ class usuariosLista
                 }
             }
 
-            $pagina = Hash::link(ConfigGlobal::getWeb()
-                . '/frontend/usuarios/controller/usuario_form.php?'
-                . http_build_query(['quien' => 'usuario', 'id_usuario' => $id_usuario])
-            );
-
             $a_valores[$i]['sel'] = "$id_usuario#";
             $a_valores[$i][1] = $usuario;
             $a_valores[$i][2] = $nom_usuario;
             $a_valores[$i][3] = $role;
             $a_valores[$i][5] = $email;
-            $a_valores[$i][6] = array('ira' => $pagina, 'valor' => 'editar');
+            // Enlace a formulario usuario: solo datos; firma HashF en frontend/usuarios/controller/usuario_lista.php
+            $a_valores[$i][6] = [
+                'link_spec' => [
+                    'path' => 'frontend/usuarios/controller/usuario_form.php',
+                    'query' => ['quien' => 'usuario', 'id_usuario' => $id_usuario],
+                ],
+                'valor' => 'editar',
+            ];
         }
 
         $data = ['a_cabeceras' => $a_cabeceras,

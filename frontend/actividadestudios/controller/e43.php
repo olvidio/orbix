@@ -1,15 +1,11 @@
 <?php
-// INICIO Cabecera global de URL de controlador *********************************
-use frontend\shared\config\OrbixRuntime;
-use frontend\shared\model\ViewNewPhtml;
-use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
-use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
-use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
-use src\personas\domain\entity\Persona;
-use src\ubis\domain\entity\Ubi;
-use web\Hash;
 
+use frontend\shared\PostRequest;
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\security\HashFront;
+
+// INICIO Cabecera global de URL de controlador *********************************
 require_once("frontend/shared/global_header_front.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -23,73 +19,27 @@ $msg_err = '';
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-// vengo directamente con un id:
 if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_nom = (integer)strtok($a_sel[0], "#");
+    $parts = explode('#', $a_sel[0]);
+    $Qid_nom = (int)($parts[0] ?? 0);
 } else {
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 }
 
+$d = PostRequest::getDataFromUrl('/src/actividadestudios/e43_data', [
+    'id_nom' => $Qid_nom,
+    'id_activ' => $Qid_activ,
+]);
+$msg_err = $d['msg_err'] ?? '';
+$nom = $d['nom'] ?? '';
+$txt_nacimiento = $d['txt_nacimiento'] ?? '';
+$dl_origen = $d['dl_origen'] ?? '';
+$dl_destino = $d['dl_destino'] ?? '';
+$txt_actividad = $d['txt_actividad'] ?? '';
+$matriculas = (int)($d['matriculas'] ?? 0);
+$aAsignaturasMatriculadas = $d['aAsignaturasMatriculadas'] ?? [];
 
-$oPersona = Persona::findPersonaEnGlobal($Qid_nom);
-if (!is_object($oPersona)) {
-    $msg_err .= "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
-}
-
-$nom = $oPersona->getNombreApellidos();
-$lugar_nacimiento = $oPersona->getLugar_nacimiento();
-$f_nacimiento = $oPersona->getF_nacimiento()?->getFromLocal();
-$txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
-
-$dl_origen = OrbixRuntime::miDelef();
-$dl_destino = $oPersona->getDl();
-
-$ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-$oActividad = $ActividadAllRepository->findById($Qid_activ);
-$nom_activ = $oActividad->getNom_activ();
-$id_ubi = $oActividad->getId_ubi();
-$f_ini = $oActividad->getF_ini()?->getFromLocal();
-$f_fin = $oActividad->getF_fin()?->getFromLocal();
-$oUbi = Ubi::NewUbi($id_ubi);
-$lugar = $oUbi->getNombre_ubi();
-
-$txt_actividad = "$lugar, $f_ini-$f_fin";
-
-$MatriculaRepository = $GLOBALS['container']->get(MatriculaRepositoryInterface::class);
-$cMatriculas = $MatriculaRepository->getMatriculas(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ));
-$matriculas = count($cMatriculas);
-$aAsignaturasMatriculadas = [];
-if ($matriculas > 0) {
-    // para ordenar
-    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
-    $PersonaNotaDBRepository = $GLOBALS['container']->get(PersonaNotaRepositoryInterface::class);
-    foreach ($cMatriculas as $oMatricula) {
-        $id_asignatura = $oMatricula->getId_asignatura();
-        $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
-        $nombre_corto = $oAsignatura->getNombre_corto();
-        //$nota = $oMatricula->getNota_txt();
-
-        $cNotas = $PersonaNotaDBRepository->getPersonaNotas(array('id_nom' => $Qid_nom, 'id_asignatura' => $id_asignatura));
-        if ($cNotas !== FALSE && count($cNotas) > 0) {
-            $oNota = $cNotas[0];
-            $nota = $oNota->getNota_txt();
-            $acta = $oNota->getActa();
-            $f_acta = $oNota->getF_acta()?->getFromLocal();
-        } else {
-            $nota = '';
-            $acta = '';
-            $f_acta = '';
-        }
-        $aAsignaturasMatriculadas[] = array('nom_asignatura' => $nombre_corto,
-            'nota' => $nota,
-            'f_acta' => $f_acta,
-            'acta' => $acta);
-    }
-} else {
-    $msg_err .= _("no hay ninguna matrícula de esta persona");
-}
-
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividadestudios/controller/e43_2_mpdf.php');
 $oHash->setCamposForm('id_nom!id_activ');
 $h = $oHash->linkSinVal();

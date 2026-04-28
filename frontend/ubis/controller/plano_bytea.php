@@ -6,7 +6,7 @@
  */
 
 use frontend\shared\config\AppUrlConfig;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // para que funcione bien la seguridad
 $_POST = $_REQUEST;
@@ -136,7 +136,7 @@ case "download":
     die();
 case 'adjuntar':
 $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/plano_bytea.php';
-$oHashComprobar = new Hash();
+$oHashComprobar = new HashFront();
 $oHashComprobar->setUrl($url);
 /*
 $a_camposHidden = array(
@@ -149,7 +149,7 @@ $oHashComprobar->setArraycamposHidden($a_camposHidden);
 $oHashComprobar->setCamposForm('id_direccion!obj_dir!act');
 $h = $oHashComprobar->linkSinValParams();
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $a_camposHidden = array(
     'id_direccion' => $Qid_direccion,
     'obj_dir' => $Qobj_dir,

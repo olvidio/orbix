@@ -1,22 +1,22 @@
 <?php
 
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
 // Index estatico: enlaces canonicos `frontend/misas/controller/...` (Slice 11).
 // Los `apps/misas/controller/*.php` homonimos siguen como wrappers por enlaces viejos.
-$goModificarPlantilla = Hash::link('frontend/misas/controller/modificar_plantilla.php');
-$goPrepararPlanDeMisas = Hash::link('frontend/misas/controller/preparar_plan_de_misas.php');
-$goModificarPlanDeMisas = Hash::link('frontend/misas/controller/modificar_plan_de_misas.php');
-$goVerPlanDeMisas = Hash::link('frontend/misas/controller/ver_plan_de_misas.php');
-$goBuscarPlanSacd = Hash::link('frontend/misas/controller/buscar_plan_sacd.php');
-$goBuscarPlanCtr = Hash::link('frontend/misas/controller/buscar_plan_ctr.php');
-$goModificarEncargos = Hash::link('frontend/misas/controller/modificar_encargos.php');
-$goModificarEncargosCtr = Hash::link('frontend/misas/controller/modificar_encargos_centros.php');
-$goIniciales = Hash::link('frontend/misas/controller/modificar_iniciales_sacd_zona.php');
-$goStatus = Hash::link('frontend/misas/controller/cambiar_status.php');
+$goModificarPlantilla = HashFront::link('frontend/misas/controller/modificar_plantilla.php');
+$goPrepararPlanDeMisas = HashFront::link('frontend/misas/controller/preparar_plan_de_misas.php');
+$goModificarPlanDeMisas = HashFront::link('frontend/misas/controller/modificar_plan_de_misas.php');
+$goVerPlanDeMisas = HashFront::link('frontend/misas/controller/ver_plan_de_misas.php');
+$goBuscarPlanSacd = HashFront::link('frontend/misas/controller/buscar_plan_sacd.php');
+$goBuscarPlanCtr = HashFront::link('frontend/misas/controller/buscar_plan_ctr.php');
+$goModificarEncargos = HashFront::link('frontend/misas/controller/modificar_encargos.php');
+$goModificarEncargosCtr = HashFront::link('frontend/misas/controller/modificar_encargos_centros.php');
+$goIniciales = HashFront::link('frontend/misas/controller/modificar_iniciales_sacd_zona.php');
+$goStatus = HashFront::link('frontend/misas/controller/cambiar_status.php');
 
 $a_campos = [
     'goModificarPlantilla' => $goModificarPlantilla,

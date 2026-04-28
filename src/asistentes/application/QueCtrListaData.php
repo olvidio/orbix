@@ -6,7 +6,7 @@ use frontend\shared\web\PeriodoQue;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use function src\shared\domain\helpers\strtoupper_dlb;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Formulario de elección de centro / periodo (`que_ctr_lista.php`).
@@ -110,7 +110,7 @@ final class QueCtrListaData
         $aOpciones = $oGesCentros->getArrayCentros("WHERE active = 't' AND tipo_ctr ~ '^a|^n' ");
         $aOpcionesSerialized = $aOpciones;
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('n_agd!empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
         $oHash->setcamposNo('id_ubi');
         $oHash->setArraycamposHidden($a_camposHidden);

@@ -2,13 +2,13 @@
 
 namespace src\certificados\domain;
 
-use src\shared\config\ConfigGlobal;
+use frontend\certificados\helpers\Select1010UrlSigning;
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
-use frontend\shared\web\Posicion;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -63,6 +63,8 @@ class Select1010
     private $Qid_sel;
     private $Qscroll_id;
     private mixed $status;
+    // Clave actual de la pila de navegación, inyectada desde el controller frontend.
+    private int $stackActual = 0;
 
     private function getBotones(): array
     {
@@ -145,10 +147,10 @@ class Select1010
     {
         $this->txt_eliminar = _("No tiene permisos para eliminar");
         // En el caso de actualizar la misma página (fnjs_actualizar) solo me quedo con la última (stack=0).
-        $oPosicion = new Posicion();
-        $stack = $oPosicion->getStack(0);
+        // El valor llega ya resuelto desde el frontend vía setStackActual().
+        $stack = $this->stackActual;
 
-        $oHashSelect = new Hash();
+        $oHashSelect = new HashFront();
         //$oHashSelect->setCamposForm('sel');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
@@ -169,18 +171,22 @@ class Select1010
         $oTabla->setBotones($this->getBotones());
         $oTabla->setDatos($this->getValores());
 
-        $oHashDown = new Hash();
-        $oHashDown->setUrl('frontend/certificados/controller/certificado_recibido_pdf_download.php');
+        $oHashDown = new HashFront();
+        $oHashDown->setUrl(AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_recibido_pdf_download');
         $oHashDown->setCamposForm('key');
         $h_download = $oHashDown->linkSinVal();
 
         $aQuery = ['nuevo' => 1, 'id_nom' => $this->id_pau];
-        $url_nuevo = Hash::link(ConfigGlobal::getWeb() . '/frontend/certificados/controller/certificado_recibido_adjuntar.php?' . http_build_query($aQuery));
+        $signed = Select1010UrlSigning::sign([
+            'url_nuevo_spec' => [
+                'path' => 'frontend/certificados/controller/certificado_recibido_adjuntar.php',
+                'query' => $aQuery,
+            ],
+        ]);
 
         $a_campos = [
-            'oPosicion' => $oPosicion,
             'oTabla' => $oTabla,
-            'url_nuevo' => $url_nuevo,
+            'url_nuevo' => $signed['url_nuevo'],
             'oHashSelect' => $oHashSelect,
             'h_download' => $h_download,
         ];
@@ -267,6 +273,11 @@ class Select1010
     public function setQueSel($queSel): void
     {
         $this->queSel = $queSel;
+    }
+
+    public function setStackActual(int $stack): void
+    {
+        $this->stackActual = $stack;
     }
 
 }

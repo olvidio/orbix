@@ -15,7 +15,7 @@ use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Modal mover asistente (`asistente_mover.php`).
@@ -176,7 +176,7 @@ final class AsistenteMoverData
         $oDesplActividades->setNombre('id_activ');
         $oDesplActividades->setOpciones($aOpciones);
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposNo('falta!est_ok');
         $a_camposHidden = [
             'id_nom' => $Qid_nom,

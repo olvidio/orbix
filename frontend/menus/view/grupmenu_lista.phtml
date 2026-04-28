@@ -1,7 +1,6 @@
 <?php
 
-use frontend\shared\config\AppUrlConfig;
-use frontend\shared\web\Hash;
+use frontend\shared\config\AppUrlConfig;use frontend\shared\security\HashFront;
 
 ?>
 <script>
@@ -35,7 +34,7 @@ use frontend\shared\web\Hash;
         }
     }
     fnjs_actualizar = function () {
-        let url = '<?= Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/menus/controller/grupmenu_lista.php') ?>';
+        let url = '<?= HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/menus/controller/grupmenu_lista.php') ?>';
         fnjs_update_div('#main', url);
     }
     fnjs_left_side_hide();

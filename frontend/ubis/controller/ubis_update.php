@@ -4,7 +4,7 @@ use frontend\shared\PostRequest;
 
 require_once("frontend/shared/global_header_front.inc");
 
-$data = PostRequest::getDataFromUrl('/src/ubis/ubis_guardar', $_POST);
+$data = PostRequest::getDataFromUrl('/src/ubis/ubis_guardar', PostRequest::requestPayloadForHash());
 if (!empty($data['error'])) {
     echo $data['error'];
 }

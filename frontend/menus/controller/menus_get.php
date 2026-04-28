@@ -3,12 +3,8 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
-use frontend\shared\web\Hash;
-use src\menus\domain\contracts\MenuDbRepositoryInterface;
-use src\usuarios\domain\contracts\RoleRepositoryInterface;
-use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -40,62 +36,34 @@ $aOpciones = $data['a_lista'];
 $oDesplGM = new Desplegable('', $aOpciones, '', true);
 $oDesplGM->setNombre('gm_new');
 
-$oHash3 = new Hash();
+$oHash3 = new HashFront();
 $a_camposHidden = array(
     'filtro_grupo' => $Qfiltro_grupo,
     'nuevo' => 1
 );
 $oHash3->setArraycamposHidden($a_camposHidden);
 
-$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
-$aRoles = $RoleRepository->getArrayRoles();
-$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$pageData = PostRequest::getDataFromUrl('/src/menus/menus_get_page_data', [
+    'filtro_grupo' => $Qfiltro_grupo,
+    'nuevo' => $Qnuevo,
+    'id_menu' => $Qid_menu,
+]);
 
-$MenuDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
-if (!empty($Qid_menu) || !empty($Qnuevo)) {
-    if (!empty($Qid_menu)) {
-        $oMenuDb = $MenuDbRepository->findById($Qid_menu);
-        // para modificar los valores de un menu.
-        $oMenuDb->setId_menu($Qid_menu);
+if (($pageData['mode'] ?? '') === 'edit') {
+    $Qid_menu = (string)($pageData['id_menu'] ?? '');
+    $orden_txt = (string)($pageData['orden_txt'] ?? '');
+    $menu = (string)($pageData['menu'] ?? '');
+    $parametros = (string)($pageData['parametros'] ?? '');
+    $id_metamenu = $pageData['id_metamenu'] ?? null;
+    $menu_perm = $pageData['menu_perm'] ?? 0;
+    $txt_ok = (string)($pageData['txt_ok'] ?? '');
+    $campos_chk = (string)($pageData['campos_chk'] ?? 'ok');
 
-        $orden = $oMenuDb->getOrden();
-        $orden_txt = implode(',', $orden);
-        $menu = $oMenuDb->getMenu();
-        $parametros = $oMenuDb->getParametros();
-        $id_metamenu = $oMenuDb->getId_metamenu();
-        $menu_perm = $oMenuDb->getMenu_perm();
-        $id_grupmenu = $oMenuDb->getId_grupmenu();
-        $ok = $oMenuDb->isOk();
-
-        $oDesplMeta->setOpcion_sel($id_metamenu);
-
-        $perm_menu = $oCuadros->lista_txt2($menu_perm);
-        $a_perm_menu = explode(',', $perm_menu);
-        $chk = ($ok) ? 'checked' : '';
-
-    } else {
-        $Qid_menu = '';
-        $orden_txt = '';
-        $menu = '';
-        $url = '';
-        $parametros = '';
-        $perm_menu = '';
-        $a_perm_menu = [];
-        $menu_perm = 0;
-        $chk = '';
+    if ($id_metamenu !== null) {
+        $oDesplMeta->setOpcion_sel((int)$id_metamenu);
     }
-    $txt_ok = '';
-    $campos_chk = '';
 
-    $oMiUsuario = $UsuarioRepository->findById((int)($_SESSION['session_auth']['id_usuario'] ?? 0));
-    $id_role = $oMiUsuario->getId_role();
-
-    //if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
-    $txt_ok = "  es ok?<input type='checkbox' name='ok' $chk >";
-    $campos_chk = 'ok';
-    //}
-
-    $oHash = new Hash();
+    $oHash = new HashFront();
     $oHash->setCamposForm("$campos_chk!orden!txt_menu!id_metamenu!parametros!perm_menu");
     $oHash->setcamposNo($campos_chk);
     $a_camposHidden = array(
@@ -105,7 +73,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
-    $oHash2 = new Hash();
+    $oHash2 = new HashFront();
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
         'filtro_grupo' => $Qfiltro_grupo,
@@ -113,13 +81,13 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     );
     $oHash2->setArraycamposHidden($a_camposHidden);
 
-    $oHash4 = new Hash();
+    $oHash4 = new HashFront();
     $a_camposHidden = array(
         'filtro_grupo' => $Qfiltro_grupo
     );
     $oHash4->setArraycamposHidden($a_camposHidden);
 
-    $oHash5 = new Hash();
+    $oHash5 = new HashFront();
     $oHash5->setCamposForm("gm_new");
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
@@ -128,7 +96,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     );
     $oHash5->setArraycamposHidden($a_camposHidden);
 
-    $oHash6 = new Hash();
+    $oHash6 = new HashFront();
     $oHash6->setCamposForm("gm_new");
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
@@ -159,16 +127,10 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     $oView = new ViewNewPhtml('frontend\menus\controller');
     $oView->renderizar('menus_get.phtml', $a_campos);
 } else {
-    // para ver el listado de todos los menus de un grupo
-    $oMenuDbs = [];
-    if (!empty($Qfiltro_grupo)) {
-        $aWhere = array('id_grupmenu' => $Qfiltro_grupo, '_ordre' => 'orden');
-        $oMenuDbs = $MenuDbRepository->getMenuDbs($aWhere);
-    }
+    $menuRows = (array)($pageData['menu_rows'] ?? []);
 
-    // para el script
     $url = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/menus/controller/menus_get.php';
-    $oHash2 = new Hash();
+    $oHash2 = new HashFront();
     $oHash2->setUrl($url);
     $oHash2->setCamposForm('filtro_grupo!id_menu');
     $h2 = $oHash2->linkSinValParams();
@@ -178,7 +140,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
         'h2' => $h2,
         'oCuadros' => $oCuadros,
         'oHash3' => $oHash3,
-        'oMenuDbs' => $oMenuDbs,
+        'menuRows' => $menuRows,
     ];
 
     $oView = new ViewNewPhtml('frontend\menus\controller');

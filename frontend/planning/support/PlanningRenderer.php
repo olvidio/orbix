@@ -3,7 +3,6 @@
 namespace frontend\planning\support;
 
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\ubis\domain\contracts\CasaPeriodoRepositoryInterface;
 
 /**
  * Renderizador HTML del planning (tabla de actividades por persona/casa).
@@ -43,6 +42,9 @@ class PlanningRenderer
     private $inueva;
     private $idoble = 1;
     private DateTimeLocal|false $oFinAct;
+
+    /** @var array<int, array<int, array{iso_ini: string, iso_fin: string, sfsv: int}>>|null */
+    private ?array $casaPeriodosPorUbi = null;
 
     public function dibujar(): string
     {
@@ -123,15 +125,16 @@ class PlanningRenderer
         }
 
         $ancho = 0;
-        $periodos_sv = [];
-        $CasaPeriodoRepository = $GLOBALS['container']->get(CasaPeriodoRepositoryInterface::class);
+        $periodos_sv = $this->casaPeriodosPorUbi ?? [];
         foreach ($this->a_actividades as $ww) {
             foreach ($ww as $per => $actividad) {
                 list($pau, $id_pau, $persona) = explode('#', $per);
 
                 if ($pau === 'u') {
-                    $id_ubi = $id_pau;
-                    $periodos_sv[$id_ubi] = $CasaPeriodoRepository->getArrayCasaPeriodos($id_ubi, $this->oInicio, $this->oFin);
+                    $id_ubi = (int)$id_pau;
+                    if (!array_key_exists($id_ubi, $periodos_sv)) {
+                        $periodos_sv[$id_ubi] = [];
+                    }
                 }
                 $long = strlen($persona);
                 if ($ancho < $long) {
@@ -575,6 +578,17 @@ class PlanningRenderer
     public function setDoble(int $idoble): self
     {
         $this->idoble = $idoble;
+        return $this;
+    }
+
+    /**
+     * Periodos sf/sv/res por id_ubi (salida de CasaPeriodosForPlanning en src).
+     *
+     * @param array<int, array<int, array{iso_ini: string, iso_fin: string, sfsv: int}>>|null $map
+     */
+    public function setCasaPeriodosPorUbi(?array $map): self
+    {
+        $this->casaPeriodosPorUbi = $map;
         return $this;
     }
 }

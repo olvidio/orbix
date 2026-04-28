@@ -5,7 +5,7 @@ namespace frontend\planning\controller;
 use frontend\planning\support\PeriodoPlanningHelper;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 
 /**
@@ -41,7 +41,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $periodo_txt = PeriodoPlanningHelper::textoPeriodoPorDefecto((int)$_SESSION['oConfig']->getMesFinStgr());
 $locale_us = OrbixRuntime::isLocaleUs();
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('nombre!apellido1!apellido2!centro!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash->setcamposNo('modelo');
 $oHash->setArraycamposHidden([

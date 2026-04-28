@@ -3,10 +3,8 @@
 namespace frontend\planning\controller;
 
 use frontend\shared\model\ViewNewPhtml;
-use src\personas\domain\contracts\PersonaDlRepositoryInterface;
-use src\shared\infrastructure\ProvidesRepositories;
-use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use web\Hash;
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 use function src\shared\domain\helpers\urlsafe_b64decode;
@@ -34,8 +32,14 @@ $Qyear = '';
 $Qempiezamin = '';
 $Qempiezamax = '';
 
+$postPayload = [];
+
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $QsaWhere = '';
+    $QsaOperador = '';
+    $QsaWhereCtr = '';
+    $QsaOperadorCtr = '';
     $aWhere = [];
     $aOperador = [];
     $aWhereCtr = [];
@@ -63,6 +67,14 @@ if (isset($_POST['stack'])) {
             $aOperadorCtr = json_decode(urlsafe_b64decode($QsaOperadorCtr), true) ?? [];
         }
     }
+    $postPayload = [
+        'stack' => $stack,
+        'obj_pau' => $Qobj_pau,
+        'saWhere' => $QsaWhere ?? '',
+        'saOperador' => $QsaOperador ?? '',
+        'saWhereCtr' => $QsaWhereCtr ?? '',
+        'saOperadorCtr' => $QsaOperadorCtr ?? '',
+    ];
 } else {
     $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
     $Qna = (string)filter_input(INPUT_POST, 'na');
@@ -84,15 +96,15 @@ if (isset($_POST['stack'])) {
     $aWhereCtr = [];
     $aOperadorCtr = [];
     if ($Qapellido1 !== '') {
-        $aWhere['apellido1'] = "^" . $Qapellido1;
+        $aWhere['apellido1'] = '^' . $Qapellido1;
         $aOperador['apellido1'] = 'sin_acentos';
     }
     if ($Qapellido2 !== '') {
-        $aWhere['apellido2'] = "^" . $Qapellido2;
+        $aWhere['apellido2'] = '^' . $Qapellido2;
         $aOperador['apellido2'] = 'sin_acentos';
     }
     if ($Qnombre !== '') {
-        $aWhere['nom'] = "^" . $Qnombre;
+        $aWhere['nom'] = '^' . $Qnombre;
         $aOperador['nom'] = 'sin_acentos';
     }
     if ($Qcentro !== '') {
@@ -107,42 +119,19 @@ if (isset($_POST['stack'])) {
     $QsaOperador = urlsafe_b64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
     $QsaWhereCtr = urlsafe_b64encode(json_encode($aWhereCtr, JSON_THROW_ON_ERROR));
     $QsaOperadorCtr = urlsafe_b64encode(json_encode($aOperadorCtr, JSON_THROW_ON_ERROR));
+
+    $postPayload = [
+        'obj_pau' => $Qobj_pau,
+        'na' => $Qna,
+        'apellido1' => $Qapellido1,
+        'apellido2' => $Qapellido2,
+        'nombre' => $Qnombre,
+        'centro' => $Qcentro,
+    ];
 }
 
-if (!empty($aWhereCtr)) {
-    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
-    $cCentros = $CentroDlRepository->getCentros($aWhereCtr, $aOperadorCtr);
-    $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-    $cPersonas = [];
-    foreach ($cCentros as $oCentro) {
-        $id_ubi = $oCentro->getId_ubi();
-        $aWhere['id_ctr'] = $id_ubi;
-        $cPersonas2 = $PersonaDlRepository->getPersonas($aWhere, $aOperador);
-        if (is_array($cPersonas2) && count($cPersonas2) >= 1) {
-            $cPersonas = array_merge($cPersonas, $cPersonas2);
-        }
-    }
-} else {
-    $repositoryProvider = new class {
-        use ProvidesRepositories;
-
-        public function get(string $entityType): object
-        {
-            return $this->getRepository($entityType);
-        }
-    };
-
-    try {
-        if ($Qobj_pau === '' || $Qobj_pau === 'PersonaDl') {
-            $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-        } else {
-            $PersonaRepository = $repositoryProvider->get($Qobj_pau);
-        }
-    } catch (\InvalidArgumentException) {
-        $PersonaRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
-    }
-    $cPersonas = $PersonaRepository->getPersonas($aWhere, $aOperador);
-}
+$apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_select_data', $postPayload);
+$cPersonas = $apiData['personas'] ?? [];
 
 $aGoBack = [
     'obj_pau' => $Qobj_pau,
@@ -151,10 +140,10 @@ $aGoBack = [
     'year' => $Qyear,
     'empiezamin' => $Qempiezamin,
     'empiezamax' => $Qempiezamax,
-    'saWhere' => $QsaWhere,
-    'saOperador' => $QsaOperador,
-    'saWhereCtr' => $QsaWhereCtr,
-    'saOperadorCtr' => $QsaOperadorCtr,
+    'saWhere' => $QsaWhere ?? '',
+    'saOperador' => $QsaOperador ?? '',
+    'saWhereCtr' => $QsaWhereCtr ?? '',
+    'saOperadorCtr' => $QsaOperadorCtr ?? '',
 ];
 $oPosicion->setParametros($aGoBack, 1);
 
@@ -178,12 +167,12 @@ if (!empty($Qid_sel)) {
 if (!empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
-foreach ($cPersonas as $oPersona) {
+foreach ($cPersonas as $row) {
     $i++;
-    $id_nom = $oPersona->getId_nom();
-    $id_tabla = $oPersona->getId_tabla();
-    $nom = $oPersona->getPrefApellidosNombre();
-    $ctr_o_dl = $oPersona->getCentro_o_dl();
+    $id_nom = $row['id_nom'];
+    $id_tabla = $row['id_tabla'];
+    $nom = $row['pref_apellidos_nombre'];
+    $ctr_o_dl = $row['centro_o_dl'];
     $condicion_2 = urlencode("Where id_nom='" . $id_nom . "'");
 
     $aQuery = [
@@ -193,7 +182,7 @@ foreach ($cPersonas as $oPersona) {
         'id_tabla' => $id_tabla,
     ];
     array_walk($aQuery, 'core\\poner_empty_on_null');
-    $pagina = Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($aQuery));
+    $pagina = HashFront::link('apps/personas/controller/home_persona.php?' . http_build_query($aQuery));
 
     $a_valores[$i]['sel'] = "$id_nom";
     $a_valores[$i][1] = $id_tabla;
@@ -201,7 +190,7 @@ foreach ($cPersonas as $oPersona) {
     $a_valores[$i][3] = $ctr_o_dl;
 }
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setcamposNo('sel!scroll_id!modelo!que!id_dossier');
 $oHash->setArraycamposHidden([
     'obj_pau' => $Qobj_pau,

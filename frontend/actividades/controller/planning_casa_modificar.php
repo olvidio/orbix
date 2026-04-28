@@ -2,9 +2,10 @@
 /**
  * Formulario para modificar una actividad desde el planning de casas.
  *
- * La carga de la actividad y la construccion de los desplegables se hace en
- * `src\actividades\application\ActividadVerDatos` via PostRequest, de modo
- * que este controlador no toca repositorios ni entidades.
+ * La carga de la actividad y los desplegables viene de
+ * `/src/actividades/actividad_ver_datos`; textos del tipo y HTML del bloque tipo
+ * desde ese payload y `/src/actividades/actividad_que_datos`; etiquetas de status
+ * desde `/src/actividades/actividad_status_labels_datos`. Sin `use src\...`.
  *
  * Migrado desde frontend/actividades/controller/planning_casa_modificar.php.
  *
@@ -17,10 +18,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use src\actividades\application\ActividadTipo;
-use src\actividades\domain\value_objects\StatusId;
-use web\Hash;
-use src\actividades\domain\entity\TiposActividades;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -75,13 +73,30 @@ if ($oPermActiv->have_perm_activ('ver') === true) {
     }
 }
 
-$oTipoActiv = new TiposActividades($id_tipo_activ);
-$ssfsv = $oTipoActiv->getSfsvText();
-$sasistentes = $oTipoActiv->getAsistentesText();
-$sactividad = $oTipoActiv->getActividadText();
-$snom_tipo = $oTipoActiv->getNom_tipoText();
+$ssfsv = (string)($data['ssfsv'] ?? '');
+$sasistentes = (string)($data['sasistentes'] ?? '');
+$sactividad = (string)($data['sactividad'] ?? '');
+$snom_tipo = (string)($data['snom_tipo'] ?? '');
 
-$oHash = new Hash();
+$labelsRow = PostRequest::getDataFromUrl('/src/actividades/actividad_status_labels_datos', [
+    'with_all' => 'f',
+]);
+$a_status = $labelsRow['id_to_label'] ?? [];
+
+$dataTipoBloque = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', [
+    'perm_jefe' => 'f',
+    'id_tipo_activ' => $id_tipo_activ,
+    'que' => '',
+    'sfsv' => $ssfsv,
+    'sasistentes' => $sasistentes,
+    'sactividad' => $sactividad,
+    'sactividad2' => '',
+    'snom_tipo' => $snom_tipo,
+    'extendida' => '',
+]);
+$actividad_tipo_html = (string)($dataTipoBloque['actividad_tipo_html'] ?? '');
+
+$oHash = new HashFront();
 $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!extendida!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
 $camposNo = 'id_tipo_activ!mod';
 $a_camposHidden = [
@@ -93,20 +108,13 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposForm($camposForm);
 $oHash->setCamposNo($camposNo);
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!isfsv!ssfsv');
 $h = $oHash1->linkSinValParams();
 
-$oActividadTipo = new ActividadTipo();
-$oActividadTipo->setId_tipo_activ($id_tipo_activ);
-$oActividadTipo->setAsistentes($sasistentes);
-$oActividadTipo->setActividad($sactividad);
-$oActividadTipo->setNom_tipo($snom_tipo);
-
 $procesos_installed = AppInstalled::is('procesos');
 
-$a_status = StatusId::getArrayStatus();
 $status_txt = $a_status[$status] ?? '';
 
 $titulo = _("modificar actividad");
@@ -140,7 +148,7 @@ $a_campos = [
     'precio' => $precio,
     'observ' => $observ,
     'publicado' => $publicado,
-    'oActividadTipo' => $oActividadTipo,
+    'actividad_tipo_html' => $actividad_tipo_html,
     'id_tipo_activ' => $id_tipo_activ,
     'html_despl_dl_org' => $html_despl_dl_org,
     'html_despl_tarifa' => $html_despl_tarifa,

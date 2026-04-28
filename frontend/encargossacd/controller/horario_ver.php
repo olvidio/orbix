@@ -3,7 +3,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Formulario horario de encargo. Datos: `/src/encargossacd/horario_ver_data`
@@ -83,7 +83,7 @@ $oDesplRef->setOpciones($opciones_dia_ref);
 $oDesplRef->setOpcion_sel($dia_ref);
 
 $url_actualizar = 'frontend/encargossacd/controller/encargo_ver.php';
-$oHash = new Hash();
+$oHash = new HashFront();
 $aCamposHidden = [
     'mod' => $Qmod,
     'id_enc' => $Qid_enc,

@@ -3,7 +3,7 @@
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use frontend\shared\web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 
@@ -43,13 +43,13 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHashSelect = new Hash();
+$oHashSelect = new HashFront();
 $oHashSelect->setCamposForm('sel');
 $oHashSelect->setcamposNo('scroll_id');
 $oHashSelect->setArraycamposHidden(array('que' => 'eliminar_grupmenu'));
 
 $aQuery = ['nuevo' => 1];
-$url_nuevo = Hash::link(AppUrlConfig::getPublicAppBaseUrl()
+$url_nuevo = HashFront::link(AppUrlConfig::getPublicAppBaseUrl()
     . '/frontend/menus/controller/grupmenu_form.php?'
     . http_build_query($aQuery));
 

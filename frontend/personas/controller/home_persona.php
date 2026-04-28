@@ -5,7 +5,7 @@ namespace frontend\personas\controller;
 use frontend\shared\PostRequest;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
 
 /**
@@ -65,10 +65,10 @@ $telfs = (string)($payload['telfs'] ?? '');
 $mails = (string)($payload['mails'] ?? '');
 
 $a_parametros = ['pau' => $pau, 'id_nom' => $id_nom, 'obj_pau' => $Qobj_pau];
-$gohome = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
-$go_ficha = Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
+$gohome = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$go_ficha = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
 $a_parametros_dossier = ['pau' => $pau, 'id_pau' => $id_nom, 'obj_pau' => $Qobj_pau];
-$godossiers = Hash::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
+$godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros_dossier));
 
 $a_campos = [
     'oPosicion' => $oPosicion,

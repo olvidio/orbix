@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * Formulario para cambiar el mail por parte del usuario.
@@ -22,7 +22,7 @@ $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $usuario = $data['usuario'];
 $email = $data['email'];
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('email');
 $a_camposHidden = array(
     'id_usuario' => $id_usuario,

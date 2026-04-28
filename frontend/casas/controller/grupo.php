@@ -12,28 +12,28 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
-$oHashLista = new Hash();
+$oHashLista = new HashFront();
 $oHashLista->setUrl($web . '/frontend/casas/controller/grupo_lista.php');
 $oHashLista->setCamposForm('');
 $h_lista = $oHashLista->linkSinVal();
 
-$oHashForm = new Hash();
+$oHashForm = new HashFront();
 $oHashForm->setUrl($web . '/frontend/casas/controller/grupo_form.php');
 $oHashForm->setCamposForm('id_item');
 $h_form = $oHashForm->linkSinVal();
 
-$oHashUpdate = new Hash();
+$oHashUpdate = new HashFront();
 $oHashUpdate->setUrl($web . '/src/casas/grupo_update');
 $oHashUpdate->setCamposForm('id_item!id_ubi_padre!id_ubi_hijo');
 $url_update = $web . '/src/casas/grupo_update' . $oHashUpdate->linkSinVal();
 
-$oHashEliminar = new Hash();
+$oHashEliminar = new HashFront();
 $oHashEliminar->setUrl($web . '/src/casas/grupo_eliminar');
 $oHashEliminar->setCamposForm('id_item');
 $url_eliminar = $web . '/src/casas/grupo_eliminar' . $oHashEliminar->linkSinVal();

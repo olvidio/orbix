@@ -1,9 +1,10 @@
 <?php
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 use frontend\shared\web\Posicion;
 
@@ -65,6 +66,28 @@ if (!empty($data['error'])) {
     exit((string)$data['error']);
 }
 
+$a_valores = $data['a_valores'] ?? [];
+$baseUrl = AppUrlConfig::getPublicAppBaseUrl();
+foreach ($a_valores as $idx => $fila) {
+    if (!is_array($fila)) {
+        continue;
+    }
+    foreach ($fila as $colKey => $cell) {
+        if (!is_array($cell) || !isset($cell['link_spec'])) {
+            continue;
+        }
+        $spec = $cell['link_spec'];
+        $path = (string)($spec['path'] ?? '');
+        $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
+        if ($path === '') {
+            continue;
+        }
+        $url = $baseUrl . '/' . ltrim($path, '/') . '?' . http_build_query($query);
+        $a_valores[$idx][$colKey]['ira'] = HashFront::link($url);
+        unset($a_valores[$idx][$colKey]['link_spec']);
+    }
+}
+
 $aGoBack = [
     'loc' => $Qloc,
     'que_lista' => $Qque_lista,
@@ -76,12 +99,12 @@ $oTabla = new Lista();
 $oTabla->setId_tabla('list_ctr');
 $oTabla->setCabeceras($data['a_cabeceras'] ?? []);
 $oTabla->setBotones($data['a_botones'] ?? []);
-$oTabla->setDatos($data['a_valores'] ?? []);
+$oTabla->setDatos($a_valores);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('loc!que_lista');
 
-$oHash1 = new Hash();
+$oHash1 = new HashFront();
 $oHash1->setCamposForm('sel');
 $oHash1->setcamposNo('scroll_id!dl_dst');
 $a_camposHidden1 = [
@@ -90,7 +113,7 @@ $a_camposHidden1 = [
 ];
 $oHash1->setArraycamposHidden($a_camposHidden1);
 
-$oHash2 = new Hash();
+$oHash2 = new HashFront();
 $oHash2->setUrl(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/ubis/controller/delegacion_que.php');
 $oHash2->setCamposForm('');
 $h2 = $oHash2->linkSinVal();

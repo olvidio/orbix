@@ -2,7 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************
@@ -26,7 +26,7 @@ $a_botones = $data['a_botones'];
 $a_valores = $data['a_valores'];
 
 
-$oHash3 = new Hash();
+$oHash3 = new HashFront();
 $oHash3->setCamposForm('que!sel');
 $oHash3->setcamposNo('sel!refresh!scroll_id');
 $a_camposHidden = array(

@@ -9,7 +9,6 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use frontend\shared\web\Periodo;
-use frontend\shared\web\Posicion;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -63,26 +62,6 @@ class FasesActivCambioLista
         if (empty($Qperiodo)) {
             $Qperiodo = 'actual';
         }
-
-        $oPosicion = new Posicion($_SERVER['PHP_SELF'], $input);
-        $refresh = $oPosicion->getParametro('refresh', 1);
-        if (empty($refresh)) {
-            $oPosicion->recordar();
-            $refresh = 1;
-        }
-        $aGoBack = [
-            'refresh' => $refresh,
-            'hnov' => 0,
-            'dl_propia' => $Qdl_propia,
-            'id_fase_nueva' => $Qid_fase_nueva,
-            'id_tipo_activ' => $Qid_tipo_activ,
-            'periodo' => $Qperiodo,
-            'year' => $Qyear,
-            'empiezamin' => $Qempiezamin,
-            'empiezamax' => $Qempiezamax,
-            'accion' => $Qaccion,
-        ];
-        $oPosicion->setParametros($aGoBack, 1);
 
         $aWhere = [];
         $aOperador = [];

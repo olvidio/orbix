@@ -3,7 +3,7 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 /**
  * AJAX de la ficha SACD. Despacha entre las acciones del lado frontend
@@ -58,7 +58,7 @@ switch ($Qque) {
         foreach ($encargos as $idx => $e) {
             $aQuery = ['id_ubi' => (int)($e['id_ubi'] ?? 0)];
             array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
-            $encargos[$idx]['pagina_ctr'] = Hash::link(
+            $encargos[$idx]['pagina_ctr'] = HashFront::link(
                 'frontend/encargossacd/controller/ctr_ficha.php?' . http_build_query($aQuery),
             );
         }
@@ -69,7 +69,7 @@ switch ($Qque) {
         $oDesplEncs->setBlanco(1);
         $oDesplEncs->setAction("fnjs_mas_enc();");
 
-        $oHash = new Hash();
+        $oHash = new HashFront();
         $oHash->setCamposForm('enc_num!mas!observ!dedic_m!dedic_t!dedic_v!id_tipo_enc');
         $oHash->setcamposNo('id_enc!mas!refresh');
         $oHash->setArrayCamposHidden([
@@ -93,7 +93,7 @@ switch ($Qque) {
         break;
 
     case 'update':
-        PostRequest::getDataFromUrl('/src/encargossacd/sacd_ficha_update', $_POST);
+        PostRequest::getDataFromUrl('/src/encargossacd/sacd_ficha_update', PostRequest::requestPayloadForHash());
         break;
 
     default:

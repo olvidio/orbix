@@ -182,6 +182,14 @@ final class ActividadVerDatos
             'nombre_ubi' => $nombre_ubi,
         ];
 
+        if ($entidad !== null && $id_tipo_activ !== '') {
+            $oTipoActiv = new TiposActividades($id_tipo_activ);
+            $payload['ssfsv'] = $oTipoActiv->getSfsvText();
+            $payload['sasistentes'] = $oTipoActiv->getAsistentesText();
+            $payload['sactividad'] = $oTipoActiv->getActividadText();
+            $payload['snom_tipo'] = $oTipoActiv->getNom_tipoText();
+        }
+
         if ($calcTarifaInicial && $id_tipo_activ !== '') {
             $RelacionTarifaTipoActividadRepository = $GLOBALS['container']->get(RelacionTarifaTipoActividadRepositoryInterface::class);
             $aWhereT = [

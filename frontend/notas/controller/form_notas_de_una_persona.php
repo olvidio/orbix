@@ -26,7 +26,7 @@ use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\notas\domain\value_objects\TipoActa;
 use frontend\shared\web\Desplegable;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -102,7 +102,7 @@ if (!empty($epoca)) {
 
 $helpers = $datos['helpers'];
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $campos_chk = '!preceptor!epoca!tipo_acta';
 $camposForm = 'preceptor!nota_num!nota_max!id_situacion!acta!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
 $camposNo = 'refresh!id_preceptor!id_activ' . $campos_chk;
@@ -130,24 +130,24 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
 $url_posibles_opcionales = $web . '/src/notas/posibles_opcionales_data';
-$oHashOpcionales = new Hash();
+$oHashOpcionales = new HashFront();
 $oHashOpcionales->setUrl($url_posibles_opcionales);
 $oHashOpcionales->setCamposForm('id_nom');
 $h_posibles_opcionales = $oHashOpcionales->linkSinValParams();
 
 $url_posibles_preceptores = $web . '/src/notas/posibles_preceptores_data';
-$oHashPreceptores = new Hash();
+$oHashPreceptores = new HashFront();
 $oHashPreceptores->setUrl($url_posibles_preceptores);
 $h_posibles_preceptores = $oHashPreceptores->linkSinVal();
 
 $url_actividad_buscar = $web . '/frontend/notas/controller/actividad_buscar_form.php';
-$oHashActivBuscar = new Hash();
+$oHashActivBuscar = new HashFront();
 $oHashActivBuscar->setUrl($url_actividad_buscar);
 $oHashActivBuscar->setCamposForm('dl_org!f_acta_iso');
 $h_actividad_buscar = $oHashActivBuscar->linkSinValParams();
 
 $url_buscar_acta = $web . '/src/notas/buscar_acta';
-$oHashBuscarActa = new Hash();
+$oHashBuscarActa = new HashFront();
 $oHashBuscarActa->setUrl($url_buscar_acta);
 $oHashBuscarActa->setCamposForm('acta');
 $h_buscar_acta = $oHashBuscarActa->linkSinValParams();

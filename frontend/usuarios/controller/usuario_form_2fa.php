@@ -10,7 +10,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\UrlBaseProject;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -54,7 +54,7 @@ if (preg_match('/(.*?)\.docker/', OrbixRuntime::servidor())) {
 $qr_url = get_qr_code_data($usuario, $secret_2fa, $appName);
 
 // Configurar el formulario
-$oHashUpdate = new Hash();
+$oHashUpdate = new HashFront();
 $url_2fa_update = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_2fa_update';
 $oHashUpdate->setUrl($url_2fa_update);
 $oHashUpdate->setCamposForm('enable_2fa!verification_code');
@@ -65,7 +65,7 @@ $a_camposHidden = array(
 );
 $oHashUpdate->setArraycamposHidden($a_camposHidden);
 
-$oHashVerify = new Hash();
+$oHashVerify = new HashFront();
 $url_2fa_verify = AppUrlConfig::getApiBaseUrl() . '/src/usuarios/usuario_2fa_verify';
 $oHashVerify->setUrl($url_2fa_verify);
 $oHashVerify->setCamposForm('secret_2fa!verification_code');

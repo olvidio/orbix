@@ -2,7 +2,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -16,7 +16,7 @@ $num_cartas = $data['num_cartas'] ?? '';
 
 $url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url_update);
 $oHash->setArrayCamposHidden([
     'id_ubi' => $Qid_ubi,

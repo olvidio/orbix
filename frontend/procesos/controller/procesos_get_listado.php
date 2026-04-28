@@ -9,7 +9,7 @@ use frontend\shared\PostRequest;
 
 require_once("frontend/shared/global_header_front.inc");
 
-$data = PostRequest::getDataFromUrl('/src/procesos/procesos_get_listado', $_POST);
+$data = PostRequest::getDataFromUrl('/src/procesos/procesos_get_listado', PostRequest::requestPayloadForHash());
 $aRows = $data['a_rows'] ?? [];
 
 echo '<table>';

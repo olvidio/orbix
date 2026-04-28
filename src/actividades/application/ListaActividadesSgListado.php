@@ -10,19 +10,21 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
-use web\Hash;
-use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
  * Monta el listado de actividades sf/sg (crt, cv) aplicando los filtros
  * fijados por la pantalla `lista_actividades_sg`. Concentra todos los
- * accesos a repositorios del dominio y devuelve datos listos para serializar:
- *   - html_tabla (string)        HTML de la tabla de resultados.
+ * accesos a repositorios del dominio y devuelve datos listos para serializar.
+ * La tabla HTML y la advertencia firmada se arman en `lista_actividades_sg_datos.php`.
+ *
+ * Claves:
  *   - result_busqueda (string)   Texto resumen ("X actividades encontradas (Y sin permiso)").
  *   - id_tipo_activ (string)     Filtro efectivo aplicado (1[45]1 o 1[45]3).
- *   - html_advertencia (string)  Bloque HTML de aviso si hay >200 actividades.
+ *   - html_advertencia (string)  Vacío; si >200 actividades, `advertencia_demasiadas`.
+ *   - advertencia_demasiadas (array|null)  Specs para el HTML de confirmación.
+ *   - a_cabeceras, a_botones, a_valores     Para `Lista::mostrar_tabla` en el endpoint.
  */
 final class ListaActividadesSgListado
 {
@@ -117,16 +119,24 @@ final class ListaActividadesSgListado
         $num_activ = count($cActividades);
 
         if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
-            $go_avant = Hash::link(ConfigGlobal::getWeb() . '/frontend/actividades/controller/lista_actividades_sg.php?' . http_build_query(['continuar' => 'si', 'stack' => $stackGo]));
-            $go_atras = Hash::link(ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_que.php?' . http_build_query(['stack' => $stackGo]));
-            $html_advertencia = "<h2>" . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $num_activ) . '</h2>';
-            $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
-            $html_advertencia .= "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
             return [
-                'html_tabla' => '',
                 'result_busqueda' => '',
                 'id_tipo_activ' => $Qid_tipo_activ,
-                'html_advertencia' => $html_advertencia,
+                'html_advertencia' => '',
+                'advertencia_demasiadas' => [
+                    'num_actividades' => $num_activ,
+                    'continuar_link_spec' => [
+                        'path' => 'frontend/actividades/controller/lista_actividades_sg.php',
+                        'query' => ['continuar' => 'si', 'stack' => $stackGo],
+                    ],
+                    'volver_link_spec' => [
+                        'path' => 'frontend/actividades/controller/actividad_que.php',
+                        'query' => ['stack' => $stackGo],
+                    ],
+                ],
+                'a_cabeceras' => $a_cabeceras,
+                'a_botones' => $a_botones,
+                'a_valores' => [],
             ];
         }
 
@@ -253,20 +263,15 @@ final class ListaActividadesSgListado
             }
         }
 
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('lista_actividades_sg');
-        $oTabla->setCabeceras($a_cabeceras);
-        $oTabla->setBotones($a_botones);
-        $oTabla->setDatos($a_valores);
-        $html_tabla = $oTabla->mostrar_tabla();
-
         $result_busqueda = sprintf(_("%s actividades encontradas (%s sin permiso)"), $num, $sin);
 
         return [
-            'html_tabla' => $html_tabla,
             'result_busqueda' => $result_busqueda,
             'id_tipo_activ' => $Qid_tipo_activ,
             'html_advertencia' => '',
+            'a_cabeceras' => $a_cabeceras,
+            'a_botones' => $a_botones,
+            'a_valores' => $a_valores,
         ];
     }
 }

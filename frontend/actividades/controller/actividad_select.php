@@ -28,8 +28,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\actividades\domain\value_objects\StatusId;
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -103,7 +102,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
         $Qperiodo = 'actual';
     }
 
-    $Qstatus = empty($Qstatus) ? StatusId::ACTUAL : $Qstatus;
+    $Qstatus = empty($Qstatus) ? 2 : $Qstatus; // 2 = StatusId::ACTUAL
 
     $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
     $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
@@ -171,7 +170,7 @@ $aTiposActiv = (array)($data['aTiposActiv'] ?? []);
 $extendida = (bool)($data['extendida'] ?? false);
 $id_tipo_activ_efectivo = (string)($data['id_tipo_activ_efectivo'] ?? $Qid_tipo_activ);
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl('frontend/actividades/controller/actividad_que.php');
 $a_camposHidden = [
     'modo' => $Qmodo,
@@ -192,7 +191,7 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposNo('extendida!modo!id_tipo_activ!id_ubi!nom_activ!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
 
-$oHashSel = new Hash();
+$oHashSel = new HashFront();
 $oHashSel->setCamposForm('!mod!queSel!id_dossier');
 $oHashSel->setcamposNo('continuar!sel!scroll_id!fases_on!fases_off');
 $a_camposHiddenSel = [
