@@ -2,11 +2,9 @@
 
 namespace frontend\shared\config;
 
-use src\shared\config\ConfigGlobal;
-
 /**
  * Orígenes HTTP para la app pública y la API. En despliegue monolito ambos
- * coinciden con ConfigGlobal::getWeb(). Con front y API en hosts distintos,
+ * coinciden con {@see OrbixRuntime::getWeb()}. Con front y API en hosts distintos,
  * definir ORBIX_PUBLIC_APP_BASE_URL y ORBIX_API_BASE_URL.
  */
 class AppUrlConfig
@@ -22,7 +20,7 @@ class AppUrlConfig
             return $fromEnv;
         }
 
-        return self::normalizeBaseUrl(ConfigGlobal::getWeb());
+        return self::normalizeBaseUrl(OrbixRuntime::getWeb());
     }
 
     public static function getApiBaseUrl(): string
@@ -35,10 +33,10 @@ class AppUrlConfig
         return self::getPublicAppBaseUrl();
     }
 
-    /** Base HTTP para `/node_modules` (alineado con `ConfigGlobal::getWeb_NodeScripts()`). */
+    /** Base HTTP para `/node_modules` (alineado con {@see OrbixRuntime::getWebNodeScripts()}). */
     public static function getNodeModulesBaseUrl(): string
     {
-        return self::normalizeBaseUrl(ConfigGlobal::getWeb_NodeScripts());
+        return self::normalizeBaseUrl(OrbixRuntime::getWebNodeScripts());
     }
 
     private static function readEnv(string $name): ?string

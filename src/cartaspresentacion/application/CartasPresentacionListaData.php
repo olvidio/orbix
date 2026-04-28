@@ -7,7 +7,7 @@ use src\cartaspresentacion\domain\contracts\CartaPresentacionDlRepositoryInterfa
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
 use src\cartaspresentacion\domain\entity\CartaPresentacion;
 use src\ubis\application\services\UbiTelecoService;
-use src\ubis\domain\CuadrosLabor;
+use src\ubis\application\UbisTiposLaborEtiquetas;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
@@ -330,8 +330,7 @@ final class CartasPresentacionListaData
             'a_direccion' => $a_direccion,
         ];
 
-        $oTipoLabor = new CuadrosLabor();
-        $aTiposLabor = $oTipoLabor->getTxtTiposLabor();
+        $aTiposLabor = UbisTiposLaborEtiquetas::mapBitToEtiqueta();
         $aTipo = [];
         $edad = '';
         if (!empty($tipo_labor)) {

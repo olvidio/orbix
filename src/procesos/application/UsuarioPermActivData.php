@@ -2,13 +2,14 @@
 
 namespace src\procesos\application;
 
-use src\shared\config\ConfigGlobal;
 use src\permisos\domain\PermisosActividades;
+use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\PermAccion;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use src\actividades\application\ActividadTipo;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -26,6 +27,7 @@ class UsuarioPermActivData
      *     nombre:string,
      *     dl_propia:string,
      *     perm_jefe:bool,
+     *     tipo_actividad_html:string,
      *     a_fases:array<string,string>,
      *     a_acciones:array<string,int>,
      *     a_afecta_a:array<string,int>,
@@ -40,7 +42,9 @@ class UsuarioPermActivData
         if (empty($Qid_tipo_activ_txt)) {
             $Qdl_propia = 't';
         }
-        $Qid_tipo_activ = (string)($input['id_tipo_activ'] ?? '');
+
+        $oTipoActiv = new TiposActividades($Qid_tipo_activ_txt, true);
+        $id_tipo_activ = $oTipoActiv->getId_tipo_activ();
 
         $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
         $oUsuario = $GrupoRepository->findById($Qid_usuario);
@@ -53,14 +57,14 @@ class UsuarioPermActivData
 
         $perm_jefe = false;
         if ($_SESSION['oConfig']->is_jefeCalendario()
-            || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() === 1)
+            || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && (int)$_SESSION['session_auth']['sfsv'] === 1)
             || ($_SESSION['oPerm']->have_perm_oficina('calendario'))
         ) {
             $perm_jefe = true;
         }
 
         $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
-        $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);
+        $aTiposDeProcesos = $TipoDeActividadRepository->getTiposDeProcesos($id_tipo_activ, $Qdl_propia);
 
         $ActividadFaseRepository = $GLOBALS['container']->get(ActividadFaseRepositoryInterface::class);
         $a_fases = $ActividadFaseRepository->getArrayActividadFases($aTiposDeProcesos);
@@ -96,10 +100,22 @@ class UsuarioPermActivData
             ];
         }
 
+        $oAt = new ActividadTipo();
+        if ($id_tipo_activ !== '' && $id_tipo_activ !== '0') {
+            $oAt->setId_tipo_activ($id_tipo_activ);
+        }
+        $oAt->setAsistentes($oTipoActiv->getAsistentesText());
+        $oAt->setActividad($oTipoActiv->getActividadText());
+        $oAt->setNom_tipo($oTipoActiv->getNom_tipoText());
+        $oAt->setPara('procesos');
+        $oAt->setPerm_jefe($perm_jefe);
+        $tipo_actividad_html = $oAt->captureHtml(true);
+
         return [
             'nombre' => $nombre,
             'dl_propia' => $Qdl_propia,
             'perm_jefe' => $perm_jefe,
+            'tipo_actividad_html' => $tipo_actividad_html,
             'a_fases' => $a_fases,
             'a_acciones' => $a_acciones,
             'a_afecta_a' => $a_afecta_a,

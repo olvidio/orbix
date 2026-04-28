@@ -9,11 +9,10 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Posicion;
-use src\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Planning (calendario) por zonas sacd. Datos vía `PostRequest` → `/src/planning/planning_zones_select_data`
- * (`PlanningZonesSelectData` / `ActividadesPorZonasService` en backend); solo se reconstruyen fechas para `PlanningRenderer`.
+ * (`PlanningZonesSelectData` / `ActividadesPorZonasService` en backend); fechas de periodo como `DateTimeImmutable` para `PlanningRenderer`.
  *
  * Migrado desde `apps/planning/controller/planning_zones_select.php`
  * (slice 3 de la migracion del modulo planning). La version legacy
@@ -46,8 +45,8 @@ $data = PostRequest::getDataFromUrl('/src/planning/planning_zones_select_data', 
 $data = is_array($data) ? $data : [];
 $isoIni = (string)($data['planning_ini_iso'] ?? '');
 $isoFin = (string)($data['planning_fin_iso'] ?? '');
-$oIniPlanning = DateTimeLocal::createFromFormat('Y-m-d', $isoIni) ?: new DateTimeLocal($isoIni);
-$oFinPlanning = DateTimeLocal::createFromFormat('Y-m-d', $isoFin) ?: new DateTimeLocal($isoFin);
+$oIniPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoIni) ?: new \DateTimeImmutable($isoIni);
+$oFinPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoFin) ?: new \DateTimeImmutable($isoFin);
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 

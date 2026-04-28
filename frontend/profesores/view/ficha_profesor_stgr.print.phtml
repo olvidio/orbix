@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 
 ?>
 <html>
@@ -22,7 +22,7 @@ use src\shared\config\ConfigGlobal;
 <table>
     <col width="15%"><col width="60%"><col width="10%"><col width="15%">
     <tr><td><?= ucfirst(_("nombre")) ?>:</td><td><?= $nom_ap ?></td><td class=derecha><?= _("ctr") ?>:</td><td><?= $nombre_ubi ?></td></tr>
-    <tr><td></td><td></td><td class=derecha><?= _("dl") ?>:</td><td><?= ConfigGlobal::mi_delef() ?></td></tr>
+    <tr><td></td><td></td><td class=derecha><?= _("dl") ?>:</td><td><?= OrbixRuntime::miDelef() ?></td></tr>
     <tr><td><?= ucfirst(_("departamento")) ?>:</td><td><?= $dep ?></td><td class=derecha><?= _("n") ?>:</td><td><?= $num_txt ?></td></tr>
     <tr><td></td><td></td><td class=derecha><?= _("agd") ?>:</td><td><?= $agd_txt ?></td></tr>
     <tr><td></td><td></td><td class=derecha><?= _("sacd") ?>:</td><td><?= $sacd_txt ?></td></tr>

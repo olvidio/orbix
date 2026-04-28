@@ -3,7 +3,7 @@
 namespace frontend\planning\support;
 
 use frontend\shared\web\PeriodoQue;
-use function src\shared\domain\helpers\strtoupper_dlb;
+use function frontend\shared\helpers\strtoupper_dlb;
 
 /**
  * Helper para construir los `frontend\shared\web\PeriodoQue` usados en los distintos

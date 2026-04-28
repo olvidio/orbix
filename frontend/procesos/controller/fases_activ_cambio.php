@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\config\OrbixRuntime;
+use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\PeriodoQue;
@@ -18,6 +18,8 @@ use frontend\shared\web\PeriodoQue;
 require_once("frontend/shared/global_header_front.inc");
 
 $oPosicion->recordar();
+
+$apiBase = AppUrlConfig::getApiBaseUrl();
 
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
@@ -50,35 +52,13 @@ if (!empty($Qsactividad2)) {
     $extendida = true;
 }
 
-$permiso_des = false;
-$Qssfsv = '';
-if ($_SESSION['oPerm']->have_perm_oficina('vcsd')
-    || $_SESSION['oPerm']->have_perm_oficina('des')
-    || $_SESSION['oPerm']->have_perm_oficina('calendario')
-) {
-    $permiso_des = true;
-    $Qssfsv = '';
-} else {
-    $mi_sfsv = OrbixRuntime::miSfsv();
-    if ($mi_sfsv == 1) {
-        $Qssfsv = 'sv';
-    }
-    if ($mi_sfsv == 2) {
-        $Qssfsv = 'sf';
-    }
-}
-
-$oActividadTipo = new \src\actividades\application\ActividadTipo();
-$oActividadTipo->setPerm_jefe($permiso_des);
-$oActividadTipo->setSfsv($Qssfsv);
-$oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
-$oActividadTipo->setAsistentes($Qsasistentes);
-if ($extendida) {
-    $oActividadTipo->setActividad2Digitos($Qsactividad2);
-} else {
-    $oActividadTipo->setActividad($Qsactividad);
-}
-$oActividadTipo->setPara('procesos');
+$dataTipo = PostRequest::getDataFromUrl($apiBase . '/src/procesos/fases_activ_cambio_tipo_html', [
+    'id_tipo_activ' => $Qid_tipo_activ,
+    'sasistentes' => $Qsasistentes,
+    'sactividad' => $Qsactividad,
+    'sactividad2' => $Qsactividad2,
+]);
+$tipo_actividad_html = (string)($dataTipo['tipo_actividad_html'] ?? '');
 
 $aOpciones = [
     'tot_any' => _("todo el año"),
@@ -96,7 +76,6 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 
 
-$apiBase = AppUrlConfig::getApiBaseUrl();
 $url_lista = 'frontend/procesos/controller/fases_activ_cambio_lista.php';
 $url_update = $apiBase . '/src/procesos/fases_activ_cambio_update';
 $url_get = $apiBase . '/src/procesos/fases_activ_cambio_get';
@@ -119,7 +98,7 @@ $h_tipo = $oHash1->linkSinVal();
 
 $txt_eliminar = _("¿Esta seguro que desea borrar esta fase?");
 
-if ($Qdl_propia == 'f') {
+if ($Qdl_propia === 'f') {
     $chk_propia = '';
     $chk_no_propia = 'checked';
 } else {
@@ -132,7 +111,7 @@ $a_campos = [
     'h_lista' => $h_lista,
     'h_actualizar' => $h_actualizar,
     'h_tipo' => $h_tipo,
-    'oActividadTipo' => $oActividadTipo,
+    'tipo_actividad_html' => $tipo_actividad_html,
     'extendida' => $extendida,
     'oFormP' => $oFormP,
     'url_lista' => $url_lista,

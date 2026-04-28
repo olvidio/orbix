@@ -2,7 +2,7 @@
 
 namespace frontend\planning\support;
 
-use src\shared\domain\value_objects\DateTimeLocal;
+use frontend\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Renderizador HTML del planning (tabla de actividades por persona/casa).
@@ -460,23 +460,23 @@ class PlanningRenderer
         return $color;
     }
 
-    public function getInicio()
+    public function getInicio(): \DateTimeInterface
     {
         return $this->oInicio;
     }
 
-    public function setInicio(DateTimeLocal $oInicio): self
+    public function setInicio(\DateTimeInterface $oInicio): self
     {
         $this->oInicio = $oInicio;
         return $this;
     }
 
-    public function getFin()
+    public function getFin(): \DateTimeInterface
     {
         return $this->oFin;
     }
 
-    public function setFin(DateTimeLocal $oFin): self
+    public function setFin(\DateTimeInterface $oFin): self
     {
         $this->oFin = $oFin;
         return $this;

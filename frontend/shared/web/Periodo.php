@@ -7,8 +7,8 @@ namespace frontend\shared\web;
 require_once dirname(__DIR__, 3) . '/src/shared/domain/helpers/func_tablas.php';
 
 use frontend\shared\PostRequest;
-use src\shared\domain\value_objects\DateTimeLocal;
-use function src\shared\domain\helpers\curso_est;
+use frontend\shared\domain\value_objects\DateTimeLocal;
+use function frontend\shared\helpers\curso_est;
 
 /**
  * Classe que passa el periode amb texte a data inici i data fi.

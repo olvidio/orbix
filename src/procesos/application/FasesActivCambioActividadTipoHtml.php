@@ -1,0 +1,39 @@
+<?php
+
+namespace src\procesos\application;
+
+use src\actividades\application\ActividadTipo;
+
+/**
+ * HTML del selector de tipo de actividad (Plantilla procesos/actividad_tipo_que_perm.html.twig)
+ * para {@see FasesActivCambioTipoActividadHtmlData} / la pantalla fases cambio de fases.
+ */
+final class FasesActivCambioActividadTipoHtml
+{
+    /**
+     * @see ActividadTipo mismo criterio que antes en el controlador procesos (para='procesos').
+     */
+    public static function render(
+        bool $permiso_des,
+        string $ssfsv,
+        bool $extendida,
+        string $id_tipo_activ,
+        string $sasistentes,
+        string $sactividad_no_extendida,
+        string $sactividad2_extendida,
+    ): string {
+        $o = new ActividadTipo();
+        $o->setPerm_jefe($permiso_des);
+        $o->setSfsv($ssfsv);
+        $o->setId_tipo_activ($id_tipo_activ);
+        $o->setAsistentes($sasistentes);
+        if ($extendida) {
+            $o->setActividad2Digitos($sactividad2_extendida);
+        } else {
+            $o->setActividad($sactividad_no_extendida);
+        }
+        $o->setPara('procesos');
+
+        return $o->captureHtml($extendida);
+    }
+}

@@ -2,18 +2,16 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\PostRequest;
-use src\ubis\domain\CuadrosLabor;
 use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 
 $Qid_ubi = (int)(filter_input(INPUT_POST, 'id_ubi') ?? filter_input(INPUT_GET, 'id_ubi'));
 $data = PostRequest::getDataFromUrl('/src/ubis/centros_form_labor', ['id_ubi' => $Qid_ubi]);
-$oPermActiv = new CuadrosLabor();
 
 $nombre_ubi = $data['nombre_ubi'] ?? '';
 $tipo_ctr = $data['tipo_ctr'] ?? '';
-$tipo_labor = (int)($data['tipo_labor'] ?? 0);
+$tipo_labor_check_html = (string)($data['tipo_labor_check_html'] ?? '');
 
 $url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 
@@ -32,7 +30,7 @@ $txt .= _("tipo de centro") . "   <input type=text size=12 name=tipo_ctr value=\
 $txt .= '<br>';
 $txt .= _("tipo de labor");
 $txt .= '   ';
-$txt .= $oPermActiv->cuadros_check('tipo_labor', $tipo_labor);
+$txt .= $tipo_labor_check_html;
 $txt .= '<br><br>';
 $txt .= "<input type='button' value='" . _("guardar") . "' onclick=\"fnjs_guardar('#frm_labor');\" >";
 $txt .= "<input type='button' value='" . _("cancel") . "' onclick=\"fnjs_cerrar();\" >";

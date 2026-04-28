@@ -3,6 +3,7 @@
 namespace src\ubis\application;
 
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\CuadrosLabor;
 
 /**
  * Datos comunes para los formularios de centro dl (labor / num / plazas).
@@ -27,10 +28,7 @@ final class CentrosFormData
         ];
 
         return match ($modo) {
-            self::MODO_LABOR => $base + [
-                'tipo_ctr' => $oCentro?->getTipo_ctr() ?? '',
-                'tipo_labor' => $oCentro?->getTipo_labor() ?? 0,
-            ],
+            self::MODO_LABOR => $base + self::payloadLabor((int)($oCentro?->getTipo_labor() ?? 0), $oCentro?->getTipo_ctr() ?? ''),
             self::MODO_NUM => $base + [
                 'n_buzon' => $oCentro?->getN_buzon() ?? '',
                 'num_pi' => $oCentro?->getNum_pi() ?? '',
@@ -43,5 +41,23 @@ final class CentrosFormData
             ],
             default => throw new \InvalidArgumentException("Modo desconocido: $modo"),
         };
+    }
+
+    /**
+     * @return array{
+     *     tipo_ctr: string,
+     *     tipo_labor: int,
+     *     tipo_labor_check_html: string
+     * }
+     */
+    private static function payloadLabor(int $tipo_labor, string $tipo_ctr): array
+    {
+        $oLabor = new CuadrosLabor();
+
+        return [
+            'tipo_ctr' => $tipo_ctr,
+            'tipo_labor' => $tipo_labor,
+            'tipo_labor_check_html' => $oLabor->cuadros_check('tipo_labor', $tipo_labor),
+        ];
     }
 }

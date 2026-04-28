@@ -2,7 +2,7 @@
 
 namespace frontend\shared;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
@@ -77,7 +77,7 @@ class PostRequest
     {
         // Compatibilidad: aceptar URL absoluta o relativa.
         if (!preg_match('#^https?://#i', $url)) {
-            $url = rtrim(ConfigGlobal::getWeb(), '/') . '/' . ltrim($url, '/');
+            $url = rtrim(OrbixRuntime::getWeb(), '/') . '/' . ltrim($url, '/');
         }
         $url_hased = HashFront::cmdSinParametros($url);
 
@@ -246,7 +246,7 @@ class PostRequest
     {
         $url = preg_match('#^https?://#i', $relativeUrl)
             ? $relativeUrl
-            : rtrim(ConfigGlobal::getWeb(), '/') . '/' . ltrim($relativeUrl, '/');
+            : rtrim(OrbixRuntime::getWeb(), '/') . '/' . ltrim($relativeUrl, '/');
 
         $cookies = $_COOKIE;
         $parts = parse_url($url);

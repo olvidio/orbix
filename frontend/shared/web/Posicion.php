@@ -2,7 +2,7 @@
 
 namespace frontend\shared\web;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\security\HashFront;
 
 class Posicion
@@ -281,7 +281,7 @@ class Posicion
         $html .= '	<input name="id_div" type="hidden" value="' . $bloque . '" size=70>';
         $html .= '</form>';
         $html .= '</div>';
-        $html .= "<img onclick=fnjs_ir_a('#$id_div') src=" . ConfigGlobal::getWeb_icons() . '/flechas/left.gif border=0 height=40>';
+        $html .= "<img onclick=fnjs_ir_a('#$id_div') src=" . OrbixRuntime::getWebIcons() . '/flechas/left.gif border=0 height=40>';
 
         $this->goEnd();
         return $html;

@@ -5,12 +5,13 @@ use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
-use src\actividades\domain\entity\TiposActividades;
 use function frontend\shared\helpers\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
 
 $oPosicion->recordar();
+
+$apiBase = AppUrlConfig::getApiBaseUrl();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) {
@@ -28,36 +29,18 @@ if (!empty($a_sel)) {
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$oTipoActiv = new TiposActividades($Qid_tipo_activ_txt, true);
-$id_tipo_activ = $oTipoActiv->getId_tipo_activ();
-$sfsv = $oTipoActiv->getSfsvText();
-$asistentes = $oTipoActiv->getAsistentesText();
-$actividad = $oTipoActiv->getActividadText();
-$nom_tipo = $oTipoActiv->getNom_tipoText();
-
-$data = PostRequest::getDataFromUrl('/src/procesos/usuario_perm_activ_data', [
+$data = PostRequest::getDataFromUrl($apiBase . '/src/procesos/usuario_perm_activ_data', [
     'id_usuario' => $Qid_usuario,
     'id_tipo_activ_txt' => $Qid_tipo_activ_txt,
-    'id_tipo_activ' => $id_tipo_activ,
     'dl_propia' => $Qdl_propia,
 ]);
 
 $nombre = $data['nombre'] ?? '';
 $Qdl_propia = $data['dl_propia'] ?? 't';
-$perm_jefe = (bool)($data['perm_jefe'] ?? false);
+$tipo_actividad_html = (string)($data['tipo_actividad_html'] ?? '');
 $a_fases = (array)($data['a_fases'] ?? []);
 $a_acciones = (array)($data['a_acciones'] ?? []);
 $aPermData = (array)($data['aPerm'] ?? []);
-
-$oActividadTipo = new \src\actividades\application\ActividadTipo();
-if (!empty($id_tipo_activ)) {
-    $oActividadTipo->setId_tipo_activ($id_tipo_activ);
-}
-$oActividadTipo->setAsistentes($asistentes);
-$oActividadTipo->setActividad($actividad);
-$oActividadTipo->setNom_tipo($nom_tipo);
-$oActividadTipo->setPara('procesos');
-$oActividadTipo->setPerm_jefe($perm_jefe);
 
 $aPerm = [];
 foreach ($aPermData as $i => $fila) {
@@ -91,7 +74,7 @@ $a_camposHidden = [
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_actualizar = AppUrlConfig::getApiBaseUrl() . '/src/procesos/usuario_perm_activ_ajax';
+$url_actualizar = $apiBase . '/src/procesos/usuario_perm_activ_ajax';
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');
@@ -113,14 +96,14 @@ if (!empty($Qid_item)) {
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
+    'url_perm_activ_guardar' => $apiBase . '/src/usuarios/perm_activ_guardar',
     'url_actualizar' => $url_actualizar,
     'h_actualizar' => $h_actualizar,
     'nombre' => $nombre,
     'chk_propia' => $chk_propia,
     'chk_otra' => $chk_otra,
-    'oActividadTipo' => $oActividadTipo,
+    'tipo_actividad_html' => $tipo_actividad_html,
     'aPerm' => $aPerm,
-    'extendida' => true,
     'titulo' => $titulo,
 ];
 

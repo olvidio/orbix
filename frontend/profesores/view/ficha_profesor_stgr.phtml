@@ -1,9 +1,9 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use function frontend\shared\helpers\is_true;
 
-include_once(ConfigGlobal::$dir_estilos . '/colores.php');
+include_once(OrbixRuntime::dir_estilos() . '/colores.php');
 ?>
 <html>
 <head>
@@ -31,7 +31,7 @@ include_once(ConfigGlobal::$dir_estilos . '/colores.php');
             <col width="10%">
             <col width="15%">
             <tr><td>Nombre:</td><td><?= $nom_ap ?></td><td class=derecha>ctr:</td><td><?= $nombre_ubi ?></td></tr>
-            <tr><td></td><td></td><td class=derecha>dl:</td><td><?= ConfigGlobal::mi_delef() ?></td></tr>
+            <tr><td></td><td></td><td class=derecha>dl:</td><td><?= OrbixRuntime::miDelef() ?></td></tr>
             <tr><td>Departamento:</td><td><?= $dep ?></td><td class=derecha>n:</td><td><?= $num_txt ?></td></tr>
             <tr><td></td><td></td><td class=derecha>agd:</td><td><?= $agd_txt ?></td></tr>
             <tr><td></td><td></td><td class=derecha>sacd:</td><td><?= $sacd_txt ?></td></tr>

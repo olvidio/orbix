@@ -10,6 +10,7 @@ use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEx;
+use src\ubis\domain\CuadrosLabor;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -161,6 +162,7 @@ final class UbisEditarLoadData
                 'nombre_ubi' => $nombre_ubi,
                 'chk_cdc' => '',
                 'tipo_labor' => null,
+                'tipo_labor_check_html' => self::tipoLaborCheckHtml(null),
                 'id_ctr_padre' => null,
                 'tipo_ctr' => null,
                 'num_pi' => null,
@@ -177,6 +179,7 @@ final class UbisEditarLoadData
                 'nombre_ubi' => $nombre_ubi,
                 'chk_cdc' => '',
                 'tipo_labor' => null,
+                'tipo_labor_check_html' => self::tipoLaborCheckHtml(null),
                 'id_ctr_padre' => null,
                 'tipo_ctr' => null,
             ]),
@@ -236,6 +239,7 @@ final class UbisEditarLoadData
             'nombre_ubi' => $o->getNombre_ubi(),
             'chk_cdc' => is_true($o->isCdc()) ? 'checked' : '',
             'tipo_labor' => $o->getTipo_labor(),
+            'tipo_labor_check_html' => self::tipoLaborCheckHtml((int)$o->getTipo_labor()),
             'id_ctr_padre' => $o->getId_ctr_padre(),
             'tipo_ctr' => $o->getTipo_ctr(),
             'num_pi' => $o->getNum_pi(),
@@ -260,9 +264,17 @@ final class UbisEditarLoadData
             'nombre_ubi' => $o->getNombre_ubi(),
             'chk_cdc' => is_true($o->isCdc()) ? 'checked' : '',
             'tipo_labor' => $o->getTipo_labor(),
+            'tipo_labor_check_html' => self::tipoLaborCheckHtml((int)$o->getTipo_labor()),
             'id_ctr_padre' => $o->getId_ctr_padre(),
             'tipo_ctr' => $o->getTipo_ctr(),
         ];
+    }
+
+    private static function tipoLaborCheckHtml(?int $tipo_labor_bin): string
+    {
+        $oLabor = new CuadrosLabor();
+
+        return $oLabor->cuadros_check('tipo_labor', (int)($tipo_labor_bin ?? 0));
     }
 
     /**

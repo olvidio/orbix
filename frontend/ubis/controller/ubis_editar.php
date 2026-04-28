@@ -3,7 +3,6 @@
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
-use src\ubis\domain\CuadrosLabor;
 use frontend\shared\security\HashFront;
 
 /**
@@ -43,8 +42,7 @@ $botones = $load['botones'] ?? 0;
 $dl = $load['dl'] ?? '';
 $region = $load['region'] ?? '';
 $nombre_ubi = $load['nombre_ubi'] ?? '';
-
-$oPermActiv = new CuadrosLabor();
+$tipo_labor_check_html = (string)($load['tipo_labor_check_html'] ?? '');
 
 $chk = (string)($load['chk'] ?? '');
 $campos_chk = 'active!sv!sf';
@@ -120,11 +118,11 @@ switch ($tipo_ubi) {
             'region' => $region,
             'nombre_ubi' => $nombre_ubi,
             'tipo_ctr' => $tipo_ctr,
+            'tipo_labor_check_html' => $tipo_labor_check_html,
             'id_ctr_padre' => $id_ctr_padre,
             'num_pi' => $num_pi,
             'num_cartas' => $num_cartas,
             'num_cartas_mensuales' => $num_cartas_mensuales,
-            'oPermActiv' => $oPermActiv,
             'tipo_labor' => $tipo_labor,
             'num_habit_indiv' => $num_habit_indiv,
             'plazas' => $plazas,
@@ -157,7 +155,7 @@ switch ($tipo_ubi) {
             'id_ctr_padre' => $id_ctr_padre,
             'chk_cdc' => $chk_cdc,
             'tipo_labor' => $tipo_labor,
-            'oPermActiv' => $oPermActiv,
+            'tipo_labor_check_html' => $tipo_labor_check_html,
             'opciones_dl' => $dataOpciones['opciones_dl'] ?? [],
             'opciones_region' => $dataOpciones['opciones_region'] ?? [],
             'opciones_tipo_ctr' => $dataOpciones['opciones_tipo_ctr'] ?? [],

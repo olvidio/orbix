@@ -6,6 +6,16 @@ namespace frontend\shared\config;
  * Acceso a flags y rutas de arranque definidos en `src` sin `use src\...`
  * en cada controlador del frontend.
  *
+ * Equivalentes a rutas en `ConfigGlobal` (entre otras):
+ * - {@see \src\shared\config\ConfigGlobal::$directorio} → {@see self::dir()}
+ * - {@see \src\shared\config\ConfigGlobal::$dir_estilos} → {@see self::dirEstilos()} / {@see self::dir_estilos()}
+ * - {@see \src\shared\config\ConfigGlobal::$dir_libs} → {@see self::dirLibs()}
+ * - {@see \src\shared\config\ConfigGlobal::$dir_languages} → {@see self::gettextLanguagesDir()}
+ * - {@see \src\shared\config\ConfigGlobal::getWeb()} → {@see self::getWeb()}
+ * - {@see \src\shared\config\ConfigGlobal::getWeb_NodeScripts()} → {@see self::getWebNodeScripts()}
+ * - {@see \src\shared\config\ConfigGlobal::getWeb_icons()} → {@see self::getWebIcons()}
+ * - {@see \src\shared\config\ConfigGlobal::is_app_installed()} → {@see self::isAppInstalled()}
+ *
  * El flag de depuración del frontend (`isDebug` / `isDebugMode`) se resuelve
  * solo por entorno (`ORBIX_FRONT_DEBUG`), sin leer `ServerConf` ni `ConfigGlobal`.
  */
@@ -85,6 +95,22 @@ final class OrbixRuntime
         return (string)\src\shared\config\ConfigGlobal::getWebPort();
     }
 
+    /**
+     * URL base HTTP (`$web_server` + puerto efectivo + `getWebPath()`). Equiv. {@see \src\shared\config\ConfigGlobal::getWeb()}.
+     */
+    public static function getWeb(): string
+    {
+        return (string)\src\shared\config\ConfigGlobal::getWeb();
+    }
+
+    /**
+     * URL base HTTP + `/node_modules`. Equiv. {@see \src\shared\config\ConfigGlobal::getWeb_NodeScripts()}.
+     */
+    public static function getWebNodeScripts(): string
+    {
+        return (string)\src\shared\config\ConfigGlobal::getWeb_NodeScripts();
+    }
+
     public static function isDmz(): bool
     {
         return (bool)\src\shared\config\ServerConf::$dmz;
@@ -109,9 +135,21 @@ final class OrbixRuntime
         return (string)\src\shared\config\ConfigGlobal::mi_region_dl();
     }
 
+    /**
+     * Ruta absoluta al directorio de estilos `.css.php` / `colores.php` (filesystem).
+     * Mismo valor que {@see \src\shared\config\ConfigGlobal::$dir_estilos}.
+     */
     public static function dirEstilos(): string
     {
         return (string)\src\shared\config\ConfigGlobal::$dir_estilos;
+    }
+
+    /**
+     * Alias de {@see self::dirEstilos()} con el mismo identificador que `ConfigGlobal::$dir_estilos`.
+     */
+    public static function dir_estilos(): string
+    {
+        return self::dirEstilos();
     }
 
     public static function dirLibs(): string
@@ -151,9 +189,18 @@ final class OrbixRuntime
         return \src\shared\config\ConfigGlobal::mi_sfsv();
     }
 
+    /**
+     * URL base HTTP + `/images`. Equiv. {@see \src\shared\config\ConfigGlobal::getWeb_icons()}.
+     */
     public static function getWebIcons(): string
     {
         return (string)\src\shared\config\ConfigGlobal::getWeb_icons();
+    }
+
+    /** Equiv. {@see \src\shared\config\ConfigGlobal::is_app_installed()} (nombre lógico de la app). */
+    public static function isAppInstalled(string $nom_app): bool
+    {
+        return \src\shared\config\ConfigGlobal::is_app_installed($nom_app);
     }
 
     /** Valor de `$_SESSION['session_auth']['role_pau']`. */

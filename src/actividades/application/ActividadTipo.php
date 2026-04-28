@@ -240,6 +240,23 @@ class ActividadTipo
         }
     }
 
+    /**
+     * Mismo efecto visual que {@see self::getHtml()} (echo vía Twig) pero como string.
+     * Útil para construir vistas desde casos de uso sin usar `frontend` como orquestador.
+     */
+    public function captureHtml(bool $extendida = false): string
+    {
+        ob_start();
+        try {
+            $this->getHtml($extendida);
+        } catch (\Throwable $e) {
+            ob_end_clean();
+            throw $e;
+        }
+
+        return ob_get_clean() ?: '';
+    }
+
     public function setPerm_jefe($perm_jefe)
     {
         $this->bperm_jefe = $perm_jefe;

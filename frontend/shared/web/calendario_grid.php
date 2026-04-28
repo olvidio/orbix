@@ -6,8 +6,8 @@
  * con los controladores que hacen `include_once` de este fichero.
  */
 
-use src\shared\config\ConfigGlobal;
-use src\shared\domain\value_objects\DateTimeLocal;
+use frontend\shared\config\OrbixRuntime;
+use frontend\shared\domain\value_objects\DateTimeLocal;
 
 /**
  * Dibuja un planning SlickGrid a partir de una lista de actividades.
@@ -145,15 +145,15 @@ function dibujar_calendario(int $dd, string $cabecera, string $oInicio, string $
         $aaa++;
         $data .= ',';
         foreach ($ww as $per => $actividad) {
-            list($pau, $id_pau, $persona) = preg_split('/#/', $per);
+            list($pau, $id_pau, $persona) = explode('#', $per);
             if (empty($persona)) {
                 $data = substr($data, 0, -1);
                 continue;
             }
 
-            if (ConfigGlobal::is_app_installed('calendario')) {
+            if (OrbixRuntime::isAppInstalled('calendario')) {
                 $oDBA = $GLOBALS['oDBA'];
-                if ($pau == "u") {
+                if ($pau === "u") {
                     $id_ubi = $id_pau;
                     $sql_periodo = "SELECT to_char(f_ini,'YYYYMMDD') as f_ini,to_char(f_fin,'YYYYMMDD') as f_fin , sfsv_num
 									FROM du_periodos
@@ -362,7 +362,7 @@ function dibujar_calendario(int $dd, string $cabecera, string $oInicio, string $
                 for ($d = 1; $d < $total_dias + 1; $d++) {
                     $texto = "";
                     $reserva = "";
-                    if (ConfigGlobal::is_app_installed('calendario')) {
+                    if (OrbixRuntime::isAppInstalled('calendario')) {
                         if ($pau == "u") {
                             $reserva = reservado($dd, $mini_0, $dini_0, $d, $aini_0, $id_ubi, $periodos_sv);
                         }

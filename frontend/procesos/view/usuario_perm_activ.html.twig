@@ -54,7 +54,7 @@
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
-                url: 'src/usuarios/perm_activ_guardar',
+                url: '{{ url_perm_activ_guardar }}',
                 method: 'POST',
                 dataType: 'json'
             });
@@ -85,7 +85,7 @@
             </td>
         </tr>
     </table>
-    {{ oActividadTipo.getHtml(extendida)|raw }}
+    {{ tipo_actividad_html|raw }}
     <br>
     <table>
         <tr>

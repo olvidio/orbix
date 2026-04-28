@@ -2,8 +2,8 @@
 
 namespace frontend\shared\web;
 
-use src\actividades\domain\value_objects\StatusId;
-use function src\shared\domain\helpers\curso_est;
+
+use function frontend\shared\helpers\curso_est;
 
 class BotonesCurso
 {
@@ -34,7 +34,7 @@ class BotonesCurso
     {
         $mes = date('m');
         $fin_m = $_SESSION['oConfig']->getMesFinStgr();
-        $any = ($mes > $fin_m) ? date('Y') + 1 : date('Y');
+        $any = ($mes > $fin_m) ? (int)date('Y') + 1 : date('Y');
         $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
         $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
 
@@ -54,7 +54,7 @@ class BotonesCurso
             case 1:
             default:
                 $this->chk_1 = "checked";
-                $this->aWhere['status'] = StatusId::ACTUAL;
+                $this->aWhere['status'] = 2; // 2 = StatusId::ACTUAL;
                 $this->aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
                 $this->aOperator['f_ini'] = 'BETWEEN';
                 break;
