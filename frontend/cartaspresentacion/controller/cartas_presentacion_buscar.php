@@ -3,8 +3,10 @@
  * Pantalla frontend: formulario de busqueda de cartas de presentacion.
  *
  * Sucesor de `apps/cartaspresentacion/controller/cartas_presentacion_buscar.php`.
- * Los datos (opciones, `url_lista`, `hash_lista_html`) se obtienen del
- * endpoint `/src/cartaspresentacion/cartas_presentacion_buscar_data` y
+ * Los datos (opciones, rutas y parametros de hash) se obtienen del
+ * endpoint `/src/cartaspresentacion/cartas_presentacion_buscar_data`;
+ * {@see \frontend\cartaspresentacion\helpers\CartasPresentacionBuscarOpcionesRender}
+ * compone `url_lista` y `hash_lista_html`.
  * los `<select>` se montan en la vista con `frontend\shared\web\Desplegable`.
  *
  * El form postea a `frontend/cartaspresentacion/controller/cartas_presentacion_lista.php`
@@ -14,11 +16,13 @@
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Desplegable;
+use frontend\cartaspresentacion\helpers\CartasPresentacionBuscarOpcionesRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_buscar_data');
 $payload = is_array($data) ? $data : [];
+$payload = CartasPresentacionBuscarOpcionesRender::enrich($payload);
 
 $opciones_region = (array)($payload['opciones_region'] ?? []);
 $opciones_pais = (array)($payload['opciones_pais'] ?? []);
@@ -42,5 +46,5 @@ $a_campos = [
     'oDesplDelegacion' => $oDesplDelegacion,
 ];
 
-$oView = new ViewNewPhtml('frontend\\cartaspresentacion\\controller');
+$oView = new ViewNewPhtml('frontend\\cartaspresentacion\\view');
 $oView->renderizar('cartas_presentacion_buscar.phtml', $a_campos);

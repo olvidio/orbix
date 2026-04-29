@@ -2,6 +2,7 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewTwig;
+use frontend\asistentes\helpers\TablaPeticionesRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -30,8 +31,9 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
 
 $data = PostRequest::getDataFromUrl('/src/asistentes/tabla_peticiones_data', $campos);
 $payload = is_array($data) ? $data : [];
+$payload = TablaPeticionesRender::enrich($payload);
 
 $a_campos = array_merge($payload, ['oPosicion' => $oPosicion]);
 
-(new ViewNewTwig('frontend/asistentes/controller'))
+(new ViewNewTwig('frontend\\asistentes\\view'))
     ->renderizar('tabla_peticiones.html.twig', $a_campos);

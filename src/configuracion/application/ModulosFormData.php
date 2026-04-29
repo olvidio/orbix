@@ -4,10 +4,11 @@ namespace src\configuracion\application;
 
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\ModulosConfig;
-use frontend\shared\security\HashFront;
 
 /**
  * Formulario de módulo (`frontend/configuracion/controller/modulos_form.php`).
+ *
+ * Campos hash del formulario: {@see \frontend\configuracion\helpers\ModulosFormRender}.
  */
 final class ModulosFormData
 {
@@ -59,26 +60,23 @@ final class ModulosFormData
         }
 
         $campos_chk = 'sel_mods!sel_apps';
-        $camposForm = 'nom!descripcion!';
-
-        $oHash = new HashFront();
-        $oHash->setCamposForm($camposForm);
-        $oHash->setcamposNo($campos_chk);
-        $oHash->setArraycamposHidden([
-            'campos_chk' => $campos_chk,
-            'id_mod' => $Qid_mod,
-            'mod' => $Qmod,
-        ]);
-
-        $oHashActualizar = new HashFront();
-        $oHashActualizar->setCamposNo('refresh');
-        $oHashActualizar->setArraycamposHidden([
-            'id_mod' => $Qid_mod,
-        ]);
 
         return [
-            'hash_form_html' => $oHash->getCamposHtml(),
-            'hash_actualizar_html' => $oHashActualizar->getCamposHtml(),
+            'hash_main' => [
+                'campos_form' => 'nom!descripcion!',
+                'campos_no' => $campos_chk,
+                'campos_hidden' => [
+                    'campos_chk' => $campos_chk,
+                    'id_mod' => $Qid_mod,
+                    'mod' => $Qmod,
+                ],
+            ],
+            'hash_actualizar' => [
+                'campos_no' => 'refresh',
+                'campos_hidden' => [
+                    'id_mod' => $Qid_mod,
+                ],
+            ],
             'id_mod' => $Qid_mod,
             'nom' => $nom,
             'descripcion' => $descripcion,

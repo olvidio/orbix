@@ -6,11 +6,12 @@ use src\shared\config\ConfigGlobal;
 use src\cartaspresentacion\domain\contracts\CartaPresentacionRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
-use frontend\shared\security\HashFront;
 
 /**
  * Data builder: datos del formulario de modificacion de una
  * `CartaPresentacion`.
+ *
+ * `hash_update_html` se compone en {@see \frontend\cartaspresentacion\helpers\CartaPresentacionFormRender}.
  *
  * Sucesor de la rama `que_mod=form_pres` del dispatcher
  * `apps/cartaspresentacion/controller/cartas_presentacion_ajax.php`.
@@ -30,7 +31,8 @@ final class CartaPresentacionFormData
      *   pres_mail: string,
      *   zona: string,
      *   observ: string,
-     *   hash_update_html: string
+     *   paths?: array{update: string},
+     *   hash_update?: array{campos_hidden: array<string, int>, campos_form: string}
      * }
      */
     public static function execute(array $input): array
@@ -49,7 +51,6 @@ final class CartaPresentacionFormData
             'pres_mail' => '',
             'zona' => '',
             'observ' => '',
-            'hash_update_html' => '',
         ];
 
         if ($id_ubi === 0 || $id_direccion === 0) {
@@ -83,15 +84,6 @@ final class CartaPresentacionFormData
         $repoCarta = $GLOBALS['container']->get(CartaPresentacionRepositoryInterface::class);
         $oCarta = $repoCarta->findById($id_ubi, $id_direccion);
 
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $oHashUpdate = new HashFront();
-        $oHashUpdate->setUrl($web . '/src/cartaspresentacion/carta_presentacion_update');
-        $oHashUpdate->setArrayCamposHidden([
-            'id_ubi' => $id_ubi,
-            'id_direccion' => $id_direccion,
-        ]);
-        $oHashUpdate->setCamposForm('pres_nom!pres_telf!pres_mail!zona!observ');
-
         return [
             'ok' => true,
             'mensaje' => '',
@@ -103,7 +95,16 @@ final class CartaPresentacionFormData
             'pres_mail' => (string)($oCarta?->getPres_mail() ?? ''),
             'zona' => (string)($oCarta?->getZona() ?? ''),
             'observ' => (string)($oCarta?->getObserv() ?? ''),
-            'hash_update_html' => $oHashUpdate->getCamposHtml(),
+            'paths' => [
+                'update' => 'src/cartaspresentacion/carta_presentacion_update',
+            ],
+            'hash_update' => [
+                'campos_hidden' => [
+                    'id_ubi' => $id_ubi,
+                    'id_direccion' => $id_direccion,
+                ],
+                'campos_form' => 'pres_nom!pres_telf!pres_mail!zona!observ',
+            ],
         ];
     }
 }

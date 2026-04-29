@@ -3,13 +3,15 @@
  * Controlador AJAX HTML: formulario modal de modificacion de una
  * `CartaPresentacion`.
  *
- * Delega en `/src/cartaspresentacion/carta_presentacion_form_data` y
+ * Delega en `/src/cartaspresentacion/carta_presentacion_form_data`;
+ * {@see \frontend\cartaspresentacion\helpers\CartaPresentacionFormRender} compone `hash_update_html`.
  * renderiza `cartas_presentacion_form.phtml`. Sucesor de la rama
  * `que_mod=form_pres` del dispatcher legacy `cartas_presentacion_ajax.php`.
  */
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\cartaspresentacion\helpers\CartaPresentacionFormRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -20,6 +22,7 @@ $campos = [
 
 $data = PostRequest::getDataFromUrl('/src/cartaspresentacion/carta_presentacion_form_data', $campos);
 $payload = is_array($data) ? $data : [];
+$payload = CartaPresentacionFormRender::enrich($payload);
 
 $a_campos = [
     'ok' => (bool)($payload['ok'] ?? false),
@@ -33,5 +36,5 @@ $a_campos = [
     'hash_update_html' => (string)($payload['hash_update_html'] ?? ''),
 ];
 
-$oView = new ViewNewPhtml('frontend\\cartaspresentacion\\controller');
+$oView = new ViewNewPhtml('frontend\\cartaspresentacion\\view');
 $oView->renderizar('cartas_presentacion_form.phtml', $a_campos);

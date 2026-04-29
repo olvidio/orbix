@@ -6,9 +6,14 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\DesplegableArray;
+use frontend\cartaspresentacion\helpers\CartasPresentacionShellRender;
 require_once 'frontend/shared/global_header_front.inc';
 
 $shell = PostRequest::getDataFromUrl('/src/cartaspresentacion/cartas_presentacion_shell_data', []);
+if (!is_array($shell)) {
+    $shell = [];
+}
+$shell = CartasPresentacionShellRender::enrich($shell);
 $mi_dele = (string)($shell['mi_dele'] ?? '');
 
 $aOpcionesCiudad = [
@@ -37,5 +42,5 @@ $a_campos = [
     'txt_confirmar_eliminar' => (string)_("¿Está seguro que quiere quitar los datos de presentación de este centro?"),
 ];
 
-$oView = new ViewNewPhtml('frontend\\cartaspresentacion\\controller');
+$oView = new ViewNewPhtml('frontend\\cartaspresentacion\\view');
 $oView->renderizar('cartas_presentacion.phtml', $a_campos);

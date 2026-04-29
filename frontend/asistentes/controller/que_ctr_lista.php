@@ -3,6 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
+use frontend\asistentes\helpers\QueCtrListaRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -11,6 +12,7 @@ $oPosicion->recordar();
 $campos = array_merge($_GET, $_POST);
 $data = PostRequest::getDataFromUrl('/src/asistentes/que_ctr_lista_data', $campos);
 $payload = is_array($data) ? $data : [];
+$payload = QueCtrListaRender::enrich($payload);
 
 $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
@@ -37,5 +39,5 @@ $a_campos = [
     'mi_sfsv' => (int)($payload['mi_sfsv'] ?? 0),
 ];
 
-$oView = new ViewNewPhtml('frontend\\asistentes\\controller');
+$oView = new ViewNewPhtml('frontend\\asistentes\\view');
 $oView->renderizar('que_ctr_lista.phtml', $a_campos);

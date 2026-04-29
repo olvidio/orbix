@@ -5,10 +5,11 @@ namespace src\configuracion\application;
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use function src\shared\domain\helpers\strtoupper_dlb;
-use frontend\shared\security\HashFront;
 
 /**
  * Listado de módulos (`frontend/configuracion/controller/modulos_select.php`).
+ *
+ * Hash del listado: {@see \frontend\configuracion\helpers\ModulosSelectRender}.
  */
 final class ModulosSelectData
 {
@@ -116,15 +117,14 @@ final class ModulosSelectData
             $a_valores['scroll_id'] = $Qscroll_id;
         }
 
-        $oHash = new HashFront();
-        $oHash->setCamposForm('sel!mod');
-        $oHash->setcamposNo('scroll_id!sel!refresh');
-
         return [
             'a_cabeceras' => $a_cabeceras,
             'a_botones' => $a_botones,
             'a_valores' => $a_valores,
-            'hash_lista_html' => $oHash->getCamposHtml(),
+            'hash_lista' => [
+                'campos_form' => 'sel!mod',
+                'campos_no' => 'scroll_id!sel!refresh',
+            ],
             'txt_eliminar' => _("¿Está seguro?"),
             'txt_anadir_modulo' => strtoupper_dlb(_("añadir módulo")),
         ];

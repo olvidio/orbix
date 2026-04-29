@@ -6,6 +6,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\DesplegableArray;
+use frontend\cambios\helpers\UsuarioAvisosPrefFormRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -32,6 +33,7 @@ $payload = PostRequest::getDataFromUrl('/src/cambios/usuario_avisos_pref_form_da
 if (!is_array($payload)) {
     $payload = [];
 }
+$payload = UsuarioAvisosPrefFormRender::enrich($payload);
 
 $aTiposAviso = (array)($payload['aTiposAviso'] ?? []);
 $aObjetos = (array)($payload['aObjetos'] ?? []);
@@ -96,5 +98,5 @@ $a_campos = array_merge($payload, [
     'id_tipo_activ' => $id_tipo_activ,
 ]);
 
-$oView = new ViewNewPhtml('frontend\\cambios\\controller');
+$oView = new ViewNewPhtml('frontend\\cambios\\view');
 $oView->renderizar('usuario_avisos_pref.phtml', $a_campos);

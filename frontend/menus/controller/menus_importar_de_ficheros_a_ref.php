@@ -8,18 +8,24 @@ use frontend\shared\security\HashFront;
 $oDB = $GLOBALS['oDBE'];
 $oDBPC = $GLOBALS['oDBPC'];
 
-$Qseguro = (integer)filter_input(INPUT_POST, 'seguro');
-$Qtodos = (integer)filter_input(INPUT_POST, 'todos');
+$Qseguro = filter_input(INPUT_POST, 'seguro', FILTER_VALIDATE_INT);
+if ($Qseguro === false || $Qseguro === null) {
+    $Qseguro = filter_input(INPUT_GET, 'seguro', FILTER_VALIDATE_INT);
+}
+$Qtodos = filter_input(INPUT_POST, 'todos', FILTER_VALIDATE_INT);
+if ($Qtodos === false || $Qtodos === null) {
+    $Qtodos = filter_input(INPUT_GET, 'todos', FILTER_VALIDATE_INT);
+}
 
-$Qseguro = empty($Qseguro) ? 2 : $Qseguro;
-$Qtodos = empty($Qtodos) ? 2 : $Qtodos;
+$Qseguro = ($Qseguro === false || $Qseguro === null || $Qseguro === 0) ? 2 : $Qseguro;
+$Qtodos = ($Qtodos === false || $Qtodos === null || $Qtodos === 0) ? 2 : $Qtodos;
 
 if ($Qseguro === 2) {
     if (ConfigGlobal::mi_dele() === 'dlb') {
         echo _("casi seguro que no quieres hacerlo");
         echo "<br>";
 
-        $go1 = HashFront::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
+        $go1 = HashFront::link('src/menus/menus_importar_de_ficheros_a_ref?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
         $html = "Esto pondrá los menus por defecto. Para todas las dl";
         $html .= "tarda mucho (3min para 10 dl), pero acaba bien (creo)";
         $html .= "<br>";
@@ -28,7 +34,7 @@ if ($Qseguro === 2) {
         echo $html;
     }
 
-    $go = HashFront::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1)));
+    $go = HashFront::link('src/menus/menus_importar_de_ficheros_a_ref?' . http_build_query(array('seguro' => 1)));
     $html = "Esto pondrá los menus por defecto. Se eliminaran todas las modificaciones que se hayan hecho en los menus y grupos de menu";
     $html .= "<br>";
     $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("continuar") . "</span>";

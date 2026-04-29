@@ -2,6 +2,9 @@
 
 namespace src\layouts;
 
+use frontend\shared\layouts\BurgerLayout;
+use frontend\shared\layouts\LegacyLayout;
+
 /**
  * Factory class for creating layout instances
  * 

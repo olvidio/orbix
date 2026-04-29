@@ -3,64 +3,44 @@
 namespace src\cartaspresentacion\application;
 
 use src\shared\config\ConfigGlobal;
-use frontend\shared\security\HashFront;
 
 /**
- * URLs y fragmentos Hash para la shell `cartas_presentacion.php`.
+ * Datos para la shell `cartas_presentacion.php`: delegación y paths relativos.
+ * URLs absolutas y fragment Hash: {@see \frontend\cartaspresentacion\helpers\CartasPresentacionShellRender}.
  */
 final class CartasPresentacionShellData
 {
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public static function build(): array
     {
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $mi_dele = ConfigGlobal::mi_delef();
-
-        $url_ctr = $web . '/frontend/ubis/controller/home_ubis.php';
-        $oHashCtr = new HashFront();
-        $oHashCtr->setUrl($url_ctr);
-        $oHashCtr->setCamposForm('bloque!pau!id_ubi');
-        $h_ctr = $oHashCtr->linkSinValParams();
-
-        $url_lista = $web . '/frontend/cartaspresentacion/controller/cartas_presentacion_ubis_lista.php';
-        $oHashLista = new HashFront();
-        $oHashLista->setUrl($url_lista);
-        $oHashLista->setCamposForm('tipo_lista');
-        $oHashLista->setCamposNo('scroll_id!sel!poblacion_sel');
-        $hash_lista_html = $oHashLista->getCamposHtml();
-
-        $url_form = $web . '/frontend/cartaspresentacion/controller/cartas_presentacion_form.php';
-        $oHashForm = new HashFront();
-        $oHashForm->setUrl($url_form);
-        $oHashForm->setCamposForm('id_direccion!id_ubi');
-        $h_form = $oHashForm->linkSinVal();
-
-        $url_poblaciones = $web . '/src/cartaspresentacion/poblaciones_data';
-        $oHashPob = new HashFront();
-        $oHashPob->setUrl($url_poblaciones);
-        $oHashPob->setCamposForm('filtro');
-        $h_poblaciones = $oHashPob->linkSinValParams();
-
-        $oHashEliminar = new HashFront();
-        $oHashEliminar->setUrl($web . '/src/cartaspresentacion/carta_presentacion_eliminar');
-        $oHashEliminar->setCamposForm('id_ubi!id_direccion');
-        $h_eliminar = $oHashEliminar->linkSinValParams();
-
         return [
-            'mi_dele' => $mi_dele,
-            'url_ctr' => $url_ctr,
-            'h_ctr' => $h_ctr,
-            'url_lista' => $url_lista,
-            'hash_lista_html' => $hash_lista_html,
-            'url_form' => $url_form,
-            'h_form' => $h_form,
-            'url_poblaciones' => $url_poblaciones,
-            'h_poblaciones' => $h_poblaciones,
-            'url_update' => $web . '/src/cartaspresentacion/carta_presentacion_update',
-            'url_eliminar' => $web . '/src/cartaspresentacion/carta_presentacion_eliminar',
-            'h_eliminar' => $h_eliminar,
+            'mi_dele' => ConfigGlobal::mi_delef(),
+            'paths' => [
+                'ctr' => 'frontend/ubis/controller/home_ubis.php',
+                'lista' => 'frontend/cartaspresentacion/controller/cartas_presentacion_ubis_lista.php',
+                'form' => 'frontend/cartaspresentacion/controller/cartas_presentacion_form.php',
+                'poblaciones' => 'src/cartaspresentacion/poblaciones_data',
+                'update' => 'src/cartaspresentacion/carta_presentacion_update',
+                'eliminar' => 'src/cartaspresentacion/carta_presentacion_eliminar',
+            ],
+            'hash_ctr' => [
+                'campos_form' => 'bloque!pau!id_ubi',
+            ],
+            'hash_lista' => [
+                'campos_form' => 'tipo_lista',
+                'campos_no' => 'scroll_id!sel!poblacion_sel',
+            ],
+            'hash_form' => [
+                'campos_form' => 'id_direccion!id_ubi',
+            ],
+            'hash_poblaciones' => [
+                'campos_form' => 'filtro',
+            ],
+            'hash_eliminar' => [
+                'campos_form' => 'id_ubi!id_direccion',
+            ],
         ];
     }
 }

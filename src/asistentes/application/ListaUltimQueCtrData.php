@@ -7,7 +7,7 @@ use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 /**
  * Selector de centro para actividades pendientes (`lista_ultim_que_ctr.php`).
- * El hash del formulario se firma en `lista_ultim_que_ctr_data.php`.
+ * Hash del formulario y URL del action en {@see \frontend\asistentes\helpers\ListaUltimQueCtrRender}.
  */
 final class ListaUltimQueCtrData
 {

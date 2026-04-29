@@ -3,6 +3,7 @@
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Lista;
+use frontend\configuracion\helpers\ModulosSelectRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -23,6 +24,7 @@ if ($stackFromPost !== '' && $oPosicion->goStack($stackFromPost)) {
 
 $data = PostRequest::getDataFromUrl('/src/configuracion/modulos_select_data', $campos);
 $payload = is_array($data) ? $data : [];
+$payload = ModulosSelectRender::enrich($payload);
 
 $a_cabeceras = (array)($payload['a_cabeceras'] ?? []);
 $a_botones = (array)($payload['a_botones'] ?? []);
@@ -42,5 +44,5 @@ $a_campos = [
     'txt_anadir_modulo' => (string)($payload['txt_anadir_modulo'] ?? ''),
 ];
 
-$oView = new ViewNewPhtml('frontend\\configuracion\\controller');
+$oView = new ViewNewPhtml('frontend\\configuracion\\view');
 $oView->renderizar('modulos_select.phtml', $a_campos);

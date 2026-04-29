@@ -19,8 +19,9 @@ use src\usuarios\domain\value_objects\PauType;
  * Data builder: todas las opciones y preseleccion necesarias para pintar la
  * pantalla `usuario_avisos_pref` (configurar un aviso para un usuario o grupo).
  *
- * HashFront, URLs absolutas y {@see ActividadTipo::getHtml()} se componen en
- * `usuario_avisos_pref_form_data.php`.
+ * Rutas relativas y parametros de hash sin resolver; la capa front compone
+ * URLs absolutas, firmas y {@see ActividadTipo::getHtml()} en
+ * {@see \frontend\cambios\helpers\UsuarioAvisosPrefFormRender}.
  *
  * Sucesor del backend de `apps/cambios/controller/usuario_avisos_pref.php`.
  */

@@ -8,7 +8,8 @@ use function src\shared\domain\helpers\strtoupper_dlb;
 
 /**
  * Formulario de elección de centro / periodo (`que_ctr_lista.php`).
- * Hash y bloque de periodo (PeriodoQue) se generan en `que_ctr_lista_data.php`.
+ * Hash, bloque PeriodoQue y URL absoluta del action en
+ * {@see \frontend\asistentes\helpers\QueCtrListaRender}.
  */
 final class QueCtrListaData
 {

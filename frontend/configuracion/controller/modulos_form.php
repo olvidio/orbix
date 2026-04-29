@@ -2,6 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\configuracion\helpers\ModulosFormRender;
 
 require_once 'frontend/shared/global_header_front.inc';
 require_once 'frontend/shared/web/func_web.php';
@@ -35,5 +36,5 @@ $a_campos = [
     'a_apps_mod' => (array)($payload['a_apps_mod'] ?? []),
 ];
 
-$oView = new ViewNewPhtml('frontend\\configuracion\\controller');
+$oView = new ViewNewPhtml('frontend\\configuracion\\view');
 $oView->renderizar('modulos_form.phtml', $a_campos);

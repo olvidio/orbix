@@ -20,9 +20,6 @@ return static function ($r) {
     $r->addRoute(['GET','POST'], '/src/inventario/doc_asignar_dlb_guardar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/doc_asignar_dlb_guardar.php';
     });
-    $r->addRoute(['GET','POST'], '/src/inventario/documentos_form', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/documentos_form.php';
-    });
     $r->addRoute(['GET','POST'], '/src/inventario/documentos_guardar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/documentos_guardar.php';
     });

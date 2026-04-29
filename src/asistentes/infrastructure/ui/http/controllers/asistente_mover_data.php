@@ -1,7 +1,12 @@
 <?php
+/**
+ * JSON para {@see \src\asistentes\application\AsistenteMoverData}.
+ */
 
 use src\asistentes\application\AsistenteMoverData;
 use frontend\shared\web\ContestarJson;
+
+require_once 'frontend/shared/global_header_front.inc';
 
 $data = AsistenteMoverData::build($_POST);
 ContestarJson::enviar('', $data);

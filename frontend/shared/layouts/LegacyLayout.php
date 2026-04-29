@@ -1,26 +1,20 @@
 <?php
 
-namespace src\layouts;
+namespace frontend\shared\layouts;
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\security\HashFront;
+use src\layouts\LayoutInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
-use frontend\shared\security\HashFront;
+use src\shared\config\ConfigGlobal;
 
 /**
- * Legacy layout implementation
- * 
- * This class implements the LayoutInterface for the legacy layout.
+ * Layout clásico (árbol UDM + barra de grupos).
+ *
+ * Implementa {@see LayoutInterface}; firma de enlaces vía {@see HashFront} en capa frontend.
  */
 class LegacyLayout implements LayoutInterface
 {
-    /**
-     * Generate the HTML for the menus
-     * 
-     * @param array $cMenuDbs Array of MenuDb objects
-     * @param array $params Additional parameters needed for rendering
-     * @return array Associative array with HTML components
-     */
     public function generateMenuHtml(array $params): array
     {
         $MenusDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
@@ -34,7 +28,6 @@ class LegacyLayout implements LayoutInterface
         $oUsuario = $params['oUsuario'];
         $gm = $params['gm'];
 
-        // El grupmenu 'Utilidades' es el 1, lo pongo siempre.
         $aWhere = [];
         $aOperador = [];
         $aWhere['id_grupmenu'] = "^1$|^$id_grupmenu$";
@@ -47,7 +40,6 @@ class LegacyLayout implements LayoutInterface
         $m = 0;
         $raiz_pral = '';
 
-        // Process MenuDb objects to generate menu data
         $menuData = [];
 
         foreach ($cMenuDbs as $oMenuDb) {
@@ -58,7 +50,6 @@ class LegacyLayout implements LayoutInterface
             $id_metamenu = $oMenuDb->getId_metamenu();
             $menu_perm = $oMenuDb->getMenu_perm();
             $id_grupmenu = $oMenuDb->getId_grupmenu();
-            //$ok = $oMenuDb->getOk ();
 
             if (!empty($id_metamenu)) {
                 $oMetamenu = $MetaMenuRepository->findById($id_metamenu);
@@ -68,8 +59,6 @@ class LegacyLayout implements LayoutInterface
                     continue;
                 }
                 $url = $oMetamenu->getUrl();
-                //echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
-                // primero si el módulo està instalado:
                 $id_mod = $oMetamenu->getId_Mod();
             } else {
                 $url = '';
@@ -78,7 +67,6 @@ class LegacyLayout implements LayoutInterface
             if (!empty($id_mod) && !ConfigGlobal::is_mod_installed($id_mod)) {
                 continue;
             }
-            // primero si la app de la ruta está instalada:
             if (!empty($url)) {
                 $matches = [];
                 $rta = preg_match('@apps/(.+?)/@', $url, $matches);
@@ -87,13 +75,12 @@ class LegacyLayout implements LayoutInterface
                 } else {
                     if ($rta === 1) {
                         $url_app = $matches[1];
-                        if (!ConfigGlobal::is_app_installed($url_app)) continue;
-                    } else {
-                        //echo " | ". _("url invàlida en $menu");
+                        if (!ConfigGlobal::is_app_installed($url_app)) {
+                            continue;
+                        }
                     }
                 }
             }
-            // compruebo que el menu raíz exista:
             if (!empty($orden)) {
                 $raiz = $orden[0];
                 if (count($orden) === 1) {
@@ -104,12 +91,11 @@ class LegacyLayout implements LayoutInterface
                 }
             }
 
-            // hago las rutas absolutas, en vez de relativas:
             $full_url = '';
-            if (!empty($url)) $full_url = ConfigGlobal::getWeb() . '/' . $url;
-            //$parametros = HashB::param($full_url,$parametros);
+            if (!empty($url)) {
+                $full_url = ConfigGlobal::getWeb() . '/' . $url;
+            }
             $parametros = HashFront::add_hash($parametros, $full_url);
-            // quito las llaves "{}"
             $indice = count($orden);
             if ($orden[0] === $num_menu_1) {
                 // continue;
@@ -124,7 +110,6 @@ class LegacyLayout implements LayoutInterface
                 continue;
             }
 
-            // Add menu item to the menu data array
             $menuData[] = [
                 'indice' => $indice,
                 'menu' => $menu,
@@ -137,10 +122,8 @@ class LegacyLayout implements LayoutInterface
             $indice_old = $indice;
         }
 
-        // Reset indice_old for HTML generation
         $indice_old = 1;
 
-        // Process menu data to generate HTML
         foreach ($menuData as $menuItem) {
             $indice = $menuItem['indice'];
             $menu = $menuItem['menu'];
@@ -149,7 +132,6 @@ class LegacyLayout implements LayoutInterface
             $parametros = $menuItem['parametros'] ?? '';
             $menu_perm = $menuItem['menu_perm'] ?? '';
 
-            // Skip if not visible
             if (!$oPermisoMenu->visible($menu_perm)) {
                 continue;
             }
@@ -184,13 +166,11 @@ class LegacyLayout implements LayoutInterface
             $indice_old = $indice;
         }
 
-        // Close any open tags
         for ($n = 1; $n < $indice_old; $n++) {
             $li_submenus .= "</li></ul>";
         }
         $li_submenus .= "</li>";
 
-        // Add exit link if needed
         if ($gm < 2) {
             $html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| " . ucfirst(_("salir")) . "</a></li>";
             $html_exit .= "<li><a class=\"nohref\"> (login as: " . $oUsuario->getUsuarioAsString() . '[' . ConfigGlobal::mi_region_dl() . "])</a></li>";
@@ -199,13 +179,10 @@ class LegacyLayout implements LayoutInterface
         }
         $li_submenus .= "</ul>";
 
-        // Generate HTML for the top menu bar
         $html_barra = "<ul id=\"menu\" class=\"menu\">";
         if (isset($params['grupMenuData'])) {
-            // Sort the group menu data by key (order)
             ksort($params['grupMenuData']);
 
-            // Generate HTML for each group menu item
             foreach ($params['grupMenuData'] as $grupMenuItem) {
                 $id_gm = $grupMenuItem['id_gm'];
                 $grup_menu = $grupMenuItem['grup_menu'];
@@ -214,7 +191,6 @@ class LegacyLayout implements LayoutInterface
             }
         }
 
-        // Add exit link to the top menu
         $html_exit = "<li onclick=\"fnjs_logout();\" >" . ucfirst(_("salir"));
         $html_exit .= " (login as: " . $oUsuario->getUsuarioAsString() . '[' . ConfigGlobal::mi_region_dl() . "])</li>";
         $html_barra .= $html_exit;
@@ -226,12 +202,6 @@ class LegacyLayout implements LayoutInterface
         return $htmlComponents;
     }
 
-    /**
-     * Include CSS files and inline styles
-     * 
-     * @param array $params Additional parameters needed for CSS inclusion
-     * @return string HTML for CSS inclusion
-     */
     public function includeCss(array $params): string
     {
         $tipo_menu = $params['tipo_menu'] ?? 'horizontal';
@@ -243,7 +213,6 @@ class LegacyLayout implements LayoutInterface
               href="<?= ConfigGlobal::getWeb_scripts() ?>/udm4-php/udm-resources/udm-style.php"
               media="screen, projection"/>
         <?php
-        //include_once (ConfigGlobal::$dir_scripts.'/udm4-php/udm-resources/udm-style.php');
         switch ($tipo_menu) {
             case "horizontal":
                 include_once(ConfigGlobal::$dir_estilos . '/menu_horizontal.css.php');
@@ -256,24 +225,11 @@ class LegacyLayout implements LayoutInterface
         return ob_get_clean();
     }
 
-    /**
-     * Include JavaScript files and inline scripts
-     * 
-     * @param array $params Additional parameters needed for JavaScript inclusion
-     * @return string HTML for JavaScript inclusion
-     */
     public function includeJs(array $params): string
     {
         return '';
     }
 
-    /**
-     * Render the final HTML structure
-     * 
-     * @param array $htmlComponents Associative array with HTML components
-     * @param array $params Additional parameters needed for rendering
-     * @return string Final HTML structure
-     */
     public function renderHtml(array $htmlComponents, array $params): string
     {
         $li_submenus = $htmlComponents['li_submenus'] ?? '';
@@ -282,7 +238,6 @@ class LegacyLayout implements LayoutInterface
 
         ob_start();
 
-        // Show the top menu bar if there are multiple group menus
         if ($gm > 1) {
             echo $html_barra;
         }

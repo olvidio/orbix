@@ -2,7 +2,6 @@
 
 namespace src\asistentes\application;
 
-use frontend\shared\web\Desplegable;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\entity\TiposActividades;
@@ -15,10 +14,11 @@ use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\application\services\AsistenteActividadService;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use frontend\shared\security\HashFront;
 
 /**
  * Modal mover asistente (`asistente_mover.php`).
+ *
+ * URL de guardado, hash y desplegable HTML: {@see \frontend\asistentes\helpers\AsistenteMoverRender}.
  */
 final class AsistenteMoverData
 {
@@ -42,16 +42,14 @@ final class AsistenteMoverData
         $AsistenteRepositoryInterface = $AsistenteActividadService->getRepoAsistente($Qid_nom, $Qid_activ_old);
         $AsistenteRepository = $GLOBALS['container']->get($AsistenteRepositoryInterface);
         $oAsistente = $AsistenteRepository->findById($Qid_activ_old, $Qid_nom);
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $url_guardar = $web . '/src/asistentes/asistente_guardar';
 
         if ($oAsistente->perm_modificar() === false) {
             return [
                 'aviso_txt' => _('los datos de asistencia los modifica la dl del asistente'),
-                'url_guardar' => $url_guardar,
-                'hash_campos_html' => '',
-                'desplegable_actividades_html' => '',
                 'observ' => '',
+                'paths' => [
+                    'guardar' => 'src/asistentes/asistente_guardar',
+                ],
             ];
         }
 
@@ -172,29 +170,25 @@ final class AsistenteMoverData
             $aOpciones[$id_activ] = "$nom_activ $txt_plazas  $txt_creditos";
         }
 
-        $oDesplActividades = new Desplegable();
-        $oDesplActividades->setNombre('id_activ');
-        $oDesplActividades->setOpciones($aOpciones);
-
-        $oHash = new HashFront();
-        $oHash->setCamposNo('falta!est_ok');
-        $a_camposHidden = [
-            'id_nom' => $Qid_nom,
-            'id_activ_old' => $Qid_activ_old,
-            'mod' => $mod,
-            'propio' => $propio,
-            'plaza' => PlazaId::ASIGNADA,
-            'propietario' => $propietario,
-        ];
-        $oHash->setCamposForm('observ!id_activ');
-        $oHash->setArraycamposHidden($a_camposHidden);
-
         return [
             'aviso_txt' => '',
-            'url_guardar' => $url_guardar,
-            'hash_campos_html' => $oHash->getCamposHtml(),
-            'desplegable_actividades_html' => $oDesplActividades->desplegable(),
             'observ' => $observ,
+            'paths' => [
+                'guardar' => 'src/asistentes/asistente_guardar',
+            ],
+            'hash_main' => [
+                'campos_no' => 'falta!est_ok',
+                'campos_form' => 'observ!id_activ',
+                'campos_hidden' => [
+                    'id_nom' => $Qid_nom,
+                    'id_activ_old' => $Qid_activ_old,
+                    'mod' => $mod,
+                    'propio' => $propio,
+                    'plaza' => PlazaId::ASIGNADA,
+                    'propietario' => $propietario,
+                ],
+            ],
+            'opciones_actividades' => $aOpciones,
         ];
     }
 }

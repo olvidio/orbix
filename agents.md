@@ -226,7 +226,7 @@ El hash de presentación (**`web\Hash`**, futuro **`frontend\shared\security\Has
 
 | Área | Archivo |
 |------|-----------|
-| menus | `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php` (`apps/menus/...`) |
+| menus | `frontend/menus/controller/menus_importar_de_ficheros_a_ref.php` (ruta HTTP `/src/menus/menus_importar_de_ficheros_a_ref`) |
 
 Actualizar esta tabla conforme se migre cada módulo (o sustituir por enlace a `rg` en el PR si se prefiere no duplicar).
 

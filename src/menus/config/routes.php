@@ -51,7 +51,7 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_generar_txt.php';
     });
     $r->addRoute(['GET','POST'], '/src/menus/menus_importar_de_ficheros_a_ref', function () {
-        require __DIR__ . '/../infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php';
+        require __DIR__ . '/../../../frontend/menus/controller/menus_importar_de_ficheros_a_ref.php';
     });
     $r->addRoute(['GET','POST'], '/src/menus/menus_importar', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_importar.php';

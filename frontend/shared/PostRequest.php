@@ -75,7 +75,8 @@ class PostRequest
 
     /**
      * Parámetros de la petición HTTP actual para repetir el hash en llamadas server-to-server.
-     * Debe coincidir con validatePost en global_header_front.inc / global_object.inc:
+     * Debe coincidir con validatePost en global_header_front.inc y
+     * frontend/shared/bootstrap/after_global_object.inc (tras global_object.inc):
      * POST si el cuerpo no está vacío; si no, GET cuando existe el parámetro `h` (p. ej. HashFront::link).
      */
     public static function requestPayloadForHash(): array

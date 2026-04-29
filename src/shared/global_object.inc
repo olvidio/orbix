@@ -19,7 +19,6 @@ use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\zonassacd\domain\contracts\ZonaRepositoryInterface;
-use frontend\shared\security\HashFront;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     // Para detectar el error: "Headers already sent"
@@ -426,9 +425,4 @@ if (empty($_SESSION['oPermActividades'])) {
 }
 
 
-session_write_close();
-// Para validar los parámetros enviados via POST o GET (si hay hash)
-$oValidator = new HashFront();
-$a_data = (!empty($_POST)) ? $_POST : ((isset($_GET['h'])) ? $_GET : []);
-echo $oValidator->validatePost($a_data);
-
+require_once __DIR__ . '/../../frontend/shared/bootstrap/after_global_object.inc';

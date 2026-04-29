@@ -10,11 +10,12 @@ use src\cambios\domain\contracts\CambioUsuarioRepositoryInterface;
 use src\cambios\domain\value_objects\AvisoTipoId;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use frontend\shared\security\HashFront;
 
 /**
  * Data builder: lista de `CambioUsuario` del usuario solicitado (con
  * `avisado=false`) para la pantalla `avisos_generar`.
+ *
+ * URLs y fragmentos hash de eliminación: {@see \frontend\cambios\helpers\AvisosGenerarListaRender}.
  *
  * Sucesor del backend de `apps/cambios/controller/avisos_generar.php`.
  */
@@ -27,6 +28,11 @@ final class AvisosGenerarListaData
      *   a_valores: array,
      *   aOpcionesUsuarios: array,
      *   aOpcionesAvisoTipo: array,
+     *   effective_id_usuario: int,
+     *   effective_aviso_tipo: int,
+     *   paths?: array{eliminar: string, eliminar_fecha: string},
+     *   hash_eliminar?: array{campos_no: string},
+     *   hash_eliminar_fecha?: array{campos_form: string}
      * }
      */
     public static function execute(array $input): array
@@ -46,8 +52,7 @@ final class AvisosGenerarListaData
 
         $a_valores = [];
 
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $baseOut = static function (array $extra) use ($web, $aOpcionesUsuarios, $aOpcionesAvisoTipo, $id_usuario, $aviso_tipo): array {
+        $baseOut = static function (array $extra) use ($aOpcionesUsuarios, $aOpcionesAvisoTipo, $id_usuario, $aviso_tipo): array {
             $out = array_merge(
                 [
                     'error' => '',
@@ -56,32 +61,23 @@ final class AvisosGenerarListaData
                     'aOpcionesAvisoTipo' => $aOpcionesAvisoTipo,
                     'effective_id_usuario' => $id_usuario,
                     'effective_aviso_tipo' => $aviso_tipo,
-                    'web' => $web,
-                    'url_eliminar' => '',
-                    'url_eliminar_fecha' => '',
-                    'h_eliminar' => '',
-                    'h_eliminar_fecha' => '',
                 ],
                 $extra
             );
             if (empty($id_usuario)) {
                 return $out;
             }
-            $url_eliminar = $web . '/src/cambios/cambio_usuario_eliminar';
-            $url_eliminar_fecha = $web . '/src/cambios/cambio_usuario_eliminar_hasta_fecha';
-            $oHashElim = new HashFront();
-            $oHashElim->setUrl($url_eliminar);
-            $oHashElim->setCamposNo('sel');
-            $h_eliminar = $oHashElim->linkSinValParams();
-            $oHashElimF = new HashFront();
-            $oHashElimF->setUrl($url_eliminar_fecha);
-            $oHashElimF->setCamposForm('f_fin');
-            $h_eliminar_fecha = $oHashElimF->linkSinValParams();
 
-            $out['url_eliminar'] = $url_eliminar;
-            $out['url_eliminar_fecha'] = $url_eliminar_fecha;
-            $out['h_eliminar'] = $h_eliminar;
-            $out['h_eliminar_fecha'] = $h_eliminar_fecha;
+            $out['paths'] = [
+                'eliminar' => 'src/cambios/cambio_usuario_eliminar',
+                'eliminar_fecha' => 'src/cambios/cambio_usuario_eliminar_hasta_fecha',
+            ];
+            $out['hash_eliminar'] = [
+                'campos_no' => 'sel',
+            ];
+            $out['hash_eliminar_fecha'] = [
+                'campos_form' => 'f_fin',
+            ];
 
             return $out;
         };

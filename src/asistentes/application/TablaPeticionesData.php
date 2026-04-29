@@ -14,7 +14,7 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
  * Tabla de peticiones de plaza por actividad (`tabla_peticiones.php`).
- * HTML de tabla y firmas AJAX: `tabla_peticiones_data.php`.
+ * HTML de tabla, enlaces firmados y metadatos AJAX: {@see \frontend\asistentes\helpers\TablaPeticionesRender}.
  */
 final class TablaPeticionesData
 {

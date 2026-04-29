@@ -8,6 +8,7 @@ use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
+use frontend\cambios\helpers\AvisosGenerarListaRender;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -36,6 +37,8 @@ $data = PostRequest::getDataFromUrl('/src/cambios/avisos_generar_lista_data', [
     'aviso_tipo' => $Qaviso_tipo,
     'is_admin' => $is_admin ? 1 : 0,
 ]);
+$data = is_array($data) ? $data : [];
+$data = AvisosGenerarListaRender::enrich($data);
 $Qid_usuario = (int)($data['effective_id_usuario'] ?? $Qid_usuario);
 $Qaviso_tipo = (int)($data['effective_aviso_tipo'] ?? $Qaviso_tipo);
 $oPosicion->setParametros([
@@ -115,5 +118,5 @@ $a_campos_view = [
     'h_eliminar_fecha' => $h_eliminar_fecha,
 ];
 
-$oView = new ViewNewPhtml('frontend\\cambios\\controller');
+$oView = new ViewNewPhtml('frontend\\cambios\\view');
 $oView->renderizar('avisos_generar.phtml', $a_campos_view);

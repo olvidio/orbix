@@ -48,7 +48,7 @@ class InfoDocsxSigla extends DatosInfoRepo
         $aOpciones = $Repository->getArrayTipoDoc();
         $a_campos['aOpcionesTiposDoc'] = $aOpciones;
 
-        $url_bloque = ConfigGlobal::getWeb().'/src/inventario/documentos_form';
+        $url_bloque = ConfigGlobal::getWeb() . '/frontend/inventario/controller/documentos_form.php';
         $a_campos['url_bloque'] = $url_bloque;
         // `h1` lo firma {@see frontend\shared\controller\tablaDB_lista_ver} (sin HashFront en `src/`).
         $a_campos['documentos_form_hash_meta'] = [
