@@ -2,7 +2,7 @@
 
 namespace src\actividades\application;
 
-use frontend\shared\security\HashFront;
+use frontend\shared\helpers\TipoActivGestionFormHashCompose;
 use src\actividades\domain\entity\TiposActividades;
 
 /**
@@ -22,14 +22,8 @@ class TipoActivFormModificar
 
         $nom_tipo = $oTiposActividades->getNom_tipoText();
 
-        $oHash = new HashFront();
-        $oHash->setCamposForm('nom_tipo_activ');
-        $oHash->setArrayCamposHidden([
-            'id_tipo_activ' => $Qid_tipo_activ,
-        ]);
-
         $txt = "<form id='frm_tipo_activ'>";
-        $txt .= $oHash->getCamposHtml();
+        $txt .= TipoActivGestionFormHashCompose::modificarHiddenHtml($Qid_tipo_activ);
         $txt .= '<h3>' . $nom_actividad . '</h3>';
         $txt .= _("nombre") . ": <input type=text size=25 id=nom_tipo_activ  name=nom_tipo_activ value=\"$nom_tipo\">";
         $txt .= '<br><br>';

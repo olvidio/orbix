@@ -543,42 +543,6 @@ if (!isset($h)) {
         }
     }
 
-    /**
-     * Funcion para comprobar que estan todos los campos necesarios antes de guardar.
-     * @param object formulario
-     * @param string obj Nombre del objeto
-     * @param string ccpau Dossier
-     * @param string tabla Nombre de la tabla de la base de datos.
-     * @returns string 'ok' | 'error'
-     */
-    var fnjs_comprobar_campos = function (formulario, obj, ccpau, tabla) {
-        if (tabla === undefined && obj === undefined) {
-            return 'ok';
-        }
-        var s = 0;
-        if (tabla === undefined) tabla = 'x';
-        if (obj === undefined) obj = 'x';
-        var parametros = $(formulario).serialize() + '&cc_tabla=' + tabla + '&cc_obj=' + obj + '&cc_pau=' + ccpau;
-
-        var url = 'apps/core/comprobar_campos.php';
-        $.ajax({
-            async: false,
-            url: url,
-            type: 'post',
-            data: parametros,
-            dataType: 'html',
-            success: function (rta_txt) {
-                if (rta_txt.length > 3) {
-                    alert(<?= json_encode(_("error")) ?> + ':\n' + rta_txt);
-                    s = 1;
-                } else {
-                    s = 0;
-                }
-            }
-        });
-        return (s === 1) ? 'error' : 'ok';
-    };
-
     function XMLtoString(elem) {
         var serialized;
         try {

@@ -8,8 +8,9 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 
 /**
- * Firma URLs hacia habitacion_form para {@see \src\ubiscamas\domain\SelectHabitacionesCdc}
- * (misma regla que otros módulos: base pública + HashFront::link).
+ * Firma URLs hacia habitacion_form para el widget CDC (specs desde
+ * {@see \src\ubiscamas\domain\SelectHabitacionesCdc::getSegmentData()},
+ * invocación típica {@see \frontend\ubiscamas\helpers\SelectHabitacionesCdcRender}).
  */
 final class SelectHabitacionesCdcUrlSigning
 {

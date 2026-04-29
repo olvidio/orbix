@@ -61,7 +61,7 @@
         let datos = $('#frm_upload').serialize();
         let request = $.ajax({
             data: datos,
-            url: 'src/certificados/certificado_recibido_guardar',
+            url: {{ url_certificado_recibido_guardar|json_encode|raw }},
             method: 'POST',
             dataType: 'json'
         });
@@ -90,7 +90,7 @@
 
         let request = $.ajax({
             data: datos,
-            url: 'src/certificados/certificado_recibido_pdf_upload',
+            url: {{ url_certificado_recibido_pdf_upload|json_encode|raw }},
             method: 'POST',
             dataType: 'json',
             cache: false,

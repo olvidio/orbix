@@ -4,7 +4,7 @@ use src\shared\config\ConfigGlobal;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use frontend\shared\web\ContestarJson;
-use frontend\shared\security\HashFront;
+use src\shared\security\HashB;
 
 $sfsv = ConfigGlobal::mi_sfsv();
 
@@ -31,19 +31,12 @@ foreach ($cListaGrupos as $oUsuarioGrupo) {
     $usuario = $oGrupo->getUsuarioAsString();
     $seccion = $asfsv[$sfsv];
 
-    /*
-    $a_parametros = array('id_grupo' => $id_grupo, 'id_usuario' => $Qid_usuario);
-    $pagina = HashFront::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_grupo_del.php?' . http_build_query($a_parametros));
-    */
-    $oHash = new HashFront();
-    $a_camposHidden = array(
+    $ctx = HashB::sign('usuario_grupo_del', [
         'id_grupo' => $id_grupo,
         'id_usuario' => $Qid_usuario,
-    );
-    $oHash->setArraycamposHidden($a_camposHidden);
-    $param = $oHash->getParamAjax();
-
-    $script = "fnjs_del_grup(\"$param\")";
+    ]);
+    $param = http_build_query(['ctx' => $ctx]);
+    $script = 'fnjs_del_grup(' . json_encode($param) . ')';
 
     $a_valores[$i][1] = $usuario;
     $a_valores[$i][2] = $seccion;

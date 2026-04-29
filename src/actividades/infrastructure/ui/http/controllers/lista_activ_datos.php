@@ -1,21 +1,13 @@
 <?php
 /**
- * Endpoint backend: datos del listado de actividades (titulo + html_tabla).
- * Resuelve `link_spec` en filas, firma con `HashFront::link` y renderiza la tabla aquí.
- *
- * Responde JSON via frontend\shared\web\ContestarJson para consumo desde el controlador
- * frontend/actividades/controller/lista_activ.php (patron refactor.md).
- *
- * @package    delegacion
- * @subpackage    actividades
+ * JSON del listado `lista_activ`: filtros POST → {@see ListaActivTabla}.
+ * Sin `HashFront` ni `Lista` aquí: celdas pueden traer `link_spec`; el front firma y
+ * renderiza en {@see frontend\actividades\controller\lista_activ}.
  */
 
-use frontend\shared\config\AppUrlConfig;
 use frontend\shared\web\ContestarJson;
-use frontend\shared\web\Lista;
 use src\actividades\application\ListaActivTabla;
 use src\shared\config\ConfigGlobal;
-use frontend\shared\security\HashFront;
 
 $input = [
     'que' => (string)filter_input(INPUT_POST, 'que'),
@@ -51,36 +43,4 @@ $opts = [
 $useCase = new ListaActivTabla();
 $data = $useCase->execute($input, $opts);
 
-$a_valores = $data['a_valores'] ?? [];
-$baseUrl = AppUrlConfig::getPublicAppBaseUrl();
-foreach ($a_valores as $idx => $fila) {
-    if (!is_array($fila)) {
-        continue;
-    }
-    foreach ($fila as $colKey => $cell) {
-        if (!is_array($cell) || !isset($cell['link_spec'])) {
-            continue;
-        }
-        $spec = $cell['link_spec'];
-        $path = (string)($spec['path'] ?? '');
-        $query = is_array($spec['query'] ?? null) ? $spec['query'] : [];
-        if ($path === '') {
-            continue;
-        }
-        $url = $baseUrl . '/' . ltrim($path, '/') . '?' . http_build_query($query);
-        $a_valores[$idx][$colKey]['ira'] = HashFront::link($url);
-        unset($a_valores[$idx][$colKey]['link_spec']);
-    }
-}
-
-$oTabla = new Lista();
-$oTabla->setId_tabla('lista_activ');
-$oTabla->setCabeceras($data['a_cabeceras'] ?? []);
-$oTabla->setBotones([]);
-$oTabla->setDatos($a_valores);
-$html_tabla = $oTabla->mostrar_tabla();
-
-ContestarJson::enviar('', [
-    'titulo' => $data['titulo'],
-    'html_tabla' => $html_tabla,
-]);
+ContestarJson::enviar('', $data);

@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\PostRequest;
+use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\web\Periodo;
 
@@ -96,12 +97,15 @@ if (($data['modo'] ?? '') === 'lista') {
     if (!empty($data['msg_txt'])) {
         echo "<div class='no_print'>" . $data['msg_txt'] . "</div>";
     }
+    $spec = $data['pagina_link_spec'] ?? null;
+    $pagina = is_array($spec) ? HashFrontSignedLink::fromSpec($spec) : '';
+
     $a_campos = ['oPosicion' => $oPosicion,
         'msg_txt' => $data['msg_txt'] ?? '',
         'titulo' => $data['titulo'] ?? '',
         'stgr' => $data['stgr'] ?? '',
         'aActividades' => $data['aActividades'] ?? [],
-        'pagina' => $data['pagina'] ?? '',
+        'pagina' => $pagina,
     ];
     $oView = new ViewNewPhtml('frontend\\actividadestudios\\controller');
     $oView->renderizar('ca_posibles_lista.phtml', $a_campos);

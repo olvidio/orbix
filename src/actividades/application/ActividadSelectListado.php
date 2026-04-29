@@ -35,11 +35,11 @@ use src\actividades\domain\entity\TiposActividades;
  *   - obj_pau (string)         'Actividad' o 'ActividadPub'.
  *   - aTiposActiv (array)      Lista de "nueva actividad ..." (txt => id).
  *   - html_advertencia (string) Vacío aquí; si hay demasiadas filas, `advertencia_demasiadas`.
- *   - advertencia_demasiadas (array|null) Specs para armar el HTML en `actividad_select_datos.php`.
- *   - a_cabeceras, a_botones, a_valores  Para `Lista::mostrar_tabla` en el endpoint.
+ *   - advertencia_demasiadas (array|null) Specs para armar el HTML en `actividad_select.php` (front).
+ *   - a_cabeceras, a_botones, a_valores  Para `Lista::mostrar_tabla` en el front (`link_spec` en celdas).
  *   - aRolesPau (array)        Roles PAU (usado para hashes en frontend).
  *
- * El HTML de la tabla y la advertencia firmada se construyen en `actividad_select_datos.php`.
+ * El HTML de la tabla y la advertencia firmada se construyen en `frontend/actividades/controller/actividad_select.php`.
  */
 final class ActividadSelectListado
 {

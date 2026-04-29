@@ -2,8 +2,6 @@
 
 namespace src\actividadestudios\domain;
 
-use core\ClasePropiedades;
-use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 
@@ -15,7 +13,7 @@ use src\notas\domain\value_objects\NotaSituacion;
  * @version 1.0
  * @created 17/11/2016
  */
-class PosiblesCa extends ClasePropiedades
+class PosiblesCa
 {
 
     /**

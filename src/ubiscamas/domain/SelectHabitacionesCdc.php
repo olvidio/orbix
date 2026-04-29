@@ -3,13 +3,7 @@
 namespace src\ubiscamas\domain;
 
 use src\shared\config\ConfigGlobal;
-use frontend\shared\model\ViewNewPhtml;
-use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
-use frontend\ubiscamas\helpers\SelectHabitacionesCdcUrlSigning;
-use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-use frontend\shared\security\HashFront;
-use frontend\shared\web\Lista;
 use function src\shared\domain\helpers\is_true_txt;
 
 /**
@@ -109,8 +103,6 @@ class SelectHabitacionesCdc
         $c = 0;
         $a_valores = [];
         $cHabitaciones = $HabitacionRepository->getHabitaciones(['id_ubi' => $this->id_pau, '_ordre' => 'orden, planta']);
-        $mi_sfsv = ConfigGlobal::mi_sfsv();
-        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         foreach ($cHabitaciones as $oHabitacion) {
             $c++;
             $id_habitacion = $oHabitacion->getId_habitacion();
@@ -148,49 +140,42 @@ class SelectHabitacionesCdc
         }
     }
 
-    public function getHtml()
+    /**
+     * Datos puros para {@see \frontend\ubiscamas\helpers\SelectHabitacionesCdcRender} (firma en frontend).
+     *
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
-        $oHashSelect = new HashFront();
-        $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
-        $a_camposHidden = array(
-            'pau' => $this->pau,
-            'id_pau' => $this->id_pau,
-            'obj_pau' => $this->obj_pau,
-            'queSel' => $this->queSel,
-            'id_dossier' => $this->id_dossier,
-            'permiso' => 3,
-        );
-        $oHashSelect->setArraycamposHidden($a_camposHidden);
-
-        //Hay que ponerlo antes, para que calcule los chk.
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('select2006');
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones());
-        $oTabla->setDatos($this->getValores());
-
-        // para que genere las variables $aLink
         $this->setLinksInsert();
 
         $aQueryNuevo = ['nuevo' => 1, 'id_ubi' => $this->id_pau];
-        $signed = SelectHabitacionesCdcUrlSigning::sign([
+
+        return [
+            'hash' => [
+                'campos_form' => '',
+                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'obj_pau' => $this->obj_pau,
+                    'queSel' => $this->queSel,
+                    'id_dossier' => $this->id_dossier,
+                    'permiso' => 3,
+                ],
+            ],
+            'tabla' => [
+                'id_tabla' => 'select2006',
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones(),
+                'valores' => $this->getValores(),
+            ],
             'url_nuevo_spec' => [
                 'path' => 'frontend/ubiscamas/controller/habitacion_form.php',
                 'query' => $aQueryNuevo,
             ],
             'a_links_dl_specs' => $this->a_links_dl_specs,
-        ]);
-
-        $a_campos = ['oTabla' => $oTabla,
-            'oHashSelect' => $oHashSelect,
-            'aLinks_dl' => $signed['aLinks_dl'],
-            'txt_eliminar' => $this->txt_eliminar,
-            'bloque' => $this->bloque,
-            'url_nuevo' => $signed['url_nuevo'],
         ];
-
-        $oView = new ViewNewPhtml('frontend\ubiscamas\view');
-        $oView->renderizar('select_habitaciones_cdc.phtml', $a_campos);
     }
 
     private function setLinksInsert()

@@ -2,14 +2,13 @@
 
 namespace src\asistentes\application;
 
-use frontend\shared\web\PeriodoQue;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use function src\shared\domain\helpers\strtoupper_dlb;
-use frontend\shared\security\HashFront;
 
 /**
  * Formulario de elección de centro / periodo (`que_ctr_lista.php`).
+ * Hash y bloque de periodo (PeriodoQue) se generan en `que_ctr_lista_data.php`.
  */
 final class QueCtrListaData
 {
@@ -35,6 +34,7 @@ final class QueCtrListaData
         $titulo = '';
         $action = '';
         $a_camposHidden = [];
+        $nomUbi = '';
 
         switch ($Qlista) {
             case 'profesion':
@@ -59,6 +59,7 @@ final class QueCtrListaData
             case 'list_est':
                 $titulo = ucfirst(_("estudios en actividades de personas por centros de la delegación"));
                 $tituloGros = ucfirst(_("¿qué centro interesa?"));
+                $nomUbi = ucfirst(_("nombre del centro"));
                 $action = 'frontend/asistentes/controller/lista_est_ctr.php';
                 $a_camposHidden = [
                     'tipo' => $tipo,
@@ -68,10 +69,7 @@ final class QueCtrListaData
                 ];
                 break;
             default:
-                $tituloGros = '';
-                $titulo = '';
-                $action = '';
-                $a_camposHidden = [];
+                break;
         }
 
         $n = '';
@@ -110,12 +108,7 @@ final class QueCtrListaData
         $aOpciones = $oGesCentros->getArrayCentros("WHERE active = 't' AND tipo_ctr ~ '^a|^n' ");
         $aOpcionesSerialized = $aOpciones;
 
-        $oHash = new HashFront();
-        $oHash->setCamposForm('n_agd!empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
-        $oHash->setcamposNo('id_ubi');
-        $oHash->setArraycamposHidden($a_camposHidden);
-
-        $periodo_form_html = '';
+        $periodo_form = null;
         if ($Qlista === 'list_activ' || $Qlista === 'list_est') {
             $aOpcionesP = [
                 'curso_ca' => _("curso ca"),
@@ -124,36 +117,34 @@ final class QueCtrListaData
                 'separador' => '---------',
                 'otro' => _("otro"),
             ];
-            $oFormP = new PeriodoQue();
-            $oFormP->setFormName('modifica');
-            $oFormP->setTitulo(strtoupper_dlb(_("periodo de inicio o finalización de las actividades")));
-            $oFormP->setPosiblesPeriodos($aOpcionesP);
+            $periodo_sel = 'tot_any';
             switch ($Qsactividad) {
                 case 'ca':
-                    $oFormP->setDesplPeriodosOpcion_sel('curso_ca');
+                    $periodo_sel = 'curso_ca';
                     break;
                 case 'crt':
-                    $oFormP->setDesplPeriodosOpcion_sel('curso_crt');
+                    $periodo_sel = 'curso_crt';
                     break;
                 default:
-                    $oFormP->setDesplPeriodosOpcion_sel('tot_any');
                     break;
             }
             if ($Qperiodo !== '') {
-                $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
+                $periodo_sel = $Qperiodo;
             }
-            if ($Qyear !== 0) {
-                $oFormP->setDesplAnysOpcion_sel($Qyear);
-            } else {
-                $oFormP->setDesplAnysOpcion_sel((int)date('Y'));
-            }
-            $periodo_form_html = $oFormP->getHtml();
+            $year_sel = $Qyear !== 0 ? $Qyear : (int)date('Y');
+
+            $periodo_form = [
+                'opciones_periodos' => $aOpcionesP,
+                'titulo' => strtoupper_dlb(_("periodo de inicio o finalización de las actividades")),
+                'form_name' => 'modifica',
+                'periodo_sel' => $periodo_sel,
+                'year_sel' => $year_sel,
+            ];
         }
 
         return [
             'tituloGros' => $tituloGros,
             'action' => $action,
-            'hash_form_html' => $oHash->getCamposHtml(),
             'titulo' => $titulo,
             'nomUbi' => $nomUbi,
             'n' => $n,
@@ -165,9 +156,14 @@ final class QueCtrListaData
             'c' => $c,
             'opciones_centros' => $aOpcionesSerialized,
             'id_ubi_sel' => $Qid_ubi,
-            'periodo_form_html' => $periodo_form_html,
             'locale_us' => ConfigGlobal::is_locale_us(),
             'mi_sfsv' => ConfigGlobal::mi_sfsv(),
+            'hash_main' => [
+                'campos_form' => 'n_agd!empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val',
+                'campos_no' => 'id_ubi',
+                'campos_hidden' => $a_camposHidden,
+            ],
+            'periodo_form' => $periodo_form,
         ];
     }
 }

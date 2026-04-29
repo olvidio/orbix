@@ -1,18 +1,18 @@
+<?php
+use frontend\shared\config\AppUrlConfig;
+?>
 <style>
     .info { display: inline-block; padding: 0px 3px 3px 3px; font-size: 22px; border-radius: 50%; border: solid 3px; width: 20px; height: 20px; font-weight: bold; text-align: center; }
 </style>
 <script>
     fnjs_guardar_dir = function (formulario) {
-        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
-        if (rr === 'ok') {
-            $('#que').val('direccion');
-            let datos = $(formulario).serialize();
-            $.ajax({ url: "<?= $url_direccion_update ?>", type: 'post', data: datos })
-                .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
-                    else { <?= $oPosicion->js_atras(1); ?> }
-                });
-        }
+        $('#que').val('direccion');
+        let datos = $(formulario).serialize();
+        $.ajax({ url: "<?= $url_direccion_update ?>", type: 'post', data: datos })
+            .done(function (rta_txt) {
+                if (rta_txt !== '' && rta_txt !== '\n') { alert(<?= json_encode(_("respuesta") . ": ") ?> + rta_txt); }
+                else { <?= $oPosicion->js_atras(1); ?> }
+            });
     }
     fnjs_quitar_dir = function (idx) {
         var formulario = '#frm2';

@@ -1,7 +1,5 @@
 <?php
 
-use frontend\shared\config\AppUrlConfig;
-
 ?>
 <script>
     fnjs_eliminar_certificado = function (formulario) {
@@ -11,7 +9,7 @@ use frontend\shared\config\AppUrlConfig;
                 $('#mod').val("eliminar");
                 let request = $.ajax({
                     data: $(formulario).serialize(),
-                    url: 'src/certificados/infrastructure/ui/http/controllers/certificado_recibido_delete.php',
+                    url: <?= json_encode($url_certificado_recibido_delete, JSON_THROW_ON_ERROR) ?>,
                     method: 'POST',
                     dataType: 'json'
                 });
@@ -50,7 +48,7 @@ use frontend\shared\config\AppUrlConfig;
             $(formulario + ' input.sel').each(function () {
                 if ($(this).prop('checked') === true) {
                     let key = $(this).prop('value');
-                    let url = <?= json_encode(AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_recibido_pdf_download', JSON_THROW_ON_ERROR) ?>;
+                    let url = <?= json_encode($url_certificado_recibido_pdf_download, JSON_THROW_ON_ERROR) ?>;
                     let url_download = url + '?key=' + key + '<?= $h_download ?>';
                     window.open(url_download);
                 }
@@ -61,6 +59,7 @@ use frontend\shared\config\AppUrlConfig;
 <h3 class=subtitulo><?= ucfirst(_("relación de certificados")) ?></h3>
 <form id="seleccionados" name="seleccionados" action="" method="post">
     <?= $oHashSelect->getCamposHtml() ?>
+    <input type="hidden" id="mod" name="mod" value="">
     <?= $oTabla->mostrar_tabla() ?>
 </form>
 <br>

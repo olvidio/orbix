@@ -2,8 +2,6 @@
 
 namespace src\asistentes\application;
 
-use frontend\shared\config\AppUrlConfig;
-use frontend\shared\web\Lista;
 use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\actividadplazas\domain\contracts\PlazaPeticionRepositoryInterface;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -13,22 +11,25 @@ use src\asistentes\application\services\AsistenteActividadService;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use frontend\shared\security\HashFront;
 
 /**
  * Tabla de peticiones de plaza por actividad (`tabla_peticiones.php`).
+ * HTML de tabla y firmas AJAX: `tabla_peticiones_data.php`.
  */
 final class TablaPeticionesData
 {
     /**
+     * Cada fila tiene `[2]` como string vacío, o
+     * `['peticiones_parts' => list<array{t: 'p', s: string}|array{t: 'm', s: string, h: array}>]`.
+     *
      * @param array<string, mixed> $input
-     * @return array{nom_activ: string, tabla_html: string, url_guardar_ajax: string, url_guardar_ajax_json: string}
+     * @return array<string, mixed>
      */
     public static function build(array $input): array
     {
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
-            $id_activ_old = (int)strtok($a_sel[0], '#');
+            $id_activ_old = (int)strtok((string)$a_sel[0], '#');
             $nom_activ = (string)strtok('#');
         } else {
             $id_activ_old = (int)($input['id_activ_old'] ?? 0);
@@ -42,7 +43,6 @@ final class TablaPeticionesData
         if (isset($input['stack'])) {
             $stack = filter_var($input['stack'], FILTER_SANITIZE_NUMBER_INT);
             if ($stack !== '' && $stack !== false) {
-                // Parámetros restaurados por el controller frontend vía $oPosicion.
                 if (array_key_exists('restored_id_sel', $input)) {
                     $Qid_sel = $input['restored_id_sel'];
                 }
@@ -85,64 +85,64 @@ final class TablaPeticionesData
             $aWhere = ['id_nom' => $id_nom, 'tipo' => $sactividad, '_ordre' => 'orden'];
             $aOperador = ['tipo' => '~'];
             $cPlazasPeticion = $PlazaPeticionRepository->getPlazasPeticion($aWhere, $aOperador);
-            $posibles_activ = '';
+            $parts = [];
             foreach ($cPlazasPeticion as $oPlazaPeticion) {
                 $id_activ = $oPlazaPeticion->getId_activ();
-                $nom_activ_i = '';
-                if (!empty($id_activ)) {
-                    $oActividadPosible = $ActividadAllRepository->findById($id_activ);
-                    $nom_activ_i = $oActividadPosible->getNom_activ();
-                    $dl_org = $oActividad->getDl_org();
+                if (empty($id_activ)) {
+                    continue;
+                }
+                $oActividadPosible = $ActividadAllRepository->findById($id_activ);
+                $nom_activ_i = $oActividadPosible->getNom_activ();
+                $dl_org = $oActividad->getDl_org();
 
-                    $txt_plazas = '';
-                    if (ConfigGlobal::is_app_installed('actividadplazas')) {
-                        $concedidas = 0;
-                        $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dl, 'id_activ' => $id_activ]);
-                        foreach ($cActividadPlazas as $oActividadPlazas) {
-                            $dl_tabla = $oActividadPlazas->getDl_tabla();
-                            if ($dl_org === $dl_tabla) {
-                                $concedidas = $oActividadPlazas->getPlazas();
-                            }
+                if (ConfigGlobal::is_app_installed('actividadplazas')) {
+                    $concedidas = 0;
+                    $cActividadPlazas = $ActividadPlazasRepository->getActividadesPlazas(['id_dl' => $id_dl, 'id_activ' => $id_activ]);
+                    foreach ($cActividadPlazas as $oActividadPlazas) {
+                        $dl_tabla = $oActividadPlazas->getDl_tabla();
+                        if ($dl_org === $dl_tabla) {
+                            $concedidas = $oActividadPlazas->getPlazas();
                         }
-                        $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
-                        if ($ocupadas < 0) {
-                            $libres = '-';
-                        } else {
-                            $libres = $concedidas - $ocupadas;
-                        }
-                        if (!empty($concedidas)) {
-                            $txt_plazas = " ($libres/$concedidas)";
-                        }
-                        $nom_activ_i .= $txt_plazas;
                     }
-                    if ($id_activ !== $id_activ_old) {
-                        $aCamposHidden = ['mod' => 'mover',
+                    $ocupadas = $AsistenteActividadService->getPlazasOcupadasPorDl($id_activ, $mi_dele);
+                    if ($ocupadas < 0) {
+                        $libres = '-';
+                    } else {
+                        $libres = $concedidas - $ocupadas;
+                    }
+                    if (!empty($concedidas)) {
+                        $nom_activ_i .= " ($libres/$concedidas)";
+                    }
+                }
+
+                if ($parts !== []) {
+                    $parts[] = ['t' => 'p', 's' => ', '];
+                }
+                if ($id_activ !== $id_activ_old) {
+                    $parts[] = [
+                        't' => 'm',
+                        's' => $nom_activ_i,
+                        'h' => [
+                            'mod' => 'mover',
                             'id_nom' => $id_nom,
                             'id_activ_old' => $id_activ_old,
                             'id_activ' => $id_activ,
                             'plaza' => PlazaId::ASIGNADA,
-                        ];
-
-                        $oHash = new HashFront();
-                        $oHash->setUrl(AppUrlConfig::getApiBaseUrl() . '/src/asistentes/asistente_guardar');
-                        $oHash->setArrayCamposHidden($aCamposHidden);
-                        $param_mover = $oHash->getParamAjax();
-
-                        $nom_activ_i = '<span class="link" onClick="fnjs_cambiar_actividad(\'' . $param_mover . '\')">' . $nom_activ_i . '</span>';
-                    }
-
-                    $posibles_activ .= empty($posibles_activ) ? '' : ', ';
-                    $posibles_activ .= $nom_activ_i;
+                        ],
+                    ];
+                } else {
+                    $parts[] = ['t' => 'p', 's' => $nom_activ_i];
                 }
             }
+
             $oPersona = $PersonaDlRepository->findById($id_nom);
             $nom_ap = $oPersona?->getApellidosNombre();
 
             $a_valores[$i][1] = $nom_ap;
-            $a_valores[$i][2] = $posibles_activ;
+            $a_valores[$i][2] = $parts === [] ? '' : ['peticiones_parts' => $parts];
         }
 
-        if (!empty($a_valores)) {
+        if ($a_valores !== []) {
             if (isset($Qid_sel) && !empty($Qid_sel)) {
                 $a_valores['select'] = $Qid_sel;
             }
@@ -151,19 +151,14 @@ final class TablaPeticionesData
             }
         }
 
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('tabla_peticiones');
-        $oTabla->setCabeceras($a_cabeceras);
-        $oTabla->setBotones($a_botones);
-        $oTabla->setDatos($a_valores);
-
-        $url_guardar_ajax = AppUrlConfig::getApiBaseUrl() . '/src/asistentes/asistente_guardar';
-
         return [
             'nom_activ' => $nom_activ,
-            'tabla_html' => $oTabla->mostrar_tabla_html(),
-            'url_guardar_ajax' => $url_guardar_ajax,
-            'url_guardar_ajax_json' => json_encode($url_guardar_ajax, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT),
+            'a_cabeceras' => $a_cabeceras,
+            'a_botones' => $a_botones,
+            'a_valores' => $a_valores,
+            'paths' => [
+                'asistente_guardar' => 'src/asistentes/asistente_guardar',
+            ],
         ];
     }
 }

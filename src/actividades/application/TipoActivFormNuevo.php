@@ -3,7 +3,7 @@
 namespace src\actividades\application;
 
 use actividades\model\ActividadTipo;
-use frontend\shared\security\HashFront;
+use frontend\shared\helpers\TipoActivGestionFormHashCompose;
 
 /**
  * Devuelve el HTML del formulario para crear un nuevo tipo de actividad.
@@ -13,9 +13,6 @@ class TipoActivFormNuevo
 {
     public function execute(array $input = []): string
     {
-        $oHash = new HashFront();
-        $oHash->setCamposForm('iactividad_val!iasistentes_val!id_nom_tipo_activ!isfsv_val!nom_tipo_activ');
-
         $oActividadTipo = new ActividadTipo();
         $oActividadTipo->setPerm_jefe(true);
         $oActividadTipo->setEvitarProcesos(true);
@@ -28,7 +25,7 @@ class TipoActivFormNuevo
         $htmlTipo = (string)ob_get_clean();
 
         $txt = "<form id='frm_tipo_activ'>";
-        $txt .= $oHash->getCamposHtml();
+        $txt .= TipoActivGestionFormHashCompose::nuevoHiddenHtml();
         $txt .= '<h3>NUEVO TIPO</h3>';
         $txt .= $htmlTipo;
         $txt .= '<br><table>';

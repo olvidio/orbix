@@ -2,6 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -12,6 +13,8 @@ if (!empty($data['error'])) {
     exit($data['error']);
 }
 unset($data['error']);
+
+$data = FormCargosDeActividadHashCompose::withHashCamposHtml($data);
 
 $data['oPosicion'] = $oPosicion;
 

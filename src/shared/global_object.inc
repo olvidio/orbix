@@ -206,6 +206,12 @@ switch ($user_sfsv) {
 
         //sf lectura
         break;
+    default:
+        // Sin rama 1/2 (p.ej. `sfsv` inesperado): `oDBC` no se asignaba y fallaba el DI
+        // al resolver {@see PgConfigSchemaRepository} durante `global_object.inc`.
+        $oDBC = $oDBPC;
+        $oDBC_Select = $oDBPC_Select;
+        break;
 }
 
 if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {

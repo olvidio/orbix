@@ -8,7 +8,7 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 
 /**
- * Firma la URL "nueva nota" para {@see \src\notas\application\Select_notas_de_una_persona}.
+ * Firma la URL "nueva nota" para {@see \frontend\notas\helpers\SelectNotasDeUnaPersonaRender}.
  */
 final class SelectNotasDeUnaPersonaUrlSigning
 {

@@ -7,9 +7,9 @@
  * @var int $id_ubi
  * @var string $reload_main_url
  * @var string $url_update_cama_full
- * @var string $hash_update_cama_ajax
+ * @var string $ctx_update_cama
  * @var string $update_solo_vip_full_url
- * @var string $hash_solo_vip_ajax
+ * @var string $ctx_update_solo_vip
  * @var string $distribucion_open_url
  * @var string $nombres_open_url
  */
@@ -139,9 +139,8 @@ endforeach; ?>
         function updateSoloVip(solo_vip) {
             let url = '<?= htmlspecialchars($update_solo_vip_full_url, ENT_QUOTES) ?>';
             let parameters = {
-                id_activ: <?= $id_activ ?>,
                 solo_vip: solo_vip ? 'true' : 'false',
-                <?= $hash_solo_vip_ajax ?>
+                ctx: <?= json_encode($ctx_update_solo_vip, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
             };
 
             $.ajax({
@@ -246,10 +245,9 @@ endforeach; ?>
         function asignarCamaBD(id_cama, id_nom, callback) {
             let url = '<?= htmlspecialchars($url_update_cama_full, ENT_QUOTES) ?>';
             let parameters = {
-                id_activ: <?= $id_activ ?>,
                 id_nom: id_nom,
                 id_cama: id_cama,
-            <?= $hash_update_cama_ajax ?>
+                ctx: <?= json_encode($ctx_update_cama, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
         };
 
         $.ajax({

@@ -5,8 +5,8 @@
  * y de `lista_activ_que` (sr/sg).
  *
  * Los datos y el HTML de la tabla se obtienen via PostRequest al endpoint
- * backend /src/actividades/lista_activ_datos (JSON). Este controlador solo
- * parsea el POST, gestiona `frontend\shared\web\Posicion` y renderiza la pagina.
+ * backend /src/actividades/lista_activ_datos (JSON con `a_cabeceras` / `a_valores` y
+ * `link_spec` en celdas). Este controlador firma enlaces, monta `Lista` y renderiza.
  *
  * Migrado desde src/actividades/infrastructure/ui/http/controllers/lista_activ.php
  * (que servia HTML directamente, violando la separacion de capas).
@@ -17,6 +17,8 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\security\HashFrontSignedLink;
+use frontend\shared\web\Lista;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -134,8 +136,28 @@ $data = PostRequest::getDataFromUrl('/src/actividades/lista_activ_datos', [
     'titulo' => $tituloPrevio,
 ]);
 
+$a_valores = $data['a_valores'] ?? [];
+foreach ($a_valores as $idx => $fila) {
+    if (!is_array($fila)) {
+        continue;
+    }
+    foreach ($fila as $colKey => $cell) {
+        if (!is_array($cell) || !isset($cell['link_spec'])) {
+            continue;
+        }
+        $a_valores[$idx][$colKey]['ira'] = HashFrontSignedLink::fromSpec($cell['link_spec']);
+        unset($a_valores[$idx][$colKey]['link_spec']);
+    }
+}
+
+$oTabla = new Lista();
+$oTabla->setId_tabla('lista_activ');
+$oTabla->setCabeceras($data['a_cabeceras'] ?? []);
+$oTabla->setBotones([]);
+$oTabla->setDatos($a_valores);
+$html_tabla = $oTabla->mostrar_tabla();
+
 $titulo = (string)($data['titulo'] ?? '');
-$html_tabla = (string)($data['html_tabla'] ?? '');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

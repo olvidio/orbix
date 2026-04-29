@@ -1,7 +1,6 @@
 <?php
 
 use frontend\shared\PostRequest;
-use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
 
 // Crea los objetos de uso global **********************************************

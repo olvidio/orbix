@@ -11,6 +11,7 @@
  * `src/actividadescentro/config/routes.php`. Sin `use src\...`.
  */
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
@@ -29,6 +30,20 @@ $shell = PostRequest::getDataFromUrl('/src/actividadescentro/activ_ctr_shell_dat
     'periodo' => $Qperiodo,
 ]);
 $Qtipo = (string)($shell['tipo'] ?? $Qtipo);
+
+$signShellEndpoint = static function (array $spec): string {
+    $path = (string)($spec['path'] ?? '');
+    $camposForm = (string)($spec['campos_form'] ?? '');
+    if ($path === '') {
+        return '';
+    }
+    $url = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/' . ltrim($path, '/');
+    $oHashEndpoint = new HashFront();
+    $oHashEndpoint->setUrl($url);
+    $oHashEndpoint->setCamposForm($camposForm);
+
+    return $url . $oHashEndpoint->linkSinVal();
+};
 
 $titulo = strtoupper_dlb(_("periodo del listado del año próximo"));
 $aOpciones = [
@@ -60,12 +75,12 @@ $a_campos = [
     'oHash' => $oHash,
     'oFormP' => $oFormP,
     'tipo' => $Qtipo,
-    'url_lista' => (string)($shell['url_lista'] ?? ''),
-    'url_encargados' => (string)($shell['url_encargados'] ?? ''),
-    'url_disponibles' => (string)($shell['url_disponibles'] ?? ''),
-    'url_asignar' => (string)($shell['url_asignar'] ?? ''),
-    'url_reordenar' => (string)($shell['url_reordenar'] ?? ''),
-    'url_eliminar' => (string)($shell['url_eliminar'] ?? ''),
+    'url_lista' => $signShellEndpoint(is_array($shell['url_lista'] ?? null) ? $shell['url_lista'] : []),
+    'url_encargados' => $signShellEndpoint(is_array($shell['url_encargados'] ?? null) ? $shell['url_encargados'] : []),
+    'url_disponibles' => $signShellEndpoint(is_array($shell['url_disponibles'] ?? null) ? $shell['url_disponibles'] : []),
+    'url_asignar' => $signShellEndpoint(is_array($shell['url_asignar'] ?? null) ? $shell['url_asignar'] : []),
+    'url_reordenar' => $signShellEndpoint(is_array($shell['url_reordenar'] ?? null) ? $shell['url_reordenar'] : []),
+    'url_eliminar' => $signShellEndpoint(is_array($shell['url_eliminar'] ?? null) ? $shell['url_eliminar'] : []),
 ];
 
 $oView = new ViewNewPhtml('frontend\\actividadescentro\\controller');

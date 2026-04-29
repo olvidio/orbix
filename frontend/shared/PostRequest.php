@@ -20,7 +20,11 @@ class PostRequest
      */
     public static function getDataMultipart(array|string $url, array $hash_params): mixed
     {
-        $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $url);
+        $url = self::absoluteHttpUrlFromAppRelative((string) $url);
+        $parts = parse_url($url);
+        $host_original = $parts['host'] ?? '';
+        $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', (string) $url);
+        $host_rewritten = (string) parse_url($url, PHP_URL_HOST);
 
         // Store the cookies from the response in the cookie jar
         $cookieJar = new CookieJar();
@@ -31,15 +35,21 @@ class PostRequest
         }
 
         //$domain = 'docker.internal';
-        $domain = strtolower(parse_url($url, PHP_URL_HOST));
+        $domain = strtolower((string) parse_url($url, PHP_URL_HOST));
         $jar = CookieJar::fromArray($cookies, $domain);
 
         // Use a specific cookie jar
         $client = new Client();
-        $response2 = $client->request('POST', $url, [
+        $reqOpts = self::withPreservedHttpHostHeader(
+            $host_original,
+            $host_rewritten,
+            $parts,
+            [
             'cookies' => $jar,
-            'multipart' => $hash_params
-        ]);
+            'multipart' => $hash_params,
+            ]
+        );
+        $response2 = $client->request('POST', $url, $reqOpts);
 
         $code = $response2->getStatusCode(); // 200
         $reason = $response2->getReasonPhrase(); // OK
@@ -73,13 +83,33 @@ class PostRequest
         return (!empty($_POST)) ? $_POST : ((isset($_GET['h'])) ? $_GET : []);
     }
 
+    /**
+     * URL absoluta para peticiones internas. Las rutas `/src/...` deben ir en el path público
+     * tal como las ve el navegador (`…/orbix/…/src/…`), sin segmento `/public/`: el front controller
+     * es `public/index.php`, pero FastRoute recibe `/src/…` tras quitar prefijos; si la URL lleva
+     * `/public/src/` el despacho acaba en 404.
+     */
+    private static function absoluteHttpUrlFromAppRelative(string $url): string
+    {
+        if (preg_match('#^https?://#i', $url)) {
+            return $url;
+        }
+
+        return rtrim(OrbixRuntime::getWeb(), '/') . '/' . ltrim($url, '/');
+    }
+
     public static function getDataFromUrl(string $url, array $campos = []): mixed
     {
-        // Compatibilidad: aceptar URL absoluta o relativa.
-        if (!preg_match('#^https?://#i', $url)) {
-            $url = rtrim(OrbixRuntime::getWeb(), '/') . '/' . ltrim($url, '/');
-        }
+        $url = self::absoluteHttpUrlFromAppRelative($url);
         $url_hased = HashFront::cmdSinParametros($url);
+
+        // Si el payload proviene de $_POST (PostRequest::requestPayloadForHash),
+        // arrastra los meta-campos de hash del navegador (h/hh/hhc/hno/horig/…).
+        // Esta función genera su propio hash para la llamada server-to-server;
+        // `HashFront::getArrayCampos()` hace `array_merge(paramHash, camposHidden)`
+        // y los meta-campos del navegador sobrescribirían el hash fresco, causando
+        // que `validatePost` en el endpoint rechace el POST y redirija a index.php.
+        $campos = self::stripInboundHashMeta($campos);
 
         $oHash = new HashFront();
         $oHash->setUrl($url_hased);
@@ -94,6 +124,40 @@ class PostRequest
             exit ($data['error']);
         }
         return $data;
+    }
+
+    /**
+     * Quita los meta-campos de hash (h, hh, hhc, horig, hhorig, hno, hchk, hnov)
+     * y los `scroll_id_*` que `validatePost`/`ordenarArrayParam` eliminan al
+     * validar. Dejarlos en el payload server-to-server rompe la firma porque se
+     * reintroducen como camposHidden y `array_merge` les da preferencia sobre
+     * el hash fresco calculado aquí.
+     *
+     * También quita `PHPSESSID`, `atras` y `hpos`:
+     * - `PHPSESSID`: `fnjs_update_div` añade `&PHPSESSID=1`; si formara parte del hash hidden,
+     *   el receptor lo borra antes de recalcular `hh` → firma rota → 302.
+     * - `atras`: análogo (campo auxiliar del POST que no debe mezclarse con la firma nueva).
+     * - `hpos`: `web\Posicion` / `HashFront::add_hash` ponen `hpos=1` al volver atrás; entonces
+     *   `validatePost` recalcula `h` con `realFullUrl()` + query (flujo Posición). La llamada
+     *   server-to-server a otro script (p.ej. `dossiers_ver_pantalla_data`) firma `h` con
+     *   `ordenarQuery(camposForm)` (flujo formulario). Si se reenvía `hpos`, receptor y emisor
+     *   usan reglas distintas → 302 a index.php.
+     *
+     * @param array<string, mixed> $campos
+     * @return array<string, mixed>
+     */
+    private static function stripInboundHashMeta(array $campos): array
+    {
+        foreach (['h', 'hh', 'hhc', 'horig', 'hhorig', 'hno', 'hchk', 'hnov', 'hc', 'PHPSESSID', 'atras', 'hpos'] as $metaKey) {
+            unset($campos[$metaKey]);
+        }
+        foreach (array_keys($campos) as $k) {
+            if (is_string($k) && str_starts_with($k, 'scroll_id_')) {
+                unset($campos[$k]);
+            }
+        }
+
+        return $campos;
     }
 
     /**
@@ -113,6 +177,37 @@ class PostRequest
             }
         }
         return $campos;
+    }
+
+    /**
+     * Al sustituir *.docker por host.docker.internal, la conexión TCP llega al vhost correcto
+     * pero el header Host sería el interno; PHP y la app usan HTTP_HOST del navegador
+     * (sesión, esquema, validaciones). Forzar el Host público evita “perder el hilo”.
+     *
+     * @param array<string, mixed> $parsedOriginal resultado de parse_url() antes del rewrite
+     * @param array<string, mixed> $requestOptions opciones Guzzle (se añade 'headers')
+     * @return array<string, mixed>
+     */
+    private static function withPreservedHttpHostHeader(
+        string $hostOriginal,
+        string $hostRewritten,
+        array $parsedOriginal,
+        array $requestOptions
+    ): array {
+        if ($hostRewritten === $hostOriginal || $hostOriginal === '') {
+            return $requestOptions;
+        }
+        if (!empty($_SERVER['HTTP_HOST'])) {
+            $hostHeader = (string) $_SERVER['HTTP_HOST'];
+        } else {
+            $hostHeader = $hostOriginal;
+            if (!empty($parsedOriginal['port'])) {
+                $hostHeader .= ':' . $parsedOriginal['port'];
+            }
+        }
+        $requestOptions['headers'] = array_merge($requestOptions['headers'] ?? [], ['Host' => $hostHeader]);
+
+        return $requestOptions;
     }
 
     /**
@@ -179,30 +274,57 @@ class PostRequest
 
         // Use a specific cookie jar
         $client = new Client();
-        $response2 = $client->request('POST', $url_limpia, [
+        $reqOpts = self::withPreservedHttpHostHeader(
+            $host_original,
+            $host_nuevo,
+            $parts,
+            [
             'cookies' => $jar,
-            'form_params' => $hash_params
-        ]);
+            'form_params' => $hash_params,
+            // Las llamadas server-to-server esperan JSON (ContestarJson::enviar).
+            // Si el endpoint redirige (p. ej. validatePost por hash inválido hace
+            // header('Location: /index.php')), NO queremos que Guzzle siga el redirect
+            // y acabe devolviendo la home HTML: se inyectaría en #main como respuesta.
+            // Preferimos detectar el 302 y devolver un error claro y diagnóstico.
+            'allow_redirects' => false,
+            // http_errors=false: 4xx/5xx no lanzan GuzzleException; los tratamos nosotros.
+            'http_errors' => false,
+            ]
+        );
+        $response2 = $client->request('POST', $url_limpia, $reqOpts);
 
-        $code = $response2->getStatusCode(); // 200
-        $reason = $response2->getReasonPhrase(); // OK
+        $code = $response2->getStatusCode();
+        if ($code >= 300 && $code < 400) {
+            $location = $response2->getHeaderLine('Location');
+            $msg = sprintf(
+                _("Redirección inesperada en llamada interna a %s (status %d → %s)"),
+                $url_limpia,
+                $code,
+                $location !== '' ? $location : _('sin Location')
+            );
+            $msg .= '<br>' . _("Probable causa: validación de hash/sesión. Revisa que el endpoint no requiera firma que no se está generando igual server-to-server.");
+            return ['error' => $msg . self::procedenciaLlamadaInternaGetData()];
+        }
+        if ($code >= 400) {
+            $msg = sprintf(_("Error HTTP %d en llamada interna a %s"), $code, $url_limpia);
+            return ['error' => $msg . self::procedenciaLlamadaInternaGetData()];
+        }
         $body = $response2->getBody();
         $content = $body->getContents();
-        $rta_json = json_decode($content, TRUE); //remainingBytes
+        $rta_json = json_decode($content, TRUE);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            if (is_string($content)) {
-                $msg = sprintf(_("Respuesta de: %s"), $url);
-                $msg .= "<br>" . $content;
-                return ['error' => $msg];
-            }
+            $preview = mb_substr(trim((string)$content), 0, 500);
+            $msg = sprintf(_("Respuesta no-JSON de %s (status %d)."), $url_limpia, $code);
+            $msg .= '<br>' . htmlspecialchars($preview, ENT_QUOTES, 'UTF-8');
+            return ['error' => $msg . self::procedenciaLlamadaInternaGetData()];
         }
 
         if ($rta_json === null) {
-            $msg = sprintf(_("No se obtiene respuesta de: %s"), $url);
-            return ['error' => $msg];
+            $msg = sprintf(_("No se obtiene respuesta de: %s"), $url_limpia);
+            return ['error' => $msg . self::procedenciaLlamadaInternaGetData()];
         }
         if (!$rta_json['success']) {
-            return ['error' => $rta_json['mensaje']];
+            return ['error' => (string)$rta_json['mensaje'] . self::procedenciaLlamadaInternaGetData()];
         }
 
         return json_decode($rta_json['data'], true);
@@ -210,8 +332,11 @@ class PostRequest
 
     public static function getContent(array|string $url, array $hash_params): mixed
     {
-        //$url2 = str_replace('orbix.docker', 'host.docker.internal', $url);
-        $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $url);
+        $url = self::absoluteHttpUrlFromAppRelative((string) $url);
+        $parts = parse_url($url);
+        $host_original = $parts['host'] ?? '';
+        $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', (string) $url);
+        $host_rewritten = (string) parse_url($url, PHP_URL_HOST);
 
         // Store the cookies from the response in the cookie jar
         $cookieJar = new CookieJar();
@@ -222,15 +347,21 @@ class PostRequest
         }
 
         //$domain = 'docker.internal';
-        $domain = strtolower(parse_url($url, PHP_URL_HOST));
+        $domain = strtolower((string) parse_url($url, PHP_URL_HOST));
         $jar = CookieJar::fromArray($cookies, $domain);
 
         // Use a specific cookie jar
         $client = new Client();
-        $response2 = $client->request('POST', $url, [
+        $reqOpts = self::withPreservedHttpHostHeader(
+            $host_original,
+            $host_rewritten,
+            $parts,
+            [
             'cookies' => $jar,
-            'form_params' => $hash_params
-        ]);
+            'form_params' => $hash_params,
+            ]
+        );
+        $response2 = $client->request('POST', $url, $reqOpts);
 
         $code = $response2->getStatusCode(); // 200
         $reason = $response2->getReasonPhrase(); // OK
@@ -244,9 +375,7 @@ class PostRequest
      */
     public static function sendRawPost(string $relativeUrl, array $formParams): string
     {
-        $url = preg_match('#^https?://#i', $relativeUrl)
-            ? $relativeUrl
-            : rtrim(OrbixRuntime::getWeb(), '/') . '/' . ltrim($relativeUrl, '/');
+        $url = self::absoluteHttpUrlFromAppRelative($relativeUrl);
 
         $cookies = $_COOKIE;
         $parts = parse_url($url);
@@ -283,11 +412,28 @@ class PostRequest
         $jar = CookieJar::fromArray($cookies, $domain);
 
         $client = new Client();
-        $response = $client->request('POST', $url_limpia, [
+        $reqOpts = self::withPreservedHttpHostHeader(
+            $host_original,
+            $host_nuevo,
+            $parts,
+            [
             'cookies' => $jar,
             'form_params' => $formParams,
-        ]);
+            ]
+        );
+        $response = $client->request('POST', $url_limpia, $reqOpts);
 
         return (string)$response->getBody()->getContents();
+    }
+
+    /**
+     * Sufijo para mensajes de error de {@see getData}: indica que el fallo procede del POST
+     * interno (p.ej. `dossiers_ver.php` → `/src/dossiers/*_data`), no de una petición del navegador a esa URL.
+     */
+    private static function procedenciaLlamadaInternaGetData(): string
+    {
+        return '<br><strong>' . _('Procedencia') . ':</strong> '
+            . '<code>' . htmlspecialchars(self::class . '::getData', ENT_QUOTES, 'UTF-8') . '</code>'
+            . ' — ' . _('POST interno firmado (HashFront) con cookies de sesión.');
     }
 }

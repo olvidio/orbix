@@ -2,6 +2,7 @@
 
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\security\HashFrontSignedLink;
 
 /**
  * Página de selección de los dossiers cuyos permisos deseo visualizar
@@ -16,5 +17,9 @@ $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $data = PostRequest::getDataFromUrl('/src/dossiers/perm_dossiers_data', [
     'tipo' => $Qtipo,
 ]);
+$data['a_filas'] = HashFrontSignedLink::signRowLinkSpecs(
+    (array)($data['a_filas'] ?? []),
+    ['pagina']
+);
 $oView = new ViewNewPhtml('frontend\\dossiers\\controller');
 $oView->renderizar('perm_dossiers.phtml', $data);

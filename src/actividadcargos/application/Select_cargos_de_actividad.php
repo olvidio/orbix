@@ -11,7 +11,7 @@ use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
-use frontend\shared\security\HashFront;
+use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
@@ -180,20 +180,9 @@ class Select_cargos_de_actividad
         }
     }
 
-    public function getHtml(): void
+    public function getHtml(): string
     {
         $this->loadValores();
-
-        $oHashSelect = new HashFront();
-        $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
-        $oHashSelect->setArraycamposHidden([
-            'pau' => $this->pau,
-            'id_pau' => $this->id_pau,
-            'obj_pau' => $this->obj_pau,
-            'queSel' => $this->queSel,
-            'id_dossier' => $this->id_dossier,
-            'permiso' => 3,
-        ]);
 
         $oTabla = new Lista();
         $oTabla->setId_tabla('select_cargos_de_actividad');
@@ -206,9 +195,21 @@ class Select_cargos_de_actividad
         $web = rtrim(ConfigGlobal::getWeb(), '/');
         $url_cargo_eliminar = $web . '/src/actividadcargos/cargo_eliminar';
 
+        $hash_select_config = [
+            'campos_no' => 'sel!mod!scroll_id!refresh',
+            'campos_hidden' => [
+                'pau' => $this->pau,
+                'id_pau' => $this->id_pau,
+                'obj_pau' => $this->obj_pau,
+                'queSel' => $this->queSel,
+                'id_dossier' => $this->id_dossier,
+                'permiso' => 3,
+            ],
+        ];
+
         $a_campos = [
             'oTabla' => $oTabla,
-            'oHashSelect' => $oHashSelect,
+            'hash_select_html' => FormCargosDeActividadHashCompose::selectListaHiddenHtml($hash_select_config),
             'aLinks_dl' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_dl),
             'txt_eliminar' => $this->txt_eliminar,
             'bloque' => $this->bloque,
@@ -216,8 +217,8 @@ class Select_cargos_de_actividad
             'url_cargo_eliminar' => $url_cargo_eliminar,
         ];
 
-        (new ViewNewPhtml('frontend\\actividadcargos\\controller'))
-            ->renderizar('select_cargos_de_actividad.phtml', $a_campos);
+        return (new ViewNewPhtml('frontend\\actividadcargos\\controller'))
+            ->renderizar('select_cargos_de_actividad.phtml', $a_campos, false);
     }
 
     private function setLinksInsert(): void
@@ -237,7 +238,7 @@ class Select_cargos_de_actividad
                 'id_dossier' => $this->id_dossier,
                 'id_pau' => $this->id_pau,
             ];
-            array_walk($aQuery, 'core\\poner_empty_on_null');
+            array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
             $nom = sprintf(_("añadir %s"), $val['nom']);
             $this->aLinks_dl[$nom] = DossierTipoPublicUrls::formControllerLinkSpec((int) $this->id_dossier, $aQuery);
         }

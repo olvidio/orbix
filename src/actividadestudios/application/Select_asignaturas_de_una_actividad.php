@@ -3,21 +3,20 @@
 namespace src\actividadestudios\application;
 
 use src\shared\config\ConfigGlobal;
-use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
-use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
-use frontend\shared\security\HashFront;
-use frontend\shared\web\Lista;
 
 /**
  * Widget del dossier `3005` (codigo `asignaturas_de_una_actividad`):
  * asignaturas impartidas en una actividad de estudios, con profesor, tipo,
  * estado de aviso y fechas.
+ *
+ * El HTML lo renderiza {@see \frontend\actividadestudios\helpers\SelectAsignaturasDeUnaActividadRender}
+ * a partir de {@see self::getSegmentData()} (sin dependencias `frontend\` en `src/`).
  *
  * Sucesor de `apps/actividadestudios/model/Select3005.php`. Instanciado
  * dinamicamente por
@@ -152,49 +151,47 @@ class Select_asignaturas_de_una_actividad
         $this->a_valores = $a_valores;
     }
 
-    public function getHtml(): void
+    /**
+     * Datos puros para {@see \frontend\actividadestudios\helpers\SelectAsignaturasDeUnaActividadRender}.
+     *
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($this->id_pau);
         $this->dl_org = $oActividad->getDl_org();
         $this->permiso = 3;
 
-        $oHashSelect = new HashFront();
-        $oHashSelect->setCamposForm('');
-        $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
-        $oHashSelect->setArraycamposHidden([
-            'pau' => $this->pau,
-            'id_pau' => $this->id_pau,
-            'obj_pau' => $this->obj_pau,
-            'queSel' => $this->queSel,
-            'id_dossier' => $this->id_dossier,
-            'permiso' => $this->permiso,
-        ]);
-
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('select3005');
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones());
-        $oTabla->setDatos($this->getValores());
-
         $this->setLinksInsert();
 
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $a_campos = [
-            'oTabla' => $oTabla,
-            'oHashSelect' => $oHashSelect,
-            'link_insert' => $this->linkInsertSpec !== null
-                ? DossierTipoFormLinkSpecsSigning::fromSpec($this->linkInsertSpec)
-                : '',
+        return [
+            'segment_tipo' => 'select_asignaturas_de_una_actividad',
+            'hash' => [
+                'campos_form' => '',
+                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'obj_pau' => $this->obj_pau,
+                    'queSel' => $this->queSel,
+                    'id_dossier' => $this->id_dossier,
+                    'permiso' => $this->permiso,
+                ],
+            ],
+            'tabla' => [
+                'id_tabla' => 'select3005',
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones(),
+                'valores' => $this->getValores(),
+            ],
+            'link_insert_spec' => $this->linkInsertSpec,
             'txt_eliminar' => $this->txt_eliminar,
             'txt_no_permiso' => $this->txt_no_permiso,
             'bloque' => $this->bloque,
-            'url_form' => $web . '/' . DossierTipoPublicUrls::relativeFormController($this->id_dossier),
-            'url_actividad_asignatura_eliminar' => $web . '/src/actividadestudios/actividad_asignatura_eliminar',
+            'url_form_relative' => DossierTipoPublicUrls::relativeFormController($this->id_dossier),
+            'url_actividad_asignatura_eliminar_path' => 'src/actividadestudios/actividad_asignatura_eliminar',
         ];
-
-        (new ViewNewPhtml('frontend\\actividadestudios\\controller'))
-            ->renderizar('select_asignaturas_de_una_actividad.phtml', $a_campos);
     }
 
     public function setLinksInsert(): void
@@ -205,7 +202,7 @@ class Select_asignaturas_de_una_actividad
                 'pau' => $this->pau,
                 'id_pau' => $this->id_pau,
             ];
-            array_walk($a_dataUrl, 'core\\poner_empty_on_null');
+            array_walk($a_dataUrl, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
             $this->linkInsertSpec = DossierTipoPublicUrls::formControllerLinkSpec($this->id_dossier, $a_dataUrl);
         }
     }

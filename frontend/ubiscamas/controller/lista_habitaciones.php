@@ -2,6 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\web\Lista;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -28,6 +29,18 @@ $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];
 $a_valores = $data['a_valores'];
 
+$linkSpecs = [
+    'reload_main_url' => $data['reload_main_link_spec'] ?? null,
+    'distribucion_open_url' => $data['distribucion_open_link_spec'] ?? null,
+    'nombres_open_url' => $data['nombres_open_link_spec'] ?? null,
+];
+$signedFrontendUrls = [];
+foreach ($linkSpecs as $key => $spec) {
+    $signedFrontendUrls[$key] = (is_array($spec) && ($spec['path'] ?? '') !== '')
+        ? HashFrontSignedLink::fromSpec($spec)
+        : '';
+}
+
 $oTabla = new Lista();
 $oTabla->setId_tabla('grupo_lista');
 $oTabla->setCabeceras($a_cabeceras);
@@ -44,13 +57,13 @@ $a_campos = [
     'asistentes_sin_cama' => $data['asistentes_sin_cama'],
     'status_code' => 200,
     'solo_vip' => $data['solo_vip'],
-    'reload_main_url' => (string)($data['reload_main_url'] ?? ''),
+    'reload_main_url' => (string)($signedFrontendUrls['reload_main_url'] ?? ''),
     'url_update_cama_full' => (string)($data['url_update_cama_full'] ?? ''),
-    'hash_update_cama_ajax' => (string)($data['hash_update_cama_ajax'] ?? ''),
+    'ctx_update_cama' => (string)($data['ctx_update_cama'] ?? ''),
     'update_solo_vip_full_url' => (string)($data['update_solo_vip_full_url'] ?? ''),
-    'hash_solo_vip_ajax' => (string)($data['hash_solo_vip_ajax'] ?? ''),
-    'distribucion_open_url' => (string)($data['distribucion_open_url'] ?? ''),
-    'nombres_open_url' => (string)($data['nombres_open_url'] ?? ''),
+    'ctx_update_solo_vip' => (string)($data['ctx_update_solo_vip'] ?? ''),
+    'distribucion_open_url' => (string)($signedFrontendUrls['distribucion_open_url'] ?? ''),
+    'nombres_open_url' => (string)($signedFrontendUrls['nombres_open_url'] ?? ''),
 ];
 
 $oView = new ViewNewPhtml('frontend\\ubiscamas\\controller');

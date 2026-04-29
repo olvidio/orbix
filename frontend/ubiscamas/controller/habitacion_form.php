@@ -2,6 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\ubiscamas\helpers\UbiscamasFormHashCompose;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -20,11 +21,12 @@ if ($Qnuevo === '' && $stackFromPost !== '' && $oPosicion->goStack($stackFromPos
 
 $data = PostRequest::getDataFromUrl('/src/ubiscamas/habitacion_form_data', $campos);
 $payload = is_array($data) ? $data : [];
+$hashBlock = UbiscamasFormHashCompose::habitacionForm($payload);
 
 $a_campos = [
     'oPosicion' => $oPosicion,
-    'hash_form_html' => (string)($payload['hash_form_html'] ?? ''),
-    'hash_actualizar_html' => (string)($payload['hash_actualizar_html'] ?? ''),
+    'hash_form_html' => $hashBlock['hash_form_html'],
+    'hash_actualizar_html' => $hashBlock['hash_actualizar_html'],
     'id_habitacion' => (string)($payload['id_habitacion'] ?? ''),
     'id_ubi' => (int)($payload['id_ubi'] ?? 0),
     'orden' => $payload['orden'] ?? '',
@@ -39,10 +41,10 @@ $a_campos = [
     'tipoLavabo' => $payload['tipoLavabo'] ?? null,
     'a_tipos_tipoLavabo' => (array)($payload['a_tipos_tipoLavabo'] ?? []),
     'a_camas' => (array)($payload['a_camas'] ?? []),
-    'url_cama_form' => (string)($payload['url_cama_form'] ?? ''),
-    'h_cama_form_params' => (string)($payload['h_cama_form_params'] ?? ''),
-    'url_cama_delete' => (string)($payload['url_cama_delete'] ?? ''),
-    'h_cama_delete_params' => (string)($payload['h_cama_delete_params'] ?? ''),
+    'url_cama_form' => $hashBlock['url_cama_form'],
+    'h_cama_form_params' => $hashBlock['h_cama_form_params'],
+    'url_cama_delete' => $hashBlock['url_cama_delete'],
+    'h_cama_delete_params' => $hashBlock['h_cama_delete_params'],
 ];
 
 $oView = new ViewNewPhtml('frontend\\ubiscamas\\controller');

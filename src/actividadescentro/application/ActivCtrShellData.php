@@ -3,16 +3,25 @@
 namespace src\actividadescentro\application;
 
 use src\shared\config\ConfigGlobal;
-use frontend\shared\security\HashFront;
 
 /**
- * URLs firmadas y tipo resuelto para la shell de `activ_ctr` (sin ConfigGlobal en el front).
+ * Tipo resuelto y especificaciones de URL para la shell de `activ_ctr` (sin `HashFront` en `src/`).
+ * La firma `linkSinVal` se aplica en {@see frontend\actividadescentro\controller\activ_ctr}.
  */
 class ActivCtrShellData
 {
     /**
      * @param array{tipo?: string, year?: string, periodo?: string} $in
-     * @return array{tipo: string, url_lista: string, url_encargados: string, url_disponibles: string, url_asignar: string, url_reordenar: string, url_eliminar: string}
+     *
+     * @return array{
+     *     tipo: string,
+     *     url_lista: array{path: string, campos_form: string},
+     *     url_encargados: array{path: string, campos_form: string},
+     *     url_disponibles: array{path: string, campos_form: string},
+     *     url_asignar: array{path: string, campos_form: string},
+     *     url_reordenar: array{path: string, campos_form: string},
+     *     url_eliminar: array{path: string, campos_form: string}
+     * }
      */
     public static function build(array $in): array
     {
@@ -31,40 +40,32 @@ class ActivCtrShellData
             }
         }
 
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $buildHashedUrl = static function (string $url, string $campos): string {
-            $oHash = new HashFront();
-            $oHash->setUrl($url);
-            $oHash->setCamposForm($campos);
-            return $url . $oHash->linkSinVal();
-        };
-
         return [
             'tipo' => $Qtipo,
-            'url_lista' => $buildHashedUrl(
-                $web . '/src/actividadescentro/lista_actividades_ctr_data',
-                'tipo!year!periodo!empiezamin!empiezamax'
-            ),
-            'url_encargados' => $buildHashedUrl(
-                $web . '/src/actividadescentro/centros_encargados_data',
-                'id_activ!id_tipo_activ!dl_org'
-            ),
-            'url_disponibles' => $buildHashedUrl(
-                $web . '/src/actividadescentro/centros_disponibles_data',
-                'tipo!id_activ!inicio!fin!f_ini_act'
-            ),
-            'url_asignar' => $buildHashedUrl(
-                $web . '/src/actividadescentro/centro_encargado_asignar',
-                'id_activ!id_ubi'
-            ),
-            'url_reordenar' => $buildHashedUrl(
-                $web . '/src/actividadescentro/centro_encargado_reordenar',
-                'id_activ!id_ubi!num_orden'
-            ),
-            'url_eliminar' => $buildHashedUrl(
-                $web . '/src/actividadescentro/centro_encargado_eliminar',
-                'id_activ!id_ubi'
-            ),
+            'url_lista' => [
+                'path' => 'src/actividadescentro/lista_actividades_ctr_data',
+                'campos_form' => 'tipo!year!periodo!empiezamin!empiezamax',
+            ],
+            'url_encargados' => [
+                'path' => 'src/actividadescentro/centros_encargados_data',
+                'campos_form' => 'id_activ!id_tipo_activ!dl_org',
+            ],
+            'url_disponibles' => [
+                'path' => 'src/actividadescentro/centros_disponibles_data',
+                'campos_form' => 'tipo!id_activ!inicio!fin!f_ini_act',
+            ],
+            'url_asignar' => [
+                'path' => 'src/actividadescentro/centro_encargado_asignar',
+                'campos_form' => 'id_activ!id_ubi',
+            ],
+            'url_reordenar' => [
+                'path' => 'src/actividadescentro/centro_encargado_reordenar',
+                'campos_form' => 'id_activ!id_ubi!num_orden',
+            ],
+            'url_eliminar' => [
+                'path' => 'src/actividadescentro/centro_encargado_eliminar',
+                'campos_form' => 'id_activ!id_ubi',
+            ],
         ];
     }
 }

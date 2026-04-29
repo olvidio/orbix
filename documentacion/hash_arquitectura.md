@@ -242,7 +242,7 @@ Es el header legacy de `apps/`. Se mantiene mientras exista `apps/`. Su `validat
 
 Los ~30 ficheros de `src/` que hoy usan `Hash` caen en dos grupos:
 
-- **Productores de HTML de UI** (layouts, `Select1010`, etc.) → se mueven a `frontend/shared/` y usan `HashF`.
+- **Productores de HTML de UI** (layouts, `Select_certificados_de_una_persona`, etc.) → se mueven a `frontend/shared/` y usan `HashF`.
 - **`application/` que genera URLs** (p.ej. para listados con enlaces) → emite los strings de URL ya firmados con `HashF`, pero desde `src/application/` esto rompe la separación de capas. Preferible: el `application/` devuelve datos crudos (ids, nombres) y el frontend controller firma las URLs al construir la vista.
 
 ### 7.5 Forms y AJAX existentes

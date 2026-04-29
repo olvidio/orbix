@@ -8,7 +8,6 @@ use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -32,7 +31,7 @@ final class FormCargosPersonasEnActividadData
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, mixed> Incluye `hash_form_config` (el front convierte a `hash_campos_html`).
      */
     public static function build(array $post): array
     {
@@ -114,7 +113,6 @@ final class FormCargosPersonasEnActividadData
 
         $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
 
-        $oHash = new HashFront();
         $camposForm = 'id_cargo!observ';
         $camposNo = 'puede_agd';
         $a_camposHidden = [
@@ -131,9 +129,6 @@ final class FormCargosPersonasEnActividadData
             }
             $camposForm .= '!id_activ';
         }
-        $oHash->setCamposNo($camposNo);
-        $oHash->setCamposForm($camposForm);
-        $oHash->setArraycamposHidden($a_camposHidden);
 
         $web = rtrim(ConfigGlobal::getWeb(), '/');
 
@@ -144,7 +139,11 @@ final class FormCargosPersonasEnActividadData
             'nom_activ' => $nom_activ,
             'aActividades' => $aActividadesRows,
             'desplegable_cargos_html' => $oDesplegableCargos->desplegable(),
-            'hash_campos_html' => $oHash->getCamposHtml(),
+            'hash_form_config' => [
+                'campos_form' => $camposForm,
+                'campos_no' => $camposNo,
+                'campos_hidden' => $a_camposHidden,
+            ],
             'chk' => $chk,
             'observ' => $observ,
             'Qmod' => $Qmod,

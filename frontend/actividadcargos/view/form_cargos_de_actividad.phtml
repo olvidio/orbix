@@ -1,8 +1,7 @@
 <script>
     /**
      * Refleja ActividadCargoNuevo/Editar::execute (ids obligatorios positivos).
-     * comprobar_campos.php está deshabilitado (exit al inicio); validamos en cliente
-     * para no enviar el POST y recibir el error del servidor.
+     * validamos en cliente para no enviar el POST y recibir el error del servidor.
      */
     fnjs_cargo_de_actividad_datos_ok = function ($f) {
         var n = function (v) {
@@ -72,7 +71,7 @@
         </tr>
         <tr>
             <td class="etiqueta"><?= ucfirst(_("cargo")) ?>:</td>
-            <td><?= $oDesplegableCargos->desplegable() ?></td>
+            <td><?= $desplegable_cargos_html ?></td>
         </tr>
         <tr>
             <td class="etiqueta"><?= _("¿Puede ser agd?") ?></td>

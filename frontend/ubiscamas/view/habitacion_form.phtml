@@ -29,8 +29,8 @@
             alert(<?= json_encode(_("Debe guardar primero la habitación antes de añadir camas")) ?>);
             return;
         }
-        let url = '<?= $url_cama_form ?>';
-        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + '<?= $h_cama_form_params ?>';
+        let url = '<?= htmlspecialchars($url_cama_form, ENT_QUOTES) ?>';
+        let parametros = 'id_ubi=' + <?= json_encode((string)$id_ubi) ?> + '&id_habitacion=' + encodeURIComponent(id_habitacion) + '<?= $h_cama_form_params ?>';
         fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
 
@@ -48,18 +48,18 @@
 
     fnjs_editar_cama = function (id_cama) {
         let id_habitacion = $('#frm2 [name="id_habitacion"]').val();
-        let url = '<?= $url_cama_form ?>';
-        let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $h_cama_form_params ?>';
+        let url = '<?= htmlspecialchars($url_cama_form, ENT_QUOTES) ?>';
+        let parametros = 'id_ubi=' + <?= json_encode((string)$id_ubi) ?> + '&id_habitacion=' + encodeURIComponent(id_habitacion) + '&id_cama=' + encodeURIComponent(id_cama) + '<?= $h_cama_form_params ?>';
         fnjs_update_div('#ficha2006', url + '?' + parametros);
     }
 
     fnjs_eliminar_cama = function (id_cama) {
         if (confirm(<?= json_encode(_("¿Seguro que desea borrar esta cama?")) ?>)) {
-            let url = '<?= $url_cama_delete ?>';
-            let parametros = 'id_ubi=' + <?= $id_ubi ?> + '&id_habitacion=' + id_habitacion + '&id_cama=' + id_cama + '<?= $oHashCamaDelete->linkSinValParams() ?>';
+            let id_habitacion = $('#frm2 [name="id_habitacion"]').val();
+            let parametros = 'id_ubi=' + <?= json_encode((string)$id_ubi) ?> + '&id_habitacion=' + encodeURIComponent(id_habitacion) + '&id_cama=' + encodeURIComponent(id_cama) + '<?= $h_cama_delete_params ?>';
             let request = $.ajax({
                 data: parametros,
-                url: 'src/ubiscamas/cama_delete',
+                url: <?= json_encode($url_cama_delete) ?>,
                 type: 'POST',
                 dataType: 'json'
             });

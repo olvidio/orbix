@@ -126,13 +126,6 @@ class HashFront
             }
         }
         $hchk = empty($aPOST['hchk']) ? '' : $aPOST['hchk'];
-        //En el caso de comprobar_campos.php añado tres que hay que borrar
-        // Para sf
-        if ($_SERVER["REQUEST_URI"] == AppUrlConfig::getPublicAppBaseUrl() . '/apps/core/comprobar_campos.php') {
-            unset($aPOST['cc_tabla']);
-            unset($aPOST['cc_obj']);
-            unset($aPOST['cc_pau']);
-        }
 
         //si es hnov es 1, es para no tener en cuenta los valores de los parametros en el hash.
         $hnov = empty($aPOST['hnov']) ? '' : $aPOST['hnov'];

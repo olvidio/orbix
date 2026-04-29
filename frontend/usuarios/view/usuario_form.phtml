@@ -102,24 +102,20 @@
     }
 
     fnjs_guardar_datos = function (formulario) {
-        let rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
-        //alert ("EEE "+rr);
-        if (rr === 'ok') {
-            let datos = $(formulario).serialize();
-            let request = $.ajax({
-                data: datos,
-                url: '<?= $url_usuario_guardar ?>',
-                method: 'POST',
-                dataType: 'json'
-            });
-            request.done(function (json) {
-                if (json.success !== true) {
-                    alert(<?= json_encode("respuesta: ") ?> + json.mensaje);
-                } else {
-                    <?= $oPosicion->js_atras(1) ?>
-                }
-            });
-        }
+        let datos = $(formulario).serialize();
+        let request = $.ajax({
+            data: datos,
+            url: '<?= $url_usuario_guardar ?>',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert(<?= json_encode("respuesta: ") ?> + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(1) ?>
+            }
+        });
     }
     <?php
     if ($pau === 'cdc' && $quien === 'usuario') { //casa

@@ -93,9 +93,7 @@ fnjs_guardar=function(tipo='') {
         {% endif %}
     }
 
-    var rr=fnjs_comprobar_campos('#modifica','{{ obj|raw }}');
-    //alert ("EEE "+rr);
-    if (rr=='ok' && err==0) {
+    if (err==0) {
         $('#mod').val(tipo);
         var urlUpdate = {
             'nuevo': 'src/actividades/actividad_nuevo',

@@ -12,6 +12,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -26,6 +27,9 @@ if (($data['redir'] ?? '') === 'go_atras') {
     return;
 }
 unset($data['redir'], $data['error']);
+
+$data = FormCargosDeActividadHashCompose::withHashCamposHtml($data);
+$data = FormCargosDeActividadHashCompose::withDesplegablesHtml($data);
 
 $data['oPosicion'] = $oPosicion;
 

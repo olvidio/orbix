@@ -89,6 +89,14 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_ver_datos.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_fases_completadas_datos', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_fases_completadas_datos.php';
+    });
+
+    $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_fase_completada_datos', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_fase_completada_datos.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/actividades/actividad_select_datos', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/actividad_select_datos.php';
     });

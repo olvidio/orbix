@@ -3,18 +3,14 @@
 namespace src\actividadestudios\application;
 
 use src\shared\config\ConfigGlobal;
-use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asistentes\application\services\AsistenteActividadService;
-use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use frontend\shared\security\HashFront;
-use frontend\shared\web\Lista;
 use function src\shared\domain\helpers\curso_est;
 use function src\shared\domain\helpers\is_true;
 
@@ -22,15 +18,15 @@ use function src\shared\domain\helpers\is_true;
  * Widget del dossier `1303` (codigo `matriculas_de_una_persona`):
  * asignaturas que cursa una persona agrupadas por actividad de estudios.
  *
+ * El HTML lo renderiza {@see \frontend\actividadestudios\helpers\SelectMatriculasDeUnaPersonaRender}
+ * a partir de {@see self::getSegmentData()} (sin dependencias `frontend\` en `src/`).
+ *
  * Sucesor de `apps/actividadestudios/model/Select1303.php`. Instanciado
  * dinamicamente por
  * {@see \src\dossiers\application\DossierTipoFileSuffixResolver::resolveSelectClassFqcn()}.
  */
 class Select_matriculas_de_una_persona
 {
-    private string $msg_err = '';
-    private array $a_valores = [];
-    private string $txt_eliminar = '';
     private string $bloque = '';
 
     private string $queSel = '';
@@ -43,13 +39,18 @@ class Select_matriculas_de_una_persona
     private $Qid_sel;
     private $Qscroll_id;
 
+    /** @var mixed */
     private $todos;
+
     private $Qid_activ;
 
     private $cAsistencias;
 
     private $status;
-    private string $aviso = '';
+    /** @var list<string> */
+    private array $avisoLines = [];
+    /** @var array{dossiers_form_action: string, hash: array{campos_form: string, campos_no: string, campos_hidden: array<string, mixed>}, mensaje: string}|null */
+    private ?array $avisoTodosForm = null;
     private mixed $id_activ;
     /** @var array{path: string, query: array<string, mixed>}|null */
     private ?array $linkAddSpec = null;
@@ -62,6 +63,7 @@ class Select_matriculas_de_una_persona
                 ['txt' => _("borrar matrícula"), 'click' => "fnjs_borrar(this.form,$ca_num)"],
             ];
         }
+
         return [];
     }
 
@@ -73,12 +75,16 @@ class Select_matriculas_de_una_persona
         ];
     }
 
-    public function getHtmlCa($oAsistente, $ca_num = 1)
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildCaPayload($oAsistente, int $ca_num): array
     {
+        $htmlPrefix = '';
         $this->id_activ = $oAsistente->getId_activ();
         $propio = $oAsistente->isPropio();
         if (!is_true($propio)) {
-            echo _("no está como propio, no debería tener plan de estudios");
+            $htmlPrefix .= _("no está como propio, no debería tener plan de estudios");
         }
 
         $est_ok = $oAsistente->isEst_ok();
@@ -87,7 +93,6 @@ class Select_matriculas_de_una_persona
         $oActividad = $ActividadAllRepository->findById($this->id_activ);
         $nom_activ = $oActividad->getNom_activ();
 
-        // el plan de estudios solo puede modificarlo la dl del alumno (a no ser que sea de paso)
         $oAlumno = Persona::findPersonaEnGlobal($this->id_pau);
         if ($oAlumno === null) {
             throw new \Exception(sprintf(_("No se ha encontrado alumno con id_nom: %s"), $this->id_pau));
@@ -153,60 +158,42 @@ class Select_matriculas_de_una_persona
             $a_valores[$i][2] = $nombre_corto;
         }
 
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('sql_1303' . $ca_num);
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones($ca_num));
-        $oTabla->setDatos($a_valores);
-
-        $oHashCa = new HashFront();
-        $oHashCa->setCamposForm('est_ok!observ_est');
-        $oHashCa->setCamposNo('sel!mod!scroll_id!refresh');
-        $oHashCa->setArraycamposHidden([
-            'pau' => $this->pau,
-            'id_pau' => $this->id_pau,
-            'id_activ' => $this->id_activ,
-            'obj_pau' => $this->obj_pau,
-            'queSel' => $this->queSel,
-            'id_dossier' => $this->id_dossier,
-            'permiso' => $this->permiso,
-        ]);
-
         $this->setLinksInsert();
 
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $url_form = $web . '/' . DossierTipoPublicUrls::relativeFormController($this->id_dossier);
-        $url_matricular = $web . '/src/actividadestudios/matricula_automatica';
-        $url_matricula_eliminar = $web . '/src/actividadestudios/matricula_eliminar';
-        $url_asistente_observ_est = $web . '/src/actividadestudios/asistente_observ_est';
-        $url_asistente_plan_est_ok = $web . '/src/actividadestudios/asistente_plan_est_ok';
+        if (!empty($msg_err)) {
+            $htmlPrefix .= $msg_err;
+        }
 
-        $a_campos = [
-            'oTabla' => $oTabla,
-            'oHashCa' => $oHashCa,
+        return [
+            'html_prefix' => $htmlPrefix,
+            'hash' => [
+                'campos_form' => 'est_ok!observ_est',
+                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'id_activ' => $this->id_activ,
+                    'obj_pau' => $this->obj_pau,
+                    'queSel' => $this->queSel,
+                    'id_dossier' => $this->id_dossier,
+                    'permiso' => $this->permiso,
+                ],
+            ],
+            'tabla' => [
+                'id_tabla' => 'sql_1303' . $ca_num,
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones($ca_num),
+                'valores' => $a_valores,
+            ],
+            'link_add_spec' => $this->linkAddSpec,
             'nom_activ' => $nom_activ,
             'form' => $form,
             'ca_num' => $ca_num,
             'chk_1' => $chk_1,
             'chk_2' => $chk_2,
-            'link_add' => $this->linkAddSpec !== null
-                ? DossierTipoFormLinkSpecsSigning::fromSpec($this->linkAddSpec)
-                : '',
-            'bloque' => $this->bloque,
             'observ_est' => $observ_est,
             'permiso' => $this->permiso,
-            'url_form' => $url_form,
-            'url_matricular' => $url_matricular,
-            'url_matricula_eliminar' => $url_matricula_eliminar,
-            'url_asistente_observ_est' => $url_asistente_observ_est,
-            'url_asistente_plan_est_ok' => $url_asistente_plan_est_ok,
         ];
-
-        if (!empty($msg_err)) {
-            echo $msg_err;
-        }
-        (new ViewNewPhtml('frontend\\actividadestudios\\controller'))
-            ->renderizar('selectUnCa.phtml', $a_campos);
     }
 
     public function setLinksInsert(): void
@@ -217,13 +204,15 @@ class Select_matriculas_de_una_persona
             'id_pau' => $this->id_pau,
             'id_activ' => $this->id_activ,
         ];
-        array_walk($a_dataUrl, 'core\\poner_empty_on_null');
+        array_walk($a_dataUrl, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
         $this->linkAddSpec = DossierTipoPublicUrls::formControllerLinkSpec($this->id_dossier, $a_dataUrl);
     }
 
     public function getAsistencias()
     {
-        // Calcular curso academico.
+        $this->avisoLines = [];
+        $this->avisoTodosForm = null;
+
         $mes = date('m');
         $fin_m = $_SESSION['oConfig']->getMesFinStgr();
         if ($mes > $fin_m) {
@@ -234,7 +223,6 @@ class Select_matriculas_de_una_persona
         $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
         $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
 
-        $aviso = '';
         if ($this->id_pau < 0) {
             $PersonaDlRepository = $GLOBALS['container']->get(PersonaExRepositoryInterface::class);
         } else {
@@ -246,7 +234,7 @@ class Select_matriculas_de_una_persona
         }
         $stgr = $oPersona->getNivel_stgr();
         if ($stgr === 'r') {
-            $aviso .= _("está de repaso") . "<br>";
+            $this->avisoLines[] = _("está de repaso") . "<br>";
         }
 
         $aWhere = [];
@@ -270,28 +258,28 @@ class Select_matriculas_de_una_persona
         if (is_array($cAsistencias)) {
             $n = count($cAsistencias);
             if ($n === 0 && empty($this->todos)) {
-                $oHashA = new HashFront();
-                $oHashA->setcamposNo('scroll_id');
-                $oHashA->setArraycamposHidden([
-                    'pau' => 'p',
-                    'id_pau' => $this->id_pau,
-                    'obj_pau' => $this->obj_pau,
-                    'id_dossier' => 1303,
-                    'permiso' => '3',
-                    'que' => 'matriculas',
-                    'todos' => 1,
-                    'mod' => 'xx',
-                ]);
-
-                $aviso .= _(sprintf(_("No tiene asignado ningún ca como propio este curso: %s - %s."), $inicurs_ca, $fincurs_ca));
-                $aviso .= "<form action='frontend/dossiers/controller/dossiers_ver.php' method='post'>";
-                $aviso .= $oHashA->getCamposHtml();
-                $aviso .= "<input type=\"button\" onclick=\"fnjs_enviar_formulario(this.form,'#main')\" value=\"" . _("ver anteriores") . "\">";
-                $aviso .= "</form>";
+                $this->avisoTodosForm = [
+                    'dossiers_form_action' => 'frontend/dossiers/controller/dossiers_ver.php',
+                    'hash' => [
+                        'campos_form' => '',
+                        'campos_no' => 'scroll_id',
+                        'campos_hidden' => [
+                            'pau' => 'p',
+                            'id_pau' => $this->id_pau,
+                            'obj_pau' => $this->obj_pau,
+                            'id_dossier' => 1303,
+                            'permiso' => '3',
+                            'que' => 'matriculas',
+                            'todos' => 1,
+                            'mod' => 'xx',
+                        ],
+                    ],
+                    'mensaje' => _(sprintf(_("No tiene asignado ningún ca como propio este curso: %s - %s."), $inicurs_ca, $fincurs_ca)),
+                ];
             }
 
             if ($n === 0 && !empty($this->todos)) {
-                $aviso .= _("no tiene asignado ningún ca.");
+                $this->avisoLines[] = _("no tiene asignado ningún ca.");
             }
             if ($n > 1 && empty($this->todos)) {
                 $nn = 0;
@@ -304,46 +292,51 @@ class Select_matriculas_de_una_persona
                     }
                 }
                 if ($nn > 1) {
-                    $aviso .= _(sprintf(_("¡¡ojo!! tiene %s actividades de estudios asignadas como propias."), $n));
+                    $this->avisoLines[] = _(sprintf(_("¡¡ojo!! tiene %s actividades de estudios asignadas como propias."), $n));
                 }
             }
         }
-        $this->cAsistencias = $cAsistencias;
-        $this->aviso = $aviso;
-        return $cAsistencias;
+        $this->cAsistencias = is_array($cAsistencias ?? null) ? $cAsistencias : [];
+
+        return $this->cAsistencias;
     }
 
-    public function getHtml()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
-        $txt_eliminar = _("¿Está seguro que desea quitar esta asignatura de esta actividad?");
-
         $this->getAsistencias();
-
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $a_campos = [
-            'aviso' => $this->aviso,
-            'txt_eliminar' => $txt_eliminar,
-            'bloque' => $this->bloque,
-            'url_form' => $web . '/' . DossierTipoPublicUrls::relativeFormController($this->id_dossier),
-            'url_matricular' => $web . '/src/actividadestudios/matricula_automatica',
-            'url_matricula_eliminar' => $web . '/src/actividadestudios/matricula_eliminar',
-            'url_asistente_observ_est' => $web . '/src/actividadestudios/asistente_observ_est',
-            'url_asistente_plan_est_ok' => $web . '/src/actividadestudios/asistente_plan_est_ok',
-        ];
-
-        $oView = new ViewNewPhtml('frontend\\actividadestudios\\controller');
-        $html_script = $oView->renderizar('select_matriculas_de_una_persona.phtml', $a_campos);
-
+        $cas = [];
         $ca_num = 0;
-        $html = '';
         foreach ($this->cAsistencias as $oAsistente) {
             $ca_num++;
-            $html .= $this->getHtmlCa($oAsistente, $ca_num);
+            $cas[] = $this->buildCaPayload($oAsistente, $ca_num);
         }
-        if (count($this->cAsistencias) === 0) {
-            $html .= _("no tiene ninguna actividad asignada. O no es de mi dl");
-        }
-        return $html_script . $html;
+
+        return [
+            'segment_tipo' => 'select_matriculas_de_una_persona',
+            'wrapper' => [
+                'txt_eliminar' => _("¿Está seguro que desea quitar esta asignatura de esta actividad?"),
+                'bloque' => $this->bloque,
+                'url_form_relative' => DossierTipoPublicUrls::relativeFormController($this->id_dossier),
+                'url_matricular_path' => 'src/actividadestudios/matricula_automatica',
+                'url_matricula_eliminar_path' => 'src/actividadestudios/matricula_eliminar',
+                'url_asistente_observ_est_path' => 'src/actividadestudios/asistente_observ_est',
+                'url_asistente_plan_est_ok_path' => 'src/actividadestudios/asistente_plan_est_ok',
+            ],
+            'aviso_lines' => $this->avisoLines,
+            'aviso_todos_form' => $this->avisoTodosForm,
+            'cas' => $cas,
+            'empty_cas_message' => count($this->cAsistencias) === 0
+                ? _("no tiene ninguna actividad asignada. O no es de mi dl")
+                : '',
+        ];
+    }
+
+    public function setTodos(mixed $todos): void
+    {
+        $this->todos = $todos;
     }
 
     public function getId_dossier() { return $this->id_dossier; }

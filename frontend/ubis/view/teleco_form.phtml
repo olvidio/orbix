@@ -1,21 +1,18 @@
 <script>
     fnjs_guardar = function (formulario) {
-        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
-        if (rr === 'ok') {
-            let datos = $(formulario).serialize();
-            let request = $.ajax({
-                url: '<?= $url_guardar ?>',
-                type: 'post',
-                data: datos
-            });
-            request.done(function (json) {
-                if (json.success !== true) {
-                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
-                } else {
-                    <?= $oPosicion->js_atras(1) ?>
-                }
-            });
-        }
+        let datos = $(formulario).serialize();
+        let request = $.ajax({
+            url: '<?= $url_guardar ?>',
+            type: 'post',
+            data: datos
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(1) ?>
+            }
+        });
     }
     fnjs_actualizar_descripcion = function () {
         var id_tipo_teleco = $('#id_tipo_teleco').val();

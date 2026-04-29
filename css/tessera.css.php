@@ -1,15 +1,22 @@
-<?php 
-// INICIO Cabecera global de URL de controlador *********************************
-	use src\shared\config\ConfigGlobal;
+<?php
+/**
+ * Hoja de estilos de la tessera: no incluir global_object.inc (bootstrap pesado / DI).
+ * El color del tema se obtiene con {@see css_colores_estilo_desde_sesion()} para que
+ * colores.php no vuelva a cargar global_object.
+ *
+ * No usar aquí {@see frontend/shared/global_header_front.inc}: hace echo de validatePost,
+ * instancia Posicion y session_write_close(); esto se incluye en medio del HTML y ensuciaría
+ * la salida CSS. La petición ya pasó por el front en `tessera_ver.php` (sesión activa).
+ * Basta con el autoload de Composer, igual que `src/shared/global_header.inc`.
+ */
+use src\shared\config\ConfigGlobal;
 
-    require_once ("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
+require_once __DIR__ . '/../libs/vendor/autoload.php';
+require_once __DIR__ . '/colores_estilo_desde_sesion.php';
 
-// Crea los objetos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
+[$estilo_color, $tipo_menu] = css_colores_estilo_desde_sesion();
 
-include_once (ConfigGlobal::$dir_estilos.'/colores.php'); 
+include_once ConfigGlobal::$dir_estilos . '/colores.php';
 ?>
 <style>
 @media print {

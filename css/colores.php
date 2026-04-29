@@ -5,30 +5,12 @@ namespace core;
 
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
-use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 
 if (empty($estilo_color)) {
-    // INICIO Cabecera global de URL de controlador *********************************
-    require_once("apps/core/global_header.inc");
-    // Archivos requeridos por esta url **********************************************
-    //require_once ("classes/personas/ext_web_preferencias_gestor.class");
-
-    // Crea los objetos de uso global **********************************************
-    require_once("apps/core/global_object.inc");
-    // FIN de  Cabecera global de URL de controlador ********************************
-    $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
-
-    $id_usuario = ConfigGlobal::mi_id_usuario();
-    $aPref = $PreferenciaRepository->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
-    if (count($aPref) > 0) {
-        $oPreferencia = $aPref[0];
-        $preferencia = $oPreferencia->getPreferencia();
-        list($estilo_color, $tipo_menu) = preg_split('/#/', $preferencia);
-    } else {
-        // valores por defecto
-        $estilo_color = 'azul';
-        $tipo_menu = 'horizontal';
-    }
+    // Sin global_object.inc: no reabrir sesión ni montar DI (rompe si ya se envió salida, p.ej. tras echo del controller).
+    require_once __DIR__ . '/../src/shared/global_header.inc';
+    require_once __DIR__ . '/colores_estilo_desde_sesion.php';
+    [$estilo_color, $tipo_menu] = \css_colores_estilo_desde_sesion();
 }
 
 $gris_claro = "#EEEEEE";

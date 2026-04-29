@@ -8,7 +8,6 @@ use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
 use function src\shared\domain\helpers\is_true;
-use frontend\shared\security\HashFront;
 
 class HabitacionesCamaLista
 {
@@ -150,12 +149,6 @@ class HabitacionesCamaLista
                 $aRow['id_nom'] = $id_nom;
 
                 $aRow[11] = $oHabitacion->getObservacionesVo()?->value() ?? '';
-                /*
-                $pagina = HashFront::link(ConfigGlobal::getWeb() . '/frontend/ubiscamas/controller/cama_form.php?'
-                    . http_build_query(array('id_habitacion' => $id_habitacion, 'id_cama' => $id_cama))
-                );
-                $aRow[7] = array('ira' => $pagina, 'valor' => _('editar'));
-                */
 
                 $a_valores[$i] = $aRow;
             }

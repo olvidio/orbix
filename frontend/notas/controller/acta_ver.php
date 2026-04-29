@@ -38,18 +38,20 @@ if (OrbixRuntime::miAmbito() === 'rstgr') {
     $permiso = 0;
 }
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qmod = (string)filter_input(INPUT_POST, 'mod');
-
-$Qsa_actas = (string)filter_input(INPUT_POST, 'sa_actas');
-$Qacta = (string)filter_input(INPUT_POST, 'acta');
-$Qnotas = (string)filter_input(INPUT_POST, 'notas');
+$requestPayload = PostRequest::requestPayloadForHash();
+$a_sel = isset($requestPayload['sel']) && is_array($requestPayload['sel'])
+    ? $requestPayload['sel']
+    : [];
+$Qmod = (string)($requestPayload['mod'] ?? '');
+$Qsa_actas = (string)($requestPayload['sa_actas'] ?? '');
+$Qacta = (string)($requestPayload['acta'] ?? '');
+$Qnotas = (string)($requestPayload['notas'] ?? '');
 
 if (empty($notas) && empty($Qnotas)) {
     $oPosicion->recordar();
 }
 
-$payload = $_POST;
+$payload = $requestPayload;
 $payload['scope_notas'] = $notas;
 $payload['scope_permiso'] = $permiso;
 if (isset($acta_notas_a_actas)) {

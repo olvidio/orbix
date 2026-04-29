@@ -2,44 +2,26 @@
 
 namespace src\certificados\domain;
 
-use frontend\certificados\helpers\Select1010UrlSigning;
-use frontend\shared\config\AppUrlConfig;
-use frontend\shared\model\ViewNewPhtml;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use frontend\shared\security\HashFront;
-use frontend\shared\web\Lista;
 use function src\shared\domain\helpers\is_true;
 
 /**
- * Gestiona el dossier 1301: Actividades a las que asiste una persona.
+ * Listado de certificados recibidos de una persona (dossier 1010 / código certificados_de_una_persona).
  *
+ * Render: {@see \frontend\certificados\helpers\SelectCertificadosDeUnaPersonaRender}.
  *
  * @package    orbix
- * @subpackage    asistencias
+ * @subpackage certificados
  * @author    Daniel Serrabou
  * @since        15/5/02.
  * @version 1.0  refactoring: separar vistas
  * @created Mayo 2018
  */
-class Select1010
+class Select_certificados_de_una_persona
 {
-    // --------- Variables internas de la clase.
-    /**
-     * array con los permisos (si o no) para asignar las actividades (según el tipo: nº)
-     * según el tipo de persona de que se trate y quién seamos nosotros.
-     * @var array $ref_perm
-     */
-    private array $ref_perm;
-    /* @var $msg_err string */
-    private string $msg_err;
     /* @var $a_valores array */
-    private array $a_valores;
-    /**
-     * Para pasar a la vista, aparece como alerta antes de ejecutarse
-     * @var string $txt_eliminar
-     */
-    private string $txt_eliminar;
+    private array $a_valores = [];
     /* @var $bloque string  necesario para el script */
     private string $bloque;
 
@@ -97,8 +79,9 @@ class Select1010
     {
         $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
         if (!is_object($oPersona)) {
-            $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
-            exit($this->msg_err);
+            throw new \RuntimeException(
+                "<br>No encuentro a ninguna persona con id_nom: $this->id_pau en  " . __FILE__ . ': line ' . __LINE__
+            );
         }
         $aWhere = [
             'id_nom' => $this->id_pau,
@@ -143,56 +126,45 @@ class Select1010
         $this->a_valores = $a_valores;
     }
 
-    public function getHtml()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
-        $this->txt_eliminar = _("No tiene permisos para eliminar");
-        // En el caso de actualizar la misma página (fnjs_actualizar) solo me quedo con la última (stack=0).
-        // El valor llega ya resuelto desde el frontend vía setStackActual().
         $stack = $this->stackActual;
 
-        $oHashSelect = new HashFront();
-        //$oHashSelect->setCamposForm('sel');
-        $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
-        $a_camposHidden = array(
-            'pau' => $this->pau,
-            'id_pau' => $this->id_pau,
-            'obj_pau' => $this->obj_pau,
-            'queSel' => $this->queSel,
-            'id_dossier' => $this->id_dossier,
-            'permiso' => 1,
-            'stack' => $stack,
-        );
-        $oHashSelect->setArraycamposHidden($a_camposHidden);
-
-        //Hay que ponerlo antes, para que calcule los chk.
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('select1010');
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones());
-        $oTabla->setDatos($this->getValores());
-
-        $oHashDown = new HashFront();
-        $oHashDown->setUrl(AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_recibido_pdf_download');
-        $oHashDown->setCamposForm('key');
-        $h_download = $oHashDown->linkSinVal();
-
-        $aQuery = ['nuevo' => 1, 'id_nom' => $this->id_pau];
-        $signed = Select1010UrlSigning::sign([
+        return [
+            'segment_tipo' => 'select_certificados_de_una_persona',
+            'hash_main' => [
+                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'obj_pau' => $this->obj_pau,
+                    'queSel' => $this->queSel,
+                    'id_dossier' => $this->id_dossier,
+                    'permiso' => 1,
+                    'stack' => $stack,
+                ],
+            ],
+            'tabla' => [
+                'id_tabla' => 'select_certificados_de_una_persona',
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones(),
+                'valores' => $this->getValores(),
+            ],
+            'paths' => [
+                'certificado_recibido_delete' => 'src/certificados/certificado_recibido_delete',
+                'certificado_recibido_pdf_download' => 'src/certificados/certificado_recibido_pdf_download',
+            ],
+            'hash_pdf' => [
+                'campos_form' => 'key',
+            ],
             'url_nuevo_spec' => [
                 'path' => 'frontend/certificados/controller/certificado_recibido_adjuntar.php',
-                'query' => $aQuery,
+                'query' => ['nuevo' => 1, 'id_nom' => $this->id_pau],
             ],
-        ]);
-
-        $a_campos = [
-            'oTabla' => $oTabla,
-            'url_nuevo' => $signed['url_nuevo'],
-            'oHashSelect' => $oHashSelect,
-            'h_download' => $h_download,
         ];
-
-        $oView = new ViewNewPhtml('frontend\certificados\view');
-        $oView->renderizar('select1010.phtml', $a_campos);
     }
 
     public function getId_dossier(): int

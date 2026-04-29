@@ -4,21 +4,21 @@ namespace src\asistentes\application;
 
 use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermDossier;
-use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\value_objects\StatusId;
 use src\asistentes\application\services\AsistenteActividadService;
-use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
-use frontend\shared\web\BotonesCurso;
-use frontend\shared\security\HashFront;
-use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
+use function src\shared\domain\helpers\curso_est;
 use function src\shared\domain\helpers\is_true;
 
 /**
  * Widget del dossier `1301` (codigo `actividades_de_una_persona`):
  * actividades a las que asiste una persona.
+ *
+ * El HTML lo renderiza {@see \frontend\asistentes\helpers\SelectActividadesDeUnaPersonaRender}
+ * desde {@see self::getSegmentData()} (sin `frontend\` en `src/`).
  *
  * Sucesor de `apps/asistentes/model/Select1301.php`. Instanciado dinamicamente por
  * {@see \src\dossiers\application\DossierTipoFileSuffixResolver::resolveSelectClassFqcn()}.
@@ -27,28 +27,68 @@ class Select_actividades_de_una_persona
 {
     private const ID_TIPO_DOSSIER = 1301;
 
-    private $ref_perm;
-    private $msg_err;
-    private $a_valores;
-    private $txt_eliminar;
-    private $bloque;
+    private mixed $ref_perm = null;
+    private mixed $msg_err = '';
+    private mixed $a_valores = null;
+    private mixed $txt_eliminar = null;
+    private mixed $bloque = null;
 
     private string $queSel = '';
+    /** @var mixed */
     private $id_dossier;
+    /** @var mixed */
     private $pau;
+    /** @var mixed */
     private $obj_pau;
+    /** @var mixed */
     private $id_pau;
+    /** @var mixed */
     private $permiso;
-    private $modo_curso;
+    private mixed $modo_curso = 1;
 
     private $Qid_sel;
     private $Qscroll_id;
     // Clave actual de la pila de navegación, inyectada desde el controller frontend.
     private int $stackActual = 0;
-    private BotonesCurso $oBotonesCurso;
-    private mixed $aLinks_dl;
-    private mixed $aLinks_otros;
+
+    /** @var array<string, array{path: string, query: array<string, mixed>}> */
+    private array $aLinks_dl = [];
+
+    /** @var array<string, array{path: string, query: array<string, mixed>}> */
+    private array $aLinks_otros = [];
+
     private mixed $status;
+
+    /**
+     * @return array{0: array<string, mixed>, 1: array<string, mixed>}
+     */
+    private function cursoWhereFromModo(int $modo_curso): array
+    {
+        $mes = date('m');
+        $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+        $any = ($mes > $fin_m) ? (int) date('Y') + 1 : date('Y');
+        $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
+        $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
+
+        $aWhere = ['_ordre' => 'f_ini'];
+        $aOperator = [];
+        switch ($modo_curso) {
+            case 2:
+                $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
+                $aOperator['f_ini'] = 'BETWEEN';
+                break;
+            case 3:
+                break;
+            case 1:
+            default:
+                $aWhere['status'] = StatusId::ACTUAL;
+                $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
+                $aOperator['f_ini'] = 'BETWEEN';
+                break;
+        }
+
+        return [$aWhere, $aOperator];
+    }
 
     private function getBotones(): array
     {
@@ -72,24 +112,26 @@ class Select_actividades_de_una_persona
 
     private function getValores()
     {
-        if (empty($this->a_valores)) {
+        if (empty($this->a_valores) && empty($this->msg_err)) {
             $this->getTabla();
         }
-        return $this->a_valores;
+
+        return $this->a_valores ?? [];
     }
 
     private function getTabla(): void
     {
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        $this->oBotonesCurso = new BotonesCurso($this->modo_curso);
-        $aWhere = $this->oBotonesCurso->getWhere();
-        $aOperator = $this->oBotonesCurso->getOperator();
+        [$aWhere, $aOperator] = $this->cursoWhereFromModo((int) $this->modo_curso);
 
         $oPersona = Persona::findPersonaEnGlobal($this->id_pau);
         if (!is_object($oPersona)) {
             $this->msg_err = "<br>No encuentro a ninguna persona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
-            exit($this->msg_err);
+            $this->a_valores = [];
+            $this->ref_perm = [];
+
+            return;
         }
         $id_tabla = $oPersona->getId_tabla();
         $oPermDossier = new PermDossier();
@@ -100,7 +142,7 @@ class Select_actividades_de_una_persona
         $aWhereNom = ['id_nom' => $this->id_pau];
         $aOperadorNom = [];
         $service = $GLOBALS['container']->get(AsistenteActividadService::class);
-        $cActividadesAsistente = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperator, TRUE);
+        $cActividadesAsistente = $service->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperator, true);
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         foreach ($cActividadesAsistente as $oAsistente) {
             $i++;
@@ -108,7 +150,6 @@ class Select_actividades_de_una_persona
             $oActividad = $ActividadAllRepository->findById($id_activ);
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
-            $dl_org = $oActividad->getDl_org();
             $f_ini = $oActividad->getF_ini()?->getFromLocal();
             $f_fin = $oActividad->getF_fin()?->getFromLocal();
 
@@ -152,51 +193,47 @@ class Select_actividades_de_una_persona
         $this->a_valores = $a_valores;
     }
 
-    public function getHtml()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
         $this->txt_eliminar = _("¿Está seguro que desea borrar a esta persona de esta actividad?");
-        // El valor llega ya resuelto desde el frontend vía setStackActual().
-        $stack = $this->stackActual;
-
-        $oHashSelect = new HashFront();
-        $oHashSelect->setCamposForm('modo_curso');
-        $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
-        $oHashSelect->setArraycamposHidden([
-            'pau' => $this->pau,
-            'id_pau' => $this->id_pau,
-            'obj_pau' => $this->obj_pau,
-            'queSel' => $this->queSel,
-            'id_dossier' => $this->id_dossier,
-            'permiso' => 3,
-            'stack' => $stack,
-        ]);
-
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('select_actividades_de_una_persona');
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones());
-        $oTabla->setDatos($this->getValores());
-
+        $this->getValores();
         $this->setLinksInsert();
 
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $url_form = $web . '/' . DossierTipoPublicUrls::relativeFormController(self::ID_TIPO_DOSSIER);
-        $url_eliminar = $web . '/src/asistentes/asistente_eliminar';
-
-        $a_campos = [
-            'oTabla' => $oTabla,
-            'oBotonesCurso' => $this->oBotonesCurso,
-            'oHashSelect' => $oHashSelect,
-            'aLinks_dl' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_dl),
-            'aLinks_otros' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_otros),
-            'txt_eliminar' => $this->txt_eliminar,
-            'bloque' => $this->bloque,
-            'url_form' => $url_form,
-            'url_eliminar' => $url_eliminar,
+        return [
+            'segment_tipo' => 'select_actividades_de_una_persona',
+            'modo_curso' => (int) $this->modo_curso,
+            'msg_err' => (string) ($this->msg_err ?? ''),
+            'wrapper' => [
+                'txt_eliminar' => (string) $this->txt_eliminar,
+                'bloque' => (string) ($this->bloque ?? ''),
+                'url_form_relative' => DossierTipoPublicUrls::relativeFormController(self::ID_TIPO_DOSSIER),
+                'url_eliminar_path' => 'src/asistentes/asistente_eliminar',
+            ],
+            'hash' => [
+                'campos_form' => 'modo_curso',
+                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'obj_pau' => $this->obj_pau,
+                    'queSel' => $this->queSel,
+                    'id_dossier' => $this->id_dossier,
+                    'permiso' => 3,
+                    'stack' => $this->stackActual,
+                ],
+            ],
+            'tabla' => [
+                'id_tabla' => 'select_actividades_de_una_persona',
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones(),
+                'valores' => $this->getValores(),
+            ],
+            'links_dl_specs' => $this->aLinks_dl,
+            'links_otros_specs' => $this->aLinks_otros,
         ];
-
-        $oView = new ViewNewPhtml('frontend\\asistentes\\controller');
-        $oView->renderizar('select_actividades_de_una_persona.phtml', $a_campos);
     }
 
     private function setLinksInsert(): void

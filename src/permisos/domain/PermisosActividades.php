@@ -13,7 +13,15 @@ use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use function src\shared\domain\helpers\is_true;
 
 /**
- * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:
+ * Matriz de permisos por tipo de actividad + contexto de la actividad actual en sesión.
+ *
+ * **Dirección de arquitectura:** conviene separar (1) el *read model* cacheado en sesión
+ * (solo `aPermDl` / `aPermOtras` y lectura sin I/O) de (2) la resolución que use
+ * contenedor/repositorios (actividad por id, fases completadas, procesos para crear),
+ * que debe vivir en `src/` y exponerse al `frontend/` vía `PostRequest` o DTOs.
+ * Ver `agents.md` § «Permisos de actividad en sesión».
+ *
+ * Instanciación (sesión):
  *
  *    $_SESSION['oPermActividades'] = new PermisosActividades(ConfigGlobal::id_usuario());
  *
@@ -73,7 +81,7 @@ class PermisosActividades
      *
      * @var integer
      */
-    private int $iid_activ;
+    private int $iid_activ = 0;
     /**
      * Id_tipo_proceso de PermisoActividad
      *
@@ -105,6 +113,15 @@ class PermisosActividades
      * @var array
      */
     private array $aFasesCompletadas = [];
+
+    /**
+     * Contexto de tipo y delegación ya resuelto (p. ej. pasado por el caller o
+     * tras cargar por id) para no depender de $GLOBALS['container'] en requests
+     * frontend que solo incluyen global_header_front.inc.
+     */
+    private ?string $setActividadContextTipo = null;
+
+    private ?string $setActividadContextDlOrg = null;
 
     /* METODES ----------------------------------------------------------------- */
     public function __construct($iid_usuario)
@@ -187,20 +204,64 @@ class PermisosActividades
     /**
      * fija las propiedades de dl_propia y id_tipo_activ.
      *
-     * @param integer $id_activ
+     * Si se pasan $id_tipo_activ y $dl_org (como en controladores frontend que
+     * ya cargaron la entidad), no se usa el contenedor DI. Si solo se pasa
+     * $id_activ, hace falta $GLOBALS['container'] o contexto cacheado de una
+     * llamada previa con los tres datos.
+     *
+     * @param int $id_activ
      */
-    public function setActividad(int $id_activ): void
+    public function setActividad(int $id_activ, ?string $id_tipo_activ = null, ?string $dl_org = null): void
     {
+        if ($this->iid_activ !== $id_activ) {
+            $this->aFasesCompletadas = [];
+        }
+
         $this->btop = false;
+
+        $tieneContexto = $id_tipo_activ !== null && $id_tipo_activ !== ''
+            && $dl_org !== null && $dl_org !== '';
+
+        if ($tieneContexto) {
+            $this->iid_activ = $id_activ;
+            $this->setActividadContextTipo = (string)$id_tipo_activ;
+            $this->setActividadContextDlOrg = (string)$dl_org;
+            $this->applyActividadTipoYDelegacion($this->setActividadContextTipo, $this->setActividadContextDlOrg);
+
+            return;
+        }
+
+        if ($id_activ === $this->iid_activ
+            && $this->setActividadContextTipo !== null
+            && $this->setActividadContextDlOrg !== null) {
+            $this->applyActividadTipoYDelegacion($this->setActividadContextTipo, $this->setActividadContextDlOrg);
+
+            return;
+        }
+
         $this->iid_activ = $id_activ;
+
+        if (!isset($GLOBALS['container'])) {
+            throw new \RuntimeException(
+                'PermisosActividades::setActividad: sin contenedor DI, indique id_tipo_activ y dl_org.'
+            );
+        }
 
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($id_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
+
+        $this->setActividadContextTipo = (string)$id_tipo_activ;
+        $this->setActividadContextDlOrg = (string)$dl_org;
+        $this->applyActividadTipoYDelegacion($this->setActividadContextTipo, $this->setActividadContextDlOrg);
+    }
+
+    private function applyActividadTipoYDelegacion(string $id_tipo_activ, string $dl_org): void
+    {
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 
-        $this->sid_tipo_activ = (string)$id_tipo_activ;
+        $this->sid_tipo_activ = $id_tipo_activ;
 
         if ($dl_org === ConfigGlobal::mi_delef() || $dl_org_no_f === ConfigGlobal::mi_dele()) {
             $this->bpropia = true;
@@ -214,24 +275,39 @@ class PermisosActividades
         $this->iid_fase = $iid_fase;
     }
 
-    private function isCompletada($id_fase)
+    /**
+     * Resuelve fases completadas: o bien ya vienen en sesión (setFasesCompletadas),
+     * o bien se cargan una sola vez con el repositorio si hay contenedor DI.
+     * En controladores solo-frontend debe haberse llamado antes a
+     * actividad_fases_completadas_datos + setFasesCompletadas.
+     */
+    private function ensureFasesCompletadasLoaded(): void
+    {
+        if (!empty($this->aFasesCompletadas)) {
+            return;
+        }
+        if (!isset($GLOBALS['container'])) {
+            throw new \RuntimeException(
+                'PermisosActividades: sin fases en caché ni contenedor. '
+                . 'En frontend use PostRequest a /src/actividades/actividad_fases_completadas_datos y setFasesCompletadas.'
+            );
+        }
+        $repo = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $fases = $repo->getFasesCompletadas($this->iid_activ);
+        $this->aFasesCompletadas = array_map(static fn ($id) => (int)$id, $fases);
+    }
+
+    private function isCompletada($id_fase): bool
     {
         if (empty($id_fase)) {
             exit (_("Hay que indicar para que fase"));
         }
-        // para cuando se mira la actividad en un estado anterior, se cargan las
-        // fases completadas con la funcion setFasesCompletadas($aFases) en la variable
-        // $this->aFasesCompletadas
-        if (!empty($this->aFasesCompletadas)) {
-            if (in_array($id_fase, $this->aFasesCompletadas)) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
-        }
-        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
-        $completada = $ActividadProcesoTareaRepository->faseCompletada($this->iid_activ, $id_fase);
-        return $completada;
+
+        $this->ensureFasesCompletadasLoaded();
+        $idFase = (int)$id_fase;
+        $fasesNorm = array_map(static fn ($v) => (int)$v, $this->aFasesCompletadas);
+
+        return \in_array($idFase, $fasesNorm, true);
     }
 
     public function setFasesCompletadas($aFases = [])

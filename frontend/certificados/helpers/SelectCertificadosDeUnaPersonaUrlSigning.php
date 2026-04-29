@@ -8,9 +8,9 @@ use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 
 /**
- * Firma la URL del botón "adjuntar nuevo certificado" para {@see \src\certificados\domain\Select1010}.
+ * Firma la URL del botón "adjuntar nuevo certificado" para {@see \frontend\certificados\helpers\SelectCertificadosDeUnaPersonaRender}.
  */
-final class Select1010UrlSigning
+final class SelectCertificadosDeUnaPersonaUrlSigning
 {
     /**
      * @param array{url_nuevo_spec?: array{path?: string, query?: array<string, mixed>}} $in

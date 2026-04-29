@@ -17,14 +17,14 @@ use src\actividades\domain\entity\TiposActividades;
  * Monta el listado de actividades sf/sg (crt, cv) aplicando los filtros
  * fijados por la pantalla `lista_actividades_sg`. Concentra todos los
  * accesos a repositorios del dominio y devuelve datos listos para serializar.
- * La tabla HTML y la advertencia firmada se arman en `lista_actividades_sg_datos.php`.
+ * La tabla HTML y la advertencia firmada se arman en `frontend/actividades/controller/lista_actividades_sg.php`.
  *
  * Claves:
  *   - result_busqueda (string)   Texto resumen ("X actividades encontradas (Y sin permiso)").
  *   - id_tipo_activ (string)     Filtro efectivo aplicado (1[45]1 o 1[45]3).
  *   - html_advertencia (string)  Vacío; si >200 actividades, `advertencia_demasiadas`.
- *   - advertencia_demasiadas (array|null)  Specs para el HTML de confirmación.
- *   - a_cabeceras, a_botones, a_valores     Para `Lista::mostrar_tabla` en el endpoint.
+ *   - advertencia_demasiadas (array|null)  Specs para el HTML de confirmación en el front.
+ *   - a_cabeceras, a_botones, a_valores     Para `Lista::mostrar_tabla` en el front (`link_spec` en celdas si aplica).
  */
 final class ListaActividadesSgListado
 {

@@ -3,7 +3,6 @@
 namespace src\actividadestudios\application;
 
 use src\shared\config\ConfigGlobal;
-use frontend\shared\model\ViewNewPhtml;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaDlRepositoryInterface;
 use src\actividadestudios\domain\contracts\ActividadAsignaturaRepositoryInterface;
@@ -11,12 +10,13 @@ use src\actividadestudios\domain\contracts\MatriculaDlRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\domain\entity\Persona;
-use frontend\shared\security\HashFront;
-use frontend\shared\web\Lista;
 
 /**
  * Widget del dossier `3103` (codigo `matriculas_de_una_actividad`):
  * listado de matriculas de una actividad, agrupadas por asignatura.
+ *
+ * El HTML lo renderiza {@see \frontend\actividadestudios\helpers\SelectMatriculasDeUnaActividadRender}
+ * a partir de {@see self::getSegmentData()} (sin dependencias `frontend\` en `src/`).
  *
  * Sucesor de `apps/actividadestudios/model/Select3103.php`. Instanciado
  * dinamicamente por
@@ -24,11 +24,11 @@ use frontend\shared\web\Lista;
  */
 class Select_matriculas_de_una_actividad
 {
-    private string $msg_err = '';
     private string $nom_activ = '';
     private array $a_valores = [];
     private array $a_grupos = [];
-    private string $txt_eliminar = '';
+    private string $sin_asignaturas_mensaje = '';
+    private string $msg_err = '';
     private string $bloque = '';
 
     private string $queSel = '';
@@ -58,7 +58,7 @@ class Select_matriculas_de_una_actividad
 
     public function getValores(): array
     {
-        if (empty($this->a_valores)) {
+        if (empty($this->a_valores) && $this->sin_asignaturas_mensaje === '') {
             $this->getTabla();
         }
         return $this->a_valores;
@@ -66,7 +66,7 @@ class Select_matriculas_de_una_actividad
 
     public function getGrupos(): array
     {
-        if (empty($this->a_grupos)) {
+        if (empty($this->a_grupos) && $this->sin_asignaturas_mensaje === '') {
             $this->getTabla();
         }
         return $this->a_grupos;
@@ -74,6 +74,8 @@ class Select_matriculas_de_una_actividad
 
     private function getTabla(): void
     {
+        $this->sin_asignaturas_mensaje = '';
+        $this->msg_err = '';
         $mi_dele = ConfigGlobal::mi_delef();
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $oActividad = $ActividadAllRepository->findById($this->id_pau);
@@ -93,7 +95,10 @@ class Select_matriculas_de_una_actividad
         ]);
 
         if (is_array($cActividadAsignaturas) && count($cActividadAsignaturas) === 0) {
-            echo _("esta actividad no tiene ninguna asignatura");
+            $this->sin_asignaturas_mensaje = _("esta actividad no tiene ninguna asignatura");
+            $this->a_valores = [];
+            $this->a_grupos = [];
+
             return;
         }
 
@@ -157,41 +162,44 @@ class Select_matriculas_de_una_actividad
         $this->a_grupos = $aGrupos;
     }
 
-    public function getHtml(): void
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
-        $this->txt_eliminar = _("¿Está seguro que desea quitar esta matrícula?");
+        $this->getTabla();
 
-        $oHashSelect = new HashFront();
-        $oHashSelect->setCamposForm('');
-        $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
-        $oHashSelect->setArraycamposHidden([
-            'pau' => $this->pau,
-            'id_pau' => $this->id_pau,
-            'obj_pau' => $this->obj_pau,
-            'queSel' => $this->queSel,
-            'id_dossier' => $this->id_dossier,
-            'permiso' => $this->permiso,
-            'bloque' => $this->bloque,
-        ]);
-
-        $oTabla = new Lista();
-        $oTabla->setGrupos($this->getGrupos());
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones());
-        $oTabla->setDatos($this->getValores());
-
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $a_campos = [
-            'oHashSelect' => $oHashSelect,
-            'oTabla' => $oTabla,
-            'txt_eliminar' => $this->txt_eliminar,
-            'nom_activ' => $this->nom_activ,
-            'url_form' => $web . '/' . DossierTipoPublicUrls::relativeFormController(1303),
-            'url_matricula_eliminar' => $web . '/src/actividadestudios/matricula_eliminar',
+        return [
+            'segment_tipo' => 'select_matriculas_de_una_actividad',
+            'sin_asignaturas_mensaje' => $this->sin_asignaturas_mensaje,
+            'msg_err' => $this->msg_err,
+            'wrapper' => [
+                'txt_eliminar' => _("¿Está seguro que desea quitar esta matrícula?"),
+                'nom_activ' => $this->nom_activ,
+                'bloque' => $this->bloque,
+                'url_form_relative' => DossierTipoPublicUrls::relativeFormController(1303),
+                'url_matricula_eliminar_path' => 'src/actividadestudios/matricula_eliminar',
+            ],
+            'hash' => [
+                'campos_form' => '',
+                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'obj_pau' => $this->obj_pau,
+                    'queSel' => $this->queSel,
+                    'id_dossier' => $this->id_dossier,
+                    'permiso' => $this->permiso,
+                    'bloque' => $this->bloque,
+                ],
+            ],
+            'tabla' => [
+                'grupos' => $this->a_grupos,
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones(),
+                'valores' => $this->a_valores,
+            ],
         ];
-
-        (new ViewNewPhtml('frontend\\actividadestudios\\controller'))
-            ->renderizar('select_matriculas_de_una_actividad.phtml', $a_campos);
     }
 
     public function getId_dossier() { return $this->id_dossier; }

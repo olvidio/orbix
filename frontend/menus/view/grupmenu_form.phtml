@@ -3,23 +3,20 @@
         <?= $oPosicion->js_atras(1) ?>
     }
     fnjs_guardar = function (formulario) {
-        let rr = fnjs_comprobar_campos(formulario, '\\src\\menus\\domain\\entity\\GrupMenu');
-        if (rr === 'ok') {
-            let datos = $(formulario).serialize();
-            let request = $.ajax({
-                data: datos,
-                url: 'src/menus/grupmenu_guardar',
-                method: 'POST',
-                dataType: 'json'
-            });
-            request.done(function (json) {
-                if (json.success !== true) {
-                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
-                } else {
-                    <?= $oPosicion->js_atras(1); ?>
-                }
-            });
-        }
+        let datos = $(formulario).serialize();
+        let request = $.ajax({
+            data: datos,
+            url: 'src/menus/grupmenu_guardar',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(1); ?>
+            }
+        });
     }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>

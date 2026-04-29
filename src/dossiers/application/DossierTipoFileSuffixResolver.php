@@ -75,6 +75,10 @@ final class DossierTipoFileSuffixResolver
         if (is_file($file3)) {
             return 'src\\' . $app . '\\application\\' . $baseName;
         }
+        $file4 = $this->projectRoot . '/src/' . $app . '/domain/' . $baseName . '.php';
+        if (is_file($file4)) {
+            return 'src\\' . $app . '\\domain\\' . $baseName;
+        }
         return null;
     }
 
@@ -132,6 +136,10 @@ final class DossierTipoFileSuffixResolver
             return $p2;
         }
         $p3 = $this->projectRoot . '/src/' . $app . '/application/' . $baseName . '.php';
-        return is_file($p3) ? $p3 : null;
+        if (is_file($p3)) {
+            return $p3;
+        }
+        $p4 = $this->projectRoot . '/src/' . $app . '/domain/' . $baseName . '.php';
+        return is_file($p4) ? $p4 : null;
     }
 }

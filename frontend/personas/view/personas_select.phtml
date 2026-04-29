@@ -1,9 +1,9 @@
 <?php
-
 use frontend\shared\config\AppUrlConfig;
-
 ?>
+
 <?= $oPosicion->mostrar_left_slide(1) ?>
+
 <script>
     fnjs_home = function (formulario) {
         rta = fnjs_solo_uno(formulario);
@@ -25,7 +25,7 @@ use frontend\shared\config\AppUrlConfig;
     fnjs_dossiers = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/dossiers/controller/dossiers_ver.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -46,7 +46,7 @@ use frontend\shared\config\AppUrlConfig;
         if (rta === 1) {
             $('#que').val("activ");
             $('#id_dossier').val("1301y1302");
-            $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/dossiers/controller/dossiers_ver.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -55,7 +55,7 @@ use frontend\shared\config\AppUrlConfig;
     fnjs_tessera = function (formulario) {
         rta = fnjs_solo_uno(formulario, true);
         if (rta !== 0) {
-            $(formulario).attr('action', "frontend/notas/controller/tessera_ver.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/notas/controller/tessera_ver.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -65,7 +65,7 @@ use frontend\shared\config\AppUrlConfig;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             $('#que').val("un_sacd");
-            $(formulario).attr('action', "frontend/actividadessacd/controller/com_sacd_activ_periodo.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/actividadessacd/controller/com_sacd_activ_periodo.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -76,7 +76,7 @@ use frontend\shared\config\AppUrlConfig;
         if (rta === 1) {
             $('#que').val("matriculas");
             $('#id_dossier').val("1303");
-            $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/dossiers/controller/dossiers_ver.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -85,7 +85,7 @@ use frontend\shared\config\AppUrlConfig;
     fnjs_posibles_ca = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "frontend/actividadestudios/controller/ca_posibles.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/actividadestudios/controller/ca_posibles.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -95,7 +95,7 @@ use frontend\shared\config\AppUrlConfig;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             $('#que').val(sactividad);
-            $(formulario).attr('action', "frontend/actividadplazas/controller/peticiones_activ.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/actividadplazas/controller/peticiones_activ.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -104,7 +104,7 @@ use frontend\shared\config\AppUrlConfig;
     fnjs_imp_tessera = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "frontend/notas/controller/tessera_imprimir.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/notas/controller/tessera_imprimir.php");
             $(formulario).target = "print";
             fnjs_enviar_formulario(formulario);
         }
@@ -115,7 +115,7 @@ use frontend\shared\config\AppUrlConfig;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             $('#id_dossier').val("1011");
-            $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/dossiers/controller/dossiers_ver.php");
             fnjs_enviar_formulario(formulario);
         }
     }
@@ -124,7 +124,7 @@ use frontend\shared\config\AppUrlConfig;
     fnjs_imp_certificado = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "frontend/certificados/controller/certificado_emitido_imprimir.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/certificados/controller/certificado_emitido_imprimir.php");
             $(formulario).target = "print";
             fnjs_enviar_formulario(formulario);
         }
@@ -135,7 +135,7 @@ use frontend\shared\config\AppUrlConfig;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             $('#id_dossier').val("1010");
-            $(formulario).attr('action', "frontend/certificados/controller/certificado_recibido_adjuntar.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/certificados/controller/certificado_recibido_adjuntar.php");
             $(formulario).target = "print";
             fnjs_enviar_formulario(formulario);
         }
@@ -145,7 +145,7 @@ use frontend\shared\config\AppUrlConfig;
     fnjs_ficha_profe = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "frontend/profesores/controller/ficha_profesor_stgr.php");
+            $(formulario).attr('action', "<?= AppUrlConfig::getPublicAppBaseUrl() ?>/frontend/profesores/controller/ficha_profesor_stgr.php");
             fnjs_enviar_formulario(formulario);
         }
     }

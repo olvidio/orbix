@@ -6,10 +6,10 @@ use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\HabitacionId;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
-use frontend\shared\security\HashFront;
 
 /**
  * Datos para `frontend/ubiscamas/controller/habitacion_form.php`.
+ * La composición de `HashFront` ocurre en {@see \frontend\ubiscamas\helpers\UbiscamasFormHashCompose::habitacionForm}.
  */
 final class HabitacionFormData
 {
@@ -91,36 +91,32 @@ final class HabitacionFormData
         $camposChk = 'sillon!adaptada!despacho';
         $camposNo = 'new_camas_desc!new_camas_larga!new_camas_vip';
 
-        $oHash = new HashFront();
-        $oHash->setCamposForm($camposForm);
-        $oHash->setCamposChk($camposChk);
-        $oHash->setCamposNo($camposNo);
-        $oHash->setArraycamposHidden([
-            'id_habitacion' => $Qid_habitacion,
-            'id_ubi' => $Qid_ubi,
-            'nuevo' => $Qnuevo,
-        ]);
-
-        $oHashActualizar = new HashFront();
-        $oHashActualizar->setCamposNo('refresh');
-        $oHashActualizar->setArraycamposHidden([
-            'id_habitacion' => $Qid_habitacion,
-            'id_ubi' => $Qid_ubi,
-        ]);
-
-        $url_cama_form = 'frontend/ubiscamas/controller/cama_form.php';
-        $oHashCamaForm = new HashFront();
-        $oHashCamaForm->setUrl($url_cama_form);
-        $oHashCamaForm->setCamposForm('id_ubi!id_cama!id_habitacion');
-
-        $url_cama_delete = 'src/ubiscamas/cama_delete';
-        $oHashCamaDelete = new HashFront();
-        $oHashCamaDelete->setUrl($url_cama_delete);
-        $oHashCamaDelete->setCamposForm('id_ubi!id_cama!id_habitacion');
-
         return [
-            'hash_form_html' => $oHash->getCamposHtml(),
-            'hash_actualizar_html' => $oHashActualizar->getCamposHtml(),
+            'hash_form' => [
+                'campos_form' => $camposForm,
+                'campos_chk' => $camposChk,
+                'campos_no' => $camposNo,
+                'campos_hidden' => [
+                    'id_habitacion' => $Qid_habitacion,
+                    'id_ubi' => $Qid_ubi,
+                    'nuevo' => $Qnuevo,
+                ],
+            ],
+            'hash_actualizar' => [
+                'campos_no' => 'refresh',
+                'campos_hidden' => [
+                    'id_habitacion' => $Qid_habitacion,
+                    'id_ubi' => $Qid_ubi,
+                ],
+            ],
+            'cama_form_hash' => [
+                'url' => 'frontend/ubiscamas/controller/cama_form.php',
+                'campos_form' => 'id_ubi!id_cama!id_habitacion',
+            ],
+            'cama_delete_hash' => [
+                'url' => 'src/ubiscamas/cama_delete',
+                'campos_form' => 'id_ubi!id_cama!id_habitacion',
+            ],
             'id_habitacion' => $Qid_habitacion,
             'id_ubi' => $Qid_ubi,
             'orden' => $orden,
@@ -135,10 +131,6 @@ final class HabitacionFormData
             'tipoLavabo' => $tipoLavabo,
             'a_tipos_tipoLavabo' => $a_tipos_tipoLavabo,
             'a_camas' => $a_camas_rows,
-            'url_cama_form' => $url_cama_form,
-            'h_cama_form_params' => $oHashCamaForm->linkSinValParams(),
-            'url_cama_delete' => $url_cama_delete,
-            'h_cama_delete_params' => $oHashCamaDelete->linkSinValParams(),
         ];
     }
 }

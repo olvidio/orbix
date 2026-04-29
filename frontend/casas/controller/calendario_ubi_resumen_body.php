@@ -39,7 +39,7 @@ if (!$ok && $error === 'sin_gastos_anterior') {
         'periodo' => 'ninguno',
         'year' => $any_anterior,
     ];
-    array_walk($aQuery, 'core\\poner_empty_on_null');
+    array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
     $web = AppUrlConfig::getPublicAppBaseUrl();
     $pagina = HashFront::link($web . '/frontend/casas/controller/casa.php?' . http_build_query($aQuery));
     $link = "<span class=\"link\" onclick=\"fnjs_update_div('#main','$pagina');\">$any_anterior</span>";

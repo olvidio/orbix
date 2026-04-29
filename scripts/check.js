@@ -594,50 +594,6 @@ function fnjs_mostra_resposta(respuesta, bloque
     }
 }
 
-// Funcion para comprobar que estan todos los campos necesarios antes de guardar.
-// @param object formulario
-// @param string tabla Nombre de la tabla de la base de datos.
-// @param string ficha 'si' o 'no' si viene de la presentación ficha.php
-// @param integer pau 0 | 1 si es de dossiers
-// @param string exterior 'si' o 'no' si está en la base de datos exterior o no.
-// @return string 'ok' | 'error'
-fnjs_comprobar_campos = function (formulario, obj, ccpau, tabla
-) {
-    if (tabla === undefined && obj === undefined) {
-        return 'ok';
-    } // sigue.
-    var s = 0;
-    if (tabla == undefined) tabla = 'x';
-    if (obj == undefined) {
-        obj = 'x';
-    }
-    //var parametros=$(formulario).serialize()+'&tabla='+tabla+'&ficha='+ficha+'&pau='+pau+'&exterior='+exterior+'&PHPSESSID=1';
-    var parametros = $(formulario).serialize() + '&cc_tabla=' + tabla + '&cc_obj=' + obj + '&cc_pau=' + ccpau;
-
-    url = 'apps/core/comprobar_campos.php';
-    // pongo la opción async a 'false' para que espere, si no sigue con el código y devuelve siempre ok.
-    $.ajax({
-        async: false,
-        url: url,
-        type: 'post',
-        data: parametros,
-        dataType: 'html',
-        success: function (rta_txt) {
-            if (rta_txt.length > 3) {
-                alert("1:\n" + rta_txt);
-                s = 1;
-            } else {
-                s = 0;
-            }
-        }
-    });
-    if (s == 1) {
-        return 'error';
-    } else {
-        return 'ok';
-    }
-}
-
 function XMLtoString(elem) {
 
     var serialized;
@@ -1188,52 +1144,6 @@ function fnjs_mostra_resposta(respuesta, bloque
     fnjs_cambiar_link(bloque);
     if (bloque === '#main') {
         sessionStorage.removeItem('is_back_navigation');
-    }
-}
-
-/*
-* funcion para comprobar que estan todos los campos necesarios antes de guardar.
-*@param object formulario
-*@param string tabla Nombre de la tabla de la base de datos.
-*@param string ficha 'si' o 'no' si viene de la presentación ficha.php
-*@param integer pau 0 | 1 si es de dossiers
-*@param string exterior 'si' o 'no' si está en la base de datos exterior o no.
-*@return string 'ok' | 'error'
-*/
-fnjs_comprobar_campos = function (formulario, obj, ccpau, tabla
-) {
-    if (tabla === undefined && obj === undefined) {
-        return 'ok';
-    } // sigue.
-    var s = 0;
-    if (tabla == undefined) tabla = 'x';
-    if (obj == undefined) {
-        obj = 'x';
-    }
-    //var parametros=$(formulario).serialize()+'&tabla='+tabla+'&ficha='+ficha+'&pau='+pau+'&exterior='+exterior+'&PHPSESSID=1';
-    var parametros = $(formulario).serialize() + '&cc_tabla=' + tabla + '&cc_obj=' + obj + '&cc_pau=' + ccpau;
-
-    url = 'apps/core/comprobar_campos.php';
-    // pongo la opción async a 'false' para que espere, si no sigue con el código y devuelve siempre ok.
-    $.ajax({
-        async: false,
-        url: url,
-        type: 'post',
-        data: parametros,
-        dataType: 'html',
-        success: function (rta_txt) {
-            if (rta_txt.length > 3) {
-                alert("1:\n" + rta_txt);
-                s = 1;
-            } else {
-                s = 0;
-            }
-        }
-    });
-    if (s == 1) {
-        return 'error';
-    } else {
-        return 'ok';
     }
 }
 

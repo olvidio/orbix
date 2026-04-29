@@ -92,7 +92,8 @@ $camposMas = $a_campos_src['camposMas'];
 $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
-    'quien' => $Qquien
+    'quien' => $Qquien,
+    'ctx' => (string)($a_campos_src['ctx_guardar'] ?? ''),
 );
 if (!empty($camposMas)) {
     $camposForm .= '!' . $camposMas;

@@ -64,7 +64,7 @@ HTTP / dominio).
 - `frontend/procesos/controller/actividad_proceso.php`
 - `frontend/shared/controller/tablaDB_formulario_ver.php`
 - `frontend/notas/view/select_notas_de_una_persona.phtml`
-- `frontend/certificados/view/select1010.phtml`
+- `frontend/certificados/view/select_certificados_de_una_persona.phtml`
 - `frontend/ubiscamas/view/select_habitaciones_cdc.phtml`
 - `frontend/asistentes/view/select_actividades_de_una_persona.phtml`
 - `frontend/asistentes/view/select_asistentes_a_una_actividad.phtml`
@@ -154,7 +154,7 @@ ni `infrastructure/ui/http/controllers/`.
 - `frontend/procesos/controller/actividad_proceso.php`
 - `frontend/shared/controller/tablaDB_formulario_ver.php`
 - `frontend/notas/view/select_notas_de_una_persona.phtml`
-- `frontend/certificados/view/select1010.phtml`
+- `frontend/certificados/view/select_certificados_de_una_persona.phtml`
 - `frontend/ubiscamas/view/select_habitaciones_cdc.phtml`
 - `frontend/asistentes/view/select_actividades_de_una_persona.phtml`
 - `frontend/actividadcargos/view/select_cargos_de_actividad.phtml`

@@ -2,12 +2,12 @@
 
 use frontend\shared\web\ContestarJson;
 use src\dossiers\application\DossiersListaFichasData;
-use src\dossiers\infrastructure\ui\http\SignPublicFrontendLink;
 
 $data = DossiersListaFichasData::build(
     (string)($_POST['pau'] ?? ''),
     (int)($_POST['id_pau'] ?? 0),
     (string)($_POST['obj_pau'] ?? '')
 );
-$data['a_filas'] = SignPublicFrontendLink::resolveDossiersListaFichasFilas($data['a_filas']);
+// El backend sólo devuelve `*_link_spec` por fila; la firma con HashFront se realiza
+// en el frontend (ver frontend/dossiers/controller/lista_dossiers.php).
 ContestarJson::enviar('', $data);

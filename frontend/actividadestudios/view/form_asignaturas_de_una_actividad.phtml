@@ -53,25 +53,21 @@
     }
 
     fnjs_guardar = function (formulario) {
-        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
-
-        if (rr === 'ok') {
-            var mod = $(formulario).find('[name=mod]').val();
-            var url = (mod === 'editar') ? '<?= $url_actividad_asignatura_editar ?>' : '<?= $url_actividad_asignatura_nueva ?>';
-            var datos = $(formulario).serialize();
-            $.ajax({
-                data: datos,
-                url: url,
-                method: 'POST',
-                dataType: 'json'
-            }).done(function (json) {
-                if (json.success !== true) {
-                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
-                } else {
-                    <?= $oPosicion->js_atras(1); ?>
-                }
-            });
-        }
+        var mod = $(formulario).find('[name=mod]').val();
+        var url = (mod === 'editar') ? '<?= $url_actividad_asignatura_editar ?>' : '<?= $url_actividad_asignatura_nueva ?>';
+        var datos = $(formulario).serialize();
+        $.ajax({
+            data: datos,
+            url: url,
+            method: 'POST',
+            dataType: 'json'
+        }).done(function (json) {
+            if (json.success !== true) {
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(1); ?>
+            }
+        });
     }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>

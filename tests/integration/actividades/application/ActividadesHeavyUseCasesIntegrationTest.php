@@ -6,6 +6,8 @@ use src\actividades\application\ActividadNueva;
 use src\actividades\application\ActividadNuevoCurso;
 use src\actividades\application\ActividadNuevoCursoEjecutar;
 use src\actividades\application\ActividadSelectListado;
+use src\actividades\application\ActividadFaseCompletadaDatos;
+use src\actividades\application\ActividadFasesCompletadasDatos;
 use src\actividades\application\ActividadVerDatos;
 use src\actividades\application\ListaActividadesSgListado;
 use src\actividades\application\ListaSrCsvListado;
@@ -28,6 +30,18 @@ use Tests\myTest;
  */
 class ActividadesHeavyUseCasesIntegrationTest extends myTest
 {
+    public function test_actividad_fases_completadas_datos_id_cero_devuelve_lista_vacia(): void
+    {
+        $out = (new ActividadFasesCompletadasDatos())->ejecutar(0);
+        $this->assertSame(['fases_completadas' => []], $out);
+    }
+
+    public function test_actividad_fase_completada_datos_id_invalido_devuelve_false(): void
+    {
+        $out = (new ActividadFaseCompletadaDatos())->ejecutar(0, 0);
+        $this->assertSame(['completada' => false], $out);
+    }
+
     public function test_actividad_ver_datos_sin_id_devuelve_payload_esperado(): void
     {
         $out = (new ActividadVerDatos())->ejecutar([

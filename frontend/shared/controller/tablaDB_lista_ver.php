@@ -3,6 +3,7 @@
 namespace src\shared;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
@@ -84,6 +85,14 @@ if ($QaSerieBuscar === null && $Qk_buscar === null) {
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
     $a_campos_buscar = $data['a_campos'];
+    if (!empty($a_campos_buscar['documentos_form_hash_meta']) && is_array($a_campos_buscar['documentos_form_hash_meta'])) {
+        $meta = $a_campos_buscar['documentos_form_hash_meta'];
+        $oHashDocForm = new HashFront();
+        $oHashDocForm->setUrl((string) ($meta['url'] ?? ''));
+        $oHashDocForm->setCamposForm((string) ($meta['campos_form'] ?? ''));
+        $a_campos_buscar['h1'] = $oHashDocForm->linkSinValParams();
+        unset($a_campos_buscar['documentos_form_hash_meta']);
+    }
     $datos_buscar = empty($data['buscar_view']) ? '' : $data['buscar_view'];
     $namespace = empty($data['namespace_view']) ? 'frontend\shared\view' : $data['namespace_view'];
 

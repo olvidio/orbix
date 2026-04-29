@@ -1,6 +1,7 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\web\Desplegable;
@@ -46,9 +47,12 @@ $locData = PostRequest::getDataFromUrl('/src/certificados/certificados_locales_d
 $a_locales = (array)($locData['a_locales'] ?? []);
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, '', true);
 
+$basePublic = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHashCertificadoPdf' => $oHashCertificadoPdf,
+    'url_certificado_recibido_guardar' => $basePublic . '/src/certificados/certificado_recibido_guardar',
+    'url_certificado_recibido_pdf_upload' => $basePublic . '/src/certificados/certificado_recibido_pdf_upload',
     'nom' => $nom,
     'oDesplIdiomas' => $oDesplIdiomas,
     'idioma' => $idioma,

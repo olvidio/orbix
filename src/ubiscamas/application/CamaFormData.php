@@ -3,13 +3,12 @@
 namespace src\ubiscamas\application;
 
 use Ramsey\Uuid\Uuid;
-use src\shared\config\ConfigGlobal;
 use src\ubiscamas\domain\contracts\CamaDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\CamaId;
-use frontend\shared\security\HashFront;
 
 /**
  * Datos para `frontend/ubiscamas/controller/cama_form.php`.
+ * La composición de `HashFront` ocurre en {@see \frontend\ubiscamas\helpers\UbiscamasFormHashCompose::camaForm}.
  */
 final class CamaFormData
 {
@@ -40,27 +39,23 @@ final class CamaFormData
             $vip = $oCama->isVip() ?? false;
         }
 
-        $oHash = new HashFront();
-        $oHash->setCamposForm('descripcion!larga!vip');
-        $oHash->setCamposChk('larga!vip');
-        $oHash->setArraycamposHidden([
-            'id_cama' => $Qid_cama,
-            'id_habitacion' => $Qid_habitacion,
-            'id_ubi' => $Qid_ubi,
-            'mod' => $Qmod,
-        ]);
-
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-
         return [
-            'hash_form_html' => $oHash->getCamposHtml(),
+            'hash_form' => [
+                'campos_form' => 'descripcion!larga!vip',
+                'campos_chk' => 'larga!vip',
+                'campos_hidden' => [
+                    'id_cama' => $Qid_cama,
+                    'id_habitacion' => $Qid_habitacion,
+                    'id_ubi' => $Qid_ubi,
+                    'mod' => $Qmod,
+                ],
+            ],
             'id_cama' => $Qid_cama,
             'id_habitacion' => $Qid_habitacion,
             'id_ubi' => $Qid_ubi,
             'descripcion' => $descripcion,
             'larga' => $larga,
             'vip' => $vip,
-            'cama_update_url' => $web . '/src/ubiscamas/cama_update',
         ];
     }
 }

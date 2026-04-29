@@ -8,29 +8,28 @@ use src\shared\domain\DatosTablaRepo;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\personas\domain\entity\Persona;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
-use frontend\shared\web\Lista;
-use frontend\shared\security\HashFront;
 
 /**
- * Cuerpo de dossiers_ver: cabecera (campos) + lista o ficha (HTML).
- * Las URLs van como placeholders `__ORBIX_DSG_*__`; `url_specs` mapea cada placeholder
- * a `{path, query}` y se firma en `dossiers_ver_pantalla_data.php`.
+ * Cuerpo de dossiers_ver: datos de cabecera + lista o ficha.
+ * El backend NO firma URLs: devuelve `*_link_spec` ({path, query}) que firma el frontend.
  *
- * @return array{error?: string, top_html: string, web_icons: string, modo: 'lista'|'ficha', cuerpo_html: string, lista_a_filas?: list<array<string, mixed>>, url_specs: array<string, array{path: string, query: array<string, mixed>}>}
+ * En modo ficha, `ficha_segmentos` mezcla:
+ *  - Segmentos `html` ya generados por los `Select_*` (TODO: refactorizar para que tampoco
+ *    lleven HTML/HashFront desde `src/`).
+ *  - Segmentos `datos_tabla` con datos puros (`action_tabla_link_spec`, `ins_traslado_link_spec`,
+ *    `script_ctx`, `hash`, `tabla`, `permiso`) que el frontend compone con HashFront, Lista y
+ *    el script JS de `DatosTablaRepo`.
+ *
+ * @return array{
+ *     error?: string,
+ *     top_data: array{web_icons: string, alt_dossiers: string, txt_dossiers: string, nom_cabecera: string, go_dossiers_link_spec: array{path: string, query: array<string, mixed>}, go_home_link_spec?: array{path: string, query: array<string, mixed>}},
+ *     modo: 'lista'|'ficha',
+ *     lista_a_filas?: list<array<string, mixed>>,
+ *     ficha_segmentos?: list<array<string, mixed>>
+ * }
  */
 class DossiersVerPantallaData
 {
-    private const PH_GODOSSIERS = '__ORBIX_DSG_godossiers__';
-
-    private const PH_GO_HOME = '__ORBIX_DSG_go_home__';
-
-    private static function phActionDatos(int $idDossier): string
-    {
-        return '__ORBIX_DSG_action_datos_' . $idDossier . '__';
-    }
-
-    private const PH_INS_TRASLADO = '__ORBIX_DSG_ins_traslado__';
-
     public static function build(array $post): array
     {
         $Qrefresh = (int)($post['refresh'] ?? 0);
@@ -66,7 +65,8 @@ class DossiersVerPantallaData
         $Qobj_pau = (string)($post['obj_pau'] ?? '');
         $Qid_dossier = (string)($post['id_dossier'] ?? '');
         $Qpermiso = (string)($post['permiso'] ?? '');
-        $QqueSel = (string)($post['queSel'] ?? '');
+        // `personas_select` y otras vistas legacy envían `que`; otras pantallas usan `queSel`.
+        $QqueSel = (string)($post['queSel'] ?? $post['que'] ?? '');
         $Qclase_info_encoded = (string)($post['clase_info'] ?? '');
 
         if (empty($Qid_dossier) && !empty($Qclase_info_encoded)) {
@@ -134,13 +134,12 @@ class DossiersVerPantallaData
             return $repositoryProvider->get($obj_pau);
         };
 
-        $urlSpecs = [];
-        $urlSpecs[self::PH_GODOSSIERS] = [
+        $goDossiersLinkSpec = [
             'path' => 'frontend/dossiers/controller/dossiers_ver.php',
             'query' => ['pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau],
         ];
-        $godossiersPh = self::PH_GODOSSIERS;
 
+        $goHomeLinkSpec = null;
         switch ($pau) {
             case 'p':
                 if (empty($Qobj_pau) || $Qobj_pau === 'Persona') {
@@ -148,7 +147,7 @@ class DossiersVerPantallaData
                     if (!is_object($oPersona)) {
                         return [
                             'error' => "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ': line (Persona lookup)',
-                            'url_specs' => [],
+                            'ficha_segmentos' => [],
                         ];
                     }
                     $clase = get_class($oPersona);
@@ -158,7 +157,7 @@ class DossiersVerPantallaData
                     $oPersona = $repo->findById($id_pau);
                 }
                 $nom_cabecera = $oPersona->getNombreApellidos();
-                $urlSpecs[self::PH_GO_HOME] = [
+                $goHomeLinkSpec = [
                     'path' => 'frontend/personas/controller/home_persona.php',
                     'query' => ['id_nom' => $id_pau, 'obj_pau' => $Qobj_pau],
                 ];
@@ -167,7 +166,7 @@ class DossiersVerPantallaData
                 $repo = $getRepository($Qobj_pau);
                 $oUbi = $repo->findById($id_pau);
                 $nom_cabecera = $oUbi->getNombre_ubi();
-                $urlSpecs[self::PH_GO_HOME] = [
+                $goHomeLinkSpec = [
                     'path' => 'frontend/ubis/controller/home_ubis.php',
                     'query' => ['id_ubi' => $id_pau, 'obj_pau' => $Qobj_pau],
                 ];
@@ -176,48 +175,40 @@ class DossiersVerPantallaData
                 $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
                 $oActividad = $ActividadAllRepository->findById($id_pau);
                 $nom_cabecera = $oActividad->getNom_activ();
-                $urlSpecs[self::PH_GO_HOME] = [
+                $goHomeLinkSpec = [
                     'path' => 'frontend/actividades/controller/actividad_ver.php',
                     'query' => ['id_activ' => $id_pau, 'obj_pau' => $Qobj_pau],
                 ];
                 break;
             default:
-                return ['error' => 'pau desconocido', 'url_specs' => []];
+                return ['error' => 'pau desconocido', 'ficha_segmentos' => []];
         }
 
-        $goHomePh = self::PH_GO_HOME;
-
-        $alt = _("ver dossiers");
-        $dos = _("dossiers");
-        $web_icons = ConfigGlobal::getWeb_icons();
-        $titulo = "<span class=link onclick=fnjs_update_div('#main','$goHomePh')>$nom_cabecera</span>";
-
-        $top_html = '<div id="top">'
-            . '<table><tr>'
-            . '<td><span class="link" onclick="fnjs_update_div(\'#main\',\'' . $godossiersPh . '\')">'
-            . '<img src="' . $web_icons . '/dossiers.gif" width="40" height="40" alt="' . htmlspecialchars($alt) . '">( ' . $dos . ' )</span></td>'
-            . '<td class="titulo">' . $titulo . '</td>'
-            . '</tr></table></div>';
+        $top_data = [
+            'web_icons' => ConfigGlobal::getWeb_icons(),
+            'alt_dossiers' => _("ver dossiers"),
+            'txt_dossiers' => _("dossiers"),
+            'nom_cabecera' => $nom_cabecera,
+            'go_dossiers_link_spec' => $goDossiersLinkSpec,
+            'go_home_link_spec' => $goHomeLinkSpec,
+        ];
 
         if (empty($Qid_dossier)) {
             $lista = DossiersListaFichasData::build($pau, $id_pau, $Qobj_pau);
             return [
-                'top_html' => $top_html,
-                'web_icons' => $web_icons,
+                'top_data' => $top_data,
                 'modo' => 'lista',
-                'cuerpo_html' => '',
                 'lista_a_filas' => $lista['a_filas'],
-                'url_specs' => $urlSpecs,
+                'ficha_segmentos' => [],
             ];
         }
 
-        $cuerpo = '';
+        $fichaSegmentos = [];
         $id_dossier = strtok($Qid_dossier, "y");
         $TipoDossierRepository = $GLOBALS['container']->get(TipoDossierRepositoryInterface::class);
         while ($id_dossier) {
             $nom_bloque = 'ficha' . $id_dossier;
             $bloque = '#ficha' . $id_dossier;
-            $cuerpo .= "<div id=\"$nom_bloque\">";
             $oTipoDossier = $TipoDossierRepository->findById($id_dossier);
             $oResSelect = DossierTipoFileSuffixResolver::fromDefaultProjectRoot();
             $nameClaseSelect = $oResSelect->resolveSelectClassFqcn($oTipoDossier) ?? '';
@@ -250,13 +241,32 @@ class DossiersVerPantallaData
                         if (!empty($Qid_activ)) {
                             $claseSelect->setQId_activ($Qid_activ);
                         }
+                        if (method_exists($claseSelect, 'setTodos')) {
+                            $claseSelect->setTodos($post['todos'] ?? null);
+                        }
                         break;
                 }
-                $cuerpo .= $claseSelect->getHtml();
+                if (method_exists($claseSelect, 'getSegmentData')) {
+                    $segmentPayload = $claseSelect->getSegmentData();
+                    $payload = is_array($segmentPayload) ? $segmentPayload : [];
+                    $segmentTipo = (string)($payload['segment_tipo'] ?? 'select_habitaciones_cdc');
+                    unset($payload['segment_tipo']);
+                    $fichaSegmentos[] = array_merge(
+                        [
+                            'tipo' => $segmentTipo,
+                            'id' => $nom_bloque,
+                        ],
+                        $payload
+                    );
+                } else {
+                    $fichaSegmentos[] = [
+                        'tipo' => 'html',
+                        'id' => $nom_bloque,
+                        'html' => $claseSelect->getHtml(),
+                    ];
+                }
             } else {
-                $clase = $oTipoDossier->getClass();
-                $app = $oTipoDossier->getApp();
-                $clase_info = "src\\$app\\domain\\Info$clase";
+                $clase_info = DossierVerDatosTablaInfoClassResolver::resolveFullyQualifiedClassName($oTipoDossier);
                 $Qclase_info_enc = urlencode($clase_info);
                 $oInfoClase = new $clase_info();
                 $oInfoClase->setId_pau($id_pau);
@@ -271,23 +281,17 @@ class DossiersVerPantallaData
                 $oDatosTabla->setId_sel($Qid_sel);
                 $oDatosTabla->setScroll_id($Qscroll_id);
 
-                $aQuery = [
-                    'clase_info' => $Qclase_info_enc,
-                    'id_pau' => $id_pau,
-                    'bloque' => $bloque,
-                    'permiso' => $Qpermiso,
-                    'obj_pau' => $Qobj_pau,
-                ];
-                $phAction = self::phActionDatos((int) $id_dossier);
-                $urlSpecs[$phAction] = [
+                $actionTablaLinkSpec = [
                     'path' => 'frontend/dossiers/controller/dossiers_ver.php',
-                    'query' => $aQuery,
+                    'query' => [
+                        'clase_info' => $Qclase_info_enc,
+                        'id_pau' => $id_pau,
+                        'bloque' => $bloque,
+                        'permiso' => $Qpermiso,
+                        'obj_pau' => $Qobj_pau,
+                    ],
                 ];
-                $oDatosTabla->setAction_tabla($phAction);
 
-                $oHashSelect = new HashFront();
-                $oHashSelect->setCamposForm('mod');
-                $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
                 $a_camposHidden = [
                     'clase_info' => $Qclase_info_enc,
                     'pau' => $pau,
@@ -296,55 +300,55 @@ class DossiersVerPantallaData
                     'permiso' => $Qpermiso,
                     'bloque' => $bloque,
                 ];
-                $oHashSelect->setArraycamposHidden($a_camposHidden);
 
-                $html = '';
-                $html .= '<script>' . $oDatosTabla->getScript() . '</script>';
-                $html .= "<h3 class=subtitulo>" . $oInfoClase->getTxtTitulo() . "</h3>"
-                    . "<form id='seleccionados' name='seleccionados' action='' method='post'>";
-                $html .= $oHashSelect->getCamposHtml();
-                $html .= "<input type='hidden' id='mod' name='mod' value=''>";
-
-                $oTabla = new Lista();
-                $oTabla->setId_tabla('datos_sql' . $id_dossier);
-                $oTabla->setCabeceras($oDatosTabla->getCabeceras());
-                $oTabla->setBotones($oDatosTabla->getBotones());
-                $oTabla->setDatos($oDatosTabla->getValores());
-
-                if (!empty($oDatosTabla->getValores())) {
-                    $html .= $oTabla->mostrar_tabla();
+                $insTrasladoLinkSpec = null;
+                if ((int)$id_dossier === 1004) {
+                    $insTrasladoLinkSpec = [
+                        'path' => 'frontend/personas/controller/traslado_form.php',
+                        'query' => [
+                            'cabecera' => 'no',
+                            'id_pau' => $id_pau,
+                            'id_dossier' => $id_dossier,
+                            'obj_pau' => $Qobj_pau,
+                        ],
+                    ];
                 }
-                if ((int)$Qpermiso === 3) {
-                    $html .= "<br><table class=botones><tr class=botones>\n"
-                        . "\t\t\t\t\t<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
-                    $html .= _("nuevo");
-                    if ((int)$id_dossier === 1004) {
-                        $urlSpecs[self::PH_INS_TRASLADO] = [
-                            'path' => 'frontend/personas/controller/traslado_form.php',
-                            'query' => [
-                                'cabecera' => 'no',
-                                'id_pau' => $id_pau,
-                                'id_dossier' => $id_dossier,
-                                'obj_pau' => $Qobj_pau,
-                            ],
-                        ];
-                        $html .= '" onclick="fnjs_update_div(\'#main\',\'' . self::PH_INS_TRASLADO . '\');"></td></tr></table>';
-                    } else {
-                        $html .= "\" onclick=\"fnjs_nuevo('#seleccionados');\"></td></tr></table>";
-                    }
-                }
-                $cuerpo .= $html;
+
+                $fichaSegmentos[] = [
+                    'tipo' => 'datos_tabla',
+                    'id' => $nom_bloque,
+                    'titulo' => $oInfoClase->getTxtTitulo(),
+                    // Datos puros para que el frontend genere el <script> con HashFront::link
+                    // aplicado a `action_tabla_link_spec`.
+                    'script_ctx' => [
+                        'bloque' => $bloque,
+                        'action_form' => $oDatosTabla->getAction_form(),
+                        'action_update' => $oDatosTabla->getAction_update(),
+                        'eliminar_txt' => $oInfoClase->getTxtEliminar(),
+                    ],
+                    'action_tabla_link_spec' => $actionTablaLinkSpec,
+                    'hash' => [
+                        'campos_form' => 'mod',
+                        'campos_no' => 'sel!mod!scroll_id!refresh',
+                        'campos_hidden' => $a_camposHidden,
+                    ],
+                    'tabla' => [
+                        'id_tabla' => 'datos_sql' . $id_dossier,
+                        'cabeceras' => $oDatosTabla->getCabeceras(),
+                        'botones' => $oDatosTabla->getBotones(),
+                        'valores' => $oDatosTabla->getValores(),
+                    ],
+                    'permiso' => (int) $Qpermiso,
+                    'ins_traslado_link_spec' => $insTrasladoLinkSpec,
+                ];
             }
-            $cuerpo .= "</div>";
             $id_dossier = strtok("y");
         }
 
         return [
-            'top_html' => $top_html,
-            'web_icons' => $web_icons,
+            'top_data' => $top_data,
             'modo' => 'ficha',
-            'cuerpo_html' => $cuerpo,
-            'url_specs' => $urlSpecs,
+            'ficha_segmentos' => $fichaSegmentos,
         ];
     }
 }

@@ -25,9 +25,9 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
 
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = isset($GLOBALS['oDBC']) ? $GLOBALS['oDBC'] : $GLOBALS['oDBPC'];
         $this->setoDbl($oDbl);
-        $oDbl_Select = $GLOBALS['oDBC_Select'];
+        $oDbl_Select = isset($GLOBALS['oDBC_Select']) ? $GLOBALS['oDBC_Select'] : $GLOBALS['oDBPC_Select'];
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('x_config_schema');
     }

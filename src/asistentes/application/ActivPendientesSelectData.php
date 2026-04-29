@@ -2,7 +2,6 @@
 
 namespace src\asistentes\application;
 
-use frontend\shared\config\AppUrlConfig;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
@@ -10,10 +9,10 @@ use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use frontend\shared\security\HashFront;
 
 /**
  * Actividades pendientes por curso (`activ_pendientes_select.php`).
+ * Datos y `link_spec` sin firmar; hash, firmas y tablas en {@see \frontend\asistentes\helpers\ActivPendientesSelectRender}.
  */
 final class ActivPendientesSelectData
 {
@@ -252,14 +251,13 @@ final class ActivPendientesSelectData
             $a_valores_2[$i][4] = $nivel_stgr;
         }
 
-        $oHash = new HashFront();
-        $oHash->setCamposForm('tipo_personas!sactividad!any');
-
-        $form_action = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/asistentes/controller/activ_pendientes_select.php';
-
         return [
-            'form_action' => $form_action,
-            'hash_campos_html' => $oHash->getCamposHtml(),
+            'paths' => [
+                'form_action' => 'frontend/asistentes/controller/activ_pendientes_select.php',
+            ],
+            'hash_main' => [
+                'campos_form' => 'tipo_personas!sactividad!any',
+            ],
             'chk_n' => $chk_n,
             'chk_agd' => $chk_agd,
             'chk_sacd' => $chk_sacd,

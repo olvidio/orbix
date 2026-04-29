@@ -12,9 +12,8 @@ use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\value_objects\PauType;
-use frontend\shared\security\HashFront;
+use src\shared\security\HashB;
 use function src\shared\domain\helpers\is_true;
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
@@ -170,24 +169,21 @@ if ($miRole < 4) { // es administrador
         $chk_has_2fa = '';
     }
 
-    $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
-    $camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
-    $oHash = new HashFront();
-    $oHash->setCamposForm($camposForm);
-    $oHash->setcamposNo('password!id_ctr!id_nom!casas');
-    $a_camposHidden = array(
-        'id_usuario' => $Qid_usuario,
-        'quien' => $Qquien
-    );
-    $oHash->setArraycamposHidden($a_camposHidden);
-
     $obj = 'src\\usuarios\\domain\\entity\\Usuario';
+
+    $id_for_ctx = ($que_user === 'nuevo') ? 0 : (int)$Qid_usuario;
+    $ctx_guardar = HashB::sign('usuario_guardar', [
+        'que_user' => $que_user,
+        'id_usuario' => $id_for_ctx,
+        'quien' => (string)$Qquien,
+    ]);
 
     $a_campos = [
         'id_usuario' => $Qid_usuario,
         'obj' => $obj,
         'que_user' => $que_user,
         'quien' => $Qquien,
+        'ctx_guardar' => $ctx_guardar,
         'pau' => $pau,
         'aDataDespl' => $aDataDespl,
         'usuario' => $usuario,

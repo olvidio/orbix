@@ -29,24 +29,21 @@ use frontend\shared\security\HashFront;
     }
 
     fnjs_guardar = function (formulario) {
-        let rr = fnjs_comprobar_campos(formulario, '\\src\\usuarios\\domain\\entity\\Role');
-        if (rr === 'ok') {
-            var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/role_guardar';
-            let datos = $(formulario).serialize();
-            let request = $.ajax({
-                data: datos,
-                url: url,
-                method: 'POST',
-                dataType: 'json'
-            });
-            request.done(function (json) {
-                if (json.success !== true) {
-                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
-                } else {
-                    <?= $oPosicion->js_atras(1) ?>
-                }
-            });
-        }
+        var url = '<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/role_guardar';
+        let datos = $(formulario).serialize();
+        let request = $.ajax({
+            data: datos,
+            url: url,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(1) ?>
+            }
+        });
     }
     fnjs_actualizar = function (formulario) {
         $("#que").val("grupmenu_del");

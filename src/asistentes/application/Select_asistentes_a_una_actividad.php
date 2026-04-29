@@ -4,26 +4,25 @@ namespace src\asistentes\application;
 
 use src\shared\config\ConfigGlobal;
 use src\dossiers\application\PermDossier;
-use frontend\shared\model\ViewNewPhtml;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
-use frontend\dossiers\helpers\DossierTipoFormLinkSpecsSigning;
 use src\dossiers\application\DossierTipoPublicUrls;
 use src\personas\application\services\PersonaFinderService;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\entity\Ubi;
-use frontend\shared\security\HashFront;
-use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
 
 /**
  * Widget del dossier `3101` (codigo `asistentes_a_una_actividad`):
  * tabla con los asistentes de una actividad (cargos primero, resto despues).
+ *
+ * El HTML lo renderiza {@see \frontend\asistentes\helpers\SelectAsistentesAUnaActividadRender}
+ * desde {@see self::getSegmentData()} (sin `frontend\` en `src/`).
  *
  * Sucesor de `apps/asistentes/model/Select3101.php`. Instanciado dinamicamente por
  * {@see \src\dossiers\application\DossierTipoFileSuffixResolver::resolveSelectClassFqcn()}.
@@ -238,7 +237,7 @@ class Select_asistentes_a_una_actividad
                     $msg_err = _("ERROR: más de un asistente con el mismo id_nom") . "<br>";
                     $msg_err .= "<br>$nom(" . $oPersona->getId_tabla() . ")<br><br>";
                     $msg_err .= _("En las tablas") . ":<ul>$tabla</ul>";
-                    exit ("$msg_err");
+                    throw new \RuntimeException($msg_err);
                 }
                 $oAsistente = $cAsistente[0];
                 $propio = $oAsistente->isPropio();
@@ -664,7 +663,10 @@ class Select_asistentes_a_una_actividad
         }
     }
 
-    public function getHtml()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
         $this->msg_err = '';
         $this->txt_eliminar = _("¿Está seguro que desea borrar a esta persona de esta actividad?");
@@ -674,79 +676,67 @@ class Select_asistentes_a_una_actividad
             $this->contarPlazas();
         }
         $this->getTabla();
-
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('select_asistentes_a_una_actividad');
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones());
-        $oTabla->setDatos($this->getValores());
-
-        $oHash = new HashFront();
-        $oHash->setCamposForm('');
-        $oHash->setCamposNo('sel!scroll_id!mod!que!refresh');
-        $oHash->setArraycamposHidden([
-            'pau' => $this->pau,
-            'id_pau' => $this->id_pau,
-            'obj_pau' => $this->obj_pau,
-            'id_dossier' => $this->id_dossier,
-            'queSel' => $this->queSel,
-            'permiso' => 3,
-        ]);
-
-        $oHash1 = new HashFront();
-        $oHash1->setCamposForm('');
-        $oHash1->setCamposNo('sel!scroll_id!mod');
-        $oHash1->setArraycamposHidden([
-            'queSel' => 'matriculas',
-            'pau' => 'p',
-            'obj_pau' => 'Persona',
-            'id_dossier' => 1303,
-            'permiso' => 3,
-            'id_activ' => $this->id_pau,
-        ]);
-
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-
-        $url_mover = $web . '/frontend/asistentes/controller/asistente_mover.php';
-        $oHash3 = new HashFront();
-        $oHash3->setUrl($url_mover);
-        $oHash3->setCamposForm('id_pau!id_activ');
-        $h3 = $oHash3->linkSinValParams();
-
-        $url_plaza_asignar = $web . '/src/asistentes/asistente_plaza_asignar';
-        $oHash4 = new HashFront();
-        $oHash4->setUrl($url_plaza_asignar);
-        $oHash4->setCamposForm('plaza!lista_json!id_activ');
-        $h4 = $oHash4->linkSinValParams();
-
         $this->setLinksInsert();
 
-        $a_campos = [
-            'oTabla' => $oTabla,
-            'oHash' => $oHash,
+        return [
+            'segment_tipo' => 'select_asistentes_a_una_actividad',
             'id_pau' => $this->id_pau,
-            'h4' => $h4,
-            'h3' => $h3,
-            'oHash1' => $oHash1,
-            'plazas_txt' => $this->plazas_txt,
-            'resumen_plazas' => $this->resumen_plazas,
-            'resumen_plazas2' => $this->resumen_plazas2,
-            'leyenda_html' => $this->leyenda_html,
-            'aLinks_dl' => DossierTipoFormLinkSpecsSigning::signLinkMap($this->aLinks_dl),
-            'msg_err' => $this->msg_err,
-            'txt_eliminar' => $this->txt_eliminar,
-            'bloque' => $this->bloque,
-            'url_form' => $web . '/' . DossierTipoPublicUrls::relativeFormController(self::ID_TIPO_DOSSIER),
-            'url_mover' => $url_mover,
-            'url_plaza_asignar' => $url_plaza_asignar,
-            'url_eliminar' => $web . '/src/asistentes/asistente_eliminar',
-            'url_form_cargos_actividad' => DossierTipoPublicUrls::relativeFormController(3102),
-            'url_cargo_eliminar' => $web . '/src/actividadcargos/cargo_eliminar',
+            'plazas_txt' => $this->plazas_txt ?? '',
+            'resumen_plazas' => $this->resumen_plazas ?? '',
+            'resumen_plazas2' => $this->resumen_plazas2 ?? '',
+            'leyenda_html' => $this->leyenda_html ?? '',
+            'msg_err' => (string) ($this->msg_err ?? ''),
             'plazas_installed' => ConfigGlobal::is_app_installed('actividadplazas'),
+            'wrapper' => [
+                'txt_eliminar' => (string) $this->txt_eliminar,
+                'bloque' => (string) ($this->bloque ?? ''),
+                'url_form_relative' => DossierTipoPublicUrls::relativeFormController(self::ID_TIPO_DOSSIER),
+                'url_form_cargos_relative' => DossierTipoPublicUrls::relativeFormController(3102),
+                'url_mover_path' => 'frontend/asistentes/controller/asistente_mover.php',
+                'url_plaza_asignar_path' => 'src/asistentes/asistente_plaza_asignar',
+                'url_eliminar_path' => 'src/asistentes/asistente_eliminar',
+                'url_cargo_eliminar_path' => 'src/actividadcargos/cargo_eliminar',
+            ],
+            'hash_main' => [
+                'campos_form' => '',
+                'campos_no' => 'sel!scroll_id!mod!que!refresh',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'obj_pau' => $this->obj_pau,
+                    'id_dossier' => $this->id_dossier,
+                    'queSel' => $this->queSel,
+                    'permiso' => 3,
+                ],
+            ],
+            'hash_matriculas' => [
+                'campos_form' => '',
+                'campos_no' => 'sel!scroll_id!mod',
+                'campos_hidden' => [
+                    'queSel' => 'matriculas',
+                    'pau' => 'p',
+                    'obj_pau' => 'Persona',
+                    'id_dossier' => 1303,
+                    'permiso' => 3,
+                    'id_activ' => $this->id_pau,
+                ],
+            ],
+            'ajax_hash_mover' => [
+                'path' => 'frontend/asistentes/controller/asistente_mover.php',
+                'campos_form' => 'id_pau!id_activ',
+            ],
+            'ajax_hash_plaza' => [
+                'path' => 'src/asistentes/asistente_plaza_asignar',
+                'campos_form' => 'plaza!lista_json!id_activ',
+            ],
+            'tabla' => [
+                'id_tabla' => 'select_asistentes_a_una_actividad',
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones(),
+                'valores' => $this->getValores(),
+            ],
+            'links_dl_specs' => $this->aLinks_dl,
         ];
-
-        $oView = new ViewNewPhtml('frontend\\asistentes\\controller');
-        $oView->renderizar('select_asistentes_a_una_actividad.phtml', $a_campos);
     }
 
     public function setLinksInsert(): void

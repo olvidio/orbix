@@ -42,7 +42,7 @@
 </script>
 <h2 class="titulo"><?= ucfirst(_("relación de cargos")) ?></h2>
 <form id="frm_cargos_de_actividad" name="frm_cargos_de_actividad" action="" method="post">
-    <?= $oHashSelect->getCamposHtml(); ?>
+    <?= $hash_select_html ?>
     <input type="hidden" id="mod" name="mod" value="">
     <?= $oTabla->mostrar_tabla(); ?>
 </form>

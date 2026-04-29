@@ -2,6 +2,7 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
+use frontend\shared\security\HashFrontSignedLink;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -46,6 +47,27 @@ $data = PostRequest::getDataFromUrl('/src/profesores/ficha_profesor_stgr', [
 if (!empty($data['error'])) {
     exit($data['error']);
 }
+
+$goCosasLinkSpecs = $data['go_cosas_link_specs'] ?? [];
+$fichaSelfLinkSpec = $data['ficha_self_link_spec'] ?? [];
+unset($data['go_cosas_link_specs'], $data['ficha_self_link_spec']);
+
+$goTo = HashFrontSignedLink::fromSpec(is_array($fichaSelfLinkSpec) ? $fichaSelfLinkSpec : []);
+$go_cosas = [];
+foreach (is_array($goCosasLinkSpecs) ? $goCosasLinkSpecs : [] as $key => $spec) {
+    if (!is_array($spec)) {
+        continue;
+    }
+    if ($key === 'print') {
+        $go_cosas[$key] = HashFrontSignedLink::fromSpec($spec);
+        continue;
+    }
+    $query = isset($spec['query']) && is_array($spec['query']) ? $spec['query'] : [];
+    $query['go_to'] = $goTo;
+    $spec['query'] = $query;
+    $go_cosas[$key] = HashFrontSignedLink::fromSpec($spec);
+}
+$data['go_cosas'] = $go_cosas;
 
 $Qprint = !empty($data['use_print_phtml']) ? 1 : 0;
 unset($data['use_print_phtml']);

@@ -4,16 +4,16 @@ namespace src\asistentes\application;
 
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use frontend\shared\security\HashFront;
 
 /**
  * Selector de centro para actividades pendientes (`lista_ultim_que_ctr.php`).
+ * El hash del formulario se firma en `lista_ultim_que_ctr_data.php`.
  */
 final class ListaUltimQueCtrData
 {
     /**
      * @param array<string, mixed> $input
-     * @return array{opciones_centros: array<string|int, string>, hash_form_html: string, form_action: string}
+     * @return array{opciones_centros: array<string|int, string>, hash_main: array{campos_form: string, campos_hidden: array<string, mixed>}, paths: array{form_action: string}}
      */
     public static function build(array $input): array
     {
@@ -33,17 +33,18 @@ final class ListaUltimQueCtrData
         natcasesort($aOpciones);
         $aOpciones['999'] = _("todos");
 
-        $oHash = new HashFront();
-        $oHash->setCamposForm('id_ubi');
-        $oHash->setArraycamposHidden([
-            'que' => $Qque,
-            'curso' => $Qcurso,
-        ]);
-
         return [
             'opciones_centros' => $aOpciones,
-            'hash_form_html' => $oHash->getCamposHtml(),
-            'form_action' => 'frontend/asistentes/controller/lista_ultima_activ.php',
+            'hash_main' => [
+                'campos_form' => 'id_ubi',
+                'campos_hidden' => [
+                    'que' => $Qque,
+                    'curso' => $Qcurso,
+                ],
+            ],
+            'paths' => [
+                'form_action' => 'frontend/asistentes/controller/lista_ultima_activ.php',
+            ],
         ];
     }
 }

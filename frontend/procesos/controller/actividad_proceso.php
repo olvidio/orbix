@@ -28,7 +28,7 @@ $aQuery = [
     'obj_pau' => 'Actividad',
 ];
 if (is_array($aQuery)) {
-    array_walk($aQuery, 'core\\poner_empty_on_null');
+    array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
 }
 $godossiers = HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
@@ -45,7 +45,7 @@ $url_generar = $apiBase . '/src/procesos/actividad_proceso_generar';
 // Renderer frontend que consume /src/procesos/actividad_proceso_get y
 // devuelve HTML.
 $url_get = 'frontend/procesos/controller/actividad_proceso_get.php';
-$url_update = $webBase . '/src/procesos/actividad_proceso_update';
+$url_update = $apiBase . '/src/procesos/actividad_proceso_update';
 
 $oHashGenerar = new HashFront();
 $oHashGenerar->setUrl($url_generar);

@@ -27,22 +27,15 @@ if ($id_usuario !== $Qid_usuario) {
     exit();
 }
 
-//////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_backend = '/src/usuarios/usuario_guardar';
+//////////////////////// Desactivar vía usuario_2fa_update (no usuario_guardar: requiere ctx HashB) ///////////////////////////////////////////////////
+$url_backend = '/src/usuarios/usuario_2fa_update';
 $a_campos_backend = [
     'id_usuario' => $id_usuario,
-    'has_2fa' => 'false',
+    'enable_2fa' => '0',
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-$usuario = $data['usuario'];
+PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
-if (isset($data['error'])) {
-    // Mostrar mensaje de error
-    $_SESSION['msg_2fa'] = $data['error'];
-} else {
-    // Mostrar mensaje de éxito
-    $_SESSION['msg_2fa'] = _("Se ha desactivado correctamente la autenticación de dos factores (2FA). Si desea volver a activarla, deberá configurarla nuevamente.");
-}
+$_SESSION['msg_2fa'] = _("Se ha desactivado correctamente la autenticación de dos factores (2FA). Si desea volver a activarla, deberá configurarla nuevamente.");
 
 // Redirigir al formulario de 2FA
 $url_2fa_form = AppUrlConfig::getPublicAppBaseUrl() . "/frontend/usuarios/controller/usuario_form_2fa.php";

@@ -2,12 +2,6 @@
 
 namespace src\notas\application;
 
-use frontend\notas\helpers\SelectNotasDeUnaPersonaUrlSigning;
-use frontend\shared\config\AppUrlConfig;
-use frontend\shared\model\ViewNewPhtml;
-use frontend\shared\security\HashFront;
-use frontend\shared\web\Lista;
-
 /**
  * Widget "select_notas_de_una_persona": listado de notas (`PersonaNota`)
  * de una persona dentro del dossier 1011. Instanciado dinamicamente por
@@ -19,19 +13,13 @@ use frontend\shared\web\Lista;
  *
  *   - La logica de datos vive en {@see NotasDeUnaPersonaData::getTabla()}
  *     (retorna `['aValores' => [...], 'aviso' => string]`).
- *   - Este widget arma `web\\Lista` + `web\\Hash`, firma el link "nuevo" via
- *     `frontend\\notas\\helpers\\SelectNotasDeUnaPersonaUrlSigning` y rendera
- *     `frontend/notas/view/select_notas_de_una_persona.phtml`.
- *
- * Esta clase es puramente "frontend renderer": no toca BD (eso lo hace
- * `NotasDeUnaPersonaData`) y emite HTML a traves del ViewNewPhtml.
+ *   - Render: {@see \frontend\notas\helpers\SelectNotasDeUnaPersonaRender}.
  */
 class Select_notas_de_una_persona
 {
     /** @var array<int|string, mixed> */
     private array $a_valores = [];
 
-    private string $txt_eliminar = '';
     private string $bloque = '';
 
     private string $queSel = '';
@@ -101,47 +89,44 @@ class Select_notas_de_una_persona
         $this->a_valores = $a_valores;
     }
 
-    public function getHtml(): void
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSegmentData(): array
     {
-        $this->txt_eliminar = _("¿Está seguro que desea borrar la nota de esta asignatura?");
         $this->loadValores();
-
-        $oHashSelect = new HashFront();
-        $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
-        $oHashSelect->setArraycamposHidden([
-            'pau' => $this->pau,
-            'id_pau' => $this->id_pau,
-            'obj_pau' => $this->obj_pau,
-            'queSel' => $this->queSel,
-            'id_dossier' => self::ID_DOSSIER,
-            'permiso' => $this->permiso,
-        ]);
-
-        $oTabla = new Lista();
-        $oTabla->setId_tabla('select_notas_de_una_persona');
-        $oTabla->setCabeceras($this->getCabeceras());
-        $oTabla->setBotones($this->getBotones());
-        $oTabla->setDatos($this->a_valores);
-
         $this->setLinksInsert();
 
-        $signed = SelectNotasDeUnaPersonaUrlSigning::sign(['link_insert_spec' => $this->link_insert_spec]);
-        $url_persona_nota_eliminar = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/') . '/src/notas/persona_nota_eliminar';
-
-        $a_campos = [
-            'oTabla' => $oTabla,
-            'oHashSelect' => $oHashSelect,
-            'link_insert' => $signed['link_insert'],
-            'txt_eliminar' => $this->txt_eliminar,
+        return [
+            'segment_tipo' => 'select_notas_de_una_persona',
+            'txt_eliminar' => _("¿Está seguro que desea borrar la nota de esta asignatura?"),
             'bloque' => $this->bloque,
             'aviso' => $this->aviso,
-            'url_persona_nota_eliminar' => $url_persona_nota_eliminar,
+            'hash_main' => [
+                'campos_no' => 'sel!mod!scroll_id!refresh',
+                'campos_hidden' => [
+                    'pau' => $this->pau,
+                    'id_pau' => $this->id_pau,
+                    'obj_pau' => $this->obj_pau,
+                    'queSel' => $this->queSel,
+                    'id_dossier' => self::ID_DOSSIER,
+                    'permiso' => $this->permiso,
+                ],
+            ],
+            'tabla' => [
+                'id_tabla' => 'select_notas_de_una_persona',
+                'cabeceras' => $this->getCabeceras(),
+                'botones' => $this->getBotones(),
+                'valores' => $this->a_valores,
+            ],
+            'link_insert_spec' => $this->link_insert_spec,
+            'paths' => [
+                'persona_nota_eliminar' => 'src/notas/persona_nota_eliminar',
+            ],
         ];
-
-        (new ViewNewPhtml('frontend\\notas\\controller'))->renderizar('select_notas_de_una_persona.phtml', $a_campos);
     }
 
-    public function setLinksInsert(): void
+    private function setLinksInsert(): void
     {
         $this->link_insert_spec = null;
         if ($this->permiso !== self::PERMISO_INSERTAR) {
@@ -154,7 +139,7 @@ class Select_notas_de_una_persona
             'obj_pau' => $this->obj_pau,
             'id_dossier' => $this->id_dossier,
         ];
-        array_walk($aQuery, 'core\\poner_empty_on_null');
+        array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
         $this->link_insert_spec = [
             'path' => 'frontend/notas/controller/form_notas_de_una_persona.php',
             'query' => $aQuery,

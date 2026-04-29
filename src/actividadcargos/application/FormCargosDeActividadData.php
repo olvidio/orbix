@@ -12,17 +12,16 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use frontend\shared\web\Desplegable;
-use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\is_true;
 
 /**
- * Datos para `form_cargos_de_actividad` (sin repositorios en el front).
+ * Datos para `form_cargos_de_actividad`. Los desplegables se construyen en el front
+ * ({@see \frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose::withDesplegablesHtml}) a partir de `personas_select` / `cargos_select`.
  */
 final class FormCargosDeActividadData
 {
     /**
-     * @return array{error?: string, redir?: string, obj: string, id_nom_real: int|string, ape_nom: string, observ: string, puede_agd: mixed, chk: string, Qmod: string, id_dossier: int, desplegable_personas_html: string, desplegable_cargos_html: string, hash_campos_html: string, url_cargo_nuevo: string, url_cargo_editar: string, show_person_desplegable: bool, show_asis: bool, Qid_pau: int, Qid_item: int|string, Qobj_pau: string, Qid_schema: int|string, Qid_nom: int, id_dossier_for_hidden: int}
+     * @return array{error?: string, redir?: string, obj: string, id_nom_real: int|string, ape_nom: string, observ: string, puede_agd: mixed, chk: string, Qmod: string, id_dossier: int, personas_select?: array{opciones: array<int|string, string>, opcion_sel?: string}|null, cargos_select: array{opciones: array<int|string, string>, opcion_sel: string}, hash_form_config: array{campos_form: string, campos_no: string, campos_hidden: array<string, mixed>}, url_cargo_nuevo: string, url_cargo_editar: string, show_person_desplegable: bool, show_asis: bool, Qid_pau: int, Qid_item: int|string, Qobj_pau: string, Qid_schema: int|string, Qid_nom: int}
      */
     public static function build(array $post): array
     {
@@ -58,7 +57,7 @@ final class FormCargosDeActividadData
         $ape_nom = '';
         $observ = '';
         $puede_agd = '';
-        $oDesplegablePersonas = null;
+        $personas_select = null;
 
         if (!empty($Qid_item)) {
             $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
@@ -89,9 +88,6 @@ final class FormCargosDeActividadData
             } elseif (!empty($Qobj_pau)) {
                 $obj_pau = strtok(urldecode($Qobj_pau), '&');
                 strtok('&');
-                $oDesplegablePersonas = new Desplegable();
-                $oDesplegablePersonas->setNombre('id_nom');
-                $oDesplegablePersonas->setBlanco(true);
                 switch ($obj_pau) {
                     case 'PersonaN':
                         $oOpciones = $GLOBALS['container']->get(PersonaNRepositoryInterface::class)->getArrayPersonas();
@@ -118,22 +114,20 @@ final class FormCargosDeActividadData
                     default:
                         $oOpciones = [];
                 }
-                $oDesplegablePersonas->setOpciones($oOpciones);
+                $personas_select = ['opciones' => $oOpciones];
             } else {
                 return ['redir' => 'go_atras'];
             }
         }
 
         $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
-        $oDesplegableCargos = new Desplegable();
-        $oDesplegableCargos->setNombre('id_cargo');
-        $oDesplegableCargos->setBlanco(true);
-        $oDesplegableCargos->setOpciones($CargoRepository->getArrayCargos());
-        $oDesplegableCargos->setOpcion_sel($Qid_cargo);
+        $cargos_select = [
+            'opciones' => $CargoRepository->getArrayCargos(),
+            'opcion_sel' => (string)$Qid_cargo,
+        ];
 
         $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
 
-        $oHash = new HashFront();
         $camposForm = 'id_cargo!observ';
         $camposNo = 'puede_agd';
         $a_camposHidden = [
@@ -152,17 +146,12 @@ final class FormCargosDeActividadData
             }
             $camposForm .= '!id_nom';
         }
-        $oHash->setCamposNo($camposNo);
-        $oHash->setCamposForm($camposForm);
-        $oHash->setArraycamposHidden($a_camposHidden);
 
         $web = rtrim(ConfigGlobal::getWeb(), '/');
         $url_cargo_nuevo = $web . '/src/actividadcargos/cargo_nuevo';
         $url_cargo_editar = $web . '/src/actividadcargos/cargo_editar';
 
-        $desplPersHtml = $oDesplegablePersonas instanceof Desplegable ? $oDesplegablePersonas->desplegable() : '';
-
-        return [
+        $out = [
             'obj' => $obj,
             'id_nom_real' => $id_nom_real,
             'ape_nom' => $ape_nom,
@@ -178,11 +167,19 @@ final class FormCargosDeActividadData
             'id_dossier' => $Qid_dossier,
             'show_person_desplegable' => empty($id_nom_real),
             'show_asis' => $Qmod === 'nuevo' && empty($id_nom_real),
-            'desplegable_personas_html' => $desplPersHtml,
-            'desplegable_cargos_html' => $oDesplegableCargos->desplegable(),
-            'hash_campos_html' => $oHash->getCamposHtml(),
+            'cargos_select' => $cargos_select,
+            'hash_form_config' => [
+                'campos_form' => $camposForm,
+                'campos_no' => $camposNo,
+                'campos_hidden' => $a_camposHidden,
+            ],
             'url_cargo_nuevo' => $url_cargo_nuevo,
             'url_cargo_editar' => $url_cargo_editar,
         ];
+        if ($personas_select !== null) {
+            $out['personas_select'] = $personas_select;
+        }
+
+        return $out;
     }
 }

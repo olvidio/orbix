@@ -105,8 +105,7 @@
                 err = 1;
             }
 
-            let rr = fnjs_comprobar_campos('#modifica', '{{ obj|raw }}');
-            if (rr === 'ok' && err === 0) {
+            if (err === 0) {
                 $('#mod').val(tipo);
                 let url = {
                     'nuevo': 'src/actividades/actividad_nuevo',

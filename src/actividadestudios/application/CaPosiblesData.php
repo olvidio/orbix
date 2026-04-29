@@ -19,8 +19,10 @@ use function frontend\shared\helpers\is_true;
 
 /**
  * Misma lógica que `frontend/.../ca_posibles.php`; respuesta serializable.
+ * En modo `lista`, `pagina_link_spec` lo firma el front ({@see frontend\actividadestudios\controller\ca_posibles}).
  *
  * @param array<string, mixed> $post
+ *
  * @return array<string, mixed>
  */
 final class CaPosiblesData
@@ -411,8 +413,16 @@ final class CaPosiblesData
 
         if (!empty($aSel) && $alum == 1) {
             $idNomPagina = (int)explode('#', $aSel[0])[0];
-            $aParamGo = ['que' => 'activ', 'pau' => 'p', 'id_pau' => $idNomPagina, 'obj_pau' => $objPau, 'id_dossier' => '1301y1302'];
-            $pagina = \frontend\shared\security\HashFront::link('frontend/dossiers/controller/dossiers_ver.php?' . http_build_query($aParamGo));
+            $paginaLinkSpec = [
+                'path' => 'frontend/dossiers/controller/dossiers_ver.php',
+                'query' => [
+                    'que' => 'activ',
+                    'pau' => 'p',
+                    'id_pau' => $idNomPagina,
+                    'obj_pau' => $objPau,
+                    'id_dossier' => '1301y1302',
+                ],
+            ];
 
             if (count($cuadro) > 1) {
                 throw new \RuntimeException(_('sólo debebería haber uno'));
@@ -433,7 +443,7 @@ final class CaPosiblesData
                 'titulo' => $titulo,
                 'stgr' => $stgr,
                 'aActividades' => $aActividadesLista,
-                'pagina' => $pagina,
+                'pagina_link_spec' => $paginaLinkSpec,
             ];
         }
 

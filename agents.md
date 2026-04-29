@@ -220,15 +220,12 @@ El hash de presentación (**`web\Hash`**, futuro **`frontend\shared\security\Has
    - `'link_spec' => ['path' => 'frontend/modulo/controller/foo.php', 'query' => ['id' => 123]]`
    El **controlador `frontend/<modulo>/controller/*.php`** (tras `PostRequest` o al montar la vista) convierte cada `link_spec` en URL firmada con `Hash::link(AppUrlConfig::getPublicAppBaseUrl() . '/' . ltrim($path, '/') . '?' . http_build_query($query))` y rellena `ira` / `href` como espera `Lista` o la plantilla.
 3. **`src/.../infrastructure/ui/http/controllers/`**: preferible devolver JSON con `link_spec` y firmar en `frontend/`; si un controlador `src` aún emite HTML legacy, documentar excepción y plan de migración.
-4. **Documentación de arquitectura**: `documentacion/hash_arquitectura.md` (§7.4) y pilotos de referencia: `GruposLista` + `grupo_lista.php`, `usuariosLista` + `usuario_lista.php`, `UbisTablaData` + `ubis_tabla.php` (celdas con `link_spec`; además `pagina_link_spec` → `pagina_link` firmado en el controlador), `ListCtrData` + `list_ctr.php`, `ListaActivTabla` + `lista_activ_datos.php` (firma y `Lista::mostrar_tabla` en el endpoint), `ActividadSelectListado` + `actividad_select_datos.php` (incl. `advertencia_demasiadas` → `html_advertencia`), `ListaActividadesSgListado` + `lista_actividades_sg_datos.php`, `HabitacionesCamaLista` + `actividad_habitaciones_lista.php` (URLs firmadas con `AppUrlConfig` + `web\Hash` en el endpoint), `SelectHabitacionesCdc` + `frontend/ubiscamas/helpers/SelectHabitacionesCdcUrlSigning.php` (specs → firmas fuera de `src/`), `Select1010` + `frontend/certificados/helpers/Select1010UrlSigning.php`, `Select_notas_de_una_persona` + `frontend/notas/helpers/SelectNotasDeUnaPersonaUrlSigning.php`, `ActivPendientesSelectData` + `activ_pendientes_select_data.php` (`link_spec` → `home_persona` en `frontend/personas/...`), módulo dossiers: `DossiersListaFichasData` (`href_*_link_spec`) + `SignPublicFrontendLink` en `dossiers_lista_fichas_data.php` y `dossiers_ver_pantalla_data.php`; `DossiersVerPantallaData` (placeholders `__ORBIX_DSG_*__` + `url_specs`); `PermDossiersListaData` (`pagina_link_spec`) + `perm_dossiers_data.php`; `PermDossierVerFormData::listaPermLinkSpec` + firma en `perm_dossier_ver_data.php`; `DossierTipoPublicUrls::formControllerLinkSpec` en los `Select_*` que enlazan al form dossier + `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning.php` (`HashFront::link` al renderizar `getHtml()`).
+4. **Documentación de arquitectura**: `documentacion/hash_arquitectura.md` (§7.4) y pilotos de referencia: `GruposLista` + `grupo_lista.php`, `usuariosLista` + `usuario_lista.php`, `UbisTablaData` + `ubis_tabla.php` (celdas con `link_spec`; además `pagina_link_spec` → `pagina_link` firmado en el controlador), `ListCtrData` + `list_ctr.php`, `ListaActivTabla` + `lista_activ_datos.php` (JSON con `link_spec`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_activ.php`, `ActividadSelectListado` + `actividad_select_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/actividad_select.php`, `ListaActividadesSgListado` + `lista_actividades_sg_datos.php` (JSON con `link_spec` y `advertencia_demasiadas`) + firma y `Lista::mostrar_tabla` en `frontend/actividades/controller/lista_actividades_sg.php`, `HabitacionesCamaLista` + `actividad_habitaciones_lista.php` (`reload_main_link_spec` / `distribucion_open_link_spec` / `nombres_open_link_spec`; firma con `HashFrontSignedLink` en `frontend/ubiscamas/controller/lista_habitaciones.php`; mutaciones AJAX `update_cama_asistente` y `update_solo_vip` con `HashB::sign` en el endpoint y POST `ctx`), `SelectHabitacionesCdc::getSegmentData()` + tipo `select_habitaciones_cdc` en `DossiersVerPantallaData` → `frontend/ubiscamas/helpers/SelectHabitacionesCdcRender.php` (`HashFront` + `Lista` + `SelectHabitacionesCdcUrlSigning` al pintar desde `dossiers_ver.php`), `Select_certificados_de_una_persona` + `frontend/certificados/helpers/SelectCertificadosDeUnaPersonaUrlSigning.php`, `Select_notas_de_una_persona` + `frontend/notas/helpers/SelectNotasDeUnaPersonaUrlSigning.php`, `ActivPendientesSelectData` + `activ_pendientes_select_data.php` (`link_spec` → `home_persona` en `frontend/personas/...`), `ActividadTipo` (Twig de filtros tipo actividad) + `frontend/shared/helpers/ActividadTipoTwigHashCompose.php` (tokens `h` / `h_act` para AJAX); formularios gestión tipo (`TipoActivFormNuevo` / `TipoActivFormModificar`) + `frontend/shared/helpers/TipoActivGestionFormHashCompose.php` (`getCamposHtml`), `FichaProfesorStgr` + `frontend/profesores/controller/ficha_profesor_stgr.php` (`go_cosas_link_specs` / `ficha_self_link_spec`; los enlaces a `tablaDB_lista_ver.php` reciben `go_to` firmado desde la spec de la ficha), módulo dossiers: `DossiersListaFichasData` (`href_*_link_spec`) + firma en `frontend/dossiers/controller/lista_dossiers.php` (`HashFrontSignedLink::signRowLinkSpecs`); `DossiersVerPantallaData` (datos planos: `top_data`, `ficha_segmentos` con `action_tabla_link_spec` / `ins_traslado_link_spec` / `script_ctx` / `hash`) + firma y render en `frontend/dossiers/controller/dossiers_ver.php` y helper `frontend/dossiers/helpers/DossiersVerFichaDatosTabla.php` (el `<script>` de `DatosTablaRepo` también se compone en frontend); `PermDossiersListaData` (`pagina_link_spec`) + firma en `frontend/dossiers/controller/perm_dossiers.php`; `PermDossierVerFormData` expone `go_to_link_spec` y `hash_config` y el `HashFront` se instancia en `frontend/dossiers/controller/perm_dossier_ver.php`; `DossierTipoPublicUrls::formControllerLinkSpec` en los `Select_*` que enlazan al form dossier + `frontend/dossiers/helpers/DossierTipoFormLinkSpecsSigning.php` (`HashFront::link` al renderizar `getHtml()`); helper genérico reutilizable `frontend/shared/security/HashFrontSignedLink.php` (`fromSpec`, `fromSpecMap`, `signRowLinkSpecs`).
 
 **Inventario — `Hash::link` aún presente en `src/` (pendiente de alinear con esta directiva):**
 
 | Área | Archivo |
 |------|-----------|
-| profesores | `src/profesores/application/FichaProfesorStgr.php` |
-| usuarios | `src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_del_lst.php` |
-| usuarios | `src/usuarios/infrastructure/ui/http/controllers/usuario_grupo_lst.php` (comentado; revisar si se borra) |
 | menus | `src/menus/infrastructure/ui/http/controllers/menus_importar_de_ficheros_a_ref.php` (`apps/menus/...`) |
 
 Actualizar esta tabla conforme se migre cada módulo (o sustituir por enlace a `rg` en el PR si se prefiere no duplicar).
@@ -240,6 +237,11 @@ frontend/ubiscamas/
   controller/
     habitacion_form.php    ← Prepara datos para el formulario
     cama_form.php         ← Prepara datos para el formulario
+    lista_habitaciones.php ← PostRequest a `actividad_habitaciones_lista`; convierte `*_link_spec` con `HashFrontSignedLink`
+  helpers/
+    SelectHabitacionesCdcUrlSigning.php
+    SelectHabitacionesCdcRender.php ← Bloque dossier habitaciones (`HashFront` + `select_habitaciones_cdc.phtml`)
+    UbiscamasFormHashCompose.php ← `HashFront` para `habitacion_form` / `cama_form` (datos desde `HabitacionFormData` / `CamaFormData`)
   view/
     habitacion_form.phtml ← Vista HTML del formulario
     cama_form.phtml      ← Vista HTML del formulario
@@ -257,7 +259,10 @@ src/ubiscamas/
       HabitacionId.php
       CamaId.php
       BañoTipo.php
+    SelectHabitacionesCdc.php ← `getSegmentData()` (sin `HashFront`; render en frontend)
   infrastructure/
+    ui/http/controllers/
+      actividad_habitaciones_lista.php ← `link_spec` + `HashB` (`ctx` para update cama / solo VIP); sin `HashFront`
     controllers/
       habitacion_update.php ← Lógica de guardado
       cama_update.php      ← Lógica de guardado
@@ -404,10 +409,43 @@ Para una experiencia de usuario fluida, combinamos el estado del backend con el 
 1.  **Estado de navegación ($oPosicion en frontend)**: Gestiona la jerarquía de páginas, IDs principales (como `id_activ`) y la lógica de "volver". Vive sólo en `frontend/`.
 2.  **Estado Frontend (SessionStorage)**: Gestiona el estado volátil de la UI (scroll, selección). **Ver detalles en** `frontend/agents.md`.
 
+### Permisos de actividad en sesión (`PermisosActividades`) — caché vs. backend
+
+La clase **`src\permisos\domain\PermisosActividades`** nació para **tener en sesión una matriz de permisos** (reglas por `id_tipo_activ_txt`, DL propia / otras delegaciones) cargada desde `aux_usuarios_perm`, de modo que las vistas puedan **consultar permisos sin nueva ida a BD** para cada pintado.
+
+**Separación objetivo (evolución recomendada):**
+
+1. **Read model en sesión (solo datos ya cargados)**  
+   Lo que pertenece a la sesión es la **matriz cacheada** (`aPermDl`, `aPermOtras` y la lógica que recorre tipos / fases ref **solo con esos arrays**). Idealmente sería un tipo dedicado (p. ej. *matriz* o *snapshot*) serializable, sin métodos que asuman `$GLOBALS['container']` ni `$GLOBALS['oDBE']` en requests que solo pasan por `frontend/shared/global_header_front.inc`.
+
+2. **Resolución con I/O en el backend (`src/` + petición HTTP)**  
+   Cualquier cosa que implique **consultar la actividad por `id_activ`**, **estado de fase en proceso** (`faseCompletada`, etc.) o **árbol de procesos / tipos** (`getPermisoCrear` y similares) es **caso de uso de aplicación / infra**: debe ejecutarse en un script bajo `global_object` (o endpoint JSON) y, desde controladores **`frontend/`**, llegar como **`PostRequest::getDataFromUrl`** o datos ya incluidos en un DTO grande (p. ej. ampliar `actividad_ver_datos`), no llamando al contenedor desde un objeto de sesión.
+
+3. **Transición práctica**  
+   Mientras la clase siga siendo monolítica, los controladores frontend deben **pasar contexto ya conocido** (`id_tipo_activ`, `dl_org`) cuando el backend ya lo devolvió por JSON, y migrar gradualmente las ramas que hoy usan repositorios dentro de la clase hacia servicios o `*_datos.php` dedicados.
+
+   **Fases de proceso (permisos on/off):** usar **`/src/actividades/actividad_fases_completadas_datos`** (`id_activ` → `fases_completadas`) antes de `getPermisoActual` / `getPermisoOn` en flujos solo-frontend (p. ej. `PrefillPermActividadesFases::desdeBackend`). Consulta unitaria equivalente a `faseCompletada`: **`/src/actividades/actividad_fase_completada_datos`** (`id_activ`, `id_fase` → `completada`).
+
 ### Seguridad (Hash.php)
 Cuando se añaden campos de estado en el frontend (ej: `<input type="hidden" name="scroll_id_...">`), estos campos deben excluirse de la validación del hash para evitar errores de "Hash mismatch".
 - Modificar `web\Hash::isValid()` para ignorar prefijos específicos (como `scroll_id_`).
 - Quién **firma** URLs hacia `frontend/` no debe ser `src/application` ni `src/domain`: ver la directiva **Enlaces firmados hacia la UI** en esta misma sección.
+
+### Pitfalls: salida parcial, JSON y tema CSS (legado)
+
+Patrones que han roto producción (avisos `session_id()` / JSON corrupto / hash POST); útiles al tocar controladores-vista o includes de color:
+
+1. **`ViewNewPhtml::renderizar` y `Select_*::getHtml()`**  
+   Si el resultado se concatena, se devuelve como string o alimenta un pipeline JSON, usar **`renderizar(..., false)`** y `return` del HTML. Un `echo` intermedio mezcla cuerpo de respuesta, rompe `Content-Type: application/json` y puede hacer que un `include` posterior ejecute código de bootstrap en el momento equivocado.
+
+2. **`PostRequest` y firma**  
+   En POST internos desde `frontend/`, revisar que los metadatos de navegación/hash que no pertenecen al formulario destino (p. ej. **`hpos`**) se normalicen en `PostRequest` para que la URL firmada coincida con la que valida el endpoint; si no, errores de hash o redirecciones (302) inesperadas.
+
+3. **Includes de tema después de `echo`**  
+   Tras cualquier salida (`mostrar_left_slide`, `echo` previo, etc.), **no** cargar **`global_object.inc`** (ni stack que llame a `session_id()` / rearranque de sesión) desde rutas como **`css/colores.php`** o entrypoints de estilos. Resolver estilo con bootstrap mínimo (p. ej. autoload + lectura de preferencia sin DI pesada, como **`css/colores_estilo_desde_sesion.php`**). Los `.css.php` servidos como recurso **no** deben pasar por `global_header_front.inc` si eso imprime HTML o cierra sesión antes de servir CSS.
+
+4. **`src/` sin `core\` implícito**  
+   Clases en `src/domain` (o servicios usados solo vía JSON) no deben extender o importar **`core\...`** que no esté garantizado por el autoload de esa petición; si hace falta un helper, usar uno en `src/shared/domain/helpers/` o un adaptador en `infrastructure`.
 
 
 ## Comunicación Frontend-Backend (AJAX y JSON)

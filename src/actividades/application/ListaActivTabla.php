@@ -16,12 +16,12 @@ use function src\shared\domain\helpers\is_true;
 
 /**
  * Caso de uso: construye los datos (cabeceras + filas) de la pantalla
- * frontend/actividades/controller/lista_activ.php. El HTML de la tabla se
- * construye en `lista_activ_datos.php` tras resolver `link_spec` y firmar.
+ * `frontend/actividades/controller/lista_activ.php`. El HTML de la tabla lo genera ese
+ * controlador: firma `link_spec` y llama a `Lista::mostrar_tabla`.
  *
  * La responsabilidad de leer el POST y la pila de navegación (`$oPosicion`) queda en el
- * controlador frontend. Aqui traducimos un set de filtros + opciones de
- * entorno (permisos, dmz, etc.) al array de datos y al HTML de la tabla.
+ * controlador frontend. Aquí traducimos un set de filtros + opciones de
+ * entorno (permisos, dmz, etc.) al array de datos de la tabla.
  */
 class ListaActivTabla
 {

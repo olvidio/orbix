@@ -2,7 +2,6 @@
 
 namespace src\asistentes\application;
 
-use frontend\shared\web\Desplegable;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -14,11 +13,11 @@ use src\personas\domain\contracts\PersonaNRepositoryInterface;
 use src\personas\domain\contracts\PersonaSRepositoryInterface;
 use src\personas\domain\entity\Persona;
 use src\shared\config\ConfigGlobal;
-use frontend\shared\security\HashFront;
 use function src\shared\domain\helpers\is_true;
 
 /**
- * Dossier asistentes a una actividad (3101).
+ * Dossier asistentes a una actividad (3101). Datos puros; la UI vive en
+ * {@see \frontend\asistentes\helpers\FormAsistentesAUnaActividadRender}.
  */
 final class FormAsistentesAUnaActividadData
 {
@@ -30,7 +29,7 @@ final class FormAsistentesAUnaActividadData
     {
         $a_sel = (array)($input['sel'] ?? []);
         if (!empty($a_sel)) {
-            $Qid_nom = (int)strtok($a_sel[0], '#');
+            $Qid_nom = (int)strtok((string)$a_sel[0], '#');
         } else {
             $Qid_nom = (int)($input['id_nom'] ?? 0);
         }
@@ -38,7 +37,7 @@ final class FormAsistentesAUnaActividadData
         $Qid_activ = (int)($input['id_activ'] ?? 0);
         $Qid_pau = (int)($input['id_pau'] ?? 0);
         $Qobj_pau = (string)($input['obj_pau'] ?? '');
-        if (empty($Qid_activ)) {
+        if ($Qid_activ === 0) {
             $Qid_activ = $Qid_pau;
         }
 
@@ -48,7 +47,9 @@ final class FormAsistentesAUnaActividadData
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
         $ActividadAllRepository->findById($Qid_activ);
 
-        $desplegable_personas_html = '';
+        $personas_opciones = null;
+        $personas_onchange = null;
+
         $obj_pau = $Qobj_pau;
         $oPersona = null;
         $id_nom_real = '';
@@ -61,11 +62,13 @@ final class FormAsistentesAUnaActividadData
         $plaza = PlazaId::PEDIDA;
         $propietario = '';
 
-        if (!empty($Qid_nom)) {
+        if ($Qid_nom !== 0) {
             $mod = 'editar';
             $oPersona = Persona::findPersonaEnGlobal($Qid_nom);
             if (!is_object($oPersona)) {
-                exit("<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ': line ' . __LINE__);
+                return [
+                    'error' => "<br>No encuentro a nadie con id_nom: $Qid_nom en  " . __FILE__ . ': line ' . __LINE__,
+                ];
             }
             $id_tabla = $oPersona->getId_tabla();
             switch ($id_tabla) {
@@ -93,6 +96,9 @@ final class FormAsistentesAUnaActividadData
             $id_nom_real = (string)$Qid_nom;
 
             $cAsistentes = $AsistenteRepository->getAsistentes(['id_activ' => $Qid_activ, 'id_nom' => $Qid_nom]);
+            if ($cAsistentes === []) {
+                return ['error' => _('No se encontró el asistente para esta actividad.')];
+            }
             $oAsistente = $cAsistentes[0];
             $propio = $oAsistente->isPropio();
             $falta = $oAsistente->isFalta();
@@ -102,52 +108,48 @@ final class FormAsistentesAUnaActividadData
             $plaza = $oAsistente->getPlaza();
             $propietario = $oAsistente->getPropietario();
 
-            if (ConfigGlobal::is_app_installed('actividadplazas') && !empty($propietario)) {
-                $padre = strtok($propietario, '>');
-                $child = strtok('>');
-                if ($obj_pau !== 'PersonaEx' && $child !== ConfigGlobal::mi_delef()) {
-                    exit(sprintf(_('los datos de asistencia los modifica el propietario de la plaza: %s'), $child));
+            if (ConfigGlobal::is_app_installed('actividadplazas') && $propietario !== '') {
+                $parts = explode('>', (string)$propietario, 2);
+                $child = (string)($parts[1] ?? '');
+                if ($obj_pau !== 'PersonaEx' && $child !== '' && $child !== ConfigGlobal::mi_delef()) {
+                    return [
+                        'error' => sprintf(
+                            _('los datos de asistencia los modifica el propietario de la plaza: %s'),
+                            $child
+                        ),
+                    ];
                 }
             }
         } else {
             $mod = 'nuevo';
-            $obj_pau = !empty($Qobj_pau) ? urldecode($Qobj_pau) : '';
+            $obj_pau = $Qobj_pau !== '' ? urldecode($Qobj_pau) : '';
             $Qna = (string)($input['na'] ?? '');
             $na_val = 'p' . $Qna;
-            $oDesplegablePersonas = new Desplegable();
+
             switch ($obj_pau) {
                 case 'PersonaN':
-                    $oOpciones = $GLOBALS['container']->get(PersonaNRepositoryInterface::class)->getArrayPersonas();
-                    $oDesplegablePersonas->setOpciones($oOpciones);
-                    $oDesplegablePersonas->setNombre('id_nom');
+                    $personas_opciones = $GLOBALS['container']->get(PersonaNRepositoryInterface::class)->getArrayPersonas();
                     break;
                 case 'PersonaNax':
-                    $oOpciones = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class)->getArrayPersonas();
-                    $oDesplegablePersonas->setOpciones($oOpciones);
-                    $oDesplegablePersonas->setNombre('id_nom');
+                    $personas_opciones = $GLOBALS['container']->get(PersonaNaxRepositoryInterface::class)->getArrayPersonas();
                     break;
                 case 'PersonaAgd':
-                    $oOpciones = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class)->getArrayPersonas();
-                    $oDesplegablePersonas->setOpciones($oOpciones);
-                    $oDesplegablePersonas->setNombre('id_nom');
+                    $personas_opciones = $GLOBALS['container']->get(PersonaAgdRepositoryInterface::class)->getArrayPersonas();
                     break;
                 case 'PersonaS':
-                    $oOpciones = $GLOBALS['container']->get(PersonaSRepositoryInterface::class)->getArrayPersonas();
-                    $oDesplegablePersonas->setOpciones($oOpciones);
-                    $oDesplegablePersonas->setNombre('id_nom');
+                    $personas_opciones = $GLOBALS['container']->get(PersonaSRepositoryInterface::class)->getArrayPersonas();
                     break;
                 case 'PersonaSSSC':
                 case 'PersonaEx':
-                    $oOpciones = $GLOBALS['container']->get(PersonaExRepositoryInterface::class)->getArrayPersonas($na_val);
-                    $oDesplegablePersonas->setOpciones($oOpciones);
-                    $oDesplegablePersonas->setNombre('id_nom');
+                    $personas_opciones = $GLOBALS['container']->get(PersonaExRepositoryInterface::class)->getArrayPersonas($na_val);
                     $obj_pau = 'PersonaEx';
                     break;
+                default:
+                    $personas_opciones = [];
             }
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
-                $oDesplegablePersonas->setAction('fnjs_cmb_propietario()');
+                $personas_onchange = 'fnjs_cmb_propietario()';
             }
-            $desplegable_personas_html = $oDesplegablePersonas->desplegable();
         }
 
         $propio_chk = (!empty($propio) && is_true($propio)) ? 'checked' : '';
@@ -155,37 +157,23 @@ final class FormAsistentesAUnaActividadData
         $est_chk = (!empty($est_ok) && is_true($est_ok)) ? 'checked' : '';
 
         $plazas_installed = ConfigGlobal::is_app_installed('actividadplazas');
-        $desplegable_plaza_html = '';
-        $desplegable_propietarios_html = '';
-        $h1 = '';
-        $url_ajax = '';
+        $plaza_opciones = [];
+        $propietario_opciones = [];
+        $propietario_select_blanco = false;
+
         if ($plazas_installed) {
-            $aOpciones = PlazaId::getArrayPosiblesPlazas();
-            $oDesplegablePlaza = new Desplegable();
-            $oDesplegablePlaza->setNombre('plaza');
-            $oDesplegablePlaza->setOpciones($aOpciones);
-            $oDesplegablePlaza->setOpcion_sel((string)$plaza);
-            $desplegable_plaza_html = $oDesplegablePlaza->desplegable();
+            $plaza_opciones = PlazaId::getArrayPosiblesPlazas();
 
             $dl_de_paso = false;
-            if ($obj_pau === 'PersonaEx' && !empty($Qid_nom) && $oPersona !== null) {
+            if ($obj_pau === 'PersonaEx' && $Qid_nom !== 0 && $oPersona !== null) {
                 $dl_de_paso = $oPersona->getDl();
             }
             $gesActividadPlazas = $GLOBALS['container']->get(ResumenPlazasService::class);
             $gesActividadPlazas->setId_activ($Qid_activ);
-            $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
-            $oDesplPosiblesPropietarios->setNombre('propietario');
-            $oDesplPosiblesPropietarios->setOpcion_sel($propietario);
-            $desplegable_propietarios_html = $oDesplPosiblesPropietarios->desplegable();
-
-            $url_ajax = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividadplazas/posibles_propietarios_data';
-            $oHash1 = new HashFront();
-            $oHash1->setUrl($url_ajax);
-            $oHash1->setCamposForm('id_activ!id_nom');
-            $h1 = $oHash1->linkSinValParams();
+            $propietario_opciones = $gesActividadPlazas->getPosiblesPropietariosOpciones($dl_de_paso);
+            $propietario_select_blanco = true;
         }
 
-        $oHash = new HashFront();
         $camposForm = 'observ!observ_est';
         if ($plazas_installed) {
             $camposForm .= '!plaza!propietario';
@@ -196,38 +184,52 @@ final class FormAsistentesAUnaActividadData
             'mod' => $mod,
             'actualizar' => 0,
         ];
-        if (!empty($id_nom_real)) {
+        if ($id_nom_real !== '') {
             $a_camposHidden['id_nom'] = (int)$id_nom_real;
         } else {
             $camposForm .= '!id_nom';
         }
-        $oHash->setCamposForm($camposForm);
-        $oHash->setArraycamposHidden($a_camposHidden);
-        $oHash->setCamposNo('actualizar!id_nom!propio!falta!est_ok');
 
-        $web = rtrim(ConfigGlobal::getWeb(), '/');
-        $url_guardar = $web . '/src/asistentes/asistente_guardar';
-        $url_self = $web . '/frontend/asistentes/controller/form_asistentes_a_una_actividad.php';
-
-        return [
+        $out = [
             'obj' => $obj,
-            'h1' => $h1,
-            'url_ajax' => $url_ajax,
-            'url_guardar' => $url_guardar,
-            'url_self' => $url_self,
             'id_activ' => $Qid_activ,
             'id_nom_real' => $id_nom_real,
             'ape_nom' => $ape_nom,
-            'desplegable_personas_html' => $desplegable_personas_html,
             'propio_chk' => $propio_chk,
             'falta_chk' => $falta_chk,
             'est_chk' => $est_chk,
             'observ' => $observ,
             'observ_est' => $observ_est,
             'plazas_installed' => $plazas_installed,
-            'hash_campos_html' => $oHash->getCamposHtml(),
-            'desplegable_plaza_html' => $desplegable_plaza_html,
-            'desplegable_propietarios_html' => $desplegable_propietarios_html,
+            'hash_main' => [
+                'campos_form' => $camposForm,
+                'campos_no' => 'actualizar!id_nom!propio!falta!est_ok',
+                'campos_hidden' => $a_camposHidden,
+            ],
+            'paths' => [
+                'asistente_guardar' => 'src/asistentes/asistente_guardar',
+                'form_self' => 'frontend/asistentes/controller/form_asistentes_a_una_actividad.php',
+                'posibles_propietarios_data' => 'src/actividadplazas/posibles_propietarios_data',
+            ],
+            'plaza_opciones' => $plaza_opciones,
+            'plaza_selected' => (string)$plaza,
+            'propietario_opciones' => $propietario_opciones,
+            'propietario_selected' => (string)$propietario,
+            'propietario_select_blanco' => $propietario_select_blanco,
         ];
+
+        if ($personas_opciones !== null) {
+            $out['personas_opciones'] = $personas_opciones;
+            $out['personas_onchange'] = $personas_onchange;
+        }
+
+        if ($plazas_installed) {
+            $out['ajax_propietarios'] = [
+                'path' => 'src/actividadplazas/posibles_propietarios_data',
+                'campos_form' => 'id_activ!id_nom',
+            ];
+        }
+
+        return $out;
     }
 }

@@ -4,11 +4,15 @@ namespace src\dossiers\application;
 
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use function src\shared\domain\helpers\is_true;
-use frontend\shared\security\HashFront;
 
 /**
  * Formulario "permisos de acceso" para un tipo de dossier.
- * `$signedGoTo` debe ser la URL firmada hacia `perm_dossiers.php` (la firma en `perm_dossier_ver_data.php`).
+ *
+ * El backend devuelve sólo datos:
+ *  - `go_to_link_spec` ({path, query}) para que el frontend firme con HashFront.
+ *  - `hash_config` (campos_form, campos_no, campos_hidden) para que el frontend componga el
+ *    bloque hidden con HashFront; el valor de `go_to` dentro de `campos_hidden` se inyecta
+ *    firmado en el borde del frontend.
  *
  * @return array<string, mixed>
  */
@@ -22,9 +26,8 @@ class PermDossierVerFormData
         ];
     }
 
-    public static function build(int $Qid_tipo_dossier, string $Qtipo, string $signedGoTo): array
+    public static function build(int $Qid_tipo_dossier, string $Qtipo): array
     {
-        $go_to = $signedGoTo;
         $url_guardar = '/src/dossiers/tipo_dossier_guardar';
         $url_eliminar = '/src/dossiers/tipo_dossier_eliminar';
 
@@ -50,18 +53,22 @@ class PermDossierVerFormData
 
         $chk = (is_true($depende_modificar)) ? 'checked' : '';
         $campos_chk = 'depende_modificar!permiso_lectura!permiso_escritura';
-        $oHash = new HashFront();
-        $oHash->setCamposForm('id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!app!class!codigo');
-        $oHash->setCamposNo('que!' . $campos_chk);
-        $a_camposHidden = [
-            'go_to' => $go_to,
-            'campos_chk' => $campos_chk,
+
+        $hashConfig = [
+            'campos_form' => 'id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!app!class!codigo',
+            'campos_no' => 'que!' . $campos_chk,
+            // `campos_hidden` sin `go_to`: el frontend debe inyectarlo ya firmado para que la
+            // firma del hash coincida con el HTML generado.
+            'campos_hidden' => [
+                'campos_chk' => $campos_chk,
+            ],
         ];
-        $oHash->setArraycamposHidden($a_camposHidden);
+
         $txt_eliminar = _("¿Está seguro que desea eliminar este dossier?");
 
         return [
-            'hash_campos_html' => $oHash->getCamposHtml(),
+            'hash_config' => $hashConfig,
+            'go_to_link_spec' => self::listaPermLinkSpec($Qtipo),
             'permiso_lectura_html' => $permiso_lectura_html,
             'permiso_escritura_html' => $permiso_escritura_html,
             'url_guardar' => $url_guardar,
@@ -81,7 +88,6 @@ class PermDossierVerFormData
             'codigo' => $oTipoDossier->getCodigo() ?? '',
             'chk' => $chk,
             'botones' => $botones,
-            'go_to' => $go_to,
         ];
     }
 }

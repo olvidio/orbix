@@ -1,8 +1,11 @@
+<?php
+use frontend\shared\config\AppUrlConfig;
+?>
 <script>
     fnjs_guardar_stgr = function (formulario) {
         $.ajax({
             data: $(formulario).serialize(),
-            url: '<?= src\shared\config\AppUrlConfig::getApiBaseUrl() ?>/src/personas/stgr_update',
+            url: '<?= AppUrlConfig::getApiBaseUrl() ?>/src/personas/stgr_update',
             method: 'POST',
             dataType: 'json'
         }).done(function (json) {

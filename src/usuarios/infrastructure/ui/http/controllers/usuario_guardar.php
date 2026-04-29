@@ -1,5 +1,7 @@
 <?php
 
+use src\shared\security\HashB;
+use src\shared\security\HashBInvalidException;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
@@ -11,6 +13,29 @@ use src\usuarios\domain\value_objects\IdPau;
 use src\usuarios\domain\value_objects\NombreUsuario;
 use frontend\shared\web\ContestarJson;
 
+$ctxRaw = (string)filter_input(INPUT_POST, 'ctx');
+try {
+    $opened = HashB::open($ctxRaw, 'usuario_guardar');
+} catch (HashBInvalidException $e) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
+$que_user = (string)($opened['que_user'] ?? '');
+$id_usuario_ctx = (int)($opened['id_usuario'] ?? 0);
+if ($que_user !== 'nuevo' && $que_user !== 'guardar') {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+if ($que_user === 'nuevo' && $id_usuario_ctx !== 0) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+if ($que_user === 'guardar' && $id_usuario_ctx <= 0) {
+    ContestarJson::enviar(_("Operación no autorizada"), 'none');
+    return;
+}
+
 $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
 
 $error_txt = '';
@@ -18,7 +43,7 @@ if (empty($Qusuario)) {
     $error_txt .= _("debe poner un nombre");
 }
 
-$Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+$Qid_usuario = ($que_user === 'nuevo') ? 0 : $id_usuario_ctx;
 $Qperm_activ = (array)filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qid_role = (integer)filter_input(INPUT_POST, 'id_role');
 $Qemail = (string)filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);

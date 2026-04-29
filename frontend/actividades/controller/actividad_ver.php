@@ -22,6 +22,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
+use frontend\actividades\helpers\PrefillPermActividadesFases;
 use function frontend\shared\helpers\is_true;
 
 require_once("frontend/shared/global_header_front.inc");
@@ -127,6 +128,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $idioma = (string)$entidad['idioma'];
 
     $_SESSION['oPermActividades']->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
+    PrefillPermActividadesFases::desdeBackend($Qid_activ);
     $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
 
     if ($oPermActiv->only_perm('ocupado')) {

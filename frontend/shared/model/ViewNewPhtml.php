@@ -42,7 +42,11 @@ class ViewNewPhtml
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-    function renderizar($file, $variables = array())
+    /**
+     * @param array<string, mixed> $variables
+     * @return string HTML capturado (y opcionalmente emitido si $echo es true).
+     */
+    function renderizar($file, $variables = array(), bool $echo = true): string
     {
 
         extract($variables);
@@ -66,8 +70,11 @@ class ViewNewPhtml
 
         require $fileName;
 
-        $out2 = ob_get_clean();
+        $out2 = (string) ob_get_clean();
 
-        echo $out2;
+        if ($echo) {
+            echo $out2;
+        }
+        return $out2;
     }
 }

@@ -49,30 +49,27 @@
             alert(<?= json_encode(_("debe indicar una actividad")) ?>);
             return;
         }
-        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
-        if (rr === 'ok') {
-            $(formulario).attr('action', "<?= $url_guardar ?>");
-            $(formulario).one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    dataType: 'json',
-                    data: $(this).serialize()
-                }).done(function (rta) {
-                    if (rta && rta.success) {
-                        <?= $oPosicion->js_atras(1); ?>
-                    } else {
-                        var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
-                        alert(<?= json_encode(_("respuesta") . ": ") ?> + msg);
-                    }
-                }).fail(function () {
-                    alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
-                });
-                return false;
+        $(formulario).attr('action', "<?= $url_guardar ?>");
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                dataType: 'json',
+                data: $(this).serialize()
+            }).done(function (rta) {
+                if (rta && rta.success) {
+                    <?= $oPosicion->js_atras(1); ?>
+                } else {
+                    var msg = (rta && rta.mensaje) ? rta.mensaje : <?= json_encode(_("error desconocido")) ?>;
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + msg);
+                }
+            }).fail(function () {
+                alert(<?= json_encode(_("error de comunicación con el servidor")) ?>);
             });
-            $(formulario).trigger("submit");
-            $(formulario).off();
-        }
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
     }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
