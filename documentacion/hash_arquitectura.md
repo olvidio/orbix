@@ -1,8 +1,8 @@
 # Arquitectura de tokens de seguridad: `HashF` y `HashB`
 
-Este documento fija la visión arquitectónica hacia la que queremos llevar el repo en lo relativo al token anti-tamper / anti-CSRF que hoy proporciona la clase única `web\Hash` (`apps/web/Hash.php`). **Es el *north star*, no el estado actual.** La migración real se hará por pasos, por módulos, y siguiendo los criterios de `refactor.md`.
+Este documento fija la visión arquitectónica hacia la que queremos llevar el repo en lo relativo al token anti-tamper / anti-CSRF que hoy proporciona la clase única `web\Hash` (`apps/web/Hash.php`). **Es el *north star*, no el estado actual.** La migración real se hará por pasos, por módulos, y siguiendo los criterios de `agents.md` (sección *Migración `apps/` → `frontend/` + `src/`* y subsección *Hash al mover endpoints AJAX*).
 
-Referencia cruzada: `refactor.md` §"`Hash` y reescritura de URLs de AJAX al mover un endpoint".
+Referencia cruzada: `agents.md` — *Hash al mover endpoints AJAX (`Hash::getCamposHtml` vs `Hash::linkSinVal`)*.
 
 ## 1. Problema a resolver
 
@@ -193,7 +193,7 @@ Para acciones "crear nuevo" donde aún no hay recurso, la cápsula contiene solo
 - Al **recibir** mutación: `HashB::open($_POST['ctx'], 'accion_concreta')` → obtiene contexto verificado → llama al caso de uso.
 - Al **responder** lectura: genera los tokens necesarios con `HashB::sign(...)` y los incluye en el payload bajo `tokens` o `tokens_globales`.
 - No vuelve a emitir `HashF` (no es capa UI).
-- Sigue haciendo `ContestarJson::enviar(...)` como dice `refactor.md`.
+- Sigue haciendo `ContestarJson::enviar(...)` como dice `agents.md` (*Comunicación Frontend-Backend*).
 
 ### 6.4 `src/<modulo>/application/*.php`
 
@@ -232,7 +232,7 @@ Son **capa UI**:
 
 - `apps/web/Hash.php` → se divide en `frontend/shared/security/HashF.php` + `src/shared/security/HashB.php`. Queda una fase transicional con *shim* en `apps/web/Hash.php` delegando a `HashF` para no romper nada hasta que esté todo migrado.
 - `apps/web/Posicion.php` → se mueve a `frontend/shared/` y usa solo `HashF`.
-- `src/layouts/BurgerLayout.php`, `src/layouts/LegacyLayout.php` → se mueven a `frontend/shared/layouts/`. `src/` deja de producir HTML de UI (coherente con `refactor.md` §"Que evitar en esta fase").
+- `src/layouts/BurgerLayout.php`, `src/layouts/LegacyLayout.php` → se mueven a `frontend/shared/layouts/`. `src/` deja de producir HTML de UI (coherente con `agents.md` — *Qué evitar al migrar pantallas*).
 
 ### 7.3 `apps/core/global_object.inc`
 
@@ -268,7 +268,7 @@ Este orden minimiza el riesgo y permite verificar la arquitectura antes de aplic
 2. **Crear `HashB`** con `sign`/`open` en `src/shared/security/HashB.php`. Incluir tests unitarios mínimos (sign-open roundtrip, sesión cruzada, expiración, action distinto).
 3. **Piloto en un solo módulo** (candidato: `actividadtarifas`, porque ya está listo con el patrón `_lista` / `_form` / `_update` / `_eliminar` / `_copiar`). Migrar solo ese vertical slice al modelo cápsula y verificar comportamiento.
 4. **Piloto en un segundo módulo** con patrón distinto (p.ej. `ubis` por su mezcla de proxies y datos compartidos).
-5. **Ola por módulo**, siguiendo el orden de `refactor.md` § "Siguiente refactor sugerido".
+5. **Ola por módulo**, siguiendo el plan de migración acordado por equipo (prioridades por módulo en baselines `documentacion/*_migracion_baseline.md`).
 6. **Última fase:** cuando no queden `new Hash()` fuera de `apps/` legacy, borrar `web\Hash` o dejarlo como shim final. Decidir qué hacer con el secreto de `HashB` (seguir session-derived o pasar a HMAC).
 
 ## 10. Checklist para cada slice

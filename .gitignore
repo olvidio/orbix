@@ -72,6 +72,7 @@ log/*
 # Build artifacts and temporary files
 /build/artifacts
 /build/tmp
+/build/phpunit-coverage-html
 /tests/autoload.php
 
 # PHP-CS-Fixer

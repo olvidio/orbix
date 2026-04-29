@@ -49,6 +49,15 @@
     "test:integration": "php libs/vendor/bin/phpunit --configuration phpunit.xml tests/integration",
     "test:docker": "scripts/phpunit-docker",
     "test:docker:integration": "scripts/phpunit-docker tests/integration",
-    "test:docker:personas": "scripts/phpunit-docker tests/integration/personas"
+    "test:docker:personas": "scripts/phpunit-docker tests/integration/personas",
+    "test:report:buckets": "bash shell_scripts/check_test_coverage.sh",
+    "test:report:granular": "bash shell_scripts/check_test_granular.sh",
+    "test:report": [
+      "@composer test:report:buckets",
+      "@composer test:report:granular"
+    ],
+    "test:coverage": "env XDEBUG_MODE=coverage php libs/vendor/bin/phpunit --configuration phpunit.xml --coverage-text",
+    "test:coverage:unit": "env XDEBUG_MODE=coverage php libs/vendor/bin/phpunit --configuration phpunit.xml --testsuite unit --coverage-text",
+    "test:coverage:html": "env XDEBUG_MODE=coverage php libs/vendor/bin/phpunit --configuration phpunit.xml --testsuite unit --coverage-html build/phpunit-coverage-html"
   }
 }
