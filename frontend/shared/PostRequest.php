@@ -232,20 +232,17 @@ class PostRequest
         $host_original = $parts['host'] ?? '';
         $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
 
-        // 2. Path: Limpiamos la solamente la 3a posición si tiene guión
+        // 2. Path: solo amb host reescrit a Docker ( *.docker → host.docker.internal ), treiem
+        // el segment d'esquema amb guió a la posició 2 (ex. "/orbix/H-dlbv/src/...").
+        // En instal·lacions HTTP reals, el mateix gest pot treure '/pruebas/H-XXX' del URL
+        // intern i el vhost espera '/pruebas/H-XXX/src/...' → 404.
         $path_final = $parts['path'] ?? '';
 
-        if (!empty($path_final)) {
-            // Convertim el path en array. Exemple: "/orbix/H-dlbv/src/..."
-            // es converteix en ['', 'orbix', 'H-dlbv', 'src', ...]
+        $dockerHostRewrite = ($host_nuevo !== $host_original && $host_original !== '');
+        if ($dockerHostRewrite && $path_final !== '') {
             $segments = explode('/', $path_final);
-
-            // Verifiquem si existeix la posició 2 (la tercera peça després de la primera /)
-            // i si realment conté un guionet '-'
             if (isset($segments[2]) && strpos($segments[2], '-') !== false) {
-                // Eliminem el segment amb guionet de l'array
                 unset($segments[2]);
-                // Tornem a muntar la ruta i reindexem
                 $path_final = implode('/', $segments);
             }
         }
@@ -384,7 +381,8 @@ class PostRequest
         $host_nuevo = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $host_original);
 
         $path_final = $parts['path'] ?? '';
-        if ($path_final !== '') {
+        $dockerHostRewrite = ($host_nuevo !== $host_original && $host_original !== '');
+        if ($dockerHostRewrite && $path_final !== '') {
             $segments = explode('/', $path_final);
             if (isset($segments[2]) && strpos($segments[2], '-') !== false) {
                 unset($segments[2]);
