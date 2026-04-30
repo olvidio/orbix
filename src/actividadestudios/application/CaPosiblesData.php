@@ -159,8 +159,7 @@ final class CaPosiblesData
         } else {
             switch ($idTablaPersona) {
                 case 'n':
-                    $nivelesStgrConEstudios = NivelStgrId::getArrayNivelStgrOn();
-                    $aWhere['nivel_stgr'] = $nivelesStgrConEstudios;
+                    $aWhere['nivel_stgr'] = array_keys(NivelStgrId::getArrayNivelStgrOn());
                     $aOperador['nivel_stgr'] = 'IN';
                     $personaRepository = $GLOBALS['container']->get(PersonaNRepositoryInterface::class);
                     break;

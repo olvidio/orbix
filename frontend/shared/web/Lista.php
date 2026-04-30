@@ -143,9 +143,9 @@ class Lista
                     $id = (is_array($Cabecera) && !empty($Cabecera['id'])) ? $Cabecera['id'] : null;
 
                     $valor = '';
-                    if ($field && isset($fila[$field])) {
+                    if ($field && array_key_exists($field, $fila)) {
                         $valor = $fila[$field];
-                    } elseif ($id && isset($fila[$id])) {
+                    } elseif ($id && array_key_exists($id, $fila)) {
                         $valor = $fila[$id];
                     } else {
                         $target_idx = $start_icol + $icol_offset;
@@ -190,8 +190,8 @@ class Lista
                     }
                 }
             }
+            $tbody .= "</tr>\n";
         }
-        $tbody .= "</tr>\n";
 
         $Html .= $tbody . "</tbody></table>";
         return $Html;
@@ -1140,9 +1140,9 @@ class Lista
                     $id = (is_array($Cabecera) && !empty($Cabecera['id'])) ? $Cabecera['id'] : null;
 
                     $valor = '';
-                    if ($field && isset($fila[$field])) {
+                    if ($field && array_key_exists($field, $fila)) {
                         $valor = $fila[$field];
-                    } elseif ($id && isset($fila[$id])) {
+                    } elseif ($id && array_key_exists($id, $fila)) {
                         $valor = $fila[$id];
                     } else {
                         $target_idx = $start_icol + $icol_offset;

@@ -15,6 +15,9 @@ import { clickGrupmenuLabelIfSet, indexPathForE2e } from '../../grupmenu';
 const SKIP_MENU_LINKS_IF_NO_BDU =
   process.env.E2E_SKIP_MENU_LINKS_IF_BDU_UNAVAILABLE === '1';
 
+/** Log por consola y adjunta `menu-links-get.log` al informe HTML (`npx playwright show-report`). */
+const MENU_LINK_GET_LOG = process.env.E2E_MENU_LINK_GET_LOG === '1';
+
 function isBduOnlyDiagnostic(diagnostic: string): boolean {
   return /\bBDU\b/i.test(diagnostic);
 }
@@ -55,6 +58,34 @@ function pathOnlyLastSegment(pathname: string): string {
   const trim = pathname.replace(/^\/+|\/+$/g, '');
   const parts = trim.split('/');
   return parts[parts.length - 1] ?? '';
+}
+
+/**
+ * Muchos controllers Orbix están pensados para POST (HashFront); un GET suele esperar entrada o tardar hasta el timeout del servidor.
+ * Por defecto no los probamos así. Para forzar todos los enlaces recolectados: `E2E_STRICT_MENU_LINK_GET=1` (mucho más lento / inestable).
+ */
+function shouldSkipBareGetOrbix(heuristicHref: string): boolean {
+  if (process.env.E2E_STRICT_MENU_LINK_GET === '1') {
+    return false;
+  }
+  let path: string;
+  try {
+    path = new URL(heuristicHref).pathname;
+  } catch {
+    return true;
+  }
+  const p = path.toLowerCase();
+  // Sufijo *_que.php (p. ej. actividad_que.php) y prefijo que_*.php (p. ej. que_ctr_lista.php).
+  if (/\/controller\/[^/]*_que\.php$/i.test(p)) return true;
+  if (/\/controller\/que_[^/]*\.php$/i.test(p)) return true;
+  if (/\/controller\/[^/]*_select\.php$/i.test(p)) return true;
+  if (/\/preferencias\.php$/i.test(p)) return true;
+  if (/\/public\/ayuda\/index\.php$/i.test(p)) return true;
+  if (/\/avisos_generar\.php$/i.test(p)) return true;
+  if (/\/gestion_/i.test(p)) return true;
+  if (/\/incorporar_/i.test(p)) return true;
+  if (/\/fases_/i.test(p)) return true;
+  return false;
 }
 
 test.describe('Tras login: enlaces en la página principal', () => {
@@ -123,31 +154,47 @@ test.describe('Tras login: enlaces en la página principal', () => {
     const hrefs = [...new Set([...hrefsIndex, ...hrefsFromMain])];
 
     const max = Number(process.env.E2E_MAX_LINKS ?? '100');
+    const getTimeoutMs = Math.min(
+      120_000,
+      Math.max(3_000, Number(process.env.E2E_LINK_GET_TIMEOUT_MS ?? 18_000)),
+    );
 
     expect(baseURL).toBeTruthy();
 
     const candidates = [...new Set(hrefs)]
       .filter((h) => !shouldSkipHref(h, pageOrigin))
+      .filter((h) => !shouldSkipBareGetOrbix(h))
       .slice(0, max);
 
     expect(
       candidates.length,
-      `No se recolectaron URLs navegables del mismo origen (${pageOrigin}). ` +
-        `¿Menú vacío o solo \`href="#"\`/` +
-        `sin fnjs_link_submenu? índice=${hrefsIndex.length} tras_clics_ajax=${hrefsFromMain.length} unión=${hrefs.length} antes del filtro.`
+      `No se recolectaron URLs navegables del mismo origen (${pageOrigin}) tras filtros (logout/delete y, por defecto, controllers tipo *_que.php / *_select.php y rutas POST-típicas). ` +
+        `Para probarlos con GET poco fiable: E2E_STRICT_MENU_LINK_GET=1. ` +
+        `¿Menú vacío? índice=${hrefsIndex.length} tras_clics_ajax=${hrefsFromMain.length} unión=${hrefs.length} antes del filtro.`
     ).toBeGreaterThan(0);
 
     const failures: string[] = [];
+    const traceLines: string[] = [];
+
+    const traceGet = (line: string) => {
+      if (!MENU_LINK_GET_LOG) return;
+      traceLines.push(line);
+      // eslint-disable-next-line no-console -- opt-in (E2E_MENU_LINK_GET_LOG=1)
+      console.log(`[menu-links-get] ${line}`);
+    };
+
+    traceGet(`candidates=${candidates.length} get_timeout_ms=${getTimeoutMs}`);
 
     for (const href of candidates) {
       try {
         const res = await page.request.get(href, {
           maxRedirects: 10,
-          timeout: 55_000,
+          timeout: getTimeoutMs,
           failOnStatusCode: false,
         });
         const status = res.status();
         if (status >= 400) {
+          traceGet(`FAIL http ${status} ${href}`);
           failures.push(`${status} ${href}`);
           continue;
         }
@@ -155,13 +202,27 @@ test.describe('Tras login: enlaces en la página principal', () => {
         if (ct.includes('text/html')) {
           const body = await res.text();
           if (PHP_HTML_ERROR_SNIPPETS.test(body)) {
+            traceGet(`FAIL php-html-pattern ${href}`);
             failures.push(`php-fatal-pattern ${href}`);
+            continue;
           }
         }
+        traceGet(`OK ${status} ${href}`);
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
+        traceGet(`FAIL request ${href} (${msg.slice(0, 160)})`);
         failures.push(`request-error ${href} (${msg.slice(0, 120)})`);
       }
+    }
+
+    if (MENU_LINK_GET_LOG) {
+      const ok = traceLines.filter((l) => l.startsWith('OK ')).length;
+      const fail = traceLines.filter((l) => l.startsWith('FAIL ')).length;
+      traceGet(`summary ok=${ok} fail=${fail}`);
+      await test.info().attach('menu-links-get.log', {
+        body: traceLines.join('\n'),
+        contentType: 'text/plain',
+      });
     }
 
     expect(failures, failures.join('\n')).toEqual([]);

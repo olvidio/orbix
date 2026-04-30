@@ -138,4 +138,8 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/notas/comprobar_notas_constants_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/comprobar_notas_constants_data.php';
     });
+
+    $r->addRoute(['GET', 'POST'], '/src/notas/comprobar_notas_page_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/comprobar_notas_page_data.php';
+    });
 };

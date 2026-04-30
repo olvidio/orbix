@@ -2,7 +2,6 @@
 
 namespace src\notas\application\legacy;
 
-use core\ClasePropiedades;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\value_objects\NivelStgrId;
@@ -10,14 +9,16 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\notas\application\services\ResumenTempTablesService;
-use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\value_objects\NotaSituacion;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
+use src\shared\traits\HandlesPdoErrors;
 use function src\shared\domain\helpers\is_true;
 
-class Resumen extends ClasePropiedades
+class Resumen
 {
+    use HandlesPdoErrors;
+
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /**
@@ -44,6 +45,7 @@ class Resumen extends ClasePropiedades
      *
      * @var string
      */
+    protected $sNomTabla;
     protected $sNomNotas;
     protected $sNomPersonas;
     protected $sNomAsignaturas;
@@ -93,6 +95,16 @@ class Resumen extends ClasePropiedades
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    public function getNomTabla()
+    {
+        return $this->sNomTabla;
+    }
+
+    public function setNomTabla(string $nomTabla)
+    {
+        $this->sNomTabla = $nomTabla;
+    }
 
     public function getNomPersonas()
     {

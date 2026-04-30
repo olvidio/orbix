@@ -3,7 +3,7 @@
 namespace src\ubis\domain\contracts;
 
 /**
- * Interfaz para gestionar la relación Casa-Dirección (tabla u_cross_dir_cdc)
+ * Interfaz para gestionar la relación Casa-Dirección (tabla u_cross_cdc_dir)
  */
 interface RelacionCasaExDireccionRepositoryInterface extends RelacionUbiDireccionRepositoryInterface
 {

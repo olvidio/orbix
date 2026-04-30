@@ -176,6 +176,7 @@ class ListaPlazasConjuntoActividades
             $nom_activ = empty($observ) ? $nom_activ : "$nom_activ $observ";
 
             if (!($sasistentes === "sss+" and $sactividad === "cv")) {
+                $aIdCargos = []; // id_nom de los cargos (si actividadcargos) para no duplicar como asistentes.
                 if (ConfigGlobal::is_app_installed('actividadcargos')) {
                     //selecciono el cl
                     $ActividadCargoRepository = $GLOBALS['container']->get(ActividadCargoRepositoryInterface::class);
@@ -183,13 +184,12 @@ class ListaPlazasConjuntoActividades
                     $cl = 0;
                     $num = 0; //número total de asistentes
                     $plazas_pedidas = 0; // plazas pedidas o 'en espera'
-                    $aIdCargos = []; // id_nom de los cargos para no ponerlos como asistentes.
                     $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
                     foreach ($cActividadCargos as $oActividadCargo) {
                         $id_nom = $oActividadCargo->getId_nom();
                         $aIdCargos[] = $id_nom;
                         $id_cargo = $oActividadCargo->getId_cargo();
-                        $cargo_cl = $CargoRepository->findById($id_cargo)?->getCargoVo()->value();
+                        $cargo_cl = $CargoRepository->findById($id_cargo)?->getCargoVo()->value() ?? '';
                         $oPersona = Persona::findPersonaEnGlobal($id_nom);
                         if ($oPersona === null) {
                             $msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom para la actividad $nom_activ";
@@ -315,8 +315,8 @@ class ListaPlazasConjuntoActividades
             }
         }
 
-        $a_cabeceras[] = _("num");
-        $a_cabeceras[] = _("nombre");
+        $a_cabeceras[] = ['name' => _("num"), 'field' => 'cargo'];
+        $a_cabeceras[] = ['name' => _("nombre"), 'field' => 'ap_nom'];
 
         if (!empty($msg_err)) {
             error_log($msg_err);

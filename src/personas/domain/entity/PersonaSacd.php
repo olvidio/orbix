@@ -667,10 +667,20 @@ class PersonaSacd
         $Pref_ordenApellidos = ConfigGlobal::mi_ordenApellidos() ?? '';
 
         if ($Pref_ordenApellidos === 'nom_ap') {
-            return $this->getNombreApellidos();
+            $nom = $this->getNombreApellidos();
+            if ($nom !== '') {
+                return $nom;
+            }
+            $nom = $this->getApellidosNombre();
+            return $nom !== '' ? $nom : $this->getApellidos();
         }
 
-        return $this->getApellidosNombre();
+        $nom = $this->getApellidosNombre();
+        if ($nom !== '') {
+            return $nom;
+        }
+        $nom = $this->getNombreApellidos();
+        return $nom !== '' ? $nom : $this->getApellidos();
     }
 
 

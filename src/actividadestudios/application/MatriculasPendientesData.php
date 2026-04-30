@@ -42,7 +42,18 @@ final class MatriculasPendientesData
             }
             $nomActiv = $oActividad->getNom_activ();
 
-            $oPersona = $personaFinderService->findPersonaEnGlobal($idNom);
+            try {
+                $oPersona = $personaFinderService->findPersonaEnGlobal($idNom);
+            } catch (\InvalidArgumentException $e) {
+                throw new \InvalidArgumentException(sprintf(
+                    _('Error al validar nombre o apellidos de persona en matrículas pendientes (fila de lista %1$d): id_nom=%2$d, id_activ=%3$d, id_asignatura=%4$d. %5$s'),
+                    $i,
+                    $idNom,
+                    $idActiv,
+                    $idAsignatura,
+                    $e->getMessage()
+                ), 0, $e);
+            }
             if ($oPersona === null) {
                 $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  " . __FILE__ . ': line ' . __LINE__;
                 continue;

@@ -9,21 +9,15 @@ abstract class ClaseRepository
 {
     use Hydratable;
     /**
-     * oDbl de ClasePropiedades
-     *
      * @var PDO
      */
     protected $oDbl;
     protected $oDbl_Select;
     /**
-     * NomTabla de ClasePropiedades
-     *
      * @var string
      */
     protected $sNomTabla = '';
     /**
-     * ErrorTxt de ClasePropiedades
-     *
      * @var string
      */
     protected $sErrorTxt;

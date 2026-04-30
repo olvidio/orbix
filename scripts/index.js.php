@@ -219,15 +219,28 @@ if (!isset($h)) {
             "heightGrid": heightGrid
         };
         var sPrefs = JSON.stringify(oPrefs);
-        var url = "<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/ui/http/controllers/preferencias_guardar.php";
-        var parametros = 'que=slickGrid&tabla=' + tabla + '&sPrefs=' + sPrefs + '<?= $h ?>';
+        // Misma ruta que el hash en index.php (FastRoute); la ruta al .php directo no coincide con el firmado y puede devolver el HTML de la aplicación.
+        var url = "<?= ConfigGlobal::getWeb() ?>/src/usuarios/preferencias_guardar";
+        var parametros = 'que=slickGrid&tabla=' + tabla + '&sPrefs=' + encodeURIComponent(sPrefs) + '<?= $h ?>';
         $.ajax({
             url: url,
             type: 'post',
             data: parametros,
             complete: function (rta) {
                 var rta_txt = rta.responseText;
-                if (rta_txt != '' && rta_txt != '\n') {
+                if (!rta_txt || rta_txt === '\n') {
+                    return;
+                }
+                try {
+                    var j = JSON.parse(rta_txt);
+                    if (j.success === false && j.mensaje) {
+                        alert(j.mensaje);
+                    }
+                } catch (e) {
+                    if (/<!DOCTYPE/i.test(rta_txt) || /<html[\s>]/i.test(rta_txt)) {
+                        alert(<?= json_encode(_("No se han podido guardar las preferencias: respuesta inválida del servidor.")) ?>);
+                        return;
+                    }
                     alert(rta_txt);
                 }
             }
@@ -299,6 +312,8 @@ if (!isset($h)) {
     }
 
     function fnjs_borrar_posibles_atras() {
+        // Evitar #ir_atras duplicado: fnjs_mostrar_atras puede dejar uno bajo #cargando (antes que #main en el DOM).
+        $('#cargando').children('#ir_atras, #ir_atras2, #go_atras, #js_atras').remove();
         if ($('#ir_a').length) $('#ir_a').remove();
         if ($('#ir_atras').length) $('#ir_atras').remove();
         if ($('#ir_atras2').length) $('#ir_atras2').remove();
@@ -306,7 +321,30 @@ if (!isset($h)) {
         if ($('#go_atras').length) $('#go_atras').remove();
     }
 
+    /**
+     * Flecha del panel izquierdo: el #ir_atras válido es el del contenido actual en #main,
+     * no un residuo bajo #cargando (misma id en el DOM ⇒ jQuery cogía el primero y podía cargar index / shell entero dentro de #main).
+     */
+    function fnjs_left_slide_atras() {
+        var selectors = ['#main #ir_atras', '#main #ir_atras2', '#main #go_atras', '#main #js_atras'];
+        for (var i = 0; i < selectors.length; i++) {
+            if ($(selectors[i]).length) {
+                return fnjs_ir_a(selectors[i]);
+            }
+        }
+        var fallbacks = ['#ir_atras', '#ir_atras2', '#go_atras', '#js_atras'];
+        for (var j = 0; j < fallbacks.length; j++) {
+            if ($(fallbacks[j]).length) {
+                return fnjs_ir_a(fallbacks[j]);
+            }
+        }
+        return false;
+    }
+
     function fnjs_ir_a(id_div) {
+        if (!id_div || $(id_div).length === 0) {
+            return false;
+        }
         fnjs_guardar_estado();
 
         var is_back = false;
@@ -349,6 +387,10 @@ if (!isset($h)) {
         if ($('#go_atras').length) {
             fnjs_ir_a(id_div);
             return false;
+        }
+        if ($('#main #ir_atras').length || $('#main #ir_atras2').length) {
+            fnjs_left_side_show();
+            return true;
         }
         if ($('#ir_atras').length) {
             fnjs_left_side_show();

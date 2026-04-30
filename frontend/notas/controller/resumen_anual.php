@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\model\ViewNewPhtml;

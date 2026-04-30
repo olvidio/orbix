@@ -39,6 +39,7 @@ if ($Qque === "slickGrid") {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
+    ContestarJson::enviar($error_txt, 'ok');
 } else {
     // Guardar Layout:
     $Qlayout = (string)filter_input(INPUT_POST, 'layout');

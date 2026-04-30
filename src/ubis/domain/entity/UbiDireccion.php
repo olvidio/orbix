@@ -4,7 +4,7 @@ namespace src\ubis\domain\entity;
 
     /**
      * Representa la relación entre una Casa y una Dirección
-     * Tabla: u_cross_dir_cdc
+     * Tabla: u_cross_cdc_dir
      */
 class UbiDireccion
 {

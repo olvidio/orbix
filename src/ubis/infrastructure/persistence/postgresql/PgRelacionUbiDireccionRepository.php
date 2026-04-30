@@ -10,7 +10,7 @@ use function src\shared\domain\helpers\is_true;
 
 /**
  * Repositorio para gestionar la relación Casa-Dirección
- * Tabla: u_cross_dir_cdc
+ * Tabla: u_cross_cdc_dir
  */
 class PgRelacionUbiDireccionRepository extends ClaseRepository  implements RelacionUbiDireccionRepositoryInterface
 {
@@ -21,7 +21,7 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl_select($oDbl_Select);
-        $this->setNomTabla('u_cross_dir_cdc');
+        $this->setNomTabla('u_cross_cdc_dir');
     }
 
     /**

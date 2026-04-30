@@ -74,7 +74,7 @@ class Condicion
                 case 'NOT IN':
                     /* no funciona, por lo menos con los integer, lo toma como string. */
                     /* Se hace como el BETWEEN */
-                    $sCondi = "$campo $operador ($valor)";
+                    $sCondi = "$campo $operador (" . self::normalizeSqlInList($valor) . ')';
                     break;
                 case 'TXT':
                     $sCondi = "$valor";
@@ -86,5 +86,42 @@ class Condicion
             $sCondi = "$campo = :$campo";
         }
         return $sCondi;
+    }
+
+    /**
+     * Construye la lista de valores para IN (...) / NOT IN (...).
+     * Si $valor es un mapa con claves enteras (p. ej. id => etiqueta), se usan las claves.
+     *
+     * @param mixed $valor Lista indexada numéricamente, cadena ya formateada, o mapa id => etiqueta.
+     */
+    private static function normalizeSqlInList(mixed $valor): string
+    {
+        if (!is_array($valor)) {
+            return (string) $valor;
+        }
+        $keys = array_keys($valor);
+        $isZeroBasedList = $keys === range(0, count($valor) - 1);
+        if (!$isZeroBasedList && $keys === array_values(array_filter($keys, static fn ($k): bool => is_int($k)))) {
+            $valor = $keys;
+        } else {
+            $valor = array_values($valor);
+        }
+        $parts = [];
+        foreach ($valor as $v) {
+            if (is_int($v) || is_float($v)) {
+                $parts[] = (string) (int) $v;
+            } elseif (is_string($v) && $v !== '' && ctype_digit($v)) {
+                $parts[] = $v;
+            } elseif (is_string($v)) {
+                $parts[] = "'" . str_replace("'", "''", $v) . "'";
+            } else {
+                throw new \InvalidArgumentException('IN/NOT IN: cada elemento debe ser numérico o cadena escalar');
+            }
+        }
+        if ($parts === []) {
+            throw new \InvalidArgumentException('IN/NOT IN: lista vacía');
+        }
+
+        return implode(',', $parts);
     }
 }

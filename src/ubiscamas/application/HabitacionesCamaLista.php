@@ -127,6 +127,7 @@ class HabitacionesCamaLista
                 $id_habitacion = $oHabitacion->getIdHabitacionVo()->value();
                 $tipo_lavabo = $arrayTiposLavabo[$oHabitacion->getTipoLavaboVo()?->value()] ?? '';
                 $aRow['sel'] = "$id_habitacion#$id_cama";
+                $aRow['id_cama'] = $id_cama;
 
                 $aRow[1] = $oHabitacion->getNombre();
                 $aRow[2] = $oHabitacion->getPlanta();

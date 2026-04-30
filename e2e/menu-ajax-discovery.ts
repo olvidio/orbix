@@ -16,6 +16,12 @@ const MENU_AJAX_ANCHOR_SELECTOR =
   '.menu-utilidades-derecha a[onclick*="fnjs_link_submenu"]';
 
 const DEFAULT_MAX_CLICKS = 30;
+const DEFAULT_SETTLE_MS = 2500;
+
+function resolveMenuAjaxSettleMs(): number {
+  const n = Number(process.env.E2E_MENU_AJAX_SETTLE_MS ?? DEFAULT_SETTLE_MS);
+  return Number.isFinite(n) ? Math.min(30_000, Math.max(400, n)) : DEFAULT_SETTLE_MS;
+}
 
 function shouldSkipMenuOnclick(onclick: string): boolean {
   if (!onclick.includes('fnjs_link_submenu')) {
@@ -54,24 +60,34 @@ export async function discoverUrlsViaMenuAjaxClicks(page: Page): Promise<string[
   const items = page.locator(MENU_AJAX_ANCHOR_SELECTOR);
   const total = await items.count();
   const nPlan = Math.min(maxClicks, total);
+  const settleMs = resolveMenuAjaxSettleMs();
 
   for (let i = 0; i < nPlan; i++) {
-    const item = items.nth(i);
-    const onclick = (await item.getAttribute('onclick')) ?? '';
-    if (shouldSkipMenuOnclick(onclick)) {
-      continue;
+    if (page.isClosed()) {
+      break;
     }
     try {
+      const item = items.nth(i);
+      const onclick = (await item.getAttribute('onclick')) ?? '';
+      if (shouldSkipMenuOnclick(onclick)) {
+        continue;
+      }
       await item.scrollIntoViewIfNeeded();
       await item.click({ timeout: 12_000 });
     } catch {
       continue;
     }
-    await page.waitForLoadState('networkidle', { timeout: 25_000 }).catch(() => {});
-    await sleep(450);
-    const fromMain = await collectOrbixUrls(page, '#main');
-    for (const u of fromMain) {
-      seen.add(u);
+    await sleep(settleMs);
+    try {
+      if (page.isClosed()) {
+        break;
+      }
+      const fromMain = await collectOrbixUrls(page, '#main');
+      for (const u of fromMain) {
+        seen.add(u);
+      }
+    } catch {
+      break;
     }
   }
 

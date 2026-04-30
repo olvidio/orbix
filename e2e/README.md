@@ -73,14 +73,18 @@ Opcionales:
 - `E2E_ESQUEMA` — si tu login muestra un **desplegable** de esquema (`<select name="esquema">`), aquí va el **`value` exacto** de la opción (en **sv** suele ser el nombre de namespace en Postgres + `v`, p. ej. `H-dlbv`; en **sf**, `…f`). El `global-setup` elige esa opción antes de enviar; antes solo se rellenaba un `input`, así que el combo quedaba en la **primera** opción (p. ej. `Ch-crChfv`) y la sesión no coincidía con `.env`. Si el contenedor define `ESQUEMA` y el formulario lleva `input` hidden, se sigue usando `fill` sobre ese campo.
 - `E2E_LOGIN_TIMEOUT_MS` — tiempo máximo (ms) esperando el campo de usuario en `global-setup` **y** una de las señales tras enviar el login (`load`, formulario `#frm_login` oculto o quitado del DOM; por defecto `90000`). El botón de login usa `noWaitAfter` para no bloquearse si la página mantiene red activa.  
 - `E2E_2FA_CODE` — si el usuario obliga a 2FA en el test  
-- `E2E_MAX_LINKS` — máximo de enlaces a probar (por defecto `100`)  
+- `E2E_MAX_LINKS` — máximo de enlaces a probar con **GET** tras filtros (por defecto `100`)  
+- `E2E_LINK_GET_TIMEOUT_MS` — milisegundos por petición GET a cada candidato (por defecto `18000`; antes `55000` ayudaba a agotar todo el tiempo del test).  
+- `E2E_STRICT_MENU_LINK_GET=1` — **no** aplica la heurística que omite URLs típicas solo-POST (`*_que.php`, `que_*.php`, `*_select.php`, `preferencias`, `avisos_generar`, ciertas `gestion_`/`fases_`/…); el test es más exhaustivo y mucho más propenso a timeouts.  
+- `E2E_MENU_LINK_GET_LOG=1` — en el spec de menú: imprime por consola cada **GET** como `OK código url` o `FAIL …`, y adjunta **`menu-links-get.log`** al informe HTML (`npm run test:e2e` seguido de `npx playwright show-report`; en la prueba fallida/pasada, pestaña *Attachments*).
 - `E2E_TRACE=1` — guardar trace Playwright en fallos / depuración  
 - `E2E_SCREENSHOT=1` / `E2E_VIDEO=1` — capturas o vídeo (más lento)  
 - `E2E_SKIP_MENU_LINKS_IF_BDU_UNAVAILABLE=1` — si el índice autenticado sólo denuncia **falta de BDU** (común en Docker sin ese servicio), el spec `menu-links` queda **omitido** (`skipped`), no fallido. **No** lo uses en entornos donde quieras validar la BDU de verdad (p. ej. staging/CI estricto).  
 - `E2E_GRUPMENU_ID` — id numérico del grupmenu (`index.php?id_grupmenu=N`, igual que al pulsar la barra en legacy). Recomendado para fijar p. ej. el grupo «vsm» sin depender del texto visible.  
 - `E2E_GRUPMENU_LABEL` — texto del grupmenu como se muestra en la barra (**no** pulses salir ni submenús: es el nombre del *grupo*, p. ej. `vsm`). Solo se usa si **no** pusiste `E2E_GRUPMENU_ID`; en legacy busca `#menu li[onclick*="fnjs_link_menu"]`; en hamburguesa, `#groupMenu a`. Si tu usuario sólo tiene un grupmenu, la barra puede no listar otros — entonces usa el id por URL o ninguno.  
-- `E2E_MENU_AJAX_DISCOVER=1` — además del HTML inicial, el spec **pulsa hasta N** enlaces del menú que ejecutan `fnjs_link_submenu` (respuesta AJAX en `#main`), y acumula `href` + `onclick` encontrados dentro de `#main`. Límite: `E2E_MAX_MENU_AJAX_CLICKS` (por defecto 30). **Cuidado:** son POST que pueden crear o modificar datos; usa usuario/entorno de prueba y revisa exclusiones (`eliminar`/`delete`/logout en el `onclick` se saltan parcialmente).  
-- `E2E_MAX_MENU_AJAX_CLICKS` — tope de clics de menú cuando `E2E_MENU_AJAX_DISCOVER=1` (máximo 200 en código).
+- `E2E_MENU_AJAX_DISCOVER=1` — además del HTML inicial, el spec **pulsa hasta N** enlaces del menú que ejecutan `fnjs_link_submenu` (respuesta AJAX en `#main`), y acumula `href` + `onclick` encontrados dentro de `#main`. Límite: `E2E_MAX_MENU_AJAX_CLICKS` (por defecto 30). **Cuidado:** son POST que pueden crear o modificar datos; usa usuario/entorno de prueba y revisa exclusiones (`eliminar`/`delete`/logout en el `onclick` se saltan parcialmente). Tras cada clic se espera `E2E_MENU_AJAX_SETTLE_MS` ms (por defecto `2500`) en lugar de `networkidle` (más estable). Con este modo activo, el proyecto Playwright **`authenticated`** alarga el **timeout por test** (hasta 15 min según `E2E_MAX_MENU_AJAX_CLICKS`). Sin AJAX, el mismo proyecto usa **120 s** para dar margen al bucle de GET sobre muchos enlaces.  
+- `E2E_MAX_MENU_AJAX_CLICKS` — tope de clics de menú cuando `E2E_MENU_AJAX_DISCOVER=1` (máximo 200 en código).  
+- `E2E_MENU_AJAX_SETTLE_MS` — milisegundos de espera tras cada clic de menú antes de leer `#main` (por defecto `2500`; sube si en tu red el AJAX tarda más).
 
 Ejemplo equivalente solo con shell (si no usas `.env`):
 
@@ -96,7 +100,7 @@ El proyecto `authenticated`:
 
 1. Ejecuta `global-setup.ts`, hace login y guarda cookies en `e2e/.auth/storage.json` (directorio ignorado por git).
 2. Abre **`index.php`**, opcionalmente con **`?id_grupmenu=`** (`E2E_GRUPMENU_ID`) o pulsando el grupmenu por **`E2E_GRUPMENU_LABEL`**, y recoge rutas navegables (enlaces `a[href]` que no sean sólo `#` y URLs en `onclick` / `fnjs_link_submenu`, típico del menú legacy).
-3. Hace **GET** a cada candidato (hasta `E2E_MAX_LINKS`) y falla si hay **≥400** o si el HTML contiene patrones típicos de fatal PHP/Xdebug.
+3. Tras filtros (mismo origen, sin logout/delete, y **salvo** `E2E_STRICT_MENU_LINK_GET=1`, sin muchos `controller` típicos solo-POST), hace **GET** a cada candidato (hasta `E2E_MAX_LINKS`, timeout `E2E_LINK_GET_TIMEOUT_MS`) y falla si hay **≥400** o si el HTML parece fatal PHP/Xdebug. Con **`E2E_MENU_LINK_GET_LOG=1`** se listan los resultados (`OK` / `FAIL`) y se adjunta un log al informe.
 
 ### PostgreSQL: `db:5432` en el error vs `localhost:5444`
 
@@ -111,8 +115,8 @@ Para que Orbix use otra BD o puerto hay que cambiar los **ficheros de credencial
 ### Limitaciones conocidas
 
 - El menú principal **legacy** no usa `href` en los ítems: la URL va en `onclick` (`fnjs_link_submenu`). El spec recoge esas rutas además de `a[href]` reales. Opcionalmente, con **`E2E_MENU_AJAX_DISCOVER=1`**, después recorre clics en el menú y vuelca enlaces aparecidos en **`#main`** (contenido cargado por AJAX).
-- Solo se prueban enlaces aparecidos en la **primera página** tras login (`index`). Submenús que solo cargan con otro clic no se descubren.
-- No ejecuta submits POST “peligrosos” (se evitan algunas URLs con `eliminar/delete` por heurística; repasa la lista si hace falsos positivos).
+- Sin **`E2E_MENU_AJAX_DISCOVER=1`**, solo se recogen enlaces del **`index`** inicial; submenús que solo muestran URL tras clic no aparecen hasta activar ese modo.
+- Los **GET** ciegos a muchos `.php` bajo `controller` no equivalen al flujo Orbix real (POST con hash/cookies): por defecto se **saltan** los patrones más problemáticos; el timeout del proyecto `authenticated` ahora contempla **`E2E_MAX_LINKS` × tiempo de GET** además del bloque AJAX de menú.
 
 ### Error «remaining connection slots» / PDO al abrir login
 

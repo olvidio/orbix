@@ -37,4 +37,11 @@ class PersonaNombreTextTest extends myTest
         $this->assertNull($personaNombreText);
     }
 
+    public function test_invalid_characters_exception_includes_codepoints(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('U+');
+        new PersonaNombreText('Pe@dro');
+    }
+
 }

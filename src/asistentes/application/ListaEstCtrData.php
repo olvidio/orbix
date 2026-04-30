@@ -103,8 +103,8 @@ final class ListaEstCtrData
             $tipo_ctr = $oCentroDl->getTipo_ctr();
             if (strpos($tipo_ctr, 'n') === 0) {
                 $aWhere['sacd'] = 'f';
-                $aWhere['stgr'] = 'n';
-                $aOperador['stgr'] = '!=';
+                $aWhere['nivel_stgr'] = 'n';
+                $aOperador['nivel_stgr'] = '!=';
             }
 
             $PersonaDlRepository = $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
