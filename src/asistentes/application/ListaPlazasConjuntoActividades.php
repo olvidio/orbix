@@ -95,8 +95,8 @@ class ListaPlazasConjuntoActividades
         $cActividades = $ActividadRepository->getActividades($this->aWhere, $this->aOperador);
 
         if (is_array($cActividades) && count($cActividades) < 1) {
-            echo strtoupper_dlb(_("no existe ninguna actividad con esta condición"));
-            // retorno una lista vacia para que no dé errores.
+            // No hacer echo: esta clase participa en endpoints JSON (lista_asis_conjunto_activ_data).
+            // Lista vacía bajo cada bloque de sección es el comportamiento esperado.
             $oLista = new Lista();
             $oLista->setGrupos([]);
             $oLista->setCabeceras([]);
@@ -134,6 +134,9 @@ class ListaPlazasConjuntoActividades
             $plazas = $oActividad->getPlazas();
             $publicado = $oActividad->isPublicado();
 
+            $num = 0;
+            $plazas_pedidas = 0;
+
             // Plazas
             $gesActividadPlazas->setId_activ($id_activ);
             $a_plazas = $gesActividadPlazas->getResumen();
@@ -142,7 +145,8 @@ class ListaPlazasConjuntoActividades
             $plazas_casa = '';
             if (!empty($id_ubi_casa)) {
                 $oCasaDl = $CasaDlRepository->findById($id_ubi_casa);
-                $plazas_max = !empty($plazas) ? $plazas : $oCasaDl->getPlazas();
+                // findById puede ser null si el id_ubi quedó huérfano tras borrados o datos inconsistentes.
+                $plazas_max = !empty($plazas) ? $plazas : ($oCasaDl?->getPlazas() ?? '');
                 $plazas_min = $oCasaDl?->getPlazas_min()?? '';
                 $plazas_casa .= !empty($plazas_max) ? $plazas_max : '';
                 $plazas_casa .= !empty($plazas_min) ? ' - ' . $plazas_min : '';
@@ -315,7 +319,7 @@ class ListaPlazasConjuntoActividades
         $a_cabeceras[] = _("nombre");
 
         if (!empty($msg_err)) {
-            echo $msg_err;
+            error_log($msg_err);
         }
 
         $oLista = new Lista();

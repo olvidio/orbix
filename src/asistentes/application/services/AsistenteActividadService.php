@@ -240,7 +240,7 @@ class AsistenteActividadService
         }
 
         if (!empty($msg_err)) {
-            echo $msg_err;
+            error_log($msg_err);
         }
 
         return $numAsis;
@@ -303,7 +303,7 @@ class AsistenteActividadService
         uksort($cAsistentesOk, "src\shared\domain\helpers\strsinacentocmp");
 
         if (!empty($msg_err)) {
-            echo $msg_err;
+            error_log($msg_err);
         }
 
         return $cAsistentesOk;

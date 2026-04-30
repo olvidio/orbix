@@ -17,6 +17,14 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 - Métodos como **`getActividadesPlazas()`** están tipados como **`array|bool`**: devuelven **lista de entidades** (o `false` en error), no un solo objeto.
 - El código de aplicación debe: tratar `false`, usar el **primer elemento** si hay filas, o **crear una entidad nueva** con las claves necesarias si la lista viene vacía; **nunca** asumir un objeto directo.
 
+## `findById` y otros retornos `?Entidad` (repos no encuentran fila)
+
+- Muchos contratos declaran **`findById(...) : ?MiEntidad`** (o métodos equivalentes de “una sola fila”). Un **`null`** es válido cuando el id no existe, hay **FK huérfanas** tras borrados (p. ej. actividad con `id_ubi` pero sin casa en `CasaRepository`), datos migrados incompletos, etc.
+- El código en `application/` **no debe** hacer **`$repo->findById($id)->metodo()`** sin comprobar: en PHP revienta con *“Call to a member function … on null”*. En endpoints consumidos como JSON suele aparecer como **/HTML de fatal (Xdebug) con status 200**, y los clientes lo reportan como **respuesta no-JSON**.
+- Responsabilidades:
+  - **Producción:** ramas explícitas, **`?->`** y valores por defecto (`??`), o mensaje de negocio; no asumir entidad cargada sólo porque el FK no es vacío.
+  - **Tests:** donde un caso de uso recorra resultados de un repo y en el bucle consulte **`findById` / equivalencias que devuelven `?`** , añadir un **caso negativo controlado**: mockear **`findById` → `null`** en un escenario donde antes el código llegaba sin protección y asertar **ausencia de fatal** y comportamiento estable (lista vacía, campo vacío, log, etc.). Así las regresiones no dependen sólo de reproducir datos rotos en integración.
+
 ## Apps instaladas: `ConfigGlobal::is_app_installed()`
 
 - Si el comportamiento depende de si una app está instalada, el test debe cubrir **explícitamente los dos casos**: **instalada** y **no instalada**.
@@ -97,4 +105,4 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 
 ---
 
-*Última actualización: criterios alineados con tests de integración en `tests/integration/actividades/application/`, unitarios de `tests/unit/actividadessacd/application/` y bootstrap en `tests/myTest.php`.*
+*Última actualización: criterios alineados con tests de integración en `tests/integration/actividades/application/`, unitarios de `tests/unit/actividadessacd/application/` y bootstrap en `tests/myTest.php`; añadida guía sobre `findById`/repos que devuelven `null` donde el código asumía entidad.*
