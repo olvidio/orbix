@@ -73,7 +73,12 @@ if (isset($_GET['r']) && is_string($_GET['r']) && str_starts_with($_GET['r'], '/
         $requestRoute = preg_replace('/^\/(pruebas|orbix)/', '', $requestPathForBootstrap);
         $esquema_bootstrap = getenv('ESQUEMA');
         if (!empty($esquema_bootstrap)) {
-            $requestRoute = preg_replace('/^\/' . preg_quote($esquema_bootstrap, '/') . '(?=\/|$)/', '', (string)$requestRoute);
+            // Insensible a mayúsculas: la URL lleva H-xxx y ESQUEMA en FPM a veces llega distinto.
+            $requestRoute = preg_replace(
+                '#^/' . preg_quote($esquema_bootstrap, '#') . '(?=/|$)#i',
+                '',
+                (string)$requestRoute
+            );
         }
     }
 }
@@ -135,12 +140,30 @@ if (isset($_GET['r']) && is_string($_GET['r']) && str_starts_with($_GET['r'], '/
 }
 
 if ($legacyR === null) {
+    $pathsForSrc = [];
     $requestUri = $_SERVER['REQUEST_URI'] ?? '';
     $requestPath = is_string($requestUri) ? parse_url($requestUri, PHP_URL_PATH) : '';
-    if (is_string($requestPath)) {
-        $srcPos = strpos($requestPath, '/src/');
+    if (is_string($requestPath) && $requestPath !== '') {
+        $pathsForSrc[] = $requestPath;
+    }
+    $pathInfo = $_SERVER['PATH_INFO'] ?? '';
+    if (is_string($pathInfo) && $pathInfo !== '') {
+        $pathsForSrc[] = $pathInfo;
+    }
+    foreach (['REDIRECT_URL', 'HTTP_X_ORIGINAL_URI'] as $serverRoutingKey) {
+        if (empty($_SERVER[$serverRoutingKey]) || !is_string($_SERVER[$serverRoutingKey])) {
+            continue;
+        }
+        $altPath = parse_url($_SERVER[$serverRoutingKey], PHP_URL_PATH);
+        if (is_string($altPath) && $altPath !== '') {
+            $pathsForSrc[] = $altPath;
+        }
+    }
+    foreach ($pathsForSrc as $pathCandidate) {
+        $srcPos = strpos($pathCandidate, '/src/');
         if ($srcPos !== false) {
-            $legacyR = substr($requestPath, $srcPos);
+            $legacyR = substr($pathCandidate, $srcPos);
+            break;
         }
     }
 }
@@ -195,7 +218,7 @@ if ($legacyR !== null) {
     // Eliminar el esquema del path si está configurado (p.ej. /H-dlmEv/src/... → /src/...)
     $esquema_web = getenv('ESQUEMA') ?: ($_SERVER['ESQUEMA'] ?? '');
     if (!empty($esquema_web)) {
-        $uri = preg_replace('/^\/' . preg_quote($esquema_web, '/') . '(?=\/|$)/', '', $uri);
+        $uri = preg_replace('#^/' . preg_quote($esquema_web, '#') . '(?=/|$)#i', '', $uri);
     }
 }
 
@@ -204,6 +227,11 @@ if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }
 $uri = rawurldecode($uri);
+// FastRoute compara la ruta al carácter; un slash final dispara NOT_FOUND.
+$uri = rtrim((string)$uri, '/');
+if ($uri === '') {
+    $uri = '/';
+}
 
 
 // 6) Despachar
