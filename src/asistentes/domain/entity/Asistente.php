@@ -2,6 +2,7 @@
 
 namespace src\asistentes\domain\entity;
 
+use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\actividadplazas\application\services\ResumenPlazasService;
 use src\actividadplazas\domain\value_objects\PlazaId;
@@ -12,8 +13,10 @@ use src\asistentes\domain\value_objects\AsistentePk;
 use src\asistentes\domain\value_objects\AsistentePropietario;
 use src\personas\domain\value_objects\PersonaTablaCode;
 use src\shared\domain\contracts\AggregateRoot;
+use src\shared\domain\DatosCampo;
 use src\shared\domain\entity\Entity;
 use src\shared\domain\traits\Hydratable;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\domain\value_objects\Uuid;
 use src\ubis\domain\value_objects\DelegacionCode;
 use src\ubiscamas\domain\entity\Cama;
@@ -491,5 +494,112 @@ class Asistente extends Entity implements AggregateRoot
         $this->cama = $cama instanceof CamaId
             ? $cama
             : CamaId::fromNullableString($cama);
+    }
+
+    /**
+     * {@see DatosTablaRepo} / dossier datos_tabla: PK compuesta JSON en campo `sel`.
+     */
+    public function getPrimary_key(): string
+    {
+        return 'pkey';
+    }
+
+    /**
+     * @return array{id_activ:int, id_nom:int}
+     */
+    public function getPkey(): array
+    {
+        return [
+            'id_activ' => $this->id_activ,
+            'id_nom' => $this->id_nom,
+        ];
+    }
+
+    public function getDatosCampos(): array
+    {
+        $set = new Set();
+        $set->add($this->datosCampoIdNomHidden());
+        $set->add($this->datosCampoNomActividad());
+        $set->add($this->datosCampoPropio());
+        $set->add($this->datosCampoEstOk());
+        $set->add($this->datosCampoFalta());
+        $set->add($this->datosCampoObserv());
+
+        return $set->getTot();
+    }
+
+    private function datosCampoIdNomHidden(): DatosCampo
+    {
+        $c = new DatosCampo();
+        $c->setNom_camp('id_nom');
+        $c->setMetodoGet('getId_nom');
+        $c->setMetodoSet('setId_nom');
+        $c->setEtiqueta('id_nom');
+        $c->setTipo('hidden');
+
+        return $c;
+    }
+
+    private function datosCampoNomActividad(): DatosCampo
+    {
+        $c = new DatosCampo();
+        $c->setNom_camp('id_activ');
+        $c->setMetodoGet('getId_activ');
+        $c->setMetodoSet('setId_activ');
+        $c->setEtiqueta(_('nombre actividad'));
+        $c->setTipo('opciones');
+        $c->setArgument(ActividadAllRepositoryInterface::class);
+        $c->setArgument2('getNom_activ');
+
+        return $c;
+    }
+
+    private function datosCampoPropio(): DatosCampo
+    {
+        $c = new DatosCampo();
+        $c->setNom_camp('propio');
+        $c->setMetodoGet('isPropio');
+        $c->setMetodoSet('setPropio');
+        $c->setEtiqueta(_('propio'));
+        $c->setTipo('check');
+
+        return $c;
+    }
+
+    private function datosCampoEstOk(): DatosCampo
+    {
+        $c = new DatosCampo();
+        $c->setNom_camp('est_ok');
+        $c->setMetodoGet('isEst_ok');
+        $c->setMetodoSet('setEst_ok');
+        $c->setEtiqueta(_('est. ok'));
+        $c->setTipo('check');
+
+        return $c;
+    }
+
+    private function datosCampoFalta(): DatosCampo
+    {
+        $c = new DatosCampo();
+        $c->setNom_camp('falta');
+        $c->setMetodoGet('isFalta');
+        $c->setMetodoSet('setFalta');
+        $c->setEtiqueta(_('falta'));
+        $c->setTipo('check');
+
+        return $c;
+    }
+
+    private function datosCampoObserv(): DatosCampo
+    {
+        $c = new DatosCampo();
+        $c->setNom_camp('observ');
+        $c->setMetodoGet('getObserv');
+        $c->setMetodoSet('setObserv');
+        $c->setEtiqueta(_('observ.'));
+        $c->setTipo('texto');
+        $c->setArgument(40);
+
+        return $c;
     }
 }
