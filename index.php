@@ -36,7 +36,10 @@ require_once("src/shared/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
+use frontend\shared\config\AppUrlConfig;
+use frontend\shared\security\HashFront;
 use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use DI\ContainerBuilder;
 use src\layouts\LayoutFactory;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
@@ -46,7 +49,6 @@ use src\menus\domain\PermisoMenu;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use web\Hash;
 
 // MODIFICACIÓN: Solo construimos el contenedor si no existe previamente
 if (!isset($container)) {
@@ -104,7 +106,7 @@ if (isset($primera)) {
     $isCambio_password = $oUsuario->isCambio_password();
     if ($isCambio_password) {
         // Redirigir a la página de verificación de 2FA para usuarios nuevos
-        $url_cambio_password = Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_pwd.php');
+        $url_cambio_password = HashFront::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_pwd.php');
         header("Location: $url_cambio_password");
         exit();
     }
@@ -114,7 +116,7 @@ if (isset($primera)) {
     $has_2fa = $oUsuario->isHas_2fa();
 
     /* OBLIGAR a los de la dmz a usar el doble factor.
-    if (!$has_2fa && ServerConf::$dmz) { // no sirve la función "Configglobal::is_dmz()" porque para la sf (puerto 10936) no da true
+    if (!$has_2fa && ServerConf::$dmz) { // no sirve ConfigGlobal::is_dmz() porque para la sf (puerto 10936) no da true
         // Redirigir a la página de verificación de 2FA para usuarios nuevos
         $url_check_2fa = ConfigGlobal::getWeb() . '/src/usuarios/check_first_login_2fa';
         header("Location: $url_check_2fa");
@@ -134,20 +136,20 @@ if (isset($primera)) {
             break;
         case "personal":
             $id_grupmenu = $mi_id_grupmenu;
-            $pag_ini = ConfigGlobal::$directorio . '/inici/personal.php';
+            $pag_ini = ServerConf::$directorio . '/inici/personal.php';
             break;
         case "avisos":
             $id_grupmenu = $mi_id_grupmenu;
-            $pag_ini = ConfigGlobal::$directorio . '/frontend/cambios/controller/avisos_generar.php';
+            $pag_ini = ServerConf::$directorio . '/frontend/cambios/controller/avisos_generar.php';
             break;
         case "aniversarios":
             $id_grupmenu = $mi_id_grupmenu;
-            //$pag_ini=ConfigGlobal::$directorio."/public/aniversarios.php";
+            //$pag_ini=ServerConf::$directorio."/public/aniversarios.php";
             $pag_ini = '';
             break;
         case "exterior":
             $oficina = $mi_oficina_menu;
-            //$pag_ini=ConfigGlobal::$directorio.'/public/exterior_home.php';
+            //$pag_ini=ServerConf::$directorio.'/public/exterior_home.php';
             $pag_ini = '';
             break;
         default:
@@ -155,9 +157,9 @@ if (isset($primera)) {
             $pag_ini = '';
     }
 } elseif (isset($_GET['id_grupmenu']) && $_GET['id_grupmenu'] === "public_home") {
-    $pag_ini = ConfigGlobal::$directorio . '/public/public_home.php';
+    $pag_ini = ServerConf::$directorio . '/public/public_home.php';
 } elseif (isset($_GET['id_grupmenu']) && $_GET['id_grupmenu'] === "armari_doc") {
-    $pag_ini = ConfigGlobal::$dir_web . '/oficinas/scdl/File/todos/DOCUMENTS.htm';
+    $pag_ini = ServerConf::$dir_web . '/oficinas/scdl/File/todos/DOCUMENTS.htm';
 }
 if (ConfigGlobal::mi_usuario() === 'auxiliar') {
     $pag_ini = '';
@@ -248,8 +250,8 @@ $layoutParams = [
 // Generate HTML components using the layout
 $htmlComponents = $oLayout->generateMenuHtml($layoutParams);
 
-$oHash = new Hash();
-$oHash->setUrl(ConfigGlobal::getWeb() . '/src/usuarios/preferencias_guardar');
+$oHash = new HashFront();
+$oHash->setUrl(AppUrlConfig::getApiBaseUrl() . '/src/usuarios/preferencias_guardar');
 $oHash->setCamposForm('que!tabla!sPrefs');
 $h = $oHash->linkSinValParams();
 
@@ -273,9 +275,9 @@ $portada_html = ob_get_clean();
     <title>Orbix</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <?php
-    include_once(ConfigGlobal::$dir_estilos . '/colores.php');
-    include_once(ConfigGlobal::$dir_estilos . '/todo_en_uno.css.php');
-    include_once(ConfigGlobal::$dir_estilos . '/slickgrid_orbix.css.php');
+    include_once(ServerConf::$dir_estilos . '/colores.php');
+    include_once(ServerConf::$dir_estilos . '/todo_en_uno.css.php');
+    include_once(ServerConf::$dir_estilos . '/slickgrid_orbix.css.php');
 
     // Include CSS using the layout
     $layoutParams = [
@@ -362,9 +364,9 @@ $portada_html = ob_get_clean();
     <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/selects.js.php?' . mt_rand() ?>"></script>
 
     <?php
-    include_once(ConfigGlobal::$dir_scripts . '/exportar.js.php');
+    include_once(ServerConf::$dir_scripts . '/exportar.js.php');
     // Include the JavaScript functions (antes en este fichero)
-    include_once(ConfigGlobal::$dir_scripts . '/index.js.php');
+    include_once(ServerConf::$dir_scripts . '/index.js.php');
 
     // Include JavaScript using the layout
     $jsParams = ['id_grupmenu' => $id_grupmenu];

@@ -3,6 +3,7 @@
 // This file contains all the JavaScript functions that were previously embedded in index.php
 
 // This file requires the $h variable to be defined before inclusion
+use frontend\shared\config\AppUrlConfig;
 use src\shared\config\ConfigGlobal;
 if (!isset($h)) {
     $h = '';
@@ -219,8 +220,8 @@ if (!isset($h)) {
             "heightGrid": heightGrid
         };
         var sPrefs = JSON.stringify(oPrefs);
-        // Misma ruta que el hash en index.php (FastRoute); la ruta al .php directo no coincide con el firmado y puede devolver el HTML de la aplicación.
-        var url = "<?= ConfigGlobal::getWeb() ?>/src/usuarios/preferencias_guardar";
+        // Misma URL base que {@see index.php} al construir HashFront para preferencias_guardar (FastRoute).
+        var url = "<?= AppUrlConfig::getApiBaseUrl() ?>/src/usuarios/preferencias_guardar";
         var parametros = 'que=slickGrid&tabla=' + tabla + '&sPrefs=' + encodeURIComponent(sPrefs) + '<?= $h ?>';
         $.ajax({
             url: url,
