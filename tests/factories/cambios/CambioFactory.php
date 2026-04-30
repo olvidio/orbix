@@ -71,8 +71,8 @@ class CambioFactory
         $oCambio->setTipoCambioVo(new TipoCambioId($faker->numberBetween(1, 2)));
         $oCambio->setId_activ($faker->numberBetween(30011, 300000));
         $oCambio->setIdTipoActivVo(new ActividadTipoId($faker->numerify('######')));
-        $oCambio->setJson_fases_sv(json_encode($faker->shuffleArray([1, 16, 3]), JSON_THROW_ON_ERROR));
-        $oCambio->setJson_fases_sf(json_encode($faker->shuffleArray([1, 16, 3]), JSON_THROW_ON_ERROR));
+        $oCambio->setJson_fases_sv($faker->shuffleArray([1, 16, 3]));
+        $oCambio->setJson_fases_sf($faker->shuffleArray([1, 16, 3]));
         $oCambio->setIdStatusVo(new StatusId($faker->randomKey(StatusId::getArrayStatus())));
         $oCambio->setDlOrgVo(new DelegacionCode(substr($faker->word, 0, 8)));
         $oCambio->setObjetoVo(new ObjetoNombre($faker->word));

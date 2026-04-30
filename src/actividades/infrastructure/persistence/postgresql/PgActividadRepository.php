@@ -27,7 +27,8 @@ class PgActividadRepository extends PgActividadAllRepository implements Activida
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl_select($oDbl_Select);
-        $this->setNomTabla('av_actividades');
+        // `av_actividades` es vista (UNION…) y no admite INSERT/UPDATE; las escrituras van a la tabla física del esquema.
+        $this->setNomTabla('a_actividades_dl');
     }
 
 }

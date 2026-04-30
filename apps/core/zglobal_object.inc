@@ -169,6 +169,12 @@ switch ($user_sfsv) {
         $config = $oConfigDB->getEsquema('restov');
         $oConexion = new DBConnection($config);
         $oDBER_Select = $oConexion->getPDO();
+
+        // Personas Nax (`p_nax`, etc.): base `sf` + esquema …f (H-dlbf), aunque la sesión sea SV (…v en `sv`).
+        $oConfigSf = new ConfigDB('sf');
+        $configSf = $oConfigSf->getEsquema($esquemaf);
+        $oConexionSf = new DBConnection($configSf);
+        $oDBF = $oConexionSf->getPDO();
         break;
     case 2: //sf
         $esquemaf = $_SESSION['session_auth']['esquema'];
@@ -204,6 +210,8 @@ switch ($user_sfsv) {
         $oDBR = $oConexion->getPDO();
         $oDBER = $oConexion->getPDO();
         $oDBER_Select = $oConexion->getPDO();
+
+        $oDBF = $oDB;
 
         //sf lectura
         break;

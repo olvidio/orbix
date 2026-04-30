@@ -142,14 +142,14 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
             $update = "
 					tipo_asignatura          = :tipo_asignatura,
 					tipo_breve               = :tipo_breve,
-					año                     = :año,
+					año                      = :year,
 					tipo_latin               = :tipo_latin";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_tipo = $id_tipo";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
             $campos = "(id_tipo,tipo_asignatura,tipo_breve,año,tipo_latin)";
-            $valores = "(:id_tipo,:tipo_asignatura,:tipo_breve,:año,:tipo_latin)";
+            $valores = "(:id_tipo,:tipo_asignatura,:tipo_breve,:year,:tipo_latin)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

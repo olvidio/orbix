@@ -93,6 +93,7 @@ Reglas:
 - Cada módulo en `src/` debe tener su carpeta en `tests/unit/<modulo>` y `tests/integration/<modulo>`.
 - **Regla de Oro:** Todo código nuevo requiere tests nuevos. Toda modificación requiere la ejecución de los tests existentes para evitar regresiones.
 - Guía amplia para generar pruebas (patrones repos, sesión, `findById`/`null`, etc.): [`tests/agents.md`](tests/agents.md).
+- **Playwright (E2E)** en **`e2e/`**: `npm run test:e2e`; guía **`e2e/README.md`**.
 - Usar el script `shell_scripts/check_test_coverage.sh` para detectar **módulos** sin carpeta de tests/factories según convención (resumen rápido).
 - Usar `shell_scripts/check_test_granular.sh` para listar **ficheros** fuente (`domain/entity/*.php`, `domain/value_objects/*.php`, `infrastructure/persistence/postgresql/Pg*Repository.php`) sin el `*Test.php` esperado; complementa el anterior. Opcionalmente `STRICT=1 bash shell_scripts/check_test_granular.sh` para salida con código 1 si hay faltantes (útil en CI).
 - Equivalente Composer: `composer test:report` (ambos informes seguidos), `composer test:report:buckets`, `composer test:report:granular`.

@@ -25,7 +25,9 @@ class ConfigGlobal extends ServerConf
     public static function getWebPath()
     {
         $path = self::$web_path;
-        if ($_SESSION['sfsv'] === 'sf') {
+        // `login.php` pone `$_SESSION['sfsv']` desde UBICACION (sv/sf). En CLI/phpunit puede faltar.
+        $sfsv_ubicacion = $_SESSION['sfsv'] ?? '';
+        if ($sfsv_ubicacion === 'sf') {
             $path .= 'sf';
         }
         $esquema_web = getenv('ESQUEMA');

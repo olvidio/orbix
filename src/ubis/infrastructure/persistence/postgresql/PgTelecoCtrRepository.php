@@ -2,6 +2,8 @@
 
 namespace src\ubis\infrastructure\persistence\postgresql;
 
+use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
+
 /**
  * Clase que adapta la tabla d_teleco_cdc a la interfaz del repositorio
  *
@@ -11,7 +13,7 @@ namespace src\ubis\infrastructure\persistence\postgresql;
  * @version 2.0
  * @created 19/11/2025
  */
-class PgTelecoCtrRepository extends PgTelecoUbiRepository
+class PgTelecoCtrRepository extends PgTelecoUbiRepository implements TelecoCtrRepositoryInterface
 {
 
     public function __construct()
@@ -24,6 +26,8 @@ class PgTelecoCtrRepository extends PgTelecoUbiRepository
 
     public function getNewId()
     {
-        throw new \Exception(_("Este repositorio no admite la generación de nuevos IDs."));
+        $oDbl = $this->getoDbl();
+        $sQuery = "select nextval('d_teleco_ctr_id_item_seq'::regclass)";
+        return $oDbl->query($sQuery)->fetchColumn();
     }
 }

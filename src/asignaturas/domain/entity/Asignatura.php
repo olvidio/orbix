@@ -27,7 +27,9 @@ use src\shared\domain\traits\Hydratable;
  */
 class Asignatura
 {
-    use Hydratable;
+    use Hydratable {
+        toArrayForDatabase as private hydratableToArrayForDatabase;
+    }
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -440,5 +442,18 @@ class Asignatura
         $oDatosCampo->setArgument2('getTipo_asignatura'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayAsignaturaTipos');
         return $oDatosCampo;
+    }
+
+    /**
+     * La columna en BD es `nombre_asignatura`; la propiedad VO se llama `nombre_signatura`
+     * y hay {@see self::getNombreAsignaturaVo()} (Hydratable esperaría getNombreSignaturaVo).
+     */
+    public function toArrayForDatabase(array $converters = []): array
+    {
+        $data = $this->hydratableToArrayForDatabase($converters);
+        $data['nombre_asignatura'] = $this->getNombreAsignaturaVo()->value();
+        unset($data['nombre_signatura']);
+
+        return $data;
     }
 }

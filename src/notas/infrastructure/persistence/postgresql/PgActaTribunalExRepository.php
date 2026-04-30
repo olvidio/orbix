@@ -2,6 +2,7 @@
 
 namespace src\notas\infrastructure\persistence\postgresql;
 
+use src\notas\domain\contracts\ActaTribunalExRepositoryInterface;
 
 /**
  * Clase que adapta la tabla e_actas_tribunal_dl a la interfaz del repositorio
@@ -12,7 +13,7 @@ namespace src\notas\infrastructure\persistence\postgresql;
  * @version 2.0
  * @created 27/12/2025
  */
-class PgActaTribunalExRepository extends PgActaTribunalRepository
+class PgActaTribunalExRepository extends PgActaTribunalRepository implements ActaTribunalExRepositoryInterface
 {
     public function __construct()
     {

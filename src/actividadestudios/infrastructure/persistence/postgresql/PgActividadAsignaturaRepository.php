@@ -2,6 +2,7 @@
 
 namespace src\actividadestudios\infrastructure\persistence\postgresql;
 
+use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\ConverterDate;
@@ -196,12 +197,22 @@ class PgActividadAsignaturaRepository extends ClaseRepository implements Activid
             $sql = "UPDATE $nom_tabla SET $update WHERE id_activ = $id_activ AND id_asignatura=$id_asignatura";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
-            $campos = "(id_activ,id_asignatura,id_profesor,avis_profesor,tipo,f_ini,f_fin)";
-            $valores = "(:id_activ,:id_asignatura,:id_profesor,:avis_profesor,:tipo,:f_ini,:f_fin)";
+            // INSERT (d_asignaturas_activ_all exige id_schema NOT NULL; Hydratable no serializa id_schema)
+            $campos = "(id_schema,id_activ,id_asignatura,id_profesor,avis_profesor,tipo,f_ini,f_fin)";
+            $valores = "(:id_schema,:id_activ,:id_asignatura,:id_profesor,:avis_profesor,:tipo,:f_ini,:f_fin)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+
+        if ($bInsert) {
+            $sid = ConfigGlobal::mi_id_schema();
+            $idSchema = is_numeric($sid) ? (int) $sid : (int) filter_var((string) $sid, FILTER_VALIDATE_INT);
+            if ($idSchema < 1) {
+                throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir actividad-asignatura.'));
+            }
+            $aDatos['id_schema'] = $idSchema;
+        }
+
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

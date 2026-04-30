@@ -32,6 +32,8 @@ class ActividadTipoGetNomTipoTabla
         $oTabla->setBotones([]);
         $oTabla->setCabeceras($a_cabeceras);
         $oTabla->setDatos($a_valores);
+        // Sin formato fijo, Lista consultaría preferencia_tabla_get por HTTP (no existe en unit tests).
+        $oTabla->setFormatoTabla('html');
 
         return $oTabla->mostrar_tabla();
     }

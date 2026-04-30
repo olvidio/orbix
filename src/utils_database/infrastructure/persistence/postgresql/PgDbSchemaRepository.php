@@ -232,6 +232,15 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         return DbSchema::fromArray($aDatos);
     }
 
+    public function getNewId(): int
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $sql = "SELECT COALESCE(MAX(id), 2999) + 1 FROM $nom_tabla";
+        $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return (int) $stmt->fetchColumn();
+    }
+
     /* -------------------- MÉTODOS PRIVADOS ---------------------------------------- */
 
     /**

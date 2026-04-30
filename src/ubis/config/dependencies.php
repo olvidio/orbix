@@ -31,6 +31,7 @@ use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
+use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
 use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
@@ -110,6 +111,8 @@ return [
     TelecoCtrDlRepositoryInterface::class => autowire(PgTelecoCtrDlRepository::class),
     TelecoCtrExRepositoryInterface::class => autowire(PgTelecoCtrExRepository::class),
     TelecoCtrRepositoryInterface::class => autowire(PgTelecoCtrRepository::class),
+    /** Casa (publicv CDC): Info2001, UbiContactsTrait resuelven por interfaz base. */
+    TelecoUbiRepositoryInterface::class => autowire(PgTelecoCdcRepository::class),
     TipoCasaRepositoryInterface::class => autowire(PgTipoCasaRepository::class),
     TipoCentroRepositoryInterface::class => autowire(PgTipoCentroRepository::class),
     TipoTelecoRepositoryInterface::class => autowire(PgTipoTelecoRepository::class),

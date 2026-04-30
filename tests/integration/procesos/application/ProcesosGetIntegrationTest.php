@@ -13,8 +13,9 @@ use Tests\myTest;
  *  - ProcesosGet (árbol de fases)
  *  - ProcesosGetListado (tabla de fases)
  *
- * Smoke tests, no queremos validar todo el HTML, sólo que se construye
- * sin errores y con los datos creados.
+ * Smoke tests: los casos de uso devuelven payload JSON (`aPadres` / `a_rows`);
+ * el HTML lo pintan los controladores frontend vía {@see ProcesosGet::dibujarTree()}
+ * y la vista de listado.
  */
 class ProcesosGetIntegrationTest extends myTest
 {
@@ -40,16 +41,16 @@ class ProcesosGetIntegrationTest extends myTest
         parent::tearDown();
     }
 
-    public function test_get_sin_tareas_devuelve_cadena_vacia(): void
+    public function test_get_sin_tareas_devuelve_arbol_vacio(): void
     {
-        $html = (new ProcesosGet())->execute(['id_tipo_proceso' => 999999999]);
-        $this->assertSame('', $html);
+        $payload = (new ProcesosGet())->execute(['id_tipo_proceso' => 999999999]);
+        $this->assertSame(['aPadres' => []], $payload);
+        $this->assertSame('', ProcesosGet::dibujarTree($payload['aPadres']));
     }
 
-    public function test_get_listado_sin_tareas_devuelve_tabla_vacia(): void
+    public function test_get_listado_sin_tareas_devuelve_filas_vacias(): void
     {
-        $html = (new ProcesosGetListado())->execute(['id_tipo_proceso' => 999999999]);
-        $this->assertStringContainsString('<table>', $html);
-        $this->assertStringContainsString('</table>', $html);
+        $payload = (new ProcesosGetListado())->execute(['id_tipo_proceso' => 999999999]);
+        $this->assertSame(['a_rows' => []], $payload);
     }
 }

@@ -19,7 +19,8 @@ class UbiInventarioFactory
 
         $oUbiInventario = new UbiInventario();
         $oUbiInventario->setId_ubi($id);
-        $oUbiInventario->setNom_ubi('test_ubi_' . $id);
+        // UbiInventarioName no admite '_' (solo \p{L}0-9 .,'’\-()\+).
+        $oUbiInventario->setNom_ubi('test ubi ' . $id);
 
         return $oUbiInventario;
     }

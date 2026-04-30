@@ -2,16 +2,8 @@
 
 namespace src\ubis\infrastructure\persistence\postgresql;
 
-use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\infrastructure\persistence\ConverterDate;
-use src\shared\infrastructure\persistence\postgresql\Set;
-use PDO;
-use PDOException;
-use src\ubis\domain\contracts\DireccionRepositoryInterface;
-use src\ubis\domain\entity\Direccion;
-use function src\shared\domain\helpers\is_true;
-
+use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
+use src\ubis\domain\contracts\PlanoOperationsTrait;
 /**
  * Clase que adapta la tabla u_dir_ctr a la interfaz del repositorio
  *
@@ -21,8 +13,10 @@ use function src\shared\domain\helpers\is_true;
  * @version 2.0
  * @created 21/11/2025
  */
-class PgDireccionCentroRepository extends PgDireccionRepository
+class PgDireccionCentroRepository extends PgDireccionRepository implements DireccionCentroRepositoryInterface
 {
+    use PlanoOperationsTrait;
+
     public function __construct()
     {
         parent::__construct();
@@ -30,6 +24,16 @@ class PgDireccionCentroRepository extends PgDireccionRepository
         $this->setoDbl($oDbl);
         $this->setoDbl_select($oDbl);
         $this->setNomTabla('u_dir_ctr');
+    }
+
+    public function downloadPlano(int $id_direccion): array
+    {
+        return $this->planoDownload($id_direccion);
+    }
+
+    protected function getPdoConnection(): \PDO
+    {
+        return $this->getoDbl();
     }
 
 }

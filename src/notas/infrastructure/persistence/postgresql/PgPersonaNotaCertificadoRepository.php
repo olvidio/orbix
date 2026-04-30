@@ -9,9 +9,12 @@ use src\notas\domain\contracts\PersonaNotaCertificadoRepositoryInterface;
 class PgPersonaNotaCertificadoRepository extends PgPersonaNotaRepository implements PersonaNotaCertificadoRepositoryInterface
 {
 
-    public function __construct(string $nombre_schema)
+    public function __construct(?string $nombre_schema = null)
     {
         parent::__construct();
+        if ($nombre_schema === null || $nombre_schema === '') {
+            $nombre_schema = ConfigGlobal::mi_region_dl();
+        }
         // Conectar con la tabla de la dl
         $db = (ConfigGlobal::mi_sfsv() === 1 )? 'sv' : 'sf';
         // se debe conectar con la region del stgr padre

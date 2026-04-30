@@ -9,7 +9,9 @@ use src\shared\domain\traits\Hydratable;
 
 class Departamento
 {
-    use Hydratable;
+    use Hydratable {
+        toArrayForDatabase as private hydratableToArrayForDatabase;
+    }
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -100,5 +102,19 @@ class Departamento
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);
         return $oDatosCampo;
+    }
+
+    /**
+     * La columna en BD es `departamento`; la propiedad VO es `nombre_departamento`.
+     */
+    public function toArrayForDatabase(array $converters = []): array
+    {
+        $data = $this->hydratableToArrayForDatabase($converters);
+        if (array_key_exists('nombre_departamento', $data)) {
+            $data['departamento'] = $data['nombre_departamento'];
+            unset($data['nombre_departamento']);
+        }
+
+        return $data;
     }
 }

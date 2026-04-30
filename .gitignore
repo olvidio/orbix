@@ -90,3 +90,10 @@ log/*
 /tests/end-to-end/*.out
 /tests/end-to-end/*.php
 /tests/config/
+
+# Playwright E2E (estado de sesión; no commitear)
+/e2e/.env
+/e2e/.auth/
+/e2e/playwright-report/
+/e2e/test-results/
+/e2e/playwright/.cache/

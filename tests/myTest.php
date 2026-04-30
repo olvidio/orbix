@@ -20,6 +20,12 @@ use src\usuarios\domain\entity\Usuario;
 
 class myTest extends TestCase
 {
+    /**
+     * Cada setUp() llegaba a abrir ~16 PDO; si no se liberan antes del siguiente test
+     * se agota max_connections en Postgres. Reutilizamos un solo juego por proceso PHPUnit.
+     */
+    private static bool $pdoTestBootstrapHecho = false;
+
     public function setUp(): void
     {
         # Turn on error reporting
@@ -103,107 +109,12 @@ class myTest extends TestCase
             $_SESSION['config'] = $session_config;
         }
 
-        // public para todo el mundo
-        $oConfigDB = new ConfigDB('comun'); //de la database comun
-
-        $config = $oConfigDB->getEsquema('public');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBPC'] = $oConexion->getPDO();
-
-        $config = $oConfigDB->getEsquema('resto');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBRC'] = $oConexion->getPDO();
-
-        // public para todo el mundo sólo lectura
-        $oConfigDB = new ConfigDB('comun_select'); //de la database comun
-
-        $config = $oConfigDB->getEsquema('public');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBPC_Select'] = $oConexion->getPDO();
-
-        $config = $oConfigDB->getEsquema('resto');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBRC_Select'] = $oConexion->getPDO();
-
-        $user_sfsv = $_SESSION['session_auth']['sfsv'];
-
-        $esquemav = $_SESSION['session_auth']['esquema'];
+        $user_sfsv = (int)($_SESSION['session_auth']['sfsv'] ?? 1);
+        $esquemav = (string)($_SESSION['session_auth']['esquema'] ?? 'H-dlbv');
         $esquema = substr($esquemav, 0, -1);
         $esquemaf = $esquema . 'f';
-        //común
-        $oConfigDB->setDataBase('comun');
-        $config = $oConfigDB->getEsquema($esquema);
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBC'] = $oConexion->getPDO();
-        //común sólo lectura
-        $oConfigDB->setDataBase('comun_select');
-        $config = $oConfigDB->getEsquema($esquema);
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBC_Select'] = $oConexion->getPDO();
 
-        //sv
-        $oConfigDB->setDataBase('sv');
-        $config = $oConfigDB->getEsquema($esquemav);
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDB'] = $oConexion->getPDO();
-
-        $config = $oConfigDB->getEsquema('publicv');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBP'] = $oConexion->getPDO();
-
-        $config = $oConfigDB->getEsquema('restov');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBR'] = $oConexion->getPDO();
-
-        //sv-e
-        $oConfigDB->setDataBase('sv-e');
-        $config = $oConfigDB->getEsquema($esquemav);
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBE'] = $oConexion->getPDO();
-        $GLOBALS['oDBE_Select'] = $oConexion->getPDO();
-
-        $config = $oConfigDB->getEsquema('publicv');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBEP'] = $oConexion->getPDO();
-
-        $config = $oConfigDB->getEsquema('restov');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBER'] = $oConexion->getPDO();
-
-        //sv exterior sólo lectura
-        $oConfigDB->setDataBase('sv-e_select');
-        $config = $oConfigDB->getEsquema($esquemav);
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBE_Select'] = $oConexion->getPDO();
-
-        $config = $oConfigDB->getEsquema('publicv');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBEP_Select'] = $oConexion->getPDO();
-
-        $config = $oConfigDB->getEsquema('restov');
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBER_Select'] = $oConexion->getPDO();
-
-
-        if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
-            // Para sincronizar con listas Madrid (SQLSERVER)
-            // No en el caso de cr (H-Hv)
-            if ((ConfigGlobal::mi_region() !== ConfigGlobal::mi_delef()) && !isset($GLOBALS['oDBListas'])) {
-                try {
-                    $oConfigDB = new ConfigDB('listas');
-                    $config = $oConfigDB->getEsquema('public');
-                    $oConexion = new DBConnection($config);
-                    $oDBListas = $oConexion->getPDOListas();
-                } catch (PDOException $e) {
-                    //Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
-                    echo "/*";
-                    echo _("No puedo conectar con la base de datos de listas") . ':<br>';
-                    echo $e->getMessage();
-                    echo "*/";
-                    $oDBListas = 'error';
-                }
-            }
-        }
+        $this->bootstrapConexionesBdTestUnaVezPorProceso($esquemav, $esquema, $esquemaf);
 
         // 2) Contenedor DI (si no existe ya) y exponerlo globalmente
         if (!isset($GLOBALS['container'])) {
@@ -366,5 +277,133 @@ class myTest extends TestCase
             //$oPermActividades = $_SESSION['oPermActividades'];
         }
 
+    }
+
+    /**
+     * Abre todas las PDO de integración una sola vez por proceso PHPUnit.
+     */
+    private function bootstrapConexionesBdTestUnaVezPorProceso(string $esquemav, string $esquema, string $esquemaf): void
+    {
+        if (self::$pdoTestBootstrapHecho) {
+            return;
+        }
+
+        // public para todo el mundo
+        $oConfigDB = new ConfigDB('comun'); //de la database comun
+
+        $config = $oConfigDB->getEsquema('public');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBPC'] = $oConexion->getPDO();
+
+        // Varias tablas (p. ej. publicv.d_asistentes_de_paso) requieren id_schema NOT NULL coherente con la DL.
+        $esqSession = (string) ($_SESSION['session_auth']['esquema'] ?? '');
+        $mis = $_SESSION['session_auth']['mi_id_schema'] ?? null;
+        if ($esqSession !== '' && ($mis === '' || $mis === null)) {
+            try {
+                $st = $GLOBALS['oDBPC']->prepare('SELECT id FROM public.db_idschema WHERE schema = :schema LIMIT 1');
+                $st->execute(['schema' => $esqSession]);
+                $idSchemaRow = $st->fetchColumn();
+                if ($idSchemaRow !== false) {
+                    $_SESSION['session_auth']['mi_id_schema'] = (int) $idSchemaRow;
+                }
+            } catch (\Throwable) {
+            }
+        }
+
+        $config = $oConfigDB->getEsquema('resto');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBRC'] = $oConexion->getPDO();
+
+        // public para todo el mundo sólo lectura
+        $oConfigDB = new ConfigDB('comun_select'); //de la database comun
+
+        $config = $oConfigDB->getEsquema('public');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBPC_Select'] = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('resto');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBRC_Select'] = $oConexion->getPDO();
+
+        //común
+        $oConfigDB->setDataBase('comun');
+        $config = $oConfigDB->getEsquema($esquema);
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBC'] = $oConexion->getPDO();
+        //común sólo lectura
+        $oConfigDB->setDataBase('comun_select');
+        $config = $oConfigDB->getEsquema($esquema);
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBC_Select'] = $oConexion->getPDO();
+
+        //sv
+        $oConfigDB->setDataBase('sv');
+        $config = $oConfigDB->getEsquema($esquemav);
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDB'] = $oConexion->getPDO();
+
+        $oConfigSf = new ConfigDB('sf');
+        $configSf = $oConfigSf->getEsquema($esquemaf);
+        $oConexionSf = new DBConnection($configSf);
+        $GLOBALS['oDBF'] = $oConexionSf->getPDO();
+
+        $config = $oConfigDB->getEsquema('publicv');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBP'] = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('restov');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBR'] = $oConexion->getPDO();
+
+        //sv-e
+        $oConfigDB->setDataBase('sv-e');
+        $config = $oConfigDB->getEsquema($esquemav);
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBE'] = $oConexion->getPDO();
+        $GLOBALS['oDBE_Select'] = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('publicv');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBEP'] = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('restov');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBER'] = $oConexion->getPDO();
+
+        //sv exterior sólo lectura
+        $oConfigDB->setDataBase('sv-e_select');
+        $config = $oConfigDB->getEsquema($esquemav);
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBE_Select'] = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('publicv');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBEP_Select'] = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('restov');
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBER_Select'] = $oConexion->getPDO();
+
+        if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
+            // Para sincronizar con listas Madrid (SQLSERVER)
+            // No en el caso de cr (H-Hv)
+            if ((ConfigGlobal::mi_region() !== ConfigGlobal::mi_delef()) && !isset($GLOBALS['oDBListas'])) {
+                try {
+                    $oConfigDB = new ConfigDB('listas');
+                    $config = $oConfigDB->getEsquema('public');
+                    $oConexion = new DBConnection($config);
+                    $oDBListas = $oConexion->getPDOListas();
+                } catch (PDOException $e) {
+                    //Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
+                    echo "/*";
+                    echo _("No puedo conectar con la base de datos de listas") . ':<br>';
+                    echo $e->getMessage();
+                    echo "*/";
+                    $oDBListas = 'error';
+                }
+            }
+        }
+
+        self::$pdoTestBootstrapHecho = true;
     }
 }

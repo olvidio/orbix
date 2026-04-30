@@ -54,6 +54,9 @@ interface DbSchemaRepositoryInterface
      */
     public function datosById(string $schema): array|bool;
 	
+    /** Siguiente valor de `id` para insertar filas (usa MAX(id)+1 en `db_idschema`). */
+    public function getNewId(): int;
+
     /**
      * Busca la clase con schema en el repositorio.
 	

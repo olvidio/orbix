@@ -2,6 +2,7 @@
 
 namespace src\ubiscamas\infrastructure\persistence\postgresql;
 
+use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -168,12 +169,22 @@ class PgCamaRepository extends ClaseRepository implements CamaRepositoryInterfac
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
         else {
-            //INSERT
-            $campos = "(id_cama,id_habitacion,descripcion,larga,vip)";
-            $valores = "(:id_cama,:id_habitacion,:descripcion,:larga,:vip)";
+            //INSERT (du_camas exige id_schema NOT NULL; Hydratable no serializa id_schema)
+            $campos = "(id_schema,id_cama,id_habitacion,descripcion,larga,vip)";
+            $valores = "(:id_schema,:id_cama,:id_habitacion,:descripcion,:larga,:vip)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+
+        if ($bInsert) {
+            $sid = ConfigGlobal::mi_id_schema();
+            $idSchema = is_numeric($sid) ? (int) $sid : (int) filter_var((string) $sid, FILTER_VALIDATE_INT);
+            if ($idSchema < 1) {
+                throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir en du_camas.'));
+            }
+            $aDatos['id_schema'] = $idSchema;
+        }
+
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

@@ -9,6 +9,7 @@ use PDO;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\asistentes\domain\entity\Asistente;
 use src\asistentes\domain\value_objects\AsistentePk;
+use src\shared\config\ConfigGlobal;
 use src\shared\domain\contracts\UnitOfWorkInterface;
 use src\shared\traits\DispatchesDomainEvents;
 use src\shared\traits\HandlesPdoErrors;
@@ -151,6 +152,8 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
         $aDatos = $Asistente->toArrayForDatabase();
         unset($aDatos['domainEvents']);
 
+        $requiere_id_schema = ($nom_tabla === 'd_asistentes_de_paso' || $nom_tabla === 'd_asistentes_all');
+
         if ($bInsert === false) {
             //UPDATE
             unset($aDatos['id_activ']);
@@ -173,10 +176,24 @@ class PgAsistenteRepository extends ClaseRepository implements AsistenteReposito
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT
-            $campos = "(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,dl_responsable,observ,id_tabla,plaza,propietario,observ_est,cama)";
-            $valores = "(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:dl_responsable,:observ,:id_tabla,:plaza,:propietario,:observ_est,:cama)";
+            if ($requiere_id_schema) {
+                $campos = "(id_schema,id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,dl_responsable,observ,id_tabla,plaza,propietario,observ_est,cama)";
+                $valores = "(:id_schema,:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:dl_responsable,:observ,:id_tabla,:plaza,:propietario,:observ_est,:cama)";
+            } else {
+                $campos = "(id_activ,id_nom,propio,est_ok,cfi,cfi_con,falta,encargo,dl_responsable,observ,id_tabla,plaza,propietario,observ_est,cama)";
+                $valores = "(:id_activ,:id_nom,:propio,:est_ok,:cfi,:cfi_con,:falta,:encargo,:dl_responsable,:observ,:id_tabla,:plaza,:propietario,:observ_est,:cama)";
+            }
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+
+        if ($bInsert && $requiere_id_schema) {
+            $sid = ConfigGlobal::mi_id_schema();
+            $idSchema = is_numeric($sid) ? (int) $sid : (int) filter_var((string) $sid, FILTER_VALIDATE_INT);
+            if ($idSchema < 1) {
+                throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir el asistente.'));
+            }
+            $aDatos['id_schema'] = $idSchema;
         }
 
         $success = $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);

@@ -15,8 +15,8 @@ use src\shared\security\HashBInvalidException;
  */
 class HashBTest extends TestCase
 {
-    /** Igual que el salt privado de HashB. */
-    private const SALT = 'b+b+b+';
+    /** Igual que el salt privado de HashB (`HashB` → `private const SALT`). */
+    private const SALT = 'b+b+back+';
 
     protected function setUp(): void
     {

@@ -20,7 +20,10 @@ class TipoDocFactory
         $oTipoDoc = new TipoDoc();
         $oTipoDoc->setId_tipo_doc($id);
         $oTipoDoc->setSigla('tst');
-        $oTipoDoc->setNom_doc('test_tipodoc_' . $id);
+        $oTipoDoc->setNom_doc('test tipodoc ' . $id);
+        $oTipoDoc->setNumerado(false);
+        $oTipoDoc->setVigente(true);
+        $oTipoDoc->setBajo_llave(false);
 
         return $oTipoDoc;
     }

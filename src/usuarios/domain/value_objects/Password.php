@@ -53,13 +53,19 @@ final class Password
     }
 
     /**
-     * Hash the password
-     *
-     * @return string
+     * Hash the password for storage (bcrypt / argon per PASSWORD_DEFAULT).
+     */
+    public function hash(): string
+    {
+        return password_hash($this->value, PASSWORD_DEFAULT);
+    }
+
+    /**
+     * @deprecated Use {@see hash()} — nombre legado fácil de confundir con {@see \src\shared\security\HashB}
      */
     public function HashB(): string
     {
-        return password_hash($this->value, PASSWORD_DEFAULT);
+        return $this->hash();
     }
 
     /**

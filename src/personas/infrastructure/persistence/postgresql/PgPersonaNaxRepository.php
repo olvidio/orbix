@@ -22,7 +22,10 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
 {
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
+        // `p_nax` vive en la base `sf` con esquema …f (p. ej. H-dlbf), no en `sv` …v.
+        // Con sesión SV, `oDB` apunta a `sv`+esquemav; `oDBF` es la conexión sf+esquemaf.
+        // Con sesión SF, `oDBF` es un alias de `oDB` (ambos sf+esquemaf).
+        $oDbl = $GLOBALS['oDBF'] ?? $GLOBALS['oDB'];
         $this->setoDbl($oDbl);
         $this->setNomTabla('p_nax');
     }
@@ -85,12 +88,22 @@ class PgPersonaNaxRepository extends PgPersonaDlRepositoryBase implements Person
             $sql = "UPDATE $nom_tabla SET $update WHERE id_nom = $id_nom";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
-            $campos = "(id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento,ce,ce_ini,ce_fin,ce_lugar,es_publico)";
-            $valores = "(:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento,:ce,:ce_ini,:ce_fin,:ce_lugar,:es_publico)";
+            // INSERT (p_nax exige id_schema NOT NULL; Hydratable no serializa id_schema)
+            $campos = "(id_schema,id_nom,id_tabla,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,idioma_preferido,situacion,f_situacion,apel_fam,inc,f_inc,nivel_stgr,profesion,eap,observ,id_ctr,lugar_nacimiento,ce,ce_ini,ce_fin,ce_lugar,es_publico)";
+            $valores = "(:id_schema,:id_nom,:id_tabla,:dl,:sacd,:trato,:nom,:nx1,:apellido1,:nx2,:apellido2,:f_nacimiento,:idioma_preferido,:situacion,:f_situacion,:apel_fam,:inc,:f_inc,:nivel_stgr,:profesion,:eap,:observ,:id_ctr,:lugar_nacimiento,:ce,:ce_ini,:ce_fin,:ce_lugar,:es_publico)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
+
+        if ($bInsert) {
+            $sid = ConfigGlobal::mi_id_schema();
+            $idSchema = is_numeric($sid) ? (int) $sid : (int) filter_var((string) $sid, FILTER_VALIDATE_INT);
+            if ($idSchema < 1) {
+                throw new \RuntimeException(_('Falta id_schema de sesión (mi_id_schema) para persistir persona nax.'));
+            }
+            $aDatos['id_schema'] = $idSchema;
+        }
+
         return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 

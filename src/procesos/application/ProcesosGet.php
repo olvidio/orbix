@@ -15,11 +15,67 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
  * del proceso filtrando segun el sfsv/role del usuario.
  *
  * Retorna un array donde cada clave es el id de fase padre (0 = raiz) y
- * cada valor es una lista de ['id', 'nom']. El render HTML se hace en
- * el frontend (frontend/procesos/controller/procesos_get.php).
+ * cada valor es una lista de ['id', 'nom']. El render HTML del árbol está en
+ * {@see dibujarTree()} y lo invoca el controlador frontend.
  */
 class ProcesosGet
 {
+    /**
+     * HTML del árbol de fases (misma estructura que la clave `aPadres` de
+     * {@see execute()}). Centralizado aquí para tests unitarios sin HTTP.
+     */
+    public static function dibujarTree(array $aPadres): string
+    {
+        if ($aPadres === []) {
+            return '';
+        }
+        ksort($aPadres);
+        $html = '<div id="tree">';
+        if (!empty($aPadres[0])) {
+            foreach ($aPadres[0] as $padre) {
+                $id_fase_i = (int)$padre['id'];
+                $nom = $padre['nom'];
+                if (array_key_exists($id_fase_i, $aPadres)) {
+                    $html .= '<div class="branch">';
+                    $html .= '<div class="entry"><span>' . $nom . '</span>';
+                    $html .= '<div class="branch">';
+                    $html .= self::dibujarTreeHijos($aPadres, $id_fase_i);
+                    $html .= '</div>';
+                    $html .= '</div>';
+                } else {
+                    $html .= '<div class="entry"><span>' . $nom . '</span></div>';
+                }
+            }
+        }
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    private static function dibujarTreeHijos(array $aPadres, int $id_fase): string
+    {
+        if (empty($aPadres[$id_fase])) {
+            return '';
+        }
+        $html = '';
+        foreach ($aPadres[$id_fase] as $padre) {
+            $id_fase_i = (int)$padre['id'];
+            $nom = $padre['nom'];
+            if (array_key_exists($id_fase_i, $aPadres)) {
+                $html .= '<div class="branch">';
+                $html .= '<div class="entry"><span>' . $nom . '</span>';
+                $html .= '<div class="branch">';
+                $html .= self::dibujarTreeHijos($aPadres, $id_fase_i);
+                $html .= '</div>';
+                $html .= '</div>';
+            } else {
+                $html .= '<div class="entry"><span>' . $nom . '</span></div>';
+            }
+        }
+
+        return $html;
+    }
+
     public function execute(array $input): array
     {
         $Qid_tipo_proceso = (int)($input['id_tipo_proceso'] ?? 0);

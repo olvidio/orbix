@@ -15,7 +15,16 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "node scripts/ensure-slickgrid-sourcemaps.js"
+    "postinstall": "node scripts/ensure-slickgrid-sourcemaps.js",
+    "test:e2e": "playwright test --config=e2e/playwright.config.ts",
+    "test:e2e:docker-skip-bdu-menu": "E2E_SKIP_MENU_LINKS_IF_BDU_UNAVAILABLE=1 playwright test --config=e2e/playwright.config.ts",
+    "test:e2e:headed": "playwright test --config=e2e/playwright.config.ts --headed",
+    "test:e2e:ui": "playwright test --config=e2e/playwright.config.ts --ui",
+    "test:e2e:install-browsers": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "dotenv": "^16.6.1"
   },
   "author": "",
   "license": "ISC"

@@ -2,6 +2,8 @@
 
 namespace src\ubis\infrastructure\persistence\postgresql;
 
+use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
+
 /**
  * Clase que adapta la tabla d_teleco_cdc a la interfaz del repositorio
  *
@@ -11,7 +13,7 @@ namespace src\ubis\infrastructure\persistence\postgresql;
  * @version 2.0
  * @created 19/11/2025
  */
-class PgTelecoCdcDlRepository extends PgTelecoUbiRepository
+class PgTelecoCdcDlRepository extends PgTelecoUbiRepository implements TelecoCdcDlRepositoryInterface
 {
 
     public function __construct()

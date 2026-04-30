@@ -102,6 +102,7 @@ Este documento recoge convenciones y lecciones aprendidas al añadir o refactori
 ## Ejecutar PHPUnit
 
 - Desde la raíz del proyecto: **`libs/vendor/bin/phpunit`**, con ruta al fichero o directorio de tests según `phpunit.xml`.
+- **Playwright (E2E)** en **`e2e/`**: servidor Orbix por URL configurable; sin credenciales solo smoke del formulario de login; con `E2E_USER`/`E2E_PASSWORD` se recorren enlaces de `/index.php` vía GET. Detalle en **`e2e/README.md`**. Comando: `npm run test:e2e` (antes `npm run test:e2e:install-browsers` una vez).
 
 ---
 

@@ -11,7 +11,9 @@ use src\shared\domain\traits\Hydratable;
 
 class Sector
 {
-    use Hydratable;
+    use Hydratable {
+        toArrayForDatabase as private hydratableToArrayForDatabase;
+    }
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -150,5 +152,19 @@ class Sector
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);
         return $oDatosCampo;
+    }
+
+    /**
+     * La columna en BD es `sector`; la propiedad VO es `nombre_sector`.
+     */
+    public function toArrayForDatabase(array $converters = []): array
+    {
+        $data = $this->hydratableToArrayForDatabase($converters);
+        if (array_key_exists('nombre_sector', $data)) {
+            $data['sector'] = $data['nombre_sector'];
+            unset($data['nombre_sector']);
+        }
+
+        return $data;
     }
 }

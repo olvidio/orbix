@@ -7,20 +7,37 @@ namespace Tests\unit\ubis\application;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use src\ubis\application\CentrosFormData;
+use src\ubis\domain\CuadrosLabor;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 final class CentrosFormDataTest extends TestCase
 {
     private mixed $previousContainer;
+    private bool $hadSessionSfsv = false;
+    private mixed $previousSessionSfsv = null;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->previousContainer = $GLOBALS['container'] ?? null;
+
+        // CuadrosLabor (vía CentrosFormData::MODO_LABOR) usa ConfigGlobal::mi_sfsv().
+        if (!isset($_SESSION['session_auth']) || !is_array($_SESSION['session_auth'])) {
+            $_SESSION['session_auth'] = [];
+        }
+        $this->hadSessionSfsv = array_key_exists('sfsv', $_SESSION['session_auth']);
+        $this->previousSessionSfsv = $this->hadSessionSfsv ? $_SESSION['session_auth']['sfsv'] : null;
+        $_SESSION['session_auth']['sfsv'] = 1;
     }
 
     protected function tearDown(): void
     {
+        if ($this->hadSessionSfsv) {
+            $_SESSION['session_auth']['sfsv'] = $this->previousSessionSfsv;
+        } else {
+            unset($_SESSION['session_auth']['sfsv']);
+        }
+
         if ($this->previousContainer === null) {
             unset($GLOBALS['container']);
         } else {
@@ -47,6 +64,7 @@ final class CentrosFormDataTest extends TestCase
             'nombre_ubi' => '',
             'tipo_ctr' => '',
             'tipo_labor' => 0,
+            'tipo_labor_check_html' => $this->expectedTipoLaborCheckHtml(0),
         ], $result);
     }
 
@@ -66,6 +84,7 @@ final class CentrosFormDataTest extends TestCase
             'nombre_ubi' => 'Centro Uno',
             'tipo_ctr' => 'Z',
             'tipo_labor' => 42,
+            'tipo_labor_check_html' => $this->expectedTipoLaborCheckHtml(42),
         ], $result);
     }
 
@@ -109,6 +128,14 @@ final class CentrosFormDataTest extends TestCase
             'plazas' => 12,
             'sede' => true,
         ], $result);
+    }
+
+    /**
+     * HTML de checkboxes de tipo labor, alineado con {@see CentrosFormData::execute} (modo labor).
+     */
+    private function expectedTipoLaborCheckHtml(int $tipoLabor): string
+    {
+        return (new CuadrosLabor())->cuadros_check('tipo_labor', $tipoLabor);
     }
 
     private function containerConCentro(?object $centro): object
