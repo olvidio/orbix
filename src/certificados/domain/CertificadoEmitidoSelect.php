@@ -88,8 +88,8 @@ class CertificadoEmitidoSelect
             $f_certificado = $oCertificado->getF_certificado()?->getFromLocal();
             $id_nom = $oCertificado->getId_nom();
             $firmado = $oCertificado->isFirmado();
-            $nom = $oCertificado->getNomVo()->value();
-            $idioma = $oCertificado->getIdiomaVo()->value();
+            $nom = $oCertificado->getNom();
+            $idioma = $oCertificado->getIdiomaVo()?->value();
             $destino = $oCertificado->getDestino();
             $pdf = $oCertificado->getDocumento();
             $fecha = $oCertificado->getF_enviado()?->getFromLocal();

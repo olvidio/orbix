@@ -4,6 +4,7 @@ namespace src\certificados\domain\entity;
 
 use src\shared\domain\traits\Hydratable;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\LocaleCode;
 use src\shared\domain\value_objects\NullDateTimeLocal;
 
 class CertificadoEmitido
@@ -19,7 +20,7 @@ class CertificadoEmitido
 
     private ?string $nom = null;
 
-    private ?string $idioma = null;
+    private ?LocaleCode $idioma = null;
 
     private ?string $destino = null;
 
@@ -73,15 +74,17 @@ class CertificadoEmitido
     }
 
 
-    public function getIdioma(): ?string
+    public function getIdiomaVo(): ?LocaleCode
     {
         return $this->idioma;
     }
 
 
-    public function setIdioma(?string $idioma): void
+    public function setIdiomaVo(LocaleCode|string|null $idioma): void
     {
-        $this->idioma = $idioma;
+        $this->idioma = $idioma instanceof LocaleCode
+            ? $idioma
+            : LocaleCode::fromNullableString($idioma);
     }
 
 

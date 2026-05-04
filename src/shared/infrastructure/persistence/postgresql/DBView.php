@@ -5,9 +5,8 @@ namespace src\shared\infrastructure\persistence\postgresql;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
-
-
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+
 
 class DBView
 {
@@ -263,7 +262,17 @@ class DBView
         $gesDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        return $gesDl->getArraySchemasRegionStgr($RegionStgr, $mi_sfsv);
+        $a_schemas = $gesDl->getArraySchemasRegionStgr($RegionStgr, $mi_sfsv);
+        // quitar H-Hv
+        if (($key = array_search("H-crHv", $a_schemas)) !== false) {
+            unset($a_schemas[$key]);
+        }
+        if (($key = array_search("M-crMv", $a_schemas)) !== false) {
+            unset($a_schemas[$key]);
+        }
+
+        return $a_schemas;
+
     }
 
     private function getSchemasComunGrupStgr()
@@ -271,7 +280,8 @@ class DBView
         $RegionStgr = $this->sRegionStgr;
         $gesDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 
-        return $gesDl->getArraySchemasRegionStgr($RegionStgr, NULL);
+        // Los esquemas reales llevan sufijo v/f; con NULL el SQL apuntaba a nombres inexistentes.
+        return $gesDl->getArraySchemasRegionStgr($RegionStgr, ConfigGlobal::mi_sfsv());
     }
 
     private function getDefView($view, $comun = FALSE)
