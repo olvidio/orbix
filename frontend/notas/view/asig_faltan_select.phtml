@@ -9,7 +9,7 @@
     fnjs_modificar = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            $(formulario).attr('action', "apps/personas/controller/stgr_cambio.php");
+            $(formulario).attr('action', "frontend/personas/controller/stgr_cambio.php");
             fnjs_enviar_formulario(formulario);
         }
     }

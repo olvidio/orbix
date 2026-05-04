@@ -182,7 +182,7 @@ foreach ($cPersonas as $row) {
         'id_tabla' => $id_tabla,
     ];
     array_walk($aQuery, 'src\\shared\\domain\\helpers\\poner_empty_on_null');
-    $pagina = HashFront::link('apps/personas/controller/home_persona.php?' . http_build_query($aQuery));
+    $pagina = HashFront::link('frontend/personas/controller/home_persona.php?' . http_build_query($aQuery));
 
     $a_valores[$i]['sel'] = "$id_nom";
     $a_valores[$i][1] = $id_tabla;
