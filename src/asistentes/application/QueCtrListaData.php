@@ -92,6 +92,7 @@ final class QueCtrListaData
                 $nm = 'checked';
                 break;
             case 'a':
+            case 'agd':
                 $a = 'checked';
                 break;
             case 'sssc':

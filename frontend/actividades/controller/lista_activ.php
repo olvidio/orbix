@@ -19,6 +19,7 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFrontSignedLink;
 use frontend\shared\web\Lista;
+use frontend\shared\web\Periodo;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -113,6 +114,17 @@ $tituloPrevio = '';
 if ($Qque === 'list_active_inv_sg' || $Qque === 'list_activ_sr') {
     // Viene del formulario que_lista_activ_sg.php / que_lista_activ_sr.
     $tituloPrevio = (string)filter_input(INPUT_POST, 'titulo');
+}
+
+// perdiodo por defecto
+if (empty($empiezamin)) {
+    $Qperiodo = 'curso';
+
+    $oPeriodo = new Periodo();
+    $oPeriodo->setPeriodo('curso');
+
+    $Qempiezamin = $oPeriodo->getF_ini()->getFromLocal();
+    $Qempiezamax = $oPeriodo->getF_fin()->getFromLocal();
 }
 
 $data = PostRequest::getDataFromUrl('/src/actividades/lista_activ_datos', [

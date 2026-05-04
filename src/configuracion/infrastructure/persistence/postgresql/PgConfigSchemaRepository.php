@@ -25,9 +25,14 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
 
     public function __construct()
     {
-        $oDbl = isset($GLOBALS['oDBC']) ? $GLOBALS['oDBC'] : $GLOBALS['oDBPC'];
+        $oDbl = $GLOBALS['oDBC'] ?? $GLOBALS['oDBPC'] ?? null;
+        $oDbl_Select = $GLOBALS['oDBC_Select'] ?? $GLOBALS['oDBPC_Select'] ?? null;
+        if (!$oDbl instanceof PDO || !$oDbl_Select instanceof PDO) {
+            throw new \RuntimeException(
+                'PgConfigSchemaRepository: sin conexión PDO en $GLOBALS (oDBC/oDBPC).'
+            );
+        }
         $this->setoDbl($oDbl);
-        $oDbl_Select = isset($GLOBALS['oDBC_Select']) ? $GLOBALS['oDBC_Select'] : $GLOBALS['oDBPC_Select'];
         $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('x_config_schema');
     }

@@ -102,13 +102,18 @@ final class MatriculasListaOtrasRData
                 $idAsignatura = $oPersonaNotaOtraRegionDB->getId_asignatura();
                 $idActiv = $oPersonaNotaOtraRegionDB->getId_activ();
                 $acta = $oPersonaNotaOtraRegionDB->getActa();
-        $Acta = $actaRepository->findById($acta);
-        if ($Acta !== null && $Acta->hasEmptyPdf()) {
+                $Acta = $actaRepository->findById($acta);
+                if ($Acta !== null && ($Acta->getPdfVo() === null)) {
                     $alert .= '!';
                 }
                 $nomAsignatura = $aAsignaturas[$idAsignatura];
-                $oActividad = $actividadAllRepository->findById($idActiv);
-                $nomActiv = $oActividad->getNom_activ();
+                $nomActiv = '';
+                if ($idActiv !== null) {
+                    $oActividad = $actividadAllRepository->findById($idActiv);
+                    if ($oActividad !== null) {
+                        $nomActiv = $oActividad->getNom_activ();
+                    }
+                }
 
                 $strAsignaturas .= $strAsignaturas === '' ? '' : ', ';
                 $strAsignaturas .= trim((string)$nomAsignatura);

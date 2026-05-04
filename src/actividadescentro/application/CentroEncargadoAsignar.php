@@ -32,7 +32,7 @@ final class CentroEncargadoAsignar
         ]);
         $num_orden = (is_array($cCentros) && count($cCentros) >= 1)
             ? ((int)$cCentros[0]->getNum_orden() + 1)
-            : 0;
+            : 1; // mejor nop poner 0. Que el primero sea 1
 
         $oCentroEncargado = new CentroEncargado();
         $oCentroEncargado->setId_activ($id_activ);

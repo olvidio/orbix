@@ -1,14 +1,18 @@
 <?php
-namespace core;
-// INICIO Cabecera global de URL de controlador *********************************
-use src\shared\config\ConfigGlobal;require_once ("src/shared/global_header.inc");
-// Archivos requeridos por esta url **********************************************
+/**
+ * Estilos “todo en uno”: no cargar global_object.inc (DI + segunda pasada de bootstrap).
+ * Este archivo se incluye desde popups (p.ej. actividad_select_ubi) donde ya hay HTML/salida;
+ * montar global_object aquí rompe variables PDO globales y la sesión. El tema se resuelve
+ * con {@see css_colores_estilo_desde_sesion()} como en tessera.css.php.
+ */
+use src\shared\config\ConfigGlobal;
 
-// Crea los objetos de uso global **********************************************
-	require_once ("src/shared/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
+require_once __DIR__ . '/../libs/vendor/autoload.php';
+require_once __DIR__ . '/colores_estilo_desde_sesion.php';
 
-include_once (ConfigGlobal::$dir_estilos.'/colores.php'); 
+[$estilo_color, $tipo_menu] = css_colores_estilo_desde_sesion();
+
+include_once ConfigGlobal::$dir_estilos . '/colores.php';
 ?>
 <style>
 @media print {

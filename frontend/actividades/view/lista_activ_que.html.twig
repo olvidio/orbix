@@ -4,15 +4,17 @@ fnjs_listar=function(formulario) {
 	var f_ini=0;
 	var f_fin=0;
 
-    if (!fnjs_comprobar_fecha('#empiezamin',{{ locale_us }})) { err=1; }
-    if (!fnjs_comprobar_fecha('#empiezamax',{{ locale_us }})) { err=1; }
-
     f_ini=$('#empiezamin').val();
+    if (f_ini) {
+        if (!fnjs_comprobar_fecha('#empiezamin',{{ locale_us }})) { err=1; }
+    }
     f_fin=$('#empiezamax').val();
+    if (f_fin) {
+        if (!fnjs_comprobar_fecha('#empiezamax',{{ locale_us }})) { err=1; }
+    }
 
-    if (!f_ini) { alert("{{ "Debe introducir la fecha de inicio del periodo"|trans|raw }}"); err=1; }
-    if (!f_fin) { alert("{{ "Debe introducir la fecha de fin del periodo"|trans|raw }}"); err=1; }
-
+    //if (!f_ini) { alert("{{ "Debe introducir la fecha de inicio del periodo"|trans|raw }}"); err=1; }
+    //if (!f_fin) { alert("{{ "Debe introducir la fecha de fin del periodo"|trans|raw }}"); err=1; }
 
     var seccion=0;
     $('[name="seccion[]"]:checked').each(function () {

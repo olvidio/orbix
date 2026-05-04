@@ -219,13 +219,16 @@ class ListaActivTabla
             $id_ubi = $oActividad->getId_ubi();
             $f_ini = $oActividad->getF_ini()?->getFromLocal();
             $f_fin = $oActividad->getF_fin()?->getFromLocal();
-            $h_ini = $oActividad->getH_ini();
-            $h_fin = $oActividad->getH_fin();
+            $h_ini = $oActividad->getH_ini()?->format('H:i');
+            $h_fin = $oActividad->getH_fin()?->format('H:i');
             $tarifa = $oActividad->getTarifa();
             $observ = $oActividad->getObserv();
 
             $oCasa = $CasaRepository->findById($id_ubi);
-            $nombre_ubi = $oCasa->getNombre_ubi();
+            $nombre_ubi = '';
+            if ($oCasa !== null) {
+                $nombre_ubi = $oCasa->getNombre_ubi();
+            }
             $comun = '';
             if (is_true($oCasa->isSv())) {
                 $comun = 'sv';
@@ -245,7 +248,7 @@ class ListaActivTabla
 
             if (($perm_sg || $perm_vcsd || $perm_des) && !$perm_admin) {
                 if ($snom_tipoTxt === '(sin especificar)') {
-                    $snom_tipoTxt = '&nbsp;';
+                    $snom_tipoTxt = '';
                 }
             }
 

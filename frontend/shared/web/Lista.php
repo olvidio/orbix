@@ -207,7 +207,7 @@ class Lista
         reset($aGrupos);
         $Html = '';
         foreach ($aGrupos as $key => $titulo) {
-            $this->aDatos = $aDatos[$key];
+            $this->aDatos = $aDatos[$key] ?? [];
             $this->ikey = $key;
             $Html .= "<div class=salta_pag>";
             $Html .= "<h2>$titulo</h2>";
@@ -250,7 +250,7 @@ class Lista
         }
         $this->setBotones([]);
         foreach ($aGrupos as $key => $titulo) {
-            $this->aDatos = $aDatos[$key];
+            $this->aDatos = $aDatos[$key] ?? [];
             $this->ikey = $key;
             $id_tabla_key = $id_tabla . '_' . $key;
             $this->setId_tabla($id_tabla_key);

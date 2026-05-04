@@ -4,6 +4,7 @@ namespace src\asistentes\application;
 
 use frontend\shared\web\Lista;
 use frontend\shared\web\Periodo;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividadestudios\domain\contracts\MatriculaRepositoryInterface;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
@@ -103,7 +104,7 @@ final class ListaEstCtrData
             $tipo_ctr = $oCentroDl->getTipo_ctr();
             if (strpos($tipo_ctr, 'n') === 0) {
                 $aWhere['sacd'] = 'f';
-                $aWhere['nivel_stgr'] = 'n';
+                $aWhere['nivel_stgr'] = NivelStgrId::N;
                 $aOperador['nivel_stgr'] = '!=';
             }
 
@@ -116,7 +117,7 @@ final class ListaEstCtrData
                 $i++;
                 $id_nom = $oPersonaDl->getId_nom();
                 $nom = $oPersonaDl->getPrefApellidosNombre();
-                $stgr = $oPersonaDl->getNivel_stgr();
+                $nivelVal = $oPersonaDl->getNivelStgrVo()?->value();
                 $a_valores[$id_ubi][$i][1] = $i;
                 $a_valores[$id_ubi][$i][2] = $nom;
 
@@ -137,11 +138,11 @@ final class ListaEstCtrData
                         $nom_activ = _('ya lo ha hecho');
                         $asignaturas = '';
                     } else {
-                        switch ($stgr) {
-                            case 'n':
+                        switch ($nivelVal) {
+                            case NivelStgrId::N:
                                 $asignaturas = _('plan de formación');
                                 break;
-                            case 'r':
+                            case NivelStgrId::R:
                                 $asignaturas = _('repaso');
                                 break;
                             default:

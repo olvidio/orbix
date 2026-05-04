@@ -3,6 +3,7 @@
 namespace src\asistentes\application;
 
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\asistentes\domain\contracts\AsistenteRepositoryInterface;
 use src\personas\domain\contracts\PersonaAgdRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
@@ -170,6 +171,7 @@ final class ActivPendientesSelectData
         $i = 0;
         $a_valores = [];
         $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
+        $aNivelesStgr = NivelStgrId::getArrayNivelStgr();
         foreach ($aFaltan as $ap_nom => $aDatos) {
             $i++;
             $id_nom = $aDatos['id_nom'];
@@ -177,7 +179,10 @@ final class ActivPendientesSelectData
             $nivel_stgr = $aDatos['nivel_stgr'];
 
             $oCentroDl = $CentroDlRepository->findById($id_ubi);
-            $nombre_ubi = $oCentroDl->getNombre_ubi();
+            $nombre_ubi = '?';
+            if ($oCentroDl !== null) {
+                $nombre_ubi = $oCentroDl->getNombre_ubi();
+            }
 
             $aQuery = ['obj_pau' => $obj_pau, 'id_nom' => $id_nom];
             $a_valores[$i][1] = $i;
@@ -189,7 +194,7 @@ final class ActivPendientesSelectData
                 'valor' => $ap_nom,
             ];
             $a_valores[$i][3] = $nombre_ubi;
-            $a_valores[$i][4] = $nivel_stgr;
+            $a_valores[$i][4] = $aNivelesStgr[$nivel_stgr]?? '';
         }
 
         $aWhere = [];

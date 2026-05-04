@@ -127,6 +127,9 @@ class ListaPlazasConjuntoActividades
         foreach ($cActividades as $oActividad) {
             $k++;  // recorro todas las actividades seleccionadas, utilizo el contador k
             $id_activ = $oActividad->getId_activ();
+            // Siempre hay filas en setDatos por cada grupo (puede quedar []), para evitar desajuste
+            // con setGrupos (p. ej. tipo sss+/cv sin bloque de asistentes o todos los registros omitidos).
+            $a_activ[$id_activ] = [];
             $nom_activ = $oActividad->getNom_activ();
             $observ = $oActividad->getObserv();
             $dl_org_activ = $oActividad->getDl_org();

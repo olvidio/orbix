@@ -324,6 +324,12 @@ class PermisosActividades
      */
     public function getPermisoCrear(bool $dl_propia)
     {
+        if (!isset($GLOBALS['container'])) {
+            throw new \RuntimeException(
+                'PermisosActividades::getPermisoCrear requiere contenedor DI en este proceso. '
+                . 'Desde controladores solo-frontend use PostRequest a /src/actividades/actividad_permiso_crear_datos.'
+            );
+        }
         $this->bpropia = $dl_propia;
         $id_tipo_activ = $this->sid_tipo_activ;
         // si vengo de una búsqueda, el id_tipo_actividad puede ser con '...'

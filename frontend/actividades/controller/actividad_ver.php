@@ -7,9 +7,10 @@
  *
  * Los bloques que dependen del dominio (entidad actividad, desplegables,
  * nombre_ubi, tarifa por defecto, textos del tipo, etiquetas de status,
- * nivel STGR por defecto, HTML del bloque tipo) se obtienen via PostRequest
- * a `/src/actividades/actividad_ver_datos`, `actividad_status_labels_datos`,
- * `actividad_nivel_stgr_default_datos` y `actividad_que_datos`. El controlador
+ * nivel STGR por defecto, HTML del bloque tipo, permiso crear en flujo nuevo)
+ * se obtienen via PostRequest a `/src/actividades/actividad_ver_datos`,
+ * `actividad_status_labels_datos`, `actividad_nivel_stgr_default_datos`,
+ * `actividad_permiso_crear_datos` y `actividad_que_datos`. El controlador
  * frontend no hace `use src\...`.
  *
  * @package    delegacion
@@ -197,9 +198,15 @@ if (!empty($Qid_activ)) { // caso de modificar
         // si no permiso para ninguno de los dos => die
         // si para dl, incluir la dl org
         // si dl_ex, idem.
-        $_SESSION['oPermActividades']->setId_tipo_activ($id_tipo_activ);
-
-        $crearPropia = $_SESSION['oPermActividades']->getPermisoCrear(TRUE);
+        // Resolver vía backend: el frontend no tiene $GLOBALS['container'].
+        $rowPropia = PostRequest::getDataFromUrl('/src/actividades/actividad_permiso_crear_datos', [
+            'id_tipo_activ' => $id_tipo_activ,
+            'dl_propia' => 't',
+        ]);
+        $crearPropia = $rowPropia['permiso_crear'] ?? false;
+        if (!empty($rowPropia['aviso'])) {
+            echo '<br>' . $rowPropia['aviso'];
+        }
         if ($crearPropia === FALSE) {
             echo '<br>';
             die (_("No tiene permiso para crear una actividad de este tipo"));
@@ -215,7 +222,17 @@ if (!empty($Qid_activ)) { // caso de modificar
                 $status = $crearPropia['status'];
             } else {
                 $Bdl = 'f';
-                $crearEx = $_SESSION['oPermActividades']->getPermisoCrear(FALSE);
+                $rowEx = PostRequest::getDataFromUrl('/src/actividades/actividad_permiso_crear_datos', [
+                    'id_tipo_activ' => $id_tipo_activ,
+                    'dl_propia' => 'f',
+                ]);
+                $crearEx = $rowEx['permiso_crear'] ?? false;
+                if (!empty($rowEx['aviso'])) {
+                    echo '<br>' . $rowEx['aviso'];
+                }
+                if ($crearEx === false || !is_array($crearEx)) {
+                    die (_("No tiene permiso para crear una actividad de este tipo"));
+                }
                 $of_responsable_txt = $crearEx['of_responsable_txt'];
                 $status = $crearEx['status'];
                 if (!$_SESSION['oPerm']->have_perm_oficina($of_responsable_txt)) {

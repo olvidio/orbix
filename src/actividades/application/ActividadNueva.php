@@ -14,6 +14,7 @@ use src\actividades\domain\value_objects\NivelStgrId;
 use src\actividades\domain\value_objects\StatusId;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
 use src\actividadplazas\domain\entity\ActividadPlazas;
+use src\shared\domain\value_objects\Dinero;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\TimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
@@ -128,7 +129,24 @@ class ActividadNueva
         $oF_fin = empty($Qf_fin) ? null : DateTimeLocal::createFromLocal($Qf_fin);
         $oActividad->setF_fin($oF_fin);
         //$oActividad->setTipo_horario($Qtipo_horario);
-        $oActividad->setPrecio($Qprecio);
+        if ($Qprecio === null) {
+            $oActividad->setPrecioVo(null);
+        } elseif (is_string($Qprecio)) {
+            $t = trim($Qprecio);
+            if ($t === '') {
+                $oActividad->setPrecioVo(null);
+            } elseif (is_numeric($t)) {
+                $oActividad->setPrecioVo((float)$t);
+            } else {
+                $oActividad->setPrecioVo(Dinero::fromString($t));
+            }
+        } elseif (is_int($Qprecio) || is_float($Qprecio)) {
+            $oActividad->setPrecioVo((float)$Qprecio);
+        } elseif (is_numeric($Qprecio)) {
+            $oActividad->setPrecioVo((float)$Qprecio);
+        } else {
+            throw new \RuntimeException(_('precio no válido'));
+        }
         $oActividad->setNum_asistentes($Qnum_asistentes);
         $oActividad->setStatus($Qstatus);
         $oActividad->setObserv($Qobserv);
