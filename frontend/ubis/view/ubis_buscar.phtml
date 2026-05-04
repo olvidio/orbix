@@ -6,7 +6,7 @@
         // borro los posibles resultados anteriores
         $('#resultados').html("");
         $(formulario + " opcion").val(opcion);
-        <?php if ($tipo === "mail") { ?>
+        <?php use frontend\shared\web\Desplegable;if ($tipo === "mail") { ?>
         $(formulario).attr('action', 'scdl/tabla_mails.php');
         <?php } else { ?>
         $(formulario).attr('action', 'frontend/ubis/controller/ubis_tabla.php');
@@ -69,11 +69,11 @@
             </tr>
             <tr>
                 <td class=etiqueta><?= ucfirst(_("región")); ?></td>
-                <td><?= \web\Desplegable::desdeOpciones($opciones_region, 'region')->desplegable(); ?></td>
+                <td><?= Desplegable::desdeOpciones($opciones_region, 'region')->desplegable(); ?></td>
             </tr>
             <tr>
                 <td class=etiqueta><?= ucfirst(_("país")); ?></td>
-                <td><?= \web\Desplegable::desdeOpciones($opciones_pais, 'pais')->desplegable(); ?></td>
+                <td><?= Desplegable::desdeOpciones($opciones_pais, 'pais')->desplegable(); ?></td>
             </tr>
 
             <?php
@@ -258,7 +258,7 @@
                     ?>
                     <tr>
                         <td class=etiqueta><?= _("tipo de centro"); ?></td>
-                        <td><?= \web\Desplegable::desdeOpciones($opciones_tipo_ctr, 'tipo_ctr')->desplegable(); ?>
+                        <td><?= Desplegable::desdeOpciones($opciones_tipo_ctr, 'tipo_ctr')->desplegable(); ?>
                         </td>
                     </tr>
                     <?php
@@ -267,7 +267,7 @@
                     ?>
                     <tr>
                         <td class=etiqueta><?= _("tipo de casa"); ?></td>
-                        <td><?= \web\Desplegable::desdeOpciones($opciones_tipo_casa, 'tipo_casa')->desplegable(); ?>
+                        <td><?= Desplegable::desdeOpciones($opciones_tipo_casa, 'tipo_casa')->desplegable(); ?>
                         </td>
                     </tr>
                     <?php

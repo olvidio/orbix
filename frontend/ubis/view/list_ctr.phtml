@@ -1,3 +1,6 @@
+<?php
+use frontend\shared\web\Desplegable;
+?>
 <script>
     fnjs_limpiar = function () {
         $('#que_lista').val('');
@@ -53,13 +56,13 @@
                 <?= ucfirst(_("localización")); ?>
             </td>
             <td>
-                <?php $_d = \web\Desplegable::desdeOpciones($opciones_loc, 'loc'); $_d->setOpcion_sel($loc); $_d->setAction('fnjs_limpiar()'); echo $_d->desplegable(); ?>
+                <?php $_d = Desplegable::desdeOpciones($opciones_loc, 'loc'); $_d->setOpcion_sel($loc); $_d->setAction('fnjs_limpiar()'); echo $_d->desplegable(); ?>
             </td>
             <td class=etiqueta>
                 <?= ucfirst(_("tipo de ubi")); ?>
             </td>
             <td class=contenido>
-                <?php $_d = \web\Desplegable::desdeOpciones($opciones_que_lista, 'que_lista'); $_d->setOpcion_sel($que_lista); $_d->setAction('fnjs_actualizar()'); echo $_d->desplegable(); ?>
+                <?php $_d = Desplegable::desdeOpciones($opciones_que_lista, 'que_lista'); $_d->setOpcion_sel($que_lista); $_d->setAction('fnjs_actualizar()'); echo $_d->desplegable(); ?>
             </td>
             <td>
                 <input type="button" value="<?= _("listar") ?>" onclick="fnjs_actualizar()">
