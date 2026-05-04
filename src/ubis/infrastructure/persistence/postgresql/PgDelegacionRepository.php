@@ -2,16 +2,15 @@
 
 namespace src\ubis\infrastructure\persistence\postgresql;
 
-use src\shared\infrastructure\persistence\ClaseRepository;
-use src\shared\infrastructure\persistence\postgresql\Condicion;
-use src\shared\config\ConfigGlobal;
-use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use RuntimeException;
+use src\shared\config\ConfigGlobal;
+use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\postgresql\Condicion;
+use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Delegacion;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Clase que adapta la tabla xu_dl a la interfaz del repositorio
@@ -177,7 +176,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
      * @param string region.
      * @return array Una Llista d'esquemes.
      */
-    public function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv): array
+    public function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv = null): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

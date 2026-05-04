@@ -4,7 +4,6 @@ namespace src\ubis\domain\contracts;
 
 use src\ubis\domain\entity\Delegacion;
 
-use function src\shared\domain\helpers\is_true;
 /**
  * Interfaz de la clase Delegacion y su Repositorio
  *
@@ -17,34 +16,33 @@ use function src\shared\domain\helpers\is_true;
 interface DelegacionRepositoryInterface
 {
 
-/* --------------------  BASiC SEARCH ---------------------------------------- */
+    /* --------------------  BASiC SEARCH ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Delegacion
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|bool Una colección de objetos de tipo Delegacion
-	 */
-	public function getDelegaciones(array $aWhere=[], array $aOperators=[]): array|bool;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /**
+     * devuelve una colección (array) de objetos de tipo Delegacion
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|bool Una colección de objetos de tipo Delegacion
+     */
+    public function getDelegaciones(array $aWhere = [], array $aOperators = []): array|bool;
 
-	public function Eliminar(Delegacion $Delegacion): bool;
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Guardar(Delegacion $Delegacion): bool;
+    public function Eliminar(Delegacion $Delegacion): bool;
 
-	public function getErrorTxt(): string;
+    public function Guardar(Delegacion $Delegacion): bool;
+
+    public function getErrorTxt(): string;
 
 
+    public function getNomTabla(): string;
 
-	public function getNomTabla(): string;
-	
     public function datosById(int $id_dl): array|bool;
-	
+
     /**
      * Busca la clase con dl en el repositorio.
-	 */
+     */
     public function findById(int $id_dl): ?Delegacion;
 
     public function getNewId(): int;
@@ -72,7 +70,7 @@ interface DelegacionRepositoryInterface
      * Devuelve un array de nombres de esquemas pertenecientes al grupo STGR de la región indicada.
      * Si $mi_sfsv es null, devuelve los esquemas "comunes".
      */
-    public function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv);
+    public function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv): array;
 
     /**
      * Devuelve array [id_dl => dl] filtrado por regiones STGR indicadas.

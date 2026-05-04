@@ -280,8 +280,17 @@ class DBView
         $RegionStgr = $this->sRegionStgr;
         $gesDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 
-        // Los esquemas reales llevan sufijo v/f; con NULL el SQL apuntaba a nombres inexistentes.
-        return $gesDl->getArraySchemasRegionStgr($RegionStgr, ConfigGlobal::mi_sfsv());
+        $a_schemas = $gesDl->getArraySchemasRegionStgr($RegionStgr);
+
+        // quitar H-Hv
+        if (($key = array_search("H-crH", $a_schemas)) !== false) {
+            unset($a_schemas[$key]);
+        }
+        if (($key = array_search("M-crM", $a_schemas)) !== false) {
+            unset($a_schemas[$key]);
+        }
+
+        return $a_schemas;
     }
 
     private function getDefView($view, $comun = FALSE)
