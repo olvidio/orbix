@@ -141,6 +141,9 @@ $h_asignaturas = $oHashAsignaturas->getParamAjaxEnArray();
 $url_acta_nueva = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_nueva';
 $url_acta_modificar = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_modificar';
 
+$base = AppUrlConfig::getPublicAppBaseUrl();
+$url_upload = $base . '/frontend/notas/controller/acta_pdf_upload.php';
+
 if (!$has_pdf) {
     $readonly = '';
     $url_download = '';
@@ -148,7 +151,7 @@ if (!$has_pdf) {
 } else {
     $readonly = 'readonly';
     $url_download = SignedDownloadToken::urlNotasActa($acta_actual);
-    $url_delete = 'apps/notas/controller/acta_pdf_delete.php';
+    $url_delete = $base . '/frontend/notas/controller/acta_pdf_delete.php';
 }
 $oHashActaDelete = new HashFront();
 $oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
@@ -191,6 +194,7 @@ $a_campos = ['obj' => $obj,
     'a_actas' => $a_actas,
     'permiso' => $permiso,
     'readonly' => $readonly,
+    'url_upload' => $url_upload,
     'url_download' => $url_download,
     'url_delete' => $url_delete,
     'h_delete' => $h_delete,

@@ -192,7 +192,7 @@
 
             let request = $.ajax({
                 data: datos,
-                url: 'apps/notas/controller/acta_pdf_upload.php',
+                url: '<?= $url_upload ?>',
                 method: 'POST',
                 dataType: 'json',
                 cache: false,
