@@ -90,5 +90,5 @@ $a_campos = [
     'fullUrl' => $fullUrl,
 ];
 
-$oView = new ViewNewTwig('actividades/controller');
+$oView = new ViewNewTwig('frontend/actividades/controller');
 $oView->renderizar('lista_sr_csv_que.html.twig', $a_campos);

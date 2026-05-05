@@ -18,6 +18,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
+use frontend\shared\helpers\SignedDownloadToken;
 use function frontend\shared\helpers\urlsafe_b64encode;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -146,7 +147,7 @@ if (!$has_pdf) {
     $url_delete = '';
 } else {
     $readonly = 'readonly';
-    $url_download = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_pdf_download?' . http_build_query(['key' => $acta_actual]));
+    $url_download = SignedDownloadToken::urlNotasActa($acta_actual);
     $url_delete = 'apps/notas/controller/acta_pdf_delete.php';
 }
 $oHashActaDelete = new HashFront();

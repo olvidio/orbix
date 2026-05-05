@@ -124,5 +124,5 @@ $a_campos = [
     'id_fase_nueva' => $Qid_fase_nueva,
 ];
 
-$oView = new ViewNewTwig('procesos/controller');
+$oView = new ViewNewTwig('frontend/procesos/controller');
 $oView->renderizar('fases_activ_cambio.html.twig', $a_campos);

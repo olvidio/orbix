@@ -4,6 +4,7 @@ namespace frontend\usuarios\controller;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
+use frontend\shared\web\ContestarJson;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\application\LoginProcesar;
@@ -162,7 +163,7 @@ if (!isset($_SESSION['session_auth'])) {
             'path' => '/',
             'secure' => false,
             'httponly' => true,
-            'samesite' => 'Strict',
+            'samesite' => 'Lax',
         ];
         setcookie('esquema', $result['esquema'], $arr_cookie_options);
         setcookie('idioma', $result['idioma'], $arr_cookie_options);

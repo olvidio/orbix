@@ -2,6 +2,8 @@
 
 ?>
 <script>
+    var dossierCertRecibidoPdfUrls = <?= $pdf_signed_urls_json ?>;
+
     fnjs_eliminar_certificado = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
@@ -44,12 +46,14 @@
     fnjs_descargar_pdf = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            /* selecciono los elementos con class="sel" de las tablas con id = formulario */
             $(formulario + ' input.sel').each(function () {
                 if ($(this).prop('checked') === true) {
                     let key = $(this).prop('value');
-                    let url = <?= json_encode($url_certificado_recibido_pdf_download, JSON_THROW_ON_ERROR) ?>;
-                    let url_download = url + '?key=' + key + '<?= $h_download ?>';
+                    let url_download = dossierCertRecibidoPdfUrls[key];
+                    if (!url_download) {
+                        alert(<?= json_encode(_("No hay URL de descarga para el certificado seleccionado.")) ?>);
+                        return;
+                    }
                     window.open(url_download);
                 }
             });

@@ -86,5 +86,5 @@ $a_campos = [
     'txt_confirm' => $txt_confirm,
 ];
 
-$oView = new ViewNewTwig('procesos/controller');
+$oView = new ViewNewTwig('frontend/procesos/controller');
 $oView->renderizar('actividad_proceso.html.twig', $a_campos);

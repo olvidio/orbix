@@ -16,6 +16,7 @@ use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
+use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\web\Lista;
 
 require_once 'frontend/shared/global_header_front.inc';
@@ -84,6 +85,8 @@ $a_cabeceras = [['name' => ucfirst(_("acta")), 'formatter' => 'clickFormatter'],
 
 $i = 0;
 $a_valores = [];
+/** @var array<string, string> mapa checkbox `sel` (= urlencode acta) → URL firmada de descarga */
+$pdf_signed_urls = [];
 foreach ($cActasData as $oActa) {
     $i++;
     $acta = (string)($oActa['acta'] ?? '');
@@ -97,6 +100,8 @@ foreach ($cActasData as $oActa) {
         $nombre_corto = $a_asignaturas[$id_asignatura];
     }
     $acta_2 = urlencode($acta);
+    /* Token HMAC (sin HashFront): evita redirección a inicio si emisor/receptor no coinciden en URL. */
+    $pdf_signed_urls[$acta_2] = SignedDownloadToken::urlNotasActa($acta);
     $pagina = HashFront::link('frontend/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
     $a_valores[$i]['sel'] = $acta_2;
     if ($_SESSION['oPerm']->have_perm_oficina('est')) {
@@ -122,13 +127,6 @@ $oHash1 = new HashFront();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
-$url_download = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_pdf_download';
-$oHashDown = new HashFront();
-$oHashDown->setUrl($url_download);
-$oHashDown->setCamposForm('key!otro');
-$oHashDown->setCamposNo('otro!acta');
-$h_download = $oHashDown->linkSinValParams();
-
 $url_acta_eliminar = AppUrlConfig::getPublicAppBaseUrl() . '/src/notas/acta_eliminar';
 
 $oTabla = new Lista();
@@ -146,8 +144,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
     'botones' => $botones,
     'txt_eliminar' => $txt_eliminar,
-    'url_download' => $url_download,
-    'h_download' => $h_download,
+    'pdf_signed_urls_json' => json_encode($pdf_signed_urls, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP),
     'url_acta_eliminar' => $url_acta_eliminar,
 ];
 

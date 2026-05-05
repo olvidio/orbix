@@ -3,6 +3,8 @@
 ## Objetivo
 Mantener una estructura consistente basada en DDD para todo nuevo código en `src/`, reduciendo acoplamientos con legacy y evitando mezclar capas.
 
+**Mejoras y migraciones aplazadas (no son reglas vigentes):** [`documentacion/backlog.md`](documentacion/backlog.md). Para trabajo ya acotado a un ámbito existe también convención de ficheros tipo `documentacion/<tema>_pendiente*.md` o `*_migracion_baseline.md`.
+
 ## Estructura mínima por módulo
 Todo módulo nuevo debe seguir esta base:
 
@@ -84,7 +86,7 @@ Reglas:
 - [ ] ¿Se añadieron pruebas (unitarias o integración) para comportamiento nuevo?
 - [ ] ¿Se han ejecutado y pasado los tests existentes al modificar código?
 - [ ] ¿Se mantiene la separación estricta: nada de HTML/UI en `src/`, nada de lógica de dominio en `frontend/`?
-- [ ] Si el caso de uso devuelve enlaces a `frontend/` o `apps/`, ¿van como `link_spec` (path + query) y la firma `Hash::link` / `HashF` ocurre solo en `frontend/`?
+- [ ] Si se añaden descargas GET de binarios desde `src/` pensadas para `window.open` o enlaces directos, ¿usan **`SignedDownloadToken`** + `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` y no exponen id sin `tk`?
 - [ ] ¿Ningún archivo nuevo en `src/application/` o `src/domain/` importa `web\Hash` para navegación UI?
 
 ## Tests: Convenciones y estructura
@@ -458,8 +460,8 @@ Patrones que han roto producción (avisos `session_id()` / JSON corrupto / hash 
 Para la comunicación asíncrona entre las vistas (`.phtml`) y los controladores de lógica del backend:
 
 ### Backend (Controladores)
-- **Clase estándar**: `web\ContestarJson` para respuestas JSON.
-- **Método preferido**: `ContestarJson::enviar($error_txt, $data)` directamente. Forma habitual del payload: el cliente recibe `success`, `mensaje` y `data` con el cuerpo útil.
+- **Clase estándar**: `frontend\shared\web\ContestarJson` (en documentación antigua puede aparecer como `web\ContestarJson`) para respuestas JSON.
+- **Método preferido**: `ContestarJson::enviar($error_txt, $data)` directamente; opcionalmente **`ContestarJson::enviar($error_txt, $data, $httpStatusOnError)`** cuando un error (p. ej. subida demasiado grande) debe devolver un código HTTP distinto de 200 (típicamente **413**). Ver también la sección **Subidas multipart** más abajo. Forma habitual del payload: el cliente recibe `success`, `mensaje` y `data` con el cuerpo útil.
 - Evitar el patrón intermedio `$jsondata = ContestarJson::respuestaPhp(...);` + `ContestarJson::send($jsondata)`; unificar con **`enviar`** (no `send`).
 - Los casos de uso en `application` deben devolver datos listos para serializar (arrays/strings) o texto de error, no la respuesta JSON ya montada. Si hay código previo que aún devuelve `respuestaPhp`, puede convivir temporalmente, pero no como patrón para código nuevo.
 - **Mutaciones** (eliminar, editar, duplicar, publicar, importar, cambiar tipo, alta, update, etc.): siempre JSON con `{success, mensaje}` aunque no haya payload; nunca cuerpo vacío sin contrato. El JS debe mostrar `mensaje` si `success === false` y refrescar la UI si `success === true`.
@@ -488,6 +490,46 @@ Para la comunicación asíncrona entre las vistas (`.phtml`) y los controladores
   });
   ```
 - **Validaciones previas**: en cliente, antes de la petición, para evitar viajes innecesarios.
+- **Subidas de fichero (multipart / `FormData`)**: además de `.done`, registrar **`.fail`** en el `$.ajax` que sube el archivo. Si el proxy (p. ej. nginx `client_max_body_size`) o PHP cortan la petición, la respuesta puede ser **413** con cuerpo HTML; el cliente debe mostrar un mensaje claro (y, si el servidor devuelve JSON con `mensaje`, preferir ese texto). Patrón de referencia: vistas de certificados (`certificado_emitido_adjuntar`, `certificado_recibido_adjuntar`, `certificado_emitido_upload_firmado`) y `frontend/notas/view/acta_ver.phtml` (`fnjs_upload_pdf`).
+
+### Subidas multipart (`$_FILES`): `MultipartUploadGuard` y HTTP 413
+
+Centralizar límites y errores de subida PHP en **`src\shared\infrastructure\ui\http\MultipartUploadGuard`** para no duplicar lógica ni devolver `[]` sin contrato cuando el POST supera `post_max_size` o `$_FILES[...]` trae `UPLOAD_ERR_*`.
+
+**Infraestructura (fuera del repo o en el servidor):** si aparece **413 Request Entity Too Large** antes de ejecutar PHP, hay que aumentar **`client_max_body_size`** en nginx (o equivalente). En PHP, alinear **`upload_max_filesize`** y **`post_max_size`** (`post_max_size` ≥ tamaño máximo útil del POST multipart).
+
+**Backend — endpoints JSON (`ContestarJson` + controladores bajo `src/.../infrastructure/ui/http/controllers/`):**
+
+1. **`MultipartUploadGuard::exitIfPostTooLargeJson()`** al inicio del script cuando la acción puede recibir un cuerpo POST grande pero **no** exige fichero obligatorio (p. ej. subida opcional tipo acta si no hay archivo en algunos flujos). Corta con **HTTP 413** y JSON `{ success: false, mensaje: ... }` si `CONTENT_LENGTH` supera `post_max_size`.
+2. **`MultipartUploadGuard::requireUploadedFileOrExit('campo_files')`** cuando la subida del fichero es **obligatoria** (p. ej. `certificado_pdf`). Valida también `$_FILES[...]['error']`; para `UPLOAD_ERR_INI_SIZE` / `UPLOAD_ERR_FORM_SIZE` responde con **413** y el mismo formato JSON.
+3. **Casos de uso** que procesan `$files`: si el fichero puede faltar pero cuando viene debe respetarse el límite, combinar **`exitIfPostTooLargeJson()`** con tratamiento explícito de `error` por clave usando **`MultipartUploadGuard::messageForPhpUploadError()`** y **`httpStatusForPhpUploadError()`** (referencia: `src\notas\application\ActaPdfSubir`).
+4. **`frontend\shared\web\ContestarJson::enviar($error_txt, $data, $httpStatusOnError)`**: tercer argumento opcional (por defecto **200** para compatibilidad). Cuando hay error de negocio o de subida que debe mapearse a **413**, pasar ese código aquí (`$error_txt` no vacío → se usa ese status HTTP).
+
+**Frontend — página HTML legacy (respuesta no JSON):** usar **`MultipartUploadGuard::isPostTooLarge()`** y mensajes de **`messageForPhpUploadError()`** para imprimir texto/HTML controlado en lugar del código numérico bruto (referencia: **`frontend/ubis/controller/plano_bytea.php`**, caso `upload`).
+
+**Cliente jQuery:** en la subida con `$.ajax({ processData: false, contentType: false, ... })`, en **`.fail(function (xhr) { ... })`** intentar `JSON.parse(xhr.responseText)` o `xhr.responseJSON` para leer `mensaje`; si no hay JSON (413 de nginx), mostrar texto genérico de fichero demasiado grande.
+
+**Referencia rápida de archivos:** `MultipartUploadGuard.php`; controladores certificados `certificado_emitido_pdf_upload.php` / `certificado_recibido_pdf_upload.php`; acta `acta_pdf_subir.php` + shim `apps/notas/controller/acta_pdf_upload.php`.
+
+### Descargas GET firmadas: `SignedDownloadToken`
+
+Para abrir en **nueva pestaña** (`window.open`) enlaces que sirven **binarios desde `src/...`** (p. ej. PDF de acta o certificado) sin depender de **`HashFront`** en la query string: el hash de formulario asume URL “completa” coherente entre quien firma y quien valida; si el enlace se construye mal o pasa por `realFullUrl`/dominios distintos, puede fallar la verificación y disparar redirección de sesión (p. ej. a inicio). La alternativa es un **token HMAC** con **caducidad** en el parámetro **`tk`**, generado en **frontend** pero verificado en el **controlador de descarga** (validación idempotente; no “consume” el token en servidor).
+
+**Helper:** `frontend\shared\helpers\SignedDownloadToken`
+
+- **Variable de entorno (producción):** `ORBIX_SIGNED_DOWNLOAD_TOKEN_SECRET` — cadena secreta larga y estable (mismo valor en todos los procesos PHP que emitan o verifiquen el token). Declararla en `.env` en la raíz del proyecto (plantilla **`.env.example`**; carga con **`src/shared/load_env.php`** desde `src/shared/global_header.inc` y `frontend/shared/global_header_front.inc`). Si falta, hay un **fallback de desarrollo** derivado de la ruta raíz del proyecto y del prefijo de firma (no sustituye un secreto explícito en entornos expuestos).
+- **Prefijo criptográfico** (entra en el HMAC, no es secreto): **`orbix.signed_dl.v1`**. Cualquier cambio de prefijo invalida los `tk` ya emitidos.
+- **TTL:** 600 s desde `e` en el payload JSON interno.
+- **Payload:** debe incluir siempre el alcance **`s`** y **`e`** (expiración); además identificadores por tipo (p. ej. `a` para id de acta, `id` para id de ítem de certificado). **`parse()`** rechaza tokens sin `s` o con firma/expiración incorrecta.
+- **URL pública:** construir con `AppUrlConfig::getPublicAppBaseUrl()` + ruta bajo `src/...` del endpoint de descarga (mismo criterio que al abrir el enlace en el navegador).
+
+**Controladores de descarga (`src/.../infrastructure/ui/http/controllers/`):** leen solo **`$_GET['tk']`**, llaman a **`SignedDownloadToken::parse($tk)`**, comprueban alcance y cargan el recurso (404 si no existe entidad o blob vacío). **No** está soportado **`key` + `h`** (HashFront) en estos endpoints; no aceptar identificadores “en claro” sin `tk` válido.
+
+**UI (listas con checkbox `sel`):** en el controlador **frontend** que monta la tabla, generar un mapa **valor de `sel` → URL firmada** con los métodos estáticos del helper (`urlNotasActa`, `urlCertificadoEmitido`, `urlCertificadoRecibido`), serializarlo a JSON (`json_encode(..., JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP)`) y pasarlo a la vista; en JS, **`window.open(mapa[key])`** (patrón alineado con `frontend/notas/view/acta_select.phtml`, `frontend/certificados/view/certificado_emitido_lista.phtml`, bloque dossier renderizado por `frontend/certificados/helpers/SelectCertificadosDeUnaPersonaRender.php`).
+
+**Alcances definidos (`s`):** `notas.acta`, `cert.emitido`, `cert.recibido`. Para otros recursos GET (p. ej. planos subidos desde **`frontend/ubis/controller/plano_bytea.php`**) el flujo puede seguir siendo **`HashFront` + `plano_bytea.php`** hasta que exista alcance dedicado en `SignedDownloadToken` y endpoint en `src/`.
+
+---
 
 ### Patrón de llamada backend desde frontend
 Referencia: `frontend/usuarios/controller/usuario_lista.php`.

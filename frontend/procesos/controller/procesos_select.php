@@ -77,5 +77,5 @@ $a_campos = [
     'txt_clonar' => $txt_clonar,
 ];
 
-$oView = new ViewNewTwig('procesos/controller');
+$oView = new ViewNewTwig('frontend/procesos/controller');
 $oView->renderizar('procesos_select.html.twig', $a_campos);

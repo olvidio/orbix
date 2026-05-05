@@ -111,6 +111,9 @@
       <path value="$PROJECT_DIR$/libs/vendor/php-di/invoker" />
       <path value="$PROJECT_DIR$/libs/vendor/php-di/php-di" />
       <path value="$PROJECT_DIR$/libs/vendor/nikic/fast-route" />
+      <path value="$PROJECT_DIR$/libs/vendor/phpoption/phpoption" />
+      <path value="$PROJECT_DIR$/libs/vendor/graham-campbell/result-type" />
+      <path value="$PROJECT_DIR$/libs/vendor/vlucas/phpdotenv" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

@@ -26,7 +26,7 @@ if (isset($_REQUEST['logout']) && $_REQUEST['logout'] === 'si') {
     die();
 }
 
-// INICIO Cabecera global de URL de controlador *********************************
+// INICIO Cabecera global: Composer, variables .env ({@see src/shared/load_env.php}), …
 require_once("src/shared/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 

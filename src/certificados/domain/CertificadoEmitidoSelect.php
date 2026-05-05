@@ -97,7 +97,7 @@ class CertificadoEmitidoSelect
             if (!empty($idioma)) {
                 $LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
                 $oLocal = $LocalRepository->findById($idioma);
-                $idioma = $oLocal->getNom_idiomaAsString();
+                $idioma = $oLocal->getNomIdiomaAsString();
             }
 
             $oPersona = Persona::findPersonaEnGlobal($id_nom);

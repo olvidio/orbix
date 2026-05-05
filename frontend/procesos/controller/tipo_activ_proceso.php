@@ -27,5 +27,5 @@ $a_campos = [
     'url_asignar' => $url_asignar,
 ];
 
-$oView = new ViewNewTwig('procesos/controller');
+$oView = new ViewNewTwig('frontend/procesos/controller');
 $oView->renderizar('tipo_activ_proceso.html.twig', $a_campos);

@@ -1,16 +1,18 @@
 <script>
+    /* mapa: valor del checkbox `sel` (urlencode del acta) → URL absoluta firmada */
+    var actaSelectPdfUrls = <?= $pdf_signed_urls_json ?>;
+
     fnjs_descargar_pdf = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            /* selecciono los elementos con class="sel" de las tablas con id = formulario */
             $(formulario + ' input.sel').each(function () {
-                let url_download;
-                let key;
-                let url;
                 if ($(this).prop('checked') === true) {
-                    key = $(this).prop('value');
-                    url = '<?= $url_download ?>';
-                    url_download = url + '?key=' + key + '<?= $h_download ?>';
+                    var key = $(this).prop('value');
+                    var url_download = actaSelectPdfUrls[key];
+                    if (!url_download) {
+                        alert(<?= json_encode(_("No hay URL de descarga para el acta seleccionado.")) ?>);
+                        return;
+                    }
                     window.open(url_download);
                 }
             });

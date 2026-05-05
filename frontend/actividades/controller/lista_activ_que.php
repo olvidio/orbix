@@ -65,5 +65,5 @@ $a_campos = [
     'url_lista' => $url_lista,
 ];
 
-$oView = new ViewNewTwig('actividades/controller');
+$oView = new ViewNewTwig('frontend/actividades/controller');
 $oView->renderizar('lista_activ_que.html.twig', $a_campos);

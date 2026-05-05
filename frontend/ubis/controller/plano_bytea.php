@@ -7,6 +7,7 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
+use src\shared\infrastructure\ui\http\MultipartUploadGuard;
 
 // para que funcione bien la seguridad
 $_POST = $_REQUEST;
@@ -47,23 +48,37 @@ case "comprobar":
     echo "$rta";
     break;
 case "upload":
-    if ($_FILES["userfile"]["error"] > 0) {
-        echo "Error: " . $_FILES["userfile"]["error"] . "<br />";
-    } else {
-        $path_parts = pathinfo($_FILES["userfile"]["name"]);
-
-        $nom = $path_parts['filename'];
-        $extension = $path_parts['extension'];
-        $userfile = $_FILES["userfile"]["tmp_name"];
-
-        $fichero = file_get_contents($userfile);
-
-        $oDireccion = new $obj($Qid_direccion);
-        $oDireccion->planoUpload($nom, $extension, $fichero);
-        //echo "sql: $sql_update<br>";
-        //echo "<body onload='window.opener.fnjs_buscar(1); window.close();' ></body>";
-        echo "<body onload='window.close();' ></body>";
+    if (MultipartUploadGuard::isPostTooLarge()) {
+        echo htmlspecialchars(MultipartUploadGuard::textPostMaxExceededPhp(), ENT_QUOTES, 'UTF-8');
+        break;
     }
+    if (!isset($_FILES['userfile'])) {
+        echo htmlspecialchars(_("No se ha recibido ningún archivo."), ENT_QUOTES, 'UTF-8');
+        break;
+    }
+    $uploadErr = (int) $_FILES['userfile']['error'];
+    if ($uploadErr !== UPLOAD_ERR_OK) {
+        $nomFile = (string) ($_FILES['userfile']['name'] ?? '');
+        echo htmlspecialchars(
+            MultipartUploadGuard::messageForPhpUploadError($uploadErr, $nomFile),
+            ENT_QUOTES,
+            'UTF-8'
+        );
+        break;
+    }
+    $path_parts = pathinfo($_FILES['userfile']['name']);
+
+    $nom = $path_parts['filename'];
+    $extension = $path_parts['extension'] ?? '';
+    $userfile = $_FILES['userfile']['tmp_name'];
+
+    $fichero = file_get_contents($userfile);
+
+    $oDireccion = new $obj($Qid_direccion);
+    $oDireccion->planoUpload($nom, $extension, $fichero);
+    //echo "sql: $sql_update<br>";
+    //echo "<body onload='window.opener.fnjs_buscar(1); window.close();' ></body>";
+    echo "<body onload='window.close();' ></body>";
     break;
 case "download":
     $oDireccion = new $obj($Qid_direccion);

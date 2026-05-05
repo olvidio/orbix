@@ -204,27 +204,27 @@ class ActividadTipo
         ];
         $a_campos = ActividadTipoTwigHashCompose::withHashTokens($a_campos);
 
-        $aditionalPaths = ['actividades' => 'actividades/view'];
+        $aditionalPaths = ['actividades' => 'frontend/actividades/view'];
         switch ($this->para) {
             case 'tipoactiv-tarifas':
-                $oView = new ViewNewTwig('actividadtarifas/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('frontend/actividadtarifas/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que.html.twig', $a_campos);
                 break;
             case 'procesos':
-                $oView = new ViewNewTwig('procesos/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('frontend/procesos/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que_perm.html.twig', $a_campos);
                 break;
             case 'cambios':
-                $oView = new ViewNewTwig('cambios/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('frontend/cambios/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que_perm.html.twig', $a_campos);
                 break;
             case 'gestion':
-                $oView = new ViewNewTwig('actividades/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('frontend/actividades/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que_gestion.html.twig', $a_campos);
                 break;
             case 'actividades':
             default:
-                $oView = new ViewNewTwig('actividades/controller', $aditionalPaths);
+                $oView = new ViewNewTwig('frontend/actividades/controller', $aditionalPaths);
                 $oView->renderizar('actividad_tipo_que.html.twig', $a_campos);
         }
     }

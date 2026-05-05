@@ -35,5 +35,5 @@ $payload = TablaPeticionesRender::enrich($payload);
 
 $a_campos = array_merge($payload, ['oPosicion' => $oPosicion]);
 
-(new ViewNewTwig('frontend\\asistentes\\view'))
+(new ViewNewTwig('frontend/asistentes/view'))
     ->renderizar('tabla_peticiones.html.twig', $a_campos);

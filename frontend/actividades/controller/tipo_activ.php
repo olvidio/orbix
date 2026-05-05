@@ -45,5 +45,5 @@ $a_campos = [
     'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new ViewNewTwig('actividades/controller');
+$oView = new ViewNewTwig('frontend/actividades/controller');
 $oView->renderizar('tipo_activ.html.twig', $a_campos);

@@ -5,21 +5,17 @@
 
 use src\certificados\domain\CertificadoRecibidoUpload;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\infrastructure\ui\http\MultipartUploadGuard;
 
 use function frontend\shared\helpers\is_true;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=UTF-8');
 
-$input = 'certificado_pdf';
-if (empty($_FILES[$input])) {
-    echo json_encode([]);
-    exit;
-}
-
-$tmpFilePath = $_FILES[$input]['tmp_name'];
-$fileName = $_FILES[$input]['name'];
+$uploaded = MultipartUploadGuard::requireUploadedFileOrExit('certificado_pdf');
+$tmpFilePath = $uploaded['tmp_name'];
+$fileName = $uploaded['name'];
 
 $error_txt = '';
 
@@ -33,14 +29,14 @@ if ($tmpFilePath !== '') {
         if ($contenido_doc === false) {
             $error_txt = sprintf(_("No se puede leer el archivo %s"), $fileName);
         } else {
-            $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-            $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-            $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
-            $Qfirmado = (string)filter_input(INPUT_POST, 'firmado');
-            $Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
-            $Qidioma = (string)filter_input(INPUT_POST, 'idioma');
-            $Qdestino = (string)filter_input(INPUT_POST, 'destino');
-            $Qf_recibido = (string)filter_input(INPUT_POST, 'f_recibido');
+            $Qid_item = (integer) filter_input(INPUT_POST, 'id_item');
+            $Qid_nom = (integer) filter_input(INPUT_POST, 'id_nom');
+            $Qcertificado = (string) filter_input(INPUT_POST, 'certificado');
+            $Qfirmado = (string) filter_input(INPUT_POST, 'firmado');
+            $Qf_certificado = (string) filter_input(INPUT_POST, 'f_certificado');
+            $Qidioma = (string) filter_input(INPUT_POST, 'idioma');
+            $Qdestino = (string) filter_input(INPUT_POST, 'destino');
+            $Qf_recibido = (string) filter_input(INPUT_POST, 'f_recibido');
             /* convertir las fechas a DateTimeLocal */
             $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
             $oF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
@@ -78,5 +74,5 @@ if (!empty($error_txt)) {
     $jsondata['success'] = true;
 }
 
-echo json_encode($jsondata);
+echo json_encode($jsondata, JSON_THROW_ON_ERROR);
 exit;

@@ -37,6 +37,22 @@
                 {{ oPosicion.js_atras(0)|raw }}
             }
         });
+        request.fail(function (xhr) {
+            var msg = '';
+            try {
+                var j = xhr.responseJSON || JSON.parse(xhr.responseText || '{}');
+                if (j && j.mensaje) {
+                    msg = j.mensaje;
+                }
+            } catch (e) {
+            }
+            if (!msg) {
+                msg = xhr.status === 413
+                    ? "{{ "El servidor rechazó la subida: archivo o petición demasiado grandes."|trans|e('js') }}"
+                    : ("{{ "Error al subir el archivo."|trans|e('js') }}" + (xhr.status ? " (" + xhr.status + ")" : ""));
+            }
+            alert("{{ "respuesta"|trans|raw }}: " + msg);
+        });
     }
 
 </script>

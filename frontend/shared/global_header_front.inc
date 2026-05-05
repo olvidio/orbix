@@ -5,6 +5,7 @@ use frontend\shared\web\Posicion;
 use frontend\shared\security\HashFront;
 
 require __DIR__ . '/../../libs/vendor/autoload.php';
+require __DIR__ . '/../../src/shared/load_env.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     // Para detectar el error: "Headers already sent"

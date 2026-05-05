@@ -16,8 +16,21 @@ function bootstrapAnonymousSrcRequest(): void
     if (session_status() !== PHP_SESSION_ACTIVE) {
         if (!empty($_COOKIE['PHPSESSID'])) {
             session_id($_COOKIE['PHPSESSID']);
+            session_start();
+        } else {
+            // Al crear la sesión (p. ej. app_login), fijar path y SameSite para que
+            // el navegador/OkHttp reenvíe PHPSESSID en GET posteriores a /src/... (global_object).
+            $lifetime = 86400 * 30;
+            ini_set('session.gc_maxlifetime', (string)$lifetime);
+            session_set_cookie_params([
+                'lifetime' => $lifetime,
+                'path' => '/',
+                'secure' => false,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
+            session_start();
         }
-        session_start();
     }
 
     if (!isset($_SESSION['oGestorErrores'])) {

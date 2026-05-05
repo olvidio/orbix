@@ -25,13 +25,31 @@ class ContestarJson
      * Respuesta estándar `{success, mensaje?, data}`.
      * `data` estructurado (array) se expone como string JSON escapado en el
      * cuerpo (compatibilidad); `data` ya string (p. ej. `'ok'`) no se vuelve a codificar.
+     *
+     * @param int $httpStatusOnError Código HTTP si hay error (`$error_txt` no vacío). Por defecto 200 por compatibilidad.
      */
-    public static function enviar(string $error_txt = '', string|array $data = 'ok'): void
+    public static function enviar(string $error_txt = '', string|array $data = 'ok', int $httpStatusOnError = 200): void
     {
         $jsondata = self::respuestaPhp($error_txt, $data);
         if (!is_string($jsondata['data'])) {
             $jsondata['data'] = json_encode($jsondata['data']);
         }
+        $httpCode = $error_txt === '' ? 200 : $httpStatusOnError;
+        (new JsonResponse($jsondata, $httpCode))->send();
+    }
+
+    /**
+     * Igual que {@see enviar} pero `data` queda como objeto/array JSON anidado
+     * (una sola codificación por byte en el mensaje HTTP). Para clientes nativos
+     * (OkHttp+Moshi/Kotlin) que esperan `data.a_valores`, no una cadena que haya
+     * que volver a parsear.
+     *
+     * No usar con {@see \frontend\shared\PostRequest::getData}: después del
+     * `json_decode` del cuerpo hace otro sobre `data`, que debe ser string.
+     */
+    public static function enviarDataAnidado(string $error_txt = '', string|array $data = 'ok'): void
+    {
+        $jsondata = self::respuestaPhp($error_txt, $data);
         (new JsonResponse($jsondata))->send();
     }
 

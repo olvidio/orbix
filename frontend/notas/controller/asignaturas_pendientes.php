@@ -57,7 +57,7 @@ if (!empty($data['ambito_rstgr'])) {
         'oCuadros' => $oCuadros,
     ];
 
-    $oView = new ViewNewTwig('ubis/controller');
+    $oView = new ViewNewTwig('frontend/ubis/controller');
     $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
 }
 ?>

@@ -3,6 +3,10 @@ apps/web/Hash.php
 *.sh
 /data/inventario/*.ini
 
+# Entorno (.env sí contiene secretos; .env.example va en repo)
+.env
+.env.local
+
 # Compiled source #
 ###################
 *.com

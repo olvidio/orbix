@@ -1,40 +1,61 @@
 <?php
 
+use frontend\shared\helpers\SignedDownloadToken;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 
 require_once 'frontend/shared/global_header_front.inc';
 
-$_POST = $_GET;
+$tk = isset($_GET['tk']) ? trim((string) $_GET['tk']) : '';
 
-$Qid_item = (int)filter_input(INPUT_GET, 'key');
-
-if ($Qid_item > 0) {
-    $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
-    $oCertificadoRecibido = $certificadoRecibidoRepository->findById($Qid_item);
-    $nombre_fichero = $oCertificadoRecibido->getCertificado();
-    $nombre_fichero .= '.pdf';
-    $doc = $oCertificadoRecibido->getDocumento();
-
-    $ctype = 'application/octet-stream';
-
-    header('Content-Description: File Transfer');
-    header('Content-Transfer-Encoding: binary');
-    header('Cache-Control: public, must-revalidate, max-age=0');
-    header('Pragma: public');
-    header('Expires: 0');
-    header('Cache-Control: private', false);
-    header('Content-Type: application/force-download');
-    header('Content-Type: application/download', false);
-    header('Content-Type: ' . $ctype);
-    header('Content-disposition: attachment; filename="' . $nombre_fichero . '"');
-
-    ob_start();
-    ob_clean();
-    flush();
-    echo $doc;
-
-    exit();
+$Qid_item = 0;
+$parsed = SignedDownloadToken::parse($tk);
+if ($parsed !== null && $parsed['s'] === SignedDownloadToken::SCOPE_CERT_RECIBIDO) {
+    $Qid_item = (int) ($parsed['id'] ?? 0);
 }
 
-$outData = "{'error': true}";
-echo json_encode($outData);
+if ($Qid_item <= 0) {
+    header('Content-Type: text/plain; charset=UTF-8');
+    http_response_code(400);
+    echo _('Enlace de descarga no válido o caducado.');
+    exit;
+}
+
+$certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
+$oCertificadoRecibido = $certificadoRecibidoRepository->findById($Qid_item);
+
+if ($oCertificadoRecibido === null) {
+    header('Content-Type: text/plain; charset=UTF-8');
+    http_response_code(404);
+    echo _('No se encuentra el certificado.');
+    exit;
+}
+
+$doc = $oCertificadoRecibido->getDocumento();
+if ($doc === null || $doc === '') {
+    header('Content-Type: text/plain; charset=UTF-8');
+    http_response_code(404);
+    echo _('No hay PDF asociado a este certificado.');
+    exit;
+}
+
+$nombre_fichero = ($oCertificadoRecibido->getCertificado() ?? 'certificado') . '.pdf';
+
+$ctype = 'application/octet-stream';
+
+header('Content-Description: File Transfer');
+header('Content-Transfer-Encoding: binary');
+header('Cache-Control: public, must-revalidate, max-age=0');
+header('Pragma: public');
+header('Expires: 0');
+header('Cache-Control: private', false);
+header('Content-Type: application/force-download');
+header('Content-Type: application/download', false);
+header('Content-Type: ' . $ctype);
+header('Content-disposition: attachment; filename="' . $nombre_fichero . '"');
+
+ob_start();
+ob_clean();
+flush();
+echo $doc;
+
+exit();

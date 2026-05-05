@@ -147,5 +147,5 @@ $a_campos = [
     'locale_us' => OrbixRuntime::isLocaleUs(),
 ];
 
-$oView = new ViewNewTwig('actividades/controller');
+$oView = new ViewNewTwig('frontend/actividades/controller');
 $oView->renderizar('calendario_form_actividad.html.twig', $a_campos);

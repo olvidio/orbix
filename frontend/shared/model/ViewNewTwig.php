@@ -64,15 +64,7 @@ class ViewNewTwig extends Environment
         $new_dir = preg_replace($patterns, $replacements, $dirname);
         $new_dir = str_replace('\\', DIRECTORY_SEPARATOR, $new_dir);
 
-        // Namespaces que siguen en el arbol legacy /apps se resuelven desde la
-        // raiz del proyecto (permite compartir plantillas con ViewTwig durante
-        // la migracion).
-        if (str_starts_with($new_dir, 'apps' . DIRECTORY_SEPARATOR)) {
-            return OrbixRuntime::dir() . DIRECTORY_SEPARATOR . $new_dir;
-        }
-
-        $base_dir = OrbixRuntime::dir() . DIRECTORY_SEPARATOR . 'frontend';
-        return $base_dir . DIRECTORY_SEPARATOR . $new_dir;
+        return OrbixRuntime::dir() . DIRECTORY_SEPARATOR . $new_dir;
     }
 
     private function getJsPath(): string

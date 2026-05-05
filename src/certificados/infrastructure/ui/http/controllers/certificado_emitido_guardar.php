@@ -7,6 +7,7 @@ use src\certificados\domain\entity\CertificadoEmitido;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
 use frontend\shared\web\ContestarJson;
+use src\shared\domain\value_objects\LocaleCode;
 use function src\shared\domain\helpers\is_true;
 
 $Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');
@@ -49,7 +50,7 @@ if (empty($Qnom)) {
 }
 
 $oCertificadoEmitido->setNom($Qnom);
-$oCertificadoEmitido->setIdioma($Qidioma);
+$oCertificadoEmitido->setIdiomaVo(LocaleCode::fromNullableString($Qidioma));
 $oCertificadoEmitido->setDestino($Qdestino);
 $oCertificadoEmitido->setCertificado($Qcertificado);
 if (is_true($Qfirmado)) {

@@ -206,6 +206,22 @@
                     <?= $oPosicion->js_atras(1); ?>
                 }
             });
+            request.fail(function (xhr) {
+                var msg = '';
+                try {
+                    var j = xhr.responseJSON || JSON.parse(xhr.responseText || '{}');
+                    if (j && j.mensaje) {
+                        msg = j.mensaje;
+                    }
+                } catch (e) {
+                }
+                if (!msg) {
+                    msg = xhr.status === 413
+                        ? <?= json_encode(_("El servidor rechazó la subida: archivo o petición demasiado grandes.")) ?>
+                        : (<?= json_encode(_("Error al subir el archivo.")) ?> + (xhr.status ? ' (' + xhr.status + ')' : ''));
+                }
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + msg);
+            });
         }
 
         fnjs_eliminar_pdf = function () {

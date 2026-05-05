@@ -107,5 +107,5 @@ $a_campos = [
     'titulo' => $titulo,
 ];
 
-$oView = new ViewNewTwig('procesos/controller');
+$oView = new ViewNewTwig('frontend/procesos/controller');
 $oView->renderizar('usuario_perm_activ.html.twig', $a_campos);

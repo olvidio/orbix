@@ -155,10 +155,6 @@ class Select_certificados_de_una_persona
             ],
             'paths' => [
                 'certificado_recibido_delete' => 'src/certificados/certificado_recibido_delete',
-                'certificado_recibido_pdf_download' => 'src/certificados/certificado_recibido_pdf_download',
-            ],
-            'hash_pdf' => [
-                'campos_form' => 'key',
             ],
             'url_nuevo_spec' => [
                 'path' => 'frontend/certificados/controller/certificado_recibido_adjuntar.php',

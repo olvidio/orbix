@@ -10,8 +10,8 @@
  *
  */
 
-use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
+use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
@@ -106,16 +106,24 @@ $oHash1 = new HashFront();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
-$oHashDown = new HashFront();
-$oHashDown->setUrl(AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_emitido_pdf_download');
-$oHashDown->setCamposForm('key');
-$h_download = $oHashDown->linkConVal();
+$pdf_signed_urls = [];
+foreach ($a_valores as $idx => $row) {
+    if (!is_int($idx) || !is_array($row) || !isset($row['sel'])) {
+        continue;
+    }
+    $id = (int)$row['sel'];
+    if ($id <= 0) {
+        continue;
+    }
+    $pdf_signed_urls[(string)$id] = SignedDownloadToken::urlCertificadoEmitido($id);
+}
 
 $txt_eliminar = _("¿Está seguro que quiere eliminar el certificado?");
 
+$a_campos = [];
 $a_campos['oHash'] = $oHash;
 $a_campos['oHash1'] = $oHash1;
-$a_campos['h_download'] = $h_download;
+$a_campos['pdf_signed_urls_json'] = json_encode($pdf_signed_urls, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);
 $a_campos['oTabla'] = $oTabla;
 $a_campos['oPosicion'] = $oPosicion;
 $a_campos['titulo'] = $titulo;

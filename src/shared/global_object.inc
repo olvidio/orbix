@@ -41,10 +41,11 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
         //$domain = ConfigGlobal::getDomain();
         // Now start the session
         session_set_cookie_params([
-            'lifetime' => $maxlifetime,
-            'Secure' => false,
-            'HttpOnly' => true,
-            'SameSite' => 'Strict',
+            'lifetime' => $timeout,
+            'path' => '/',
+            'secure' => false,
+            'httponly' => true,
+            'samesite' => 'Lax',
             //'Domain' => $domain
         ]);
         session_start();

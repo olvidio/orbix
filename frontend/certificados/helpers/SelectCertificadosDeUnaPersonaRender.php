@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace frontend\certificados\helpers;
 
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\helpers\SignedDownloadToken;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\Lista;
@@ -23,17 +24,23 @@ final class SelectCertificadosDeUnaPersonaRender
     {
         $paths = isset($seg['paths']) && is_array($seg['paths']) ? $seg['paths'] : [];
         $publicBase = rtrim(AppUrlConfig::getPublicAppBaseUrl(), '/');
-        $apiBase = rtrim(AppUrlConfig::getApiBaseUrl(), '/');
         $delRel = (string)($paths['certificado_recibido_delete'] ?? '');
-        $pdfRel = (string)($paths['certificado_recibido_pdf_download'] ?? '');
         $urlCertificadoRecibidoDelete = $delRel !== '' ? $publicBase . '/' . ltrim($delRel, '/') : '';
-        $urlCertificadoRecibidoPdfDownload = $pdfRel !== '' ? $apiBase . '/' . ltrim($pdfRel, '/') : '';
 
-        $hashPdf = isset($seg['hash_pdf']) && is_array($seg['hash_pdf']) ? $seg['hash_pdf'] : [];
-        $oHashDown = new HashFront();
-        $oHashDown->setUrl($urlCertificadoRecibidoPdfDownload);
-        $oHashDown->setCamposForm((string)($hashPdf['campos_form'] ?? 'key'));
-        $h_download = $oHashDown->linkSinVal();
+        $tablaSeg = isset($seg['tabla']) && is_array($seg['tabla']) ? $seg['tabla'] : [];
+        $valoresRaw = isset($tablaSeg['valores']) && is_array($tablaSeg['valores']) ? $tablaSeg['valores'] : [];
+
+        $pdfSignedUrls = [];
+        foreach ($valoresRaw as $idx => $row) {
+            if (!is_int($idx) || !is_array($row) || !isset($row['sel'])) {
+                continue;
+            }
+            $idItem = (int)$row['sel'];
+            if ($idItem <= 0) {
+                continue;
+            }
+            $pdfSignedUrls[(string)$idItem] = SignedDownloadToken::urlCertificadoRecibido($idItem);
+        }
 
         $urlNuevoSpec = isset($seg['url_nuevo_spec']) && is_array($seg['url_nuevo_spec']) ? $seg['url_nuevo_spec'] : [];
         $signed = SelectCertificadosDeUnaPersonaUrlSigning::sign([
@@ -63,9 +70,8 @@ final class SelectCertificadosDeUnaPersonaRender
             'oTabla' => $oTabla,
             'url_nuevo' => (string)($signed['url_nuevo'] ?? ''),
             'oHashSelect' => $oHashSelect,
-            'h_download' => $h_download,
+            'pdf_signed_urls_json' => json_encode($pdfSignedUrls, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP),
             'url_certificado_recibido_delete' => $urlCertificadoRecibidoDelete,
-            'url_certificado_recibido_pdf_download' => $urlCertificadoRecibidoPdfDownload,
         ], false);
     }
 }

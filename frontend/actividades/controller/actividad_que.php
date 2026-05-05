@@ -269,5 +269,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_filtros' => $h_filtros,
 ];
 
-$oView = new ViewNewTwig('actividades/controller');
+$oView = new ViewNewTwig('frontend/actividades/controller');
 $oView->renderizar('actividad_que.html.twig', $a_campos);

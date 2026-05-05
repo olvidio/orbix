@@ -75,7 +75,7 @@ if (!$es_nuevo) {
         'locale_us' => OrbixRuntime::isLocaleUs(),
     ];
 
-    $oView = new ViewNewTwig('actividadtarifas/controller');
+    $oView = new ViewNewTwig('frontend/actividadtarifas/controller');
     $oView->renderizar('tarifa_tipo_actividad_form.html.twig', $a_campos);
 } else {
     $ssfsv = '';
@@ -107,6 +107,6 @@ if (!$es_nuevo) {
         'actividad_tipo_html' => $actividad_tipo_html,
     ];
 
-    $oView = new ViewNewTwig('actividadtarifas/controller');
+    $oView = new ViewNewTwig('frontend/actividadtarifas/controller');
     $oView->renderizar('tarifa_tipo_actividad_form_nuevo.html.twig', $a_campos);
 }

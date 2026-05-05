@@ -44,5 +44,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'a_alumnos_fin_c' => $d['a_alumnos_fin_c'] ?? [],
 ];
 
-$oView = new ViewNewTwig('actividadestudios/controller');
+$oView = new ViewNewTwig('frontend/actividadestudios/controller');
 $oView->renderizar('posibles_asignaturas_ca.html.twig', $a_campos);

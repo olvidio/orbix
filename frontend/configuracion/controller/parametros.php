@@ -174,5 +174,5 @@ $oHashC1->setArrayCamposHidden(['parametro' => $parametro]);
 $a_campos['oHashC1'] = $oHashC1;
 
 
-$oView = new ViewNewTwig('configuracion\\controller');
+$oView = new ViewNewTwig('frontend/configuracion/controller');
 $oView->renderizar('parametros.html.twig', $a_campos);

@@ -107,5 +107,5 @@ $a_campos = [
     'aMensajes_requisitos' => $aMensajes_requisitos,
 ];
 
-$oView = new ViewNewTwig('procesos/controller');
+$oView = new ViewNewTwig('frontend/procesos/controller');
 $oView->renderizar('procesos_ver.html.twig', $a_campos);

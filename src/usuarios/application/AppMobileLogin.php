@@ -259,7 +259,7 @@ final class AppMobileLogin
             'path' => '/',
             'secure' => false,
             'httponly' => true,
-            'samesite' => 'Strict',
+            'samesite' => 'Lax',
         ];
         setcookie('esquema', $esquema, $arr_cookie_options);
         setcookie('idioma', $idioma, $arr_cookie_options);

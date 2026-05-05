@@ -1,9 +1,10 @@
 <?php
 
-use frontend\shared\config\AppUrlConfig;
-
 ?>
 <script>
+    /* checkbox `sel` (id ítem) → URL absoluta firmada */
+    var certEmitidoPdfUrls = <?= $pdf_signed_urls_json ?>;
+
     fnjs_enviar_certificado = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
@@ -34,15 +35,14 @@ use frontend\shared\config\AppUrlConfig;
     fnjs_descargar_pdf = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            /* selecciono los elementos con class="sel" de las tablas con id = formulario */
             $(formulario + ' input.sel').each(function () {
-                let url_download;
-                let key;
-                let url;
                 if ($(this).prop('checked') === true) {
-                    key = $(this).prop('value');
-                    url = <?= json_encode(AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_emitido_pdf_download', JSON_THROW_ON_ERROR) ?>;
-                    url_download = url + '?key=' + key + '&<?= $h_download ?>';
+                    let key = $(this).prop('value');
+                    let url_download = certEmitidoPdfUrls[key];
+                    if (!url_download) {
+                        alert(<?= json_encode(_("No hay URL de descarga para el certificado seleccionado.")) ?>);
+                        return;
+                    }
                     window.open(url_download);
                 }
             });
