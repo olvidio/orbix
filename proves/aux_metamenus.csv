@@ -120,6 +120,6 @@ id_metamenu;id_mod;url;descripcion
 33;28;frontend/inventario/controller/equipajes_ver.php;Ver equipajes
 109;28;frontend/inventario/controller/inventario_que.php;inventario buscar
 199;28;frontend/inventario/controller/traslado_doc_que.php;Traslado Documentos
-129;29;apps/pasarela/controller/exportar_que.php;exportar actividades
-153;29;apps/pasarela/controller/parametros_menu.php;pasarela parametros
+129;29;frontend/pasarela/controller/exportar_que.php;exportar actividades
+153;29;frontend/pasarela/controller/parametros_menu.php;pasarela parametros
 201;31;frontend/misas/controller/misas_index.php;llista de modul misas

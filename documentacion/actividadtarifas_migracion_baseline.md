@@ -81,7 +81,7 @@ Dispatcher `tarifa_tipo_actividad_ajax.php`:
   `url_tarifas = 'apps/actividadtarifas/controller/tarifa_ajax.php'` a
   `view/ubi_resumen.html.twig`; el form hace `POST` a esa URL con
   `que=update_inc`. Hay que apuntar a nuevo endpoint JSON.
-- `apps/pasarela/controller/nombre_form.php` (sin callers vivos salvo
+- `frontend/pasarela/controller/nombre_form.php` (sin callers vivos salvo
   ficheros `.po`) reutiliza los mismos hashes; se le redirigen las URLs
   aunque esta muerto.
 - `src/actividades/application/ActividadTipo.php:221` renderiza
@@ -182,7 +182,7 @@ procesa `success` / `mensaje` del estandar `ContestarJson`.
   `apps/casas/view/ubi_resumen.html.twig`: apuntar `url_tarifas` al
   nuevo endpoint `/src/actividadtarifas/tarifa_ubi_update_inc` y
   ajustar AJAX a `dataType: 'json'` / `ContestarJson`.
-- `apps/pasarela/controller/nombre_form.php`: refrescar URLs de los
+- `frontend/pasarela/controller/nombre_form.php`: refrescar URLs de los
   hashes al nuevo endpoint, aunque no se use.
 - `log/menus/comun.sql`, `proves/aux_metamenus.csv`,
   `documentacion/Documentacion_Obix/menus.csv`: sustituir

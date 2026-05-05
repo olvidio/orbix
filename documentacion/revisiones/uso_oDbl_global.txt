@@ -16,8 +16,8 @@ apps/devel/model/DBAlterSchema.php
 apps/notas/model/AsignaturasPendientes.php
 apps/notas/model/EditarPersonaNota.php
 apps/notas/model/Resumen.php
-apps/pasarela/model/entity/GestorPasarelaConfig.php
-apps/pasarela/model/entity/PasarelaConfig.php
+src/pasarela/domain/entity/GestorPasarelaConfig.php
+src/pasarela/domain/entity/PasarelaConfig.php
 apps/personas/controller/personas_editar.php
 frontend/ubis/controller/direcciones_editar.php
 frontend/ubis/controller/ubis_editar.php

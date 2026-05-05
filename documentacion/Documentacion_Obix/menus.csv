@@ -215,8 +215,8 @@ id_grupmenu,?column?,url,parametros,id_mod
 8,tarifa <-> tipo actividad (Tipo tarifa),frontend/actividadtarifas/controller/tarifa_tipo_actividad.php,,5
 8,tarifas por casa y año (actividad Tarifa Ubi),frontend/actividadtarifas/controller/tarifa_ubi.php,,5
 8,Pasarela (Raiz pasarela),,,29
-8,parámetros (pasarela parametros),apps/pasarela/controller/parametros_menu.php,,29
-8,exportar actividades (exportar actividades),apps/pasarela/controller/exportar_que.php,,29
+8,parámetros (pasarela parametros),frontend/pasarela/controller/parametros_menu.php,,29
+8,exportar actividades (exportar actividades),frontend/pasarela/controller/exportar_que.php,,29
 8,Misas (Raiz Misas),,,31
 8,aaaaaaaaaaaaa (llista de modul misas),frontend/misas/controller/misas_index.php,,31
 8,resto (listas de matriculas),frontend/actividadestudios/controller/matriculas_lista.php,,7

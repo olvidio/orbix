@@ -100,7 +100,7 @@ Reglas:
 - Usar `shell_scripts/check_test_granular.sh` para listar **ficheros** fuente (`domain/entity/*.php`, `domain/value_objects/*.php`, `infrastructure/persistence/postgresql/Pg*Repository.php`) sin el `*Test.php` esperado; complementa el anterior. Opcionalmente `STRICT=1 bash shell_scripts/check_test_granular.sh` para salida con código 1 si hay faltantes (útil en CI).
 - Equivalente Composer: `composer test:report` (ambos informes seguidos), `composer test:report:buckets`, `composer test:report:granular`.
 - Cobertura de **líneas** sobre `src/`: definida en [`phpunit.xml`](phpunit.xml) (`source`/`coverage`); ejecutar por ejemplo `composer test:coverage` o `composer test:coverage:unit` (los scripts configuran `XDEBUG_MODE=coverage` cuando se usa **Xdebug**; con solo **PCOV** no suele hacer falta ese entorno).
-- Módulos excluidos del chequeo automático: `layouts` (código de presentación legacy), `pasarela` (vacío).
+- Módulos excluidos del chequeo automático: `layouts` (código de presentación legacy).
 
 ### Tests unitarios (`tests/unit/<modulo>/`)
 - Cubren `domain/entity/` y `domain/value_objects/`.
