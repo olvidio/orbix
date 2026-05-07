@@ -397,10 +397,11 @@ class PersonaBDU
      *
      * @param array $aDatos
      */
-    function setAllAttributes(array $aDatos)
+    public function setAllAttributes(array $aDatos): static
     {
-        if (!is_array($aDatos))
-            return;
+        if (!is_array($aDatos)) {
+            return $this;
+        }
         if (array_key_exists('identif', $aDatos))
             $this->setIdentif($aDatos['identif']);
         if (array_key_exists('apenom', $aDatos))
@@ -435,6 +436,8 @@ class PersonaBDU
             $this->setFecha_c_fic($aDatos['fecha_c_fic']);
         if (array_key_exists('compartida_con_r', $aDatos))
             $this->setCompartida_con_r($aDatos['compartida_con_r'] ?? '');
+
+        return $this;
     }
 
     /**
@@ -493,6 +496,14 @@ class PersonaBDU
     function getApenom()
     {
         return $this->sApenom;
+    }
+
+    /**
+     * Alias para código que usa el nombre getApeNom (p. ej. sincronización Listas).
+     */
+    public function getApeNom(): string
+    {
+        return (string) ($this->sApenom ?? '');
     }
 
     /**
