@@ -69,10 +69,10 @@ if ($max === 0) {
             <?php
             echo "<tr>";
             echo "<td>" . $persona_orbix['id_nom_orbix'] . '</td>';
-            echo "<td class='titulo'>" . htmlspecialchars($persona_orbix['ape_nom']) . '</td>';
-            echo "<td>" . htmlspecialchars($persona_orbix['nombre']) . '</td>';
-            echo "<td>" . htmlspecialchars($persona_orbix['apellido1']) . '</td>';
-            echo "<td>" . htmlspecialchars($persona_orbix['apellido2']) . '</td>';
+            echo "<td class='titulo'>" . htmlspecialchars($persona_orbix['ape_nom'] ?? '') . '</td>';
+            echo "<td>" . htmlspecialchars($persona_orbix['nombre'] ?? '') . '</td>';
+            echo "<td>" . htmlspecialchars($persona_orbix['apellido1'] ?? '') . '</td>';
+            echo "<td>" . htmlspecialchars($persona_orbix['apellido2'] ?? '') . '</td>';
             echo "<td class='titulo'>" . htmlspecialchars($persona_orbix['f_nacimiento'] ?? '') . '</td>';
             echo '</tr>';
             ?>
@@ -106,11 +106,11 @@ if ($max === 0) {
                 echo "<td>" . htmlspecialchars($persona_bdu['pertenece_r'] ?? '') . '</td>';
                 echo "<td>" . htmlspecialchars($persona_bdu['compartida_con_r'] ?? '') . '</td>';
                 echo "<td>" . htmlspecialchars($persona_bdu['dl_persona'] ?? '') . '</td>';
-                echo "<td class='contenido'>" . htmlspecialchars($persona_bdu['ape_nom']) . '</td>';
-                echo "<td>" . htmlspecialchars($persona_bdu['nombre']) . '</td>';
-                echo "<td>" . htmlspecialchars($persona_bdu['apellido1']) . '</td>';
-                echo "<td>" . htmlspecialchars($persona_bdu['apellido2']) . '</td>';
-                echo "<td class='contenido'>" . htmlspecialchars($persona_bdu['f_nacimiento']) . '</td>';
+                echo "<td class='contenido'>" . htmlspecialchars($persona_bdu['ape_nom'] ?? '') . '</td>';
+                echo "<td>" . htmlspecialchars($persona_bdu['nombre'] ?? '') . '</td>';
+                echo "<td>" . htmlspecialchars($persona_bdu['apellido1'] ?? '') . '</td>';
+                echo "<td>" . htmlspecialchars($persona_bdu['apellido2'] ?? '') . '</td>';
+                echo "<td class='contenido'>" . htmlspecialchars($persona_bdu['f_nacimiento'] ?? '') . '</td>';
                 echo "<td class='titulo'><span class=link onClick='fnjs_unir_bdu($id_bdu)'>" . _("unir") . '</span></td>';
                 echo '</tr>';
             }
