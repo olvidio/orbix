@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\security\HashFrontSignedLink;
@@ -67,5 +68,5 @@ $a_campos = [
     'h2' => $h2,
 ];
 
-$oView = new \frontend\shared\model\ViewNewPhtml();
+$oView = new ViewNewPhtml('frontend/dbextern/controller');
 $oView->renderizar(__FILE__, $a_campos);

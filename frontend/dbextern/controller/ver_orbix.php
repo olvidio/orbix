@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use src\shared\config\ConfigGlobal;
@@ -110,5 +111,5 @@ $a_campos = [
     'h1' => $h1,
 ];
 
-$oView = new \frontend\shared\model\ViewNewPhtml();
+$oView = new ViewNewPhtml('frontend/dbextern/controller');
 $oView->renderizar(__FILE__, $a_campos);
