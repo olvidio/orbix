@@ -31,6 +31,7 @@ class OdbcDlListasRepository extends ClaseRepository
         }
         $oDbl = $GLOBALS['oDBListas'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('dbo.q_Aux_Dl');
     }
 
