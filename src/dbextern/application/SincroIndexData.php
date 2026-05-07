@@ -6,6 +6,7 @@ use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\CopiarBDU;
 use src\dbextern\domain\SincroDB;
+use src\personas\application\support\PersonaRepositoryResolver;
 use src\shared\config\ConfigGlobal;
 
 class SincroIndexData
@@ -43,9 +44,13 @@ class SincroIndexData
             return ['error' => _("no tiene permisos")];
         }
 
-        $obj_pau = $this->resolverGestor($tipo_persona);
-        $obj = 'personas\\model\\entity\\' . $obj_pau;
-        $GesPersonas = new $obj();
+        $obj_pau = $this->resolverObjPau($tipo_persona);
+        $resolver = new PersonaRepositoryResolver();
+        try {
+            $repoPersona = $resolver->repositorio($obj_pau);
+        } catch (\InvalidArgumentException) {
+            return ['error' => _("No existe la clase de la persona")];
+        }
 
         // Personas BDU
         $tabla = 'tmp_bdu';
@@ -81,7 +86,7 @@ class SincroIndexData
             $cIdMatch = $this->idMatchRepository->getIdMatchPersonas(['id_listas' => $id_nom_listas]);
             if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
                 $id_orbix = $cIdMatch[0]->getId_orbix();
-                $cPersonas = $GesPersonas->getPersonas(['id_nom' => $id_orbix]);
+                $cPersonas = $repoPersona->getPersonas(['id_nom' => $id_orbix]);
                 if (!empty($cPersonas) && count($cPersonas) > 0) {
                     $situacion = $cPersonas[0]->getSituacion();
                     if ($situacion === 'A') {
@@ -109,7 +114,7 @@ class SincroIndexData
         }
 
         // Personas Orbix
-        $cPersonasOrbix = $GesPersonas->getPersonas(['situacion' => 'A']);
+        $cPersonasOrbix = $repoPersona->getPersonas(['situacion' => 'A']);
         $p7_orbix_unidas_otra_dl = 0;
         $p8_orbix_unidas_desaparecidas = 0;
         $p910_orbix_no_unidas = 0;
@@ -198,13 +203,13 @@ class SincroIndexData
         };
     }
 
-    private function resolverGestor(string $tipo_persona): string
+    private function resolverObjPau(string $tipo_persona): string
     {
         return match ($tipo_persona) {
-            'n' => 'GestorPersonaN',
-            'a' => 'GestorPersonaAgd',
-            's' => 'GestorPersonaS',
-            'sssc' => 'GestorPersonaSSSC',
+            'n' => 'PersonaN',
+            'a' => 'PersonaAgd',
+            's' => 'PersonaS',
+            'sssc' => 'PersonaSSSC',
             default => '',
         };
     }
