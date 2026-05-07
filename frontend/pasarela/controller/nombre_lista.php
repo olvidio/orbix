@@ -24,6 +24,13 @@ $oHashLista->setUrl($url_ajax);
 $oHashLista->setCamposForm('que');
 $h_lista = $oHashLista->linkSinValParams();
 
+// Alta (form_nuevo): POST mínimo a /src/... + linkSinValParams (sin hash del formulario con ActividadTipo).
+$url_src_nombre_guardar = $web . '/src/pasarela/nombre_excepcion_guardar';
+$oHashSrcNombreGuardar = new HashFront();
+$oHashSrcNombreGuardar->setUrl($url_src_nombre_guardar);
+$oHashSrcNombreGuardar->setCamposForm('id_tipo_activ!valor');
+$h_src_nombre_guardar = $oHashSrcNombreGuardar->linkSinValParams();
+
 $txt_eliminar = _('¿Está seguro que quiere eliminar esta fila?');
 
 $a_campos = [
@@ -32,6 +39,8 @@ $a_campos = [
     'h_nuevo' => $h_nuevo,
     'h_lista' => $h_lista,
     'url_ajax' => $url_ajax,
+    'url_src_nombre_guardar' => $url_src_nombre_guardar,
+    'h_src_nombre_guardar' => $h_src_nombre_guardar,
     'txt_eliminar' => $txt_eliminar,
 ];
 

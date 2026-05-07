@@ -29,6 +29,12 @@ $oHashLista->setUrl($url_ajax);
 $oHashLista->setCamposForm('que');
 $h_lista = $oHashLista->linkSinValParams();
 
+$url_src_contrib_guardar = $web . '/src/pasarela/contribucion_reserva_excepcion_guardar';
+$oHashSrcGuardar = new HashFront();
+$oHashSrcGuardar->setUrl($url_src_contrib_guardar);
+$oHashSrcGuardar->setCamposForm('id_tipo_activ!valor');
+$h_src_contrib_guardar = $oHashSrcGuardar->linkSinValParams();
+
 $txt_eliminar = _('¿Está seguro que quiere eliminar esta fila?');
 
 $a_campos = [
@@ -38,6 +44,8 @@ $a_campos = [
     'h_nuevo' => $h_nuevo,
     'h_lista' => $h_lista,
     'url_ajax' => $url_ajax,
+    'url_src_contrib_guardar' => $url_src_contrib_guardar,
+    'h_src_contrib_guardar' => $h_src_contrib_guardar,
     'txt_eliminar' => $txt_eliminar,
 ];
 

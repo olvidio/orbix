@@ -89,7 +89,8 @@ switch ($Qque) {
 
         $oHash = new HashFront();
         $oHash->setUrl($url_ajax);
-        $oHash->setCamposForm('id_tipo_activ!activacion');
+        // Mismo conjunto que el POST del bloque ActividadTipo (_actividad_tipo_body: extendida + selects) + activacion.
+        $oHash->setCamposForm('extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!activacion');
         $oHash->setCamposNo('id_tipo_activ!que');
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => $Qid_tipo_activ,
@@ -122,7 +123,7 @@ switch ($Qque) {
 
         $oHash = new HashFront();
         $oHash->setUrl($url_ajax);
-        $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!activacion');
+        $oHash->setCamposForm('extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!activacion');
         $oHash->setCamposNo('id_tipo_activ!que');
         $oHash->setArrayCamposHidden([
             'id_tipo_activ' => '',
@@ -153,7 +154,7 @@ function render_activacion_lista_html(array $data): string
 
     $html = '<table>';
     $html .= '<tr><td>' . _('por defecto') . '</td><td>';
-    $html .= '<span class="link" onclick="fnjs_modificar_default()">' . $default . '</span></td></tr>';
+    $html .= '<span class="link" onclick="fnjs_modificar_activacion_default()">' . $default . '</span></td></tr>';
     $html .= '</table><table>';
     foreach ($excepciones as $row) {
         $id_tipo_activ = (int)($row['id_tipo_activ'] ?? 0);
@@ -162,7 +163,7 @@ function render_activacion_lista_html(array $data): string
         $valor_js = htmlspecialchars(addslashes($valor), ENT_QUOTES, 'UTF-8');
         $valor_html = htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
         $html .= "<tr><td>$etiqueta</td><td>";
-        $html .= "<span class=\"link\" onclick=\"fnjs_modificar($id_tipo_activ,'$valor_js')\">$valor_html</span></td></tr>";
+        $html .= "<span class=\"link\" onclick=\"fnjs_modificar_activacion($id_tipo_activ,'$valor_js')\">$valor_html</span></td></tr>";
     }
     $html .= '</table>';
     return $html;

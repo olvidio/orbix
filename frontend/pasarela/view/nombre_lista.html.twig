@@ -52,8 +52,9 @@
 
     fnjs_guardar_nuevo = function (formulario) {
         let err = 0;
-        let id_nom_tipo_activ = $('#id_tipo_activ').val();
-        let nombre_actividad = $('#nombre_actividad').val();
+        let $f = $(formulario);
+        let id_nom_tipo_activ = $f.find('[name="id_tipo_activ"]').val();
+        let nombre_actividad = $f.find('[name="nombre_actividad"]').val();
         if (!id_nom_tipo_activ) {
             alert("{{ "Tipo no válido"|trans|raw }}");
             err = 1;
@@ -63,25 +64,28 @@
             err = 1;
         }
         if (!err) {
-            $('#que').val('nuevo');
-            $(formulario).attr('action', '{{ url_ajax }}');
-            $(formulario).one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
+            let data = 'id_tipo_activ=' + encodeURIComponent(id_nom_tipo_activ)
+                + '&valor=' + encodeURIComponent(nombre_actividad)
+                + '{{ h_src_nombre_guardar|raw }}';
+            $.ajax({
+                url: '{{ url_src_nombre_guardar|raw }}',
+                type: 'post',
+                data: data,
+                dataType: 'json'
+            })
+                .done(function (json) {
+                    if (json && json.success !== true) {
+                        alert("{{ "respuesta"|trans|raw }}: " + (json.mensaje || ''));
+                    }
+                    fnjs_lista();
+                    fnjs_cerrar();
                 })
-                    .done(function (rta_txt) {
-                        if (rta_txt !== '' && rta_txt !== '\n') {
-                            alert(rta_txt);
-                        }
-                        fnjs_lista();
-                        fnjs_cerrar();
-                    });
-                return false;
-            });
-            $(formulario).trigger("submit");
-            $(formulario).off();
+                .fail(function (jqXHR) {
+                    let txt = jqXHR.responseText || jqXHR.statusText || '';
+                    alert("{{ "respuesta"|trans|raw }}: " + txt);
+                    fnjs_lista();
+                    fnjs_cerrar();
+                });
         }
     }
 

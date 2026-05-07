@@ -75,9 +75,8 @@ class ContribucionNoDuerme
 
     private function guardar(): void
     {
-        $contribucion_no_duerme = new stdClass();
-        $contribucion_no_duerme->default = $this->default;
-        $contribucion_no_duerme->excepciones = $this->a_excepciones;
+        $contribucion_no_duerme['default'] = $this->default;
+        $contribucion_no_duerme['excepciones'] = $this->a_excepciones;
 
         $PasarelaConfigRepository = $GLOBALS['container']->get(PasarelaConfigRepositoryInterface::class);
         $oPasarelaConfig = $PasarelaConfigRepository->findById(self::PARAMETRO);

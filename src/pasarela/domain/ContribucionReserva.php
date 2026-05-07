@@ -75,9 +75,8 @@ class ContribucionReserva
 
     private function guardar(): void
     {
-        $contribucion_reserva = new stdClass();
-        $contribucion_reserva->default = $this->default;
-        $contribucion_reserva->excepciones = $this->a_excepciones;
+        $contribucion_reserva['default'] = $this->default;
+        $contribucion_reserva['excepciones'] = $this->a_excepciones;
 
         $PasarelaConfigRepository = $GLOBALS['container']->get(PasarelaConfigRepositoryInterface::class);
         $oPasarelaConfig = $PasarelaConfigRepository->findById(self::PARAMETRO);

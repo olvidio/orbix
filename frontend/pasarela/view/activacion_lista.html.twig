@@ -1,25 +1,57 @@
 <script>
-    let fnjs_guardar_activacion_default = function (formulario) {
-        $("#que").val('update_default');
-        let request = $.ajax({
-            url: '{{ url_ajax|raw }}',
+    {# fnjs_update_div vuelve a ejecutar este script: `let` en global fallaría por redeclaración; `window.*` solo reasigna.
+       En callbacks AJAX usar siempre window.fnjs_* : el identificador global desnudo puede no resolverse igual tras reinyectar el bloque.
+       HashFront: el POST no puede llevar campos que no estén en setCamposForm del Hash (p. ej. id_tarifa, fases_on[] del widget ActividadTipo); si no, validatePost falla y la respuesta AJAX acaba siendo el HTML de index.php. #}
+    window.fnjs_serialize_activacion_hash = function (formulario, modo) {
+        var allowTipo = {
+            que: 1, id_tipo_activ: 1, extendida: 1, isfsv_val: 1, iasistentes_val: 1, iactividad_val: 1, inom_tipo_val: 1, activacion: 1,
+            h: 1, hh: 1, hhc: 1, hno: 1, hchk: 1, hnov: 1, horig: 1, hhorig: 1
+        };
+        var allowDefault = {
+            que: 1, default: 1,
+            h: 1, hh: 1, hhc: 1, hno: 1, hchk: 1, hnov: 1, horig: 1, hhorig: 1
+        };
+        var allow = (modo === 'default') ? allowDefault : allowTipo;
+        return $(formulario).serializeArray()
+            .filter(function (field) { return Object.prototype.hasOwnProperty.call(allow, field.name); })
+            .map(function (field) {
+                return encodeURIComponent(field.name) + '=' + encodeURIComponent(field.value == null ? '' : String(field.value));
+            })
+            .join('&');
+    };
+
+    window.fnjs_activacion_mutacion_ajax = function (url, dataStr) {
+        var request = $.ajax({
+            url: url,
             type: 'post',
-            data: $(formulario).serialize(),
+            data: dataStr,
             dataType: 'json'
         });
         request.done(function (json) {
             if (json.success !== true) {
-                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
-                fnjs_lista_activacion();
-                fnjs_cerrar_activacion();
+                alert("{{ "respuesta"|trans|raw }}: " + (json.mensaje || ''));
             }
+            window.fnjs_lista_activacion();
+            window.fnjs_cerrar_activacion();
         });
+        request.fail(function (jqXHR) {
+            var txt = jqXHR.responseText || jqXHR.statusText || '';
+            alert("{{ "respuesta"|trans|raw }}: " + txt);
+            window.fnjs_lista_activacion();
+            window.fnjs_cerrar_activacion();
+        });
+    };
+
+    window.fnjs_guardar_activacion_default = function (formulario) {
+        $(formulario).find('[name="que"]').val('update_default');
+        window.fnjs_activacion_mutacion_ajax('{{ url_ajax|raw }}', window.fnjs_serialize_activacion_hash(formulario, 'default'));
     }
 
-    let fnjs_guardar_activacion_nuevo = function (formulario) {
+    window.fnjs_guardar_activacion_nuevo = function (formulario) {
         var err = 0;
-        var id_tipo_activ = $('#id_tipo_activ').val();
-        var activacion = $('#activacion').val();
+        var $f = $(formulario);
+        var id_tipo_activ = $f.find('[name="id_tipo_activ"]').val();
+        var activacion = $f.find('[name="activacion"]').val();
         if (!id_tipo_activ) {
             alert("{{ "Tipo no válido"|trans|raw }}");
             err = 1;
@@ -29,62 +61,45 @@
             err = 1;
         }
         if (!err) {
-            $('#que').val('nuevo');
-            let request = $.ajax({
-                url: '{{ url_ajax|raw }}',
-                type: 'post',
-                data: $(formulario).serialize(),
-                dataType: 'json'
-            });
-            request.done(function (json) {
-                if (json.success !== true) {
-                    alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
-                    fnjs_lista_activacion();
-                    fnjs_cerrar_activacion();
-                }
-            });
+            $(formulario).find('[name="que"]').val('nuevo');
+            window.fnjs_activacion_mutacion_ajax('{{ url_ajax|raw }}', window.fnjs_serialize_activacion_hash(formulario, 'tipo'));
         }
     }
 
-    let fnjs_guardar_activacion = function (formulario, que) {
-        var err = 0;
-        if (que === "eliminar") {
-            seguro = confirm("{{ txt_eliminar }}");
-            if (seguro) {
-                err = 0;
-            } else {
-                err = 1;
-            }
-        }
-        var activacion = $('#activacion').val();
-        var id_tipo_activ = $('#id_tipo_activ').val();
-        if (!id_tipo_activ) {
+    {# Formulario modificar: POST mínimo a /src/... + linkSinValParams (validación global_object, sin hh del form). #}
+    window.fnjs_guardar_activacion_modificar = function (formulario) {
+        var $f = $(formulario);
+        var idTipo = $f.find('[name="id_tipo_activ"]').val();
+        var activacion = $f.find('[name="activacion"]').val();
+        if (!idTipo) {
             alert("{{ "Tipo no válido"|trans|raw }}");
-            err = 1;
+            return;
         }
         if (!activacion) {
             alert("{{ "debe indicar un valor"|trans|raw }}");
-            err = 1;
+            return;
         }
-        if (!err) {
-            $('#que').val(que);
-            let request = $.ajax({
-                url: '{{ url_ajax|raw }}',
-                type: 'post',
-                data: $(formulario).serialize(),
-                dataType: 'json'
-            });
-            request.done(function (json) {
-                if (json.success !== true) {
-                    alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
-                    fnjs_lista_activacion();
-                    fnjs_cerrar_activacion();
-                }
-            });
+        var data = 'id_tipo_activ=' + encodeURIComponent(idTipo)
+            + '&valor=' + encodeURIComponent(activacion)
+            + '{{ h_src_excepcion_guardar|raw }}';
+        window.fnjs_activacion_mutacion_ajax('{{ url_src_excepcion_guardar|raw }}', data);
+    };
+
+    window.fnjs_eliminar_activacion = function (formulario) {
+        if (!confirm("{{ txt_eliminar }}")) {
+            return;
         }
+        var $f = $(formulario);
+        var idTipo = $f.find('[name="id_tipo_activ"]').val();
+        if (!idTipo) {
+            alert("{{ "Tipo no válido"|trans|raw }}");
+            return;
+        }
+        var data = 'id_tipo_activ=' + encodeURIComponent(idTipo) + '{{ h_src_excepcion_eliminar|raw }}';
+        window.fnjs_activacion_mutacion_ajax('{{ url_src_excepcion_eliminar|raw }}', data);
     }
 
-    let fnjs_nuevo_activacion = function (id_tipo_activ) {
+    window.fnjs_nuevo_activacion = function (id_tipo_activ) {
         document.getElementById("div_modificar").style.display = "block";
         $('#div_modificar').addClass('ventana');
         $('#div_modificar').width('auto');
@@ -94,10 +109,10 @@
 
         var url = '{{ url_ajax|raw }}';
         var parametros = 'que=form_nuevo' + '{{ h_nuevo|raw }}';
-        fnjs_update_div('#div_modificar', url + '?' + parametros);
+        window.fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
 
-    let fnjs_modificar_activacion = function (id_tipo_activ, activacion) {
+    window.fnjs_modificar_activacion = function (id_tipo_activ, activacion) {
         document.getElementById("div_modificar").style.display = "block";
         $('#div_modificar').addClass('ventana');
         $('#div_modificar').width('auto');
@@ -107,10 +122,10 @@
 
         var url = '{{ url_ajax|raw }}';
         var parametros = 'que=form_modificar&id_tipo_activ=' + id_tipo_activ + '&activacion=' + activacion + '{{ h_modificar|raw }}';
-        fnjs_update_div('#div_modificar', url + '?' + parametros);
+        window.fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
 
-    let fnjs_modificar_activacion_default = function () {
+    window.fnjs_modificar_activacion_default = function () {
         document.getElementById("div_modificar").style.display = "block";
         $('#div_modificar').addClass('ventana');
         $('#div_modificar').width('auto');
@@ -120,10 +135,10 @@
 
         var url = '{{ url_ajax|raw }}';
         var parametros = 'que=form_default' + '{{ h_default|raw }}';
-        fnjs_update_div('#div_modificar', url + '?' + parametros);
+        window.fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
 
-    let fnjs_lista_activacion = function () {
+    window.fnjs_lista_activacion = function () {
         // obtener el listado
         var url = '{{ url_ajax|raw }}';
         var parametros = 'que=lista' + '{{ h_lista|raw }}';
@@ -137,18 +152,17 @@
             if (rta_txt) {
                 $('#div_tabla').html(rta_txt);
             }
-            fnjs_cerrar_activacion();
+            window.fnjs_cerrar_activacion();
         });
     }
 
-    let fnjs_cerrar_activacion = function () {
+    window.fnjs_cerrar_activacion = function () {
         $('#div_modificar').html('');
         document.getElementById("div_modificar").style.display = "none";
         document.getElementById("overlay").style.display = "none";
     }
 
-    /*
-    let fnjs_id_activ_activacion = function () {
+    window.fnjs_id_activ = function () {
         let isfsv = $('#isfsv_val').val();
         let iasistentes = $('#iasistentes_val').val();
         let iactividad = $('#iactividad_val').val();
@@ -157,13 +171,12 @@
 
         $('#id_tipo_activ').val(id_tipo_activ);
     }
-    */
 
     $(document).ready(function () {
-        fnjs_lista_activacion();
+        window.fnjs_lista_activacion();
     });
 
-    fnjs_left_side_hide();
+    window.fnjs_left_side_hide();
 </script>
 <div id='div_botones'>
     <input type="button" value="{{ "nuevo"|trans|raw }}" onclick="fnjs_nuevo_activacion();">
