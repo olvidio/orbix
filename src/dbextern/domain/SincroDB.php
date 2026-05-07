@@ -383,9 +383,6 @@ class SincroDB
         $a_lista_orbix = [];
         $IdMatchRepository = new PgIdMatchPersonaRepository();
         foreach ($cPersonasDl as $oPersonaDl) {
-            if (!empty($esquema)) {
-                $oPersonaDl->setoDbl($oDB);
-            }
             $id_nom = $oPersonaDl->getId_nom();
             $cIdMatch = $IdMatchRepository->getIdMatchPersonas(array('id_orbix' => $id_nom));
             if (!empty($cIdMatch[0]) and count($cIdMatch) > 0) {
@@ -517,7 +514,7 @@ class SincroDB
         $oPersona->setId_ctr($id_ubi);
 
 
-        if ($oPersona->DBGuardar() === false) {
+        if ($repoPersona->Guardar($oPersona) === false) {
             exit(_("hay un error, no se ha guardado"));
         }
 
@@ -585,9 +582,9 @@ class SincroDB
 
     public function conexion($esquema)
     {
-        $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
+        $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
         //Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
-        if (ConfigGlobal::mi_region_dl() == $esquema) {
+        if (ConfigGlobal::mi_region_dl() === $esquema) {
             //Utilizo la conexión oDB para cambiar momentáneamente el search_path.
             $oDB = $GLOBALS['oDB'];
         } else {
