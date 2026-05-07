@@ -8,6 +8,7 @@ use src\dbextern\domain\entity\PersonaBDU;
 use src\dbextern\infrastructure\persistence\postgresql\OdbcDlListasRepository;
 use src\dbextern\infrastructure\persistence\postgresql\PgIdMatchPersonaRepository;
 use src\dbextern\infrastructure\persistence\postgresql\PgPersonaBDURepository;
+use src\personas\application\support\PersonaRepositoryResolver;
 use src\personas\domain\contracts\PersonaDlRepositoryFactoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
@@ -478,8 +479,14 @@ class SincroDB
                 $obj_pau = 'PersonaNax';
                 break;
         }
-        $obj = 'personas\\model\\entity\\' . $obj_pau;
-        $oPersona = new $obj($id_orbix);
+        $resolver = new PersonaRepositoryResolver();
+        try {
+            $repoPersona = $resolver->repositorio($obj_pau);
+        } catch (\InvalidArgumentException) {
+            return ['error' => _("No existe la clase de la persona")];
+        }
+
+        $oPersona = $repoPersona->findById($id_orbix);
 
         //Las personas en listas siempre están en situación 'A'
         if ($oPersona->getSituacion() !== 'A') {
