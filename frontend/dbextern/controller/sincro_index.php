@@ -69,4 +69,4 @@ $a_campos = [
 ];
 
 $oView = new ViewNewPhtml('frontend\dbextern\controller');
-$oView->renderizar(__FILE__, $a_campos);
+$oView->renderizar('sincro_index.phtml', $a_campos);

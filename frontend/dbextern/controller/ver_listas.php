@@ -140,4 +140,4 @@ $a_campos = [
 ];
 
 $oView = new ViewNewPhtml('frontend\dbextern\controller');
-$oView->renderizar(__FILE__, $a_campos);
+$oView->renderizar('ver_listas.phtml', $a_campos);
