@@ -272,7 +272,7 @@ class SincroDB
                 continue;
             }
             $id_nom_listas = $oPersonaBDU->getIdentif();
-            $ape_nom = $oPersonaBDU->getApeNom();
+            $ape_nom = $oPersonaBDU->getApenom();
             $nombre = $oPersonaBDU->getNombre();
             $apellido1 = $oPersonaBDU->getApellido1();
             $nx1 = $oPersonaBDU->getNx1();
@@ -421,7 +421,7 @@ class SincroDB
         $a_ctr = $GLOBALS['a_centros'];
 
         $id_nom_listas = $oPersonaListas->getIdentif();
-        $ape_nom = $oPersonaListas->getApeNom();
+        $ape_nom = $oPersonaListas->getApenom();
         $nombre = $oPersonaListas->getNombre();
         $apellido1 = $oPersonaListas->getApellido1();
         $nx1 = $oPersonaListas->getNx1();

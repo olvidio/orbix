@@ -29,7 +29,7 @@ class VerDesaparecidosDeOrbixData
 
             $a_persona_listas[$i] = [
                 'id_nom_listas' => $id_nom_listas,
-                'ape_nom' => $oPersonaListas?->getApeNom() ?? '',
+                'ape_nom' => $oPersonaListas?->getApenom() ?? '',
                 'dl' => $oPersonaListas?->getDl() ?? '',
             ];
         }

@@ -48,7 +48,7 @@ class VerListasData
             $i++;
             $a_lista[$i] = [
                 'id_nom_listas' => $id_nom_bdu,
-                'ape_nom' => $oPersonaBDU->getApeNom(),
+                'ape_nom' => $oPersonaBDU->getApenom(),
                 'nombre' => $oPersonaBDU->getNombre(),
                 'apellido1' => $oPersonaBDU->getApellido1(),
                 'apellido1_sinprep' => $oPersonaBDU->getApellido1_sinprep(),

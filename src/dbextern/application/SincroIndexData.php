@@ -129,7 +129,7 @@ class SincroIndexData
             if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
                 $id_nom_listas = $cIdMatch[0]->getId_listas();
                 $oPersonaBDU = $this->personaBDURepository->findById($id_nom_listas);
-                if ($oPersonaBDU === null || empty($oPersonaBDU->getApeNom())) {
+                if ($oPersonaBDU === null || empty($oPersonaBDU->getApenom())) {
                     $p8_orbix_unidas_desaparecidas++;
                     $a_ids_desaparecidos_de_listas[] = $id_nom_orbix;
                 } else {

@@ -499,14 +499,6 @@ class PersonaBDU
     }
 
     /**
-     * Alias para código que usa el nombre getApeNom (p. ej. sincronización Listas).
-     */
-    public function getApeNom(): string
-    {
-        return (string) ($this->sApenom ?? '');
-    }
-
-    /**
      * Establece el valor del atributo sApenom de Listas
      *
      * @param string sApenom
