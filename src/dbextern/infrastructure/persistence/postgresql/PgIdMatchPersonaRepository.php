@@ -3,13 +3,14 @@
 namespace src\dbextern\infrastructure\persistence\postgresql;
 
 use PDO;
+use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\domain\entity\IdMatchPersona;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
-class PgIdMatchPersonaRepository extends ClaseRepository implements \src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface
+class PgIdMatchPersonaRepository extends ClaseRepository implements IdMatchPersonaRepositoryInterface
 {
     use HandlesPdoErrors;
 

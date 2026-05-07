@@ -3,13 +3,14 @@
 namespace src\dbextern\infrastructure\persistence\postgresql;
 
 use PDO;
+use src\dbextern\domain\contracts\PersonaBDURepositoryInterface;
 use src\dbextern\domain\entity\PersonaBDU;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
 
-class PgPersonaBDURepository extends ClaseRepository implements \src\dbextern\domain\contracts\PersonaBDURepositoryInterface
+class PgPersonaBDURepository extends ClaseRepository implements PersonaBDURepositoryInterface
 {
 
     use HandlesPdoErrors;
@@ -21,7 +22,7 @@ class PgPersonaBDURepository extends ClaseRepository implements \src\dbextern\do
         $this->setNomTabla('tmp_bdu');
     }
 
-    function getPersonaBDUQuery($sQuery = '')
+    function getPersonaBDUQuery(string $sQuery = ''): array
     {
         $oDbl = $this->getoDbl();
         $oPersonaBDUSet = new Set();
