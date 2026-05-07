@@ -3,6 +3,7 @@
 namespace src\dbextern\application;
 
 use src\dbextern\domain\SincroDB;
+use src\personas\application\support\PersonaRepositoryResolver;
 
 class VerTrasladosData
 {
@@ -22,7 +23,12 @@ class VerTrasladosData
             default => '',
         };
 
-        $obj = 'personas\\model\\entity\\' . $obj_pau;
+        $resolver = new PersonaRepositoryResolver();
+        try {
+            $repoPersona = $resolver->repositorio($obj_pau);
+        } catch (\InvalidArgumentException) {
+            return ['error' => _("No existe la clase de la persona")];
+        }
 
         $oSincroDB = new SincroDB();
         $oSincroDB->setTipo_persona($tipo_persona);
@@ -35,7 +41,7 @@ class VerTrasladosData
             $a_reg_dl = explode('-', $dl_orbix);
             $dl_actual = substr($a_reg_dl[1], 0, -1);
 
-            $oPersonaOrbix = new $obj(['id_nom' => $id_nom_orbix]);
+            $oPersonaOrbix = $repoPersona->findById($id_nom_orbix);
             $oDB = $oSincroDB->conexion($dl_orbix);
             $oPersonaOrbix->setoDbl($oDB);
 

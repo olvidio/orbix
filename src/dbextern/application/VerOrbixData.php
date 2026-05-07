@@ -4,6 +4,7 @@ namespace src\dbextern\application;
 
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 use src\dbextern\domain\SincroDB;
+use src\personas\application\support\PersonaRepositoryResolver;
 
 class VerOrbixData
 {
@@ -22,19 +23,23 @@ class VerOrbixData
     public function __invoke(string $region, string $tipo_persona): array
     {
         $obj_pau = match ($tipo_persona) {
-            'n' => 'GestorPersonaN',
-            'a' => 'GestorPersonaAgd',
-            's' => 'GestorPersonaS',
-            'sssc' => 'GestorPersonaSSSC',
+            'n' => 'PersonaN',
+            'a' => 'PersonaAgd',
+            's' => 'PersonaS',
+            'sssc' => 'PersonaSSSC',
             default => '',
         };
         if (empty($obj_pau)) {
             return ['lista' => []];
         }
 
-        $obj = 'personas\\model\\entity\\' . $obj_pau;
-        $GesPersonas = new $obj();
-        $cPersonasOrbix = $GesPersonas->getPersonas(['situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom']);
+        $resolver = new PersonaRepositoryResolver();
+        try {
+            $repoPersona = $resolver->repositorio($obj_pau);
+        } catch (\InvalidArgumentException) {
+            return ['error' => _("No existe la clase de la persona")];
+        }
+        $cPersonasOrbix = $repoPersona->getPersonas(['situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom']);
 
         $a_lista = [];
         $i = 0;
