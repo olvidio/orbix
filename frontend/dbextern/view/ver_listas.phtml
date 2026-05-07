@@ -1,0 +1,194 @@
+<?php
+/**
+ * @var string $region
+ * @var string $dl
+ * @var string $tipo_persona
+ * @var string $id_nom_bdu
+ * @var int $new_id
+ * @var int $max
+ * @var string $mov
+ * @var int $cont_sync
+ * @var bool $first_load
+ * @var array $persona_listas
+ * @var array $a_lista_orbix
+ * @var array $a_lista_orbix_otradl
+ * @var string $html_reg
+ * @var \frontend\shared\security\HashFront $oHash
+ * @var string $url_sincro_ver
+ * @var string $url_sincro_crear
+ * @var string $url_sincro_unir
+ * @var string $url_sincro_crear_todos
+ * @var string $h_crear
+ * @var string $h_unir
+ * @var string $h_crear_todos
+ */
+?>
+<script>
+    fnjs_crear_todos = function () {
+        var url = '<?= $url_sincro_crear_todos ?>';
+        var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&tipo_persona=<?= $tipo_persona ?><?= $h_crear_todos ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        })
+            .done(function (json) {
+                if (json.success !== true) {
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+                } else {
+                    alert("Ja está");
+                }
+            });
+    }
+
+    fnjs_crear = function () {
+        var url = '<?= $url_sincro_crear ?>';
+        var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&id=<?= $new_id ?>&id_nom_listas=<?= $id_nom_bdu ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h_crear ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        })
+            .done(function (json) {
+                if (json.success !== true) {
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+                } else {
+                    fnjs_submit('#movimiento', '-');
+                }
+            });
+    }
+
+    fnjs_unir = function (id_orbix) {
+        var url = '<?= $url_sincro_unir ?>';
+        var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&id_orbix=' + id_orbix + '&id=<?= $new_id ?>&id_nom_listas=<?= $id_nom_bdu ?>&tipo_persona=<?= $tipo_persona ?><?= $h_unir ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        })
+            .done(function (json) {
+                if (json.success !== true) {
+                    alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+                } else {
+                    fnjs_submit('#movimiento', '-');
+                }
+            });
+    }
+
+    fnjs_submit = function (formulario, mov) {
+        $('#mov').val(mov);
+        $(formulario).attr('action', "<?= $url_sincro_ver ?>");
+        fnjs_enviar_formulario(formulario);
+    }
+</script>
+
+<h3><?= sprintf(_("personas en la BDU con dl: '%s'"), $dl) ?></h3>
+<?php
+if ($first_load) {
+    echo sprintf(_("unidas automáticamente: %s"), $cont_sync);
+    echo '<br>';
+    echo '<br>';
+}
+?>
+<?php if (!empty($persona_listas)) { ?>
+<form id="movimiento" name="movimiento" action="">
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="hidden" id="mov" name="mov" value="">
+    <input type="button" value="< <?= _("anterior") ?>" onclick="fnjs_submit(this.form,'-')"/>
+    <?= $html_reg ?>
+    <input type="button" value="<?= _("siguiente") ?> >" onclick="fnjs_submit(this.form,'+')"/>
+    <br>
+    <br>
+
+    <table>
+        <tr>
+            <th><?= _("id BDU") ?></th>
+            <th><?= _("ape_nom") ?></th>
+            <th><?= _("nombre-calculado") ?></th>
+            <th><?= _("apellido1-calculado") ?></th>
+            <th><?= _("apellido2-calculado") ?></th>
+            <th><?= _("fecha nacimiento") ?></th>
+        </tr>
+        <?php
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($persona_listas['id_nom_listas']) . '</td>';
+        echo "<td class='titulo'>" . htmlspecialchars($persona_listas['ape_nom']) . '</td>';
+        echo "<td>" . htmlspecialchars($persona_listas['nombre']) . '</td>';
+        echo "<td>" . htmlspecialchars($persona_listas['apellido1']) . '</td>';
+        echo "<td>" . htmlspecialchars($persona_listas['apellido2']) . '</td>';
+        echo "<td class='titulo'>" . htmlspecialchars($persona_listas['f_nacimiento']) . '</td>';
+        echo '</tr>';
+        ?>
+    </table>
+    <?php } ?>
+
+    <?php if (!empty($a_lista_orbix)) { ?>
+        <h3><?= _("posibles coincidencias con personas de Aquinate de la propia dl/r") ?>:</h3>
+        <table>
+            <tr>
+                <th><?= _("id aquinate") ?></th>
+                <th><?= _("ape_nom-calculado") ?></th>
+                <th><?= _("nombre") ?></th>
+                <th><?= _("apellido1") ?></th>
+                <th><?= _("apellido2") ?></th>
+                <th><?= _("fecha nacimiento") ?></th>
+            </tr>
+            <?php
+            foreach ($a_lista_orbix as $persona_orbix) {
+                $id_orbix = $persona_orbix['id_nom'];
+                echo "<tr>";
+                echo "<td>" . $persona_orbix['id_nom'] . '</td>';
+                echo "<td class='contenido'>" . htmlspecialchars($persona_orbix['ape_nom']) . '</td>';
+                echo "<td>" . htmlspecialchars($persona_orbix['nombre']) . '</td>';
+                echo "<td>" . htmlspecialchars($persona_orbix['apellido1']) . '</td>';
+                echo "<td>" . htmlspecialchars($persona_orbix['apellido2']) . '</td>';
+                echo "<td class='contenido'>" . htmlspecialchars($persona_orbix['f_nacimiento']) . '</td>';
+                echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span></td>';
+                echo '</tr>';
+            }
+            ?>
+        </table>
+    <?php } ?>
+    <?php if (!empty($a_lista_orbix_otradl)) { ?>
+        <h3><?= _("posibles coincidencias con personas de Aquinate en otras dl/r") ?>:</h3>
+        <table>
+            <tr>
+                <th><?= _("esquema") ?></th>
+                <th><?= _("id aquinate") ?></th>
+                <th><?= _("ape_nom-calculado") ?></th>
+                <th><?= _("nombre") ?></th>
+                <th><?= _("apellido1") ?></th>
+                <th><?= _("apellido2") ?></th>
+                <th><?= _("fecha nacimiento") ?></th>
+            </tr>
+            <?php
+            foreach ($a_lista_orbix_otradl as $e => $a_persona_orbix) {
+                foreach ($a_persona_orbix as $persona_orbix) {
+                    $id_orbix = $persona_orbix['id_nom'];
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($persona_orbix['esquema']) . '</td>';
+                    echo "<td>" . $persona_orbix['id_nom'] . '</td>';
+                    echo "<td class='contenido'>" . htmlspecialchars($persona_orbix['ape_nom']) . '</td>';
+                    echo "<td>" . htmlspecialchars($persona_orbix['nombre']) . '</td>';
+                    echo "<td>" . htmlspecialchars($persona_orbix['apellido1']) . '</td>';
+                    echo "<td>" . htmlspecialchars($persona_orbix['apellido2']) . '</td>';
+                    echo "<td class='contenido'>" . htmlspecialchars($persona_orbix['f_nacimiento']) . '</td>';
+                    echo "<td class='titulo'><span class=link onClick='fnjs_unir($id_orbix)'>" . _("unir") . '</span></td>';
+                    echo '</tr>';
+                }
+            }
+            ?>
+        </table>
+    <?php } ?>
+    <?php if (!empty($persona_listas)) { ?>
+    <br>
+    <input type="button" value="<?= _("crear nuevo") ?>" onclick="fnjs_crear()">
+    <input type="button" value="<?= _("crear todos") ?>" onclick="fnjs_crear_todos()">
+</form>
+<?php } ?>

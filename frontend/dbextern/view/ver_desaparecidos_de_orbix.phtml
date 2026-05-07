@@ -1,0 +1,50 @@
+<?php
+/**
+ * @var string $tipo_persona
+ * @var array $a_persona_listas
+ * @var string $url_sincro_desunir
+ * @var string $h
+ */
+?>
+<script>
+    fnjs_desunir = function (id_listas, fila) {
+        var url = '<?= $url_sincro_desunir ?>';
+        var parametros = 'id_nom_listas=' + id_listas + '&tipo_persona=<?= $tipo_persona ?><?= $h ?>';
+
+        var request = $.ajax({
+            url: url,
+            data: parametros,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+            } else {
+                $("#fila" + fila).addClass('tachado');
+            }
+        });
+    }
+</script>
+
+<h3><?= _("personas de la BDU que habían estado en aquinate y no se encuentran") ?></h3>
+<table>
+    <tr>
+        <th><?= _("nombre") ?></th>
+        <th><?= _("dl actual") ?></th>
+        <th></th>
+    </tr>
+    <?php
+    $i = 0;
+    foreach ($a_persona_listas as $persona_listas) {
+        $i++;
+        $id_listas = $persona_listas['id_nom_listas'];
+        $dl_listas = $persona_listas['dl'];
+        echo "<tr id=fila$i>";
+        echo "<td class='titulo'>" . htmlspecialchars($persona_listas['ape_nom']) . '</td>';
+        echo "<td>" . htmlspecialchars($dl_listas) . '</td>';
+        echo "<td><span class=link onClick='fnjs_desunir($id_listas, $i)'>" . _("desunir") . '</span><td>';
+        echo '</tr>';
+    }
+    ?>
+</table>

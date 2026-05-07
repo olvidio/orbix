@@ -1,0 +1,34 @@
+<?php
+
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
+use src\shared\config\ConfigGlobal;
+
+require_once 'frontend/shared/global_header_front.inc';
+
+$tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
+$ids_traslados_A = (string)filter_input(INPUT_POST, 'ids_traslados_A');
+
+$data = PostRequest::getDataFromUrl('/src/dbextern/ver_orbix_otradl_datos', [
+    'tipo_persona' => $tipo_persona,
+    'ids_traslados_A' => $ids_traslados_A,
+]);
+
+$a_persona_listas = $data['personas'] ?? [];
+
+// Hash para AJAX trasladar
+$url_sincro_trasladar_a = ConfigGlobal::getWeb() . '/src/dbextern/sincro_trasladar_a';
+$oHash = new HashFront();
+$oHash->setUrl($url_sincro_trasladar_a);
+$oHash->setCamposForm('dl!id_nom_orbix!tipo_persona');
+$h = $oHash->linkSinValParams();
+
+$a_campos = [
+    'tipo_persona' => $tipo_persona,
+    'a_persona_listas' => $a_persona_listas,
+    'url_sincro_trasladar_a' => $url_sincro_trasladar_a,
+    'h' => $h,
+];
+
+$oView = new \frontend\shared\model\ViewNewPhtml();
+$oView->renderizar(__FILE__, $a_campos);

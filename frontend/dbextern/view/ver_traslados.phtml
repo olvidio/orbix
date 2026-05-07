@@ -1,0 +1,54 @@
+<?php
+/**
+ * @var string $tipo_persona
+ * @var array $a_persona_orbix
+ * @var string $url_sincro_trasladar
+ * @var string $h
+ */
+
+$txt_alert = _("se va a poner la fecha de hoy como fecha de traslado. Para cambiarlo ir al a ficha de la persona y al dossier de traslados");
+?>
+<script>
+    fnjs_trasladar = function (id_orbix, dl, fila) {
+        var url = '<?= $url_sincro_trasladar ?>';
+        var parametros = 'dl=' + dl + '&id_nom_orbix=' + id_orbix + '&tipo_persona=<?= $tipo_persona ?><?= $h ?>';
+
+        alert(<?= json_encode((string)$txt_alert) ?>);
+
+        var request = $.ajax({
+            url: url,
+            data: parametros,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+            } else {
+                $("#fila" + fila).addClass('tachado');
+            }
+        });
+    }
+</script>
+
+<h3><?= _("personas en la dl que deben ser trasladadas desde otras dl") ?></h3>
+<table>
+    <tr>
+        <th><?= _("nombre") ?></th>
+        <th><?= _("dl orbix") ?></th>
+        <th></th>
+    </tr>
+    <?php
+    $i = 0;
+    foreach ($a_persona_orbix as $persona_orbix) {
+        $i++;
+        $id_orbix = $persona_orbix['id_nom_orbix'];
+        $dl_orbix = $persona_orbix['dl'];
+        echo "<tr id=fila$i>";
+        echo "<td class='titulo'>" . htmlspecialchars($persona_orbix['ape_nom']) . '</td>';
+        echo "<td>" . htmlspecialchars($persona_orbix['dl_actual']) . '</td>';
+        echo "<td><span class=link onClick='fnjs_trasladar($id_orbix,\"$dl_orbix\",$i)'>" . _("trasladar") . '</span><td>';
+        echo '</tr>';
+    }
+    ?>
+</table>

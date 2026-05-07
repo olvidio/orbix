@@ -1,4 +1,4 @@
 <?php
  putenv("UBICACION=sv");
 
-require __DIR__ . '/../apps/core/zglobal_header.inc';
+require __DIR__ . '/../src/shared/global_header.inc';

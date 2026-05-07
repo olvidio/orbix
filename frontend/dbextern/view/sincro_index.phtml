@@ -1,0 +1,125 @@
+<?php
+/**
+ * @var string $fecha_actualizacion
+ * @var string $region
+ * @var string $dl_listas
+ * @var string $tipo_persona
+ * @var int $p1_unidas_dl
+ * @var int $p2_unidas_otradl
+ * @var int $p3_unidas_desaparecidas
+ * @var int $p456_listas_no_unidas
+ * @var int $p7_orbix_unidas_otra_dl
+ * @var int $p8_orbix_unidas_desaparecidas
+ * @var int $p910_orbix_no_unidas
+ * @var string $ver_2
+ * @var string $ver_3
+ * @var string $ver_456
+ * @var string $ver_7
+ * @var string $ver_8
+ * @var string $ver_910
+ * @var string $url_actualizar
+ * @var string $url_sincro_syncro
+ * @var string $url_refrescar
+ * @var string $h1
+ * @var string $h2
+ */
+
+$explicacion_txt = _("en situación normal bastaría hacer click en 'ejecutar' del punto 1.");
+$explicacion_txt .= "<br>";
+$explicacion_txt .= _("el resto de puntos deberían tener valor 0. En situaciones especiales pueden tener otro valor, pero deben ser casos controlados.");
+$explicacion_txt .= "<br>";
+$explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las personas cambian de situación (no se arregla directamente). Es posible que se tengan que hacer varias pasadas antes de tener a todos en el punto 1");
+?>
+<script>
+    fnjs_refrescar = function () {
+        var url = '<?= $url_refrescar ?>';
+        var parametros = 'que=algo<?= $h2 ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        })
+            .done(function (json) {
+                if (json.success !== true) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
+                } else {
+                    fnjs_update_div('#main', '<?= $url_actualizar ?>');
+                }
+            });
+    }
+    fnjs_sincronizar = function () {
+        var url = '<?= $url_sincro_syncro ?>';
+        var parametros = 'region=<?= $region ?>&dl_listas=<?= $dl_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        })
+            .done(function (json) {
+                if (json.success !== true) {
+                    alert(<?= json_encode(_("respuesta") . ": ") ?> + json.mensaje);
+                } else {
+                    alert(json.data.mensaje);
+                }
+            });
+    }
+</script>
+<p>Si ha modificado datos en la BDU después de: <?= $fecha_actualizacion ?> debe
+    <b><span class=link onclick="fnjs_refrescar()"><?= _("refrescar") ?></span></b>. Esta operación tardará
+    un par o tres de minutos</p>
+<br>
+<p>
+    <?= $explicacion_txt ?>
+</p>
+<br>
+<table>
+    <tr>
+        <th colspan="4"><?= _("personas en la BDU") ?></th>
+    <tr>
+        <td>1.</td>
+        <td><?= _("personas a sincronizar") ?></td>
+        <td><?= $p1_unidas_dl ?></td>
+        <td><span class=link onclick="fnjs_sincronizar()"><?= _("ejecutar") ?></span></td>
+    </tr>
+    <tr>
+        <td>2.</td>
+        <td> <?= _("posiblemente estén en otra dl") ?></td>
+        <td><?= $p2_unidas_otradl ?></td>
+        <td><span class=link onclick="fnjs_update_div('#main','<?= $ver_2 ?>')"><?= _("ver") ?></span></td>
+    </tr>
+    <tr>
+        <td>3.</td>
+        <td><?= _("personas en la BDU desaparecidas en aquinate") ?></td>
+        <td><?= $p3_unidas_desaparecidas ?></td>
+        <td><span class=link onclick="fnjs_update_div('#main','<?= $ver_3 ?>')"><?= _("ver") ?></span></td>
+    </tr>
+    <tr>
+        <td>4.</td>
+        <td><?= _("personas no estan unidas a aquinate") ?></td>
+        <td><?= $p456_listas_no_unidas ?></td>
+        <td><span class=link onclick="fnjs_update_div('#main','<?= $ver_456 ?>')"><?= _("ver") ?></span></td>
+    </tr>
+    <tr>
+        <th colspan="4"><?= _("personas en aquinate") ?></th>
+    <tr>
+        <td>7.</td>
+        <td><?= _("personas en aquinate que deberían trasladarse a otra dl") ?></td>
+        <td><?= $p7_orbix_unidas_otra_dl ?></td>
+        <td><span class=link onclick="fnjs_update_div('#main','<?= $ver_7 ?>')"><?= _("ver") ?></span></td>
+    </tr>
+    <tr>
+        <td>8.</td>
+        <td><?= _("personas en aquinate con correspondencia en la BDU y desaparecidos de la BDU") ?></td>
+        <td><?= $p8_orbix_unidas_desaparecidas ?></td>
+        <td><span class=link onclick="fnjs_update_div('#main','<?= $ver_8 ?>')"><?= _("ver") ?></span></td>
+    </tr>
+    <tr>
+        <td>9.</td>
+        <td><?= _("personas en aquinate sin correspondencia en la BDU") ?></td>
+        <td><?= $p910_orbix_no_unidas ?></td>
+        <td><span class=link onclick="fnjs_update_div('#main','<?= $ver_910 ?>')"><?= _("ver") ?></span></td>
+</table>

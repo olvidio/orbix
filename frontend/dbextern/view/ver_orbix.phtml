@@ -1,0 +1,120 @@
+<?php
+/**
+ * @var string $region
+ * @var string $dl
+ * @var string $tipo_persona
+ * @var int $new_id
+ * @var int $max
+ * @var array $persona_orbix
+ * @var array $a_lista_bdu
+ * @var string $html_reg
+ * @var \frontend\shared\security\HashFront $oHash
+ * @var string $url_sincro_ver
+ * @var string $url_sincro_unir
+ * @var string $h1
+ */
+
+if ($max === 0) {
+    echo $html_reg;
+} else {
+    ?>
+    <script>
+        fnjs_unir_bdu = function (id_bdu) {
+            var url = '<?= $url_sincro_unir ?>';
+            var id_orbix = <?= $persona_orbix['id_nom_orbix'] ?>;
+            var parametros = 'region=<?= $region ?>&dl=<?= $dl ?>&id_orbix=' + id_orbix + '&id=<?= $new_id ?>&id_nom_listas=' + id_bdu + '&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'json'
+            })
+                .done(function (json) {
+                    if (json.success !== true) {
+                        alert(<?= json_encode(_("respuesta")) ?> + ': ' + json.mensaje);
+                    } else {
+                        fnjs_submit('#movimiento', '-');
+                    }
+                });
+        }
+
+        fnjs_submit = function (formulario, mov) {
+            $('#mov').val(mov);
+            $(formulario).attr('action', "<?= $url_sincro_ver ?>");
+            fnjs_enviar_formulario(formulario);
+        }
+    </script>
+
+    <h3><?= _("personas en aquinate sin unir a la BDU") ?></h3>
+
+    <form id="movimiento" name="movimiento" action="">
+        <?= $oHash->getCamposHtml(); ?>
+        <input type="hidden" id="mov" name="mov" value="">
+        <input type="button" value="< <?= _("anterior") ?>" onclick="fnjs_submit(this.form,'-')"/>
+        <?= $html_reg ?>
+        <input type="button" value="<?= _("siguiente") ?> >" onclick="fnjs_submit(this.form,'+')"/>
+        <br>
+        <br>
+
+        <table>
+            <tr>
+                <th><?= _("id aquinate") ?></th>
+                <th><?= _("ape_nom-calculado") ?></th>
+                <th><?= _("nombre") ?></th>
+                <th><?= _("apellido1") ?></th>
+                <th><?= _("apellido2") ?></th>
+                <th><?= _("fecha nacimiento") ?></th>
+            </tr>
+            <?php
+            echo "<tr>";
+            echo "<td>" . $persona_orbix['id_nom_orbix'] . '</td>';
+            echo "<td class='titulo'>" . htmlspecialchars($persona_orbix['ape_nom']) . '</td>';
+            echo "<td>" . htmlspecialchars($persona_orbix['nombre']) . '</td>';
+            echo "<td>" . htmlspecialchars($persona_orbix['apellido1']) . '</td>';
+            echo "<td>" . htmlspecialchars($persona_orbix['apellido2']) . '</td>';
+            echo "<td class='titulo'>" . htmlspecialchars($persona_orbix['f_nacimiento'] ?? '') . '</td>';
+            echo '</tr>';
+            ?>
+        </table>
+        <br>
+        <?= _("Por el momento estos botones no hacen nada") ?>.
+        <input type="button" value="<?= _("borrar") ?>" onclick="">
+        <input type="button" value="<?= _("trasladar") ?>" onclick="">
+        <input type="button" value="<?= _("baja") ?>" onclick="">
+    </form>
+    <br>
+    <?php if (!empty($a_lista_bdu)) { ?>
+        <h3><?= _("posibles coincidencias con personas de la BDU en otras dl/r") ?>:</h3>
+        <table>
+            <tr>
+                <th><?= _("id aquinate") ?></th>
+                <th><?= _("región") ?></th>
+                <th><?= _("compartida") ?></th>
+                <th><?= _("dl") ?></th>
+                <th><?= _("ape_nom-calculado") ?></th>
+                <th><?= _("nombre") ?></th>
+                <th><?= _("apellido1") ?></th>
+                <th><?= _("apellido2") ?></th>
+                <th><?= _("fecha nacimiento") ?></th>
+            </tr>
+            <?php
+            foreach ($a_lista_bdu as $persona_bdu) {
+                $id_bdu = $persona_bdu['id_nom'];
+                echo "<tr>";
+                echo "<td>" . $persona_bdu['id_nom'] . '</td>';
+                echo "<td>" . htmlspecialchars($persona_bdu['pertenece_r'] ?? '') . '</td>';
+                echo "<td>" . htmlspecialchars($persona_bdu['compartida_con_r'] ?? '') . '</td>';
+                echo "<td>" . htmlspecialchars($persona_bdu['dl_persona'] ?? '') . '</td>';
+                echo "<td class='contenido'>" . htmlspecialchars($persona_bdu['ape_nom']) . '</td>';
+                echo "<td>" . htmlspecialchars($persona_bdu['nombre']) . '</td>';
+                echo "<td>" . htmlspecialchars($persona_bdu['apellido1']) . '</td>';
+                echo "<td>" . htmlspecialchars($persona_bdu['apellido2']) . '</td>';
+                echo "<td class='contenido'>" . htmlspecialchars($persona_bdu['f_nacimiento']) . '</td>';
+                echo "<td class='titulo'><span class=link onClick='fnjs_unir_bdu($id_bdu)'>" . _("unir") . '</span></td>';
+                echo '</tr>';
+            }
+            ?>
+        </table>
+    <?php }
+}
