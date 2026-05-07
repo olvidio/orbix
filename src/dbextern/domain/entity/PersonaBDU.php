@@ -427,9 +427,9 @@ class PersonaBDU
         if (array_key_exists('encargos', $aDatos))
             $this->setEncargos($aDatos['encargos'] ?? '');
         if (array_key_exists('incorp', $aDatos))
-            $this->setIncorporacion($aDatos['incorp']);
+            $this->setIncorporacion($aDatos['incorp'] ?? '');
         if (array_key_exists('pertenece_r', $aDatos))
-            $this->setPertenece_r($aDatos['pertenece_r']);
+            $this->setPertenece_r($aDatos['pertenece_r'] ?? '');
         if (array_key_exists('camb_fic', $aDatos))
             $this->setCamb_fic($aDatos['camb_fic'] ?? '');
         if (array_key_exists('fecha_c_fic', $aDatos))
@@ -585,6 +585,10 @@ class PersonaBDU
      */
     function setFecha_Naci($dFecha_Naci)
     {
+        if ($dFecha_Naci === null || $dFecha_Naci === '') {
+            $this->dFecha_Naci = '';
+            return;
+        }
         $oFecha = new DateTime($dFecha_Naci);
         $new_fecha = date_format($oFecha, 'j/m/Y');
         $this->dFecha_Naci = $new_fecha;
