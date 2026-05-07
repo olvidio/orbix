@@ -19,6 +19,7 @@ class PgPersonaBDURepository extends ClaseRepository implements PersonaBDUReposi
     {
         $oDbl = $GLOBALS['oDBP'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('tmp_bdu');
     }
 

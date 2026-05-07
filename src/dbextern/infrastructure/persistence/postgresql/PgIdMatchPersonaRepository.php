@@ -18,6 +18,7 @@ class PgIdMatchPersonaRepository extends ClaseRepository implements IdMatchPerso
     {
         $oDbl = $GLOBALS['oDBP'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('conv_id_personas');
     }
 
