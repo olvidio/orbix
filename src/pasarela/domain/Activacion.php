@@ -3,6 +3,7 @@
 namespace src\pasarela\domain;
 
 use src\pasarela\domain\contracts\PasarelaConfigRepositoryInterface;
+use src\pasarela\domain\entity\PasarelaConfig;
 use stdClass;
 
 /**
@@ -75,18 +76,17 @@ class Activacion
 
     private function guardar(): void
     {
-        $activacion = new stdClass();
-        $activacion->default = $this->default;
-        $activacion->excepciones = $this->a_excepciones;
+        $a_activacion['default'] = $this->default;
+        $a_activacion['excepciones'] = $this->a_excepciones;
 
         $PasarelaConfigRepository = $GLOBALS['container']->get(PasarelaConfigRepositoryInterface::class);
         $oPasarelaConfig = $PasarelaConfigRepository->findById(self::PARAMETRO);
         if ($oPasarelaConfig === null) {
-            $oPasarelaConfig = new \src\pasarela\domain\entity\PasarelaConfig();
+            $oPasarelaConfig = new PasarelaConfig();
             $oPasarelaConfig->setNom_parametro(self::PARAMETRO);
         }
 
-        $oPasarelaConfig->setJson_valor($activacion);
+        $oPasarelaConfig->setJson_valor($a_activacion);
         $PasarelaConfigRepository->Guardar($oPasarelaConfig);
     }
 }

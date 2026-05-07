@@ -7,6 +7,8 @@ use PDO;
 use src\pasarela\domain\contracts\PasarelaConfigRepositoryInterface;
 use src\pasarela\domain\entity\PasarelaConfig;
 use src\shared\infrastructure\persistence\ClaseRepository;
+use src\shared\infrastructure\persistence\ConverterDate;
+use src\shared\infrastructure\persistence\ConverterJson;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use src\shared\traits\HandlesPdoErrors;
@@ -111,6 +113,8 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+            // para los json
+            $aDatos['json_valor'] = (new ConverterJson($aDatos['json_valor'], false))->fromPg();
             $ConfigSchema = PasarelaConfig::fromArray($aDatos);
             $ConfigSchemaSet->add($ConfigSchema);
         }
@@ -119,9 +123,9 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(PasarelaConfig $ConfigSchema): bool
+    public function Eliminar(PasarelaConfig $PasarelaConfig): bool
     {
-        $nom_parametro = $ConfigSchema->getNomParametroVo()->value();
+        $nom_parametro = $PasarelaConfig->getNomParametroVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE nom_parametro = '$nom_parametro'";
@@ -131,25 +135,28 @@ class PgPasarelaConfigRepository extends ClaseRepository implements PasarelaConf
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(PasarelaConfig $ConfigSchema): bool
+    public function Guardar(PasarelaConfig $PasarelaConfig): bool
     {
-        $nom_parametro = $ConfigSchema->getNomParametroVo()->value();
+        $nom_parametro = $PasarelaConfig->getNomParametroVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($nom_parametro);
 
-        $aDatos = $ConfigSchema->toArrayForDatabase();
+        $aDatos = $PasarelaConfig->toArrayForDatabase([
+            'json_valor' => fn($v) => (new ConverterJson($v, false))->toPg(false),
+        ]);
+
         if ($bInsert === false) {
             //UPDATE
             unset($aDatos['nom_parametro']);
             $update = "
-					valor                    = :valor";
+					json_valor              = :json_valor";
             $sql = "UPDATE $nom_tabla SET $update WHERE nom_parametro = '$nom_parametro'";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
-            $campos = "(_nomparametro,valor)";
-            $valores = "(:nom_parametro,:valor)";
+            $campos = "(nom_parametro,json_valor)";
+            $valores = "(:nom_parametro,:json_valor)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }

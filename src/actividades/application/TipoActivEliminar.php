@@ -2,6 +2,7 @@
 
 namespace src\actividades\application;
 
+use frontend\actividades\helpers\TipoActivMetadataLoader;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 
 /**
@@ -19,6 +20,10 @@ class TipoActivEliminar
         if ($TipoDeActividadRepository->Eliminar($oTipoDeActividad) === false) {
             return _("hay un error, no se ha eliminado");
         }
+
+        // El listado cacheado en sesión por TipoActivMetadataLoader queda
+        // obsoleto al eliminar un tipo: forzar refetch en la próxima lectura.
+        TipoActivMetadataLoader::forget();
 
         return '';
     }

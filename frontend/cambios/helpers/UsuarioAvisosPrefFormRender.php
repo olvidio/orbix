@@ -6,7 +6,7 @@ namespace frontend\cambios\helpers;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
-use src\actividades\application\ActividadTipo;
+use frontend\actividades\helpers\ActividadTipo;
 use src\actividades\domain\entity\TiposActividades;
 
 /**

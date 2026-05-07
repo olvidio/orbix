@@ -1,49 +1,63 @@
 <?php
 
-namespace src\actividades\application;
+declare(strict_types=1);
 
-use src\shared\config\ConfigGlobal;
-use frontend\shared\model\ViewNewTwig;
+namespace frontend\actividades\helpers;
+
 use frontend\shared\helpers\ActividadTipoTwigHashCompose;
-use src\actividades\domain\value_objects\StatusId;
+use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
-use src\actividades\domain\entity\TiposActividades;
+use src\actividades\domain\value_objects\StatusId;
+use src\shared\config\ConfigGlobal;
 
 /**
- * Description of actividadtipo
+ * Widget UI del selector de tipo de actividad (sfsv / asistentes / actividad /
+ * nom_tipo) con su cascada de "posibles". Sustituye al antiguo
+ * `src\actividades\application\ActividadTipo`, que mezclaba lógica de UI con
+ * acceso a `TipoDeActividadRepositoryInterface`.
  *
- * @author Daniel Serrabou <dani@moneders.net>
+ * La resolución de "posibles" ya no toca el repositorio: se delega en
+ * {@see TiposDeActividades}, que se autocarga (maps + filas) vía
+ * {@see TipoActivMetadataLoader} con UNA sola request a
+ * `/src/actividades/tipo_activ_metadata` por petición de página.
+ *
+ * La permisología (perm_oficina, jefeCalendario) y el render Twig se mantienen
+ * exactamente igual que en la versión backend para que el HTML renderizado sea
+ * el mismo que producía la clase original.
  */
 class ActividadTipo
 {
+    private ?string $ssfsv = null;
+    private ?string $sasistentes = null;
+    private ?string $sactividad = null;
+    private ?string $snom_tipo = null;
+    private ?int $status = null;
+    private ?string $que = null;
+    private int|string|null $id_tipo_activ = null;
+    private ?string $para = null;
+    private bool $bperm_jefe = false;
+    private bool $bAll = false;
+    private ?bool $evitar_procesos = null;
 
-    private $ssfsv;
-    private $sasistentes;
-    private $sactividad;
-    private $snom_tipo;
-    private $status;
-    private $que;
-    private $id_tipo_activ;
-    private $para;
-    private $bperm_jefe = FALSE;
-    private $bAll = FALSE;
-    private $evitar_procesos;
-
-    public function getHtml($extendida = FALSE)
+    /**
+     * Renderiza el desplegable y hace `echo` directo del HTML resultante (vía
+     * `ViewNewTwig::renderizar`). Para obtenerlo como string usar
+     * {@see self::captureHtml()}.
+     */
+    public function getHtml($extendida = false): void
     {
         $isfsv = ConfigGlobal::mi_sfsv();
-
-        $aSfsv = array(1 => 'sv', 2 => 'sf');
+        $aSfsv = [1 => 'sv', 2 => 'sf'];
 
         if (empty($this->ssfsv)) {
-            $this->ssfsv = $aSfsv[$isfsv];
+            $this->ssfsv = $aSfsv[$isfsv] ?? '';
         }
         if (empty($this->status)) {
             $this->status = StatusId::ACTUAL;
         }
 
         if (!empty($this->id_tipo_activ)) {
-            $oTipoActiv = new TiposActividades($this->id_tipo_activ, $extendida);
+            $oTipoActiv = new TiposDeActividades($this->id_tipo_activ, (bool)$extendida);
             $this->ssfsv = $oTipoActiv->getSfsvText();
             $this->sasistentes = $oTipoActiv->getAsistentesText();
             if ($extendida) {
@@ -54,22 +68,28 @@ class ActividadTipo
                 $this->snom_tipo = $oTipoActiv->getNom_tipoText();
             }
         } else {
-            $oTipoActiv = new TiposActividades();
-            // puede ser que tenga parte del id_tipo_activ.
-            if (!empty($this->ssfsv)) $oTipoActiv->setSfsvText($this->ssfsv);
-            if (!empty($this->sasistentes)) $oTipoActiv->setAsistentesText($this->sasistentes);
-            if ($extendida) {
-                if (!empty($this->sactividad)) $oTipoActiv->setActividad2DigitosText($this->sactividad);
-            } else {
-                if (!empty($this->sactividad)) $oTipoActiv->setActividadText($this->sactividad);
+            $oTipoActiv = new TiposDeActividades('', (bool)$extendida);
+            if (!empty($this->ssfsv)) {
+                $oTipoActiv->setSfsvText($this->ssfsv);
             }
-            // limitar el uso de all (sv,sf, resevado):
+            if (!empty($this->sasistentes)) {
+                $oTipoActiv->setAsistentesText($this->sasistentes);
+            }
+            if ($extendida) {
+                if (!empty($this->sactividad)) {
+                    $oTipoActiv->setActividad2DigitosText($this->sactividad);
+                }
+            } else {
+                if (!empty($this->sactividad)) {
+                    $oTipoActiv->setActividadText($this->sactividad);
+                }
+            }
             $oTipoActiv->setPosiblesAll($this->bAll);
         }
 
         $a_sfsv_posibles = $oTipoActiv->getSfsvPosibles();
         if ($extendida) {
-            $a_actividades_posibles = $oTipoActiv->getActividadesPosibles2digitos();
+            $a_actividades_posibles = $oTipoActiv->getActividadesPosibles2Digitos();
             $a_nom_tipo_posibles = $oTipoActiv->getNom_tipoPosibles2Digitos();
             $val_blanco_activ = '..';
             $val_blanco_nom = '..';
@@ -80,72 +100,66 @@ class ActividadTipo
             $val_blanco_nom = '...';
         }
 
-
         $array2 = [];
         if ($_SESSION['oPerm']->have_perm_oficina('est')) {
-            $array_n = array(1 => 'n', 3 => 'agd');
-            $array2 = array_merge($array2, $array_n);
+            $array2 = array_merge($array2, [1 => 'n', 3 => 'agd']);
         }
         if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
-            $array_n = array(1 => 'n');
-            $array2 = array_merge($array2, $array_n);
+            $array2 = array_merge($array2, [1 => 'n']);
         }
         if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
-            $array_nax = array(1 => 'nax');
-            $array2 = array_merge($array2, $array_nax);
+            $array2 = array_merge($array2, [1 => 'nax']);
         }
         if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
-            $array_agd = array(3 => 'agd');
-            $array2 = array_merge($array2, $array_agd);
+            $array2 = array_merge($array2, [3 => 'agd']);
         }
         if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
-            $array_sg = array(4 => 's', 5 => 'sg');
-            $array2 = array_merge($array2, $array_sg);
+            $array2 = array_merge($array2, [4 => 's', 5 => 'sg']);
         }
         if ($_SESSION['oPerm']->have_perm_oficina('des')) {
             if ($this->status === StatusId::ACTUAL) {
-                $array_des = $oTipoActiv->getAsistentesPosibles(); //todos
+                $array_des = $oTipoActiv->getAsistentesPosibles();
             } else {
-                $array_des = array(6 => 'sss+');
+                $array_des = [6 => 'sss+'];
             }
             $array2 = array_merge($array2, $array_des);
         }
         if ($_SESSION['oPerm']->have_perm_oficina('sr')) {
-            $array_sr = array(7 => 'sr');
-            $array2 = array_merge($array2, $array_sr);
+            $array2 = array_merge($array2, [7 => 'sr']);
         }
-
         if ($_SESSION['oPerm']->have_perm_oficina('calendario')) { // desde la sf
-            $array_des = $oTipoActiv->getAsistentesPosibles(); //todos
-            $array2 = array_merge($array2, $array_des);
+            $array2 = array_merge($array2, $oTipoActiv->getAsistentesPosibles());
         }
-
 
         // si es una búsqueda, también puedo buscar todos. (Excepto sf/sv)
-        if ($_SESSION['oConfig']->is_jefeCalendario() || ((isset($this->que) && $this->que === "buscar") || $this->bperm_jefe)) {
-            $oTipoActivB = new TiposActividades();
-            if ($this->ssfsv) $oTipoActivB->setSfsvText($this->ssfsv);
+        if ($_SESSION['oConfig']->is_jefeCalendario()
+            || ((isset($this->que) && $this->que === 'buscar') || $this->bperm_jefe)
+        ) {
+            $oTipoActivB = new TiposDeActividades('', (bool)$extendida);
+            if ($this->ssfsv) {
+                $oTipoActivB->setSfsvText($this->ssfsv);
+            }
             $a_asistentes_posibles = $oTipoActivB->getAsistentesPosibles();
         } else {
-            //$array1=$oTipoActiv->getAsistentesPosibles();
-            $oTipoActivB = new TiposActividades();
-            if ($this->ssfsv) $oTipoActivB->setSfsvText($this->ssfsv);
+            $oTipoActivB = new TiposDeActividades('', (bool)$extendida);
+            if ($this->ssfsv) {
+                $oTipoActivB->setSfsvText($this->ssfsv);
+            }
             $array1 = $oTipoActivB->getAsistentesPosibles();
-
             $a_asistentes_posibles = array_intersect($array1, $array2);
         }
+
         // pasar texto a numero
-        $isfsv = $oTipoActiv->getSfsvId();
+        $isfsvId = $oTipoActiv->getSfsvId();
         $iasistentes = $oTipoActiv->getAsistentesId();
         $iactividad = $oTipoActiv->getActividadId();
-        $inom_tipo = $oTipoActiv->getnom_tipoId();
-
+        $inom_tipo = $oTipoActiv->getNom_tipoId();
 
         $oDesplSfsv = new Desplegable();
         $oDesplSfsv->setNombre('isfsv_val');
         $oDesplSfsv->setOpciones($a_sfsv_posibles);
-        $oDesplSfsv->setOpcion_sel($isfsv);
-        if ($this->bAll === TRUE) {
+        $oDesplSfsv->setOpcion_sel($isfsvId);
+        if ($this->bAll === true) {
             $oDesplSfsv->setBlanco('t');
             $oDesplSfsv->setValBlanco('.');
         }
@@ -184,17 +198,17 @@ class ActividadTipo
         $url = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get';
         $url_act = ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_ver.php';
 
-        if ($this->getEvitarProcesos() !== TRUE) {
+        if ($this->getEvitarProcesos() !== true) {
             $procesos_installed = ConfigGlobal::is_app_installed('procesos');
         } else {
-            $procesos_installed = FALSE;
+            $procesos_installed = false;
         }
 
         $a_campos = [
             'url' => $url,
             'url_act' => $url_act,
             'perm_jefe' => $this->bperm_jefe,
-            'isfsv' => $isfsv,
+            'isfsv' => $isfsvId,
             'oDesplSfsv' => $oDesplSfsv,
             'oDesplAsistentes' => $oDesplAsistentes,
             'oDesplActividad' => $oDesplActividad,
@@ -231,7 +245,8 @@ class ActividadTipo
 
     /**
      * Mismo efecto visual que {@see self::getHtml()} (echo vía Twig) pero como string.
-     * Útil para construir vistas desde casos de uso sin usar `frontend` como orquestador.
+     * Útil para construir vistas desde casos de uso sin que los consumidores
+     * tengan que envolver la llamada en `ob_start`/`ob_get_clean`.
      */
     public function captureHtml(bool $extendida = false): string
     {
@@ -246,78 +261,72 @@ class ActividadTipo
         return ob_get_clean() ?: '';
     }
 
-    public function setPerm_jefe($perm_jefe)
+    public function setPerm_jefe($perm_jefe): void
     {
-        $this->bperm_jefe = $perm_jefe;
+        $this->bperm_jefe = (bool)$perm_jefe;
     }
 
-    public function setSfsvAll($bAll = FALSE)
+    public function setSfsvAll($bAll = false): void
     {
-        $this->bAll = $bAll;
+        $this->bAll = (bool)$bAll;
     }
 
-    public function setSfsv($ssfsv)
+    public function setSfsv($ssfsv): void
     {
-        $this->ssfsv = $ssfsv;
+        $this->ssfsv = $ssfsv === null ? null : (string)$ssfsv;
     }
 
-    public function setAsistentes($sasistentes)
+    public function setAsistentes($sasistentes): void
     {
-        $this->sasistentes = $sasistentes;
+        $this->sasistentes = $sasistentes === null ? null : (string)$sasistentes;
     }
 
-    public function setActividad($sactividad)
+    public function setActividad($sactividad): void
     {
-        $this->sactividad = $sactividad;
+        $this->sactividad = $sactividad === null ? null : (string)$sactividad;
     }
 
-    public function setActividad2Digitos($sactividad)
+    public function setActividad2Digitos($sactividad): void
     {
-        $this->sactividad = $sactividad;
+        $this->sactividad = $sactividad === null ? null : (string)$sactividad;
     }
 
-    public function setNom_tipo($snom_tipo)
+    public function setNom_tipo($snom_tipo): void
     {
-        $this->snom_tipo = $snom_tipo;
+        $this->snom_tipo = $snom_tipo === null ? null : (string)$snom_tipo;
     }
 
-    public function setStatus($status)
+    public function setStatus($status): void
     {
-        $this->status = $status;
+        $this->status = $status === null ? null : (int)$status;
     }
 
-    public function setQue($que)
+    public function setQue($que): void
     {
-        $this->que = $que;
+        $this->que = $que === null ? null : (string)$que;
     }
 
-    public function setId_tipo_activ($id_tipo_activ)
+    public function setId_tipo_activ($id_tipo_activ): void
     {
         $this->id_tipo_activ = $id_tipo_activ;
     }
 
-    public function setPara($para = 'actividades')
+    public function setPara($para = 'actividades'): void
     {
-        $this->para = $para;
+        $this->para = $para === null ? null : (string)$para;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEvitarProcesos()
+    public function getEvitarProcesos(): ?bool
     {
         return $this->evitar_procesos;
     }
 
     /**
-     * Para indicar que no tenga en cuenta los procesos en caso de tener instalado el módulo.
-     *
-     * @param boolean $procesos
+     * Indica si se debe ignorar la app `procesos` aunque esté instalada
+     * (la plantilla la usa para decidir si pinta el bloque de fases).
      */
-    public function setEvitarProcesos($evitar_procesos)
+    public function setEvitarProcesos($evitar_procesos): void
     {
-        $this->evitar_procesos = $evitar_procesos;
+        $this->evitar_procesos = $evitar_procesos === null ? null : (bool)$evitar_procesos;
     }
-
-
 }

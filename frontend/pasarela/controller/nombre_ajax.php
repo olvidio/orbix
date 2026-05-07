@@ -1,5 +1,6 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
@@ -76,7 +77,7 @@ switch ($Qque) {
         $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
         $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
 
-        $oActividadTipo = new \src\actividades\application\ActividadTipo();
+        $oActividadTipo = new ActividadTipo();
         $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
         $oActividadTipo->setAsistentes($Qsasistentes);
         $oActividadTipo->setActividad($Qsactividad);
@@ -121,7 +122,7 @@ function render_nombre_lista_html(array $data): string
         $valor_js = htmlspecialchars(addslashes($valor), ENT_QUOTES, 'UTF-8');
         $valor_html = htmlspecialchars($valor, ENT_QUOTES, 'UTF-8');
         $html .= "<tr><td>$etiqueta</td><td>";
-        $html .= "<span class=\"link\" onclick=\"fnjs_modificar($id_tipo_activ,'$valor_js')\">$valor_html</span></td></tr>";
+        $html .= "<span class=\"link\" onclick=\"fnjs_modificar($id_tipo_activ,'$valor_js')\" size=\"200\">$valor_html</span></td></tr>";
     }
     $html .= '</table>';
     return $html;

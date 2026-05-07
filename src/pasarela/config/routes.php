@@ -75,4 +75,7 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/pasarela/exportar_actividades_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/exportar_actividades_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/pasarela/exportar_que_actividad_tipo_html', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/exportar_que_actividad_tipo_html.php';
+    });
 };

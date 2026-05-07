@@ -2,6 +2,7 @@
 
 namespace src\actividades\application;
 
+use frontend\actividades\helpers\TipoActivMetadataLoader;
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\entity\TipoDeActividad;
@@ -33,6 +34,11 @@ class TipoActivNuevo
         $oTipoDeActividad->setNombre($Qnom_tipo_activ);
         if ($TipoDeActividadRepository->Guardar($oTipoDeActividad) === false) {
             $mensajes .= _("hay un error, no se ha guardado");
+        } else {
+            // El listado cacheado en sesión por TipoActivMetadataLoader queda
+            // obsoleto al añadir un nuevo tipo: forzar refetch en la próxima
+            // lectura.
+            TipoActivMetadataLoader::forget();
         }
         if (ConfigGlobal::is_app_installed('procesos')) {
             $mensajes .= _("IMPORTANTE: Debe añadir un proceso para el nuevo tipo de actividad");

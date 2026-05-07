@@ -2,12 +2,11 @@
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
+use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\web\CasasQue;
 use frontend\shared\web\PeriodoQue;
 use frontend\shared\web\Posicion;
-use src\actividades\application\ActividadTipo;
-use src\shared\config\ConfigGlobal;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -19,7 +18,6 @@ use src\shared\config\ConfigGlobal;
  */
 
 require_once 'frontend/shared/global_header_front.inc';
-require_once __DIR__ . '/../../src/shared/global_object.inc';
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
@@ -51,41 +49,13 @@ $Qcdc_sel = (integer)filter_input(INPUT_POST, 'cdc_sel');
 $Qid_cdc_mas = (string)filter_input(INPUT_POST, 'id_cdc_mas');
 $Qid_cdc_num = (string)filter_input(INPUT_POST, 'id_cdc_num');
 
-$isfsv = ConfigGlobal::mi_sfsv();
-$permiso_des = FALSE;
-if ($_SESSION['oPerm']->have_perm_oficina('vcsd')
-    || $_SESSION['oPerm']->have_perm_oficina('des')
-    || $_SESSION['oPerm']->have_perm_oficina('calendario')
-) {
-    $permiso_des = TRUE;
-    $ssfsv = '';
-} else {
-    if ($isfsv === 1) {
-        $ssfsv = 'sv';
-    }
-    if ($isfsv === 2) {
-        $ssfsv = 'sf';
-    }
-}
-
-$oActividadTipo = new ActividadTipo();
-$oActividadTipo->setPerm_jefe($permiso_des);
-$oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
-$oActividadTipo->setSfsv($ssfsv);
-$oActividadTipo->setAsistentes($Qsasistentes);
-$oActividadTipo->setActividad($Qsactividad);
-$oActividadTipo->setNom_tipo($Qsnom_tipo);
-$oActividadTipo->setEvitarProcesos(TRUE);
-
-$perm_jefe = FALSE;
-if ($_SESSION['oConfig']->is_jefeCalendario()
-    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() === 1)
-    || ($_SESSION['oPerm']->have_perm_oficina('admin_sf') && ConfigGlobal::mi_sfsv() === 2)
-) {
-    $perm_jefe = TRUE;
-}
-$oActividadTipo->setPerm_jefe($perm_jefe);
-$oActividadTipo->setSfsvAll(TRUE);
+$dataTipoHtml = PostRequest::getDataFromUrl('/src/pasarela/exportar_que_actividad_tipo_html', [
+    'id_tipo_activ' => $Qid_tipo_activ,
+    'sasistentes' => $Qsasistentes,
+    'sactividad' => $Qsactividad,
+    'snom_tipo' => $Qsnom_tipo,
+]);
+$html_actividad_tipo = (string)($dataTipoHtml['html'] ?? '');
 
 $aOpciones = [
     'tot_any' => _('todo el año'),
@@ -117,7 +87,7 @@ $oHash->setCamposNo('cdc_sel!id_cdc!id_cdc_mas!id_cdc_num');
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
-    'oActividadTipo' => $oActividadTipo,
+    'html_actividad_tipo' => $html_actividad_tipo,
     'oFormP' => $oFormP,
     'oForm' => $oForm,
     'url_ajax' => $url_ajax,

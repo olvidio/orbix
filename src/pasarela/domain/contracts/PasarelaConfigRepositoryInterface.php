@@ -20,9 +20,9 @@ interface PasarelaConfigRepositoryInterface
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(PasarelaConfig $ConfigSchema): bool;
+    public function Eliminar(PasarelaConfig $PasarelaConfig): bool;
 
-    public function Guardar(PasarelaConfig $ConfigSchema): bool;
+    public function Guardar(PasarelaConfig $PasarelaConfig): bool;
 
     public function getErrorTxt(): string;
 

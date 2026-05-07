@@ -2,7 +2,7 @@
 
 namespace src\procesos\application;
 
-use src\actividades\application\ActividadTipo;
+use frontend\actividades\helpers\ActividadTipo;
 
 /**
  * HTML del selector de tipo de actividad (Plantilla procesos/actividad_tipo_que_perm.html.twig)

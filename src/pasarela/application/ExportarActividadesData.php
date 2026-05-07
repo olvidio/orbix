@@ -154,9 +154,9 @@ final class ExportarActividadesData
             $id_ubi = $oActividad->getId_ubi();
             $oF_ini = $oActividad->getF_ini();
             $f_ini = $oActividad->getF_ini()?->getFromLocal();
-            $h_ini = $oActividad->getH_ini();
+            $h_ini = $oActividad->getH_ini()?->format('H:i');
             $f_fin = $oActividad->getF_fin()?->getFromLocal();
-            $h_fin = $oActividad->getH_fin();
+            $h_fin = $oActividad->getH_fin()?->format('H:i');
 
             if (!empty($h_ini)) {
                 $h_ini = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_ini ?? '');
@@ -233,7 +233,7 @@ final class ExportarActividadesData
                 }
             }
             $year = $oF_ini?->format('Y') ?? '';
-            $cTarifas = $TarifaUbiRepository->getTarifas([
+            $cTarifas = $TarifaUbiRepository->getTarifaUbis([
                 'id_ubi' => $id_ubi,
                 'year' => $year,
                 'id_tarifa' => $id_tarifa,

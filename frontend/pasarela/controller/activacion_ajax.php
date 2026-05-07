@@ -1,5 +1,6 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
@@ -15,9 +16,9 @@ require_once 'frontend/shared/global_header_front.inc';
  * `PostRequest::getDataFromUrl(...)` y pintamos HTML/Twig en frontend.
  *
  * Contrato con el JS de las plantillas Twig:
- *  - mutaciones (`eliminar`, `update`, `nuevo`, `update_default`): respuesta
- *    vacía si éxito; texto del error si la validación o la persistencia falla
- *    (`PostRequest::getDataFromUrl` hace `exit()` con el mensaje del backend).
+ *  - mutaciones (`eliminar`, `update`, `nuevo`, `update_default`): JSON
+ *    `{"success":true}` si éxito; si falla el POST interno,
+ *    `PostRequest::getDataFromUrl` hace `exit()` con el mensaje (no JSON).
  *  - `lista`: HTML para `#div_tabla`.
  *  - `form_*`: HTML del formulario para `#div_modificar`.
  */
@@ -33,6 +34,8 @@ switch ($Qque) {
         PostRequest::getDataFromUrl('/src/pasarela/activacion_excepcion_eliminar', [
             'id_tipo_activ' => $Qid_tipo_activ,
         ]);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(['success' => true], JSON_THROW_ON_ERROR);
         break;
     case 'update':
     case 'nuevo':
@@ -42,12 +45,16 @@ switch ($Qque) {
             'id_tipo_activ' => $Qid_tipo_activ,
             'valor' => $Qactivacion,
         ]);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(['success' => true], JSON_THROW_ON_ERROR);
         break;
     case 'update_default':
         $Qdefault = (string)filter_input(INPUT_POST, 'default');
         PostRequest::getDataFromUrl('/src/pasarela/activacion_default_guardar', [
             'default' => $Qdefault,
         ]);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(['success' => true], JSON_THROW_ON_ERROR);
         break;
     case 'lista':
         $data = PostRequest::getDataFromUrl('/src/pasarela/activacion_lista');
@@ -106,11 +113,7 @@ switch ($Qque) {
         $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
         $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
 
-        // Widget UI heredado (`src\actividades\application\ActividadTipo::getHtml()`)
-        // que renderiza el selector de tipo de actividad. Mientras no exista una
-        // versión en `frontend/`, se permite instanciarlo aquí como excepción
-        // documentada al uso de PostRequest (no es dominio de pasarela).
-        $oActividadTipo = new \src\actividades\application\ActividadTipo();
+        $oActividadTipo = new ActividadTipo();
         $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
         $oActividadTipo->setAsistentes($Qsasistentes);
         $oActividadTipo->setActividad($Qsactividad);
@@ -133,7 +136,7 @@ switch ($Qque) {
             'oActividadTipo' => $oActividadTipo,
         ];
 
-        $oView = new ViewNewTwig('frontend\\pasarela\\controller');
+        $oView = new ViewNewTwig('frontend/pasarela/controller');
         $oView->renderizar('activacion_form_nuevo.html.twig', $a_campos);
         break;
 }

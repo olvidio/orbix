@@ -1,5 +1,6 @@
 <?php
 
+use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
@@ -105,7 +106,7 @@ switch ($Qque) {
         $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
         $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
 
-        $oActividadTipo = new \src\actividades\application\ActividadTipo();
+        $oActividadTipo = new ActividadTipo();
         $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
         $oActividadTipo->setAsistentes($Qsasistentes);
         $oActividadTipo->setActividad($Qsactividad);
@@ -129,7 +130,7 @@ switch ($Qque) {
             'txt' => $txt,
         ];
 
-        $oView = new ViewNewTwig('frontend\\pasarela\\controller');
+        $oView = new ViewNewTwig('frontend/pasarela/controller');
         $oView->renderizar('contribucion_x_form_nuevo.html.twig', $a_campos);
         break;
 }

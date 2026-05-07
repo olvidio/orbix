@@ -2,6 +2,8 @@
 
 namespace src\actividades\application;
 
+use frontend\actividades\helpers\ActividadTipo;
+
 /**
  * Datos del bloque de tipo de actividad (desplegables) para la pantalla actividad_que.
  * El HTML lo genera {@see ActividadTipo::getHtml()} (render vía Twig); aquí se captura

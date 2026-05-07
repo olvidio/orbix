@@ -16,20 +16,25 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
  */
 class TiposActividades
 {
-    private string $sregexp_id_tipo_activ = '';
-    private string $ssfsv = '';
-    private string $sasistentes = '';
-    private string $sactividad = '';
-    private string $snom_tipo = '';
-
-    private array $aSfsv = [
+    /**
+     * Mapa texto → código del primer dígito del id_tipo_activ (sf/sv/reservada).
+     * Fuente única de verdad: este `const` lo expone también el endpoint
+     * `/src/actividades/tipo_activ_metadata` (vía
+     * {@see \src\actividades\application\TipoActivMetadata}) para que
+     * {@see \frontend\actividades\helpers\TiposDeActividades} no lo duplique.
+     */
+    public const A_SFSV = [
         "sv" => 1,
         "sf" => 2,
         "reservada" => 3,
         "all" => '.',
     ];
 
-    private array $aAsistentes = [
+    /**
+     * Mapa texto → código del segundo dígito del id_tipo_activ (asistentes).
+     * @see self::A_SFSV
+     */
+    public const A_ASISTENTES = [
         "n" => 1,
         "nax" => 2,
         "agd" => 3,
@@ -42,7 +47,11 @@ class TiposActividades
         "all" => '.',
     ];
 
-    private array $aActividad1Digito = [
+    /**
+     * Mapa texto → código del tercer dígito (actividad) en modo no extendida.
+     * @see self::A_SFSV
+     */
+    public const A_ACTIVIDAD_1_DIGITO = [
         "crt" => '1',
         "ca" => '2',
         "cv" => '3',
@@ -51,7 +60,11 @@ class TiposActividades
         "all" => '.',
     ];
 
-    private array $aActividad2Digitos = [
+    /**
+     * Mapa texto → código de los dígitos 3-4 (actividad) en modo extendida.
+     * @see self::A_SFSV
+     */
+    public const A_ACTIVIDAD_2_DIGITOS = [
         "crt" => 10,
         "crt-recientes" => 11,
         "crt-bach" => 15,
@@ -73,6 +86,17 @@ class TiposActividades
         "cv-crt" => 50,
         "all" => '..',
     ];
+
+    private string $sregexp_id_tipo_activ = '';
+    private string $ssfsv = '';
+    private string $sasistentes = '';
+    private string $sactividad = '';
+    private string $snom_tipo = '';
+
+    private array $aSfsv = self::A_SFSV;
+    private array $aAsistentes = self::A_ASISTENTES;
+    private array $aActividad1Digito = self::A_ACTIVIDAD_1_DIGITO;
+    private array $aActividad2Digitos = self::A_ACTIVIDAD_2_DIGITOS;
 
     private array $afSfsv = [];
     private array $afAsistentes = [];

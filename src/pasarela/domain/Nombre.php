@@ -4,7 +4,6 @@ namespace src\pasarela\domain;
 
 use src\pasarela\domain\contracts\PasarelaConfigRepositoryInterface;
 use src\pasarela\domain\entity\PasarelaConfig;
-use stdClass;
 
 /**
  * Configuración del parámetro `nombre`.
@@ -61,8 +60,7 @@ class Nombre
 
     private function guardar(): void
     {
-        $nombres = new stdClass();
-        $nombres->excepciones = $this->a_excepciones;
+        $a_nombres['excepciones'] = $this->a_excepciones;
 
         $PasarelaConfigRepository = $GLOBALS['container']->get(PasarelaConfigRepositoryInterface::class);
         $oPasarelaConfig = $PasarelaConfigRepository->findById(self::PARAMETRO);
@@ -71,7 +69,7 @@ class Nombre
             $oPasarelaConfig->setNom_parametro(self::PARAMETRO);
         }
 
-        $oPasarelaConfig->setJson_valor($nombres);
+        $oPasarelaConfig->setJson_valor($a_nombres);
         $PasarelaConfigRepository->Guardar($oPasarelaConfig);
     }
 }

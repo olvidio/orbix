@@ -9,6 +9,10 @@ return static function ($r) {
         require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_lista.php';
     });
 
+    $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_metadata', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_metadata.php';
+    });
+
     $r->addRoute(['GET', 'POST'], '/src/actividades/tipo_activ_form_nuevo', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/tipo_activ_form_nuevo.php';
     });

@@ -7,7 +7,7 @@ namespace frontend\shared\helpers;
 use frontend\shared\security\HashFront;
 
 /**
- * Tokens `h` / `h_act` para los Twig de {@see \src\actividades\application\ActividadTipo}
+ * Tokens `h` / `h_act` para los Twig de {@see \frontend\actividades\helpers\ActividadTipo}
  * (`linkSinValParams` sobre el POST AJAX a `actividad_tipo_get` y sobre `actividad_ver.php`).
  */
 final class ActividadTipoTwigHashCompose

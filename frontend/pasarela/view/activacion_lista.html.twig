@@ -1,27 +1,22 @@
 <script>
-    fnjs_guardar_default = function (formulario) {
-        $('#que').val('update_default');
-        $(formulario).attr('action', '{{ url_ajax }}');
-        $(formulario).one("submit", function () {
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-            })
-                .done(function (rta_txt) {
-                    if (rta_txt !== '' && rta_txt !== '\n') {
-                        alert(rta_txt);
-                    }
-                    fnjs_lista();
-                    fnjs_cerrar();
-                });
-            return false;
+    let fnjs_guardar_activacion_default = function (formulario) {
+        $("#que").val('update_default');
+        let request = $.ajax({
+            url: '{{ url_ajax|raw }}',
+            type: 'post',
+            data: $(formulario).serialize(),
+            dataType: 'json'
         });
-        $(formulario).trigger("submit");
-        $(formulario).off();
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+                fnjs_lista_activacion();
+                fnjs_cerrar_activacion();
+            }
+        });
     }
 
-    fnjs_guardar_nuevo = function (formulario) {
+    let fnjs_guardar_activacion_nuevo = function (formulario) {
         var err = 0;
         var id_tipo_activ = $('#id_tipo_activ').val();
         var activacion = $('#activacion').val();
@@ -35,29 +30,25 @@
         }
         if (!err) {
             $('#que').val('nuevo');
-            $(formulario).attr('action', '{{ url_ajax }}');
-            $(formulario).one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
-                })
-                    .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\n') {
-                            alert(rta_txt);
-                        }
-                        fnjs_lista();
-                        fnjs_cerrar();
-                    });
-                return false;
+            let request = $.ajax({
+                url: '{{ url_ajax|raw }}',
+                type: 'post',
+                data: $(formulario).serialize(),
+                dataType: 'json'
             });
-            $(formulario).trigger("submit");
-            $(formulario).off();
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+                    fnjs_lista_activacion();
+                    fnjs_cerrar_activacion();
+                }
+            });
         }
     }
 
-    fnjs_guardar = function (formulario, que) {
-        if (que == "eliminar") {
+    let fnjs_guardar_activacion = function (formulario, que) {
+        var err = 0;
+        if (que === "eliminar") {
             seguro = confirm("{{ txt_eliminar }}");
             if (seguro) {
                 err = 0;
@@ -65,7 +56,6 @@
                 err = 1;
             }
         }
-        var err = 0;
         var activacion = $('#activacion').val();
         var id_tipo_activ = $('#id_tipo_activ').val();
         if (!id_tipo_activ) {
@@ -78,29 +68,23 @@
         }
         if (!err) {
             $('#que').val(que);
-            $(formulario).attr('action', '{{ url_ajax }}');
-            $(formulario).one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
-                })
-                    .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\n') {
-                            alert(rta_txt);
-                        } else {
-                            fnjs_lista();
-                            fnjs_cerrar();
-                        }
-                    });
-                return false;
+            let request = $.ajax({
+                url: '{{ url_ajax|raw }}',
+                type: 'post',
+                data: $(formulario).serialize(),
+                dataType: 'json'
             });
-            $(formulario).trigger("submit");
-            $(formulario).off();
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+                    fnjs_lista_activacion();
+                    fnjs_cerrar_activacion();
+                }
+            });
         }
     }
 
-    fnjs_nuevo = function (id_tipo_activ) {
+    let fnjs_nuevo_activacion = function (id_tipo_activ) {
         document.getElementById("div_modificar").style.display = "block";
         $('#div_modificar').addClass('ventana');
         $('#div_modificar').width('auto');
@@ -113,7 +97,7 @@
         fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
 
-    fnjs_modificar = function (id_tipo_activ, activacion) {
+    let fnjs_modificar_activacion = function (id_tipo_activ, activacion) {
         document.getElementById("div_modificar").style.display = "block";
         $('#div_modificar').addClass('ventana');
         $('#div_modificar').width('auto');
@@ -126,7 +110,7 @@
         fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
 
-    fnjs_modificar_default = function () {
+    let fnjs_modificar_activacion_default = function () {
         document.getElementById("div_modificar").style.display = "block";
         $('#div_modificar').addClass('ventana');
         $('#div_modificar').width('auto');
@@ -139,8 +123,8 @@
         fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
 
-    fnjs_lista = function () {
-        /* obtener el listado */
+    let fnjs_lista_activacion = function () {
+        // obtener el listado
         var url = '{{ url_ajax|raw }}';
         var parametros = 'que=lista' + '{{ h_lista|raw }}';
 
@@ -149,21 +133,22 @@
             type: 'post',
             data: parametros
         })
-            .done(function (rta_txt) {
-                if (rta_txt) {
-                    $('#div_tabla').html(rta_txt);
-                }
-                fnjs_cerrar();
-            });
+        .done(function (rta_txt) {
+            if (rta_txt) {
+                $('#div_tabla').html(rta_txt);
+            }
+            fnjs_cerrar_activacion();
+        });
     }
 
-    fnjs_cerrar = function () {
+    let fnjs_cerrar_activacion = function () {
         $('#div_modificar').html('');
         document.getElementById("div_modificar").style.display = "none";
         document.getElementById("overlay").style.display = "none";
     }
 
-    fnjs_id_activ = function () {
+    /*
+    let fnjs_id_activ_activacion = function () {
         let isfsv = $('#isfsv_val').val();
         let iasistentes = $('#iasistentes_val').val();
         let iactividad = $('#iactividad_val').val();
@@ -172,15 +157,16 @@
 
         $('#id_tipo_activ').val(id_tipo_activ);
     }
+    */
 
     $(document).ready(function () {
-        fnjs_lista();
+        fnjs_lista_activacion();
     });
 
     fnjs_left_side_hide();
 </script>
 <div id='div_botones'>
-    <input type="button" value="{{ "nuevo"|trans|raw }}" onclick="fnjs_nuevo();">
+    <input type="button" value="{{ "nuevo"|trans|raw }}" onclick="fnjs_nuevo_activacion();">
 </div>
 <div id='div_tabla'></div>
 <div id='div_modificar'></div>

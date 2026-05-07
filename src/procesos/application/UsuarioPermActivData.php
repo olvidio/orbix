@@ -2,6 +2,7 @@
 
 namespace src\procesos\application;
 
+use frontend\actividades\helpers\ActividadTipo;
 use src\permisos\domain\PermisosActividades;
 use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
@@ -9,7 +10,6 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\PermAccion;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
-use src\actividades\application\ActividadTipo;
 use function src\shared\domain\helpers\is_true;
 
 /**

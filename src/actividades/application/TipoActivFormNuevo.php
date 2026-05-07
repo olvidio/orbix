@@ -2,7 +2,7 @@
 
 namespace src\actividades\application;
 
-use actividades\model\ActividadTipo;
+use frontend\actividades\helpers\ActividadTipo;
 use frontend\shared\helpers\TipoActivGestionFormHashCompose;
 
 /**
