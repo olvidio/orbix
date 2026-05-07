@@ -1,9 +1,9 @@
 <?php
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use src\shared\config\ConfigGlobal;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -18,7 +18,7 @@ $data = PostRequest::getDataFromUrl('/src/dbextern/ver_traslados_datos', [
 $a_persona_orbix = $data['personas'] ?? [];
 
 // Hash para AJAX trasladar
-$url_sincro_trasladar = ConfigGlobal::getWeb() . '/src/dbextern/sincro_trasladar';
+$url_sincro_trasladar = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_trasladar';
 $oHash = new HashFront();
 $oHash->setUrl($url_sincro_trasladar);
 $oHash->setCamposForm('dl!id_nom_orbix!tipo_persona');
@@ -31,5 +31,5 @@ $a_campos = [
     'h' => $h,
 ];
 
-$oView = new ViewNewPhtml('frontend/dbextern/controller');
+$oView = new ViewNewPhtml('frontend\dbextern\controller');
 $oView->renderizar(__FILE__, $a_campos);

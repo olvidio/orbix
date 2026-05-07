@@ -1,9 +1,9 @@
 <?php
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use src\shared\config\ConfigGlobal;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -77,7 +77,7 @@ if ($max === 0) {
 }
 
 // Hash para el formulario de navegación
-$url_sincro_ver = ConfigGlobal::getWeb() . '/frontend/dbextern/controller/ver_orbix.php';
+$url_sincro_ver = AppUrlConfig::getApiBaseUrl() . '/frontend/dbextern/controller/ver_orbix.php';
 $oHash = new HashFront();
 $oHash->setUrl($url_sincro_ver);
 $oHash->setcamposNo('mov');
@@ -90,7 +90,7 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 
 // Hash para AJAX unir
-$url_sincro_unir = ConfigGlobal::getWeb() . '/src/dbextern/sincro_unir';
+$url_sincro_unir = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_unir';
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_sincro_unir);
 $oHash1->setCamposForm('region!dl!id_nom_listas!id!id_orbix!tipo_persona');
@@ -111,5 +111,5 @@ $a_campos = [
     'h1' => $h1,
 ];
 
-$oView = new ViewNewPhtml('frontend/dbextern/controller');
+$oView = new ViewNewPhtml('frontend\dbextern\controller');
 $oView->renderizar(__FILE__, $a_campos);

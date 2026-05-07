@@ -1,10 +1,10 @@
 <?php
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 use frontend\shared\security\HashFrontSignedLink;
-use src\shared\config\ConfigGlobal;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -30,14 +30,14 @@ $ver_910 = HashFrontSignedLink::fromSpec($data['link_spec_ver_orbix']);
 $url_actualizar = HashFrontSignedLink::fromSpec($data['link_spec_self']);
 
 // Hash para AJAX syncro
-$url_sincro_syncro = ConfigGlobal::getWeb() . '/src/dbextern/sincro_syncro';
+$url_sincro_syncro =  AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_syncro';
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_sincro_syncro);
 $oHash1->setCamposForm('region!dl_listas!tipo_persona');
 $h1 = $oHash1->linkSinValParams();
 
 // Hash para AJAX refrescar
-$url_refrescar = ConfigGlobal::getWeb() . '/src/dbextern/refrescar_bdu';
+$url_refrescar = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/refrescar_bdu';
 $oHash2 = new HashFront();
 $oHash2->setUrl($url_refrescar);
 $oHash2->setCamposForm('que');
@@ -68,5 +68,5 @@ $a_campos = [
     'h2' => $h2,
 ];
 
-$oView = new ViewNewPhtml('frontend/dbextern/controller');
+$oView = new ViewNewPhtml('frontend\dbextern\controller');
 $oView->renderizar(__FILE__, $a_campos);

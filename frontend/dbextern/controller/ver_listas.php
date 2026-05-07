@@ -1,9 +1,9 @@
 <?php
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use src\shared\config\ConfigGlobal;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -82,7 +82,7 @@ if (!empty($new_id) && isset($_SESSION['DBListas'][$new_id])) {
 }
 
 // Hash para el formulario de navegación
-$url_sincro_ver = ConfigGlobal::getWeb() . '/frontend/dbextern/controller/ver_listas.php';
+$url_sincro_ver = AppUrlConfig::getApiBaseUrl() . '/frontend/dbextern/controller/ver_listas.php';
 $oHash = new HashFront();
 $oHash->setUrl($url_sincro_ver);
 $oHash->setcamposNo('mov');
@@ -95,19 +95,19 @@ $a_camposHidden = [
 $oHash->setArraycamposHidden($a_camposHidden);
 
 // Hash para AJAX crear/unir/crear_todos
-$url_sincro_crear = ConfigGlobal::getWeb() . '/src/dbextern/sincro_crear';
+$url_sincro_crear = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_crear';
 $oHash1 = new HashFront();
 $oHash1->setUrl($url_sincro_crear);
 $oHash1->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona');
 $h_crear = $oHash1->linkSinValParams();
 
-$url_sincro_unir = ConfigGlobal::getWeb() . '/src/dbextern/sincro_unir';
+$url_sincro_unir = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_unir';
 $oHash2 = new HashFront();
 $oHash2->setUrl($url_sincro_unir);
 $oHash2->setCamposForm('id_nom_listas!id_orbix!region!dl!id!tipo_persona');
 $h_unir = $oHash2->linkSinValParams();
 
-$url_sincro_crear_todos = ConfigGlobal::getWeb() . '/src/dbextern/sincro_crear_todos';
+$url_sincro_crear_todos = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_crear_todos';
 $oHash3 = new HashFront();
 $oHash3->setUrl($url_sincro_crear_todos);
 $oHash3->setCamposForm('region!dl!tipo_persona');
@@ -139,5 +139,5 @@ $a_campos = [
     'h_crear_todos' => $h_crear_todos,
 ];
 
-$oView = new ViewNewPhtml('frontend/dbextern/controller');
+$oView = new ViewNewPhtml('frontend\dbextern\controller');
 $oView->renderizar(__FILE__, $a_campos);

@@ -1,9 +1,9 @@
 <?php
 
+use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
-use src\shared\config\ConfigGlobal;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -18,7 +18,7 @@ $data = PostRequest::getDataFromUrl('/src/dbextern/ver_orbix_otradl_datos', [
 $a_persona_listas = $data['personas'] ?? [];
 
 // Hash para AJAX trasladar
-$url_sincro_trasladar_a = ConfigGlobal::getWeb() . '/src/dbextern/sincro_trasladar_a';
+$url_sincro_trasladar_a = AppUrlConfig::getApiBaseUrl() . '/src/dbextern/sincro_trasladar_a';
 $oHash = new HashFront();
 $oHash->setUrl($url_sincro_trasladar_a);
 $oHash->setCamposForm('dl!id_nom_orbix!tipo_persona');
@@ -31,5 +31,5 @@ $a_campos = [
     'h' => $h,
 ];
 
-$oView = new ViewNewPhtml('frontend/dbextern/controller');
+$oView = new ViewNewPhtml('frontend\dbextern\controller');
 $oView->renderizar(__FILE__, $a_campos);
