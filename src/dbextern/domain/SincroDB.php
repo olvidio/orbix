@@ -426,7 +426,7 @@ class SincroDB
         $nx2 = $oPersonaListas->getNx2();
         $apellido2 = $oPersonaListas->getApellido2();
         $apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
-        $f_nacimiento = $oPersonaListas->getFecha_Naci();
+        $f_nacimiento_raw = $oPersonaListas->getFecha_Naci();
         $lugar_nacimiento = $oPersonaListas->getLugar_Naci();
 
         $dl_listas = $oPersonaListas->getDl();
@@ -495,7 +495,8 @@ class SincroDB
         $oPersona->setApellido1($apellido1_sinprep);
         $oPersona->setNx2($nx2);
         $oPersona->setApellido2($apellido2_sinprep);
-        $oPersona->setF_nacimiento($f_nacimiento);
+        $f_nacimiento_vo = DateTimeLocal::createFromLocal($f_nacimiento_raw);
+        $oPersona->setF_nacimiento($f_nacimiento_vo instanceof DateTimeLocal ? $f_nacimiento_vo : null);
         $oPersona->setLugar_nacimiento($lugar_nacimiento);
         if ($id_tipo_persona != 4) {
             $oPersona->setCe($ce_num);
