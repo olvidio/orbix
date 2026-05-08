@@ -12,7 +12,7 @@ apps/dbextern/model/entity/IdMatchPersona.php
 apps/dbextern/model/entity/PersonaBDU.php
 apps/devel/controller/factory.php
 apps/devel/controller/factory_mvc.php
-apps/devel/model/DBAlterSchema.php
+src/devel_db_admin/infrastructure/DBAlterSchema.php
 apps/notas/model/AsignaturasPendientes.php
 apps/notas/model/EditarPersonaNota.php
 apps/notas/model/Resumen.php

@@ -21,11 +21,11 @@ id_metamenu;id_mod;url;descripcion
 150;1;frontend/usuarios/controller/usuario_lista.php;lista usuarios 2
 165;1;public/ayuda/index.php;Ayuda
 142;1;src/menus/infrastructure/ui/http/controllers/menus_generar_txt.php;pasa los menus a texto
-102;2;apps/devel/controller/apptables.php;Manage tablas de Apps
-192;2;apps/devel/controller/db_cambiar_nombre_que.php;cambiar nombre dl
-54;2;apps/devel/controller/db_mover_que.php;DB mover tabla
-17;2;apps/devel/controller/db_que.php;nuevo esquema
-19;2;apps/devel/controller/factory_form.php;generador de clases
+102;2;frontend/devel_db_admin/controller/apptables.php;Manage tablas de Apps
+192;2;frontend/devel_db_admin/controller/db_cambiar_nombre_que.php;cambiar nombre dl
+54;2;frontend/devel_db_admin/controller/db_mover_que.php;DB mover tabla
+17;2;frontend/devel_db_admin/controller/db_que.php;nuevo esquema
+19;2;frontend/devel_codegen/controller/factory_form.php;generador de clases
 166;2;apps/menus/controller/pasar_a_demo.php;pasar a demo
 27;2;frontend/configuracion/controller/modulos_select.php;modulos select
 92;2;frontend/menus/controller/menus_exportar_form.php;exportar menus

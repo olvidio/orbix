@@ -5660,11 +5660,6 @@ msgstr "Pertenece_r"
 msgid "ojo es un modulo principal"
 msgstr "Eye is a main module"
 
-#: devel/controller/avisos_bucardo_mails.php:117
-#, fuzzy
-msgid "Syncronización bucardo"
-msgstr "Bucardo syncronization"
-
 #: devel/controller/db_absorber_esquema.php:357
 #, fuzzy, php-format
 msgid "se ha pasado la %s a %s"

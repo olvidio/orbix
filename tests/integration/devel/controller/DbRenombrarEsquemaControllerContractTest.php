@@ -8,7 +8,7 @@ final class DbRenombrarEsquemaControllerContractTest extends TestCase
 {
     private function getFilePath(): string
     {
-        return __DIR__ . '/../../../../apps/devel/controller/db_renombrar_esquema.php';
+        return __DIR__ . '/../../../../frontend/devel_db_admin/controller/db_renombrar_esquema.php';
     }
 
     public function test_file_exists_and_is_readable(): void

@@ -220,8 +220,8 @@ msgstr "ordine di carico"
 #: apps/casas/controller/casa_ajax.php:47 apps/procesos/model/entity/ActividadFase.php:501
 #: apps/procesos/model/entity/ProcesoTipo.php:419 frontend/ubis/controller/calendario_periodos_ajax.php:76
 #: frontend/ubis/controller/calendario_periodos_ajax.php:122 frontend/ubis/controller/calendario_periodos_ajax.php:267
-#: frontend/ubis/controller/centros_ajax.php:32 apps/ubis/model/entity/UbiGlobal.php:711 apps/devel/view/db_cambiar_nombre_que.phtml:98
-#: apps/devel/view/db_que.phtml:128 apps/ubis/view/cdc_form.phtml:92 frontend/usuarios/view/role_form.phtml:65
+#: frontend/ubis/controller/centros_ajax.php:32 apps/ubis/model/entity/UbiGlobal.php:711 frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:98
+#: frontend/devel_db_admin/view/db_que.phtml:128 apps/ubis/view/cdc_form.phtml:92 frontend/usuarios/view/role_form.phtml:65
 msgid "sf"
 msgstr "sf"
 
@@ -230,7 +230,7 @@ msgstr "sf"
 #: apps/procesos/model/entity/ActividadFase.php:516 apps/procesos/model/entity/ProcesoTipo.php:419
 #: frontend/ubis/controller/calendario_periodos_ajax.php:75 frontend/ubis/controller/calendario_periodos_ajax.php:121
 #: frontend/ubis/controller/calendario_periodos_ajax.php:266 frontend/ubis/controller/centros_ajax.php:31
-#: apps/ubis/model/entity/UbiGlobal.php:697 apps/devel/view/db_cambiar_nombre_que.phtml:96 apps/devel/view/db_que.phtml:126
+#: apps/ubis/model/entity/UbiGlobal.php:697 frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:96 frontend/devel_db_admin/view/db_que.phtml:126
 #: apps/ubis/view/cdc_form.phtml:91 frontend/usuarios/view/role_form.phtml:67
 msgid "sv"
 msgstr "sv"
@@ -3781,7 +3781,7 @@ msgid "Error de configuración: faltan parámetros para conectar con la BDU."
 msgstr "Errore di configurazione: mancano i parametri per la connessione alla BDU."
 
 #: apps/core/DBEsquemaCreate.php:316 apps/core/DBEsquemaCreate.php:509 apps/core/DBTabla.php:295 apps/core/DBTabla.php:302
-#: apps/devel/controller/db_mover.php:77
+#: frontend/devel_db_admin/controller/db_mover.php:77
 #, php-format
 msgid "error al escribir el fichero"
 msgstr "errore durante la scrittura del file"
@@ -4148,8 +4148,8 @@ msgstr "unire"
 msgid "posibles coincidencias con personas de Aquinate en otras dl/r"
 msgstr "Possibili corrispondenze con persone dell'Aquino in altri dl/r"
 
-#: apps/dbextern/controller/ver_listas.php:265 apps/devel/view/apptables.phtml:39 apps/devel/view/db_cambiar_nombre_que.phtml:67
-#: apps/devel/view/db_que.phtml:113
+#: apps/dbextern/controller/ver_listas.php:265 frontend/devel_db_admin/view/apptables.phtml:39 frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:67
+#: frontend/devel_db_admin/view/db_que.phtml:113
 msgid "esquema"
 msgstr "schema"
 
@@ -4183,8 +4183,8 @@ msgid "posibles coincidencias con personas de la BDU en otras dl/r"
 msgstr "possibili abbinamenti con persone della BDU in altri dl/r"
 
 #: apps/dbextern/controller/ver_orbix.php:227 frontend/ubis/controller/list_ctr.php:258 frontend/ubis/controller/ubis_lista.php:78
-#: frontend/ubis/controller/ubis_tabla.php:464 apps/ubis/model/entity/UbiGlobal.php:654 apps/devel/view/db_cambiar_nombre_que.phtml:77
-#: apps/devel/view/db_que.phtml:84 apps/ubis/view/cdc_form.phtml:73 apps/ubis/view/ctrdl_form.phtml:63
+#: frontend/ubis/controller/ubis_tabla.php:464 apps/ubis/model/entity/UbiGlobal.php:654 frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:77
+#: frontend/devel_db_admin/view/db_que.phtml:84 apps/ubis/view/cdc_form.phtml:73 apps/ubis/view/ctrdl_form.phtml:63
 #: apps/ubis/view/ctrex_form.phtml:63 apps/ubis/view/ubis_buscar.phtml:71 apps/ubis/view/ubis_buscar.phtml:245
 msgid "región"
 msgstr "regione"
@@ -4296,78 +4296,74 @@ msgstr "incorporazione"
 msgid "Pertenece_r"
 msgstr "Appartenere"
 
-#: apps/devel/controller/apptables.php:45
+#: frontend/devel_db_admin/controller/apptables.php:45
 msgid "ojo es un modulo principal"
 msgstr "eye è un modulo principale"
 
-#: apps/devel/controller/avisos_bucardo_mails.php:117
-msgid "Syncronización bucardo"
-msgstr "Sincronizzazione del Bucardo"
-
-#: apps/devel/controller/db_absorber_esquema.php:357
+#: frontend/devel_db_admin/controller/db_absorber_esquema.php:357
 #, php-format
 msgid "se ha pasado la %s a %s"
 msgstr "%s è stato passato a %s"
 
-#: apps/devel/controller/db_ajax.php:37
+#: frontend/devel_db_admin/controller/db_ajax.php:37
 msgid "para gestión global"
 msgstr "per la gestione globale"
 
-#: apps/devel/controller/db_cambiar_nombre_que.php:37 apps/devel/controller/db_que.php:36
+#: frontend/devel_db_admin/controller/db_cambiar_nombre_que.php:37 frontend/devel_db_admin/controller/db_que.php:36
 msgid "debe poner la delegación"
 msgstr "dovrebbe mettere la delegazione"
 
-#: apps/devel/controller/db_cambiar_nombre_que.php:38 apps/devel/controller/db_que.php:37
+#: frontend/devel_db_admin/controller/db_cambiar_nombre_que.php:38 frontend/devel_db_admin/controller/db_que.php:37
 msgid "debe poner la delegación de referencia"
 msgstr "devi mettere la delega di riferimento"
 
-#: apps/devel/controller/db_copiar.php:135
+#: frontend/devel_db_admin/controller/db_copiar.php:135
 #, php-format
 msgid "esquema: %s. Se han pasado todos los datos que se tenían."
 msgstr "schema: %s.Tutti i dati disponibili sono stati trasmessi."
 
-#: apps/devel/controller/db_crear_esquema.php:238
+#: frontend/devel_db_admin/controller/db_crear_esquema.php:238
 #, php-format
 msgid "se ha creado la estructura de los esquemas."
 msgstr "La struttura dei regimi è stata creata."
 
-#: apps/devel/controller/db_crear_usuarios.php:153
+#: frontend/devel_db_admin/controller/db_crear_usuarios.php:153
 #, php-format
 msgid "se han creado los usuarios. Ojo, un único usuario para pruebas y producción"
 msgstr "sono stati creati gli utenti Attenzione, un unico utente per test e produzione"
 
-#: apps/devel/controller/db_crear_usuarios.php:155
+#: frontend/devel_db_admin/controller/db_crear_usuarios.php:155
 #, php-format
 msgid "debe copiar los siguientes usuarios y passwords en el archivo %s"
 msgstr "È necessario copiare i seguenti utenti e password nel file %s"
 
-#: apps/devel/controller/db_crear_usuarios.php:162
+#: frontend/devel_db_admin/controller/db_crear_usuarios.php:162
 msgid "Ya no hace falta, pero interesa saberlo para acceder al a BD directamente."
 msgstr "Non è più necessario, ma è interessante sapere per accedere direttamente al BD."
 
-#: apps/devel/controller/db_eliminar.php:104
+#: frontend/devel_db_admin/controller/db_eliminar.php:104
 msgid "datos pasados a resto y tablas vaciadas"
 msgstr "i dati passati a riposare e le tabelle svuotate"
 
-#: apps/devel/controller/db_eliminar.php:106
+#: frontend/devel_db_admin/controller/db_eliminar.php:106
 msgid "Sólo elimina el esquema comun y los usuarios si se marcado eliminar sv y sf"
 msgstr "Elimina lo schema comune e gli utenti solo se sono stati selezionati elimina sv e sf"
 
-#: apps/devel/controller/db_mover.php:47
+#: frontend/devel_db_admin/controller/db_mover.php:47
 #, php-format
 msgid "Error para %s"
 msgstr "Errore per %s"
 
-#: apps/devel/controller/db_mover_que.php:35
+#: frontend/devel_db_admin/controller/db_mover_que.php:35
 msgid "debe poner la tabla"
 msgstr "devi mettere il tavolo"
 
-#: apps/devel/controller/db_renombrar_esquema.php:451
+#: frontend/devel_db_admin/controller/db_renombrar_esquema.php:451
 #, php-format
 msgid "se ha cambiado el nombre del esquema"
 msgstr "il nome dello schema è stato modificato"
 
-#: apps/devel/controller/factory_form.php:26 apps/devel/view/modulos_form.phtml:138 apps/dossiers/view/perm_dossier_pres.phtml:89
+#: frontend/devel_codegen/controller/factory_form.php:26 apps/devel/view/modulos_form.phtml:138 apps/dossiers/view/perm_dossier_pres.phtml:89
 #: apps/personas/view/persona_de_paso.phtml:162 apps/personas/view/persona_form.phtml:186 apps/personas/view/persona_sss_form.phtml:179
 #: apps/ubis/view/cdc_form.phtml:110 apps/ubis/view/ctrdl_form.phtml:135 apps/ubis/view/ctrex_form.phtml:103
 #: apps/ubis/view/direccion_form.phtml:256 apps/ubis/view/teleco_form.phtml:74
@@ -6239,7 +6235,7 @@ msgstr "copia tessera"
 msgid "adjuntar certificado"
 msgstr "allegare certificato"
 
-#: apps/personas/controller/personas_select.php:398 apps/devel/view/db_mover_que.phtml:18
+#: apps/personas/controller/personas_select.php:398 frontend/devel_db_admin/view/db_mover_que.phtml:18
 msgid "tabla"
 msgstr "tavolo"
 
@@ -6432,7 +6428,7 @@ msgstr "quartier generale di ctr"
 msgid "ctr cr"
 msgstr "ctr cr"
 
-#: apps/personas/model/entity/Traslado.php:631 apps/devel/view/db_cambiar_nombre_que.phtml:80 apps/devel/view/db_que.phtml:87
+#: apps/personas/model/entity/Traslado.php:631 frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:80 frontend/devel_db_admin/view/db_que.phtml:87
 #: apps/personas/view/p_public_personas.phtml:28 apps/personas/view/traslado_form.phtml:88
 msgid "delegación"
 msgstr "delegazione"
@@ -9223,87 +9219,87 @@ msgstr "relazione delle attività che frequenta"
 msgid "¿Está seguro que desea transferir todas las personas seleccionadas a históricos?"
 msgstr "Sei sicuro di voler trasferire tutte le persone selezionate a quelle storiche?"
 
-#: apps/devel/view/apptables.phtml:13
+#: frontend/devel_db_admin/view/apptables.phtml:13
 msgid "Esto cambiará la aplicación"
 msgstr "Questo cambierà l'app"
 
-#: apps/devel/view/apptables.phtml:13
+#: frontend/devel_db_admin/view/apptables.phtml:13
 msgid "para el esquema"
 msgstr "per lo schema"
 
-#: apps/devel/view/apptables.phtml:22 apps/devel/view/apptables.phtml:29
+#: frontend/devel_db_admin/view/apptables.phtml:22 frontend/devel_db_admin/view/apptables.phtml:29
 msgid "aplicación"
 msgstr "applicazione"
 
-#: apps/devel/view/apptables.phtml:23
+#: frontend/devel_db_admin/view/apptables.phtml:23
 msgid "si se acaba de crear la aplicación, hay que salir y volver a entrar para poder crear el esquema"
 msgstr "Se l'applicazione è appena stata creata, è necessario disconnettersi e accedere nuovamente per creare lo schema"
 
-#: apps/devel/view/apptables.phtml:33
+#: frontend/devel_db_admin/view/apptables.phtml:33
 msgid "global"
 msgstr "globale"
 
-#: apps/devel/view/apptables.phtml:50
+#: frontend/devel_db_admin/view/apptables.phtml:50
 msgid "hay que hacer los dos pasos"
 msgstr "devi fare i due passaggi"
 
-#: apps/devel/view/apptables.phtml:52
+#: frontend/devel_db_admin/view/apptables.phtml:52
 msgid "OJO"
 msgstr "OCCHIO"
 
-#: apps/devel/view/apptables.phtml:53
+#: frontend/devel_db_admin/view/apptables.phtml:53
 msgid "Por cuestión de permisos, las tablas de un esquema hay que crearlas desde el propio esquema"
 msgstr "Per motivi di autorizzazioni, le tabelle di uno schema devono essere create dallo schema stesso."
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:61
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:61
 msgid "Cambiar nombre de un esquema (region-dl)"
 msgstr "Rinominare uno schema (region-dl)"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:62
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:62
 msgid "Esquema actual"
 msgstr "Schema attuale"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:72
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:72
 msgid "Nuevo nombre"
 msgstr "Nuovo nome"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:94 apps/devel/view/db_que.phtml:124
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:94 frontend/devel_db_admin/view/db_que.phtml:124
 msgid "comun"
 msgstr "comune"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:116
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:116
 msgid "Absorber un esquema (region-dl)"
 msgstr "Assorbi uno schema (region-dl)"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:117
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:117
 msgid "pasar los datos al Esquema matriz"
 msgstr "passare i dati allo schema genitore"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:122
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:122
 msgid "esquema matriz"
 msgstr "schema a matrice"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:123
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:123
 msgid "esquema a disolver"
 msgstr "schema da sciogliere"
 
-#: apps/devel/view/db_mover_que.phtml:13
+#: frontend/devel_db_admin/view/db_mover_que.phtml:13
 msgid "mover tabla al exterior (sv-e)"
 msgstr "spostare il tavolo all'esterno (sv-e)"
 
-#: apps/devel/view/db_que.phtml:79
+#: frontend/devel_db_admin/view/db_que.phtml:79
 msgid "nuevas dl"
 msgstr "nuovo dl"
 
-#: apps/devel/view/db_que.phtml:94
+#: frontend/devel_db_admin/view/db_que.phtml:94
 msgid "hay que hacer los tres pasos"
 msgstr "devi fare i tre passaggi"
 
-#: apps/devel/view/db_que.phtml:108
+#: frontend/devel_db_admin/view/db_que.phtml:108
 msgid "dl de referencia"
 msgstr "riferimento dl"
 
-#: apps/devel/view/db_que.phtml:152
+#: frontend/devel_db_admin/view/db_que.phtml:152
 msgid "Eliminar dl"
 msgstr "Elimina dl"
 

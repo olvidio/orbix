@@ -349,8 +349,8 @@ msgstr "ordine di carico"
 #: frontend/ubis/controller/calendario_periodos_ajax.php:267
 #: frontend/ubis/controller/centros_ajax.php:32
 #: apps/ubis/model/entity/UbiGlobal.php:711
-#: apps/devel/view/db_cambiar_nombre_que.phtml:98
-#: apps/devel/view/db_que.phtml:128 apps/ubis/view/cdc_form.phtml:92
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:98
+#: frontend/devel_db_admin/view/db_que.phtml:128 apps/ubis/view/cdc_form.phtml:92
 #: frontend/usuarios/view/role_form.phtml:65
 msgid "sf"
 msgstr "sf"
@@ -366,8 +366,8 @@ msgstr "sf"
 #: frontend/ubis/controller/calendario_periodos_ajax.php:266
 #: frontend/ubis/controller/centros_ajax.php:31
 #: apps/ubis/model/entity/UbiGlobal.php:697
-#: apps/devel/view/db_cambiar_nombre_que.phtml:96
-#: apps/devel/view/db_que.phtml:126 apps/ubis/view/cdc_form.phtml:91
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:96
+#: frontend/devel_db_admin/view/db_que.phtml:126 apps/ubis/view/cdc_form.phtml:91
 #: frontend/usuarios/view/role_form.phtml:67
 msgid "sv"
 msgstr "sv"
@@ -5301,7 +5301,7 @@ msgstr ""
 
 #: apps/core/DBEsquemaCreate.php:316 apps/core/DBEsquemaCreate.php:509
 #: apps/core/DBTabla.php:295 apps/core/DBTabla.php:302
-#: apps/devel/controller/db_mover.php:77
+#: frontend/devel_db_admin/controller/db_mover.php:77
 #, php-format
 msgid "error al escribir el fichero"
 msgstr "errore durante la scrittura del file"
@@ -5799,9 +5799,9 @@ msgid "posibles coincidencias con personas de Aquinate en otras dl/r"
 msgstr "possibili corrispondenze con persone da Aquinate in altri dl/r"
 
 #: apps/dbextern/controller/ver_listas.php:265
-#: apps/devel/view/apptables.phtml:39
-#: apps/devel/view/db_cambiar_nombre_que.phtml:67
-#: apps/devel/view/db_que.phtml:113
+#: frontend/devel_db_admin/view/apptables.phtml:39
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:67
+#: frontend/devel_db_admin/view/db_que.phtml:113
 #, fuzzy
 #| msgid "nuevo esquema"
 msgid "esquema"
@@ -5850,8 +5850,8 @@ msgstr "possibili corrispondenze con persone BDU in altri DL/R"
 #: frontend/ubis/controller/list_ctr.php:258 frontend/ubis/controller/ubis_lista.php:78
 #: frontend/ubis/controller/ubis_tabla.php:464
 #: apps/ubis/model/entity/UbiGlobal.php:654
-#: apps/devel/view/db_cambiar_nombre_que.phtml:77
-#: apps/devel/view/db_que.phtml:84 apps/ubis/view/cdc_form.phtml:73
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:77
+#: frontend/devel_db_admin/view/db_que.phtml:84 apps/ubis/view/cdc_form.phtml:73
 #: apps/ubis/view/ctrdl_form.phtml:63 apps/ubis/view/ctrex_form.phtml:63
 #: apps/ubis/view/ubis_buscar.phtml:71 apps/ubis/view/ubis_buscar.phtml:245
 msgid "región"
@@ -5996,66 +5996,61 @@ msgstr "incorporazioni"
 msgid "Pertenece_r"
 msgstr "Pertenece_r"
 
-#: apps/devel/controller/apptables.php:45
+#: frontend/devel_db_admin/controller/apptables.php:45
 #, fuzzy
 msgid "ojo es un modulo principal"
 msgstr "Eye è un modulo principale"
 
-#: apps/devel/controller/avisos_bucardo_mails.php:117
-#, fuzzy
-msgid "Syncronización bucardo"
-msgstr "Sincronizzazione del bucardo"
-
-#: apps/devel/controller/db_absorber_esquema.php:357
+#: frontend/devel_db_admin/controller/db_absorber_esquema.php:357
 #, fuzzy, php-format
 msgid "se ha pasado la %s a %s"
 msgstr "Il %s è stato passato a %s"
 
-#: apps/devel/controller/db_ajax.php:37
+#: frontend/devel_db_admin/controller/db_ajax.php:37
 #, fuzzy
 #| msgid "presentación tablas"
 msgid "para gestión global"
 msgstr "tavoli di presentazione"
 
-#: apps/devel/controller/db_cambiar_nombre_que.php:37
-#: apps/devel/controller/db_que.php:36
+#: frontend/devel_db_admin/controller/db_cambiar_nombre_que.php:37
+#: frontend/devel_db_admin/controller/db_que.php:36
 #, fuzzy
 #| msgid "nombre de la delegación"
 msgid "debe poner la delegación"
 msgstr "nome della delegazione"
 
-#: apps/devel/controller/db_cambiar_nombre_que.php:38
-#: apps/devel/controller/db_que.php:37
+#: frontend/devel_db_admin/controller/db_cambiar_nombre_que.php:38
+#: frontend/devel_db_admin/controller/db_que.php:37
 #, fuzzy
 #| msgid "tabla de centros de la delegación femenina"
 msgid "debe poner la delegación de referencia"
 msgstr "tavolo dei centri della delegazione femminile"
 
-#: apps/devel/controller/db_copiar.php:135
+#: frontend/devel_db_admin/controller/db_copiar.php:135
 #, fuzzy, php-format
 #| msgid "esquema: %s. Se han pasado todos los datos que se tenian."
 msgid "esquema: %s. Se han pasado todos los datos que se tenían."
 msgstr "schema: %s . Hanno passato tutti i dati che avevano."
 
-#: apps/devel/controller/db_crear_esquema.php:238
+#: frontend/devel_db_admin/controller/db_crear_esquema.php:238
 #, fuzzy, php-format
 #| msgid "se han creado los usuarios y la estructua de los esquemas."
 msgid "se ha creado la estructura de los esquemas."
 msgstr "sono stati creati gli utenti e la struttura degli schemi."
 
-#: apps/devel/controller/db_crear_usuarios.php:153
+#: frontend/devel_db_admin/controller/db_crear_usuarios.php:153
 #, fuzzy, php-format
 msgid ""
 "se han creado los usuarios. Ojo, un único usuario para pruebas y producción"
 msgstr ""
 "Gli utenti sono stati creati. Eye, un unico utente per test e produzione"
 
-#: apps/devel/controller/db_crear_usuarios.php:155
+#: frontend/devel_db_admin/controller/db_crear_usuarios.php:155
 #, fuzzy, php-format
 msgid "debe copiar los siguientes usuarios y passwords en el archivo %s"
 msgstr "È necessario copiare i seguenti utenti e password nel file %s"
 
-#: apps/devel/controller/db_crear_usuarios.php:162
+#: frontend/devel_db_admin/controller/db_crear_usuarios.php:162
 #, fuzzy
 msgid ""
 "Ya no hace falta, pero interesa saberlo para acceder al a BD directamente."
@@ -6063,34 +6058,34 @@ msgstr ""
 "Non è più necessario, ma è interessante conoscerlo per accedere direttamente "
 "al DB."
 
-#: apps/devel/controller/db_eliminar.php:104
+#: frontend/devel_db_admin/controller/db_eliminar.php:104
 msgid "datos pasados a resto y tablas vaciadas"
 msgstr "i dati passati a riposare e le tabelle svuotate"
 
-#: apps/devel/controller/db_eliminar.php:106
+#: frontend/devel_db_admin/controller/db_eliminar.php:106
 #, fuzzy
 msgid ""
 "Sólo elimina el esquema comun y los usuarios si se marcado eliminar sv y sf"
 msgstr ""
 "Elimina solo lo schema comune e gli utenti se selezionati eliminano sv e sf"
 
-#: apps/devel/controller/db_mover.php:47
+#: frontend/devel_db_admin/controller/db_mover.php:47
 #, fuzzy, php-format
 msgid "Error para %s"
 msgstr "Errore per %s"
 
-#: apps/devel/controller/db_mover_que.php:35
+#: frontend/devel_db_admin/controller/db_mover_que.php:35
 #, fuzzy
 #| msgid "debe poner una asignatura"
 msgid "debe poner la tabla"
 msgstr "deve mettere un soggetto"
 
-#: apps/devel/controller/db_renombrar_esquema.php:451
+#: frontend/devel_db_admin/controller/db_renombrar_esquema.php:451
 #, fuzzy, php-format
 msgid "se ha cambiado el nombre del esquema"
 msgstr "Schema rinominato"
 
-#: apps/devel/controller/factory_form.php:26
+#: frontend/devel_codegen/controller/factory_form.php:26
 #: apps/devel/view/modulos_form.phtml:138
 #: apps/dossiers/view/perm_dossier_pres.phtml:89
 #: apps/personas/view/persona_de_paso.phtml:162
@@ -8573,7 +8568,7 @@ msgid "adjuntar certificado"
 msgstr "certificato"
 
 #: apps/personas/controller/personas_select.php:398
-#: apps/devel/view/db_mover_que.phtml:18
+#: frontend/devel_db_admin/view/db_mover_que.phtml:18
 msgid "tabla"
 msgstr "tavolo"
 
@@ -8790,8 +8785,8 @@ msgid "ctr cr"
 msgstr "ctr cr"
 
 #: apps/personas/model/entity/Traslado.php:631
-#: apps/devel/view/db_cambiar_nombre_que.phtml:80
-#: apps/devel/view/db_que.phtml:87
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:80
+#: frontend/devel_db_admin/view/db_que.phtml:87
 #: apps/personas/view/p_public_personas.phtml:28
 #: apps/personas/view/traslado_form.phtml:88
 msgid "delegación"
@@ -12336,25 +12331,25 @@ msgstr ""
 "Sei sicuro di voler trasferire tutte le persone selezionate a quelle "
 "storiche?"
 
-#: apps/devel/view/apptables.phtml:13
+#: frontend/devel_db_admin/view/apptables.phtml:13
 #, fuzzy
 #| msgid "buscar una aplicación"
 msgid "Esto cambiará la aplicación"
 msgstr "trova una domanda"
 
-#: apps/devel/view/apptables.phtml:13
+#: frontend/devel_db_admin/view/apptables.phtml:13
 #, fuzzy
 #| msgid "nuevo esquema"
 msgid "para el esquema"
 msgstr "nuovo schema"
 
-#: apps/devel/view/apptables.phtml:22 apps/devel/view/apptables.phtml:29
+#: frontend/devel_db_admin/view/apptables.phtml:22 frontend/devel_db_admin/view/apptables.phtml:29
 #, fuzzy
 #| msgid "calificación"
 msgid "aplicación"
 msgstr "qualificazione"
 
-#: apps/devel/view/apptables.phtml:23
+#: frontend/devel_db_admin/view/apptables.phtml:23
 #, fuzzy
 msgid ""
 "si se acaba de crear la aplicación, hay que salir y volver a entrar para "
@@ -12363,88 +12358,88 @@ msgstr ""
 "Se l'applicazione è appena stata creata, è necessario uscire e rientrare "
 "prima di poter creare lo schema"
 
-#: apps/devel/view/apptables.phtml:33
+#: frontend/devel_db_admin/view/apptables.phtml:33
 #, fuzzy
 msgid "global"
 msgstr "globale"
 
-#: apps/devel/view/apptables.phtml:50
+#: frontend/devel_db_admin/view/apptables.phtml:50
 msgid "hay que hacer los dos pasos"
 msgstr "devi fare i due passaggi"
 
-#: apps/devel/view/apptables.phtml:52
+#: frontend/devel_db_admin/view/apptables.phtml:52
 msgid "OJO"
 msgstr ""
 
-#: apps/devel/view/apptables.phtml:53
+#: frontend/devel_db_admin/view/apptables.phtml:53
 msgid ""
 "Por cuestión de permisos, las tablas de un esquema hay que crearlas desde el "
 "propio esquema"
 msgstr ""
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:61
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:61
 #, fuzzy
 msgid "Cambiar nombre de un esquema (region-dl)"
 msgstr "Rinominare uno schema (region-dl)"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:62
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:62
 #, fuzzy
 msgid "Esquema actual"
 msgstr "Schema corrente"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:72
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:72
 #, fuzzy
 msgid "Nuevo nombre"
 msgstr "Nuovo nome"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:94
-#: apps/devel/view/db_que.phtml:124
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:94
+#: frontend/devel_db_admin/view/db_que.phtml:124
 #, fuzzy
 msgid "comun"
 msgstr "Comune"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:116
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:116
 #, fuzzy
 msgid "Absorber un esquema (region-dl)"
 msgstr "Assorbire uno schema (region-dl)"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:117
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:117
 #, fuzzy
 msgid "pasar los datos al Esquema matriz"
 msgstr "passare i dati allo schema Matrix"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:122
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:122
 #, fuzzy
 msgid "esquema matriz"
 msgstr "schema matriciale"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:123
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:123
 #, fuzzy
 msgid "esquema a disolver"
 msgstr "Schema da sciogliere"
 
-#: apps/devel/view/db_mover_que.phtml:13
+#: frontend/devel_db_admin/view/db_mover_que.phtml:13
 #, fuzzy
 msgid "mover tabla al exterior (sv-e)"
 msgstr "Sposta tabella all'esterno (SV-E)"
 
-#: apps/devel/view/db_que.phtml:79
+#: frontend/devel_db_admin/view/db_que.phtml:79
 msgid "nuevas dl"
 msgstr "nuovo dl"
 
-#: apps/devel/view/db_que.phtml:94
+#: frontend/devel_db_admin/view/db_que.phtml:94
 #, fuzzy
 #| msgid "hay que hacer los dos pasos"
 msgid "hay que hacer los tres pasos"
 msgstr "devi fare i due passaggi"
 
-#: apps/devel/view/db_que.phtml:108
+#: frontend/devel_db_admin/view/db_que.phtml:108
 #, fuzzy
 #| msgid "referencia"
 msgid "dl de referencia"
 msgstr "riferimento"
 
-#: apps/devel/view/db_que.phtml:152
+#: frontend/devel_db_admin/view/db_que.phtml:152
 #, fuzzy
 #| msgid "eliminar"
 msgid "Eliminar dl"

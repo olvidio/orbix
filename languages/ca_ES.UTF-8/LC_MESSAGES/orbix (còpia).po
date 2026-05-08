@@ -349,8 +349,8 @@ msgstr "ordre càrrec"
 #: frontend/ubis/controller/calendario_periodos_ajax.php:267
 #: frontend/ubis/controller/centros_ajax.php:32
 #: apps/ubis/model/entity/UbiGlobal.php:711
-#: apps/devel/view/db_cambiar_nombre_que.phtml:98
-#: apps/devel/view/db_que.phtml:128 apps/ubis/view/cdc_form.phtml:92
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:98
+#: frontend/devel_db_admin/view/db_que.phtml:128 apps/ubis/view/cdc_form.phtml:92
 #: frontend/usuarios/view/role_form.phtml:65
 msgid "sf"
 msgstr "sf"
@@ -366,8 +366,8 @@ msgstr "sf"
 #: frontend/ubis/controller/calendario_periodos_ajax.php:266
 #: frontend/ubis/controller/centros_ajax.php:31
 #: apps/ubis/model/entity/UbiGlobal.php:697
-#: apps/devel/view/db_cambiar_nombre_que.phtml:96
-#: apps/devel/view/db_que.phtml:126 apps/ubis/view/cdc_form.phtml:91
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:96
+#: frontend/devel_db_admin/view/db_que.phtml:126 apps/ubis/view/cdc_form.phtml:91
 #: frontend/usuarios/view/role_form.phtml:67
 msgid "sv"
 msgstr "sv"
@@ -4747,7 +4747,7 @@ msgstr "Error de configuració: falten paràmetres per connectar amb la BDU."
 
 #: apps/core/DBEsquemaCreate.php:316 apps/core/DBEsquemaCreate.php:509
 #: apps/core/DBTabla.php:295 apps/core/DBTabla.php:302
-#: apps/devel/controller/db_mover.php:77
+#: frontend/devel_db_admin/controller/db_mover.php:77
 #, php-format
 msgid "error al escribir el fichero"
 msgstr "error en escriure el fitxer"
@@ -5207,9 +5207,9 @@ msgid "posibles coincidencias con personas de Aquinate en otras dl/r"
 msgstr "possibles coincidències amb persones d'Aquinate en altres dl/r"
 
 #: apps/dbextern/controller/ver_listas.php:265
-#: apps/devel/view/apptables.phtml:39
-#: apps/devel/view/db_cambiar_nombre_que.phtml:67
-#: apps/devel/view/db_que.phtml:113
+#: frontend/devel_db_admin/view/apptables.phtml:39
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:67
+#: frontend/devel_db_admin/view/db_que.phtml:113
 msgid "esquema"
 msgstr "esquema"
 
@@ -5248,8 +5248,8 @@ msgstr "possibles coincidències amb persones de la BDU en altres dl/r"
 #: frontend/ubis/controller/list_ctr.php:258 frontend/ubis/controller/ubis_lista.php:78
 #: frontend/ubis/controller/ubis_tabla.php:464
 #: apps/ubis/model/entity/UbiGlobal.php:654
-#: apps/devel/view/db_cambiar_nombre_que.phtml:77
-#: apps/devel/view/db_que.phtml:84 apps/ubis/view/cdc_form.phtml:73
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:77
+#: frontend/devel_db_admin/view/db_que.phtml:84 apps/ubis/view/cdc_form.phtml:73
 #: apps/ubis/view/ctrdl_form.phtml:63 apps/ubis/view/ctrex_form.phtml:63
 #: apps/ubis/view/ubis_buscar.phtml:71 apps/ubis/view/ubis_buscar.phtml:245
 msgid "región"
@@ -5373,84 +5373,80 @@ msgstr "incorporació"
 msgid "Pertenece_r"
 msgstr "Pertenece_r"
 
-#: apps/devel/controller/apptables.php:45
+#: frontend/devel_db_admin/controller/apptables.php:45
 msgid "ojo es un modulo principal"
 msgstr "ull, és un mòdul principal"
 
-#: apps/devel/controller/avisos_bucardo_mails.php:117
-msgid "Syncronización bucardo"
-msgstr "Sincronizació bucardo"
-
-#: apps/devel/controller/db_absorber_esquema.php:357
+#: frontend/devel_db_admin/controller/db_absorber_esquema.php:357
 #, php-format
 msgid "se ha pasado la %s a %s"
 msgstr "s'ha passat la %s a %s"
 
-#: apps/devel/controller/db_ajax.php:37
+#: frontend/devel_db_admin/controller/db_ajax.php:37
 msgid "para gestión global"
 msgstr "per a gestió global"
 
-#: apps/devel/controller/db_cambiar_nombre_que.php:37
-#: apps/devel/controller/db_que.php:36
+#: frontend/devel_db_admin/controller/db_cambiar_nombre_que.php:37
+#: frontend/devel_db_admin/controller/db_que.php:36
 msgid "debe poner la delegación"
 msgstr "ha de posar la delegació"
 
-#: apps/devel/controller/db_cambiar_nombre_que.php:38
-#: apps/devel/controller/db_que.php:37
+#: frontend/devel_db_admin/controller/db_cambiar_nombre_que.php:38
+#: frontend/devel_db_admin/controller/db_que.php:37
 msgid "debe poner la delegación de referencia"
 msgstr "ha de posar la delegació de referència"
 
-#: apps/devel/controller/db_copiar.php:135
+#: frontend/devel_db_admin/controller/db_copiar.php:135
 #, php-format
 msgid "esquema: %s. Se han pasado todos los datos que se tenían."
 msgstr "esquema: %s . S'han passat totes les dades que es tenien."
 
-#: apps/devel/controller/db_crear_esquema.php:238
+#: frontend/devel_db_admin/controller/db_crear_esquema.php:238
 #, php-format
 msgid "se ha creado la estructura de los esquemas."
 msgstr "s'ha creat l'estructura dels esquemes."
 
-#: apps/devel/controller/db_crear_usuarios.php:153
+#: frontend/devel_db_admin/controller/db_crear_usuarios.php:153
 #, php-format
 msgid ""
 "se han creado los usuarios. Ojo, un único usuario para pruebas y producción"
 msgstr "s'han creat usuaris. Ull, un sol usuari per a la prova i producció"
 
-#: apps/devel/controller/db_crear_usuarios.php:155
+#: frontend/devel_db_admin/controller/db_crear_usuarios.php:155
 #, php-format
 msgid "debe copiar los siguientes usuarios y passwords en el archivo %s"
 msgstr "ha de copiar els següents usuaris i passwords a l'arxiu %s"
 
-#: apps/devel/controller/db_crear_usuarios.php:162
+#: frontend/devel_db_admin/controller/db_crear_usuarios.php:162
 msgid ""
 "Ya no hace falta, pero interesa saberlo para acceder al a BD directamente."
 msgstr "No cal, però és interessant saber-ho per accedir a la BD directament."
 
-#: apps/devel/controller/db_eliminar.php:104
+#: frontend/devel_db_admin/controller/db_eliminar.php:104
 msgid "datos pasados a resto y tablas vaciadas"
 msgstr "dades passats a la resta i taules buidades"
 
-#: apps/devel/controller/db_eliminar.php:106
+#: frontend/devel_db_admin/controller/db_eliminar.php:106
 msgid ""
 "Sólo elimina el esquema comun y los usuarios si se marcado eliminar sv y sf"
 msgstr ""
 "Només elimina l'esquema comú i els usuaris si està marcat eliminar SV i SF"
 
-#: apps/devel/controller/db_mover.php:47
+#: frontend/devel_db_admin/controller/db_mover.php:47
 #, php-format
 msgid "Error para %s"
 msgstr "Error per %s"
 
-#: apps/devel/controller/db_mover_que.php:35
+#: frontend/devel_db_admin/controller/db_mover_que.php:35
 msgid "debe poner la tabla"
 msgstr "ha de posar la taula"
 
-#: apps/devel/controller/db_renombrar_esquema.php:451
+#: frontend/devel_db_admin/controller/db_renombrar_esquema.php:451
 #, php-format
 msgid "se ha cambiado el nombre del esquema"
 msgstr "s'ha canviat el nom de l'esquema"
 
-#: apps/devel/controller/factory_form.php:26
+#: frontend/devel_codegen/controller/factory_form.php:26
 #: apps/devel/view/modulos_form.phtml:138
 #: apps/dossiers/view/perm_dossier_pres.phtml:89
 #: apps/personas/view/persona_de_paso.phtml:162
@@ -7607,7 +7603,7 @@ msgid "adjuntar certificado"
 msgstr "adjuntar certificat"
 
 #: apps/personas/controller/personas_select.php:398
-#: apps/devel/view/db_mover_que.phtml:18
+#: frontend/devel_db_admin/view/db_mover_que.phtml:18
 msgid "tabla"
 msgstr "taula"
 
@@ -7819,8 +7815,8 @@ msgid "ctr cr"
 msgstr "ctr cr"
 
 #: apps/personas/model/entity/Traslado.php:631
-#: apps/devel/view/db_cambiar_nombre_que.phtml:80
-#: apps/devel/view/db_que.phtml:87
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:80
+#: frontend/devel_db_admin/view/db_que.phtml:87
 #: apps/personas/view/p_public_personas.phtml:28
 #: apps/personas/view/traslado_form.phtml:88
 msgid "delegación"
@@ -11085,19 +11081,19 @@ msgstr ""
 "Esteu segur que voleu transferir totes les persones seleccionades a "
 "històrics?"
 
-#: apps/devel/view/apptables.phtml:13
+#: frontend/devel_db_admin/view/apptables.phtml:13
 msgid "Esto cambiará la aplicación"
 msgstr "Això canviarà l'aplicació"
 
-#: apps/devel/view/apptables.phtml:13
+#: frontend/devel_db_admin/view/apptables.phtml:13
 msgid "para el esquema"
 msgstr "per el esquema"
 
-#: apps/devel/view/apptables.phtml:22 apps/devel/view/apptables.phtml:29
+#: frontend/devel_db_admin/view/apptables.phtml:22 frontend/devel_db_admin/view/apptables.phtml:29
 msgid "aplicación"
 msgstr "aplicació"
 
-#: apps/devel/view/apptables.phtml:23
+#: frontend/devel_db_admin/view/apptables.phtml:23
 msgid ""
 "si se acaba de crear la aplicación, hay que salir y volver a entrar para "
 "poder crear el esquema"
@@ -11105,19 +11101,19 @@ msgstr ""
 "si acaba de crear l'aplicació, s'ha de sortir i tornar a entrar per poder "
 "crear l'esquema"
 
-#: apps/devel/view/apptables.phtml:33
+#: frontend/devel_db_admin/view/apptables.phtml:33
 msgid "global"
 msgstr "global"
 
-#: apps/devel/view/apptables.phtml:50
+#: frontend/devel_db_admin/view/apptables.phtml:50
 msgid "hay que hacer los dos pasos"
 msgstr "cal fer els dos passos"
 
-#: apps/devel/view/apptables.phtml:52
+#: frontend/devel_db_admin/view/apptables.phtml:52
 msgid "OJO"
 msgstr "ULL VIU"
 
-#: apps/devel/view/apptables.phtml:53
+#: frontend/devel_db_admin/view/apptables.phtml:53
 msgid ""
 "Por cuestión de permisos, las tablas de un esquema hay que crearlas desde el "
 "propio esquema"
@@ -11125,56 +11121,56 @@ msgstr ""
 "Per qüestió de permisos, les taules d'un esquema s'han de crear des del "
 "propi esquema"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:61
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:61
 msgid "Cambiar nombre de un esquema (region-dl)"
 msgstr "Canviar el nom d'un esquema (regió-dl)"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:62
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:62
 msgid "Esquema actual"
 msgstr "Esquema actual"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:72
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:72
 msgid "Nuevo nombre"
 msgstr "Nou nom"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:94
-#: apps/devel/view/db_que.phtml:124
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:94
+#: frontend/devel_db_admin/view/db_que.phtml:124
 msgid "comun"
 msgstr "comú"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:116
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:116
 msgid "Absorber un esquema (region-dl)"
 msgstr "Absorbir un esquema (regió-dl)"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:117
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:117
 msgid "pasar los datos al Esquema matriz"
 msgstr "passar les dades al esquema matriu"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:122
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:122
 msgid "esquema matriz"
 msgstr "esquema matriu"
 
-#: apps/devel/view/db_cambiar_nombre_que.phtml:123
+#: frontend/devel_db_admin/view/db_cambiar_nombre_que.phtml:123
 msgid "esquema a disolver"
 msgstr "esquema a disoldre"
 
-#: apps/devel/view/db_mover_que.phtml:13
+#: frontend/devel_db_admin/view/db_mover_que.phtml:13
 msgid "mover tabla al exterior (sv-e)"
 msgstr "mou la taula a l'exterior (sv-e)"
 
-#: apps/devel/view/db_que.phtml:79
+#: frontend/devel_db_admin/view/db_que.phtml:79
 msgid "nuevas dl"
 msgstr "noves dl"
 
-#: apps/devel/view/db_que.phtml:94
+#: frontend/devel_db_admin/view/db_que.phtml:94
 msgid "hay que hacer los tres pasos"
 msgstr "s'han de fer els tres passos"
 
-#: apps/devel/view/db_que.phtml:108
+#: frontend/devel_db_admin/view/db_que.phtml:108
 msgid "dl de referencia"
 msgstr "dl de referència"
 
-#: apps/devel/view/db_que.phtml:152
+#: frontend/devel_db_admin/view/db_que.phtml:152
 msgid "Eliminar dl"
 msgstr "Eliminar dl"
 

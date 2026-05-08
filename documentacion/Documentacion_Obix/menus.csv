@@ -324,12 +324,12 @@ id_grupmenu,?column?,url,parametros,id_mod
 13,importar desde ficheros (menu a/de ficheros),src/menus/frontend/controller/menus_ficheros.php,accion=importar,2
 13,ayuda (ayuda menus),frontend/menus/view/como.html,,2
 13,DB (Raiz admin),,,1
-13,nuevo esquema (nuevo esquema),apps/devel/controller/db_que.php,,2
-13,mover tabla a otra DB (DB mover tabla),apps/devel/controller/db_mover_que.php,,2
-13,mover y cambiar nombre dl (cambiar nombre dl),apps/devel/controller/db_cambiar_nombre_que.php,"",2
+13,nuevo esquema (nuevo esquema),frontend/devel_db_admin/controller/db_que.php,,2
+13,mover tabla a otra DB (DB mover tabla),frontend/devel_db_admin/controller/db_mover_que.php,,2
+13,mover y cambiar nombre dl (cambiar nombre dl),frontend/devel_db_admin/controller/db_cambiar_nombre_que.php,"",2
 13,borrar passwords (borrar passwords de todos los usuarios),frontend/usuarios/controller/borrar_todos_pwd.php,,2
 13,devel (Raiz devel),,,2
-13,factory (generador de clases),apps/devel/controller/factory_form.php,,2
+13,factory (generador de clases),frontend/devel_codegen/controller/factory_form.php,,2
 13,perm_dossiers (Raiz admin),,,1
 13,personas (permisos dossiers),frontend/dossiers/controller/perm_dossiers.php,tipo=p,1
 13,ubis (permisos dossiers),frontend/dossiers/controller/perm_dossiers.php,tipo=u,1
@@ -351,7 +351,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 13,aplicaciones (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\configuracion\domain\InfoApps,1
 13,definir módulos (modulos select),frontend/configuracion/controller/modulos_select.php,"",2
 13,instalar módulos (modificar los datos de una tabla con Repository),frontend/shared/controller/tablaDB_lista_ver.php,clase_info=src\configuracion\domain\InfoModsInstalled,1
-13,Tablas de apps (Manage tablas de Apps),apps/devel/controller/apptables.php,,2
+13,Tablas de apps (Manage tablas de Apps),frontend/devel_db_admin/controller/apptables.php,,2
 13,config esquema (Configuracion esquema),frontend/configuracion/controller/parametros.php,,1
 13,gestión Tipos actividades (gestionar tipos actividades),frontend/actividades/controller/tipo_activ.php,,5
 13,traducciones (Raiz base),,,1

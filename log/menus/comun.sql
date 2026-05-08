@@ -86,7 +86,7 @@
 159	\N	scdl/registro/pen_form.php	\N	\N
 138	\N	programas/lista_dossiers.php	\N	\N
 92	2	apps/menus/controller/menus_exportar.php	\N	exportar menus
-27	2	apps/devel/controller/modulos_select.php	\N	modulos select
+27	2	frontend/configuracion/controller/modulos_select.php	\N	modulos select
 32	11	frontend/procesos/controller/procesos_select.php	\N	procesos select
 85	24	apps/zonassacd/controller/zona_ctr.php	\N	Zona-ctr
 154	26	frontend/cambios/controller/avisos_generar.php	\N	avisos generar
@@ -107,7 +107,7 @@
 194	5	frontend/actividades/controller/planning_casa_que.php	\N	Planing Casa
 114	25	frontend/cartaspresentacion/controller/cartas_presentacion.php	\N	Cartas Presentacion
 3	25	frontend/cartaspresentacion/controller/cartas_presentacion_buscar.php	\N	Buscar Cartas presentacion
-19	2	apps/devel/controller/factory_form.php	\N	generador de clases
+19	2	frontend/devel_codegen/controller/factory_form.php	\N	generador de clases
 133	3	frontend/ubis/controller/ubis_buscar.php	\N	buscar ubis
 119	5	frontend/actividades/controller/actividad_que.php	\N	seleccionar actividad
 179	24	\N	\N	Raiz Zonas
@@ -144,12 +144,12 @@
 170	8	frontend/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
 43	20	frontend/actividadescentro/controller/activ_ctr.php	\N	actividades centro
 166	2	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
-17	2	apps/devel/controller/db_que.php	\N	nuevo esquema
+17	2	frontend/devel_db_admin/controller/db_que.php	\N	nuevo esquema
 171	4	frontend/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
 173	4	apps/profesores/controller/lista_por_departamentos.php	\N	listado claustro
 64	2	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros
 177	2	apps/menus/view/como.phtml	\N	ayuda menus
-102	2	apps/devel/controller/apptables.php	\N	Manage tablas de Apps
+102	2	frontend/devel_db_admin/controller/apptables.php	\N	Manage tablas de Apps
 130	11	frontend/procesos/controller/fases_activ_cambio.php	\N	Fases activ cambio
 34	24	apps/zonassacd/controller/zona_sacd_ajax.php	\N	Zona sacd ajax
 180	2	\N	\N	Raiz devel
@@ -181,12 +181,12 @@
 108	5	frontend/actividadtarifas/controller/tarifa_tipo_actividad.php	\N	Tipo id_tarifa
 128	5	frontend/actividadtarifas/controller/tarifa.php	\N	Tarifa actividades
 5	27	frontend/casas/controller/prevision_asistentes.php	\N	prevision asistentes
-54	2	apps/devel/controller/db_mover_que.php	\N	DB mover tabla
+54	2	frontend/devel_db_admin/controller/db_mover_que.php	\N	DB mover tabla
 100	5	frontend/actividadtarifas/controller/tarifa.php	\N	Tarifa definir
 165	1	public/ayuda/index.php	\N	Ayuda
 137	26	frontend/cambios/controller/avisos_generar.php	\N	lista avisos
 87	21	apps/encargossacd/controller/propuestas_menu.php	\N	propuestas encargos sacd
-192	2	apps/devel/controller/db_cambiar_nombre_que.php	\N	cambiar nombre dl
+192	2	frontend/devel_db_admin/controller/db_cambiar_nombre_que.php	\N	cambiar nombre dl
 1	7	\N	\N	Raiz stgr 2
 61	6	frontend/asistentes/controller/planning_que.php	\N	planning
 15	7	frontend/profesores/controller/docencia.php	\N	Docencia
