@@ -59,5 +59,11 @@ return static function ($r) {
     $r->addRoute(['GET', 'POST'], '/src/menus/menus_get_page_data', function () {
         require __DIR__ . '/../infrastructure/ui/http/controllers/menus_get_page_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/menus/menus_legacy_layout_items_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/menus_legacy_layout_items_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/menus/menus_burger_layout_data', function () {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/menus_burger_layout_data.php';
+    });
 
 };

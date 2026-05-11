@@ -4,6 +4,7 @@ namespace src\usuarios\application;
 
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
+use src\permisos\domain\MenuDlPermissionBits;
 use src\permisos\domain\PermDl;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
@@ -72,7 +73,7 @@ class usuariosRegionContactos
                 || $oPerm->have_perm_oficina('sm') === true
                 || $oPerm->have_perm_oficina('agd') === true)
             {
-                $aContactos[$nom_usuario] = ['email' => $email, 'cargo' => $oPerm->lista_txt2($iperm_menu)];
+                $aContactos[$nom_usuario] = ['email' => $email, 'cargo' => MenuDlPermissionBits::listaTxt2($iperm_menu)];
             }
         }
 

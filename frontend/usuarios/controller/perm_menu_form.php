@@ -2,13 +2,11 @@
 
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\permisos\domain\PermDl;
 use frontend\shared\security\HashFront;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-$oCuadros = new PermDl;
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
@@ -24,7 +22,11 @@ $a_campos_backend = ['id_usuario' => $Qid_usuario, 'id_item' => $Qid_item];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
 $nombre = $data['nombre'];
-$menu_perm = $data['menu_perm'];
+$menu_perm = (int)$data['menu_perm'];
+$menu_perm_dl_map = [];
+if (isset($data['menu_perm_dl_map']) && is_array($data['menu_perm_dl_map'])) {
+    $menu_perm_dl_map = $data['menu_perm_dl_map'];
+}
 
 $oHash = new HashFront();
 $oHash->setCamposForm('menu_perm');
@@ -38,7 +40,7 @@ $oHash->setArraycamposHidden($aCamposHidden);
 $a_campos = ['oPosicion' => $oPosicion,
     'nombre' => $nombre,
     'oHash' => $oHash,
-    'oCuadros' => $oCuadros,
+    'menu_perm_dl_map' => $menu_perm_dl_map,
     'menu_perm' => $menu_perm,
 ];
 

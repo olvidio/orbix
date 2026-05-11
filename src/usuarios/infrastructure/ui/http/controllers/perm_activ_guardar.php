@@ -2,7 +2,7 @@
 
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\entity\PermUsuarioActividad;
-use src\procesos\domain\PermAfectados;
+use src\procesos\domain\PermAfectadosBits;
 use frontend\shared\web\ContestarJson;
 use function src\shared\domain\helpers\is_true;
 
@@ -35,10 +35,8 @@ if (empty($Qid_tipo_activ)) {
 }
 
 // afecta a:
-$oCuadros = new PermAfectados();
-$aAfecta_a = $oCuadros->getPermissions();
 $PermUsuarioActividadRepository = $GLOBALS['container']->get(PermUsuarioActividadRepositoryInterface::class);
-foreach ($aAfecta_a as $afecta_a) {
+foreach (PermAfectadosBits::map() as $afecta_a) {
     $aWhere = [
         'id_usuario' => $Qid_usuario,
         'dl_propia' => $Qdl_propia,

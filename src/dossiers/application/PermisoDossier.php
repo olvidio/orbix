@@ -2,7 +2,7 @@
 
 namespace src\dossiers\application;
 
-use src\shared\config\ConfigGlobal;
+use src\dossiers\domain\PermisoDossierBits;
 use src\permisos\domain\XPermisos;
 
 /**
@@ -39,29 +39,9 @@ class PermisoDossier extends XPermisos
         $this->omplir();
     }
 
-    private function omplir()
+    private function omplir(): void
     {
-        if (ConfigGlobal::mi_sfsv() == 1) $permissions['adl'] = 1;
-        if (ConfigGlobal::mi_sfsv() == 2) $permissions['pr'] = 1;
-
-        $permissions['agd'] = 1 << 1; // 2
-        $permissions['aop'] = 1 << 2; //4,
-        $permissions['des'] = 1 << 3; //8,
-        $permissions['est'] = 1 << 4; //16,
-        $permissions['scdl'] = 1 << 5; //32,
-        $permissions['scr'] = 1 << 5; //32,
-        $permissions['sg'] = 1 << 6; //64,
-        $permissions['sm'] = 1 << 7; //128,
-        $permissions['soi'] = 1 << 8; //256,
-        $permissions['sr'] = 1 << 9; //512,
-        $permissions['vcsd'] = 1 << 10; //1024,
-        $permissions['vcsr'] = 1 << 10; //1024,
-        $permissions['dtor'] = 1 << 11; //2048,
-        $permissions['ocs'] = 1 << 12; //4096,
-        $permissions['sddl'] = 1 << 13; //8192,
-        $permissions['nax'] = 1 << 14; //16384,
-
-       $this->permissions= $permissions;
+        $this->permissions = PermisoDossierBits::labeledMap();
     }
 
 }

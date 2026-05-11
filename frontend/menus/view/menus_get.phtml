@@ -1,3 +1,8 @@
+<?php
+
+use frontend\shared\permisos\MenuPermisoMenuHtml;
+
+?>
 <script>
     fnjs_guardar = function (formulario) {
         let url = $(formulario).attr('action');
@@ -49,7 +54,7 @@
 
         <tr>
             <td><?= _("permisos") ?></td>
-            <td><?= $oCuadros->cuadros_check('perm_menu', $menu_perm); ?></td>
+            <td><?= MenuPermisoMenuHtml::cuadrosCheck('perm_menu', (int)$menu_perm, $perm_menu_bit_map) ?></td>
         </tr>
     </table>
     <input type="button" onclick="fnjs_guardar('#frm_menus');" value="<?= _("guardar") ?>">

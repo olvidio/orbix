@@ -8,7 +8,7 @@ use src\actividades\domain\entity\TiposActividades;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
-use src\procesos\domain\PermAccion;
+use src\procesos\domain\PermAccionBits;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use function src\shared\domain\helpers\is_true;
 
@@ -50,8 +50,7 @@ class UsuarioPermActivData
         $oUsuario = $GrupoRepository->findById($Qid_usuario);
         $nombre = $oUsuario?->getUsuario() ?? '';
 
-        $oAcciones = new PermAccion();
-        $a_acciones = $oAcciones->lista_array();
+        $a_acciones = PermAccionBits::valueToLabel();
         $a_afecta_a = PermisosActividades::AFECTA;
         asort($a_afecta_a);
 

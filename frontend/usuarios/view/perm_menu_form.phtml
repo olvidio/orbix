@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\permisos\MenuPermDlRadiosHtml;
 
 ?>
 <script>
@@ -31,9 +32,7 @@ use frontend\shared\config\AppUrlConfig;
         <tr>
             <td class=etiqueta><?= ucfirst(_("oficina o grupo")); ?>:</td>
             <td colspan=5>
-                <?php
-                echo $oCuadros->cuadros_radio('menu_perm', $menu_perm);
-                ?>
+                <?= MenuPermDlRadiosHtml::cuadrosRadio('menu_perm', $menu_perm, $menu_perm_dl_map) ?>
             </td>
         </tr>
     </table>

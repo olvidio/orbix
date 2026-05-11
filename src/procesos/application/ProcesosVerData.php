@@ -3,7 +3,7 @@
 namespace src\procesos\application;
 
 use src\actividades\domain\value_objects\StatusId;
-use src\menus\domain\PermisoMenu;
+use src\menus\domain\PermisoMenuBits;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\ActividadTareaRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
@@ -26,8 +26,7 @@ class ProcesosVerData
      */
     public static function execute(string $mod, int $id_item): array
     {
-        $oPermMenus = new PermisoMenu();
-        $a_oficinas = $oPermMenus->lista_array();
+        $a_oficinas = PermisoMenuBits::valueToLabel();
 
         $a_status = StatusId::getArrayStatus();
 

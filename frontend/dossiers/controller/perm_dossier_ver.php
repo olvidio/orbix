@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\permisos\MenuPermisoMenuHtml;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
@@ -37,6 +38,22 @@ $camposHidden = is_array($hashConfig['campos_hidden'] ?? null) ? $hashConfig['ca
 $camposHidden['go_to'] = $goTo;
 $oHash->setArrayCamposHidden($camposHidden);
 $data['hash_campos_html'] = $oHash->getCamposHtml();
+
+$dossierMap = [];
+if (isset($data['permiso_dossier_bit_map']) && is_array($data['permiso_dossier_bit_map'])) {
+    $dossierMap = $data['permiso_dossier_bit_map'];
+}
+$data['permiso_lectura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
+    'permiso_lectura',
+    (int)($data['permiso_lectura'] ?? 0),
+    $dossierMap
+);
+$data['permiso_escritura_html'] = MenuPermisoMenuHtml::cuadrosCheck(
+    'permiso_escritura',
+    (int)($data['permiso_escritura'] ?? 0),
+    $dossierMap
+);
+unset($data['permiso_dossier_bit_map']);
 
 $oView = new ViewNewPhtml('frontend\\dossiers\\controller');
 $oView->renderizar('perm_dossier_pres.phtml', $data);

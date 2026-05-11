@@ -2,8 +2,9 @@
 
 namespace src\ubis\application;
 
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\CuadrosLabor;
+use src\ubis\domain\CuadrosLaborBits;
 
 /**
  * Datos comunes para los formularios de centro dl (labor / num / plazas).
@@ -47,17 +48,15 @@ final class CentrosFormData
      * @return array{
      *     tipo_ctr: string,
      *     tipo_labor: int,
-     *     tipo_labor_check_html: string
+     *     tipo_labor_bit_map: array<string, int>
      * }
      */
     private static function payloadLabor(int $tipo_labor, string $tipo_ctr): array
     {
-        $oLabor = new CuadrosLabor();
-
         return [
             'tipo_ctr' => $tipo_ctr,
             'tipo_labor' => $tipo_labor,
-            'tipo_labor_check_html' => $oLabor->cuadros_check('tipo_labor', $tipo_labor),
+            'tipo_labor_bit_map' => CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv()),
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace src\usuarios\domain;
 
-use src\menus\domain\PermisoMenu;
+use src\menus\domain\PermisoMenuBits;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
@@ -120,9 +120,7 @@ class GrupoJefeZona
 
     private function setIdGrupoConPermisoJefeZona()
     {
-        $oPermisoMenu = new PermisoMenu();
-        $permissions = $oPermisoMenu->omplir();
-        $perm_jefe_zona = $permissions['jefeZona'];
+        $perm_jefe_zona = PermisoMenuBits::map()['jefeZona'];
 
         $PermMenuRepository = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
         $cGruposPermMenu = $PermMenuRepository->getPermMenus();

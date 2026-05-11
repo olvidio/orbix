@@ -2,7 +2,8 @@
 
 namespace src\ubis\application;
 
-use src\ubis\domain\CuadrosLabor;
+use src\shared\config\ConfigGlobal;
+use src\ubis\domain\CuadrosLaborBits;
 
 /**
  * Mapa bit ⇒ etiqueta para tipos de labor (mismo criterio que {@see CuadrosLabor::getTxtTiposLabor()}).
@@ -15,8 +16,6 @@ final class UbisTiposLaborEtiquetas
      */
     public static function mapBitToEtiqueta(): array
     {
-        $o = new CuadrosLabor();
-
-        return $o->getTxtTiposLabor();
+        return array_flip(CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv()));
     }
 }

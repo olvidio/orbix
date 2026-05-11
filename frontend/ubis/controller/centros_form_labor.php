@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
+use frontend\shared\permisos\MenuPermisoMenuHtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
 
@@ -11,7 +12,12 @@ $data = PostRequest::getDataFromUrl('/src/ubis/centros_form_labor', ['id_ubi' =>
 
 $nombre_ubi = $data['nombre_ubi'] ?? '';
 $tipo_ctr = $data['tipo_ctr'] ?? '';
-$tipo_labor_check_html = (string)($data['tipo_labor_check_html'] ?? '');
+$laborMap = [];
+if (isset($data['tipo_labor_bit_map']) && is_array($data['tipo_labor_bit_map'])) {
+    $laborMap = $data['tipo_labor_bit_map'];
+}
+$tipo_labor = (int)($data['tipo_labor'] ?? 0);
+$tipo_labor_check_html = MenuPermisoMenuHtml::cuadrosCheck('tipo_labor', $tipo_labor, $laborMap);
 
 $url_update = AppUrlConfig::getApiBaseUrl() . '/src/ubis/centros_update';
 

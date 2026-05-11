@@ -3,7 +3,7 @@
 namespace src\procesos\domain\entity;
 
 use src\actividades\domain\value_objects\StatusId;
-use src\menus\domain\PermisoMenu;
+use src\menus\domain\PermisoMenuBits;
 use src\procesos\domain\value_objects\FaseId;
 use src\procesos\domain\value_objects\ProcesoTipoId;
 use src\procesos\domain\value_objects\TareaId;
@@ -36,8 +36,7 @@ class TareaProceso
     public function getOf_responsable_txt()
     {
         // para crear el array id_oficina => oficina_txt. Uso los de los menus
-        $oPermMenus = new PermisoMenu;
-        $aOpcionesOficinas = $oPermMenus->lista_array();
+        $aOpcionesOficinas = PermisoMenuBits::valueToLabel();
         $id_of_responsable = $this->getId_of_responsable();
         $of_responsable_txt = empty($aOpcionesOficinas[$id_of_responsable]) ? '' : $aOpcionesOficinas[$id_of_responsable];
         return $of_responsable_txt;

@@ -1,6 +1,6 @@
 <?php
 
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use frontend\shared\security\HashFront;
 
@@ -21,7 +21,7 @@ $Qseguro = ($Qseguro === false || $Qseguro === null || $Qseguro === 0) ? 2 : $Qs
 $Qtodos = ($Qtodos === false || $Qtodos === null || $Qtodos === 0) ? 2 : $Qtodos;
 
 if ($Qseguro === 2) {
-    if (ConfigGlobal::mi_dele() === 'dlb') {
+    if (OrbixRuntime::miDele() === 'dlb') {
         echo _("casi seguro que no quieres hacerlo");
         echo "<br>";
 
@@ -53,7 +53,7 @@ if ($Qseguro === 1) {
         $oDBPropiedades = new DBPropiedades();
         $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
     } else { // solo un esquema
-        $mi_region_dl = ConfigGlobal::mi_region_dl();
+        $mi_region_dl = OrbixRuntime::miRegionDl();
         $aEsquemas[] = $mi_region_dl;
     }
 

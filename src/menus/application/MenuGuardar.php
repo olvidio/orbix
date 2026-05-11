@@ -5,7 +5,7 @@ namespace src\menus\application;
 use src\shared\config\ConfigGlobal;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
-use src\menus\domain\PermisoMenu;
+use src\menus\domain\PermisoMenuBits;
 use src\usuarios\domain\entity\Role;
 use function src\shared\domain\helpers\is_true;
 
@@ -23,7 +23,6 @@ class MenuGuardar
     {
 
         $MenuDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
-        $oPermisoMenu = new PermisoMenu;
 
         // si es nuevo
         if (empty($id_menu)) {
@@ -48,10 +47,7 @@ class MenuGuardar
         $oMenuDb->setId_metamenu($id_metamenu);
         //cuando el campo es perm_menu, se pasa un array que hay que convertirlo en integer.
         if (!empty($perm_menu)) {
-            list ($ok0, $sum) = $oPermisoMenu->permsum_bit($perm_menu);
-            if ($ok0) {
-                $oMenuDb->setMenu_perm($sum);
-            }
+            $oMenuDb->setMenu_perm(PermisoMenuBits::combineSelectedBits($perm_menu));
         }
         //cuando el campo es orden, se pasa csv que hay que convertirlo en un array.
         $a_orden = explode(',', $orden);

@@ -4,6 +4,7 @@ namespace src\menus\application;
 
 use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
+use src\menus\domain\PermisoMenuBits;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 
 /**
@@ -29,6 +30,8 @@ final class MenusGetPageData
             'i_perm_menus' => (int)($_SESSION['iPermMenus'] ?? 1),
         ];
 
+        $perm_menu_bit_map = PermisoMenuBits::map();
+
         if (!empty($Qid_menu) || !empty($Qnuevo)) {
             $edit = self::buildEditPayload($MenuDbRepository, $Qid_menu, $Qnuevo, $Qfiltro_grupo);
 
@@ -37,6 +40,7 @@ final class MenusGetPageData
                 'aRoles' => $aRoles,
                 'usuario' => $usuario,
                 'filtro_grupo' => $Qfiltro_grupo,
+                'perm_menu_bit_map' => $perm_menu_bit_map,
             ], $edit);
         }
 
@@ -55,6 +59,7 @@ final class MenusGetPageData
             'usuario' => $usuario,
             'filtro_grupo' => $Qfiltro_grupo,
             'menu_rows' => $menu_rows,
+            'perm_menu_bit_map' => $perm_menu_bit_map,
         ];
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use frontend\shared\config\OrbixRuntime;
+use frontend\shared\permisos\MenuPermisoMenuHtml;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
@@ -42,7 +43,12 @@ $botones = $load['botones'] ?? 0;
 $dl = $load['dl'] ?? '';
 $region = $load['region'] ?? '';
 $nombre_ubi = $load['nombre_ubi'] ?? '';
-$tipo_labor_check_html = (string)($load['tipo_labor_check_html'] ?? '');
+$laborMap = [];
+if (isset($load['tipo_labor_bit_map']) && is_array($load['tipo_labor_bit_map'])) {
+    $laborMap = $load['tipo_labor_bit_map'];
+}
+$tipo_labor_for_checks = (int)($load['tipo_labor'] ?? 0);
+$tipo_labor_check_html = MenuPermisoMenuHtml::cuadrosCheck('tipo_labor', $tipo_labor_for_checks, $laborMap);
 
 $chk = (string)($load['chk'] ?? '');
 $campos_chk = 'active!sv!sf';

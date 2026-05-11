@@ -41,7 +41,7 @@ use frontend\shared\security\HashFront;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
 use DI\ContainerBuilder;
-use src\layouts\LayoutFactory;
+use frontend\shared\layouts\LayoutFactory;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\menus\domain\contracts\MenuDbRepositoryInterface;

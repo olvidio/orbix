@@ -4,6 +4,12 @@ namespace src\permisos\domain;
 
 use src\shared\config\ConfigGlobal;
 
+/**
+ * Lógica histórica de bits + helpers de HTML. Los mapas canónicos viven en clases `*Bits`
+ * por ámbito ({@see MenuDlPermissionBits}, {@see \src\menus\domain\PermisoMenuBits},
+ * {@see \src\ubis\domain\CuadrosLaborBits}, etc.); la pintura de formularios en `frontend/`
+ * usa {@see \frontend\shared\permisos\MenuPermisoMenuHtml} y afines cuando el flujo es por API.
+ */
 abstract class XPermisos
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */

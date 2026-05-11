@@ -10,7 +10,7 @@ use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEx;
-use src\ubis\domain\CuadrosLabor;
+use src\ubis\domain\CuadrosLaborBits;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -81,13 +81,15 @@ final class UbisEditarLoadData
             'botones' => $botones,
         ];
 
+        $laborMap = CuadrosLaborBits::labeledMap(OrbixRuntime::miSfsv());
+
         return match ($tipo_ubi) {
             'ctrdl', 'ctrsf' => array_merge($base, self::serializeCentroDlFields(
                 $oUbi instanceof CentroDl ? $oUbi : throw new \RuntimeException(_('tipo de entidad inesperado para centro dl'))
-            )),
+            ), ['tipo_labor_bit_map' => $laborMap]),
             'ctrex' => array_merge($base, self::serializeCentroExFields(
                 $oUbi instanceof CentroEx ? $oUbi : throw new \RuntimeException(_('tipo de entidad inesperado para centro ex'))
-            )),
+            ), ['tipo_labor_bit_map' => $laborMap]),
             'cdcdl', 'cdcex' => array_merge($base, self::serializeCasaFields(
                 $oUbi instanceof Casa ? $oUbi : throw new \RuntimeException(_('tipo de entidad inesperado para casa'))
             )),
@@ -155,6 +157,8 @@ final class UbisEditarLoadData
             }
         }
 
+        $laborMap = CuadrosLaborBits::labeledMap(OrbixRuntime::miSfsv());
+
         return match ($tipo_ubi_in) {
             'ctrdl', 'ctrsf' => array_merge($base, [
                 'dl' => $dl === '' ? OrbixRuntime::miDelef() : $dl,
@@ -162,7 +166,7 @@ final class UbisEditarLoadData
                 'nombre_ubi' => $nombre_ubi,
                 'chk_cdc' => '',
                 'tipo_labor' => null,
-                'tipo_labor_check_html' => self::tipoLaborCheckHtml(null),
+                'tipo_labor_bit_map' => $laborMap,
                 'id_ctr_padre' => null,
                 'tipo_ctr' => null,
                 'num_pi' => null,
@@ -179,7 +183,7 @@ final class UbisEditarLoadData
                 'nombre_ubi' => $nombre_ubi,
                 'chk_cdc' => '',
                 'tipo_labor' => null,
-                'tipo_labor_check_html' => self::tipoLaborCheckHtml(null),
+                'tipo_labor_bit_map' => $laborMap,
                 'id_ctr_padre' => null,
                 'tipo_ctr' => null,
             ]),
@@ -239,7 +243,6 @@ final class UbisEditarLoadData
             'nombre_ubi' => $o->getNombre_ubi(),
             'chk_cdc' => is_true($o->isCdc()) ? 'checked' : '',
             'tipo_labor' => $o->getTipo_labor(),
-            'tipo_labor_check_html' => self::tipoLaborCheckHtml((int)$o->getTipo_labor()),
             'id_ctr_padre' => $o->getId_ctr_padre(),
             'tipo_ctr' => $o->getTipo_ctr(),
             'num_pi' => $o->getNum_pi(),
@@ -264,17 +267,9 @@ final class UbisEditarLoadData
             'nombre_ubi' => $o->getNombre_ubi(),
             'chk_cdc' => is_true($o->isCdc()) ? 'checked' : '',
             'tipo_labor' => $o->getTipo_labor(),
-            'tipo_labor_check_html' => self::tipoLaborCheckHtml((int)$o->getTipo_labor()),
             'id_ctr_padre' => $o->getId_ctr_padre(),
             'tipo_ctr' => $o->getTipo_ctr(),
         ];
-    }
-
-    private static function tipoLaborCheckHtml(?int $tipo_labor_bin): string
-    {
-        $oLabor = new CuadrosLabor();
-
-        return $oLabor->cuadros_check('tipo_labor', (int)($tipo_labor_bin ?? 0));
     }
 
     /**

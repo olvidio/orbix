@@ -2,14 +2,14 @@
 
 namespace src\ubis\application;
 
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
-use src\ubis\domain\CuadrosLabor;
+use src\ubis\domain\CuadrosLaborBits;
 
 class CentrosGetLaborData
 {
     public static function execute(): array
     {
-        $oPermActiv = new CuadrosLabor();
         $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $aWhere = ['active' => 't', '_ordre' => 'nombre_ubi'];
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
@@ -25,7 +25,7 @@ class CentrosGetLaborData
                 'id_ubi' => $id_ubi,
                 'nombre_ubi' => $nombre_ubi,
                 'tipo_ctr' => $tipo_ctr,
-                'tipo_labor_txt' => $oPermActiv->cuadros_check_read($tipo_labor),
+                'tipo_labor' => (int)$tipo_labor,
             ];
         }
 
@@ -38,6 +38,7 @@ class CentrosGetLaborData
         return [
             'a_cabeceras' => $a_cabeceras,
             'a_valores' => $a_valores,
+            'tipo_labor_bit_map' => CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv()),
         ];
     }
 }

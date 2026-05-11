@@ -2,143 +2,41 @@
 
 namespace frontend\shared\layouts;
 
-use frontend\shared\security\HashFront;
-use src\layouts\LayoutInterface;
-use src\menus\domain\contracts\MenuDbRepositoryInterface;
-use src\menus\domain\contracts\MetaMenuRepositoryInterface;
-use src\shared\config\ConfigGlobal;
+use frontend\shared\config\OrbixRuntime;
+use frontend\shared\PostRequest;
 
 /**
  * Layout hamburguesa (grupmenús en columna).
  *
- * HTML de menú y firma de enlaces: vive en `frontend/`; implementa {@see LayoutInterface} desde `src`.
+ * Datos de menú vía HTTP (`src/menus`).
  */
 class BurgerLayout implements LayoutInterface
 {
-
-    private string|false $jsonMenuConfig;
-    private mixed $oPermisoMenu;
-    /**
-     * @var array|mixed
-     */
-    private array $listaGrupMenu;
+    /** @var array<string, mixed> */
+    private array $menuConfigArray = [];
 
     /**
-     * @param array $menus El array de menú de entrada con 'smenu', 'a_orden' y 'id_grupmenu'.
-     * @return array La estructura de menú jerárquica agrupada.
+     * @var array<int|string, string>
      */
-    function buildMenuStructure(array $menus): array
-    {
-        $MetaMenuReposiroty = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
-        $indexedNodes = [];
-        foreach ($menus as $key => $itemObject) {
-            $pathKey = $itemObject->getId_grupmenu() . '_' . implode('_', $itemObject->getOrden());
-            $orden = $itemObject->getOrden();
-            if (empty($orden)) {
-                continue;
-            }
-            $id_metamenu = $itemObject->getId_metamenu();
-            if (!empty($id_metamenu)) {
-                $oMetamenu = $MetaMenuReposiroty->findById($id_metamenu);
-                if ($oMetamenu === null) {
-                    unset($menus[$key]);
-                    continue;
-                }
-                $url = $oMetamenu->getUrl();
-                $id_mod = $oMetamenu->getId_Mod();
-            } else {
-                $url = '';
-                $id_mod = '';
-            }
-            if (!empty($id_mod) && !ConfigGlobal::is_mod_installed($id_mod)) {
-                unset($menus[$key]);
-                continue;
-            }
-
-            $full_url = '';
-            $onClick = '';
-            if (!empty($url)) {
-                $full_url = ConfigGlobal::getWeb() . '/' . $url;
-            }
-            $parametros = $itemObject->getParametros();
-            $parametros = HashFront::add_hash($parametros, $full_url);
-            if (!empty($full_url)) {
-                if (!is_null($url) && strstr($url, 'fnjs') !== false) {
-                    $onClick = "\"$url;\"";
-                } else {
-                    $onClick = "fnjs_link_submenu('$full_url','$parametros');";
-                }
-            }
-
-            $indexedNodes[$pathKey] = [
-                'name' => $itemObject->getMenu(),
-                'submenu' => [],
-                'onClick' => $onClick,
-            ];
-        }
-
-        $groupedRootNodes = [];
-        foreach ($menus as $itemObject) {
-            $currentGroup = $itemObject->getId_grupmenu();
-            $currentOrder = $itemObject->getOrden();
-            $currentPathKey = $currentGroup . '_' . implode('_', $currentOrder);
-
-            $currentNode = &$indexedNodes[$currentPathKey];
-
-            if (count($currentOrder) === 1) {
-                if (!isset($groupedRootNodes[$currentGroup])) {
-                    $groupedRootNodes[$currentGroup] = [];
-                }
-                $groupedRootNodes[$currentGroup][] = &$currentNode;
-            } else {
-                $parentOrder = array_slice($currentOrder, 0, -1);
-                $parentPathKey = $currentGroup . '_' . implode('_', $parentOrder);
-
-                if (isset($indexedNodes[$parentPathKey])) {
-                    $indexedNodes[$parentPathKey]['submenu'][] = &$currentNode;
-                }
-            }
-        }
-
-        $finalMenuConfig = [];
-        foreach ($groupedRootNodes as $groupKey => $rootNodesForGroup) {
-            if (!empty($this->listaGrupMenu[$groupKey])) {
-                $groupName = $this->listaGrupMenu[$groupKey];
-                $finalMenuConfig[$groupName] = $rootNodesForGroup;
-            }
-        }
-
-        return $finalMenuConfig;
-    }
+    private array $listaGrupMenu = [];
 
     public function generateMenuHtml(array $params): array
     {
-        $MenusDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
-
-        $this->oPermisoMenu = $params['oPermisoMenu'];
-        $id_grupmenu = $params['id_grupmenu'] ?? '1';
         $this->listaGrupMenu = $params['listaGrupMenu'] ?? [];
-        $oUsuario = $params['oUsuario'];
-        $gm = $params['gm'];
 
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['id_grupmenu'] = 1;
-        $aWhere['_ordre'] = 'id_grupmenu,orden';
-        $cMenusUtilidades = $MenusDbRepository->getMenuDbs($aWhere, $aOperador);
-
-        $user_menus = $this->buildUserMenus($cMenusUtilidades);
-
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['id_grupmenu'] = 1;
-        $aOperador['id_grupmenu'] = "!=";
-        $aWhere['_ordre'] = 'id_grupmenu,orden';
-        $cMenuDbs = $MenusDbRepository->getMenuDbs($aWhere, $aOperador);
-
-        $menuConfig = $this->buildMenuStructure($cMenuDbs);
-
-        $this->jsonMenuConfig = json_encode($menuConfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $payload = PostRequest::getDataFromUrl('/src/menus/menus_burger_layout_data', [
+            'lista_grup_menu_json' => json_encode($this->listaGrupMenu, JSON_UNESCAPED_UNICODE),
+        ]);
+        $this->menuConfigArray = [];
+        $user_menus = '';
+        if (is_array($payload)) {
+            if (isset($payload['menu_config']) && is_array($payload['menu_config'])) {
+                $this->menuConfigArray = $payload['menu_config'];
+            }
+            if (isset($payload['user_menus_html']) && is_string($payload['user_menus_html'])) {
+                $user_menus = $payload['user_menus_html'];
+            }
+        }
 
         $html_aside = "
           <!-- Botón toggle para móvil -->
@@ -163,19 +61,18 @@ class BurgerLayout implements LayoutInterface
             foreach ($params['grupMenuData'] as $grupMenuItem) {
                 $id_gm = $grupMenuItem['id_gm'];
                 $grup_menu = $grupMenuItem['grup_menu'];
-                $clase = $grupMenuItem['clase'];
                 $html_aside .= "<li><a href='#' onclick=\"setActiveGroup(this, '$grup_menu');\" >$grup_menu</a></li>";
             }
         }
 
-        $html_exit = "<hr><li><a href=\"#\" onclick=\"fnjs_logout();\" >" . ucfirst(_("salir"))
-            . ' (' . ConfigGlobal::mi_usuario() . '[' . ConfigGlobal::mi_region_dl() . '])'
-            . "</a></li>";
+        $html_exit = '<li><a href="#" onclick="fnjs_logout();" >' . ucfirst(_('salir'))
+            . ' (' . OrbixRuntime::miUsuario() . '[' . OrbixRuntime::miRegionDl() . '])'
+            . '</a></li>';
         $html_aside .= $html_exit;
 
-        $html_aside .= "</ul>";
-        $html_aside .= "</nav>";
-        $html_aside .= "</aside>";
+        $html_aside .= '</ul>';
+        $html_aside .= '</nav>';
+        $html_aside .= '</aside>';
 
         $li_submenus = '';
         $htmlComponents['li_submenus'] = $li_submenus;
@@ -189,29 +86,33 @@ class BurgerLayout implements LayoutInterface
     {
         ob_start();
 
-        include_once(ConfigGlobal::$dir_estilos . '/layout_hamburguesa.css.php');
+        include_once (OrbixRuntime::dirEstilos() . '/layout_hamburguesa.css.php');
 
         return ob_get_clean();
     }
 
     public function includeJs(array $params): string
     {
-        $defaultGrupMenu = (empty($params['id_grupmenu'])) ? '' : $this->listaGrupMenu[$params['id_grupmenu']];
+        $defaultGrupMenu = (empty($params['id_grupmenu'])) ? '' : ($this->listaGrupMenu[$params['id_grupmenu']] ?? '');
+        $menuJson = json_encode($this->menuConfigArray, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        if ($menuJson === false) {
+            $menuJson = '{}';
+        }
         ob_start();
         ?>
         <!-- Configuración de menús por grupo -->
         <script>
-            const defaultGrupMenu = '<?= $defaultGrupMenu ?>';
+            const defaultGrupMenu = '<?= htmlspecialchars((string)$defaultGrupMenu, ENT_QUOTES, 'UTF-8') ?>';
         </script>
         <!--  para layout hamburguesa -->
         <script>
             <?php
-               include_once(ConfigGlobal::$dir_scripts . '/layout_hamburguesa.js.php');
+            include_once (OrbixRuntime::dirScripts() . '/layout_hamburguesa.js.php');
             ?>
         </script>
         <!-- Configuración de menús por grupo -->
         <script>
-            const menuConfig = <?= $this->jsonMenuConfig ?>;
+            const menuConfig = <?= $menuJson ?>;
         </script>
         <?php
 
@@ -246,8 +147,8 @@ class BurgerLayout implements LayoutInterface
                             <ul>
                                 <?= $user_menus ?>
                                 <hr>
-                                <li><a href="#" onclick="fnjs_logout();"><?= ucfirst(_("salir")) ?>
-                                        <?= "(" . ConfigGlobal::mi_usuario() . '[' . ConfigGlobal::mi_region_dl() . "])" ?>
+                                <li><a href="#" onclick="fnjs_logout();"><?= ucfirst(_('salir')) ?>
+                                        <?= '(' . htmlspecialchars(OrbixRuntime::miUsuario(), ENT_QUOTES, 'UTF-8') . '[' . htmlspecialchars(OrbixRuntime::miRegionDl(), ENT_QUOTES, 'UTF-8') . '])' ?>
                                     </a></li>
                             </ul>
                         </div>
@@ -259,98 +160,4 @@ class BurgerLayout implements LayoutInterface
 
         return ob_get_clean();
     }
-
-    private function buildUserMenus(array|bool $cMenusUtilidades)
-    {
-        $MetaMenuReposiroty = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
-
-        $indexedNodes = [];
-        foreach ($cMenusUtilidades as $itemObject) {
-            $orden = $itemObject->getOrden();
-            $id_grupmenu = $itemObject->getId_grupmenu();
-            $pathKey = $id_grupmenu . '_' . implode('_', $orden);
-            if (empty($orden)) {
-                continue;
-            }
-            $id_metamenu = $itemObject->getId_metamenu();
-
-            if (count($orden) === 1) {
-                continue;
-            }
-
-            $url = '';
-            if (!empty($id_metamenu)) {
-                $oMetamenu = $MetaMenuReposiroty->findById($id_metamenu);
-                if ($oMetamenu === null) {
-                    continue;
-                }
-                $url = $oMetamenu->getUrl();
-            }
-            $full_url = '';
-            $onClick = '';
-            if (!empty($url)) {
-                $full_url = ConfigGlobal::getWeb() . '/' . $url;
-            }
-            $parametros = $itemObject->getParametros();
-            $parametros = HashFront::add_hash($parametros, $full_url);
-            if (!empty($full_url)) {
-                if (!is_null($url) && strstr($url, 'fnjs') !== false) {
-                    $onClick = "$url;";
-                } else {
-                    $onClick = "fnjs_link_submenu('$full_url','$parametros');";
-                }
-            }
-
-            $indexedNodes[$pathKey] = [
-                'name' => $itemObject->getMenu(),
-                'submenu' => [],
-                'onClick' => $onClick,
-            ];
-        }
-
-        $groupedRootNodes = [];
-        foreach ($cMenusUtilidades as $itemObject) {
-            $currentGroup = $itemObject->getId_grupmenu();
-            $currentOrder = $itemObject->getOrden();
-            $currentPathKey = $currentGroup . '_' . implode('_', $currentOrder);
-
-            $currentNode = &$indexedNodes[$currentPathKey];
-
-            if (count($currentOrder) === 1) {
-                if (!isset($groupedRootNodes[$currentGroup])) {
-                    $groupedRootNodes[$currentGroup] = [];
-                }
-                $groupedRootNodes[$currentGroup][] = &$currentNode;
-            } else {
-                $parentOrder = array_slice($currentOrder, 0, -1);
-                $parentPathKey = $currentGroup . '_' . implode('_', $parentOrder);
-
-                if (isset($indexedNodes[$parentPathKey])) {
-                    $indexedNodes[$parentPathKey]['submenu'][] = &$currentNode;
-                }
-            }
-        }
-
-        $li_submenus = '';
-        $indice_old = 0;
-        foreach ($indexedNodes as $key => $node) {
-            if ($node === null) {
-                continue;
-            }
-            $indice = substr_count($key, '_');
-            if (empty($node['submenu'])) {
-                if ($indice_old > $indice) {
-                    $li_submenus .= "</ul></div></li>";
-                }
-                    $li_submenus .= "<li><a href='#' onclick=\"" . $node['onClick'] . "\"  >" . $node['name'] . "</a></li>";
-            } else {
-                $li_submenus .= "<li><a href='#'  class=\"has-submenu\" onclick=\"\"  >" . $node['name'] . "</a>";
-                $li_submenus .= "<div class=\"user-dropdown\"> <ul>";
-            }
-            $indice_old = $indice;
-
-        }
-        return $li_submenus;
-    }
-
 }

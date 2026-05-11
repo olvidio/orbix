@@ -2,6 +2,7 @@
 
 namespace src\dossiers\application;
 
+use src\dossiers\domain\PermisoDossierBits;
 use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
 use function src\shared\domain\helpers\is_true;
 
@@ -13,6 +14,8 @@ use function src\shared\domain\helpers\is_true;
  *  - `hash_config` (campos_form, campos_no, campos_hidden) para que el frontend componga el
  *    bloque hidden con HashFront; el valor de `go_to` dentro de `campos_hidden` se inyecta
  *    firmado en el borde del frontend.
+ *  - `permiso_dossier_bit_map` + enteros `permiso_lectura` / `permiso_escritura`; el HTML de
+ *    checkboxes lo genera el controlador frontend con {@see \frontend\shared\permisos\MenuPermisoMenuHtml}.
  *
  * @return array<string, mixed>
  */
@@ -45,11 +48,8 @@ class PermDossierVerFormData
             $perm_admin = true;
         }
 
-        $oCuadros = new PermisoDossier();
         $permiso_lectura = $oTipoDossier->getPermiso_lectura();
         $permiso_escritura = $oTipoDossier->getPermiso_escritura();
-        $permiso_lectura_html = $oCuadros->cuadros_check('permiso_lectura', $permiso_lectura);
-        $permiso_escritura_html = $oCuadros->cuadros_check('permiso_escritura', $permiso_escritura);
 
         $chk = (is_true($depende_modificar)) ? 'checked' : '';
         $campos_chk = 'depende_modificar!permiso_lectura!permiso_escritura';
@@ -69,8 +69,7 @@ class PermDossierVerFormData
         return [
             'hash_config' => $hashConfig,
             'go_to_link_spec' => self::listaPermLinkSpec($Qtipo),
-            'permiso_lectura_html' => $permiso_lectura_html,
-            'permiso_escritura_html' => $permiso_escritura_html,
+            'permiso_dossier_bit_map' => PermisoDossierBits::labeledMap(),
             'url_guardar' => $url_guardar,
             'url_eliminar' => $url_eliminar,
             'txt_eliminar' => $txt_eliminar,

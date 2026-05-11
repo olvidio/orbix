@@ -3,7 +3,6 @@
 namespace frontend\shared\web;
 
 use frontend\shared\PostRequest;
-use src\shared\config\ConfigGlobal;
 use function frontend\shared\helpers\is_true;
 
 /**
@@ -38,9 +37,6 @@ class Lista
      */
     private function fetchPreferenciaTabla(string $id_tabla = ''): array
     {
-        if (ConfigGlobal::is_test_mode()) {
-            return ['formato_tabla' => '', 'slickgrid' => null];
-        }
         $data = PostRequest::getDataFromUrl(
             '/src/usuarios/preferencia_tabla_get',
             ['id_tabla' => $id_tabla]

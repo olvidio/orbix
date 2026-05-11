@@ -11,31 +11,12 @@ class CuadrosLabor extends XPermisos
 
     public function generarArrayTraducido(): array
     {
-        return [
-            _("sr") => 512,
-            _("n") => 256,
-            _("agd") => 128,
-            _("sg") => 64,
-            _("club") => 16,
-            _("bachilleres") => 8,
-            _("univ") => 4,
-            _("jóvenes") => 2,
-            _("mayores") => 1,
-        ];
+        return CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv());
     }
 
     public function __construct()
     {
-        $miSfsv = ConfigGlobal::mi_sfsv();
-
-        $this->permissions = $this->generarArrayTraducido();
-
-        if ($miSfsv === 1) {
-            $this->permissions[_("sss+")] = 32;
-        }
-        if ($miSfsv === 2) {
-            $this->permissions[_("nax")] = 32;
-        }
+        $this->permissions = CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv());
     }
 
     public function getTxtTiposLabor(): array

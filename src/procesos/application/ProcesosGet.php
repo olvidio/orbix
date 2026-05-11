@@ -4,7 +4,6 @@ namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\value_objects\StatusId;
-use src\menus\domain\PermisoMenu;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -95,9 +94,6 @@ class ProcesosGet
 
         $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aRoles = $RoleRepository->getArrayRoles();
-
-        $oPermMenus = new PermisoMenu();
-        $oPermMenus->lista_array();
 
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
             $soy = 3;

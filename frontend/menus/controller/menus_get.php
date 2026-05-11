@@ -13,8 +13,6 @@ require_once("frontend/shared/global_header_front.inc");
 $oPosicion->setBloque('#ficha'); // antes del recordar
 $oPosicion->recordar();
 
-$oCuadros = new \src\menus\domain\PermisoMenu;
-
 $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
@@ -48,6 +46,11 @@ $pageData = PostRequest::getDataFromUrl('/src/menus/menus_get_page_data', [
     'nuevo' => $Qnuevo,
     'id_menu' => $Qid_menu,
 ]);
+
+$perm_menu_bit_map = [];
+if (isset($pageData['perm_menu_bit_map']) && is_array($pageData['perm_menu_bit_map'])) {
+    $perm_menu_bit_map = $pageData['perm_menu_bit_map'];
+}
 
 if (($pageData['mode'] ?? '') === 'edit') {
     $Qid_menu = (string)($pageData['id_menu'] ?? '');
@@ -113,7 +116,7 @@ if (($pageData['mode'] ?? '') === 'edit') {
         'menu' => $menu,
         'oDesplMeta' => $oDesplMeta,
         'parametros' => $parametros,
-        'oCuadros' => $oCuadros,
+        'perm_menu_bit_map' => $perm_menu_bit_map,
         'menu_perm' => $menu_perm,
         'oHash4' => $oHash4,
         'nuevo' => $Qnuevo,
@@ -138,7 +141,7 @@ if (($pageData['mode'] ?? '') === 'edit') {
     $a_campos = ['oPosicion' => $oPosicion,
         'url' => $url,
         'h2' => $h2,
-        'oCuadros' => $oCuadros,
+        'perm_menu_bit_map' => $perm_menu_bit_map,
         'oHash3' => $oHash3,
         'menuRows' => $menuRows,
     ];

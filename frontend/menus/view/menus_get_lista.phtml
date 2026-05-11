@@ -1,3 +1,8 @@
+<?php
+
+use frontend\shared\permisos\MenuPermisoMenuHtml;
+
+?>
 <script>
     fnjs_ver_ficha = function (id_menu) {
         var filtro_grupo = $('#filtro_grupo').val();
@@ -29,7 +34,7 @@
         $ok = $row['ok'] ?? null;
 
         $txt_ok = empty($ok) ? '' : '[ok]';
-        $perm_menu = $oCuadros->lista_txt2($menu_perm);
+        $perm_menu = MenuPermisoMenuHtml::listaTxt2($menu_perm, $perm_menu_bit_map);
         $indice = is_array($orden) ? count($orden) : 0;
         $orden_txt = is_array($orden) ? implode(',', $orden) : '';
         // para poder hacer click si he borrado el nombre

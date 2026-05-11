@@ -9,34 +9,32 @@ use src\menus\domain\PermisoMenu;
 use src\shared\config\ConfigGlobal;
 
 /**
- * Entradas de menú lateral visibles para un id_grupmenu, equivalente al filtro
- * aplicado al menú lateral (permisos Bit, módulos y apps instalados). Para el layout legacy
- * con grupos 1 + seleccionado vía regex, ver {@see MenusLegacyLayoutItemsUseCase}.
+ * Entradas de menú para el layout legacy (grupos 1 y el seleccionado, mismo filtro que el antiguo
+ * {@see \frontend\shared\layouts\LegacyLayout} antes de mover la lectura a HTTP).
+ *
+ * @return list<array{indice:int,menu:?string,url:string,full_url:string,parametros:?string,menu_perm:mixed}>
  */
-final class MenusVisiblesPorGrupoMenuUseCase
+final class MenusLegacyLayoutItemsUseCase
 {
-    /**
-     * @return list<array{id_menu:int,indice:int,menu:?string,url:string,full_url:string,parametros:?string,orden:list<int>}>
-     */
-    public function __invoke(int $id_grupmenu): array
+    public function __invoke(string $id_grupmenu): array
     {
         $MenusDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
         $MetaMenuRepository = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
-
         $oPermisoMenu = new PermisoMenu();
 
         $aWhere = [
-            'id_grupmenu' => $id_grupmenu,
+            'id_grupmenu' => '^1$|^' . $id_grupmenu . '$',
             '_ordre' => 'orden',
         ];
-        $cMenuDbs = $MenusDbRepository->getMenuDbs($aWhere);
+        $aOperador = ['id_grupmenu' => '~'];
+        $cMenuDbs = $MenusDbRepository->getMenuDbs($aWhere, $aOperador);
         if ($cMenuDbs === false || !is_iterable($cMenuDbs)) {
             return [];
         }
 
-        $menuData = [];
         $num_menu_1 = 0;
         $raiz_pral = '';
+        $menuData = [];
 
         foreach ($cMenuDbs as $oMenuDb) {
             $orden = $oMenuDb->getOrden();
@@ -54,12 +52,13 @@ final class MenusVisiblesPorGrupoMenuUseCase
                 if ($oMetamenu === null) {
                     continue;
                 }
-                $url = $oMetamenu->getUrl();
+                $url = $oMetamenu->getUrl() ?? '';
                 $id_mod = $oMetamenu->getId_mod();
             } else {
                 $url = '';
                 $id_mod = null;
             }
+
             if (!empty($id_mod) && !ConfigGlobal::is_mod_installed((int)$id_mod)) {
                 continue;
             }
@@ -81,7 +80,7 @@ final class MenusVisiblesPorGrupoMenuUseCase
             if (count($orden) === 1) {
                 $raiz_pral = $raiz;
             }
-            if ($raiz !== $raiz_pral) {
+            if ($raiz != $raiz_pral) {
                 continue;
             }
 
@@ -91,9 +90,9 @@ final class MenusVisiblesPorGrupoMenuUseCase
             }
             $parametros = HashFront::add_hash($parametros, $full_url);
             $indice = count($orden);
+
             if ($indice == 1 && !$oPermisoMenu->visible($menu_perm)) {
                 $num_menu_1 = $orden[0];
-
                 continue;
             }
 
@@ -103,13 +102,12 @@ final class MenusVisiblesPorGrupoMenuUseCase
             }
 
             $menuData[] = [
-                'id_menu' => (int)$oMenuDb->getId_menu(),
                 'indice' => $indice,
                 'menu' => $menu,
-                'url' => (string)($url ?? ''),
+                'url' => $url,
                 'full_url' => $full_url,
                 'parametros' => $parametros,
-                'orden' => array_map(static fn ($v): int => (int)$v, $orden),
+                'menu_perm' => $menu_perm,
             ];
         }
 

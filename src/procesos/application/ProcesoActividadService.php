@@ -3,7 +3,7 @@
 namespace src\procesos\application;
 
 use src\shared\config\ConfigGlobal;
-use src\menus\domain\PermisoMenu;
+use src\menus\domain\PermisoMenuBits;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\actividades\domain\value_objects\StatusId;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
@@ -313,8 +313,7 @@ class ProcesoActividadService
     public function cargar_permisos(): array
     {
         //para crear un desplegable de oficinas. Uso los de los menus
-        $oPermMenus = new PermisoMenu;
-        $this->aOpcionesOficinas = $oPermMenus->lista_array();
+        $this->aOpcionesOficinas = PermisoMenuBits::valueToLabel();
         return $this->aOpcionesOficinas;
     }
 

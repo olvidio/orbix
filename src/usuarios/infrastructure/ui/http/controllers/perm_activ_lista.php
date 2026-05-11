@@ -4,13 +4,11 @@ use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
-use src\procesos\domain\PermAccion;
-use src\procesos\domain\PermAfectados;
+use src\procesos\domain\PermAccionBits;
+use src\procesos\domain\PermAfectadosBits;
 use frontend\shared\web\ContestarJson;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
-
-$oCuadrosAfecta = new PermAfectados();
 
 $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
 
@@ -54,8 +52,7 @@ $a_botones = [
     ['prefix' => 'perm', 'txt' => _("eliminar"), 'click' => "fnjs_del_perm_activ(\"#permisos_activ\")"],
 ];
 
-$oAcciones = new PermAccion();
-$aOpcionesAction = $oAcciones->lista_array();
+$aOpcionesAction = PermAccionBits::valueToLabel();
 $a_valores = [];
 $id_tipo_activ_anterior = '';
 $dl_propia_anterior = '';
@@ -102,7 +99,7 @@ foreach ($cUsuarioPermArray as $aUsuarioPerm) {
         $a_valores[$i][1] = $dl_propia_txt;
         $a_valores[$i][2] = $oTipoActividad->getNom();
     }
-    $a_valores[$i][3] = $oCuadrosAfecta->lista_tiene_txt($afecta_a);
+    $a_valores[$i][3] = PermAfectadosBits::listaTieneTxt((int)$afecta_a);
 
     $a_valores[$i][4] = $fase_ref_txt;
     $a_valores[$i][5] = empty($aOpcionesAction[$perm_off]) ? '?' : $aOpcionesAction[$perm_off];

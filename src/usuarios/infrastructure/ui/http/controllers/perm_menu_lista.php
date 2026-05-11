@@ -1,12 +1,11 @@
 <?php
 
-use src\permisos\domain\PermDl;
+use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use frontend\shared\web\ContestarJson;
 
 $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
 
-$oCuadros = new PermDl();
 $PermMenuRepository = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
 $oGrupoGrupoPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $Qid_usuario));
 
@@ -22,7 +21,7 @@ foreach ($oGrupoGrupoPermMenu as $oPermMenu) {
     $menu_perm = $oPermMenu->getMenu_perm();
 
     $a_valores[$i]['sel'] = "$Qid_usuario#$id_item";
-    $a_valores[$i][1] = $oCuadros->lista_txt($menu_perm);
+    $a_valores[$i][1] = MenuDlPermissionBits::listaTxt((int)$menu_perm);
 }
 
 $data = ['a_cabeceras' => $a_cabeceras,

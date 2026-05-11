@@ -1,5 +1,6 @@
 <?php
 
+use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use frontend\shared\web\ContestarJson;
@@ -22,5 +23,6 @@ if (!empty($Qid_item)) {
 $error_txt = '';
 $data['nombre'] = $nombre;
 $data['menu_perm'] = $menu_perm;
+$data['menu_perm_dl_map'] = MenuDlPermissionBits::map();
 
 ContestarJson::enviar($error_txt, $data);

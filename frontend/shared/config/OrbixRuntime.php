@@ -13,8 +13,12 @@ namespace frontend\shared\config;
  * - {@see \src\shared\config\ConfigGlobal::$dir_languages} → {@see self::gettextLanguagesDir()}
  * - {@see \src\shared\config\ConfigGlobal::getWeb()} → {@see self::getWeb()}
  * - {@see \src\shared\config\ConfigGlobal::getWeb_NodeScripts()} → {@see self::getWebNodeScripts()}
+ * - {@see \src\shared\config\ConfigGlobal::getWeb_scripts()} → {@see self::getWebScripts()}
+ * - {@see \src\shared\config\ConfigGlobal::$dir_scripts} → {@see self::dirScripts()}
  * - {@see \src\shared\config\ConfigGlobal::getWeb_icons()} → {@see self::getWebIcons()}
  * - {@see \src\shared\config\ConfigGlobal::is_app_installed()} → {@see self::isAppInstalled()}
+ * - {@see \src\shared\config\ConfigGlobal::mi_usuario()} → {@see self::miUsuario()}
+ * - {@see \src\shared\config\ConfigGlobal::mi_region_dl()} → {@see self::miRegionDl()}
  *
  * El flag de depuración del frontend (`isDebug` / `isDebugMode`) se resuelve
  * solo por entorno (`ORBIX_FRONT_DEBUG`), sin leer `ServerConf` ni `ConfigGlobal`.
@@ -111,6 +115,20 @@ final class OrbixRuntime
         return (string)\src\shared\config\ConfigGlobal::getWeb_NodeScripts();
     }
 
+    /** URL base HTTP + `/scripts`. Equiv. {@see \src\shared\config\ConfigGlobal::getWeb_scripts()}. */
+    public static function getWebScripts(): string
+    {
+        return (string)\src\shared\config\ConfigGlobal::getWeb_scripts();
+    }
+
+    /**
+     * Ruta absoluta al árbol `scripts/` (filesystem). Mismo valor que {@see \src\shared\config\ConfigGlobal::$dir_scripts}.
+     */
+    public static function dirScripts(): string
+    {
+        return (string)\src\shared\config\ConfigGlobal::$dir_scripts;
+    }
+
     public static function isDmz(): bool
     {
         return (bool)\src\shared\config\ServerConf::$dmz;
@@ -133,6 +151,12 @@ final class OrbixRuntime
     public static function miRegionDl(): string
     {
         return (string)\src\shared\config\ConfigGlobal::mi_region_dl();
+    }
+
+    /** Nombre de usuario en sesión. Equiv. {@see \src\shared\config\ConfigGlobal::mi_usuario()}. */
+    public static function miUsuario(): string
+    {
+        return (string)\src\shared\config\ConfigGlobal::mi_usuario();
     }
 
     /**
