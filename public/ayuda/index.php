@@ -2,8 +2,8 @@
 namespace core;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use frontend\shared\security\HashFront;
 use src\shared\config\ConfigGlobal;
-use web\Hash;
 
 require_once ("src/shared/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -25,7 +25,7 @@ $aQuery = [ 'pau' => 'a' ];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'src\shared\domain\helpers\poner_empty_on_null');
 }
-$goMisas = Hash::link('frontend/misas/controller/misas_index.php?' . http_build_query($aQuery));
+$goMisas = HashFront::link('frontend/misas/controller/misas_index.php?' . http_build_query($aQuery));
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="es">

@@ -537,6 +537,24 @@ Referencia: `frontend/usuarios/controller/usuario_lista.php`.
 - Parámetros: array asociativo; el hash de seguridad lo genera `PostRequest` internamente donde aplique.
 - Respuesta: decodificar el JSON; si no se usa un helper que ya trate errores con `exit`, comprobar `success` / `error` según el endpoint.
 
+### Patrón de referencia: `devel_db_admin` (herramientas de esquemas / BD)
+
+Las pantallas bajo `frontend/devel_db_admin/` siguen el mismo criterio que el resto de módulos migrados: **el controlador frontend no instancia casos de uso ni servicios de `src/devel_db_admin/application/`**; la mutación o lectura agregada va a un **endpoint HTTP bajo `/src/devel_db_admin/...`** y el PHP del formulario usa **`PostRequest::getDataFromUrl`**.
+
+**Estructura:**
+
+- **Casos de uso / orquestación** (efectos secundarios, SQL, ficheros): clases en `src/devel_db_admin/application/` (p. ej. `CrearEsquema`, `CopiarEsquema`, `RenombrarEsquema`, `EliminarEsquemaDl`, `MoverTabla`, `AbsorberEsquema`, `CrearUsuarios`). Cuando necesiten el contenedor DI, reciben `object $container` en constructor (herramienta interna; excepción pragmática a “no `$GLOBALS` en application” solo en este módulo de administración).
+- **Rutas:** `src/devel_db_admin/config/routes.php` registra cada acción (`/src/devel_db_admin/copiar_esquema`, `crear_esquema`, `renombrar_esquema`, `eliminar_esquema`, `crear_usuarios`, `absorber_esquema`, `mover_tabla`, etc.).
+- **Controladores HTTP:** `src/devel_db_admin/infrastructure/ui/http/controllers/*.php` hacen `require_once 'frontend/shared/global_header_front.inc'`, leen `$_POST` / `filter_input`, invocan la clase de `application/` y responden con **`ContestarJson::enviar`** (`data` string `"ok"` o un objeto/array con campos como `lines`, credenciales, `a_esquemas`+`lines` para mover, etc.). Errores de negocio que deben cortar el flujo: `ContestarJson::enviar($mensaje, 'none')` para que `PostRequest` trate `success === false` y haga `exit` con el mensaje.
+- **Controladores frontend:** `frontend/devel_db_admin/controller/*.php` solo leen el request del navegador, llaman a `PostRequest::getDataFromUrl('/src/devel_db_admin/<endpoint>', $campos)` y muestran HTML/mensajes con los datos devueltos (o el texto fijo que ya existía). **Prohibido** `use src\devel_db_admin\application\...` en esos controladores para ejecutar la operación (sí puede existir `use` residual solo si otra regla del repo lo exige; el flujo canónico es el endpoint).
+
+**Datos de formulario / desplegables (solo lectura):**
+
+- Preferir **un** `PostRequest` a `db_propiedades_data` con `op` acorde (`db_que_esquema_ref`, `db_cambiar_nombre_esquemas`, `db_mover_tablas`, …) implementado en `src/devel_db_admin/application/DbPropiedadesFormData`.
+- Incluir en el JSON mapas **value → label** (p. ej. `a_opciones_regiones`, `a_posibles_esquemas`) y en el controlador frontend montar `<select>` con **`frontend\shared\web\Desplegable::desdeOpciones(...)`** — **no** importar desde `frontend/devel_db_admin/controller` servicios tipo `src\ubis\application\services\RegionDropdown`; esos servicios pueden seguir usándose **dentro** de `DbPropiedadesFormData` al construir el payload.
+
+**Excepción AJAX HTML:** `db_lugar` devuelve un fragmento HTML (`<select name="dl">`) para `$.ajax` con `dataType: 'html'`; es un caso acotado documentado; el resto de endpoints del módulo deben JSON + `ContestarJson`.
+
 ---
 
 ## Migración `apps/` → `frontend/` + `src/` (convivencia y slices)
@@ -624,12 +642,12 @@ Para modelos legacy muy grandes (>~1000 LOC, SQL ad-hoc, tablas temporales) sin 
 - Al mover a `legacy/`, pasada mecánica recomendada: typos, `exit` en constructor → excepción, casts defensivos en SQL si no hay `prepare()`, código muerto, condiciones tautológicas. Reescritura profunda = fase 2 opcional.
 
 ### Separación estricta frontend ↔ `src`
-- Vistas y controladores frontend **no** instancian `src\...\application\...` ni `use src\...` para lógica de aplicación. Toda obtención de datos vía **`PostRequest`** a `/src/<modulo>/<accion>`.
+- Vistas y controladores frontend **no** instancian `src\...\application\...` ni `use src\...` para lógica de aplicación. Toda obtención de datos vía **`PostRequest`** a `/src/<modulo>/<accion>`. Ejemplo detallado del módulo de administración de BD: **### Patrón de referencia: `devel_db_admin` (herramientas de esquemas / BD)**.
 - Comprobación práctica al migrar: `grep -n "use src\\\\" frontend/<modulo>/` debe dar **cero** resultados salvo contratos de dominio muy estables explícitamente permitidos.
 - Incumplimientos detectados en el pasado (corregir así): p. ej. importar `src/` desde controladores frontend en rutas tipo `actividad_tipo_get` → sustituir por endpoint JSON + `PostRequest`.
 
 ### Desplegables devueltos por endpoints AJAX
-Los controladores `src/...` **no** devuelven HTML de `<select>`; `application` **no** instancia `web\Desplegable`.
+Por defecto los controladores `src/...` **no** devuelven HTML de `<select>`; `application` **no** instancia `web\Desplegable`. **Excepción acotada:** `devel_db_admin` expone `db_lugar` con fragmento HTML para jQuery `dataType: 'html'` (ver **### Patrón de referencia: `devel_db_admin`**).
 
 **Contrato** (dentro de `data` del JSON, tras parsear si viene serializado): objeto con campos opcionales con defaults:
 

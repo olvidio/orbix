@@ -1,13 +1,13 @@
 <?php
 
+use frontend\shared\security\HashFront;
 use src\shared\config\ConfigGlobal;
-use web\Hash;
 
-$url = Hash::cmdSinParametros(ConfigGlobal::getWeb()
+$url = HashFront::cmdSinParametros(ConfigGlobal::getWeb()
         . 'frontend/usuarios/controller/mails_contactos_region.php'
 );
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setUrl($url);
 $oHash->setCamposForm('region');
 $hash_params = $oHash->getParamAjaxEnArray();
@@ -36,6 +36,7 @@ $hash_params = $oHash->getParamAjaxEnArray();
    <tr><td>crP</td><td>Perú</td><td><span class="link" onclick="fnjs_mostrar_modal('P-crP')">ver contactos</span></td></tr>
    <tr><td>crPl</td><td>Filipinas</td><td><span class="link" onclick="fnjs_mostrar_modal('Pl-crPl')">ver contactos</span></td></tr>
    <tr><td>crPla</td><td>región del Plata</td><td><span class="link" onclick="fnjs_mostrar_modal('Pla-crPla')">ver contactos</span></td></tr>
+   <tr><td>crUsca</td><td>región de Usa y Canadá</td><td><span class="link" onclick="fnjs_mostrar_modal('Usca-crUsca')">ver contactos</span></td></tr>
    <tr><td>--</td>
    <tr><td>dlal</td><td>Aragón y Levante</td><td><span class="link" onclick="fnjs_mostrar_modal('H-dlal')">ver contactos</span></td></tr>
    <tr><td>dlb</td><td>Barcelona</td><td><span class="link" onclick="fnjs_mostrar_modal('H-dlb')">ver contactos</span></td></tr>

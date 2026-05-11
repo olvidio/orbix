@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace src\devel_db_admin\application;
 
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
+use src\ubis\application\services\RegionDropdown;
 
 /**
  * Datos de UI basados en {@see DBPropiedades} para pantallas de `devel_db_admin`.
@@ -44,7 +45,7 @@ final class DbPropiedadesFormData
     }
 
     /**
-     * @return array{oEsquemaRef: string|false}
+     * @return array{oEsquemaRef: string|false, a_opciones_regiones: array<string, string>}
      */
     private static function dbQueEsquemaRef(DBPropiedades $dbp): array
     {
@@ -52,11 +53,12 @@ final class DbPropiedadesFormData
 
         return [
             'oEsquemaRef' => $dbp->posibles_esquemas(''),
+            'a_opciones_regiones' => RegionDropdown::activasOrdenNombre(),
         ];
     }
 
     /**
-     * @return array{oEsquemaRef: string|false, a_posibles_esquemas: array<string, string>}
+     * @return array{oEsquemaRef: string|false, a_posibles_esquemas: array<string, string>, a_opciones_regiones: array<string, string>}
      */
     private static function dbCambiarNombreEsquemas(DBPropiedades $dbp): array
     {
@@ -66,6 +68,7 @@ final class DbPropiedadesFormData
         return [
             'oEsquemaRef' => $dbp->posibles_esquemas(''),
             'a_posibles_esquemas' => is_array($opts) ? $opts : [],
+            'a_opciones_regiones' => RegionDropdown::activasOrdenNombre(),
         ];
     }
 

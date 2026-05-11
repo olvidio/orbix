@@ -2,12 +2,11 @@
 
 namespace frontend\devel_db_admin\controller;
 
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
-use src\shared\config\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
-use src\ubis\application\services\RegionDropdown;
+use frontend\shared\security\HashFront;
 use frontend\shared\web\Desplegable;
-use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("frontend/shared/global_header_front.inc");
@@ -19,17 +18,18 @@ $dbProps = PostRequest::getDataFromUrl('/src/devel_db_admin/db_propiedades_data'
 ]);
 $dbProps = is_array($dbProps) ? $dbProps : [];
 $oEsquemaRef = $dbProps['oEsquemaRef'] ?? '';
+$a_opciones_regiones = (array) ($dbProps['a_opciones_regiones'] ?? []);
 
-$oDesplRegiones = Desplegable::desdeOpciones(RegionDropdown::activasOrdenNombre(), 'region');
+$oDesplRegiones = Desplegable::desdeOpciones($a_opciones_regiones, 'region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('esquema!region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
 
-$oHash1 = new Hash();
-$oHash1->setUrl(ConfigGlobal::getWeb() . '/frontend/devel_db_admin/controller/db_ajax.php');
-$oHash1->setCamposForm('salida!entrada');
+$oHash1 = new HashFront();
+$oHash1->setUrl(OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar');
+$oHash1->setCamposForm('region');
 $h = $oHash1->linkSinValParams();
 
 $msg_falta_dl = _("debe poner la delegación");

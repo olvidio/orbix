@@ -1,12 +1,12 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$oHash = new Hash();
+$oHash = new HashFront();
 $oHash->setCamposForm('db!tabla!clase!clase_plural!grupo!aplicacion');
 
 ?>

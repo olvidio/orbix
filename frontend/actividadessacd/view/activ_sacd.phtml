@@ -9,7 +9,7 @@
  * construye en cliente a partir del JSON, no llega nunca desde el backend.
  *
  * @var frontend\shared\web\PeriodoQue $oFormP
- * @var web\Hash       $oHash
+ * @var HashFront      $oHash
  * @var string         $tipo
  * @var bool           $perm_des
  * @var string         $url_lista
@@ -20,6 +20,8 @@
  * @var string         $url_reordenar
  * @var string         $url_eliminar
  */
+
+use frontend\shared\security\HashFront;
 
 $i18n = [
     'plus_prioridad' => _("+ prioridad"),

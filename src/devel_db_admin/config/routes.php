@@ -9,4 +9,28 @@ return static function ($r): void {
     $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/apptables_apps_data', function (): void {
         require __DIR__ . '/../infrastructure/ui/http/controllers/apptables_apps_data.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/db_lugar', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/db_lugar.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/absorber_esquema', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/absorber_esquema.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/copiar_esquema', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/copiar_esquema.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/crear_esquema', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/crear_esquema.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/crear_usuarios', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/crear_usuarios.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/eliminar_esquema', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/eliminar_esquema.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/mover_tabla', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/mover_tabla.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/renombrar_esquema', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/renombrar_esquema.php';
+    });
 };

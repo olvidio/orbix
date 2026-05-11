@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
-use frontend\shared\PostRequest;
+/**
+ * Ejecuta {@see CrearEsquema} (POST: esquema, region, dl, comun, sv, sf). Respuesta JSON `data`: `"ok"`.
+ */
+
+use frontend\shared\web\ContestarJson;
+use src\devel_db_admin\application\CrearEsquema;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -13,14 +18,13 @@ $Qcomun = (int) filter_input(INPUT_POST, 'comun');
 $Qsv = (int) filter_input(INPUT_POST, 'sv');
 $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
-PostRequest::getDataFromUrl('/src/devel_db_admin/crear_esquema', [
-    'esquema' => $QEsquemaRef,
-    'region' => $Qregion,
-    'dl' => $Qdl,
-    'comun' => $Qcomun,
-    'sv' => $Qsv,
-    'sf' => $Qsf,
-]);
+(new CrearEsquema($GLOBALS['container']))->ejecutar(
+    $QEsquemaRef,
+    $Qregion,
+    $Qdl,
+    $Qcomun,
+    $Qsv,
+    $Qsf,
+);
 
-echo '<br>';
-echo sprintf(_("se ha creado la estructura de los esquemas."));
+ContestarJson::enviar('', 'ok');

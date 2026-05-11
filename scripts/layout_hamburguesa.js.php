@@ -3,7 +3,7 @@
    importante para que el navegador entienda que lo que sigue es javascrip, ya que
 	la extension del fichero no es ".js", sino ".js.php"
 */
-use web\Hash;
+use frontend\shared\security\HashFront;
 
 //header('Content-Type: text/javascript; charset=UTF-8');
 ?>
@@ -76,7 +76,7 @@ function setActiveGroup(element, groupName) {
     addHorizontalMenuEventListeners();
 
     const sidebarHeaderH2 = document.getElementById('sidebar-header-h2');
-    sidebarHeaderH2.innerHTML=groupName;
+    sidebarHeaderH2.innerHTML = groupName;
     // Cerrar sidebar en móvil
     if (window.innerWidth <= 1024) {
         toggleSidebar();
@@ -159,15 +159,15 @@ function showUser() {
     navUser.classList.toggle('user-dropdown');
 }
 
-function showPortada(groupName){
+function showPortada(groupName) {
     <?php
-        $oHash1 = new Hash();
-        $oHash1->setUrl("public/portada.php");
-        $oHash1->setCamposForm('grupmenu');
-        $h = $oHash1->linkSinValParams();
+    $oHash1 = new HashFront();
+    $oHash1->setUrl("public/portada.php");
+    $oHash1->setCamposForm('grupmenu');
+    $h = $oHash1->linkSinValParams();
     ?>
     url = "public/portada.php";
-    datos = 'grupmenu='+groupName+'<?= $h ?>';
+    datos = 'grupmenu=' + groupName + '<?= $h ?>';
 
     let request = $.ajax({
         data: datos,

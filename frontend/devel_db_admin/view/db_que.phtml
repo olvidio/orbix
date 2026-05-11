@@ -6,8 +6,8 @@ use src\shared\config\ConfigGlobal;
 <script>
     fnjs_dl = function () {
         var filtro_region = $('#region').val();
-        var url = '<?= ConfigGlobal::getWeb() . '/frontend/devel_db_admin/controller/db_ajax.php' ?>';
-        var parametros = 'salida=lugar&entrada=' + filtro_region + '<?= $h ?>';
+        var url = '<?= ConfigGlobal::getWeb() . '/src/devel_db_admin/db_lugar' ?>';
+        var parametros = 'region=' + encodeURIComponent(filtro_region) + '<?= $h ?>';
         $.ajax({
             url: url,
             type: 'post',
