@@ -11,13 +11,13 @@
  *   - dl_org (delegacion organizadora; para 'freq')
  *   - isfsv  (1|2|0)
  *
- * Respuesta JSON (via frontend\shared\web\ContestarJson):
+ * Respuesta JSON (via src\shared\web\ContestarJson):
  *   - success=true, data = { id, opciones, selected, action, mensaje }
  *   - success=false, mensaje = "..." (tipo no soportado).
  */
 
 use src\actividades\application\ActividadSelectUbiData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');

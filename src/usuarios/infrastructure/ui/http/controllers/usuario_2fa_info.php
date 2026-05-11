@@ -1,7 +1,7 @@
 <?php
 
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 

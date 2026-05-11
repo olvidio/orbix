@@ -713,8 +713,6 @@ class TablaEditable
         $fnjs = '';
         $url = $this->getUpdateUrl();
         if (!empty($url)) {
-            // Contrato JSON estándar `{success, mensaje, data}` devuelto por
-            // `frontend\shared\web\ContestarJson::enviar(...)`.
             $txtRespuesta = _('respuesta');
             $txtError = _('hay un error, no se ha guardado');
             $fnjs = "

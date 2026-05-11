@@ -1,7 +1,7 @@
 <?php
 
 use src\procesos\application\FasesActivCambioUpdate;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $useCase = new FasesActivCambioUpdate();
 $error = $useCase->execute($_POST);

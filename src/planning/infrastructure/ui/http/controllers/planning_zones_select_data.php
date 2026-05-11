@@ -4,7 +4,7 @@
  * Dataset para {@see frontend/planning/controller/planning_zones_select.php}.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\planning\application\PlanningZonesSelectData;
 
 require_once 'frontend/shared/global_header_front.inc';

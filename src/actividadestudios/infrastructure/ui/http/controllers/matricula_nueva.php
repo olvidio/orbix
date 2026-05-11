@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadestudios\application\MatriculaNueva;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 /**
  * Crea una matricula. Responde JSON `{success, mensaje, data}`.

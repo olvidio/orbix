@@ -1,7 +1,7 @@
 <?php
 
 use src\dossiers\application\TipoDossierEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 /**
  * Elimina un `TipoDossier`.

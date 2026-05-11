@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\CentrosSListaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $data = CentrosSListaData::execute();
 if (isset($data['error'])) {

@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadestudios\application\ActaNotasMatriculaGuardar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 /**
  * Guarda el borrador de notas sobre cada matricula (rama `que=1` del legacy

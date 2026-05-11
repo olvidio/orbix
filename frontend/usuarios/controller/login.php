@@ -4,7 +4,6 @@ namespace frontend\usuarios\controller;
 
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
-use frontend\shared\web\ContestarJson;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\application\LoginProcesar;

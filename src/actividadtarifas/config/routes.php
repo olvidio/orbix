@@ -4,7 +4,7 @@
  * Rutas del modulo `actividadtarifas`. Las registra `public/index.php`
  * via glob sobre `src/*\/config/routes.php`. Cada endpoint vive en
  * `src/actividadtarifas/infrastructure/ui/http/controllers/` y
- * responde JSON estandar mediante `frontend\shared\web\ContestarJson::enviar(...)`.
+ * responde JSON estandar mediante `src\shared\web\ContestarJson::enviar(...)`.
  */
 return static function ($r) {
     // Tipos de tarifa (catalogo).

@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadestudios\application\E43CertificadoData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error = '';
 $data = [];

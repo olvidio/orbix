@@ -5,7 +5,7 @@ use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\entity\UsuarioGrupo;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $sfsv = ConfigGlobal::mi_sfsv();
 $error_txt = '';

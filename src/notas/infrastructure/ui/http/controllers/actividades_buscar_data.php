@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\ActividadesBuscarData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 /**
  * Datos (delegaciones + actividades) para el dialogo "buscar actividad"

@@ -5,7 +5,7 @@
  */
 
 use src\actividadtarifas\application\TipoTarifaFormData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'id_tarifa' => (string)filter_input(INPUT_POST, 'id_tarifa'),

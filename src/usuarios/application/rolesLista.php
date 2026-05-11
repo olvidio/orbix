@@ -7,7 +7,7 @@ use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 class rolesLista
 {

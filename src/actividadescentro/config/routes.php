@@ -3,7 +3,7 @@
 // Rutas del modulo `actividadescentro`. Las registra `public/index.php` via
 // glob sobre `src/*/config/routes.php`. Cada endpoint vive en
 // `src/actividadescentro/infrastructure/ui/http/controllers/` y responde
-// JSON mediante `frontend\shared\web\ContestarJson::enviar(...)`.
+// JSON mediante `src\shared\web\ContestarJson::enviar(...)`.
 return static function ($r) {
     // Mutaciones.
     $r->addRoute(['GET', 'POST'], '/src/actividadescentro/centro_encargado_asignar', function () {

@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\ListCtrData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qque_lista = (string)filter_input(INPUT_POST, 'que_lista');
 $Qloc = (string)filter_input(INPUT_POST, 'loc');

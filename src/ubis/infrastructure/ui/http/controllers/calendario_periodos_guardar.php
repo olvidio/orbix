@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\CalendarioPeriodoGuardar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 ContestarJson::enviar(
     CalendarioPeriodoGuardar::execute(

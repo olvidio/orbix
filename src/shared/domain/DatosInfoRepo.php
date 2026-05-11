@@ -234,9 +234,11 @@ abstract class DatosInfoRepo
         //caso de actualizar el campo depende
         $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
         $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
-        $oDesplegable = new Desplegable('', $aOpciones, $opcion_sel, true);
-        $opciones_txt = $oDesplegable->options();
-
+        $opciones_txt = '<option></option>';
+        foreach ($aOpciones as $key => $val) {
+            $sel = ((string)$key === (string)$opcion_sel) ? 'selected' : '';
+            $opciones_txt .= "<option value=\"$key\" $sel>$val</option>";
+        }
         return $opciones_txt;
         */
     }

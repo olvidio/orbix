@@ -10,7 +10,6 @@ use src\personas\domain\contracts\TelecoPersonaDlRepositoryInterface;
 use src\personas\domain\contracts\TelecoPersonaExRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
-use frontend\shared\web\Desplegable;
 
 class InfoTelecoPersona extends DatosInfoRepo
 {
@@ -75,8 +74,12 @@ class InfoTelecoPersona extends DatosInfoRepo
         //caso de actualizar el campo depende
         $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
         $aOpciones = $DescTelecoRepository->getArrayDescTelecoPersonas($valor_depende);
-        $oDesplegable = new Desplegable('', $aOpciones, $opcion_sel, true);
-        $opciones_txt = $oDesplegable->options();
+
+        $opciones_txt = '<option></option>';
+        foreach ($aOpciones as $key => $val) {
+            $sel = ((string)$key === (string)$opcion_sel) ? 'selected' : '';
+            $opciones_txt .= "<option value=\"$key\" $sel>$val</option>";
+        }
 
         return $opciones_txt;
     }

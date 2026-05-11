@@ -1,7 +1,7 @@
 <?php
 
 use src\usuarios\application\usuariosLista;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 // Se usa al buscar:
 $Qusername = (string)filter_input(INPUT_POST, 'username');

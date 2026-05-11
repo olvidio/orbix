@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\ActaVerFormData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error = '';
 $data = [];

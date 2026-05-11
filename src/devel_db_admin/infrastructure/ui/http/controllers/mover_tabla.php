@@ -7,7 +7,7 @@ declare(strict_types=1);
  * JSON `data`: `{ "a_esquemas": string[], "lines": string[] }` o error con `success: false`.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\MoverTabla;
 use src\shared\infrastructure\persistence\postgresql\DBPropiedades;
 

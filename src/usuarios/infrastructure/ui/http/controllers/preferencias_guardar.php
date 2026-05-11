@@ -5,7 +5,7 @@ use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 

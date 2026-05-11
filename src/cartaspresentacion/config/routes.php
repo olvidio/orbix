@@ -4,7 +4,7 @@
  * Rutas del modulo `cartaspresentacion`. Las registra `public/index.php`
  * via glob sobre `src/*\/config/routes.php`. Cada endpoint vive en
  * `src/cartaspresentacion/infrastructure/ui/http/controllers/` y responde
- * JSON estandar mediante `frontend\shared\web\ContestarJson::enviar(...)`.
+ * JSON estandar mediante `src\shared\web\ContestarJson::enviar(...)`.
  */
 return static function ($r) {
     $base = __DIR__ . '/../infrastructure/ui/http/controllers';

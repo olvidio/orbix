@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\GuardarEncargoZona;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'id_enc' => filter_input(INPUT_POST, 'id_enc'),

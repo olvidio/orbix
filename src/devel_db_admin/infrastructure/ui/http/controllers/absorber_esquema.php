@@ -6,7 +6,7 @@ declare(strict_types=1);
  * JSON `{ "lines": string[] }` para la absorción de esquema (POST `esquema_matriz`, `esquema_del`).
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\AbsorberEsquema;
 
 require_once 'frontend/shared/global_header_front.inc';

@@ -4,7 +4,7 @@
  * VO {@see NivelStgrId} + {@see NotaSituacion} para `comprobar_notas.php`.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\notas\application\ComprobarNotasConstantsData;
 
 require_once 'frontend/shared/global_header_front.inc';

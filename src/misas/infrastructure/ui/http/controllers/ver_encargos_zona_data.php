@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\VerEncargosZonaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
 $Qorden = (string)filter_input(INPUT_POST, 'orden');

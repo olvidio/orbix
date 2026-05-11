@@ -2,7 +2,7 @@
 
 namespace src\ubis\application;
 
-use frontend\shared\config\OrbixRuntime;
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\ubis\domain\contracts\CasaExRepositoryInterface;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
@@ -53,14 +53,14 @@ final class UbisEditarLoadData
 
         $es_de_dl = false;
         if (str_contains($tipo_ubi, 'ctr')) {
-            if ($dl === OrbixRuntime::miDelef()) {
+            if ($dl === ConfigGlobal::mi_delef()) {
                 $es_de_dl = true;
             } else {
                 $tipo_ubi = 'ctrex';
             }
         }
         if (str_contains($tipo_ubi, 'cdc')) {
-            if ($dl === OrbixRuntime::miDele()) {
+            if ($dl === ConfigGlobal::mi_dele()) {
                 $es_de_dl = true;
             } else {
                 $tipo_ubi = 'cdcex';
@@ -81,7 +81,7 @@ final class UbisEditarLoadData
             'botones' => $botones,
         ];
 
-        $laborMap = CuadrosLaborBits::labeledMap(OrbixRuntime::miSfsv());
+        $laborMap = CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv());
 
         return match ($tipo_ubi) {
             'ctrdl', 'ctrsf' => array_merge($base, self::serializeCentroDlFields(
@@ -124,14 +124,14 @@ final class UbisEditarLoadData
 
         if ($dl === '' && str_contains($Qobj_pau, 'Dl')) {
             if (str_contains($tipo_ubi_in, 'ctr')) {
-                $dl = OrbixRuntime::miDelef();
+                $dl = ConfigGlobal::mi_delef();
             }
             if (str_contains($tipo_ubi_in, 'cdc')) {
-                $dl = OrbixRuntime::miDele();
+                $dl = ConfigGlobal::mi_dele();
             }
         }
         if ($region === '' && str_contains($Qobj_pau, 'Dl')) {
-            $region = OrbixRuntime::miRegion();
+            $region = ConfigGlobal::mi_region();
         }
 
         $botones = self::computeBotones($Qobj_pau, (string)($post['nuevo'] ?? ''), false);
@@ -149,20 +149,20 @@ final class UbisEditarLoadData
         $sv = false;
         $sf = false;
         if (str_contains($tipo_ubi_in, 'cdc')) {
-            if (OrbixRuntime::miSfsv() === 1) {
+            if (ConfigGlobal::mi_sfsv() === 1) {
                 $sv = true;
             }
-            if (OrbixRuntime::miSfsv() === 2) {
+            if (ConfigGlobal::mi_sfsv() === 2) {
                 $sf = true;
             }
         }
 
-        $laborMap = CuadrosLaborBits::labeledMap(OrbixRuntime::miSfsv());
+        $laborMap = CuadrosLaborBits::labeledMap(ConfigGlobal::mi_sfsv());
 
         return match ($tipo_ubi_in) {
             'ctrdl', 'ctrsf' => array_merge($base, [
-                'dl' => $dl === '' ? OrbixRuntime::miDelef() : $dl,
-                'region' => $region === '' ? OrbixRuntime::miRegion() : $region,
+                'dl' => $dl === '' ? ConfigGlobal::mi_delef() : $dl,
+                'region' => $region === '' ? ConfigGlobal::mi_region() : $region,
                 'nombre_ubi' => $nombre_ubi,
                 'chk_cdc' => '',
                 'tipo_labor' => null,
@@ -188,8 +188,8 @@ final class UbisEditarLoadData
                 'tipo_ctr' => null,
             ]),
             'cdcdl', 'cdcex' => array_merge($base, [
-                'dl' => $tipo_ubi_in === 'cdcdl' ? ($dl === '' ? OrbixRuntime::miDele() : $dl) : $dl,
-                'region' => $tipo_ubi_in === 'cdcdl' ? ($region === '' ? OrbixRuntime::miRegion() : $region) : $region,
+                'dl' => $tipo_ubi_in === 'cdcdl' ? ($dl === '' ? ConfigGlobal::mi_dele() : $dl) : $dl,
+                'region' => $tipo_ubi_in === 'cdcdl' ? ($region === '' ? ConfigGlobal::mi_region() : $region) : $region,
                 'nombre_ubi' => $nombre_ubi,
                 'tipo_casa' => null,
                 'plazas' => null,

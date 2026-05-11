@@ -1,7 +1,7 @@
 <?php
 
 use src\zonassacd\application\ZonaSacdUpdate;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
 $Qid_zona_new = (string)filter_input(INPUT_POST, 'id_zona_new');

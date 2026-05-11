@@ -3,7 +3,7 @@
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\NullDateTimeLocal;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use function src\shared\domain\helpers\is_true;
 
 $Qdocumentos = (string)filter_input(INPUT_POST, 'documentos');

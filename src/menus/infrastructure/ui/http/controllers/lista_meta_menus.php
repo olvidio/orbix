@@ -1,7 +1,7 @@
 <?php
 
 use src\menus\application\ListaMetaMenus;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = '';
 

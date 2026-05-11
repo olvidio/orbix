@@ -9,7 +9,7 @@ use src\personas\domain\entity\Persona;
 use frontend\shared\config\OrbixRuntime;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use function src\shared\domain\helpers\is_true;
 
 $id_item = (string)filter_input(INPUT_POST, 'id_item');

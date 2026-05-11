@@ -2,7 +2,7 @@
 
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $id_nom = (string)filter_input(INPUT_POST, 'id_nom');
 

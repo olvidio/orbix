@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\dossiers\application\PermDossierVerFormData;
 
 $Qid_tipo_dossier = (int)($_POST['id_tipo_dossier'] ?? 0);

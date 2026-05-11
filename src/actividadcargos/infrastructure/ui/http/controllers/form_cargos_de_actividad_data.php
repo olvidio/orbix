@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadcargos\application\FormCargosDeActividadData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $result = FormCargosDeActividadData::build($_POST);
 $error = (string)($result['error'] ?? '');

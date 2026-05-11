@@ -12,7 +12,7 @@ use src\ubiscamas\domain\value_objects\HabitacionNombre;
 use src\ubiscamas\domain\value_objects\HabitacionOrden;
 use src\ubiscamas\domain\value_objects\NumeroCamas;
 use src\ubiscamas\domain\value_objects\PlantaText;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use function src\shared\domain\helpers\is_true;
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

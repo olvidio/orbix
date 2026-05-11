@@ -2,7 +2,7 @@
 
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\personas\domain\entity\Persona;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');
 

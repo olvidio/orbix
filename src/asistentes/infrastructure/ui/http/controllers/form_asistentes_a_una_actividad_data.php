@@ -1,7 +1,7 @@
 <?php
 
 use src\asistentes\application\FormAsistentesAUnaActividadData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $data = FormAsistentesAUnaActividadData::build($_POST);
 if (isset($data['error'])) {

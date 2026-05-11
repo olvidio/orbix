@@ -5,7 +5,7 @@
  * con `*_link_spec`; el front firma y pinta en {@see frontend\actividades\controller\actividad_select}.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\actividades\application\ActividadSelectListado;
 
 $input = [

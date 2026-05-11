@@ -10,6 +10,7 @@
  */
 
 use frontend\shared\AppInstalled;
+use frontend\actividades\helpers\ActividadStatusId;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
 use frontend\shared\model\ViewNewTwig;
@@ -78,8 +79,7 @@ $extendida = is_true($Qextendida) ? TRUE : FALSE;
 
 
 if (empty($Qstatus)) {
-    // Valor por defecto alineado con StatusId::ACTUAL (domain).
-    $Qstatus = 2;
+    $Qstatus = ActividadStatusId::ACTUAL;
 }
 
 $Qisfsv = substr($Qid_tipo_activ, 0, 1);
@@ -196,17 +196,11 @@ $data_que = PostRequest::getDataFromUrl('/src/actividades/actividad_que_datos', 
 
 $actividad_tipo_html = $data_que['actividad_tipo_html'] ?? '';
 
-// Valores alineados con src\actividades\domain\value_objects\StatusId
-$val_status_1 = 1;
-$chk_status_1 = ($Qstatus === $val_status_1) ? "checked='true'" : '';
-$val_status_2 = 2;
-$chk_status_2 = ($Qstatus === $val_status_2) ? "checked='true'" : '';
-$val_status_3 = 3;
-$chk_status_3 = ($Qstatus === $val_status_3) ? "checked='true'" : '';
-$val_status_4 = 4;
-$chk_status_4 = ($Qstatus === $val_status_4) ? "checked='true'" : '';
-$val_status_9 = 9;
-$chk_status_9 = ($Qstatus === $val_status_9) ? "checked='true'" : '';
+$chk_status_1 = ($Qstatus === ActividadStatusId::PROYECTO) ? "checked='true'" : '';
+$chk_status_2 = ($Qstatus === ActividadStatusId::ACTUAL) ? "checked='true'" : '';
+$chk_status_3 = ($Qstatus === ActividadStatusId::TERMINADA) ? "checked='true'" : '';
+$chk_status_4 = ($Qstatus === ActividadStatusId::BORRABLE) ? "checked='true'" : '';
+$chk_status_9 = ($Qstatus === ActividadStatusId::ALL) ? "checked='true'" : '';
 
 //////////// PROCESOS /////////////////
 // Los cuadros de fases_on/fases_off se pintan en cliente via AJAX al
@@ -243,15 +237,15 @@ $a_campos = ['oPosicion' => $oPosicion,
     'actividad_tipo_html' => $actividad_tipo_html,
     'extendida' => $extendida,
     'Link_borrar' => $Link_borrar,
-    'val_status_1' => $val_status_1,
+    'val_status_1' => ActividadStatusId::PROYECTO,
     'chk_status_1' => $chk_status_1,
-    'val_status_2' => $val_status_2,
+    'val_status_2' => ActividadStatusId::ACTUAL,
     'chk_status_2' => $chk_status_2,
-    'val_status_3' => $val_status_3,
+    'val_status_3' => ActividadStatusId::TERMINADA,
     'chk_status_3' => $chk_status_3,
-    'val_status_4' => $val_status_4,
+    'val_status_4' => ActividadStatusId::BORRABLE,
     'chk_status_4' => $chk_status_4,
-    'val_status_9' => $val_status_9,
+    'val_status_9' => ActividadStatusId::ALL,
     'chk_status_9' => $chk_status_9,
     'proceso_installed' => $proceso_installed,
     'url_actualizar_fases' => $url_actualizar_fases,

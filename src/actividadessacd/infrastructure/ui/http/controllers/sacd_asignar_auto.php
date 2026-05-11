@@ -7,7 +7,7 @@
  */
 
 use src\actividadessacd\application\SacdAsignarAuto;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $data = SacdAsignarAuto::execute($_POST);
 ContestarJson::enviar('', $data);

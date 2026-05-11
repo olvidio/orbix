@@ -5,7 +5,7 @@
  */
 
 use src\actividadessacd\application\SolapesSacdData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'year' => (string)filter_input(INPUT_POST, 'year'),

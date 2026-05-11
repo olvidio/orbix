@@ -1,7 +1,7 @@
 <?php
 
 use src\dossiers\application\TipoDossierGuardar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 /**
  * Guarda los cambios a un `TipoDossier`.

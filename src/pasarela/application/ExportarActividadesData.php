@@ -20,7 +20,7 @@ use src\ubis\domain\entity\Ubi;
  * y casas), devuelve cabeceras + filas para el listado de exportación, mezclando
  * datos de actividades con las conversiones de pasarela.
  *
- * Devuelve un array serializable por {@see \frontend\shared\web\ContestarJson::enviar}
+ * Devuelve un array serializable por {@see \src\shared\web\ContestarJson::enviar}
  * con la estructura:
  *  - `a_cabeceras`: nombres de columnas (string[]).
  *  - `a_botones`: array vacío (no hay acciones por fila en el listado actual).

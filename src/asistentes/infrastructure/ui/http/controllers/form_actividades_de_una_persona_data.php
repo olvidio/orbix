@@ -1,7 +1,7 @@
 <?php
 
 use src\asistentes\application\FormActividadesDeUnaPersonaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $data = FormActividadesDeUnaPersonaData::build($_POST);
 if (isset($data['error'])) {

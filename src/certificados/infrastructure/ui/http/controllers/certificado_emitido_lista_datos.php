@@ -11,7 +11,7 @@
  */
 
 use src\certificados\domain\CertificadoEmitidoSelect;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
 $inicurs_ca_iso = (string)filter_input(INPUT_POST, 'inicurs_ca_iso');

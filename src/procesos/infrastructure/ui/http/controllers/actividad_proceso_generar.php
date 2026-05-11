@@ -1,7 +1,7 @@
 <?php
 
 use src\procesos\application\ActividadProcesoGenerar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $useCase = new ActividadProcesoGenerar();
 $error = $useCase->execute($_POST);

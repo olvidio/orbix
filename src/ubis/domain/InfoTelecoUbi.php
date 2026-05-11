@@ -7,8 +7,6 @@ namespace src\ubis\domain;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\shared\domain\DatosInfoRepo;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
-use src\ubis\domain\contracts\RegionRepositoryInterface;
-use frontend\shared\web\Desplegable;
 
 class InfoTelecoUbi extends DatosInfoRepo
 {
@@ -66,8 +64,12 @@ class InfoTelecoUbi extends DatosInfoRepo
         //caso de actualizar el campo depende
         $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
         $aOpciones = $DescTelecoRepository->getArrayDescTelecoUbis($valor_depende);
-        $oDesplegable = new Desplegable('', $aOpciones, $opcion_sel, true);
-        $opciones_txt = $oDesplegable->options();
+
+        $opciones_txt = '<option></option>';
+        foreach ($aOpciones as $key => $val) {
+            $sel = ((string)$key === (string)$opcion_sel) ? 'selected' : '';
+            $opciones_txt .= "<option value=\"$key\" $sel>$val</option>";
+        }
 
         return $opciones_txt;
     }

@@ -6,7 +6,7 @@
  */
 
 use src\actividades\application\ListaCentrosActivDatos;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'id_ctr_num' => (int)filter_input(INPUT_POST, 'id_ctr_num'),

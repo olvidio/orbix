@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\dossiers\application\PermDossiersListaData;
 
 $Qtipo = (string)($_POST['tipo'] ?? '');

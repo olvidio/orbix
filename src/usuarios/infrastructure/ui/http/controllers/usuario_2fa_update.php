@@ -3,7 +3,7 @@
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\Secret2FA;
 use src\usuarios\domain\Verify2fa;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = '';
 

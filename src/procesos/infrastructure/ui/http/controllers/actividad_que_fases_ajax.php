@@ -11,7 +11,7 @@
 
 use function src\shared\domain\helpers\is_true;
 use src\procesos\application\ActividadQueFasesCuadro;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');

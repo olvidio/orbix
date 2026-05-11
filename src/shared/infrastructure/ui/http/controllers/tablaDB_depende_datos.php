@@ -1,5 +1,5 @@
 <?php
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qclase_info_encoded = (string)filter_input(INPUT_POST, 'clase_info');
 $QpKeyRepository = (string)filter_input(INPUT_POST, 'pKeyRepository');

@@ -3,7 +3,7 @@
 // Rutas del modulo `actividadestudios`. Las registra `public/index.php` via
 // glob sobre `src/*/config/routes.php`. Cada endpoint vive en
 // `src/actividadestudios/infrastructure/ui/http/controllers/` y responde JSON
-// estandar mediante `frontend\shared\web\ContestarJson::enviar(...)`.
+// estandar mediante `src\shared\web\ContestarJson::enviar(...)`.
 return static function ($r) {
     $base = __DIR__ . '/../infrastructure/ui/http/controllers';
 

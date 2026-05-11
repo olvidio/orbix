@@ -5,7 +5,7 @@
  */
 
 use src\actividadplazas\application\PeticionesEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'id_nom' => (int)filter_input(INPUT_POST, 'id_nom'),

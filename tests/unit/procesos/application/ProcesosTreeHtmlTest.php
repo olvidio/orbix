@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\unit\procesos\application;
 
+use frontend\procesos\support\ProcesosTreeHtml;
 use PHPUnit\Framework\TestCase;
-use src\procesos\application\ProcesosGet;
 
 /**
- * Test unitario del método público estático ProcesosGet::dibujarTree(),
- * que no depende de BD y se puede probar con arrays sintéticos.
+ * HTML del árbol a partir de `aPadres` (sin BD).
  */
-final class ProcesosGetDibujarTreeTest extends TestCase
+final class ProcesosTreeHtmlTest extends TestCase
 {
     public function test_arbol_simple_sin_hijos_devuelve_entries(): void
     {
@@ -22,13 +21,12 @@ final class ProcesosGetDibujarTreeTest extends TestCase
             ],
         ];
 
-        $html = ProcesosGet::dibujarTree($aPadres);
+        $html = ProcesosTreeHtml::dibujarTree($aPadres);
 
         $this->assertStringStartsWith('<div id="tree">', $html);
         $this->assertStringEndsWith('</div>', $html);
         $this->assertStringContainsString('<span>Fase A</span>', $html);
         $this->assertStringContainsString('<span>Fase B</span>', $html);
-        // Sin hijos las fases se marcan directamente como entry sin branch interna
         $this->assertSame(2, substr_count($html, 'class="entry"'));
     }
 
@@ -44,12 +42,11 @@ final class ProcesosGetDibujarTreeTest extends TestCase
             ],
         ];
 
-        $html = ProcesosGet::dibujarTree($aPadres);
+        $html = ProcesosTreeHtml::dibujarTree($aPadres);
 
         $this->assertStringContainsString('<span>Fase A</span>', $html);
         $this->assertStringContainsString('<span>Fase A.1</span>', $html);
         $this->assertStringContainsString('<span>Fase A.2</span>', $html);
-        // La raíz tiene una branch interna que contiene a los hijos
         $this->assertGreaterThanOrEqual(2, substr_count($html, 'class="branch"'));
     }
 }

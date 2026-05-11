@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\config\AppUrlConfig;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\shared\security\HashB;
 use src\ubiscamas\application\HabitacionesCamaLista;
 

@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\EncargoVerData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $que = (string)(filter_input(INPUT_POST, 'que') ?? filter_input(INPUT_GET, 'que') ?? '');
 $id_enc = (int)(filter_input(INPUT_POST, 'id_enc') ?? filter_input(INPUT_GET, 'id_enc') ?? 0);

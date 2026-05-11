@@ -1,7 +1,7 @@
 <?php
 
 use src\usuarios\application\usuariosRegionContactos;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qregion = (string)filter_input(INPUT_POST, 'region');
 

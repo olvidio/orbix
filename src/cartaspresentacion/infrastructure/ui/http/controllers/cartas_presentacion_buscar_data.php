@@ -5,7 +5,7 @@
  */
 
 use src\cartaspresentacion\application\CartasPresentacionBuscarOpcionesData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $data = CartasPresentacionBuscarOpcionesData::execute();
 ContestarJson::enviar('', $data);

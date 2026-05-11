@@ -12,7 +12,7 @@
  */
 
 use src\personas\application\PersonaUpdate;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = PersonaUpdate::execute($_POST);
 

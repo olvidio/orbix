@@ -5,7 +5,7 @@
  * el front firma y pinta en {@see frontend\actividades\controller\lista_actividades_sg}.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\actividades\application\ListaActividadesSgListado;
 
 $input = [

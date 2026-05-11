@@ -1,7 +1,7 @@
 <?php
 
 use src\casas\application\CasaEcGastosGuardar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = array_merge($_POST, [
     'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),

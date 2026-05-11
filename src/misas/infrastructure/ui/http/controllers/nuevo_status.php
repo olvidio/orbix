@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\NuevoStatusPeriodo;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');

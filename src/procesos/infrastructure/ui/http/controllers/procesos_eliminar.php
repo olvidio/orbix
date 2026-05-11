@@ -1,7 +1,7 @@
 <?php
 
 use src\procesos\application\ProcesosEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $useCase = new ProcesosEliminar();
 $error = $useCase->execute($_POST);

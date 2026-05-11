@@ -2,7 +2,7 @@
 
 use src\notas\application\ListadoAnualActasData;
 use src\shared\domain\value_objects\DateTimeLocal;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error = '';
 $data = [];

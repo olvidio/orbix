@@ -2,7 +2,7 @@
 
 /**
  * Resuelve `$estilo_color` y `$tipo_menu` para incluir `colores.php` sin `global_object.inc`.
- * Usado desde hojas CSS PHP incluidas en vistas (p.ej. tessera) donde no debe montarse
+ * Usado desde hojas CSS PHP incluidas en vistas (p.ej. todo_en_uno) donde no debe montarse
  * el bootstrap completo (DI, ObtenerConfigSnapshot, etc.).
  */
 

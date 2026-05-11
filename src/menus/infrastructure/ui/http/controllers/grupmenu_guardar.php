@@ -2,7 +2,7 @@
 
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\menus\domain\entity\GrupMenu;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qgrupmenu = (string)filter_input(INPUT_POST, 'grupmenu');
 $Qid_grupmenu = (integer)filter_input(INPUT_POST, 'id_grupmenu');

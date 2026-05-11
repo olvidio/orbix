@@ -6,7 +6,7 @@
  */
 
 use src\actividadessacd\application\SacdAsignar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = SacdAsignar::execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\DireccionesTablaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 ContestarJson::enviar('', DireccionesTablaData::execute(
     (int)filter_input(INPUT_POST, 'id_ubi'),

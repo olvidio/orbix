@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Ejecuta {@see CrearUsuarios} (POST: region, dl). JSON `data`: mapa con esquemas y passwords.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\CrearUsuarios;
 
 require_once 'frontend/shared/global_header_front.inc';

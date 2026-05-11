@@ -460,7 +460,7 @@ Patrones que han roto producción (avisos `session_id()` / JSON corrupto / hash 
 Para la comunicación asíncrona entre las vistas (`.phtml`) y los controladores de lógica del backend:
 
 ### Backend (Controladores)
-- **Clase estándar**: `frontend\shared\web\ContestarJson` (en documentación antigua puede aparecer como `web\ContestarJson`) para respuestas JSON.
+- **Clase estándar**: `src\shared\web\ContestarJson` (en documentación antigua puede aparecer como `web\ContestarJson`) para respuestas JSON.
 - **Método preferido**: `ContestarJson::enviar($error_txt, $data)` directamente; opcionalmente **`ContestarJson::enviar($error_txt, $data, $httpStatusOnError)`** cuando un error (p. ej. subida demasiado grande) debe devolver un código HTTP distinto de 200 (típicamente **413**). Ver también la sección **Subidas multipart** más abajo. Forma habitual del payload: el cliente recibe `success`, `mensaje` y `data` con el cuerpo útil.
 - Evitar el patrón intermedio `$jsondata = ContestarJson::respuestaPhp(...);` + `ContestarJson::send($jsondata)`; unificar con **`enviar`** (no `send`).
 - Los casos de uso en `application` deben devolver datos listos para serializar (arrays/strings) o texto de error, no la respuesta JSON ya montada. Si hay código previo que aún devuelve `respuestaPhp`, puede convivir temporalmente, pero no como patrón para código nuevo.
@@ -503,7 +503,7 @@ Centralizar límites y errores de subida PHP en **`src\shared\infrastructure\ui\
 1. **`MultipartUploadGuard::exitIfPostTooLargeJson()`** al inicio del script cuando la acción puede recibir un cuerpo POST grande pero **no** exige fichero obligatorio (p. ej. subida opcional tipo acta si no hay archivo en algunos flujos). Corta con **HTTP 413** y JSON `{ success: false, mensaje: ... }` si `CONTENT_LENGTH` supera `post_max_size`.
 2. **`MultipartUploadGuard::requireUploadedFileOrExit('campo_files')`** cuando la subida del fichero es **obligatoria** (p. ej. `certificado_pdf`). Valida también `$_FILES[...]['error']`; para `UPLOAD_ERR_INI_SIZE` / `UPLOAD_ERR_FORM_SIZE` responde con **413** y el mismo formato JSON.
 3. **Casos de uso** que procesan `$files`: si el fichero puede faltar pero cuando viene debe respetarse el límite, combinar **`exitIfPostTooLargeJson()`** con tratamiento explícito de `error` por clave usando **`MultipartUploadGuard::messageForPhpUploadError()`** y **`httpStatusForPhpUploadError()`** (referencia: `src\notas\application\ActaPdfSubir`).
-4. **`frontend\shared\web\ContestarJson::enviar($error_txt, $data, $httpStatusOnError)`**: tercer argumento opcional (por defecto **200** para compatibilidad). Cuando hay error de negocio o de subida que debe mapearse a **413**, pasar ese código aquí (`$error_txt` no vacío → se usa ese status HTTP).
+4. **`src\shared\web\ContestarJson::enviar($error_txt, $data, $httpStatusOnError)`**: tercer argumento opcional (por defecto **200** para compatibilidad). Cuando hay error de negocio o de subida que debe mapearse a **413**, pasar ese código aquí (`$error_txt` no vacío → se usa ese status HTTP).
 
 **Frontend — página HTML legacy (respuesta no JSON):** usar **`MultipartUploadGuard::isPostTooLarge()`** y mensajes de **`messageForPhpUploadError()`** para imprimir texto/HTML controlado en lugar del código numérico bruto (referencia: **`frontend/ubis/controller/plano_bytea.php`**, caso `upload`).
 

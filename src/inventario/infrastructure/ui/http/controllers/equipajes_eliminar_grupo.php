@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\domain\contracts\EgmRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_grupo = (integer)filter_input(INPUT_POST, 'id_grupo');
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');

@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\SacdFichaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $id_nom = (int)(filter_input(INPUT_POST, 'id_nom') ?? filter_input(INPUT_GET, 'id_nom') ?? 0);
 

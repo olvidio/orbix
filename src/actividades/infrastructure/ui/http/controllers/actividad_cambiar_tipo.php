@@ -16,7 +16,7 @@ use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\domain\value_objects\Dinero;
 use src\shared\domain\value_objects\TimeLocal;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = '';
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');

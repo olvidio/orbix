@@ -27,6 +27,7 @@
  * @subpackage    actividades
  */
 
+use frontend\actividades\helpers\ActividadStatusId;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFront;
@@ -105,7 +106,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
         $Qperiodo = 'actual';
     }
 
-    $Qstatus = empty($Qstatus) ? 2 : $Qstatus; // 2 = StatusId::ACTUAL
+    $Qstatus = empty($Qstatus) ? ActividadStatusId::ACTUAL : $Qstatus;
 
     $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
     $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');

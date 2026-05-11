@@ -8,7 +8,7 @@
  * Respuesta: `ContestarJson::enviar($error, $data)`.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\personas\application\HomePersonaData;
 
 $result = HomePersonaData::build($_POST);

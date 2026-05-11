@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\ListasComCtrData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $sfsv = (string)(filter_input(INPUT_POST, 'sfsv') ?? filter_input(INPUT_GET, 'sfsv') ?? '');
 

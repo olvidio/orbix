@@ -1,8 +1,5 @@
 <?php
 
-namespace src\shared;
-
-// INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;

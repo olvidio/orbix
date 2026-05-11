@@ -11,7 +11,7 @@
  * obligaba al frontend a duplicar los maps.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\actividades\application\TipoActivMetadata;
 
 $payload = (new TipoActivMetadata())->execute();

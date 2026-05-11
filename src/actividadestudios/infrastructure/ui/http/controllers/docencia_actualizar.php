@@ -4,7 +4,7 @@
  * Consumo desde `frontend/actividadestudios/controller/actualizar_docencia.php` via PostRequest.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\actividadestudios\application\DocenciaActualizar;
 
 $txt_rta = DocenciaActualizar::execute($_POST);

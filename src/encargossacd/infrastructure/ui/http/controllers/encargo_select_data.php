@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\EncargoSelectData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $desc_enc = (string)(filter_input(INPUT_POST, 'desc_enc') ?? filter_input(INPUT_GET, 'desc_enc') ?? '');
 $id_tipo_enc = (int)(filter_input(INPUT_POST, 'id_tipo_enc') ?? filter_input(INPUT_GET, 'id_tipo_enc') ?? 0);

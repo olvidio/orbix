@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\actividadessacd\application\ComSacdActivPeriodoPageData;
 
 require_once 'frontend/shared/global_header_front.inc';

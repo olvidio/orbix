@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Ejecuta {@see CopiarEsquema} (POST: esquema, region, dl, comun, sv, sf). Respuesta JSON `data`: `"ok"`.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\CopiarEsquema;
 
 require_once 'frontend/shared/global_header_front.inc';

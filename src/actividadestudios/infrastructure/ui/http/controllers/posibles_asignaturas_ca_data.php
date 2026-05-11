@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadestudios\application\PosiblesAsignaturasCaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error = '';
 $data = [];

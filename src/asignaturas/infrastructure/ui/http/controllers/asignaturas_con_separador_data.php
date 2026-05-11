@@ -1,7 +1,7 @@
 <?php
 
 use src\asignaturas\application\AsignaturasConSeparadorOpcionesData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error = '';
 $data = [];

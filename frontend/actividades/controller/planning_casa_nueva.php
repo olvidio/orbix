@@ -12,6 +12,7 @@
  * @subpackage actividades
  */
 
+use frontend\actividades\helpers\ActividadStatusId;
 use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
@@ -32,7 +33,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
 $id_tipo_activ = '';
 $isfsv_input = OrbixRuntime::miSfsv();
 $dl_org = OrbixRuntime::miDelef();
-$status = 1; // StatusId::PROYECTO
+$status = ActividadStatusId::PROYECTO;
 
 $data = PostRequest::getDataFromUrl('/src/actividades/actividad_ver_datos', [
     'id_activ' => 0,

@@ -6,7 +6,7 @@
  */
 
 use src\actividadessacd\application\TextoComunicacionGuardar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = TextoComunicacionGuardar::execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

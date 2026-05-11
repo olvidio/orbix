@@ -5,7 +5,7 @@
  */
 
 use src\cambios\application\CambioUsuarioEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $result = CambioUsuarioEliminar::execute(['sel' => $sel]);

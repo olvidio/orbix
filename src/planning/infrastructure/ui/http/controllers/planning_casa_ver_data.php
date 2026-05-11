@@ -5,7 +5,7 @@
  * (`ActividadesPorCasasService` + `CasaPeriodosForPlanning`).
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\planning\application\PlanningCasaVerData;
 
 require_once 'frontend/shared/global_header_front.inc';

@@ -6,7 +6,7 @@ use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use function src\shared\domain\helpers\is_true;
 
 $Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');

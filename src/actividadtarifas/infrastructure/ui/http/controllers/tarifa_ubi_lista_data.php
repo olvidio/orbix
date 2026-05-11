@@ -4,7 +4,7 @@
  */
 
 use src\actividadtarifas\application\TarifaUbiListaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'id_ubi' => (int)filter_input(INPUT_POST, 'id_ubi'),

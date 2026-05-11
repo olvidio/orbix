@@ -9,7 +9,7 @@
  */
 
 use src\cartaspresentacion\application\CartasPresentacionListaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'que' => (string)filter_input(INPUT_POST, 'que'),

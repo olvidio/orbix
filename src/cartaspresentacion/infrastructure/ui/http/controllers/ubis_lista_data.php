@@ -6,7 +6,7 @@
  */
 
 use src\cartaspresentacion\application\CartasPresentacionUbisListaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'tipo_lista' => (string)filter_input(INPUT_POST, 'tipo_lista'),

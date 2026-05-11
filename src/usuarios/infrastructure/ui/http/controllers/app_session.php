@@ -4,7 +4,7 @@
  * Comprueba si hay sesión autenticada (útil al arrancar la app). Sin credenciales.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 header('Content-Type: application/json; charset=UTF-8');
 

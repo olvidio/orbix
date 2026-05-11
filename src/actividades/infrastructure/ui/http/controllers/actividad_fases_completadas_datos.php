@@ -4,7 +4,7 @@
  */
 
 use src\actividades\application\ActividadFasesCompletadasDatos;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_activ = (int)filter_input(INPUT_POST, 'id_activ');
 if ($Qid_activ === 0) {

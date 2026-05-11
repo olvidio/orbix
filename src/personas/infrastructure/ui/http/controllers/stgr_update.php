@@ -12,7 +12,7 @@
  */
 
 use src\personas\application\StgrUpdate;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_nom = (int)filter_input(INPUT_POST, 'id_nom');
 $Qid_tabla = (string)filter_input(INPUT_POST, 'id_tabla');

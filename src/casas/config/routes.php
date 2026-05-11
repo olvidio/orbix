@@ -4,7 +4,7 @@
  * Rutas del módulo `casas`. Las registra `public/index.php` via glob
  * sobre `src/*\/config/routes.php`. Cada endpoint vive en
  * `src/casas/infrastructure/ui/http/controllers/` y responde JSON
- * estándar mediante `frontend\shared\web\ContestarJson::enviar(...)`.
+ * estándar mediante `src\shared\web\ContestarJson::enviar(...)`.
  */
 return static function ($r) {
     // Grupos de casas (padre ↔ hijo).

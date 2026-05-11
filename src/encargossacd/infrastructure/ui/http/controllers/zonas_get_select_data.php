@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\EncargoZonasSelectData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $id_zona = filter_input(INPUT_POST, 'id_zona');
 if ($id_zona === null) {

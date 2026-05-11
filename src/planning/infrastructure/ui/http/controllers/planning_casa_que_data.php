@@ -5,7 +5,7 @@
  * sin `use src` sobre Role/PauType en frontend.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\planning\application\PlanningCasaQueFormData;
 
 require_once 'frontend/shared/global_header_front.inc';

@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\UbisEditarOpcionesData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qtipo_ubi = (string)filter_input(INPUT_POST, 'tipo_ubi');

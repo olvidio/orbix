@@ -5,7 +5,7 @@
  */
 
 use src\casas\application\IngresoPlazasPrevistasUpdate;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'data' => (string)filter_input(INPUT_POST, 'data'),

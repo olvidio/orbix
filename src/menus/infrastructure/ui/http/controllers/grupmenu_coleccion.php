@@ -2,7 +2,7 @@
 
 use src\menus\application\GrupMenuColeccionUseCase;
 use src\menus\application\MenusVisiblesPorGrupoMenuUseCase;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = '';
 

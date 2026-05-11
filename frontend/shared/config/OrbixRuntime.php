@@ -17,6 +17,7 @@ namespace frontend\shared\config;
  * - {@see \src\shared\config\ConfigGlobal::$dir_scripts} → {@see self::dirScripts()}
  * - {@see \src\shared\config\ConfigGlobal::getWeb_icons()} → {@see self::getWebIcons()}
  * - {@see \src\shared\config\ConfigGlobal::is_app_installed()} → {@see self::isAppInstalled()}
+ * - {@see \src\shared\config\ConfigGlobal::mi_sfsv()} → {@see self::miSfsv()}
  * - {@see \src\shared\config\ConfigGlobal::mi_usuario()} → {@see self::miUsuario()}
  * - {@see \src\shared\config\ConfigGlobal::mi_region_dl()} → {@see self::miRegionDl()}
  *

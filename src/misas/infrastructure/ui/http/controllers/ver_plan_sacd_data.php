@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\VerPlanSacdData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_sacd_key = (string)filter_input(INPUT_POST, 'id_sacd');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');

@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\application\EquipajeEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 

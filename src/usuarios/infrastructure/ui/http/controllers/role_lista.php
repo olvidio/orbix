@@ -1,7 +1,7 @@
 <?php
 
 use src\usuarios\application\rolesLista;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $jsondata = rolesLista::rolesLista();
 

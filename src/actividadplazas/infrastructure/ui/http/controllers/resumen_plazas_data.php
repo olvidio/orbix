@@ -6,7 +6,7 @@
  */
 
 use src\actividadplazas\application\ResumenPlazasData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'id_activ' => (int)filter_input(INPUT_POST, 'id_activ'),

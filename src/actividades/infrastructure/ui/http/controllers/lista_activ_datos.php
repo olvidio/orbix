@@ -5,7 +5,7 @@
  * renderiza en {@see frontend\actividades\controller\lista_activ}.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\actividades\application\ListaActivTabla;
 use src\shared\config\ConfigGlobal;
 

@@ -17,7 +17,7 @@
 use src\actividadtarifas\application\TarifaUbiUpdate;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $ctxRaw = (string)filter_input(INPUT_POST, 'ctx_update');
 try {

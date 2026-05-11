@@ -5,8 +5,8 @@
  * arbol de fases.
  */
 
+use frontend\procesos\support\ProcesosTreeHtml;
 use frontend\shared\PostRequest;
-use src\procesos\application\ProcesosGet;
 
 require_once("frontend/shared/global_header_front.inc");
 
@@ -17,4 +17,4 @@ if (empty($aPadres)) {
     return;
 }
 
-echo ProcesosGet::dibujarTree($aPadres);
+echo ProcesosTreeHtml::dibujarTree($aPadres);

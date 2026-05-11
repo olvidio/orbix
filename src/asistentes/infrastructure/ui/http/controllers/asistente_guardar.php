@@ -1,7 +1,7 @@
 <?php
 
 use src\asistentes\application\AsistenteGuardar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 /**
  * Crea, edita o mueve un `Asistente`.

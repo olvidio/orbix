@@ -12,7 +12,7 @@
  * a `src/` (regla de separacion definida en `refactor.md`).
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\personas\application\PersonasSelectData;
 
 $result = PersonasSelectData::build($_POST);

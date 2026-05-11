@@ -1,22 +1,11 @@
-<?php 
-// INICIO Cabecera global de URL de controlador *********************************
-	use src\shared\config\ConfigGlobal;
-    require_once ("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
-include_once (ConfigGlobal::$dir_estilos.'/colores.php'); 
-?>
+<!-- Estilos certificado (pantalla/impresión); sin tema dinámico — colores fijos -->
 <style>
 @media print {
     .no_print { display: none; }
 }
 
-#otro, #main { 
-    width: auto; 
+#otro, #main {
+    width: auto;
     height: auto;
     clear:both;
     overflow:auto;
@@ -26,7 +15,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
     padding-top:0em;
 }
 
-div.A4 { 
+div.A4 {
     position: relative;
 	display: block;
 	margin-top:	0.8cm;
@@ -42,7 +31,7 @@ div.A4 {
     padding-bottom: 14pt;
     padding-left: 10pt;
 	}
-	
+
 table {
 	width: 95%;
 }
@@ -104,13 +93,13 @@ td.subtitulo2 { font-family : serif;
 	font-size : 10pt;
 	text-align: justify;
 	}
-	
+
 tr.opcional {
     background-color : White;
 	line-height: 10pt;
  	}
- 
-div.pie {	
+
+div.pie {
     height: 6cm;
 	display: block;
 	position: absolute;
@@ -119,7 +108,7 @@ div.pie {
 	line-height: 14pt;
 	width: 90%;
 	}
-div.fecha {	
+div.fecha {
 	display: inline-block;
 	margin-top:	0.5cm;
 	text-align: right;
@@ -127,7 +116,7 @@ div.fecha {
     font-weight: normal;
     width: 100%;
 	}
-div.g_sello {	
+div.g_sello {
     display: block;
     margin-left: 1cm;
     font-size: 10pt;
@@ -136,17 +125,17 @@ div.g_sello {
 	width: 18cm;
 	height: 1cm;
 	}
-div.sello {	
+div.sello {
 	display: inline-block;
 	margin-top: 0cm;
 	}
-div.firma {	
+div.firma {
 	margin-top: 0.5cm;
 	display: inline-block;
 	margin-left: 6cm;
 	}
-	
-div.g_libro {	
+
+div.g_libro {
     display: block;
     margin-left: 0cm;
     font-size: 10pt;
@@ -154,7 +143,7 @@ div.g_libro {
 	bottom: 1cm;
 	width: 17cm ;
 	}
-div.libro {	
+div.libro {
 	display: inline-block;
 	float: left;
     margin-left: 0cm;
@@ -163,7 +152,7 @@ div.libro {
 	bottom: 0px;
     white-space: nowrap;
 	}
-div.secretario {	
+div.secretario {
 	display: inline-block;
     position: absolute;
 	bottom: 0px;
@@ -171,9 +160,9 @@ div.secretario {
     text-align: right;
     width: 100%;
 }
-	
-div.ects {	
-	font-size: 8pt; 
+
+div.ects {
+	font-size: 8pt;
 	display: block;
 	float: left;
 	text-align: left;
@@ -181,7 +170,7 @@ div.ects {
 	position: absolute;
 	bottom: 0px;
 	}
-div.piepagina {	
+div.piepagina {
     display: block;
     margin-left: 1cm;
     font-size: 6pt;
@@ -189,14 +178,14 @@ div.piepagina {
 	bottom: 0px;
 	width: 18cm ;
 	}
-div.f7 {	
+div.f7 {
 	display: inline-block;
 	text-align: left;
 	}
-div.dir {	
+div.dir {
 	display: inline-block;
 	text-align: center;
     align-content: center;
     width: 95%;
 	}
-</style> 
+</style>

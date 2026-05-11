@@ -6,7 +6,7 @@
  */
 
 use src\actividadessacd\application\TextoComunicacionData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $data = TextoComunicacionData::execute($_POST);
 ContestarJson::enviar('', $data);

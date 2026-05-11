@@ -6,7 +6,7 @@ use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\shared\domain\value_objects\LocaleCode;
 use function src\shared\domain\helpers\is_true;
 

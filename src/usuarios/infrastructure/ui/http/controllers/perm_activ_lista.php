@@ -6,7 +6,7 @@ use src\procesos\domain\contracts\ActividadFaseRepositoryInterface;
 use src\procesos\domain\contracts\PermUsuarioActividadRepositoryInterface;
 use src\procesos\domain\PermAccionBits;
 use src\procesos\domain\PermAfectadosBits;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\actividades\domain\entity\TiposActividades;
 use function src\shared\domain\helpers\is_true;
 

@@ -15,6 +15,7 @@
  * @subpackage    actividades
  */
 
+use frontend\actividades\helpers\ActividadStatusId;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use frontend\shared\security\HashFrontSignedLink;
@@ -84,7 +85,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qseccion = (array)filter_input(INPUT_POST, 'seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (empty($Qstatus)) {
         $Qa_status = (array)filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $Qstatus = empty($Qa_status) ? 2 : $Qa_status; // 2 = StatusId::ACTUAL
+        $Qstatus = empty($Qa_status) ? ActividadStatusId::ACTUAL : $Qa_status;
     }
 
     $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');

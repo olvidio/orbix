@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadcargos\application\ActividadCargoEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 /**
  * Elimina un `ActividadCargo` y, si procede, su `Asistente`.

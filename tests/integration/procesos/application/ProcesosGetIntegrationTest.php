@@ -2,6 +2,7 @@
 
 namespace Tests\integration\procesos\application;
 
+use frontend\procesos\support\ProcesosTreeHtml;
 use src\procesos\application\ProcesosGet;
 use src\procesos\application\ProcesosGetListado;
 use src\procesos\domain\contracts\TareaProcesoRepositoryInterface;
@@ -14,7 +15,7 @@ use Tests\myTest;
  *  - ProcesosGetListado (tabla de fases)
  *
  * Smoke tests: los casos de uso devuelven payload JSON (`aPadres` / `a_rows`);
- * el HTML lo pintan los controladores frontend vía {@see ProcesosGet::dibujarTree()}
+ * el HTML lo pintan los controladores frontend vía {@see ProcesosTreeHtml::dibujarTree()}
  * y la vista de listado.
  */
 class ProcesosGetIntegrationTest extends myTest
@@ -45,7 +46,7 @@ class ProcesosGetIntegrationTest extends myTest
     {
         $payload = (new ProcesosGet())->execute(['id_tipo_proceso' => 999999999]);
         $this->assertSame(['aPadres' => []], $payload);
-        $this->assertSame('', ProcesosGet::dibujarTree($payload['aPadres']));
+        $this->assertSame('', ProcesosTreeHtml::dibujarTree($payload['aPadres']));
     }
 
     public function test_get_listado_sin_tareas_devuelve_filas_vacias(): void

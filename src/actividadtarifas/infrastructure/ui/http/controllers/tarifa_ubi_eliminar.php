@@ -10,7 +10,7 @@
 use src\actividadtarifas\application\TarifaUbiEliminar;
 use src\shared\security\HashB;
 use src\shared\security\HashBInvalidException;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $ctxRaw = (string)filter_input(INPUT_POST, 'ctx_eliminar');
 try {

@@ -3,7 +3,7 @@
 use src\shared\config\ConfigGlobal;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use frontend\shared\web\Periodo;
 
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');

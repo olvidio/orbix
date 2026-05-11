@@ -8,7 +8,7 @@
  */
 
 use src\actividadessacd\application\ListaActividadesSacdData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'tipo' => (string)filter_input(INPUT_POST, 'tipo'),

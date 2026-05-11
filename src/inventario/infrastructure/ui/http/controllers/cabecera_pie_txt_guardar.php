@@ -2,7 +2,7 @@
 
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ConfigMagik;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = '';
 

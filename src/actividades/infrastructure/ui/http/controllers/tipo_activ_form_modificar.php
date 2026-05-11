@@ -1,7 +1,7 @@
 <?php
 
 use src\actividades\application\TipoActivFormModificar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $useCase = new TipoActivFormModificar();
 $html = $useCase->execute($_POST);

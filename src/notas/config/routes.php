@@ -3,7 +3,7 @@
 // Rutas del modulo `notas`. Las registra `public/index.php` via glob sobre
 // `src/*/config/routes.php`. Cada endpoint vive en
 // `src/notas/infrastructure/ui/http/controllers/` y responde JSON mediante
-// `frontend\shared\web\ContestarJson::enviar(...)`.
+// `src\shared\web\ContestarJson::enviar(...)`.
 return static function ($r) {
     // Slice 1: Mutaciones criticas (actas, notas de persona, pdf, tessera).
     $r->addRoute(['GET', 'POST'], '/src/notas/acta_nueva', function () {

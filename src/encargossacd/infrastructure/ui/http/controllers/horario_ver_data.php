@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\EncargoHorarioVerData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $mod = (string)(filter_input(INPUT_POST, 'mod') ?? filter_input(INPUT_GET, 'mod') ?? '');
 $id_enc = (int)(filter_input(INPUT_POST, 'id_enc') ?? filter_input(INPUT_GET, 'id_enc') ?? 0);

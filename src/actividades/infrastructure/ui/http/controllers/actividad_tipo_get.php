@@ -4,7 +4,7 @@
  * tabla HTML o valor escalar) segun el parametro POST `salida`. Usado por las
  * cascadas de filtros de actividades desde callers AJAX (templates Twig/phtml).
  *
- * Responde siempre JSON via frontend\shared\web\ContestarJson. Las salidas de tipo desplegable
+ * Responde siempre JSON via src\shared\web\ContestarJson. Las salidas de tipo desplegable
  * (asistentes, actividad, nom_tipo, dl_org, filtro_lugar, lugar) devuelven
  * bajo `data` el payload {id, opciones, selected, blanco, val_blanco, action}
  * y el frontend construye el `<select>`. Las salidas nom_tipo_tabla e
@@ -21,7 +21,7 @@ use src\actividades\application\ActividadTipoGetLugar;
 use src\actividades\application\ActividadTipoGetNomTipo;
 use src\actividades\application\ActividadTipoGetNomTipoTabla;
 use src\actividades\application\ActividadTipoGetNivelStgrDefecto;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 

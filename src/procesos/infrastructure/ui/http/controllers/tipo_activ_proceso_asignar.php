@@ -1,7 +1,7 @@
 <?php
 
 use src\procesos\application\TipoActivProcesoAsignar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $useCase = new TipoActivProcesoAsignar();
 $error = $useCase->execute($_POST);

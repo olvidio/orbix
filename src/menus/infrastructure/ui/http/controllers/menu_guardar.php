@@ -1,7 +1,7 @@
 <?php
 
 use src\menus\application\MenuGuardar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_grupmenu = (integer)filter_input(INPUT_POST, 'filtro_grupo');
 $Qid_menu = (integer)filter_input(INPUT_POST, 'id_menu');

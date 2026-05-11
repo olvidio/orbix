@@ -1,7 +1,7 @@
 <?php
 
 use src\shared\domain\DatosFormRepo;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qclase_info_encoded = filter_input(INPUT_POST, 'clase_info');
 $a_pkey = filter_input(INPUT_POST, 'a_pkey');

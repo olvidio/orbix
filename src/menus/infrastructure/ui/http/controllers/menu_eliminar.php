@@ -1,7 +1,7 @@
 <?php
 
 use src\menus\application\MenuEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_menu = (integer)filter_input(INPUT_POST, 'id_menu');
 

@@ -5,7 +5,7 @@
  */
 
 use src\actividades\application\ActividadQueDatos;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $perm_jefe = filter_input(INPUT_POST, 'perm_jefe') === 't';
 $id_tipo_activ = filter_input(INPUT_POST, 'id_tipo_activ');

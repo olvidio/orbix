@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use frontend\shared\web\Periodo;
 use src\planning\application\PlanningPersonaVerData;
 

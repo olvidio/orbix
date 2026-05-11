@@ -5,7 +5,7 @@
  */
 
 use src\actividadescentro\application\CentroEncargadoAsignar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = CentroEncargadoAsignar::execute($_POST);
 ContestarJson::enviar($error_txt, 'ok');

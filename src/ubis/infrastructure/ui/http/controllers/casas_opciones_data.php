@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\CasasOpcionesData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $filtro = [];
 

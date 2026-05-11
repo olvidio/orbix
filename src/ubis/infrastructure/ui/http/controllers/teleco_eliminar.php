@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\TelecoEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use function src\shared\domain\helpers\urlsafe_b64decode;
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');

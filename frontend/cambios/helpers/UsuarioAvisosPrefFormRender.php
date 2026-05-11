@@ -7,7 +7,7 @@ namespace frontend\cambios\helpers;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\security\HashFront;
 use frontend\actividades\helpers\ActividadTipo;
-use src\actividades\domain\entity\TiposActividades;
+use frontend\actividades\helpers\TiposDeActividades;
 
 /**
  * Completa el JSON de {@see \src\cambios\application\UsuarioAvisosPrefFormData} para la vista.
@@ -70,7 +70,7 @@ final class UsuarioAvisosPrefFormRender
         if ($id_tipo_res !== '') {
             $oActividadTipo->setId_tipo_activ($id_tipo_res);
         } else {
-            $oTipoActiv = new TiposActividades();
+            $oTipoActiv = new TiposDeActividades();
             $oTipoActiv->setSfsvText((string)($result['sfsv_text'] ?? ''));
             $oActividadTipo->setSfsv($oTipoActiv->getSfsvText());
             $oActividadTipo->setAsistentes($oTipoActiv->getAsistentesText());

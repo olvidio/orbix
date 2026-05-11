@@ -1,7 +1,7 @@
 <?php
 
 use src\encargossacd\application\CtrFichaUpdate;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $resultado = CtrFichaUpdate::execute($_POST);
 

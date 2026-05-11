@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\inventario\application\InventarioCssInlineData;
 
 $data = InventarioCssInlineData::build();

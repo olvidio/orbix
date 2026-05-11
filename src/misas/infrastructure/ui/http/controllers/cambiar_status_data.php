@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\CambiarStatusPantallaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 try {
     ContestarJson::enviar('', CambiarStatusPantallaData::getData());

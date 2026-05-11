@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\TelecoTablaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qid_ubi = (int)filter_input(INPUT_POST, 'id_ubi');

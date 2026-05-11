@@ -3,7 +3,7 @@
  * Estilos “todo en uno”: no cargar global_object.inc (DI + segunda pasada de bootstrap).
  * Este archivo se incluye desde popups (p.ej. actividad_select_ubi) donde ya hay HTML/salida;
  * montar global_object aquí rompe variables PDO globales y la sesión. El tema se resuelve
- * con {@see css_colores_estilo_desde_sesion()} como en tessera.css.php.
+ * con {@see css_colores_estilo_desde_sesion()} (sin global_object).
  */
 use src\shared\config\ConfigGlobal;
 

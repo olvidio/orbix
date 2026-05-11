@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\domain\contracts\LugarRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $error_txt = '';

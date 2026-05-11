@@ -3,7 +3,7 @@
  * Etiquetas de status ({@see StatusId::getArrayStatus}) para el formulario actividad.
  */
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\actividades\application\ActividadStatusLabelsDatos;
 
 $withAll = filter_input(INPUT_POST, 'with_all') === 't';

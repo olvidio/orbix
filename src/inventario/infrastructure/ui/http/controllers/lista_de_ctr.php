@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = '';
 

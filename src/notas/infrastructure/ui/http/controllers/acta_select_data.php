@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\ActaSelectData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error = '';
 $data = [];

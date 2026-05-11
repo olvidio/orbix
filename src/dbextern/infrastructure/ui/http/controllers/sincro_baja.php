@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\dbextern\application\BajaPersonaUseCase;
 
 $dl = (string)filter_input(INPUT_POST, 'dl');

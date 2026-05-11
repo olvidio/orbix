@@ -4,7 +4,7 @@
  */
 
 use src\casas\application\GrupoCasaEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'id_item' => (int)filter_input(INPUT_POST, 'id_item'),

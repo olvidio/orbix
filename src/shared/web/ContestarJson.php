@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\shared\web;
+namespace src\shared\web;
 
 use Illuminate\Http\JsonResponse;
 

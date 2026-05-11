@@ -9,7 +9,7 @@
  */
 
 use src\cartaspresentacion\application\CartasPresentacionPoblacionesData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = ['filtro' => (string)filter_input(INPUT_POST, 'filtro')];
 $data = CartasPresentacionPoblacionesData::execute($input);

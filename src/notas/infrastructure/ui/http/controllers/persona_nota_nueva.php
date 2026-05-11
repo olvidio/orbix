@@ -1,7 +1,7 @@
 <?php
 
 use src\notas\application\PersonaNotaNueva;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 /**
  * Crea una `PersonaNota`. Responde JSON `{success, mensaje, data}`.

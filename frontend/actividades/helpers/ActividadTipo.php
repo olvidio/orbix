@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace frontend\actividades\helpers;
 
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\helpers\ActividadTipoTwigHashCompose;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\web\Desplegable;
-use src\actividades\domain\value_objects\StatusId;
-use src\shared\config\ConfigGlobal;
 
 /**
  * Widget UI del selector de tipo de actividad (sfsv / asistentes / actividad /
@@ -46,14 +45,14 @@ class ActividadTipo
      */
     public function getHtml($extendida = false): void
     {
-        $isfsv = ConfigGlobal::mi_sfsv();
+        $isfsv = OrbixRuntime::miSfsv();
         $aSfsv = [1 => 'sv', 2 => 'sf'];
 
         if (empty($this->ssfsv)) {
             $this->ssfsv = $aSfsv[$isfsv] ?? '';
         }
         if (empty($this->status)) {
-            $this->status = StatusId::ACTUAL;
+            $this->status = ActividadStatusId::ACTUAL;
         }
 
         if (!empty($this->id_tipo_activ)) {
@@ -117,7 +116,7 @@ class ActividadTipo
             $array2 = array_merge($array2, [4 => 's', 5 => 'sg']);
         }
         if ($_SESSION['oPerm']->have_perm_oficina('des')) {
-            if ($this->status === StatusId::ACTUAL) {
+            if ($this->status === ActividadStatusId::ACTUAL) {
                 $array_des = $oTipoActiv->getAsistentesPosibles();
             } else {
                 $array_des = [6 => 'sss+'];
@@ -195,11 +194,11 @@ class ActividadTipo
             }
         }
 
-        $url = rtrim(ConfigGlobal::getWeb(), '/') . '/src/actividades/actividad_tipo_get';
-        $url_act = ConfigGlobal::getWeb() . '/frontend/actividades/controller/actividad_ver.php';
+        $url = rtrim(OrbixRuntime::getWeb(), '/') . '/src/actividades/actividad_tipo_get';
+        $url_act = OrbixRuntime::getWeb() . '/frontend/actividades/controller/actividad_ver.php';
 
         if ($this->getEvitarProcesos() !== true) {
-            $procesos_installed = ConfigGlobal::is_app_installed('procesos');
+            $procesos_installed = OrbixRuntime::isAppInstalled('procesos');
         } else {
             $procesos_installed = false;
         }

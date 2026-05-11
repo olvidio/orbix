@@ -3,7 +3,7 @@
 // grabar la cabecera, pie o texto en las maletas.
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $error_txt = '';
 

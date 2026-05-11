@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\UbisGuardar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $service = new UbisGuardar();
 $errorTxt = $service->execute($_POST);

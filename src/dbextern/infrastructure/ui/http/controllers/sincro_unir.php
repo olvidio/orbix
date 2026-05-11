@@ -1,6 +1,6 @@
 <?php
 
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 use src\dbextern\application\UnirPersonaUseCase;
 use src\dbextern\domain\contracts\IdMatchPersonaRepositoryInterface;
 

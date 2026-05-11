@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\QuitarHorarioPlantilla;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $result = QuitarHorarioPlantilla::execute([
     'id_item' => filter_input(INPUT_POST, 'id_item'),

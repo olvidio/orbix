@@ -12,7 +12,7 @@ use src\ubis\domain\contracts\DelegacionRepositoryInterface;
  * tambien de `plazas_balance_dl`).
  *
  * Devuelve string vacio si ha ido bien, o mensaje de error. El
- * controlador HTTP lo envuelve con `frontend\shared\web\ContestarJson::enviar(...)`
+ * controlador HTTP lo envuelve con `src\shared\web\ContestarJson::enviar(...)`
  * en el contrato JSON estandar `{success, mensaje, data}`. El widget
  * `frontend\shared\web\TablaEditable` consume esa respuesta via `dataType: 'json'`.
  *

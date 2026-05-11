@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\application\TipoDocOpcionesData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $data = TipoDocOpcionesData::build();
 

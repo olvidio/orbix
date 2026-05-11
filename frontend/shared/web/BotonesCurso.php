@@ -2,7 +2,7 @@
 
 namespace frontend\shared\web;
 
-
+use frontend\actividades\helpers\ActividadStatusId;
 use function frontend\shared\helpers\curso_est;
 
 class BotonesCurso
@@ -54,7 +54,7 @@ class BotonesCurso
             case 1:
             default:
                 $this->chk_1 = "checked";
-                $this->aWhere['status'] = 2; // 2 = StatusId::ACTUAL;
+                $this->aWhere['status'] = ActividadStatusId::ACTUAL;
                 $this->aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
                 $this->aOperator['f_ini'] = 'BETWEEN';
                 break;

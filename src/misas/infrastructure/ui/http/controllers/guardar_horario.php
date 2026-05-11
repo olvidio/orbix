@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\GuardarHorarioTarea;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $result = GuardarHorarioTarea::execute([
     'id_item_h' => filter_input(INPUT_POST, 'id_item_h'),

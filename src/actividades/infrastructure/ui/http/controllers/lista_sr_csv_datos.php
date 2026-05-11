@@ -6,7 +6,7 @@
  */
 
 use src\actividades\application\ListaSrCsvListado;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $input = [
     'periodo' => (string)filter_input(INPUT_POST, 'periodo'),

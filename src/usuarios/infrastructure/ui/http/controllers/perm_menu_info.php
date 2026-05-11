@@ -3,7 +3,7 @@
 use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');

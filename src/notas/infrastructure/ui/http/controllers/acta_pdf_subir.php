@@ -2,7 +2,7 @@
 
 use src\notas\application\ActaPdfSubir;
 use src\shared\infrastructure\ui\http\MultipartUploadGuard;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 MultipartUploadGuard::exitIfPostTooLargeJson();
 

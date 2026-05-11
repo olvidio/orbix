@@ -1,7 +1,7 @@
 <?php
 
 use src\misas\application\BuscarPlanCtrData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_zona = (int)filter_input(INPUT_POST, 'id_zona');
 

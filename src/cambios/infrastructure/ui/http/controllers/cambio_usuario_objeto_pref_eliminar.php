@@ -6,7 +6,7 @@
  */
 
 use src\cambios\application\CambioUsuarioObjetoPrefEliminar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 require_once 'frontend/shared/global_header_front.inc';
 

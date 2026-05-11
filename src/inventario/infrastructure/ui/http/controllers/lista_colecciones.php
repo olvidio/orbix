@@ -1,7 +1,7 @@
 <?php
 
 use src\inventario\application\ColeccionesOpcionesData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $data = ColeccionesOpcionesData::build();
 

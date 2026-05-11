@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\UbisTablaData;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $data = UbisTablaData::execute($_POST);
 if (isset($data['error'])) {

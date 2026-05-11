@@ -3,7 +3,7 @@
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\entity\Grupo;
 use src\usuarios\domain\value_objects\Username;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
 

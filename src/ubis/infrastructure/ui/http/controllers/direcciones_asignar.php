@@ -1,7 +1,7 @@
 <?php
 
 use src\ubis\application\DireccionesAsignar;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 ContestarJson::enviar('', DireccionesAsignar::execute(
     (int)filter_input(INPUT_POST, 'id_ubi'),

@@ -1,7 +1,7 @@
 <?php
 
 use src\actividadestudios\application\MatriculaAutomatica;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 /**
  * Matricula masivamente a una o varias personas en las asignaturas del plan

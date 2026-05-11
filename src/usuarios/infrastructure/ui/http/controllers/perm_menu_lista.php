@@ -2,7 +2,7 @@
 
 use src\permisos\domain\MenuDlPermissionBits;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
 

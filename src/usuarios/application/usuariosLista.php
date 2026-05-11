@@ -7,7 +7,7 @@ use Exception;
 use InvalidArgumentException;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 class usuariosLista
 {

@@ -11,7 +11,7 @@ use src\usuarios\domain\value_objects\Email;
 use src\usuarios\domain\value_objects\Password;
 use src\usuarios\domain\value_objects\IdPau;
 use src\usuarios\domain\value_objects\NombreUsuario;
-use frontend\shared\web\ContestarJson;
+use src\shared\web\ContestarJson;
 
 $ctxRaw = (string)filter_input(INPUT_POST, 'ctx');
 try {

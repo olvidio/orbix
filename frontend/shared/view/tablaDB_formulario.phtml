@@ -97,7 +97,8 @@ use frontend\shared\config\AppUrlConfig;
                         </td>
                     </tr>
                     <?php break;
-                case "opciones": ?>
+                case "opciones":
+                case "array": ?>
                     <tr>
                         <td class="etiqueta"><?= ucfirst($eti) ?></td>
                         <td class="contenido">
@@ -126,16 +127,6 @@ use frontend\shared\config\AppUrlConfig;
                         <td class="contenido">
                             <select id="<?= $nom_camp ?>" name="<?= $nom_camp ?>">
                                 <?= $field['opciones_txt'] ?>
-                            </select>
-                        </td>
-                    </tr>
-                    <?php break;
-                case "array": ?>
-                    <tr>
-                        <td class="etiqueta"><?= ucfirst($eti) ?></td>
-                        <td class="contenido">
-                            <select name="<?= $nom_camp ?>">
-                                <?= $field['options_html'] ?>
                             </select>
                         </td>
                     </tr>

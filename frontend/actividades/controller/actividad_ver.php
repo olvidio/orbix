@@ -17,6 +17,8 @@
  * @subpackage    actividades
  */
 
+use frontend\actividades\helpers\ActividadStatusId;
+use frontend\actividades\helpers\NivelStgrId;
 use frontend\shared\AppInstalled;
 use frontend\shared\config\AppUrlConfig;
 use frontend\shared\config\OrbixRuntime;
@@ -80,7 +82,7 @@ $publicado = '';
 $lugar_esp = '';
 $tarifa = '';
 $id_repeticion = 0;
-$nivel_stgr = 9; // NivelStgrId::N
+$nivel_stgr = NivelStgrId::N;
 $id_ubi = 0;
 $dl_org = '';
 $status = 0;
@@ -120,7 +122,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $precio = $entidad['precio'];
     $status = (int)$entidad['status'];
     $observ = (string)$entidad['observ'];
-    $nivel_stgr = $entidad['nivel_stgr'] ?? 9;
+    $nivel_stgr = $entidad['nivel_stgr'] ?? NivelStgrId::N;
     $lugar_esp = (string)$entidad['lugar_esp'];
     $tarifa = $entidad['tarifa'];
     $id_repeticion = (int)$entidad['id_repeticion'];
@@ -158,7 +160,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     ]);
     $a_status = $labelsRow['id_to_label'] ?? [];
     $dl_org = OrbixRuntime::miDelef();
-    $status = 1; // StatusId::PROYECTO
+    $status = ActividadStatusId::PROYECTO;
     $id_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
     $id_tipo_activ = urldecode($id_tipo_activ); // En el caso de sr, sg, se pasa la cadena tipo 2[789]... (con [, que se encodan).
 
