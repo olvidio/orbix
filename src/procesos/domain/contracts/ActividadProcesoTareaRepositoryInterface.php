@@ -68,4 +68,13 @@ interface ActividadProcesoTareaRepositoryInterface
     public function findById(int $id_item): ?ActividadProcesoTarea;
 
     public function getNewId();
+
+    /**
+     * Regenera las tareas del proceso para la actividad indicada.
+     *
+     * @param string $iid_activ
+     * @param int|string $isfsv
+     * @return bool|int id_fase u otro valor según implementación
+     */
+    public function generarProceso(string $iid_activ = '', int|string $isfsv = '', bool $force = false);
 }

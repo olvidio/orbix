@@ -44,7 +44,7 @@ final class HabitacionFormData
 
             $HabitacionRepository = $GLOBALS['container']->get(HabitacionDlRepositoryInterface::class);
             $uuid_habitacion = HabitacionId::fromNullableString($Qid_habitacion);
-            $oHabitacion = $uuid_habitacion !== null ? $HabitacionRepository->findById($uuid_habitacion) : null;
+            $oHabitacion = $uuid_habitacion !== null ? $HabitacionRepository->findById($uuid_habitacion->value()) : null;
             if (!empty($oHabitacion)) {
                 $Qid_ubi = $oHabitacion->getIdUbiVo();
                 $orden = $oHabitacion->getOrdenVo()?->value() ?? 0;

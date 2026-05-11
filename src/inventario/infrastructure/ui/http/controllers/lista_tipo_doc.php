@@ -1,15 +1,8 @@
 <?php
 
-use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\application\TipoDocOpcionesData;
 use frontend\shared\web\ContestarJson;
 
-$error_txt = '';
+$data = TipoDocOpcionesData::build();
 
-$Repository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
-$a_opciones = $Repository->getArrayTipoDoc();
-
-$data = ['a_opciones' => $a_opciones,
-];
-
-// envía una Response
-ContestarJson::enviar($error_txt, $data);
+ContestarJson::enviar('', $data);

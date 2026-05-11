@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\unit\zonassacd\application;
 
 use PHPUnit\Framework\TestCase;
@@ -176,6 +178,28 @@ final class ZonaSacdListaTest extends TestCase
         $this->assertCount(1, $out['a_valores']);
         $first = reset($out['a_valores']);
         $this->assertStringContainsString('999', $first[1]);
+    }
+
+    public function test_zona_concreta_sin_vinculos_sacds_devuelve_filas_vacias(): void
+    {
+        $zonaRepo = $this->createStub(ZonaRepositoryInterface::class);
+        $zonaRepo->method('findById')->with('3')->willReturn($this->zonaStub('Sin sacds'));
+
+        $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
+        $zonaSacdRepo->expects($this->once())
+            ->method('getZonasSacds')
+            ->with(['id_zona' => '3'], [])
+            ->willReturn([]);
+
+        $GLOBALS['container'] = $this->containerFromMap([
+            PersonaSacdRepositoryInterface::class => $this->createStub(PersonaSacdRepositoryInterface::class),
+            ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
+            ZonaRepositoryInterface::class => $zonaRepo,
+        ]);
+
+        $out = ZonaSacdLista::execute('3');
+
+        $this->assertSame([], $out['a_valores']);
     }
 
     private function personaSacdStub(int $id_nom, string $pref, string $id_tabla): PersonaSacd

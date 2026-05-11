@@ -19,7 +19,7 @@ class MenuCopiar
         } else {
             // Clonar y poner en otro grupmenu
             $ok = $oMenuDb->isOk();
-            $orden = $oMenuDb->getOrdenVo()->value();
+            $orden = $oMenuDb->getOrden();
             $id_grupmenu = $oMenuDb->getId_grupmenu();
             $txt_menu = $oMenuDb->getMenu();
             $parametros = $oMenuDb->getParametros();
@@ -36,7 +36,7 @@ class MenuCopiar
             $oNewMenuDb->setParametros($parametros);
             $oNewMenuDb->setId_metamenu($id_metamenu);
             $oNewMenuDb->setMenu_perm($perm_menu);
-            $oNewMenuDb->setId_grupmenu($gm_new);
+            $oNewMenuDb->setId_grupmenu((int)$gm_new);
             if ($MenuDbRepository->Guardar($oNewMenuDb) === false) {
                 $error_txt .= _("hay un error, no se ha guardado");
                 $error_txt .= "\n" . $MenuDbRepository->getErrorTxt();

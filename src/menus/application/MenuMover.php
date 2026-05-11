@@ -17,7 +17,7 @@ class MenuMover
         if (empty($oMenuDb)) {
             $error_txt = _("No encuentro el menu");
         } else {
-            $oMenuDb->setId_grupmenu($gm_new);
+            $oMenuDb->setId_grupmenu((int)$gm_new);
             if ($MenuDbRepository->Guardar($oMenuDb) === false) {
                 $error_txt .= _("hay un error, no se ha guardado");
                 $error_txt .= "\n" . $MenuDbRepository->getErrorTxt();

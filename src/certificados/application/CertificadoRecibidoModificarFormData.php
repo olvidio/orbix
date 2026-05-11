@@ -18,7 +18,7 @@ final class CertificadoRecibidoModificarFormData
 
         $id_nom = (int)($oCertificadoRecibido->getId_nom() ?? 0);
         $nom = (string)($oCertificadoRecibido->getNom() ?? '');
-        $idioma = (string)($oCertificadoRecibido->getIdioma() ?? '');
+        $idioma = (string)($oCertificadoRecibido->getIdiomaVo()?->value() ?? '');
         $destino = (string)($oCertificadoRecibido->getDestino() ?? '');
         $certificado = (string)($oCertificadoRecibido->getCertificado() ?? '');
         $f_certificado = $oCertificadoRecibido->getF_certificado();

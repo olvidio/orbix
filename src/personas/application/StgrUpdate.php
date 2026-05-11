@@ -34,7 +34,7 @@ final class StgrUpdate
         $oPersona->setNivel_stgr($nivel_stgr);
         if ($repository->Guardar($oPersona) === false) {
             $err = _("hay un error, no se ha guardado");
-            $detalle = $oPersona->getErrorTxt();
+            $detalle = $repository->getErrorTxt();
             return $detalle ? $err . "\n" . $detalle : $err;
         }
 

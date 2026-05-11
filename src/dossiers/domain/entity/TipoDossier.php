@@ -354,6 +354,22 @@ class TipoDossier
             : TipoDossierCodigo::fromNullableString($codigo);
     }
 
+    /**
+     * @deprecated use getCodigoVo()
+     */
+    public function getCodigo(): ?string
+    {
+        return $this->codigo?->value();
+    }
+
+    /**
+     * @deprecated use setCodigoVo()
+     */
+    public function setCodigo(?string $codigo = null): void
+    {
+        $this->setCodigoVo($codigo);
+    }
+
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {

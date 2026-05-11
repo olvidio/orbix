@@ -1,16 +1,8 @@
 <?php
 
-use src\inventario\domain\contracts\ColeccionRepositoryInterface;
+use src\inventario\application\ColeccionesOpcionesData;
 use frontend\shared\web\ContestarJson;
 
-$error_txt = '';
+$data = ColeccionesOpcionesData::build();
 
-$Repository = $GLOBALS['container']->get(ColeccionRepositoryInterface::class);
-$a_opciones = $Repository->getArrayColecciones();
-
-$data = [
-    'a_opciones' => $a_opciones,
-];
-
-// envía una Response
-ContestarJson::enviar($error_txt, $data);
+ContestarJson::enviar('', $data);

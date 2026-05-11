@@ -40,9 +40,9 @@ class PgCambioUsuarioRepository extends ClaseRepository implements CambioUsuario
      *
      * @param DateTimeLocal|string df_fin.
      */
-    public function eliminarHastaFecha($df_fin)
+    public function eliminarHastaFecha($df_fin): bool
     {
-        if (empty($df_fin)) return FALSE;
+        if (empty($df_fin)) return false;
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $nom_tabla_cambios = 'public.av_cambios';

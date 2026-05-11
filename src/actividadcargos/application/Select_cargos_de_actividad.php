@@ -14,7 +14,6 @@ use src\personas\domain\entity\Persona;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 use frontend\shared\web\Lista;
 use src\actividades\domain\entity\TiposActividades;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Widget del dossier `3102` (codigo `cargos_de_actividad`): relacion de personas
@@ -115,66 +114,18 @@ class Select_cargos_de_actividad
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $cCargosEnActividad = $ActividadCargoRepository->getActividadCargos(['id_activ' => $this->id_pau]);
 
-        $c = 0;
-        $a_valores = [];
-        foreach ($cCargosEnActividad as $oActividadCargo) {
-            $c++;
-            $id_schema = $oActividadCargo->getId_schema();
-            $id_item = $oActividadCargo->getId_item();
-            $id_nom = $oActividadCargo->getId_nom();
-            $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = $CargoRepository->findById($id_cargo);
-            $tipo_cargo = '';
-            $cargo = '';
-            if ($oCargo !== null) {
-                $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
-                $cargo = $oCargo->getCargoVo()->value();
-            }
-            if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
-                continue;
-            }
-
-            $oPersona = Persona::findPersonaEnGlobal($id_nom);
-            if ($oPersona === null) {
-                $this->msg_err .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
-                continue;
-            }
-
-            $nom = $oPersona->getPrefApellidosNombre();
-            $ctr_dl = $oPersona->getCentro_o_dl();
-            $chk_puede_agd = is_true($oActividadCargo->isPuede_agd()) ? 'si' : 'no';
-            $observ = $oActividadCargo->getObserv();
-
-            $permiso = 1;
-            if ($id_tabla = $oPersona->getId_tabla()) {
-                $a_act = $this->a_ref_perm[$id_tabla] ?? null;
-                $permiso = (!empty($a_act) && !empty($a_act['perm'])) ? 3 : 1;
-            } else {
-                $permiso = 3;
-            }
-
-            if ($permiso === 3) {
-                // Formato compatible con Select3101 (asistentes): id_nom#id_item#elim_asis#id_schema
-                $a_valores[$c]['sel'] = "$id_nom#$id_item#$elim_asis_default#$id_schema";
-            } else {
-                $a_valores[$c]['sel'] = '';
-            }
-            $a_valores[$c][1] = $cargo;
-            $a_valores[$c][2] = "$nom  ($ctr_dl)";
-            $a_valores[$c][3] = $chk_puede_agd;
-            $a_valores[$c][4] = $observ;
-        }
-
-        if (!empty($a_valores)) {
-            if (!empty($this->Qid_sel)) {
-                $a_valores['select'] = $this->Qid_sel;
-            }
-            if (!empty($this->Qscroll_id)) {
-                $a_valores['scroll_id'] = $this->Qscroll_id;
-            }
-        }
-
-        $this->a_valores = $a_valores;
+        $result = SelectCargosDeActividadTableData::buildValorRows(
+            $elim_asis_default,
+            $mi_sfsv,
+            $cCargosEnActividad,
+            $CargoRepository,
+            static fn (?int $id_nom) => Persona::findPersonaEnGlobal($id_nom),
+            $this->a_ref_perm ?? [],
+            $this->Qid_sel,
+            $this->Qscroll_id,
+        );
+        $this->a_valores = $result['a_valores'];
+        $this->msg_err .= $result['msg_err'];
         if ($this->msg_err !== '') {
             echo $this->msg_err;
         }

@@ -3,6 +3,7 @@
 namespace src\ubiscamas\domain;
 
 use src\shared\config\ConfigGlobal;
+use src\ubiscamas\domain\contracts\HabitacionDlRepositoryInterface;
 use src\ubiscamas\domain\value_objects\TipoLavabo;
 use function src\shared\domain\helpers\is_true_txt;
 

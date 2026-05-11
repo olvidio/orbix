@@ -1,25 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\unit\misas\application;
 
+use PHPUnit\Framework\TestCase;
 use src\misas\application\UpdateIniciales;
 use src\misas\domain\contracts\InicialesSacdRepositoryInterface;
 use src\misas\domain\entity\InicialesSacd;
-use Tests\myTest;
 
-class UpdateInicialesTest extends myTest
+final class UpdateInicialesTest extends TestCase
 {
-    private mixed $containerBackup;
+    private mixed $previousContainer;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->containerBackup = $GLOBALS['container'];
+        $this->previousContainer = $GLOBALS['container'] ?? null;
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
-        $GLOBALS['container'] = $this->containerBackup;
+        if ($this->previousContainer === null) {
+            unset($GLOBALS['container']);
+        } else {
+            $GLOBALS['container'] = $this->previousContainer;
+        }
         parent::tearDown();
     }
 
@@ -36,16 +42,9 @@ class UpdateInicialesTest extends myTest
             }
         );
 
-        $GLOBALS['container'] = new class ($repo) {
-            public function __construct(private readonly InicialesSacdRepositoryInterface $repo)
-            {
-            }
-
-            public function get(string $id): InicialesSacdRepositoryInterface
-            {
-                return $this->repo;
-            }
-        };
+        $GLOBALS['container'] = $this->containerFromMap([
+            InicialesSacdRepositoryInterface::class => $repo,
+        ]);
 
         $this->assertSame('', UpdateIniciales::execute(42, 'XYZ', '#ABC'));
         $this->assertNotNull($captured);
@@ -72,16 +71,9 @@ class UpdateInicialesTest extends myTest
             }
         );
 
-        $GLOBALS['container'] = new class ($repo) {
-            public function __construct(private readonly InicialesSacdRepositoryInterface $repo)
-            {
-            }
-
-            public function get(string $id): InicialesSacdRepositoryInterface
-            {
-                return $this->repo;
-            }
-        };
+        $GLOBALS['container'] = $this->containerFromMap([
+            InicialesSacdRepositoryInterface::class => $repo,
+        ]);
 
         $this->assertSame('', UpdateIniciales::execute(7, 'NEW', ''));
         $this->assertSame($existing, $captured);
@@ -96,17 +88,28 @@ class UpdateInicialesTest extends myTest
         $repo->method('Guardar')->willReturn(false);
         $repo->method('getErrorTxt')->willReturn('fallo al guardar');
 
-        $GLOBALS['container'] = new class ($repo) {
-            public function __construct(private readonly InicialesSacdRepositoryInterface $repo)
-            {
-            }
-
-            public function get(string $id): InicialesSacdRepositoryInterface
-            {
-                return $this->repo;
-            }
-        };
+        $GLOBALS['container'] = $this->containerFromMap([
+            InicialesSacdRepositoryInterface::class => $repo,
+        ]);
 
         $this->assertSame('fallo al guardar', UpdateIniciales::execute(1, 'A', '#000000'));
+    }
+
+    /**
+     * @param array<class-string, object> $services
+     */
+    private function containerFromMap(array $services): object
+    {
+        return new class ($services) {
+            public function __construct(private readonly array $services) {}
+
+            public function get(string $id): object
+            {
+                if (!array_key_exists($id, $this->services)) {
+                    throw new \RuntimeException('Unexpected DI key: ' . $id);
+                }
+                return $this->services[$id];
+            }
+        };
     }
 }

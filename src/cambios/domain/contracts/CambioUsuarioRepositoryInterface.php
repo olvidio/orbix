@@ -29,6 +29,14 @@ interface CambioUsuarioRepositoryInterface
 	
 	 */
 	public function getCambiosUsuario(array $aWhere=[], array $aOperators=[]): array|bool;
+
+	/**
+	 * Elimina filas anteriores a la fecha indicada (uso masivo).
+	 *
+	 * @param \src\shared\domain\value_objects\DateTimeLocal|string $df_fin
+	 * @return bool
+	 */
+	public function eliminarHastaFecha($df_fin): bool;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

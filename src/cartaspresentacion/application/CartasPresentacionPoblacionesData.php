@@ -97,7 +97,7 @@ final class CartasPresentacionPoblacionesData
                 }
             }
         }
-        uksort($poblaciones, 'core\\strsinacentocmp');
+        uksort($poblaciones, 'src\shared\domain\helpers\strsinacentocmp');
         return $poblaciones;
     }
 }

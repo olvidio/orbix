@@ -8,7 +8,6 @@ use src\notas\domain\entity\PersonaNota;
 use src\notas\domain\value_objects\NotaEpoca;
 use src\notas\domain\value_objects\TipoActa;
 use src\shared\domain\value_objects\DateTimeLocal;
-use src\shared\domain\value_objects\NullDateTimeLocal;
 use function src\shared\domain\helpers\is_true;
 
 /**
@@ -76,7 +75,7 @@ final class PersonaNotaInputParser
             $epoca = NotaEpoca::EPOCA_OTRO;
         }
 
-        $oF_acta = empty($f_acta) ? new NullDateTimeLocal() : DateTimeLocal::createFromLocal($f_acta);
+        $oF_acta = empty($f_acta) ? null : DateTimeLocal::createFromLocal($f_acta);
 
         $oPersonaNota->setIdSituacionVo($id_situacion);
         $oPersonaNota->setActaVo($acta);

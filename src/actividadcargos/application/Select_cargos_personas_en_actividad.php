@@ -14,7 +14,6 @@ use src\personas\domain\entity\Persona;
 use frontend\actividadcargos\helpers\FormCargosDeActividadHashCompose;
 use frontend\shared\web\BotonesCurso;
 use frontend\shared\web\Lista;
-use function src\shared\domain\helpers\is_true;
 
 /**
  * Widget del dossier `1302` (codigo `cargos_personas_en_actividad`): relacion
@@ -127,48 +126,16 @@ class Select_cargos_personas_en_actividad
             $aOperator
         );
 
-        $c = 0;
-        $a_valores = [];
-        foreach ($cCargosEnActividad as $oActividadCargo) {
-            $c++;
-            $id_item = $oActividadCargo->getId_item();
-            $id_activ = $oActividadCargo->getId_activ();
-            $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = $CargoRepository->findById($id_cargo);
-            $tipo_cargo = $oCargo?->getTipoCargoVo()?->value() ?? '';
-            $cargo = $oCargo?->getCargoVo()?->value() ?? '';
-            if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
-                continue;
-            }
-
-            $oActividad = $ActividadAllRepository->findById($id_activ);
-            $nom_activ = $oActividad->getNom_activ();
-            $id_tipo_activ = $oActividad->getId_tipo_activ();
-
-            $chk_puede_agd = is_true($oActividadCargo->isPuede_agd()) ? 'si' : 'no';
-            $observ = $oActividadCargo->getObserv();
-
-            $id_tipo = substr((string) $id_tipo_activ, 0, 3);
-            $act = !empty($this->ref_perm[$id_tipo]) ? $this->ref_perm[$id_tipo] : '';
-            $permiso = (!empty($act) && !empty($act['perm'])) ? 3 : 1;
-
-            $a_valores[$c]['sel'] = $permiso === 3 ? "$id_item#$elim_asis_default" : '';
-            $a_valores[$c][1] = $cargo;
-            $a_valores[$c][2] = $nom_activ;
-            $a_valores[$c][3] = $chk_puede_agd;
-            $a_valores[$c][4] = $observ;
-        }
-
-        if (!empty($a_valores)) {
-            if (!empty($this->Qid_sel)) {
-                $a_valores['select'] = $this->Qid_sel;
-            }
-            if (!empty($this->Qscroll_id)) {
-                $a_valores['scroll_id'] = $this->Qscroll_id;
-            }
-        }
-
-        $this->a_valores = $a_valores;
+        $this->a_valores = SelectCargosPersonasEnActividadTableData::buildValorRows(
+            $mi_sfsv,
+            $elim_asis_default,
+            $cCargosEnActividad,
+            $CargoRepository,
+            $ActividadAllRepository,
+            $this->ref_perm ?? [],
+            $this->Qid_sel,
+            $this->Qscroll_id,
+        );
     }
 
     public function getHtml(): string

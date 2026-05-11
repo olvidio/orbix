@@ -37,7 +37,7 @@ final class IngresoPlazasPrevistasUpdate
             return (string)_('no se encuentra el ingreso');
         }
 
-        $oIngreso->setNum_asistentes_previstos($plazas);
+        $oIngreso->setNumAsistentesPrevistosVo($plazas);
         if ($repo->Guardar($oIngreso) === false) {
             return (string)_('Hay un error, no se ha guardado')
                 . "\n" . $repo->getErrorTxt();
