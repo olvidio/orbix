@@ -8,40 +8,40 @@ class IdMatchPersona
 {
     use Hydratable;
 
-    /* ATRIBUTOS ----------------------------------------------------------------- */
+    /* ATRIBUTOS (nombres = columnas BD; Hydratable usa getId_* ↔ id_*) ------------- */
 
-    private int $iid_listas;
-    private ?int $iid_orbix;
-    private string $sid_tabla;
+    private int $id_listas;
+    private ?int $id_orbix;
+    private string $id_tabla;
 
 
     function getId_listas(): int
     {
-        return $this->iid_listas;
+        return $this->id_listas;
     }
 
-    function setId_listas(int $iid_listas)
+    function setId_listas(int $id_listas)
     {
-        $this->iid_listas = $iid_listas;
+        $this->id_listas = $id_listas;
     }
 
     function getId_orbix(): ?int
     {
-        return $this->iid_orbix;
+        return $this->id_orbix;
     }
 
-    function setId_orbix(?int $iid_orbix = null)
+    function setId_orbix(?int $id_orbix = null)
     {
-        $this->iid_orbix = $iid_orbix;
+        $this->id_orbix = $id_orbix;
     }
 
     function getId_tabla(): string
     {
-        return $this->sid_tabla;
+        return $this->id_tabla;
     }
 
-    function setId_tabla(?string $sid_tabla = null)
+    function setId_tabla(?string $id_tabla = null)
     {
-        $this->sid_tabla = $sid_tabla;
+        $this->id_tabla = $id_tabla ?? '';
     }
 }

@@ -41,18 +41,19 @@ class VerTrasladosData
             $a_reg_dl = explode('-', $dl_orbix);
             $dl_actual = substr($a_reg_dl[1], 0, -1);
 
-            $oPersonaOrbix = $repoPersona->findById($id_nom_orbix);
             $oDB = $oSincroDB->conexion($dl_orbix);
-            $oPersonaOrbix->setoDbl($oDB);
+            $repoPersona->setoDbl($oDB);
+            $oPersonaOrbix = $repoPersona->findById($id_nom_orbix);
 
             $a_persona_orbix[$i] = [
                 'id_nom_orbix' => $id_nom_orbix,
-                'ape_nom' => $oPersonaOrbix->getPrefApellidosNombre(),
-                'dl' => $oPersonaOrbix->getDl(),
+                'ape_nom' => $oPersonaOrbix?->getPrefApellidosNombre() ?? '',
+                'dl' => $oPersonaOrbix?->getDl() ?? '',
                 'dl_actual' => $dl_actual,
             ];
 
             $oSincroDB->restaurarConexion($oDB);
+            $repoPersona->setoDbl($GLOBALS['oDB']);
         }
 
         return ['personas' => $a_persona_orbix];

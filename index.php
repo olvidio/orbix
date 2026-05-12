@@ -188,7 +188,12 @@ if ($oPreferencia !== null) {
 }
 
 // Create the layout instance
-$oLayout = LayoutFactory::create($layout);
+try {
+    $oLayout = LayoutFactory::create($layout);
+} catch (\InvalidArgumentException) {
+    $layout = 'legacy';
+    $oLayout = LayoutFactory::create($layout);
+}
 
 $aWhere = array('id_role' => $oUsuario->getId_role());
 $cGrupMenuRoles = $GrupMenuRoleRepository->getGrupMenuRoles($aWhere);
@@ -276,8 +281,13 @@ $portada_html = ob_get_clean();
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <?php
     include_once(ServerConf::$dir_estilos . '/colores.php');
-    include_once(ServerConf::$dir_estilos . '/todo_en_uno.css.php');
-    include_once(ServerConf::$dir_estilos . '/slickgrid_orbix.css.php');
+    if ($layout === 'modern') {
+        include_once(ServerConf::$dir_estilos . '/todo_en_uno_moderno.css.php');
+        include_once(ServerConf::$dir_estilos . '/slickgrid_orbix_moderno.css.php');
+    } else {
+        include_once(ServerConf::$dir_estilos . '/todo_en_uno.css.php');
+        include_once(ServerConf::$dir_estilos . '/slickgrid_orbix.css.php');
+    }
 
     // Include CSS using the layout
     $layoutParams = [
@@ -374,7 +384,7 @@ $portada_html = ob_get_clean();
     ?>
 </head>
 
-<body class="otro" id="body">
+<body class="otro<?= $layout === 'modern' ? ' layout-modern' : '' ?>" id="body">
 <?php
 // Render the final HTML structure
 $renderParams = [

@@ -9,7 +9,7 @@ use src\menus\domain\entity\MenuDb;
 use src\shared\config\ConfigGlobal;
 
 /**
- * Datos para {@see \frontend\shared\layouts\BurgerLayout}: árbol de menús (JSON) y HTML del desplegable
+ * Datos para {@see \frontend\shared\layouts\BurgerLayout} y {@see \frontend\shared\layouts\ModernLayout}:
  * "Utilidades", sin acceso a repos desde `frontend/`.
  */
 final class MenusBurgerLayoutDataUseCase
