@@ -2,6 +2,7 @@
 
 namespace src\personas\domain;
 
+use PDO;
 use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
@@ -149,16 +150,16 @@ class Trasladar
         $this->df_traslado = $df_traslado;
     }
 
-    private function getConexionEsquema($esquema, $exterior = FALSE)
+    private function getConexionEsquema($esquema, $exterior = FALSE): PDO
     {
         $this->sresolved_esquema = $esquema;
 
-        if (ConfigGlobal::mi_sfsv() == 2) {
+        if (ConfigGlobal::mi_sfsv() === 2) {
             $database = 'sf';
             if ($exterior) {
                 $database = 'sf-e';
             }
-            if (ConfigGlobal::mi_region_dl() != $esquema) {
+            if (ConfigGlobal::mi_region_dl() !== $esquema) {
                 $esquema = 'restof';
             }
         } else {
@@ -188,33 +189,33 @@ class Trasladar
         return $oConexion->getPDO();
     }
 
-    private function getConexionOrg($exterior = FALSE)
+    private function getConexionOrg($exterior = FALSE): PDO
     {
         $this->snew_esquema = $this->sreg_dl_org;
         return $this->getConexionEsquema($this->snew_esquema, $exterior);
     }
 
-    private function restaurarConexionOrg($oDB)
+    private function restaurarConexionOrg($oDB): void
     {
         // Volver oDB a su estado original:
         $oDB->exec("SET search_path TO $this->path_ini_org");
         //$GLOBALS['oDBR'] = $oDBR;
     }
 
-    private function getConexionDst($exterior = FALSE)
+    private function getConexionDst($exterior = FALSE): PDO
     {
         $this->snew_esquema = $this->sreg_dl_dst;
         return $this->getConexionEsquema($this->snew_esquema, $exterior);
     }
 
-    private function restaurarConexionDst($oDB)
+    private function restaurarConexionDst($oDB): void
     {
         // Volver oDBR a su estado original:
         $oDB->exec("SET search_path TO $this->path_ini_dst");
     }
 
     /* -----------------------------------------------------------------------*/
-    public function trasladar()
+    public function trasladar(): array
     {
         if (($rta = $this->comprobar()) > 0) {
             $msg = $this->serror;
@@ -298,7 +299,7 @@ class Trasladar
         return $jsondata;
     }
 
-    private function comprobar()
+    private function comprobar(): int
     {
         $error = '';
         $rta = 0;
@@ -421,20 +422,19 @@ class Trasladar
      * @param integer id_mnom
      * @return array(schemaName, id_schema, situacion, f_situacion)
      */
-    public function getEsquemas($id_orbix, $tipo_persona)
+    public function getEsquemas($id_orbix, $tipo_persona): array
     {
         // posibles esquemas
         /*
          * @todo: filtrar por regiones?
          */
-        $oDBR = $GLOBALS['oDBR'];
-        $qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
-        $aResultSql = $qRs->fetchAll(\PDO::FETCH_ASSOC);
-        $aEsquemas = $aResultSql;
         //Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
         $oDBR = $GLOBALS['oDBR'];
+        $qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
+        $aResultSql = $qRs->fetchAll(PDO::FETCH_ASSOC);
+        $aEsquemas = $aResultSql;
         $qRs = $oDBR->query('SHOW search_path');
-        $aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
+        $aPath = $qRs->fetch(PDO::FETCH_ASSOC);
         $path_org = addslashes($aPath['search_path']);
         $aResult = [];
         foreach ($aEsquemas as $esquemaName) {
@@ -458,7 +458,7 @@ class Trasladar
                 $a_reg = explode('-', $esquema);
                 $reg = $a_reg[0];
                 $dl = substr($a_reg[1], 0, -1); // quito la v o la f.
-                if ($reg == $dl) {
+                if ($reg === $dl) {
                     continue;
                 }
             }
@@ -478,9 +478,9 @@ class Trasladar
             $esquema_slash = '"' . $esquema . '"';
             $oDBR->exec("SET search_path TO public,$esquema_slash");
             $qRs = $oDBR->query("SELECT '$esquema' as schemaName,id_schema,situacion,f_situacion FROM $tabla_personas WHERE id_nom=$id_orbix");
-            $Result = $qRs->fetchAll(\PDO::FETCH_ASSOC);
+            $Result = $qRs->fetchAll(PDO::FETCH_ASSOC);
             if (!empty($Result)) {
-                if (count($Result) == 1) {
+                if (count($Result) === 1) {
                     $aResult[] = $Result[0];
                 } else {
                     exit(_("no puede existir una persona con el mismo id!!"));
@@ -565,17 +565,17 @@ class Trasladar
         return true;
     }
 
-    protected function getOrgConnectionForCopyPersona(): \PDO
+    protected function getOrgConnectionForCopyPersona(): PDO
     {
         return $this->getConexionOrg();
     }
 
-    protected function getDstConnectionForCopyPersona(): \PDO
+    protected function getDstConnectionForCopyPersona(): PDO
     {
         return $this->getConexionDst();
     }
 
-    protected function schemaExistsInDatabase(\PDO $oDBorg, string $schema): ?bool
+    protected function schemaExistsInDatabase(PDO $oDBorg, string $schema): ?bool
     {
         $stmt = $oDBorg->prepare("SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = :schema) AS existe");
         if ($stmt === false || $stmt->execute(['schema' => $schema]) === false) {
@@ -585,7 +585,7 @@ class Trasladar
             }
             return null;
         }
-        $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $aDades = $stmt->fetch(PDO::FETCH_ASSOC);
         $rawExists = $aDades['existe'] ?? false;
 
         return in_array($rawExists, [true, 1, '1', 't', 'true'], true);
@@ -615,7 +615,7 @@ class Trasladar
         };
     }
 
-    private function appendDebugContext(string $error, \PDO $oDB, ?string $idTabla = null, ?object $repository = null): string
+    private function appendDebugContext(string $error, PDO $oDB, ?string $idTabla = null, ?object $repository = null): string
     {
         if (!$this->isTrasladoDebugEnabled()) {
             return $error;
@@ -634,7 +634,7 @@ class Trasladar
         return ConfigGlobal::is_debug_mode() || getenv('ORBIX_DEBUG_TRASLADO') === '1';
     }
 
-    private function buildDebugContext(\PDO $oDB, ?string $idTabla = null, ?object $repository = null): string
+    private function buildDebugContext(PDO $oDB, ?string $idTabla = null, ?object $repository = null): string
     {
         $parts = [];
         $parts[] = sprintf('[debug traslado] schema_solicitado=%s', $this->snew_esquema ?? '');
@@ -650,7 +650,7 @@ class Trasladar
 
         try {
             $row = $oDB->query("SELECT current_database() AS db, current_user AS usr, current_schema() AS sch, current_setting('search_path') AS sp")
-                ?->fetch(\PDO::FETCH_ASSOC);
+                ?->fetch(PDO::FETCH_ASSOC);
             if (!empty($row)) {
                 $parts[] = sprintf(
                     'db=%s user=%s current_schema=%s search_path=%s',
@@ -667,13 +667,13 @@ class Trasladar
         $repoDb = null;
         if ($repository !== null && method_exists($repository, 'getoDbl')) {
             try {
-                /** @var \PDO $repoDb */
+                /** @var PDO $repoDb */
                 $repoDb = $repository->getoDbl();
                 $sameConnection = spl_object_id($repoDb) === spl_object_id($oDB) ? 'SI' : 'NO';
                 $parts[] = sprintf('repo_misma_conexion=%s', $sameConnection);
 
                 $repoRow = $repoDb->query("SELECT current_database() AS db, current_user AS usr, current_schema() AS sch, current_setting('search_path') AS sp")
-                    ?->fetch(\PDO::FETCH_ASSOC);
+                    ?->fetch(PDO::FETCH_ASSOC);
                 if (!empty($repoRow)) {
                     $parts[] = sprintf(
                         'repo_db=%s repo_user=%s repo_current_schema=%s repo_search_path=%s',
@@ -692,7 +692,7 @@ class Trasladar
             $stmt = $oDB->prepare('SELECT id_tabla, dl, situacion FROM personas_dl WHERE id_nom = :id_nom');
             if ($stmt !== false) {
                 $stmt->execute(['id_nom' => $this->iid_nom]);
-                $personaDl = $stmt->fetch(\PDO::FETCH_ASSOC);
+                $personaDl = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($personaDl === false) {
                     $parts[] = 'personas_dl=NO';
                 } else {
@@ -722,7 +722,7 @@ class Trasladar
                     // noop
                 }
 
-                if ($repoDb instanceof \PDO) {
+                if ($repoDb instanceof PDO) {
                     try {
                         $stmtRepo = $repoDb->prepare("SELECT 1 FROM $tabla WHERE id_nom = :id_nom");
                         if ($stmtRepo !== false) {
@@ -767,7 +767,7 @@ class Trasladar
                 $_SESSION['oGestorErrores']->addErrorAppLastError($qRs, $sClauError, __LINE__, __FILE__);
                 return false;
             }
-            $aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
+            $aSchema = $qRs->fetch(PDO::FETCH_ASSOC);
             $id_schema_persona = $aSchema['id'];
             foreach ($collection as $oPersonaNotaDB) {
                 /*
@@ -1104,7 +1104,7 @@ class Trasladar
         return true;
     }
 
-    protected function repositoryWithConnection(string $repositoryId, \PDO $oDbl, ?\PDO $oDblSelect = null): object
+    protected function repositoryWithConnection(string $repositoryId, PDO $oDbl, ?PDO $oDblSelect = null): object
     {
         $factory = $GLOBALS['container']->get(ConnectionRepositoryFactoryInterface::class);
 
@@ -1143,11 +1143,11 @@ class Trasladar
     /**
      * para poder ver donde esta conectado al hacer pruebas.
      *
-     * @param \PDO $conn
+     * @param PDO $conn
      */
-    private function verConexion(\PDO $conn)
+    private function verConexion(PDO $conn)
     {
-        $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $attributes = array(
             "ERRMODE", "CASE", "CLIENT_VERSION", "CONNECTION_STATUS",
