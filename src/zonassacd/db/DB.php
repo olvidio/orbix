@@ -3,7 +3,7 @@
 namespace zonassacd\db;
 
 use src\shared\config\ConfigGlobal;
-use src\configuracion\domain\DBAbstract;
+use src\utils_database\domain\entity\DBAbstract;
 
 /**
  * Crear las tablas necesaria a nivel de aplicación (global).

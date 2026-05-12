@@ -129,10 +129,19 @@
       <path value="$PROJECT_DIR$/libs/vendor/phpoption/phpoption" />
       <path value="$PROJECT_DIR$/libs/vendor/graham-campbell/result-type" />
       <path value="$PROJECT_DIR$/libs/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/libs/vendor/phpstan/phpstan" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
+  </component>
+  <component name="PhpStan">
+    <PhpStan_settings>
+      <PhpStanConfiguration tool_path="$PROJECT_DIR$/libs/vendor/bin/phpstan" />
+    </PhpStan_settings>
+  </component>
+  <component name="PhpStanOptionsConfiguration">
+    <option name="config" value="$PROJECT_DIR$/phpstan.neon" />
   </component>
   <component name="PhpUnit">
     <phpunit_settings>

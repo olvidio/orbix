@@ -2,6 +2,7 @@
 
 namespace src\personas\domain;
 
+use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
@@ -184,10 +185,7 @@ class Trasladar
         $config['schema'] = $esquema;
         $oConexion = new DBConnection($config);
 
-        $oDB = $oConexion->getPDO();
-
-        //$this->verConexion($oDB);
-        return $oDB;
+        return $oConexion->getPDO();
     }
 
     private function getConexionOrg($exterior = FALSE)
@@ -1173,7 +1171,7 @@ class Trasladar
         $oCertificadoRecibido = new CertificadoRecibido();
         $oCertificadoRecibido->setId_nom($Certificado->getId_nom());
         $oCertificadoRecibido->setNom($Certificado->getNom());
-        $oCertificadoRecibido->setIdioma($Certificado->getIdioma());
+        $oCertificadoRecibido->setIdiomaVo(LocaleCode::fromNullableString($Certificado->getIdioma()));
         $oCertificadoRecibido->setDestino($Certificado->getDestino());
         $oCertificadoRecibido->setCertificado($Certificado->getCertificado());
         $oCertificadoRecibido->setF_certificado($Certificado->getF_certificado());

@@ -1,0 +1,14 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 9
+    paths:
+        - src
+        - frontend
+    # Ampliar memoria en CI o monorepos grandes: COMPOSER_MEMORY_LIMIT=2G o --memory-limit
+    tmpDir: .phpstan/cache
+    # gettext / helpers cargados vía composer "files"
+    scanFiles:
+        - frontend/shared/helpers/func_tablas.php
+        - src/shared/domain/helpers/func_tablas.php

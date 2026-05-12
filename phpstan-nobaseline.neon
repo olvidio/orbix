@@ -1,0 +1,11 @@
+# Misma configuración que phpstan.neon pero sin baseline: ver avisos “reales”.
+# Uso:
+#   php libs/vendor/bin/phpstan analyse -c phpstan-nobaseline.neon --memory-limit=2G src/personas/domain/Trasladar.php
+# O vía Composer: composer phpstan:file -- src/personas/domain/Trasladar.php
+
+parameters:
+    level: 9
+    tmpDir: .phpstan/cache
+    scanFiles:
+        - frontend/shared/helpers/func_tablas.php
+        - src/shared/domain/helpers/func_tablas.php

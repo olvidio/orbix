@@ -29,7 +29,8 @@
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^11.2",
-    "fakerphp/faker": "^1.23"
+    "fakerphp/faker": "^1.23",
+    "phpstan/phpstan": "^2.1"
   },
   "autoload": {
         "psr-4": {
@@ -59,6 +60,9 @@
     ],
     "test:coverage": "env XDEBUG_MODE=coverage php libs/vendor/bin/phpunit --configuration phpunit.xml --coverage-text",
     "test:coverage:unit": "env XDEBUG_MODE=coverage php libs/vendor/bin/phpunit --configuration phpunit.xml --testsuite unit --coverage-text",
-    "test:coverage:html": "env XDEBUG_MODE=coverage php libs/vendor/bin/phpunit --configuration phpunit.xml --testsuite unit --coverage-html build/phpunit-coverage-html"
+    "test:coverage:html": "env XDEBUG_MODE=coverage php libs/vendor/bin/phpunit --configuration phpunit.xml --testsuite unit --coverage-html build/phpunit-coverage-html",
+    "phpstan": "php libs/vendor/bin/phpstan analyse --memory-limit=2G",
+    "phpstan:baseline": "php libs/vendor/bin/phpstan analyse --memory-limit=2G --generate-baseline phpstan-baseline.neon",
+    "phpstan:file": "php libs/vendor/bin/phpstan analyse --memory-limit=2G -c phpstan-nobaseline.neon"
   }
 }

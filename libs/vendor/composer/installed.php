@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '3b0b81767d1d112bd5ae8d165082e60fd48c3db6',
+        'reference' => 'ef1d35acf15f3c2e170843c08c885f557d29e5a5',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3b0b81767d1d112bd5ae8d165082e60fd48c3db6',
+            'reference' => 'ef1d35acf15f3c2e170843c08c885f557d29e5a5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../../',
             'aliases' => array(),
@@ -351,6 +351,15 @@
             'install_path' => __DIR__ . '/../phpoption/phpoption',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'phpstan/phpstan' => array(
+            'pretty_version' => '2.1.54',
+            'version' => '2.1.54.0',
+            'reference' => '8be50c3992107dc837b17da4d140fbbdf9a5c5bd',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpstan/phpstan',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'phpunit/php-code-coverage' => array(
             'pretty_version' => '11.0.9',

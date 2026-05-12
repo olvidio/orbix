@@ -2,11 +2,11 @@
 
 namespace src\actividadescentro\domain;
 
-use core\DatosInfo;
+use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 
-class Info3010 extends DatosInfo
+class Info3010 extends DatosInfoRepo
 {
 
     public function __construct()

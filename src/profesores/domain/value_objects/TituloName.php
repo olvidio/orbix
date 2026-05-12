@@ -35,7 +35,7 @@ final class TituloName
 
     public static function fromNullable(?string $value): ?self
     {
-
+        return self::fromNullableString($value);
     }
 
     public static function fromNullableString(?string $value): ?self
