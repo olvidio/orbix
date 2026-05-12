@@ -1049,6 +1049,37 @@ class HashFront
 }
 
     /**
+     * Convierte `campo[0]`, `campo[1]`, … en la clave canónica `campo` cuando el hash del
+     * formulario se generó solo con `campo` (p. ej. {@see DesplegableArray} + CasasQue).
+     *
+     * @param array<string, mixed> $aPOST
+     * @param list<string> $canonicalBases
+     * @return array<string, mixed>
+     */
+    private static function collapseIndexedPostKeysToCanonical(array $aPOST, array $canonicalBases): array
+    {
+        foreach ($canonicalBases as $base) {
+            // PHP agrupa `id_cdc[0]=…` en `$_POST['id_cdc'][0]`, no como clave literal `id_cdc[0]`.
+            if (isset($aPOST[$base]) && is_array($aPOST[$base])) {
+                $aPOST[$base] = '';
+            }
+            $pattern = '/^' . preg_quote($base, '/') . '\[\d+]$/';
+            $hadIndexed = false;
+            foreach (array_keys($aPOST) as $k) {
+                if (preg_match($pattern, (string)$k)) {
+                    $hadIndexed = true;
+                    unset($aPOST[$k]);
+                }
+            }
+            if ($hadIndexed && !array_key_exists($base, $aPOST)) {
+                $aPOST[$base] = '';
+            }
+        }
+
+        return $aPOST;
+    }
+
+    /**
      * Devuelve los parametros preparados para calcular el hash.
      *
      * Ordena los parametros para que al calcular el hash  estén siempre en el mismo orden.
@@ -1097,6 +1128,11 @@ class HashFront
                 unset($aPOST[$key]);
             }
         }
+        // DesplegableArray envía `name="id_cdc[n]"` → PHP usa `$_POST['id_cdc'][n]` (array) o, en
+        // entornos raros, claves literales `id_cdc[n]`. El hash del formulario usa la clave
+        // canónica `id_cdc` (ver ordenarQuery sobre sCamposForm). Sin normalizar, validatePost
+        // puede fallar → 302 a index.php.
+        $aPOST = self::collapseIndexedPostKeysToCanonical($aPOST, ['id_cdc']);
         ksort($aPOST);
         if (is_array($aPOST)) {
             array_walk($aPOST, self::poner_empty_on_null(...));

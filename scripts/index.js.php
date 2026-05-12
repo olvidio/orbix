@@ -580,6 +580,15 @@ if (!isset($h)) {
         // Destacar filas seleccionadas inicialmente en tablas HTML
         $(bloque).find('table input.sel:checked').closest('tr').addClass('selected_row');
         if (bloque === '#main') {
+            // Tras AJAX en #main, UDM puede quedar con um.tr/um.n incoherentes; refrescar evita errores en consola (cck/contains).
+            setTimeout(function () {
+                try {
+                    if (typeof window.um !== 'undefined' && window.um.tr && typeof window.um.refresh === 'function' && document.getElementById('udm')) {
+                        window.um.refresh(0);
+                    }
+                } catch (e) {
+                }
+            }, 0);
             setTimeout(function () {
                 sessionStorage.removeItem('is_back_navigation');
             }, 1000);

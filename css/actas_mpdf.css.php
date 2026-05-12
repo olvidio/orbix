@@ -1,13 +1,3 @@
-<?php 
-// INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
-?>
 <style>
 
 div.A4 {  
@@ -34,8 +24,7 @@ div.cabecera {
 div.region { 
 	display: block;
 	margin-top: 5pt;
-	font-weight: bold; 
-	font-size: 18pt; 
+	font-size: 18pt;
 	text-align : left;
 	font-weight: normal;
 	line-height: 24pt ;
@@ -107,7 +96,7 @@ div.acta {
 	margin-top:	-6mm;
 	float: right;
 	text-align: right;
-	margin-right: 0cm;
+	margin-right: 0;
 	}
 div.f7 {	
 	display: block;
@@ -121,8 +110,8 @@ table.alumni {
 	margin-top: 1cm;
 	width: 99% ;
 	height: 12pt;
-	border: 0pt;
-	font-family: 'Times new Roman';
+	border: 0;
+    font-family: 'Times new Roman', serif;
 	font-size: 12pt; 
 }
 td.alumni {
@@ -134,12 +123,12 @@ td.alumni {
 	}
 td.alumno {	
 	text-align: left;
-	text-indent: 0cm;
+	text-indent: 0;
 	line-height: 14pt ;
 	}
 td.nota {	
 	text-align: left;
-	text-indent: 0cm;
+	text-indent: 0;
 	line-height: 12pt ;
 	}
 td.linea {

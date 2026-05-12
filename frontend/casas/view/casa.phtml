@@ -1,97 +1,97 @@
-<script>
-fnjs_mas_casas = function (e) {
-    var code = (e.keyCode ? e.keyCode : e.which);
-    if (e === 'x') {
-        var valor = 1;
-    } else {
-        var id_campo = '#' + e.currentTarget.id;
-        var valor = $(id_campo).val();
-        if (code !== 9) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    }
-    if (code === 9 || e.type === 'change' || e === 'x') {
-        if (valor != 0) {
-            <?= $oSelects->ListaSelectsJs() ?>
-        }
-    }
-};
-<?= $oSelects->ComprobarSelectJs() ?>
-
-fnjs_cerrar = function () {
-    $('#div_modificar').html('');
-    $('#div_modificar').width('0');
-    $('#div_modificar').height('0');
-    $('#div_modificar').removeClass('ventana');
-    document.getElementById('overlay').style.display = 'none';
-};
-
-fnjs_modificar = function (id_activ) {
-    $('#div_modificar').addClass('ventana');
-    $('#div_modificar').width('auto');
-    $('#div_modificar').height('auto');
-    document.getElementById('overlay').style.display = 'block';
-
-    var url = '<?= $url_form ?>';
-    var sep = url.indexOf('?') === -1 ? '?' : '&';
-    fnjs_update_div('#div_modificar', url + sep + 'id_activ=' + id_activ);
-};
-
-fnjs_ver = function () {
-    var pata = $('#seleccion').serialize();
-    var url = '<?= $url_ajax ?>';
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: pata,
-        success: function (rta_txt) {
-            if (rta_txt) {
-                $('#exportar').html(rta_txt);
-            }
-        }
-    });
-};
-
-fnjs_guardar = function (formulario, que) {
-    var err = 0;
-    if (que === 'eliminar') {
-        var seguro = confirm(<?= json_encode((string)$txt_eliminar) ?>);
-        err = seguro ? 0 : 1;
-    }
-    if (err === 1) { return; }
-
-    var url = (que === 'eliminar') ? '<?= $url_eliminar ?>' : '<?= $url_update ?>';
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: $(formulario).serialize(),
-        dataType: 'json'
-    }).done(function (rta) {
-        if (!rta || rta.success !== true) {
-            alert((rta && rta.mensaje) ? rta.mensaje : '');
-        } else {
-            fnjs_cerrar();
-        }
-        fnjs_ver();
-    });
-};
-</script>
 <form id="seleccion" name="seleccion" action="">
-<?= $oHash->getCamposHtml() ?>
-<?php if ($periodo === 'no'): ?>
-    <?= $oForm->getHtmlTabla2() ?>
-<?php else: ?>
-    <?= $oFormP?->getHtml() ?? '' ?>
-<?php endif; ?>
+    <?= $oHash->getCamposHtml() ?>
+    <?php if ($periodo === 'no'): ?>
+        <?= $oForm->getHtmlTabla2() ?>
+    <?php else: ?>
+        <?= $oFormP?->getHtml() ?? '' ?>
+    <?php endif; ?>
 </form>
 <div id="exportar"></div>
 <div id="div_modificar"></div>
 <div id="overlay"></div>
-<?php if ($id_ubi): ?>
+
 <script>
-$('#id_cdc_mas').val(<?= (int)$id_ubi ?>);
-fnjs_mas_casas('x');
-fnjs_ver();
+    fnjs_mas_casas = function (e) {
+        let code = (e.keyCode ? e.keyCode : e.which);
+        let valor = 1;
+        if (e !== 'x') {
+            let id_campo = '#' + e.currentTarget.id;
+            valor = $(id_campo).val();
+            if (code !== 9) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+        if (code === 9 || e.type === 'change' || e === 'x') {
+            if (valor !== 0) {
+                <?= $oSelects->ListaSelectsJs() ?>
+            }
+        }
+    };
+    <?= $oSelects->ComprobarSelectJs() ?>
+
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById('overlay').style.display = 'none';
+    };
+
+    fnjs_modificar = function (id_activ) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById('overlay').style.display = 'block';
+
+        var url = '<?= $url_form ?>';
+        var sep = url.indexOf('?') === -1 ? '?' : '&';
+        fnjs_update_div('#div_modificar', url + sep + 'id_activ=' + id_activ);
+    };
+
+    fnjs_ver = function () {
+        var pata = $('#seleccion').serialize();
+        var url = '<?= $url_ajax ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: pata,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $('#exportar').html(rta_txt);
+                }
+            }
+        });
+    };
+
+    fnjs_guardar = function (formulario, que) {
+        var err = 0;
+        if (que === 'eliminar') {
+            var seguro = confirm(<?= json_encode((string)$txt_eliminar) ?>);
+            err = seguro ? 0 : 1;
+        }
+        if (err === 1) {
+            return;
+        }
+
+        var url = (que === 'eliminar') ? '<?= $url_eliminar ?>' : '<?= $url_update ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: $(formulario).serialize(),
+            dataType: 'json'
+        }).done(function (rta) {
+            if (!rta || rta.success !== true) {
+                alert((rta && rta.mensaje) ? rta.mensaje : '');
+            } else {
+                fnjs_cerrar();
+            }
+            fnjs_ver();
+        });
+    };
+    <?php if ($id_ubi): ?>
+        $('#id_cdc_mas').val(<?= (int)$id_ubi ?>);
+        fnjs_mas_casas('x');
+        fnjs_ver();
+    <?php endif; ?>
 </script>
-<?php endif; ?>

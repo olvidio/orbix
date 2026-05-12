@@ -16,6 +16,7 @@ class CasasQue
     private ?string $sTitulo = null;
     private array $aCasas = [];
     private ?Desplegable $oDesplCasas = null;
+    private ?DesplegableArray $oSelects = null;
     private ?string $sSeleccionados = null;
     private int $cdc_sel;
     private mixed $sBoton = null;
@@ -38,30 +39,29 @@ class CasasQue
     public function getHtmlTabla2(): string
     {
         $aOpcionesCasas = $this->getDesplCasas()->getOpciones();
-        $oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
-        $oSelects->setBlanco('t');
-        $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
+        $this->oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
+        $this->oSelects->setBlanco('t');
+        $this->oSelects->setAccionConjunto('fnjs_mas_casas(event)');
         if (!empty($this->sSeleccionados)) {
-            $oSelects->setSeleccionados($this->sSeleccionados);
+            $this->oSelects->setSeleccionados($this->sSeleccionados);
         }
 
         $sHtml = '<script>
 		fnjs_mas_casas = function(evt) {
-			if(evt=="x") {
-				var valor=1;
-			} else {
-				var id_campo=evt.currentTarget.id;
-				var valor=$(id_campo).val();
+            let valor=1;
+			if(evt!=="x") {
+				let id_campo=evt.currentTarget.id;
+				valor=$(id_campo).val();
 				evt.preventDefault();
 				evt.stopPropagation();
 			}
-			if (evt.keyCode==9 || evt.type=="change" || evt=="x") {
-				if (valor!=0) {
-					' . $oSelects->ListaSelectsJs() . '
+			if (evt.keyCode===9 || evt.type==="change" || evt==="x") {
+				if (valor!==0) {
+					' . $this->oSelects->ListaSelectsJs() . '
 				}
 			}
 		}';
-        $sHtml .= $oSelects->ComprobarSelectJs();
+        $sHtml .= $this->oSelects->ComprobarSelectJs();
         $sHtml .= '</script>';
         $sHtml .= '<table>';
         if (!empty($this->sTitulo)) {
@@ -73,7 +73,7 @@ class CasasQue
         if (isset($this->sAntes)) {
             $sHtml .= '<td>' . $this->sAntes . '</td>';
         }
-        $sHtml .= '<td>' . $oSelects->ListaSelects() . '</td>';
+        $sHtml .= '<td>' . $this->oSelects->ListaSelects() . '</td>';
         if (isset($this->sBoton)) {
             $sHtml .= '<td>' . $this->sBoton . '</td>';
         }
@@ -87,16 +87,16 @@ class CasasQue
     public function getHtmlTabla(): string
     {
         $aOpcionesCasas = $this->getDesplCasas()->getOpciones();
-        $oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
-        $oSelects->setBlanco('t');
-        $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
+        $this->oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
+        $this->oSelects->setBlanco('t');
+        $this->oSelects->setAccionConjunto('fnjs_mas_casas(event)');
         if (!empty($this->sSeleccionados)) {
-            $oSelects->setSeleccionados($this->sSeleccionados);
+            $this->oSelects->setSeleccionados($this->sSeleccionados);
         }
 
         $sHtml = '<script>
-		funjs_otro = function(v) {
-			if (v==1) {
+		fnjs_otro = function(v) {
+			if (v===1) {
 				$(\'#id_cdc_span\').addClass(\'d_visible\');
 				$(\'#cdc_sel_9\').prop("checked",true);
 			} else {
@@ -104,22 +104,21 @@ class CasasQue
 			}
 		}
 		fnjs_mas_casas = function(evt) {
-			funjs_otro(1);
-			if(evt=="x") {
-				var valor=1;
-			} else {
-				var id_campo=evt.currentTarget.id;
-				var valor=$(id_campo).val();
+			fnjs_otro(1);
+            let valor=1;
+			if(evt!=="x") {
+				let id_campo=evt.currentTarget.id;
+				valor=$(id_campo).val();
 				evt.preventDefault();
 				evt.stopPropagation();
 			}
-			if (evt.keyCode==9 || evt.type=="change" || evt=="x") {
-				if (valor!=0) {
-					' . $oSelects->ListaSelectsJs() . '
+			if (evt.keyCode===9 || evt.type==="change" || evt==="x") {
+				if (valor!==0) {
+					' . $this->oSelects->ListaSelectsJs() . '
 				}
 			}
 		}';
-        $sHtml .= $oSelects->ComprobarSelectJs();
+        $sHtml .= $this->oSelects->ComprobarSelectJs();
         $sHtml .= '</script>';
         $sHtml .= '<table>';
         $sHtml .= '<tr><th class=titulo_inv colspan="3">';
@@ -131,10 +130,10 @@ class CasasQue
                 $chk_cdc = 'checked';
             }
             if ($inum === 9) {
-                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(1);" ' . $chk_cdc . '>' . $sCasa . '</td>';
-                $sHtml .= '<td>' . $oSelects->ListaSelects() . '</td>';
+                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="fnjs_otro(1);" ' . $chk_cdc . '>' . $sCasa . '</td>';
+                $sHtml .= '<td>' . $this->oSelects->ListaSelects() . '</td>';
             } else {
-                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(0);" ' . $chk_cdc . '>' . $sCasa . '</td></tr>';
+                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="fnjs_otro(0);" ' . $chk_cdc . '>' . $sCasa . '</td></tr>';
             }
         }
         $sHtml .= '<tr><td> </td></tr>';
@@ -195,7 +194,7 @@ class CasasQue
             $oDesplCasas = new Desplegable();
             $oDesplCasas->setNombre('id_cdc');
             $oDesplCasas->setBlanco(true);
-            $oDesplCasas->setAction('funjs_otro(1)');
+            $oDesplCasas->setAction('fnjs_otro(1)');
             $this->oDesplCasas = $oDesplCasas;
         }
         $this->oDesplCasas->setOpciones($this->fetchOpciones($filtro));
@@ -213,10 +212,24 @@ class CasasQue
             $oDesplCasas->setNombre('id_cdc');
             $oDesplCasas->setOpciones($this->fetchOpciones($this->aFiltroCasas));
             $oDesplCasas->setBlanco(true);
-            $oDesplCasas->setAction('funjs_otro(1)');
+            $oDesplCasas->setAction('fnjs_otro(1)');
             $this->oDesplCasas = $oDesplCasas;
         }
         return $this->oDesplCasas;
+    }
+
+    public function getSelects(): DesplegableArray
+    {
+        if (!isset($this->oSelects)) {
+            $aOpcionesCasas = $this->getDesplCasas()->getOpciones();
+            $this->oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
+            $this->oSelects->setBlanco('t');
+            $this->oSelects->setAccionConjunto('fnjs_mas_casas(event)');
+            if (!empty($this->sSeleccionados)) {
+                $this->oSelects->setSeleccionados($this->sSeleccionados);
+            }
+        }
+        return $this->oSelects;
     }
 
     public function setAction($sAction): void
@@ -274,7 +287,7 @@ class CasasQue
     {
         $campos = self::normalizaFiltroParaPost($filtro);
         $data = PostRequest::getDataFromUrl('/src/ubis/casas_opciones_data', $campos);
-        if (!is_array($data) || !isset($data['opciones']) || !is_array($data['opciones'])) {
+        if (!isset($data['opciones']) || !is_array($data['opciones'])) {
             return [];
         }
         return $data['opciones'];

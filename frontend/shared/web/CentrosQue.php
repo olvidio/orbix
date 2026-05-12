@@ -41,16 +41,15 @@ class CentrosQue
         $oSelects->setAccionConjunto('fnjs_mas_centros(event)');
         $sHtml = '<script>
 		fnjs_mas_centros = function(evt) {
-			if(evt=="x") {
-				var valor=1;
-			} else {
-				var id_campo=evt.currentTarget.id;
-				var valor=$(id_campo).val();
+            let valor=1;
+			if(evt!=="x") {
+				let id_campo=evt.currentTarget.id;
+				valor=$(id_campo).val();
 				evt.preventDefault();
 				evt.stopPropagation();
 			}
-			if (evt.keyCode==9 || evt.type=="change" || evt=="x") {
-				if (valor!=0) {
+			if (evt.keyCode===9 || evt.type==="change" || evt==="x") {
+				if (valor!==0) {
 					' . $oSelects->ListaSelectsJs() . '
 				}
 			}
@@ -85,8 +84,8 @@ class CentrosQue
         $oSelects->setBlanco('t');
         $oSelects->setAccionConjunto('fnjs_mas_centros(event)');
         $sHtml = '<script>
-		funjs_otro = function(v) {
-			if (v==1) {
+		fnjs_otro = function(v) {
+			if (v===1) {
 				$(\'#id_ctr_span\').addClass(\'d_visible\');
 				$(\'#ctr_sel_9\').prop("checked",true);
 			} else {
@@ -94,17 +93,16 @@ class CentrosQue
 			}
 		}
 		fnjs_mas_centros = function(evt) {
-			funjs_otro(1);
-			if(evt=="x") {
-				var valor=1;
-			} else {
-				var id_campo=evt.currentTarget.id;
-				var valor=$(id_campo).val();
+			fnjs_otro(1);
+			let valor=1;
+			if(evt!=="x") {
+				let id_campo=evt.currentTarget.id;
+				valor=$(id_campo).val();
 				evt.preventDefault();
 				evt.stopPropagation();
 			}
-			if (evt.keyCode==9 || evt.type=="change" || evt=="x") {
-				if (valor!=0) {
+			if (evt.keyCode===9 || evt.type==="change" || evt==="x") {
+				if (valor!==0) {
 					' . $oSelects->ListaSelectsJs() . '
 				}
 			}
@@ -117,10 +115,10 @@ class CentrosQue
         $sHtml .= '</th></tr>';
         foreach ($this->aCentros as $inum => $sCentro) {
             if ($inum === 9) {
-                $sHtml .= '<tr><td><input type="radio" id="ctr_sel_' . $inum . '" name="ctr_sel" value="' . $inum . '" onClick="funjs_otro(1);">' . $sCentro . '</td>';
+                $sHtml .= '<tr><td><input type="radio" id="ctr_sel_' . $inum . '" name="ctr_sel" value="' . $inum . '" onClick="fnjs_otro(1);">' . $sCentro . '</td>';
                 $sHtml .= '<td>' . $oSelects->ListaSelects() . '</td>';
             } else {
-                $sHtml .= '<tr><td><input type="radio" id="ctr_sel_' . $inum . '" name="ctr_sel" value="' . $inum . '" onClick="funjs_otro(0);">' . $sCentro . '</td></tr>';
+                $sHtml .= '<tr><td><input type="radio" id="ctr_sel_' . $inum . '" name="ctr_sel" value="' . $inum . '" onClick="fnjs_otro(0);">' . $sCentro . '</td></tr>';
             }
         }
         $sHtml .= '<tr><td> </td></tr>';
@@ -182,7 +180,7 @@ class CentrosQue
             $oDesplCentros = new Desplegable();
             $oDesplCentros->setNombre('id_ctr');
             $oDesplCentros->setBlanco(true);
-            $oDesplCentros->setAction('funjs_otro(1)');
+            $oDesplCentros->setAction('fnjs_otro(1)');
             $this->oDesplCentros = $oDesplCentros;
         }
         $this->oDesplCentros->setOpciones($this->fetchOpciones($filtro));
@@ -200,7 +198,7 @@ class CentrosQue
             $oDesplCentros->setNombre('id_ctr');
             $oDesplCentros->setOpciones($this->fetchOpciones($this->aFiltroCentros));
             $oDesplCentros->setBlanco(true);
-            $oDesplCentros->setAction('funjs_otro(1)');
+            $oDesplCentros->setAction('fnjs_otro(1)');
             $this->oDesplCentros = $oDesplCentros;
         }
         return $this->oDesplCentros;
@@ -242,7 +240,7 @@ class CentrosQue
     {
         $campos = self::normalizaFiltroParaPost($filtro);
         $data = PostRequest::getDataFromUrl('/src/ubis/centros_opciones_data', $campos);
-        if (!is_array($data) || !isset($data['opciones']) || !is_array($data['opciones'])) {
+        if (!isset($data['opciones']) || !is_array($data['opciones'])) {
             return [];
         }
         return $data['opciones'];

@@ -46,9 +46,8 @@ if ($miRolePau === 'cdc') {
 $oForm->setFiltroCasas($filtro);
 $oForm->setAction('');
 
-$oSelects = $oForm->getDesplCasas();
+$oSelects = $oForm->getSelects();
 $oSelects->setAction('');
-$oSelects->setAccionConjunto('fnjs_mas_casas(event)');
 
 $aOpciones = [
     'tot_any' => _('todo el año'),
@@ -90,4 +89,4 @@ $a_campos = [
 ];
 
 $oView = new ViewNewPhtml('frontend\\casas\\controller');
-$oView->renderizar('casa_resumen.phtml', $a_campos);
+$oView->renderizar('casas_resumen.phtml', $a_campos);

@@ -274,10 +274,10 @@ class DateTimeLocal extends DateTime
          * s 	Seconds, numeric
          */
         $interval = $this->diff($oDateOtra);
-        $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + $interval->format('%i') / 60 + $interval->format('%s') / 3600;
+        $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + (int)$interval->format('%i') / 60 + (int)$interval->format('%s') / 3600;
         $horas = $horas + 12;
         $dias_con_decimales = $horas / 24;
-        $dias_enteros = (int)($dias_con_decimales % $horas);
+        $dias_enteros = (int) floor($dias_con_decimales);
         $decimales = round(($dias_con_decimales - $dias_enteros), 1);
         if ($decimales > 0.1) {
             $decimal_redondeado = 0.5;

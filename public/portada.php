@@ -61,7 +61,7 @@ $oHash->setArrayCamposHidden(['id_grupmenu' => $id_grupmenu]);
             $('#mod').val("eliminar");
             var request = $.ajax({
                 data: $(formulario).serialize(),
-                url: 'apps/tablonanuncios/controller/anuncio_delete.php',
+                url: 'src/tablonanuncios/anuncio_delete',
                 method: 'POST',
                 dataType: 'json'
             });

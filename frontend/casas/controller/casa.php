@@ -55,9 +55,7 @@ if ($miRolePau === 'cdc') {
 $oForm->setFiltroCasas($filtro);
 $oForm->setAction('');
 
-$oSelects = $oForm->getDesplCasas();
-$oSelects->setAction('');
-$oSelects->setAccionConjunto('fnjs_mas_casas(event)');
+$oSelects = $oForm->getSelects();
 
 $oFormP = null;
 if ($Qperiodo === 'no') {
@@ -92,7 +90,9 @@ if ($Qperiodo === 'no') {
 
 $web = AppUrlConfig::getPublicAppBaseUrl();
 
-$sCamposForm = 'que!id_cdc!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!year';
+// Solo nombres que realmente envía `#seleccion` (serialize): no hay `que`, `tipo_lista` ni radios `cdc_sel`
+// en esta vista (solo DesplegableArray `id_cdc[*]` + periodo/year/fechas + hidden del hash).
+$sCamposForm = 'id_cdc!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!year';
 
 switch ($Qtipo_lista) {
     case 'lista_activ':

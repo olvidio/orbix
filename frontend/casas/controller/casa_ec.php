@@ -41,9 +41,8 @@ if ($miRolePau === 'cdc') {
 $oForm->setFiltroCasas($filtro);
 $oForm->setAction('');
 
-$oSelects = $oForm->getDesplCasas();
+$oSelects = $oForm->getSelects();
 $oSelects->setAction('');
-$oSelects->setAccionConjunto('fnjs_mas_casas(event)');
 
 $oForm->setTitulo(strtoupper_dlb((string)_("resumen económico")));
 $oForm->setBoton("<input type='button' name='buscar' value='" . _('buscar') . "' onclick='fnjs_ver();'>");

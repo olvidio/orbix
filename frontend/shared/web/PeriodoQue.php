@@ -34,8 +34,8 @@ class PeriodoQue
         if (empty($this->sFormName)) $this->sFormName = 'modifica';
         $sHtml = '<script>
 			funjs_activar_fecha = function() {
-				var f=$(\'#periodo\').val();	
-				if (f==\'otro\') {
+				let f=$(\'#periodo\').val();
+				if (f===\'otro\') {
 					$(\'#span_fechas\').addClass(\'d_visible\');
 					$(\'#span_fechas\').removeClass(\'d_novisible\');
 				} else {
@@ -73,8 +73,8 @@ class PeriodoQue
     {
         $sHtml = '<script>
 			funjs_activar_fecha = function() {
-				var f=$(\'#periodo\').val();	
-				if (f==\'otro\') {
+				let f=$(\'#periodo\').val();
+				if (f===\'otro\') {
 					$(\'#span_fechas\').addClass(\'d_visible\');
 					$(\'#span_fechas\').removeClass(\'d_novisible\');
 				} else {
