@@ -64,7 +64,7 @@ class ZonaCtrLista
             'tipo' => 'tabla',
             'id_tabla' => 'zona_ctr_ajax',
             'a_cabeceras' => [_("centro"), _("zona")],
-            'a_botones' => 'ninguno',
+            'a_botones' => [],
             'a_valores' => $a_valores,
             'error' => '',
         ];

@@ -10,20 +10,71 @@ use frontend\shared\security\HashFront;
 
 class PostRequest
 {
+    /**
+     * Clave reservada cuando el JSON interno de `data` es un escalar (poco frecuente).
+     * Los endpoints habituales devuelven objeto/array; los ack tipo `'ok'` se mapean a `[]`.
+     *
+     * @see envelopeDataFieldToArray()
+     */
+    private const INNER_SCALAR_ENVELOPE_KEY = '__postRequestScalar';
+
+    /**
+     * Convierte el campo `data` del envelope JSON de {@see \src\shared\web\ContestarJson::enviar}
+     * en un array asociativo.
+     *
+     * Comportamiento respecto al antiguo {@see json_decode}(..., true) directo:
+     *
+     * | Origen típico | Antes | Ahora |
+     * |---------------|-------|-------|
+     * | `data` = string JSON de objeto/array (caso normal) | `array` | igual |
+     * | `data` = `'ok'`, `'none'`, texto no-JSON, `''` | `null` | `[]` |
+     * | literal JSON `null` | `null` | `[]` |
+     * | JSON escalar `"x"` o `42` | string/int/… | `['__postRequestScalar' => …]` |
+     *
+     * @return array<int|string, mixed>
+     */
+    private static function envelopeDataFieldToArray(mixed $raw): array
+    {
+        if (is_array($raw)) {
+            return $raw;
+        }
+        if ($raw === null) {
+            return [];
+        }
+        if (!is_string($raw)) {
+            return [self::INNER_SCALAR_ENVELOPE_KEY => $raw];
+        }
+        $trim = trim($raw);
+        if ($trim === '') {
+            return [];
+        }
+        $decoded = json_decode($trim, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return [];
+        }
+        if ($decoded === null) {
+            return [];
+        }
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        return [self::INNER_SCALAR_ENVELOPE_KEY => $decoded];
+    }
 
     /**
      * Para enviar archivos pdf (...) en los parámetros:
-     * @param array|string $url
-     * @param array $hash_params
-     * @return mixed|void
+     * @param string $url
+     * @param array<string, mixed> $hash_params
+     * @return array<int|string, mixed>
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function getDataMultipart(array|string $url, array $hash_params): mixed
+    public static function getDataMultipart(string $url, array $hash_params): array
     {
-        $url = self::absoluteHttpUrlFromAppRelative((string) $url);
+        $url = self::absoluteHttpUrlFromAppRelative($url);
         $parts = parse_url($url);
         $host_original = $parts['host'] ?? '';
-        $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', (string) $url);
+        $url = preg_replace('/(.*?)\.docker/', 'host.docker.internal', $url);
         $host_rewritten = (string) parse_url($url, PHP_URL_HOST);
 
         // Store the cookies from the response in the cookie jar
@@ -70,7 +121,21 @@ class PostRequest
             exit ($rta_json['mensaje']);
         }
 
-        return json_decode($rta_json['data'], true);
+        return self::envelopeDataFieldToArray($rta_json['data'] ?? null);
+    }
+
+    /**
+     * POST interno (URL ya resuelta/hasheada si aplica). Misma respuesta que {@see getDataFromUrl}
+     * sin envolver en HashFront desde ruta relativa.
+     *
+     * @param string $url
+     * @param array<string, mixed> $hash_params
+     * @return array<int|string, mixed>
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public static function getData(string $url, array $hash_params): array
+    {
+        return self::getDataInternal($url, $hash_params);
     }
 
     /**
@@ -99,7 +164,17 @@ class PostRequest
         return rtrim(OrbixRuntime::getWeb(), '/') . '/' . ltrim($url, '/');
     }
 
-    public static function getDataFromUrl(string $url, array $campos = []): mixed
+    /**
+     * POST interno firmado (HashFront) al backend; devuelve siempre un array.
+     *
+     * - Si el backend responde error en envelope: `['error' => '…html…']` y aquí se hace `exit`.
+     * - Si éxito: el contenido útil es {@see envelopeDataFieldToArray} sobre `data`
+     *   (nunca `null`; ack `'ok'` → `[]`). Ver tabla en {@see envelopeDataFieldToArray}.
+     *
+     * @param array<string, mixed> $campos
+     * @return array<int|string, mixed>
+     */
+    public static function getDataFromUrl(string $url, array $campos = []): array
     {
         $url = self::absoluteHttpUrlFromAppRelative($url);
         $url_hased = HashFront::cmdSinParametros($url);
@@ -212,12 +287,12 @@ class PostRequest
     }
 
     /**
-     * @param array|string $url
-     * @param array $hash_params
-     * @return mixed|void
+     * @param string $url
+     * @param array<string, mixed> $hash_params
+     * @return array<int|string, mixed>
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private static function getData(array|string $url, array $hash_params): mixed
+    private static function getDataInternal(string $url, array $hash_params): array
     {
         // Store the cookies from the response in the cookie jar
         $cookieJar = new CookieJar();
@@ -325,7 +400,7 @@ class PostRequest
             return ['error' => (string)$rta_json['mensaje'] . self::procedenciaLlamadaInternaGetData()];
         }
 
-        return json_decode($rta_json['data'], true);
+        return self::envelopeDataFieldToArray($rta_json['data'] ?? null);
     }
 
     public static function getContent(array|string $url, array $hash_params): mixed

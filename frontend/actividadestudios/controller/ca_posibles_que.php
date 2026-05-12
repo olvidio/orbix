@@ -19,8 +19,8 @@ $oPosicion->recordar();
 
 //Si vengo de vuelta y le paso la referencia del stack donde está la información.
 if (isset($_POST['stack'])) {
-    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack !== 0) {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir

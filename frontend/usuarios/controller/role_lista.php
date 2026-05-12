@@ -16,8 +16,8 @@ $Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
 $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack !== '') {
+    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');

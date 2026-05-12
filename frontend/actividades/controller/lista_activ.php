@@ -59,7 +59,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
     $Qsnom_tipo = '';
 } else {
     // Si vengo por medio de Posicion, borro la ultima.
-    if ($stack !== '') {
+    if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
             $oPosicion2->olvidar($stack);

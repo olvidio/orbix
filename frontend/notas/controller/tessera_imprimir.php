@@ -31,7 +31,7 @@ include_once(OrbixRuntime::dirEstilos() . '/tessera.css.php');
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack2 = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack2 !== '') {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir

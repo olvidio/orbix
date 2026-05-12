@@ -9,8 +9,8 @@ require_once 'frontend/shared/global_header_front.inc';
 
 
 if (isset($_POST['stack'])) {
-    $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack2 !== '') {
+    $stack2 = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack2 !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack2)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');

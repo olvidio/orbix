@@ -25,7 +25,7 @@ $Qtodos = (int)filter_input(INPUT_POST, 'todos');
 
 $oPosicion->recordar();
 if (isset($_POST['stack'])) {
-    $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack2 = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack2 !== '') {
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack2)) {

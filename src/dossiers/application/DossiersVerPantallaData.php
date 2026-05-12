@@ -47,7 +47,7 @@ class DossiersVerPantallaData
         $stack = '';
         if (isset($post['stack']) && (string)$post['stack'] !== '') {
             $stack = (string)filter_var($post['stack'], FILTER_SANITIZE_NUMBER_INT);
-            if ($stack !== '') {
+            if ($stack !== 0) {
                 // Parámetros restaurados por el controller frontend vía $oPosicion.
                 if (array_key_exists('restored_id_sel', $post)) {
                     $Qid_sel = $post['restored_id_sel'];
@@ -226,7 +226,7 @@ class DossiersVerPantallaData
                     $claseSelect->setStackActual((int)($post['stack_actual'] ?? 0));
                 }
 
-                if (isset($post['stack']) && (string)$stack !== '') {
+                if (isset($post['stack']) && (string)$stack !== 0) {
                     $claseSelect->setQId_sel($Qid_sel);
                     $claseSelect->setQScroll_id($Qscroll_id);
                 }

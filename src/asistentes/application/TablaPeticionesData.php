@@ -42,7 +42,7 @@ final class TablaPeticionesData
         $Qscroll_id = null;
         if (isset($input['stack'])) {
             $stack = filter_var($input['stack'], FILTER_SANITIZE_NUMBER_INT);
-            if ($stack !== '' && $stack !== false) {
+            if ($stack !== 0) {
                 if (array_key_exists('restored_id_sel', $input)) {
                     $Qid_sel = $input['restored_id_sel'];
                 }

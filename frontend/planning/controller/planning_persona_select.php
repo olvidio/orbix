@@ -35,7 +35,7 @@ $Qempiezamax = '';
 $postPayload = [];
 
 if (isset($_POST['stack'])) {
-    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     $QsaWhere = '';
     $QsaOperador = '';
     $QsaWhereCtr = '';
@@ -44,7 +44,7 @@ if (isset($_POST['stack'])) {
     $aOperador = [];
     $aWhereCtr = [];
     $aOperadorCtr = [];
-    if ($stack !== '' && $stack !== null) {
+    if ($stack !== 0) {
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack((int)$stack)) {
             $Qobj_pau = (string)$oPosicion2->getParametro('obj_pau');

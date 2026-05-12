@@ -30,7 +30,7 @@ $oPosicion->recordar();
 $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
 $QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
 if (isset($_POST['stack'])) {
-    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 } else {
     $stack = '';
 }
@@ -55,7 +55,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack !== 0)) {
 } else {
     $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
-    if ($stack !== '') {
+    if ($stack !== 0) {
         $oPosicion2 = new frontend\shared\web\Posicion();
         if ($oPosicion2->goStack($stack)) {
             $Qid_sel = $oPosicion2->getParametro('id_sel');

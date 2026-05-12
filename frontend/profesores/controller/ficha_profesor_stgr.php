@@ -20,7 +20,7 @@ if (!empty($a_sel)) {
 }
 
 $stack = (string)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-if ($stack !== '') {
+if ($stack !== 0) {
     $oPosicion2 = new frontend\shared\web\Posicion();
     if ($oPosicion2->goStack($stack)) {
         $oPosicion2->olvidar($stack);

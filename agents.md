@@ -461,7 +461,7 @@ Para la comunicación asíncrona entre las vistas (`.phtml`) y los controladores
 
 ### Backend (Controladores)
 - **Clase estándar**: `src\shared\web\ContestarJson` (en documentación antigua puede aparecer como `web\ContestarJson`) para respuestas JSON.
-- **Método preferido**: `ContestarJson::enviar($error_txt, $data)` directamente; opcionalmente **`ContestarJson::enviar($error_txt, $data, $httpStatusOnError)`** cuando un error (p. ej. subida demasiado grande) debe devolver un código HTTP distinto de 200 (típicamente **413**). Ver también la sección **Subidas multipart** más abajo. Forma habitual del payload: el cliente recibe `success`, `mensaje` y `data` con el cuerpo útil.
+- **Método preferido**: `ContestarJson::enviar($error_txt, $data)` directamente; opcionalmente **`ContestarJson::enviar($error_txt, $data, $httpStatusOnError)`** cuando un error (p. ej. subida demasiado grande) debe devolver un código HTTP distinto de 200 (típicamente **413**). Ver también la sección **Subidas multipart** más abajo. Forma habitual del payload: el cliente recibe `success`, `mensaje` y `data` con el cuerpo útil. Los endpoints que vayan a consumirse desde **PHP** con `PostRequest::getDataFromUrl` deben seguir además **### Endpoints JSON para `PostRequest::getDataFromUrl` / `PostRequest::getData`** (misma sección de este documento).
 - Evitar el patrón intermedio `$jsondata = ContestarJson::respuestaPhp(...);` + `ContestarJson::send($jsondata)`; unificar con **`enviar`** (no `send`).
 - Los casos de uso en `application` deben devolver datos listos para serializar (arrays/strings) o texto de error, no la respuesta JSON ya montada. Si hay código previo que aún devuelve `respuestaPhp`, puede convivir temporalmente, pero no como patrón para código nuevo.
 - **Mutaciones** (eliminar, editar, duplicar, publicar, importar, cambiar tipo, alta, update, etc.): siempre JSON con `{success, mensaje}` aunque no haya payload; nunca cuerpo vacío sin contrato. El JS debe mostrar `mensaje` si `success === false` y refrescar la UI si `success === true`.
@@ -536,6 +536,20 @@ Referencia: `frontend/usuarios/controller/usuario_lista.php`.
 - URL backend: cadena que empiece por `/src/<modulo>/...` (sin host; `PostRequest` añade `ConfigGlobal::getWeb()`).
 - Parámetros: array asociativo; el hash de seguridad lo genera `PostRequest` internamente donde aplique.
 - Respuesta: decodificar el JSON; si no se usa un helper que ya trate errores con `exit`, comprobar `success` / `error` según el endpoint.
+
+### Endpoints JSON para `PostRequest::getDataFromUrl` / `PostRequest::getData` (contrato `data`)
+
+Los controladores bajo `src/.../infrastructure/ui/http/controllers/` que respondan con **`ContestarJson::enviar($error_txt, $data)`** deben alinear el payload con lo que hace `frontend\shared\PostRequest` al interpretar el cuerpo:
+
+1. **Envelope HTTP** (siempre): JSON con `success`, opcionalmente `mensaje`, y `data`. `ContestarJson` coloca el segundo argumento de `enviar` en `data`: si `$data` es un **array**, se serializa con `json_encode` y `data` es un **string** que contiene JSON; si `$data` es un **string** escalar (`'ok'`, `'none'`, …), en el JSON va tal cual (p. ej. `"data":"ok"`).
+2. **Tras éxito (`success === true`)**, `PostRequest` decodifica el contenido de `data` y lo **normaliza siempre a `array` PHP** (`getDataFromUrl(): array`, `getData(): array`):
+   - JSON interno de **objeto/array** → ese **array** (caso habitual cuando el endpoint pasa un array a `ContestarJson::enviar`).
+   - Ack **no JSON** (`'ok'`, `'none'`, `''`), texto no parseable como JSON, o literal JSON `null` → **`[]`**. (Antes, `json_decode` devolvía `null` y rompía tipos estrictos en el front, p. ej. `Lista::setBotones(array)`.)
+   - JSON escalar interno válido (`"x"`, `42`) → poco habitual; el cliente recibe **`['__postRequestScalar' => valor]`**. **No** usar la clave `__postRequestScalar` en datos de negocio.
+3. **Errores**: `ContestarJson::enviar` con mensaje de error no vacío → `success: false`; `PostRequest` hace `exit` con el mensaje (el caller no recibe un array “de éxito”).
+4. **Listas / tablas** (`Lista`, `TablaEditable`, …): devolver **arrays con las claves y tipos** que el componente espera (p. ej. `a_botones` siempre **`array`**, no strings tipo `'ninguno'`).
+5. **Mutación solo ack** (`ContestarJson::enviar('', 'ok')`): válido; si el front ignora el retorno de `getDataFromUrl`, no cambia el flujo; si algún día se lee el resultado tras éxito, será **`[]`**, no `null`.
+6. **No usar** `ContestarJson::enviarDataAnidado` para endpoints consumidos por `PostRequest` (el envelope anidado no sigue el mismo contrato de doble decodificación).
 
 ### Patrón de referencia: `devel_db_admin` (herramientas de esquemas / BD)
 
@@ -704,6 +718,7 @@ fnjs_construir_desplegable = function (json) {
 4. `dataType: 'json'` y manejo de `success === false` con `mensaje`.
 5. Vistas/twigs duplicados entre módulos: actualizar todas las copias.
 6. `php -l` y prueba manual por consumidor.
+7. Consumidores **PHP** vía `PostRequest::getDataFromUrl` / `getData`: cumplir **### Endpoints JSON para `PostRequest::getDataFromUrl` / `PostRequest::getData`** (tipos en el payload decodificado; ack `'ok'` → `[]` en el caller).
 
 ### Hash al mover endpoints AJAX (`Hash::getCamposHtml` vs `Hash::linkSinVal`)
 - **`Hash::getCamposHtml($aCampos, $aHidden)`**: firma campos del formulario (no la URL). Para **POST** con URL fija.

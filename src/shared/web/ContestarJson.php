@@ -25,6 +25,8 @@ class ContestarJson
      * Respuesta estándar `{success, mensaje?, data}`.
      * `data` estructurado (array) se expone como string JSON escapado en el
      * cuerpo (compatibilidad); `data` ya string (p. ej. `'ok'`) no se vuelve a codificar.
+     * {@see \frontend\shared\PostRequest::getDataFromUrl} decodifica siempre a `array`
+     * (p. ej. ack `'ok'` sin JSON interno → `[]`; ver `frontend/shared/PostRequest.php`).
      *
      * @param int $httpStatusOnError Código HTTP si hay error (`$error_txt` no vacío). Por defecto 200 por compatibilidad.
      */

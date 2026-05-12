@@ -26,7 +26,7 @@ final class ModulosSelectData
 
         if (isset($input['stack']) && (string)$input['stack'] !== '') {
             $stack = (string)filter_var($input['stack'], FILTER_SANITIZE_NUMBER_INT);
-            if ($stack !== '') {
+            if ($stack !== 0) {
                 // Parámetros restaurados por el controller frontend vía $oPosicion.
                 if (array_key_exists('restored_id_sel', $input)) {
                     $Qid_sel = (string) $input['restored_id_sel'];

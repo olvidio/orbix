@@ -62,6 +62,7 @@
     "test:coverage:unit": "env XDEBUG_MODE=coverage php libs/vendor/bin/phpunit --configuration phpunit.xml --testsuite unit --coverage-text",
     "test:coverage:html": "env XDEBUG_MODE=coverage php libs/vendor/bin/phpunit --configuration phpunit.xml --testsuite unit --coverage-html build/phpunit-coverage-html",
     "phpstan": "php libs/vendor/bin/phpstan analyse --memory-limit=2G",
+    "phpstan:baseline-report": "php scripts/phpstan_baseline_priorities.php --summary --markdown",
     "phpstan:baseline": "php libs/vendor/bin/phpstan analyse --memory-limit=2G --generate-baseline phpstan-baseline.neon",
     "phpstan:file": "php libs/vendor/bin/phpstan analyse --memory-limit=2G -c phpstan-nobaseline.neon"
   }
