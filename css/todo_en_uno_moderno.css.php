@@ -19,10 +19,48 @@ body.layout-modern #contenido_sin_menus {
 }
 
 body.layout-modern #main {
-    border-radius: 12px;
+    border-radius: 0 12px 12px 0;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 4px 24px rgba(15, 23, 42, 0.04);
     border: 1px solid <?= $lineas ?>;
+    border-left: 0;
     background-color: #f0f2f7;
+}
+
+body.layout-modern #left_slide {
+    width: 34px;
+    margin-right: 0;
+    padding: 0;
+    background-color: #f0f2f7;
+    border: 1px solid <?= $lineas ?>;
+    border-right: 0;
+    border-radius: 12px 0 0 12px;
+}
+
+body.layout-modern .handle {
+    position: sticky;
+    top: 45%;
+    width: 26px;
+    height: 58px;
+    margin: 180px 4px 0;
+    border: 1px solid <?= $tono5 ?>;
+    border-right: 0;
+    border-radius: 12px 0 0 12px;
+    background: linear-gradient(180deg, <?= $tono2 ?> 0%, <?= $tono3 ?> 100%);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.10);
+    cursor: pointer;
+}
+
+body.layout-modern .handle::before {
+    content: "\2039";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: <?= $oscuro ?>;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 600;
 }
 
 body.layout-modern .titulo,
@@ -79,21 +117,58 @@ body.layout-modern textarea {
 }
 
 body.layout-modern input.btn_ok,
+body.layout-modern input.btn,
+body.layout-modern input[type="button"],
+body.layout-modern input[type="reset"],
 body.layout-modern input[type="submit"],
 body.layout-modern button:not(.modern-pill):not(.modern-user-trigger) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-family: inherit;
+    font-size: 0.875rem;
     border-radius: 8px;
+    min-height: 31px;
+    margin: 3px 4px 3px 0;
     padding: 6px 14px;
     border: 1px solid <?= $medio ?>;
     background: linear-gradient(180deg, <?= $tono2 ?> 0%, <?= $tono3 ?> 100%);
     color: <?= $oscuro ?>;
     font-weight: 600;
     cursor: pointer;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
 
 body.layout-modern input.btn_ok:hover,
-body.layout-modern input[type="submit"]:hover {
+body.layout-modern input.btn:hover,
+body.layout-modern input[type="button"]:hover,
+body.layout-modern input[type="reset"]:hover,
+body.layout-modern input[type="submit"]:hover,
+body.layout-modern button:not(.modern-pill):not(.modern-user-trigger):hover {
     filter: brightness(1.03);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+}
+
+body.layout-modern input.btn_ok:active,
+body.layout-modern input.btn:active,
+body.layout-modern input[type="button"]:active,
+body.layout-modern input[type="reset"]:active,
+body.layout-modern input[type="submit"]:active,
+body.layout-modern button:not(.modern-pill):not(.modern-user-trigger):active {
+    transform: translateY(1px);
+}
+
+body.layout-modern input.btn_ok:disabled,
+body.layout-modern input.btn:disabled,
+body.layout-modern input[type="button"]:disabled,
+body.layout-modern input[type="reset"]:disabled,
+body.layout-modern input[type="submit"]:disabled,
+body.layout-modern button:not(.modern-pill):not(.modern-user-trigger):disabled {
+    cursor: not-allowed;
+    opacity: 0.58;
+    box-shadow: none;
 }
 
 body.layout-modern table.lista,

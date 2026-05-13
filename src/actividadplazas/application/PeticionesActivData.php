@@ -35,7 +35,7 @@ final class PeticionesActivData
     {
         $id_nom = (int)($input['id_nom'] ?? 0);
         $na = (string)($input['na'] ?? '');
-        $sactividad = (string)($input['sactividad'] ?? '');
+        $sactividad = (string)($input['sactividad'] ?? $input['que'] ?? '');
         $todos = (int)($input['todos'] ?? 0);
         $id_ctr_agd = (int)($input['id_ctr_agd'] ?? 0);
         $id_ctr_n = (int)($input['id_ctr_n'] ?? 0);
@@ -61,7 +61,7 @@ final class PeticionesActivData
             $mi_grupo = '';
             foreach ($cDelegaciones as $oDelegacion) {
                 $mi_grupo .= $mi_grupo === '' ? '' : ',';
-                $mi_grupo .= "'" . $oDelegacion->getDlVo()->value . "'";
+                $mi_grupo .= "'" . $oDelegacion->getDlVo()->value() . "'";
             }
             if ($mi_grupo !== '') {
                 $aWhere['dl_org'] = $mi_grupo;

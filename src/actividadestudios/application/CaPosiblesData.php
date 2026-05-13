@@ -280,27 +280,24 @@ final class CaPosiblesData
         $ncCuadrienio = $ncCuadrienio1 + $ncCuadrienio2;
 
         $cuadro = [];
+        $centrosNombre = [];
+        $avisosCentro = [];
         if (!empty($aSel)) {
             $cOrdPersonas = [];
             $centroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             foreach ($cPersonas as $oPersonaDl) {
                 $idUbi = $oPersonaDl->getId_ctr();
-                $oCentroDl = $centroDlRepository->findById($idUbi);
-                $Ctr = $oCentroDl->getNombre_ubi();
+                $Ctr = self::resolveNombreCentro($centroDlRepository, $idUbi, $centrosNombre, $avisosCentro, $msgTxt);
                 $ctr = strtolower((string)$Ctr);
                 $cOrdPersonas[$ctr][] = ['Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl];
             }
         } else {
             $cOrdPersonas = [];
-            $idUbiOld = '';
             $centroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             foreach ($cPersonas as $oPersonaDl) {
                 $idUbi = $oPersonaDl->getId_ctr();
-                if ($idUbi != $idUbiOld) {
-                    $oCentroDl = $centroDlRepository->findById($idUbi);
-                    $Ctr = $oCentroDl->getNombre_ubi();
-                    $ctr = strtolower((string)$Ctr);
-                }
+                $Ctr = self::resolveNombreCentro($centroDlRepository, $idUbi, $centrosNombre, $avisosCentro, $msgTxt);
+                $ctr = strtolower((string)$Ctr);
                 $cOrdPersonas[$ctr][] = ['Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl];
             }
         }
@@ -314,7 +311,7 @@ final class CaPosiblesData
                 $idNom = $oPersonaDl->getId_nom();
                 $idTablaPersonaRow = $oPersonaDl->getId_tabla();
                 $nomPersona = $oPersonaDl->getPrefApellidosNombre();
-                $stgr = $oPersonaDl->getNivel_stgr();
+                $stgr = (int)$oPersonaDl->getNivel_stgr();
                 $ce = method_exists($oPersonaDl, 'getCe') ? $oPersonaDl->getCe() : '';
 
                 $aActividades = [];
@@ -324,19 +321,19 @@ final class CaPosiblesData
                     $nivelStgr = $datosCa['nivel_stgr'];
                     $aAsignaturas = $datosCa['aAsignaturas'];
 
-                    if ($ce && $Qna === 'agd') {
-                        $stgr = 'ce';
+                    if ($ce && in_array($Qna, ['agd', 'a'], true)) {
+                        $stgr = NivelStgrId::CE;
                     }
 
                     switch ($stgr) {
-                        case 'n':
+                        case NivelStgrId::N:
                             if (in_array($nivelStgr, [9, 8, 7], true)) {
                                 $creditos = 'x';
                             } else {
                                 $creditos = '-';
                             }
                             break;
-                        case 'b':
+                        case NivelStgrId::B:
                             if ($nivelStgr == 1) {
                                 $result = $oPosiblesCa->contar_creditos($idNom, $aAsignaturas);
                                 $creditos = $result['suma'];
@@ -345,7 +342,7 @@ final class CaPosiblesData
                                 $creditos = '-';
                             }
                             break;
-                        case 'c1':
+                        case NivelStgrId::C1:
                             if ($nivelStgr == 2) {
                                 $result = $oPosiblesCa->contar_creditos($idNom, $aAsignaturas);
                                 $creditos = $result['suma'];
@@ -358,7 +355,7 @@ final class CaPosiblesData
                                 $creditos = '-';
                             }
                             break;
-                        case 'c2':
+                        case NivelStgrId::C2:
                             if ($nivelStgr == 3) {
                                 $result = $oPosiblesCa->contar_creditos($idNom, $aAsignaturas);
                                 $creditos = $result['suma'];
@@ -367,7 +364,7 @@ final class CaPosiblesData
                                 $creditos = '-';
                             }
                             break;
-                        case 'r':
+                        case NivelStgrId::R:
                             if ($idTablaPersonaRow === 'n') {
                                 if ($nivelStgr == 4) {
                                     $creditos = 'x';
@@ -382,7 +379,7 @@ final class CaPosiblesData
                                 }
                             }
                             break;
-                        case 'ce':
+                        case NivelStgrId::CE:
                             if ($nivelStgr == 5) {
                                 $result = $oPosiblesCa->contar_creditos($idNom, $aAsignaturas);
                                 $creditos = $result['suma'];
@@ -475,5 +472,42 @@ final class CaPosiblesData
             'modo' => 'tabla',
             'tabla_filas' => $tablaFilas,
         ];
+    }
+
+    /**
+     * @param array<string, string> $centrosNombre
+     * @param array<string, bool> $avisosCentro
+     */
+    private static function resolveNombreCentro(
+        CentroDlRepositoryInterface $centroDlRepository,
+        ?int $idUbi,
+        array &$centrosNombre,
+        array &$avisosCentro,
+        string &$msgTxt
+    ): string {
+        $key = $idUbi === null ? 'sin-centro' : (string)$idUbi;
+        if (array_key_exists($key, $centrosNombre)) {
+            return $centrosNombre[$key];
+        }
+
+        if (empty($idUbi)) {
+            $nombreCentro = _('sin centro');
+            $aviso = _('hay personas sin centro asignado');
+        } else {
+            $oCentroDl = $centroDlRepository->findById($idUbi);
+            if ($oCentroDl !== null) {
+                return $centrosNombre[$key] = $oCentroDl->getNombre_ubi();
+            }
+
+            $nombreCentro = sprintf(_('centro desconocido (%s)'), (string)$idUbi);
+            $aviso = sprintf(_('no se encuentra el centro con id: %s'), (string)$idUbi);
+        }
+
+        if (!isset($avisosCentro[$key])) {
+            $msgTxt .= $aviso . '<br>';
+            $avisosCentro[$key] = true;
+        }
+
+        return $centrosNombre[$key] = $nombreCentro;
     }
 }

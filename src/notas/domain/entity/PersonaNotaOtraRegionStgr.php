@@ -376,7 +376,7 @@ class PersonaNotaOtraRegionStgr
     /**
      * @deprecated use getIdActivVo()
      */
-    public function getId_activ(): ?string
+    public function getId_activ(): ?int
     {
         return $this->id_activ?->value();
     }

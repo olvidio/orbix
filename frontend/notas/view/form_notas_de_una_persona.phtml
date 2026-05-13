@@ -241,7 +241,7 @@ $epoca_invierno = (int)($neVo['EPOCA_INVIERNO'] ?? 0);
             err = 1;
         }
 
-        if (&& err != 1) {
+        if (err != 1) {
             var url_guardar = (mod === 'editar')
                 ? '<?= $url_persona_nota_editar ?>'
                 : '<?= $url_persona_nota_nueva ?>';

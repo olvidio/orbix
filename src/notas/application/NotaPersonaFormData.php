@@ -77,6 +77,7 @@ final class NotaPersonaFormData
             : $oAsignatura->getId_nivel();
 
         $oF_acta = $oPersonaNota->getF_acta();
+        $id_activ = $oPersonaNota->getId_activ();
 
         return [
             'mod' => 'editar',
@@ -94,8 +95,8 @@ final class NotaPersonaFormData
             'id_preceptor' => $oPersonaNota->getId_preceptor(),
             'detalle' => $oPersonaNota->getDetalle(),
             'epoca' => $oPersonaNota->getEpoca(),
-            'id_activ' => $oPersonaNota->getId_activ(),
-            'nom_activ' => self::resolveNomActiv($oPersonaNota->getId_activ()),
+            'id_activ' => $id_activ,
+            'nom_activ' => self::resolveNomActiv($id_activ),
             'profesores' => self::getProfesoresDl(),
             'asignaturas_faltan' => [],
         ];
@@ -162,7 +163,7 @@ final class NotaPersonaFormData
         ];
     }
 
-    private static function resolveNomActiv(int $id_activ): string
+    private static function resolveNomActiv(?int $id_activ): string
     {
         if (empty($id_activ)) {
             return '';
@@ -184,7 +185,7 @@ final class NotaPersonaFormData
             }
             $aProfesores[$oProfesor->getId_nom()] = $oPersona->getPrefApellidosNombre();
         }
-        uasort($aProfesores, 'core\\strsinacentocmp');
+        uasort($aProfesores, 'src\shared\domain\helpers\strsinacentocmp');
         return $aProfesores;
     }
 

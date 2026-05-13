@@ -49,6 +49,9 @@ final class CaPosiblesQueData
                 continue;
             }
             $oCentroDl = $centroDlRepository->findById($idUbi);
+            if ($oCentroDl === null) {
+                continue;
+            }
             $nombreUbi = $oCentroDl->getNombre_ubi();
             $aCentrosOrden[$nombreUbi] = [$idUbi => $nombreUbi];
         }
@@ -66,7 +69,13 @@ final class CaPosiblesQueData
         $aListaCtr = $personaAgdRepository->getArrayIdCentros();
         $aCentrosOrden = [];
         foreach ($aListaCtr as $idUbi) {
+            if ($idUbi === null) {
+                continue;
+            }
             $oCentroDl = $centroDlRepository->findById($idUbi);
+            if ($oCentroDl === null) {
+                continue;
+            }
             $nombreUbi = $oCentroDl->getNombre_ubi();
             $aCentrosOrden[$nombreUbi] = [$idUbi => $nombreUbi];
         }

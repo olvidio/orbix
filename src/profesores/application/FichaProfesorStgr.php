@@ -235,7 +235,7 @@ class FichaProfesorStgr
             $cProfesorPublicaciones = $ProfesorPublicacionRepository->getProfesorPublicaciones(['id_nom' => $id_nom, '_ordre' => 'f_publicacion']);
             foreach ($cProfesorPublicaciones as $oProfesorPublicacion) {
                 $a_publicaciones[] = [
-                    'pendiente' => $oProfesorPublicacion->getPendiente(),
+                    'pendiente' => $oProfesorPublicacion->isPendiente(),
                     'tipo_publicacion' => $oProfesorPublicacion->getTipo_publicacion(),
                     'titulo' => $oProfesorPublicacion->getTitulo(),
                     'editorial' => $oProfesorPublicacion->getEditorial(),

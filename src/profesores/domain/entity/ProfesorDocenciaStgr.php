@@ -10,7 +10,6 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\notas\domain\value_objects\ActaNumero;
 use src\procesos\domain\value_objects\ActividadId;
-use src\profesores\domain\value_objects\Acta;
 use src\profesores\domain\value_objects\CursoInicio;
 use src\profesores\domain\value_objects\ProfesorTipoName;
 use src\shared\domain\traits\Hydratable;
@@ -140,7 +139,7 @@ class ProfesorDocenciaStgr
     /**
      * @deprecated use getActaVo()
      */
-    public function getActa(): ?int
+    public function getActa(): ?string
     {
         return $this->acta?->value();
     }

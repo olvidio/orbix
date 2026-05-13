@@ -441,13 +441,13 @@ final class CartasPresentacionListaData
 
         if ($ordenar_dl === 1) {
             foreach ($a_mega as $tipo => $a_dl_pob_edad) {
-                uksort($a_dl_pob_edad, 'core\\strsinacentocmp');
+                uksort($a_dl_pob_edad, 'src\shared\domain\helpers\strsinacentocmp');
                 $html .= '<h3>';
                 $html .= sprintf(_("Cartas de presentación de %s"), $tipo);
                 $html .= '</h3>';
                 $dl_anterior = '';
                 foreach ($a_dl_pob_edad as $dl => $a_pob_edad) {
-                    uksort($a_pob_edad, 'core\\strsinacentocmp');
+                    uksort($a_pob_edad, 'src\shared\domain\helpers\strsinacentocmp');
                     if ($dl !== $dl_anterior) {
                         $html .= "<h3>$dl - $tipo</h3>";
                     }
@@ -459,7 +459,7 @@ final class CartasPresentacionListaData
             }
         } else {
             foreach ($a_mega as $tipo => $a_pob_edad) {
-                uksort($a_pob_edad, 'core\\strsinacentocmp');
+                uksort($a_pob_edad, 'src\shared\domain\helpers\strsinacentocmp');
                 $html .= '<h3>';
                 $html .= sprintf(_("Cartas de presentación de %s"), $tipo);
                 $html .= '</h3>';

@@ -38,12 +38,12 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) {
     $Qid_nom = (int)strtok($a_sel[0], '#');
     $Qna = strtok('#');
-    $Qsactividad = (string)filter_input(INPUT_POST, 'que');
+    $Qsactividad = (string)(filter_input(INPUT_POST, 'sactividad') ?: filter_input(INPUT_POST, 'que'));
     $Qtodos = empty($Qtodos) ? 1 : $Qtodos;
 } else {
     $Qid_nom = (int)filter_input(INPUT_POST, 'id_nom');
     $Qna = (string)filter_input(INPUT_POST, 'na');
-    $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+    $Qsactividad = (string)(filter_input(INPUT_POST, 'sactividad') ?: filter_input(INPUT_POST, 'que'));
 }
 
 $campos = [
@@ -56,7 +56,7 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/actividadplazas/peticiones_activ_data', $campos);
-$payload = is_array($data) && isset($data['data']) && is_array($data['data']) ? $data['data'] : [];
+$payload = is_array($data) ? $data : [];
 
 $ap_nom = (string)($payload['ap_nom'] ?? '');
 $sid_activ = (string)($payload['sid_activ'] ?? '');
