@@ -25,8 +25,7 @@ final class DelegacionCode
         if (mb_strlen($value) > 8) {
             throw new \InvalidArgumentException('DelegacionCode must be at most 6 characters');
         }
-        // incluir el '+' para csr+
-        if (!preg_match('/^[\+A-Za-z0-9_-]+$/u', $value)) {
+        if (!preg_match("/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]+$/u", $value)) {
             throw new \InvalidArgumentException('DelegacionCode has invalid characters');
         }
     }

@@ -13,6 +13,12 @@ class DelegacionCodeTest extends myTest
         $this->assertEquals('dlb', $delegacionCode->value());
     }
 
+    public function test_create_valid_delegacionCode_with_punctuation()
+    {
+        $delegacionCode = new DelegacionCode('csr+');
+        $this->assertEquals('csr+', $delegacionCode->value());
+    }
+
     public function test_invalid_length_throws_exception()
     {
         $this->expectException(\InvalidArgumentException::class);

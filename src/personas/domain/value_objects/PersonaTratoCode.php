@@ -21,7 +21,7 @@ final class PersonaTratoCode
         if (mb_strlen($value) > 5) {
             throw new \InvalidArgumentException('PersonaTratoCode must be at most 5 characters');
         }
-        if (!preg_match("/^[A-Za-z0-9._' -]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]+$/u", $value)) {
             throw new \InvalidArgumentException('PersonaTratoCode has invalid characters');
         }
     }

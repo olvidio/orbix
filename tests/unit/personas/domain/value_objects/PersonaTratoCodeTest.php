@@ -14,6 +14,12 @@ class PersonaTratoCodeTest extends myTest
         $this->assertEquals('test', $personaTratoCode->value());
     }
 
+    public function test_create_valid_unicode_personaTratoCode()
+    {
+        $personaTratoCode = new PersonaTratoCode('Dª');
+        $this->assertEquals('Dª', $personaTratoCode->value());
+    }
+
     public function test_invalid_length_throws_exception()
     {
         $this->expectException(\InvalidArgumentException::class);

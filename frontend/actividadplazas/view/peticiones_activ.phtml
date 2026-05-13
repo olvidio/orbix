@@ -22,7 +22,7 @@
             dataType: 'json'
         }).done(function (json) {
             if (json && json.success === true) {
-                fnjs_actualizar();
+                fnjs_left_slide_atras();
             } else {
                 alert(json && json.mensaje ? json.mensaje : '<?= _("error al guardar") ?>');
             }
@@ -47,9 +47,6 @@
         $('#frm_peticiones').attr('action', 'frontend/actividadplazas/controller/peticiones_activ.php');
         fnjs_enviar_formulario('#frm_peticiones');
     }
-    fnjs_cancelar = function () {
-        fnjs_left_slide_atras();
-    }
     <?= $oSelects->ComprobarSelectJs(); ?>
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
@@ -64,5 +61,4 @@
     </table>
     <input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
     <input type=button onclick="fnjs_borrar(this.form);" value="<?= _("borrar") ?>">
-    <input type=button onclick="fnjs_cancelar();" value="<?= _("cancelar") ?>">
 </form>

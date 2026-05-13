@@ -101,14 +101,8 @@ class FichaProfesorStgr
 
         $nom_ap = $oPersona->getNombreApellidosCrSin();
         $sacd_txt = is_true($oPersona->isSacd()) ? 'si' : '';
-        $id_ctr = $oPersona->getid_ctr();
-
-        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $oCentro = $GLOBALS['container']->get(CentroRepositoryInterface::class)->findById($id_ctr);
-        } else {
-            $oCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ctr);
-        }
-        $nombre_ubi = $oCentro->getNombre_ubi();
+        $id_ctr = $oPersona->getId_ctr();
+        $nombre_ubi = self::resolveNombreCentro($id_ctr);
 
         $latin = $GLOBALS['container']->get(ProfesorLatinRepositoryInterface::class)->findById($id_nom)?->isLatin();
         $latin_txt = is_true($latin) ? 'si' : '';
@@ -315,5 +309,20 @@ class FichaProfesorStgr
             'ficha_self_link_spec' => $ficha_self_link_spec,
             'use_print_phtml' => $print,
         ];
+    }
+
+    private static function resolveNombreCentro(?int $id_ctr): string
+    {
+        if ($id_ctr === null) {
+            return '';
+        }
+
+        if (ConfigGlobal::mi_ambito() === 'rstgr') {
+            $oCentro = $GLOBALS['container']->get(CentroRepositoryInterface::class)->findById($id_ctr);
+        } else {
+            $oCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ctr);
+        }
+
+        return (string)($oCentro?->getNombre_ubi() ?? '');
     }
 }
