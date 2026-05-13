@@ -3,6 +3,7 @@
 use src\shared\web\ContestarJson;
 use frontend\shared\web\Periodo;
 use src\planning\application\PlanningPersonaVerData;
+use src\shared\domain\value_objects\DateTimeLocal;
 
 $error = '';
 $data = [];
@@ -34,7 +35,7 @@ try {
 
     $inicio_iso = $oPeriodo->getF_ini_iso();
     $fin_iso = $oPeriodo->getF_fin_iso();
-    $oIniPlanning = $oPeriodo->getF_ini();
+    $oIniPlanning = new DateTimeLocal($inicio_iso);
     $inicio_local = $oIniPlanning->getFromLocal();
 
     $data = PlanningPersonaVerData::execute($post, $aid_nom, $oIniPlanning, $inicio_local, $fin_iso, $inicio_iso);

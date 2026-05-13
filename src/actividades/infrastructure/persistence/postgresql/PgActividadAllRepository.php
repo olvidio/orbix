@@ -42,6 +42,11 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
         $this->setNomTabla('a_actividades_all');
     }
 
+    protected function getNomTablaSelect(): string
+    {
+        return $this->getNomTabla();
+    }
+
 
     /**
      * Devuelve un array con las actividades de una casa en un periodo.
@@ -159,7 +164,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function getCoincidencia($oActividad): bool
     {
         $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
+        $nom_tabla = $this->getNomTablaSelect();
 
         $iTolerancia = 1;
         $interval = "P$iTolerancia" . "D";
@@ -196,7 +201,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function getUbis($aWhere = [], $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
+        $nom_tabla = $this->getNomTablaSelect();
         $oCondicion = new Condicion();
         $aCondi = [];
         foreach ($aWhere as $camp => $val) {
@@ -235,7 +240,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function getArrayActividadesDeTipo($sid_tipo = '......', $scondicion = ''): array
     {
         $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
+        $nom_tabla = $this->getNomTablaSelect();
         $sQuery = "SELECT id_activ, nom_activ
 		   FROM $nom_tabla
 	   	   WHERE id_tipo_activ::text ~ '" . $sid_tipo . "' $scondicion
@@ -254,7 +259,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function getArrayActividadesEstudios(): array
     {
         $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
+        $nom_tabla = $this->getNomTablaSelect();
 
         $cond_nivel_stgr = "(nivel_stgr < 6 OR nivel_stgr=11)";
         $any_final = $_SESSION['oConfig']?->any_final_curs('est') ?? date('Y');
@@ -283,7 +288,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function getArrayIdsWithKeyFini($aWhere = [], $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
+        $nom_tabla = $this->getNomTablaSelect();
 
         $oCondicion = new Condicion();
         $aCondi = [];
@@ -331,7 +336,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function getActividades(array $aWhere = [], array $aOperators = []): array
     {
         $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
+        $nom_tabla = $this->getNomTablaSelect();
         $ActividadAllSet = new Set();
         $oCondicion = new Condicion();
         $aCondicion = [];
@@ -483,7 +488,7 @@ class PgActividadAllRepository extends ClaseRepository implements ActividadAllRe
     public function datosById(int $id_activ): array|bool
     {
         $oDbl = $this->getoDbl_Select();
-        $nom_tabla = $this->getNomTabla();
+        $nom_tabla = $this->getNomTablaSelect();
         $sql = "SELECT * FROM $nom_tabla WHERE id_activ = $id_activ";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 

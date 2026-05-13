@@ -279,9 +279,9 @@ body.otro {
 
 .modern-modulebar__menu .dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% - 1px);
     left: 0;
-    margin-top: 4px;
+    margin-top: 0;
     background: #fff;
     min-width: 200px;
     border-radius: var(--modern-radius);
@@ -289,8 +289,8 @@ body.otro {
     border: 1px solid var(--modern-border);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-6px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    transform: translateY(0);
+    transition: opacity 0.12s ease, visibility 0.12s;
     z-index: 1050;
     display: none;
 }
@@ -306,6 +306,10 @@ body.otro {
     list-style: none;
     margin: 0;
     padding: 6px 0;
+}
+
+.modern-modulebar__menu .dropdown li {
+    position: relative;
 }
 
 .modern-modulebar__menu .dropdown a {

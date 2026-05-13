@@ -31,4 +31,9 @@ class PgActividadRepository extends PgActividadAllRepository implements Activida
         $this->setNomTabla('a_actividades_dl');
     }
 
+    protected function getNomTablaSelect(): string
+    {
+        return 'av_actividades';
+    }
+
 }

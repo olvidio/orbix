@@ -138,8 +138,6 @@
   <component name="PhpStan">
     <PhpStan_settings>
       <PhpStanConfiguration tool_path="$PROJECT_DIR$/libs/vendor/bin/phpstan" />
-      <PhpStanConfiguration tool_path="$PROJECT_DIR$/libs/vendor/bin/phpstan" />
-      <PhpStanConfiguration asDefaultInterpreter="true" deletedFromTheList="true" tool_path="$PROJECT_DIR$/libs/vendor/bin/phpstan" />
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">

@@ -387,7 +387,9 @@ class HashFront
     {
         //$sUrl_org = $sUrl_full;
         $sUrl_full = self::ordenarParam($sUrl_full);
-        $rta = self::md($sUrl_full);
+        // Normalizar quitando sf/ESQUEMA para hash consistente
+        $sUrl_hash = self::normalizarUrlSinSfEsquema($sUrl_full);
+        $rta = self::md($sUrl_hash);
         $sUrlHash = $rta['hash'];
         $horig = $rta['orig'];
 
@@ -421,6 +423,7 @@ class HashFront
         $sUrl_org = self::link($sUrl_full);
 
         $sUrl_int = str_replace(OrbixRuntime::webPortSf(), OrbixRuntime::webPort(), $sUrl_org);
+        $sUrl_int = self::normalizarUrlSinSfEsquema($sUrl_int);
         return $sUrl_int;
     }
 
@@ -434,8 +437,8 @@ class HashFront
      */
     static function cmdSinParametros(string $sUrl_full)
     {
-        $sUrl_int = str_replace(OrbixRuntime::webPortSf(), OrbixRuntime::webPort(), $sUrl_full);
-        return $sUrl_int;
+        //$sUrl_int = str_replace(OrbixRuntime::webPortSf(), OrbixRuntime::webPort(), $sUrl_full);
+        return self::normalizarUrlSinSfEsquema($sUrl_full);
     }
 
     /**
@@ -994,6 +997,24 @@ class HashFront
     return $sCamposHidden;
 }
 
+    /**
+     * Normaliza la URL quitando el segmento sf/ESQUEMA del path.
+     * Para que el hash sea el mismo tanto desde el exterior (sf) como desde el interior.
+     * Ej: /orbixsf/H-dlbf/apps/... → /orbix/apps/...
+     */
+    private static function normalizarUrlSinSfEsquema(string $url): string
+    {
+        $web_path = OrbixRuntime::webPath(); // e.g., "/orbix"
+        $esquema = getenv('ESQUEMA'); // e.g., "H-dlbf"
+        if (!empty($esquema)) {
+            // quitar sf/ESQUEMA: /orbixsf/H-dlbf/ → /orbix/
+            $url = str_replace($web_path . 'sf/' . $esquema, $web_path, $url);
+        }
+        // quitar sf sin esquema: /orbixsf/ → /orbix/
+        $url = str_replace($web_path . 'sf', $web_path, $url);
+        return $url;
+    }
+
     private function realFullUrl()
 {
     /* Con el cambio de rutas, no coincide el uri de origen y destino.
@@ -1004,6 +1025,7 @@ class HashFront
     $pattern = '/(^.*src\/[^\/]+\/)infrastructure\/ui\/http\/controllers\/([^\/]+)\.php$/';
     $replacement = '$1$2';
     $request_uri_modificada = preg_replace($pattern, $replacement, $request_uri);
+    $request_uri_modificada = self::normalizarUrlSinSfEsquema($request_uri_modificada);
 
     /*
     *  El HTTP_HOST ya lleva el puerto, Pero si el nameserver es la ip NO
@@ -1045,6 +1067,8 @@ class HashFront
             }
         }
     }
+    // Normalizar quitando sf/ESQUEMA para que el hash coincida con el receptor
+    $sPath = self::normalizarUrlSinSfEsquema($sPath);
     return $sPath;
 }
 
