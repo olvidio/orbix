@@ -9,7 +9,7 @@ use src\menus\domain\entity\MenuDb;
 use src\shared\config\ConfigGlobal;
 
 /**
- * Datos para {@see \frontend\shared\layouts\BurgerLayout} y {@see \frontend\shared\layouts\ModernLayout}:
+ * Datos para {@see \frontend\shared\layouts\BurgerLayout} y {@see \frontend\shared\layouts\PillsLayout}:
  * "Utilidades", sin acceso a repos desde `frontend/`.
  */
 final class MenusBurgerLayoutDataUseCase

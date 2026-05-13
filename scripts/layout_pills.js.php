@@ -2,7 +2,7 @@
 use frontend\shared\security\HashFront;
 ?>
 
-function modernCreateMenuItem(item, level = 0) {
+function pillsCreateMenuItem(item, level = 0) {
     const li = document.createElement('li');
 
     if (typeof item === 'string') {
@@ -23,7 +23,7 @@ function modernCreateMenuItem(item, level = 0) {
             const ul = document.createElement('ul');
 
             item.submenu.forEach(subitem => {
-                ul.appendChild(modernCreateMenuItem(subitem, level + 1));
+                ul.appendChild(pillsCreateMenuItem(subitem, level + 1));
             });
 
             dropdown.appendChild(ul);
@@ -35,10 +35,10 @@ function modernCreateMenuItem(item, level = 0) {
     return li;
 }
 
-function modernSetActiveGroup(element, groupName, fromUserClick) {
-    document.querySelectorAll('.modern-group-link').forEach(btn => btn.classList.remove('modern-pill--active'));
+function pillsSetActiveGroup(element, groupName, fromUserClick) {
+    document.querySelectorAll('.pills-group-link').forEach(btn => btn.classList.remove('pills-pill--active'));
     if (element) {
-        element.classList.add('modern-pill--active');
+        element.classList.add('pills-pill--active');
         if (fromUserClick) {
             showPortada(groupName);
         }
@@ -53,7 +53,7 @@ function modernSetActiveGroup(element, groupName, fromUserClick) {
     horizontalMenu.innerHTML = '';
     if (Array.isArray(menuItems)) {
         menuItems.forEach((item, index) => {
-            const li = modernCreateMenuItem(item);
+            const li = pillsCreateMenuItem(item);
             if (index === 0) {
                 li.classList.add('active');
             }
@@ -61,7 +61,7 @@ function modernSetActiveGroup(element, groupName, fromUserClick) {
         });
     } else {
         [...menuItems].forEach((item, index) => {
-            const li = modernCreateMenuItem(item);
+            const li = pillsCreateMenuItem(item);
             if (index === 0) {
                 li.classList.add('active');
             }
@@ -69,30 +69,30 @@ function modernSetActiveGroup(element, groupName, fromUserClick) {
         });
     }
 
-    modernAddHorizontalMenuEventListeners();
+    pillsAddHorizontalMenuEventListeners();
 }
 
-function modernAddHorizontalMenuEventListeners() {
-    const horizontalMenuItems = document.querySelectorAll('.modern-modulebar__menu.horizontal-menu > li > a');
+function pillsAddHorizontalMenuEventListeners() {
+    const horizontalMenuItems = document.querySelectorAll('.pills-modulebar__menu.horizontal-menu > li > a');
 
     horizontalMenuItems.forEach(menuItem => {
         menuItem.addEventListener('click', function (e) {
             e.preventDefault();
-            document.querySelectorAll('.modern-modulebar__menu.horizontal-menu > li').forEach(li => {
+            document.querySelectorAll('.pills-modulebar__menu.horizontal-menu > li').forEach(li => {
                 li.classList.remove('active');
             });
             this.parentElement.classList.add('active');
         });
     });
 
-    const dropdownItems = document.querySelectorAll('.modern-modulebar__menu .dropdown a');
+    const dropdownItems = document.querySelectorAll('.pills-modulebar__menu .dropdown a');
 
     dropdownItems.forEach(dropdownItem => {
         dropdownItem.addEventListener('click', function (e) {
             e.preventDefault();
-            const mainMenuItem = this.closest('.modern-modulebar__menu.horizontal-menu > li');
+            const mainMenuItem = this.closest('.pills-modulebar__menu.horizontal-menu > li');
             if (mainMenuItem) {
-                document.querySelectorAll('.modern-modulebar__menu.horizontal-menu > li').forEach(li => {
+                document.querySelectorAll('.pills-modulebar__menu.horizontal-menu > li').forEach(li => {
                     li.classList.remove('active');
                 });
                 mainMenuItem.classList.add('active');
@@ -101,12 +101,12 @@ function modernAddHorizontalMenuEventListeners() {
     });
 }
 
-function modernToggleUserPanel(evt) {
+function pillsToggleUserPanel(evt) {
     if (evt) {
         evt.stopPropagation();
     }
-    const panel = document.getElementById('modernUserPanel');
-    const trigger = document.getElementById('modernUserTrigger');
+    const panel = document.getElementById('pillsUserPanel');
+    const trigger = document.getElementById('pillsUserTrigger');
     if (!panel || !trigger) {
         return;
     }
@@ -121,8 +121,8 @@ function modernToggleUserPanel(evt) {
 }
 
 document.addEventListener('click', function (e) {
-    const panel = document.getElementById('modernUserPanel');
-    const trigger = document.getElementById('modernUserTrigger');
+    const panel = document.getElementById('pillsUserPanel');
+    const trigger = document.getElementById('pillsUserTrigger');
     if (!panel || panel.hasAttribute('hidden')) {
         return;
     }
@@ -164,21 +164,21 @@ function showPortada(groupName) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const groupNav = document.getElementById('modernGroupMenu');
+    const groupNav = document.getElementById('pillsGroupMenu');
     if (groupNav) {
         groupNav.addEventListener('click', function (e) {
-            const btn = e.target.closest('.modern-group-link');
+            const btn = e.target.closest('.pills-group-link');
             if (!btn) {
                 return;
             }
             const grupo = btn.getAttribute('data-grupo');
             if (grupo !== null) {
-                modernSetActiveGroup(btn, grupo, true);
+                pillsSetActiveGroup(btn, grupo, true);
             }
         });
     }
 
-    const pills = document.querySelectorAll('.modern-group-link');
+    const pills = document.querySelectorAll('.pills-group-link');
     let el = null;
     let name = defaultGrupMenu;
     pills.forEach(btn => {
@@ -190,5 +190,5 @@ document.addEventListener('DOMContentLoaded', function () {
         el = pills[0];
         name = el.getAttribute('data-grupo') || el.textContent.trim();
     }
-    modernSetActiveGroup(el, name || defaultGrupMenu, false);
+    pillsSetActiveGroup(el, name || defaultGrupMenu, false);
 });

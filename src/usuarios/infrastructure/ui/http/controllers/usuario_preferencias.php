@@ -20,6 +20,10 @@ if ($oPreferencia !== null) {
 } else {
     $layout = '';
 }
+// Normalizar preferencia guardada antes del cambio de nombre del layout.
+if ($layout === 'modern') {
+    $layout = 'pills';
+}
 
 // ----------- Página de inicio -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'inicio');

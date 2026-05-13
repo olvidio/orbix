@@ -186,6 +186,10 @@ if ($oPreferencia !== null) {
     // valores por defecto
     $layout = 'legacy';
 }
+// Normalizar preferencia guardada antes del cambio de nombre del layout.
+if ($layout === 'modern') {
+    $layout = 'pills';
+}
 
 // Create the layout instance
 try {
@@ -281,9 +285,9 @@ $portada_html = ob_get_clean();
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <?php
     include_once(ServerConf::$dir_estilos . '/colores.php');
-    if ($layout === 'modern') {
-        include_once(ServerConf::$dir_estilos . '/todo_en_uno_moderno.css.php');
-        include_once(ServerConf::$dir_estilos . '/slickgrid_orbix_moderno.css.php');
+    if ($layout === 'pills') {
+        include_once(ServerConf::$dir_estilos . '/todo_en_uno_pills.css.php');
+        include_once(ServerConf::$dir_estilos . '/slickgrid_orbix_pills.css.php');
     } else {
         include_once(ServerConf::$dir_estilos . '/todo_en_uno.css.php');
         include_once(ServerConf::$dir_estilos . '/slickgrid_orbix.css.php');
@@ -384,7 +388,7 @@ $portada_html = ob_get_clean();
     ?>
 </head>
 
-<body class="otro<?= $layout === 'modern' ? ' layout-modern' : '' ?>" id="body">
+<body class="otro<?= $layout === 'pills' ? ' layout-pills' : '' ?>" id="body">
 <?php
 // Render the final HTML structure
 $renderParams = [
