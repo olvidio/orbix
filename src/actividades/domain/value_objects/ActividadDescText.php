@@ -19,10 +19,10 @@ final class ActividadDescText
             throw new \InvalidArgumentException('ActividadDescText must be a non-empty string');
         }
         if (mb_strlen($value) > 80) {
-            throw new \InvalidArgumentException('NivelStgrDesc debe tener como máximo 80 caracteres');
+            throw new \InvalidArgumentException('ActividadDescText debe tener como máximo 80 caracteres');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
-            throw new \InvalidArgumentException('NivelStgrDesc contiene caracteres no válidos');
+        if (!preg_match("/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]*$/u", $value)) {
+            throw new \InvalidArgumentException('ActividadDescText contiene caracteres no válidos');
         }
     }
 
