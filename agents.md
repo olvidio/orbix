@@ -212,8 +212,9 @@ Los nuevos módulos deben separar claramente la presentación (frontend) de la l
 - `src/<modulo>/infrastructure/ui/http/controllers/` - Controladores de lógica
   - `*_update.php` - Procesar guardado/actualización de datos
   - `*_delete.php` - Procesar eliminación de datos
-  - Usan casos de uso y repositorios
-  - Devuelven respuestas puras (texto, JSON, etc.)
+  - Leen request, validan/adaptan input de transporte e invocan casos de uso de `application/`
+  - Devuelven respuestas puras (preferentemente JSON con `ContestarJson::enviar`)
+  - Sin lógica de negocio compleja: la lógica reutilizable debe quedar en `application/`
   - **Prohibido:** Generar HTML, usar `frontend/...`, o interactuar directamente con la UI.
 
 ### Enlaces firmados hacia la UI (`Hash::link` / `HashF`) — directiva
@@ -533,7 +534,7 @@ Para abrir en **nueva pestaña** (`window.open`) enlaces que sirven **binarios d
 
 ### Patrón de llamada backend desde frontend
 Referencia: `frontend/usuarios/controller/usuario_lista.php`.
-- URL backend: cadena que empiece por `/src/<modulo>/...` (sin host; `PostRequest` añade `ConfigGlobal::getWeb()`).
+- URL backend: cadena que empiece por `/src/<modulo>/...` (sin host; `PostRequest` añade la base HTTP configurada para llamadas internas).
 - Parámetros: array asociativo; el hash de seguridad lo genera `PostRequest` internamente donde aplique.
 - Respuesta: decodificar el JSON; si no se usa un helper que ya trate errores con `exit`, comprobar `success` / `error` según el endpoint.
 
@@ -550,6 +551,15 @@ Los controladores bajo `src/.../infrastructure/ui/http/controllers/` que respond
 4. **Listas / tablas** (`Lista`, `TablaEditable`, …): devolver **arrays con las claves y tipos** que el componente espera (p. ej. `a_botones` siempre **`array`**, no strings tipo `'ninguno'`).
 5. **Mutación solo ack** (`ContestarJson::enviar('', 'ok')`): válido; si el front ignora el retorno de `getDataFromUrl`, no cambia el flujo; si algún día se lee el resultado tras éxito, será **`[]`**, no `null`.
 6. **No usar** `ContestarJson::enviarDataAnidado` para endpoints consumidos por `PostRequest` (el envelope anidado no sigue el mismo contrato de doble decodificación).
+
+### Preparar endpoints para un futuro camino interno
+
+El contrato vigente sigue siendo HTTP: `frontend/` llama a `/src/...` con `PostRequest`, y el endpoint responde con `ContestarJson`. Para dejar abierta una optimización futura sin HTTP cuando frontend y API estén en la misma instalación, los endpoints nuevos o migrados deben cumplir:
+
+1. **Controlador HTTP fino:** no meter lógica de negocio en `src/.../infrastructure/ui/http/controllers/*.php`. El controlador lee `$_POST`/request, construye input, llama a `application` y responde.
+2. **Caso de uso invocable directamente:** la lógica debe vivir en una clase de `application/` que devuelva arrays/DTOs serializables y no dependa de `header()`, `echo`, `exit`, `ContestarJson`, `$_POST` ni de una subpetición HTTP.
+3. **Sin incluir controladores como atajo:** si algún día `PostRequest` tiene un dispatcher interno, debe mapear rutas preparadas a casos de uso; las rutas no registradas harán fallback a HTTP.
+4. **`ContestarJson` no decide el dispatch:** su responsabilidad es envolver la respuesta JSON del camino HTTP, no ejecutar casos de uso ni elegir entre HTTP/camino interno.
 
 ### Patrón de referencia: `devel_db_admin` (herramientas de esquemas / BD)
 
