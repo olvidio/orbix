@@ -249,8 +249,19 @@ if (!isset($h)) {
     }
 
     function fnjs_logout() {
-        var parametros = 'logout=si&PHPSESSID=<?= session_id() ?>';
-        top.location.href = 'index.php?' + parametros;
+        var parametros = 'logout=si&PHPSESSID=<?= session_id(); ?>';
+        var path = window.location.pathname;
+
+        if (path.endsWith('/index.php')) {
+            top.location.href = path + '?' + parametros;
+            return;
+        }
+
+        if (!path.endsWith('/')) {
+            path += '/';
+        }
+
+        top.location.href = path + 'index.php?' + parametros;
     }
 
     function fnjs_windowopen(url) { //para poder hacerlo por el menu
