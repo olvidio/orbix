@@ -1,0 +1,69 @@
+# Migraciones SQL
+
+Los ficheros de esta carpeta se ejecutan desde el menu:
+
+`frontend/devel_db_admin/controller/migraciones_lista.php`
+
+## Nombre de fichero
+
+Formato:
+
+```text
+YYYYMMDDHHMM_descripcion__db.sql
+```
+
+Ejemplos:
+
+```text
+202605141630_add_larga_du_camasa__sv-e.sql
+202605141700_update_textos__comun.sql
+```
+
+`db` solo puede ser:
+
+- `comun`
+- `sv-e`
+- `sv`
+
+Las replicas de lectura no se ponen en el nombre. El runner las deriva cuando toca.
+
+## Estructura o datos
+
+El runner clasifica automaticamente cada fichero:
+
+- Estructura: `CREATE`, `ALTER`, `DROP`, `TRUNCATE`, `COMMENT`, `GRANT`, `REVOKE`, `RENAME`.
+- Datos: `INSERT`, `UPDATE`, `DELETE`, `COPY`, `SELECT INTO`.
+- Si hay mezcla o no se puede decidir, se trata como estructura.
+
+Regla de ejecucion:
+
+- `__comun.sql` de estructura: primero `comun_select`, despues `comun`.
+- `__comun.sql` de datos: solo `comun`.
+- `__sv-e.sql` de estructura: primero `sv-e_select`, despues `sv-e`.
+- `__sv-e.sql` de datos: solo `sv-e`.
+- `__sv.sql`: solo `sv`.
+
+## Comodin de esquema
+
+Se puede escribir `*.` para ejecutar la misma consulta en todos los esquemas activos de la BD destino:
+
+```sql
+ALTER TABLE *.du_camasa_dl ALTER COLUMN larga DEFAULT TRUE;
+```
+
+El runner consulta `comun.public.db_idschema`:
+
+- Para `comun` / `comun_select`: esquemas comun activos (`id` entre 3000 y 3999, sin sufijo `v` ni `f`).
+- Para `sv` / `sv-e` / `sv-e_select`: esquemas con sufijo `v`.
+
+Cada `*.` se sustituye por el esquema entre comillas dobles:
+
+```sql
+ALTER TABLE "H-dlbv".du_camasa_dl ALTER COLUMN larga DEFAULT TRUE;
+```
+
+Limitacion: el comodin debe aparecer como `*.`. No usar `*` dentro de literales de texto si puede confundirse con un nombre de esquema.
+
+## Registro
+
+Las ejecuciones se registran en `comun.public.migracion_aplicada`. Si un fichero ya aplicado cambia de contenido (`sha1` distinto), el runner avisa y no lo reaplica automaticamente.

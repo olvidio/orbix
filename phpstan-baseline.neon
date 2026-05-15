@@ -40555,20 +40555,8 @@ parameters:
 			path: src/menus/domain/entity/MenuDb.php
 
 		-
-			message: '#^Method src\\menus\\domain\\entity\\MenuDb\:\:getMenuVo\(\) should return src\\menus\\domain\\value_objects\\MenuName but returns src\\menus\\domain\\value_objects\\MenuName\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/menus/domain/entity/MenuDb.php
-
-		-
 			message: '#^Method src\\menus\\domain\\entity\\MenuDb\:\:getOrden\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/menus/domain/entity/MenuDb.php
-
-		-
-			message: '#^Method src\\menus\\domain\\entity\\MenuDb\:\:getParametrosVo\(\) should return src\\menus\\domain\\value_objects\\MenuParametros but returns src\\menus\\domain\\value_objects\\MenuParametros\|null\.$#'
-			identifier: return.type
 			count: 1
 			path: src/menus/domain/entity/MenuDb.php
 

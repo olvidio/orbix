@@ -61,7 +61,7 @@ class MenuDb
         return $this->menu?->value();
     }
 
-    public function getMenuVo(): MenuName
+    public function getMenuVo(): ?MenuName
     {
         return $this->menu;
     }
@@ -83,7 +83,7 @@ class MenuDb
         return $this->parametros?->value();
     }
 
-    public function getParametrosVo(): MenuParametros
+    public function getParametrosVo(): ?MenuParametros
     {
         return $this->parametros;
     }

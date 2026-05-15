@@ -33,4 +33,23 @@ class DbSchemaIdTest extends myTest
         $this->assertEquals(123, (string)$dbSchemaId);
     }
 
+    public function test_resto_reserved_ids_are_valid(): void
+    {
+        $this->assertSame(-1001, (new DbSchemaId(-1001))->value());
+        $this->assertSame(-2001, (new DbSchemaId(-2001))->value());
+        $this->assertSame(-3001, (new DbSchemaId(-3001))->value());
+    }
+
+    public function test_other_non_positive_ids_throw(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new DbSchemaId(-1002);
+    }
+
+    public function test_from_string_accepts_signed_integers(): void
+    {
+        $this->assertSame(-2001, DbSchemaId::fromString('-2001')->value());
+        $this->assertSame(123, DbSchemaId::fromString('123')->value());
+    }
+
 }

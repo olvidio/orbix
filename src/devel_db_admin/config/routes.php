@@ -30,6 +30,12 @@ return static function ($r): void {
     $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/mover_tabla', function (): void {
         require __DIR__ . '/../infrastructure/ui/http/controllers/mover_tabla.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/migraciones_lista_data', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/migraciones_lista_data.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/migraciones_ejecutar', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/migraciones_ejecutar.php';
+    });
     $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/renombrar_esquema', function (): void {
         require __DIR__ . '/../infrastructure/ui/http/controllers/renombrar_esquema.php';
     });

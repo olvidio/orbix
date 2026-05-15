@@ -490,10 +490,14 @@ class Lista
                             }
                         }
                     } else {
-                        if (isset($aFields[$icol])) {
-                            $aFilas[$num_fila][$aFields[$icol]] = ($valor === '' || $valor === null) ? '' : addslashes($valor ?? '');
+                        // Filas asociativas (field => valor): mapear por nombre de columna.
+                        // ksort() ordena alfabéticamente; la asignación solo con $aFields[$icol] dejaba casi todo vacío.
+                        if (!is_numeric($col) && in_array($col, $aFields, true)) {
+                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes((string) $valor);
+                        } elseif (isset($aFields[$icol])) {
+                            $aFilas[$num_fila][$aFields[$icol]] = ($valor === '' || $valor === null) ? '' : addslashes((string) $valor);
                         } elseif (!is_numeric($col)) {
-                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes($valor ?? '');
+                            $aFilas[$num_fila][$col] = ($valor === '' || $valor === null) ? '' : addslashes((string) $valor);
                         }
                         if (is_numeric($col)) {
                             $icol++;

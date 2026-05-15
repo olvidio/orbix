@@ -1,0 +1,80 @@
+<script>
+    fnjs_migraciones_checked = function () {
+        return $('input[name="sel[]"]:checked');
+    }
+
+    fnjs_migraciones_enviar = function (modo, prefijoHasta) {
+        $('#modo').val(modo);
+        $('#prefijo_hasta').val(prefijoHasta || '');
+        $('#migraciones_resultado').text(<?= json_encode((string) _("ejecutando...")) ?>);
+        $.ajax({
+            url: <?= json_encode((string) $url_ejecutar) ?>,
+            method: 'POST',
+            data: $('#frm_migraciones').serialize(),
+            dataType: 'json'
+        }).done(function (json) {
+            var data = {};
+            if (json && typeof json.data === 'string') {
+                try {
+                    data = JSON.parse(json.data);
+                } catch (e) {
+                    data = {};
+                }
+            } else if (json && json.data) {
+                data = json.data;
+            }
+            var lines = data.lines || [];
+            if (json && json.success !== true) {
+                lines.unshift(json.mensaje || <?= json_encode((string) $msg_error_respuesta) ?>);
+            }
+            if (data.error) {
+                lines.unshift(data.error);
+            }
+            $('#migraciones_resultado').text(lines.join("\n"));
+        }).fail(function () {
+            $('#migraciones_resultado').text(<?= json_encode((string) $msg_error_respuesta) ?>);
+        });
+    }
+
+    fnjs_migraciones_ejecutar_seleccion = function () {
+        var checked = fnjs_migraciones_checked();
+        if (!checked.length) {
+            alert(<?= json_encode((string) $msg_sin_seleccion) ?>);
+            return;
+        }
+        fnjs_migraciones_enviar('seleccion', '');
+    }
+
+    fnjs_migraciones_ejecutar_hasta = function () {
+        var checked = fnjs_migraciones_checked();
+        if (checked.length !== 1) {
+            alert(<?= json_encode((string) $msg_hasta_unica) ?>);
+            return;
+        }
+        fnjs_migraciones_enviar('hasta', checked.val());
+    }
+</script>
+
+<h1><?= _("migraciones de base de datos") ?></h1>
+
+<?php if (!empty($warnings)): ?>
+    <div class="alert">
+        <strong><?= _("avisos") ?>:</strong>
+        <ul>
+            <?php foreach ($warnings as $warning): ?>
+                <li><?= htmlspecialchars((string) $warning, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<form id="frm_migraciones" action="" method="post">
+    <?= $oHash->getCamposHtml(); ?>
+    <?= $oTabla->mostrar_tabla(); ?>
+</form>
+
+<pre id="migraciones_resultado"></pre>
+
+<p>
+    <?= _("Los ficheros se leen de db/migrations. Los SQL de estructura se ejecutan primero en replicas de lectura y despues en la base principal.") ?>
+</p>
