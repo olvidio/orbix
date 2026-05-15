@@ -3,6 +3,7 @@
 namespace src\shared\infrastructure\persistence\postgresql;
 
 use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 

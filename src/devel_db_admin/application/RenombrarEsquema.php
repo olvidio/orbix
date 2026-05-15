@@ -4,14 +4,25 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use PDO;
+use RuntimeException;
 use src\devel_db_admin\infrastructure\DBAlterSchema;
+use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBRol;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+use Throwable;
 
 /**
- * Renombrar esquema region-dl (comun/sv/sv-e + defaults en tablas).
+ * Renombrar esquema region-dl (comun/sv/sv-e/sf + defaults en tablas).
+ * En hosts *.docker se omiten réplicas (*_select) como en {@see CrearEsquema}.
+ *
+ * Idempotente por bloque (comun, comun_select, sv, sv-e, sv-e_select, sf):
+ * todas las operaciones DDL usan la conexión `importar` (superusuario, igual que {@see CrearEsquema}),
+ * y antes de cada ALTER SCHEMA / ALTER ROLE / actualización de `.inc` se comprueba si ese paso ya está hecho.
+ * Esto permite reanudar un renombre interrumpido a medias (p. ej. caída entre `public` y `public_select`)
+ * sin tener que pasar antes por «Corregir».
  */
 final class RenombrarEsquema
 {
@@ -20,135 +31,118 @@ final class RenombrarEsquema
     ) {
     }
 
+    /**
+     * @return array{avisos: list<string>}|array{error: string, avisos: list<string>}
+     */
     public function ejecutar(
-        string $esquemaRef,
+        string $esquemaOrigenCampo,
         string $region,
         string $dl,
         int $comun,
         int $sv,
-    ): void {
-        $esquema_old = substr($esquemaRef, 0, -1); // quito la v o la f.
-        
-        $esquema_oldv = $esquema_old . 'v';
-        //$esquema_oldf = $esquema_old.'f';
-        
-        $esquema = "$region-$dl";
-        $esquemav = $esquema . 'v';
-        //$esquemaf = $esquema.'f';
-        
+        int $sf,
+    ): array {
+        $ctx = RenombrarEsquemaVerificacionContexto::desdeEntrada($esquemaOrigenCampo, $region, $dl, $comun, $sv, $sf);
+        if (is_array($ctx)) {
+            return ['avisos' => [$ctx['resumen']]];
+        }
+
+        $esquema_old = $ctx->esquemaOld;
+        $esquema_oldv = $ctx->esquemaOldv;
+        $esquema_oldf = $ctx->esquemaOldf;
+        $region = $ctx->region;
+        $dl = $ctx->dl;
+
+        $esquema = $ctx->esquemaNew;
+        $esquemav = $ctx->esquemaNewv;
+        $esquemaf = $ctx->esquemaNewf;
+
+        $pwdErr = $this->validarFicherosPasswordAntesDeRenombre($ctx);
+        if ($pwdErr !== null) {
+            return $pwdErr;
+        }
+
+        $isDocker = (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
+
         $oDBRol = new DBRol();
-        
+
         //  USUARIOS Y CAMBIO NOMBRE ESQUEMA  ///////////////////////////////////
-        
+
         // Hay que pasar como parámetro el nombre de la database, que corresponde al archivo database.inc
         // donde están los passwords. En este caso en importar.inc, tenemos al superadmin.
         $oConfigDB = new ConfigDB('importar');
         //coge los valores de public: 1.la database comun; 2.nombre superusuario; 3.pasword superusuario;
-        
-        
-        $oDBRol = new DBRol();
-        
-        //************** comun ****************************************
-        $configComunP = $oConfigDB->getEsquema('public');
-        $oConexion = new DBConnection($configComunP);
-        $oConComun = $oConexion->getPDO();
-        $oDBRol->setDbConexion($oConComun);
-        // mantener el password:
-        $oConfigDBComun = new ConfigDB('comun');
-        $configComun = $oConfigDBComun->getEsquema($esquema_old);
-        $esquema_pwd = $configComun['password'];
-        
-        $oDBRol->setUser($esquema);
-        $oDBRol->setPwd($esquema_pwd);
-        $oDBRol->renombrarSchema($esquema_old); // Cambia el nombre del esquema
-        $oDBRol->renombrarUsuario($esquema_old); // reescribe el password que ya tenia.
-        $oConfigDBComun->renombrarListaEsquema('comun', $esquema_old, $esquema);
-        
-        // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
+
         $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
-        $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'comun');
-        
-        /////////  para comun en interior (select)
-        $configComunP = $oConfigDB->getEsquema('public_select');
-        $oConexion = new DBConnection($configComunP);
-        $oConComun = $oConexion->getPDO();
-        $oDBRol->setDbConexion($oConComun);
-        // mantener el password:
+
         $oConfigDBComun = new ConfigDB('comun');
-        $configComun = $oConfigDBComun->getEsquema($esquema_old);
-        $esquema_pwd = $configComun['password'];
-        
-        $oDBRol->setUser($esquema);
-        $oDBRol->setPwd($esquema_pwd);
-        $oDBRol->renombrarSchema($esquema_old); // Cambia el nombre del esquema
-        $oDBRol->renombrarUsuario($esquema_old); // reescribe el password que ya tenia.
-        $oConfigDBComun->renombrarListaEsquema('comun_select', $esquema_old, $esquema);
-        
-        // *********************  sv  *********************************
-        $configSvP = $oConfigDB->getEsquema('publicv');
-        $oConexion = new DBConnection($configSvP);
-        $oConSv = $oConexion->getPDO();
-        $oDBRol->setDbConexion($oConSv);
-        // mantener el password:
         $oConfigDBSv = new ConfigDB('sv');
-        $configSv = $oConfigDBSv->getEsquema($esquema_oldv);
-        $esquema_pwdv = $configSv['password'];
-        
-        $oDBRol->setUser($esquemav);
-        $oDBRol->setPwd($esquema_pwdv);
-        $oDBRol->renombrarSchema($esquema_oldv); // Cambia el nombre del esquema 
-        $oDBRol->renombrarUsuario($esquema_oldv); // reescribe el password que ya tenia.
-        $oConfigDBSv->renombrarListaEsquema('sv', $esquema_oldv, $esquemav);
-        
-        // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-        $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
-        $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv');
-        
-        // *********************  sv-e  ********************************
-        $configSveP = $oConfigDB->getEsquema('publicv-e');
-        $oConexion = new DBConnection($configSveP);
-        $oConSve = $oConexion->getPDO();
-        $oDBRol->setDbConexion($oConSve);
-        // mantener el password:
         $oConfigDBSve = new ConfigDB('sv-e');
-        $configSve = $oConfigDBSve->getEsquema($esquema_oldv);
-        $esquema_pwdve = $configSve['password'];
-        
-        $oDBRol->setUser($esquemav);
-        $oDBRol->setPwd($esquema_pwdve);
-        $oDBRol->renombrarSchema($esquema_oldv); // Cambia el nombre del esquema
-        // Ya se ha cambiado el usuario para sv.
-        //$oDBRol->renombrarUsuario($esquema_oldv); // reescribe el password que ya tenia.
-        $oConfigDBSve->renombrarListaEsquema('sv-e', $esquema_oldv, $esquemav);
-        
-        // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-        $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
+        $oConfigDBSf = $sf !== 0 ? new ConfigDB('sf') : null;
+
+        //************** comun ****************************************
+        $oConComun = $this->pdoDesdeImportar($oConfigDB, 'public');
+        $this->renombrarBloqueRolEsquema(
+            $oDBRol,
+            $oConComun,
+            $esquema_old,
+            $esquema,
+            $this->leerPasswordEsquema($oConfigDBComun, $esquema_old, $esquema),
+        );
+        $this->renombrarClaveInc($oConfigDBComun, 'comun', $esquema_old, $esquema);
+        $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'comun');
+
+        /////////  para comun en interior (select) — omitir en docker (sin réplica)
+        if (!$isDocker) {
+            $oConComunSel = $this->pdoDesdeImportar($oConfigDB, 'public_select');
+            $this->renombrarBloqueRolEsquema(
+                $oDBRol,
+                $oConComunSel,
+                $esquema_old,
+                $esquema,
+                $this->leerPasswordEsquema($oConfigDBComun, $esquema_old, $esquema),
+            );
+            $this->renombrarClaveInc($oConfigDBComun, 'comun_select', $esquema_old, $esquema);
+        }
+
+        // *********************  sv  *********************************
+        $oConSv = $this->pdoDesdeImportar($oConfigDB, 'publicv');
+        $this->renombrarBloqueRolEsquema(
+            $oDBRol,
+            $oConSv,
+            $esquema_oldv,
+            $esquemav,
+            $this->leerPasswordEsquema($oConfigDBSv, $esquema_oldv, $esquemav),
+        );
+        $this->renombrarClaveInc($oConfigDBSv, 'sv', $esquema_oldv, $esquemav);
+        $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv');
+
+        // *********************  sv-e  ********************************
+        // En sv-e (misma instancia que sv) solo renombramos el ESQUEMA; el ROL ya se renombró en el bloque sv.
+        $oConSve = $this->pdoDesdeImportar($oConfigDB, 'publicv-e');
+        $this->renombrarBloqueSoloEsquema($oDBRol, $oConSve, $esquema_oldv, $esquemav);
+        $this->renombrarClaveInc($oConfigDBSve, 'sv-e', $esquema_oldv, $esquemav);
         $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv-e');
-        
-        //////////// sv-e para db interior (select) debería servir el de sv normal
-        $oConfigDBSve->renombrarListaEsquema('sv-e_select', $esquema_oldv, $esquemav);
-        
-        // sf
-        /*
-        $configSf = $oConfigDB->getEsquema('publicf');
-        $oConexion = new core\dbConnection($configSf);
-        $oConSf = $oConexion->getPDO();
-        $oDBRol->setDbConexion($oConSf);
-        // mantener el password:
-        $esquema_pwdf = $configSf['password'];
-        
-        $oDBRol->setUser($esquemaf);
-        $oDBRol->setPwd($esquema_pwdf);
-        $oDBRol->renombrarSchema($esquema_oldf); // Cambia el nombre del esquema
-        $oDBRol->renombrarUsuario($esquema_oldf); // reescribe el password que ya tenia.
-        $oConfigDBSf = new ConfigDB('sf');
-        $oConfigDBSf->renombrarListaEsquema('sf', $esquema_oldf, $esquemaf);
-        
-        // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-        $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
-        $DbSchemaRepository->cambiarNombre($esquema_old,$esquema,'sf');
-        */
-        
+
+        //////////// sv-e para db interior (select) — omitir lista réplica en docker
+        if (!$isDocker) {
+            $this->renombrarClaveInc($oConfigDBSve, 'sv-e_select', $esquema_oldv, $esquemav);
+        }
+
+        // *********************  sf  *********************************
+        if ($sf !== 0 && $oConfigDBSf !== null) {
+            $oConSf = $this->pdoDesdeImportar($oConfigDB, 'publicf');
+            $this->renombrarBloqueRolEsquema(
+                $oDBRol,
+                $oConSf,
+                $esquema_oldf,
+                $esquemaf,
+                $this->leerPasswordEsquema($oConfigDBSf, $esquema_oldf, $esquemaf),
+            );
+            $this->renombrarClaveInc($oConfigDBSf, 'sf', $esquema_oldf, $esquemaf);
+            $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sf');
+        }
+
         // ESQUEMAS: CAMBIOS EN TABLAS ////////////////////////////////////////
         
         $RegionNew = $region;
@@ -157,42 +151,7 @@ final class RenombrarEsquema
         // comun
         if ($comun !== 0) {
             // Valores Default:
-            $aDefaults = [
-                ['tabla' => 'a_actividad_proceso_sf', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'a_actividad_proceso_sv', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'a_actividades_dl', 'campo' => 'id_activ', 'valor' => "bigglobal('$esquema'::text, 'a_actividades_dl'::text)"],
-                ['tabla' => 'a_actividades_dl', 'campo' => 'dl_org', 'valor' => "'$DlNew'::character varying"],
-                ['tabla' => 'a_fases', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'a_tareas', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'a_tareas_proceso', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'a_tipos_actividad', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'a_tipos_proceso', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'av_cambios_anotados_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'av_cambios_anotados_dl_sf', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'av_cambios_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-        
-                ['tabla' => 'av_cambios_usuario', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'cd_cargos_activ_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'cp_sacd', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'cu_centros_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'cu_centros_dlf', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'da_ctr_encargados', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'da_ingresos_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'du_gastos_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'du_grupos_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'du_grupos_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'du_periodos', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'du_tarifas', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-        
-                ['tabla' => 'u_cdc_dl', 'campo' => 'id_ubi', 'valor' => "idglobal('$esquema'::text, 'u_cdc_dl'::text)"],
-                ['tabla' => 'u_cdc_dl', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-                ['tabla' => 'u_cdc_dl', 'campo' => 'region', 'valor' => "'$RegionNew'::character varying"],
-                ['tabla' => 'u_dir_cdc_dl', 'campo' => 'id_direccion', 'valor' => "idglobal('$esquema'::text, 'u_dir_cdc_dl'::text)"],
-        
-                ['tabla' => 'x_config_schema', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'xa_tipo_activ_tarifa', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-                ['tabla' => 'xa_tipo_tarifa', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-            ];
+            $aDefaults = RenombrarEsquemaDefaultsCatalog::comun($esquema, $RegionNew, $DlNew);
         
             // datos
             // REGEXP_REPLACE(source, pattern, replacement_string,[, flags])
@@ -223,21 +182,23 @@ final class RenombrarEsquema
         
             $oAlterSchema->setDefaults($aDefaults);
             $oAlterSchema->updateDatosRegexp($aDatos);
-        
-            // comun_select (servidor interno)
-            $oConfigDB = new ConfigDB('importar'); //de la database comun
-            $config = $oConfigDB->getEsquema('public_select'); //de la database comun
-        
-            $oConexion = new DBConnection($config);
-            $oDevelPC = $oConexion->getPDO();
-        
-            $oAlterSchema = new DBAlterSchema();
-            $oAlterSchema->setDbConexion($oDevelPC);
-            $oAlterSchema->setSchema($esquema);
-        
-            $oAlterSchema->setDefaults($aDefaults);
-            // No hace falta cambiar los datos, ya se sincroniza
-            //$oAlterSchema->updateDatosRegexp($aDatos);
+
+            // comun_select (servidor interno) — omitir en docker
+            if (!$isDocker) {
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('public_select'); //de la database comun
+
+                $oConexion = new DBConnection($config);
+                $oDevelPC = $oConexion->getPDO();
+
+                $oAlterSchema = new DBAlterSchema();
+                $oAlterSchema->setDbConexion($oDevelPC);
+                $oAlterSchema->setSchema($esquema);
+
+                $oAlterSchema->setDefaults($aDefaults);
+                // No hace falta cambiar los datos, ya se sincroniza
+                //$oAlterSchema->updateDatosRegexp($aDatos);
+            }
         }
         
         // sv
@@ -253,55 +214,7 @@ final class RenombrarEsquema
             $oAlterSchema->setSchema($esquemav);
         
             // Valores Default:
-            $aDefaults = [
-                ['tabla' => 'd_asignaturas_activ_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_congresos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_docencia_stgr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_dossiers_abiertos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_matriculas_activ_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_profesor_ampliacion', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_profesor_director', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-        
-                ['tabla' => 'd_profesor_juramento', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_profesor_latin', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_profesor_stgr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-        
-                ['tabla' => 'd_publicaciones', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_teleco_ctr_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_teleco_personas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_titulo_est', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_traslados', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_ultima_asistencia', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'da_plazas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'dap_plazas_peticion_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'du_presentacion_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'e_actas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'e_actas_tribunal_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'e_notas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'p_agregados', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'p_agregados', 'campo' => 'id_nom', 'valor' => "public.idglobal('$esquemav'::text, 'p_agregados'::text)"],
-                ['tabla' => 'p_agregados', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-                ['tabla' => 'p_de_paso_out', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'p_de_paso_out', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-                ['tabla' => 'p_numerarios', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'p_numerarios', 'campo' => 'id_nom', 'valor' => "public.idglobal('$esquemav'::text, 'p_numerarios'::text)"],
-                ['tabla' => 'p_numerarios', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-                ['tabla' => 'p_sssc', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'p_sssc', 'campo' => 'id_nom', 'valor' => "public.idglobal('$esquemav'::text, 'p_sssc'::text)"],
-                ['tabla' => 'p_sssc', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-                ['tabla' => 'p_supernumerarios', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'p_supernumerarios', 'campo' => 'id_nom', 'valor' => "public.idglobal('$esquemav'::text, 'p_supernumerarios'::text)"],
-                ['tabla' => 'p_supernumerarios', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-                ['tabla' => 'personas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-        
-                ['tabla' => 'u_centros_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'u_centros_dl', 'campo' => 'id_ubi', 'valor' => "public.idglobal('$esquemav'::text, 'u_centros_dl'::text)"],
-                ['tabla' => 'u_centros_dl', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
-                ['tabla' => 'u_centros_dl', 'campo' => 'region', 'valor' => "'$RegionNew'::character varying"],
-                ['tabla' => 'u_cross_ctr_dl_dir', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'u_dir_ctr_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'u_dir_ctr_dl', 'campo' => 'id_direccion', 'valor' => "public.idglobal('$esquemav'::text, 'u_dir_ctr_dl'::text)"],
-            ];
+            $aDefaults = RenombrarEsquemaDefaultsCatalog::sv($esquemav, $RegionNew, $DlNew);
             $oAlterSchema->setDefaults($aDefaults);
         
             // datos
@@ -346,41 +259,7 @@ final class RenombrarEsquema
         
             ////////////// Esquema sv-e
             // Valores Default:
-            $aDefaults = [
-                ['tabla' => 'a_sacd_textos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'aux_cross_usuarios_grupos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'aux_grupmenu', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'aux_grupmenu_rol', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'aux_grupo_permmenu', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'aux_grupos_y_usuarios', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'aux_menus', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'aux_usuarios', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'aux_usuarios_ctr_perm', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'aux_usuarios_perm', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'av_cambios_usuario_objeto_pref', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'av_cambios_usuario_objeto_pref', 'campo' => 'dl_org', 'valor' => "'$DlNew'::character varying"],
-                ['tabla' => 'av_cambios_usuario_propiedades_pref', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_asistentes_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_asistentes_out', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'd_cargos_activ_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargo_datos_cgi', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargo_horario', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargo_horario_excepcion', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargo_sacd_horario', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargo_sacd_horario_excepcion', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargo_sacd_observ', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargo_textos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargo_tipo', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'encargos_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'm0_mods_installed_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'propuesta_encargo_sacd_horario', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'propuesta_encargos_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'web_preferencias', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'zonas', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'zonas_grupos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-                ['tabla' => 'zonas_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-            ];
+            $aDefaults = RenombrarEsquemaDefaultsCatalog::svE($esquemav, $DlNew);
         
             // datos
             // Todos los esquemas:
@@ -403,22 +282,193 @@ final class RenombrarEsquema
             $oAlterSchema->setDefaults($aDefaults);
             $oAlterSchema->updateDatosRegexpTodos($aDatos);
             $oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
-        
-            ///// sv-e_select (servidor interno)
-            $oConfigDB = new ConfigDB('importar'); //de la database sv
-            $config = $oConfigDB->getEsquema('publicv-e_select');
-        
-            $oConexion = new DBConnection($config);
-            $oDevelPC = $oConexion->getPDO();
-        
-            $oAlterSchema = new DBAlterSchema();
-            $oAlterSchema->setDbConexion($oDevelPC);
-            $oAlterSchema->setSchema($esquemav);
-        
-            $oAlterSchema->setDefaults($aDefaults);
-            // No debería hacer falta. Se sincroniza
-            //$oAlterSchema->updateDatosRegexpTodos($aDatos);
-            //$oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
+
+            ///// sv-e_select (servidor interno) — omitir en docker
+            if (!$isDocker) {
+                $oConfigDB = new ConfigDB('importar'); //de la database sv
+                $config = $oConfigDB->getEsquema('publicv-e_select');
+
+                $oConexion = new DBConnection($config);
+                $oDevelPC = $oConexion->getPDO();
+
+                $oAlterSchema = new DBAlterSchema();
+                $oAlterSchema->setDbConexion($oDevelPC);
+                $oAlterSchema->setSchema($esquemav);
+
+                $oAlterSchema->setDefaults($aDefaults);
+                // No debería hacer falta. Se sincroniza
+                //$oAlterSchema->updateDatosRegexpTodos($aDatos);
+                //$oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
+            }
+        }
+
+        return ['avisos' => $oDBRol->consumirAvisosRenameRol()];
+    }
+
+    /**
+     * El desplegable de origen lista esquemas vistos en PostgreSQL; el renombre necesita
+     * el password en algún `.inc` para reasignarlo tras `ALTER ROLE RENAME` (MD5 se invalida).
+     * Aceptamos clave vieja o nueva: si en una BD el rename ya pasó por el `.inc`, la clave nueva
+     * tiene el mismo password y permite reanudar el renombre interrumpido.
+     *
+     * @return array{error: string, avisos: list<string>}|null
+     */
+    private function validarFicherosPasswordAntesDeRenombre(RenombrarEsquemaVerificacionContexto $ctx): ?array
+    {
+        $intentos = [
+            ['db' => 'comun', 'old' => $ctx->esquemaOld, 'new' => $ctx->esquemaNew],
+            ['db' => 'sv', 'old' => $ctx->esquemaOldv, 'new' => $ctx->esquemaNewv],
+            ['db' => 'sv-e', 'old' => $ctx->esquemaOldv, 'new' => $ctx->esquemaNewv],
+        ];
+        if ($ctx->sf !== 0) {
+            $intentos[] = ['db' => 'sf', 'old' => $ctx->esquemaOldf, 'new' => $ctx->esquemaNewf];
+        }
+        foreach ($intentos as $row) {
+            $cfg = new ConfigDB($row['db']);
+            if ($this->leerPasswordEsquema($cfg, $row['old'], $row['new']) === null) {
+                return [
+                    'error' => sprintf(
+                        _('El esquema «%1$s» no tiene entrada de conexión en «%2$s.inc» (ni con el nombre antiguo ni con el nuevo «%3$s»). El listado de origen sale de PostgreSQL; hace falta la misma clave en el fichero de passwords (p. ej. tras «Crear esquema») para poder renombrar.'),
+                        $row['old'],
+                        $row['db'],
+                        $row['new'],
+                    ),
+                    'avisos' => [],
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    private function pdoDesdeImportar(ConfigDB $importar, string $esquema): PDO
+    {
+        $config = $importar->getEsquema($esquema);
+
+        return (new DBConnection($config))->getPDO();
+    }
+
+    /**
+     * Devuelve el password del esquema mirando primero la clave vieja en el `.inc` y, si no está,
+     * la clave nueva (un rename a medias deja el password ya bajo el nombre nuevo en ese `.inc`).
+     */
+    private function leerPasswordEsquema(ConfigDB $cfg, string $esquemaOld, string $esquemaNew): ?string
+    {
+        foreach ([$esquemaOld, $esquemaNew] as $clave) {
+            if ($clave === '') {
+                continue;
+            }
+            try {
+                $row = $cfg->getEsquema($clave);
+            } catch (RuntimeException) {
+                continue;
+            }
+            if (isset($row['password']) && is_string($row['password']) && $row['password'] !== '') {
+                return $row['password'];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Renombra schema + rol en la BD apuntada por $pdo, saltando lo que ya esté hecho.
+     * Si el rol nuevo ya existe, además reasegura propietarios/privilegios.
+     */
+    private function renombrarBloqueRolEsquema(
+        DBRol $oDBRol,
+        PDO $pdo,
+        string $esquemaOld,
+        string $esquemaNew,
+        ?string $pwd,
+    ): void {
+        $oDBRol->setDbConexion($pdo);
+        $oDBRol->setUser($esquemaNew);
+        if ($pwd !== null) {
+            $oDBRol->setPwd($pwd);
+        }
+
+        if ($this->existeEsquema($pdo, $esquemaOld) && !$this->existeEsquema($pdo, $esquemaNew)) {
+            $oDBRol->renombrarSchema($esquemaOld);
+        }
+        if ($this->existeRol($pdo, $esquemaOld) && !$this->existeRol($pdo, $esquemaNew)) {
+            $oDBRol->renombrarUsuario($esquemaOld);
+        } elseif ($this->existeRol($pdo, $esquemaNew) && $this->existeEsquema($pdo, $esquemaNew)) {
+            $oDBRol->repararEsquemaPostRenombre($esquemaNew);
+        }
+    }
+
+    /**
+     * Variante para sv-e: aquí el ROL ya se renombró en la pasada anterior (sv, mismo cluster);
+     * solo hay que renombrar el ESQUEMA y reasegurar propietarios.
+     */
+    private function renombrarBloqueSoloEsquema(DBRol $oDBRol, PDO $pdo, string $esquemaOld, string $esquemaNew): void
+    {
+        $oDBRol->setDbConexion($pdo);
+        $oDBRol->setUser($esquemaNew);
+
+        if ($this->existeEsquema($pdo, $esquemaOld) && !$this->existeEsquema($pdo, $esquemaNew)) {
+            $oDBRol->renombrarSchema($esquemaOld);
+        }
+        if ($this->existeEsquema($pdo, $esquemaNew)) {
+            $oDBRol->repararEsquemaPostRenombre($esquemaNew);
+        }
+    }
+
+    private function renombrarClaveInc(ConfigDB $cfg, string $ficheroBase, string $claveOld, string $claveNew): void
+    {
+        if (!$this->incTieneClave($ficheroBase, $claveOld)) {
+            return;
+        }
+        if ($this->incTieneClave($ficheroBase, $claveNew)) {
+            return;
+        }
+        $cfg->renombrarListaEsquema($ficheroBase, $claveOld, $claveNew);
+    }
+
+    private function incTieneClave(string $ficheroBase, string $clave): bool
+    {
+        if ($clave === '') {
+            return false;
+        }
+        try {
+            (new ConfigDB($ficheroBase))->getEsquema($clave);
+
+            return true;
+        } catch (RuntimeException) {
+            return false;
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    private function existeEsquema(PDO $pdo, string $nombre): bool
+    {
+        if ($nombre === '') {
+            return false;
+        }
+        try {
+            $st = $pdo->prepare('SELECT 1 FROM pg_namespace WHERE nspname = :n LIMIT 1');
+            $st->execute(['n' => $nombre]);
+
+            return (bool) $st->fetchColumn();
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    private function existeRol(PDO $pdo, string $rol): bool
+    {
+        if ($rol === '') {
+            return false;
+        }
+        try {
+            $st = $pdo->prepare('SELECT 1 FROM pg_roles WHERE rolname = :r LIMIT 1');
+            $st->execute(['r' => $rol]);
+
+            return (bool) $st->fetchColumn();
+        } catch (Throwable) {
+            return false;
         }
     }
 }

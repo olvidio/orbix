@@ -17,15 +17,15 @@ $dbProps = PostRequest::getDataFromUrl('/src/devel_db_admin/db_propiedades_data'
     'op' => 'db_cambiar_nombre_esquemas',
 ]);
 $dbProps = is_array($dbProps) ? $dbProps : [];
-$oEsquemaRef = $dbProps['oEsquemaRef'] ?? '';
-$a_posibles_esquemas = (array)($dbProps['a_posibles_esquemas'] ?? []);
+$a_esquemas_union = (array)($dbProps['a_esquemas_union'] ?? []);
 $a_opciones_regiones = (array)($dbProps['a_opciones_regiones'] ?? []);
 
+$oDesplEsquemaOrigen = Desplegable::desdeOpciones($a_esquemas_union, 'esquema_origen');
 $oDesplRegiones = Desplegable::desdeOpciones($a_opciones_regiones, 'region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
 $oHash = new HashFront();
-$oHash->setCamposForm('esquema!region!dl!comun!sv!sf');
+$oHash->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
 
 $oHash1 = new HashFront();
@@ -33,34 +33,32 @@ $oHash1->setUrl(OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar');
 $oHash1->setCamposForm('region');
 $h = $oHash1->linkSinValParams();
 
-$msg_falta_dl = _("debe poner la delegación");
-$msg_falta_esquema = _("debe poner la delegación de referencia");
+$msg_falta_dl = _('debe elegir la delegación de destino');
+$msg_falta_region = _('debe elegir la región de destino');
+$msg_falta_origen = _('debe elegir el esquema de origen (nombre base antiguo)');
 
-// absorber
-$oDesplMatriz = new Desplegable();
-$oDesplMatriz->setNombre('esquema_matriz');
-$oDesplMatriz->setBlanco(TRUE);
-$oDesplMatriz->setOpciones($a_posibles_esquemas);
+$oHashVerificar = new HashFront();
+$oHashVerificar->setUrl(OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/db_verificar_renombrar_esquema.php');
+$oHashVerificar->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
+$oHashVerificar->setcamposNo('comun!sv!sf');
 
-$oDesplDel = new Desplegable();
-$oDesplDel->setNombre('esquema_del');
-$oDesplDel->setBlanco(TRUE);
-$oDesplDel->setOpciones($a_posibles_esquemas);
-
-$oHashAbsorber = new HashFront();
-$oHashAbsorber->setCamposForm('esquema_matriz!esquema_del');
+$oHashCorregir = new HashFront();
+$oHashCorregir->setUrl(OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/db_corregir_renombrar_esquema.php');
+$oHashCorregir->setCamposForm('esquema_origen!region!dl!comun!sv!sf');
+$oHashCorregir->setcamposNo('comun!sv!sf');
 
 $a_campos = [
     'oHash' => $oHash,
     'h' => $h,
+    'oDesplEsquemaOrigen' => $oDesplEsquemaOrigen,
     'oDesplRegiones' => $oDesplRegiones,
-    'oEsquemaRef' => $oEsquemaRef,
     'msg_falta_dl' => $msg_falta_dl,
-    'msg_falta_esquema' => $msg_falta_esquema,
-    // absorber
-    'oDesplMatriz' => $oDesplMatriz,
-    'oDesplDel' => $oDesplDel,
-    'oHashAbsorber' => $oHashAbsorber,
+    'msg_falta_region' => $msg_falta_region,
+    'msg_falta_origen' => $msg_falta_origen,
+    'frmVerificarOculto' => $oHashVerificar->getCamposHtml(),
+    'frmCorregirOculto' => $oHashCorregir->getCamposHtml(),
+    'url_db_verificar_renombrar' => OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/db_verificar_renombrar_esquema.php',
+    'url_db_corregir_renombrar' => OrbixRuntime::getWeb() . '/frontend/devel_db_admin/controller/db_corregir_renombrar_esquema.php',
 ];
 
 $oView = new ViewNewPhtml('frontend\devel_db_admin\controller');

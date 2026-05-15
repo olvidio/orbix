@@ -4,6 +4,7 @@ namespace src\shared\infrastructure\persistence;
 
 use RuntimeException;
 use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 
 /**
  * Básicamente la conexión a la base de datos, con los passwd para cada esquema.
@@ -90,7 +91,7 @@ class ConfigDB
 
         $this->renombrarListaEsquemaProduccion($database, $esquema_old, $esquema_new);
         // En docker no tengo db de pruebas
-        if (!preg_match('/(.*?)\.docker/',ServerConf::SERVIDOR )) {
+        if (!preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
             $this->renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new);
         }
     }

@@ -20,17 +20,37 @@ $hash_recibido = HashFront('sha256', $Qtoken);
 // AND token_expiracion_2fa > NOW()
 
 $esquema = $Qesquema;
+$sfsv = 0;
+$oDB = null;
+$ubicacion = (string) getenv('UBICACION');
+$private = (string) getenv('PRIVATE');
+$useSfDb = ($ubicacion === 'sf' || $private === 'sf');
+
 if (substr($esquema, -1) === 'v') {
     $sfsv = 1;
     $oConfigDB = new ConfigDB('sv-e');
     $config = $oConfigDB->getEsquema($esquema);
     $oConexion = new DBConnection($config);
     $oDB = $oConexion->getPDO();
-
+} elseif (substr($esquema, -1) === 'f') {
+    if ($useSfDb) {
+        try {
+            $sfsv = 2;
+            $oConfigDB = new ConfigDB('sf-e');
+            $config = $oConfigDB->getEsquema($esquema);
+            $oConexion = new DBConnection($config);
+            $oDB = $oConexion->getPDO();
+        } catch (\Throwable $e) {
+            $esquema = substr($esquema, 0, -1);
+            $sfsv = 0;
+        }
+    } else {
+        $esquema = substr($esquema, 0, -1);
+    }
 }
-if (substr($esquema, -1) === 'f') {
-    $sfsv = 2;
-    $oConfigDB = new ConfigDB('sf-e');
+
+if ($oDB === null) {
+    $oConfigDB = new ConfigDB('comun_select');
     $config = $oConfigDB->getEsquema($esquema);
     $oConexion = new DBConnection($config);
     $oDB = $oConexion->getPDO();

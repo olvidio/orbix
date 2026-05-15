@@ -33,7 +33,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl_select($oDbl_Select);
-        $this->setNomTabla('db_idschema');
+        // Siempre en esquema public (sv/sv-e usan search_path hacia publicv; nombre sin calificar no resuelve).
+        $this->setNomTabla('public.db_idschema');
     }
 
     /* -------------------- Otras Funciones ---------------------------------------- */
@@ -322,15 +323,44 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     }
 
     /**
-     * Cambiar nombre: al reves que lo normal, uso de clave el id
+     * Cambiar nombre: `schema` es PK; no puede haber dos filas con el mismo nombre.
      *
+     * Idempotente para reintentos de renombre:
+     * - Si no existe la fila antigua (ya renombrada o no existía): no-op.
+     * - Si existen antigua y nueva (estado incoherente tras corte a medias): borra la fila antigua
+     *   para no violar la PK (un UPDATE antigua→nueva fallaría con «duplicate key»).
+     * - Si solo existe la antigua: UPDATE a `new`.
      */
-    private function DBCambiarNombre($old, $new, $database)
+    private function DBCambiarNombre($old, $new, $database): bool
     {
+        if ($old === $new || $old === '' || $new === '') {
+            return true;
+        }
         $oDbl = $this->connectar($database);
         $nom_tabla = $this->getNomTabla();
-        //UPDATE
-        $update = "UPDATE $nom_tabla SET schema='$new' WHERE schema='$old'";
+        $qOld = $oDbl->quote((string) $old);
+        $qNew = $oDbl->quote((string) $new);
+
+        $sqlOld = "SELECT 1 FROM $nom_tabla WHERE schema = $qOld LIMIT 1";
+        $stmtOld = $this->pdoQuery($oDbl, $sqlOld, __METHOD__, __FILE__, __LINE__);
+        $hasOld = $stmtOld !== false && $stmtOld->fetchColumn() !== false;
+
+        if (!$hasOld) {
+            return true;
+        }
+
+        $sqlNew = "SELECT 1 FROM $nom_tabla WHERE schema = $qNew LIMIT 1";
+        $stmtNew = $this->pdoQuery($oDbl, $sqlNew, __METHOD__, __FILE__, __LINE__);
+        $hasNew = $stmtNew !== false && $stmtNew->fetchColumn() !== false;
+
+        if ($hasNew) {
+            $delete = "DELETE FROM $nom_tabla WHERE schema = $qOld";
+
+            return $this->pdoExec($oDbl, $delete, __METHOD__, __FILE__, __LINE__);
+        }
+
+        $update = "UPDATE $nom_tabla SET schema=$qNew WHERE schema=$qOld";
+
         return $this->pdoExec($oDbl, $update, __METHOD__, __FILE__, __LINE__);
     }
 

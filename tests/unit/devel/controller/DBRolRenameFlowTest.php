@@ -40,14 +40,14 @@ final class DBRolRenameFlowTest extends TestCase
         $searchPathStatement = new SpyStatement(true);
         $pdo = new SpyPdo([$renameStatement, $passwordStatement, $searchPathStatement]);
 
-        $dbRol = new DBRol();
+        $dbRol = new DBRolSinRepararPostRenombre();
         $dbRol->setDbConexion($pdo);
         $dbRol->setUser('nuevo_usuario');
         $dbRol->setPwd('super_secret');
 
         $result = $dbRol->renombrarUsuario('usuario_viejo');
 
-        $this->assertNull($result);
+        $this->assertTrue($result, 'Tras RENAME + password + search_path, debe devolver el resultado de repararEsquemaPostRenombre (aquí true sin tocar PostgreSQL).');
         $this->assertSame(
             [
                 'ALTER ROLE "usuario_viejo" RENAME TO "nuevo_usuario" ',
@@ -74,6 +74,19 @@ final class DBRolRenameFlowTest extends TestCase
         $this->assertFalse($result);
         $this->assertCount(1, $_SESSION['oGestorErrores']->errors);
         $this->assertSame('DBRol.crear.prepare', $_SESSION['oGestorErrores']->errors[0]['clave']);
+    }
+}
+
+/**
+ * Aísla el flujo unitario de {@see DBRol::renombrarUsuario}: tras los tres prepare/execute del rename,
+ * la implementación real llama a {@see DBRol::repararEsquemaPostRenombre} (más consultas DDL/DML).
+ * Con {@see SpyPdo} no hay `exec()` ni prepares extra; evitamos ese acoplamiento en este test.
+ */
+final class DBRolSinRepararPostRenombre extends DBRol
+{
+    public function repararEsquemaPostRenombre(string $esquemaNombre): bool
+    {
+        return true;
     }
 }
 
@@ -121,6 +134,15 @@ final class DummyErrorManager
     {
         $this->errors[] = [
             'clave' => $clave,
+            'line' => $line,
+            'file' => $file,
+        ];
+    }
+
+    public function addErrorAppLastErrorNoThrowText(string $errorText, string $sClauError, int $line, string $file): void
+    {
+        $this->errors[] = [
+            'clave' => $sClauError,
             'line' => $line,
             'file' => $file,
         ];

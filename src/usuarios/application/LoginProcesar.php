@@ -36,7 +36,7 @@ final class LoginProcesar
     /**
      * @param array{username?:string, password?:string, esquema?:string, verification_code?:string} $input
      * @param string $esquemaWeb Esquema forzado por la variable de entorno ESQUEMA ('' si no hay).
-     * @param string $ubicacion Valor de getenv('UBICACION').
+     * @param string $ubicacion Valor de getenv('UBICACION') (p. ej. «sf» solo en entrada sf; si no, esquema «…f» se trata como comun sin sufijo).
      *
      * @return array{
      *     ok: bool,
@@ -58,9 +58,9 @@ final class LoginProcesar
 
         $esquema = empty($esquemaIn) ? $esquemaWeb : $esquemaIn;
 
-        // PDO segun la terminacion del esquema.
+        // PDO según sufijo v/sv-e o f/sf, o comun (nombre base). La «f» solo implica BD sf si la entrada es sf (UBICACION/PRIVATE); si no, se usa comun (p. ej. Docker sin rol …f).
         $sfsv = 0;
-        $oDB_Select = $this->pdoForEsquema($esquema, $sfsv);
+        $oDB_Select = $this->pdoForEsquema($esquema, $sfsv, $ubicacion);
         if ($oDB_Select === null) {
             return ['ok' => false, 'error' => 1];
         }
@@ -228,27 +228,56 @@ final class LoginProcesar
         ];
     }
 
-    private function pdoForEsquema(string $esquema, ?int &$sfsv): ?\PDO
+    private function pdoForEsquema(string &$esquema, ?int &$sfsv, string $ubicacion): ?\PDO
     {
         $sfsv = 0;
+        $private = (string) getenv('PRIVATE');
+        $useSfDb = ($ubicacion === 'sf' || $private === 'sf');
+
         if (substr($esquema, -1) === 'v') {
             $sfsv = 1;
-            $oConfigDB = new ConfigDB('sv-e_select');
-            $config = $oConfigDB->getEsquema($esquema);
-            $oConexion = new DBConnection($config);
+            try {
+                $oConfigDB = new ConfigDB('sv-e_select');
+                $config = $oConfigDB->getEsquema($esquema);
+                $oConexion = new DBConnection($config);
 
-            return $oConexion->getPDO();
+                return $oConexion->getPDO();
+            } catch (\PDOException) {
+                return null;
+            }
         }
+
         if (substr($esquema, -1) === 'f') {
-            $sfsv = 2;
-            $oConfigDB = new ConfigDB('sf-e');
+            if ($useSfDb) {
+                try {
+                    $sfsv = 2;
+                    $oConfigDB = new ConfigDB('sf-e');
+                    $config = $oConfigDB->getEsquema($esquema);
+                    $oConexion = new DBConnection($config);
+
+                    return $oConexion->getPDO();
+                } catch (\PDOException) {
+                    $esquema = substr($esquema, 0, -1);
+                    $sfsv = 0;
+                }
+            } else {
+                $esquema = substr($esquema, 0, -1);
+            }
+        }
+
+        if ($esquema === '') {
+            return null;
+        }
+
+        try {
+            $oConfigDB = new ConfigDB('comun_select');
             $config = $oConfigDB->getEsquema($esquema);
             $oConexion = new DBConnection($config);
 
             return $oConexion->getPDO();
+        } catch (\PDOException) {
+            return null;
         }
-
-        return null;
     }
 
     /** @return array<string, int> */

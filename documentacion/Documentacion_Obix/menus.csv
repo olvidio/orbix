@@ -328,6 +328,7 @@ id_grupmenu,?column?,url,parametros,id_mod
 13,migraciones (ejecutar migraciones SQL),frontend/devel_db_admin/controller/migraciones_lista.php,,2
 13,mover tabla a otra DB (DB mover tabla),frontend/devel_db_admin/controller/db_mover_que.php,,2
 13,mover y cambiar nombre dl (cambiar nombre dl),frontend/devel_db_admin/controller/db_cambiar_nombre_que.php,"",2
+13,absorber esquema (absorber esquema),frontend/devel_db_admin/controller/db_absorber_esquema_que.php,"",2
 13,borrar passwords (borrar passwords de todos los usuarios),frontend/usuarios/controller/borrar_todos_pwd.php,,2
 13,devel (Raiz devel),,,2
 13,factory (generador de clases),frontend/devel_codegen/controller/factory_form.php,,2

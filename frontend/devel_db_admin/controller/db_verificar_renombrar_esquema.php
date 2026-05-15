@@ -16,7 +16,7 @@ $Qcomun = (int) filter_input(INPUT_POST, 'comun');
 $Qsv = (int) filter_input(INPUT_POST, 'sv');
 $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
-PostRequest::getDataFromUrl('/src/devel_db_admin/renombrar_esquema', [
+$data = PostRequest::getDataFromUrl('/src/devel_db_admin/verificar_renombrar_esquema', [
     'esquema_origen' => $QEsquemaOrigen,
     'region' => $Qregion,
     'dl' => $Qdl,
@@ -25,5 +25,5 @@ PostRequest::getDataFromUrl('/src/devel_db_admin/renombrar_esquema', [
     'sf' => $Qsf,
 ]);
 
-echo '<br>';
-echo sprintf(_("se ha cambiado el nombre del esquema"));
+header('Content-Type: application/json; charset=UTF-8');
+echo json_encode(['success' => true, 'data' => $data], JSON_UNESCAPED_UNICODE);

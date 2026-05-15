@@ -65,7 +65,8 @@ final class AppMobileLogin
         }
 
         $sfsv = 0;
-        $oDB_Select = self::pdoForEsquema($esquema, $sfsv);
+        $ubicacionStr = (string) $ubicacion;
+        $oDB_Select = self::pdoForEsquema($esquema, $sfsv, $ubicacionStr);
         if ($oDB_Select === null) {
             return [
                 'ok' => false,
@@ -275,27 +276,56 @@ final class AppMobileLogin
         ];
     }
 
-    private static function pdoForEsquema(string $esquema, ?int &$sfsv): ?\PDO
+    private static function pdoForEsquema(string &$esquema, ?int &$sfsv, string $ubicacion): ?\PDO
     {
-        $sfsv = null;
+        $sfsv = 0;
+        $private = (string) getenv('PRIVATE');
+        $useSfDb = ($ubicacion === 'sf' || $private === 'sf');
+
         if (str_ends_with($esquema, 'v')) {
             $sfsv = 1;
-            $oConfigDB = new ConfigDB('sv-e_select');
-            $config = $oConfigDB->getEsquema($esquema);
-            $oConexion = new DBConnection($config);
+            try {
+                $oConfigDB = new ConfigDB('sv-e_select');
+                $config = $oConfigDB->getEsquema($esquema);
+                $oConexion = new DBConnection($config);
 
-            return $oConexion->getPDO();
+                return $oConexion->getPDO();
+            } catch (\PDOException) {
+                return null;
+            }
         }
+
         if (str_ends_with($esquema, 'f')) {
-            $sfsv = 2;
-            $oConfigDB = new ConfigDB('sf-e');
+            if ($useSfDb) {
+                try {
+                    $sfsv = 2;
+                    $oConfigDB = new ConfigDB('sf-e');
+                    $config = $oConfigDB->getEsquema($esquema);
+                    $oConexion = new DBConnection($config);
+
+                    return $oConexion->getPDO();
+                } catch (\PDOException) {
+                    $esquema = substr($esquema, 0, -1);
+                    $sfsv = 0;
+                }
+            } else {
+                $esquema = substr($esquema, 0, -1);
+            }
+        }
+
+        if ($esquema === '') {
+            return null;
+        }
+
+        try {
+            $oConfigDB = new ConfigDB('comun_select');
             $config = $oConfigDB->getEsquema($esquema);
             $oConexion = new DBConnection($config);
 
             return $oConexion->getPDO();
+        } catch (\PDOException) {
+            return null;
         }
-
-        return null;
     }
 
     /** @return array<string, int> */

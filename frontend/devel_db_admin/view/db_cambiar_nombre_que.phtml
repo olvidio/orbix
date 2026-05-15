@@ -21,14 +21,19 @@ use frontend\shared\config\OrbixRuntime;
     fnjs_db_renombrar_esquema = function () {
         err = '';
         dl = $('#dl').val();
-        esquema = $('#esquema').val();
+        region = $('#region').val();
+        esquema_origen = $('#esquema_origen').val();
 
-        if (!dl) {
-            alert(<?= json_encode((string)$msg_falta_dl) ?>);
+        if (!esquema_origen) {
+            alert(<?= json_encode((string)($msg_falta_origen ?? '')) ?>);
             err = 1;
         }
-        if (!esquema) {
-            alert(<?= json_encode((string)$msg_falta_esquema) ?>);
+        if (!region) {
+            alert(<?= json_encode((string)($msg_falta_region ?? '')) ?>);
+            err = 1;
+        }
+        if (!dl) {
+            alert(<?= json_encode((string)$msg_falta_dl) ?>);
             err = 1;
         }
 
@@ -37,47 +42,175 @@ use frontend\shared\config\OrbixRuntime;
             fnjs_enviar_formulario('#frm', '#main');
         }
     }
-    fnjs_absorber_dl = function () {
+    fnjs_sincronizar_frm_verif = function () {
+        $('#vf_esquema_origen').val($('#esquema_origen').val());
+        $('#vf_region').val($('#region').val());
+        $('#vf_dl').val($('#dl').val());
+        $('#vf_comun').val($('input[name=comun]').is(':checked') ? '1' : '0');
+        $('#vf_sv').val($('input[name=sv]').is(':checked') ? '1' : '0');
+        $('#vf_sf').val($('input[name=sf]').is(':checked') ? '1' : '0');
+        $('#cf_esquema_origen').val($('#esquema_origen').val());
+        $('#cf_region').val($('#region').val());
+        $('#cf_dl').val($('#dl').val());
+        $('#cf_comun').val($('input[name=comun]').is(':checked') ? '1' : '0');
+        $('#cf_sv').val($('input[name=sv]').is(':checked') ? '1' : '0');
+        $('#cf_sf').val($('input[name=sf]').is(':checked') ? '1' : '0');
+    }
+    fnjs_html_verificacion = function (d) {
+        var html = '<h4>' + <?= json_encode(_('Resultado de la comprobación')) ?> + '</h4>';
+        html += '<p><strong>' + <?= json_encode(_('Resumen')) ?> + ':</strong> ' + (d.resumen || '') + '</p>';
+        html += '<p><strong>' + <?= json_encode(_('Estado')) ?> + ':</strong> ' + (d.listo ? <?= json_encode(_('coherente con el objetivo')) ?> : <?= json_encode(_('hay pendientes o errores')) ?>) + '</p>';
+        if (d.meta) {
+            if (d.meta.comprobacion_solo_destino) {
+                html += '<p><small><em>' + <?= json_encode(_('Comprobación solo destino (sin nombre de origen): no se valida la desaparición de un esquema antiguo.')) ?> + '</em></small></p>';
+            }
+            html += '<p><small>' + <?= json_encode(_('Origen (base)')) ?> + ': ' + (d.meta.comprobacion_solo_destino ? '—' : (d.meta.origen_base || '')) +
+                ' → ' + <?= json_encode(_('Objetivo (base)')) ?> + ': ' + (d.meta.objetivo_base || '') + '</small></p>';
+            if (d.meta.region_efectiva !== undefined && d.meta.dl_efectiva !== undefined) {
+                html += '<p><small>' + <?= json_encode(_('Región / delegación usadas en la comprobación')) ?> + ': ' +
+                    (d.meta.region_efectiva || '') + ' / ' + (d.meta.dl_efectiva || '') + '</small></p>';
+            }
+        }
+        if (d.bloques && d.bloques.length) {
+            html += '<ul style="text-align:left">';
+            for (var i = 0; i < d.bloques.length; i++) {
+                var b = d.bloques[i];
+                html += '<li><strong>' + (b.nombre || '') + '</strong><ul>';
+                var items = b.items || [];
+                for (var j = 0; j < items.length; j++) {
+                    var it = items[j];
+                    var st = it.estado || '';
+                    html += '<li>[' + st + '] ' + (it.texto || '') + '</li>';
+                }
+                html += '</ul></li>';
+            }
+            html += '</ul>';
+        }
+        return html;
+    }
+    fnjs_db_verificar_renombrar_esquema = function () {
         err = '';
-        esquema_m = $('#esquema_matriz').val();
-        esquema_d = $('#esquema_del').val();
-
-        if (!esquema_m) {
-            alert(<?= json_encode((string)$msg_falta_esquema) ?>);
+        region = $('#region').val();
+        dl = $('#dl').val();
+        if (!region) {
+            alert(<?= json_encode((string)($msg_falta_region ?? '')) ?>);
             err = 1;
         }
-        if (!esquema_d) {
-            alert(<?= json_encode((string)$msg_falta_esquema) ?>);
+        if (!dl) {
+            alert(<?= json_encode((string)$msg_falta_dl) ?>);
             err = 1;
         }
-
-        if (!err) {
-            $('#frm_absorber').attr('action', 'frontend/devel_db_admin/controller/db_absorber_esquema.php');
-            fnjs_enviar_formulario('#frm_absorber', '#main');
+        if (err) {
+            return;
         }
+        fnjs_sincronizar_frm_verif();
+        var url = <?= json_encode((string)($url_db_verificar_renombrar ?? '')) ?>;
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: $('#frm_verif').serialize(),
+            dataType: 'json'
+        })
+            .done(function (rta) {
+                if (!rta || !rta.success || !rta.data) {
+                    alert(<?= json_encode(_('Respuesta inesperada del servidor.')) ?>);
+                    return;
+                }
+                var d = rta.data;
+                $('#verif_result').html(fnjs_html_verificacion(d));
+            })
+            .fail(function (xhr) {
+                var msg = <?= json_encode(_('Error al comprobar.')) ?>;
+                if (xhr.responseText) {
+                    msg += '\n' + xhr.responseText.substring(0, 500);
+                }
+                alert(msg);
+            });
+    }
+    fnjs_db_corregir_renombrar_esquema = function () {
+        err = '';
+        region = $('#region').val();
+        dl = $('#dl').val();
+        if (!region) {
+            alert(<?= json_encode((string)($msg_falta_region ?? '')) ?>);
+            err = 1;
+        }
+        if (!dl) {
+            alert(<?= json_encode((string)$msg_falta_dl) ?>);
+            err = 1;
+        }
+        if (err) {
+            return;
+        }
+        fnjs_sincronizar_frm_verif();
+        var url = <?= json_encode((string)($url_db_corregir_renombrar ?? '')) ?>;
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: $('#frm_corregir').serialize(),
+            dataType: 'json'
+        })
+            .done(function (rta) {
+                if (!rta || !rta.success || !rta.data) {
+                    alert(<?= json_encode(_('Respuesta inesperada del servidor.')) ?>);
+                    return;
+                }
+                var p = rta.data;
+                var html = '<h4>' + <?= json_encode(_('Corrección automática')) ?> + '</h4>';
+                if (p.acciones && p.acciones.length) {
+                    html += '<p><strong>' + <?= json_encode(_('Acciones realizadas')) ?> + ':</strong></p><ul style="text-align:left">';
+                    for (var i = 0; i < p.acciones.length; i++) {
+                        html += '<li>' + (p.acciones[i] || '') + '</li>';
+                    }
+                    html += '</ul>';
+                } else {
+                    html += '<p><em>' + <?= json_encode(_('No se ejecutó ninguna acción de corrección (condiciones no cumplidas o ya estaba alineado).')) ?> + '</em></p>';
+                }
+                if (p.avisos && p.avisos.length) {
+                    html += '<p><strong>' + <?= json_encode(_('Avisos / errores parciales')) ?> + ':</strong></p><ul style="text-align:left;color:#a00">';
+                    for (var k = 0; k < p.avisos.length; k++) {
+                        html += '<li>' + (p.avisos[k] || '') + '</li>';
+                    }
+                    html += '</ul>';
+                }
+                if (p.verificacion) {
+                    html += '<hr style="margin:1em 0">';
+                    html += fnjs_html_verificacion(p.verificacion);
+                }
+                $('#verif_result').html(html);
+            })
+            .fail(function (xhr) {
+                var msg = <?= json_encode(_('Error al corregir.')) ?>;
+                if (xhr.responseText) {
+                    msg += '\n' + xhr.responseText.substring(0, 500);
+                }
+                alert(msg);
+            });
     }
 </script>
 
-<h1><?= _("Cambiar nombre de un esquema (region-dl)") ?></h1>
-<h3><?= _("Esquema actual") ?></h3>
-<form id="frm" action="" method=post>
+<h1><?= htmlspecialchars(_("Cambiar nombre de un esquema (región–dl)")) ?></h1>
+
+<form id="frm" action="" method="post">
     <?= $oHash->getCamposHtml(); ?>
+    <h2 style="margin-top:0"><?= htmlspecialchars(_("Origen (nombre base antiguo)")) ?></h2>
+    <p style="text-align:left;margin:0 0 1em 0;max-width:900px"><?= htmlspecialchars(_('Lista unida de esquemas vistos en comun, sv, sv-e y sf (y réplicas si aplica). Si el nombre antiguo ya no aparece, puede dejar el origen vacío: «Comprobar» valida solo el destino (región + delegación); «Corregir» reaplica solo los defaults (ALTER COLUMN) en ese nombre. Para contrastar o corregir la transición completa (incl. .inc y db_idschema) o para «Cambiar nombre», indique el esquema de origen cuando lo tenga.')) ?></p>
     <table>
-        <tr style="vertical-align=top; text-align: left">
-            <td><?= _("esquema") ?>: <?= $oEsquemaRef ?> </td>
+        <tr style="vertical-align:top; text-align:left">
+            <td><?= htmlspecialchars(_("esquema de origen")) ?>:</td>
+            <td><?= $oDesplEsquemaOrigen->desplegable() ?></td>
         </tr>
     </table>
     <br>
 
-    <h3><?= _("Nuevo nombre") ?></h3>
-    Si no sale en la lista, hay que ir a "Global > Ubis > delegaciones" y añadir la dl, o cambiar el nombre a una
-    existente. (idem con la region)
+    <h2><?= htmlspecialchars(_("Destino (nuevo nombre región–dl)")) ?></h2>
+    <p style="text-align:left;margin:0 0 1em 0;max-width:900px"><?= htmlspecialchars(_('Si no sale en la lista, hay que ir a "Global > Ubis > delegaciones" y añadir la dl, o cambiar el nombre a una existente (idem con la región).')) ?></p>
     <table>
-        <tr style="vertical-align=top; text-align: left">
-            <td><?= _("región") ?>:</td>
+        <tr style="vertical-align:top; text-align:left">
+            <td><?= htmlspecialchars(_("región")) ?>:</td>
             <td><?= $oDesplRegiones->desplegable() ?>
             </td>
-            <td><?= _("delegación") ?>:</td>
+            <td><?= htmlspecialchars(_("delegación")) ?>:</td>
             <td id="lst_dl">
             </td>
         </tr>
@@ -86,52 +219,66 @@ use frontend\shared\config\OrbixRuntime;
 
     <table>
         <tr>
-            <td colspan=3>
-                Para las bases de datos:
+            <td colspan="3">
+                <?= htmlspecialchars(_("Para las bases de datos:")) ?>
             </td>
         </tr>
         <tr>
-            <td><?= _("comun") ?>: <input type="checkbox" value="1" checked name="comun">
+            <td><?= htmlspecialchars(_("comun")) ?>: <input type="checkbox" value="1" checked name="comun">
             </td>
-            <td><?= _("sv") ?>: <input type="checkbox" value="1" checked name="sv">
+            <td><?= htmlspecialchars(_("sv")) ?>: <input type="checkbox" value="1" checked name="sv">
             </td>
-            <td><?= _("sf") ?>: <input type="checkbox" value="1" name="sf">
+            <td><?= htmlspecialchars(_("sf")) ?>: <input type="checkbox" value="1" name="sf">
             </td>
         </tr>
     </table>
     <br>
     <br>
     <table>
+        <tr>
+            <td>
+                <input type="button" name="bverif" onclick="fnjs_db_verificar_renombrar_esquema()"
+                       value="<?= htmlspecialchars(_("Comprobar estado del renombre")) ?>"></td>
+            <td colspan="4" style="text-align:left">
+                <?= htmlspecialchars(_('Comprueba esquemas/roles, db_idschema y ficheros .inc frente al nombre objetivo (sin modificar). Origen vacío: solo destino (región + delegación). Con origen relleno: también la transición desde ese nombre antiguo.')) ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" name="bcorregir" onclick="fnjs_db_corregir_renombrar_esquema()"
+                       value="<?= htmlspecialchars(_("Intentar correcciones automáticas")) ?>"></td>
+            <td colspan="4" style="text-align:left">
+                <?= htmlspecialchars(_('Reaplica ALTER COLUMN (defaults) según el catálogo en el nombre destino. Origen vacío: solo defaults (no sincroniza .inc ni db_idschema). Con origen y renombre ya hecho en PostgreSQL, también alinea .inc y db_idschema. Vuelve a comprobar al final.')) ?>
+            </td>
+        </tr>
         <tr>
             <td>
                 <input type="button" name="bcrear" onclick="fnjs_db_renombrar_esquema()"
-                       value="<?= ("cambiar nombre Esquema") ?>"></td>
-            <td colspan=4>
-                Cambia el nombre del esquema, y todos los valores por defecto.
+                       value="<?= htmlspecialchars(_("Cambiar nombre del esquema")) ?>"></td>
+            <td colspan="4" style="text-align:left">
+                <?= htmlspecialchars(_("Cambia el nombre del esquema y los valores por defecto asociados.")) ?>
             </td>
         </tr>
     </table>
+    <div id="verif_result" style="margin-top:1em;text-align:left;max-width:900px;"></div>
 </form>
 
-<h1><?= _("Absorber un esquema (region-dl)") ?></h1>
-<h3><?= _("pasar los datos al Esquema matriz") ?></h3>
-<form id="frm_absorber" action="" method=post>
-    <?= $oHashAbsorber->getCamposHtml(); ?>
-    <table>
-        <tr style="vertical-align=top; text-align: left">
-            <td><?= _("esquema matriz") ?>: <?= $oDesplMatriz->desplegable() ?> </td>
-            <td><?= _("esquema a disolver") ?>: <?= $oDesplDel->desplegable() ?> </td>
-        </tr>
-    </table>
-    <br>
-    <br>
-    <table>
-        <tr>
-            <td>
-                <input type="button" name="bimportar" onclick="fnjs_absorber_dl()"
-                       value="<?= ("trasladar los datos al esquema matriz") ?>"></td>
-            <td colspan=4>
-                Todas las referencias a la dl importada desaparecen, y se cambia por la nueva dl.
-            </td>
-        </tr>
-    </table>
+<form id="frm_verif" method="post" action="#" style="display:none" aria-hidden="true">
+    <?= $frmVerificarOculto ?? '' ?>
+    <input type="hidden" name="esquema_origen" id="vf_esquema_origen" value="">
+    <input type="hidden" name="region" id="vf_region" value="">
+    <input type="hidden" name="dl" id="vf_dl" value="">
+    <input type="hidden" name="comun" id="vf_comun" value="0">
+    <input type="hidden" name="sv" id="vf_sv" value="0">
+    <input type="hidden" name="sf" id="vf_sf" value="0">
+</form>
+
+<form id="frm_corregir" method="post" action="#" style="display:none" aria-hidden="true">
+    <?= $frmCorregirOculto ?? '' ?>
+    <input type="hidden" name="esquema_origen" id="cf_esquema_origen" value="">
+    <input type="hidden" name="region" id="cf_region" value="">
+    <input type="hidden" name="dl" id="cf_dl" value="">
+    <input type="hidden" name="comun" id="cf_comun" value="0">
+    <input type="hidden" name="sv" id="cf_sv" value="0">
+    <input type="hidden" name="sf" id="cf_sf" value="0">
+</form>

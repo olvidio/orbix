@@ -33,15 +33,9 @@ class TablonAnunciosParaGM
         foreach ($cAnuncios as $Anuncio) {
             $i++;
             $uuid_item = $Anuncio->getUuid_item();
-            $usuario_creador = $Anuncio->getUsuarioCreador();
-            $esquema_emisor = $Anuncio->getEsquemaEmisor();
-            $esquema_destino = $Anuncio->getEsquemaDestino();
-            $texto_anuncio = $Anuncio->getTextoAnuncio();
-            $idioma = $Anuncio->getIdiomaVo()->value();
-            $tablon = $Anuncio->getTablon();
+            $esquema_emisor = $Anuncio->getEsquemaEmisorVo()->value();
+            $texto_anuncio = $Anuncio->getTextoAnuncioVo()->value();
             $t_anotado = $Anuncio->getT_anotado();
-            $t_eliminado = $Anuncio->getT_eliminado();
-            $categoria = $Anuncio->getCategoria();
 
             // sólo puede ver que està ocupado
             $a_valores[$i]['sel'] = $uuid_item;

@@ -2,10 +2,14 @@
 
 namespace src\shared\infrastructure\persistence\postgresql;
 
+use PDOException;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
+
 class DBRol
 {
+    /** @var list<string> Avisos no fatales (p. ej. rol destino eliminado antes de renombrar). */
+    private array $avisosRenameRol = [];
     /**
      * oDbl de Grupo
      *
@@ -159,6 +163,191 @@ class DBRol
         }
     }
 
+    /**
+     * Tras RENAME del esquema y del rol, el propietario del esquema puede no coincidir con el nombre del rol; Orbix espera que coincidan (como en CREATE SCHEMA … AUTHORIZATION).
+     */
+    public function asegurarPropietarioEsquema(string $esquemaNombre): bool
+    {
+        if ($esquemaNombre === '' || preg_match('/[^A-Za-z0-9._-]/', $esquemaNombre)) {
+            return false;
+        }
+        $oDbl = $this->getoDbl();
+        $q = '"' . str_replace('"', '""', $esquemaNombre) . '"';
+        $sql = "ALTER SCHEMA {$q} OWNER TO {$q}";
+
+        if (($oDblSt = $oDbl->prepare($sql)) === false) {
+            $sClauError = 'DBRol.asegurarPropietarioEsquema.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+
+            return false;
+        }
+        try {
+            if ($oDblSt->execute() === false) {
+                $sClauError = 'DBRol.asegurarPropietarioEsquema.execute';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+
+                return false;
+            }
+        } catch (PDOException $e) {
+            $sClauError = 'DBRol.asegurarPropietarioEsquema.execute';
+            $sClauError .= ' ' . ($e->errorInfo[2] ?? $e->getMessage());
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Tras renombrar esquema/rol: dueño del esquema = rol homónimo, mismos dueños en objetos del esquema y GRANT de respaldo (evita «permission denied» en aux_usuarios con sesión del rol delegación).
+     */
+    public function repararEsquemaPostRenombre(string $esquemaNombre): bool
+    {
+        if (!$this->asegurarPropietarioEsquema($esquemaNombre)) {
+            return false;
+        }
+        if (!$this->realignarPropietariosObjetosEnEsquema($esquemaNombre)) {
+            return false;
+        }
+        $this->concederPrivilegiosRolSobreSuEsquema($esquemaNombre);
+
+        return true;
+    }
+
+    /**
+     * Pone el propietario de tablas, particiones, vistas, mat. vistas, secuencias y tablas foráneas del esquema en el rol homónimo al esquema.
+     * No incluye índices (relkind i/I): ALTER INDEX suele fallar sin aportar a permisos DML sobre las tablas; el dueño del heap es el relevante.
+     * Omite secuencias ligadas a una columna (SERIAL/IDENTITY): PostgreSQL no permite ALTER SEQUENCE OWNER en ellas; el dueño sigue al de la tabla.
+     */
+    public function realignarPropietariosObjetosEnEsquema(string $esquemaNombre): bool
+    {
+        if ($esquemaNombre === '' || preg_match('/[^A-Za-z0-9._-]/', $esquemaNombre)) {
+            return false;
+        }
+        $oDbl = $this->getoDbl();
+        $st = $oDbl->prepare(
+            'SELECT c.relname, c.relkind FROM pg_class c
+             INNER JOIN pg_namespace n ON n.oid = c.relnamespace
+             WHERE n.nspname = :s
+               AND c.relkind IN (\'r\', \'p\', \'v\', \'m\', \'S\', \'f\')
+               AND c.relname NOT LIKE \'pg\_%\' ESCAPE \'\\\'
+               AND NOT (
+                 c.relkind = \'S\'
+                 AND EXISTS (
+                   SELECT 1 FROM pg_depend d
+                   WHERE d.classid = \'pg_class\'::regclass
+                     AND d.objid = c.oid
+                     AND d.refclassid = \'pg_class\'::regclass
+                     AND d.refobjsubid <> 0
+                     AND d.deptype = \'a\'
+                 )
+               )',
+        );
+        if ($st === false) {
+            $sClauError = 'DBRol.realignarPropietariosObjetosEnEsquema.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+
+            return false;
+        }
+        $st->execute(['s' => $esquemaNombre]);
+        $qs = '"' . str_replace('"', '""', $esquemaNombre) . '"';
+        foreach ($st->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            $rel = (string) ($row['relname'] ?? '');
+            $kind = (string) ($row['relkind'] ?? '');
+            if ($rel === '') {
+                continue;
+            }
+            $qt = '"' . str_replace('"', '""', $rel) . '"';
+            $sql = match ($kind) {
+                'S' => "ALTER SEQUENCE {$qs}.{$qt} OWNER TO {$qs}",
+                'f' => "ALTER FOREIGN TABLE {$qs}.{$qt} OWNER TO {$qs}",
+                'm' => "ALTER MATERIALIZED VIEW {$qs}.{$qt} OWNER TO {$qs}",
+                default => "ALTER TABLE {$qs}.{$qt} OWNER TO {$qs}",
+            };
+            try {
+                $oDbl->exec($sql);
+            } catch (PDOException $e) {
+                $msg = ($e->errorInfo[2] ?? $e->getMessage());
+                $sClauError = 'DBRol.realignarPropietariosObjetosEnEsquema.exec '
+                    . $esquemaNombre . '.' . $rel . ' (' . $kind . '): ' . $msg;
+                if (isset($_SESSION['oGestorErrores']) && is_object($_SESSION['oGestorErrores'])) {
+                    $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
+                        $sClauError,
+                        'DBRol.realignarPropietariosObjetosEnEsquema',
+                        __LINE__,
+                        __FILE__,
+                    );
+                }
+                // Vistas/MV/FT pueden fallar sin bloquear tablas; tablas/secuencias se validan después.
+                if (in_array($kind, ['r', 'p', 'S'], true)) {
+                    return false;
+                }
+            }
+        }
+
+        $stV = $oDbl->prepare(
+            'SELECT c.relname, c.relkind FROM pg_class c
+             INNER JOIN pg_namespace n ON n.oid = c.relnamespace
+             INNER JOIN pg_roles r_own ON r_own.oid = c.relowner
+             INNER JOIN pg_roles r_want ON r_want.rolname = :want
+             WHERE n.nspname = :s
+               AND c.relkind IN (\'r\', \'p\', \'S\')
+               AND c.relname NOT LIKE \'pg\_%\' ESCAPE \'\\\'
+               AND r_own.oid <> r_want.oid
+             LIMIT 5',
+        );
+        if ($stV === false) {
+            $sClauError = 'DBRol.realignarPropietariosObjetosEnEsquema.verifyPrepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+
+            return false;
+        }
+        $stV->execute(['s' => $esquemaNombre, 'want' => $esquemaNombre]);
+        $pend = $stV->fetchAll(\PDO::FETCH_ASSOC);
+        if ($pend !== []) {
+            $nombres = implode(', ', array_map(static fn (array $r): string => (string) ($r['relname'] ?? '') . '(' . (string) ($r['relkind'] ?? '') . ')', $pend));
+            $sClauError = 'DBRol.realignarPropietariosObjetosEnEsquema.verify Aún con dueño distinto de «'
+                . $esquemaNombre . '»: ' . $nombres;
+            if (isset($_SESSION['oGestorErrores']) && is_object($_SESSION['oGestorErrores'])) {
+                $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
+                    $sClauError,
+                    'DBRol.realignarPropietariosObjetosEnEsquema',
+                    __LINE__,
+                    __FILE__,
+                );
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Concede USAGE del esquema y DML sobre tablas/secuencias existentes al rol homónimo (respaldo si quedaron privilegios desalineados).
+     */
+    public function concederPrivilegiosRolSobreSuEsquema(string $esquemaNombre): void
+    {
+        if ($esquemaNombre === '' || preg_match('/[^A-Za-z0-9._-]/', $esquemaNombre)) {
+            return;
+        }
+        $oDbl = $this->getoDbl();
+        $q = '"' . str_replace('"', '""', $esquemaNombre) . '"';
+        $stmts = [
+            "GRANT USAGE ON SCHEMA {$q} TO {$q}",
+            "GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA {$q} TO {$q}",
+            "GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA {$q} TO {$q}",
+        ];
+        foreach ($stmts as $sql) {
+            try {
+                $oDbl->exec($sql);
+            } catch (PDOException) {
+                // No bloquear el renombre si un GRANT no aplica (p. ej. permisos ya equivalentes).
+            }
+        }
+    }
+
     public function crearUsuario()
     {
         $oDbl = $this->getoDbl();
@@ -203,37 +392,126 @@ class DBRol
             $sClauError = 'DBRol.crear.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
-        } else {
+        }
+
+        $reintentoTrasConflicto = false;
+        while (true) {
             try {
-                $oDblSt->execute();
-            } catch (\PDOException $e) {
-                $sClauError = 'DBRol.crear.execute';
-                $sClauError .= ' ' . $e->errorInfo[2];
-
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
-            }
-            /* Because MD5-encrypted passwords use the role name as cryptographic salt, 
-             * renaming a role clears its password if the password is MD5-encrypted.
-             */
-            $this->cambiarPassword();
-
-            $sql = "ALTER ROLE \"$this->sUser\" SET search_path TO '$this->sUser', 'public'; ";
-
-            if (($oDblSt = $oDbl->prepare($sql)) === false) {
-                $sClauError = 'DBRol.crear.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                return false;
-            } else {
-                try {
-                    $oDblSt->execute();
-                } catch (\PDOException $e) {
-                    $sClauError = 'DBRol.crear.execute';
-                    $sClauError .= ' ' . $e->errorInfo[2];
-
+                if ($oDblSt->execute() === false) {
+                    $sClauError = 'DBRol.renombrarUsuario.execute';
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
                     return false;
                 }
+                break;
+            } catch (PDOException $e) {
+                if (
+                    !$reintentoTrasConflicto
+                    && $this->esErrorRolDestinoYaExiste($e, $this->sUser)
+                ) {
+                    $this->eliminarRolConflicto($this->sUser);
+                    $msgAviso = sprintf(
+                        _('El rol "%s" ya existía en esta base de datos; se ha eliminado (DROP OWNED + DROP ROLE) y se ha aplicado el renombre desde "%s".'),
+                        $this->sUser,
+                        $usuario_old
+                    );
+                    $this->avisosRenameRol[] = $msgAviso;
+                    if (isset($_SESSION['oGestorErrores']) && is_object($_SESSION['oGestorErrores'])
+                        && method_exists($_SESSION['oGestorErrores'], 'addErrorAppLastErrorNoThrowText')) {
+                        $_SESSION['oGestorErrores']->addErrorAppLastErrorNoThrowText(
+                            $msgAviso,
+                            'DBRol.renombrarUsuario.rol_duplicado_remediado',
+                            __LINE__,
+                            __FILE__,
+                        );
+                    }
+                    $reintentoTrasConflicto = true;
+                    $oDblSt = $oDbl->prepare($sql);
+                    if ($oDblSt === false) {
+                        $sClauError = 'DBRol.renombrarUsuario.prepare_reintento';
+                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                        return false;
+                    }
+                    continue;
+                }
+                $sClauError = 'DBRol.crear.execute';
+                $sClauError .= ' ' . ($e->errorInfo[2] ?? $e->getMessage());
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+        }
+
+        /* Because MD5-encrypted passwords use the role name as cryptographic salt,
+         * renaming a role clears its password if the password is MD5-encrypted.
+         */
+        $this->cambiarPassword();
+
+        $sql = "ALTER ROLE \"$this->sUser\" SET search_path TO '$this->sUser', 'public'; ";
+
+        if (($oDblSt = $oDbl->prepare($sql)) === false) {
+            $sClauError = 'DBRol.crear.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        try {
+            if ($oDblSt->execute() === false) {
+                $sClauError = 'DBRol.renombrarUsuario.search_path';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+        } catch (PDOException $e) {
+            $sClauError = 'DBRol.crear.execute';
+            $sClauError .= ' ' . ($e->errorInfo[2] ?? $e->getMessage());
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+
+        return $this->repararEsquemaPostRenombre($this->sUser);
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function consumirAvisosRenameRol(): array
+    {
+        $a = $this->avisosRenameRol;
+        $this->avisosRenameRol = [];
+
+        return $a;
+    }
+
+    private function esErrorRolDestinoYaExiste(PDOException $e, string $nombreRolDestino): bool
+    {
+        $msg = strtolower((string) ($e->errorInfo[2] ?? $e->getMessage()));
+        if (!str_contains($msg, 'role') || !str_contains($msg, strtolower($nombreRolDestino))) {
+            return false;
+        }
+        $sqlState = (string) ($e->errorInfo[0] ?? '');
+        if ($sqlState === '42710') {
+            return true;
+        }
+
+        return str_contains($msg, 'already exists');
+    }
+
+    /**
+     * Elimina un rol huérfano que choca con el nombre destino del renombre (DROP OWNED … CASCADE; DROP ROLE).
+     */
+    private function eliminarRolConflicto(string $rol): void
+    {
+        if ($rol === '' || preg_match('/[^A-Za-z0-9._-]/', $rol)) {
+            return;
+        }
+        $q = '"' . str_replace('"', '""', $rol) . '"';
+        $oDbl = $this->getoDbl();
+        foreach (["DROP OWNED BY {$q} CASCADE", "DROP ROLE IF EXISTS {$q}"] as $sqlDrop) {
+            $st = $oDbl->prepare($sqlDrop);
+            if ($st === false) {
+                continue;
+            }
+            try {
+                $st->execute();
+            } catch (PDOException) {
+                // Siguiente sentencia o reintento de RENAME decidirá.
             }
         }
     }
@@ -297,8 +575,12 @@ class DBRol
                 continue;
             }
 
-            $oConexion = new DBConnection($config);
-            $oDbl = $oConexion->getPDO();
+            try {
+                $oConexion = new DBConnection($config);
+                $oDbl = $oConexion->getPDO();
+            } catch (\PDOException) {
+                continue;
+            }
 
             $sqlDropOwned = "DROP OWNED BY \"$this->sUser\" CASCADE;";
             if (($oDblSt = $oDbl->prepare($sqlDropOwned)) !== false) {

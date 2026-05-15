@@ -39,4 +39,10 @@ return static function ($r): void {
     $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/renombrar_esquema', function (): void {
         require __DIR__ . '/../infrastructure/ui/http/controllers/renombrar_esquema.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/verificar_renombrar_esquema', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/verificar_renombrar_esquema.php';
+    });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/corregir_renombrar_esquema', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/corregir_renombrar_esquema.php';
+    });
 };

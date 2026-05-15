@@ -48,10 +48,16 @@ function css_colores_estilo_desde_sesion(): array
 }
 
 /**
- * Misma convención que {@see \src\usuarios\application\LoginProcesar::pdoForEsquema()}.
+ * Misma convención que {@see \src\usuarios\application\LoginProcesar::pdoForEsquema()} (v/sv-e, f/sf solo si entrada sf, si no comun con nombre sin f).
  */
 function css_colores_pdo_for_esquema_usuario(string $esquema): ?\PDO
 {
+    $ubic = (string) ($_SESSION['sfsv'] ?? '');
+    $private = (string) ($_SESSION['private'] ?? '');
+    $useSfDb = ($ubic === 'sf' || $private === 'sf');
+    if ($esquema !== '' && substr($esquema, -1) === 'f' && !$useSfDb) {
+        $esquema = substr($esquema, 0, -1);
+    }
     try {
         if (substr($esquema, -1) === 'v') {
             $oConfigDB = new ConfigDB('sv-e_select');
@@ -59,15 +65,20 @@ function css_colores_pdo_for_esquema_usuario(string $esquema): ?\PDO
 
             return (new DBConnection($config))->getPDO();
         }
-        if (substr($esquema, -1) === 'f') {
+        if (substr($esquema, -1) === 'f' && $useSfDb) {
             $oConfigDB = new ConfigDB('sf-e');
             $config = $oConfigDB->getEsquema($esquema);
 
             return (new DBConnection($config))->getPDO();
         }
+        if ($esquema === '') {
+            return null;
+        }
+        $oConfigDB = new ConfigDB('comun_select');
+        $config = $oConfigDB->getEsquema($esquema);
+
+        return (new DBConnection($config))->getPDO();
     } catch (\Throwable) {
         return null;
     }
-
-    return null;
 }

@@ -2,6 +2,8 @@
 
 namespace src\shared\infrastructure\persistence\postgresql;
 
+use PDO;
+use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 
@@ -45,6 +47,9 @@ class DBPropiedades
             } else {
                 $ubicacion = 'sf';
             }
+        }
+        if (empty($ubicacion)) {
+            $ubicacion = 'sv';
         }
         $txt = '';
         // Lista de posibles esquemas (en comun)
@@ -285,6 +290,77 @@ class DBPropiedades
         } else {
             return false;
         }
+    }
+
+    /**
+     * Nombres base de esquema (región-dl) presentes en cualquiera de las conexiones de importar
+     * (comun, réplicas, sv, sv-e, sf), para desplegables donde hace falta el origen aunque ya no esté en comun.
+     *
+     * @return array<string, string> mapa base => base
+     */
+    public function array_esquemas_union_importar(): array
+    {
+        $bases = [];
+        $isDocker = (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
+        $labels = ['public', 'publicv', 'publicv-e', 'publicf'];
+        if (!$isDocker) {
+            $labels = ['public', 'public_select', 'publicv', 'publicv-e', 'publicv-e_select', 'publicf'];
+        }
+        $oImportar = new ConfigDB('importar');
+        foreach ($labels as $label) {
+            try {
+                $config = $oImportar->getEsquema($label);
+                $pdo = (new DBConnection($config))->getPDO();
+            } catch (\Throwable) {
+                continue;
+            }
+            foreach ($this->schemasDesdePdo($pdo) as $nspname) {
+                $base = $this->nombreBaseEsquemaDesdeNs($nspname);
+                if ($base === '') {
+                    continue;
+                }
+                $a_reg = explode('-', $base, 2);
+                if (isset($a_reg[1]) && $a_reg[0] === $a_reg[1]) {
+                    continue;
+                }
+                $bases[$base] = $base;
+            }
+        }
+        ksort($bases, SORT_NATURAL | SORT_FLAG_CASE);
+
+        return $bases;
+    }
+
+    private function nombreBaseEsquemaDesdeNs(string $nspname): string
+    {
+        $n = $nspname;
+        $last = substr($n, -1);
+        if (($last === 'v' || $last === 'f') && strlen($n) > 1) {
+            return substr($n, 0, -1);
+        }
+
+        return $n;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function schemasDesdePdo(PDO $pdo): array
+    {
+        $out = [];
+        $sQuery = "select nspname from pg_namespace where nspowner > 1000 AND nspname !~ '^zz' ORDER BY nspname";
+        $oDblSt = $pdo->query($sQuery);
+        if ($oDblSt === false) {
+            return $out;
+        }
+        foreach ($oDblSt as $row) {
+            if ($row[0] === 'public' || $row[0] === 'resto' || $row[0] === 'global' || $row[0] === 'bucardo') {
+                continue;
+            }
+            $out[] = (string) $row[0];
+        }
+
+        return $out;
     }
 
 }

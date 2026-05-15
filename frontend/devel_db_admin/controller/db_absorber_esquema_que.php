@@ -1,0 +1,43 @@
+<?php
+
+namespace frontend\devel_db_admin\controller;
+
+use frontend\shared\PostRequest;
+use frontend\shared\security\HashFront;
+use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\web\Desplegable;
+
+// INICIO Cabecera global de URL de controlador *********************************
+require_once("frontend/shared/global_header_front.inc");
+// FIN de  Cabecera global de URL de controlador ********************************
+
+$dbProps = PostRequest::getDataFromUrl('/src/devel_db_admin/db_propiedades_data', [
+    'op' => 'db_absorber_esquema_que',
+]);
+$dbProps = is_array($dbProps) ? $dbProps : [];
+$a_posibles_esquemas = (array)($dbProps['a_posibles_esquemas'] ?? []);
+
+$oDesplMatriz = new Desplegable();
+$oDesplMatriz->setNombre('esquema_matriz');
+$oDesplMatriz->setBlanco(true);
+$oDesplMatriz->setOpciones($a_posibles_esquemas);
+
+$oDesplDel = new Desplegable();
+$oDesplDel->setNombre('esquema_del');
+$oDesplDel->setBlanco(true);
+$oDesplDel->setOpciones($a_posibles_esquemas);
+
+$oHashAbsorber = new HashFront();
+$oHashAbsorber->setCamposForm('esquema_matriz!esquema_del');
+
+$msg_falta_esquemas = _("Debe elegir el esquema matriz y el esquema a disolver.");
+
+$a_campos = [
+    'oDesplMatriz' => $oDesplMatriz,
+    'oDesplDel' => $oDesplDel,
+    'oHashAbsorber' => $oHashAbsorber,
+    'msg_falta_esquemas' => $msg_falta_esquemas,
+];
+
+$oView = new ViewNewPhtml('frontend\devel_db_admin\controller');
+$oView->renderizar('db_absorber_esquema_que.phtml', $a_campos);

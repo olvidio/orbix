@@ -25,6 +25,7 @@ final class DbPropiedadesFormData
             'apptables_esquemas' => self::apptablesEsquemas($dbp, $input),
             'db_que_esquema_ref' => self::dbQueEsquemaRef($dbp),
             'db_cambiar_nombre_esquemas' => self::dbCambiarNombreEsquemas($dbp),
+            'db_absorber_esquema_que' => self::dbAbsorberEsquemaQue($dbp),
             'db_mover_tablas' => self::dbMoverTablas($dbp),
             'db_mover_esquemas_con_tabla' => self::dbMoverEsquemasConTabla($dbp, $input),
             default => ['error' => 'op no válida'],
@@ -58,17 +59,28 @@ final class DbPropiedadesFormData
     }
 
     /**
-     * @return array{oEsquemaRef: string|false, a_posibles_esquemas: array<string, string>, a_opciones_regiones: array<string, string>}
+     * @return array{a_esquemas_union: array<string, string>, a_opciones_regiones: array<string, string>}
      */
     private static function dbCambiarNombreEsquemas(DBPropiedades $dbp): array
+    {
+        return [
+            'a_esquemas_union' => $dbp->array_esquemas_union_importar(),
+            'a_opciones_regiones' => RegionDropdown::activasOrdenNombre(),
+        ];
+    }
+
+    /**
+     * Solo desplegables de esquema para la pantalla de absorber esquema (`db_absorber_esquema_que.php`).
+     *
+     * @return array{a_posibles_esquemas: array<string, string>}
+     */
+    private static function dbAbsorberEsquemaQue(DBPropiedades $dbp): array
     {
         $dbp->setBlanco(true);
         $opts = $dbp->array_posibles_esquemas(true);
 
         return [
-            'oEsquemaRef' => $dbp->posibles_esquemas(''),
             'a_posibles_esquemas' => is_array($opts) ? $opts : [],
-            'a_opciones_regiones' => RegionDropdown::activasOrdenNombre(),
         ];
     }
 

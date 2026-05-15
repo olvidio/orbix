@@ -184,17 +184,36 @@ class ConfigGlobal extends ServerConf
 
     public static function mi_region()
     {
-        $a_reg = explode('-', $_SESSION['session_auth']['esquema']);
-        return $a_reg[0];
+        $esq = (string) ($_SESSION['session_auth']['esquema'] ?? '');
+        if ($esq === '') {
+            return '';
+        }
+        // «Cong-crCongv» tiene un solo guión: explode('-', $s) ya da [Cong, crCongv].
+        // El límite 2 equivale a eso y deja fijada la regla «partir solo en el primer guión»
+        // por si el nombre completo llegara a tener más guiones.
+        $a_reg = explode('-', $esq, 2);
+
+        return $a_reg[0] ?? '';
     }
 
     public static function mi_dele()
     {
-        $a_reg = explode('-', $_SESSION['session_auth']['esquema']);
-        $dl = substr($a_reg[1], 0, -1); // quito la v o la f.
+        $esq = (string) ($_SESSION['session_auth']['esquema'] ?? '');
+        if ($esq === '') {
+            return '';
+        }
+        $a_reg = explode('-', $esq, 2);
+        $seg = $a_reg[1] ?? '';
+        if ($seg === '') {
+            return '';
+        }
+        $last = substr($seg, -1);
+        // Solo quitar sufijo sv/sf en el tramo delegación; esquemas base sin v/f no se truncan.
+        $dl = ($last === 'v' || $last === 'f') ? substr($seg, 0, -1) : $seg;
         if ($dl === 'cr') {
             $dl .= self::mi_region();
         }
+
         return $dl;
     }
 

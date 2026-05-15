@@ -2584,37 +2584,37 @@ parameters:
 			message: '#^Call to an undefined method frontend\\shared\\web\\Desplegable\:\:ListaSelects\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: frontend/casas/controller/casa_resumen.php
+			path: frontend/casas/controller/casas_resumen.php
 
 		-
 			message: '#^Call to an undefined method frontend\\shared\\web\\Desplegable\:\:setAccionConjunto\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: frontend/casas/controller/casa_resumen.php
+			path: frontend/casas/controller/casas_resumen.php
 
 		-
 			message: '#^Cannot access offset ''MiUsuario'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: frontend/casas/controller/casa_resumen.php
+			path: frontend/casas/controller/casas_resumen.php
 
 		-
 			message: '#^Cannot call method getCsv_id_pau\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: frontend/casas/controller/casa_resumen.php
+			path: frontend/casas/controller/casas_resumen.php
 
 		-
 			message: '#^Cannot call method have_perm_oficina\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: frontend/casas/controller/casa_resumen.php
+			path: frontend/casas/controller/casas_resumen.php
 
 		-
 			message: '#^Variable \$oPosicion might not be defined\.$#'
 			identifier: variable.undefined
 			count: 2
-			path: frontend/casas/controller/casa_resumen.php
+			path: frontend/casas/controller/casas_resumen.php
 
 		-
 			message: '#^Call to function is_array\(\) with array\<int\|string, mixed\> will always evaluate to true\.$#'
@@ -32299,12 +32299,6 @@ parameters:
 			path: src/devel_db_admin/application/DbPropiedadesFormData.php
 
 		-
-			message: '#^Method src\\devel_db_admin\\application\\DbPropiedadesFormData\:\:dbCambiarNombreEsquemas\(\) should return array\{oEsquemaRef\: string\|false, a_posibles_esquemas\: array\<string, string\>, a_opciones_regiones\: array\<string, string\>\} but returns array\{oEsquemaRef\: mixed, a_posibles_esquemas\: array\<mixed\>, a_opciones_regiones\: array\<string, string\>\}\.$#'
-			identifier: return.type
-			count: 1
-			path: src/devel_db_admin/application/DbPropiedadesFormData.php
-
-		-
 			message: '#^Method src\\devel_db_admin\\application\\DbPropiedadesFormData\:\:dbMoverEsquemasConTabla\(\) should return array\{a_esquemas_con_tabla\: list\<string\>\} but returns array\{a_esquemas_con_tabla\: list\<mixed\>\}\.$#'
 			identifier: return.type
 			count: 1
@@ -32331,7 +32325,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method object\:\:get\(\)\.$#'
 			identifier: method.notFound
-			count: 3
+			count: 1
 			path: src/devel_db_admin/application/RenombrarEsquema.php
 
 		-

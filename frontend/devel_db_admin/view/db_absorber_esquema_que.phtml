@@ -1,0 +1,39 @@
+<?php
+
+?>
+<script>
+    fnjs_absorber_dl = function () {
+        err = '';
+        esquema_m = $('#esquema_matriz').val();
+        esquema_d = $('#esquema_del').val();
+
+        if (!esquema_m || !esquema_d) {
+            alert(<?= json_encode((string)$msg_falta_esquemas) ?>);
+            err = 1;
+        }
+
+        if (!err) {
+            $('#frm_absorber').attr('action', 'frontend/devel_db_admin/controller/db_absorber_esquema.php');
+            fnjs_enviar_formulario('#frm_absorber', '#main');
+        }
+    }
+</script>
+
+<h1><?= htmlspecialchars(_("Absorber un esquema (región–dl)")) ?></h1>
+<p style="text-align:left;max-width:900px;margin:0 0 1em 0"><?= htmlspecialchars(_("Pasar los datos al esquema matriz. Todas las referencias a la dl importada desaparecen y se sustituyen por la de la matriz.")) ?></p>
+
+<form id="frm_absorber" action="" method="post">
+    <?= $oHashAbsorber->getCamposHtml(); ?>
+    <table>
+        <tr style="vertical-align:top; text-align:left">
+            <td><?= htmlspecialchars(_("esquema matriz")) ?>:</td>
+            <td><?= $oDesplMatriz->desplegable() ?></td>
+            <td style="padding-left:1em"><?= htmlspecialchars(_("esquema a disolver")) ?>:</td>
+            <td><?= $oDesplDel->desplegable() ?></td>
+        </tr>
+    </table>
+    <p style="margin-top:1em;text-align:left">
+        <input type="button" name="bimportar" onclick="fnjs_absorber_dl()"
+               value="<?= htmlspecialchars(_("Trasladar los datos al esquema matriz")) ?>">
+    </p>
+</form>

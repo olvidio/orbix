@@ -3,16 +3,17 @@
 namespace core;
 
 use DI\ContainerBuilder;
+use src\configuracion\application\ObtenerConfigSnapshot;
+use src\menus\domain\PermisoMenu;
+use src\permisos\domain\PermDl;
+use src\permisos\domain\PermisosActividades;
+use src\permisos\domain\PermisosActividadesTrue;
 use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use src\shared\infrastructure\logging\GestorErrores;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBView;
-use src\permisos\domain\PermDl;
-use src\permisos\domain\PermisosActividades;
-use src\permisos\domain\PermisosActividadesTrue;
-use src\configuracion\application\ObtenerConfigSnapshot;
-use src\menus\domain\PermisoMenu;
 use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
@@ -71,6 +72,10 @@ $config = $oConfigDB->getEsquema('public');
 $oConexion = new dbConnection($config);
 $oDBT = $oConexion->getPDO();
 */
+$isDocker = FALSE;
+if (preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
+    $isDocker = TRUE;
+}
 
 // public para todo el mundo
 $oConfigDB = new ConfigDB('comun'); //de la database comun
@@ -169,12 +174,18 @@ switch ($user_sfsv) {
         $oConexion = new DBConnection($config);
         $oDBER_Select = $oConexion->getPDO();
 
-        // Personas Nax (`p_nax`, etc.): base `sf` + esquema …f (H-dlbf), aunque la sesión sea SV (…v en `sv`).
-        // Instancia aparte para no cambiar `$oConfigDB` a `sf` antes de usar esquemas `sv`/select.
-        $oConfigSf = new ConfigDB('sf');
-        $configSf = $oConfigSf->getEsquema($esquemaf);
-        $oConexionSf = new DBConnection($configSf);
-        $oDBF = $oConexionSf->getPDO();
+        // Personas Nax (`p_nax`, etc.): base `sf` + esquema …f, aunque la sesión sea SV (…v en `sv`).
+        // En instalaciones sin sf/rol …f, omitir: {@see PgPersonaNaxRepository} usa `oDB` como respaldo.
+        $oDBF = null;
+        if (!$isDocker) {
+            try {
+                $oConfigSf = new ConfigDB('sf');
+                $configSf = $oConfigSf->getEsquema($esquemaf);
+                $oConexionSf = new DBConnection($configSf);
+                $oDBF = $oConexionSf->getPDO();
+            } catch (\Throwable) {
+            }
+        }
         break;
     case 2: //sf
         $esquemaf = $_SESSION['session_auth']['esquema'];
@@ -223,7 +234,7 @@ switch ($user_sfsv) {
         break;
 }
 
-if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
+if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz() && !$isDocker) {
     // Para sincronizar con listas Madrid (SQLSERVER)
     // No en el caso de cr (H-Hv)
     if ((ConfigGlobal::mi_region() != ConfigGlobal::mi_delef())) {

@@ -574,7 +574,7 @@ Las pantallas bajo `frontend/devel_db_admin/` siguen el mismo criterio que el re
 
 **Datos de formulario / desplegables (solo lectura):**
 
-- Preferir **un** `PostRequest` a `db_propiedades_data` con `op` acorde (`db_que_esquema_ref`, `db_cambiar_nombre_esquemas`, `db_mover_tablas`, …) implementado en `src/devel_db_admin/application/DbPropiedadesFormData`.
+- Preferir **un** `PostRequest` a `db_propiedades_data` con `op` acorde (`db_que_esquema_ref`, `db_cambiar_nombre_esquemas`, `db_absorber_esquema_que`, `db_mover_tablas`, …) implementado en `src/devel_db_admin/application/DbPropiedadesFormData`.
 - Incluir en el JSON mapas **value → label** (p. ej. `a_opciones_regiones`, `a_posibles_esquemas`) y en el controlador frontend montar `<select>` con **`frontend\shared\web\Desplegable::desdeOpciones(...)`** — **no** importar desde `frontend/devel_db_admin/controller` servicios tipo `src\ubis\application\services\RegionDropdown`; esos servicios pueden seguir usándose **dentro** de `DbPropiedadesFormData` al construir el payload.
 
 **Excepción AJAX HTML:** `db_lugar` devuelve un fragmento HTML (`<select name="dl">`) para `$.ajax` con `dataType: 'html'`; es un caso acotado documentado; el resto de endpoints del módulo deben JSON + `ContestarJson`.

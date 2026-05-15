@@ -23,6 +23,7 @@ id_metamenu;id_mod;url;descripcion
 142;1;src/menus/infrastructure/ui/http/controllers/menus_generar_txt.php;pasa los menus a texto
 102;2;frontend/devel_db_admin/controller/apptables.php;Manage tablas de Apps
 192;2;frontend/devel_db_admin/controller/db_cambiar_nombre_que.php;cambiar nombre dl
+193;2;frontend/devel_db_admin/controller/db_absorber_esquema_que.php;absorber esquema
 54;2;frontend/devel_db_admin/controller/db_mover_que.php;DB mover tabla
 17;2;frontend/devel_db_admin/controller/db_que.php;nuevo esquema
 19;2;frontend/devel_codegen/controller/factory_form.php;generador de clases
