@@ -13,7 +13,8 @@ use Throwable;
 
 /**
  * Comprueba el estado intermedio/final de un renombre de esquema (BD + ficheros .inc + db_idschema + defaults de columnas),
- * alineado con {@see RenombrarEsquema}. Origen + región + delegación para comprobar un renombre; solo región + delegación si se usa comprobación «solo destino» (véase {@see RenombrarEsquemaVerificacionContexto::soloDestinoVerificacion}).
+ * alineado con {@see RenombrarEsquema}. Los `.inc` de passwords se leen con {@see ConfigDB::ficheroIncNombre} (p. ej. `pruebas-comun.inc` en entorno pruebas).
+ * Origen + región + delegación para comprobar un renombre; solo región + delegación si se usa comprobación «solo destino» (véase {@see RenombrarEsquemaVerificacionContexto::soloDestinoVerificacion}).
  */
 final class VerificarEstadoRenombrarEsquema
 {
@@ -589,14 +590,15 @@ final class VerificarEstadoRenombrarEsquema
 
         foreach ($defs as $row) {
             $base = $row['fichero'];
-            $keys = $this->keysInc($base . '.inc');
+            $archivo = ConfigDB::ficheroIncNombre($base);
+            $keys = $this->keysInc($archivo);
             if ($row['old'] === $row['new']) {
                 $clave = $row['old'];
                 $has = $clave !== '' && in_array($clave, $keys, true);
                 $items[] = [
                     'texto' => $has
-                        ? sprintf(_('%s.inc: clave "%s" presente.'), $base, $clave)
-                        : sprintf(_('%s.inc: falta la clave "%s".'), $base, $clave),
+                        ? sprintf(_('%s: clave "%s" presente.'), $archivo, $clave)
+                        : sprintf(_('%s: falta la clave "%s".'), $archivo, $clave),
                     'estado' => $has ? 'ok' : 'falta',
                 ];
 
@@ -606,22 +608,22 @@ final class VerificarEstadoRenombrarEsquema
             $hasNew = in_array($row['new'], $keys, true);
             if ($hasNew && !$hasOld) {
                 $items[] = [
-                    'texto' => sprintf(_('%s.inc: clave nueva "%s" presente, antigua "%s" ausente.'), $base, $row['new'], $row['old']),
+                    'texto' => sprintf(_('%s: clave nueva "%s" presente, antigua "%s" ausente.'), $archivo, $row['new'], $row['old']),
                     'estado' => 'ok',
                 ];
             } elseif ($hasOld && !$hasNew) {
                 $items[] = [
-                    'texto' => sprintf(_('%s.inc: sigue la clave antigua "%s"; falta "%s".'), $base, $row['old'], $row['new']),
+                    'texto' => sprintf(_('%s: sigue la clave antigua "%s"; falta "%s".'), $archivo, $row['old'], $row['new']),
                     'estado' => 'falta',
                 ];
             } elseif ($hasOld && $hasNew) {
                 $items[] = [
-                    'texto' => sprintf(_('%s.inc: coexisten "%s" y "%s" (limpiar la antigua al terminar).'), $base, $row['old'], $row['new']),
+                    'texto' => sprintf(_('%s: coexisten "%s" y "%s" (limpiar la antigua al terminar).'), $archivo, $row['old'], $row['new']),
                     'estado' => 'error',
                 ];
             } else {
                 $items[] = [
-                    'texto' => sprintf(_('%s.inc: no hay clave ni "%s" ni "%s" (¿otro nombre o fichero ausente?).'), $base, $row['old'], $row['new']),
+                    'texto' => sprintf(_('%s: no hay clave ni "%s" ni "%s" (¿otro nombre o fichero ausente?).'), $archivo, $row['old'], $row['new']),
                     'estado' => 'aviso',
                 ];
             }

@@ -4,7 +4,6 @@ namespace src\shared\infrastructure\persistence;
 
 use RuntimeException;
 use src\shared\config\ConfigGlobal;
-use src\shared\config\ServerConf;
 
 /**
  * Básicamente la conexión a la base de datos, con los passwd para cada esquema.
@@ -41,6 +40,21 @@ class ConfigDB
             $database = 'pruebas-' . $database;
         }
         $this->data = include ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
+    }
+
+    /**
+     * Nombre del fichero `.inc` de passwords en disco (solo nombre, relativo a {@see ConfigGlobal::getDIR_PWD()}).
+     * Misma regla que {@see setDataBase} y {@see renombrarListaEsquema}: en `pruebas` usa prefijo `pruebas-`.
+     *
+     * @param string $baseSinExtension p. ej. `comun`, `comun_select`, `sv-e`
+     */
+    public static function ficheroIncNombre(string $baseSinExtension): string
+    {
+        if (ConfigGlobal::WEBDIR === 'pruebas') {
+            return 'pruebas-' . $baseSinExtension . '.inc';
+        }
+
+        return $baseSinExtension . '.inc';
     }
 
     /**
@@ -83,41 +97,62 @@ class ConfigDB
         }
     }
 
+    /**
+     * Renombra la clave de esquema en el fichero de passwords `.inc` del entorno actual.
+     *
+     * - `ConfigGlobal::WEBDIR === 'pruebas'`: solo `pruebas-{database}.inc` (p. ej. `pruebas-comun.inc`).
+     * - Por defecto (producción / orbix): solo `{database}.inc` (p. ej. `comun.inc`), sin tocar `pruebas-*.inc`.
+     */
     public function renombrarListaEsquema($database, $esquema_old, $esquema_new): void
     {
-        // Las bases de datos de pruebas y producción están en el mismo cluster, y 
-        // por tanto los usuarios son los mismos. Hay que ponerlo en los dos ficheros:
-        // Pero OJO: la parte de definición de host y dbname son diferentes!!
+        if (ConfigGlobal::WEBDIR === 'pruebas') {
+            $this->renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new);
+
+            return;
+        }
 
         $this->renombrarListaEsquemaProduccion($database, $esquema_old, $esquema_new);
-        // En docker no tengo db de pruebas
-        if (!preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
-            $this->renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new);
-        }
     }
 
+    /** Fichero `{database}.inc` (sin prefijo `pruebas-`). */
     private function renombrarListaEsquemaProduccion($database, $esquema_old, $esquema_new): void
     {
-        $this->data = include ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
+        $filename = ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
+        $this->data = include $filename;
+
+        // No-op si ya no está la clave antigua (p. ej. renombre ya aplicado, o solo existe en pruebas-*.inc).
+        if (!isset($this->data[$esquema_old]) || !is_array($this->data[$esquema_old])) {
+            return;
+        }
+        if (!isset($this->data[$esquema_old]['password'])) {
+            return;
+        }
 
         $esquema_pwd = $this->data[$esquema_old]['password'];
         unset($this->data[$esquema_old]);
         $this->data[$esquema_new] = ['user' => $esquema_new, 'password' => $esquema_pwd];
 
-        $filename = ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
         file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
     }
 
+    /** Fichero `pruebas-{database}.inc`. */
     private function renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new): void
     {
         $database = 'pruebas-' . $database;
-        $this->data = include ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
+        $filename_pruebas = ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
+        $this->data = include $filename_pruebas;
+
+        if (!isset($this->data[$esquema_old]) || !is_array($this->data[$esquema_old])) {
+            return;
+        }
+        if (!isset($this->data[$esquema_old]['password'])) {
+            return;
+        }
 
         $esquema_pwd = $this->data[$esquema_old]['password'];
         unset($this->data[$esquema_old]);
         $this->data[$esquema_new] = ['user' => $esquema_new, 'password' => $esquema_pwd];
 
-        $filename_pruebas = ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
         file_put_contents($filename_pruebas, '<?php return ' . var_export($this->data, true) . ' ;');
     }
 }

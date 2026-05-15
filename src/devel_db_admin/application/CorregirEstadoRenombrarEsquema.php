@@ -217,9 +217,12 @@ final class CorregirEstadoRenombrarEsquema
             if ($this->incDebeRenombrarClave('comun', $ctx->esquemaOld, $ctx->esquemaNew)) {
                 try {
                     (new ConfigDB('comun'))->renombrarListaEsquema('comun', $ctx->esquemaOld, $ctx->esquemaNew);
-                    $acciones[] = _('comun.inc: claves de esquema alineadas con el nuevo nombre.');
+                    $acciones[] = sprintf(
+                        _('%s: claves de esquema alineadas con el nuevo nombre.'),
+                        ConfigDB::ficheroIncNombre('comun'),
+                    );
                 } catch (Throwable $e) {
-                    $avisos[] = sprintf(_('comun.inc: %s'), $e->getMessage());
+                    $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('comun'), $e->getMessage());
                 }
             }
             try {
@@ -236,9 +239,9 @@ final class CorregirEstadoRenombrarEsquema
                 if ($this->incDebeRenombrarClave('comun_select', $ctx->esquemaOld, $ctx->esquemaNew)) {
                     try {
                         (new ConfigDB('comun'))->renombrarListaEsquema('comun_select', $ctx->esquemaOld, $ctx->esquemaNew);
-                        $acciones[] = _('comun_select.inc: claves alineadas.');
+                        $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('comun_select'));
                     } catch (Throwable $e) {
-                        $avisos[] = sprintf(_('comun_select.inc: %s'), $e->getMessage());
+                        $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('comun_select'), $e->getMessage());
                     }
                 }
             }
@@ -249,9 +252,9 @@ final class CorregirEstadoRenombrarEsquema
             if ($this->incDebeRenombrarClave('sv', $ctx->esquemaOldv, $ctx->esquemaNewv)) {
                 try {
                     (new ConfigDB('sv'))->renombrarListaEsquema('sv', $ctx->esquemaOldv, $ctx->esquemaNewv);
-                    $acciones[] = _('sv.inc: claves alineadas.');
+                    $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('sv'));
                 } catch (Throwable $e) {
-                    $avisos[] = sprintf(_('sv.inc: %s'), $e->getMessage());
+                    $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('sv'), $e->getMessage());
                 }
             }
             try {
@@ -267,9 +270,9 @@ final class CorregirEstadoRenombrarEsquema
             if ($this->incDebeRenombrarClave('sv-e', $ctx->esquemaOldv, $ctx->esquemaNewv)) {
                 try {
                     (new ConfigDB('sv-e'))->renombrarListaEsquema('sv-e', $ctx->esquemaOldv, $ctx->esquemaNewv);
-                    $acciones[] = _('sv-e.inc: claves alineadas.');
+                    $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('sv-e'));
                 } catch (Throwable $e) {
-                    $avisos[] = sprintf(_('sv-e.inc: %s'), $e->getMessage());
+                    $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('sv-e'), $e->getMessage());
                 }
             }
             try {
@@ -285,9 +288,9 @@ final class CorregirEstadoRenombrarEsquema
                 if ($this->incDebeRenombrarClave('sv-e_select', $ctx->esquemaOldv, $ctx->esquemaNewv)) {
                     try {
                         (new ConfigDB('sv-e'))->renombrarListaEsquema('sv-e_select', $ctx->esquemaOldv, $ctx->esquemaNewv);
-                        $acciones[] = _('sv-e_select.inc: claves alineadas.');
+                        $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('sv-e_select'));
                     } catch (Throwable $e) {
-                        $avisos[] = sprintf(_('sv-e_select.inc: %s'), $e->getMessage());
+                        $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('sv-e_select'), $e->getMessage());
                     }
                 }
             }
@@ -299,9 +302,9 @@ final class CorregirEstadoRenombrarEsquema
                 if ($this->incDebeRenombrarClave('sf', $ctx->esquemaOldf, $ctx->esquemaNewf)) {
                     try {
                         (new ConfigDB('sf'))->renombrarListaEsquema('sf', $ctx->esquemaOldf, $ctx->esquemaNewf);
-                        $acciones[] = _('sf.inc: claves alineadas.');
+                        $acciones[] = sprintf(_('%s: claves alineadas.'), ConfigDB::ficheroIncNombre('sf'));
                     } catch (Throwable $e) {
-                        $avisos[] = sprintf(_('sf.inc: %s'), $e->getMessage());
+                        $avisos[] = sprintf(_('%s: %s'), ConfigDB::ficheroIncNombre('sf'), $e->getMessage());
                     }
                 }
                 try {
@@ -323,7 +326,7 @@ final class CorregirEstadoRenombrarEsquema
 
     private function incDebeRenombrarClave(string $ficheroBase, string $oldKey, string $newKey): bool
     {
-        $keys = $this->keysInc($ficheroBase . '.inc');
+        $keys = $this->keysInc(ConfigDB::ficheroIncNombre($ficheroBase));
 
         return in_array($oldKey, $keys, true) && !in_array($newKey, $keys, true);
     }
