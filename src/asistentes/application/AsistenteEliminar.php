@@ -34,7 +34,7 @@ final class AsistenteEliminar
             $id_nom = (int) ($input['id_nom'] ?? 0);
         }
 
-        if ($id_activ <= 0 || $id_nom <= 0) {
+        if ($id_activ === 0 || $id_nom === 0) {
             return _("faltan parametros id_activ / id_nom");
         }
 

@@ -49,6 +49,35 @@ final class AsistenteGuardarTest extends TestCase
         $GLOBALS['container'] = $this->containerFromMap($this->minimalContainer());
 
         $this->assertNotSame('', AsistenteGuardar::execute(['mod' => 'nuevo', 'id_activ' => 0, 'id_nom' => 1]));
+        $this->assertNotSame('', AsistenteGuardar::execute(['mod' => 'nuevo', 'id_activ' => 10, 'id_nom' => 0]));
+    }
+
+    public function test_nuevo_acepta_ids_negativos_de_paso(): void
+    {
+        $dossier = $this->createMock(Dossier::class);
+        $dossier->expects($this->once())->method('abrir');
+
+        $dosRepo = $this->createMock(DossierRepositoryInterface::class);
+        $dosRepo->method('findByPk')->willReturn($dossier);
+        $dosRepo->expects($this->once())->method('Guardar')->with($dossier)->willReturn(true);
+
+        $app = $this->createMock(AsistenteApplicationService::class);
+        $app->method('findById')->with(-2001456, -1001123)->willReturn(null);
+        $app->expects($this->once())->method('guardar')->willReturnCallback(function (Asistente $a) {
+            return $a->getId_activ() === -2001456 && $a->getId_nom() === -1001123;
+        });
+
+        $GLOBALS['container'] = $this->containerFromMap([
+            AsistenteApplicationService::class => $app,
+            DossierRepositoryInterface::class => $dosRepo,
+        ]);
+
+        $this->assertSame('', AsistenteGuardar::execute([
+            'mod' => 'nuevo',
+            'id_activ' => -2001456,
+            'id_nom' => -1001123,
+            'plaza' => 1,
+        ]));
     }
 
     public function test_mover_sin_id_activ_old(): void

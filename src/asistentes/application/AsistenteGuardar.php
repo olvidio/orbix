@@ -47,7 +47,7 @@ final class AsistenteGuardar
         }
         $id_activ_old = (int) ($input['id_activ_old'] ?? 0);
 
-        if ($id_activ <= 0 || $id_nom <= 0) {
+        if ($id_activ === 0 || $id_nom === 0) {
             return _("faltan parametros id_activ / id_nom");
         }
 
@@ -56,7 +56,7 @@ final class AsistenteGuardar
         }
 
         if ($mod === 'mover') {
-            if ($id_activ_old <= 0) {
+            if ($id_activ_old === 0) {
                 return _("falta id_activ_old");
             }
             $err = AsistenteEliminar::execute([

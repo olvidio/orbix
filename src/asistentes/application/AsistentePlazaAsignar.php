@@ -15,7 +15,7 @@ final class AsistentePlazaAsignar
     public static function execute(array $input): string
     {
         $id_activ = (int) ($input['id_activ'] ?? 0);
-        if ($id_activ <= 0) {
+        if ($id_activ === 0) {
             return _("falta id_activ");
         }
         $plaza = $input['plaza'] ?? null;
@@ -30,7 +30,7 @@ final class AsistentePlazaAsignar
         foreach ($arr as $obj) {
             $raw = $obj->value ?? '';
             $id_nom = (int) strtok((string) $raw, '#');
-            if ($id_nom <= 0) {
+            if ($id_nom === 0) {
                 continue;
             }
             $oAsistente = $asistenteAppService->findById($id_activ, $id_nom);

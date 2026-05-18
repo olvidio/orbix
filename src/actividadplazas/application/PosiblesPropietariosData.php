@@ -35,7 +35,7 @@ final class PosiblesPropietariosData
         $id_nom = (int)($input['id_nom'] ?? 0);
         $id_activ = (int)($input['id_activ'] ?? 0);
 
-        if ($id_nom <= 0 || $id_activ <= 0) {
+        if ($id_nom === 0 || $id_activ === 0) {
             return ['error' => (string)_("faltan parametros id_nom / id_activ")];
         }
 
