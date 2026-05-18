@@ -3,7 +3,6 @@
 namespace src\personas\domain;
 
 use PDO;
-use src\shared\domain\value_objects\LocaleCode;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\DBConnection;
@@ -1171,7 +1170,7 @@ class Trasladar
         $oCertificadoRecibido = new CertificadoRecibido();
         $oCertificadoRecibido->setId_nom($Certificado->getId_nom());
         $oCertificadoRecibido->setNom($Certificado->getNom());
-        $oCertificadoRecibido->setIdiomaVo(LocaleCode::fromNullableString($Certificado->getIdioma()));
+        $oCertificadoRecibido->setIdiomaVo($Certificado->getIdiomaVo());
         $oCertificadoRecibido->setDestino($Certificado->getDestino());
         $oCertificadoRecibido->setCertificado($Certificado->getCertificado());
         $oCertificadoRecibido->setF_certificado($Certificado->getF_certificado());
