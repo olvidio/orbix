@@ -15,11 +15,14 @@ use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 final class ListaActivTablaApplicationTest extends TestCase
 {
     private mixed $previousContainer;
+    private mixed $previousSession;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->previousContainer = $GLOBALS['container'] ?? null;
+        $this->previousSession = $_SESSION ?? null;
+        $_SESSION['session_auth'] = ['sfsv' => 1, 'idioma' => 'es_ES'];
     }
 
     protected function tearDown(): void
@@ -28,6 +31,11 @@ final class ListaActivTablaApplicationTest extends TestCase
             unset($GLOBALS['container']);
         } else {
             $GLOBALS['container'] = $this->previousContainer;
+        }
+        if ($this->previousSession === null) {
+            unset($_SESSION);
+        } else {
+            $_SESSION = $this->previousSession;
         }
         parent::tearDown();
     }
@@ -247,5 +255,101 @@ final class ListaActivTablaApplicationTest extends TestCase
         $this->assertCount(1, $out['a_valores']);
         $this->assertSame('', $out['a_valores'][1][1]);
         $this->assertSame('', $out['a_valores'][1][10]);
+    }
+
+    public function test_fechas_personalizadas_con_periodo_distinto_de_otro(): void
+    {
+        $actRepo = $this->createMock(ActividadRepositoryInterface::class);
+        $actRepo->expects($this->once())
+            ->method('getActividades')
+            ->with(
+                $this->callback(static function (array $where): bool {
+                    return $where['f_ini'] === "'2026-05-01','2026-05-31'";
+                }),
+                $this->callback(static function (array $operador): bool {
+                    return ($operador['f_ini'] ?? '') === 'BETWEEN';
+                }),
+            )
+            ->willReturn([]);
+
+        $prefRepo = $this->createMock(PreferenciaRepositoryInterface::class);
+
+        $GLOBALS['container'] = new class($actRepo, $prefRepo) {
+            public function __construct(
+                private readonly object $actRepo,
+                private readonly object $prefRepo,
+            ) {}
+
+            public function get(string $id): object
+            {
+                return match ($id) {
+                    ActividadRepositoryInterface::class => $this->actRepo,
+                    CasaRepositoryInterface::class => $this->emptyCasaRepo(),
+                    TipoTarifaRepositoryInterface::class => $this->emptyTarifaRepo(),
+                    CentroEncargadoRepositoryInterface::class => $this->emptyCentroEncRepo(),
+                    ActividadCargoRepositoryInterface::class => $this->emptyCargoRepo(),
+                    PreferenciaRepositoryInterface::class => $this->prefRepo,
+                    default => throw new \RuntimeException($id),
+                };
+            }
+
+            private function emptyCasaRepo(): object
+            {
+                return new class {
+                    public function findById(int $id): ?object
+                    {
+                        return null;
+                    }
+                };
+            }
+
+            private function emptyTarifaRepo(): object
+            {
+                return new class {
+                    public function findById(?int $id): ?object
+                    {
+                        return null;
+                    }
+                };
+            }
+
+            private function emptyCentroEncRepo(): object
+            {
+                return new class {
+                    public function getCentrosEncargadosActividad(int $id): array
+                    {
+                        return [];
+                    }
+                };
+            }
+
+            private function emptyCargoRepo(): object
+            {
+                return new class {
+                    public function getActividadSacds(int $id): array
+                    {
+                        return [];
+                    }
+                };
+            }
+        };
+
+        (new ListaActivTabla())->execute(
+            [
+                'que' => 'list_activ',
+                'periodo' => 'tot_any',
+                'empiezamin' => '01/05/2026',
+                'empiezamax' => '31/05/2026',
+                'id_tipo_activ' => '......',
+            ],
+            [
+                'mi_sfsv' => 1,
+                'perm_vcsd' => false,
+                'perm_des' => false,
+                'perm_sg' => false,
+                'perm_admin' => false,
+                'is_dmz' => true,
+            ]
+        );
     }
 }

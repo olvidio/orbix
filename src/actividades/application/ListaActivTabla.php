@@ -129,7 +129,12 @@ class ListaActivTabla
         $oPeriodo->setAny($Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);
         $oPeriodo->setEmpiezaMax($Qempiezamax);
-        $oPeriodo->setPeriodo($Qperiodo);
+        // Las fechas del formulario solo aplican con periodo "otro"; si vienen informadas,
+        // usarlas aunque el POST traiga otro alias (p. ej. tot_any desde menú de casas).
+        $periodoCalculo = ($Qempiezamin !== '' && $Qempiezamax !== '')
+            ? 'otro'
+            : $Qperiodo;
+        $oPeriodo->setPeriodo($periodoCalculo);
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 
