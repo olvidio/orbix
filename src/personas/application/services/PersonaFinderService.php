@@ -115,6 +115,7 @@ class PersonaFinderService
         $aResultados = [];
 
         foreach ($this->getPosiblesEsquemas() as $esquema) {
+            $oDB = $this->oDB;
             $path_ini = $this->cambiarEsquema($esquema, $oDB);
 
             try {
