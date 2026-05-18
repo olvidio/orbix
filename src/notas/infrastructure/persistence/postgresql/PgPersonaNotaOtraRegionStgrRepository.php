@@ -63,7 +63,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             $oCert->estado = 'guardado';
             $a_json_certificados[] = $oCert;
             $oPersonaNotaOtraRegionStgr->setJson_certificados($a_json_certificados);
-            $oPersonaNotaOtraRegionStgr->DBGuardar();
+            $this->Guardar($oPersonaNotaOtraRegionStgr);
 
             // miro de guardarlo en su dl.
             $PersonaNotaDBRepository = $GLOBALS['container']->get(PgPersonaNotaRepository::class);
@@ -81,13 +81,13 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
                 $oPersonaNota->setId_nom($id_nom);
                 $oPersonaNota->setTipoActaVo(TipoActa::FORMATO_CERTIFICADO);
                 $oPersonaNota->setIdSituacionVo($oPersonaNotaOtraRegionStgr->getIdSituacionVo());
-                $oPersonaNota->setActaVo($oPersonaNotaOtraRegionStgr->getActaVo());
+                $oPersonaNota->setActaVo($oPersonaNotaOtraRegionStgr->getActaVo() ?? $certificado);
                 $oPersonaNota->setDetalleVo($oPersonaNotaOtraRegionStgr->getDetalleVo());
                 $oPersonaNota->setF_acta($oF_certificado);
                 $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
                 $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
                 $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo());
-                $oPersonaNota->setIdActivVo($oPersonaNotaOtraRegionStgr->getIdActividadVo()->value());
+                $oPersonaNota->setIdActivVo($oPersonaNotaOtraRegionStgr->getIdActivVo());
                 $oPersonaNota->setNotaNumVo($oPersonaNotaOtraRegionStgr->getNotaNumVo());
                 $oPersonaNota->setNotaMaxVo($oPersonaNotaOtraRegionStgr->getNotaMaxVo());
 
@@ -110,7 +110,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
                     $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
                     $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
                     $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo()->value());
-                    $oPersonaNota->setIdActividadVo($oPersonaNotaOtraRegionStgr->getIdActividadVo()->value());
+                    $oPersonaNota->setIdActivVo($oPersonaNotaOtraRegionStgr->getIdActivVo());
                     $oPersonaNota->setNotaNumVo($oPersonaNotaOtraRegionStgr->getNotaNumVo()->value());
                     $oPersonaNota->setNotaMaxVo($oPersonaNotaOtraRegionStgr->getNotaMaxVo()->value());
                     $PersonaNotaDBRepository->Guardar($oPersonaNota);
@@ -184,12 +184,9 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
 
         foreach ($stmt as $aDatos) {
-            $oPersonaNotaOtraRegionStgr = new PersonaNotaOtraRegionStgr();
-            $oPersonaNotaOtraRegionStgr->setId_nom($aDatos['id_nom']);
-            $oPersonaNotaOtraRegionStgr->setId_nivel($aDatos['id_nivel']);
-            $oPersonaNotaOtraRegionStgr->setIdAsignaturaVo($aDatos['id_asignatura']);
-            $oPersonaNotaOtraRegionStgr->setIdSituacionVo($aDatos['id_situacion']);
-            $oPersonaNotaOtraRegionStgr->setTipoActaVo($aDatos['tipo_acta']);
+            $aDatos['f_acta'] = (new ConverterDate('date', $aDatos['f_acta'] ?? null))->fromPg();
+            $aDatos['json_certificados'] = (new ConverterJson($aDatos['json_certificados'] ?? null, false))->fromPg();
+            $oPersonaNotaOtraRegionStgr = PersonaNotaOtraRegionStgr::fromArray($aDatos);
             $oPersonaNotaOtraRegionStgrSet->add($oPersonaNotaOtraRegionStgr);
         }
         return $oPersonaNotaOtraRegionStgrSet->getTot();

@@ -5,6 +5,7 @@ use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
 use src\notas\domain\value_objects\TipoActa;
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
 use frontend\shared\config\OrbixRuntime;
 use src\shared\domain\value_objects\DateTimeLocal;
@@ -18,11 +19,16 @@ $error_txt = '';
 $data = [];
 
 $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
-$oCertificadoEmitido = $certificadoEmitidoRepository->findById($id_item);
+$oCertificadoEmitido = $certificadoEmitidoRepository->findById((int)$id_item);
+if ($oCertificadoEmitido === null) {
+    $error_txt .= "<br>No encuentro certificado emitido con id_item: $id_item en " . __FILE__ . ': line ' . __LINE__;
+    ContestarJson::enviar($error_txt, $data);
+    return;
+}
 
 $id_nom = $oCertificadoEmitido->getId_nom();
-$nom = $oCertificadoEmitido->getNomVo()->value();
-$idioma = $oCertificadoEmitido->getIdiomaVo()->value();
+$nom = (string)($oCertificadoEmitido->getNom() ?? '');
+$idioma = (string)($oCertificadoEmitido->getIdiomaVo()?->value() ?? '');
 $destino = $oCertificadoEmitido->getDestino();
 $certificado = $oCertificadoEmitido->getCertificado();
 $f_certificado = $oCertificadoEmitido->getF_certificado()?->getFromLocal();
@@ -33,21 +39,34 @@ if (is_true($firmado)) {
     $chk_firmado = '';
 }
 
+/** @var ConfigSnapshot $oConfig */
+$oConfig = $_SESSION['oConfig'];
+$error_txt .= $oConfig->formatMissingParametersMessage([
+    $oConfig->regionLatin => _('nombre región en latín'),
+    $oConfig->vstgr => _('vstgr'),
+    $oConfig->dirStgr => _('direccion stgr'),
+    $oConfig->lugarFirma => _('lugar firma'),
+]);
+
 $oPersona = Persona::findPersonaEnGlobal($id_nom);
-if ($oPersona === null) {
-    $msg_err = "<br>No encuentro a nadie con id_nom: $id_nom en " . __FILE__ . ": line " . __LINE__;
-    exit($msg_err);
+if ($error_txt === '' && $oPersona === null) {
+    $error_txt .= "<br>No encuentro a nadie con id_nom: $id_nom en " . __FILE__ . ': line ' . __LINE__;
 }
+if ($error_txt !== '') {
+    ContestarJson::enviar($error_txt, $data);
+    return;
+}
+
 $apellidos_nombre = $oPersona->getApellidosNombre();
 $nom = empty($nom) ? $apellidos_nombre : $nom;
-$lugar_nacimiento = $oPersona->getLugarNacimientoVo()->value();
-$f_nacimiento = $oPersona->getF_nacimiento()->getFechaLatin();
-$nivel_stgr = $oPersona->getNivelStgrVo()->value();
+$lugar_nacimiento = (string)($oPersona->getLugarNacimientoVo()?->value() ?? $oPersona->getLugar_nacimiento() ?? '');
+$f_nacimiento = (string)($oPersona->getF_nacimiento()?->getFechaLatin() ?? '');
+$nivel_stgr = $oPersona->getNivelStgrVo()?->value() ?? '';
 
-$region_latin = $_SESSION['oConfig']->getNomRegionLatin();
-$vstgr = $_SESSION['oConfig']->getNomVstgr();
-$dir_stgr = $_SESSION['oConfig']->getDirStgr();
-$lugar_firma = $_SESSION['oConfig']->getLugarFirma();
+$region_latin = (string)$oConfig->regionLatin;
+$vstgr = (string)$oConfig->vstgr;
+$dir_stgr = (string)$oConfig->dirStgr;
+$lugar_firma = (string)$oConfig->lugarFirma;
 
 $oHoy = new DateTimeLocal();
 $lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
@@ -62,8 +81,11 @@ if (!empty($idioma)) {
     $dir = ConfigGlobal::$dir_languages . '/' . $idioma;
     $filename_textos = $dir . '/' . "textos_certificados.php";
     if (!file_exists($filename_textos)) {
-        $error_txt .= sprintf(_("No existe un fichero con las traducciones para %s"), $idioma);
-        ContestarJson::enviar($error_txt, 'ok');
+        $error_txt .= sprintf(
+            _('No existe un fichero con las traducciones para %s. Deje el idioma en blanco para latín o elija un idioma disponible (p. ej. es_ES.UTF-8).'),
+            $idioma
+        );
+        ContestarJson::enviar($error_txt, $data);
         return;
     }
 }

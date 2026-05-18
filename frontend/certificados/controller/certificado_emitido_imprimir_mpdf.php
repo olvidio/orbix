@@ -27,10 +27,17 @@ require_once("frontend/shared/global_header_front.inc");
 // $id_nom = empty($_GET['id_nom']) ? '' : $_GET['id_nom'];
 $Qid_item = empty($_GET['id_item']) ? '' : $_GET['id_item'];
 
+require_once __DIR__ . '/certificado_emitido_aviso_html.php';
+
 /////////// Consulta al backend ///////////////////
 $url_backend = '/src/certificados/certificado_emitido_imprimir_mpdf_datos';
-$a_campos_backend = ['id_item' => $Qid_item ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$a_campos_backend = ['id_item' => $Qid_item];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend, false);
+if (!empty($data['error'])) {
+    certificado_emitido_echo_aviso_y_salir(
+        PostRequest::stripInternalCallProvenance((string)$data['error'])
+    );
+}
 
 $id_nom = $data['id_nom'];
 $nom = $data['nom'];

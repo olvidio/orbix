@@ -38,7 +38,16 @@ if (!empty($a_sel)) { //vengo de un checkbox
 /////////// Consulta al backend ///////////////////
 $url_backend = '/src/certificados/certificado_emitido_imprimir_datos';
 $a_campos_backend = ['id_nom' => $id_nom];
-$datosPersona = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+$datosPersona = PostRequest::getDataFromUrl($url_backend, $a_campos_backend, false);
+if (!empty($datosPersona['error'])) {
+    $a_campos = [
+        'oPosicion' => $oPosicion,
+        'aviso' => PostRequest::stripInternalCallProvenance((string)$datosPersona['error']),
+    ];
+    $oView = new ViewNewTwig('frontend/certificados/controller');
+    $oView->renderizar('certificado_emitido_imprimir.html.twig', $a_campos);
+    return;
+}
 
 $nombreApellidos = $datosPersona['nombreApellidos'];
 $lugar_nacimiento = $datosPersona['lugar_nacimiento'];
@@ -82,13 +91,14 @@ $pag_certificado_2_pdf = AppUrlConfig::getPublicAppBaseUrl() . '/frontend/certif
 $oHash = new HashFront();
 $oHash->setUrl($pag_certificado_2_pdf);
 $oHash->setCamposForm('id_item!guardar');
-$h = $oHash->linkSinVal();
+// Tras `?guardar=1&id_item=…` hace falta `&hnov=…` (linkSinValParams), no otro `?` (linkSinVal).
+$h = $oHash->linkSinValParams();
 
 $pag_certificado_eliminar = AppUrlConfig::getApiBaseUrl() . '/src/certificados/certificado_emitido_delete';
 $oHash_e = new HashFront();
 $oHash_e->setUrl($pag_certificado_eliminar);
 $oHash_e->setCamposForm('id_item');
-$h_eliminar = $oHash_e->linkSinVal();
+$h_eliminar = $oHash_e->linkSinValParams();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHashCertificadoPdf' => $oHashCertificadoPdf,

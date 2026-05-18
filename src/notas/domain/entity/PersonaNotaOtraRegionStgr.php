@@ -265,19 +265,20 @@ class PersonaNotaOtraRegionStgr
     /**
      * @deprecated use getActaVo()
      */
-    public function getActa(): string
+    public function getActa(): ?string
     {
-        return $this->acta->value();
+        return isset($this->acta) ? $this->acta?->value() : null;
     }
-    public function getActaVo(): ActaNumero
+
+    public function getActaVo(): ?ActaNumero
     {
-        return $this->acta;
+        return isset($this->acta) ? $this->acta : null;
     }
 
     /**
      * @deprecated use setActaVo()
      */
-    public function setActa(string $acta): void
+    public function setActa(?string $acta): void
     {
         $this->acta = ActaNumero::fromNullableString($acta);
     }

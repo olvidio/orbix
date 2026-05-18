@@ -10,16 +10,27 @@ $error_txt = '';
 
 $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
+$data = [];
+
+if ($oCertificadoEmitido === null) {
+    $error_txt .= '<br>' . sprintf(
+        _('No encuentro certificado emitido con id_item: %d'),
+        $Qid_item
+    );
+    ContestarJson::enviar($error_txt, $data);
+    return;
+}
 
 $id_nom = $oCertificadoEmitido->getId_nom();
 $nom = $oCertificadoEmitido->getNom();
-$data['idioma'] = $oCertificadoEmitido->getIdiomaVo()?->value();
-$data['destino'] = $oCertificadoEmitido->getDestino();
-$data['certificado'] = $oCertificadoEmitido->getCertificado();
-$data['f_certificado'] = $oCertificadoEmitido->getF_certificado()?->getFromLocal();
-$data['f_enviado'] = $oCertificadoEmitido->getF_enviado()?->getFromLocal();
-$data['firmado'] = $oCertificadoEmitido->isFirmado();
-$data['content'] = base64_encode($oCertificadoEmitido->getDocumento());
+$data['idioma'] = (string)($oCertificadoEmitido->getIdiomaVo()?->value() ?? '');
+$data['destino'] = (string)($oCertificadoEmitido->getDestino() ?? '');
+$data['certificado'] = (string)($oCertificadoEmitido->getCertificado() ?? '');
+$data['f_certificado'] = (string)($oCertificadoEmitido->getF_certificado()?->getFromLocal() ?? '');
+$data['f_enviado'] = (string)($oCertificadoEmitido->getF_enviado()?->getFromLocal() ?? '');
+$data['firmado'] = (bool)($oCertificadoEmitido->isFirmado() ?? false);
+$documento = $oCertificadoEmitido->getDocumento();
+$data['content'] = ($documento !== null && $documento !== '') ? base64_encode($documento) : '';
 
 $oPersona = Persona::findPersonaEnGlobal($id_nom);
 $apellidos_nombre = '';

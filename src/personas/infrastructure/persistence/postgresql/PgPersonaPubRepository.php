@@ -11,6 +11,7 @@ use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\PersonaPub;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
 use src\shared\traits\HandlesPdoErrors;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 
 /**
@@ -39,7 +40,25 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
      */
     protected function createEntityFromArray(array $aDatos): PersonaPub
     {
-        return PersonaPub::fromArray($aDatos);
+        return PersonaPub::fromArray($this->withIdSchema($aDatos));
+    }
+
+    /**
+     * v_personas_pub no incluye id_schema; se obtiene del esquema de la dl de origen.
+     */
+    private function withIdSchema(array $aDatos): array
+    {
+        if (isset($aDatos['id_schema']) && $aDatos['id_schema'] !== '' && $aDatos['id_schema'] !== null) {
+            return $aDatos;
+        }
+        $dl = $aDatos['dl'] ?? '';
+        if ($dl === '' || $dl === null) {
+            return $aDatos;
+        }
+        $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
+        $aDatos['id_schema'] = $gesDelegacion->mi_region_stgr((string) $dl)['mi_id_schema'];
+
+        return $aDatos;
     }
 
     /* --------------------  BASiC SEARCH ---------------------------------------- */
@@ -163,6 +182,6 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         if (empty($aDatos)) {
             return null;
         }
-        return PersonaPub::fromArray($aDatos);
+        return $this->createEntityFromArray($aDatos);
     }
 }

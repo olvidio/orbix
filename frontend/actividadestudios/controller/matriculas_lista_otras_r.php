@@ -1,5 +1,6 @@
 <?php
 
+use frontend\shared\config\OrbixRuntime;
 use frontend\shared\PostRequest;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\security\HashFront;
@@ -31,6 +32,11 @@ if (isset($_POST['stack'])) {
     }
 }
 $oPosicion->recordar();
+
+// comprobar que sou un región del stgr
+if (!(OrbixRuntime::miAmbito() === 'rstgr' || OrbixRuntime::miAmbito() === 'r')) {
+    exit(_("Solamente lo pueden ver las regiones del stgr"));
+}
 
 $aviso = '';
 $form = '';

@@ -100,19 +100,14 @@ class BurgerLayout implements LayoutInterface
         }
         ob_start();
         ?>
-        <!-- Configuración de menús por grupo -->
         <script>
-            const defaultGrupMenu = '<?= htmlspecialchars((string)$defaultGrupMenu, ENT_QUOTES, 'UTF-8') ?>';
-        </script>
-        <!--  para layout hamburguesa -->
-        <script>
+            window.orbixLayout = {
+                defaultGrupMenu: <?= json_encode((string)$defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>,
+                menuConfig: <?= $menuJson ?>
+            };
             <?php
-            include_once (OrbixRuntime::dirScripts() . '/layout_hamburguesa.js.php');
+            include_once OrbixRuntime::dirScripts() . '/layout_hamburguesa.js.php';
             ?>
-        </script>
-        <!-- Configuración de menús por grupo -->
-        <script>
-            const menuConfig = <?= $menuJson ?>;
         </script>
         <?php
 

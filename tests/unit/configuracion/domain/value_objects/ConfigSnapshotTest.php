@@ -84,6 +84,31 @@ class ConfigSnapshotTest extends myTest
         $this->assertSame('1000', $s->getContador_certificados());
     }
 
+    public function test_formatMissingParametersMessage_lists_all_missing()
+    {
+        $s = $this->makeSnapshot(['vstgr' => 'San Jose']);
+        $msg = $s->formatMissingParametersMessage([
+            $s->regionLatin => 'region latin',
+            $s->vstgr => 'vstgr',
+            $s->iniContadorCertificados => 'contador',
+        ]);
+        $this->assertStringContainsString('region latin', $msg);
+        $this->assertStringContainsString('contador', $msg);
+        $this->assertStringNotContainsString('vstgr', $msg);
+    }
+
+    public function test_formatMissingParametersMessage_empty_when_all_present()
+    {
+        $s = $this->makeSnapshot([
+            'regionLatin' => 'Hispania',
+            'iniContadorCertificados' => '1',
+        ]);
+        $this->assertSame('', $s->formatMissingParametersMessage([
+            $s->regionLatin => 'region latin',
+            $s->iniContadorCertificados => 'contador',
+        ]));
+    }
+
     /* ------------------- getCe / getCe_lugar ------------------- */
 
     public function test_getCe_parses_csv()

@@ -101,15 +101,13 @@ class PillsLayout implements LayoutInterface
         ob_start();
         ?>
         <script>
-            const defaultGrupMenu = <?= json_encode((string)$defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>;
-        </script>
-        <script>
+            window.orbixLayout = {
+                defaultGrupMenu: <?= json_encode((string)$defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>,
+                menuConfig: <?= $menuJson ?>
+            };
             <?php
             include_once OrbixRuntime::dirScripts() . '/layout_pills.js.php';
             ?>
-        </script>
-        <script>
-            const menuConfig = <?= $menuJson ?>;
         </script>
         <?php
 

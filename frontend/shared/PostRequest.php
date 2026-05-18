@@ -167,14 +167,15 @@ class PostRequest
     /**
      * POST interno firmado (HashFront) al backend; devuelve siempre un array.
      *
-     * - Si el backend responde error en envelope: `['error' => '…html…']` y aquí se hace `exit`.
+     * - Si el backend responde error en envelope: `['error' => '…html…']` y, por defecto, `exit`.
      * - Si éxito: el contenido útil es {@see envelopeDataFieldToArray} sobre `data`
      *   (nunca `null`; ack `'ok'` → `[]`). Ver tabla en {@see envelopeDataFieldToArray}.
      *
      * @param array<string, mixed> $campos
+     * @param bool $exitOnError Si es false, devuelve `['error' => '…']` en lugar de hacer `exit`.
      * @return array<int|string, mixed>
      */
-    public static function getDataFromUrl(string $url, array $campos = []): array
+    public static function getDataFromUrl(string $url, array $campos = [], bool $exitOnError = true): array
     {
         $url = self::absoluteHttpUrlFromAppRelative($url);
         $url_hased = HashFront::cmdSinParametros($url);
@@ -197,9 +198,26 @@ class PostRequest
 
         $data = self::getData($url_hased, $hash_params);
         if (!empty($data['error'])) {
-            exit ($data['error']);
+            if ($exitOnError) {
+                exit($data['error']);
+            }
+            return $data;
         }
         return $data;
+    }
+
+    /**
+     * Quita el sufijo técnico de {@see procedenciaLlamadaInternaGetData} para mostrar el aviso al usuario.
+     */
+    public static function stripInternalCallProvenance(string $errorHtml): string
+    {
+        $needle = '<br><strong>' . _('Procedencia') . ':';
+        $pos = strpos($errorHtml, $needle);
+        if ($pos === false) {
+            return $errorHtml;
+        }
+
+        return substr($errorHtml, 0, $pos);
     }
 
     /**

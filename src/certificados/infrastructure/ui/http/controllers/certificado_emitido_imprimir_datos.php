@@ -1,32 +1,45 @@
 <?php
 
+use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
 use src\shared\web\ContestarJson;
 
-$id_nom = (string)filter_input(INPUT_POST, 'id_nom');
+$id_nom = (int)filter_input(INPUT_POST, 'id_nom', FILTER_VALIDATE_INT);
 
 $error_txt = '';
+$data = [];
 
-$oPersona = Persona::findPersonaEnGlobal($id_nom);
-if ($oPersona === null) {
-    $error_txt .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
-    $data = 'ok';
-} else {
-    $data['nombreApellidos'] = $oPersona->getNombreApellidos();
-    $data['lugar_nacimiento'] = $oPersona->getLugarNacimientoVo()->value();
-    $data['f_nacimiento'] = $oPersona->getF_nacimiento()->getFechaLatin();
-    $data['nivel_stgr'] = $oPersona->getNivelStgrVo()->value();
+/** @var ConfigSnapshot $oConfig */
+$oConfig = $_SESSION['oConfig'];
+$error_txt .= $oConfig->formatMissingParametersMessage([
+    $oConfig->regionLatin => _('nombre región en latín'),
+    $oConfig->vstgr => _('vstgr'),
+    $oConfig->dirStgr => _('direccion stgr'),
+    $oConfig->lugarFirma => _('lugar firma'),
+    $oConfig->iniContadorCertificados => _('inicio contador certificados'),
+]);
 
-    $data['region_latin'] = $_SESSION['oConfig']->getNomRegionLatin();
-    $data['vstgr'] = $_SESSION['oConfig']->getNomVstgr();
-    $data['dir_stgr'] = $_SESSION['oConfig']->getDirStgr();
-    $data['lugar_firma'] = $_SESSION['oConfig']->getLugarFirma();
-    $data['contador'] = $_SESSION['oConfig']->getContador_certificados();
+if ($error_txt === '') {
+    $oPersona = Persona::findPersonaEnGlobal($id_nom);
+    if ($oPersona === null) {
+        $error_txt .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ': line ' . __LINE__;
+    } else {
+        $data['nombreApellidos'] = $oPersona->getNombreApellidos();
+        $data['lugar_nacimiento'] = (string)($oPersona->getLugarNacimientoVo()?->value() ?? $oPersona->getLugar_nacimiento() ?? '');
+        $data['f_nacimiento'] = (string)($oPersona->getF_nacimiento()?->getFechaLatin() ?? '');
+        $data['nivel_stgr'] = $oPersona->getNivelStgrVo()?->value() ?? '';
 
-    $oHoy = new DateTimeLocal();
-    $data['f_certificado'] = $oHoy->getFromLocal();
-    $data['any_2digit'] = $oHoy->format('y');
+        $data['region_latin'] = (string)$oConfig->regionLatin;
+        $data['vstgr'] = (string)$oConfig->vstgr;
+        $data['dir_stgr'] = (string)$oConfig->dirStgr;
+        $data['lugar_firma'] = (string)$oConfig->lugarFirma;
+        $data['contador'] = (string)$oConfig->iniContadorCertificados;
+
+        $oHoy = new DateTimeLocal();
+        $data['f_certificado'] = $oHoy->getFromLocal();
+        $data['any_2digit'] = $oHoy->format('y');
+    }
 }
 
 ContestarJson::enviar($error_txt, $data);

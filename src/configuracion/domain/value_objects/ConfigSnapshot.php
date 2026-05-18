@@ -48,15 +48,44 @@ final class ConfigSnapshot
     }
 
     /**
+     * Mensaje HTML cuando falta un parámetro de esquema (sin abortar el request).
+     */
+    public function formatMissingParameterMessage(string $nom_param): string
+    {
+        return $this->msg . '<br><br>' . sprintf(_("falta el parámetro: %s"), $nom_param);
+    }
+
+    /**
+     * Mensaje HTML con todos los parámetros faltantes (sin abortar el request).
+     *
+     * @param array<string|null> $checks mapa valor del parámetro => etiqueta traducible
+     */
+    public function formatMissingParametersMessage(array $checks): string
+    {
+        $labels = [];
+        foreach ($checks as $value => $label) {
+            if ($value === null || $value === '') {
+                $labels[] = $label;
+            }
+        }
+        if ($labels === []) {
+            return '';
+        }
+        $msg = $this->msg . '<br><br>';
+        foreach ($labels as $label) {
+            $msg .= sprintf(_("falta el parámetro: %s"), $label) . '<br>';
+        }
+
+        return rtrim($msg, '<br>');
+    }
+
+    /**
      * Devuelve el valor del parámetro o muere con un mensaje de configuración faltante.
      */
     private function requireValue(?string $value, string $nom_param): string
     {
         if (empty($value)) {
-            $msg = $this->msg;
-            $msg .= "<br><br>";
-            $msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
-            exit ($msg);
+            exit($this->formatMissingParameterMessage($nom_param));
         }
         return $value;
     }

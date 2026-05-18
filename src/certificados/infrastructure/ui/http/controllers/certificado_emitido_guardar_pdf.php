@@ -1,5 +1,6 @@
 <?php
 
+use src\certificados\application\CertificadoEmitidoGuardarMessages;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\shared\web\ContestarJson;
@@ -17,23 +18,39 @@ $error_txt = '';
 $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
 
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
-$oCertificadoEmitido->setId_nom($Qid_nom);
-$oCertificadoEmitido->setDocumento($pdf_content);
-if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
-    $error_txt .= $certificadoEmitidoRepository->getErrorTxt();
-}
-// también hay que guardarlo en las notas afectadas
-$oF_certificado = $oCertificadoEmitido->getF_certificado();
-// Se supone que si accedo a esta página es porque soy una región del stgr.
-$esquema_region_stgr = $_SESSION['session_auth']['esquema'];
-$PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(PersonaNotaOtraRegionStgrRepositoryInterface::class, ['esquema_region_stgr' => $esquema_region_stgr]);
-try {
-    $PersonaNotaOtraRegionStgrRepository->addCertificado($Qid_nom, $certificado, $oF_certificado);
-} catch (\Exception $e) {
-    $error_txt .= $e->getMessage();
+if ($oCertificadoEmitido === null) {
+    $error_txt .= '<br>' . sprintf(_('No encuentro certificado emitido con id_item: %d'), $Qid_item);
+    ContestarJson::enviar($error_txt, []);
+    return;
 }
 
-$data['mensaje'] = 'ok';
-$data['item'] = $Qid_item;
+$oCertificadoEmitido->setId_nom($Qid_nom);
+$oCertificadoEmitido->setDocumento($pdf_content);
+try {
+    if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
+        $error_txt .= CertificadoEmitidoGuardarMessages::fromDatabaseError(
+            (string)$certificadoEmitidoRepository->getErrorTxt()
+        );
+    }
+} catch (\Throwable $e) {
+    $error_txt .= CertificadoEmitidoGuardarMessages::fromThrowable($e);
+}
+
+if ($error_txt === '') {
+    // también hay que guardarlo en las notas afectadas
+    $oF_certificado = $oCertificadoEmitido->getF_certificado();
+    $esquema_region_stgr = $_SESSION['session_auth']['esquema'] ?? '';
+    try {
+        $PersonaNotaOtraRegionStgrRepository = $GLOBALS['container']->make(
+            PersonaNotaOtraRegionStgrRepositoryInterface::class,
+            ['esquema_region_stgr' => $esquema_region_stgr]
+        );
+        $PersonaNotaOtraRegionStgrRepository->addCertificado($Qid_nom, $certificado, $oF_certificado);
+    } catch (\Throwable $e) {
+        $error_txt .= $e->getMessage();
+    }
+}
+
+$data = ['mensaje' => 'ok', 'item' => $Qid_item];
 
 ContestarJson::enviar($error_txt, $data);

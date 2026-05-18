@@ -7,7 +7,8 @@ use frontend\shared\security\HashFront;
 
 //header('Content-Type: text/javascript; charset=UTF-8');
 ?>
-
+const defaultGrupMenu = window.orbixLayout.defaultGrupMenu;
+const menuConfig = window.orbixLayout.menuConfig;
 
 function createMenuItem(item, level = 0) {
     const li = document.createElement('li');

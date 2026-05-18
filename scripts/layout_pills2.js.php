@@ -1,6 +1,8 @@
 <?php
 use frontend\shared\security\HashFront;
 ?>
+const defaultGrupMenu = window.orbixLayout.defaultGrupMenu;
+const menuConfig = window.orbixLayout.menuConfig;
 
 function pills2CreateMenuItem(item, level = 0, crumbPrefix = []) {
     const li = document.createElement('li');

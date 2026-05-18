@@ -1,5 +1,6 @@
 <?php
 
+use src\certificados\application\CertificadoEmitidoGuardarMessages;
 use src\shared\config\ConfigGlobal;
 use src\shared\config\ServerConf;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
@@ -65,11 +66,19 @@ if (!empty($oF_enviado)) {
     $oCertificadoEmitido->setF_enviado($oF_enviado);
 }
 
-if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
-    $error_txt .= $certificadoEmitidoRepository->getErrorTxt();
+$guardado = false;
+try {
+    $guardado = $certificadoEmitidoRepository->Guardar($oCertificadoEmitido);
+} catch (\Throwable $e) {
+    $error_txt .= CertificadoEmitidoGuardarMessages::fromThrowable($e);
+}
+if ($guardado === false && $error_txt === '') {
+    $error_txt .= CertificadoEmitidoGuardarMessages::fromDatabaseError(
+        (string)$certificadoEmitidoRepository->getErrorTxt()
+    );
 }
 // borrar el pdf en log
-if (!empty($Qcertificado_old)) {
+if ($guardado && !empty($Qcertificado_old)) {
     $filename_sin_barra = str_replace('/', '_', $Qcertificado_old);
     $filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
     $filename_pdf = ServerConf::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';

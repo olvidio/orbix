@@ -21,9 +21,17 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 /////////// Consulta al backend ///////////////////
 $url_backend = '/src/certificados/certificado_emitido_ver_datos';
-$a_campos_backend = [ 'id_item' => $Qid_item ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-
+$a_campos_backend = ['id_item' => $Qid_item];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend, false);
+if (!empty($data['error'])) {
+    $a_campos = [
+        'oPosicion' => $oPosicion,
+        'aviso' => PostRequest::stripInternalCallProvenance((string)$data['error']),
+    ];
+    $oView = new ViewNewTwig('frontend/certificados/controller');
+    $oView->renderizar('certificado_emitido_ver.html.twig', $a_campos);
+    return;
+}
 
 $id_nom = $data['id_nom'];
 $nom = $data['nom'];

@@ -77,7 +77,13 @@ if (!empty($Qguardar)) {
         'certificado' => $certificado_base64,
         'pdf' => $pdf_base64,
     ];
-    $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+    require_once __DIR__ . '/certificado_emitido_aviso_html.php';
+    $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend, false);
+    if (!empty($data['error'])) {
+        certificado_emitido_echo_aviso_y_salir(
+            PostRequest::stripInternalCallProvenance((string)$data['error'])
+        );
+    }
 }
 
     // Poner la salida del pdf al final, para poder mostrar si hay errores al guardar.
