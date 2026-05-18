@@ -127,7 +127,7 @@ class PgPersonaNotaRepository extends ClaseRepository implements PersonaNotaRepo
     {
         $id_nom = $PersonaNota->getId_nom();
         $id_nivel = $PersonaNota->getIdNivelVo()->value();
-        $tipo_acta = $PersonaNota->getTipoActaVo()->value();
+        $tipo_acta = $PersonaNota->getTipoActaVo()?->value() ?? TipoActa::FORMATO_ACTA;
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_nom=$id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";

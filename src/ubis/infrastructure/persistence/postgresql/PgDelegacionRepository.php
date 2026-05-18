@@ -3,8 +3,9 @@
 namespace src\ubis\infrastructure\persistence\postgresql;
 
 use PDO;
-use RuntimeException;
 use src\shared\config\ConfigGlobal;
+use src\ubis\domain\RegionStgrAviso;
+use src\ubis\domain\RegionStgrConfigException;
 use src\shared\infrastructure\persistence\ClaseRepository;
 use src\shared\infrastructure\persistence\postgresql\Condicion;
 use src\shared\infrastructure\persistence\postgresql\Set;
@@ -60,8 +61,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
         $region_stgr = 'cr' . $aDades['region_stgr'];
         if (empty($aDades['region_stgr'])) {
-            $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
-            throw new RunTimeException($message);
+            throw new RegionStgrConfigException(RegionStgrAviso::mensajeRegionStgrFalta($dele));
         }
 
         return $dele === $region_stgr;
@@ -85,14 +85,12 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 
             $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
             if ($aDades === false || empty($aDades)) {
-                $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
-                throw new RunTimeException($message);
+                throw new RegionStgrConfigException(RegionStgrAviso::mensajeDlNoEncontrada($dele));
             }
             $region_dele = $aDades['region'];
             $region_stgr = $aDades['region_stgr'];
             if (empty($aDades['region_stgr'])) {
-                $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
-                throw new RunTimeException($message);
+                throw new RegionStgrConfigException(RegionStgrAviso::mensajeRegionStgrFalta($dele));
             }
         }
         // nombre del esquema
@@ -123,8 +121,9 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $id_esquema_dele = null;
         foreach ($stmt as $aDades) {
             if ($aDades === false) {
-                $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_region_stgr);
-                throw new RunTimeException($message);
+                throw new RegionStgrConfigException(
+                    RegionStgrAviso::mensajeEsquemaNoEncontrado($esquema_region_stgr, $dele),
+                );
             }
             if ($aDades['schema'] === $esquema_region_stgr) {
                 //$id_esquema_region_stgr = $aDades['id'];
@@ -134,8 +133,9 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             }
         }
         if ($id_esquema_dele === null) {
-            $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_dele);
-            throw new RunTimeException($message);
+            throw new RegionStgrConfigException(
+                RegionStgrAviso::mensajeEsquemaNoEncontrado($esquema_dele, $dele),
+            );
         }
 
         return ['region_stgr' => $region_stgr,

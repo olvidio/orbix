@@ -3,7 +3,10 @@
 use src\shared\config\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaRepositoryInterface;
+use src\notas\domain\entity\PersonaNota;
+use src\notas\domain\entity\PersonaNotaOtraRegionStgr;
 use src\notas\domain\value_objects\TipoActa;
 use src\configuracion\domain\value_objects\ConfigSnapshot;
 use src\personas\domain\entity\Persona;
@@ -159,11 +162,30 @@ if (empty($error_txt)) {
     $aOperador['id_nivel'] = 'BETWEEN';
     $aWhere['tipo_acta'] = TipoActa::FORMATO_ACTA;
     $cNotas = $PersonaNotaDBRepository->getPersonaNotas($aWhere, $aOperador);
+
+    $esquemaRegionStgr = (string)($_SESSION['session_auth']['esquema'] ?? '');
+    if ($esquemaRegionStgr !== '') {
+        $personaNotaOtraRepo = $GLOBALS['container']->make(
+            PersonaNotaOtraRegionStgrRepositoryInterface::class,
+            ['esquema_region_stgr' => $esquemaRegionStgr],
+        );
+        $cNotasOtraRegion = $personaNotaOtraRepo->getPersonaNotas($aWhere, $aOperador);
+        $cNotas = array_merge($cNotas, $cNotasOtraRegion);
+    }
+
     $aAprobadas = [];
     $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     foreach ($cNotas as $oPersonaNota) {
-        $id_asignatura = $oPersonaNota->getIdAsignaturaVo()->value();
-        $id_nivel = $oPersonaNota->getIdNivelVo()->value();
+        if (!($oPersonaNota instanceof PersonaNota) && !($oPersonaNota instanceof PersonaNotaOtraRegionStgr)) {
+            continue;
+        }
+        $idAsignaturaVo = $oPersonaNota->getIdAsignaturaVo();
+        $idNivelVo = $oPersonaNota->getIdNivelVo();
+        if ($idAsignaturaVo === null || $idNivelVo === null) {
+            continue;
+        }
+        $id_asignatura = $idAsignaturaVo->value();
+        $id_nivel = $idNivelVo->value();
 
         $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
         if ($oAsignatura === null) {
@@ -175,7 +197,11 @@ if (empty($error_txt)) {
             if (!$oAsignatura->isActive()) {
                 continue;
             }
-            $id_nivel_asig = $oAsignatura->getIdNivelVo()->value();
+            $idNivelAsigVo = $oAsignatura->getIdNivelVo();
+            if ($idNivelAsigVo === null) {
+                continue;
+            }
+            $id_nivel_asig = $idNivelAsigVo->value();
         }
         $creditos = $oAsignatura->getCreditos();
         $n = $id_nivel_asig;

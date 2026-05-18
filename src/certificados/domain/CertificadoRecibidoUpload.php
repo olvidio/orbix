@@ -40,7 +40,7 @@ class CertificadoRecibidoUpload
         $nom = $apellidos_nombre;
 
         if (empty($destino)) {
-            $destino = $oPersona->getDlVo()->value();
+            $destino = $oPersona->getDlVo()?->value() ?? '';
         }
 
         $certificadoRecibidoRepository = $this->certificadoRecibidoRepository();

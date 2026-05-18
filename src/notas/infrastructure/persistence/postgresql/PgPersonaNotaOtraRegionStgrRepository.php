@@ -103,16 +103,16 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
             } else {
                 $oPersonaNota = $cPersonNotas[0];
                 if (!empty($oPersonaNota)) {
-                    $oPersonaNota->setIdSituacionVo($oPersonaNotaOtraRegionStgr->getIdSituacionVo()->value());
+                    $oPersonaNota->setIdSituacionVo($oPersonaNotaOtraRegionStgr->getIdSituacionVo());
                     $oPersonaNota->setF_acta($oF_certificado);
                     $oPersonaNota->setActaVo($certificado);
                     //$oPersonaNota->setDetalleVo($detalle); // dejo lo que hay
                     $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->isPreceptor());
                     $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
-                    $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo()->value());
+                    $oPersonaNota->setEpocaVo($oPersonaNotaOtraRegionStgr->getEpocaVo());
                     $oPersonaNota->setIdActivVo($oPersonaNotaOtraRegionStgr->getIdActivVo());
-                    $oPersonaNota->setNotaNumVo($oPersonaNotaOtraRegionStgr->getNotaNumVo()->value());
-                    $oPersonaNota->setNotaMaxVo($oPersonaNotaOtraRegionStgr->getNotaMaxVo()->value());
+                    $oPersonaNota->setNotaNumVo($oPersonaNotaOtraRegionStgr->getNotaNumVo());
+                    $oPersonaNota->setNotaMaxVo($oPersonaNotaOtraRegionStgr->getNotaMaxVo());
                     $PersonaNotaDBRepository->Guardar($oPersonaNota);
                 }
             }
@@ -285,7 +285,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     {
         $id_nom = $personaNotaOtraRegionStgr->getId_nom();
         $id_nivel = $personaNotaOtraRegionStgr->getIdNivelVo()->value();
-        $tipo_acta = $personaNotaOtraRegionStgr->getTipoActaVo()->value();
+        $tipo_acta = $personaNotaOtraRegionStgr->getTipoActaVo()?->value() ?? TipoActa::FORMATO_ACTA;
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_nom=$id_nom AND id_nivel=$id_nivel AND tipo_acta=$tipo_acta";
@@ -300,7 +300,7 @@ class PgPersonaNotaOtraRegionStgrRepository extends ClaseRepository implements P
     {
         $id_nom = $personaNotaOtraRegionStgr->getId_nom();
         $id_nivel = $personaNotaOtraRegionStgr->getIdNivelVo()->value();
-        $tipo_acta = $personaNotaOtraRegionStgr->getTipoActaVo()->value();
+        $tipo_acta = $personaNotaOtraRegionStgr->getTipoActaVo()?->value() ?? TipoActa::FORMATO_ACTA;
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_nom, $id_nivel, $tipo_acta);

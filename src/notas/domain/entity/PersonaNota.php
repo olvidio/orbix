@@ -89,8 +89,8 @@ class PersonaNota
         $nota_corte = $_SESSION['oConfig']->getNotaCorte();
         $aprobada = 'f';
         if ($this->id_situacion === NotaSituacion::NUMERICA) {
-            $nota_num = $this->getNotaNumVo()->value();
-            $nota_max = $this->getNotaMaxVo()->value();
+            $nota_num = $this->getNotaNumVo()?->value();
+            $nota_max = $this->getNotaMaxVo()?->value();
             // deben ser números.
             if (is_numeric($nota_num) && is_numeric($nota_max)) {
                 if ($nota_num / $nota_max >= $nota_corte) {

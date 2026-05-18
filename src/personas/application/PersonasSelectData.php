@@ -38,6 +38,7 @@ final class PersonasSelectData
      *     id_tabla?: string,
      *     permiso?: int,
      *     sPrefs?: string,
+     *     aviso?: string,
      *     total?: int,
      *     personas?: list<array{
      *         id_nom: int,
@@ -145,6 +146,7 @@ final class PersonasSelectData
         $permiso = 1;
         $obj_pau = '';
         $cPersonas = [];
+        $aviso = '';
         switch ($tabla) {
             case 'p_sssc':
                 $obj_pau = 'PersonaSSSC';
@@ -180,7 +182,9 @@ final class PersonasSelectData
                     $id_tabla = 'p' . $Qna;
                 }
                 $obj_pau = 'PersonaEx';
-                $cPersonas = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class)->getPersonas($aWhere, $aOperador);
+                $sinRegionStgrPorIdNom = [];
+                $cPersonas = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class)
+                    ->getPersonasParaListado($aWhere, $aOperador, $aviso, $sinRegionStgrPorIdNom);
                 if (
                     $_SESSION['oPerm']->have_perm_oficina('sm')
                     || $_SESSION['oPerm']->have_perm_oficina('agd')
@@ -249,7 +253,7 @@ final class PersonasSelectData
 
         $personas = array_values($a_personas);
 
-        return [
+        $result = [
             'tabla' => $tabla,
             'obj_pau' => $obj_pau,
             'id_tabla' => $id_tabla,
@@ -258,5 +262,10 @@ final class PersonasSelectData
             'total' => count($personas),
             'personas' => $personas,
         ];
+        if ($aviso !== '') {
+            $result['aviso'] = $aviso;
+        }
+
+        return $result;
     }
 }

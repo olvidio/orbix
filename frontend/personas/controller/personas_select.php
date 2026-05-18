@@ -106,6 +106,7 @@ $permiso = (int)($payload['permiso'] ?? 1);
 $sPrefs = (string)($payload['sPrefs'] ?? '');
 $total = (int)($payload['total'] ?? 0);
 $a_filas = (array)($payload['personas'] ?? []);
+$aviso = (string)($payload['aviso'] ?? '');
 
 // Botones y scripts: son UI (dependen de `$_SESSION['oPerm']`, apps instaladas
 // y ambito) y se construyen en el frontend.
@@ -281,6 +282,7 @@ $a_campos = [
     'oTabla' => $oTabla,
     'pagina' => $pagina,
     'permiso' => $permiso,
+    'aviso' => $aviso,
 ];
 
 $oView = new ViewNewPhtml('frontend\personas\controller');
