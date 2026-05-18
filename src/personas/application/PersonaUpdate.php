@@ -96,6 +96,14 @@ final class PersonaUpdate
         }
         $oPersona->setObserv((string)($input['observ'] ?? ''));
 
+        if (method_exists($oPersona, 'setEdad')) {
+            $edad = (string)($input['edad'] ?? '');
+            $oPersona->setEdad($edad === '' ? null : (int)$edad);
+        }
+        if (method_exists($oPersona, 'setProfesor_stgr')) {
+            $oPersona->setProfesor_stgr(is_true((string)($input['profesor_stgr'] ?? '')));
+        }
+
         if ($repoPersona->Guardar($oPersona) === false) {
             $err = _("hay un error, no se ha guardado");
             $detalle = $repoPersona->getErrorTxt();

@@ -92,7 +92,7 @@ final class PersonaUpdateTest extends TestCase
             PersonaExRepositoryInterface::class => $repo,
         ]);
 
-        $this->assertSame('', PersonaUpdate::execute([
+        $result = PersonaUpdate::execute([
             'id_nom' => 99,
             'obj_pau' => 'PersonaEx',
             'dl' => 'BCN',
@@ -100,11 +100,14 @@ final class PersonaUpdateTest extends TestCase
             'nivel_stgr' => NivelStgrId::N,
             'situacion' => 'A',
             'apellido1' => 'Externa',
+            'edad' => '42',
             'ce' => 1,
             'ce_lugar' => 'x',
             'ce_ini' => 2,
             'ce_fin' => 3,
-        ]));
+        ]);
+        $this->assertSame('', $result);
+        $this->assertSame(42, $persona->getEdad());
     }
 
     public function test_falla_guardar(): void

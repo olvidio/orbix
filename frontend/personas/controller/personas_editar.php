@@ -99,6 +99,7 @@ $dl = (string)($payload['dl'] ?? '');
 $idioma_preferido = (string)($payload['idioma_preferido'] ?? '');
 $situacion = (string)($payload['situacion'] ?? '');
 $nivel_stgr = (string)($payload['nivel_stgr'] ?? '');
+$edad = (string)($payload['edad'] ?? '');
 
 $opciones_dl = (array)($payload['opciones_dl'] ?? []);
 $opciones_centros = (array)($payload['opciones_centros'] ?? []);
@@ -286,6 +287,7 @@ $a_campos = [
     'ce_ini' => $ce_ini,
     'ce_fin' => $ce_fin,
     'observ' => $observ,
+    'edad' => $edad,
     'botones' => $botones,
     'obj' => $obj,
 ];

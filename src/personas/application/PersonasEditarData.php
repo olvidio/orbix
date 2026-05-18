@@ -78,6 +78,7 @@ final class PersonasEditarData
             'idioma_preferido' => '',
             'situacion' => '',
             'nivel_stgr' => '',
+            'edad' => '',
         ];
 
         if (!empty($Qnuevo)) {
@@ -130,6 +131,9 @@ final class PersonasEditarData
             $out['ce_ini'] = method_exists($oPersona, 'getCe_ini') ? (string)($oPersona->getCe_ini() ?? '') : '';
             $out['ce_fin'] = method_exists($oPersona, 'getCe_fin') ? (string)($oPersona->getCe_fin() ?? '') : '';
             $out['observ'] = (string)($oPersona->getObserv() ?? '');
+            $out['edad'] = method_exists($oPersona, 'getEdad') && $oPersona->getEdad() !== null
+                ? (string)$oPersona->getEdad()
+                : '';
 
             if (!empty($out['id_ctr'])) {
                 $centroRepoIface = ConfigGlobal::mi_ambito() === 'rstgr'
