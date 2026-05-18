@@ -176,7 +176,7 @@ final class PeticionesIncorporar
             }
         }
         $AsistentesOutRepository = $GLOBALS['container']->get(AsistenteOutRepositoryInterface::class);
-        $cAsistentesOut = $AsistentesOutRepository->getAsistentesOut(['id_nom' => $id_nom, 'propio' => 't']);
+        $cAsistentesOut = $AsistentesOutRepository->getAsistentes(['id_nom' => $id_nom, 'propio' => 't']);
         foreach ($cAsistentesOut as $oAsistente) {
             if (array_key_exists($oAsistente->getId_activ(), $aId_activ)) {
                 return true;
