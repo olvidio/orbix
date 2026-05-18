@@ -125,7 +125,7 @@ class OdbcDlListasRepository extends ClaseRepository
 					nombre_dl           = :nombre_dl,
 					abr_r               = :abr_r,
 					numero_r            = :numero_r";
-            $sql = "UPDATE $nom_tabla SET $update WHERE nuemro_dl = $nuemro_dl";
+            $sql = "UPDATE $nom_tabla SET $update WHERE nuemro_dl = $numero_dl";
             $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             // INSERT

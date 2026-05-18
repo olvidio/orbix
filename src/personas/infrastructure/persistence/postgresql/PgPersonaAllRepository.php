@@ -53,16 +53,16 @@ class PgPersonaAllRepository extends ClaseRepository implements PersonaAllReposi
         // sino, los que vienen de otra dl
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion = 'A' ORDER BY f_situacion";
         if ($oDblSt = $this->ejecutar($sql)) {
+            $id_schema_persona = null;
             foreach ($oDblSt as $aDades) {
                 $id_schema_persona = $aDades['id_schema'];
             }
             // Si hay más de uno, me quedo con el que tiene la fecha de cambio situación más reciente.
             // Lo marco como publicado
-            $sql = "UPDATE $nom_tabla SET es_publico = 't' WHERE id_nom=$id_nom AND situacion = 'A' AND id_schema = $id_schema_persona";
-            if ($oDblSt = $this->ejecutar($sql)) {
-
+            if ($id_schema_persona !== null) {
+                $sql = "UPDATE $nom_tabla SET es_publico = 't' WHERE id_nom=$id_nom AND situacion = 'A' AND id_schema = $id_schema_persona";
+                $this->ejecutar($sql);
             }
-
         }
 
         // que esté en la dl, pero no en situación = 'A'

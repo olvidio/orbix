@@ -449,6 +449,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $cActividadProcesoTarea = $this->getActividadProcesoTareas($aWhere);
                 foreach ($cActividadProcesoTarea as $oActividadProcesoTarea) {
                     $id_fase = $oActividadProcesoTarea->getIdFaseVo()?->value();
+                    $id_tarea = $oActividadProcesoTarea->getIdTareaVo()?->value();
                     $completado = 'f';
                     // marco el status correspondiente en la actividad.
                     if ($statusActividad === StatusId::PROYECTO) {

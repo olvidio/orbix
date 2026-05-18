@@ -120,6 +120,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
                         WHERE schema = '$esquema_region_stgr' OR schema = '$esquema_dele'";
         $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
+        $id_esquema_dele = null;
         foreach ($stmt as $aDades) {
             if ($aDades === false) {
                 $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_region_stgr);
@@ -131,6 +132,10 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             if ($aDades['schema'] === $esquema_dele) {
                 $id_esquema_dele = $aDades['id'];
             }
+        }
+        if ($id_esquema_dele === null) {
+            $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_dele);
+            throw new RunTimeException($message);
         }
 
         return ['region_stgr' => $region_stgr,

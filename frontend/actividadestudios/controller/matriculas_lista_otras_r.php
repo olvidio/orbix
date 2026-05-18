@@ -62,9 +62,21 @@ $titulo = '';
 
 $d = PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_lista_otras_r_data', [
     'apellido1' => $Qapellido1,
-]);
+], false);
+if (!empty($d['error'])) {
+    $errorHtml = PostRequest::stripInternalCallProvenance((string)$d['error']);
+    if (str_contains($errorHtml, _('falta indicar a que región del stgr pertenece la dl:'))
+        || str_contains($errorHtml, 'región del stgr pertenece la dl')) {
+        $aviso = $errorHtml;
+    } else {
+        echo $errorHtml;
+        return;
+    }
+    $d = [];
+}
 $titulo = $d['titulo'] ?? '';
 $msg_err = $d['msg_err'] ?? '';
+$aviso = (string)($d['aviso'] ?? $aviso);
 $a_valores = $d['a_valores'] ?? [];
 
 if (isset($Qid_sel) && !empty($Qid_sel)) {

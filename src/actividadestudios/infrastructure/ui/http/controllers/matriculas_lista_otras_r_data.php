@@ -12,6 +12,18 @@ try {
         throw new \InvalidArgumentException(_('Falta contexto de sesión'));
     }
     $data = MatriculasListaOtrasRData::execute($apellido1, $esquema);
+} catch (\RuntimeException $e) {
+    if (MatriculasListaOtrasRData::esAvisoRegionStgr($e)) {
+        $data = [
+            'titulo' => '',
+            'titulo_busqueda_por_apellidos' => _('búsqueda por apellidos'),
+            'msg_err' => '',
+            'aviso' => $e->getMessage(),
+            'a_valores' => [],
+        ];
+    } else {
+        $error = $e->getMessage();
+    }
 } catch (\Throwable $e) {
     $error = $e->getMessage();
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\integration\ubis\infrastructure\persistence\postgresql;
 
+use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Delegacion;
 use Tests\myTest;
@@ -163,6 +164,21 @@ class PgDelegacionRepositoryTest extends myTest
         
         $this->assertNotNull($newId);
         $this->assertIsNumeric($newId);
+    }
+
+    public function test_mi_region_stgr_devuelve_mi_id_schema_para_dele_sesion(): void
+    {
+        $dele = ConfigGlobal::mi_dele();
+        $this->assertNotSame('', $dele, 'La sesión de test debe tener esquema con delegación');
+
+        $aRegion = $this->repository->mi_region_stgr($dele);
+
+        $this->assertArrayHasKey('mi_id_schema', $aRegion);
+        $this->assertNotNull($aRegion['mi_id_schema']);
+        $this->assertIsInt($aRegion['mi_id_schema']);
+        $this->assertGreaterThan(0, $aRegion['mi_id_schema']);
+        $this->assertArrayHasKey('esquema_dl', $aRegion);
+        $this->assertNotSame('', $aRegion['esquema_dl']);
     }
 
 }

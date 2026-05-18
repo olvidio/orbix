@@ -8,12 +8,16 @@ use src\notas\domain\contracts\ActaRepositoryInterface;
 use src\notas\domain\contracts\PersonaNotaOtraRegionStgrRepositoryInterface;
 use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\entity\Persona;
+use src\personas\domain\entity\PersonaDl;
+use src\personas\domain\entity\PersonaPub;
+use src\ubis\domain\RegionStgrAviso;
 
 /**
  * @return array{
  *   titulo: string,
  *   titulo_busqueda_por_apellidos: string,
  *   msg_err: string,
+ *   aviso: string,
  *   a_valores: array<int|string, array<string|int, mixed>>,
  *   a_Nombre?: array<int, string>
  * }
@@ -25,6 +29,7 @@ final class MatriculasListaOtrasRData
         $tituloBusqueda = _('búsqueda por apellidos');
         $titulo = '';
         $msgErr = '';
+        $aviso = '';
         $aValores = [];
         $aNombre = [];
 
@@ -36,10 +41,8 @@ final class MatriculasListaOtrasRData
                 '_ordre' => 'dl,stgr,apellido1,nom',
             ];
             $aOperador = ['apellido1' => 'sin_acentos'];
-            $cPersonas = $personaPubRepository->getPersonas($aWhere, $aOperador);
-            if ($cPersonas === false) {
-                $cPersonas = [];
-            }
+            $sinRegionStgrPorIdNom = [];
+            $cPersonas = $personaPubRepository->getPersonasParaListado($aWhere, $aOperador, $aviso, $sinRegionStgrPorIdNom);
             $i = 0;
             foreach ($cPersonas as $oPersona) {
                 $idNom = $oPersona->getId_nom();
@@ -50,7 +53,7 @@ final class MatriculasListaOtrasRData
                 $aValores[$i][5] = $idNom;
                 $aValores[$i][1] = $apellidosNombre;
                 $aValores[$i][2] = $dl;
-                $aValores[$i][3] = '';
+                $aValores[$i][3] = isset($sinRegionStgrPorIdNom[$idNom]) ? '⚠' : '';
                 $aValores[$i][4] = '';
                 $aNombre[$i] = $apellidosNombre;
             }
@@ -80,7 +83,8 @@ final class MatriculasListaOtrasRData
                 $idNom = $oPersonaNotaOtraRegionDB->getId_nom();
 
                 if ($idNomAnterior !== '' && $idNom !== $idNomAnterior) {
-                    $oPersona = Persona::findPersonaEnGlobal($idNomAnterior);
+                    $marcaRegionStgr = false;
+                    $oPersona = self::findPersonaEnGlobal($idNomAnterior, $aviso, $marcaRegionStgr);
                     if ($oPersona === null) {
                         $msgErr .= "<br>No encuentro a nadio con id_nom $idNomAnterior en  " . __FILE__ . ': line ' . __LINE__;
                         $idNomAnterior = $idNom;
@@ -88,6 +92,9 @@ final class MatriculasListaOtrasRData
                     }
                     $apellidosNombre = $oPersona->getPrefApellidosNombre();
                     $dl = $oPersona->getDl();
+                    if ($marcaRegionStgr) {
+                        $alert = self::alertaConRegionStgr($alert);
+                    }
 
                     $aValores[$i]['sel'] = (string)$idNomAnterior;
                     $aValores[$i][5] = $idNomAnterior;
@@ -122,12 +129,16 @@ final class MatriculasListaOtrasRData
                 $idNomAnterior = $idNom;
             }
             if ($idNom !== '') {
-                $oPersona = Persona::findPersonaEnGlobal($idNom);
+                $marcaRegionStgr = false;
+                $oPersona = self::findPersonaEnGlobal($idNom, $aviso, $marcaRegionStgr);
                 if ($oPersona === null) {
                     $msgErr .= "<br>No encuentro a nadie con id_nom: $idNom en  " . __FILE__ . ': line ' . __LINE__;
                 } else {
                     $apellidosNombre = $oPersona->getPrefApellidosNombre();
                     $dl = $oPersona->getDl();
+                    if ($marcaRegionStgr) {
+                        $alert = self::alertaConRegionStgr($alert);
+                    }
                     $aValores[$i + 1]['sel'] = (string)$idNom;
                     $aValores[$i + 1][5] = $idNom;
                     $aValores[$i + 1][1] = $apellidosNombre;
@@ -147,7 +158,41 @@ final class MatriculasListaOtrasRData
             'titulo' => $titulo,
             'titulo_busqueda_por_apellidos' => $tituloBusqueda,
             'msg_err' => $msgErr,
+            'aviso' => $aviso,
             'a_valores' => $aValores,
         ];
+    }
+
+    private static function findPersonaEnGlobal(
+        int $idNom,
+        string &$aviso,
+        bool &$marcaRegionStgr = false,
+    ): PersonaDl|PersonaPub|null {
+        $marcaRegionStgr = false;
+        try {
+            $persona = Persona::findPersonaEnGlobal($idNom);
+            if ($persona !== null) {
+                return $persona;
+            }
+        } catch (\RuntimeException $e) {
+            if (!RegionStgrAviso::esDlSinRegion($e)) {
+                throw $e;
+            }
+            $aviso = RegionStgrAviso::append($aviso, $e->getMessage());
+        }
+
+        $personaPubRepository = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class);
+
+        return $personaPubRepository->findByIdParaListado($idNom, $aviso, $marcaRegionStgr);
+    }
+
+    public static function esAvisoRegionStgr(\Throwable $e): bool
+    {
+        return RegionStgrAviso::esDlSinRegion($e);
+    }
+
+    private static function alertaConRegionStgr(string $alert): string
+    {
+        return str_contains($alert, '⚠') ? $alert : $alert . '⚠';
     }
 }

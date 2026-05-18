@@ -12,6 +12,7 @@ use src\personas\domain\entity\PersonaPub;
 use src\personas\infrastructure\persistence\postgresql\traits\PersonaGlobalListsTrait;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\ubis\domain\RegionStgrAviso;
 
 
 /**
@@ -132,6 +133,99 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $PersonaDlSet->add($Persona);
         }
         return $PersonaDlSet->getTot();
+    }
+
+    /**
+     * @return array<int, PersonaPub>
+     */
+    public function getPersonasParaListado(
+        array $aWhere,
+        array $aOperators,
+        string &$avisosRegionStgr,
+        array &$sinRegionStgrPorIdNom = [],
+    ): array {
+        $sinRegionStgrPorIdNom = [];
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $PersonaDlSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre' || $camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN' || $sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = ' WHERE ' . $sCondicion;
+        }
+        $sOrdre = '';
+        $sLimit = '';
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        unset($aWhere['_ordre']);
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        unset($aWhere['_limit']);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $aDatos) {
+            $aDatos['f_nacimiento'] = (new ConverterDate('date', $aDatos['f_nacimiento']))->fromPg();
+            $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
+            $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
+            $marcaAviso = false;
+            $persona = $this->createEntityParaListado($aDatos, $avisosRegionStgr, $marcaAviso);
+            if ($marcaAviso) {
+                $sinRegionStgrPorIdNom[$persona->getId_nom()] = true;
+            }
+            $PersonaDlSet->add($persona);
+        }
+
+        return $PersonaDlSet->getTot();
+    }
+
+    public function findByIdParaListado(int $id_nom, string &$avisosRegionStgr, bool &$marcaAvisoRegionStgr): ?PersonaPub
+    {
+        $marcaAvisoRegionStgr = false;
+        $aDatos = $this->datosById($id_nom);
+        if (empty($aDatos)) {
+            return null;
+        }
+
+        return $this->createEntityParaListado($aDatos, $avisosRegionStgr, $marcaAvisoRegionStgr);
+    }
+
+    private function createEntityParaListado(
+        array $aDatos,
+        string &$avisosRegionStgr,
+        bool &$marcaAvisoRegionStgr = false,
+    ): PersonaPub {
+        $marcaAvisoRegionStgr = false;
+        try {
+            return PersonaPub::fromArray($this->withIdSchema($aDatos));
+        } catch (\RuntimeException $e) {
+            if (!RegionStgrAviso::esDlSinRegion($e)) {
+                throw $e;
+            }
+            $avisosRegionStgr = RegionStgrAviso::append($avisosRegionStgr, $e->getMessage());
+            $marcaAvisoRegionStgr = true;
+            $aDatos['id_schema'] = 0;
+
+            return PersonaPub::fromArray($aDatos);
+        }
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */

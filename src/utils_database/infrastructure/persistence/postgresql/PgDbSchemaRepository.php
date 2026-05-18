@@ -252,6 +252,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      */
     private function connectar(string $database)
     {
+        $oDB = null;
         switch ($database) {
             case 'comun':
                 $oDB = $this->getoDbl();
@@ -276,6 +277,11 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
                 $oDB = $oConexion->getPDO();
                 $this->setoDbl($oDB);
                 break;
+            default:
+                throw new \InvalidArgumentException(sprintf(_('Base de datos no soportada: %s'), $database));
+        }
+        if ($oDB === null) {
+            throw new \RuntimeException(sprintf(_('No se pudo conectar a la base de datos: %s'), $database));
         }
         return $oDB;
     }
@@ -316,8 +322,12 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             ORDER BY id DESC
             LIMIT 1";
         $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+        $lastId = null;
         foreach ($stmt as $aDades) {
             $lastId = $aDades['id'];
+        }
+        if ($lastId === null) {
+            throw new \RuntimeException(_('No se encuentra ningún id_schema en el rango 3000-4000'));
         }
         return $lastId;
     }

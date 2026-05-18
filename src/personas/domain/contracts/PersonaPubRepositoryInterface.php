@@ -49,6 +49,29 @@ interface PersonaPubRepositoryInterface
      */
     public function getPersonas(array $aWhere = [], array $aOperators = []): array|bool;
 
+    /**
+     * Como getPersonas: incluye todas las filas aunque falte región stgr de la dl;
+     * acumula avisos en $avisosRegionStgr.
+     *
+     * @param-out string $avisosRegionStgr
+     * @param-out array<int, true> $sinRegionStgrPorIdNom id_nom marcados sin región stgr en la dl
+     * @return array<int, PersonaPub>
+     */
+    public function getPersonasParaListado(
+        array $aWhere,
+        array $aOperators,
+        string &$avisosRegionStgr,
+        array &$sinRegionStgrPorIdNom = [],
+    ): array;
+
+    /**
+     * Como findById pero tolera dl sin región stgr (id_schema=0 y aviso).
+     *
+     * @param-out string $avisosRegionStgr
+     * @param-out bool $marcaAvisoRegionStgr true si la fila se cargó sin región stgr
+     */
+    public function findByIdParaListado(int $id_nom, string &$avisosRegionStgr, bool &$marcaAvisoRegionStgr): ?PersonaPub;
+
     /* -------------------- ENTIDAD --------------------------------------------- */
 
     public function getErrorTxt(): string;

@@ -144,6 +144,7 @@ abstract class ClaseRepository
 
         //ordenar
         if (!empty($paraOrdenar)) {
+            $a_ord_cond = [];
             $a_ordre = explode(',', $paraOrdenar);
             foreach ($cClassesTot as $key_c => $oClass) {
                 $get = '';
@@ -163,7 +164,7 @@ abstract class ClaseRepository
             }
             $multisort_args = [];
             foreach ($a_ordre as $key_o => $ordre) {
-                if (!empty($a_ord[$key_o])) {
+                if (!empty($a_ord[$key_o]) && isset($a_ord_cond[$key_o])) {
                     $multisort_args[] = $a_ord[$key_o];
                     $multisort_args[] = $a_ord_cond[$key_o];
                     $multisort_args[] = SORT_STRING;
