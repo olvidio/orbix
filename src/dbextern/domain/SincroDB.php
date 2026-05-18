@@ -446,10 +446,10 @@ class SincroDB
         $Email = $oPersonaListas->getEmail();
         $Tfno_Movil = $oPersonaListas->getTfno_Movil();
 
-        $ce_num = $oPersonaListas->getCe_num();
+        $ce_num = $this->toNullableInt($oPersonaListas->getCe_num());
         $ce_lugar = $oPersonaListas->getCe_lugar();
-        $ce_ini = $oPersonaListas->getCe_ini();
-        $ce_fin = $oPersonaListas->getCe_fin();
+        $ce_ini = $this->toNullableInt($oPersonaListas->getCe_ini());
+        $ce_fin = $this->toNullableInt($oPersonaListas->getCe_fin());
 
         $inc = $oPersonaListas->getInc();
         $f_inc = $oPersonaListas->getF_inc();
@@ -604,5 +604,14 @@ class SincroDB
     {
         // Volver oDBR a su estado original:
         $oDB->exec("SET search_path TO $this->path_ini");
+    }
+
+    private function toNullableInt(mixed $value): ?int
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (int)$value;
     }
 }
