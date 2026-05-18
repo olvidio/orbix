@@ -226,18 +226,18 @@ class ListaActivTabla
 
             $oCasa = $CasaRepository->findById($id_ubi);
             $nombre_ubi = '';
+            $comun = '';
             if ($oCasa !== null) {
                 $nombre_ubi = $oCasa->getNombre_ubi();
-            }
-            $comun = '';
-            if (is_true($oCasa->isSv())) {
-                $comun = 'sv';
-            }
-            if (is_true($oCasa->isSf())) {
-                $comun = 'sf';
-            }
-            if (is_true($oCasa->isSv()) && is_true($oCasa->isSf())) {
-                $comun = 'comun';
+                if (is_true($oCasa->isSv())) {
+                    $comun = 'sv';
+                }
+                if (is_true($oCasa->isSf())) {
+                    $comun = 'sf';
+                }
+                if (is_true($oCasa->isSv()) && is_true($oCasa->isSf())) {
+                    $comun = 'comun';
+                }
             }
 
             $oTipoActivRow = new TiposActividades($id_tipo_activ_row);

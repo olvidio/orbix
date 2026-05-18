@@ -5,6 +5,7 @@ namespace Tests\unit\actividades\application;
 use PHPUnit\Framework\TestCase;
 use src\actividades\application\ListaActivTabla;
 use src\actividades\domain\contracts\ActividadRepositoryInterface;
+use src\shared\domain\value_objects\DateTimeLocal;
 use src\actividadcargos\domain\contracts\ActividadCargoRepositoryInterface;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\actividadtarifas\domain\contracts\TipoTarifaRepositoryInterface;
@@ -132,5 +133,119 @@ final class ListaActivTablaApplicationTest extends TestCase
         $this->assertArrayHasKey('a_valores', $out);
         $this->assertSame([], $out['a_valores']);
         $this->assertArrayNotHasKey('html_tabla', $out);
+    }
+
+    public function test_actividad_sin_casa_no_falla(): void
+    {
+        $activ = new class {
+            public function getId_activ(): int
+            {
+                return 1;
+            }
+
+            public function getId_tipo_activ(): string
+            {
+                return 'sv......';
+            }
+
+            public function getId_ubi(): int
+            {
+                return 99999;
+            }
+
+            public function getF_ini(): DateTimeLocal
+            {
+                return DateTimeLocal::createFromLocal('01/05/2026');
+            }
+
+            public function getF_fin(): DateTimeLocal
+            {
+                return DateTimeLocal::createFromLocal('02/05/2026');
+            }
+
+            public function getH_ini(): ?\DateTimeInterface
+            {
+                return null;
+            }
+
+            public function getH_fin(): ?\DateTimeInterface
+            {
+                return null;
+            }
+
+            public function getTarifa(): ?int
+            {
+                return null;
+            }
+
+            public function getObserv(): string
+            {
+                return '';
+            }
+        };
+
+        $actRepo = $this->createMock(ActividadRepositoryInterface::class);
+        $actRepo->method('getActividades')->willReturn([$activ]);
+
+        $casaRepo = $this->createMock(CasaRepositoryInterface::class);
+        $casaRepo->method('findById')->with(99999)->willReturn(null);
+
+        $tarifaRepo = $this->createMock(TipoTarifaRepositoryInterface::class);
+        $tarifaRepo->method('findById')->willReturn(new class {
+            public function getLetra(): string
+            {
+                return 'A';
+            }
+        });
+
+        $centroEncRepo = $this->createMock(CentroEncargadoRepositoryInterface::class);
+        $centroEncRepo->method('getCentrosEncargadosActividad')->willReturn([]);
+
+        $cargoRepo = $this->createMock(ActividadCargoRepositoryInterface::class);
+        $cargoRepo->method('getActividadSacds')->willReturn([]);
+
+        $GLOBALS['container'] = new class($actRepo, $casaRepo, $tarifaRepo, $centroEncRepo, $cargoRepo) {
+            public function __construct(
+                private readonly object $actRepo,
+                private readonly object $casaRepo,
+                private readonly object $tarifaRepo,
+                private readonly object $centroEncRepo,
+                private readonly object $cargoRepo,
+            ) {}
+
+            public function get(string $id): object
+            {
+                return match ($id) {
+                    ActividadRepositoryInterface::class => $this->actRepo,
+                    CasaRepositoryInterface::class => $this->casaRepo,
+                    TipoTarifaRepositoryInterface::class => $this->tarifaRepo,
+                    CentroEncargadoRepositoryInterface::class => $this->centroEncRepo,
+                    ActividadCargoRepositoryInterface::class => $this->cargoRepo,
+                    default => throw new \RuntimeException($id),
+                };
+            }
+        };
+
+        $out = (new ListaActivTabla())->execute(
+            [
+                'que' => 'list_activ_compl',
+                'periodo' => 'actual',
+                'empiezamin' => '01/05/2026',
+                'empiezamax' => '31/05/2026',
+                'id_tipo_activ' => '......',
+            ],
+            [
+                'mi_sfsv' => 1,
+                'perm_vcsd' => false,
+                'perm_des' => false,
+                'perm_sg' => false,
+                'perm_admin' => true,
+                'is_dmz' => true,
+            ]
+        );
+
+        $this->assertCount(1, $out['a_valores']);
+        $this->assertSame('', $out['a_valores'][1][1]);
+        $this->assertSame('', $out['a_valores'][1][10]);
     }
 }
