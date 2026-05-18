@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Tests\unit\personas\application;
 
 use PHPUnit\Framework\TestCase;
+use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\PersonaUpdate;
+use src\personas\domain\contracts\PersonaExRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\entity\PersonaEx;
 use src\personas\domain\entity\PersonaN;
 use src\personas\infrastructure\persistence\postgresql\PgPersonaNRepository;
 
@@ -71,6 +74,37 @@ final class PersonaUpdateTest extends TestCase
         ];
 
         $this->assertSame('', PersonaUpdate::execute($input));
+    }
+
+    public function test_exito_persona_ex_sin_id_ctr_ni_ce(): void
+    {
+        $persona = new PersonaEx();
+        $persona->setId_nom(99);
+        $persona->setId_tabla('pn');
+        $persona->setApellido1('Externa');
+        $persona->setSituacion('A');
+
+        $repo = $this->createMock(PersonaExRepositoryInterface::class);
+        $repo->method('findById')->with(99)->willReturn($persona);
+        $repo->expects($this->once())->method('Guardar')->with($persona)->willReturn(true);
+
+        $GLOBALS['container'] = $this->containerFromMap([
+            PersonaExRepositoryInterface::class => $repo,
+        ]);
+
+        $this->assertSame('', PersonaUpdate::execute([
+            'id_nom' => 99,
+            'obj_pau' => 'PersonaEx',
+            'dl' => 'BCN',
+            'id_ctr' => 123,
+            'nivel_stgr' => NivelStgrId::N,
+            'situacion' => 'A',
+            'apellido1' => 'Externa',
+            'ce' => 1,
+            'ce_lugar' => 'x',
+            'ce_ini' => 2,
+            'ce_fin' => 3,
+        ]));
     }
 
     public function test_falla_guardar(): void

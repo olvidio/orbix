@@ -53,7 +53,9 @@ final class PersonaUpdate
         }
 
         $oPersona->setDl((string)($input['dl'] ?? ''));
-        $oPersona->setId_ctr((int)($input['id_ctr'] ?? 0));
+        if (method_exists($oPersona, 'setId_ctr')) {
+            $oPersona->setId_ctr((int)($input['id_ctr'] ?? 0));
+        }
         $oPersona->setSituacion((string)($input['situacion'] ?? ''));
         $oPersona->setIdioma_preferido((string)($input['idioma_preferido'] ?? ''));
         $oPersona->setNivel_stgr((int)($input['nivel_stgr'] ?? 0));
@@ -80,10 +82,18 @@ final class PersonaUpdate
         $f_inc = (string)($input['f_inc'] ?? '');
         $oPersona->setF_inc(empty($f_inc) ? null : DateTimeLocal::createFromLocal($f_inc));
 
-        $oPersona->setCe((int)($input['ce'] ?? 0));
-        $oPersona->setCe_lugar((string)($input['ce_lugar'] ?? ''));
-        $oPersona->setCe_ini((int)($input['ce_ini'] ?? 0));
-        $oPersona->setCe_fin((int)($input['ce_fin'] ?? 0));
+        if (method_exists($oPersona, 'setCe')) {
+            $oPersona->setCe((int)($input['ce'] ?? 0));
+        }
+        if (method_exists($oPersona, 'setCe_lugar')) {
+            $oPersona->setCe_lugar((string)($input['ce_lugar'] ?? ''));
+        }
+        if (method_exists($oPersona, 'setCe_ini')) {
+            $oPersona->setCe_ini((int)($input['ce_ini'] ?? 0));
+        }
+        if (method_exists($oPersona, 'setCe_fin')) {
+            $oPersona->setCe_fin((int)($input['ce_fin'] ?? 0));
+        }
         $oPersona->setObserv((string)($input['observ'] ?? ''));
 
         if ($repoPersona->Guardar($oPersona) === false) {
