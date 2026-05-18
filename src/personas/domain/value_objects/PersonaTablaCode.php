@@ -21,9 +21,7 @@ final class PersonaTablaCode
         if (mb_strlen($value) > 6) {
             throw new \InvalidArgumentException('PersonaTablaCode must be at most 6 characters');
         }
-        if (!preg_match('/^[A-Za-z0-9_]+$/', $value)) {
-            throw new \InvalidArgumentException('PersonaTablaCode has invalid characters');
-        }
+        PersonaTextoChars::throwsIfNotMatching('PersonaTablaCode', $value, PersonaTextoChars::CLASE_TABLA_CODE);
     }
 
     public function value(): string
@@ -50,6 +48,7 @@ final class PersonaTablaCode
         if ($value_trimmed === '') {
             return null;
         }
+
         return new self($value_trimmed);
     }
 }

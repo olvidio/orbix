@@ -37,4 +37,20 @@ class PersonaApellido2TextTest extends myTest
         $this->assertNull($personaApellido2Text);
     }
 
+    public function test_acepta_barra_y_punto_medio(): void
+    {
+        $text = new PersonaApellido2Text('Richi/Ricardo');
+        $this->assertSame('Richi/Ricardo', $text->value());
+
+        $conPunto = new PersonaApellido2Text('Muñoz·García');
+        $this->assertSame('Muñoz·García', $conPunto->value());
+    }
+
+    public function test_caracter_no_permitido_incluye_detalle_en_excepcion(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/PersonaApellido2Text.*no permitidos:/');
+        new PersonaApellido2Text('García & López');
+    }
+
 }

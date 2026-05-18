@@ -8,7 +8,7 @@ final class PersonaApellido2Text
 
     public function __construct(string $value)
     {
-        $value = trim($value);
+        $value = PersonaTextoChars::normalizeTipografico(trim($value));
         $this->validate($value);
         $this->value = $value;
     }
@@ -21,13 +21,18 @@ final class PersonaApellido2Text
         if (mb_strlen($value) > 25) {
             throw new \InvalidArgumentException('PersonaApellido2Text must be at most 25 characters');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’´\-()·]+$/u", $value)) {
-            throw new \InvalidArgumentException('PersonaApellido2Text has invalid characters');
-        }
+        PersonaTextoChars::throwsIfNotMatching('PersonaApellido2Text', $value, PersonaTextoChars::CLASE_TEXTO_PERSONA);
     }
 
-    public function value(): string { return $this->value; }
-    public function __toString(): string { return $this->value; }
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
 
     public static function fromNullableString(?string $value): ?self
     {
@@ -38,6 +43,7 @@ final class PersonaApellido2Text
         if ($value_trimmed === '') {
             return null;
         }
+
         return new self($value_trimmed);
     }
 }

@@ -21,14 +21,18 @@ final class PersonaNx1Text
         if (mb_strlen($value) > 7) {
             throw new \InvalidArgumentException('PersonaNx1Text must be at most 7 characters');
         }
-        // admitir texto y espacios
-        if (!preg_match('/^[A-Za-z0-9 ]+$/u', $value)) {
-            throw new \InvalidArgumentException('PersonaNx1Text has invalid characters');
-        }
+        PersonaTextoChars::throwsIfNotMatching('PersonaNx1Text', $value, PersonaTextoChars::CLASE_NX);
     }
 
-    public function value(): string { return $this->value; }
-    public function __toString(): string { return $this->value; }
+    public function value(): string
+    {
+        return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
 
     public static function fromNullableString(?string $value): ?self
     {
@@ -39,6 +43,7 @@ final class PersonaNx1Text
         if ($value_trimmed === '') {
             return null;
         }
+
         return new self($value_trimmed);
     }
 }

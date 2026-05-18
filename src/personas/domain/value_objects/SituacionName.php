@@ -8,7 +8,7 @@ final class SituacionName
 
     public function __construct(string $value)
     {
-        $value = trim($value);
+        $value = PersonaTextoChars::normalizeTipografico(trim($value));
         $this->validate($value);
         $this->value = $value;
     }
@@ -18,14 +18,10 @@ final class SituacionName
         if ($value === '') {
             throw new \InvalidArgumentException('SituacionName cannot be empty');
         }
-        // Por UI, longitud máxima 60 (DatosCampo->setArgument(60))
         if (mb_strlen($value) > 60) {
             throw new \InvalidArgumentException('SituacionName must be at most 60 characters');
         }
-        // Caracteres comunes de nombre, incluyendo acentos, espacios, guiones, paréntesis, subrayado y +
-        if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {
-            throw new \InvalidArgumentException('SituacionName has invalid characters');
-        }
+        PersonaTextoChars::throwsIfNotMatching('SituacionName', $value, PersonaTextoChars::CLASE_SITUACION);
     }
 
     public function value(): string
@@ -57,6 +53,7 @@ final class SituacionName
         if ($value_trimmed === '') {
             return null;
         }
+
         return new self($value_trimmed);
     }
 }
