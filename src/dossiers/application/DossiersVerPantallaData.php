@@ -4,6 +4,7 @@ namespace src\dossiers\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\ubis\domain\RegionStgrAviso;
 use src\ubis\domain\RegionStgrConfigException;
 use src\shared\domain\DatosTablaRepo;
 use src\shared\infrastructure\ProvidesRepositories;
@@ -43,7 +44,7 @@ class DossiersVerPantallaData
 
     private static function buildInternal(array $post): array
     {
-        $avisoRegionStgr = '';
+        $problemasRegionStgr = [];
         $Qrefresh = (int)($post['refresh'] ?? 0);
         $a_sel = isset($post['sel']) ? (array)$post['sel'] : [];
         if ($a_sel === []) {
@@ -155,7 +156,7 @@ class DossiersVerPantallaData
         switch ($pau) {
             case 'p':
                 if (empty($Qobj_pau) || $Qobj_pau === 'Persona') {
-                    $oPersona = Persona::findPersonaEnGlobal($id_pau, $avisoRegionStgr);
+                    $oPersona = Persona::findPersonaEnGlobal($id_pau, $problemasRegionStgr);
                     if (!is_object($oPersona)) {
                         return [
                             'error' => "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ': line (Persona lookup)',
@@ -212,7 +213,7 @@ class DossiersVerPantallaData
                 'modo' => 'lista',
                 'lista_a_filas' => $lista['a_filas'],
                 'ficha_segmentos' => [],
-            ], $avisoRegionStgr);
+            ], $problemasRegionStgr);
         }
 
         $fichaSegmentos = [];
@@ -361,18 +362,19 @@ class DossiersVerPantallaData
             'top_data' => $top_data,
             'modo' => 'ficha',
             'ficha_segmentos' => $fichaSegmentos,
-        ], $avisoRegionStgr);
+        ], $problemasRegionStgr);
     }
 
     /**
      * @param array<string, mixed> $result
+     * @param array<string, array<string, string>> $problemasRegionStgr
      * @return array<string, mixed>
      */
-    private static function withAvisoRegionStgr(array $result, string $avisoRegionStgr): array
+    private static function withAvisoRegionStgr(array $result, array $problemasRegionStgr): array
     {
-        $avisoRegionStgr = trim($avisoRegionStgr);
-        if ($avisoRegionStgr !== '') {
-            $result['aviso'] = $avisoRegionStgr;
+        $aviso = RegionStgrAviso::formatear($problemasRegionStgr);
+        if ($aviso !== '') {
+            $result['aviso'] = $aviso;
         }
 
         return $result;
@@ -388,8 +390,11 @@ class DossiersVerPantallaData
         $id_pau = (int)($post['id_pau'] ?? 0);
         $Qobj_pau = (string)($post['obj_pau'] ?? '');
 
+        $problemasRegionStgr = [];
+        RegionStgrAviso::registrar($problemasRegionStgr, $e);
+
         return [
-            'aviso' => $e->getMessage(),
+            'aviso' => RegionStgrAviso::formatear($problemasRegionStgr),
             'top_data' => [
                 'web_icons' => ConfigGlobal::getWeb_icons(),
                 'alt_dossiers' => _('ver dossiers'),

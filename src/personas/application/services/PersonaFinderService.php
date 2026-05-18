@@ -72,7 +72,7 @@ class PersonaFinderService
      * @phpstan-return PersonaDl|PersonaPub|null
      * @psalm-return PersonaDl|PersonaPub|null
      */
-    public function findPersonaEnGlobal(int $id_nom, string &$avisoRegionStgr = ''): PersonaDl|PersonaPub|null
+    public function findPersonaEnGlobal(int $id_nom, array &$problemasRegionStgr = []): PersonaDl|PersonaPub|null
     {
         $aWhere = ['id_nom' => $id_nom, 'situacion' => 'A'];
         $personaDlRepository = $this->personaDlRepositoryFactory->create();
@@ -85,7 +85,7 @@ class PersonaFinderService
 
         // PersonaPub: resolver id_schema sin fatal si la dl no está en xu_dl (aviso al caller).
         $marcaAvisoRegionStgr = false;
-        $persona = $this->personaPubRepository->findByIdParaListado($id_nom, $avisoRegionStgr, $marcaAvisoRegionStgr);
+        $persona = $this->personaPubRepository->findByIdParaListado($id_nom, $problemasRegionStgr, $marcaAvisoRegionStgr);
         if ($persona === null) {
             return null;
         }
