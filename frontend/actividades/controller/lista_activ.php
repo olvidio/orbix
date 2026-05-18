@@ -117,8 +117,8 @@ if ($Qque === 'list_active_inv_sg' || $Qque === 'list_activ_sr') {
     $tituloPrevio = (string)filter_input(INPUT_POST, 'titulo');
 }
 
-// perdiodo por defecto
-if (empty($empiezamin)) {
+// periodo por defecto
+if (empty($Qempiezamin)) {
     $Qperiodo = 'curso';
 
     $oPeriodo = new Periodo();
