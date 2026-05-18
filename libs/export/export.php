@@ -1,6 +1,22 @@
 <?php
 
 /**
+ * Contenido HTML del export (frm_export_ex), decodificado si viene en base64
+ * para evitar falsos positivos de ModSecurity/OWASP CRS en POST con CSS/HTML.
+ */
+function obtenerDocumentoExport(): string
+{
+    $documento = $_POST['frm_export_ex'] ?? '';
+    if (isset($_POST['frm_export_enc']) && $_POST['frm_export_enc'] === 'b64') {
+        $decoded = base64_decode($documento, true);
+        if ($decoded !== false) {
+            return $decoded;
+        }
+    }
+    return $documento;
+}
+
+/**
  * Función para eliminar los "&" que no son html
  *
  * @param string $html
@@ -33,7 +49,7 @@ switch ($_POST['frm_export_tipo']) {
             $nom = "export";
         }
         // quito las imágenes
-        $documento = $_POST['frm_export_ex'];
+        $documento = obtenerDocumentoExport();
         $documento = preg_replace("/<img(.*?)>/mi", "", $documento);
         $documento = stripslashes($documento);
         @header("Content-type: application/octet-stream");
@@ -48,7 +64,7 @@ switch ($_POST['frm_export_tipo']) {
             $nom = "planning";
         }
         // quito las imágenes
-        $documento = $_POST['frm_export_ex'];
+        $documento = obtenerDocumentoExport();
         $documento = preg_replace("/<img(.*?)>/mi", "", $documento);
         $documento = stripslashes($documento);
         //guardo el fichero html
@@ -82,7 +98,7 @@ switch ($_POST['frm_export_tipo']) {
         } else {
             $nom = "export" . uniqid('', true); // per evitar emoblics si accedeixen varies persones a l'hora.
         }
-        $documento = $_POST['frm_export_ex'];
+        $documento = obtenerDocumentoExport();
         fixAmps($documento, 0);
         $doc_type = "spreadsheet";
         require_once("odf.php");
@@ -154,7 +170,7 @@ switch ($_POST['frm_export_tipo']) {
         } else {
             $nom = "export" . uniqid('', true); // per evitar emoblics si accedeixen varies persones a l'hora.
         }
-        $documento = $_POST['frm_export_ex'];
+        $documento = obtenerDocumentoExport();
         fixAmps($documento, 0);
         $doc_type = "text";
         require_once("odf.php");

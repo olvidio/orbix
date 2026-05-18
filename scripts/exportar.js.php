@@ -28,6 +28,9 @@ switch ($code_lng) {
 
 ?>
 <script>
+function fnjs_utf8ToBase64(str) {
+	return btoa(unescape(encodeURIComponent(str)));
+}
 function convertToIso(fecha) {
 	var dateformat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4}$/;
 	var dateTimeFormat = /^\d{1,2}(\-|\/|\.)\d{1,2}(\-|\/|\.)\d{2,4} \d{2}:\d{2}:\d{2}$/;
@@ -480,7 +483,8 @@ function fnjs_exportar(formato){
 	$('#frm_export_titulo').val(titulo);
 	$('#frm_export_modo').val(export_modo);
 	$('#frm_export_tipo').val(formato);
-	$('#frm_export_ex').val(myText);
+	$('#frm_export_enc').val('b64');
+	$('#frm_export_ex').val(fnjs_utf8ToBase64(myText));
 	$('#frm_export').trigger("submit");
 }
 </script>
