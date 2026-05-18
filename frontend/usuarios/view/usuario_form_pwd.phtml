@@ -82,6 +82,7 @@
             }
         });
     }
+
     function fnjs_logout() {
         var parametros = 'logout=si&PHPSESSID=<?= session_id(); ?>';
         var path = window.location.pathname;
@@ -97,7 +98,6 @@
 
         top.location.href = path + 'index.php?' + parametros;
     }
-
 </script>
 
 <h3><?= $usuario ?></h3>

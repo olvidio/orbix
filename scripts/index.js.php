@@ -160,10 +160,6 @@ use core\ConfigGlobal;
 
         top.location.href = path + 'index.php?' + parametros;
     }
-    function fnjs_logout() {
-        var parametros = 'logout=si&PHPSESSID=<?= session_id(); ?>';
-        top.location.href = 'index.php?' + parametros;
-    }
 
     function fnjs_windowopen(url) { //para poder hacerlo por el menu
         var parametros = '';
