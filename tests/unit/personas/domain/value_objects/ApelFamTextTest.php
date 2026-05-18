@@ -37,4 +37,23 @@ class ApelFamTextTest extends myTest
         $this->assertNull($apelFamText);
     }
 
+    public function test_acepta_caracteres_como_apellidos(): void
+    {
+        $apelFamText = new ApelFamText('Muñoz·García');
+        $this->assertSame('Muñoz·García', $apelFamText->value());
+    }
+
+    public function test_normaliza_guion_y_apostrofo_tipografico(): void
+    {
+        $apelFamText = new ApelFamText("O\u{2019}Brien\u{2013}Smith");
+        $this->assertSame("O'Brien-Smith", $apelFamText->value());
+    }
+
+    public function test_caracter_no_permitido_incluye_detalle_en_excepcion(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/no permitidos:/');
+        new ApelFamText('García & López');
+    }
+
 }
