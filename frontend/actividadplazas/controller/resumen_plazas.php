@@ -40,7 +40,7 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/actividadplazas/resumen_plazas_data', $campos);
-$payload = is_array($data) && isset($data['data']) && is_array($data['data']) ? $data['data'] : [];
+$payload = is_array($data) ? $data : [];
 
 $publicado = (bool)($payload['publicado'] ?? false);
 $otra_dl = (bool)($payload['otra_dl'] ?? false);

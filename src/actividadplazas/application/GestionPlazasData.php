@@ -91,7 +91,10 @@ final class GestionPlazasData
         $oPeriodo->setAny((string)$Qyear);
         $oPeriodo->setEmpiezaMin($Qempiezamin);
         $oPeriodo->setEmpiezaMax($Qempiezamax);
-        $oPeriodo->setPeriodo($Qperiodo);
+        $periodoCalculo = ($Qempiezamin !== '' && $Qempiezamax !== '')
+            ? 'otro'
+            : $Qperiodo;
+        $oPeriodo->setPeriodo($periodoCalculo);
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
 

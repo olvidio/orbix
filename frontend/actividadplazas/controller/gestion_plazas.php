@@ -38,13 +38,15 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/actividadplazas/gestion_plazas_data', $campos);
-$payload = is_array($data) && isset($data['data']) && is_array($data['data']) ? $data['data'] : [];
+$payload = is_array($data) ? $data : [];
 
 $a_cabeceras = $payload['a_cabeceras'] ?? [];
 $a_valores = $payload['a_valores'] ?? [];
 $Qid_tipo_activ = (string)($payload['id_tipo_activ'] ?? '');
 $Qyear = (string)($payload['year'] ?? '');
 $Qperiodo = (string)($payload['periodo'] ?? '');
+$Qempiezamin = (string)($payload['empiezamin'] ?? '');
+$Qempiezamax = (string)($payload['empiezamax'] ?? '');
 $extendida = (bool)($payload['extendida'] ?? false);
 
 $apiBase = AppUrlConfig::getApiBaseUrl();
@@ -81,6 +83,8 @@ $oFormP->setTitulo($titulo);
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
+$oFormP->setEmpiezaMin($Qempiezamin);
+$oFormP->setEmpiezaMax($Qempiezamax);
 $oFormP->setBoton($boton);
 
 $oHash = new HashFront();

@@ -24,7 +24,7 @@ $campos = [
 ];
 
 $data = PostRequest::getDataFromUrl('/src/actividadplazas/plazas_balance_data', $campos);
-$payload = is_array($data) && isset($data['data']) && is_array($data['data']) ? $data['data'] : [];
+$payload = is_array($data) ? $data : [];
 
 $dlA = (string)($payload['dlA'] ?? '');
 $dlB = (string)($payload['dlB'] ?? '');
