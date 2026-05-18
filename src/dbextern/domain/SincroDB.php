@@ -505,7 +505,8 @@ class SincroDB
             $oPersona->setCe_fin($ce_fin);
         }
         $oPersona->setInc($inc);
-        $oPersona->setF_inc($f_inc, FALSE);
+        $f_inc_vo = DateTimeLocal::createFromLocal($f_inc);
+        $oPersona->setF_inc($f_inc_vo instanceof DateTimeLocal ? $f_inc_vo : null);
         $oPersona->setProfesion($profesion);
         $oPersona->setEap($encargos);
 
