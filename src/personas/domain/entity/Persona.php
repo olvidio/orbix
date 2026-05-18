@@ -22,10 +22,10 @@ class Persona
      * @param int $id_nom ID de la persona a buscar
      * @return PersonaDl|PersonaPub|null
      */
-    public static function findPersonaEnGlobal($id_nom): PersonaDl|PersonaPub|null
+    public static function findPersonaEnGlobal($id_nom, string &$avisoRegionStgr = ''): PersonaDl|PersonaPub|null
     {
         $service = $GLOBALS['container']->get(PersonaFinderService::class);
-        return $service->findPersonaEnGlobal($id_nom);
+        return $service->findPersonaEnGlobal((int)$id_nom, $avisoRegionStgr);
     }
 
     /**

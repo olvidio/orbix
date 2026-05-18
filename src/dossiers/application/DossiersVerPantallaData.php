@@ -4,6 +4,7 @@ namespace src\dossiers\application;
 
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
 use src\shared\config\ConfigGlobal;
+use src\ubis\domain\RegionStgrConfigException;
 use src\shared\domain\DatosTablaRepo;
 use src\shared\infrastructure\ProvidesRepositories;
 use src\personas\domain\entity\Persona;
@@ -25,13 +26,24 @@ use src\dossiers\domain\contracts\TipoDossierRepositoryInterface;
  *     top_data: array{web_icons: string, alt_dossiers: string, txt_dossiers: string, nom_cabecera: string, go_dossiers_link_spec: array{path: string, query: array<string, mixed>}, go_home_link_spec?: array{path: string, query: array<string, mixed>}},
  *     modo: 'lista'|'ficha',
  *     lista_a_filas?: list<array<string, mixed>>,
- *     ficha_segmentos?: list<array<string, mixed>>
+ *     ficha_segmentos?: list<array<string, mixed>>,
+ *     aviso?: string
  * }
  */
 class DossiersVerPantallaData
 {
     public static function build(array $post): array
     {
+        try {
+            return self::buildInternal($post);
+        } catch (RegionStgrConfigException $e) {
+            return self::respuestaSoloAvisoRegionStgr($e, $post);
+        }
+    }
+
+    private static function buildInternal(array $post): array
+    {
+        $avisoRegionStgr = '';
         $Qrefresh = (int)($post['refresh'] ?? 0);
         $a_sel = isset($post['sel']) ? (array)$post['sel'] : [];
         if ($a_sel === []) {
@@ -143,7 +155,7 @@ class DossiersVerPantallaData
         switch ($pau) {
             case 'p':
                 if (empty($Qobj_pau) || $Qobj_pau === 'Persona') {
-                    $oPersona = Persona::findPersonaEnGlobal($id_pau);
+                    $oPersona = Persona::findPersonaEnGlobal($id_pau, $avisoRegionStgr);
                     if (!is_object($oPersona)) {
                         return [
                             'error' => "<br>No encuentro a nadie con id_nom: $id_pau en  " . __FILE__ . ': line (Persona lookup)',
@@ -195,12 +207,12 @@ class DossiersVerPantallaData
 
         if (empty($Qid_dossier)) {
             $lista = DossiersListaFichasData::build($pau, $id_pau, $Qobj_pau);
-            return [
+            return self::withAvisoRegionStgr([
                 'top_data' => $top_data,
                 'modo' => 'lista',
                 'lista_a_filas' => $lista['a_filas'],
                 'ficha_segmentos' => [],
-            ];
+            ], $avisoRegionStgr);
         }
 
         $fichaSegmentos = [];
@@ -345,10 +357,52 @@ class DossiersVerPantallaData
             $id_dossier = strtok("y");
         }
 
-        return [
+        return self::withAvisoRegionStgr([
             'top_data' => $top_data,
             'modo' => 'ficha',
             'ficha_segmentos' => $fichaSegmentos,
+        ], $avisoRegionStgr);
+    }
+
+    /**
+     * @param array<string, mixed> $result
+     * @return array<string, mixed>
+     */
+    private static function withAvisoRegionStgr(array $result, string $avisoRegionStgr): array
+    {
+        $avisoRegionStgr = trim($avisoRegionStgr);
+        if ($avisoRegionStgr !== '') {
+            $result['aviso'] = $avisoRegionStgr;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array<string, mixed> $post
+     * @return array<string, mixed>
+     */
+    private static function respuestaSoloAvisoRegionStgr(RegionStgrConfigException $e, array $post): array
+    {
+        $pau = (string)($post['pau'] ?? '');
+        $id_pau = (int)($post['id_pau'] ?? 0);
+        $Qobj_pau = (string)($post['obj_pau'] ?? '');
+
+        return [
+            'aviso' => $e->getMessage(),
+            'top_data' => [
+                'web_icons' => ConfigGlobal::getWeb_icons(),
+                'alt_dossiers' => _('ver dossiers'),
+                'txt_dossiers' => _('dossiers'),
+                'nom_cabecera' => '',
+                'go_dossiers_link_spec' => [
+                    'path' => 'frontend/dossiers/controller/dossiers_ver.php',
+                    'query' => ['pau' => $pau, 'id_pau' => $id_pau, 'obj_pau' => $Qobj_pau],
+                ],
+            ],
+            'modo' => 'lista',
+            'lista_a_filas' => [],
+            'ficha_segmentos' => [],
         ];
     }
 }

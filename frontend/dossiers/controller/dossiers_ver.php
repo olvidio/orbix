@@ -39,6 +39,13 @@ if (!is_array($data)) {
     exit;
 }
 
+$avisoRegionStgr = (string)($data['aviso'] ?? '');
+if ($avisoRegionStgr !== '') {
+    echo '<div class="certificado-aviso-config" role="alert" style="max-width: 42rem; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #c9a227; background: #fffbea; color: #3d3500; line-height: 1.5;">';
+    echo '<div style="margin: 0;">' . $avisoRegionStgr . '</div>';
+    echo '</div>';
+}
+
 // ----- Firma de link_specs en el frontend (HashFront vive sólo en frontend/) -----
 $topData = (array)($data['top_data'] ?? []);
 $goDossiers = isset($topData['go_dossiers_link_spec']) && is_array($topData['go_dossiers_link_spec'])
