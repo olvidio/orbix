@@ -125,10 +125,10 @@ final class PersonasEditarData
             $out['eap'] = (string)($oPersona->getEap() ?? '');
             $out['inc'] = (string)($oPersona->getInc() ?? '');
             $out['f_inc'] = (string)($oPersona->getF_inc()?->getFromLocal() ?? '');
-            $out['ce'] = (string)($oPersona->getCe() ?? '');
-            $out['ce_lugar'] = (string)($oPersona->getCe_lugar() ?? '');
-            $out['ce_ini'] = (string)($oPersona->getCe_ini() ?? '');
-            $out['ce_fin'] = (string)($oPersona->getCe_fin() ?? '');
+            $out['ce'] = method_exists($oPersona, 'getCe') ? (string)($oPersona->getCe() ?? '') : '';
+            $out['ce_lugar'] = method_exists($oPersona, 'getCe_lugar') ? (string)($oPersona->getCe_lugar() ?? '') : '';
+            $out['ce_ini'] = method_exists($oPersona, 'getCe_ini') ? (string)($oPersona->getCe_ini() ?? '') : '';
+            $out['ce_fin'] = method_exists($oPersona, 'getCe_fin') ? (string)($oPersona->getCe_fin() ?? '') : '';
             $out['observ'] = (string)($oPersona->getObserv() ?? '');
 
             if (!empty($out['id_ctr'])) {
