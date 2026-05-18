@@ -3,7 +3,7 @@
 namespace frontend\shared\layouts;
 
 /**
- * Crea la implementación de layout según preferencia de usuario (`legacy`, `burger`, `pills`, …).
+ * Crea la implementación de layout según preferencia de usuario (`legacy`, `burger`, `pills`, `pills2`, …).
  */
 final class LayoutFactory
 {
@@ -19,6 +19,8 @@ final class LayoutFactory
                 return new BurgerLayout();
             case 'pills':
                 return new PillsLayout();
+            case 'pills2':
+                return new Pills2Layout();
             default:
                 throw new \InvalidArgumentException("Unsupported layout type: $layoutType");
         }

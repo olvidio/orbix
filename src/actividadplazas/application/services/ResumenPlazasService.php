@@ -314,7 +314,7 @@ class ResumenPlazasService
             }
             //$a_plazas[$dl]['calendario'] = 0;
             if ($dl_org == $dl_tabla) {
-                $a_plazas[$dl]['calendario'] = $oActividadPlazas->getPlazasVo()->value();
+                $a_plazas[$dl]['calendario'] = $oActividadPlazas->getPlazasVo()?->value() ?? 0;
                 // las cedidas se guardan en la tabla que pertenece a la dl
                 if ($dl === $dl_org) {
                     $aCedidas = $oActividadPlazas->getArrayCedidas();

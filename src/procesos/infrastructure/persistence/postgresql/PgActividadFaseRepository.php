@@ -291,22 +291,23 @@ class PgActividadFaseRepository extends ClaseRepository implements ActividadFase
             $aFasesProcesoDesc = [];
             foreach ($aFasesProceso as $id_item => $id_fase) {
                 // compruebo que está en la lista de las fases comunes.
-                if (array_key_exists($id_fase, $aFasesComunes)) {
-                    $oFase = new ActividadFase($id_fase);
-                    // compruebo si soy el responsable
-                    if ($bresp) {
-                        $oTareaProceso = $TareaProcesoRepository->findById($id_item);
-                        $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
+                if (!array_key_exists($id_fase, $aFasesComunes)) {
+                    continue;
+                }
+                $desc_fase = (string)$aFasesComunes[$id_fase];
+                // compruebo si soy el responsable
+                if ($bresp) {
+                    $oTareaProceso = $TareaProcesoRepository->findById($id_item);
+                    $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();
 
-                        // Si no hay oficina responsable, pueden todos:
-                        if (empty($of_responsable_txt)) {
-                            $aFasesProcesoDesc[$id_fase] = $oFase->getDesc_fase();
-                        } elseif ($oPermiso->have_perm_oficina($of_responsable_txt)) {
-                            $aFasesProcesoDesc[$id_fase] = $oFase->getDesc_fase();
-                        }
-                    } else {
-                        $aFasesProcesoDesc[$id_fase] = $oFase->getDesc_fase();
+                    // Si no hay oficina responsable, pueden todos:
+                    if (empty($of_responsable_txt)
+                        || $oPermiso->have_perm_oficina($of_responsable_txt)
+                    ) {
+                        $aFasesProcesoDesc[$id_fase] = $desc_fase;
                     }
+                } else {
+                    $aFasesProcesoDesc[$id_fase] = $desc_fase;
                 }
             }
             return $aFasesProcesoDesc;

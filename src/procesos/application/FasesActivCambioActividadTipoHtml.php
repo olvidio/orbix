@@ -33,6 +33,7 @@ final class FasesActivCambioActividadTipoHtml
             $o->setActividad($sactividad_no_extendida);
         }
         $o->setPara('procesos');
+        $o->setQue('buscar');
 
         return $o->captureHtml($extendida);
     }

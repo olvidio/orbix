@@ -13,7 +13,8 @@ use Throwable;
 
 /**
  * Comprueba el estado intermedio/final de un renombre de esquema (BD + ficheros .inc + db_idschema + defaults de columnas),
- * alineado con {@see RenombrarEsquema}. Los `.inc` de passwords se leen con {@see ConfigDB::ficheroIncNombre} (p. ej. `pruebas-comun.inc` en entorno pruebas).
+ * alineado con {@see RenombrarEsquema}. Claves de esquema: {@see ConfigDB::clavesEnFicheroRoles} / {@see ConfigDB::ficheroIncNombre}
+ * (`comun.roles.inc` en formato partido, o `pruebas-comun.inc` / `comun.inc` en legado).
  * Origen + región + delegación para comprobar un renombre; solo región + delegación si se usa comprobación «solo destino» (véase {@see RenombrarEsquemaVerificacionContexto::soloDestinoVerificacion}).
  */
 final class VerificarEstadoRenombrarEsquema
@@ -591,7 +592,7 @@ final class VerificarEstadoRenombrarEsquema
         foreach ($defs as $row) {
             $base = $row['fichero'];
             $archivo = ConfigDB::ficheroIncNombre($base);
-            $keys = $this->keysInc($archivo);
+            $keys = ConfigDB::clavesEnFicheroRoles($base);
             if ($row['old'] === $row['new']) {
                 $clave = $row['old'];
                 $has = $clave !== '' && in_array($clave, $keys, true);
@@ -630,26 +631,6 @@ final class VerificarEstadoRenombrarEsquema
         }
 
         return ['nombre' => $nombre, 'items' => $items];
-    }
-
-    /** @return list<string> */
-    private function keysInc(string $filename): array
-    {
-        $path = ConfigGlobal::getDIR_PWD() . '/' . $filename;
-        if (!is_readable($path)) {
-            return [];
-        }
-        try {
-            /** @var mixed $d */
-            $d = include $path;
-        } catch (Throwable) {
-            return [];
-        }
-        if (!is_array($d)) {
-            return [];
-        }
-
-        return array_keys($d);
     }
 
     private function itemEsperado(string $titulo, bool $ok, string $detalleOk, string $detalleMal): array

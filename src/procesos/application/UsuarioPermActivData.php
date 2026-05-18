@@ -107,6 +107,7 @@ class UsuarioPermActivData
         $oAt->setActividad($oTipoActiv->getActividadText());
         $oAt->setNom_tipo($oTipoActiv->getNom_tipoText());
         $oAt->setPara('procesos');
+        $oAt->setQue('buscar');
         $oAt->setPerm_jefe($perm_jefe);
         $tipo_actividad_html = $oAt->captureHtml(true);
 

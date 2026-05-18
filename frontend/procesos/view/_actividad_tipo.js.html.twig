@@ -113,6 +113,10 @@ fnjs_nom_tipo=function(){
 	});
 	fnjs_actualizar_fases ();
 }
+// Alias usado por actividad_tipo_get (modo buscar) en el desplegable nom_tipo.
+fnjs_id_activ=function(){
+	fnjs_act_id_activ();
+}
 fnjs_act_id_activ=function(){
     var url='{{ url }}';
 	var que=$('#que').val();

@@ -288,6 +288,9 @@ $portada_html = ob_get_clean();
     if ($layout === 'pills') {
         include_once(ServerConf::$dir_estilos . '/todo_en_uno_pills.css.php');
         include_once(ServerConf::$dir_estilos . '/slickgrid_orbix_pills.css.php');
+    } elseif ($layout === 'pills2') {
+        include_once(ServerConf::$dir_estilos . '/todo_en_uno_pills2.css.php');
+        include_once(ServerConf::$dir_estilos . '/slickgrid_orbix_pills2.css.php');
     } else {
         include_once(ServerConf::$dir_estilos . '/todo_en_uno.css.php');
         include_once(ServerConf::$dir_estilos . '/slickgrid_orbix.css.php');
@@ -388,7 +391,7 @@ $portada_html = ob_get_clean();
     ?>
 </head>
 
-<body class="otro<?= $layout === 'pills' ? ' layout-pills' : '' ?>" id="body">
+<body class="otro<?= $layout === 'pills' ? ' layout-pills' : ($layout === 'pills2' ? ' layout-pills2' : '') ?>" id="body">
 <?php
 // Render the final HTML structure
 $renderParams = [

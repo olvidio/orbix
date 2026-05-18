@@ -326,7 +326,7 @@ final class CorregirEstadoRenombrarEsquema
 
     private function incDebeRenombrarClave(string $ficheroBase, string $oldKey, string $newKey): bool
     {
-        $keys = $this->keysInc(ConfigDB::ficheroIncNombre($ficheroBase));
+        $keys = ConfigDB::clavesEnFicheroRoles($ficheroBase);
 
         return in_array($oldKey, $keys, true) && !in_array($newKey, $keys, true);
     }
@@ -343,25 +343,6 @@ final class CorregirEstadoRenombrarEsquema
         $acciones[] = sprintf(_('Defaults ALTER reaplicados (%s).'), $etiqueta);
     }
 
-    /** @return list<string> */
-    private function keysInc(string $filename): array
-    {
-        $path = ConfigGlobal::getDIR_PWD() . '/' . $filename;
-        if (!is_readable($path)) {
-            return [];
-        }
-        try {
-            /** @var mixed $d */
-            $d = include $path;
-        } catch (Throwable) {
-            return [];
-        }
-        if (!is_array($d)) {
-            return [];
-        }
-
-        return array_keys($d);
-    }
 
     private function pdoDesdeImportar(ConfigDB $importar, string $esquema): ?PDO
     {

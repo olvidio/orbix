@@ -19,7 +19,7 @@ if (empty($id_grupmenu)) {
     $id_grupmenu =  (integer)filter_input(INPUT_POST, 'id_grupmenu');
     if (empty($id_grupmenu)) {
         $id_grupmenu =  (integer)filter_input(INPUT_GET, 'id_grupmenu');
-        // puede venir de la presentación 'burger' o 'pills'
+        // puede venir de la presentación 'burger', 'pills' o 'pills2'
         if (empty($id_grupmenu)) {
             $grupmenu =  (string)filter_input(INPUT_POST, 'grupmenu');
         }

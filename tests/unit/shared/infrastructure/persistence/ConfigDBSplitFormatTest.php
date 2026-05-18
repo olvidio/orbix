@@ -1,0 +1,137 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\unit\shared\infrastructure\persistence;
+
+use PHPUnit\Framework\TestCase;
+use src\shared\infrastructure\persistence\ConfigDB;
+
+final class ConfigDBSplitFormatTest extends TestCase
+{
+    /** @var list<string> */
+    private array $createdFiles = [];
+
+    private ?string $tmpDir = null;
+
+    protected function setUp(): void
+    {
+        $this->tmpDir = sys_get_temp_dir() . '/configdb_split_' . bin2hex(random_bytes(4));
+        mkdir($this->tmpDir, 0700, true);
+        ConfigDB::$dirPwdOverride = $this->tmpDir;
+    }
+
+    protected function tearDown(): void
+    {
+        ConfigDB::$dirPwdOverride = null;
+        foreach ($this->createdFiles as $path) {
+            if (is_file($path)) {
+                @unlink($path);
+            }
+        }
+        if ($this->tmpDir !== null && is_dir($this->tmpDir)) {
+            @rmdir($this->tmpDir);
+        }
+        parent::tearDown();
+    }
+
+    public function test_baseRolesParaFichero_mapea_replicas(): void
+    {
+        $this->assertSame('comun', ConfigDB::baseRolesParaFichero('comun_select'));
+        $this->assertSame('sv', ConfigDB::baseRolesParaFichero('sv-e'));
+        $this->assertSame('sv', ConfigDB::baseRolesParaFichero('sv-e_select'));
+        $this->assertSame('comun', ConfigDB::baseRolesParaFichero('comun'));
+    }
+
+    public function test_formato_partido_merge_conn_y_roles(): void
+    {
+        $base = 'cfgdbtest';
+        $dir = $this->pwdDir();
+        $this->writeInc(
+            $dir . '/' . ConfigDB::ficheroConnNombre($base),
+            ['default' => ['host' => 'prod-host', 'dbname' => 'orbix']],
+        );
+        $this->writeInc(
+            $dir . '/' . $base . '.roles.inc',
+            [
+                'cfgdb_esq' => ['user' => 'cfgdb_esq', 'password' => 'secret'],
+            ],
+        );
+
+        $cfg = new ConfigDB($base);
+        $merged = $this->dataFromConfigDb($cfg);
+
+        $this->assertSame('prod-host', $merged['default']['host']);
+        $this->assertSame('secret', $merged['cfgdb_esq']['password']);
+    }
+
+    public function test_renombrar_en_roles_inc_solo_un_fichero(): void
+    {
+        $base = 'cfgdbtest';
+        $dir = $this->pwdDir();
+        $rolesPath = $dir . '/' . $base . '.roles.inc';
+        $this->writeInc($rolesPath, [
+            'cfgdb_old' => ['user' => 'cfgdb_old', 'password' => 'x'],
+        ]);
+
+        $cfg = new ConfigDB($base);
+        $cfg->renombrarListaEsquema($base, 'cfgdb_old', 'cfgdb_new');
+
+        $data = include $rolesPath;
+        $this->assertIsArray($data);
+        $this->assertArrayNotHasKey('cfgdb_old', $data);
+        $this->assertSame('x', $data['cfgdb_new']['password']);
+    }
+
+    public function test_crearFicherosPartidos_desde_monolitos(): void
+    {
+        $base = 'cfgdbtest';
+        $dir = $this->pwdDir();
+        $this->writeInc($dir . '/' . $base . '.inc', [
+            'default' => ['host' => 'h1', 'dbname' => 'db1'],
+            'esq1' => ['user' => 'esq1', 'password' => 'p1'],
+        ]);
+        $this->writeInc($dir . '/pruebas-' . $base . '.inc', [
+            'default' => ['host' => 'h-pruebas', 'dbname' => 'db-pruebas'],
+            'esq2' => ['user' => 'esq2', 'password' => 'p2'],
+        ]);
+
+        $msgs = ConfigDB::crearFicherosPartidosDesdeMonoliticos($base);
+        $this->assertNotEmpty($msgs);
+        foreach ([$base . '.roles.inc', $base . '.conn.inc', 'pruebas-' . $base . '.conn.inc'] as $nombre) {
+            $path = $dir . '/' . $nombre;
+            $this->createdFiles[] = $path;
+            $this->assertFileExists($path);
+        }
+
+        $roles = include $dir . '/' . $base . '.roles.inc';
+        $this->assertIsArray($roles);
+        $this->assertArrayHasKey('esq1', $roles);
+        $this->assertArrayHasKey('esq2', $roles);
+    }
+
+    private function pwdDir(): string
+    {
+        $this->assertNotNull($this->tmpDir);
+
+        return $this->tmpDir;
+    }
+
+    /** @param array<string, mixed> $data */
+    private function writeInc(string $path, array $data): void
+    {
+        file_put_contents($path, '<?php return ' . var_export($data, true) . ' ;');
+        $this->createdFiles[] = $path;
+    }
+
+    /** @return array<string, mixed> */
+    private function dataFromConfigDb(ConfigDB $cfg): array
+    {
+        $ref = new \ReflectionProperty(ConfigDB::class, 'data');
+        $ref->setAccessible(true);
+        /** @var array<string, mixed> $data */
+        $data = $ref->getValue($cfg);
+
+        return $data;
+    }
+}

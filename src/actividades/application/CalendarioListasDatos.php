@@ -189,7 +189,7 @@ final class CalendarioListasDatos
             }
 
             if (!is_array($cActividades) || count($cActividades) === 0) {
-                $a_ubi_activ[$key] = 1;
+                $a_ubi_activ[$key] = [];
                 continue;
             }
 
@@ -202,8 +202,8 @@ final class CalendarioListasDatos
                 $dl_org = $oActividad->getDl_org();
                 $f_ini = $oActividad->getF_ini()?->getFromLocal();
                 $f_fin = $oActividad->getF_fin()?->getFromLocal();
-                $h_ini = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $oActividad->getH_ini() ?? '');
-                $h_fin = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $oActividad->getH_fin() ?? '');
+                $h_ini = $oActividad->getH_ini()?->format('H:i') ?? '';
+                $h_fin = $oActividad->getH_fin()?->format('H:i') ?? '';
                 $tarifa = $oActividad->getTarifa();
 
                 $id_ubi = $oActividad->getId_ubi();
@@ -295,27 +295,27 @@ final class CalendarioListasDatos
         switch ($tipo) {
             case 'casa':
                 $aCabeceras = [
-                    _('sv/sf'),
-                    _('tipo actividad'),
-                    _('fechas'),
-                    _('hora inicio'),
-                    _('hora fin'),
-                    _('asistentes previstos'),
-                    _('id_tarifa'),
-                    _('centros encargados'),
+                    ['name' => _('sv/sf'), 'field' => 'sfsv'],
+                    ['name' => _('tipo actividad'), 'field' => 'tipo_activ'],
+                    ['name' => _('fechas'), 'field' => 'fechas'],
+                    ['name' => _('hora inicio'), 'field' => 'h_ini'],
+                    ['name' => _('hora fin'), 'field' => 'h_fin'],
+                    ['name' => _('asistentes previstos'), 'field' => 'num_asistentes'],
+                    ['name' => _('id_tarifa'), 'field' => 'id_tarifa'],
+                    ['name' => _('centros encargados'), 'field' => 'ctr_encargados'],
                 ];
                 break;
             case 'oficina':
                 $aCabeceras = [
-                    _('sv/sf'),
-                    _('tipo actividad'),
-                    _('cdc'),
-                    _('fechas'),
-                    _('hora inicio'),
-                    _('hora fin'),
-                    _('asistentes previstos'),
-                    _('id_tarifa'),
-                    _('centros encargados'),
+                    ['name' => _('sv/sf'), 'field' => 'sfsv'],
+                    ['name' => _('tipo actividad'), 'field' => 'tipo_activ'],
+                    ['name' => _('cdc'), 'field' => 'cdc'],
+                    ['name' => _('fechas'), 'field' => 'fechas'],
+                    ['name' => _('hora inicio'), 'field' => 'h_ini'],
+                    ['name' => _('hora fin'), 'field' => 'h_fin'],
+                    ['name' => _('asistentes previstos'), 'field' => 'num_asistentes'],
+                    ['name' => _('id_tarifa'), 'field' => 'id_tarifa'],
+                    ['name' => _('centros encargados'), 'field' => 'ctr_encargados'],
                 ];
                 break;
             default:

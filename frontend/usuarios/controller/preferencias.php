@@ -47,7 +47,12 @@ if ($cambios_installed) {
 // ----------- LayOut -------------------
 $oDesplLayout = new Desplegable();
 $oDesplLayout->setNombre('layout');
-$oDesplLayout->setOpciones(['legacy' => "Legacy", 'burger' => "Burger", 'pills' => "Pills"]);
+$oDesplLayout->setOpciones([
+    'legacy' => 'Legacy',
+    'burger' => 'Burger',
+    'pills' => 'Pills',
+    'pills2' => 'Pills 2 (switcher)',
+]);
 $oDesplLayout->setOpcion_sel($layout);
 
 // ----------- Inicio -------------------
