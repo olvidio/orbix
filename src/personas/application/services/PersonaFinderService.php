@@ -103,7 +103,7 @@ class PersonaFinderService
      * en cada uno, cambiando temporalmente el search_path de PostgreSQL.
      *
      * @param int $id_nom ID de la persona a buscar
-     * @return array Array de PersonaGlobal encontradas
+     * @return array<int, array{esquema: string, persona: PersonaDl|PersonaPub}>
      */
     public function buscarEnTodasRegiones(int $id_nom): array
     {
@@ -126,15 +126,18 @@ class PersonaFinderService
                     $resultado = $personaDlRepository->getPersonas($aWhere);
                 }
 
-                if (!empty($resultado)) {
-                    $aResultados[] = $resultado;
+                foreach ($resultado as $persona) {
+                    $aResultados[] = [
+                        'esquema' => $esquema,
+                        'persona' => $persona,
+                    ];
                 }
             } finally {
                 $this->restaurarEsquema($oDB, $path_ini);
             }
         }
 
-        return !empty($aResultados) ? array_merge(...$aResultados) : [];
+        return $aResultados;
     }
 
     /**

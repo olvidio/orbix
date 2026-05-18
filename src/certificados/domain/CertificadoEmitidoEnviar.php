@@ -45,17 +45,17 @@ class CertificadoEmitidoEnviar
             }
             if (count($cPersonas) > 1) {
                 $error_txt .= "Existe más de una persona con este id, dado de alta:";
-                foreach ($cPersonas as $oPersona) {
+                foreach ($cPersonas as $aPersona) {
                     $error_txt .= "\n";
-                    $error_txt .= $$oPersona->getEsquema();
+                    $error_txt .= $aPersona['esquema'];
                 }
                 $b_saltar = TRUE;
             }
         }
 
         if (!$b_saltar) {
-            $nombre_apellidos = $cPersonas[0]->getApellidosNombre();
-            $dl_destino = $cPersonas[0]->getDlVo()->value();
+            $nombre_apellidos = $cPersonas[0]['persona']->getApellidosNombre();
+            $dl_destino = $cPersonas[0]['persona']->getDlVo()->value();
 
             $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
             try {

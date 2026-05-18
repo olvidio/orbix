@@ -35,7 +35,7 @@ class Persona
      * Este método es un wrapper temporal para mantener compatibilidad.
      *
      * @param int $id_nom ID de la persona a buscar
-     * @return array Array de PersonaGlobal encontradas
+     * @return array<int, array{esquema: string, persona: PersonaDl|PersonaPub}>
      */
     public static function buscarEnTodasRegiones($id_nom): array
     {
