@@ -411,6 +411,7 @@ echo $oLayout->renderHtml($htmlComponents, $renderParams);
             <input type="hidden" id="frm_export_titulo" name="frm_export_titulo"/>
             <input type="hidden" id="frm_export_modo" name="frm_export_modo"/>
             <input type="hidden" id="frm_export_tipo" name="frm_export_tipo"/>
+            <input type="hidden" id="frm_export_enc" name="frm_export_enc"/>
             <input type="hidden" id="frm_export_ex" name="frm_export_ex"/>
         </form>
     </div>
