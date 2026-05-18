@@ -37,16 +37,10 @@ final class PlazasCeder
             $id_dl = (int)($cDelegaciones[0]->getIdDlVo()->value() ?? 0);
         }
 
-        $ActvidadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
-        $cActividadPlazasDl = $ActvidadPlazasDlRepository->getActividadesPlazas([
-            'id_activ' => $id_activ,
-            'id_dl' => $id_dl,
-            'dl_tabla' => $mi_dele,
-        ]);
-        if (empty($cActividadPlazasDl)) {
-            return (string)_("Todavía no se han asignado las plazas por calendario");
+        $oActividadPlazasDl = PlazasDlEdicion::obtenerOCrearDesdeCalendario($id_activ, $id_dl, $mi_dele);
+        if ($oActividadPlazasDl === null) {
+            return PlazasCalendarioMensaje::faltaRegistro();
         }
-        $oActividadPlazasDl = $cActividadPlazasDl[0];
 
         $aCedidas = $oActividadPlazasDl->getArrayCedidas() ?? [];
         if (!is_array($aCedidas)) {
@@ -61,9 +55,10 @@ final class PlazasCeder
         }
         $oActividadPlazasDl->setCedidas($aCedidas);
 
-        if ($ActvidadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
+        $ActividadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
+        if ($ActividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
             return (string)_("hay un error, no se ha guardado")
-                . "\n" . $ActvidadPlazasDlRepository->getErrorTxt();
+                . "\n" . $ActividadPlazasDlRepository->getErrorTxt();
         }
         return '';
     }

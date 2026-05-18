@@ -5,6 +5,7 @@ namespace Tests\unit\actividadplazas\application;
 use PHPUnit\Framework\TestCase;
 use src\actividadplazas\application\PlazasCeder;
 use src\actividadplazas\domain\contracts\ActividadPlazasDlRepositoryInterface;
+use src\actividadplazas\domain\contracts\ActividadPlazasRepositoryInterface;
 use src\actividadplazas\domain\entity\ActividadPlazas;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Delegacion;
@@ -43,6 +44,7 @@ final class PlazasCederTest extends TestCase
         $GLOBALS['container'] = $this->containerFromMap([
             DelegacionRepositoryInterface::class => $this->createMock(DelegacionRepositoryInterface::class),
             ActividadPlazasDlRepositoryInterface::class => $this->createMock(ActividadPlazasDlRepositoryInterface::class),
+            ActividadPlazasRepositoryInterface::class => $this->createMock(ActividadPlazasRepositoryInterface::class),
         ]);
 
         $msg = PlazasCeder::execute(['id_activ' => 0, 'region_dl' => 'R-x']);
@@ -58,12 +60,15 @@ final class PlazasCederTest extends TestCase
         $delegRepo = $this->createMock(DelegacionRepositoryInterface::class);
         $delegRepo->method('getDelegaciones')->with(['dl' => 'dl'])->willReturn([$deleg]);
 
-        $plazasRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
-        $plazasRepo->method('getActividadesPlazas')->willReturn([]);
+        $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
+        $plazasDlRepo->method('getActividadesPlazas')->willReturn([]);
+        $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
+        $calRepo->method('getActividadesPlazas')->willReturn([]);
 
         $GLOBALS['container'] = $this->containerFromMap([
             DelegacionRepositoryInterface::class => $delegRepo,
-            ActividadPlazasDlRepositoryInterface::class => $plazasRepo,
+            ActividadPlazasDlRepositoryInterface::class => $plazasDlRepo,
+            ActividadPlazasRepositoryInterface::class => $calRepo,
         ]);
 
         $msg = PlazasCeder::execute([
@@ -86,14 +91,16 @@ final class PlazasCederTest extends TestCase
         $oPlazas = $this->createMock(ActividadPlazas::class);
         $oPlazas->method('getArrayCedidas')->willReturn(['dlx' => 3]);
 
-        $plazasRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
-        $plazasRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $plazasDlRepo = $this->createMock(ActividadPlazasDlRepositoryInterface::class);
+        $plazasDlRepo->method('getActividadesPlazas')->willReturn([$oPlazas]);
+        $calRepo = $this->createMock(ActividadPlazasRepositoryInterface::class);
         $oPlazas->expects($this->once())->method('setCedidas')->with([]);
-        $plazasRepo->expects($this->once())->method('Guardar')->with($oPlazas)->willReturn(true);
+        $plazasDlRepo->expects($this->once())->method('Guardar')->with($oPlazas)->willReturn(true);
 
         $GLOBALS['container'] = $this->containerFromMap([
             DelegacionRepositoryInterface::class => $delegRepo,
-            ActividadPlazasDlRepositoryInterface::class => $plazasRepo,
+            ActividadPlazasDlRepositoryInterface::class => $plazasDlRepo,
+            ActividadPlazasRepositoryInterface::class => $calRepo,
         ]);
 
         $msg = PlazasCeder::execute([

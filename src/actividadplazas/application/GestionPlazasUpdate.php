@@ -78,17 +78,14 @@ final class GestionPlazasUpdate
         if (is_array($cDelegaciones) && count($cDelegaciones) > 0) {
             $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
         }
-        $ActividadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
-        $cActividadPlazasDl = $ActividadPlazasDlRepository->getActividadesPlazas([
-            'id_activ' => $id_activ,
-            'id_dl' => $id_dl,
-            'dl_tabla' => $mi_dele,
-        ]);
-        if (empty($cActividadPlazasDl)) {
-            return (string)_("Todavía no se han asignado las plazas por calendario");
+        // Lectura del cuadro en {@see GestionPlazasData}: da_plazas (calendario común).
+        // Lo que edita esta dl se persiste en da_plazas_dl.
+        $oActividadPlazasDl = PlazasDlEdicion::obtenerOCrearDesdeCalendario($id_activ, $id_dl, $mi_dele);
+        if ($oActividadPlazasDl === null) {
+            return PlazasCalendarioMensaje::faltaRegistro();
         }
-        $oActividadPlazasDl = $cActividadPlazasDl[0];
         $oActividadPlazasDl->setPlazas($plazas);
+        $ActividadPlazasDlRepository = $GLOBALS['container']->get(ActividadPlazasDlRepositoryInterface::class);
         if ($ActividadPlazasDlRepository->Guardar($oActividadPlazasDl) === false) {
             $err = (string)_("hay un error, no se ha guardado");
             return $err . "\n" . $ActividadPlazasDlRepository->getErrorTxt();
