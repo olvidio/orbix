@@ -524,7 +524,7 @@ class SincroDB
         $TelecoPersonaDlRepository = $GLOBALS['container']->get(TelecoPersonaDlRepositoryInterface::class);
         // Telf movil  --particular(5)
         if (!empty($Tfno_Movil)) {
-            $cTelecos = $TelecoPersonaDlRepository->getTelecosPersona(array('id_nom' => $id_orbix, 'tipo_teleco' => 'móvil', 'id_desc_teleco' => 5));
+            $cTelecos = $TelecoPersonaDlRepository->getTelecosPersona(array('id_nom' => $id_orbix, 'id_tipo_teleco' => 2, 'id_desc_teleco' => 5));
             if (!empty($cTelecos) && count($cTelecos) > 0) {
                 $oTeleco = $cTelecos[0];
                 $oTeleco->setNum_teleco($Tfno_Movil);
@@ -545,7 +545,7 @@ class SincroDB
         }
         // e-mail   --principal(13)
         if (!empty($Email)) {
-            $cTelecos = $TelecoPersonaDlRepository->getTelecosPersona(array('id_nom' => $id_orbix, 'tipo_teleco' => 'e-mail', 'id_desc_teleco' => 13));
+            $cTelecos = $TelecoPersonaDlRepository->getTelecosPersona(array('id_nom' => $id_orbix, 'id_tipo_teleco' => 3, 'id_desc_teleco' => 13));
             if (!empty($cTelecos) && count($cTelecos) > 0) {
                 $oTeleco = $cTelecos[0];
                 $oTeleco->setNum_teleco($Email);
