@@ -4,8 +4,8 @@ namespace src\personas\domain\value_objects;
 
 final class ApelFamText
 {
-    /** Mismo criterio que {@see PersonaApellido2Text} y {@see PersonaNombreText}. */
-    private const ALLOWED_PATTERN = '/^[\p{L}0-9 .,\'’´\-()?·]+$/u';
+    /** Mismo criterio que apellidos/nombre, más «/» (p. ej. Richi/Ricardo). */
+    private const ALLOWED_PATTERN = '/^[\p{L}0-9 .,\'’´\-()?·\/]+$/u';
 
     private string $value;
 

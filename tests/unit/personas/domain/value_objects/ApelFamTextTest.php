@@ -41,6 +41,9 @@ class ApelFamTextTest extends myTest
     {
         $apelFamText = new ApelFamText('Muñoz·García');
         $this->assertSame('Muñoz·García', $apelFamText->value());
+
+        $conBarra = new ApelFamText('Richi/Ricardo');
+        $this->assertSame('Richi/Ricardo', $conBarra->value());
     }
 
     public function test_normaliza_guion_y_apostrofo_tipografico(): void
