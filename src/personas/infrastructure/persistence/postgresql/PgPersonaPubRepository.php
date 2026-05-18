@@ -141,7 +141,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
     public function getPersonasParaListado(
         array $aWhere,
         array $aOperators,
-        string &$avisosRegionStgr,
+        array &$problemasRegionStgr,
         array &$sinRegionStgrPorIdNom = [],
     ): array {
         $sinRegionStgrPorIdNom = [];
@@ -187,7 +187,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             $aDatos['f_situacion'] = (new ConverterDate('date', $aDatos['f_situacion']))->fromPg();
             $aDatos['f_inc'] = (new ConverterDate('date', $aDatos['f_inc']))->fromPg();
             $marcaAviso = false;
-            $persona = $this->createEntityParaListado($aDatos, $avisosRegionStgr, $marcaAviso);
+            $persona = $this->createEntityParaListado($aDatos, $problemasRegionStgr, $marcaAviso);
             if ($marcaAviso) {
                 $sinRegionStgrPorIdNom[$persona->getId_nom()] = true;
             }
@@ -197,7 +197,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
         return $PersonaDlSet->getTot();
     }
 
-    public function findByIdParaListado(int $id_nom, string &$avisosRegionStgr, bool &$marcaAvisoRegionStgr): ?PersonaPub
+    public function findByIdParaListado(int $id_nom, array &$problemasRegionStgr, bool &$marcaAvisoRegionStgr): ?PersonaPub
     {
         $marcaAvisoRegionStgr = false;
         $aDatos = $this->datosById($id_nom);
@@ -205,12 +205,12 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             return null;
         }
 
-        return $this->createEntityParaListado($aDatos, $avisosRegionStgr, $marcaAvisoRegionStgr);
+        return $this->createEntityParaListado($aDatos, $problemasRegionStgr, $marcaAvisoRegionStgr);
     }
 
     private function createEntityParaListado(
         array $aDatos,
-        string &$avisosRegionStgr,
+        array &$problemasRegionStgr,
         bool &$marcaAvisoRegionStgr = false,
     ): PersonaPub {
         $marcaAvisoRegionStgr = false;
@@ -220,7 +220,7 @@ class PgPersonaPubRepository extends ClaseRepository implements PersonaPubReposi
             if (!RegionStgrAviso::esDlSinRegion($e)) {
                 throw $e;
             }
-            $avisosRegionStgr = RegionStgrAviso::append($avisosRegionStgr, $e->getMessage());
+            RegionStgrAviso::registrar($problemasRegionStgr, $e);
             $marcaAvisoRegionStgr = true;
             $aDatos['id_schema'] = 0;
 

@@ -13,6 +13,7 @@ use src\personas\domain\contracts\PersonaSSSCRepositoryInterface;
 use src\shared\config\ConfigGlobal;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\ubis\domain\RegionStgrAviso;
 use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\value_objects\PauType;
 
@@ -146,7 +147,7 @@ final class PersonasSelectData
         $permiso = 1;
         $obj_pau = '';
         $cPersonas = [];
-        $aviso = '';
+        $problemasRegionStgr = [];
         switch ($tabla) {
             case 'p_sssc':
                 $obj_pau = 'PersonaSSSC';
@@ -184,7 +185,7 @@ final class PersonasSelectData
                 $obj_pau = 'PersonaEx';
                 $sinRegionStgrPorIdNom = [];
                 $cPersonas = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class)
-                    ->getPersonasParaListado($aWhere, $aOperador, $aviso, $sinRegionStgrPorIdNom);
+                    ->getPersonasParaListado($aWhere, $aOperador, $problemasRegionStgr, $sinRegionStgrPorIdNom);
                 if (
                     $_SESSION['oPerm']->have_perm_oficina('sm')
                     || $_SESSION['oPerm']->have_perm_oficina('agd')
@@ -262,8 +263,8 @@ final class PersonasSelectData
             'total' => count($personas),
             'personas' => $personas,
         ];
-        if ($aviso !== '') {
-            $result['aviso'] = $aviso;
+        if ($problemasRegionStgr !== []) {
+            $result['aviso'] = RegionStgrAviso::formatear($problemasRegionStgr);
         }
 
         return $result;

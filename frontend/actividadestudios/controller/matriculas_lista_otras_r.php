@@ -63,11 +63,13 @@ $titulo = '';
 $d = PostRequest::getDataFromUrl('/src/actividadestudios/matriculas_lista_otras_r_data', [
     'apellido1' => $Qapellido1,
 ], false);
-if (!empty($d['error'])) {
-    $errorHtml = PostRequest::stripInternalCallProvenance((string)$d['error']);
-    if (str_contains($errorHtml, _('falta indicar a que región del stgr pertenece la dl:'))
-        || str_contains($errorHtml, 'región del stgr pertenece la dl')) {
-        $aviso = $errorHtml;
+    if (!empty($d['error'])) {
+        $errorHtml = PostRequest::stripInternalCallProvenance((string)$d['error']);
+        if (str_contains($errorHtml, _('Delegaciones no dadas de alta'))
+            || str_contains($errorHtml, 'Delegaciones no dadas de alta')
+            || str_contains($errorHtml, _('Delegaciones sin región del stgr'))
+            || str_contains($errorHtml, 'Delegaciones sin región del stgr')) {
+            $aviso = $errorHtml;
     } else {
         echo $errorHtml;
         return;

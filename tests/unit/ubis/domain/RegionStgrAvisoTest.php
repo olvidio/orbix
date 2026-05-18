@@ -10,22 +10,30 @@ final class RegionStgrAvisoTest extends TestCase
 {
     public function test_es_dl_sin_region_reconoce_excepcion_de_configuracion(): void
     {
-        $e = new RegionStgrConfigException(RegionStgrAviso::mensajeDlNoEncontrada('L'));
+        $e = new RegionStgrConfigException(RegionStgrAviso::TIPO_DL_NO_ENCONTRADA, 'L');
         $this->assertTrue(RegionStgrAviso::esDlSinRegion($e));
     }
 
-    public function test_mensaje_dl_no_encontrada_incluye_dl_consecuencias_y_correccion(): void
+    public function test_formatear_agrupa_dls_sin_duplicar_explicacion(): void
     {
-        $msg = RegionStgrAviso::mensajeDlNoEncontrada('L');
-        $this->assertStringContainsString('L', $msg);
-        $this->assertStringContainsString('xu_dl', $msg);
-        $this->assertStringContainsString('Consecuencias', $msg);
-        $this->assertStringContainsString('Cómo corregirlo', $msg);
+        $problemas = [];
+        RegionStgrAviso::registrar($problemas, new RegionStgrConfigException(RegionStgrAviso::TIPO_DL_NO_ENCONTRADA, 'L'));
+        RegionStgrAviso::registrar($problemas, new RegionStgrConfigException(RegionStgrAviso::TIPO_DL_NO_ENCONTRADA, 'M'));
+        RegionStgrAviso::registrar($problemas, new RegionStgrConfigException(RegionStgrAviso::TIPO_DL_NO_ENCONTRADA, 'L'));
+
+        $msg = RegionStgrAviso::formatear($problemas);
+        $this->assertStringContainsString('«L»', $msg);
+        $this->assertStringContainsString('«M»', $msg);
+        $this->assertSame(1, substr_count($msg, 'Consecuencias'));
+        $this->assertSame(1, substr_count($msg, 'Cómo corregirlo'));
     }
 
-    public function test_append_no_duplica_mensajes(): void
+    public function test_registrar_no_duplica_la_misma_dl(): void
     {
-        $uno = RegionStgrAviso::mensajeDlNoEncontrada('L');
-        $this->assertSame($uno, RegionStgrAviso::append($uno, $uno));
+        $problemas = [];
+        RegionStgrAviso::registrar($problemas, new RegionStgrConfigException(RegionStgrAviso::TIPO_DL_NO_ENCONTRADA, 'L'));
+        RegionStgrAviso::registrar($problemas, new RegionStgrConfigException(RegionStgrAviso::TIPO_DL_NO_ENCONTRADA, 'L'));
+
+        $this->assertCount(1, $problemas[RegionStgrAviso::TIPO_DL_NO_ENCONTRADA]);
     }
 }

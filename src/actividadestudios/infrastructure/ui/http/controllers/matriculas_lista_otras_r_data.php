@@ -2,6 +2,7 @@
 
 use src\actividadestudios\application\MatriculasListaOtrasRData;
 use src\shared\web\ContestarJson;
+use src\ubis\domain\RegionStgrAviso;
 
 $error = '';
 $data = [];
@@ -14,11 +15,13 @@ try {
     $data = MatriculasListaOtrasRData::execute($apellido1, $esquema);
 } catch (\RuntimeException $e) {
     if (MatriculasListaOtrasRData::esAvisoRegionStgr($e)) {
+        $problemasRegionStgr = [];
+        RegionStgrAviso::registrar($problemasRegionStgr, $e);
         $data = [
             'titulo' => '',
             'titulo_busqueda_por_apellidos' => _('búsqueda por apellidos'),
             'msg_err' => '',
-            'aviso' => $e->getMessage(),
+            'aviso' => RegionStgrAviso::formatear($problemasRegionStgr),
             'a_valores' => [],
         ];
     } else {

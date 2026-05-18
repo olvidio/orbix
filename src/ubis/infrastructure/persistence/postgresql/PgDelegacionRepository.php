@@ -61,7 +61,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
         $region_stgr = 'cr' . $aDades['region_stgr'];
         if (empty($aDades['region_stgr'])) {
-            throw new RegionStgrConfigException(RegionStgrAviso::mensajeRegionStgrFalta($dele));
+            throw new RegionStgrConfigException(RegionStgrAviso::TIPO_REGION_STGR_FALTA, $dele);
         }
 
         return $dele === $region_stgr;
@@ -85,12 +85,12 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 
             $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
             if ($aDades === false || empty($aDades)) {
-                throw new RegionStgrConfigException(RegionStgrAviso::mensajeDlNoEncontrada($dele));
+                throw new RegionStgrConfigException(RegionStgrAviso::TIPO_DL_NO_ENCONTRADA, $dele);
             }
             $region_dele = $aDades['region'];
             $region_stgr = $aDades['region_stgr'];
             if (empty($aDades['region_stgr'])) {
-                throw new RegionStgrConfigException(RegionStgrAviso::mensajeRegionStgrFalta($dele));
+                throw new RegionStgrConfigException(RegionStgrAviso::TIPO_REGION_STGR_FALTA, $dele);
             }
         }
         // nombre del esquema
@@ -122,7 +122,9 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         foreach ($stmt as $aDades) {
             if ($aDades === false) {
                 throw new RegionStgrConfigException(
-                    RegionStgrAviso::mensajeEsquemaNoEncontrado($esquema_region_stgr, $dele),
+                    RegionStgrAviso::TIPO_ESQUEMA_NO_ENCONTRADO,
+                    $dele,
+                    $esquema_region_stgr,
                 );
             }
             if ($aDades['schema'] === $esquema_region_stgr) {
@@ -134,7 +136,9 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         }
         if ($id_esquema_dele === null) {
             throw new RegionStgrConfigException(
-                RegionStgrAviso::mensajeEsquemaNoEncontrado($esquema_dele, $dele),
+                RegionStgrAviso::TIPO_ESQUEMA_NO_ENCONTRADO,
+                $dele,
+                $esquema_dele,
             );
         }
 
