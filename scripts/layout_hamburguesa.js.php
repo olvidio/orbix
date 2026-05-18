@@ -7,8 +7,13 @@ use frontend\shared\security\HashFront;
 
 //header('Content-Type: text/javascript; charset=UTF-8');
 ?>
-const defaultGrupMenu = window.orbixLayout.defaultGrupMenu;
-const menuConfig = window.orbixLayout.menuConfig;
+function orbixLayoutDefaultGrupMenu() {
+    return (window.orbixLayout && window.orbixLayout.defaultGrupMenu) || '';
+}
+
+function orbixLayoutMenuConfig() {
+    return (window.orbixLayout && window.orbixLayout.menuConfig) || {};
+}
 
 function createMenuItem(item, level = 0) {
     const li = document.createElement('li');
@@ -54,7 +59,7 @@ function setActiveGroup(element, groupName) {
 
     // Actualizar menú horizontal
     const horizontalMenu = document.getElementById('horizontalMenu');
-    const menuItems = menuConfig[groupName] || [];
+    const menuItems = orbixLayoutMenuConfig()[groupName] || [];
 
     horizontalMenu.innerHTML = '';
     //Array.prototype.forEach.call(
@@ -185,7 +190,7 @@ function showPortada(groupName) {
 
 // Inicializar con el primer grupo
 document.addEventListener('DOMContentLoaded', function () {
-    setActiveGroup(document.querySelector('.main-container a.active'), defaultGrupMenu);
+    setActiveGroup(document.querySelector('.main-container a.active'), orbixLayoutDefaultGrupMenu());
     // Agregar eventos a los elementos existentes del menú horizontal
     addHorizontalMenuEventListeners();
 });

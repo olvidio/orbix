@@ -105,9 +105,12 @@ class PillsLayout implements LayoutInterface
                 defaultGrupMenu: <?= json_encode((string)$defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>,
                 menuConfig: <?= $menuJson ?>
             };
+            if (!window.__orbixLayoutPillsJsLoaded) {
+                window.__orbixLayoutPillsJsLoaded = true;
             <?php
             include_once OrbixRuntime::dirScripts() . '/layout_pills.js.php';
             ?>
+            }
         </script>
         <?php
 

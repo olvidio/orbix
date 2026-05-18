@@ -1,8 +1,13 @@
 <?php
 use frontend\shared\security\HashFront;
 ?>
-const defaultGrupMenu = window.orbixLayout.defaultGrupMenu;
-const menuConfig = window.orbixLayout.menuConfig;
+function orbixLayoutDefaultGrupMenu() {
+    return (window.orbixLayout && window.orbixLayout.defaultGrupMenu) || '';
+}
+
+function orbixLayoutMenuConfig() {
+    return (window.orbixLayout && window.orbixLayout.menuConfig) || {};
+}
 
 function pills2CreateMenuItem(item, level = 0, crumbPrefix = []) {
     const li = document.createElement('li');
@@ -214,7 +219,7 @@ function pills2SetActiveGroup(element, groupName, fromUserClick) {
     if (!horizontalMenu) {
         return;
     }
-    const menuItems = menuConfig[groupName] || [];
+    const menuItems = orbixLayoutMenuConfig()[groupName] || [];
 
     horizontalMenu.innerHTML = '';
     if (Array.isArray(menuItems)) {
@@ -370,9 +375,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const options = document.querySelectorAll('.pills2-group-link');
     let el = null;
-    let name = defaultGrupMenu;
+    let name = orbixLayoutDefaultGrupMenu();
     options.forEach(btn => {
-        if (btn.getAttribute('data-grupo') === defaultGrupMenu) {
+        if (btn.getAttribute('data-grupo') === orbixLayoutDefaultGrupMenu()) {
             el = btn;
         }
     });
@@ -380,5 +385,5 @@ document.addEventListener('DOMContentLoaded', function () {
         el = options[0];
         name = el.getAttribute('data-grupo') || el.textContent.trim();
     }
-    pills2SetActiveGroup(el, name || defaultGrupMenu, false);
+    pills2SetActiveGroup(el, name || orbixLayoutDefaultGrupMenu(), false);
 });

@@ -105,9 +105,12 @@ class BurgerLayout implements LayoutInterface
                 defaultGrupMenu: <?= json_encode((string)$defaultGrupMenu, JSON_UNESCAPED_UNICODE) ?>,
                 menuConfig: <?= $menuJson ?>
             };
+            if (!window.__orbixLayoutBurgerJsLoaded) {
+                window.__orbixLayoutBurgerJsLoaded = true;
             <?php
             include_once OrbixRuntime::dirScripts() . '/layout_hamburguesa.js.php';
             ?>
+            }
         </script>
         <?php
 
