@@ -13,8 +13,9 @@
         }).done(function (json) {
             var msg = '';
             if (json && json.success === true) {
-                var incorporadas = (json.data && json.data.incorporadas) || 0;
-                var mensaje_final = (json.data && json.data.mensaje_final) || '';
+                var payload = (typeof json.data === 'string') ? JSON.parse(json.data) : (json.data || {});
+                var incorporadas = payload.incorporadas || 0;
+                var mensaje_final = payload.mensaje_final || '';
                 msg = <?= json_encode(_("incorporadas")) ?> + ': ' + incorporadas + '<br>' + mensaje_final;
             } else {
                 msg = (json && json.mensaje) ? json.mensaje : <?= json_encode(_("error")) ?>;
