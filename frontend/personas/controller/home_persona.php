@@ -48,8 +48,25 @@ $campos = [
     'obj_pau' => $Qobj_pau,
 ];
 
-$data = PostRequest::getDataFromUrl('/src/personas/home_persona_data', $campos);
+$data = PostRequest::getDataFromUrl('/src/personas/home_persona_data', $campos, false);
+$aviso = '';
+if (!empty($data['error'])) {
+    $errorHtml = PostRequest::stripInternalCallProvenance((string)$data['error']);
+    if (
+        str_contains($errorHtml, _('persona no válida'))
+        || str_contains($errorHtml, 'persona no válida')
+        || str_contains($errorHtml, _('Delegaciones no dadas de alta'))
+        || str_contains($errorHtml, 'Delegaciones no dadas de alta')
+    ) {
+        $aviso = $errorHtml;
+        $data = [];
+    } else {
+        echo $errorHtml;
+        return;
+    }
+}
 $payload = is_array($data) ? $data : [];
+$aviso = (string)($payload['aviso'] ?? $aviso);
 
 $Qobj_pau = (string)($payload['Qobj_pau'] ?? $Qobj_pau);
 $nom = (string)($payload['titulo'] ?? '');
@@ -88,6 +105,7 @@ $a_campos = [
     'pau' => $pau,
     'id_pau' => $id_nom,
     'Qobj_pau' => $Qobj_pau,
+    'aviso' => $aviso,
 ];
 
 $oView = new ViewNewPhtml('frontend\personas\controller');

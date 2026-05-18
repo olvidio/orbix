@@ -7,6 +7,7 @@ namespace src\notas\application;
 use src\notas\application\Tesera;
 use src\personas\domain\entity\Persona;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\ubis\domain\RegionStgrAviso;
 
 /**
  * Datos imprimibles de tessera ya serializados (sin objetos dominio → JSON estable).
@@ -14,24 +15,28 @@ use src\shared\domain\value_objects\DateTimeLocal;
 final class TesseraImprimirData
 {
     /**
-     * @return array{
-     *   nom: string,
-     *   plan: int,
-     *   c_asignaturas: list<array{id_nivel: int, nombre_asignatura: string, id_asignatura: int}>,
-     *   a_aprobadas: array<int|string, array<string, mixed>>
-     * }
+     * @return array<string, mixed>
      */
     public static function execute(int $id_nom): array
     {
         if ($id_nom <= 0) {
-            throw new \RuntimeException(_('persona no válida'));
+            return ['aviso' => RegionStgrAviso::mensajePersonaNoValida()];
         }
-        $oPersona = Persona::findPersonaEnGlobal($id_nom);
+
+        $problemasRegionStgr = [];
+        $oPersona = Persona::findPersonaEnGlobal($id_nom, $problemasRegionStgr);
         if ($oPersona === null) {
-            throw new \RuntimeException(sprintf(
-                _('No encuentro persona con id_nom: %s'),
-                (string)$id_nom
-            ));
+            return ['aviso' => sprintf(_('No encuentro persona con id_nom: %s'), (string)$id_nom)];
+        }
+        if ($oPersona->getId_schema() === 0) {
+            RegionStgrAviso::registrarPersonaSinSchema(
+                $problemasRegionStgr,
+                $id_nom,
+                (string)$oPersona->getPrefApellidosNombre(),
+                (string)($oPersona->getDl() ?? ''),
+            );
+
+            return ['aviso' => RegionStgrAviso::formatear($problemasRegionStgr)];
         }
 
         $tesera = new Tesera();

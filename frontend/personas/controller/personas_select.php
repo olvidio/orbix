@@ -96,7 +96,27 @@ $campos = [
     'centro' => $Qcentro,
 ];
 
-$data = PostRequest::getDataFromUrl('/src/personas/personas_select_data', $campos);
+$data = PostRequest::getDataFromUrl('/src/personas/personas_select_data', $campos, false);
+$aviso = '';
+if (!empty($data['error'])) {
+    $errorHtml = PostRequest::stripInternalCallProvenance((string)$data['error']);
+    if (
+        str_contains($errorHtml, _('persona no válida'))
+        || str_contains($errorHtml, 'persona no válida')
+        || str_contains($errorHtml, _('Delegaciones no dadas de alta'))
+        || str_contains($errorHtml, 'Delegaciones no dadas de alta')
+        || str_contains($errorHtml, _('Delegaciones sin región del stgr'))
+        || str_contains($errorHtml, 'Delegaciones sin región del stgr')
+        || str_contains($errorHtml, _('Personas del listado sin id_schema válido'))
+        || str_contains($errorHtml, 'Personas del listado sin id_schema válido')
+    ) {
+        $aviso = $errorHtml;
+        $data = [];
+    } else {
+        echo $errorHtml;
+        return;
+    }
+}
 $payload = is_array($data) ? $data : [];
 
 $tabla = (string)($payload['tabla'] ?? $tabla);
@@ -106,7 +126,7 @@ $permiso = (int)($payload['permiso'] ?? 1);
 $sPrefs = (string)($payload['sPrefs'] ?? '');
 $total = (int)($payload['total'] ?? 0);
 $a_filas = (array)($payload['personas'] ?? []);
-$aviso = (string)($payload['aviso'] ?? '');
+$aviso = (string)($payload['aviso'] ?? $aviso);
 
 // Botones y scripts: son UI (dependen de `$_SESSION['oPerm']`, apps instaladas
 // y ambito) y se construyen en el frontend.

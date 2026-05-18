@@ -26,8 +26,12 @@ foreach ($a_sel as $PersonaSel) {
     $id_nom = (integer)strtok($PersonaSel, "#");
     $payload = PostRequest::getDataFromUrl('/src/notas/tessera_ver_data', [
         'id_nom' => $id_nom,
-    ]);
+    ], false);
     $a_campos = is_array($payload) ? $payload : [];
+    if (!empty($a_campos['error'])) {
+        echo PostRequest::stripInternalCallProvenance((string)$a_campos['error']);
+        return;
+    }
     $a_campos['oPosicion'] = $oPosicion;
     $oView->renderizar('tesera_ver.phtml', $a_campos);
 }

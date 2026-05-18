@@ -14,12 +14,23 @@ require_once("frontend/shared/global_header_front.inc");
 
 $oPosicion->recordar();
 
-$id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-$Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) {
+    $id_nom = (int)strtok((string)$a_sel[0], '#');
+} else {
+    $id_nom = (int)filter_input(INPUT_POST, 'id_nom');
+}
+$Qnuevo = (int)filter_input(INPUT_POST, 'nuevo');
 $formData = PostRequest::getDataFromUrl('/src/certificados/certificado_recibido_adjuntar_data', [
     'id_nom' => $id_nom,
-]);
+], false);
+$aviso = '';
+if (!empty($formData['error'])) {
+    echo PostRequest::stripInternalCallProvenance((string)$formData['error']);
+    return;
+}
 $form = is_array($formData) ? $formData : [];
+$aviso = (string)($form['aviso'] ?? '');
 $nom = (string)($form['nom'] ?? '');
 $idioma = '';
 $destino = '';
@@ -61,6 +72,7 @@ $a_campos = [
     'f_certificado' => $f_certificado,
     'f_recibido' => $f_recibido,
     'chk_firmado' => $chk_firmado,
+    'aviso' => $aviso,
 ];
 
 $oView = new ViewNewTwig('frontend/certificados/controller');

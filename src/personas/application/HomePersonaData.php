@@ -4,8 +4,11 @@ namespace src\personas\application;
 
 use src\actividades\domain\value_objects\NivelStgrId;
 use src\personas\application\support\PersonaRepositoryResolver;
+use src\personas\application\support\PersonaSeleccionInput;
+use src\personas\domain\contracts\PersonaPubRepositoryInterface;
 use src\personas\domain\services\TelecoPersonaService;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\RegionStgrAviso;
 
 /**
  * Caso de uso detras del endpoint `/src/personas/home_persona_data`.
@@ -32,7 +35,8 @@ final class HomePersonaData
      *     observ?: string,
      *     ctr?: string,
      *     telfs?: string,
-     *     mails?: string
+     *     mails?: string,
+     *     aviso?: string
      * }
      */
     public static function build(array $input): array
@@ -42,21 +46,32 @@ final class HomePersonaData
             $id_nom = (int)strtok((string)$a_sel[0], '#');
             $id_tabla = (string)strtok('#');
         } else {
-            $id_nom = (int)($input['id_nom'] ?? 0);
-            $id_tabla = (string)($input['id_tabla'] ?? '');
+            $seleccion = PersonaSeleccionInput::idNomYTabla($input);
+            $id_nom = $seleccion['id_nom'];
+            $id_tabla = $seleccion['id_tabla'];
         }
 
         $Qobj_pau = (string)($input['obj_pau'] ?? '');
 
         $resolver = new PersonaRepositoryResolver();
+        $problemasRegionStgr = [];
         try {
-            $repoPersona = $resolver->repositorio($Qobj_pau);
+            if ($Qobj_pau === 'PersonaEx') {
+                $marcaAviso = false;
+                $oPersona = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class)
+                    ->findByIdParaListado($id_nom, $problemasRegionStgr, $marcaAviso);
+            } else {
+                $repoPersona = $resolver->repositorio($Qobj_pau);
+                $oPersona = $repoPersona->findById($id_nom);
+            }
         } catch (\InvalidArgumentException) {
             return ['error' => _("No existe la clase de la persona")];
         }
-
-        $oPersona = $repoPersona->findById($id_nom);
         if ($oPersona === null) {
+            if ($id_nom <= 0) {
+                return ['aviso' => RegionStgrAviso::mensajePersonaNoValida()];
+            }
+
             return ['error' => _("No se encuentra la persona")];
         }
 
@@ -102,7 +117,7 @@ final class HomePersonaData
         }
         $mails = (string)$telecoService->getTelecosPorTipo($id_nom, 'e-mail', " / ", "*");
 
-        return [
+        $result = [
             'Qobj_pau' => $Qobj_pau,
             'id_nom' => $id_nom,
             'id_tabla' => $id_tabla,
@@ -118,6 +133,11 @@ final class HomePersonaData
             'telfs' => (string)$telfs,
             'mails' => $mails,
         ];
+        if ($problemasRegionStgr !== []) {
+            $result['aviso'] = RegionStgrAviso::formatear($problemasRegionStgr);
+        }
+
+        return $result;
     }
 
     /**

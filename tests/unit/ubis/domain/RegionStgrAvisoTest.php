@@ -36,4 +36,19 @@ final class RegionStgrAvisoTest extends TestCase
 
         $this->assertCount(1, $problemas[RegionStgrAviso::TIPO_DL_NO_ENCONTRADA]);
     }
+
+    public function test_registrar_persona_sin_schema_no_duplica(): void
+    {
+        $problemas = [];
+        RegionStgrAviso::registrarPersonaSinSchema($problemas, 12, 'García, Juan', 'L');
+        RegionStgrAviso::registrarPersonaSinSchema($problemas, 12, 'García, Juan', 'L');
+
+        $this->assertCount(1, $problemas[RegionStgrAviso::TIPO_PERSONA_SIN_ID_SCHEMA]);
+    }
+
+    public function test_es_mensaje_suave_reconoce_persona_no_valida(): void
+    {
+        $this->assertTrue(RegionStgrAviso::esMensajeSuave(_('persona no válida')));
+        $this->assertTrue(RegionStgrAviso::esMensajeSuave(RegionStgrAviso::mensajePersonaNoValida()));
+    }
 }

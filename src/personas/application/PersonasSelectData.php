@@ -148,6 +148,7 @@ final class PersonasSelectData
         $obj_pau = '';
         $cPersonas = [];
         $problemasRegionStgr = [];
+        $sinRegionStgrPorIdNom = [];
         switch ($tabla) {
             case 'p_sssc':
                 $obj_pau = 'PersonaSSSC';
@@ -183,7 +184,6 @@ final class PersonasSelectData
                     $id_tabla = 'p' . $Qna;
                 }
                 $obj_pau = 'PersonaEx';
-                $sinRegionStgrPorIdNom = [];
                 $cPersonas = $GLOBALS['container']->get(PersonaPubRepositoryInterface::class)
                     ->getPersonasParaListado($aWhere, $aOperador, $problemasRegionStgr, $sinRegionStgrPorIdNom);
                 if (
@@ -246,6 +246,14 @@ final class PersonasSelectData
                 if (!empty($Qcmb)) {
                     $fila['situacion'] = (string)$oPersona->getSituacion();
                     $fila['f_situacion'] = (string)($oPersona->getF_situacion()?->getFromLocal() ?? '');
+                }
+                if (isset($sinRegionStgrPorIdNom[$id_nom])) {
+                    RegionStgrAviso::registrarPersonaSinSchema(
+                        $problemasRegionStgr,
+                        $id_nom,
+                        $nom,
+                        (string)($oPersona->getDl() ?? ''),
+                    );
                 }
                 $a_personas[$nom . '_' . $id_nom] = $fila;
             }

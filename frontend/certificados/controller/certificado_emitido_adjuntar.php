@@ -13,11 +13,22 @@ require_once("frontend/shared/global_header_front.inc");
 
 $oPosicion->recordar();
 
-$id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+if (!empty($a_sel)) {
+    $id_nom = (int)strtok((string)$a_sel[0], '#');
+} else {
+    $id_nom = (int)filter_input(INPUT_POST, 'id_nom');
+}
 $formData = PostRequest::getDataFromUrl('/src/certificados/certificado_emitido_adjuntar_data', [
     'id_nom' => $id_nom,
-]);
+], false);
+$aviso = '';
+if (!empty($formData['error'])) {
+    echo PostRequest::stripInternalCallProvenance((string)$formData['error']);
+    return;
+}
 $form = is_array($formData) ? $formData : [];
+$aviso = (string)($form['aviso'] ?? '');
 $nom = (string)($form['nom'] ?? '');
 $idioma = '';
 $destino = '';
@@ -55,7 +66,8 @@ $a_campos = [
     'f_certificado' => $f_certificado,
     'f_enviado' => $f_enviado,
     'chk_firmado' => $chk_firmado,
+    'aviso' => $aviso,
 ];
 
 $oView = new ViewNewTwig('frontend/certificados/controller');
-$oView->renderizar('certificado_adjuntar.html.twig', $a_campos);
+$oView->renderizar('certificado_emitido_adjuntar.html.twig', $a_campos);

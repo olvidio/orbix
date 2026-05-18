@@ -4,6 +4,11 @@ use frontend\shared\config\OrbixRuntime;
 
 ?>
 <?= $oPosicion->mostrar_left_slide(1); ?>
+<?php if (!empty($aviso)) : ?>
+<div class="certificado-aviso-config" role="alert" style="max-width: 42rem; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #c9a227; background: #fffbea; color: #3d3500; line-height: 1.5;">
+    <div style="margin: 0;"><?= $aviso ?></div>
+</div>
+<?php endif; ?>
 <div id="top" name="top">
     <table>
         <tr>

@@ -10,6 +10,67 @@ final class RegionStgrAviso
     public const TIPO_DL_NO_ENCONTRADA = 'dl_no_encontrada';
     public const TIPO_REGION_STGR_FALTA = 'region_stgr_falta';
     public const TIPO_ESQUEMA_NO_ENCONTRADO = 'esquema_no_encontrado';
+    public const TIPO_PERSONA_SIN_ID_SCHEMA = 'persona_sin_id_schema';
+
+    public static function esMensajeSuave(string $mensaje): bool
+    {
+        $mensaje = self::stripHtml($mensaje);
+
+        return self::esTextoConfiguracionDl($mensaje)
+            || str_contains($mensaje, _('persona no válida'))
+            || str_contains($mensaje, 'persona no válida')
+            || str_contains($mensaje, _('persona no encontrada'))
+            || str_contains($mensaje, 'persona no encontrada')
+            || str_contains($mensaje, _('Personas del listado sin id_schema válido'))
+            || str_contains($mensaje, 'Personas del listado sin id_schema válido');
+    }
+
+    public static function mensajePersonaNoValida(): string
+    {
+        return _('persona no válida') . '<br>' . _(
+            'No se ha podido identificar la persona seleccionada (falta id_nom o la dl no tiene esquema válido).'
+        ) . '<br>' . _(
+            'Consecuencias: no se pueden abrir tessera, certificados ni otras operaciones entre regiones para esa fila.'
+        ) . '<br>' . _(
+            'Cómo corregirlo: seleccione de nuevo la persona en el listado y, si la dl aparece en el aviso de configuración, corríjala en Ubis.'
+        );
+    }
+
+    public static function combinarAvisos(string ...$avisos): string
+    {
+        $partes = [];
+        foreach ($avisos as $aviso) {
+            $aviso = trim($aviso);
+            if ($aviso === '') {
+                continue;
+            }
+            if ($partes !== [] && str_contains(implode(' ', $partes), $aviso)) {
+                continue;
+            }
+            $partes[] = $aviso;
+        }
+
+        return implode('<br><br>', $partes);
+    }
+
+    /**
+     * @param array<string, array<string, string>> $problemas
+     */
+    public static function registrarPersonaSinSchema(
+        array &$problemas,
+        int $idNom,
+        string $nombre,
+        string $dl = '',
+    ): void {
+        if ($idNom <= 0) {
+            return;
+        }
+        $etiqueta = $nombre . ' (id ' . $idNom . ')';
+        if ($dl !== '') {
+            $etiqueta .= ', dl ' . $dl;
+        }
+        $problemas[self::TIPO_PERSONA_SIN_ID_SCHEMA][(string)$idNom] = $etiqueta;
+    }
 
     public static function esDlSinRegion(\Throwable $e): bool
     {
@@ -68,7 +129,64 @@ final class RegionStgrAviso
             $bloques[] = self::bloqueEsquemaNoEncontrado(array_values($problemas[self::TIPO_ESQUEMA_NO_ENCONTRADO]));
         }
 
-        return implode('<br><br>', $bloques);
+        $texto = implode('<br><br>', $bloques);
+        if (!empty($problemas[self::TIPO_PERSONA_SIN_ID_SCHEMA])) {
+            $personas = array_values($problemas[self::TIPO_PERSONA_SIN_ID_SCHEMA]);
+            sort($personas);
+            $lineaPersonas = sprintf(
+                _('Personas del listado sin id_schema válido: %s.'),
+                self::listaEtiquetas($personas)
+            );
+            if ($texto === '') {
+                $texto = self::bloquePersonaSinSchema($personas);
+            } else {
+                $texto .= '<br>' . $lineaPersonas;
+            }
+        }
+
+        return $texto;
+    }
+
+    /**
+     * @param list<string> $personas
+     */
+    private static function bloquePersonaSinSchema(array $personas): string
+    {
+        sort($personas);
+
+        return sprintf(
+            _('Personas del listado sin id_schema válido: %s.'),
+            self::listaEtiquetas($personas)
+        ) . '<br>' . _(
+            'Sin id_schema no se pueden enlazar notas, certificados ni traslados entre regiones del stgr.'
+        ) . '<br>' . _(
+            'Consecuencias: la fila aparece en el listado, pero tessera, certificados y traslados fallarán para esas personas.'
+        ) . '<br>' . _(
+            'Cómo corregirlo: corrija la configuración de la dl de cada persona en Ubis (véase el aviso de delegaciones si también aparece).'
+        );
+    }
+
+    private static function esTextoConfiguracionDl(string $mensaje): bool
+    {
+        return str_contains($mensaje, _('Delegaciones no dadas de alta'))
+            || str_contains($mensaje, 'Delegaciones no dadas de alta')
+            || str_contains($mensaje, _('Delegaciones sin región del stgr'))
+            || str_contains($mensaje, 'Delegaciones sin región del stgr')
+            || str_contains($mensaje, _('Delegaciones cuyo esquema no está'))
+            || str_contains($mensaje, 'Delegaciones cuyo esquema no está');
+    }
+
+    private static function stripHtml(string $mensaje): string
+    {
+        return trim(strip_tags($mensaje));
+    }
+
+    /**
+     * @param list<string> $etiquetas
+     */
+    private static function listaEtiquetas(array $etiquetas): string
+    {
+        return implode(', ', array_map(static fn (string $e): string => '«' . $e . '»', $etiquetas));
     }
 
     /**

@@ -2,20 +2,27 @@
 
 /**
  * Endpoint JSON: datos para la pantalla `home_persona.phtml`.
- *
- * Ruta: /src/personas/home_persona_data
- *
- * Respuesta: `ContestarJson::enviar($error, $data)`.
  */
 
-use src\shared\web\ContestarJson;
 use src\personas\application\HomePersonaData;
+use src\shared\web\ContestarJson;
+use src\ubis\domain\RegionStgrAviso;
 
 $result = HomePersonaData::build($_POST);
 
 if (!empty($result['error'])) {
-    ContestarJson::enviar((string)$result['error']);
-    return;
+    if (RegionStgrAviso::esMensajeSuave((string)$result['error'])) {
+        $result['aviso'] = RegionStgrAviso::combinarAvisos(
+            (string)($result['aviso'] ?? ''),
+            str_contains((string)$result['error'], _('persona no válida'))
+                ? RegionStgrAviso::mensajePersonaNoValida()
+                : (string)$result['error'],
+        );
+        unset($result['error']);
+    } else {
+        ContestarJson::enviar((string)$result['error']);
+        return;
+    }
 }
 
 ContestarJson::enviar('', $result);
