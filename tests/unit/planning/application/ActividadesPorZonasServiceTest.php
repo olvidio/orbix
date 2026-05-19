@@ -10,6 +10,7 @@ use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
 use src\actividades\domain\entity\ActividadAll;
 use src\encargossacd\domain\contracts\EncargoRepositoryInterface;
 use src\encargossacd\domain\contracts\EncargoSacdHorarioRepositoryInterface;
+use src\encargossacd\domain\entity\EncargoSacdHorario;
 use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\personas\domain\entity\PersonaSacd;
 use src\planning\application\ActividadesPorZonasService;
@@ -282,6 +283,52 @@ final class ActividadesPorZonasServiceTest extends TestCase
      * bucle que procesa actividades. Al forzar una actividad con
      * horas reales, reproducimos el fallo observado en produccion.
      */
+    public function test_ausencia_con_grupo_encargo_invalido_en_bd_se_omite(): void
+    {
+        $oZona = $this->zona('Z');
+
+        $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
+        $zonaRepo->method('findById')->willReturn($oZona);
+
+        $zonaSacd = new class {
+            public function getId_nom(): int { return 123; }
+            public function getId_zona(): int { return 99; }
+        };
+        $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
+        $zonaSacdRepo->method('getZonasSacds')->willReturn([$zonaSacd]);
+
+        $oSacd = $this->createStub(PersonaSacd::class);
+        $oSacd->method('getSituacion')->willReturn('A');
+        $oSacd->method('getPrefApellidosNombre')->willReturn('Sacd Uno');
+        $sacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
+        $sacdRepo->method('findById')->willReturn($oSacd);
+
+        $horario = $this->createStub(EncargoSacdHorario::class);
+        $horario->method('getId_enc')->willReturn(9001);
+        $horario->method('getF_ini')->willReturn(new DateTimeLocal('2030-02-01'));
+        $horario->method('getF_fin')->willReturn(new DateTimeLocal('2030-02-10'));
+
+        $encargoSacdRepo = $this->createMock(EncargoSacdHorarioRepositoryInterface::class);
+        $encargoSacdRepo->method('getEncargoSacdHorarios')->willReturn([$horario]);
+
+        $encargoRepo = $this->createMock(EncargoRepositoryInterface::class);
+        $encargoRepo->method('findById')->with(9001)->willThrowException(
+            new \InvalidArgumentException('EncargoGrupo solo admite: 1, 2, 3, 4, 5, 8')
+        );
+
+        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+            ZonaRepositoryInterface::class => $zonaRepo,
+            ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
+            PersonaSacdRepositoryInterface::class => $sacdRepo,
+            EncargoSacdHorarioRepositoryInterface::class => $encargoSacdRepo,
+            EncargoRepositoryInterface::class => $encargoRepo,
+        ]));
+
+        $out = ActividadesPorZonasService::execute('99', 1, 2030, 'si', 'no');
+
+        $this->assertSame([], $out['actividades_por_zona'][1]['Sacd Uno']['p#123#Sacd Uno'] ?? []);
+    }
+
     public function test_actividad_con_TimeLocal_como_horario_no_falla_al_convertir_a_string(): void
     {
         $oZona = $this->zona('Z');

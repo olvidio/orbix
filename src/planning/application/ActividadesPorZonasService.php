@@ -358,7 +358,15 @@ class ActividadesPorZonasService
             $h_ini = '';
             $h_fin = '';
 
-            $oEncargo = $EncargoRepository->findById($id_enc);
+            try {
+                $oEncargo = $EncargoRepository->findById($id_enc);
+            } catch (\InvalidArgumentException) {
+                // `encargos.grupo_encargo` fuera de 1,2,3,4,5,8: no se puede hidratar Encargo.
+                continue;
+            }
+            if ($oEncargo === null) {
+                continue;
+            }
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
             $id = (string)$id_tipo_enc;
             if ($id[0] !== '7' && $id[0] !== '4') {
@@ -376,7 +384,10 @@ class ActividadesPorZonasService
             $hfi = empty($h_fin) ? '22:00' : (string)$h_fin;
 
             $propio = "p";
-            $nom_llarg = $oEncargo->getDesc_enc();
+            $nom_llarg = (string)($oEncargo->getDesc_enc() ?? '');
+            if ($nom_llarg === '') {
+                continue;
+            }
             $nom_curt = ($nom_llarg[0] === 'A') ? 'a' : 'x';
             if ($ini !== $fi) {
                 $nom_llarg .= " ($ini-$fi)";
