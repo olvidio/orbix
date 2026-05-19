@@ -2,6 +2,7 @@
 
 namespace src\procesos\domain\contracts;
 
+use src\actividades\domain\entity\ActividadAll;
 use src\procesos\domain\entity\ActividadProcesoTarea;
 
 
@@ -74,7 +75,21 @@ interface ActividadProcesoTareaRepositoryInterface
      *
      * @param string $iid_activ
      * @param int|string $isfsv
+     * @param bool $force
+     * @param ActividadAll|null $oActividad Actividad ya cargada (p. ej. recién guardada en dl)
      * @return bool|int id_fase u otro valor según implementación
      */
-    public function generarProceso(string $iid_activ = '', int|string $isfsv = '', bool $force = false);
+    public function generarProceso(
+        string $iid_activ = '',
+        int|string $isfsv = '',
+        bool $force = false,
+        ?ActividadAll $oActividad = null,
+    ): bool|int;
+
+    /**
+     * Avisos no fatales acumulados por la última llamada a {@see generarProceso()} (se vacían al leer).
+     *
+     * @return list<string>
+     */
+    public function consumirAvisosGenerarProceso(): array;
 }

@@ -19,6 +19,7 @@ use src\shared\web\ContestarJson;
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $error_txt = '';
+$avisos = [];
 
 if (!empty($a_sel)) {
     $ImportadaRepository = $GLOBALS['container']->get(ImportadaRepositoryInterface::class);
@@ -32,9 +33,16 @@ if (!empty($a_sel)) {
         }
         if (ConfigGlobal::is_app_installed('procesos')) {
             $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
-            $ActividadProcesoTareaRepository->generarProceso($id_activ, ConfigGlobal::mi_sfsv(), TRUE);
+            $ActividadProcesoTareaRepository->generarProceso((string) $id_activ, ConfigGlobal::mi_sfsv(), true);
+            foreach ($ActividadProcesoTareaRepository->consumirAvisosGenerarProceso() as $aviso) {
+                $avisos[] = $aviso;
+            }
         }
     }
+}
+
+if ($error_txt === '' && $avisos !== []) {
+    ContestarJson::enviar('', ['avisos' => $avisos]);
 }
 
 ContestarJson::enviar($error_txt);

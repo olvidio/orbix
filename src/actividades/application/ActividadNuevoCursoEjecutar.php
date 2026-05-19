@@ -77,6 +77,15 @@ final class ActividadNuevoCursoEjecutar
             $html .= "<h3>" . _("solapes") . "</h3>";
             $html .= $txt_solapes;
         }
+        $avisosProceso = $oNuevoCurso->consumirAvisosProceso();
+        if ($avisosProceso !== []) {
+            $html .= '<h3>' . _('avisos') . '</h3>';
+            $html .= '<ul class="avisos">';
+            foreach ($avisosProceso as $aviso) {
+                $html .= '<li>' . htmlspecialchars((string) $aviso, ENT_QUOTES, 'UTF-8') . '</li>';
+            }
+            $html .= '</ul>';
+        }
 
         return [
             'html' => $html,

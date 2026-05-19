@@ -125,7 +125,12 @@ if ($ActividadDlRepository->Guardar($oActividad) === false) {
     if (ConfigGlobal::is_app_installed('procesos')) {
         if (($dl_orig != $dl_org) && ($dl_org == ConfigGlobal::mi_delef() || $dl_orig == ConfigGlobal::mi_delef())) {
             $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
-            $ActividadProcesoTareaRepository->generarProceso($oActividad->getId_activ());
+            $ActividadProcesoTareaRepository->generarProceso(
+                (string) $oActividad->getId_activ(),
+                '',
+                false,
+                $oActividad,
+            );
         }
     }
     // Por defecto pongo todas las plazas en mi dl

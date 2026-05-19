@@ -49,6 +49,9 @@ class ActividadNuevoCurso
      */
     private $aRepeticion;
 
+    /** @var list<string> */
+    private array $avisosProceso = [];
+
     private function getRepetiones()
     {
         if (!isset($this->aRepeticion)) {
@@ -277,15 +280,28 @@ class ActividadNuevoCurso
         }
         if (ConfigGlobal::is_app_installed('procesos')) {
             // También creo las fases-tareas
-            $this->crear_fases($id_actividad_new);
+            $this->crear_fases($id_actividad_new, $oActividad);
+        }
+        return $txt;
+    }
+
+    private function crear_fases(int $id_activ, ActividadAll $oActividad): void
+    {
+        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
+        $ActividadProcesoTareaRepository->generarProceso((string) $id_activ, '', false, $oActividad);
+        foreach ($ActividadProcesoTareaRepository->consumirAvisosGenerarProceso() as $aviso) {
+            $this->avisosProceso[] = $aviso;
         }
     }
 
-    private function crear_fases($id_activ)
+    /**
+     * @return list<string>
+     */
+    public function consumirAvisosProceso(): array
     {
-        //echo "generando fases de $id_activ,$id_tipo_activ...<br>";
-        $ActividadProcesoTareaRepository = $GLOBALS['container']->get(ActividadProcesoTareaRepositoryInterface::class);
-        $ActividadProcesoTareaRepository->generarProceso($id_activ);
+        $avisos = $this->avisosProceso;
+        $this->avisosProceso = [];
+        return $avisos;
     }
 
 

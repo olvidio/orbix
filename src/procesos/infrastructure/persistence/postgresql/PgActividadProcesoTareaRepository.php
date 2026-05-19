@@ -37,6 +37,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
 {
     use HandlesPdoErrors;
 
+    /** @var list<string> */
+    private array $avisosGenerarProceso = [];
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
@@ -154,12 +157,18 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
      * @param boolean $force para forzar a borrar el proceso y generarlo de nuevo
      * @return boolean|int id_fase.
      */
-    public function generarProceso(string $iid_activ = '', int|string $isfsv = '', bool $force = FALSE)
-    {
+    public function generarProceso(
+        string $iid_activ = '',
+        int|string $isfsv = '',
+        bool $force = FALSE,
+        ?ActividadAll $oActividad = null,
+    ): bool|int {
         $id_activ = (int) $iid_activ;
-        $oActividad = $this->findActividadForProceso($id_activ);
         if ($oActividad === null) {
-            echo sprintf(_("La actividad: %s ya no existe"), $iid_activ) . "\n";
+            $oActividad = $this->findActividadForProceso($id_activ);
+        }
+        if ($oActividad === null) {
+            $this->registrarAvisoGenerarProceso(sprintf(_("La actividad: %s ya no existe"), $iid_activ));
             return TRUE;
         }
         $iid_tipo_activ = $oActividad->getIdTipoActivVo()->value();
@@ -167,7 +176,7 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         $oTipoDeActividad = $TipoDeActividadRepository->findById($iid_tipo_activ);
 
         if (empty($oTipoDeActividad)) {
-            echo sprintf(_("No existe este tipo de actividad: %s"), $iid_tipo_activ) . "\n";
+            $this->registrarAvisoGenerarProceso(sprintf(_("No existe este tipo de actividad: %s"), $iid_tipo_activ));
             return TRUE;
         }
         $dl_org = $oActividad->getDl_org();
@@ -203,7 +212,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $id_tipo_proceso = $oTipoDeActividad->getId_tipo_proceso_ex($sfsv);
             }
             if (empty($id_tipo_proceso)) {
-                echo sprintf(_("No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"), $iid_tipo_activ, $sfsv);
+                $this->registrarAvisoGenerarProceso(
+                    sprintf(_("No tiene definido el proceso para este tipo de actividad: %s de sv/sf: %s"), $iid_tipo_activ, $sfsv)
+                );
                 return TRUE;
             }
             // Asegurar que no existe, a veces al hacerlo para las dos secciones, una lo tiene y otra no:
@@ -222,6 +233,18 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
 
         // devuelve la fase del proceso propio
         return $iid_fase[$isfsv];
+    }
+
+    public function consumirAvisosGenerarProceso(): array
+    {
+        $avisos = $this->avisosGenerarProceso;
+        $this->avisosGenerarProceso = [];
+        return $avisos;
+    }
+
+    private function registrarAvisoGenerarProceso(string $mensaje): void
+    {
+        $this->avisosGenerarProceso[] = $mensaje;
     }
 
     /**
