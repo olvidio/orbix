@@ -19,9 +19,9 @@ final class PersonaNombreText
             throw new \InvalidArgumentException('PersonaNombreText cannot be empty');
         }
         $len = mb_strlen($value);
-        if ($len > 40) {
+        if ($len > 50) {
             throw new \InvalidArgumentException(sprintf(
-                'PersonaNombreText must be at most 40 characters (length=%d, value=%s)',
+                'PersonaNombreText must be at most 50 characters (length=%d, value=%s)',
                 $len,
                 PersonaTextoChars::safeRepr($value)
             ));
