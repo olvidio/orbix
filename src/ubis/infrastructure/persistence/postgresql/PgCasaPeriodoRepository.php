@@ -66,18 +66,20 @@ class PgCasaPeriodoRepository extends ClaseRepository implements CasaPeriodoRepo
         if (count($a_periodos) === 0) {
             $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
             $oCasa = $CasaDlRepository->findById($id_ubi);
-            $sf = $oCasa->isSf();
-            $sv = $oCasa->isSv();
-            $oInicio->setTime(0, 0, 0);
-            $isoIni = $oInicio->format('Ymd');
-            $oFin->setTime(23, 59, 59);
-            $isoFin = $oFin->format('Ymd');
+            if ($oCasa !== null) {
+                $sf = $oCasa->isSf();
+                $sv = $oCasa->isSv();
+                $oInicio->setTime(0, 0, 0);
+                $isoIni = $oInicio->format('Ymd');
+                $oFin->setTime(23, 59, 59);
+                $isoFin = $oFin->format('Ymd');
 
-            if ($sf === true && $sv === false) {
-                $a_periodos[] = array('iso_ini' => $isoIni, 'iso_fin' => $isoFin, 'sfsv' => 2);
-            }
-            if ($sf === false && $sv === true) {
-                $a_periodos[] = array('iso_ini' => $isoIni, 'iso_fin' => $isoFin, 'sfsv' => 1);
+                if ($sf === true && $sv === false) {
+                    $a_periodos[] = array('iso_ini' => $isoIni, 'iso_fin' => $isoFin, 'sfsv' => 2);
+                }
+                if ($sf === false && $sv === true) {
+                    $a_periodos[] = array('iso_ini' => $isoIni, 'iso_fin' => $isoFin, 'sfsv' => 1);
+                }
             }
         }
         return $a_periodos;
