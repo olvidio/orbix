@@ -139,7 +139,6 @@ $oPosicion->setParametros($aGoBack, 1);
 
 $a_botones = [
     ['txt' => _("vista tabla"), 'click' => "fnjs_ver_planning(\"#seleccionados\",1)"],
-    ['txt' => _("vista grid"), 'click' => "fnjs_ver_planning(\"#seleccionados\",3)"],
     ['txt' => _("vista para imprimir"), 'click' => "fnjs_planning_print(\"#seleccionados\")"],
     ['txt' => _("ver actividades"), 'click' => "fnjs_actividades(\"#seleccionados\")"],
 ];

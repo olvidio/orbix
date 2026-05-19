@@ -2,7 +2,7 @@
 
 /**
  * Variables PHP del planning y tokens CSS según el estilo de sesión (azul / verde / naranja).
- * Incluir siempre ANTES de calendario.css.php o calendario_grid.css.php.
+ * Incluir siempre ANTES de calendario.css.php.
  */
 require_once __DIR__ . '/colores_estilo_desde_sesion.php';
 [$estilo_color, $tipo_menu] = css_colores_estilo_desde_sesion();

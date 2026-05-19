@@ -74,15 +74,7 @@ ob_start();
 include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
 $css = ob_get_clean();
 ob_start();
-switch ($Qmodelo) {
-    case 2:
-    case 1:
-        include OrbixRuntime::dirEstilos() . '/calendario.css.php';
-        break;
-    case 3:
-        include OrbixRuntime::dirEstilos() . '/calendario_grid.css.php';
-        break;
-}
+include OrbixRuntime::dirEstilos() . '/calendario.css.php';
 $css .= ob_get_clean();
 
 $oPlanning = new PlanningRenderer();
