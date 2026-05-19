@@ -8,7 +8,10 @@ use src\shared\config\ConfigGlobal;
 use src\shared\infrastructure\persistence\postgresql\Set;
 use PDO;
 use src\actividades\domain\contracts\ActividadAllRepositoryInterface;
+use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
+use src\actividades\domain\contracts\ActividadExRepositoryInterface;
 use src\actividades\domain\contracts\TipoDeActividadRepositoryInterface;
+use src\actividades\domain\entity\ActividadAll;
 use src\actividades\domain\value_objects\StatusId;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\procesos\domain\contracts\ProcesoTipoRepositoryInterface;
@@ -153,32 +156,18 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
      */
     public function generarProceso(string $iid_activ = '', int|string $isfsv = '', bool $force = FALSE)
     {
-        // Si se genera al crear una actividad Ex. El objeto Actividad no la encuentra
-        // porque todavía no se ha importado (y no está en su grupo de actividades).
-        // Para evitar errores accedo directamente a los datos sin esperar a importarla,
-        // En principio la dl que la crea es porque va a importarla...
-        /*
-        if ($iid_activ < 0) {
-            $oActividad = new ActividadEx(array('id_activ' => $iid_activ));
-        } else {
-            $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-            $oActividad = $ActividadAllRepository->findById($iid_activ);
+        $id_activ = (int) $iid_activ;
+        $oActividad = $this->findActividadForProceso($id_activ);
+        if ($oActividad === null) {
+            echo sprintf(_("La actividad: %s ya no existe"), $iid_activ) . "\n";
+            return TRUE;
         }
-        */
-        $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($iid_activ);
         $iid_tipo_activ = $oActividad->getIdTipoActivVo()->value();
         $TipoDeActividadRepository = $GLOBALS['container']->get(TipoDeActividadRepositoryInterface::class);
         $oTipoDeActividad = $TipoDeActividadRepository->findById($iid_tipo_activ);
 
         if (empty($oTipoDeActividad)) {
             echo sprintf(_("No existe este tipo de actividad: %s"), $iid_tipo_activ) . "\n";
-            return TRUE;
-
-        }
-        // Creo que cuando pasa es que no existe la actividad (pero se tiene el id_activ)
-        if (empty($oActividad) || empty($iid_tipo_activ)) {
-            echo sprintf(_("La actividad: %s ya no existe"), $iid_activ) . "\n";
             return TRUE;
         }
         $dl_org = $oActividad->getDl_org();
@@ -233,6 +222,27 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
 
         // devuelve la fase del proceso propio
         return $iid_fase[$isfsv];
+    }
+
+    /**
+     * Busca la actividad en all, dl o ex (p. ej. recién creada en dl y aún no visible en all).
+     */
+    private function findActividadForProceso(int $id_activ): ?ActividadAll
+    {
+        foreach (
+            [
+                ActividadAllRepositoryInterface::class,
+                ActividadDlRepositoryInterface::class,
+                ActividadExRepositoryInterface::class,
+            ] as $repositoryClass
+        ) {
+            $repository = $GLOBALS['container']->get($repositoryClass);
+            $oActividad = $repository->findById($id_activ);
+            if ($oActividad !== null) {
+                return $oActividad;
+            }
+        }
+        return null;
     }
 
     /**
