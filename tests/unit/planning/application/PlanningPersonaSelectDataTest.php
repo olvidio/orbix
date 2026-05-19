@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Tests\unit\planning\application;
 
 use PHPUnit\Framework\TestCase;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\ubis\domain\entity\CentroDl;
 use src\personas\domain\entity\PersonaDl;
 use src\planning\application\PlanningPersonaSelectData;
 
@@ -57,6 +59,44 @@ final class PlanningPersonaSelectDataTest extends TestCase
         $this->assertSame('n', $out[0]['id_tabla']);
         $this->assertSame('Apellido, Nombre', $out[0]['pref_apellidos_nombre']);
         $this->assertSame('Mi centro', $out[0]['centro_o_dl']);
+    }
+
+    public function test_con_centro_usa_repositorio_de_obj_pau(): void
+    {
+        $p = $this->createMock(PersonaDl::class);
+        $p->method('getId_nom')->willReturn(200);
+        $p->method('getId_tabla')->willReturn('n');
+        $p->method('getPrefApellidosNombre')->willReturn('Centro, Persona');
+        $p->method('getCentro_o_dl')->willReturn('Ctr X');
+
+        $centro = $this->createMock(CentroDl::class);
+        $centro->method('getId_ubi')->willReturn(42);
+
+        $repoN = $this->createMock(PersonaNRepositoryInterface::class);
+        $repoN->expects($this->once())
+            ->method('getPersonas')
+            ->with($this->callback(static fn(array $where): bool => ($where['id_ctr'] ?? null) === 42))
+            ->willReturn([$p]);
+
+        $repoDl = $this->createMock(PersonaDlRepositoryInterface::class);
+        $repoDl->expects($this->never())->method('getPersonas');
+
+        $repoCentro = $this->createMock(CentroDlRepositoryInterface::class);
+        $repoCentro->method('getCentros')->willReturn([$centro]);
+
+        $GLOBALS['container'] = $this->containerFromMap([
+            PersonaNRepositoryInterface::class => $repoN,
+            PersonaDlRepositoryInterface::class => $repoDl,
+            CentroDlRepositoryInterface::class => $repoCentro,
+        ]);
+
+        $out = PlanningPersonaSelectData::execute([
+            'obj_pau' => 'PersonaN',
+            'centro' => 'Mi centro',
+        ]);
+
+        $this->assertCount(1, $out);
+        $this->assertSame(200, $out[0]['id_nom']);
     }
 
     public function test_lista_vacia(): void

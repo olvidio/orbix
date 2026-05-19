@@ -7,6 +7,7 @@ namespace Tests\unit\planning\application;
 use PHPUnit\Framework\TestCase;
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
 use src\personas\domain\contracts\PersonaNRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\planning\application\PlanningPersonaRepositoryPicker;
 
 final class PlanningPersonaRepositoryPickerTest extends TestCase
@@ -62,6 +63,19 @@ final class PlanningPersonaRepositoryPickerTest extends TestCase
 
         $picker = new PlanningPersonaRepositoryPicker();
         $this->assertSame($n, $picker->get('PersonaN'));
+    }
+
+    public function test_get_persona_sacd(): void
+    {
+        $dl = $this->createMock(PersonaDlRepositoryInterface::class);
+        $sacd = $this->createMock(PersonaSacdRepositoryInterface::class);
+        $GLOBALS['container'] = $this->containerFromMap([
+            PersonaDlRepositoryInterface::class => $dl,
+            PersonaSacdRepositoryInterface::class => $sacd,
+        ]);
+
+        $picker = new PlanningPersonaRepositoryPicker();
+        $this->assertSame($sacd, $picker->get('PersonaSacd'));
     }
 
     public function test_get_safe_obj_pau_invalido_caen_en_persona_dl(): void

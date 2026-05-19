@@ -3,6 +3,7 @@
 namespace src\planning\application;
 
 use src\personas\domain\contracts\PersonaDlRepositoryInterface;
+use src\personas\domain\contracts\PersonaSacdRepositoryInterface;
 use src\shared\infrastructure\ProvidesRepositories;
 
 /**
@@ -16,6 +17,9 @@ final class PlanningPersonaRepositoryPicker
     {
         if ($obj_pau === '' || $obj_pau === 'PersonaDl') {
             return $GLOBALS['container']->get(PersonaDlRepositoryInterface::class);
+        }
+        if ($obj_pau === 'PersonaSacd') {
+            return $GLOBALS['container']->get(PersonaSacdRepositoryInterface::class);
         }
 
         return $this->getRepository($obj_pau);

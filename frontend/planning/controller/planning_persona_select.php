@@ -23,112 +23,102 @@ require_once("frontend/shared/global_header_front.inc");
 /** @var Posicion $oPosicion */
 $oPosicion->recordar();
 
-$Qid_sel = '';
-$Qscroll_id = '';
-$Qobj_pau = '';
-$Qna = '';
-$Qperiodo = '';
-$Qyear = '';
-$Qempiezamin = '';
-$Qempiezamax = '';
-
-$postPayload = [];
+$Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
+$Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qna = (string)filter_input(INPUT_POST, 'na');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
+$Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
+$Qnombre = (string)filter_input(INPUT_POST, 'nombre');
+$Qcentro = (string)filter_input(INPUT_POST, 'centro');
 
 if (isset($_POST['stack'])) {
     $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    $QsaWhere = '';
-    $QsaOperador = '';
-    $QsaWhereCtr = '';
-    $QsaOperadorCtr = '';
-    $aWhere = [];
-    $aOperador = [];
-    $aWhereCtr = [];
-    $aOperadorCtr = [];
     if ($stack !== 0) {
         $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack((int)$stack)) {
-            $Qobj_pau = (string)$oPosicion2->getParametro('obj_pau');
-            $Qna = (string)$oPosicion2->getParametro('na');
-            $Qperiodo = (string)$oPosicion2->getParametro('periodo');
-            $Qyear = (string)$oPosicion2->getParametro('year');
-            $Qempiezamin = (string)$oPosicion2->getParametro('empiezamin');
-            $Qempiezamax = (string)$oPosicion2->getParametro('empiezamax');
+            $Qobj_pau = (string)($oPosicion2->getParametro('obj_pau') ?: $Qobj_pau);
+            $Qna = (string)($oPosicion2->getParametro('na') ?: $Qna);
+            $Qperiodo = (string)($oPosicion2->getParametro('periodo') ?: $Qperiodo);
+            $Qyear = (string)($oPosicion2->getParametro('year') ?: $Qyear);
+            $Qempiezamin = (string)($oPosicion2->getParametro('empiezamin') ?: $Qempiezamin);
+            $Qempiezamax = (string)($oPosicion2->getParametro('empiezamax') ?: $Qempiezamax);
+            $Qid_sel = (string)($oPosicion2->getParametro('id_sel') ?: $Qid_sel);
+            $Qscroll_id = (string)($oPosicion2->getParametro('scroll_id') ?: $Qscroll_id);
             $QsaWhere = (string)$oPosicion2->getParametro('saWhere');
             $QsaOperador = (string)$oPosicion2->getParametro('saOperador');
             $QsaWhereCtr = (string)$oPosicion2->getParametro('saWhereCtr');
             $QsaOperadorCtr = (string)$oPosicion2->getParametro('saOperadorCtr');
-            $Qid_sel = (string)$oPosicion2->getParametro('id_sel');
-            $Qscroll_id = (string)$oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar((int)$stack);
 
             $aWhere = json_decode(urlsafe_b64decode($QsaWhere), true) ?? [];
             $aOperador = json_decode(urlsafe_b64decode($QsaOperador), true) ?? [];
             $aWhereCtr = json_decode(urlsafe_b64decode($QsaWhereCtr), true) ?? [];
             $aOperadorCtr = json_decode(urlsafe_b64decode($QsaOperadorCtr), true) ?? [];
+            $Qapellido1 = (string)($aWhere['apellido1'] ?? $Qapellido1);
+            if (str_starts_with($Qapellido1, '^')) {
+                $Qapellido1 = substr($Qapellido1, 1);
+            }
+            $Qapellido2 = (string)($aWhere['apellido2'] ?? $Qapellido2);
+            if (str_starts_with($Qapellido2, '^')) {
+                $Qapellido2 = substr($Qapellido2, 1);
+            }
+            $Qnombre = (string)($aWhere['nom'] ?? $Qnombre);
+            if (str_starts_with($Qnombre, '^')) {
+                $Qnombre = substr($Qnombre, 1);
+            }
+            $Qcentro = (string)($aWhereCtr['nombre_ubi'] ?? $Qcentro);
+            if (isset($aWhere['id_tabla']) && str_starts_with((string)$aWhere['id_tabla'], 'p')) {
+                $Qna = substr((string)$aWhere['id_tabla'], 1);
+            }
         }
     }
-    $postPayload = [
-        'stack' => $stack,
-        'obj_pau' => $Qobj_pau,
-        'saWhere' => $QsaWhere ?? '',
-        'saOperador' => $QsaOperador ?? '',
-        'saWhereCtr' => $QsaWhereCtr ?? '',
-        'saOperadorCtr' => $QsaOperadorCtr ?? '',
-    ];
-} else {
-    $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
-    $Qna = (string)filter_input(INPUT_POST, 'na');
-    $Qyear = (string)filter_input(INPUT_POST, 'year');
-    $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-    $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-
-    $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
-    $Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
-    $Qnombre = (string)filter_input(INPUT_POST, 'nombre');
-    $Qcentro = (string)filter_input(INPUT_POST, 'centro');
-
-    $aWhere = [
-        'situacion' => 'A',
-        '_ordre' => 'apellido1,apellido2,nom',
-    ];
-    $aOperador = [];
-    $aWhereCtr = [];
-    $aOperadorCtr = [];
-    if ($Qapellido1 !== '') {
-        $aWhere['apellido1'] = '^' . $Qapellido1;
-        $aOperador['apellido1'] = 'sin_acentos';
-    }
-    if ($Qapellido2 !== '') {
-        $aWhere['apellido2'] = '^' . $Qapellido2;
-        $aOperador['apellido2'] = 'sin_acentos';
-    }
-    if ($Qnombre !== '') {
-        $aWhere['nom'] = '^' . $Qnombre;
-        $aOperador['nom'] = 'sin_acentos';
-    }
-    if ($Qcentro !== '') {
-        $nom_ubi = str_replace('+', '\\+', $Qcentro);
-        $aWhereCtr['nombre_ubi'] = $nom_ubi;
-        $aOperadorCtr['nombre_ubi'] = 'sin_acentos';
-    }
-    if ($Qna !== '') {
-        $aWhere['id_tabla'] = 'p' . $Qna;
-    }
-    $QsaWhere = urlsafe_b64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
-    $QsaOperador = urlsafe_b64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
-    $QsaWhereCtr = urlsafe_b64encode(json_encode($aWhereCtr, JSON_THROW_ON_ERROR));
-    $QsaOperadorCtr = urlsafe_b64encode(json_encode($aOperadorCtr, JSON_THROW_ON_ERROR));
-
-    $postPayload = [
-        'obj_pau' => $Qobj_pau,
-        'na' => $Qna,
-        'apellido1' => $Qapellido1,
-        'apellido2' => $Qapellido2,
-        'nombre' => $Qnombre,
-        'centro' => $Qcentro,
-    ];
 }
+
+$aWhere = [
+    'situacion' => 'A',
+    '_ordre' => 'apellido1,apellido2,nom',
+];
+$aOperador = [];
+$aWhereCtr = [];
+$aOperadorCtr = [];
+if ($Qapellido1 !== '') {
+    $aWhere['apellido1'] = '^' . $Qapellido1;
+    $aOperador['apellido1'] = 'sin_acentos';
+}
+if ($Qapellido2 !== '') {
+    $aWhere['apellido2'] = '^' . $Qapellido2;
+    $aOperador['apellido2'] = 'sin_acentos';
+}
+if ($Qnombre !== '') {
+    $aWhere['nom'] = '^' . $Qnombre;
+    $aOperador['nom'] = 'sin_acentos';
+}
+if ($Qcentro !== '') {
+    $nom_ubi = str_replace('+', '\\+', $Qcentro);
+    $aWhereCtr['nombre_ubi'] = $nom_ubi;
+    $aOperadorCtr['nombre_ubi'] = 'sin_acentos';
+}
+if ($Qna !== '') {
+    $aWhere['id_tabla'] = 'p' . $Qna;
+}
+$QsaWhere = urlsafe_b64encode(json_encode($aWhere, JSON_THROW_ON_ERROR));
+$QsaOperador = urlsafe_b64encode(json_encode($aOperador, JSON_THROW_ON_ERROR));
+$QsaWhereCtr = urlsafe_b64encode(json_encode($aWhereCtr, JSON_THROW_ON_ERROR));
+$QsaOperadorCtr = urlsafe_b64encode(json_encode($aOperadorCtr, JSON_THROW_ON_ERROR));
+
+$postPayload = [
+    'obj_pau' => $Qobj_pau,
+    'na' => $Qna,
+    'apellido1' => $Qapellido1,
+    'apellido2' => $Qapellido2,
+    'nombre' => $Qnombre,
+    'centro' => $Qcentro,
+];
 
 $apiData = PostRequest::getDataFromUrl('/src/planning/planning_persona_select_data', $postPayload);
 $cPersonas = $apiData['personas'] ?? [];
