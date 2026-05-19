@@ -28,44 +28,53 @@ Se define un estilo, para la tabla.
 
 <style>
 
+table {
+    border-collapse: collapse;
+    border: 1px solid var(--planning-border);
+}
+
 .cap {
     font-size: 26pt;
     width: 10cm;
+    background-color: var(--planning-nom-bg);
+    color: var(--planning-cap-text);
+    border: 1px solid var(--planning-nom-border);
 }
 
 .mes {
     font-size: 15pt;
-    border-style: double;
-    border-color: Maroon;
-    border-width: medium;
+    border: 1px solid var(--planning-nom-border);
+    background-color: var(--planning-mes-bg);
+    color: var(--planning-mes-text);
 }
 
 .diumenge, .diumengenum {
-    background-color: #EE5522;
+    background-color: var(--planning-diumenge-bg);
+    color: var(--planning-diumenge-text);
+    font-weight: bold;
 }
 
 .lletra {
     font-size: 9pt;
-    border-style: solid;
-    border-color: Maroon;
-    border-width: 1px;
+    border: 1px solid var(--planning-border-light);
     border-bottom-width: 0px;
 }
 
 .num {
     font-size: 9pt;
-    border-style: solid;
-    border-color: Maroon;
-    border-width: 1px;
+    border: 1px solid var(--planning-border-light);
     border-top-width: 0px;
 }
 
 .nom {
     font-size: 9pt;
     font-weight: bold;
-    border-bottom-width: thin;
-    border-color: Navy;
-    background-color: #CCCCCC;
+    text-align: left;
+    vertical-align: middle;
+    padding: 2px 6px;
+    border: 1px solid var(--planning-nom-border);
+    background-color: var(--planning-nom-bg);
+    color: var(--planning-nom-text);
 }
 
 .actsv {
@@ -131,31 +140,81 @@ Se define un estilo, para la tabla.
     font-size: 8pt;
 }
 
+.diumenge1,
+.diumenge2 {
+    background-color: var(--planning-diumenge-cell-bg);
+}
+
 .diumenge1 {
     border-style: solid;
-    border-width: 0px 0px 1px 1px;
-    border-bottom-color: #BBBBBB;
-    border-left-color: #000000;
+    border-width: 0px 0px 1px 2px;
+    border-bottom-color: var(--planning-border-light);
+    border-left-color: var(--planning-diumenge-bg);
 }
 
 .diumenge2 {
     border-style: solid;
     border-width: 0px 0px 1px 0px;
-    border-color: #BBBBBB;
+    border-color: var(--planning-border-light);
 }
 
 .nada1 {
     border-style: solid;
     border-width: 0px 0px 1px 1px;
-    border-color: #BBBBBB;
+    border-color: var(--planning-border-light);
     font-size: 8pt;
 }
 
 .nada2 {
     border-style: solid;
     border-width: 0px 0px 1px 0px;
-    border-color: #BBBBBB;
+    border-color: var(--planning-border-light);
     font-size: 8pt;
+}
+
+tr.planning-fila-interna > td:not(.nom) {
+    border-bottom-width: 1px;
+    border-bottom-style: dotted;
+    border-bottom-color: var(--planning-border-fila-interna);
+}
+
+tbody.planning-persona > tr:first-child > td.nom,
+tr.planning-fila-persona-fin > td {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--planning-persona-separator);
+}
+
+#exportar table tbody.planning-persona > tr:first-child > td.nom {
+    border-bottom: 1px solid var(--planning-persona-separator);
+}
+
+/* Anula estilos globales de la app (todo_en_uno) dentro del planning */
+#exportar table th {
+    background-color: var(--planning-th-bg);
+    color: var(--planning-th-text);
+}
+
+#exportar table th.cap,
+#exportar table td.nom {
+    background-color: var(--planning-nom-bg);
+    color: var(--planning-nom-text);
+    border-color: var(--planning-nom-border);
+}
+
+#exportar table th.cap {
+    color: var(--planning-cap-text);
+}
+
+#exportar table th.diumenge,
+#exportar table th.diumengenum {
+    background-color: var(--planning-diumenge-bg);
+    color: var(--planning-diumenge-text);
+}
+
+#exportar table th.mes {
+    background-color: var(--planning-mes-bg);
+    color: var(--planning-mes-text);
 }
 
 A.link {

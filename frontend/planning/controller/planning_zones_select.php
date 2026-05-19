@@ -50,6 +50,7 @@ $oFinPlanning = \DateTimeImmutable::createFromFormat('Y-m-d', $isoFin) ?: new \D
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
+include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
 switch ($Qmodelo) {
     case 2:
     case 1:
@@ -60,11 +61,11 @@ switch ($Qmodelo) {
         include_once('frontend/shared/web/calendario_grid.php');
         break;
 }
-include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($colorColumnaUno);
 $oPlanning->setColorColumnaDos($colorColumnaDos);
+$oPlanning->setColorColumnaDomingo($colorColumnaDomingo);
 $oPlanning->setTable_border($table_border);
 $oPlanning->setDd(3);
 $oPlanning->setInicio($oIniPlanning);

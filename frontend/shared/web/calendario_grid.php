@@ -21,7 +21,7 @@ use frontend\shared\domain\value_objects\DateTimeLocal;
  */
 function dibujar_calendario(int $dd, string $cabecera, string $oInicio, string $oFin, array $actividades, int $mod, int $nueva, int $doble = 1)
 {
-    global $colorColumnaUno, $colorColumnaDos, $table_border;
+    global $colorColumnaUno, $colorColumnaDos, $colorColumnaDomingo, $table_border;
     $bgcolor = $colorColumnaUno;
     $semana = [_("D"), _("L"), _("M"), _("X"), _("J"), _("V"), _("S")];
     $mes = [_("enero"), _("febrero"), _("marzo"), _("abril"), _("mayo"), _("junio"), _("julio"),
@@ -405,10 +405,13 @@ function dibujar_calendario(int $dd, string $cabecera, string $oInicio, string $
                             $p = 2;
                         }
                         $w = date("w", mktime(0, 0, 0, $mini_0, $dini_0 + $dia, $aini_0));
-                        $diumenge = ($w == 1) ? "diumenge" . $p : "nada" . $p;
+                        $diumenge = ($w == 0) ? "diumenge" . $p : "nada" . $p;
 
                         $bgcolor = $colorColumnaUno;
                         (($d - 1) / $dd) % 2 ? 0 : $bgcolor = $colorColumnaDos;
+                        if ($w == 0 && !empty($colorColumnaDomingo)) {
+                            $bgcolor = $colorColumnaDomingo;
+                        }
                         switch ($reserva) {
                             case "sf":
                                 $bgcolor = "FFCCCC";

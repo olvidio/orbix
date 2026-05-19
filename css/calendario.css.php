@@ -20,39 +20,40 @@ Se define un estilo, para la tabla.
 -->
 <style>
 	table  {
-     	border : solid;
-     	border-color : red;
+     	border-collapse : collapse;
+     	border : 1px solid var(--planning-border);
     }
 
     th.cap  {
      	font-size : 26pt;
      	width : 10cm;
+     	background-color : var(--planning-nom-bg);
+     	color : var(--planning-cap-text);
+     	border : 1px solid var(--planning-nom-border);
     }
 
     th.mes  {
      	font-size : 15pt;
-     	border-style : double;
-     	border-color : Maroon;
-     	border-width : medium;
+     	border : 1px solid var(--planning-nom-border);
+     	background-color : var(--planning-mes-bg);
+     	color : var(--planning-mes-text);
     }
 
  	th.diumenge, th.diumengenum  {
-     	background-color: #EE5522;
+     	background-color: var(--planning-diumenge-bg);
+     	color: var(--planning-diumenge-text);
+     	font-weight: bold;
     }
 
     th.lletra  {
      	font-size: 9pt;
-     	border-style: solid;
-     	border-color: Maroon;
-     	border-width: 1px;
+     	border: 1px solid var(--planning-border-light);
      	border-bottom-width: 0px;
     }
 
     th.num  {
      	font-size : 9pt;
-     	border-style : solid;
-     	border-color : Maroon;
-     	border-width : 1px;
+     	border: 1px solid var(--planning-border-light);
      	border-top-width : 0px;
     }
 
@@ -66,15 +67,18 @@ Se define un estilo, para la tabla.
      	text-decoration : none;
      	color : black;
      	font-family : arial, helvetica, sans-serif;
-     	border : solid;
+     	border : 1px solid var(--planning-border-light);
 	}
 
     td.nom  {
      	font-size : 9pt;
      	font-weight : bold;
-     	border-bottom-width : thin;
-     	border-color : Navy;
-     	background-color : #CCCCCC;
+     	text-align : left;
+     	vertical-align : middle;
+     	padding : 2px 6px;
+     	border : 1px solid var(--planning-nom-border);
+     	background-color : var(--planning-nom-bg);
+     	color : var(--planning-nom-text);
     }
 
     td.provisional  {
@@ -155,31 +159,82 @@ td.proyectof  {
 		background-color : #33FF99;
     }
 
+ 	td.diumenge1,
+	td.diumenge2 {
+     	background-color: var(--planning-diumenge-cell-bg);
+    }
+
  	td.diumenge1 {
 	    border-style: solid;
-		border-width: 0px 0px 1px 1px;
-		border-bottom-color: #BBBBBB;
-		border-left-color: #000000;
+		border-width: 0px 0px 1px 2px;
+		border-bottom-color: var(--planning-border-light);
+		border-left-color: var(--planning-diumenge-bg);
     }
 
 	td.diumenge2 {
 	    border-style: solid;
 		border-width: 0px 0px 1px 0px;
-		border-color: #BBBBBB;
+		border-color: var(--planning-border-light);
     }
 
     td.nada1  {
 	    border-style: solid;
 		border-width: 0px 0px 1px 1px;
-		border-color: #BBBBBB;
+		border-color: var(--planning-border-light);
      	font-size : 8pt;
     }
 
     td.nada2  {
 	    border-style: solid;
 		border-width: 0px 0px 1px 0px;
-		border-color: #BBBBBB;
+		border-color: var(--planning-border-light);
      	font-size : 8pt;
+    }
+
+    /* Misma persona: separador fino en el grid; entre personas: linea suave (incl. columna nom) */
+    tr.planning-fila-interna > td:not(.nom) {
+     	border-bottom-width: 1px;
+     	border-bottom-style: dotted;
+     	border-bottom-color: var(--planning-border-fila-interna);
+    }
+
+    tbody.planning-persona > tr:first-child > td.nom,
+    tr.planning-fila-persona-fin > td {
+     	border-bottom-width: 1px;
+     	border-bottom-style: solid;
+     	border-bottom-color: var(--planning-persona-separator);
+    }
+
+    #exportar table tbody.planning-persona > tr:first-child > td.nom {
+     	border-bottom: 1px solid var(--planning-persona-separator);
+    }
+
+    /* Anula estilos globales de la app (todo_en_uno) dentro del planning */
+    #exportar table th {
+     	background-color: var(--planning-th-bg);
+     	color: var(--planning-th-text);
+    }
+
+    #exportar table th.cap,
+    #exportar table td.nom {
+     	background-color: var(--planning-nom-bg);
+     	color: var(--planning-nom-text);
+     	border-color: var(--planning-nom-border);
+    }
+
+    #exportar table th.cap {
+     	color: var(--planning-cap-text);
+    }
+
+    #exportar table th.diumenge,
+    #exportar table th.diumengenum {
+     	background-color: var(--planning-diumenge-bg);
+     	color: var(--planning-diumenge-text);
+    }
+
+    #exportar table th.mes {
+     	background-color: var(--planning-mes-bg);
+     	color: var(--planning-mes-text);
     }
 
     A.link  {
@@ -231,20 +286,28 @@ td.proyectof  {
 		height:30pt;
     }
 
-    th.diumenge  {
+    th.diumenge,
+    th.diumengenum  {
 		border-width: 1pt;
-		border-bottom-width: 0;
 		border-collapse: collapse;
      	border-style : solid;
 		font-size : 7pt;
+     	background-color: var(--planning-diumenge-bg);
+     	color: var(--planning-diumenge-text);
+     	font-weight: bold;
+    }
+
+    th.diumenge  {
+		border-bottom-width: 0;
     }
 
     th.diumengenum  {
-		border-width: 1pt;
 		border-top-width: 0;
-		border-collapse: collapse;
-     	border-style: solid;
-		font-size : 7pt;
+    }
+
+    td.diumenge1,
+    td.diumenge2 {
+     	background-color: var(--planning-diumenge-cell-bg);
     }
 
     th.lletra  {
@@ -263,13 +326,16 @@ td.proyectof  {
      	height : 12pt;
     }
 
-    td.nom  {
+    td.nom,
+    th.cap  {
      	font-size : 8pt;
-     	border-bottom-width : 1pt;
-     	border-top-width : 1pt;
-		border-right-width : 0;
-		border-left-width : 0;
-		border-style : solid;
+     	background-color : var(--planning-nom-bg);
+     	color : var(--planning-nom-text);
+     	border : 1pt solid var(--planning-nom-border);
+    }
+
+    th.cap  {
+     	color : var(--planning-cap-text);
     }
 
     td.actsv  {
@@ -303,22 +369,22 @@ td.proyectof  {
 	td.diumenge1 {
 	    border-style: solid;
 		border-width: 0 0 1pt 1pt;
-		border-bottom-color: #BBBBBB;
-		border-left-color: #000000;
+		border-bottom-color: var(--planning-border-light);
+		border-left-color: var(--planning-border-light);
 	}
 
 	td.diumenge2 {
 	    border-style: solid;
 		border-width: 0 0 1pt 0;
-		border-color: #BBBBBB;
+		border-color: var(--planning-border-light);
 	}
 
     td.nada1  {
 	    border-style: solid;
 		border-width: 0 0 1pt 1pt;
-		border-bottom-color: #BBBBBB;
+		border-bottom-color: var(--planning-border-light);
 		border-left-style: dotted;
-		border-left-color: #BBBBBB;
+		border-left-color: var(--planning-border-light);
      	font-size : 8pt;
     }
 

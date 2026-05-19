@@ -77,6 +77,7 @@ $aGoBack = [
 ];
 $oPosicion->setParametros($aGoBack, 1);
 
+include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
 switch ($Qmodelo) {
     case 2:
     case 1:
@@ -87,11 +88,11 @@ switch ($Qmodelo) {
         include_once('frontend/shared/web/calendario_grid.php');
         break;
 }
-include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($colorColumnaUno);
 $oPlanning->setColorColumnaDos($colorColumnaDos);
+$oPlanning->setColorColumnaDomingo($colorColumnaDomingo);
 $oPlanning->setTable_border($table_border);
 $oPlanning->setDd($Qdd);
 $oPlanning->setInicio($oIniPlanning);

@@ -31,6 +31,7 @@ class PlanningRenderer
 {
     private $scolorColumnaUno;
     private $scolorColumnaDos;
+    private $scolorColumnaDomingo;
     private $stable_border;
 
     private $idd;
@@ -331,23 +332,19 @@ class PlanningRenderer
                 if ($max_filas == 0) {
                     $max_filas = 1;
                 }
-                $html .= "<tbody>";
-                if (!empty($this->inueva)) {
-                    if (empty($id_pau)) {
-                        $html .= "<tr class=\"delgada\"><td rowspan=$max_filas class=\"delgada\" title=\"$txt_aviso\">$persona</td>";
-                    } else {
-                        $html .= "<tr><td rowspan=$max_filas class=\"nom link\" onclick=\"fnjs_nueva_activ('$id_pau')\" title=\"$txt_nueva\">$persona</td>";
-                    }
-                } else {
-                    if (empty($id_pau)) {
-                        $html .= "<tr class=\"delgada\"><td rowspan=$max_filas class=\"delgada\" title=\"$txt_aviso\">$persona</td>";
-                    } else {
-                        $html .= "<tr><td rowspan=$max_filas class=\"nom\">$persona</td>";
-                    }
-                }
+                $html .= '<tbody class="planning-persona">';
                 for ($f = 0; $f < $max_filas; $f++) {
-                    if ($f > 0) {
-                        $html .= "<tr>";
+                    $claseFila = $this->claseFilaPlanning($f, $max_filas, empty($id_pau));
+                    if ($f === 0) {
+                        if (!empty($this->inueva) && !empty($id_pau)) {
+                            $html .= "<tr class=\"$claseFila\"><td rowspan=$max_filas class=\"nom link\" onclick=\"fnjs_nueva_activ('$id_pau')\" title=\"$txt_nueva\">$persona</td>";
+                        } elseif (empty($id_pau)) {
+                            $html .= "<tr class=\"$claseFila\"><td rowspan=$max_filas class=\"delgada\" title=\"$txt_aviso\">$persona</td>";
+                        } else {
+                            $html .= "<tr class=\"$claseFila\"><td rowspan=$max_filas class=\"nom\">$persona</td>";
+                        }
+                    } else {
+                        $html .= "<tr class=\"$claseFila\">";
                     }
                     for ($d = 1; $d < $total_dias + 1; $d++) {
                         $texto = "";
@@ -387,12 +384,15 @@ class PlanningRenderer
                                 $p = 2;
                             }
                             $w = \date("w", mktime(0, 0, 0, $mini_0, (int)$dini_0 + (int)$dia, $aini_0));
-                            if ($w == 1) {
+                            if ($w == 0) {
                                 $diumenge = "diumenge" . $p;
                             } else {
                                 $diumenge = "nada" . $p;
                             }
                             $bgcolor = (int)(($d - 1) / $this->idd) % 2 ? $this->scolorColumnaUno : $this->scolorColumnaDos;
+                            if ($w == 0 && !empty($this->scolorColumnaDomingo)) {
+                                $bgcolor = $this->scolorColumnaDomingo;
+                            }
                             switch ($reserva) {
                                 case "sf":
                                     $bgcolor = "#FFCCCC";
@@ -418,11 +418,26 @@ class PlanningRenderer
                     }
                     $html .= "</tr>";
                 }
+                $html .= '</tbody>';
             }
         }
-        $html .= "</tbody></table></div>";
+        $html .= '</table></div>';
 
         return $html;
+    }
+
+    /**
+     * Clase CSS de la fila: separador fino entre filas de la misma persona,
+     * borde mas marcado al final de cada persona.
+     */
+    private function claseFilaPlanning(int $fila, int $maxFilas, bool $esDelgada): string
+    {
+        $clases = [($fila < $maxFilas - 1) ? 'planning-fila-interna' : 'planning-fila-persona-fin'];
+        if ($esDelgada) {
+            array_unshift($clases, 'delgada');
+        }
+
+        return implode(' ', $clases);
     }
 
     /**
@@ -501,6 +516,17 @@ class PlanningRenderer
     public function setColorColumnaDos(string $scolorColumnaDos): self
     {
         $this->scolorColumnaDos = $scolorColumnaDos;
+        return $this;
+    }
+
+    public function getColorColumnaDomingo()
+    {
+        return $this->scolorColumnaDomingo;
+    }
+
+    public function setColorColumnaDomingo(string $scolorColumnaDomingo): self
+    {
+        $this->scolorColumnaDomingo = $scolorColumnaDomingo;
         return $this;
     }
 

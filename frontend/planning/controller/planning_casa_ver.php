@@ -70,21 +70,25 @@ $casa_periodos_por_ubi = $d['casa_periodos_por_ubi'] ?? [];
 
 $goLeyenda = HashFront::link(AppUrlConfig::getPublicAppBaseUrl() . '/frontend/planning/controller/leyenda.php?' . http_build_query(['id_item' => 1]));
 
-$css = '';
+ob_start();
+include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
+$css = ob_get_clean();
+ob_start();
 switch ($Qmodelo) {
     case 2:
     case 1:
-        $css = file_get_contents(OrbixRuntime::dirEstilos() . '/calendario.css.php');
+        include OrbixRuntime::dirEstilos() . '/calendario.css.php';
         break;
     case 3:
-        $css = file_get_contents(OrbixRuntime::dirEstilos() . '/calendario_grid.css.php');
+        include OrbixRuntime::dirEstilos() . '/calendario_grid.css.php';
         break;
 }
-include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
+$css .= ob_get_clean();
 
 $oPlanning = new PlanningRenderer();
 $oPlanning->setColorColumnaUno($colorColumnaUno);
 $oPlanning->setColorColumnaDos($colorColumnaDos);
+$oPlanning->setColorColumnaDomingo($colorColumnaDomingo);
 $oPlanning->setTable_border($table_border);
 $oPlanning->setDd($Qdd);
 $oPlanning->setCabecera($cabecera);

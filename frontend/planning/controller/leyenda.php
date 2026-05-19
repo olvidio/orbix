@@ -15,6 +15,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
+include_once(OrbixRuntime::dirEstilos() . '/calendario_color_cols.css.php');
 include_once(OrbixRuntime::dirEstilos() . '/calendario.css.php');
 
 $oView = new ViewNewPhtml('frontend\\planning\\controller');
