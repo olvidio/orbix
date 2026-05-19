@@ -222,12 +222,12 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             if ($force === FALSE) {
                 $cActividadProcesoTarea = $this->getActividadProcesoTareas(['id_activ' => $iid_activ]);
                 if (empty($cActividadProcesoTarea)) {
-                    $iid_fase[$sfsv] = $this->generar($iid_activ, $id_tipo_proceso, $sfsv, $force);
+                    $iid_fase[$sfsv] = $this->generar($iid_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
                 } else {
                     $iid_fase[$sfsv] = $cActividadProcesoTarea[0]->getIdFaseVo()->value();
                 }
             } else {
-                $iid_fase[$sfsv] = $this->generar($iid_activ, $id_tipo_proceso, $sfsv, $force);
+                $iid_fase[$sfsv] = $this->generar($iid_activ, $id_tipo_proceso, $sfsv, $force, $oActividad);
             }
         }
 
@@ -353,8 +353,13 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
      * @param integer iid_tipo_proceso
      * @return int id_fase.
      */
-    private function generar($iid_activ = '', $iid_tipo_proceso = '', $isfsv = '', $force = FALSE)
-    {
+    private function generar(
+        $iid_activ = '',
+        $iid_tipo_proceso = '',
+        $isfsv = '',
+        $force = FALSE,
+        ?ActividadAll $oActividad = null,
+    ) {
         $this->borrar($iid_activ);
 
         // ordena por fases previas, no importa la fase: simplemente las vacias primero
@@ -375,17 +380,22 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
         // Vamos a establecer la fecha de hoy como criterio para distinguir entre
         // actividades anteriores y posteriores.
         $ActividadAllRepository = $GLOBALS['container']->get(ActividadAllRepositoryInterface::class);
-        $oActividad = $ActividadAllRepository->findById($iid_activ);
+        if ($oActividad === null) {
+            $oActividad = $this->findActividadForProceso((int) $iid_activ);
+        }
+        if ($oActividad === null) {
+            $this->registrarAvisoGenerarProceso(sprintf(_("La actividad: %s ya no existe"), $iid_activ));
+            return FALSE;
+        }
         $nom_activ = $oActividad->getNom_activ();
         $statusActividad = $oActividad->getStatusVo()->value();
 
         // Si es borrable, hay que ver que hacemos: de momento nada.
         if ($statusActividad === StatusId::BORRABLE) {
             $nom_activ = empty($nom_activ) ? $iid_activ : $nom_activ;
-            $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Está para borrar."), $nom_activ);
-            $msg .= "\n";
-            $msg .= "<br>";
-            echo $msg;
+            $this->registrarAvisoGenerarProceso(
+                sprintf(_("error al generar el proceso de la actividad: '%s'. Está para borrar."), $nom_activ)
+            );
             return FALSE;
         }
         // Si es anterior a hoy, mantengo el status de la actividad.
@@ -412,8 +422,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                 $oActividadProcesoTarea->setIdTareaVo($id_tarea);
                 $oActividadProcesoTarea->setCompletado($completado);
                 if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
-                    echo "1.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
-                    //return false;
+                    $this->registrarAvisoGenerarProceso(
+                        "1.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
+                    );
                 }
             }
         } else {
@@ -442,8 +453,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                         $statusNew = $statusFase;
                     }
                     if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
-                        echo "2.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
-                        //return false;
+                        $this->registrarAvisoGenerarProceso(
+                            "2.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
+                        );
                     }
                 }
                 // cambiar el status de la actividad para que se ajuste al de la fase.
@@ -471,8 +483,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                     $oActividadProcesoTarea->setIdFaseVo($id_fase);
                     $oActividadProcesoTarea->setIdTareaVo($id_tarea);
                     if ($ActividadProcesoTareaRepository->Guardar($oActividadProcesoTarea) === false) {
-                        echo "3.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
-                        //return false;
+                        $this->registrarAvisoGenerarProceso(
+                            "3.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
+                        );
                     }
                 }
                 $aWhere = [
@@ -503,8 +516,9 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
                     if (is_true($completado)) {
                         $oActividadProcesoTarea->setCompletado($completado);
                         if ($this->Guardar($oActividadProcesoTarea) === false) {
-                            echo "4.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";
-                            //return false;
+                            $this->registrarAvisoGenerarProceso(
+                                "4.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea"
+                            );
                         }
                     }
                 }
@@ -520,11 +534,8 @@ class PgActividadProcesoTareaRepository extends ClaseRepository implements Activ
             $nom_activ = empty($nom_activ) ? $iid_activ : $nom_activ;
 
             $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Tipo de proceso: '%s' para sf/sv: %s."), $nom_activ, $nom_proceso, $isfsv);
-            $msg .= "\n";
-            $msg .= _("Probablemente no esté definido el proceso");
-            $msg .= "\n";
-            $msg .= "<br>";
-            echo $msg;
+            $msg .= ' ' . _("Probablemente no esté definido el proceso");
+            $this->registrarAvisoGenerarProceso($msg);
         }
         return true;
     }

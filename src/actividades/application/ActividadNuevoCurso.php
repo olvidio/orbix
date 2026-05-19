@@ -12,6 +12,8 @@ use src\actividades\domain\value_objects\StatusId;
 use src\actividadescentro\domain\contracts\CentroEncargadoRepositoryInterface;
 use src\procesos\domain\contracts\ActividadProcesoTareaRepositoryInterface;
 use src\shared\domain\value_objects\DateTimeLocal;
+use src\shared\domain\value_objects\NullTimeLocal;
+use src\shared\domain\value_objects\TimeLocal;
 
 /**
  * Description of actividadlugar
@@ -98,19 +100,15 @@ class ActividadNuevoCurso
                 // cambio de ubi
                 continue; //salto al siguiente.
             }
-            $oF_fin = $cActividades[$i]->getF_fin();
-            $h_fin = $cActividades[$i]->getH_fin();
-            if (empty($h_fin))
-                $h_fin = '10:00:00';
-            list($h, $m, $s) = explode(':', $h_fin);
-            $oF_fin->setTime($h, $m, $s);
+            $oF_fin = clone $cActividades[$i]->getF_fin();
+            $h_fin = $this->horaComoTexto($cActividades[$i]->getH_fin(), '10:00:00');
+            [$h, $m, $s] = array_pad(explode(':', $h_fin), 3, '0');
+            $oF_fin->setTime((int) $h, (int) $m, (int) $s);
 
-            $oF_ini = $cActividades[$i + 1]->getF_ini();
-            $h_ini = $cActividades[$i + 1]->getH_ini();
-            if (empty($h_ini))
-                $h_ini = '20:00:00';
-            list($h, $m, $s) = explode(':', $h_ini);
-            $oF_ini->setTime($h, $m, $s);
+            $oF_ini = clone $cActividades[$i + 1]->getF_ini();
+            $h_ini = $this->horaComoTexto($cActividades[$i + 1]->getH_ini(), '20:00:00');
+            [$h, $m, $s] = array_pad(explode(':', $h_ini), 3, '0');
+            $oF_ini->setTime((int) $h, (int) $m, (int) $s);
 
             $dif = $oF_fin->diff($oF_ini);
             //echo $dif->format('%R%a %H');
@@ -124,6 +122,15 @@ class ActividadNuevoCurso
             }
         }
         return $txt;
+    }
+
+    private function horaComoTexto(TimeLocal|NullTimeLocal|null $hora, string $porDefecto): string
+    {
+        if ($hora === null || $hora instanceof NullTimeLocal) {
+            return $porDefecto;
+        }
+        $txt = $hora->toDatabaseString();
+        return $txt === '' ? $porDefecto : $txt;
     }
 
     /**
