@@ -77,6 +77,17 @@ function cambiar_idioma($idioma = '')
 }
 
 /**
+ * Indica al cliente AJAX que debe recargar la aplicación (login completo).
+ */
+function orbix_marcar_respuesta_ajax_sin_sesion(): void
+{
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+        && strtolower((string) $_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        header('X-Orbix-Auth-Required: 1');
+    }
+}
+
+/**
  * Renderiza el formulario de login con los campos indicados.
  */
 function render_login_form($username, $ubicacion, $idioma, $esquema, $error, $esquema_web = ''): void
@@ -111,6 +122,7 @@ if (!empty($esquema_web)) {
 }
 
 if (!isset($_SESSION['session_auth'])) {
+    orbix_marcar_respuesta_ajax_sin_sesion();
     $idioma = '';
 
     if (isset($_POST['username']) && isset($_POST['password'])) {

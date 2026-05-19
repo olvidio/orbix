@@ -264,6 +264,37 @@ if (!isset($h)) {
         top.location.href = path + 'index.php?' + parametros;
     }
 
+    function fnjs_redirect_a_login() {
+        var path = window.location.pathname;
+
+        if (path.endsWith('/index.php')) {
+            top.location.href = path;
+            return;
+        }
+
+        if (!path.endsWith('/')) {
+            path += '/';
+        }
+
+        top.location.href = path + 'index.php';
+    }
+
+    function fnjs_es_resposta_login(html) {
+        if (!html) {
+            return false;
+        }
+        return /id=["']frm_login["']/.test(html) || /form-signin/.test(html);
+    }
+
+    function fnjs_resposta_requiere_login(respuesta, html) {
+        if (typeof respuesta === 'object' && respuesta && typeof respuesta.getResponseHeader === 'function') {
+            if (respuesta.getResponseHeader('X-Orbix-Auth-Required')) {
+                return true;
+            }
+        }
+        return fnjs_es_resposta_login(html);
+    }
+
     function fnjs_windowopen(url) { //para poder hacerlo por el menu
         var parametros = '';
         window.open(url + '?' + parametros);
@@ -585,6 +616,10 @@ if (!isset($h)) {
             case 'string':
                 myText = respuesta.trim();
                 break;
+        }
+        if (fnjs_resposta_requiere_login(respuesta, myText)) {
+            fnjs_redirect_a_login();
+            return;
         }
         $(bloque).empty().append(myText);
         fnjs_cambiar_link(bloque);
