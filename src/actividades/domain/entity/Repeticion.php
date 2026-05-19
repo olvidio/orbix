@@ -161,6 +161,13 @@ class Repeticion
         return $this->tipo?->value();
     }
 
+    /**
+     * @deprecated usar getTipoRepeticion()
+     */
+    public function getTipo(): ?int
+    {
+        return $this->getTipoRepeticion();
+    }
 
     /**
      * @deprecated usar setTipoRepeticionVo(?RepeticionTipo $tipo)
@@ -168,6 +175,14 @@ class Repeticion
     public function setTipoRepeticion(?int $tipo = null): void
     {
         $this->tipo = $tipo === null ? null : new RepeticionTipo($tipo);
+    }
+
+    /**
+     * @deprecated usar setTipoRepeticion()
+     */
+    public function setTipo(?int $tipo = null): void
+    {
+        $this->setTipoRepeticion($tipo);
     }
 
     public function getTipoRepeticionVo(): ?RepeticionTipo

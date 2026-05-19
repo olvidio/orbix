@@ -57,7 +57,7 @@ class ActividadNuevoCurso
             $this->aRepeticion = [];
             foreach ($cRepeticiones as $oRepeticion) {
                 $id_repeticion = $oRepeticion->getId_repeticion();
-                $TipoRepeticion = $oRepeticion->getTipo();
+                $TipoRepeticion = $oRepeticion->getTipoRepeticion();
                 $this->aRepeticion[$id_repeticion] = $TipoRepeticion;
             }
         }
