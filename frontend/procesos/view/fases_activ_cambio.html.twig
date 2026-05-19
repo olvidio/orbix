@@ -31,6 +31,12 @@ fnjs_cambiar=function(formulario){
 				fnjs_mostra_resposta(json.mensaje,'#main');
 			}
 			fnjs_lista();
+		})
+		.fail(function (jqXHR) {
+			var txt = jqXHR.responseText || jqXHR.statusText || '';
+			if (txt) {
+				fnjs_mostra_resposta(txt, '#main');
+			}
 		});
 	}
 }

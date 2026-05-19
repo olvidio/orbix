@@ -23,6 +23,11 @@ class ActividadProcesoUpdate
         $oFicha->setCompletado(is_true($Qcompletado));
         $oFicha->setObserv($Qobserv);
         if ($ProcesoActividadService->guardar($oFicha) === false) {
+            $err = $ProcesoActividadService->getErrorTxt();
+            if ($err !== '') {
+                return $err;
+            }
+
             return _("hay un error, no se ha guardado") . "\n" . $ActividadProcesoTareaRepository->getErrorTxt();
         }
 

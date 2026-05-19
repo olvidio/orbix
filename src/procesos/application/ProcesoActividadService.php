@@ -32,6 +32,7 @@ class ProcesoActividadService
     private array $aOpcionesOficinas = [];
     private array $aStack = [];
     private bool $bForce = false;
+    private string $errorTxt = '';
 
     public function __construct(
         private ActividadProcesoTareaRepositoryInterface $actividadProcesoTareaRepository,
@@ -41,10 +42,31 @@ class ProcesoActividadService
     ) {
     }
 
+    public function getErrorTxt(): string
+    {
+        return $this->errorTxt;
+    }
+
+    private function abort(string $msg): void
+    {
+        $this->errorTxt = $msg;
+        throw new \RuntimeException($msg);
+    }
+
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
     public function guardar(ActividadProcesoTarea $ActividadProcesoTarea): bool
+    {
+        $this->errorTxt = '';
+        try {
+            return $this->doGuardar($ActividadProcesoTarea);
+        } catch (\RuntimeException) {
+            return false;
+        }
+    }
+
+    private function doGuardar(ActividadProcesoTarea $ActividadProcesoTarea): bool
     {
         $id_tipo_proceso = $ActividadProcesoTarea->getIdTipoProcesoVo()->value();
         $id_activ = $ActividadProcesoTarea->getId_activ();
@@ -64,14 +86,13 @@ class ProcesoActividadService
             $oTareaProceso = $cTareasProceso[0];
         } else {
             $msg_err = sprintf(_("error: La fase del proceso tipo: %s, fase: %s, tarea: %s"), $id_tipo_proceso, $id_fase, $id_tarea);
-            exit($msg_err);
+            $this->abort($msg_err);
         }
         $fase_tarea = $id_fase . '#' . $id_tarea;
         // comprobar que tengo permiso
         if (!$this->tiene_permiso($id_tipo_proceso, $fase_tarea)) {
             // No se puede marcar por alguna razón.
-            echo _("No tiene permiso para marcar o desmarcar esta fase");
-            exit();
+            $this->abort(_("No tiene permiso para marcar o desmarcar esta fase"));
         }
         $this->cargarFases($id_activ, $id_tipo_proceso);
         if (is_true($completado)) {
@@ -143,8 +164,7 @@ class ProcesoActividadService
         $rta = $this->comprobar_dependientes($id_activ, $id_tipo_proceso, $fase_tarea);
         if ($rta['marcada'] === false) {
             // No se puede marcar por alguna razón.
-            echo $rta['mensaje'];
-            exit();
+            $this->abort($rta['mensaje']);
         }
 
         $id_fase = strtok($fase_tarea, '#');
@@ -172,8 +192,7 @@ class ProcesoActividadService
         // Cuando un proceso está mal y se da el caso de referencias circulares en las dependencias,
         // se emplea una variable global para poder detectar cuando se está intentando marcar una fase por segunda vez.
         if (in_array($fase_tarea, $this->aStack)) {
-            $msg = _("Hay un error en el diseño del proceso: referencias circulares.");
-            exit($msg);
+            $this->abort(_("Hay un error en el diseño del proceso: referencias circulares."));
         }
         $this->aStack[] = $fase_tarea;
         // comprobar si hay dependencias insatisfechas
@@ -181,8 +200,7 @@ class ProcesoActividadService
         $rta = $this->comprobar_dependencia($id_activ, $id_tipo_proceso, $fase_tarea);
         if ($rta['marcada'] === false) {
             // No se puede marcar por alguna razón.
-            echo $rta['mensaje'];
-            exit();
+            $this->abort($rta['mensaje']);
         }
 
         $id_fase = strtok($fase_tarea, '#');
@@ -283,7 +301,7 @@ class ProcesoActividadService
         if (empty($cTareaProceso)) {
             // la fase de la que depende no está en el proceso
             $msg = sprintf(_("Proceso mal diseñado. La fase %s, con tarea %s no está en el proceso"), $id_fase, $id_tarea);
-            exit($msg);
+            $this->abort($msg);
         }
         $oTareaProceso = $cTareaProceso[0];
         $of_responsable_txt = $oTareaProceso->getOf_responsable_txt();

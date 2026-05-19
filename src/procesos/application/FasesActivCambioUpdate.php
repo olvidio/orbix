@@ -62,8 +62,14 @@ class FasesActivCambioUpdate
                 }
                 $ProcesoActividadService = $GLOBALS['container']->get(ProcesoActividadService::class);
                 if ($ProcesoActividadService->guardar($oActividadProcesoTarea) === false) {
-                    $txtOut .= _("hay un error, no se ha guardado");
-                    $txtOut .= "\n" . $ActividadProcesoTareaRepository->getErrorTxt();
+                    $err = $ProcesoActividadService->getErrorTxt();
+                    if ($err !== '') {
+                        $txtOut .= $err;
+                    } else {
+                        $txtOut .= _("hay un error, no se ha guardado");
+                        $txtOut .= "\n" . $ActividadProcesoTareaRepository->getErrorTxt();
+                    }
+                    $txtOut .= '<br>';
                 }
             } else {
                 $txtOut .= _("No tiene permiso para completar la fase, no se ha guardado");
