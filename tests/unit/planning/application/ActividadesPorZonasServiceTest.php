@@ -175,6 +175,34 @@ final class ActividadesPorZonasServiceTest extends TestCase
         $this->assertSame('2030-01-31', $out['oFinPlanning']->format('Y-m-d'));
     }
 
+    public function test_sacd_inexistente_en_personas_se_omite(): void
+    {
+        $oZona = $this->zona('Z');
+
+        $zonaRepo = $this->createMock(ZonaRepositoryInterface::class);
+        $zonaRepo->method('findById')->willReturn($oZona);
+
+        $zonaSacd = new class {
+            public function getId_nom(): int { return 9999; }
+            public function getId_zona(): int { return 99; }
+        };
+        $zonaSacdRepo = $this->createMock(ZonaSacdRepositoryInterface::class);
+        $zonaSacdRepo->method('getZonasSacds')->willReturn([$zonaSacd]);
+
+        $sacdRepo = $this->createMock(PersonaSacdRepositoryInterface::class);
+        $sacdRepo->method('findById')->with(9999)->willReturn(null);
+
+        $GLOBALS['container'] = $this->containerFromMap($this->defaultServices([
+            ZonaRepositoryInterface::class => $zonaRepo,
+            ZonaSacdRepositoryInterface::class => $zonaSacdRepo,
+            PersonaSacdRepositoryInterface::class => $sacdRepo,
+        ]));
+
+        $out = ActividadesPorZonasService::execute('99', 1, 2030, 'si', 'no');
+
+        $this->assertCount(1, $out['actividades_por_zona'][1]);
+    }
+
     public function test_sacd_con_situacion_distinta_de_A_se_omite(): void
     {
         $oZona = $this->zona('Z');

@@ -83,7 +83,7 @@ class ActividadesPorZonasService
                 $aActivPersona = [];
                 $id_nom = $oZonaSacd->getId_nom();
                 $oSacd = $PersonaSacdRepository->findById($id_nom);
-                if ($oSacd->getSituacion() !== 'A') {
+                if ($oSacd === null || $oSacd->getSituacion() !== 'A') {
                     continue;
                 }
 
