@@ -47,7 +47,7 @@ final class EncargoVerNuevo
         }
 
         if ($id_tipo_enc !== '' && ($id_tipo_enc[0] ?? '') === '7') {
-            $Qsf_sv = 0;
+            $Qsf_sv = EncargoGrupo::PERSONAL;
         }
 
         if ($Qdesc_enc === '') {

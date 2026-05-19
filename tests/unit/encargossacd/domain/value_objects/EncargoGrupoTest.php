@@ -39,4 +39,10 @@ class EncargoGrupoTest extends myTest
         $this->assertNull($encargoGrupo);
     }
 
+    public function test_personal_cero_es_valido(): void
+    {
+        $encargoGrupo = new EncargoGrupo(EncargoGrupo::PERSONAL);
+        $this->assertSame(0, $encargoGrupo->value());
+    }
+
 }

@@ -4,6 +4,8 @@ namespace src\encargossacd\domain\value_objects;
 
 class EncargoGrupo
 {
+    /** Actividades personales SACD (tipos 7xxx); sin centro ni zona. */
+    public const PERSONAL = 0;
 
     public const CENTRO_SV = 1;
     public const CENTRO_SF = 2;
@@ -16,6 +18,7 @@ class EncargoGrupo
     public static function getArrayGrupos(): array
     {
         $a_status = [
+            self::PERSONAL => _("actividades personales"),
             self::CENTRO_SV => _("centro sv"),
             self::CENTRO_SF => _("centro sf"),
             self::CENTRO_SSSC => _("centro sss+"),
@@ -39,7 +42,7 @@ class EncargoGrupo
     private function validate(int $value): void
     {
         if (!array_key_exists($value, self::getArrayGrupos())) {
-            throw new \InvalidArgumentException('EncargoGrupo solo admite: 1, 2, 3, 4, 5, 8');
+            throw new \InvalidArgumentException('EncargoGrupo solo admite: 0, 1, 2, 3, 4, 5, 8');
         }
     }
 
