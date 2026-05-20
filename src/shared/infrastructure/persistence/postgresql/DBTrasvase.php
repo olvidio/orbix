@@ -4,6 +4,7 @@ namespace src\shared\infrastructure\persistence\postgresql;
 
 use PDO;
 use src\shared\config\ConfigGlobal;
+use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\actividades\domain\contracts\ActividadDlRepositoryInterface;
@@ -443,9 +444,9 @@ class DBTrasvase extends DBAbstract
 
     private function configurarMapIdRepository(MapIdRepositoryInterface $mapIdRepository): void
     {
-        $esquemaComun = $this->getRegion() . '-' . $this->getDl();
-        $oDblAdmin = $this->getoDblComunDlAdministrador();
-        if (!$this->esquemaExiste($oDblAdmin, $esquemaComun)) {
+        $esquemaComun = $this->esquemaBaseDl();
+        $oDblOrigen = $this->getoDblComunDlAdministrador();
+        if (!$this->esquemaExiste($oDblOrigen, $esquemaComun)) {
             $this->avisosConexion[] = sprintf(
                 _('No existe el esquema «%s»; se omiten operaciones con map_id.'),
                 $esquemaComun,
@@ -454,10 +455,63 @@ class DBTrasvase extends DBAbstract
             return;
         }
 
+        $this->asegurarMapIdEnConexionComun($oDblOrigen, $esquemaComun);
+
+        $oDblReplica = $this->getoDblComunDlAdministradorReplica();
+        if ($oDblReplica !== null) {
+            $this->asegurarMapIdEnConexionComun($oDblReplica, $esquemaComun);
+            $this->refrescarSuscripcionComunTrasMapId();
+        }
+
+        $mapIdRepository->setoDbl($oDblOrigen);
+        $mapIdRepository->setoDbl_Select($oDblReplica ?? $oDblOrigen);
+    }
+
+    private function asegurarMapIdEnConexionComun(PDO $oDblAdmin, string $esquemaComun): void
+    {
+        if (!$this->esquemaExiste($oDblAdmin, $esquemaComun)) {
+            return;
+        }
+
         $this->asegurarTablaMapId($oDblAdmin, $esquemaComun);
         $this->sincronizarPermisosMapIdRolDl($oDblAdmin, $esquemaComun);
-        $mapIdRepository->setoDbl($oDblAdmin);
-        $mapIdRepository->setoDbl_Select($oDblAdmin);
+    }
+
+    /**
+     * Réplica interior (comun_select): misma tabla map_id que en origen para la suscripción lógica.
+     */
+    private function getoDblComunDlAdministradorReplica(): ?PDO
+    {
+        if (preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
+            return null;
+        }
+
+        $esquema = $this->esquemaBaseDl();
+        $oConfigDB = new ConfigDB('importar');
+        $config = $oConfigDB->getConexionMantenimiento('public_select');
+        $config['schema'] = $esquema;
+
+        return (new DBConnection($config))->getPDO();
+    }
+
+    private function refrescarSuscripcionComunTrasMapId(): void
+    {
+        try {
+            $oConfigDB = new ConfigDB('importar');
+            $config = $oConfigDB->getConexionMantenimiento('public_select');
+            $host = (string) ($config['host'] ?? '');
+            $dsn = (new DBConnection($config))->getURI();
+            $logFile = ConfigGlobal::$directorio . '/log/db/map_id.refresh_sub.sql';
+            $aviso = (new DBRefresh())->refreshSubscription($host, 'comun', $dsn, $logFile);
+            if ($aviso !== null) {
+                $this->avisosConexion[] = $aviso;
+            }
+        } catch (\Throwable $e) {
+            $this->avisosConexion[] = sprintf(
+                _('Aviso: no se pudo refrescar la suscripción tras crear map_id en réplica: %s'),
+                $e->getMessage(),
+            );
+        }
     }
 
     private function esquemaBaseDl(): string
