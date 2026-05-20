@@ -99,6 +99,10 @@ final class CrearEsquema
 
                 $oDBEsquemaSelect = new DBEsquemaCreate();
                 $oDBEsquemaSelect->setConfig($config);
+                $oDBEsquemaSelect->setRegionRef($RegionRef);
+                $oDBEsquemaSelect->setDlRef($DlRef);
+                $oDBEsquemaSelect->setRegionNew($RegionNew);
+                $oDBEsquemaSelect->setDlNew($DlNew);
                 $oDBEsquemaSelect->setFileNew($sqlVolcadoComun);
                 $aviso = $oDBEsquemaSelect->crear_select('comun');
                 if ($aviso !== null) {
@@ -169,6 +173,10 @@ final class CrearEsquema
                 $oDBRol->crearSchema();
                 $oDBEsquemaSelect = new DBEsquemaCreate();
                 $oDBEsquemaSelect->setConfig($config);
+                $oDBEsquemaSelect->setRegionRef($RegionRef);
+                $oDBEsquemaSelect->setDlRef($DlRef);
+                $oDBEsquemaSelect->setRegionNew($RegionNew);
+                $oDBEsquemaSelect->setDlNew($DlNew);
                 $oDBEsquemaSelect->setFileNew($sqlVolcadoSve);
                 $aviso = $oDBEsquemaSelect->crear_select('sv-e');
                 if ($aviso !== null) {

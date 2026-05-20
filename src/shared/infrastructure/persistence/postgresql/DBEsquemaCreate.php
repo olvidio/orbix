@@ -161,12 +161,39 @@ class DBEsquemaCreate
 
     public function getNew()
     {
-        if ($this->sRegionNew === null || $this->sDlNew === null
-            || $this->sRegionNew === '' || $this->sDlNew === '') {
-            throw new \RuntimeException(_('Faltan región y dl del esquema (setRegionNew / setDlNew).'));
+        $this->sNew = $this->resolverNombreEsquema();
+
+        return $this->sNew;
+    }
+
+    /**
+     * Nombre del esquema PG (p. ej. B-crBv): región–dl + sufijo v/f según BD, o deducido del .sql en setFileNew.
+     */
+    private function resolverNombreEsquema(): string
+    {
+        if ($this->sEsquemaNombre !== null && $this->sEsquemaNombre !== '') {
+            return $this->sEsquemaNombre;
         }
 
-        $this->sNew = $this->sRegionNew . '-' . $this->sDlNew;
+        if ($this->sRegionNew !== null && $this->sDlNew !== null
+            && $this->sRegionNew !== '' && $this->sDlNew !== '') {
+            return $this->aplicarSufijoEsquemaPorDb($this->sRegionNew . '-' . $this->sDlNew);
+        }
+
+        if ($this->sfileNew !== '') {
+            $nombre = $this->nombreEsquemaDesdeRutaVolcado($this->sfileNew);
+            if ($nombre !== '') {
+                $this->sEsquemaNombre = $nombre;
+
+                return $nombre;
+            }
+        }
+
+        throw new \RuntimeException(_('Faltan región y dl del esquema (setRegionNew / setDlNew).'));
+    }
+
+    private function aplicarSufijoEsquemaPorDb(string $base): string
+    {
         switch ($this->getDb()) {
             case 'comun':
             case 'comun_select':
@@ -177,16 +204,27 @@ class DBEsquemaCreate
             case 'sv-e_select':
             case 'pruebas-sv':
             case 'pruebas-sv-e':
-                $this->sNew .= 'v';
+                $base .= 'v';
                 break;
             case 'sf':
             case 'sf-e':
             case 'pruebas-sf':
             case 'pruebas-sf-e':
-                $this->sNew .= 'f';
+                $base .= 'f';
                 break;
         }
-        return $this->sNew;
+
+        return $base;
+    }
+
+    private function nombreEsquemaDesdeRutaVolcado(string $path): string
+    {
+        $base = basename($path);
+        if (preg_match('/^(.+)\.[^.]+\.sql$/', $base, $coincide)) {
+            return $coincide[1];
+        }
+
+        return '';
     }
 
     public function setNew($esquema)
@@ -286,7 +324,7 @@ class DBEsquemaCreate
     public function getFileLog()
     {
         if ($this->sfileLog === '') {
-            $nombre = $this->sEsquemaNombre ?? $this->getNew();
+            $nombre = $this->resolverNombreEsquema();
             $this->sfileLog = $this->getDir() . '/' . $nombre . '.pg_error.sql';
         }
 
@@ -307,6 +345,10 @@ class DBEsquemaCreate
     public function setFileNew($fileNew)
     {
         $this->sfileNew = $fileNew;
+        $nombre = $this->nombreEsquemaDesdeRutaVolcado($fileNew);
+        if ($nombre !== '') {
+            $this->sEsquemaNombre = $nombre;
+        }
     }
 
     public function getFileSeq()
