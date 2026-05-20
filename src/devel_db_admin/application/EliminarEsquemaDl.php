@@ -31,6 +31,9 @@ final class EliminarEsquemaDl
         $esquemav = $esquema . 'v';
         $esquemaf = $esquema . 'f';
 
+        $RegionNew = $region;
+        $DlNew = $dl;
+
         $oConfigDB = new ConfigDB('importar');
 
         if ($comun !== 0) {
@@ -46,6 +49,8 @@ final class EliminarEsquemaDl
 
             $oDBEsquemaCreate = new DBEsquemaCreate();
             $oDBEsquemaCreate->setConfig($oConfigDB->getEsquema('public'));
+            $oDBEsquemaCreate->setRegionNew($RegionNew);
+            $oDBEsquemaCreate->setDlNew($DlNew);
             $oDBEsquemaCreate->eliminar($esquema);
         }
 
@@ -63,16 +68,22 @@ final class EliminarEsquemaDl
 
             $oDBEsquemaCreate = new DBEsquemaCreate();
             $oDBEsquemaCreate->setConfig($config);
+            $oDBEsquemaCreate->setRegionNew($RegionNew);
+            $oDBEsquemaCreate->setDlNew($DlNew);
             $oDBEsquemaCreate->eliminar($esquemav);
 
             $oDBEsquemaCreate = new DBEsquemaCreate();
             $oDBEsquemaCreate->setConfig($oConfigDB->getEsquema('publicv-e'));
+            $oDBEsquemaCreate->setRegionNew($RegionNew);
+            $oDBEsquemaCreate->setDlNew($DlNew);
             $oDBEsquemaCreate->eliminar($esquemav);
         }
 
         if ($sf !== 0) {
             $oDBEsquemaCreate = new DBEsquemaCreate();
             $oDBEsquemaCreate->setConfig($oConfigDB->getEsquema('publicf'));
+            $oDBEsquemaCreate->setRegionNew($RegionNew);
+            $oDBEsquemaCreate->setDlNew($DlNew);
             $oDBEsquemaCreate->eliminar($esquemaf);
         }
 

@@ -65,6 +65,8 @@ class DBEsquemaCreate
     private ?string $sDlNew = null;
     private ?string $sRegionNew = null;
     private mixed $sDbRef = null;
+    /** Nombre PG del esquema en curso (p. ej. tras `eliminar('B-crBv')`). */
+    private ?string $sEsquemaNombre = null;
     /** @var array<string, mixed> */
     protected array $config = [];
 
@@ -283,7 +285,11 @@ class DBEsquemaCreate
 
     public function getFileLog()
     {
-        $this->sfileLog = empty($this->sfileLog) ? $this->getDir() . '/' . $this->getNew() . '.pg_error.sql' : $this->sfileLog;
+        if ($this->sfileLog === '') {
+            $nombre = $this->sEsquemaNombre ?? $this->getNew();
+            $this->sfileLog = $this->getDir() . '/' . $nombre . '.pg_error.sql';
+        }
+
         return $this->sfileLog;
     }
 
@@ -624,18 +630,12 @@ class DBEsquemaCreate
     public function eliminar(?string $nombreEsquema = null): void
     {
         $esquema = $nombreEsquema ?? $this->getNew();
-        $this->asegurarRutaLogParaEsquema($esquema);
-        $this->vaciarLog($this->getFileLog());
+        $this->sEsquemaNombre = $esquema;
+        $this->sfileLog = $this->getDir() . '/' . $esquema . '.pg_error.sql';
+        $this->vaciarLog($this->sfileLog);
         $this->eliminarEsquemaPorPdo($esquema);
         // Segunda pasada por si quedaron objetos huérfanos tras el traslado a resto
         $this->eliminarEsquemaPorPdo($esquema);
-    }
-
-    private function asegurarRutaLogParaEsquema(string $esquema): void
-    {
-        if ($this->sfileLog === '') {
-            $this->sfileLog = $this->getDir() . '/' . $esquema . '.pg_error.sql';
-        }
     }
 
     private function eliminarEsquemaPorPdo(string $esquema): void
