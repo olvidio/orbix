@@ -66,6 +66,24 @@ SQL;
             'ALTER TABLE ONLY "H-dlf".cd_ejemplo ALTER COLUMN id_schema SET NOT NULL;',
             $out,
         );
-        $this->assertStringNotContainsString('NOT NULL id_schema', $out);
+        $this->assertStringNotContainsString("NOT NULL id_schema,\n", $out);
+    }
+
+    public function test_reparar_create_table_only_sin_parentesis_antes_de_inherits(): void
+    {
+        $sql = <<<'SQL'
+CREATE TABLE ONLY "H-dlf"."cd_ejemplo" (
+    NOT NULL id_schema,
+INHERITS (global.d_ejemplo);
+SQL;
+
+        $out = DBEsquemaCreate::repararVolcadoHeredadoYCompatibilidad($sql);
+
+        $this->assertStringContainsString('CREATE TABLE ONLY "H-dlf"."cd_ejemplo" (', $out);
+        $this->assertStringContainsString(
+            'ALTER TABLE ONLY "H-dlf"."cd_ejemplo" ALTER COLUMN id_schema SET NOT NULL;',
+            $out,
+        );
+        $this->assertStringNotContainsString("NOT NULL id_schema,\n", $out);
     }
 }

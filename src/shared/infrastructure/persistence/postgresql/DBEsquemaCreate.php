@@ -427,6 +427,7 @@ class DBEsquemaCreate
 
         $sql = self::repararCreateTableNotNullSuelto($sql, conInherits: true);
         $sql = self::repararCreateTableNotNullSuelto($sql, conInherits: false);
+        $sql = self::repararBloquesNotNullLineaALinea($sql);
 
         return $sql;
     }
@@ -436,16 +437,17 @@ class DBEsquemaCreate
      */
     private static function repararCreateTableNotNullSuelto(string $sql, bool $conInherits): string
     {
-        $identTabla = '(?:"[^"]+"\.)?(?:"[^"]+"|\w+)';
-        $lineasNotNull = '((?:\s*NOT NULL\s+\w+\s*,?\s*\n)+)';
+        $identTabla = '(?:(?:"[^"]+"\.)*"[^"]+"|(?:(?:\w+\.)+)?\w+)';
+        $create = 'CREATE\s+TABLE(?:\s+ONLY)?\s+';
+        $lineasNotNull = '((?:[ \t]*NOT NULL\s+\w+\s*,?\s*\r?\n)+)';
 
         if ($conInherits) {
-            $patron = '/CREATE TABLE (' . $identTabla . ')\s*\(\s*\n'
+            $patron = '/' . $create . '(' . $identTabla . ')\s*\(\s*\r?\n'
                 . $lineasNotNull
                 . '(?:\)\s*)?'
                 . '(\s*INHERITS\s*\([^)]+\)\s*;?)/i';
         } else {
-            $patron = '/CREATE TABLE (' . $identTabla . ')\s*\(\s*\n'
+            $patron = '/' . $create . '(' . $identTabla . ')\s*\(\s*\r?\n'
                 . $lineasNotNull
                 . '\)\s*;/i';
         }
@@ -454,6 +456,7 @@ class DBEsquemaCreate
             $patron,
             static function (array $m) use ($conInherits): string {
                 $table = $m[1];
+                $prefijoCreate = preg_match('/ONLY/i', $m[0]) ? 'CREATE TABLE ONLY ' : 'CREATE TABLE ';
                 $alters = '';
                 if (preg_match_all('/NOT NULL\s+(\w+)/i', $m[2], $cols)) {
                     foreach ($cols[1] as $col) {
@@ -467,15 +470,85 @@ class DBEsquemaCreate
                         $inherits .= ';';
                     }
 
-                    return 'CREATE TABLE ' . $table . " (\n)\n" . $inherits . "\n" . $alters;
+                    return $prefijoCreate . $table . " (\n)\n" . $inherits . "\n" . $alters;
                 }
 
-                return 'CREATE TABLE ' . $table . " (\n)\n);\n" . $alters;
+                return $prefijoCreate . $table . " (\n)\n);\n" . $alters;
             },
             $sql,
         );
 
         return is_string($reparado) ? $reparado : $sql;
+    }
+
+    /**
+     * Segunda pasada línea a línea (pg_dump -s con CREATE TABLE ONLY y variantes de espaciado).
+     */
+    private static function repararBloquesNotNullLineaALinea(string $sql): string
+    {
+        $lines = preg_split('/\r\n|\r|\n/', $sql);
+        if ($lines === false) {
+            return $sql;
+        }
+
+        $out = [];
+        $n = count($lines);
+        for ($i = 0; $i < $n; $i++) {
+            if (!preg_match('/^CREATE\s+TABLE(?:\s+ONLY)?\s+(.+?)\s*\(\s*$/i', $lines[$i], $encabezado)) {
+                $out[] = $lines[$i];
+                continue;
+            }
+
+            $table = $encabezado[1];
+            $tieneOnly = stripos($lines[$i], ' ONLY ') !== false;
+            $prefijoCreate = $tieneOnly ? 'CREATE TABLE ONLY ' : 'CREATE TABLE ';
+            $j = $i + 1;
+            $columnas = [];
+            while ($j < $n && preg_match('/^[ \t]*NOT NULL\s+(\w+)\s*,?\s*$/i', $lines[$j], $col)) {
+                $columnas[] = $col[1];
+                $j++;
+            }
+
+            if ($columnas === []) {
+                $out[] = $lines[$i];
+                continue;
+            }
+
+            $k = $j;
+            if ($k < $n && preg_match('/^[ \t]*\)\s*$/', $lines[$k])) {
+                $k++;
+            }
+
+            if ($k < $n && preg_match('/^[ \t]*INHERITS\s*\([^)]+\)\s*;?\s*$/i', $lines[$k], $inh)) {
+                $inherits = rtrim($lines[$k]);
+                if (!str_ends_with($inherits, ';')) {
+                    $inherits .= ';';
+                }
+                $out[] = $prefijoCreate . $table . ' (';
+                $out[] = ')';
+                $out[] = $inherits;
+                foreach ($columnas as $nombreCol) {
+                    $out[] = 'ALTER TABLE ONLY ' . $table . ' ALTER COLUMN ' . $nombreCol . ' SET NOT NULL;';
+                }
+                $i = $k;
+                continue;
+            }
+
+            if ($k < $n && preg_match('/^[ \t]*\)\s*;\s*$/', $lines[$k])) {
+                $out[] = $prefijoCreate . $table . ' (';
+                $out[] = ')';
+                $out[] = ');';
+                foreach ($columnas as $nombreCol) {
+                    $out[] = 'ALTER TABLE ONLY ' . $table . ' ALTER COLUMN ' . $nombreCol . ' SET NOT NULL;';
+                }
+                $i = $k;
+                continue;
+            }
+
+            $out[] = $lines[$i];
+        }
+
+        return implode("\n", $out);
     }
 
     /** Relee el .sql generado y aplica normalización/reparación antes de psql (por si el fichero es anterior o incompleto). */
