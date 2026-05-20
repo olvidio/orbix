@@ -35,6 +35,7 @@ final class EliminarEsquemaDl
         $DlNew = $dl;
 
         $oConfigDB = new ConfigDB('importar');
+        $incluirSelect = !$this->esEntornoDocker();
 
         if ($comun !== 0) {
             $oTrasvase = new DBTrasvase();
@@ -47,16 +48,20 @@ final class EliminarEsquemaDl
             $oTrasvase->cdc('dl2resto');
             $avisos = array_merge($avisos, $oTrasvase->consumirAvisosConexion());
 
-            $oDBEsquemaCreate = new DBEsquemaCreate();
-            $oDBEsquemaCreate->setConfig($oConfigDB->getEsquema('public'));
-            $oDBEsquemaCreate->setRegionNew($RegionNew);
-            $oDBEsquemaCreate->setDlNew($DlNew);
-            $oDBEsquemaCreate->eliminar($esquema);
+            $clavesComun = ['public'];
+            if ($incluirSelect) {
+                $clavesComun[] = 'public_select';
+            }
+            $avisos = array_merge($avisos, $this->eliminarEsquemaEnClavesImportar(
+                $oConfigDB,
+                $RegionNew,
+                $DlNew,
+                $esquema,
+                $clavesComun,
+            ));
         }
 
         if ($sv !== 0) {
-            $config = $oConfigDB->getEsquema('publicv');
-
             $oTrasvase = new DBTrasvase();
             $oTrasvase->setRegion($region);
             $oTrasvase->setDl($dl);
@@ -66,25 +71,28 @@ final class EliminarEsquemaDl
             $oTrasvase->ctr('dl2resto');
             $avisos = array_merge($avisos, $oTrasvase->consumirAvisosConexion());
 
-            $oDBEsquemaCreate = new DBEsquemaCreate();
-            $oDBEsquemaCreate->setConfig($config);
-            $oDBEsquemaCreate->setRegionNew($RegionNew);
-            $oDBEsquemaCreate->setDlNew($DlNew);
-            $oDBEsquemaCreate->eliminar($esquemav);
-
-            $oDBEsquemaCreate = new DBEsquemaCreate();
-            $oDBEsquemaCreate->setConfig($oConfigDB->getEsquema('publicv-e'));
-            $oDBEsquemaCreate->setRegionNew($RegionNew);
-            $oDBEsquemaCreate->setDlNew($DlNew);
-            $oDBEsquemaCreate->eliminar($esquemav);
+            $clavesSv = ['publicv', 'publicv-e'];
+            if ($incluirSelect) {
+                $clavesSv[] = 'publicv-e_select';
+            }
+            $avisos = array_merge($avisos, $this->eliminarEsquemaEnClavesImportar(
+                $oConfigDB,
+                $RegionNew,
+                $DlNew,
+                $esquemav,
+                $clavesSv,
+            ));
         }
 
         if ($sf !== 0) {
-            $oDBEsquemaCreate = new DBEsquemaCreate();
-            $oDBEsquemaCreate->setConfig($oConfigDB->getEsquema('publicf'));
-            $oDBEsquemaCreate->setRegionNew($RegionNew);
-            $oDBEsquemaCreate->setDlNew($DlNew);
-            $oDBEsquemaCreate->eliminar($esquemaf);
+            $clavesSf = ['publicf', 'publicf-e'];
+            $avisos = array_merge($avisos, $this->eliminarEsquemaEnClavesImportar(
+                $oConfigDB,
+                $RegionNew,
+                $DlNew,
+                $esquemaf,
+                $clavesSf,
+            ));
         }
 
         $this->revocarPermisosRestoTrasTraslado($region, $dl, $comun, $sv);
@@ -92,17 +100,21 @@ final class EliminarEsquemaDl
         if ($comun !== 0 || $sv !== 0 || $sf !== 0) {
             $oDBRol = new DBRol();
             if ($comun !== 0) {
+                $clavesComun = ['public'];
+                if ($incluirSelect) {
+                    $clavesComun[] = 'public_select';
+                }
                 $avisos = array_merge($avisos, $this->eliminarRolSiExiste(
                     $oDBRol,
                     $oConfigDB,
                     'public',
-                    [$esquema],
+                    $clavesComun,
                     $esquema,
                 ));
             }
             if ($sv !== 0) {
                 $clavesSv = ['publicv', 'publicv-e'];
-                if (!preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
+                if ($incluirSelect) {
                     $clavesSv[] = 'publicv-e_select';
                 }
                 $avisos = array_merge($avisos, $this->eliminarRolSiExiste(
@@ -121,6 +133,43 @@ final class EliminarEsquemaDl
                     ['publicf', 'publicf-e'],
                     $esquemaf,
                 ));
+            }
+        }
+
+        return $avisos;
+    }
+
+    private function esEntornoDocker(): bool
+    {
+        return (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
+    }
+
+    /**
+     * @param list<string> $clavesImportar p. ej. public, public_select
+     * @return list<string>
+     */
+    private function eliminarEsquemaEnClavesImportar(
+        ConfigDB $oConfigDB,
+        string $regionNew,
+        string $dlNew,
+        string $nombreEsquema,
+        array $clavesImportar,
+    ): array {
+        $avisos = [];
+        foreach ($clavesImportar as $clave) {
+            try {
+                $oDBEsquemaCreate = new DBEsquemaCreate();
+                $oDBEsquemaCreate->setConfig($oConfigDB->getEsquema($clave));
+                $oDBEsquemaCreate->setRegionNew($regionNew);
+                $oDBEsquemaCreate->setDlNew($dlNew);
+                $oDBEsquemaCreate->eliminar($nombreEsquema);
+            } catch (\Throwable $e) {
+                $avisos[] = sprintf(
+                    _('No se pudo eliminar el esquema «%1$s» en %2$s: %3$s'),
+                    $nombreEsquema,
+                    $clave,
+                    $e->getMessage(),
+                );
             }
         }
 
@@ -153,7 +202,7 @@ final class EliminarEsquemaDl
     }
 
     /**
-     * @param list<string> $clavesDropOwned plantillas importar donde ejecutar DROP OWNED
+     * @param list<string> $clavesDropOwned plantillas importar (public, public_select, …)
      * @return list<string>
      */
     private function eliminarRolSiExiste(

@@ -482,7 +482,7 @@ class DBEsquemaCreate
     }
 
     /**
-     * Segunda pasada línea a línea (pg_dump -s con CREATE TABLE ONLY y variantes de espaciado).
+     * Repara CREATE TABLE con líneas «NOT NULL col» (pg_dump ≥17), también si van mezcladas con columnas normales.
      */
     private static function repararBloquesNotNullLineaALinea(string $sql): string
     {
@@ -503,49 +503,65 @@ class DBEsquemaCreate
             $tieneOnly = stripos($lines[$i], ' ONLY ') !== false;
             $prefijoCreate = $tieneOnly ? 'CREATE TABLE ONLY ' : 'CREATE TABLE ';
             $j = $i + 1;
-            $columnas = [];
-            while ($j < $n && preg_match('/^[ \t]*NOT NULL\s+(\w+)\s*,?\s*$/i', $lines[$j], $col)) {
-                $columnas[] = $col[1];
+            $columnasNotNull = [];
+            $cuerpo = [];
+            while ($j < $n) {
+                $linea = $lines[$j];
+                if (preg_match('/^[ \t]*NOT NULL\s+(\w+)\s*,?\s*$/i', $linea, $col)) {
+                    $columnasNotNull[] = $col[1];
+                    $j++;
+                    continue;
+                }
+                if (preg_match('/^[ \t]*\)\s*;?\s*$/', $linea) || preg_match('/^[ \t]*INHERITS\s*\(/i', $linea)) {
+                    break;
+                }
+                $cuerpo[] = $linea;
                 $j++;
             }
 
-            if ($columnas === []) {
+            if ($columnasNotNull === []) {
                 $out[] = $lines[$i];
                 continue;
             }
 
             $k = $j;
+            $out[] = $prefijoCreate . $table . ' (';
+            foreach ($cuerpo as $lineaCuerpo) {
+                $out[] = $lineaCuerpo;
+            }
+
+            $cerroParentesis = false;
             if ($k < $n && preg_match('/^[ \t]*\)\s*$/', $lines[$k])) {
+                $out[] = ')';
+                $cerroParentesis = true;
                 $k++;
             }
 
-            if ($k < $n && preg_match('/^[ \t]*INHERITS\s*\([^)]+\)\s*;?\s*$/i', $lines[$k], $inh)) {
+            if ($k < $n && preg_match('/^[ \t]*INHERITS\s*\([^)]+\)\s*;?\s*$/i', $lines[$k])) {
+                if (!$cerroParentesis) {
+                    $out[] = ')';
+                }
                 $inherits = rtrim($lines[$k]);
                 if (!str_ends_with($inherits, ';')) {
                     $inherits .= ';';
                 }
-                $out[] = $prefijoCreate . $table . ' (';
-                $out[] = ')';
                 $out[] = $inherits;
-                foreach ($columnas as $nombreCol) {
-                    $out[] = 'ALTER TABLE ONLY ' . $table . ' ALTER COLUMN ' . $nombreCol . ' SET NOT NULL;';
+                $k++;
+            } elseif ($k < $n && preg_match('/^[ \t]*\)\s*;\s*$/', $lines[$k])) {
+                if (!$cerroParentesis) {
+                    $out[] = ')';
                 }
-                $i = $k;
-                continue;
-            }
-
-            if ($k < $n && preg_match('/^[ \t]*\)\s*;\s*$/', $lines[$k])) {
-                $out[] = $prefijoCreate . $table . ' (';
-                $out[] = ')';
                 $out[] = ');';
-                foreach ($columnas as $nombreCol) {
-                    $out[] = 'ALTER TABLE ONLY ' . $table . ' ALTER COLUMN ' . $nombreCol . ' SET NOT NULL;';
-                }
-                $i = $k;
-                continue;
+                $k++;
+            } elseif (!$cerroParentesis) {
+                $out[] = ')';
             }
 
-            $out[] = $lines[$i];
+            foreach ($columnasNotNull as $nombreCol) {
+                $out[] = 'ALTER TABLE ONLY ' . $table . ' ALTER COLUMN ' . $nombreCol . ' SET NOT NULL;';
+            }
+
+            $i = $k - 1;
         }
 
         return implode("\n", $out);
@@ -838,10 +854,13 @@ class DBEsquemaCreate
     private function claveEsquemaImportar(): string
     {
         return match ($this->getDb()) {
-            'comun', 'comun_select', 'pruebas-comun' => 'public',
+            'comun', 'pruebas-comun' => 'public',
+            'comun_select', 'pruebas-comun_select' => 'public_select',
             'sv', 'pruebas-sv' => 'publicv',
-            'sv-e', 'sv-e_select', 'pruebas-sv-e' => 'publicv-e',
-            'sf', 'sf-e', 'pruebas-sf', 'pruebas-sf-e' => 'publicf',
+            'sv-e', 'pruebas-sv-e' => 'publicv-e',
+            'sv-e_select', 'pruebas-sv-e_select' => 'publicv-e_select',
+            'sf', 'pruebas-sf' => 'publicf',
+            'sf-e', 'pruebas-sf-e' => 'publicf-e',
             default => 'public',
         };
     }

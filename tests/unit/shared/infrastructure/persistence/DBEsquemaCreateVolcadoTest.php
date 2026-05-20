@@ -86,4 +86,25 @@ SQL;
         );
         $this->assertStringNotContainsString("NOT NULL id_schema,\n", $out);
     }
+
+    public function test_reparar_columnas_normales_mezcladas_con_not_null_suelto(): void
+    {
+        $sql = <<<'SQL'
+CREATE TABLE "B-crBf".e_actas_tribunal_dl (
+    NOT NULL id_schema,
+    id_item integer
+)
+INHERITS (publicf.e_actas_tribunal);
+SQL;
+
+        $out = DBEsquemaCreate::repararVolcadoHeredadoYCompatibilidad($sql);
+
+        $this->assertStringContainsString('id_item integer', $out);
+        $this->assertStringContainsString('INHERITS (publicf.e_actas_tribunal);', $out);
+        $this->assertStringContainsString(
+            'ALTER TABLE ONLY "B-crBf".e_actas_tribunal_dl ALTER COLUMN id_schema SET NOT NULL;',
+            $out,
+        );
+        $this->assertStringNotContainsString("NOT NULL id_schema,\n", $out);
+    }
 }

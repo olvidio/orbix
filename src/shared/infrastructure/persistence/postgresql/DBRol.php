@@ -594,6 +594,10 @@ class DBRol
                 $config = $oConfigDB->getConexionMantenimiento($clave);
                 $oDbl = (new DBConnection($config))->getPDO();
                 $this->revocarPrivilegiosRestoEnConexion($oDbl, $this->sUser);
+                try {
+                    $oDbl->exec("REASSIGN OWNED BY {$q} TO CURRENT_USER");
+                } catch (\Throwable) {
+                }
                 $oDbl->exec("DROP OWNED BY {$q} CASCADE");
             } catch (\Throwable) {
                 // Best effort en cada BD (comun, sv, sv-e, réplica…).
@@ -630,6 +634,7 @@ class DBRol
     {
         $claves = ['public', 'publicv', 'publicf', 'publicv-e', 'publicf-e'];
         if (!preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
+            $claves[] = 'public_select';
             $claves[] = 'publicv-e_select';
         }
 
