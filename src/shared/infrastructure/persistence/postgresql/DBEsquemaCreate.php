@@ -459,16 +459,21 @@ class DBEsquemaCreate
         }
     }
 
-    public function crear_select(string $db)
+    /**
+     * Importa en el servidor interior (select) el .sql ya generado en el exterior y opcionalmente refresca la suscripción.
+     *
+     * @return string|null Aviso no bloqueante (p. ej. fallo al refrescar subscripción)
+     */
+    public function crear_select(string $db): ?string
     {
-        // es para las copias locales del servidor externo.
-        // Ya tenemos los archivos creados,
-        // leer_local()
-        // cambiar_nombre()
-        // sólo hay que importalos al servidor interior
-        // importar():
+        $sqlPath = $this->getFileNew();
+        if (!is_readable($sqlPath)) {
+            throw new \RuntimeException(sprintf(
+                _('No se encuentra el volcado SQL para importar en réplica: %s'),
+                $sqlPath,
+            ));
+        }
 
-        //cambiar la conexión
         $oConnection = new DBConnection($this->config);
         $dsn = $oConnection->getURI();
 
@@ -478,23 +483,19 @@ class DBEsquemaCreate
         $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
             . ' ' . escapeshellarg($psql) . ' -h ' . escapeshellarg($host)
             . ' -U postgres -q -X -t --pset pager=off -v ON_ERROR_STOP=1 --file='
-            . escapeshellarg($this->getFileNew()) . ' '
+            . escapeshellarg($sqlPath) . ' '
             . escapeshellarg($dsn)
             . ' > ' . escapeshellarg($logFile) . ' 2>&1';
         passthru($command);
         $this->lanzarSiLogPsqlConError($command, $logFile, 4);
 
-
-        ///// REFRESCAR LA SUBSCRIPCIÓN ///////////
-        /// No para develop
-        if ($this->getHost() !== 'db') {
-            $host = $this->getHost();
-            $fileLog = $this->getFileLog();
-            $DBRefresh = new DBRefresh();
-            $DBRefresh->refreshSubscription($host, $db, $dsn, $fileLog);
+        if ($this->getHost() === 'db') {
+            return null;
         }
 
+        $refreshLog = $logFile . '.refresh_sub.sql';
 
+        return (new DBRefresh())->refreshSubscription($host, $db, $dsn, $refreshLog);
     }
 
     private function crear_local()

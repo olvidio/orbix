@@ -39,39 +39,72 @@ class DBRefresh
      * @param $fileLog
      * @return void
      */
-    public function refreshSubscription($host, string $db, string $dsn, $fileLog)
+    /**
+     * Refresca la suscripción lógica en el servidor interior (réplica). No bloquea el flujo principal.
+     *
+     * @return string|null Aviso si falla; null si OK o no aplica
+     */
+    public function refreshSubscription($host, string $db, string $dsn, $fileLog): ?string
     {
-        ///// REFRESCAR LA SUBSCRIPCIÓN ///////////
-        // (( para saber el nombre: SELECT oid, subdbid, subname, subconninfo, subpublications FROM pg_subscription; ))
-        // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h $host -d $db -U postgres -q  -X -t --pset pager=off ";
-        if (ServerConf::WEBDIR === 'pruebas') {
-            $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h $host -d pruebas-$db -U postgres -q  -X -t --pset pager=off ";
-            if ($db === 'comun') {
-                $command .= "-c 'ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;' ";
-            }
-            if ($db === 'sv-e') {
-                $command .= "-c 'ALTER SUBSCRIPTION subpruebassve REFRESH PUBLICATION;' ";
-            }
-        } else {
-            $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h $host -d $db -U postgres -q  -X -t --pset pager=off ";
-            if ($db === 'comun') {
-                $command .= "-c 'ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;' ";
-            }
-            if ($db === 'sv-e') {
-                $command .= "-c 'ALTER SUBSCRIPTION subsve REFRESH PUBLICATION;' ";
-            }
+        $subNombre = $this->nombreSuscripcion($db);
+        if ($subNombre === null) {
+            return null;
         }
-        $command .= "\"" . $dsn . "\"";
-        $command .= " > " . $fileLog . " 2>&1";
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($fileLog);
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $fileLog);
+
+        $psql = self::rutaPsql();
+        $nombreBd = ServerConf::WEBDIR === 'pruebas' ? 'pruebas-' . $db : $db;
+        $sql = 'ALTER SUBSCRIPTION ' . $subNombre . ' REFRESH PUBLICATION;';
+
+        $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
+            . ' ' . escapeshellarg($psql)
+            . ' -h ' . escapeshellarg((string) $host)
+            . ' -d ' . escapeshellarg($nombreBd)
+            . ' -U postgres -q -X -t --pset pager=off -c '
+            . escapeshellarg($sql)
+            . ' ' . escapeshellarg($dsn)
+            . ' > ' . escapeshellarg((string) $fileLog) . ' 2>&1';
+
+        passthru($command);
+        $error = is_readable($fileLog) ? trim((string) file_get_contents($fileLog)) : '';
+        if ($error === '' || $this->esErrorSuscripcionInexistente($error)) {
+            return null;
+        }
+
+        return sprintf(
+            _('Aviso: no se pudo refrescar la suscripción «%1$s» en %2$s (%3$s). La estructura del esquema puede estar creada igualmente. Detalle: %4$s'),
+            $subNombre,
+            $nombreBd,
+            $db,
+            $error,
+        );
+    }
+
+    private function nombreSuscripcion(string $db): ?string
+    {
+        if ($db === 'comun') {
+            return ServerConf::WEBDIR === 'pruebas' ? 'subpruebascomun' : 'subcomun';
+        }
+        if ($db === 'sv-e') {
+            return ServerConf::WEBDIR === 'pruebas' ? 'subpruebassve' : 'subsve';
+        }
+
+        return null;
+    }
+
+    private function esErrorSuscripcionInexistente(string $error): bool
+    {
+        return str_contains($error, 'does not exist')
+            && str_contains(strtolower($error), 'subscription');
+    }
+
+    private static function rutaPsql(): string
+    {
+        foreach (['/usr/lib/postgresql/15/bin/psql', '/usr/bin/psql'] as $ruta) {
+            if (is_executable($ruta)) {
+                return $ruta;
             }
         }
 
+        return '/usr/bin/psql';
     }
 }

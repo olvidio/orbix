@@ -21,6 +21,9 @@ final class CrearEsquema
     ) {
     }
 
+    /**
+     * @return list<string> avisos no bloqueantes
+     */
     public function ejecutar(
         string $esquemaRef,
         string $region,
@@ -28,7 +31,8 @@ final class CrearEsquema
         int $comun,
         int $sv,
         int $sf,
-    ): void {
+    ): array {
+        $avisos = [];
         $esquema = "$region-$dl";
         $esquemav = $esquema . 'v';
         $esquemaf = $esquema . 'f';
@@ -76,6 +80,7 @@ final class CrearEsquema
             $oDBEsquemaCreate->setRegionNew($RegionNew);
             $oDBEsquemaCreate->setDlNew($DlNew);
             $oDBEsquemaCreate->crear();
+            $sqlVolcadoComun = $oDBEsquemaCreate->getFileNew();
 
             $oDBRol->delGrupo('orbix');
 
@@ -92,13 +97,13 @@ final class CrearEsquema
 
                 $oDBRol->crearSchema();
 
-                $oDBEsquemaCreate = new DBEsquemaCreate();
-                $oDBEsquemaCreate->setConfig($config);
-                $oDBEsquemaCreate->setRegionRef($RegionRef);
-                $oDBEsquemaCreate->setDlRef($DlRef);
-                $oDBEsquemaCreate->setRegionNew($RegionNew);
-                $oDBEsquemaCreate->setDlNew($DlNew);
-                $oDBEsquemaCreate->crear_select('comun');
+                $oDBEsquemaSelect = new DBEsquemaCreate();
+                $oDBEsquemaSelect->setConfig($config);
+                $oDBEsquemaSelect->setFileNew($sqlVolcadoComun);
+                $aviso = $oDBEsquemaSelect->crear_select('comun');
+                if ($aviso !== null) {
+                    $avisos[] = $aviso;
+                }
 
                 $oDBRol->delGrupo('orbix');
             }
@@ -125,6 +130,7 @@ final class CrearEsquema
             $oDBEsquemaCreate->setRegionNew($RegionNew);
             $oDBEsquemaCreate->setDlNew($DlNew);
             $oDBEsquemaCreate->crear();
+            $sqlVolcadoSv = $oDBEsquemaCreate->getFileNew();
             $oDBRol->delGrupo('orbixv');
 
             $schema = $RegionNew . '-' . $DlNew;
@@ -147,6 +153,7 @@ final class CrearEsquema
             $oDBEsquemaCreate->setRegionNew($RegionNew);
             $oDBEsquemaCreate->setDlNew($DlNew);
             $oDBEsquemaCreate->crear();
+            $sqlVolcadoSve = $oDBEsquemaCreate->getFileNew();
             $oDBRol->delGrupo('orbixv');
 
             // En Docker, sv-e ya se rellenó con crear(); crear_select duplicaría el .sql en la misma BD.
@@ -160,13 +167,13 @@ final class CrearEsquema
                 $oDBRol->setUser($esquemav);
                 $oDBRol->addGrupo('orbixv');
                 $oDBRol->crearSchema();
-                $oDBEsquemaCreate = new DBEsquemaCreate();
-                $oDBEsquemaCreate->setConfig($config);
-                $oDBEsquemaCreate->setRegionRef($RegionRef);
-                $oDBEsquemaCreate->setDlRef($DlRef);
-                $oDBEsquemaCreate->setRegionNew($RegionNew);
-                $oDBEsquemaCreate->setDlNew($DlNew);
-                $oDBEsquemaCreate->crear_select('sv-e');
+                $oDBEsquemaSelect = new DBEsquemaCreate();
+                $oDBEsquemaSelect->setConfig($config);
+                $oDBEsquemaSelect->setFileNew($sqlVolcadoSve);
+                $aviso = $oDBEsquemaSelect->crear_select('sv-e');
+                if ($aviso !== null) {
+                    $avisos[] = $aviso;
+                }
                 $oDBRol->delGrupo('orbixv');
             }
 
@@ -198,5 +205,7 @@ final class CrearEsquema
             $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
             $DbSchemaRepository->llenarNuevo($schema, 'sf');
         }
+
+        return $avisos;
     }
 }

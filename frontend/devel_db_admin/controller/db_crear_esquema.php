@@ -23,7 +23,7 @@ $data = PostRequest::getDataFromUrl('/src/devel_db_admin/crear_esquema', [
 ]);
 
 $avisos = $data['avisos'] ?? [];
-if (($data['ok'] ?? true) === false || (is_array($avisos) && $avisos !== [])) {
+if (($data['ok'] ?? true) === false) {
     echo '<br>';
     echo '<strong>' . _('Avisos') . ':</strong><ul>';
     foreach ($avisos as $aviso) {
@@ -35,3 +35,10 @@ if (($data['ok'] ?? true) === false || (is_array($avisos) && $avisos !== [])) {
 
 echo '<br>';
 echo sprintf(_("se ha creado la estructura de los esquemas."));
+if (is_array($avisos) && $avisos !== []) {
+    echo '<br><strong>' . _('Avisos') . ':</strong><ul>';
+    foreach ($avisos as $aviso) {
+        echo '<li>' . htmlspecialchars((string) $aviso, ENT_QUOTES, 'UTF-8') . '</li>';
+    }
+    echo '</ul>';
+}

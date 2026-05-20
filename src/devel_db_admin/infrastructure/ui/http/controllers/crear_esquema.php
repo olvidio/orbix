@@ -20,7 +20,7 @@ $Qsv = (int) filter_input(INPUT_POST, 'sv');
 $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
 try {
-    (new CrearEsquema($GLOBALS['container']))->ejecutar(
+    $avisos = (new CrearEsquema($GLOBALS['container']))->ejecutar(
         $QEsquemaRef,
         $Qregion,
         $Qdl,
@@ -36,4 +36,4 @@ try {
     return;
 }
 
-ContestarJson::enviar('', ['ok' => true, 'avisos' => []]);
+ContestarJson::enviar('', ['ok' => true, 'avisos' => $avisos]);
