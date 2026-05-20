@@ -120,7 +120,13 @@ final class RenombrarEsquema
         // *********************  sv-e  ********************************
         // En sv-e (misma instancia que sv) solo renombramos el ESQUEMA; el ROL ya se renombró en el bloque sv.
         $oConSve = $this->pdoDesdeImportar($oConfigDB, 'publicv-e');
-        $this->renombrarBloqueSoloEsquema($oDBRol, $oConSve, $esquema_oldv, $esquemav);
+        $this->renombrarBloqueSoloEsquema(
+            $oDBRol,
+            $oConSve,
+            $esquema_oldv,
+            $esquemav,
+            $this->leerPasswordEsquema($oConfigDBSve, $esquema_oldv, $esquemav),
+        );
         $this->renombrarClaveInc($oConfigDBSve, 'sv-e', $esquema_oldv, $esquemav);
         $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv-e');
 
@@ -388,30 +394,67 @@ final class RenombrarEsquema
             $oDBRol->setPwd($pwd);
         }
 
+        $this->asegurarRolDestinoRenombre($oDBRol, $pdo, $esquemaOld, $esquemaNew, $pwd);
+
         if ($this->existeEsquema($pdo, $esquemaOld) && !$this->existeEsquema($pdo, $esquemaNew)) {
             $oDBRol->renombrarSchema($esquemaOld);
         }
-        if ($this->existeRol($pdo, $esquemaOld) && !$this->existeRol($pdo, $esquemaNew)) {
-            $oDBRol->renombrarUsuario($esquemaOld);
-        } elseif ($this->existeRol($pdo, $esquemaNew) && $this->existeEsquema($pdo, $esquemaNew)) {
+
+        if ($this->existeRol($pdo, $esquemaNew) && $this->existeEsquema($pdo, $esquemaNew)) {
             $oDBRol->repararEsquemaPostRenombre($esquemaNew);
         }
     }
 
     /**
-     * Variante para sv-e: aquí el ROL ya se renombró en la pasada anterior (sv, mismo cluster);
-     * solo hay que renombrar el ESQUEMA y reasegurar propietarios.
+     * Variante para sv-e (mismo cluster que sv): el rol suele renombrarse en el bloque sv;
+     * aquí se asegura el rol destino, se renombra el esquema en esta BD y se repara solo si el rol existe.
      */
-    private function renombrarBloqueSoloEsquema(DBRol $oDBRol, PDO $pdo, string $esquemaOld, string $esquemaNew): void
-    {
+    private function renombrarBloqueSoloEsquema(
+        DBRol $oDBRol,
+        PDO $pdo,
+        string $esquemaOld,
+        string $esquemaNew,
+        ?string $pwd,
+    ): void {
         $oDBRol->setDbConexion($pdo);
         $oDBRol->setUser($esquemaNew);
+        if ($pwd !== null) {
+            $oDBRol->setPwd($pwd);
+        }
+
+        $this->asegurarRolDestinoRenombre($oDBRol, $pdo, $esquemaOld, $esquemaNew, $pwd);
 
         if ($this->existeEsquema($pdo, $esquemaOld) && !$this->existeEsquema($pdo, $esquemaNew)) {
             $oDBRol->renombrarSchema($esquemaOld);
         }
-        if ($this->existeEsquema($pdo, $esquemaNew)) {
+
+        if ($this->existeRol($pdo, $esquemaNew) && $this->existeEsquema($pdo, $esquemaNew)) {
             $oDBRol->repararEsquemaPostRenombre($esquemaNew);
+        }
+    }
+
+    /**
+     * Garantiza el rol destino antes de ALTER SCHEMA … OWNER (evita «no existe el rol» tras un rename a medias).
+     */
+    private function asegurarRolDestinoRenombre(
+        DBRol $oDBRol,
+        PDO $pdo,
+        string $esquemaOld,
+        string $esquemaNew,
+        ?string $pwd,
+    ): void {
+        if ($this->existeRol($pdo, $esquemaNew)) {
+            return;
+        }
+
+        if ($this->existeRol($pdo, $esquemaOld)) {
+            $oDBRol->renombrarUsuario($esquemaOld);
+
+            return;
+        }
+
+        if ($pwd !== null && $pwd !== '') {
+            $oDBRol->crearUsuario();
         }
     }
 

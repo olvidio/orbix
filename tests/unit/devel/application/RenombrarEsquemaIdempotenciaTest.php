@@ -35,7 +35,7 @@ final class RenombrarEsquemaIdempotenciaTest extends TestCase
         };
     }
 
-    /** @return \Closure(SpyDBRol, SpyPdoIdem, string, string): void */
+    /** @return \Closure(SpyDBRol, SpyPdoIdem, string, string, ?string): void */
     private function makeRenombrarSoloEsquemaHelper(): \Closure
     {
         $instance = new RenombrarEsquema(new \stdClass());
@@ -45,9 +45,10 @@ final class RenombrarEsquemaIdempotenciaTest extends TestCase
             SpyDBRol $oDBRol,
             SpyPdoIdem $pdo,
             string $old,
-            string $new
+            string $new,
+            ?string $pwd = null,
         ) use ($instance, $method): void {
-            $method->invoke($instance, $oDBRol, $pdo, $old, $new);
+            $method->invoke($instance, $oDBRol, $pdo, $old, $new, $pwd);
         };
     }
 
@@ -59,8 +60,8 @@ final class RenombrarEsquemaIdempotenciaTest extends TestCase
 
         $invoke($dbRol, $pdo, 'esquema_old', 'esquema_new', 'pwd');
 
+        $this->assertSame(['esquema_old'], $dbRol->renombrarUsuarioCalls, 'El rol debe renombrarse antes que el esquema.');
         $this->assertSame(['esquema_old'], $dbRol->renombrarSchemaCalls);
-        $this->assertSame(['esquema_old'], $dbRol->renombrarUsuarioCalls);
         $this->assertSame([], $dbRol->repararEsquemaPostRenombreCalls);
         $this->assertSame('esquema_new', $dbRol->lastUser);
         $this->assertSame('pwd', $dbRol->lastPwd);
@@ -79,7 +80,7 @@ final class RenombrarEsquemaIdempotenciaTest extends TestCase
         $this->assertSame([], $dbRol->repararEsquemaPostRenombreCalls);
     }
 
-    public function test_si_rol_ya_renombrado_solo_renombra_schema_y_repara(): void
+    public function test_si_rol_ya_renombrado_solo_repara_si_esquema_destino_ya_existe(): void
     {
         $pdo = new SpyPdoIdem(['esquema_old', 'esquema_new'], ['esquema_new']);
         $dbRol = new SpyDBRol();
@@ -87,13 +88,23 @@ final class RenombrarEsquemaIdempotenciaTest extends TestCase
 
         $invoke($dbRol, $pdo, 'esquema_old', 'esquema_new', 'pwd');
 
-        $this->assertSame(
-            [],
-            $dbRol->renombrarSchemaCalls,
-            'No debe renombrar el esquema si el nuevo ya existe (coexistencia es incoherencia, pero no la creamos nosotros).',
-        );
+        $this->assertSame([], $dbRol->renombrarSchemaCalls);
         $this->assertSame([], $dbRol->renombrarUsuarioCalls);
         $this->assertSame(['esquema_new'], $dbRol->repararEsquemaPostRenombreCalls);
+    }
+
+    public function test_si_esquema_ya_renombrado_y_rol_ausente_crea_rol_con_password(): void
+    {
+        $pdo = new SpyPdoIdem(['esquema_new'], []);
+        $dbRol = new SpyDBRol();
+        $invoke = $this->makeRenombrarHelper();
+
+        $invoke($dbRol, $pdo, 'B-crBv', 'V-crVv', 'pwd-sv');
+
+        $this->assertSame([], $dbRol->renombrarSchemaCalls);
+        $this->assertSame([], $dbRol->renombrarUsuarioCalls);
+        $this->assertSame(['V-crVv'], $dbRol->crearUsuarioCalls);
+        $this->assertSame([], $dbRol->repararEsquemaPostRenombreCalls);
     }
 
     public function test_si_todo_ya_renombrado_solo_repara(): void
@@ -130,14 +141,14 @@ final class RenombrarEsquemaIdempotenciaTest extends TestCase
         $dbRol = new SpyDBRol();
         $invoke = $this->makeRenombrarSoloEsquemaHelper();
 
-        $invoke($dbRol, $pdo, 'esquema_oldv', 'esquema_newv');
+        $invoke($dbRol, $pdo, 'esquema_oldv', 'esquema_newv', 'pwd');
 
+        $this->assertSame(['esquema_oldv'], $dbRol->renombrarUsuarioCalls);
         $this->assertSame(['esquema_oldv'], $dbRol->renombrarSchemaCalls);
-        $this->assertSame([], $dbRol->renombrarUsuarioCalls, 'sv-e no debe tocar el rol (ya lo hizo el bloque sv).');
         $this->assertSame(
             [],
             $dbRol->repararEsquemaPostRenombreCalls,
-            'En esta primera pasada el esquema nuevo todavía no existe en pdo, así que no podemos reparar.',
+            'Tras renombrar el esquema el spy no refleja el rol nuevo; reparar queda para la segunda pasada.',
         );
     }
 
@@ -147,7 +158,7 @@ final class RenombrarEsquemaIdempotenciaTest extends TestCase
         $dbRol = new SpyDBRol();
         $invoke = $this->makeRenombrarSoloEsquemaHelper();
 
-        $invoke($dbRol, $pdo, 'esquema_oldv', 'esquema_newv');
+        $invoke($dbRol, $pdo, 'esquema_oldv', 'esquema_newv', 'pwd');
 
         $this->assertSame([], $dbRol->renombrarSchemaCalls);
         $this->assertSame(['esquema_newv'], $dbRol->repararEsquemaPostRenombreCalls);
@@ -163,6 +174,8 @@ final class SpyDBRol extends DBRol
     public array $renombrarUsuarioCalls = [];
     /** @var list<string> */
     public array $repararEsquemaPostRenombreCalls = [];
+    /** @var list<string> */
+    public array $crearUsuarioCalls = [];
 
     public ?string $lastUser = null;
     public ?string $lastPwd = null;
@@ -210,6 +223,13 @@ final class SpyDBRol extends DBRol
     public function repararEsquemaPostRenombre(string $esquemaNombre): bool
     {
         $this->repararEsquemaPostRenombreCalls[] = $esquemaNombre;
+
+        return true;
+    }
+
+    public function crearUsuario()
+    {
+        $this->crearUsuarioCalls[] = (string) $this->lastUser;
 
         return true;
     }
