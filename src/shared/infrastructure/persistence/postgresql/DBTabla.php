@@ -328,6 +328,7 @@ class DBTabla extends DBAbstract
         $dump_nou = preg_replace($pattern, '$1' . $crNew . '$2', $dump_nou) ?? $dump_nou;
         $pattern = "/(SET DEFAULT\s*')".preg_quote($dlRef, '/')."(')/";
         $dump_nou = preg_replace($pattern, '$1' . $dlNew . '$2', $dump_nou) ?? $dump_nou;
+        $dump_nou = DBEsquemaCreate::normalizarVolcadoPgDumpParaPsql($dump_nou);
 
         $sqlPath = $this->rutaVolcadoNuevo();
         if (file_put_contents($sqlPath, $dump_nou) === false) {
@@ -499,6 +500,15 @@ class DBTabla extends DBAbstract
                 $sqlPath,
                 $destino,
             ));
+        }
+
+        $sql = file_get_contents($sqlPath);
+        if ($sql === false) {
+            throw new \RuntimeException(sprintf(_('No se pudo leer %s'), $sqlPath));
+        }
+        $sql = DBEsquemaCreate::normalizarVolcadoPgDumpParaPsql($sql);
+        if (file_put_contents($sqlPath, $sql) === false) {
+            throw new \RuntimeException(sprintf(_('No se pudo reescribir %s'), $sqlPath));
         }
     }
 
