@@ -486,6 +486,7 @@ class DBEsquemaCreate
             . escapeshellarg($sqlPath) . ' '
             . escapeshellarg($dsn)
             . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+        $this->vaciarLog($logFile);
         passthru($command);
         $this->lanzarSiLogPsqlConError($command, $logFile, 4);
 
@@ -570,6 +571,7 @@ class DBEsquemaCreate
             . ' ' . escapeshellarg($dsn)
             . ' > ' . escapeshellarg($logFile) . ' 2>&1';
 
+        $this->vaciarLog($logFile);
         passthru($command);
         $this->lanzarSiLogPsqlConError($command, $logFile, 1);
     }
@@ -598,6 +600,7 @@ class DBEsquemaCreate
             . escapeshellarg($dsn)
             . ' > ' . escapeshellarg($logFile) . ' 2>&1';
 
+        $this->vaciarLog($logFile);
         passthru($command);
         $this->lanzarSiLogPsqlConError($command, $logFile, 2);
     }
@@ -605,23 +608,46 @@ class DBEsquemaCreate
     public function eliminar(): void
     {
         $esquema = $this->getNew();
-        $sql = 'DROP SCHEMA IF EXISTS "' . $esquema . '" CASCADE;';
-        $dsn = $this->getConexionImportar();
-        $logFile = $this->getFileLog();
-        $host = $this->getHost();
+        $this->vaciarLog($this->getFileLog());
+        $this->eliminarEsquemaPorPdo($esquema);
+        // Segunda pasada por si quedaron objetos huérfanos tras el traslado a resto
+        $this->eliminarEsquemaPorPdo($esquema);
+    }
 
-        $psql = $this->binarioPostgres('psql');
-        $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
-            . ' ' . escapeshellarg($psql) . ' -h ' . escapeshellarg($host)
-            . ' -q -X -t --pset pager=off -c ' . escapeshellarg($sql)
-            . ' ' . escapeshellarg($dsn)
-            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+    private function eliminarEsquemaPorPdo(string $esquema): void
+    {
+        $config = (new ConfigDB('importar'))->getConexionMantenimiento($this->claveEsquemaImportar());
+        $pdo = (new DBConnection($config))->getPDO();
+        $qEsquema = '"' . str_replace('"', '""', $esquema) . '"';
+        $sqlDrop = 'DROP SCHEMA IF EXISTS ' . $qEsquema . ' CASCADE';
 
-        passthru($command);
-        $this->lanzarSiLogPsqlConError($command, $logFile, 3);
-        // Quizá hay que hacerlo dos veces:
-        passthru($command);
-        $this->lanzarSiLogPsqlConError($command, $logFile, 4);
+        try {
+            $pdo->exec($sqlDrop);
+        } catch (\PDOException $e) {
+            if (!$this->esErrorPropietarioEsquema($e)) {
+                throw new \RuntimeException(sprintf(
+                    _('No se pudo eliminar el esquema «%1$s»: %2$s'),
+                    $esquema,
+                    $e->getMessage(),
+                ), 0, $e);
+            }
+            $pdo->exec('ALTER SCHEMA ' . $qEsquema . ' OWNER TO CURRENT_USER');
+            $pdo->exec($sqlDrop);
+        }
+    }
+
+    private function esErrorPropietarioEsquema(\PDOException $e): bool
+    {
+        $msg = $e->getMessage();
+
+        return str_contains($msg, 'must be owner')
+            || str_contains($msg, 'debe ser dueño')
+            || str_contains($msg, '42501');
+    }
+
+    private function vaciarLog(string $logFile): void
+    {
+        file_put_contents($logFile, '');
     }
 
     private function claveEsquemaImportar(): string
@@ -638,7 +664,7 @@ class DBEsquemaCreate
     private function getConexionImportar(): string
     {
         $oConfigDB = new ConfigDB('importar');
-        $config = $oConfigDB->getEsquema($this->claveEsquemaImportar());
+        $config = $oConfigDB->getConexionMantenimiento($this->claveEsquemaImportar());
 
         return (new DBConnection($config))->getURI();
     }

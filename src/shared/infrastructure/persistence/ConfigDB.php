@@ -174,6 +174,36 @@ class ConfigDB
     }
 
     /**
+     * Conexión de mantenimiento (postgres / importar): host y BD de la plantilla, sin credenciales de rol DL.
+     *
+     * @param string $claveImportar p. ej. `public`, `publicv`, `publicv-e`, `publicf`
+     * @return array<string, mixed>
+     */
+    public function getConexionMantenimiento(string $claveImportar): array
+    {
+        if (!isset($this->data['default']) || !is_array($this->data['default'])) {
+            throw new RuntimeException(sprintf(
+                _('Falta el bloque default en la configuración importar (%s).'),
+                $this->baseLogico,
+            ));
+        }
+
+        $out = $this->data['default'];
+        $plantilla = $this->data[$claveImportar] ?? [];
+        if (!is_array($plantilla)) {
+            return $out;
+        }
+
+        foreach (['host', 'port', 'dbname', 'sslmode', 'sslcert', 'sslkey', 'sslrootcert', 'ssh_user'] as $clave) {
+            if (isset($plantilla[$clave])) {
+                $out[$clave] = $plantilla[$clave];
+            }
+        }
+
+        return $out;
+    }
+
+    /**
      * @param string $database nombre lógico (`comun`, `sv-e`, …) con o sin prefijo `pruebas-`
      */
     public function setDataBase($database): void
