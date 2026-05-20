@@ -353,6 +353,24 @@ class ConfigDB
     }
 
     /**
+     * Quita usuario/password del esquema en los mismos ficheros que {@see addEsquemaEnFicheroPasswords}.
+     */
+    public function removeEsquemaEnFicheroPasswords($database, string $esquema): void
+    {
+        $base = self::normalizarBaseLogico((string) $database);
+        if (self::usaFormatoPartido($base)) {
+            $this->eliminarClaveEnRoles($base, $esquema);
+
+            return;
+        }
+
+        $this->removeEsquemaMonolitico($base, $esquema);
+        if (!preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
+            $this->removeEsquemaMonolitico('pruebas-' . $base, $esquema);
+        }
+    }
+
+    /**
      * Renombra clave de esquema en `.roles.inc` (formato partido) o en ambos monolitos prod/pruebas (legado).
      */
     public function renombrarListaEsquema($database, $esquema_old, $esquema_new): void
@@ -608,7 +626,7 @@ class ConfigDB
         $path = self::dirPwd() . '/' . self::ficheroRolesNombre($ficheroBase);
         $data = self::cargarArrayInc($path);
         $data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd];
-        file_put_contents($path, '<?php return ' . var_export($data, true) . ' ;');
+        $this->guardarArrayInc($path, $data);
     }
 
     private function renombrarClaveEnRoles(string $ficheroBase, string $esquema_old, string $esquema_new): void
@@ -623,36 +641,105 @@ class ConfigDB
         $pwd = $data[$esquema_old]['password'];
         unset($data[$esquema_old]);
         $data[$esquema_new] = ['user' => $esquema_new, 'password' => $pwd];
-        file_put_contents($path, '<?php return ' . var_export($data, true) . ' ;');
+        $this->guardarArrayInc($path, $data);
     }
 
     private function addEsquemaMonolitico(string $database, string $esquema, string $esquema_pwd): void
     {
-        $filename = self::dirPwd() . '/' . $database . '.inc';
-        $data = self::cargarArrayInc($filename);
-        $data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd];
-        file_put_contents($filename, '<?php return ' . var_export($data, true) . ' ;');
+        $entrada = ['user' => $esquema, 'password' => $esquema_pwd];
+        $this->escribirEntradaMonolito($database, $esquema, $entrada);
+        $select = self::nombreMonolitoSelectPar($database);
+        if ($select !== null) {
+            $this->escribirEntradaMonolito($select, $esquema, $entrada);
+        }
+    }
 
-        if ($database === 'sv-e' || $database === 'comun') {
-            $filenameSelect = self::dirPwd() . '/' . $database . '_select.inc';
-            $dataSelect = self::cargarArrayInc($filenameSelect);
-            $dataSelect[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd];
-            file_put_contents($filenameSelect, '<?php return ' . var_export($dataSelect, true) . ' ;');
+    private function removeEsquemaMonolitico(string $database, string $esquema): void
+    {
+        $this->eliminarEntradaMonolito($database, $esquema);
+        $select = self::nombreMonolitoSelectPar($database);
+        if ($select !== null) {
+            $this->eliminarEntradaMonolito($select, $esquema);
         }
     }
 
     private function renombrarClaveEnMonolitico(string $database, string $esquema_old, string $esquema_new): void
     {
-        $filename = self::dirPwd() . '/' . $database . '.inc';
-        $data = self::cargarArrayInc($filename);
+        if (!$this->renombrarEntradaMonolito($database, $esquema_old, $esquema_new)) {
+            return;
+        }
+
+        $select = self::nombreMonolitoSelectPar($database);
+        if ($select !== null) {
+            $this->renombrarEntradaMonolito($select, $esquema_old, $esquema_new);
+        }
+    }
+
+    /**
+     * Par réplica monolito: `comun`↔`comun_select`, `pruebas-comun`↔`pruebas-comun_select`, igual sv-e.
+     */
+    private static function nombreMonolitoSelectPar(string $database): ?string
+    {
+        $norm = self::normalizarBaseLogico($database);
+
+        if ($norm !== 'comun' && $norm !== 'sv-e') {
+            return null;
+        }
+
+        return $database . '_select';
+    }
+
+    /** @param array{user: string, password: string} $entrada */
+    private function escribirEntradaMonolito(string $database, string $esquema, array $entrada): void
+    {
+        $path = self::dirPwd() . '/' . $database . '.inc';
+        $data = self::cargarArrayInc($path);
+        $data[$esquema] = $entrada;
+        $this->guardarArrayInc($path, $data);
+    }
+
+    private function eliminarEntradaMonolito(string $database, string $esquema): void
+    {
+        $path = self::dirPwd() . '/' . $database . '.inc';
+        $data = self::cargarArrayInc($path);
+        if (!isset($data[$esquema])) {
+            return;
+        }
+        unset($data[$esquema]);
+        $this->guardarArrayInc($path, $data);
+    }
+
+    private function renombrarEntradaMonolito(string $database, string $esquema_old, string $esquema_new): bool
+    {
+        $path = self::dirPwd() . '/' . $database . '.inc';
+        $data = self::cargarArrayInc($path);
 
         if (!isset($data[$esquema_old]) || !is_array($data[$esquema_old]) || !isset($data[$esquema_old]['password'])) {
-            return;
+            return false;
         }
 
         $pwd = $data[$esquema_old]['password'];
         unset($data[$esquema_old]);
         $data[$esquema_new] = ['user' => $esquema_new, 'password' => $pwd];
-        file_put_contents($filename, '<?php return ' . var_export($data, true) . ' ;');
+        $this->guardarArrayInc($path, $data);
+
+        return true;
+    }
+
+    private function eliminarClaveEnRoles(string $ficheroBase, string $esquema): void
+    {
+        $path = self::dirPwd() . '/' . self::ficheroRolesNombre($ficheroBase);
+        $data = self::cargarArrayInc($path);
+        if (!isset($data[$esquema])) {
+            return;
+        }
+        unset($data[$esquema]);
+        $this->guardarArrayInc($path, $data);
+    }
+
+    /** @param array<string, mixed> $data */
+    private function guardarArrayInc(string $path, array $data): void
+    {
+        file_put_contents($path, '<?php return ' . var_export($data, true) . ' ;');
     }
 }

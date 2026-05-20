@@ -136,12 +136,35 @@ final class EliminarEsquemaDl
             }
         }
 
+        $this->quitarEntradasPasswordEnFicheros($comun, $sv, $sf, $esquema, $esquemav, $esquemaf);
+
         return $avisos;
     }
 
     private function esEntornoDocker(): bool
     {
         return (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
+    }
+
+    private function quitarEntradasPasswordEnFicheros(
+        int $comun,
+        int $sv,
+        int $sf,
+        string $esquema,
+        string $esquemav,
+        string $esquemaf,
+    ): void {
+        if ($comun !== 0) {
+            (new ConfigDB('comun'))->removeEsquemaEnFicheroPasswords('comun', $esquema);
+        }
+        if ($sv !== 0) {
+            (new ConfigDB('sv'))->removeEsquemaEnFicheroPasswords('sv', $esquemav);
+            (new ConfigDB('sv-e'))->removeEsquemaEnFicheroPasswords('sv-e', $esquemav);
+        }
+        if ($sf !== 0) {
+            (new ConfigDB('sf'))->removeEsquemaEnFicheroPasswords('sf', $esquemaf);
+            (new ConfigDB('sf-e'))->removeEsquemaEnFicheroPasswords('sf-e', $esquemaf);
+        }
     }
 
     /**

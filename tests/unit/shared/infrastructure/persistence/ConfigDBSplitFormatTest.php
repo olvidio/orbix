@@ -180,6 +180,68 @@ final class ConfigDBSplitFormatTest extends TestCase
         $this->assertSame('public', $conn['schema']);
     }
 
+    public function test_add_esquema_monolitico_sincroniza_par_select(): void
+    {
+        $dir = $this->pwdDir();
+        $this->writeInc($dir . '/comun.inc', ['default' => ['host' => 'ext']]);
+        $this->writeInc($dir . '/comun_select.inc', ['default' => ['host' => 'int']]);
+        $this->writeInc($dir . '/pruebas-comun.inc', ['default' => ['host' => 'ext-p']]);
+        $this->writeInc($dir . '/pruebas-comun_select.inc', ['default' => ['host' => 'int-p']]);
+
+        $cfg = new ConfigDB('comun');
+        $cfg->addEsquemaEnFicheroPasswords('comun', 'T-tT', 'pwd-comun');
+        $cfg->addEsquemaEnFicheroPasswords('sv-e', 'T-tTv', 'pwd-sve');
+        // En pre-prod (no docker) addEsquemaEnFicheroPasswords también escribe pruebas-*; aquí lo forzamos.
+        $monolito = new \ReflectionMethod(ConfigDB::class, 'addEsquemaMonolitico');
+        $monolito->setAccessible(true);
+        $monolito->invoke($cfg, 'pruebas-comun', 'T-tT', 'pwd-comun');
+        $monolito->invoke($cfg, 'pruebas-sv-e', 'T-tTv', 'pwd-sve');
+
+        foreach (['comun.inc', 'comun_select.inc', 'pruebas-comun.inc', 'pruebas-comun_select.inc'] as $nombre) {
+            $data = include $dir . '/' . $nombre;
+            $this->assertIsArray($data);
+            $this->assertSame('pwd-comun', $data['T-tT']['password'] ?? null, $nombre);
+        }
+        foreach (['sv-e.inc', 'sv-e_select.inc', 'pruebas-sv-e.inc', 'pruebas-sv-e_select.inc'] as $nombre) {
+            $data = include $dir . '/' . $nombre;
+            $this->assertIsArray($data);
+            $this->assertSame('pwd-sve', $data['T-tTv']['password'] ?? null, $nombre);
+        }
+    }
+
+    public function test_remove_esquema_monolitico_quita_en_par_select(): void
+    {
+        $dir = $this->pwdDir();
+        $this->writeInc($dir . '/comun.inc', [
+            'default' => ['host' => 'h'],
+            'X-xX' => ['user' => 'X-xX', 'password' => 'p'],
+        ]);
+        $this->writeInc($dir . '/comun_select.inc', [
+            'default' => ['host' => 'h2'],
+            'X-xX' => ['user' => 'X-xX', 'password' => 'p'],
+        ]);
+        $this->writeInc($dir . '/pruebas-comun.inc', [
+            'default' => ['host' => 'h3'],
+            'X-xX' => ['user' => 'X-xX', 'password' => 'p'],
+        ]);
+        $this->writeInc($dir . '/pruebas-comun_select.inc', [
+            'default' => ['host' => 'h4'],
+            'X-xX' => ['user' => 'X-xX', 'password' => 'p'],
+        ]);
+
+        $cfg = new ConfigDB('comun');
+        $cfg->removeEsquemaEnFicheroPasswords('comun', 'X-xX');
+        $monolito = new \ReflectionMethod(ConfigDB::class, 'removeEsquemaMonolitico');
+        $monolito->setAccessible(true);
+        $monolito->invoke($cfg, 'pruebas-comun', 'X-xX');
+
+        foreach (['comun.inc', 'comun_select.inc', 'pruebas-comun.inc', 'pruebas-comun_select.inc'] as $nombre) {
+            $data = include $dir . '/' . $nombre;
+            $this->assertIsArray($data);
+            $this->assertArrayNotHasKey('X-xX', $data, $nombre);
+        }
+    }
+
     public function test_crearFicherosPartidos_desde_monolitos(): void
     {
         $base = 'cfgdbtest';
