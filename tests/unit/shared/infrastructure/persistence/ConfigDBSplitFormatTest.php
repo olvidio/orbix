@@ -132,6 +132,34 @@ final class ConfigDBSplitFormatTest extends TestCase
         $this->assertTrue($cfg->tieneEsquema('cfgdb_esq'));
     }
 
+    public function test_getConexionMantenimiento_credenciales_plantilla_y_schema_public(): void
+    {
+        $base = 'cfgdbtest';
+        $dir = $this->pwdDir();
+        $this->writeInc(
+            $dir . '/' . ConfigDB::ficheroConnNombre($base),
+            [
+                'default' => ['host' => 'h-default', 'port' => 5432],
+                'publicv' => ['dbname' => 'pruebas-sv', 'user' => 'postgres', 'password' => 'pgsecret'],
+            ],
+        );
+        $this->writeInc(
+            $dir . '/' . $base . '.roles.inc',
+            [
+                'B-crBv' => ['user' => 'B-crBv', 'password' => 'dlsecret'],
+            ],
+        );
+
+        $cfg = new ConfigDB($base);
+        $conn = $cfg->getConexionMantenimiento('publicv');
+
+        $this->assertSame('postgres', $conn['user']);
+        $this->assertSame('pgsecret', $conn['password']);
+        $this->assertSame('pruebas-sv', $conn['dbname']);
+        $this->assertSame('h-default', $conn['host']);
+        $this->assertSame('public', $conn['schema']);
+    }
+
     public function test_crearFicherosPartidos_desde_monolitos(): void
     {
         $base = 'cfgdbtest';

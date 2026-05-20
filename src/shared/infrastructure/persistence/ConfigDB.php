@@ -174,7 +174,8 @@ class ConfigDB
     }
 
     /**
-     * Conexión de mantenimiento (postgres / importar): host y BD de la plantilla, sin credenciales de rol DL.
+     * Conexión de mantenimiento (postgres / importar): host y BD de la plantilla `public*`, credenciales del
+     * bloque conn o `default` (nunca de un rol región–dl en `.roles.inc`).
      *
      * @param string $claveImportar p. ej. `public`, `publicv`, `publicv-e`, `publicf`
      * @return array<string, mixed>
@@ -189,14 +190,67 @@ class ConfigDB
         }
 
         $out = $this->data['default'];
-        $plantilla = $this->data[$claveImportar] ?? [];
-        if (!is_array($plantilla)) {
-            return $out;
-        }
+        $plantilla = $this->plantillaConnImportar($claveImportar);
 
         foreach (['host', 'port', 'dbname', 'sslmode', 'sslcert', 'sslkey', 'sslrootcert', 'ssh_user'] as $clave) {
             if (isset($plantilla[$clave])) {
                 $out[$clave] = $plantilla[$clave];
+            }
+        }
+
+        foreach (['user', 'password'] as $clave) {
+            if (isset($out[$clave]) && $out[$clave] !== '') {
+                continue;
+            }
+            if (isset($plantilla[$clave]) && $plantilla[$clave] !== '') {
+                $out[$clave] = $plantilla[$clave];
+            }
+        }
+
+        $out['schema'] = 'public';
+
+        if (!isset($out['user'], $out['password']) || $out['user'] === '' || $out['password'] === '') {
+            throw new RuntimeException(sprintf(
+                _('Faltan user/password de mantenimiento en importar (%1$s, plantilla «%2$s»). Revise default y %3$s.'),
+                $this->baseLogico,
+                $claveImportar,
+                self::ficheroConnNombre($this->baseLogico),
+            ));
+        }
+
+        if (!isset($out['port']) || $out['port'] === '') {
+            $out['port'] = 5432;
+        }
+
+        return $out;
+    }
+
+    /**
+     * Bloque `public*` del fichero `.conn.inc` (sin roles DL); complemento desde datos mergeados si hace falta.
+     *
+     * @return array<string, mixed>
+     */
+    private function plantillaConnImportar(string $claveImportar): array
+    {
+        $desdeConn = [];
+        if (self::usaFormatoPartido($this->baseLogico)) {
+            $conn = self::cargarArrayInc(self::dirPwd() . '/' . self::ficheroConnNombre($this->baseLogico));
+            if (is_array($conn[$claveImportar] ?? null)) {
+                $desdeConn = $conn[$claveImportar];
+            }
+        }
+
+        $desdeMerged = $this->data[$claveImportar] ?? [];
+        if (!is_array($desdeMerged)) {
+            $desdeMerged = [];
+        }
+
+        $out = [];
+        foreach (['host', 'port', 'dbname', 'user', 'password', 'sslmode', 'sslcert', 'sslkey', 'sslrootcert', 'ssh_user'] as $clave) {
+            if (isset($desdeConn[$clave])) {
+                $out[$clave] = $desdeConn[$clave];
+            } elseif (isset($desdeMerged[$clave])) {
+                $out[$clave] = $desdeMerged[$clave];
             }
         }
 
