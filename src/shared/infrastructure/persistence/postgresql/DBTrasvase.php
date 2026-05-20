@@ -221,6 +221,15 @@ class DBTrasvase extends DBAbstract
         return (string) $row['tabla'];
     }
 
+    private function esquemaExiste(\PDO $oDbl, string $esquema): bool
+    {
+        $esquema = str_replace('"', '', $esquema);
+        $st = $oDbl->prepare('SELECT 1 FROM pg_namespace WHERE nspname = :nsp LIMIT 1');
+        $st->execute(['nsp' => $esquema]);
+
+        return (bool) $st->fetchColumn();
+    }
+
     private function avisoOmiteTrasladoDl2resto(string $esquema, string $tabla, string $bloque): void
     {
         $this->avisosConexion[] = sprintf(
@@ -236,6 +245,16 @@ class DBTrasvase extends DBAbstract
      */
     private function debeTrasladarDl2resto(\PDO $oDbl, string $esquema, string $tablaIndicadora, string $bloque): bool
     {
+        if (!$this->esquemaExiste($oDbl, $esquema)) {
+            $this->avisosConexion[] = sprintf(
+                _('No existe el esquema «%1$s»; se omite el traslado %2$s a resto.'),
+                $esquema,
+                $bloque,
+            );
+
+            return false;
+        }
+
         if ($this->regclassTabla($oDbl, $esquema, $tablaIndicadora) !== null) {
             return true;
         }
@@ -375,11 +394,15 @@ class DBTrasvase extends DBAbstract
 
     private function asegurarTablaMapId(PDO $oDbl, string $esquemaDestino): void
     {
+        $esquemaDestino = str_replace('"', '', $esquemaDestino);
+        if (!$this->esquemaExiste($oDbl, $esquemaDestino)) {
+            return;
+        }
+
         if ($this->regclassTabla($oDbl, $esquemaDestino, 'map_id') !== null) {
             return;
         }
 
-        $esquemaDestino = str_replace('"', '', $esquemaDestino);
         if ($this->regclassTabla($oDbl, 'resto', 'map_id') !== null) {
             $oDbl->exec(sprintf(
                 'CREATE TABLE %s.map_id (LIKE resto.map_id INCLUDING ALL)',
@@ -422,6 +445,15 @@ class DBTrasvase extends DBAbstract
     {
         $esquemaComun = $this->getRegion() . '-' . $this->getDl();
         $oDblAdmin = $this->getoDblComunDlAdministrador();
+        if (!$this->esquemaExiste($oDblAdmin, $esquemaComun)) {
+            $this->avisosConexion[] = sprintf(
+                _('No existe el esquema «%s»; se omiten operaciones con map_id.'),
+                $esquemaComun,
+            );
+
+            return;
+        }
+
         $this->asegurarTablaMapId($oDblAdmin, $esquemaComun);
         $this->sincronizarPermisosMapIdRolDl($oDblAdmin, $esquemaComun);
         $mapIdRepository->setoDbl($oDblAdmin);
@@ -615,9 +647,9 @@ class DBTrasvase extends DBAbstract
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => comisión, dl => delegación, ci => centro interregional.
 
         $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
-        $this->configurarMapIdRepository($MapIdRepository);
         switch ($que) {
             case 'resto2dl':
+                $this->configurarMapIdRepository($MapIdRepository);
                 if ($tipoUbicacion === 'cr') { //no hay delegaciones.
                     $aWhere = ['dl' => '', 'region' => $region];
                     $aOperador = ['dl' => 'IS NULL'];
@@ -756,9 +788,9 @@ class DBTrasvase extends DBAbstract
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
 
         $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
-        $this->configurarMapIdRepository($MapIdRepository);
         switch ($que) {
             case 'resto2dl':
+                $this->configurarMapIdRepository($MapIdRepository);
                 if ($tipoUbicacion === 'cr') { //no hay delegaciones.
                     $aWhere = ['dl' => '', 'region' => $region];
                     $aOperador = ['dl' => 'IS NULL'];
