@@ -31,25 +31,25 @@ class DBEsquemaCreate
      *
      * @var string
      */
-    private $sfileRef;
+    private string $sfileRef = '';
     /**
      * Fichero con el volcado del nuevo esquema de Esquema
      *
      * @var string
      */
-    private $sfileNew;
+    private string $sfileNew = '';
     /**
      * Fichero con el log de la accion de Esquema
      *
      * @var string
      */
-    private $sfileLog;
+    private string $sfileLog = '';
     /**
      * Fichero con la lista de secuencias a actualizar del Esquema
      *
      * @var string
      */
-    private $sfileSeq;
+    private string $sfileSeq = '';
 
     private $sDb;
     private $user;
@@ -60,12 +60,13 @@ class DBEsquemaCreate
     private $ssh_user;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
-    private mixed $sRegionRef;
-    private mixed $sDlRef;
-    private mixed $sDlNew;
-    private mixed $sRegionNew;
-    private mixed $sDbRef;
-    protected array $config;
+    private ?string $sRegionRef = null;
+    private ?string $sDlRef = null;
+    private ?string $sDlNew = null;
+    private ?string $sRegionNew = null;
+    private mixed $sDbRef = null;
+    /** @var array<string, mixed> */
+    protected array $config = [];
 
     /**
      * Constructor de la classe.
@@ -84,11 +85,13 @@ class DBEsquemaCreate
      */
     function __destruct()
     {
-        // No los borro si estoy en debug
-        if (!ConfigGlobal::is_debug_mode()) {
-            $this->deleteFile($this->getFileNew());
-            $this->deleteFile($this->getFileRef());
-            $this->deleteFile($this->getFileLog());
+        if (ConfigGlobal::is_debug_mode()) {
+            return;
+        }
+        foreach ([$this->sfileNew, $this->sfileRef, $this->sfileLog, $this->sfileSeq] as $path) {
+            if (is_string($path) && $path !== '') {
+                $this->deleteFile($path);
+            }
         }
     }
 
@@ -156,7 +159,12 @@ class DBEsquemaCreate
 
     public function getNew()
     {
-        $this->sNew = $this->getRegionNew() . '-' . $this->getDlNew();
+        if ($this->sRegionNew === null || $this->sDlNew === null
+            || $this->sRegionNew === '' || $this->sDlNew === '') {
+            throw new \RuntimeException(_('Faltan región y dl del esquema (setRegionNew / setDlNew).'));
+        }
+
+        $this->sNew = $this->sRegionNew . '-' . $this->sDlNew;
         switch ($this->getDb()) {
             case 'comun':
             case 'comun_select':
@@ -186,7 +194,12 @@ class DBEsquemaCreate
 
     public function getRef()
     {
-        $this->sRef = $this->getRegionRef() . '-' . $this->getDlRef();
+        if ($this->sRegionRef === null || $this->sDlRef === null
+            || $this->sRegionRef === '' || $this->sDlRef === '') {
+            throw new \RuntimeException(_('Faltan región y dl de referencia (setRegionRef / setDlRef).'));
+        }
+
+        $this->sRef = $this->sRegionRef . '-' . $this->sDlRef;
         switch ($this->getDb()) {
             case 'comun':
             case 'comun_select':
@@ -605,13 +618,24 @@ class DBEsquemaCreate
         $this->lanzarSiLogPsqlConError($command, $logFile, 2);
     }
 
-    public function eliminar(): void
+    /**
+     * @param string|null $nombreEsquema si se indica, no hace falta setRegionNew/setDlNew (p. ej. `B-crBv`)
+     */
+    public function eliminar(?string $nombreEsquema = null): void
     {
-        $esquema = $this->getNew();
+        $esquema = $nombreEsquema ?? $this->getNew();
+        $this->asegurarRutaLogParaEsquema($esquema);
         $this->vaciarLog($this->getFileLog());
         $this->eliminarEsquemaPorPdo($esquema);
         // Segunda pasada por si quedaron objetos huérfanos tras el traslado a resto
         $this->eliminarEsquemaPorPdo($esquema);
+    }
+
+    private function asegurarRutaLogParaEsquema(string $esquema): void
+    {
+        if ($this->sfileLog === '') {
+            $this->sfileLog = $this->getDir() . '/' . $esquema . '.pg_error.sql';
+        }
     }
 
     private function eliminarEsquemaPorPdo(string $esquema): void
