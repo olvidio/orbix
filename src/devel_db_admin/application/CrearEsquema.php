@@ -85,9 +85,10 @@ final class CrearEsquema
             $oDBRol->delGrupo('orbix');
 
             if (!$isDocker) {
-                $config = $oConfigDB->getEsquema('public_select');
+                $configSelect = $oConfigDB->getConexionMantenimiento('public_select');
+                $configSelect['schema'] = 'public_select';
 
-                $oConexion = new DBConnection($config);
+                $oConexion = new DBConnection($configSelect);
                 $oDevelPC = $oConexion->getPDO();
 
                 $oDBRol->setDbConexion($oDevelPC);
@@ -98,7 +99,7 @@ final class CrearEsquema
                 $oDBRol->crearSchema();
 
                 $oDBEsquemaSelect = new DBEsquemaCreate();
-                $oDBEsquemaSelect->setConfig($config);
+                $oDBEsquemaSelect->setConfig($configSelect);
                 $oDBEsquemaSelect->setRegionRef($RegionRef);
                 $oDBEsquemaSelect->setDlRef($DlRef);
                 $oDBEsquemaSelect->setRegionNew($RegionNew);
@@ -162,8 +163,10 @@ final class CrearEsquema
 
             // En Docker, sv-e ya se rellenó con crear(); crear_select duplicaría el .sql en la misma BD.
             if (!$isDocker) {
-                $config = $oConfigDB->getEsquema('publicv-e_select');
-                $oConexion = new DBConnection($config);
+                $configSelect = $oConfigDB->getConexionMantenimiento('publicv-e_select');
+                $configSelect['schema'] = 'publicv-e_select';
+
+                $oConexion = new DBConnection($configSelect);
                 $oDevelPC = $oConexion->getPDO();
 
                 $oDBRol = new DBRol();
@@ -172,7 +175,7 @@ final class CrearEsquema
                 $oDBRol->addGrupo('orbixv');
                 $oDBRol->crearSchema();
                 $oDBEsquemaSelect = new DBEsquemaCreate();
-                $oDBEsquemaSelect->setConfig($config);
+                $oDBEsquemaSelect->setConfig($configSelect);
                 $oDBEsquemaSelect->setRegionRef($RegionRef);
                 $oDBEsquemaSelect->setDlRef($DlRef);
                 $oDBEsquemaSelect->setRegionNew($RegionNew);

@@ -690,20 +690,24 @@ class DBEsquemaCreate
      */
     private function importarVolcadoEnSelect(string $sqlPath, string $logFile, int $numeroComando): void
     {
-        $this->eliminarEsquemaPorPdo($this->getNew());
+        // Reintento con restos de un intento anterior (tablas sin volcado completo).
+        if ($this->contarTablasEsquemaMantenimiento() > 0) {
+            $this->eliminarEsquemaPorPdo($this->getNew());
+        }
+
+        // pg_dump -n no incluye CREATE SCHEMA: debe existir antes del psql (paso crearSchema).
+        $this->asegurarEsquemaExisteParaImport();
+
         $this->asegurarVolcadoCompatibleAntesDeImportar();
 
-        if ($this->esHostPostgresLocal($this->getHost())) {
-            $this->ejecutarPsqlArchivo(
-                $sqlPath,
-                $logFile,
-                $numeroComando,
-                $this->getConexionImportar(),
-                $this->getHost(),
-            );
-        } else {
-            $this->ejecutarPsqlArchivoPorSsh($sqlPath, $logFile, $numeroComando);
-        }
+        $host = (string) ($this->config['host'] ?? $this->getHost());
+        $this->ejecutarPsqlArchivo(
+            $sqlPath,
+            $logFile,
+            $numeroComando,
+            $this->getConexionImportar(),
+            $host,
+        );
 
         $tablas = $this->contarTablasEsquemaMantenimiento();
         if ($tablas === 0) {
@@ -715,6 +719,20 @@ class DBEsquemaCreate
                 $logFile,
             ));
         }
+    }
+
+    /** El .sql de pg_dump asume que el esquema destino ya existe (CREATE SCHEMA IF NOT EXISTS). */
+    private function asegurarEsquemaExisteParaImport(): void
+    {
+        $config = (new ConfigDB('importar'))->getConexionMantenimiento($this->claveEsquemaImportar());
+        $pdo = (new DBConnection($config))->getPDO();
+        $esquema = $this->getNew();
+        if ($this->existeEsquemaEnPdo($pdo, $esquema)) {
+            return;
+        }
+
+        $q = '"' . str_replace('"', '""', $esquema) . '"';
+        $pdo->exec('CREATE SCHEMA IF NOT EXISTS ' . $q . ' AUTHORIZATION ' . $q);
     }
 
     private function ejecutarPsqlArchivo(
@@ -730,47 +748,6 @@ class DBEsquemaCreate
             . ' -U postgres -q -X -t --pset pager=off -v ON_ERROR_STOP=1 --file='
             . escapeshellarg($sqlPath) . ' '
             . escapeshellarg($dsn)
-            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
-        passthru($command);
-        $this->lanzarSiLogPsqlConError($command, $logFile, $numeroComando);
-    }
-
-    private function ejecutarPsqlArchivoPorSsh(string $sqlPath, string $logFile, int $numeroComando): void
-    {
-        $sshUser = $this->getSsh_user();
-        if ($sshUser === null || $sshUser === '') {
-            throw new \RuntimeException(_('Falta ssh_user en la plantilla public_select para importar en el servidor interior.'));
-        }
-
-        $config = (new ConfigDB('importar'))->getConexionMantenimiento($this->claveEsquemaImportar());
-        $dbname = (string) ($config['dbname'] ?? '');
-        if ($dbname === '') {
-            throw new \RuntimeException(sprintf(
-                _('Falta dbname en la conexión de mantenimiento «%s».'),
-                $this->claveEsquemaImportar(),
-            ));
-        }
-
-        $hostLocal = '/var/run/postgresql';
-        $remotePath = '/tmp/orbix_' . basename($sqlPath) . '_' . getmypid() . '.sql';
-        $sshTarget = $sshUser . '@' . $this->getHost();
-        $sshOpts = '-i /var/www/.ssh/id_rsa ';
-
-        $scpCmd = 'LC_ALL=C /usr/bin/scp ' . $sshOpts . escapeshellarg($sqlPath) . ' '
-            . escapeshellarg($sshTarget . ':' . $remotePath);
-        passthru($scpCmd, $scpExit);
-        if ($scpExit !== 0) {
-            throw new \RuntimeException(_('No se pudo copiar el volcado al servidor interior (scp).'));
-        }
-
-        $psqlRemoto = '/usr/bin/psql -U postgres -h ' . escapeshellarg($hostLocal)
-            . ' -d ' . escapeshellarg($dbname)
-            . ' -q -X -t --pset pager=off -v ON_ERROR_STOP=1 --file='
-            . escapeshellarg($remotePath)
-            . ' ; rm -f ' . escapeshellarg($remotePath);
-
-        $command = 'LC_ALL=C /usr/bin/ssh ' . $sshOpts . escapeshellarg($sshTarget) . ' '
-            . escapeshellarg($psqlRemoto)
             . ' > ' . escapeshellarg($logFile) . ' 2>&1';
         passthru($command);
         $this->lanzarSiLogPsqlConError($command, $logFile, $numeroComando);
