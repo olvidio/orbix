@@ -693,7 +693,7 @@ class DBTrasvase extends DBAbstract
                     foreach ($cActividades as $oActividad) {
                         // TODO: $oActividadEx->setNoGenerarProceso(TRUE);
 
-                        if ($ActividadExRepository->Guadar($oActividad, false) === false) { // Pongo el param registrarCambios=false para que no anote cambios.
+                        if ($ActividadExRepository->Guardar($oActividad, false) === false) { // Pongo el param registrarCambios=false para que no anote cambios.
                             $error .= '<br>' . _("no se ha guardado la actividad");
                             exit($error);
                         }
