@@ -320,6 +320,7 @@ class DBEsquemaCreate
         $dump_nou = preg_replace($pattern, $replacement, $dump_nou);
 
         $dump_nou = self::normalizarVolcadoPgDumpParaPsql($dump_nou);
+        $dump_nou = self::repararVolcadoHeredadoYCompatibilidad($dump_nou);
 
         $d = file_put_contents($this->getFileNew(), $dump_nou);
         if ($d === false) {
@@ -352,15 +353,97 @@ class DBEsquemaCreate
         return implode("\n", $out);
     }
 
+    /**
+     * Ajusta volcados de pg_dump reciente para psql del servidor (tablas INHERITS, NOT NULL sueltos).
+     */
+    public static function repararVolcadoHeredadoYCompatibilidad(string $sql): string
+    {
+        $sql = preg_replace(
+            '/(INHERITS\s*\([^);]+\))\s*\n\s*(ALTER\s+TABLE)/i',
+            "$1;\n$2",
+            $sql,
+        ) ?? $sql;
+
+        $reparado = preg_replace_callback(
+            '/CREATE TABLE ((?:"[^"]+"\.)?\w+)\s*\(\s*\n((?:\s*NOT NULL\s+\w+\s*,?\s*\n)+)\)\s*(\nINHERITS\s*\([^)]+\)\s*;?)/i',
+            static function (array $m): string {
+                $table = $m[1];
+                $inherits = rtrim($m[3]);
+                if (!str_ends_with($inherits, ';')) {
+                    $inherits .= ';';
+                }
+                $alters = '';
+                if (preg_match_all('/NOT NULL\s+(\w+)/i', $m[2], $cols)) {
+                    foreach ($cols[1] as $col) {
+                        $alters .= 'ALTER TABLE ONLY ' . $table . ' ALTER COLUMN ' . $col . ' SET NOT NULL;' . "\n";
+                    }
+                }
+
+                return 'CREATE TABLE ' . $table . " (\n)\n" . $inherits . "\n" . $alters;
+            },
+            $sql,
+        );
+
+        return is_string($reparado) ? $reparado : $sql;
+    }
+
     private function renombrarEsquemaEnVolcado(string $dump, string $ref, string $new): string
     {
         $refQ = preg_quote($ref, '/');
-        $out = preg_replace('/"' . $refQ . '"/', '"' . $new . '"', $dump);
-        $out = preg_replace('/\b' . $refQ . '\./', $new . '.', $out);
-        $out = preg_replace('/\bON\s+SCHEMA\s+' . $refQ . '\b/i', 'ON SCHEMA ' . $new, $out);
-        $out = preg_replace('/\bSCHEMA\s+' . $refQ . '\b/i', 'SCHEMA ' . $new, $out);
+        $reemplazos = [
+            '/"' . $refQ . '"/' => '"' . $new . '"',
+            '/\b' . $refQ . '\./' => $new . '.',
+            '/\bON\s+SCHEMA\s+' . $refQ . '\b/i' => 'ON SCHEMA ' . $new,
+            '/\bSCHEMA\s+' . $refQ . '\b/i' => 'SCHEMA ' . $new,
+            '/\bOWNER\s+TO\s+"' . $refQ . '"/i' => 'OWNER TO "' . $new . '"',
+            '/\bAUTHORIZATION\s+"' . $refQ . '"/i' => 'AUTHORIZATION "' . $new . '"',
+            "/public\.idschema\s*\(\s*'" . $refQ . "'::text\s*\)/i" => "public.idschema('" . $new . "'::text)",
+            "/\bsearch_path\s*=\s*'" . $refQ . "'/i" => "search_path = '" . $new . "'",
+            '/\bSchema:\s*' . $refQ . '\b/i' => 'Schema: ' . $new,
+        ];
+        $out = $dump;
+        foreach ($reemplazos as $patron => $sustituto) {
+            $out = preg_replace($patron, $sustituto, $out);
+        }
 
-        return str_replace($ref, $new, $out);
+        return $out;
+    }
+
+    private function majorVersionPostgresServidor(): ?int
+    {
+        try {
+            $oConfigDB = new ConfigDB('importar');
+            $config = $oConfigDB->getEsquema($this->claveEsquemaImportar());
+            $pdo = (new DBConnection($config))->getPDO();
+            $version = $pdo->query('SHOW server_version')->fetchColumn();
+            if (is_string($version) && preg_match('/^(\d+)/', $version, $m) === 1) {
+                return (int) $m[1];
+            }
+        } catch (\Throwable) {
+        }
+
+        return null;
+    }
+
+    public static function rutaBinarioPostgres(string $herramienta, ?int $majorServidor = null): string
+    {
+        $candidatos = [];
+        if ($majorServidor !== null && $majorServidor > 0) {
+            $candidatos[] = '/usr/lib/postgresql/' . $majorServidor . '/bin/' . $herramienta;
+        }
+        $candidatos[] = '/usr/bin/' . $herramienta;
+        foreach ($candidatos as $ruta) {
+            if (is_executable($ruta)) {
+                return $ruta;
+            }
+        }
+
+        return '/usr/bin/' . $herramienta;
+    }
+
+    private function binarioPostgres(string $herramienta): string
+    {
+        return self::rutaBinarioPostgres($herramienta, $this->majorVersionPostgresServidor());
     }
 
     public function crear()
@@ -391,9 +474,10 @@ class DBEsquemaCreate
 
         $logFile = $this->getFileLog();
         $host = $this->getHost();
+        $psql = $this->binarioPostgres('psql');
         $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
-            . ' /usr/bin/psql -h ' . escapeshellarg($host)
-            . ' -U postgres -q -X -t --pset pager=off --file='
+            . ' ' . escapeshellarg($psql) . ' -h ' . escapeshellarg($host)
+            . ' -U postgres -q -X -t --pset pager=off -v ON_ERROR_STOP=1 --file='
             . escapeshellarg($this->getFileNew()) . ' '
             . escapeshellarg($dsn)
             . ' > ' . escapeshellarg($logFile) . ' 2>&1';
@@ -478,7 +562,8 @@ class DBEsquemaCreate
         $schema = $this->getRef();
         $fileRef = $this->getFileRef();
 
-        $command = 'LC_ALL=C /usr/bin/pg_dump -h ' . escapeshellarg($host)
+        $pgDump = $this->binarioPostgres('pg_dump');
+        $command = 'LC_ALL=C ' . escapeshellarg($pgDump) . ' -h ' . escapeshellarg($host)
             . ' -U postgres -s -n ' . escapeshellarg($this->patronPgDumpSchema($schema))
             . ' --file=' . escapeshellarg($fileRef)
             . ' ' . escapeshellarg($dsn)
@@ -504,9 +589,10 @@ class DBEsquemaCreate
         $logFile = $this->getFileLog();
         $host = $this->getHost();
 
+        $psql = $this->binarioPostgres('psql');
         $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
-            . ' /usr/bin/psql -h ' . escapeshellarg($host)
-            . ' -U postgres -q -X -t --pset pager=off --file='
+            . ' ' . escapeshellarg($psql) . ' -h ' . escapeshellarg($host)
+            . ' -U postgres -q -X -t --pset pager=off -v ON_ERROR_STOP=1 --file='
             . escapeshellarg($this->getFileNew()) . ' '
             . escapeshellarg($dsn)
             . ' > ' . escapeshellarg($logFile) . ' 2>&1';
@@ -523,8 +609,10 @@ class DBEsquemaCreate
         $logFile = $this->getFileLog();
         $host = $this->getHost();
 
-        $command = "LC_ALL=C PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . escapeshellarg($host)
-            . " -q -X -t --pset pager=off -c " . escapeshellarg($sql)
+        $psql = $this->binarioPostgres('psql');
+        $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
+            . ' ' . escapeshellarg($psql) . ' -h ' . escapeshellarg($host)
+            . ' -q -X -t --pset pager=off -c ' . escapeshellarg($sql)
             . ' ' . escapeshellarg($dsn)
             . ' > ' . escapeshellarg($logFile) . ' 2>&1';
 
@@ -583,12 +671,21 @@ class DBEsquemaCreate
         }
 
         $detalle = trim((string) file_get_contents($logFile));
-        throw new \RuntimeException(sprintf(
+        $msg = sprintf(
             _('Error pg_dump/psql (comando %1$d). Log: %2$s.%3$s'),
             $numeroComando,
             $logFile,
             $detalle !== '' ? ' ' . $detalle : ' ' . $command,
-        ));
+        );
+        if ($detalle !== ''
+            && str_contains($detalle, 'NOT NULL')
+            && str_contains($detalle, 'syntax error')) {
+            $msg .= ' ' . _(
+                'Suele deberse a pg_dump y psql de versiones distintas; tras desplegar, el cliente debe coincidir con la major del servidor (p. ej. /usr/lib/postgresql/15/bin/).',
+            );
+        }
+
+        throw new \RuntimeException($msg);
     }
 
     /**

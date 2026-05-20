@@ -27,4 +27,25 @@ SQL;
         $this->assertStringNotContainsString('transaction_timeout', $out);
         $this->assertStringContainsString('integer NOT NULL', $out);
     }
+
+    public function test_reparar_convierte_not_null_suelto_en_alter_tras_inherits(): void
+    {
+        $sql = <<<'SQL'
+CREATE TABLE "H-dlb".cd_cargos_activ_dl (
+    NOT NULL id_item
+)
+INHERITS (global.d_cargos_activ)
+ALTER TABLE ONLY "H-dlb".cd_cargos_activ_dl OWNER TO "H-dlb";
+SQL;
+
+        $out = DBEsquemaCreate::repararVolcadoHeredadoYCompatibilidad($sql);
+
+        $this->assertStringContainsString("CREATE TABLE \"H-dlb\".cd_cargos_activ_dl (\n)", $out);
+        $this->assertStringContainsString('INHERITS (global.d_cargos_activ);', $out);
+        $this->assertStringContainsString(
+            'ALTER TABLE ONLY "H-dlb".cd_cargos_activ_dl ALTER COLUMN id_item SET NOT NULL;',
+            $out,
+        );
+        $this->assertStringNotContainsString("NOT NULL id_item\n)", $out);
+    }
 }
