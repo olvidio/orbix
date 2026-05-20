@@ -425,14 +425,35 @@ class DBEsquemaCreate
             $sql,
         ) ?? $sql;
 
+        $sql = self::repararCreateTableNotNullSuelto($sql, conInherits: true);
+        $sql = self::repararCreateTableNotNullSuelto($sql, conInherits: false);
+
+        return $sql;
+    }
+
+    /**
+     * pg_dump ≥17 en tablas heredadas: «NOT NULL col» dentro del CREATE; PG15 exige () + INHERITS + ALTER COLUMN.
+     */
+    private static function repararCreateTableNotNullSuelto(string $sql, bool $conInherits): string
+    {
+        $identTabla = '(?:"[^"]+"\.)?(?:"[^"]+"|\w+)';
+        $lineasNotNull = '((?:\s*NOT NULL\s+\w+\s*,?\s*\n)+)';
+
+        if ($conInherits) {
+            $patron = '/CREATE TABLE (' . $identTabla . ')\s*\(\s*\n'
+                . $lineasNotNull
+                . '(?:\)\s*)?'
+                . '(\s*INHERITS\s*\([^)]+\)\s*;?)/i';
+        } else {
+            $patron = '/CREATE TABLE (' . $identTabla . ')\s*\(\s*\n'
+                . $lineasNotNull
+                . '\)\s*;/i';
+        }
+
         $reparado = preg_replace_callback(
-            '/CREATE TABLE ((?:"[^"]+"\.)?\w+)\s*\(\s*\n((?:\s*NOT NULL\s+\w+\s*,?\s*\n)+)\)\s*(\nINHERITS\s*\([^)]+\)\s*;?)/i',
-            static function (array $m): string {
+            $patron,
+            static function (array $m) use ($conInherits): string {
                 $table = $m[1];
-                $inherits = rtrim($m[3]);
-                if (!str_ends_with($inherits, ';')) {
-                    $inherits .= ';';
-                }
                 $alters = '';
                 if (preg_match_all('/NOT NULL\s+(\w+)/i', $m[2], $cols)) {
                     foreach ($cols[1] as $col) {
@@ -440,12 +461,35 @@ class DBEsquemaCreate
                     }
                 }
 
-                return 'CREATE TABLE ' . $table . " (\n)\n" . $inherits . "\n" . $alters;
+                if ($conInherits) {
+                    $inherits = rtrim($m[3]);
+                    if (!str_ends_with($inherits, ';')) {
+                        $inherits .= ';';
+                    }
+
+                    return 'CREATE TABLE ' . $table . " (\n)\n" . $inherits . "\n" . $alters;
+                }
+
+                return 'CREATE TABLE ' . $table . " (\n)\n);\n" . $alters;
             },
             $sql,
         );
 
         return is_string($reparado) ? $reparado : $sql;
+    }
+
+    /** Relee el .sql generado y aplica normalización/reparación antes de psql (por si el fichero es anterior o incompleto). */
+    private function asegurarVolcadoCompatibleAntesDeImportar(): void
+    {
+        $path = $this->getFileNew();
+        $sql = file_get_contents($path);
+        if ($sql === false || $sql === '') {
+            return;
+        }
+
+        $sql = self::normalizarVolcadoPgDumpParaPsql($sql);
+        $sql = self::repararVolcadoHeredadoYCompatibilidad($sql);
+        file_put_contents($path, $sql);
     }
 
     private function renombrarEsquemaEnVolcado(string $dump, string $ref, string $new): string
@@ -649,6 +693,8 @@ class DBEsquemaCreate
 
     public function importar(): void
     {
+        $this->asegurarVolcadoCompatibleAntesDeImportar();
+
         $dsn = $this->getConexionImportar();
         $logFile = $this->getFileLog();
         $host = $this->getHost();

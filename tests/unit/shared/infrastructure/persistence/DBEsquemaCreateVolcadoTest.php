@@ -48,4 +48,24 @@ SQL;
         );
         $this->assertStringNotContainsString("NOT NULL id_item\n)", $out);
     }
+
+    public function test_reparar_id_schema_sin_parentesis_antes_de_inherits(): void
+    {
+        $sql = <<<'SQL'
+CREATE TABLE "H-dlf".cd_ejemplo (
+    NOT NULL id_schema,
+    NOT NULL id_item
+INHERITS (global.d_ejemplo);
+ALTER TABLE ONLY "H-dlf".cd_ejemplo OWNER TO "H-dlf";
+SQL;
+
+        $out = DBEsquemaCreate::repararVolcadoHeredadoYCompatibilidad($sql);
+
+        $this->assertStringContainsString('INHERITS (global.d_ejemplo);', $out);
+        $this->assertStringContainsString(
+            'ALTER TABLE ONLY "H-dlf".cd_ejemplo ALTER COLUMN id_schema SET NOT NULL;',
+            $out,
+        );
+        $this->assertStringNotContainsString('NOT NULL id_schema', $out);
+    }
 }
