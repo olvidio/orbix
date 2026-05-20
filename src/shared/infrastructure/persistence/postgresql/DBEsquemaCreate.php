@@ -304,20 +304,63 @@ class DBEsquemaCreate
     public function cambiar_nombre()
     {
         $dump = file_get_contents($this->getFileRef());
-        // cambiar nombre esquema
-        $dump_nou = str_replace($this->getRef(), $this->getNew(), $dump);
+        if ($dump === false) {
+            throw new \RuntimeException(sprintf(_('No se pudo leer %s'), $this->getFileRef()));
+        }
+
+        $dump_nou = $this->renombrarEsquemaEnVolcado($dump, $this->getRef(), $this->getNew());
         // comentar "CREATE SCHEMA; que ya está creado
         $dump_nou = str_replace('CREATE SCHEMA', '-- CREATE SCHEMA', $dump_nou);
         // cambiar nombre por defecto de la dl i r
-        $pattern = "/(SET DEFAULT\s*')" . $this->getRegionRef() . "(')/";
-        $replacement = "$1" . $this->getRegionNew() . "$2";
+        $pattern = "/(SET DEFAULT\s*')" . preg_quote($this->getRegionRef(), '/') . "(')/";
+        $replacement = '$1' . $this->getRegionNew() . '$2';
         $dump_nou = preg_replace($pattern, $replacement, $dump_nou);
-        $pattern = "/(SET DEFAULT\s*')" . $this->getDlRef() . "(')/";
-        $replacement = "$1" . $this->getDlNew() . "$2";
+        $pattern = "/(SET DEFAULT\s*')" . preg_quote($this->getDlRef(), '/') . "(')/";
+        $replacement = '$1' . $this->getDlNew() . '$2';
         $dump_nou = preg_replace($pattern, $replacement, $dump_nou);
 
+        $dump_nou = self::normalizarVolcadoPgDumpParaPsql($dump_nou);
+
         $d = file_put_contents($this->getFileNew(), $dump_nou);
-        if ($d === false) printf(_("error al escribir el fichero"));
+        if ($d === false) {
+            printf(_("error al escribir el fichero"));
+        }
+    }
+
+    /**
+     * Quita meta-comandos y GUC de pg_dump ≥ 17.6 que psql antiguo no entiende
+     * (p. ej. \restrict, SET transaction_timeout).
+     */
+    public static function normalizarVolcadoPgDumpParaPsql(string $sql): string
+    {
+        $lines = explode("\n", $sql);
+        $out = [];
+        foreach ($lines as $line) {
+            $trim = ltrim($line);
+            if ($trim !== '' && !str_starts_with($trim, '--')) {
+                if (preg_match('/^\\\\restrict\\b/', $trim) === 1
+                    || preg_match('/^\\\\unrestrict\\b/', $trim) === 1) {
+                    continue;
+                }
+                if (preg_match('/^SET\\s+transaction_timeout\\b/i', $trim) === 1) {
+                    continue;
+                }
+            }
+            $out[] = $line;
+        }
+
+        return implode("\n", $out);
+    }
+
+    private function renombrarEsquemaEnVolcado(string $dump, string $ref, string $new): string
+    {
+        $refQ = preg_quote($ref, '/');
+        $out = preg_replace('/"' . $refQ . '"/', '"' . $new . '"', $dump);
+        $out = preg_replace('/\b' . $refQ . '\./', $new . '.', $out);
+        $out = preg_replace('/\bON\s+SCHEMA\s+' . $refQ . '\b/i', 'ON SCHEMA ' . $new, $out);
+        $out = preg_replace('/\bSCHEMA\s+' . $refQ . '\b/i', 'SCHEMA ' . $new, $out);
+
+        return str_replace($ref, $new, $out);
     }
 
     public function crear()
