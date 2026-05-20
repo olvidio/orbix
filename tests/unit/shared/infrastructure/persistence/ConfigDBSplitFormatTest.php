@@ -43,6 +43,26 @@ final class ConfigDBSplitFormatTest extends TestCase
         $this->assertSame('comun', ConfigDB::baseRolesParaFichero('comun'));
     }
 
+    public function test_sv_e_select_carga_roles_desde_sv_roles_inc(): void
+    {
+        $dir = $this->pwdDir();
+        $this->writeInc(
+            $dir . '/' . ConfigDB::ficheroConnNombre('sv-e_select'),
+            ['default' => ['host' => 'interior', 'dbname' => 'pruebas-sv-e_select']],
+        );
+        $this->writeInc(
+            $dir . '/sv.roles.inc',
+            [
+                'B-crBv' => ['user' => 'B-crBv', 'password' => 'pwd-sv'],
+            ],
+        );
+
+        $cfg = new ConfigDB('sv-e_select');
+
+        $this->assertTrue($cfg->tieneEsquema('B-crBv'));
+        $this->assertSame('pwd-sv', $cfg->getEsquema('B-crBv')['password']);
+    }
+
     public function test_rutaDondeAnadirEsquema_dl_sf_apunta_a_sf_e_roles(): void
     {
         $dir = $this->pwdDir();

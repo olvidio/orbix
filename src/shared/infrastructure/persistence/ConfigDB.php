@@ -264,7 +264,8 @@ class ConfigDB
     {
         $base = self::normalizarBaseLogico($database);
         $this->baseLogico = $base;
-        if (self::usaFormatoPartido($base)) {
+        $baseRoles = self::baseRolesParaFichero($base);
+        if (self::usaFormatoPartido($baseRoles)) {
             $this->data = self::cargarDatosMergeados($base);
 
             return;
@@ -449,7 +450,8 @@ class ConfigDB
             }
         }
 
-        $rolesPath = self::dirPwd() . '/' . self::ficheroRolesNombre($baseLogico);
+        $baseRoles = self::baseRolesParaFichero($baseLogico);
+        $rolesPath = self::dirPwd() . '/' . self::ficheroRolesNombre($baseRoles);
         $roles = self::cargarArrayInc($rolesPath);
 
         $merged = $conn;
@@ -483,6 +485,14 @@ class ConfigDB
         $paths = [self::dirPwd() . '/' . $baseLogico . '.inc'];
         if (ConfigGlobal::WEBDIR === 'pruebas') {
             $paths[] = self::dirPwd() . '/pruebas-' . $baseLogico . '.inc';
+        }
+
+        $baseRoles = self::baseRolesParaFichero($baseLogico);
+        if ($baseRoles !== $baseLogico) {
+            $paths[] = self::dirPwd() . '/' . $baseRoles . '.inc';
+            if (ConfigGlobal::WEBDIR === 'pruebas') {
+                $paths[] = self::dirPwd() . '/pruebas-' . $baseRoles . '.inc';
+            }
         }
 
         return array_values(array_unique($paths));
