@@ -496,6 +496,31 @@ class DBTrasvase extends DBAbstract
         $this->role_vf = $suffix === '' ? $this->role : '"' . $base . $suffix . '"';
     }
 
+    /**
+     * Revoca permisos concedidos en dl2resto (orbix + esquema resto*). Requiere setRegion/setDl/setDbName y {@see usarRolesDelEsquemaObjetivo}.
+     *
+     * @param 'comun'|'sfsv' $permisoDb mismo valor que en {@see addPermisoGlobal}
+     */
+    public function revocarPermisosDl2resto(string $permisoDb): void
+    {
+        if ($permisoDb === 'comun') {
+            $esquema = $this->getRegion() . '-' . $this->getDl();
+            $this->delPermisoRole('comun', $esquema);
+            $this->delPermisoGlobal('comun');
+
+            return;
+        }
+
+        if ($permisoDb === 'sfsv') {
+            $this->delPermisoRole('sfsv', $this->getEsquema());
+            $this->delPermisoGlobal('sfsv');
+
+            return;
+        }
+
+        throw new \InvalidArgumentException(sprintf(_('Tipo de permiso no válido: %s'), $permisoDb));
+    }
+
     public function getEsquema()
     {
         switch ($this->getDbName()) {
