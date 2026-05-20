@@ -3,6 +3,7 @@
 namespace src\shared\infrastructure\persistence\postgresql;
 
 use PDOException;
+use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 
@@ -536,61 +537,78 @@ class DBRol
 
     public function eliminarUsuario()
     {
-        $oDbl = $this->getoDbl();
+        $error = $this->intentarEliminarUsuario();
+        if ($error !== null) {
+            $sClauError = 'DBRol.eliminar.execute ' . $error;
+            $_SESSION['oGestorErrores']->addErrorAppLastError($this->getoDbl(), $sClauError, __LINE__, __FILE__);
+        }
+    }
 
-        $this->limpiarDependenciasUsuario();
+    /**
+     * DROP OWNED en cada BD del cluster y DROP ROLE (conexión de mantenimiento).
+     *
+     * @param list<string>|null $clavesImportar plantillas importar; null = todas las BDs de devel_db_admin
+     * @return string|null mensaje de error si el rol sigue existiendo o no se pudo borrar; null si ok
+     */
+    public function intentarEliminarUsuario(?array $clavesImportar = null): ?string
+    {
+        if ($this->sUser === '' || preg_match('/[^A-Za-z0-9._-]/', $this->sUser)) {
+            return _('Nombre de rol no válido.');
+        }
 
-        $sql = "DROP ROLE IF EXISTS \"$this->sUser\";";
+        $this->limpiarDependenciasUsuario($clavesImportar);
 
-        if (($oDblSt = $oDbl->prepare($sql)) === false) {
-            $sClauError = 'DBRol.eliminar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        } else {
+        $q = '"' . str_replace('"', '""', $this->sUser) . '"';
+        try {
+            $this->getoDbl()->exec("DROP ROLE IF EXISTS {$q}");
+        } catch (\PDOException $e) {
+            return $e->getMessage();
+        }
+
+        if ($this->rolExisteEnConexion($this->getoDbl())) {
+            return _('El rol sigue existiendo tras DROP ROLE.');
+        }
+
+        return null;
+    }
+
+    private function rolExisteEnConexion(\PDO $pdo): bool
+    {
+        $st = $pdo->prepare('SELECT 1 FROM pg_roles WHERE rolname = :rol LIMIT 1');
+        $st->execute(['rol' => $this->sUser]);
+
+        return (bool) $st->fetchColumn();
+    }
+
+    /**
+     * @param list<string>|null $clavesImportar
+     */
+    private function limpiarDependenciasUsuario(?array $clavesImportar = null): void
+    {
+        $claves = $clavesImportar ?? self::clavesImportarParaDropOwned();
+        $oConfigDB = new ConfigDB('importar');
+        $q = '"' . str_replace('"', '""', $this->sUser) . '"';
+
+        foreach ($claves as $clave) {
             try {
-                $ok = $oDblSt->execute();
-            } catch (\PDOException $e) {
-                $sClauError = 'DBRol.eliminar.execute';
-                $sClauError .= ' ' . $e->errorInfo[2];
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
-            }
-            if ($ok === false) {
-                $sClauError = 'DBRol.eliminar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                return false;
+                $config = $oConfigDB->getConexionMantenimiento($clave);
+                $oDbl = (new DBConnection($config))->getPDO();
+                $oDbl->exec("DROP OWNED BY {$q} CASCADE");
+            } catch (\Throwable) {
+                // Best effort en cada BD (comun, sv, sv-e, réplica…).
             }
         }
     }
 
-    private function limpiarDependenciasUsuario(): void
+    /** @return list<string> */
+    private static function clavesImportarParaDropOwned(): array
     {
-        $esquemas = ['public', 'publicv', 'publicf', 'publicv-e'];
-        $oConfigDB = new ConfigDB('importar');
-
-        foreach ($esquemas as $esquema) {
-            try {
-                $config = $oConfigDB->getEsquema($esquema);
-            } catch (\RuntimeException $e) {
-                continue;
-            }
-
-            try {
-                $oConexion = new DBConnection($config);
-                $oDbl = $oConexion->getPDO();
-            } catch (\PDOException) {
-                continue;
-            }
-
-            $sqlDropOwned = "DROP OWNED BY \"$this->sUser\" CASCADE;";
-            if (($oDblSt = $oDbl->prepare($sqlDropOwned)) !== false) {
-                try {
-                    $oDblSt->execute();
-                } catch (\PDOException $e) {
-                    // Best effort: si falla en alguna db, intentamos con las demás.
-                }
-            }
+        $claves = ['public', 'publicv', 'publicf', 'publicv-e', 'publicf-e'];
+        if (!preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
+            $claves[] = 'publicv-e_select';
         }
+
+        return $claves;
     }
 
     private function cambiarPassword()

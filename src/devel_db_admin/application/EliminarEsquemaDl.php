@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace src\devel_db_admin\application;
 
+use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use src\shared\infrastructure\persistence\postgresql\DBEsquemaCreate;
@@ -80,21 +81,31 @@ final class EliminarEsquemaDl
             if ($comun !== 0) {
                 $avisos = array_merge($avisos, $this->eliminarRolSiExiste(
                     $oDBRol,
-                    (new DBConnection($oConfigDB->getEsquema('public')))->getPDO(),
+                    $oConfigDB,
+                    'public',
+                    [$esquema],
                     $esquema,
                 ));
             }
             if ($sv !== 0) {
+                $clavesSv = ['publicv', 'publicv-e'];
+                if (!preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
+                    $clavesSv[] = 'publicv-e_select';
+                }
                 $avisos = array_merge($avisos, $this->eliminarRolSiExiste(
                     $oDBRol,
-                    (new DBConnection($oConfigDB->getEsquema('publicv')))->getPDO(),
+                    $oConfigDB,
+                    'publicv',
+                    $clavesSv,
                     $esquemav,
                 ));
             }
             if ($sf !== 0) {
                 $avisos = array_merge($avisos, $this->eliminarRolSiExiste(
                     $oDBRol,
-                    (new DBConnection($oConfigDB->getEsquema('publicf')))->getPDO(),
+                    $oConfigDB,
+                    'publicf',
+                    ['publicf', 'publicf-e'],
                     $esquemaf,
                 ));
             }
@@ -104,17 +115,32 @@ final class EliminarEsquemaDl
     }
 
     /**
+     * @param list<string> $clavesDropOwned plantillas importar donde ejecutar DROP OWNED
      * @return list<string>
      */
-    private function eliminarRolSiExiste(DBRol $oDBRol, \PDO $pdo, string $rol): array
-    {
+    private function eliminarRolSiExiste(
+        DBRol $oDBRol,
+        ConfigDB $oConfigDB,
+        string $claveDropRole,
+        array $clavesDropOwned,
+        string $rol,
+    ): array {
+        $pdo = (new DBConnection($oConfigDB->getConexionMantenimiento($claveDropRole)))->getPDO();
+
         if (!$this->rolExiste($pdo, $rol)) {
             return [sprintf(_('El rol «%s» ya no existía; no se intentó borrarlo.'), $rol)];
         }
 
         $oDBRol->setDbConexion($pdo);
         $oDBRol->setUser($rol);
-        $oDBRol->eliminarUsuario();
+        $error = $oDBRol->intentarEliminarUsuario($clavesDropOwned);
+        if ($error !== null) {
+            return [sprintf(
+                _('Aviso: no se pudo eliminar el rol «%1$s» (los esquemas ya se borraron): %2$s'),
+                $rol,
+                $error,
+            )];
+        }
 
         return [];
     }
