@@ -675,7 +675,16 @@ class DBEsquemaCreate
         $host = $this->getHost();
         $this->vaciarLog($logFile);
 
-        if (!$this->debeOmitirImportSqlEnReplica($db)) {
+        if ($this->replicaComparteBdConOrigen($db)) {
+            file_put_contents(
+                $logFile,
+                '-- ' . _('Import psql omitido: public_select apunta a la misma BD que el origen (p. ej. docker).') . "\n",
+            );
+        } else {
+            // Esquema vacío de crearSchema() o restos de un intento anterior: limpiar antes del volcado.
+            $this->eliminarEsquemaPorPdo($this->getNew());
+            $this->asegurarVolcadoCompatibleAntesDeImportar();
+
             $psql = $this->binarioPostgres('psql');
             $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
                 . ' ' . escapeshellarg($psql) . ' -h ' . escapeshellarg($host)
@@ -685,11 +694,6 @@ class DBEsquemaCreate
                 . ' > ' . escapeshellarg($logFile) . ' 2>&1';
             passthru($command);
             $this->lanzarSiLogPsqlConError($command, $logFile, 4);
-        } else {
-            file_put_contents(
-                $logFile,
-                '-- ' . _('Import psql omitido en réplica: la estructura ya está en esta BD (misma instancia o réplica lógica).') . "\n",
-            );
         }
 
         if ($this->getHost() === 'db') {
@@ -702,18 +706,8 @@ class DBEsquemaCreate
     }
 
     /**
-     * Evita volcar de nuevo el .sql en select cuando el paso «crear» en origen ya pobló la BD
-     * (réplica lógica) o select apunta a la misma BD que el exterior (docker / config).
+     * true si select y origen son la misma BD física (import duplicaría el paso «crear» del exterior).
      */
-    private function debeOmitirImportSqlEnReplica(string $db): bool
-    {
-        if ($this->replicaComparteBdConOrigen($db)) {
-            return true;
-        }
-
-        return $this->esquemaTieneTablasEnReplica();
-    }
-
     private function replicaComparteBdConOrigen(string $db): bool
     {
         $oConfigDB = new ConfigDB('importar');
@@ -735,22 +729,6 @@ class DBEsquemaCreate
             . '|' . strtolower((string) ($c['dbname'] ?? ''));
 
         return $firma($origen) === $firma($replica);
-    }
-
-    private function esquemaTieneTablasEnReplica(): bool
-    {
-        try {
-            $config = (new ConfigDB('importar'))->getConexionMantenimiento($this->claveEsquemaImportar());
-            $pdo = (new DBConnection($config))->getPDO();
-            $st = $pdo->prepare(
-                "SELECT COUNT(*) FROM pg_tables WHERE schemaname = :s AND tablename NOT LIKE 'pg\\_%'",
-            );
-            $st->execute(['s' => $this->getNew()]);
-
-            return (int) $st->fetchColumn() > 0;
-        } catch (\Throwable) {
-            return false;
-        }
     }
 
     private function crear_local()
