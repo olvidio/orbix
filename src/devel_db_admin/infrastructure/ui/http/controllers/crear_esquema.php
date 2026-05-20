@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 use src\shared\web\ContestarJson;
 use src\devel_db_admin\application\CrearEsquema;
+use src\devel_db_admin\application\CrearEsquemaPrecondicionException;
 
 require_once 'frontend/shared/global_header_front.inc';
 
@@ -27,9 +28,12 @@ try {
         $Qsv,
         $Qsf,
     );
+} catch (CrearEsquemaPrecondicionException $e) {
+    ContestarJson::enviar('', ['ok' => false, 'avisos' => [$e->getMessage()]]);
+    return;
 } catch (\Throwable $e) {
     ContestarJson::enviar($e->getMessage(), 'none', 200);
     return;
 }
 
-ContestarJson::enviar('', 'ok');
+ContestarJson::enviar('', ['ok' => true, 'avisos' => []]);

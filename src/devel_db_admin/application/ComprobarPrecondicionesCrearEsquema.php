@@ -80,11 +80,51 @@ final class ComprobarPrecondicionesCrearEsquema
         );
 
         if ($conflictos !== []) {
-            throw new \RuntimeException($this->mensajeConflictos($esquema, $conflictos));
+            throw new CrearEsquemaPrecondicionException($this->mensajeConflictos($esquema, $conflictos));
         }
 
         if ($faltaReferencia !== []) {
-            throw new \RuntimeException($this->mensajeFaltaReferencia($esquemaRefBase, $faltaReferencia));
+            throw new CrearEsquemaPrecondicionException($this->mensajeFaltaReferencia($esquemaRefBase, $faltaReferencia));
+        }
+
+        $this->asegurarRolesCreados($esquema, $esquemav, $esquemaf, $comun, $sv, $sf, $importar);
+    }
+
+    /**
+     * Los roles del paso «1º crear usuarios» deben existir antes del paso 2 (CREATE SCHEMA … AUTHORIZATION).
+     *
+     * @throws CrearEsquemaPrecondicionException
+     */
+    public function asegurarRolesCreados(
+        string $esquema,
+        string $esquemav,
+        string $esquemaf,
+        int $comun,
+        int $sv,
+        int $sf,
+        ?ConfigDB $importar = null,
+    ): void {
+        $importar ??= new ConfigDB('importar');
+        $pdo = $this->pdoDesdeImportar($importar, 'public');
+        if ($pdo === null) {
+            throw new CrearEsquemaPrecondicionException(
+                _('Aviso: no se pudo comprobar los roles (conexión a comun). Ejecute primero el paso «1º crear usuarios».'),
+            );
+        }
+
+        $faltan = [];
+        if ($comun !== 0 && !$this->existeRol($pdo, $esquema)) {
+            $faltan[] = sprintf('• %s: rol «%s»', _('comun'), $esquema);
+        }
+        if ($sv !== 0 && !$this->existeRol($pdo, $esquemav)) {
+            $faltan[] = sprintf('• %s: rol «%s» (%s / %s)', _('sv'), $esquemav, _('sv'), _('sv-e'));
+        }
+        if ($sf !== 0 && !$this->existeRol($pdo, $esquemaf)) {
+            $faltan[] = sprintf('• %s: rol «%s»', _('sf'), $esquemaf);
+        }
+
+        if ($faltan !== []) {
+            throw new CrearEsquemaPrecondicionException($this->mensajeFaltanRoles($esquema, $faltan));
         }
     }
 
@@ -162,6 +202,19 @@ final class ComprobarPrecondicionesCrearEsquema
         return sprintf(
             _('No se puede crear: falta el esquema de referencia «%1$s» en:%2$s%2$s%3$s'),
             $esquemaRefBase,
+            "\n",
+            implode("\n", $lineas),
+        );
+    }
+
+    /**
+     * @param list<string> $lineas
+     */
+    private function mensajeFaltanRoles(string $esquemaBase, array $lineas): string
+    {
+        return sprintf(
+            _('Aviso: no se puede crear la estructura de esquemas para «%1$s». Primero ejecute el paso «1º crear usuarios» (misma región y delegación) y, si hace falta, copie las entradas en los ficheros .inc que indica ese paso.%2$s%2$sRoles que faltan en PostgreSQL:%2$s%3$s'),
+            $esquemaBase,
             "\n",
             implode("\n", $lineas),
         );
