@@ -466,7 +466,30 @@ class DBRol
             return false;
         }
 
-        return $this->repararEsquemaPostRenombre($this->sUser);
+        if ($this->existeEsquemaEnCluster($this->sUser)) {
+            return $this->repararEsquemaPostRenombre($this->sUser);
+        }
+
+        return true;
+    }
+
+    private function existeEsquemaEnCluster(string $nombreEsquema): bool
+    {
+        if ($nombreEsquema === '') {
+            return false;
+        }
+        $oDbl = $this->getoDbl();
+        $st = $oDbl->prepare('SELECT 1 FROM pg_namespace WHERE nspname = :n LIMIT 1');
+        if ($st === false) {
+            return false;
+        }
+        try {
+            $st->execute(['n' => $nombreEsquema]);
+        } catch (PDOException) {
+            return false;
+        }
+
+        return (bool) $st->fetchColumn();
     }
 
     /**

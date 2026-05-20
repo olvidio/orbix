@@ -63,6 +63,7 @@ final class RenombrarEsquema
         }
 
         $isDocker = (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
+        $avisos = [];
 
         $oDBRol = new DBRol();
 
@@ -137,16 +138,35 @@ final class RenombrarEsquema
 
         // *********************  sf  *********************************
         if ($sf !== 0 && $oConfigDBSf !== null) {
-            $oConSf = $this->pdoDesdeImportar($oConfigDB, 'publicf');
-            $this->renombrarBloqueRolEsquema(
-                $oDBRol,
-                $oConSf,
-                $esquema_oldf,
-                $esquemaf,
-                $this->leerPasswordEsquema($oConfigDBSf, $esquema_oldf, $esquemaf),
-            );
+            $pwdSf = $this->leerPasswordEsquema($oConfigDBSf, $esquema_oldf, $esquemaf);
             $this->renombrarClaveInc($oConfigDBSf, 'sf', $esquema_oldf, $esquemaf);
-            $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sf');
+            $this->renombrarClaveInc($oConfigDBSf, 'sf-e', $esquema_oldf, $esquemaf);
+
+            if ($this->delegacionSfTieneEsquemaEnPostgres($oConfigDB, $esquema_oldf, $esquemaf)) {
+                $oConSf = $this->pdoDesdeImportar($oConfigDB, 'publicf');
+                $this->renombrarBloqueRolEsquema(
+                    $oDBRol,
+                    $oConSf,
+                    $esquema_oldf,
+                    $esquemaf,
+                    $pwdSf,
+                );
+                $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sf');
+            } elseif ($this->delegacionSfTieneRolEnPostgres($oConfigDB, $esquema_oldf, $esquemaf)) {
+                $oConSf = $this->pdoDesdeImportar($oConfigDB, 'publicf');
+                $this->renombrarSoloRolDelegacionSf($oDBRol, $oConSf, $esquema_oldf, $esquemaf, $pwdSf);
+                $avisos[] = sprintf(
+                    _('Aviso: en sf solo existía el rol «%1$s»/«%2$s», no el esquema (no se marcó sf al «crear esquema»). Se renombró el rol y las claves .inc; no se tocó la BD sf-e.'),
+                    $esquema_oldf,
+                    $esquemaf,
+                );
+            } else {
+                $avisos[] = sprintf(
+                    _('Aviso: sf marcado en el formulario pero no hay esquema ni rol «%1$s»/«%2$s» en PostgreSQL; solo se actualizaron los .inc si existían.'),
+                    $esquema_oldf,
+                    $esquemaf,
+                );
+            }
         }
 
         // ESQUEMAS: CAMBIOS EN TABLAS ////////////////////////////////////////
@@ -308,7 +328,7 @@ final class RenombrarEsquema
             }
         }
 
-        return ['avisos' => $oDBRol->consumirAvisosRenameRol()];
+        return ['avisos' => array_merge($avisos, $oDBRol->consumirAvisosRenameRol())];
     }
 
     /**
@@ -326,7 +346,7 @@ final class RenombrarEsquema
             ['db' => 'sv', 'old' => $ctx->esquemaOldv, 'new' => $ctx->esquemaNewv],
             ['db' => 'sv-e', 'old' => $ctx->esquemaOldv, 'new' => $ctx->esquemaNewv],
         ];
-        if ($ctx->sf !== 0) {
+        if ($ctx->sf !== 0 && $this->delegacionSfAplicaEnRenombre($ctx)) {
             $intentos[] = ['db' => 'sf', 'old' => $ctx->esquemaOldf, 'new' => $ctx->esquemaNewf];
         }
         foreach ($intentos as $row) {
@@ -436,6 +456,70 @@ final class RenombrarEsquema
     /**
      * Garantiza el rol destino antes de ALTER SCHEMA … OWNER (evita «no existe el rol» tras un rename a medias).
      */
+    private function delegacionSfAplicaEnRenombre(RenombrarEsquemaVerificacionContexto $ctx): bool
+    {
+        if ($this->incTieneClave('sf', $ctx->esquemaOldf) || $this->incTieneClave('sf', $ctx->esquemaNewf)) {
+            return true;
+        }
+
+        return $this->delegacionSfTieneRolEnPostgres(
+            new ConfigDB('importar'),
+            $ctx->esquemaOldf,
+            $ctx->esquemaNewf,
+        ) || $this->delegacionSfTieneEsquemaEnPostgres(
+            new ConfigDB('importar'),
+            $ctx->esquemaOldf,
+            $ctx->esquemaNewf,
+        );
+    }
+
+    private function delegacionSfTieneEsquemaEnPostgres(
+        ConfigDB $oConfigDB,
+        string $esquemaOldf,
+        string $esquemaNewf,
+    ): bool {
+        try {
+            $pdo = $this->pdoDesdeImportar($oConfigDB, 'publicf');
+
+            return $this->existeEsquema($pdo, $esquemaOldf) || $this->existeEsquema($pdo, $esquemaNewf);
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    private function delegacionSfTieneRolEnPostgres(
+        ConfigDB $oConfigDB,
+        string $esquemaOldf,
+        string $esquemaNewf,
+    ): bool {
+        try {
+            $pdo = $this->pdoDesdeImportar($oConfigDB, 'publicf');
+
+            return $this->existeRol($pdo, $esquemaOldf) || $this->existeRol($pdo, $esquemaNewf);
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    /**
+     * Rol «…f» creado en «crear usuarios» sin esquema sf (crear esquema sin checkbox sf).
+     */
+    private function renombrarSoloRolDelegacionSf(
+        DBRol $oDBRol,
+        PDO $pdo,
+        string $esquemaOldf,
+        string $esquemaNewf,
+        ?string $pwd,
+    ): void {
+        $oDBRol->setDbConexion($pdo);
+        $oDBRol->setUser($esquemaNewf);
+        if ($pwd !== null) {
+            $oDBRol->setPwd($pwd);
+        }
+
+        $this->asegurarRolDestinoRenombre($oDBRol, $pdo, $esquemaOldf, $esquemaNewf, $pwd);
+    }
+
     private function asegurarRolDestinoRenombre(
         DBRol $oDBRol,
         PDO $pdo,
