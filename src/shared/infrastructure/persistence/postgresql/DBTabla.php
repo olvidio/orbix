@@ -180,10 +180,18 @@ class DBTabla extends DBAbstract
         $this->sDb = $db;
     }
 
-    public function getFileRef()
+    public function getFileRef(): string
     {
-        $this->sfileRef = empty($this->sfileRef) ? $this->getDir() . '/dbRef' . $this->getRef() . '.' . $this->getDb() . '.sql' : $this->sfileRef;
-        return $this->sfileRef;
+        if ($this->sfileRef !== '') {
+            return $this->sfileRef;
+        }
+
+        return $this->rutaVolcadoRef();
+    }
+
+    private function rutaVolcadoRef(): string
+    {
+        return $this->getDir() . '/dbRef' . $this->getRef() . '.' . $this->getDb() . '.sql';
     }
 
     public function setFileRef($fileRef)
@@ -213,10 +221,18 @@ class DBTabla extends DBAbstract
         $this->sfileLogW = $fileLog;
     }
 
-    public function getFileNew()
+    public function getFileNew(): string
     {
-        $this->sfileNew = empty($this->sfileNew) ? $this->getDir() . '/dbNew' . $this->getNew() . '.' . $this->getDb() . '.sql' : $this->sfileNew;
-        return $this->sfileNew;
+        if ($this->sfileNew !== '') {
+            return $this->sfileNew;
+        }
+
+        return $this->rutaVolcadoNuevo();
+    }
+
+    private function rutaVolcadoNuevo(): string
+    {
+        return $this->getDir() . '/dbNew' . $this->getNew() . '.' . $this->getDb() . '.sql';
     }
 
     public function setFileNew($fileNew)
@@ -283,8 +299,10 @@ class DBTabla extends DBAbstract
 
     private function prepararFicherosVolcadoCopiar(): void
     {
-        foreach ([$this->getFileRef(), $this->getFileNew()] as $path) {
-            if (is_string($path) && $path !== '' && is_file($path)) {
+        $this->sfileRef = '';
+        $this->sfileNew = '';
+        foreach ([$this->rutaVolcadoRef(), $this->rutaVolcadoNuevo()] as $path) {
+            if (is_file($path)) {
                 $this->deleteFile($path);
             }
         }
@@ -311,8 +329,9 @@ class DBTabla extends DBAbstract
         $pattern = "/(SET DEFAULT\s*')".preg_quote($dlRef, '/')."(')/";
         $dump_nou = preg_replace($pattern, '$1' . $dlNew . '$2', $dump_nou) ?? $dump_nou;
 
-        if (file_put_contents($this->getFileNew(), $dump_nou) === false) {
-            throw new \RuntimeException(sprintf(_('No se pudo escribir %s'), $this->getFileNew()));
+        $sqlPath = $this->rutaVolcadoNuevo();
+        if (file_put_contents($sqlPath, $dump_nou) === false) {
+            throw new \RuntimeException(sprintf(_('No se pudo escribir %s'), $sqlPath));
         }
     }
 
@@ -442,19 +461,45 @@ class DBTabla extends DBAbstract
 
     public function importar(): void
     {
+        $sqlPath = $this->rutaVolcadoNuevo();
+        $this->asegurarVolcadoDestinoCoherente($sqlPath);
+
         $dsn = $this->getConexionImportar();
         $logFile = $this->getFileLogW();
         $host = $this->getHost();
+        file_put_contents($logFile, '');
 
         $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
             . ' /usr/bin/psql -h ' . escapeshellarg($host)
             . ' -U postgres -q -X -t --pset pager=off --file='
-            . escapeshellarg($this->getFileNew()) . ' '
+            . escapeshellarg($sqlPath) . ' '
             . escapeshellarg($dsn)
             . ' > ' . escapeshellarg($logFile) . ' 2>&1';
 
         passthru($command);
-        $this->lanzarSiLogConError($command, $logFile, 3, 'psql');
+        $this->lanzarSiLogConError($command, $logFile, 3, 'psql', $sqlPath);
+    }
+
+    private function asegurarVolcadoDestinoCoherente(string $sqlPath): void
+    {
+        if (!is_readable($sqlPath)) {
+            throw new \RuntimeException(sprintf(
+                _('No existe el volcado para importar: %s (origen «%s» → destino «%s»).'),
+                $sqlPath,
+                $this->getRef(),
+                $this->getNew(),
+            ));
+        }
+
+        $muestra = (string) file_get_contents($sqlPath, false, null, 0, 65536);
+        $destino = $this->getNew();
+        if ($destino !== '' && !str_contains($muestra, '"' . $destino . '"')) {
+            throw new \RuntimeException(sprintf(
+                _('El fichero %1$s no contiene el esquema destino «%2$s» (¿volcado antiguo dbNewEu-crEu u otro?). Regenerar el paso 3.'),
+                $sqlPath,
+                $destino,
+            ));
+        }
     }
 
     /**
@@ -623,19 +668,25 @@ class DBTabla extends DBAbstract
         return true;
     }
 
-    private function lanzarSiLogConError(string $command, string $logFile, int $numeroComando, string $herramienta): void
-    {
+    private function lanzarSiLogConError(
+        string $command,
+        string $logFile,
+        int $numeroComando,
+        string $herramienta,
+        ?string $sqlPath = null,
+    ): void {
         if ($this->logPsqlSinErrorReal($logFile)) {
             return;
         }
 
         $detalle = trim((string) file_get_contents($logFile));
         throw new \RuntimeException(sprintf(
-            _('Error %1$s (comando %2$d). Origen «%3$s» → destino «%4$s». Log: %5$s.%6$s'),
+            _('Error %1$s (comando %2$d). Origen «%3$s» → destino «%4$s». SQL: %5$s. Log: %6$s.%7$s'),
             $herramienta,
             $numeroComando,
             $this->getRef(),
             $this->getNew(),
+            $sqlPath ?? $this->rutaVolcadoNuevo(),
             $logFile,
             $detalle !== '' ? ' ' . $detalle : ' ' . $command,
         ));
