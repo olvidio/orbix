@@ -1,0 +1,133 @@
+<?php
+
+use frontend\shared\config\OrbixRuntime;
+
+?>
+<script>
+    fnjs_dl = function () {
+        var filtro_region = $('#region').val();
+        var url = '<?= OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar' ?>';
+        var parametros = 'region=' + encodeURIComponent(filtro_region) + '<?= $h ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#lst_dl').html(rta_txt);
+            });
+    }
+    fnjs_db_crear_usuarios = function () {
+        dl = $('#dl').val();
+        if (!dl) {
+            alert(<?= json_encode((string)$msg_falta_dl) ?>);
+        } else {
+            $('#frm').attr('action', 'frontend/devel_db_admin/controller/db_crear_usuarios.php');
+            fnjs_enviar_formulario('#frm', '#main');
+        }
+    }
+    fnjs_db_crear_esquemas = function () {
+        err = '';
+        dl = $('#dl').val();
+        esquema = $('#esquema').val();
+
+        if (!dl) {
+            alert(<?= json_encode((string)$msg_falta_dl) ?>);
+            err = 1;
+        }
+        if (!esquema) {
+            alert(<?= json_encode((string)$msg_falta_esquema) ?>);
+            err = 1;
+        }
+
+        if (!err) {
+            $('#frm').attr('action', 'frontend/devel_db_admin/controller/db_crear_esquema.php');
+            fnjs_enviar_formulario('#frm', '#main');
+        }
+    }
+    fnjs_db_copiar = function () {
+        err = '';
+        dl = $('#dl').val();
+        esquema = $('#esquema').val();
+
+        if (!dl) {
+            alert(<?= json_encode((string)$msg_falta_dl) ?>);
+            err = 1;
+        }
+        if (!esquema) {
+            alert(<?= json_encode((string)$msg_falta_esquema) ?>);
+            err = 1;
+        }
+
+        if (!err) {
+            $('#frm').attr('action', 'frontend/devel_db_admin/controller/db_copiar.php');
+            fnjs_enviar_formulario('#frm', '#main');
+        }
+    }
+</script>
+
+<h1><?= htmlspecialchars(_('Crear esquema (región–dl)')) ?></h1>
+<p style="text-align:left;max-width:900px;margin:0 0 1em 0"><?= htmlspecialchars(_('Alta de una delegación nueva: usuarios, estructura de tablas (desde un esquema de referencia) e importación de datos desde resto.')) ?></p>
+
+<form id="frm" action="" method="post">
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr style="vertical-align:top; text-align:left">
+            <td><?= htmlspecialchars(_('región')) ?>:</td>
+            <td><?= $oDesplRegiones->desplegable() ?></td>
+            <td><?= htmlspecialchars(_('delegación')) ?>:</td>
+            <td id="lst_dl"></td>
+        </tr>
+    </table>
+
+    <p><?= htmlspecialchars(_('hay que hacer los tres pasos')) ?>:</p>
+    <table>
+        <tr>
+            <td>
+                <input type="button" name="bcrear" onclick="fnjs_db_crear_usuarios()"
+                       value="<?= htmlspecialchars(_('1º crear usuarios')) ?>">
+            </td>
+            <td>
+                <?= htmlspecialchars(_('Crea los usuarios de las bases de datos (comun, sv, sf) y genera passwords para los ficheros .inc.')) ?>
+            </td>
+        </tr>
+    </table>
+
+    <h3><?= htmlspecialchars(_('dl de referencia')) ?></h3>
+    <table>
+        <tr style="vertical-align:top; text-align:left">
+            <td><?= htmlspecialchars(_('esquema')) ?>:</td>
+            <td><?= $oEsquemaRef ?></td>
+        </tr>
+        <tr>
+            <td colspan="4"><?= htmlspecialchars(_('Para las bases de datos')) ?>:</td>
+        </tr>
+        <tr>
+            <td><?= htmlspecialchars(_('comun')) ?>: <input type="checkbox" value="1" checked name="comun"></td>
+            <td><?= htmlspecialchars(_('sv')) ?>: <input type="checkbox" value="1" checked name="sv"></td>
+            <td><?= htmlspecialchars(_('sf')) ?>: <input type="checkbox" value="1" name="sf"></td>
+        </tr>
+        <tr>
+            <td align="right">
+                <input type="button" name="bcrear_esquema" onclick="fnjs_db_crear_esquemas()"
+                       value="<?= htmlspecialchars(_('2º crear esquema')) ?>">
+            </td>
+            <td colspan="3">
+                <?= htmlspecialchars(_('Crea el esquema en la base de datos y copia la estructura de tablas del esquema de referencia.')) ?>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                <input type="button" name="bimportar" onclick="fnjs_db_copiar()"
+                       value="<?= htmlspecialchars(_('3º importar datos de resto')) ?>">
+            </td>
+            <td colspan="3">
+                <?= htmlspecialchars(_('Rellena tablas con datos de resto y los quita de resto cuando corresponda.')) ?>
+            </td>
+        </tr>
+    </table>
+    <p style="text-align:left;max-width:900px">
+        <?= htmlspecialchars(_('Si algo falla, revise permisos de /var/www/orbix/log/db (usuario y grupo www-data) y los ficheros .sql generados.')) ?>
+    </p>
+</form>

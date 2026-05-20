@@ -22,6 +22,7 @@ $oTabla->setDatos((array) ($data['a_valores'] ?? []));
 $oTabla->setBotones([
     ['txt' => _('ejecutar seleccionadas'), 'click' => 'fnjs_migraciones_ejecutar_seleccion()'],
     ['txt' => _('ejecutar hasta la marcada'), 'click' => 'fnjs_migraciones_ejecutar_hasta()'],
+    ['txt' => _('quitar registro de seleccionadas'), 'click' => 'fnjs_migraciones_quitar_registro()'],
 ]);
 
 $oHash = new HashFront();
@@ -37,7 +38,9 @@ $a_campos = [
     'oHash' => $oHash,
     'warnings' => (array) ($data['warnings'] ?? []),
     'url_ejecutar' => OrbixRuntime::getWeb() . '/src/devel_db_admin/migraciones_ejecutar',
+    'url_quitar_registro' => OrbixRuntime::getWeb() . '/src/devel_db_admin/migraciones_quitar_registro',
     'msg_sin_seleccion' => _('debe seleccionar una migracion'),
+    'msg_confirmar_quitar_registro' => _('Esto solo borra el registro de control en migracion_aplicada; no revierte cambios en la base de datos. ¿Continuar?'),
     'msg_hasta_unica' => _('debe marcar una sola migracion para ejecutar hasta esa'),
     'msg_error_respuesta' => _('No se puede interpretar la respuesta del servidor'),
 ];

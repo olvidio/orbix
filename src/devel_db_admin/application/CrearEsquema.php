@@ -35,14 +35,25 @@ final class CrearEsquema
 
         $oDBRol = new DBRol();
 
-        $a_reg = explode('-', $esquemaRef);
-        $RegionRef = $a_reg[0];
-        $DlRef = substr($a_reg[1], 0, -1);
+        $esquemaBase = RenombrarEsquemaVerificacionContexto::baseDesdeCampoOrigen($esquemaRef);
+        if ($esquemaBase === '' || !str_contains($esquemaBase, '-')) {
+            throw new \InvalidArgumentException(_('Esquema de referencia no válido.'));
+        }
+        [$RegionRef, $DlRef] = explode('-', $esquemaBase, 2);
 
         $RegionNew = $region;
         $DlNew = $dl;
 
         $isDocker = (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
+
+        (new ComprobarPrecondicionesCrearEsquema())->asegurarDestinoLibre(
+            $region,
+            $dl,
+            $esquemaBase,
+            $comun,
+            $sv,
+            $sf,
+        );
 
         if ($comun !== 0) {
             $oConfigDB = new ConfigDB('importar');
@@ -138,23 +149,26 @@ final class CrearEsquema
             $oDBEsquemaCreate->crear();
             $oDBRol->delGrupo('orbixv');
 
-            $config = $oConfigDB->getEsquema('publicv-e_select');
-            $oConexion = new DBConnection($config);
-            $oDevelPC = $oConexion->getPDO();
+            // En Docker, sv-e ya se rellenó con crear(); crear_select duplicaría el .sql en la misma BD.
+            if (!$isDocker) {
+                $config = $oConfigDB->getEsquema('publicv-e_select');
+                $oConexion = new DBConnection($config);
+                $oDevelPC = $oConexion->getPDO();
 
-            $oDBRol = new DBRol();
-            $oDBRol->setDbConexion($oDevelPC);
-            $oDBRol->setUser($esquemav);
-            $oDBRol->addGrupo('orbixv');
-            $oDBRol->crearSchema();
-            $oDBEsquemaCreate = new DBEsquemaCreate();
-            $oDBEsquemaCreate->setConfig($config);
-            $oDBEsquemaCreate->setRegionRef($RegionRef);
-            $oDBEsquemaCreate->setDlRef($DlRef);
-            $oDBEsquemaCreate->setRegionNew($RegionNew);
-            $oDBEsquemaCreate->setDlNew($DlNew);
-            $oDBEsquemaCreate->crear_select('sv-e');
-            $oDBRol->delGrupo('orbixv');
+                $oDBRol = new DBRol();
+                $oDBRol->setDbConexion($oDevelPC);
+                $oDBRol->setUser($esquemav);
+                $oDBRol->addGrupo('orbixv');
+                $oDBRol->crearSchema();
+                $oDBEsquemaCreate = new DBEsquemaCreate();
+                $oDBEsquemaCreate->setConfig($config);
+                $oDBEsquemaCreate->setRegionRef($RegionRef);
+                $oDBEsquemaCreate->setDlRef($DlRef);
+                $oDBEsquemaCreate->setRegionNew($RegionNew);
+                $oDBEsquemaCreate->setDlNew($DlNew);
+                $oDBEsquemaCreate->crear_select('sv-e');
+                $oDBRol->delGrupo('orbixv');
+            }
 
             $schema = $RegionNew . '-' . $DlNew;
             $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);

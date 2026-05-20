@@ -18,13 +18,18 @@ $Qcomun = (int) filter_input(INPUT_POST, 'comun');
 $Qsv = (int) filter_input(INPUT_POST, 'sv');
 $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
-(new CrearEsquema($GLOBALS['container']))->ejecutar(
-    $QEsquemaRef,
-    $Qregion,
-    $Qdl,
-    $Qcomun,
-    $Qsv,
-    $Qsf,
-);
+try {
+    (new CrearEsquema($GLOBALS['container']))->ejecutar(
+        $QEsquemaRef,
+        $Qregion,
+        $Qdl,
+        $Qcomun,
+        $Qsv,
+        $Qsf,
+    );
+} catch (\Throwable $e) {
+    ContestarJson::enviar($e->getMessage(), 'none', 200);
+    return;
+}
 
 ContestarJson::enviar('', 'ok');

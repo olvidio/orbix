@@ -15,7 +15,7 @@ $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
 
-PostRequest::getDataFromUrl('/src/devel_db_admin/copiar_esquema', [
+$data = PostRequest::getDataFromUrl('/src/devel_db_admin/copiar_esquema', [
     'esquema' => $QEsquemaRef,
     'region' => $Qregion,
     'dl' => $Qdl,
@@ -25,4 +25,13 @@ PostRequest::getDataFromUrl('/src/devel_db_admin/copiar_esquema', [
 ]);
 
 echo '<br>';
-echo sprintf(_("esquema: %s. Se han pasado todos los datos que se tenían."), $esquema);
+echo sprintf(_("esquema: %s. Se han pasado los datos que se tenían (según bloques aplicables)."), $esquema);
+
+$avisos = $data['avisos'] ?? [];
+if (is_array($avisos) && $avisos !== []) {
+    echo '<br><strong>' . _('Avisos') . ':</strong><ul>';
+    foreach ($avisos as $aviso) {
+        echo '<li>' . htmlspecialchars((string) $aviso, ENT_QUOTES, 'UTF-8') . '</li>';
+    }
+    echo '</ul>';
+}

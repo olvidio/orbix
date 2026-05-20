@@ -1,0 +1,45 @@
+<?php
+
+namespace frontend\devel_db_admin\controller;
+
+use frontend\shared\config\OrbixRuntime;
+use frontend\shared\PostRequest;
+use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\security\HashFront;
+use frontend\shared\web\Desplegable;
+
+// INICIO Cabecera global de URL de controlador *********************************
+require_once 'frontend/shared/global_header_front.inc';
+// FIN de  Cabecera global de URL de controlador ********************************
+
+$dbProps = PostRequest::getDataFromUrl('/src/devel_db_admin/db_propiedades_data', [
+    'op' => 'db_que_esquema_ref',
+]);
+$dbProps = is_array($dbProps) ? $dbProps : [];
+$a_opciones_regiones = (array) ($dbProps['a_opciones_regiones'] ?? []);
+
+$oDesplRegiones = Desplegable::desdeOpciones($a_opciones_regiones, 'region');
+$oDesplRegiones->setAction('fnjs_dl()');
+
+$oHash = new HashFront();
+$oHash->setCamposForm('region!dl!comun!sv!sf');
+$oHash->setcamposNo('comun!sv!sf');
+
+$oHash1 = new HashFront();
+$oHash1->setUrl(OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar');
+$oHash1->setCamposForm('region');
+$h = $oHash1->linkSinValParams();
+
+$msg_falta_dl = _('debe elegir la delegación');
+$msg_confirmar = _('¿Confirma pasar los datos a resto y eliminar los esquemas marcados? Esta acción no se puede deshacer.');
+
+$a_campos = [
+    'oHash' => $oHash,
+    'h' => $h,
+    'oDesplRegiones' => $oDesplRegiones,
+    'msg_falta_dl' => $msg_falta_dl,
+    'msg_confirmar' => $msg_confirmar,
+];
+
+$oView = new ViewNewPhtml('frontend\devel_db_admin\controller');
+$oView->renderizar('db_eliminar_esquema_que.phtml', $a_campos);

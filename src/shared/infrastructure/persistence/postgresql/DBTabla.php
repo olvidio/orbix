@@ -264,6 +264,7 @@ class DBTabla extends DBAbstract
     {
         $this->leer_remote();
         $this->cambiar_nombre();
+        $this->vaciarTablasDestino();
         $this->importar();
         $this->actualizar_schema();
     }
@@ -272,6 +273,7 @@ class DBTabla extends DBAbstract
     {
         $this->leer_local();
         $this->cambiar_nombre();
+        $this->vaciarTablasDestino();
         $this->importar();
         $this->actualizar_schema();
     }
@@ -338,29 +340,34 @@ class DBTabla extends DBAbstract
         passthru($command); // no output to capture so no need to store it
     }
 
-    private function leer_local($data_only = TRUE)
+    private function leer_local(bool $data_only = true): void
     {
-        $a = ($data_only) ? '-a' : '';
-        $sTablas = '';
+        $partesTabla = [];
         foreach ($this->aTablas as $tabla => $param) {
-            $sTablas .= "-t \\\"" . $this->getRef() . "\\\".$tabla ";
+            $partesTabla[] = '-t ' . escapeshellarg($this->tablaPgDumpCalificada($this->getRef(), $tabla));
         }
-        //pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
-        // crear archivo con el password
-        $dsn = $this->getConexion('ref');
-        // leer esquema
-        $command = "/usr/bin/pg_dump -h " . $this->getHost() . "  -U postgres $a $sTablas";
-        $command .= "--file=" . $this->getFileRef() . " ";
-        $command .= "\"" . $dsn . "\"";
-        $command .= " > " . $this->getFileLogR() . " 2>&1";
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($this->getFileLogR());
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PG_DUMP ERROR IN COMMAND(1): %s<br> mirar: %s<br>"), $command, $this->getFileLogR());
-            }
-        }
+
+        $dsn = $this->getConexionImportar();
+        $logFile = $this->getFileLogR();
+        $host = $this->getHost();
+        $soloDatos = $data_only ? '-a ' : '';
+
+        $command = 'LC_ALL=C /usr/bin/pg_dump -h ' . escapeshellarg($host)
+            . ' -U postgres ' . $soloDatos
+            . implode(' ', $partesTabla) . ' '
+            . '--file=' . escapeshellarg($this->getFileRef()) . ' '
+            . escapeshellarg($dsn)
+            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+
+        passthru($command);
+        $this->lanzarSiLogConError($command, $logFile, 1, 'pg_dump');
+    }
+
+    private function tablaPgDumpCalificada(string $schema, string $tabla): string
+    {
+        $schema = str_replace('"', '', $schema);
+
+        return '"' . $schema . '".' . $tabla;
     }
 
     public function eliminarTabla($nom_tabla)
@@ -393,48 +400,47 @@ class DBTabla extends DBAbstract
 
     public function importarAsAdmin()
     {
-        // crear archivo con el password
         $dsn = $this->getConexionAdmin('publicv-e');
+        $logFile = $this->getFileLogW();
+        $host = $this->getHost();
 
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -U postgres -q -X -t ";
-        $command .= "--pset pager=off ";
-        $command .= "--file=" . $this->getFileNew() . " ";
-        $command .= "\"" . $dsn . "\"";
-        $command .= " > " . $this->getFileLogW() . " 2>&1";
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($this->getFileLogW());
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND(2): %s<br><br> mirar en: %s"), $command, $this->getFileLogW());
-                echo "<br>" . _("Si sólo salen números, son las filas que se ha insertado: Está bien.");
-                echo "<pre>$error</pre>";
-                return FALSE;
-            }
+        $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
+            . ' /usr/bin/psql -h ' . escapeshellarg($host)
+            . ' -U postgres -q -X -t --pset pager=off --file='
+            . escapeshellarg($this->getFileNew()) . ' '
+            . escapeshellarg($dsn)
+            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+
+        passthru($command);
+        if ($this->logPsqlSinErrorReal($logFile)) {
+            return true;
         }
-        return TRUE;
+
+        if (ConfigGlobal::is_debug_mode()) {
+            $error = (string) file_get_contents($logFile);
+            echo sprintf(_('PSQL ERROR IN COMMAND(2): %1$s<br><br> mirar en: %2$s'), $command, $logFile);
+            echo '<br>' . _('Si sólo salen números, son las filas que se ha insertado: Está bien.');
+            echo '<pre>' . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . '</pre>';
+        }
+
+        return false;
     }
 
-    public function importar()
+    public function importar(): void
     {
-        // crear archivo con el password
-        $dsn = $this->getConexion('new');
+        $dsn = $this->getConexionImportar();
+        $logFile = $this->getFileLogW();
+        $host = $this->getHost();
 
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -U postgres -q -X -t ";
-        $command .= "--pset pager=off ";
-        $command .= "--file=" . $this->getFileNew() . " ";
-        $command .= "\"" . $dsn . "\"";
-        $command .= " > " . $this->getFileLogW() . " 2>&1";
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($this->getFileLogW());
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND(3): %s<br><br> mirar en: %s"), $command, $this->getFileLogW());
-                echo "<br>" . _("Si sólo salen números, son las filas que se ha insertado: Está bien.");
-                echo "<pre>$error</pre>";
-            }
-        }
+        $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
+            . ' /usr/bin/psql -h ' . escapeshellarg($host)
+            . ' -U postgres -q -X -t --pset pager=off --file='
+            . escapeshellarg($this->getFileNew()) . ' '
+            . escapeshellarg($dsn)
+            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+
+        passthru($command);
+        $this->lanzarSiLogConError($command, $logFile, 3, 'psql');
     }
 
     /**
@@ -530,9 +536,97 @@ class DBTabla extends DBAbstract
         return $oConnection->getPDO();
     }
 
+    /**
+     * Paso copiar: las tablas de config ya existen (vacías) tras crear esquema; si se reintenta
+     * tras un fallo parcial hay que vaciarlas antes del COPY.
+     */
+    private function vaciarTablasDestino(): void
+    {
+        $tablas = array_keys($this->aTablas);
+        if ($tablas === []) {
+            return;
+        }
+
+        $schema = str_replace('"', '', $this->getNew());
+        $qualified = [];
+        foreach ($tablas as $tabla) {
+            $qualified[] = '"' . $schema . '"."' . str_replace('"', '', $tabla) . '"';
+        }
+
+        $oConfigDB = new ConfigDB('importar');
+        $pdo = (new DBConnection($oConfigDB->getEsquema($this->claveEsquemaImportar())))->getPDO();
+        $sql = 'TRUNCATE TABLE ' . implode(', ', $qualified) . ' RESTART IDENTITY CASCADE';
+        $pdo->exec($sql);
+    }
+
+    private function claveEsquemaImportar(): string
+    {
+        return match ($this->sDb) {
+            'comun', 'comun_select', 'pruebas-comun' => 'public',
+            'sv', 'pruebas-sv' => 'publicv',
+            'sv-e', 'sv-e_select', 'pruebas-sv-e' => 'publicv-e',
+            'sf', 'sf-e', 'pruebas-sf', 'pruebas-sf-e' => 'publicf',
+            default => 'public',
+        };
+    }
+
+    private function getConexionImportar(): string
+    {
+        $oConfigDB = new ConfigDB('importar');
+        $config = $oConfigDB->getEsquema($this->claveEsquemaImportar());
+
+        return (new DBConnection($config))->getURI();
+    }
+
+    private function logPsqlSinErrorReal(string $path): bool
+    {
+        if (!is_readable($path)) {
+            return true;
+        }
+        $contents = file_get_contents($path);
+        if ($contents === false || trim($contents) === '') {
+            return true;
+        }
+        foreach (explode("\n", $contents) as $line) {
+            $line = trim($line);
+            if ($line === '' || str_starts_with($line, 'perl: warning:')) {
+                continue;
+            }
+            if (preg_match('/^COPY \d+$/', $line) === 1) {
+                continue;
+            }
+            if (preg_match('/^INSERT 0 \d+$/', $line) === 1) {
+                continue;
+            }
+            if (preg_match('/^\d+$/', $line) === 1) {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function lanzarSiLogConError(string $command, string $logFile, int $numeroComando, string $herramienta): void
+    {
+        if ($this->logPsqlSinErrorReal($logFile)) {
+            return;
+        }
+
+        $detalle = trim((string) file_get_contents($logFile));
+        throw new \RuntimeException(sprintf(
+            _('Error %1$s (comando %2$d). Log: %3$s.%4$s'),
+            $herramienta,
+            $numeroComando,
+            $logFile,
+            $detalle !== '' ? ' ' . $detalle : ' ' . $command,
+        ));
+    }
+
     private function deleteFile($file)
     {
-        $command = "/bin/rm -f " . $file;
-        passthru($command); // no output to capture so no need to store it
+        $command = '/bin/rm -f ' . escapeshellarg($file);
+        passthru($command);
     }
 }

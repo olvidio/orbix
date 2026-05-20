@@ -17,6 +17,7 @@
 148	{40,40}	por centro	tipo=planning_ctr	61	2064	12	t
 126	{30,10}	posibles ca	\N	155	2194	12	t
 254	{20,10}	nuevo esquema	\N	17	33554432	13	t
+1429	{20,11}	eliminar esquema	\N	197	33554432	13	t
 134	{37,10}	buscar cv	sasistentes=agd&sactividad=cv&que=ver	119	2064	12	t
 158	{10,30}	listados	\N	48	33816575	4	t
 121	{10,30}	matricular a todos	\N	104	16	12	t

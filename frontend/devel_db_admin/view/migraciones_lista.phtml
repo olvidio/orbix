@@ -53,6 +53,48 @@
         }
         fnjs_migraciones_enviar('hasta', checked.val());
     }
+
+    fnjs_migraciones_quitar_registro = function () {
+        var checked = fnjs_migraciones_checked();
+        if (!checked.length) {
+            alert(<?= json_encode((string) $msg_sin_seleccion) ?>);
+            return;
+        }
+        if (!confirm(<?= json_encode((string) $msg_confirmar_quitar_registro) ?>)) {
+            return;
+        }
+        $('#migraciones_resultado').text(<?= json_encode((string) _("quitando registro...")) ?>);
+        $.ajax({
+            url: <?= json_encode((string) $url_quitar_registro) ?>,
+            method: 'POST',
+            data: $('#frm_migraciones').serialize(),
+            dataType: 'json'
+        }).done(function (json) {
+            var data = {};
+            if (json && typeof json.data === 'string') {
+                try {
+                    data = JSON.parse(json.data);
+                } catch (e) {
+                    data = {};
+                }
+            } else if (json && json.data) {
+                data = json.data;
+            }
+            var lines = data.lines || [];
+            if (json && json.success !== true) {
+                lines.unshift(json.mensaje || <?= json_encode((string) $msg_error_respuesta) ?>);
+            }
+            if (data.error) {
+                lines.unshift(data.error);
+            }
+            $('#migraciones_resultado').text(lines.join("\n"));
+            if (json && json.success === true && !data.error) {
+                window.location.reload();
+            }
+        }).fail(function () {
+            $('#migraciones_resultado').text(<?= json_encode((string) $msg_error_respuesta) ?>);
+        });
+    }
 </script>
 
 <h1><?= _("migraciones de base de datos") ?></h1>

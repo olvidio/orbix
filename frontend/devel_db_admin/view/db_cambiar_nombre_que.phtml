@@ -233,30 +233,40 @@ use frontend\shared\config\OrbixRuntime;
         </tr>
     </table>
     <br>
-    <br>
     <table>
         <tr>
-            <td>
+            <td style="vertical-align:top">
+                <input type="button" name="bcrear" onclick="fnjs_db_renombrar_esquema()"
+                       value="<?= htmlspecialchars(_("Cambiar nombre del esquema")) ?>">
+            </td>
+            <td style="text-align:left">
+                <?= htmlspecialchars(_("Cambia el nombre del esquema y los valores por defecto asociados.")) ?>
+            </td>
+        </tr>
+    </table>
+
+    <hr style="margin:1.25em 0;max-width:900px;border:0;border-top:1px solid #ccc">
+
+    <p style="text-align:left;margin:0 0 1em 0;max-width:900px">
+        <?= htmlspecialchars(_('Si tras el cambio algo no cuadra (esquemas, roles, db_idschema o ficheros .inc), puede comprobar el estado y, si procede, intentar las correcciones automáticas:')) ?>
+    </p>
+    <table>
+        <tr>
+            <td style="vertical-align:top">
                 <input type="button" name="bverif" onclick="fnjs_db_verificar_renombrar_esquema()"
-                       value="<?= htmlspecialchars(_("Comprobar estado del renombre")) ?>"></td>
-            <td colspan="4" style="text-align:left">
+                       value="<?= htmlspecialchars(_("Comprobar estado del renombre")) ?>">
+            </td>
+            <td style="text-align:left">
                 <?= htmlspecialchars(_('Comprueba esquemas/roles, db_idschema y ficheros .inc frente al nombre objetivo (sin modificar). Origen vacío: solo destino (región + delegación). Con origen relleno: también la transición desde ese nombre antiguo.')) ?>
             </td>
         </tr>
         <tr>
-            <td>
+            <td style="vertical-align:top">
                 <input type="button" name="bcorregir" onclick="fnjs_db_corregir_renombrar_esquema()"
-                       value="<?= htmlspecialchars(_("Intentar correcciones automáticas")) ?>"></td>
-            <td colspan="4" style="text-align:left">
-                <?= htmlspecialchars(_('Reaplica ALTER COLUMN (defaults) según el catálogo en el nombre destino. Origen vacío: solo defaults (no sincroniza .inc ni db_idschema). Con origen y renombre ya hecho en PostgreSQL, también alinea .inc y db_idschema. Vuelve a comprobar al final.')) ?>
+                       value="<?= htmlspecialchars(_("Intentar correcciones automáticas")) ?>">
             </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="button" name="bcrear" onclick="fnjs_db_renombrar_esquema()"
-                       value="<?= htmlspecialchars(_("Cambiar nombre del esquema")) ?>"></td>
-            <td colspan="4" style="text-align:left">
-                <?= htmlspecialchars(_("Cambia el nombre del esquema y los valores por defecto asociados.")) ?>
+            <td style="text-align:left">
+                <?= htmlspecialchars(_('Reaplica ALTER COLUMN (defaults) según el catálogo en el nombre destino. Origen vacío: solo defaults (no sincroniza .inc ni db_idschema). Con origen y renombre ya hecho en PostgreSQL, también alinea .inc y db_idschema. Vuelve a comprobar al final.')) ?>
             </td>
         </tr>
     </table>

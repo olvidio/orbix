@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Ejecuta {@see EliminarEsquemaDl} (POST: region, dl, comun, sv, sf). Respuesta JSON `data`: `"ok"`.
+ * Ejecuta {@see EliminarEsquemaDl} (POST: region, dl, comun, sv, sf). Respuesta JSON `data`: `ok` y `avisos`.
  */
 
 use src\shared\web\ContestarJson;
@@ -17,6 +17,11 @@ $Qcomun = (int) filter_input(INPUT_POST, 'comun');
 $Qsv = (int) filter_input(INPUT_POST, 'sv');
 $Qsf = (int) filter_input(INPUT_POST, 'sf');
 
-(new EliminarEsquemaDl())->ejecutar($Qregion, $Qdl, $Qcomun, $Qsv, $Qsf);
+try {
+    $avisos = (new EliminarEsquemaDl())->ejecutar($Qregion, $Qdl, $Qcomun, $Qsv, $Qsf);
+} catch (\Throwable $e) {
+    ContestarJson::enviar($e->getMessage(), 'none', 200);
+    return;
+}
 
-ContestarJson::enviar('', 'ok');
+ContestarJson::enviar('', ['ok' => true, 'avisos' => $avisos]);

@@ -144,7 +144,8 @@
 170	8	frontend/actividadplazas/controller/plazas_balance_que.php	\N	Balance de Plazas
 43	20	frontend/actividadescentro/controller/activ_ctr.php	\N	actividades centro
 166	2	apps/menus/controller/pasar_a_demo.php	\N	pasar a demo
-17	2	frontend/devel_db_admin/controller/db_que.php	\N	nuevo esquema
+17	2	frontend/devel_db_admin/controller/db_crear_esquema_que.php	\N	nuevo esquema
+197	2	frontend/devel_db_admin/controller/db_eliminar_esquema_que.php	\N	eliminar esquema
 171	4	frontend/profesores/controller/profesor_asignatura_que.php	\N	profesores para asignatura
 173	4	apps/profesores/controller/lista_por_departamentos.php	\N	listado claustro
 64	2	apps/menus/controller/menus_ficheros.php	\N	menu a/de ficheros

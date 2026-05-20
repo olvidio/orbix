@@ -346,18 +346,16 @@ class DBEsquemaCreate
         $oConnection = new DBConnection($this->config);
         $dsn = $oConnection->getURI();
 
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -U postgres -q  -X -t --pset pager=off ";
-        $command .= "--file=" . $this->getFileNew() . " ";
-        $command .= "\"" . $dsn . "\"";
-        $command .= " > " . $this->getFileLog() . " 2>&1";
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($this->getFileLog());
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
-            }
-        }
+        $logFile = $this->getFileLog();
+        $host = $this->getHost();
+        $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
+            . ' /usr/bin/psql -h ' . escapeshellarg($host)
+            . ' -U postgres -q -X -t --pset pager=off --file='
+            . escapeshellarg($this->getFileNew()) . ' '
+            . escapeshellarg($dsn)
+            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+        passthru($command);
+        $this->lanzarSiLogPsqlConError($command, $logFile, 4);
 
 
         ///// REFRESCAR LA SUBSCRIPCIÓN ///////////
@@ -429,72 +427,125 @@ class DBEsquemaCreate
         */
     }
 
-    private function leer_local()
+    private function leer_local(): void
     {
-        //pg_dump --dbname=postgresql://username:password@host:port/database > file.sql
-        // crear archivo con el password
-        $dsn = $this->getConexion('ref');
-        // leer esquema
-        $command = "/usr/bin/pg_dump -h " . $this->getHost() . " -U postgres -s --schema=\\\"" . $this->getRef() . "\\\" ";
-        $command .= "--file=" . $this->getFileRef() . " ";
-        $command .= "\"" . $dsn . "\"";
-        $command .= " > " . $this->getFileLog() . " 2>&1";
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($this->getFileLog());
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND(1): %s<br> mirar: %s<br>"), $command, $this->getFileLog());
-            }
-        }
+        $dsn = $this->getConexionImportar();
+        $logFile = $this->getFileLog();
+        $host = $this->getHost();
+        $schema = $this->getRef();
+        $fileRef = $this->getFileRef();
+
+        $command = 'LC_ALL=C /usr/bin/pg_dump -h ' . escapeshellarg($host)
+            . ' -U postgres -s -n ' . escapeshellarg($this->patronPgDumpSchema($schema))
+            . ' --file=' . escapeshellarg($fileRef)
+            . ' ' . escapeshellarg($dsn)
+            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+
+        passthru($command);
+        $this->lanzarSiLogPsqlConError($command, $logFile, 1);
     }
 
-    public function importar()
+    /**
+     * pg_dump -n interpreta patrones (psql \dn): nombres con guión deben ir entre comillas dobles.
+     */
+    private function patronPgDumpSchema(string $schema): string
     {
-        // crear archivo con el password
-        $dsn = $this->getConexion('new');
-        // Importar el esquema en la base de datos comun
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -U postgres -q  -X -t --pset pager=off ";
-        $command .= "--file=" . $this->getFileNew() . " ";
-        $command .= "\"" . $dsn . "\"";
-        $command .= " > " . $this->getFileLog() . " 2>&1";
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($this->getFileLog());
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND(2): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
-            }
-        }
+        $schema = str_replace('"', '', $schema);
+
+        return '"' . $schema . '"';
     }
 
-    public function eliminar()
+    public function importar(): void
     {
-        $dsn = $this->getConexion('new');
+        $dsn = $this->getConexionImportar();
+        $logFile = $this->getFileLog();
+        $host = $this->getHost();
+
+        $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
+            . ' /usr/bin/psql -h ' . escapeshellarg($host)
+            . ' -U postgres -q -X -t --pset pager=off --file='
+            . escapeshellarg($this->getFileNew()) . ' '
+            . escapeshellarg($dsn)
+            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+
+        passthru($command);
+        $this->lanzarSiLogPsqlConError($command, $logFile, 2);
+    }
+
+    public function eliminar(): void
+    {
         $esquema = $this->getNew();
-        $sql = "DROP SCHEMA IF EXISTS \\\"" . $esquema . "\\\" CASCADE;";
+        $sql = 'DROP SCHEMA IF EXISTS "' . $esquema . '" CASCADE;';
+        $dsn = $this->getConexionImportar();
+        $logFile = $this->getFileLog();
+        $host = $this->getHost();
 
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -q -X -t --pset pager=off";
-        $command .= " -c \"" . $sql . "\" ";
-        $command .= "\"" . $dsn . "\"";
-        $command .= " > " . $this->getFileLog() . " 2>&1";
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($this->getFileLog());
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND(3): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
-            }
+        $command = "LC_ALL=C PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . escapeshellarg($host)
+            . " -q -X -t --pset pager=off -c " . escapeshellarg($sql)
+            . ' ' . escapeshellarg($dsn)
+            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+
+        passthru($command);
+        $this->lanzarSiLogPsqlConError($command, $logFile, 3);
+        // Quizá hay que hacerlo dos veces:
+        passthru($command);
+        $this->lanzarSiLogPsqlConError($command, $logFile, 4);
+    }
+
+    private function claveEsquemaImportar(): string
+    {
+        return match ($this->getDb()) {
+            'comun', 'comun_select', 'pruebas-comun' => 'public',
+            'sv', 'pruebas-sv' => 'publicv',
+            'sv-e', 'sv-e_select', 'pruebas-sv-e' => 'publicv-e',
+            'sf', 'sf-e', 'pruebas-sf', 'pruebas-sf-e' => 'publicf',
+            default => 'public',
+        };
+    }
+
+    private function getConexionImportar(): string
+    {
+        $oConfigDB = new ConfigDB('importar');
+        $config = $oConfigDB->getEsquema($this->claveEsquemaImportar());
+
+        return (new DBConnection($config))->getURI();
+    }
+
+    /** Ignora avisos perl de locale en stderr; solo cuenta líneas de error reales de psql/pg_dump. */
+    private function logPsqlSinErrorReal(string $path): bool
+    {
+        if (!is_readable($path)) {
+            return true;
         }
-        //Quizá hay que hacerlo dos veces:
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($this->getFileLog());
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
-            }
+        $contents = file_get_contents($path);
+        if ($contents === false || trim($contents) === '') {
+            return true;
         }
+        foreach (explode("\n", $contents) as $line) {
+            $line = trim($line);
+            if ($line === '' || str_starts_with($line, 'perl: warning:')) {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function lanzarSiLogPsqlConError(string $command, string $logFile, int $numeroComando): void
+    {
+        if ($this->logPsqlSinErrorReal($logFile)) {
+            return;
+        }
+
+        $detalle = trim((string) file_get_contents($logFile));
+        throw new \RuntimeException(sprintf(
+            _('Error pg_dump/psql (comando %1$d). Log: %2$s.%3$s'),
+            $numeroComando,
+            $logFile,
+            $detalle !== '' ? ' ' . $detalle : ' ' . $command,
+        ));
     }
 
     /**

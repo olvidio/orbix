@@ -43,6 +43,28 @@ final class ConfigDBSplitFormatTest extends TestCase
         $this->assertSame('comun', ConfigDB::baseRolesParaFichero('comun'));
     }
 
+    public function test_rutaDondeAnadirEsquema_dl_sf_apunta_a_sf_e_roles(): void
+    {
+        $dir = $this->pwdDir();
+        $this->writeInc($dir . '/sf-e.roles.inc', []);
+
+        $ruta = ConfigDB::rutaDondeAnadirEsquema('sf', 'B-crBf');
+
+        $this->assertSame($dir . '/sf-e.roles.inc', $ruta);
+        $this->assertSame('sf-e', ConfigDB::ficheroBaseRolesParaEsquemaRegionDl('B-crBf'));
+    }
+
+    public function test_mensajeAvisoEsquemaConexionFaltante_lleva_prefijo(): void
+    {
+        $dir = $this->pwdDir();
+        $this->writeInc($dir . '/sf-e.roles.inc', []);
+
+        $msg = ConfigDB::mensajeAvisoEsquemaConexionFaltante('sf', 'B-crBf');
+
+        $this->assertStringStartsWith('Aviso:', $msg);
+        $this->assertStringContainsString('sf-e.roles.inc', $msg);
+    }
+
     public function test_formato_partido_merge_conn_y_roles(): void
     {
         $base = 'cfgdbtest';
@@ -81,6 +103,33 @@ final class ConfigDBSplitFormatTest extends TestCase
         $this->assertIsArray($data);
         $this->assertArrayNotHasKey('cfgdb_old', $data);
         $this->assertSame('x', $data['cfgdb_new']['password']);
+    }
+
+    public function test_roles_inc_se_completa_con_monolito_si_falta_clave(): void
+    {
+        $base = 'cfgdbtest';
+        $dir = $this->pwdDir();
+        $this->writeInc(
+            $dir . '/' . ConfigDB::ficheroConnNombre($base),
+            ['default' => ['host' => 'prod-host', 'dbname' => 'orbix']],
+        );
+        $this->writeInc(
+            $dir . '/' . $base . '.roles.inc',
+            [
+                'cfgdb_otro' => ['user' => 'cfgdb_otro', 'password' => 'secret'],
+            ],
+        );
+        $this->writeInc($dir . '/' . $base . '.inc', [
+            'default' => ['host' => 'legacy-host', 'dbname' => 'legacy'],
+            'cfgdb_esq' => ['user' => 'cfgdb_esq', 'password' => 'legacy-secret'],
+        ]);
+
+        $cfg = new ConfigDB($base);
+        $merged = $this->dataFromConfigDb($cfg);
+
+        $this->assertSame('secret', $merged['cfgdb_otro']['password']);
+        $this->assertSame('legacy-secret', $merged['cfgdb_esq']['password']);
+        $this->assertTrue($cfg->tieneEsquema('cfgdb_esq'));
     }
 
     public function test_crearFicherosPartidos_desde_monolitos(): void

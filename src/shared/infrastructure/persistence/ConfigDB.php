@@ -30,18 +30,141 @@ class ConfigDB
     /** @var array<string, mixed> */
     private array $data = [];
 
+    private string $baseLogico = '';
+
     /** @param string $database p. ej. `comun`, `sv-e`, `comun_select` (sin prefijo pruebas-) */
     public function __construct($database)
     {
         $this->setDataBase($database);
     }
 
+    public function getBaseLogico(): string
+    {
+        return $this->baseLogico;
+    }
+
+    public function tieneEsquema(string $esquema): bool
+    {
+        return array_key_exists($esquema, $this->data)
+            && is_array($this->data[$esquema])
+            && (isset($this->data[$esquema]['user']) || isset($this->data[$esquema]['password']));
+    }
+
+    /**
+     * Ruta del fichero donde se definen user/password de esquemas (`.roles.inc` o monolito `.inc`).
+     */
+    public static function rutaFicheroEntradaEsquema(string $ficheroBase): string
+    {
+        $base = self::normalizarBaseLogico($ficheroBase);
+        if (self::usaFormatoPartido($base)) {
+            return self::dirPwd() . '/' . self::ficheroRolesNombre($base);
+        }
+
+        return self::rutaMonolitico($base);
+    }
+
+    /**
+     * Indica el fichero donde conviene añadir la clave (conn para `public*`, roles para región–dl).
+     */
+    public static function rutaDondeAnadirEsquema(string $ficheroBase, string $esquema): string
+    {
+        if (str_starts_with($esquema, 'public')) {
+            $connBase = match ($esquema) {
+                'publicv', 'publicv-e' => 'sv',
+                'publicf', 'publicf-e' => 'sf',
+                default => self::normalizarBaseLogico($ficheroBase),
+            };
+
+            return self::dirPwd() . '/' . self::ficheroConnNombre($connBase);
+        }
+
+        if (preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+v$/', $esquema) === 1) {
+            return self::rutaFicheroEntradaEsquema('sv');
+        }
+        if (preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+f$/', $esquema) === 1) {
+            return self::rutaFicheroEntradaEsquema('sf-e');
+        }
+        if (preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+$/', $esquema) === 1) {
+            return self::rutaFicheroEntradaEsquema('comun');
+        }
+
+        return self::rutaFicheroEntradaEsquema($ficheroBase);
+    }
+
+    public static function mensajeEsquemaConexionFaltante(string $ficheroBase, string $esquema): string
+    {
+        $rutaSugerida = self::rutaDondeAnadirEsquema($ficheroBase, $esquema);
+        $encontrado = self::localizarEsquemaEnFicheros($esquema);
+        if ($encontrado !== null && $encontrado !== $rutaSugerida) {
+            return sprintf(
+                _('El esquema «%1$s» está en %2$s pero no se cargó en la configuración «%3$s»; unifique la entrada en %4$s o corrija el formato (user/password).'),
+                $esquema,
+                $encontrado,
+                $ficheroBase,
+                $rutaSugerida,
+            );
+        }
+
+        $msg = sprintf(
+            _('Hay que añadir los parámetros de conexión para el esquema «%1$s» en %2$s'),
+            $esquema,
+            $rutaSugerida,
+        );
+        $baseMono = self::ficheroBaseRolesParaEsquemaRegionDl($esquema)
+            ?? self::normalizarBaseLogico($ficheroBase);
+        if (self::usaFormatoPartido($baseMono)) {
+            $mono = self::dirPwd() . '/' . $baseMono . '.inc';
+            if ($mono !== $rutaSugerida && is_readable($mono)) {
+                $msg .= ' ' . sprintf(_('(si ya está en %s, se incorporará al recargar)'), $mono);
+            }
+        }
+        if (preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+[vf]?$/', $esquema) === 1) {
+            $msg .= ' ' . _('(suele hacerlo el paso «1º crear usuarios»).');
+        }
+
+        return $msg;
+    }
+
+    /**
+     * Mismo texto que {@see mensajeEsquemaConexionFaltante}, prefijado para listas de avisos no bloqueantes.
+     */
+    public static function mensajeAvisoEsquemaConexionFaltante(
+        string $ficheroBase,
+        string $esquema,
+        string $sufijo = '',
+    ): string {
+        return _('Aviso:') . ' ' . self::mensajeEsquemaConexionFaltante($ficheroBase, $esquema) . $sufijo;
+    }
+
+    /**
+     * Base lógica del `.roles.inc` para esquemas región–dl (`B-xx`, `B-xxv`, `B-xxf`).
+     */
+    public static function ficheroBaseRolesParaEsquemaRegionDl(string $esquema): ?string
+    {
+        if (preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+v$/', $esquema) === 1) {
+            return 'sv';
+        }
+        if (preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+f$/', $esquema) === 1) {
+            return 'sf-e';
+        }
+        if (preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+$/', $esquema) === 1) {
+            return 'comun';
+        }
+
+        return null;
+    }
+
+    public function mensajeEsquemaFaltante(string $esquema): string
+    {
+        return self::mensajeEsquemaConexionFaltante($this->baseLogico, $esquema);
+    }
+
     public function getEsquema($esquema)
     {
         $data = $this->data['default'];
         $data['schema'] = $esquema;
-        if (!array_key_exists($esquema, $this->data)) {
-            throw new RunTimeException(sprintf(_('hay que añadir los parámetros de conexión para el esquema: %s'), $esquema));
+        if (!$this->tieneEsquema($esquema)) {
+            throw new RunTimeException($this->mensajeEsquemaFaltante((string) $esquema));
         }
         foreach ($this->data[$esquema] as $key => $value) {
             $data[$key] = $value;
@@ -56,6 +179,7 @@ class ConfigDB
     public function setDataBase($database): void
     {
         $base = self::normalizarBaseLogico($database);
+        $this->baseLogico = $base;
         if (self::usaFormatoPartido($base)) {
             $this->data = self::cargarDatosMergeados($base);
 
@@ -228,20 +352,21 @@ class ConfigDB
     private static function cargarDatosMergeados(string $baseLogico): array
     {
         $conn = self::cargarArrayInc(self::dirPwd() . '/' . self::ficheroConnNombre($baseLogico));
-        $legacyPath = self::rutaMonolitico($baseLogico);
-        $legacy = is_readable($legacyPath) ? self::cargarArrayInc($legacyPath) : [];
 
-        if ($conn === [] && isset($legacy['default']) && is_array($legacy['default'])) {
-            $conn['default'] = $legacy['default'];
-        } elseif ($conn === [] && isset($legacy['default'])) {
-            $conn['default'] = $legacy['default'];
+        foreach (self::rutasMonoliticoComplementarias($baseLogico) as $legacyPath) {
+            if (!is_readable($legacyPath)) {
+                continue;
+            }
+            $legacy = self::cargarArrayInc($legacyPath);
+            if ($conn === [] && isset($legacy['default']) && is_array($legacy['default'])) {
+                $conn['default'] = $legacy['default'];
+            } elseif ($conn === [] && isset($legacy['default'])) {
+                $conn['default'] = $legacy['default'];
+            }
         }
 
         $rolesPath = self::dirPwd() . '/' . self::ficheroRolesNombre($baseLogico);
         $roles = self::cargarArrayInc($rolesPath);
-        if ($roles === [] && $legacy !== []) {
-            $roles = self::extraerEntradasEsquema($legacy);
-        }
 
         $merged = $conn;
         foreach ($roles as $clave => $valor) {
@@ -251,7 +376,59 @@ class ConfigDB
             $merged[$clave] = $valor;
         }
 
+        foreach (self::rutasMonoliticoComplementarias($baseLogico) as $legacyPath) {
+            if (!is_readable($legacyPath)) {
+                continue;
+            }
+            $legacy = self::cargarArrayInc($legacyPath);
+            foreach (self::extraerEntradasEsquema($legacy) as $clave => $valor) {
+                if (!isset($merged[$clave])) {
+                    $merged[$clave] = $valor;
+                }
+            }
+        }
+
         return $merged;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function rutasMonoliticoComplementarias(string $baseLogico): array
+    {
+        $paths = [self::dirPwd() . '/' . $baseLogico . '.inc'];
+        if (ConfigGlobal::WEBDIR === 'pruebas') {
+            $paths[] = self::dirPwd() . '/pruebas-' . $baseLogico . '.inc';
+        }
+
+        return array_values(array_unique($paths));
+    }
+
+    /**
+     * Devuelve la ruta del primer fichero legible que contiene la clave (diagnóstico).
+     */
+    public static function localizarEsquemaEnFicheros(string $esquema): ?string
+    {
+        foreach (['comun', 'sv', 'sf', 'sf-e'] as $base) {
+            $rolesPath = self::dirPwd() . '/' . self::ficheroRolesNombre($base);
+            if (is_readable($rolesPath)) {
+                $roles = self::cargarArrayInc($rolesPath);
+                if (isset($roles[$esquema]) || isset(self::extraerEntradasEsquema($roles)[$esquema])) {
+                    return $rolesPath;
+                }
+            }
+            foreach (self::rutasMonoliticoComplementarias($base) as $path) {
+                if (!is_readable($path)) {
+                    continue;
+                }
+                $data = self::cargarArrayInc($path);
+                if (isset(self::extraerEntradasEsquema($data)[$esquema])) {
+                    return $path;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

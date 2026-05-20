@@ -25,7 +25,8 @@ id_metamenu;id_mod;url;descripcion
 192;2;frontend/devel_db_admin/controller/db_cambiar_nombre_que.php;cambiar nombre dl
 193;2;frontend/devel_db_admin/controller/db_absorber_esquema_que.php;absorber esquema
 54;2;frontend/devel_db_admin/controller/db_mover_que.php;DB mover tabla
-17;2;frontend/devel_db_admin/controller/db_que.php;nuevo esquema
+17;2;frontend/devel_db_admin/controller/db_crear_esquema_que.php;nuevo esquema
+197;2;frontend/devel_db_admin/controller/db_eliminar_esquema_que.php;eliminar esquema
 19;2;frontend/devel_codegen/controller/factory_form.php;generador de clases
 166;2;apps/menus/controller/pasar_a_demo.php;pasar a demo
 27;2;frontend/configuracion/controller/modulos_select.php;modulos select

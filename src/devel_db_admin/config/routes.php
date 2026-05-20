@@ -36,6 +36,9 @@ return static function ($r): void {
     $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/migraciones_ejecutar', function (): void {
         require __DIR__ . '/../infrastructure/ui/http/controllers/migraciones_ejecutar.php';
     });
+    $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/migraciones_quitar_registro', function (): void {
+        require __DIR__ . '/../infrastructure/ui/http/controllers/migraciones_quitar_registro.php';
+    });
     $r->addRoute(['GET', 'POST'], '/src/devel_db_admin/renombrar_esquema', function (): void {
         require __DIR__ . '/../infrastructure/ui/http/controllers/renombrar_esquema.php';
     });

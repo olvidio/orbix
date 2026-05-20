@@ -1,0 +1,62 @@
+<?php
+
+use frontend\shared\config\OrbixRuntime;
+
+?>
+<script>
+    fnjs_dl = function () {
+        var filtro_region = $('#region').val();
+        var url = '<?= OrbixRuntime::getWeb() . '/src/devel_db_admin/db_lugar' ?>';
+        var parametros = 'region=' + encodeURIComponent(filtro_region) + '<?= $h ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#lst_dl').html(rta_txt);
+            });
+    }
+    fnjs_db_eliminar = function () {
+        var dl = $('#dl').val();
+        if (!dl) {
+            alert(<?= json_encode((string)$msg_falta_dl) ?>);
+            return;
+        }
+        if (!confirm(<?= json_encode((string)$msg_confirmar) ?>)) {
+            return;
+        }
+        $('#frm').attr('action', 'frontend/devel_db_admin/controller/db_eliminar.php');
+        fnjs_enviar_formulario('#frm', '#main');
+    }
+</script>
+
+<h1><?= htmlspecialchars(_('Eliminar esquema (región–dl)')) ?></h1>
+<p style="text-align:left;max-width:900px;margin:0 0 1em 0">
+    <?= htmlspecialchars(_('Traslada actividades, CDC y centros al esquema resto, vacía tablas locales, elimina esquemas en las bases marcadas y borra los roles asociados.')) ?>
+</p>
+
+<form id="frm" action="" method="post">
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr style="vertical-align:top; text-align:left">
+            <td><?= htmlspecialchars(_('región')) ?>:</td>
+            <td><?= $oDesplRegiones->desplegable() ?></td>
+            <td><?= htmlspecialchars(_('delegación')) ?>:</td>
+            <td id="lst_dl"></td>
+        </tr>
+        <tr>
+            <td colspan="4"><?= htmlspecialchars(_('Bases de datos a procesar')) ?>:</td>
+        </tr>
+        <tr>
+            <td><?= htmlspecialchars(_('comun')) ?>: <input type="checkbox" value="1" checked name="comun"></td>
+            <td><?= htmlspecialchars(_('sv')) ?>: <input type="checkbox" value="1" checked name="sv"></td>
+            <td><?= htmlspecialchars(_('sf')) ?>: <input type="checkbox" value="1" name="sf"></td>
+        </tr>
+    </table>
+    <p style="margin-top:1em;text-align:left">
+        <input type="button" name="beliminar" onclick="fnjs_db_eliminar()"
+               value="<?= htmlspecialchars(_('Pasar datos a resto y eliminar esquema')) ?>">
+    </p>
+</form>

@@ -13,6 +13,9 @@ use src\shared\infrastructure\persistence\postgresql\DBTrasvase;
  */
 final class CopiarEsquema
 {
+    /**
+     * @return list<string> avisos no bloqueantes (p. ej. esquema de conexión no configurado en importar)
+     */
     public function ejecutar(
         string $esquemaRefPost,
         string $region,
@@ -20,117 +23,141 @@ final class CopiarEsquema
         int $comun,
         int $sv,
         int $sf,
-    ): void {
+    ): array {
+        $avisos = [];
         $esquema = "$region-$dl";
         $esquemav = $esquema . 'v';
         $esquemaf = $esquema . 'f';
 
-        $a_reg = explode('-', $esquemaRefPost);
-        $RegionRef = $a_reg[0];
-        $DlRef = substr($a_reg[1], 0, -1);
+        $esquemaBaseRef = RenombrarEsquemaVerificacionContexto::baseDesdeCampoOrigen($esquemaRefPost);
+        if ($esquemaBaseRef === '' || !str_contains($esquemaBaseRef, '-')) {
+            throw new \InvalidArgumentException(_('Esquema de referencia no válido.'));
+        }
+        [$RegionRef, $DlRef] = explode('-', $esquemaBaseRef, 2);
 
-        $esquemaRef = "$RegionRef-$DlRef";
+        $esquemaRef = $esquemaBaseRef;
         $esquemaRefv = $esquemaRef . 'v';
         $esquemaReff = $esquemaRef . 'f';
 
+        $oConfigDB = new ConfigDB('importar');
+
         if ($comun !== 0) {
-            $oConfigDB = new ConfigDB('importar');
-            $config = $oConfigDB->getEsquema('public');
+            $config = $this->configImportar($oConfigDB, 'public', _('comun'), $avisos);
+            if ($config !== null) {
+                /**
+                 * lista de tablas de las que hay que copiar los valores.
+                 * Posteriormente hay que cambiar el id_schema (si tiene)
+                 * y actualizar la secuencia (se hace al final, en DBTrasvase)
+                 *
+                 * @var array $aTablas
+                 */
+                $aTablas = [
+                    'a_tipos_actividad' => ['id_schema' => 'yes'],
+                    'xa_tipo_tarifa' => ['id_schema' => 'yes'],
+                    'x_config_schema' => ['id_schema' => 'yes'],
+                ];
+                $oDBTabla = new DBTabla();
+                $oDBTabla->setConfig($config);
+                $oDBTabla->setRef($esquemaRef);
+                $oDBTabla->setNew($esquema);
+                $oDBTabla->setTablas($aTablas);
+                $oDBTabla->copiar();
 
-            /**
-             * lista de tablas de las que hay que copiar los valores.
-             * Posteriormente hay que cambiar el id_schema (si tiene)
-             * y actualizar la secuencia (se hace al final, en DBTrasvase)
-             *
-             * @var array $aTablas
-             */
-            $aTablas = [
-                'a_tipos_actividad' => ['id_schema' => 'yes'],
-                'xa_tipo_tarifa' => ['id_schema' => 'yes'],
-                'x_config_schema' => ['id_schema' => 'yes'],
-            ];
-            $oDBTabla = new DBTabla();
-            $oDBTabla->setConfig($config);
-            $oDBTabla->setRef($esquemaRef);
-            $oDBTabla->setNew($esquema);
-            $oDBTabla->setTablas($aTablas);
-            $oDBTabla->copiar();
-            // para la DB Select de la máquina interna
-            // No hay que volver a copiar, simplemente refrescar la Subscripción:
-            // Ya se hace al crear la tabla.
-            // (( para saber el nombre: SELECT oid, subdbid, subname, subconninfo, subpublications FROM pg_subscription; ))
-            // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
+                $oTrasvase = new DBTrasvase();
+                $oTrasvase->setRegion($region);
+                $oTrasvase->setDl($dl);
+                $oTrasvase->setDbName('comun');
+                $oTrasvase->usarRolesDelEsquemaObjetivo();
 
-            $oTrasvase = new DBTrasvase();
-            $oTrasvase->setRegion($region);
-            $oTrasvase->setDl($dl);
-            $oTrasvase->setDbName('comun');
-
-            $oTrasvase->actividades('resto2dl');
-            $oTrasvase->cdc('resto2dl');
-            $oTrasvase->fix_seq();
+                $oTrasvase->actividades('resto2dl');
+                $oTrasvase->cdc('resto2dl');
+                $oTrasvase->fix_seq();
+                $avisos = array_merge($avisos, $oTrasvase->consumirAvisosConexion());
+            }
         }
 
         if ($sv !== 0) {
-            $oConfigDB = new ConfigDB('importar');
-            $config = $oConfigDB->getEsquema('publicv-e');
+            $config = $this->configImportar($oConfigDB, 'publicv-e', _('sv (sv-e)'), $avisos);
+            if ($config !== null) {
+                $aTablas = [
+                    'aux_cross_usuarios_grupos' => ['id_schema' => 'yes'],
+                    'aux_grupmenu' => ['id_schema' => 'yes'],
+                    'aux_grupmenu_rol' => ['id_schema' => 'yes'],
+                    'aux_grupo_permmenu' => ['id_schema' => 'yes'],
+                    'aux_grupos_y_usuarios' => ['id_schema' => 'yes'],
+                    'aux_menus' => ['id_schema' => 'yes'],
+                    'aux_usuarios' => ['id_schema' => 'yes'],
+                    'web_preferencias' => ['id_schema' => 'yes'],
+                    'm0_mods_installed_dl' => ['id_schema' => 'yes'],
+                ];
+                $oDBTabla = new DBTabla();
+                $oDBTabla->setConfig($config);
+                $oDBTabla->setRef($esquemaRefv);
+                $oDBTabla->setNew($esquemav);
+                $oDBTabla->setTablas($aTablas);
+                $oDBTabla->copiar();
 
-            $aTablas = [
-                'aux_cross_usuarios_grupos' => ['id_schema' => 'yes'],
-                'aux_grupmenu' => ['id_schema' => 'yes'],
-                'aux_grupmenu_rol' => ['id_schema' => 'yes'],
-                'aux_grupo_permmenu' => ['id_schema' => 'yes'],
-                'aux_grupos_y_usuarios' => ['id_schema' => 'yes'],
-                'aux_menus' => ['id_schema' => 'yes'],
-                'aux_usuarios' => ['id_schema' => 'yes'],
-                'web_preferencias' => ['id_schema' => 'yes'],
-                'm0_mods_installed_dl' => ['id_schema' => 'yes'],
-            ];
-            $oDBTabla = new DBTabla();
-            $oDBTabla->setConfig($config);
-            $oDBTabla->setRef($esquemaRefv);
-            $oDBTabla->setNew($esquemav);
-            $oDBTabla->setTablas($aTablas);
-            $oDBTabla->copiar();
+                $oTrasvase = new DBTrasvase();
+                $oTrasvase->setRegion($region);
+                $oTrasvase->setDl($dl);
+                $oTrasvase->setDbName('sv');
+                $oTrasvase->usarRolesDelEsquemaObjetivo();
 
-            $oTrasvase = new DBTrasvase();
-            $oTrasvase->setRegion($region);
-            $oTrasvase->setDl($dl);
-            $oTrasvase->setDbName('sv');
-
-            $oTrasvase->ctr('resto2dl');
-            $oTrasvase->fix_seq();
+                $oTrasvase->ctr('resto2dl');
+                $oTrasvase->fix_seq();
+                $avisos = array_merge($avisos, $oTrasvase->consumirAvisosConexion());
+            }
         }
 
         if ($sf !== 0) {
-            $oConfigDB = new ConfigDB('importar');
-            $config = $oConfigDB->getEsquema('publicf-e');
+            $config = $this->configImportar($oConfigDB, 'publicf-e', _('sf (sf-e)'), $avisos);
+            if ($config !== null) {
+                $aTablas = [
+                    'aux_cross_usuarios_grupos' => ['id_schema' => 'yes'],
+                    'aux_grupmenu' => ['id_schema' => 'yes'],
+                    'aux_grupmenu_rol' => ['id_schema' => 'yes'],
+                    'aux_grupo_permmenu' => ['id_schema' => 'yes'],
+                    'aux_grupos_y_usuarios' => ['id_schema' => 'yes'],
+                    'aux_menus' => ['id_schema' => 'yes'],
+                    'aux_usuarios' => ['id_schema' => 'yes'],
+                    'web_preferencias' => ['id_schema' => 'yes'],
+                    'm0_mods_installed_dl' => ['id_schema' => 'yes'],
+                ];
+                $oDBTabla = new DBTabla();
+                $oDBTabla->setConfig($config);
+                $oDBTabla->setRef($esquemaReff);
+                $oDBTabla->setNew($esquemaf);
+                $oDBTabla->setTablas($aTablas);
+                $oDBTabla->copiar();
 
-            $aTablas = [
-                'aux_cross_usuarios_grupos' => ['id_schema' => 'yes'],
-                'aux_grupmenu' => ['id_schema' => 'yes'],
-                'aux_grupmenu_rol' => ['id_schema' => 'yes'],
-                'aux_grupo_permmenu' => ['id_schema' => 'yes'],
-                'aux_grupos_y_usuarios' => ['id_schema' => 'yes'],
-                'aux_menus' => ['id_schema' => 'yes'],
-                'aux_usuarios' => ['id_schema' => 'yes'],
-                'web_preferencias' => ['id_schema' => 'yes'],
-                'm0_mods_installed_dl' => ['id_schema' => 'yes'],
-            ];
-            $oDBTabla = new DBTabla();
-            $oDBTabla->setConfig($config);
-            $oDBTabla->setRef($esquemaReff);
-            $oDBTabla->setNew($esquemaf);
-            $oDBTabla->setTablas($aTablas);
-            $oDBTabla->copiar();
+                $oTrasvase = new DBTrasvase();
+                $oTrasvase->setRegion($region);
+                $oTrasvase->setDl($dl);
+                $oTrasvase->setDbName('sf');
+                $oTrasvase->usarRolesDelEsquemaObjetivo();
 
-            $oTrasvase = new DBTrasvase();
-            $oTrasvase->setRegion($region);
-            $oTrasvase->setDl($dl);
-            $oTrasvase->setDbName('sf');
-
-            $oTrasvase->ctr('resto2dl');
-            $oTrasvase->fix_seq();
+                $oTrasvase->ctr('resto2dl');
+                $oTrasvase->fix_seq();
+                $avisos = array_merge($avisos, $oTrasvase->consumirAvisosConexion());
+            }
         }
+
+        return $avisos;
+    }
+
+    /**
+     * @param list<string> $avisos
+     * @return array<string, mixed>|null
+     */
+    private function configImportar(ConfigDB $oConfigDB, string $claveEsquema, string $etiquetaBloque, array &$avisos): ?array
+    {
+        if ($oConfigDB->tieneEsquema($claveEsquema)) {
+            return $oConfigDB->getEsquema($claveEsquema);
+        }
+
+        $avisos[] = _('Se omitió') . ' ' . $etiquetaBloque . ': '
+            . ConfigDB::mensajeAvisoEsquemaConexionFaltante('importar', $claveEsquema);
+
+        return null;
     }
 }

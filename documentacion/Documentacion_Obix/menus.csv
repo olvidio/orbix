@@ -324,7 +324,8 @@ id_grupmenu,?column?,url,parametros,id_mod
 13,importar desde ficheros (menu a/de ficheros),src/menus/frontend/controller/menus_ficheros.php,accion=importar,2
 13,ayuda (ayuda menus),frontend/menus/view/como.html,,2
 13,DB (Raiz admin),,,1
-13,nuevo esquema (nuevo esquema),frontend/devel_db_admin/controller/db_que.php,,2
+13,crear esquema dl (crear esquema),frontend/devel_db_admin/controller/db_crear_esquema_que.php,,2
+13,eliminar esquema dl (eliminar esquema),frontend/devel_db_admin/controller/db_eliminar_esquema_que.php,,2
 13,migraciones (ejecutar migraciones SQL),frontend/devel_db_admin/controller/migraciones_lista.php,,2
 13,mover tabla a otra DB (DB mover tabla),frontend/devel_db_admin/controller/db_mover_que.php,,2
 13,mover y cambiar nombre dl (cambiar nombre dl),frontend/devel_db_admin/controller/db_cambiar_nombre_que.php,"",2

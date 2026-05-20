@@ -28,14 +28,16 @@ use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
 use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\entity\Casa;
-use src\ubis\domain\entity\Centro;
+use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
 use src\utils_database\domain\contracts\MapIdRepositoryInterface;
 use src\utils_database\domain\entity\DBAbstract;
 use src\utils_database\domain\entity\MapId;
+use src\utils_database\domain\GenerateIdGlobal;
 use src\utils_database\domain\value_objects\MapIdDl;
 use src\utils_database\domain\value_objects\MapIdResto;
+use function src\shared\domain\helpers\is_true;
 
 class DBTrasvase extends DBAbstract
 {
@@ -49,6 +51,9 @@ class DBTrasvase extends DBAbstract
     /* CONSTRUCTOR -------------------------------------------------------------- */
     private \PDO $oDbResto;
     private string $serror;
+
+    /** @var list<string> */
+    private array $avisosConexion = [];
 
     function __construct()
     {
@@ -76,43 +81,168 @@ class DBTrasvase extends DBAbstract
         return $this->sdbname;
     }
 
+    private function nombreBaseConfigDb(): string
+    {
+        return match ($this->getDbName()) {
+            'comun' => 'comun',
+            'sv', 'sv-e' => 'sv',
+            'sf', 'sf-e' => 'sf',
+            default => 'importar',
+        };
+    }
+
     private function getConfigConexion($esquema = '')
     {
         if (empty($esquema)) {
             $esquema = $this->getEsquema();
         }
-        switch ($this->getDbName()) {
-            case 'comun':
-                $oConfigDB = new ConfigDB('comun'); //de la database comun
-                $config = $oConfigDB->getEsquema($esquema); //de la database comun
-                break;
-            case 'sv':
-                $oConfigDB = new ConfigDB('sv'); //de la database sv
-                $config = $oConfigDB->getEsquema($esquema); //de la database sv
-                break;
-            case 'sf':
-                $oConfigDB = new ConfigDB('sf'); //de la database sf
-                $config = $oConfigDB->getEsquema($esquema); //de la database sf
-                break;
-            case 'sv-e':
-                $oConfigDB = new ConfigDB('sv-e'); //de la database sv
-                $config = $oConfigDB->getEsquema($esquema); //de la database sv
-                break;
-            case 'sf-e':
-                $oConfigDB = new ConfigDB('sf-e'); //de la database sf
-                $config = $oConfigDB->getEsquema($esquema); //de la database sf
-                break;
+
+        $config = $this->resolverConfigEsquema($esquema);
+        if ($config !== null) {
+            return $config;
         }
 
-        return $config;
+        $base = $this->nombreBaseConfigDb();
+        $this->avisosConexion[] = ConfigDB::mensajeAvisoEsquemaConexionFaltante(
+            $base,
+            $esquema,
+            ' ' . _('La operación continúa con el usuario de importar.'),
+        );
+
+        $oConfigImportar = new ConfigDB('importar');
+        $configImportar = $oConfigImportar->getEsquema($this->claveEsquemaImportarParaDb());
+        $configImportar['schema'] = $esquema;
+
+        return $configImportar;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function basesConfigParaEsquemaDl(string $esquema): array
+    {
+        $principal = $this->nombreBaseConfigDb();
+        $bases = [$principal];
+
+        if ($principal === 'sf' && preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+f$/', $esquema) === 1) {
+            $bases[] = 'sf-e';
+        }
+        if ($principal === 'sv' && preg_match('/^[A-Za-z0-9]+-[A-Za-z0-9]+v$/', $esquema) === 1) {
+            $bases[] = 'sv-e';
+        }
+
+        $bases[] = 'importar';
+
+        return array_values(array_unique($bases));
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function resolverConfigEsquema(string $esquema): ?array
+    {
+        foreach ($this->basesConfigParaEsquemaDl($esquema) as $base) {
+            $oConfigDB = new ConfigDB($base);
+            if ($oConfigDB->tieneEsquema($esquema)) {
+                return $oConfigDB->getEsquema($esquema);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function consumirAvisosConexion(): array
+    {
+        $avisos = $this->avisosConexion;
+        $this->avisosConexion = [];
+
+        return $avisos;
     }
 
     private function getConexionPDO($esquema = '')
     {
         $config = $this->getConfigConexion($esquema);
 
-        $oConnection = new DBConnection($config);
-        return $oConnection->getPDO();
+        try {
+            return (new DBConnection($config))->getPDO();
+        } catch (\PDOException $e) {
+            if (!$this->esErrorRolInexistente($e)) {
+                throw $e;
+            }
+
+            $rol = (string) ($config['user'] ?? '');
+            $schema = (string) ($config['schema'] ?? $esquema);
+            $this->avisosConexion[] = sprintf(
+                _('El rol «%1$s» no existe; la operación continúa con el usuario de importar (esquema «%2$s»).'),
+                $rol,
+                $schema,
+            );
+
+            $oConfigDB = new ConfigDB('importar');
+            $configImportar = $oConfigDB->getEsquema($this->claveEsquemaImportarParaDb());
+            $configImportar['schema'] = $config['schema'];
+
+            return (new DBConnection($configImportar))->getPDO();
+        }
+    }
+
+    private function esErrorRolInexistente(\PDOException $e): bool
+    {
+        $msg = $e->getMessage();
+
+        return str_contains($msg, 'does not exist')
+            && (str_contains($msg, 'role') || preg_match('/FATAL:\s+role\s+/i', $msg) === 1);
+    }
+
+    private function claveEsquemaImportarParaDb(): string
+    {
+        return match ($this->getDbName()) {
+            'sv' => 'publicv',
+            'sv-e' => 'publicv-e',
+            'sf', 'sf-e' => 'publicf',
+            default => 'public',
+        };
+    }
+
+    private function regclassTabla(\PDO $oDbl, string $esquema, string $tabla): ?string
+    {
+        $esquema = str_replace('"', '', $esquema);
+        $tabla = str_replace('"', '', $tabla);
+        $st = $oDbl->prepare('SELECT to_regclass(:qualified) AS tabla');
+        $st->execute(['qualified' => '"' . $esquema . '".' . $tabla]);
+        $row = $st->fetch(\PDO::FETCH_ASSOC);
+        if ($row === false || empty($row['tabla'])) {
+            return null;
+        }
+
+        return (string) $row['tabla'];
+    }
+
+    private function avisoOmiteTrasladoDl2resto(string $esquema, string $tabla, string $bloque): void
+    {
+        $this->avisosConexion[] = sprintf(
+            _('No existe «%1$s.%2$s»; se omite el traslado %3$s a resto.'),
+            $esquema,
+            $tabla,
+            $bloque,
+        );
+    }
+
+    /**
+     * @return bool true si la tabla indicadora existe y debe ejecutarse el traslado
+     */
+    private function debeTrasladarDl2resto(\PDO $oDbl, string $esquema, string $tablaIndicadora, string $bloque): bool
+    {
+        if ($this->regclassTabla($oDbl, $esquema, $tablaIndicadora) !== null) {
+            return true;
+        }
+
+        $this->avisoOmiteTrasladoDl2resto($esquema, $tablaIndicadora, $bloque);
+
+        return false;
     }
 
 
@@ -179,6 +309,159 @@ class DBTrasvase extends DBAbstract
     public function setDl($dl)
     {
         $this->sdl = $dl;
+    }
+
+    /**
+     * IDs de ubicación en resto (centros/casas ex) pueden ser negativos; MapIdResto los admite.
+     */
+    private function idUbicacionAEntero(mixed $id, string $contexto = ''): int
+    {
+        if (is_int($id)) {
+            $entero = $id;
+        } elseif (is_string($id) && preg_match('/^-?\d+$/', trim($id)) === 1) {
+            $entero = (int) trim($id);
+        } else {
+            throw new \InvalidArgumentException(sprintf(
+                _('Identificador de ubicación no válido%1$s: %2$s'),
+                $contexto !== '' ? " ($contexto)" : '',
+                is_scalar($id) ? (string) $id : get_debug_type($id),
+            ));
+        }
+        if ($entero === 0) {
+            throw new \InvalidArgumentException(sprintf(
+                _('Identificador de ubicación no válido%1$s: %2$s'),
+                $contexto !== '' ? " ($contexto)" : '',
+                (string) $entero,
+            ));
+        }
+
+        return $entero;
+    }
+
+    /**
+     * map_id vive en comun (esquema región–dl sin sufijo v/f), no en sv/sf.
+     */
+    private function getoDblComunDl(): PDO
+    {
+        $esquema = $this->getRegion() . '-' . $this->getDl();
+        $dbNameAnterior = $this->getDbName();
+        $this->sdbname = 'comun';
+        try {
+            $config = $this->getConfigConexion($esquema);
+
+            return (new DBConnection($config))->getPDO();
+        } finally {
+            $this->sdbname = $dbNameAnterior;
+        }
+    }
+
+    /**
+     * Usuario importar (postgres) en comun; devel_db_admin opera esquemas recién creados.
+     */
+    private function getoDblComunDlAdministrador(): PDO
+    {
+        $esquema = $this->getRegion() . '-' . $this->getDl();
+        $oConfigDB = new ConfigDB('importar');
+        $config = $oConfigDB->getEsquema('public');
+        $config['schema'] = $esquema;
+
+        return (new DBConnection($config))->getPDO();
+    }
+
+    private function identificadorPg(string $ident): string
+    {
+        return '"' . str_replace('"', '""', $ident) . '"';
+    }
+
+    private function asegurarTablaMapId(PDO $oDbl, string $esquemaDestino): void
+    {
+        if ($this->regclassTabla($oDbl, $esquemaDestino, 'map_id') !== null) {
+            return;
+        }
+
+        $esquemaDestino = str_replace('"', '', $esquemaDestino);
+        if ($this->regclassTabla($oDbl, 'resto', 'map_id') !== null) {
+            $oDbl->exec(sprintf(
+                'CREATE TABLE %s.map_id (LIKE resto.map_id INCLUDING ALL)',
+                $this->identificadorPg($esquemaDestino),
+            ));
+
+            return;
+        }
+
+        throw new \RuntimeException(sprintf(
+            _('La tabla map_id no existe en el esquema «%s» y no hay plantilla en «resto». Vuelva a ejecutar «crear esquema» (comun) con un esquema de referencia que la incluya.'),
+            $esquemaDestino,
+        ));
+    }
+
+    /**
+     * Tras pg_dump o CREATE … LIKE el dueño puede no ser el rol del esquema DL.
+     */
+    private function sincronizarPermisosMapIdRolDl(PDO $oDblAdmin, string $esquemaDestino): void
+    {
+        if ($this->regclassTabla($oDblAdmin, $esquemaDestino, 'map_id') === null) {
+            return;
+        }
+
+        $qEsquema = $this->identificadorPg(str_replace('"', '', $esquemaDestino));
+        $stmts = [
+            "ALTER TABLE {$qEsquema}.map_id OWNER TO {$qEsquema}",
+            "GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE {$qEsquema}.map_id TO {$qEsquema}",
+        ];
+        foreach ($stmts as $sql) {
+            try {
+                $oDblAdmin->exec($sql);
+            } catch (\PDOException) {
+                // Si ya está alineado (p. ej. mismo dueño), no bloquear el trasvase.
+            }
+        }
+    }
+
+    private function configurarMapIdRepository(MapIdRepositoryInterface $mapIdRepository): void
+    {
+        $esquemaComun = $this->getRegion() . '-' . $this->getDl();
+        $oDblAdmin = $this->getoDblComunDlAdministrador();
+        $this->asegurarTablaMapId($oDblAdmin, $esquemaComun);
+        $this->sincronizarPermisosMapIdRolDl($oDblAdmin, $esquemaComun);
+        $mapIdRepository->setoDbl($oDblAdmin);
+        $mapIdRepository->setoDbl_Select($oDblAdmin);
+    }
+
+    private function esquemaBaseDl(): string
+    {
+        return $this->getRegion() . '-' . $this->getDl();
+    }
+
+    /**
+     * IDs de dirección DL: prefijo db_idschema + índice de tabla, no el nextval en bruto.
+     */
+    private function nuevoIdDireccionDl(string $tabla, int $idAutoSecuencia): int
+    {
+        return GenerateIdGlobal::generateIdGlobal(
+            $this->esquemaBaseDl(),
+            $tabla,
+            $idAutoSecuencia,
+        );
+    }
+
+    /**
+     * Los GRANT de {@see DBAbstract::addPermisoGlobal} / addPermisoRole deben ir al esquema
+     * que se opera (p. ej. eliminar otro DL desde devel_db_admin), no al de la sesión web.
+     */
+    public function usarRolesDelEsquemaObjetivo(): void
+    {
+        $base = $this->getRegion() . '-' . $this->getDl();
+        $this->esquema = $base;
+        $this->role = '"' . $base . '"';
+
+        $dbName = isset($this->sdbname) ? $this->getDbName() : '';
+        $suffix = match ($dbName) {
+            'sv', 'sv-e' => 'v',
+            'sf', 'sf-e' => 'f',
+            default => '',
+        };
+        $this->role_vf = $suffix === '' ? $this->role : '"' . $base . $suffix . '"';
     }
 
     public function getEsquema()
@@ -267,7 +550,7 @@ class DBTrasvase extends DBAbstract
                 $error = '';
                 if (!empty($cActividades)) {
                     $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
-                    $MapIdRepository->setoDbl($oDbl);
+                    $this->configurarMapIdRepository($MapIdRepository);
                     $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
                     foreach ($cActividades as $oActividad) {
                         //TODO: $oActividadDl->setNoGenerarProceso(TRUE);
@@ -286,6 +569,10 @@ class DBTrasvase extends DBAbstract
                 $this->serror = $error;
                 return false;
             case 'dl2resto':
+                if (!$this->debeTrasladarDl2resto($oDbl, $this->getEsquema(), 'a_actividades_dl', 'actividades')) {
+                    return true;
+                }
+
                 $ActividadDlRepository = $GLOBALS['container']->get(ActividadDlRepositoryInterface::class);
                 $ActividadDlRepository->setoDbl($oDbl);
                 $cActividades = $ActividadDlRepository->getActividades(['dl_org' => $dl]);
@@ -328,7 +615,7 @@ class DBTrasvase extends DBAbstract
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => comisión, dl => delegación, ci => centro interregional.
 
         $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
-        $MapIdRepository->setoDbl($oDbl);
+        $this->configurarMapIdRepository($MapIdRepository);
         switch ($que) {
             case 'resto2dl':
                 if ($tipoUbicacion === 'cr') { //no hay delegaciones.
@@ -355,33 +642,46 @@ class DBTrasvase extends DBAbstract
                     if ($CasaDlRepository->Guardar($oCasaDl) === FALSE) {
                         $error .= '<br>' . _("no se ha guardado la casa");
                     } else {
-                        $id_ubi_old = $aDades['id_ubi'];
+                        $id_ubi_old = $this->idUbicacionAEntero($aDades['id_ubi'] ?? null, 'id_ubi');
                         $oMapId = $MapIdRepository->findById('Casa', $id_ubi_old);
                         if ($oMapId === null) {
                             $oMapId = new MapId();
                             $oMapId->setObjeto('Casa');
-                            $oMapId->setIdRestoVo(MapIdResto::fromString($id_ubi_old));
+                            $oMapId->setIdRestoVo($id_ubi_old);
                         }
-                        $oMapId->setIdDlVo(MapIdDl::fromString($newIdCasa));
+                        $oMapId->setIdDlVo($this->idUbicacionAEntero($newIdCasa, 'id_dl'));
                         $MapIdRepository->Guardar($oMapId);
                         // Buscar la dirección
-                        $aIdDirecciones = $RelacionCasaExDireccion->getDireccionesProUbi($id_ubi_old);
+                        $aIdDirecciones = $RelacionCasaExDireccion->getDireccionesPorUbi($id_ubi_old);
                         $DireccionCasaDlRepository = $GLOBALS['container']->get(DireccionCasaDlRepositoryInterface::class);
+                        $DireccionCasaDlRepository->setoDbl($oDbl);
+                        $RelacionCasaDlDireccion->setoDbl($oDbl);
                         $DireccionCasaExRepository = $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class);
                         foreach ($aIdDirecciones as $aDireccion) {
                             $id_direccion_old = $aDireccion['id_direccion'];
                             $principal = $aDireccion['principal'];
                             $oDireccionEx = $DireccionCasaExRepository->findById($id_direccion_old);
-                            $newIdDireccion = $DireccionCasaDlRepository->getNewId();
+                            if ($oDireccionEx === null) {
+                                continue;
+                            }
+                            $newIdDireccion = $this->nuevoIdDireccionDl(
+                                'u_dir_cdc_dl',
+                                $DireccionCasaDlRepository->getNewId(),
+                            );
                             $oDireccionDl = clone $oDireccionEx;
                             $oDireccionDl->setId_direccion($newIdDireccion);
                             $DireccionCasaDlRepository->Guardar($oDireccionDl);
                             // Map
                             $oMapId = $MapIdRepository->findById('Direccion', $id_direccion_old);
-                            $oMapId->setIdDlVo(MapIdDl::fromString($newIdDireccion));
+                            if ($oMapId === null) {
+                                $oMapId = new MapId();
+                                $oMapId->setObjeto('Direccion');
+                                $oMapId->setIdRestoVo($id_direccion_old);
+                            }
+                            $oMapId->setIdDlVo($this->idUbicacionAEntero($newIdDireccion, 'id_dl'));
                             $MapIdRepository->Guardar($oMapId);
                             // cross Direccion
-                            $RelacionCasaDlDireccion->asociarDireccion($newIdCasa, $newIdDireccion, $principal);
+                            $RelacionCasaDlDireccion->asociarDireccion($newIdCasa, $newIdDireccion, is_true($principal));
                             // Eliminar el cross y la direccion
                             $DireccionCasaExRepository->Eliminar($oDireccionEx);
                             // delete cross (deberia borrarse sólo; por el foreign key).
@@ -413,15 +713,9 @@ class DBTrasvase extends DBAbstract
                 $this->serror = $error;
                 return false;
             case 'dl2resto':
-                // actualizar el tipo_ubi.
-                /* no hace falta si despues se borra toda la tabla
-                $sql = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcex';";
-                if ($oDbl->query($sql) === false) {
-                    $sClauError = 'DBTrasvase.ctr.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                    return false;
+                if (!$this->debeTrasladarDl2resto($oDbl, $esquema, 'u_cdc_dl', 'CDC')) {
+                    return true;
                 }
-                */
 
                 $this->addPermisoGlobal('comun');
                 $this->addPermisoRole('comun', $esquema);
@@ -455,17 +749,14 @@ class DBTrasvase extends DBAbstract
         $oDbl = $this->getoDbl();
         $esquema = $this->getEsquema();
         $resto = $this->getResto();
-
-        // Conexión DB comun
-        $this->setDbName('comun');
-        $oDblC = $this->getoDbl();
+        $oDblComun = $this->getoDblComunDl();
 
         $dl = $this->getDl();
         $region = $this->getRegion();
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
 
         $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
-        $MapIdRepository->setoDbl($oDbl);
+        $this->configurarMapIdRepository($MapIdRepository);
         switch ($que) {
             case 'resto2dl':
                 if ($tipoUbicacion === 'cr') { //no hay delegaciones.
@@ -489,7 +780,7 @@ class DBTrasvase extends DBAbstract
                     $aDades['tipo_ubi'] = 'ctrdl';
                     // Ahora uso la nomenclatura para dl tipo 'crA'
                     $aDades['dl'] = $dl;
-                    $oCentroDl = Centro::fromArray($aDades);
+                    $oCentroDl = CentroDl::fromArray($aDades);
                     $CentroDlRepository->setoDbl($oDbl);
                     $newIdCentro = $CentroDlRepository->getNewId();
                     $oCentroDl->setId_ubi($newIdCentro);
@@ -497,14 +788,14 @@ class DBTrasvase extends DBAbstract
                         $error .= '<br>' . _("no se ha guardado el centro");
                     } else {
                         // Al hacer INSERT se genera un id_ubi nuevo. Para conservar el original:
-                        $id_ubi_old = $aDades['id_ubi'];
+                        $id_ubi_old = $this->idUbicacionAEntero($aDades['id_ubi'] ?? null, 'id_ubi');
                         $oMapId = $MapIdRepository->findById('Centro', $id_ubi_old);
                         if ($oMapId === null) {
                             $oMapId = new MapId();
                             $oMapId->setObjeto('Centro');
-                            $oMapId->setIdRestoVo(MapIdResto::fromString($id_ubi_old));
+                            $oMapId->setIdRestoVo($id_ubi_old);
                         }
-                        $oMapId->setIdDlVo(MapIdDl::fromString($newIdCentro));
+                        $oMapId->setIdDlVo($this->idUbicacionAEntero($newIdCentro, 'id_dl'));
                         $MapIdRepository->Guardar($oMapId);
                         // Además hay que añadirlo a la copia en DB comun:
                         // para la sf (comienza por 2).
@@ -512,34 +803,48 @@ class DBTrasvase extends DBAbstract
                             $oCentroEllas = new CentroEllas();
                             $oCentroEllas->setId_ubi($newIdCentro);
                             $oCentroEllas->setAllAttributes($aDades, TRUE);
-                            $CentroEllasRepository->setoDbl($oDblC);
+                            $CentroEllasRepository->setoDbl($oDblComun);
                             $CentroEllasRepository->Guardar($oCentroEllas);
                         } else {
                             $oCentroEllos = new CentroEllos();
                             $oCentroEllos->setId_ubi($newIdCentro);
                             $oCentroEllos->setAllAttributes($aDades);
-                            $CentroEllosRepository->setoDbl($oDblC);
+                            $CentroEllosRepository->setoDbl($oDblComun);
                             $CentroEllosRepository->Guardar($oCentroEllos);
                         }
                         // Buscar la dirección
-                        $aIdDirecciones = $RelacionCentroExDireccion->getDireccionesProUbi($id_ubi_old);
+                        $aIdDirecciones = $RelacionCentroExDireccion->getDireccionesPorUbi($id_ubi_old);
                         $DireccionCentroDlRepository = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
+                        $DireccionCentroDlRepository->setoDbl($oDbl);
+                        $RelacionCentroDlDireccion->setoDbl($oDbl);
                         $DireccionCentroExRepository = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
                         foreach ($aIdDirecciones as $aIdDireccion) {
                             $id_direccion_old = $aIdDireccion ['id_direccion'];
                             $propietario = $aIdDireccion ['propietario'];
                             $principal = $aIdDireccion['principal'];
-                            $oDireccionCentroEx = $DireccionCentroExRepository->findBuId($id_direccion_old);
-                            $newIdDireccionCentro = $DireccionCentroDlRepository->getNewId();
+                            $oDireccionCentroEx = $DireccionCentroExRepository->findById($id_direccion_old);
+                            if ($oDireccionCentroEx === null) {
+                                continue;
+                            }
+                            $newIdDireccionCentro = $this->nuevoIdDireccionDl(
+                                'u_dir_ctr_dl',
+                                $DireccionCentroDlRepository->getNewId(),
+                            );
                             $oDireccionCentroDl = clone $oDireccionCentroEx;
                             $oDireccionCentroDl->setId_direccion($newIdDireccionCentro);
                             $DireccionCentroDlRepository->Guardar($oDireccionCentroDl);
                             // Map
                             $oMapId = $MapIdRepository->findById('Direccion', $id_direccion_old);
-                            $oMapId->setIdDlVo(MapIdDl::fromString($newIdDireccionCentro));
+                            if ($oMapId === null) {
+                                $oMapId = new MapId();
+                                $oMapId->setObjeto('Direccion');
+                                $oMapId->setIdRestoVo($id_direccion_old);
+                            }
+                            $oMapId->setIdDlVo($this->idUbicacionAEntero($newIdDireccionCentro, 'id_dl'));
                             $MapIdRepository->Guardar($oMapId);
                             // cross Direccion
-                            $RelacionCentroDlDireccion->asociarDireccion($newIdCentro, $newIdDireccionCentro, $principal, $propietario);
+                            $RelacionCentroDlDireccion->asociarDireccion($newIdCentro, $newIdDireccionCentro, is_true($principal));
+                            $RelacionCentroDlDireccion->updatePropietario($newIdCentro, $newIdDireccionCentro, is_true($propietario));
                             // Eliminar el cross y la dirección
                             $DireccionCentroExRepository->Eliminar($oDireccionCentroEx);
                             // delete cross (debería borrarse sólo; por el foreign key).
@@ -561,7 +866,7 @@ class DBTrasvase extends DBAbstract
                             }
                         }
                         //borrar la origen:
-                        $oCentroEx->DBEliminar();
+                        $CentroExRepository->Eliminar($oCentroEx);
                     }
                 }
                 if (empty($error)) {
@@ -571,16 +876,7 @@ class DBTrasvase extends DBAbstract
                 $this->serror = $error;
                 return false;
             case 'dl2resto':
-                // Si ya se trasladó/borró previamente, evitamos fallar al reintentar.
-                $sql = "SELECT to_regclass('\"$esquema\".u_centros_dl') AS tabla";
-                if (($oDblSt = $oDbl->query($sql)) === false) {
-                    $sClauError = 'DBTrasvase.ctr.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                    return false;
-                }
-                $aDades = $oDblSt->fetch(PDO::FETCH_ASSOC);
-                if (empty($aDades['tabla'])) {
-                    // No hay nada que trasladar en sv/sf para ese esquema.
+                if (!$this->debeTrasladarDl2resto($oDbl, $esquema, 'u_centros_dl', 'CTR')) {
                     return true;
                 }
 

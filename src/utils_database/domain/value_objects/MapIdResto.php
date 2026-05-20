@@ -14,8 +14,8 @@ final class MapIdResto
 
     private function validate(int $value): void
     {
-        if ($value <= 0) {
-            throw new \InvalidArgumentException('MapIdResto must be a positive integer');
+        if ($value === 0) {
+            throw new \InvalidArgumentException('MapIdResto must be a non-zero integer');
         }
     }
 
@@ -36,9 +36,11 @@ final class MapIdResto
 
     public static function fromString(string $value): self
     {
-        if (!ctype_digit($value)) {
+        $value = trim($value);
+        if (!preg_match('/^-?\d+$/', $value)) {
             throw new \InvalidArgumentException('MapIdResto string must be digits');
         }
-        return new self((int)$value);
+
+        return new self((int) $value);
     }
 }

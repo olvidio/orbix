@@ -82,6 +82,7 @@ final class CrearUsuarios
         $oDBRol->setPwd($esquemaf_pwd);
         $oDBRol->crearUsuario();
         $oConfigDB->addEsquemaEnFicheroPasswords('sf', $esquemaf, $esquemaf_pwd);
+        $oConfigDB->addEsquemaEnFicheroPasswords('sf-e', $esquemaf, $esquemaf_pwd);
 
         if ($sessionEsSf) {
             $oConfigDB = new ConfigDB('importar');

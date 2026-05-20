@@ -33,4 +33,16 @@ class MapIdRestoTest extends myTest
         $this->assertEquals(123, (string)$mapIdResto);
     }
 
+    public function test_accepts_negative_resto_id()
+    {
+        $mapIdResto = MapIdResto::fromString('-5');
+        $this->assertEquals(-5, $mapIdResto->value());
+    }
+
+    public function test_rejects_zero()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new MapIdResto(0);
+    }
+
 }
