@@ -556,17 +556,38 @@ class DBRol
             return _('Nombre de rol no válido.');
         }
 
-        $this->limpiarDependenciasUsuario($clavesImportar);
+        $claves = $clavesImportar ?? self::clavesImportarParaDropOwned();
+        $this->limpiarDependenciasUsuario($claves);
 
         $q = '"' . str_replace('"', '""', $this->sUser) . '"';
-        try {
-            $this->getoDbl()->exec("DROP ROLE IF EXISTS {$q}");
-        } catch (\PDOException $e) {
-            return $e->getMessage();
+        $erroresDrop = [];
+        $oConfigDB = new ConfigDB('importar');
+
+        foreach ($claves as $clave) {
+            try {
+                $pdo = (new DBConnection($oConfigDB->getConexionMantenimiento($clave)))->getPDO();
+                try {
+                    $pdo->exec("DROP ROLE IF EXISTS {$q}");
+                } catch (\PDOException $e) {
+                    $erroresDrop[] = "{$clave}: {$e->getMessage()}";
+                }
+            } catch (\Throwable $e) {
+                $erroresDrop[] = "{$clave}: {$e->getMessage()}";
+            }
         }
 
-        if ($this->rolExisteEnConexion($this->getoDbl())) {
-            return _('El rol sigue existiendo tras DROP ROLE.');
+        $instanciasPendientes = $this->clavesDondeRolExiste($claves);
+        if ($instanciasPendientes !== []) {
+            $detalle = implode(', ', $instanciasPendientes);
+            if ($erroresDrop !== []) {
+                return $detalle . ' (' . implode('; ', $erroresDrop) . ')';
+            }
+
+            return sprintf(_('El rol sigue en: %s'), $detalle);
+        }
+
+        if ($erroresDrop !== []) {
+            return implode('; ', $erroresDrop);
         }
 
         return null;
@@ -581,28 +602,67 @@ class DBRol
     }
 
     /**
-     * @param list<string>|null $clavesImportar
+     * @param list<string> $clavesImportar
      */
-    private function limpiarDependenciasUsuario(?array $clavesImportar = null): void
+    private function limpiarDependenciasUsuario(array $clavesImportar): void
     {
-        $claves = $clavesImportar ?? self::clavesImportarParaDropOwned();
         $oConfigDB = new ConfigDB('importar');
         $q = '"' . str_replace('"', '""', $this->sUser) . '"';
 
-        foreach ($claves as $clave) {
+        foreach ($clavesImportar as $clave) {
             try {
-                $config = $oConfigDB->getConexionMantenimiento($clave);
-                $oDbl = (new DBConnection($config))->getPDO();
-                $this->revocarPrivilegiosRestoEnConexion($oDbl, $this->sUser);
-                try {
-                    $oDbl->exec("REASSIGN OWNED BY {$q} TO CURRENT_USER");
-                } catch (\Throwable) {
-                }
-                $oDbl->exec("DROP OWNED BY {$q} CASCADE");
+                $oDbl = (new DBConnection($oConfigDB->getConexionMantenimiento($clave)))->getPDO();
+                $this->limpiarDependenciasEnConexion($oDbl, $q);
             } catch (\Throwable) {
-                // Best effort en cada BD (comun, sv, sv-e, réplica…).
+                // Best effort en cada BD / instancia (origen, réplica…).
             }
         }
+    }
+
+    private function limpiarDependenciasEnConexion(\PDO $pdo, string $qRol): void
+    {
+        $this->revocarPrivilegiosRestoEnConexion($pdo, $this->sUser);
+        $this->revocarMembresiasOrbixEnConexion($pdo, $qRol);
+        try {
+            $pdo->exec("REASSIGN OWNED BY {$qRol} TO CURRENT_USER");
+        } catch (\Throwable) {
+        }
+        $pdo->exec("DROP OWNED BY {$qRol} CASCADE");
+    }
+
+    private function revocarMembresiasOrbixEnConexion(\PDO $pdo, string $qRol): void
+    {
+        foreach (['orbix', 'orbixv', 'orbixf'] as $grupo) {
+            $qGrupo = '"' . str_replace('"', '""', $grupo) . '"';
+            try {
+                $pdo->exec("REVOKE {$qGrupo} FROM {$qRol}");
+            } catch (\Throwable) {
+                // El rol puede no ser miembro de este grupo en esta instancia.
+            }
+        }
+    }
+
+    /**
+     * @param list<string> $clavesImportar
+     * @return list<string>
+     */
+    private function clavesDondeRolExiste(array $clavesImportar): array
+    {
+        $oConfigDB = new ConfigDB('importar');
+        $pendientes = [];
+
+        foreach ($clavesImportar as $clave) {
+            try {
+                $pdo = (new DBConnection($oConfigDB->getConexionMantenimiento($clave)))->getPDO();
+                if ($this->rolExisteEnConexion($pdo)) {
+                    $pendientes[] = $clave;
+                }
+            } catch (\Throwable) {
+                // No se pudo comprobar esta instancia.
+            }
+        }
+
+        return $pendientes;
     }
 
     /** Revoca GRANT en esquemas resto/restov/restof (tras dl2resto) antes de DROP ROLE. */

@@ -212,12 +212,11 @@ final class EliminarEsquemaDl
         array $clavesDropOwned,
         string $rol,
     ): array {
-        $pdo = (new DBConnection($oConfigDB->getConexionMantenimiento($claveDropRole)))->getPDO();
-
-        if (!$this->rolExiste($pdo, $rol)) {
+        if (!$this->rolExisteEnAlgunaClave($oConfigDB, $clavesDropOwned, $rol)) {
             return [sprintf(_('El rol «%s» ya no existía; no se intentó borrarlo.'), $rol)];
         }
 
+        $pdo = (new DBConnection($oConfigDB->getConexionMantenimiento($claveDropRole)))->getPDO();
         $oDBRol->setDbConexion($pdo);
         $oDBRol->setUser($rol);
         $error = $oDBRol->intentarEliminarUsuario($clavesDropOwned);
@@ -230,6 +229,25 @@ final class EliminarEsquemaDl
         }
 
         return [];
+    }
+
+    /**
+     * @param list<string> $clavesImportar
+     */
+    private function rolExisteEnAlgunaClave(ConfigDB $oConfigDB, array $clavesImportar, string $rol): bool
+    {
+        foreach ($clavesImportar as $clave) {
+            try {
+                $pdo = (new DBConnection($oConfigDB->getConexionMantenimiento($clave)))->getPDO();
+                if ($this->rolExiste($pdo, $rol)) {
+                    return true;
+                }
+            } catch (\Throwable) {
+                // Siguiente clave (p. ej. réplica no accesible).
+            }
+        }
+
+        return false;
     }
 
     private function rolExiste(\PDO $pdo, string $rol): bool
