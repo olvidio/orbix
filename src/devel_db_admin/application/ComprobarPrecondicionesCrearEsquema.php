@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace src\devel_db_admin\application;
 
 use PDO;
+use src\shared\config\ServerConf;
 use src\shared\infrastructure\persistence\ConfigDB;
 use src\shared\infrastructure\persistence\DBConnection;
 use Throwable;
@@ -48,6 +49,18 @@ final class ComprobarPrecondicionesCrearEsquema
             $conflictos,
             $faltaReferencia,
         );
+        if ($comun !== 0 && !preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
+            $this->revisarBd(
+                $importar,
+                _('comun (réplica)'),
+                'public_select',
+                $esquema,
+                $refComun,
+                true,
+                $conflictos,
+                $faltaReferencia,
+            );
+        }
         $this->revisarBd(
             $importar,
             _('sv'),
@@ -68,6 +81,18 @@ final class ComprobarPrecondicionesCrearEsquema
             $conflictos,
             $faltaReferencia,
         );
+        if ($sv !== 0 && !preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR)) {
+            $this->revisarBd(
+                $importar,
+                _('sv-e (réplica)'),
+                'publicv-e_select',
+                $esquemav,
+                $refSv,
+                true,
+                $conflictos,
+                $faltaReferencia,
+            );
+        }
         $this->revisarBd(
             $importar,
             _('sf'),
