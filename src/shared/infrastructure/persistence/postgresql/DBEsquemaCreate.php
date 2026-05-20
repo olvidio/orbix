@@ -668,33 +668,12 @@ class DBEsquemaCreate
             ));
         }
 
-        $oConnection = new DBConnection($this->config);
-        $dsn = $oConnection->getURI();
-
+        $dsn = $this->getConexionImportar();
         $logFile = $this->getFileLog();
         $host = $this->getHost();
         $this->vaciarLog($logFile);
 
-        if ($this->replicaComparteBdConOrigen($db)) {
-            file_put_contents(
-                $logFile,
-                '-- ' . _('Import psql omitido: public_select apunta a la misma BD que el origen (p. ej. docker).') . "\n",
-            );
-        } else {
-            // Esquema vacío de crearSchema() o restos de un intento anterior: limpiar antes del volcado.
-            $this->eliminarEsquemaPorPdo($this->getNew());
-            $this->asegurarVolcadoCompatibleAntesDeImportar();
-
-            $psql = $this->binarioPostgres('psql');
-            $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
-                . ' ' . escapeshellarg($psql) . ' -h ' . escapeshellarg($host)
-                . ' -U postgres -q -X -t --pset pager=off -v ON_ERROR_STOP=1 --file='
-                . escapeshellarg($sqlPath) . ' '
-                . escapeshellarg($dsn)
-                . ' > ' . escapeshellarg($logFile) . ' 2>&1';
-            passthru($command);
-            $this->lanzarSiLogPsqlConError($command, $logFile, 4);
-        }
+        $this->importarVolcadoEnSelect($sqlPath, $logFile, 4);
 
         if ($this->getHost() === 'db') {
             return null;
@@ -706,29 +685,112 @@ class DBEsquemaCreate
     }
 
     /**
-     * true si select y origen son la misma BD física (import duplicaría el paso «crear» del exterior).
+     * Importa el .sql en la BD interior (public_select / publicv-e_select).
+     * En pre-prod el volcado se copia por SSH y psql corre en el servidor interior (socket local).
      */
-    private function replicaComparteBdConOrigen(string $db): bool
+    private function importarVolcadoEnSelect(string $sqlPath, string $logFile, int $numeroComando): void
     {
-        $oConfigDB = new ConfigDB('importar');
-        $claveOrigen = match ($db) {
-            'comun' => 'public',
-            'sv-e' => 'publicv-e',
-            default => 'public',
-        };
+        $this->eliminarEsquemaPorPdo($this->getNew());
+        $this->asegurarVolcadoCompatibleAntesDeImportar();
 
-        try {
-            $origen = $oConfigDB->getConexionMantenimiento($claveOrigen);
-            $replica = $oConfigDB->getConexionMantenimiento($this->claveEsquemaImportar());
-        } catch (\Throwable) {
-            return false;
+        if ($this->esHostPostgresLocal($this->getHost())) {
+            $this->ejecutarPsqlArchivo(
+                $sqlPath,
+                $logFile,
+                $numeroComando,
+                $this->getConexionImportar(),
+                $this->getHost(),
+            );
+        } else {
+            $this->ejecutarPsqlArchivoPorSsh($sqlPath, $logFile, $numeroComando);
         }
 
-        $firma = static fn (array $c): string => strtolower((string) ($c['host'] ?? ''))
-            . '|' . (int) ($c['port'] ?? 5432)
-            . '|' . strtolower((string) ($c['dbname'] ?? ''));
+        $tablas = $this->contarTablasEsquemaMantenimiento();
+        if ($tablas === 0) {
+            throw new \RuntimeException(sprintf(
+                _('Tras importar en réplica (%1$s / %2$s) el esquema «%3$s» no tiene tablas. Revise %4$s y pruebas-importar.conn.inc (dbname de public_select).'),
+                $this->claveEsquemaImportar(),
+                (string) ($this->config['dbname'] ?? ''),
+                $this->getNew(),
+                $logFile,
+            ));
+        }
+    }
 
-        return $firma($origen) === $firma($replica);
+    private function ejecutarPsqlArchivo(
+        string $sqlPath,
+        string $logFile,
+        int $numeroComando,
+        string $dsn,
+        string $host,
+    ): void {
+        $psql = $this->binarioPostgres('psql');
+        $command = 'LC_ALL=C PGOPTIONS=' . escapeshellarg('--client-min-messages=warning')
+            . ' ' . escapeshellarg($psql) . ' -h ' . escapeshellarg($host)
+            . ' -U postgres -q -X -t --pset pager=off -v ON_ERROR_STOP=1 --file='
+            . escapeshellarg($sqlPath) . ' '
+            . escapeshellarg($dsn)
+            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+        passthru($command);
+        $this->lanzarSiLogPsqlConError($command, $logFile, $numeroComando);
+    }
+
+    private function ejecutarPsqlArchivoPorSsh(string $sqlPath, string $logFile, int $numeroComando): void
+    {
+        $sshUser = $this->getSsh_user();
+        if ($sshUser === null || $sshUser === '') {
+            throw new \RuntimeException(_('Falta ssh_user en la plantilla public_select para importar en el servidor interior.'));
+        }
+
+        $config = (new ConfigDB('importar'))->getConexionMantenimiento($this->claveEsquemaImportar());
+        $dbname = (string) ($config['dbname'] ?? '');
+        if ($dbname === '') {
+            throw new \RuntimeException(sprintf(
+                _('Falta dbname en la conexión de mantenimiento «%s».'),
+                $this->claveEsquemaImportar(),
+            ));
+        }
+
+        $hostLocal = '/var/run/postgresql';
+        $remotePath = '/tmp/orbix_' . basename($sqlPath) . '_' . getmypid() . '.sql';
+        $sshTarget = $sshUser . '@' . $this->getHost();
+        $sshOpts = '-i /var/www/.ssh/id_rsa ';
+
+        $scpCmd = 'LC_ALL=C /usr/bin/scp ' . $sshOpts . escapeshellarg($sqlPath) . ' '
+            . escapeshellarg($sshTarget . ':' . $remotePath);
+        passthru($scpCmd, $scpExit);
+        if ($scpExit !== 0) {
+            throw new \RuntimeException(_('No se pudo copiar el volcado al servidor interior (scp).'));
+        }
+
+        $psqlRemoto = '/usr/bin/psql -U postgres -h ' . escapeshellarg($hostLocal)
+            . ' -d ' . escapeshellarg($dbname)
+            . ' -q -X -t --pset pager=off -v ON_ERROR_STOP=1 --file='
+            . escapeshellarg($remotePath)
+            . ' ; rm -f ' . escapeshellarg($remotePath);
+
+        $command = 'LC_ALL=C /usr/bin/ssh ' . $sshOpts . escapeshellarg($sshTarget) . ' '
+            . escapeshellarg($psqlRemoto)
+            . ' > ' . escapeshellarg($logFile) . ' 2>&1';
+        passthru($command);
+        $this->lanzarSiLogPsqlConError($command, $logFile, $numeroComando);
+    }
+
+    private function esHostPostgresLocal(string $host): bool
+    {
+        return in_array($host, ['db', '/var/run/postgresql', 'localhost', '127.0.0.1'], true);
+    }
+
+    private function contarTablasEsquemaMantenimiento(): int
+    {
+        $config = (new ConfigDB('importar'))->getConexionMantenimiento($this->claveEsquemaImportar());
+        $pdo = (new DBConnection($config))->getPDO();
+        $st = $pdo->prepare(
+            "SELECT COUNT(*) FROM pg_tables WHERE schemaname = :s AND tablename NOT LIKE 'pg\\_%'",
+        );
+        $st->execute(['s' => $this->getNew()]);
+
+        return (int) $st->fetchColumn();
     }
 
     private function crear_local()
@@ -856,9 +918,45 @@ class DBEsquemaCreate
     private function eliminarEsquemaPorPdo(string $esquema): void
     {
         $config = (new ConfigDB('importar'))->getConexionMantenimiento($this->claveEsquemaImportar());
+        $host = (string) ($config['host'] ?? $this->getHost());
+
+        if ($this->esHostPostgresLocal($host)) {
+            $this->eliminarEsquemaEnConexionMantenimiento($esquema, $config);
+        } else {
+            $this->eliminarEsquemaPorSsh($esquema, $config);
+        }
+
+        if ($this->existeEsquemaTrasIntentoEliminar($esquema, $config, $host)) {
+            throw new \RuntimeException(sprintf(
+                _('El esquema «%1$s» sigue existiendo en %2$s (%3$s) tras DROP SCHEMA. Revise propietario (p. ej. orbix_admindb) y %4$s.'),
+                $esquema,
+                $this->claveEsquemaImportar(),
+                (string) ($config['dbname'] ?? ''),
+                $this->getFileLog(),
+            ));
+        }
+    }
+
+    /**
+     * En réplica el esquema suele ser de orbix_admindb (apply de replicación lógica): reasignar a postgres y borrar.
+     *
+     * @param array<string, mixed> $config
+     */
+    private function eliminarEsquemaEnConexionMantenimiento(string $esquema, array $config): void
+    {
         $pdo = (new DBConnection($config))->getPDO();
+        if (!$this->existeEsquemaEnPdo($pdo, $esquema)) {
+            return;
+        }
+
         $qEsquema = '"' . str_replace('"', '""', $esquema) . '"';
         $sqlDrop = 'DROP SCHEMA IF EXISTS ' . $qEsquema . ' CASCADE';
+
+        try {
+            $pdo->exec('ALTER SCHEMA ' . $qEsquema . ' OWNER TO postgres');
+        } catch (\Throwable) {
+            // Puede no hacer falta si ya es postgres o el usuario es superusuario.
+        }
 
         try {
             $pdo->exec($sqlDrop);
@@ -873,6 +971,118 @@ class DBEsquemaCreate
             $pdo->exec('ALTER SCHEMA ' . $qEsquema . ' OWNER TO CURRENT_USER');
             $pdo->exec($sqlDrop);
         }
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function eliminarEsquemaPorSsh(string $esquema, array $config): void
+    {
+        $sshUser = (string) ($config['ssh_user'] ?? $this->getSsh_user() ?? '');
+        if ($sshUser === '') {
+            throw new \RuntimeException(sprintf(
+                _('Falta ssh_user para eliminar el esquema en el servidor interior («%s»).'),
+                $this->claveEsquemaImportar(),
+            ));
+        }
+
+        $dbname = (string) ($config['dbname'] ?? '');
+        if ($dbname === '') {
+            throw new \RuntimeException(sprintf(
+                _('Falta dbname en la conexión de mantenimiento «%s».'),
+                $this->claveEsquemaImportar(),
+            ));
+        }
+
+        $host = (string) ($config['host'] ?? $this->getHost());
+        $logFile = $this->getFileLog();
+        $sql = $this->sqlReasignarPropietarioYBorrarEsquema($esquema);
+        $hostLocal = '/var/run/postgresql';
+        $sshTarget = $sshUser . '@' . $host;
+        $sshOpts = '-i /var/www/.ssh/id_rsa ';
+
+        $psqlRemoto = '/usr/bin/psql -U postgres -h ' . escapeshellarg($hostLocal)
+            . ' -d ' . escapeshellarg($dbname)
+            . ' -q -X -t --pset pager=off -v ON_ERROR_STOP=1 -c '
+            . escapeshellarg($sql);
+
+        $command = 'LC_ALL=C /usr/bin/ssh ' . $sshOpts . escapeshellarg($sshTarget) . ' '
+            . escapeshellarg($psqlRemoto)
+            . ' >> ' . escapeshellarg($logFile) . ' 2>&1';
+        passthru($command);
+        $this->lanzarSiLogPsqlConError($command, $logFile, 3);
+    }
+
+    private function sqlReasignarPropietarioYBorrarEsquema(string $esquema): string
+    {
+        if ($esquema === '' || preg_match('/[^A-Za-z0-9._-]/', $esquema)) {
+            throw new \InvalidArgumentException(_('Nombre de esquema no válido.'));
+        }
+
+        $qEsquema = '"' . str_replace('"', '""', $esquema) . '"';
+        $literal = str_replace("'", "''", $esquema);
+
+        return 'DO $orbix$ BEGIN IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = \''
+            . $literal
+            . '\') THEN ALTER SCHEMA '
+            . $qEsquema
+            . ' OWNER TO postgres; END IF; END $orbix$; DROP SCHEMA IF EXISTS '
+            . $qEsquema
+            . ' CASCADE;';
+    }
+
+    private function existeEsquemaEnPdo(\PDO $pdo, string $esquema): bool
+    {
+        $st = $pdo->prepare('SELECT 1 FROM pg_namespace WHERE nspname = :n LIMIT 1');
+        $st->execute(['n' => $esquema]);
+
+        return (bool) $st->fetchColumn();
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function existeEsquemaTrasIntentoEliminar(string $esquema, array $config, string $host): bool
+    {
+        if ($this->esHostPostgresLocal($host)) {
+            try {
+                $pdo = (new DBConnection($config))->getPDO();
+
+                return $this->existeEsquemaEnPdo($pdo, $esquema);
+            } catch (\Throwable) {
+                return false;
+            }
+        }
+
+        return $this->existeEsquemaPorSsh($esquema, $config);
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function existeEsquemaPorSsh(string $esquema, array $config): bool
+    {
+        $sshUser = (string) ($config['ssh_user'] ?? $this->getSsh_user() ?? '');
+        $dbname = (string) ($config['dbname'] ?? '');
+        $host = (string) ($config['host'] ?? $this->getHost());
+        if ($sshUser === '' || $dbname === '' || $host === '') {
+            return false;
+        }
+
+        $literal = str_replace("'", "''", $esquema);
+        $sql = 'SELECT 1 FROM pg_namespace WHERE nspname = \'' . $literal . '\' LIMIT 1';
+        $hostLocal = '/var/run/postgresql';
+        $sshTarget = $sshUser . '@' . $host;
+        $sshOpts = '-i /var/www/.ssh/id_rsa ';
+        $psqlRemoto = '/usr/bin/psql -U postgres -h ' . escapeshellarg($hostLocal)
+            . ' -d ' . escapeshellarg($dbname)
+            . ' -q -X -t --pset pager=off -c '
+            . escapeshellarg($sql);
+        $command = '/usr/bin/ssh ' . $sshOpts . escapeshellarg($sshTarget) . ' '
+            . escapeshellarg($psqlRemoto) . ' 2>/dev/null';
+        $out = shell_exec($command);
+
+        return is_string($out) && trim($out) !== '';
     }
 
     private function esErrorPropietarioEsquema(\PDOException $e): bool
@@ -891,6 +1101,11 @@ class DBEsquemaCreate
 
     private function claveEsquemaImportar(): string
     {
+        $claveConfig = $this->config['schema'] ?? '';
+        if (is_string($claveConfig) && str_starts_with($claveConfig, 'public')) {
+            return $claveConfig;
+        }
+
         return match ($this->getDb()) {
             'comun', 'pruebas-comun' => 'public',
             'comun_select', 'pruebas-comun_select' => 'public_select',

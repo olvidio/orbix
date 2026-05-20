@@ -158,8 +158,11 @@ final class EliminarEsquemaDl
         $avisos = [];
         foreach ($clavesImportar as $clave) {
             try {
+                $configMant = $oConfigDB->getConexionMantenimiento($clave);
+                $configMant['schema'] = $clave;
+
                 $oDBEsquemaCreate = new DBEsquemaCreate();
-                $oDBEsquemaCreate->setConfig($oConfigDB->getEsquema($clave));
+                $oDBEsquemaCreate->setConfig($configMant);
                 $oDBEsquemaCreate->setRegionNew($regionNew);
                 $oDBEsquemaCreate->setDlNew($dlNew);
                 $oDBEsquemaCreate->eliminar($nombreEsquema);
