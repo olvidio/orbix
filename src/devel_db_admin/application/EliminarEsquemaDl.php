@@ -87,6 +87,8 @@ final class EliminarEsquemaDl
             $oDBEsquemaCreate->eliminar($esquemaf);
         }
 
+        $this->revocarPermisosRestoTrasTraslado($esquema, $region, $dl, $comun, $sv);
+
         if ($comun !== 0 || $sv !== 0 || $sf !== 0) {
             $oDBRol = new DBRol();
             if ($comun !== 0) {
@@ -123,6 +125,34 @@ final class EliminarEsquemaDl
         }
 
         return $avisos;
+    }
+
+    private function revocarPermisosRestoTrasTraslado(
+        string $esquema,
+        string $region,
+        string $dl,
+        int $comun,
+        int $sv,
+    ): void {
+        if ($comun !== 0) {
+            $oTrasvase = new DBTrasvase();
+            $oTrasvase->setRegion($region);
+            $oTrasvase->setDl($dl);
+            $oTrasvase->setDbName('comun');
+            $oTrasvase->usarRolesDelEsquemaObjetivo();
+            $oTrasvase->delPermisoRole('comun', $esquema);
+            $oTrasvase->delPermisoGlobal('comun');
+        }
+
+        if ($sv !== 0) {
+            $oTrasvase = new DBTrasvase();
+            $oTrasvase->setRegion($region);
+            $oTrasvase->setDl($dl);
+            $oTrasvase->setDbName('sv');
+            $oTrasvase->usarRolesDelEsquemaObjetivo();
+            $oTrasvase->delPermisoRole('sfsv', $oTrasvase->getEsquema());
+            $oTrasvase->delPermisoGlobal('sfsv');
+        }
     }
 
     /**

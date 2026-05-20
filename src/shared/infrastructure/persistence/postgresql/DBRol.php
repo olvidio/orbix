@@ -593,9 +593,34 @@ class DBRol
             try {
                 $config = $oConfigDB->getConexionMantenimiento($clave);
                 $oDbl = (new DBConnection($config))->getPDO();
+                $this->revocarPrivilegiosRestoEnConexion($oDbl, $this->sUser);
                 $oDbl->exec("DROP OWNED BY {$q} CASCADE");
             } catch (\Throwable) {
                 // Best effort en cada BD (comun, sv, sv-e, réplica…).
+            }
+        }
+    }
+
+    /** Revoca GRANT en esquemas resto/restov/restof (tras dl2resto) antes de DROP ROLE. */
+    private function revocarPrivilegiosRestoEnConexion(\PDO $pdo, string $rol): void
+    {
+        if ($rol === '' || preg_match('/[^A-Za-z0-9._-]/', $rol)) {
+            return;
+        }
+
+        $qRol = '"' . str_replace('"', '""', $rol) . '"';
+        foreach (['resto', 'restov', 'restof'] as $esquemaResto) {
+            $qEsquema = '"' . str_replace('"', '""', $esquemaResto) . '"';
+            foreach ([
+                "REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA {$qEsquema} FROM {$qRol}",
+                "REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA {$qEsquema} FROM {$qRol}",
+                "REVOKE ALL PRIVILEGES ON SCHEMA {$qEsquema} FROM {$qRol}",
+            ] as $sql) {
+                try {
+                    $pdo->exec($sql);
+                } catch (\Throwable) {
+                    // El esquema resto* puede no existir en esta BD.
+                }
             }
         }
     }

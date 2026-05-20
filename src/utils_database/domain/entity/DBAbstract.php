@@ -147,8 +147,10 @@ abstract class DBAbstract
 
                 $this->user_orbix = 'orbix';
 
-                $a_sql = [];
-                $a_sql = [$this->sqlRevokeRoleFromRole($this->user_orbix, $role_target)];
+                $a_sql = array_merge(
+                    [$this->sqlRevokeRoleFromRole($this->user_orbix, $role_target)],
+                    $this->sqlRevokesRestoSiRolExiste('resto', $role_target),
+                );
 
                 $this->executeSql($a_sql);
                 break;
@@ -161,13 +163,17 @@ abstract class DBAbstract
 
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
+                    $resto = 'restov';
                 } else {
                     $vf = 'f';
+                    $resto = 'restof';
                 }
                 $this->user_orbix = 'orbix' . $vf;
 
-                $a_sql = [];
-                $a_sql = [$this->sqlRevokeRoleFromRole($this->user_orbix, $role_target)];
+                $a_sql = array_merge(
+                    [$this->sqlRevokeRoleFromRole($this->user_orbix, $role_target)],
+                    $this->sqlRevokesRestoSiRolExiste($resto, $role_target),
+                );
 
                 $this->executeSql($a_sql);
                 break;
@@ -180,12 +186,16 @@ abstract class DBAbstract
 
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
+                    $resto = 'restov';
                 } else {
                     $vf = 'f';
+                    $resto = 'restof';
                 }
                 $this->user_orbix = 'orbix' . $vf;
-                $a_sql = [];
-                $a_sql = [$this->sqlRevokeRoleFromRole($this->user_orbix, $role_target)];
+                $a_sql = array_merge(
+                    [$this->sqlRevokeRoleFromRole($this->user_orbix, $role_target)],
+                    $this->sqlRevokesRestoSiRolExiste($resto, $role_target),
+                );
 
                 $this->executeSql($a_sql);
                 break;
@@ -456,6 +466,24 @@ abstract class DBAbstract
             "DO $$ BEGIN IF $cond THEN EXECUTE 'GRANT ALL PRIVILEGES ON SCHEMA \"$resto\" TO \"$rol\"'; END IF; END $$;",
             "DO $$ BEGIN IF $cond THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"$resto\" TO \"$rol\"'; END IF; END $$;",
             "DO $$ BEGIN IF $cond THEN EXECUTE 'GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"$resto\" TO \"$rol\"'; END IF; END $$;",
+        ];
+    }
+
+    /**
+     * Revoca los GRANT de {@see sqlGrantsRestoSiRolExiste} (necesario antes de DROP ROLE).
+     *
+     * @return list<string>
+     */
+    private function sqlRevokesRestoSiRolExiste(string $resto, string $rol): array
+    {
+        $resto = $this->escSqlIdent($resto);
+        $rol = $this->escSqlIdent($rol);
+        $cond = "EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$rol') AND EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = '$resto')";
+
+        return [
+            "DO $$ BEGIN IF $cond THEN EXECUTE 'REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA \"$resto\" FROM \"$rol\"'; END IF; END $$;",
+            "DO $$ BEGIN IF $cond THEN EXECUTE 'REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA \"$resto\" FROM \"$rol\"'; END IF; END $$;",
+            "DO $$ BEGIN IF $cond THEN EXECUTE 'REVOKE ALL PRIVILEGES ON SCHEMA \"$resto\" FROM \"$rol\"'; END IF; END $$;",
         ];
     }
 
