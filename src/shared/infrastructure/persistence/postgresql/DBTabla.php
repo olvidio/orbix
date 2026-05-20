@@ -136,6 +136,7 @@ class DBTabla extends DBAbstract
     public function setNew($esquema)
     {
         $this->sNew = $esquema;
+        $this->sfileNew = '';
     }
 
     public function getRef()
@@ -146,6 +147,7 @@ class DBTabla extends DBAbstract
     public function setRef($esquema)
     {
         $this->sRef = $esquema;
+        $this->sfileRef = '';
     }
 
     public function getHost()
@@ -176,7 +178,6 @@ class DBTabla extends DBAbstract
     public function setDb($db)
     {
         $this->sDb = $db;
-        $this->setFileRef($this->getDir() . '/dbRef' . $this->getRef() . '.' . $db . '.sql');
     }
 
     public function getFileRef()
@@ -262,6 +263,7 @@ class DBTabla extends DBAbstract
 
     private function copiar_remote()
     {
+        $this->prepararFicherosVolcadoCopiar();
         $this->leer_remote();
         $this->cambiar_nombre();
         $this->vaciarTablasDestino();
@@ -271,6 +273,7 @@ class DBTabla extends DBAbstract
 
     private function copiar_local()
     {
+        $this->prepararFicherosVolcadoCopiar();
         $this->leer_local();
         $this->cambiar_nombre();
         $this->vaciarTablasDestino();
@@ -278,28 +281,39 @@ class DBTabla extends DBAbstract
         $this->actualizar_schema();
     }
 
+    private function prepararFicherosVolcadoCopiar(): void
+    {
+        foreach ([$this->getFileRef(), $this->getFileNew()] as $path) {
+            if (is_string($path) && $path !== '' && is_file($path)) {
+                $this->deleteFile($path);
+            }
+        }
+    }
+
     public function cambiar_nombre()
     {
-        $esqemaRef = $this->getRef();
-        $crRef = strtok($esqemaRef, '-');
-        $dlRef = strtok('-');
-        $esqemaNew = $this->getNew();
-        $crNew = strtok($esqemaNew, '-');
-        $dlNew = strtok('-');
+        $partesRef = explode('-', $this->getRef(), 2);
+        $partesNew = explode('-', $this->getNew(), 2);
+        if (count($partesRef) < 2 || count($partesNew) < 2) {
+            throw new \InvalidArgumentException(_('Esquema ref o destino con formato región-dl no válido.'));
+        }
+        [$crRef, $dlRef] = $partesRef;
+        [$crNew, $dlNew] = $partesNew;
 
         $dump = file_get_contents($this->getFileRef());
-        // cambiar nombre esquema
-        $dump_nou = str_replace($this->getRef(), $this->getNew(), $dump);
-        // cambiar nombre por defecto de la dl i r
-        $pattern = "/(SET DEFAULT\s*')$crRef(')/";
-        $replacement = "$1$crNew$2";
-        $dump_nou = preg_replace($pattern, $replacement, $dump_nou);
-        $pattern = "/(SET DEFAULT\s*')$dlRef(')/";
-        $replacement = "$1$dlNew$2";
-        $dump_nou = preg_replace($pattern, $replacement, $dump_nou);
+        if ($dump === false) {
+            throw new \RuntimeException(sprintf(_('No se pudo leer el volcado de referencia: %s'), $this->getFileRef()));
+        }
 
-        $d = file_put_contents($this->getFileNew(), $dump_nou);
-        if ($d === false) exit (_("error al escribir el fichero"));
+        $dump_nou = str_replace($this->getRef(), $this->getNew(), $dump);
+        $pattern = "/(SET DEFAULT\s*')".preg_quote($crRef, '/')."(')/";
+        $dump_nou = preg_replace($pattern, '$1' . $crNew . '$2', $dump_nou) ?? $dump_nou;
+        $pattern = "/(SET DEFAULT\s*')".preg_quote($dlRef, '/')."(')/";
+        $dump_nou = preg_replace($pattern, '$1' . $dlNew . '$2', $dump_nou) ?? $dump_nou;
+
+        if (file_put_contents($this->getFileNew(), $dump_nou) === false) {
+            throw new \RuntimeException(sprintf(_('No se pudo escribir %s'), $this->getFileNew()));
+        }
     }
 
     public function cambiar_nombre_fichero()
@@ -554,7 +568,8 @@ class DBTabla extends DBAbstract
         }
 
         $oConfigDB = new ConfigDB('importar');
-        $pdo = (new DBConnection($oConfigDB->getEsquema($this->claveEsquemaImportar())))->getPDO();
+        $config = $oConfigDB->getConexionMantenimiento($this->claveEsquemaImportar());
+        $pdo = (new DBConnection($config))->getPDO();
         $sql = 'TRUNCATE TABLE ' . implode(', ', $qualified) . ' RESTART IDENTITY CASCADE';
         $pdo->exec($sql);
     }
@@ -573,7 +588,7 @@ class DBTabla extends DBAbstract
     private function getConexionImportar(): string
     {
         $oConfigDB = new ConfigDB('importar');
-        $config = $oConfigDB->getEsquema($this->claveEsquemaImportar());
+        $config = $oConfigDB->getConexionMantenimiento($this->claveEsquemaImportar());
 
         return (new DBConnection($config))->getURI();
     }
@@ -616,9 +631,11 @@ class DBTabla extends DBAbstract
 
         $detalle = trim((string) file_get_contents($logFile));
         throw new \RuntimeException(sprintf(
-            _('Error %1$s (comando %2$d). Log: %3$s.%4$s'),
+            _('Error %1$s (comando %2$d). Origen «%3$s» → destino «%4$s». Log: %5$s.%6$s'),
             $herramienta,
             $numeroComando,
+            $this->getRef(),
+            $this->getNew(),
             $logFile,
             $detalle !== '' ? ' ' . $detalle : ' ' . $command,
         ));

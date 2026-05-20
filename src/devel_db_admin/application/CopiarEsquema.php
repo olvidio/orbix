@@ -25,6 +25,12 @@ final class CopiarEsquema
         int $sf,
     ): array {
         $avisos = [];
+        $region = trim($region);
+        $dl = trim($dl);
+        if ($region === '' || $dl === '') {
+            throw new \InvalidArgumentException(_('Faltan región o delegación destino para copiar datos.'));
+        }
+
         $esquema = "$region-$dl";
         $esquemav = $esquema . 'v';
         $esquemaf = $esquema . 'f';
