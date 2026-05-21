@@ -53,6 +53,17 @@ final class CorregirEstadoRenombrarEsquema
             $acciones[] = _('Modo solo destino: se reaplican solo los defaults (ALTER COLUMN) en los esquemas del nombre región–delegación; no se sincronizan .inc ni db_idschema sin nombre de origen.');
         }
 
+        if (!$ctx->sinRenombreEfectivo && !$ctx->soloDestinoComprobacion) {
+            try {
+                foreach ((new RenombrarEsquema($this->container))->reanudarRenombrePostgreSQL($ctx) as $av) {
+                    $avisos[] = $av;
+                }
+                $acciones[] = _('Renombre PostgreSQL reanudado donde faltaba (esquemas/roles/.inc).');
+            } catch (Throwable $e) {
+                $avisos[] = sprintf(_('Renombre PostgreSQL: %s'), $e->getMessage());
+            }
+        }
+
         try {
             $this->aplicarDefaultsAlter($ctx, $acciones);
         } catch (Throwable $e) {

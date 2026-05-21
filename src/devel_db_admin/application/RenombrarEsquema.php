@@ -62,111 +62,16 @@ final class RenombrarEsquema
             return $pwdErr;
         }
 
+        $avisos = $this->reanudarRenombrePostgreSQL($ctx);
+
         $isDocker = (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
-        $avisos = [];
-
-        $oDBRol = new DBRol();
-
-        //  USUARIOS Y CAMBIO NOMBRE ESQUEMA  ///////////////////////////////////
-
-        // Hay que pasar como parámetro el nombre de la database, que corresponde al archivo database.inc
-        // donde están los passwords. En este caso en importar.inc, tenemos al superadmin.
-        $oConfigDB = new ConfigDB('importar');
-        //coge los valores de public: 1.la database comun; 2.nombre superusuario; 3.pasword superusuario;
 
         $DbSchemaRepository = $this->container->get(DbSchemaRepositoryInterface::class);
-
-        $oConfigDBComun = new ConfigDB('comun');
-        $oConfigDBSv = new ConfigDB('sv');
-        $oConfigDBSve = new ConfigDB('sv-e');
-        $oConfigDBSf = $sf !== 0 ? new ConfigDB('sf') : null;
-
-        //************** comun ****************************************
-        $oConComun = $this->pdoDesdeImportar($oConfigDB, 'public');
-        $this->renombrarBloqueRolEsquema(
-            $oDBRol,
-            $oConComun,
-            $esquema_old,
-            $esquema,
-            $this->leerPasswordEsquema($oConfigDBComun, $esquema_old, $esquema),
-        );
-        $this->renombrarClaveInc($oConfigDBComun, 'comun', $esquema_old, $esquema);
         $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'comun');
-
-        /////////  para comun en interior (select) — omitir en docker (sin réplica)
-        if (!$isDocker) {
-            $oConComunSel = $this->pdoDesdeImportar($oConfigDB, 'public_select');
-            $this->renombrarBloqueRolEsquema(
-                $oDBRol,
-                $oConComunSel,
-                $esquema_old,
-                $esquema,
-                $this->leerPasswordEsquema($oConfigDBComun, $esquema_old, $esquema),
-            );
-            $this->renombrarClaveInc($oConfigDBComun, 'comun_select', $esquema_old, $esquema);
-        }
-
-        // *********************  sv  *********************************
-        $oConSv = $this->pdoDesdeImportar($oConfigDB, 'publicv');
-        $this->renombrarBloqueRolEsquema(
-            $oDBRol,
-            $oConSv,
-            $esquema_oldv,
-            $esquemav,
-            $this->leerPasswordEsquema($oConfigDBSv, $esquema_oldv, $esquemav),
-        );
-        $this->renombrarClaveInc($oConfigDBSv, 'sv', $esquema_oldv, $esquemav);
         $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv');
-
-        // *********************  sv-e  ********************************
-        // En sv-e (misma instancia que sv) solo renombramos el ESQUEMA; el ROL ya se renombró en el bloque sv.
-        $oConSve = $this->pdoDesdeImportar($oConfigDB, 'publicv-e');
-        $this->renombrarBloqueSoloEsquema(
-            $oDBRol,
-            $oConSve,
-            $esquema_oldv,
-            $esquemav,
-            $this->leerPasswordEsquema($oConfigDBSve, $esquema_oldv, $esquemav),
-        );
-        $this->renombrarClaveInc($oConfigDBSve, 'sv-e', $esquema_oldv, $esquemav);
         $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv-e');
-
-        //////////// sv-e para db interior (select) — omitir lista réplica en docker
-        if (!$isDocker) {
-            $this->renombrarClaveInc($oConfigDBSve, 'sv-e_select', $esquema_oldv, $esquemav);
-        }
-
-        // *********************  sf  *********************************
-        if ($sf !== 0 && $oConfigDBSf !== null) {
-            $pwdSf = $this->leerPasswordEsquema($oConfigDBSf, $esquema_oldf, $esquemaf);
-            $this->renombrarClaveInc($oConfigDBSf, 'sf', $esquema_oldf, $esquemaf);
-            $this->renombrarClaveInc($oConfigDBSf, 'sf-e', $esquema_oldf, $esquemaf);
-
-            if ($this->delegacionSfTieneEsquemaEnPostgres($oConfigDB, $esquema_oldf, $esquemaf)) {
-                $oConSf = $this->pdoDesdeImportar($oConfigDB, 'publicf');
-                $this->renombrarBloqueRolEsquema(
-                    $oDBRol,
-                    $oConSf,
-                    $esquema_oldf,
-                    $esquemaf,
-                    $pwdSf,
-                );
-                $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sf');
-            } elseif ($this->delegacionSfTieneRolEnPostgres($oConfigDB, $esquema_oldf, $esquemaf)) {
-                $oConSf = $this->pdoDesdeImportar($oConfigDB, 'publicf');
-                $this->renombrarSoloRolDelegacionSf($oDBRol, $oConSf, $esquema_oldf, $esquemaf, $pwdSf);
-                $avisos[] = sprintf(
-                    _('Aviso: en sf solo existía el rol «%1$s»/«%2$s», no el esquema (no se marcó sf al «crear esquema»). Se renombró el rol y las claves .inc; no se tocó la BD sf-e.'),
-                    $esquema_oldf,
-                    $esquemaf,
-                );
-            } else {
-                $avisos[] = sprintf(
-                    _('Aviso: sf marcado en el formulario pero no hay esquema ni rol «%1$s»/«%2$s» en PostgreSQL; solo se actualizaron los .inc si existían.'),
-                    $esquema_oldf,
-                    $esquemaf,
-                );
-            }
+        if ($sf !== 0 && $this->delegacionSfTieneEsquemaEnPostgres(new ConfigDB('importar'), $esquema_oldf, $esquemaf)) {
+            $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sf');
         }
 
         // ESQUEMAS: CAMBIOS EN TABLAS ////////////////////////////////////////
@@ -328,7 +233,122 @@ final class RenombrarEsquema
             }
         }
 
-        return ['avisos' => array_merge($avisos, $oDBRol->consumirAvisosRenameRol())];
+        return ['avisos' => $avisos];
+    }
+
+    /**
+     * Reanuda ALTER ROLE / ALTER SCHEMA y claves .inc (idempotente por instancia).
+     * No toca db_idschema ni ALTER COLUMN; {@see CorregirEstadoRenombrarEsquema} lo usa para completar renombres a medias.
+     *
+     * @return list<string>
+     */
+    public function reanudarRenombrePostgreSQL(RenombrarEsquemaVerificacionContexto $ctx): array
+    {
+        $esquema_old = $ctx->esquemaOld;
+        $esquema_oldv = $ctx->esquemaOldv;
+        $esquema_oldf = $ctx->esquemaOldf;
+        $esquema = $ctx->esquemaNew;
+        $esquemav = $ctx->esquemaNewv;
+        $esquemaf = $ctx->esquemaNewf;
+        $sf = $ctx->sf;
+
+        $isDocker = (bool) preg_match('/(.*?)\.docker/', ServerConf::SERVIDOR);
+        $avisos = [];
+
+        $oDBRol = new DBRol();
+        $oConfigDB = new ConfigDB('importar');
+        $oConfigDBComun = new ConfigDB('comun');
+        $oConfigDBSv = new ConfigDB('sv');
+        $oConfigDBSve = new ConfigDB('sv-e');
+        $oConfigDBSf = $sf !== 0 ? new ConfigDB('sf') : null;
+
+        $oConComun = $this->pdoDesdeImportar($oConfigDB, 'public');
+        $this->renombrarBloqueRolEsquema(
+            $oDBRol,
+            $oConComun,
+            $esquema_old,
+            $esquema,
+            $this->leerPasswordEsquema($oConfigDBComun, $esquema_old, $esquema),
+        );
+        $this->renombrarClaveInc($oConfigDBComun, 'comun', $esquema_old, $esquema);
+
+        if (!$isDocker) {
+            $oConComunSel = $this->pdoDesdeImportar($oConfigDB, 'public_select');
+            $this->renombrarBloqueRolEsquema(
+                $oDBRol,
+                $oConComunSel,
+                $esquema_old,
+                $esquema,
+                $this->leerPasswordEsquema($oConfigDBComun, $esquema_old, $esquema),
+            );
+            $this->renombrarClaveInc($oConfigDBComun, 'comun_select', $esquema_old, $esquema);
+        }
+
+        $oConSv = $this->pdoDesdeImportar($oConfigDB, 'publicv');
+        $this->renombrarBloqueRolEsquema(
+            $oDBRol,
+            $oConSv,
+            $esquema_oldv,
+            $esquemav,
+            $this->leerPasswordEsquema($oConfigDBSv, $esquema_oldv, $esquemav),
+        );
+        $this->renombrarClaveInc($oConfigDBSv, 'sv', $esquema_oldv, $esquemav);
+
+        $oConSve = $this->pdoDesdeImportar($oConfigDB, 'publicv-e');
+        $this->renombrarBloqueSoloEsquema(
+            $oDBRol,
+            $oConSve,
+            $esquema_oldv,
+            $esquemav,
+            $this->leerPasswordEsquema($oConfigDBSve, $esquema_oldv, $esquemav),
+        );
+        $this->renombrarClaveInc($oConfigDBSve, 'sv-e', $esquema_oldv, $esquemav);
+
+        if (!$isDocker) {
+            $pwdSve = $this->leerPasswordEsquema($oConfigDBSve, $esquema_oldv, $esquemav);
+            $oConSveSel = $this->pdoDesdeImportar($oConfigDB, 'publicv-e_select');
+            $this->renombrarBloqueSoloEsquema(
+                $oDBRol,
+                $oConSveSel,
+                $esquema_oldv,
+                $esquemav,
+                $pwdSve,
+            );
+            $this->renombrarClaveInc($oConfigDBSve, 'sv-e_select', $esquema_oldv, $esquemav);
+        }
+
+        if ($sf !== 0 && $oConfigDBSf !== null) {
+            $pwdSf = $this->leerPasswordEsquema($oConfigDBSf, $esquema_oldf, $esquemaf);
+            $this->renombrarClaveInc($oConfigDBSf, 'sf', $esquema_oldf, $esquemaf);
+            $this->renombrarClaveInc($oConfigDBSf, 'sf-e', $esquema_oldf, $esquemaf);
+
+            if ($this->delegacionSfTieneEsquemaEnPostgres($oConfigDB, $esquema_oldf, $esquemaf)) {
+                $oConSf = $this->pdoDesdeImportar($oConfigDB, 'publicf');
+                $this->renombrarBloqueRolEsquema(
+                    $oDBRol,
+                    $oConSf,
+                    $esquema_oldf,
+                    $esquemaf,
+                    $pwdSf,
+                );
+            } elseif ($this->delegacionSfTieneRolEnPostgres($oConfigDB, $esquema_oldf, $esquemaf)) {
+                $oConSf = $this->pdoDesdeImportar($oConfigDB, 'publicf');
+                $this->renombrarSoloRolDelegacionSf($oDBRol, $oConSf, $esquema_oldf, $esquemaf, $pwdSf);
+                $avisos[] = sprintf(
+                    _('Aviso: en sf solo existía el rol «%1$s»/«%2$s», no el esquema (no se marcó sf al «crear esquema»). Se renombró el rol y las claves .inc; no se tocó la BD sf-e.'),
+                    $esquema_oldf,
+                    $esquemaf,
+                );
+            } else {
+                $avisos[] = sprintf(
+                    _('Aviso: sf marcado en el formulario pero no hay esquema ni rol «%1$s»/«%2$s» en PostgreSQL; solo se actualizaron los .inc si existían.'),
+                    $esquema_oldf,
+                    $esquemaf,
+                );
+            }
+        }
+
+        return array_merge($avisos, $oDBRol->consumirAvisosRenameRol());
     }
 
     /**

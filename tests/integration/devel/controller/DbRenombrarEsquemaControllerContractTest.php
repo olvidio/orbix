@@ -61,7 +61,7 @@ final class DbRenombrarEsquemaControllerContractTest extends TestCase
         $this->assertStringContainsString('if (!$isDocker)', $contents);
         $this->assertStringContainsString('ServerConf::SERVIDOR', $contents);
         $this->assertStringContainsString('validarFicherosPasswordAntesDeRenombre', $contents);
-        $this->assertStringContainsString("return ['avisos' => \$oDBRol->consumirAvisosRenameRol()];", $contents);
+        $this->assertStringContainsString("return ['avisos' => \$avisos];", $contents);
     }
 
     public function test_rename_blocks_are_idempotent_via_existence_checks(): void
@@ -74,11 +74,14 @@ final class DbRenombrarEsquemaControllerContractTest extends TestCase
             'renombrarBloqueRolEsquema debe saltar ALTER SCHEMA si el nuevo ya existe y el viejo no.',
         );
         $this->assertMatchesRegularExpression(
-            '/existeRol\(\$pdo,\s*\$esquemaOld\).*existeRol\(\$pdo,\s*\$esquemaNew\)/s',
+            '/function asegurarRolDestinoRenombre\([\s\S]*existeRol\(\$pdo,\s*\$esquemaNew\)[\s\S]*existeRol\(\$pdo,\s*\$esquemaOld\)/s',
             $contents,
-            'renombrarBloqueRolEsquema debe saltar ALTER ROLE si el nuevo ya existe y el viejo no.',
+            'asegurarRolDestinoRenombre debe saltar ALTER ROLE si el nuevo ya existe y solo renombrar si sigue el viejo.',
         );
         $this->assertStringContainsString('repararEsquemaPostRenombre', $contents);
+        $this->assertStringContainsString('publicv-e_select', $contents);
+        $this->assertStringContainsString('renombrarBloqueSoloEsquema', $contents);
+        $this->assertStringContainsString('reanudarRenombrePostgreSQL', $contents);
         $this->assertStringContainsString('incTieneClave', $contents);
     }
 
@@ -156,6 +159,8 @@ final class DbRenombrarEsquemaControllerContractTest extends TestCase
 
         $cor = __DIR__ . '/../../../../src/devel_db_admin/application/CorregirEstadoRenombrarEsquema.php';
         $this->assertFileExists($cor);
-        $this->assertStringContainsString('CorregirEstadoRenombrarEsquema', file_get_contents($cor) ?: '');
+        $corContents = file_get_contents($cor) ?: '';
+        $this->assertStringContainsString('CorregirEstadoRenombrarEsquema', $corContents);
+        $this->assertStringContainsString('reanudarRenombrePostgreSQL', $corContents);
     }
 }

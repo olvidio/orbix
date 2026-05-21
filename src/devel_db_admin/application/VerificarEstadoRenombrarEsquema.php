@@ -360,16 +360,28 @@ final class VerificarEstadoRenombrarEsquema
 
         if ($so) {
             $propO = $this->propietarioEsquema($pdo, $schemaOld);
-            $items[] = $this->itemEsperado(
-                sprintf(_('Propietario del esquema antiguo «%s» (= rol homónimo)'), $schemaOld),
-                $propO !== null && $propO === $schemaOld,
-                sprintf(_('Coincide («%s»).'), (string) $propO),
-                sprintf(
-                    _('No coincide: el propietario es «%s». Use «Corregir» o ALTER SCHEMA … OWNER TO «%s».'),
-                    $propO ?? _('desconocido'),
-                    $schemaOld,
-                ),
-            );
+            if (!$sn && $propO === $roleNew) {
+                $items[] = [
+                    'texto' => sprintf(
+                        _('Propietario del esquema antiguo «%1$s»: ya es el rol nuevo «%2$s»; falta ALTER SCHEMA «%1$s» RENAME TO «%3$s» (use «Corregir» o «Cambiar nombre»).'),
+                        $schemaOld,
+                        $roleNew,
+                        $schemaNew,
+                    ),
+                    'estado' => 'falta',
+                ];
+            } else {
+                $items[] = $this->itemEsperado(
+                    sprintf(_('Propietario del esquema antiguo «%s» (= rol homónimo)'), $schemaOld),
+                    $propO !== null && $propO === $schemaOld,
+                    sprintf(_('Coincide («%s»).'), (string) $propO),
+                    sprintf(
+                        _('No coincide: el propietario es «%s». Use «Corregir» o ALTER SCHEMA … OWNER TO «%s».'),
+                        $propO ?? _('desconocido'),
+                        $schemaOld,
+                    ),
+                );
+            }
         }
         if ($sn) {
             $propN = $this->propietarioEsquema($pdo, $schemaNew);
