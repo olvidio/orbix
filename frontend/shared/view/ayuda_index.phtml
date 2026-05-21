@@ -1,0 +1,125 @@
+<?php
+/**
+ * @var \frontend\shared\web\Posicion $oPosicion
+ * @var int $pruebas
+ * @var string $webPublic
+ * @var array{href: string, full_url: string, parametros: string} $enlaceManual
+ * @var array{href: string, full_url: string, parametros: string} $enlaceTraducciones
+ * @var string $hashParamsRegiones
+ */
+?>
+<script type="application/javascript">
+    fnjs_windowopen = function (url) {
+        window.open(url);
+    };
+    fnjs_ayuda_ir = function (fullUrl, parametros, hrefFallback) {
+        if (typeof fnjs_link_submenu === 'function' && document.getElementById('main')) {
+            fnjs_link_submenu(fullUrl, parametros);
+            return false;
+        }
+        if (hrefFallback) {
+            window.location.href = hrefFallback;
+        }
+        return false;
+    };
+</script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
+
+<?php if ($pruebas === 1) { ?>
+    <h1 class="alerta"><?= _('Entorno de pruebas') ?></h1>
+<?php } ?>
+
+<p class="comentario"><?= _("OCTUBRE 2022: se ha añadido una dl fantasma ('Otra dl de aquinate') para poder introducir actividades que organiza otra dl que sí está en aquinate, pero que no las va a introducir en su dl (por ejemplo actividades de sg, cuando no se usa para sg)") ?></p>
+
+<?php
+require __DIR__ . '/regiones_en_orbix.phtml';
+?>
+
+<br>
+<h1 class="titulo"><?= _('Tutoriales') ?></h1>
+<br>
+<h2 class="subtitulo"><a href="#uso_general">1. <?= _('Uso en general') ?></a></h2>
+<h2 class="subtitulo"><a href="#gestion_de_ca">2. <?= _('Gestión de ca') ?></a></h2>
+<h2 class="subtitulo"><a href="#gestion_de_personas">3. <?= _('Gestión de personas') ?></a></h2>
+<h2 class="subtitulo"><a href="#gestion_de_ctr">4. <?= _('Gestión de centros') ?></a></h2>
+<h2 class="subtitulo">
+    <a class="link nohref" href="<?= htmlspecialchars($enlaceManual['href'], ENT_QUOTES, 'UTF-8') ?>"
+       onclick="return fnjs_ayuda_ir(<?= json_encode($enlaceManual['full_url']) ?>, <?= json_encode($enlaceManual['parametros']) ?>, <?= json_encode($enlaceManual['href']) ?>);">
+        <?= _('Manual de usuario (por módulo)') ?>
+    </a>
+</h2>
+<h2 class="subtitulo">
+    <a class="link nohref" href="<?= htmlspecialchars($enlaceTraducciones['href'], ENT_QUOTES, 'UTF-8') ?>"
+       onclick="return fnjs_ayuda_ir(<?= json_encode($enlaceTraducciones['full_url']) ?>, <?= json_encode($enlaceTraducciones['parametros']) ?>, <?= json_encode($enlaceTraducciones['href']) ?>);">
+        x. <?= _('Traducciones') ?>
+    </a>
+</h2>
+<br><br><br><br>
+
+<h2 class="subtitulo"><a name="uso_general"></a>1. <?= _('Uso en general') ?></h2>
+<br>
+<?= _('Aspectos aplicables en todo el entorno web') ?><br>
+<br>
+<h4><b>1.1. <?= _('Preferencias') ?></b></h4>
+<h4>1.2. <?= _('Tabla slickGrid') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/slickgrid.mp4')">(<?= _('video') ?>)</span></h4>
+<?= _('Es la presentación de resultados por defecto. Se puede cambiar a la vista de tabla normal (html) en el menú de preferencias.') ?><br>
+<?= _('Posibilidades:') ?><br>
+- <?= _('cambio de tamaño') ?><br>
+- <?= _('esconder columnas') ?><br>
+- <?= _('cambiar el ancho de las columnas') ?><br>
+- <?= _('cambiar el orden de las columnas') ?><br>
+- <?= _('ordenar por una columna') ?><br>
+- <?= _('buscar dentro de la grid') ?><br>
+- <?= _('guardar la configuración (para cada página web es distinta)') ?><br>
+- <?= _('Selección múltiple: en algunos casos se puede seleccionar más de una fila para hacer alguna operación.') ?><br>
+<?= _("Ctr + clic. Si se mantiene apretada la tecla 'Control' se puede hacer clic en más de una fila.") ?><br>
+<?= _("Mays + clic. Si se mantiene apretada la tecla 'Mays' al hacer clic se seleccionan todas las filas entre el primer y segundo clic.") ?><br>
+<?= _('ATENCIÓN:') ?><br>
+* <?= _('para exportar (y quizá alguna otra cosa), primero hay que visualizar todas las filas. Explicación: si la lista es larga, el navegador no tiene todas las filas, las va pidiendo conforme las necesita visualizar. Una vez se ha visualizado todas, ya están en la memoria del navegador y se pueden exportar.') ?><br>
+* <?= _('al ordenar tiene algún problema con los acentos.') ?><br>
+<br>
+<h4>1.3. <?= _('Desplegables') ?></h4>
+<?= _('Recordar que apretando una tecla (o escribiendo más de una, pero sin pausa) va al ítem de la lista que empieza por la letra que tecleamos.') ?><br>
+<h4>1.4. <?= _('Buscar en la página') ?></h4>
+<?= _('Para buscar en toda la página, Ctrl+f permite buscar una cadena, con Ctrl+g se busca la siguiente.') ?><br>
+* <?= _('en slickgrid deben de haberse visualizado antes (mejor usar la búsqueda propia de la grid)') ?><br>
+<h4>1.5. <?= _('Imprimir') ?></h4>
+<?= _('Hay páginas web que están pensadas para imprimir directamente desde el navegador. En este caso hay que decirle al navegador que no ponga cabecera ni pie en la página.') ?><br>
+<h4>1.6. <?= _('Exportar') ?></h4>
+<h4>1.7. <?= _('Permisos') ?></h4>
+<?= _('Afectan a dos cosas: menús y procesos.') ?><br>
+<?= _('En el caso de los menús se pueden adaptar a cada caso, aunque entiendo que lo mejor de momento es dejarlo como viene por defecto.') ?><br>
+<?= _('En el caso de los procesos es más rígido. En las actividades, quien tiene el control es dre. Sólo entrando como dre se pueden borrar actividades.') ?><br>
+<h4>1.8. <?= _('Salir') ?></h4>
+<?= _('Es importante usar el botón de "Salir" para cerrar la sesión. El servidor provoca un error cuando se excede un número determinado de sesiones abiertas y apagando el navegador no se cierra la sesión.') ?><br>
+
+<br><br><br>
+<h2 class="subtitulo"><a name="gestion_de_ca"></a>2. <?= _('Gestión de ca') ?></h2>
+<ol>
+    <li><h4><?= _('Nuevo ca') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/01-nuevoCa.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('Asignaturas de ca') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/02-asignaturas.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('asistentes dl a ca') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/03-asistentesDl.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('asistentes otras dl a ca') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/04-asistentesOtrDl.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('matriculaciones asignaturas ca') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/05-matriculaciones.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('actas') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/06-actas.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('ca posibles por ctr') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/07-caPosiblesPorCentro.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('opciones ca') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/08-opcionesCa.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('gestión de plazas de calendario') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/09-gestionPlazasCalendario.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('importar ca') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/10-importarCa.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('publicar ca') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/11-publicarCa.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('imprimir situación académica') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/12-verTessera.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('exportar tessera a archivo') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/13-tessera-curriculum.mp4')">(<?= _('video') ?>)</span></h4></li>
+</ol>
+
+<br><br><br>
+<h2 class="subtitulo"><a name="gestion_de_personas"></a>3. <?= _('Gestión de personas') ?></h2>
+<ol>
+    <li><h4><?= _('Nueva persona') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/31-nuevaPersona.mp4')">(<?= _('video') ?>)</span></h4></li>
+    <li><h4><?= _('crear / modificar nota') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/32-modificarNota.mp4')">(<?= _('video') ?>)</span></h4></li>
+</ol>
+
+<br><br><br>
+<h2 class="subtitulo"><a name="gestion_de_ctr"></a>4. <?= _('Gestión de ctr') ?></h2>
+<ol>
+    <li><h4><?= _('Crear/modificar un nuevo centro') ?> <span class="link" onclick="fnjs_windowopen('<?= htmlspecialchars($webPublic, ENT_QUOTES, 'UTF-8') ?>/ayuda/41-modificarCtr.mp4')">(<?= _('video') ?>)</span></h4></li>
+</ol>

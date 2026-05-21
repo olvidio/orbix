@@ -1,0 +1,116 @@
+<?php
+/**
+ * @var \frontend\shared\web\Posicion $oPosicion
+ * @var string $modulo
+ * @var list<array{slug: string, titulo: string}> $modulos
+ * @var array{slug: string, titulo: string, html: string}|null $documento
+ * @var string $manualBase
+ * @var array<string, array{href: string, full_url: string, parametros: string}> $enlacesModulos
+ * @var array{href: string, full_url: string, parametros: string} $enlaceIndice
+ * @var array{href: string, full_url: string, parametros: string} $enlaceAyuda
+ */
+?>
+<style>
+    .manual-orbix { font-family: inherit; line-height: 1.5; color: #1a1a1a; }
+    .manual-orbix .manual-layout { display: flex; gap: 0; min-height: 12rem; }
+    .manual-orbix .manual-nav { flex: 0 0 240px; background: #f4f6f8; border: 1px solid #d8dee4; padding: 0.75rem; box-sizing: border-box; max-height: 80vh; overflow-y: auto; }
+    .manual-orbix .manual-nav h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+    .manual-orbix .manual-nav ul { list-style: none; margin: 0; padding: 0; }
+    .manual-orbix .manual-nav li { margin: 0.15rem 0; }
+    .manual-orbix .manual-nav a.activo { font-weight: bold; }
+    .manual-orbix .manual-main { flex: 1 1 auto; padding: 0 0 0 1rem; min-width: 0; }
+    .manual-orbix .manual-indice { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 0.5rem 1rem; list-style: none; padding: 0; margin: 0.75rem 0 0; }
+    .manual-orbix .manual-indice a { display: block; padding: 0.5rem 0.65rem; border: 1px solid #d8dee4; border-radius: 4px; text-decoration: none; background: #fafbfc; }
+    .manual-orbix .manual-contenido h1 { font-size: 1.5rem; margin-top: 0; }
+    .manual-orbix .manual-contenido h2 { font-size: 1.25rem; margin-top: 1.25rem; border-bottom: 1px solid #eee; }
+    .manual-orbix .manual-contenido table { border-collapse: collapse; width: 100%; margin: 0.75rem 0; font-size: 0.95rem; }
+    .manual-orbix .manual-contenido th, .manual-orbix .manual-contenido td { border: 1px solid #d0d7de; padding: 0.4rem 0.55rem; vertical-align: top; }
+    .manual-orbix .manual-contenido th { background: #f6f8fa; }
+    .manual-orbix .manual-contenido code { background: #f0f3f6; padding: 0.1rem 0.3rem; border-radius: 3px; }
+    .manual-orbix .manual-contenido pre { background: #f6f8fa; border: 1px solid #d8dee4; padding: 0.65rem; overflow-x: auto; }
+    .manual-orbix .manual-aviso { padding: 0.6rem 0.85rem; background: #fff8e1; border: 1px solid #ffe082; margin-bottom: 0.75rem; }
+    .manual-orbix .manual-error { color: #b00020; font-weight: bold; }
+    @media (max-width: 720px) {
+        .manual-orbix .manual-layout { flex-direction: column; }
+        .manual-orbix .manual-main { padding: 0.75rem 0 0; }
+    }
+</style>
+<script>
+    fnjs_manual_ir = function (fullUrl, parametros, hrefFallback) {
+        if (typeof fnjs_link_submenu === 'function' && document.getElementById('main')) {
+            fnjs_link_submenu(fullUrl, parametros);
+            return false;
+        }
+        if (hrefFallback) {
+            window.location.href = hrefFallback;
+        }
+        return false;
+    };
+</script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
+<div class="manual-orbix">
+    <div class="manual-layout">
+        <nav class="manual-nav" aria-label="<?= htmlspecialchars(_('Módulos del manual'), ENT_QUOTES, 'UTF-8') ?>">
+            <h3><?= _('Manual') ?></h3>
+            <p>
+                <a class="link nohref" href="<?= htmlspecialchars($enlaceAyuda['href'], ENT_QUOTES, 'UTF-8') ?>"
+                   onclick="return fnjs_manual_ir(<?= json_encode($enlaceAyuda['full_url']) ?>, <?= json_encode($enlaceAyuda['parametros']) ?>, <?= json_encode($enlaceAyuda['href']) ?>);">
+                    ← <?= _('Ayuda') ?>
+                </a>
+            </p>
+            <ul>
+                <?php foreach ($modulos as $item) {
+                    $enlace = $enlacesModulos[$item['slug']];
+                    $activo = $documento !== null && $item['slug'] === $documento['slug'];
+                    ?>
+                    <li>
+                        <a class="link nohref<?= $activo ? ' activo' : '' ?>"
+                           href="<?= htmlspecialchars($enlace['href'], ENT_QUOTES, 'UTF-8') ?>"
+                           onclick="return fnjs_manual_ir(<?= json_encode($enlace['full_url']) ?>, <?= json_encode($enlace['parametros']) ?>, <?= json_encode($enlace['href']) ?>);">
+                            <?= htmlspecialchars($item['titulo'], ENT_QUOTES, 'UTF-8') ?>
+                        </a>
+                    </li>
+                <?php } ?>
+            </ul>
+        </nav>
+        <main class="manual-main">
+            <p>
+                <a class="link nohref" href="<?= htmlspecialchars($enlaceAyuda['href'], ENT_QUOTES, 'UTF-8') ?>"
+                   onclick="return fnjs_manual_ir(<?= json_encode($enlaceAyuda['full_url']) ?>, <?= json_encode($enlaceAyuda['parametros']) ?>, <?= json_encode($enlaceAyuda['href']) ?>);">
+                    <?= _('Ayuda') ?>
+                </a>
+                ·
+                <a class="link nohref" href="<?= htmlspecialchars($enlaceIndice['href'], ENT_QUOTES, 'UTF-8') ?>"
+                   onclick="return fnjs_manual_ir(<?= json_encode($enlaceIndice['full_url']) ?>, <?= json_encode($enlaceIndice['parametros']) ?>, <?= json_encode($enlaceIndice['href']) ?>);">
+                    <?= _('Manual de usuario') ?>
+                </a>
+            </p>
+            <?php if ($modulo !== '' && $documento === null) { ?>
+                <p class="manual-error"><?= sprintf(_('No se ha encontrado el módulo «%s».'), htmlspecialchars($modulo, ENT_QUOTES, 'UTF-8')) ?></p>
+            <?php } elseif ($documento !== null) { ?>
+                <div class="manual-aviso comentario">
+                    <?= _('Documentación en') ?> <code>docs/manual/</code>.
+                    <?= _('Puede requerir revisión manual (menús, permisos y textos visibles).') ?>
+                </div>
+                <article class="manual-contenido">
+                    <?= $documento['html'] ?>
+                </article>
+            <?php } else { ?>
+                <h2 class="subtitulo"><?= _('Manual de usuario') ?></h2>
+                <p class="comentario"><?= _('Documentación por módulo de Orbix.') ?></p>
+                <ul class="manual-indice">
+                    <?php foreach ($modulos as $item) {
+                        $enlace = $enlacesModulos[$item['slug']];
+                        ?>
+                        <li>
+                            <a class="link nohref" href="<?= htmlspecialchars($enlace['href'], ENT_QUOTES, 'UTF-8') ?>"
+                               onclick="return fnjs_manual_ir(<?= json_encode($enlace['full_url']) ?>, <?= json_encode($enlace['parametros']) ?>, <?= json_encode($enlace['href']) ?>);">
+                                <?= htmlspecialchars($item['titulo'], ENT_QUOTES, 'UTF-8') ?>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            <?php } ?>
+        </main>
+    </div>
+</div>
