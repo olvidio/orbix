@@ -118,7 +118,7 @@ class PostRequest
             exit ($msg);
         }
         if (!$rta_json['success']) {
-            exit ($rta_json['mensaje']);
+            exit((string) $rta_json['mensaje'] . self::sufijoDiagnosticoLlamadaInterna($url));
         }
 
         return self::envelopeDataFieldToArray($rta_json['data'] ?? null);
@@ -207,10 +207,20 @@ class PostRequest
     }
 
     /**
-     * Quita el sufijo técnico de {@see procedenciaLlamadaInternaGetData} para mostrar el aviso al usuario.
+     * Marca el inicio del bloque técnico (URL, página, procedencia) en errores de {@see getDataInternal}.
+     */
+    private const DIAGNOSTIC_MARKER = '<!-- postRequestDiagnostic -->';
+
+    /**
+     * Quita el sufijo técnico de {@see sufijoDiagnosticoLlamadaInterna} para mostrar el aviso al usuario.
      */
     public static function stripInternalCallProvenance(string $errorHtml): string
     {
+        $pos = strpos($errorHtml, self::DIAGNOSTIC_MARKER);
+        if ($pos !== false) {
+            return substr($errorHtml, 0, $pos);
+        }
+
         $needle = '<br><strong>' . _('Procedencia') . ':';
         $pos = strpos($errorHtml, $needle);
         if ($pos === false) {
@@ -394,11 +404,11 @@ class PostRequest
                 $location !== '' ? $location : _('sin Location')
             );
             $msg .= '<br>' . _("Probable causa: validación de hash/sesión. Revisa que el endpoint no requiera firma que no se está generando igual server-to-server.");
-            return ['error' => $msg . self::procedenciaLlamadaInternaGetData()];
+            return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
         }
         if ($code >= 400) {
             $msg = sprintf(_("Error HTTP %d en llamada interna a %s"), $code, $url_limpia);
-            return ['error' => $msg . self::procedenciaLlamadaInternaGetData()];
+            return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
         }
         $body = $response2->getBody();
         $content = $body->getContents();
@@ -407,15 +417,15 @@ class PostRequest
             $preview = mb_substr(trim((string)$content), 0, 500);
             $msg = sprintf(_("Respuesta no-JSON de %s (status %d)."), $url_limpia, $code);
             $msg .= '<br>' . htmlspecialchars($preview, ENT_QUOTES, 'UTF-8');
-            return ['error' => $msg . self::procedenciaLlamadaInternaGetData()];
+            return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
         }
 
         if ($rta_json === null) {
             $msg = sprintf(_("No se obtiene respuesta de: %s"), $url_limpia);
-            return ['error' => $msg . self::procedenciaLlamadaInternaGetData()];
+            return ['error' => $msg . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
         }
         if (!$rta_json['success']) {
-            return ['error' => (string)$rta_json['mensaje'] . self::procedenciaLlamadaInternaGetData()];
+            return ['error' => (string) $rta_json['mensaje'] . self::sufijoDiagnosticoLlamadaInterna($url_limpia)];
         }
 
         return self::envelopeDataFieldToArray($rta_json['data'] ?? null);
@@ -516,6 +526,23 @@ class PostRequest
         $response = $client->request('POST', $url_limpia, $reqOpts);
 
         return (string)$response->getBody()->getContents();
+    }
+
+    /**
+     * Contexto diagnóstico (endpoint, página del formulario, tipo de llamada) en errores de {@see getDataInternal}.
+     */
+    private static function sufijoDiagnosticoLlamadaInterna(string $urlLimpia): string
+    {
+        $s = self::DIAGNOSTIC_MARKER;
+        $s .= '<br><strong>' . _('Endpoint') . ':</strong> <code>'
+            . htmlspecialchars($urlLimpia, ENT_QUOTES, 'UTF-8') . '</code>';
+        if (!empty($_SERVER['REQUEST_URI'])) {
+            $s .= '<br><strong>' . _('Página') . ':</strong> <code>'
+                . htmlspecialchars((string) $_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8') . '</code>';
+        }
+        $s .= self::procedenciaLlamadaInternaGetData();
+
+        return $s;
     }
 
     /**
